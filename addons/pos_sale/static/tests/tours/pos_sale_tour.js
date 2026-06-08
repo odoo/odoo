@@ -8,42 +8,6 @@ import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add("PosSettleOrder", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            PosSale.settleNthOrder(1),
-            ProductScreen.selectedOrderlineHas("Pizza Chicken", 9),
-            ProductScreen.clickNumpad("Qty", "2"), // Change the quantity of the product to 2
-            ProductScreen.selectedOrderlineHas("Pizza Chicken", 2),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Bank"),
-            PaymentScreen.clickValidate(),
-            FeedbackScreen.isShown(),
-            Chrome.clickOrders(),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("PosSettleOrderIncompatiblePartner", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            // The second item in the list is the first sale.order.
-            PosSale.settleNthOrder(2),
-            ProductScreen.selectedOrderlineHas("product1", 1),
-            ProductScreen.totalAmountIs("10.00"),
-
-            // The first item in the list is the second sale.order.
-            // Selecting the 2nd sale.order should use a new order,
-            // therefore, the total amount will change.
-            PosSale.settleNthOrder(1),
-            ProductScreen.selectedOrderlineHas("product2", 1),
-            ProductScreen.totalAmountIs("11.00"),
-        ].flat(),
-});
-
 registry.category("web_tour.tours").add("PosSettleOrder2", {
     steps: () =>
         [
@@ -147,79 +111,6 @@ registry.category("web_tour.tours").add("PosSettleAndInvoiceOrder2", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("PosOrderDoesNotRemainInList", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            PosSale.settleNthOrder(1),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Bank"),
-            PaymentScreen.clickValidate(),
-            FeedbackScreen.clickNextOrder(),
-            PosSale.checkOrdersListEmpty(),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("PosSettleDraftOrder", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            PosSale.settleNthOrder(1),
-            ProductScreen.selectedOrderlineHas("Test service product", "1", "50.00"),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Bank"),
-            PaymentScreen.clickValidate(),
-            FeedbackScreen.isShown(),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("PosSettleCustomPrice", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            PosSale.settleNthOrder(1),
-            ProductScreen.selectedOrderlineHas("Product A", "1", "100"),
-            ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("A Test Partner AAA"),
-            ProductScreen.selectedOrderlineHas("Product A", "1", "100"),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("PoSSaleOrderWithDownpayment", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            PosSale.settleNthOrder(1),
-            ProductScreen.selectedOrderlineHas("Down Payment (POS)"),
-            ProductScreen.totalAmountIs(980.0),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("test_pos_settle_so_with_downpayment", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            PosSale.settleNthOrder(1),
-            ProductScreen.checkOrderlinesNumber(3),
-            ProductScreen.totalAmountIs(755.0),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("test_settle_so_with_non_pos_groupable_uom", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            PosSale.settleNthOrder(1),
-            ProductScreen.selectedOrderlineHas("Pomme de Terre", "0.5", "5.00"),
-        ].flat(),
-});
-
 registry.category("web_tour.tours").add("PoSDownPaymentLinesPerTax", {
     steps: () =>
         [
@@ -246,18 +137,6 @@ registry.category("web_tour.tours").add("PoSDownPaymentLinesPerTax", {
             PaymentScreen.clickInvoiceButton(),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("PoSApplyDownpayment", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            PosSale.downPaymentFirstOrder("+10"),
-            ProductScreen.clickPayButton(),
-            PaymentScreen.clickPaymentMethod("Bank"),
-            PaymentScreen.clickValidate(),
         ].flat(),
 });
 

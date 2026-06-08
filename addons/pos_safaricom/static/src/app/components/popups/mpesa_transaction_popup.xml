@@ -36,7 +36,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <t t-if="this.transactions.length > 0" t-foreach="this.transactions" t-as="tx" t-key="tx.id">
+                        <t t-if="this.transactions.length > 0" t-foreach="this.transactions" t-as="tx" t-key="tx_index">
                             <tr>
                                 <td><t t-out="tx.name"/></td>
                                 <td><t t-out="tx.phone"/></td>

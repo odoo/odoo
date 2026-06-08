@@ -11,8 +11,8 @@
         "point_of_sale._assets_pos": [
             "pos_safaricom/static/src/**/*",
         ],
-        "web.assets_tests": [
-            "pos_safaricom/static/tests/tours/**/*",
+        "web.assets_unit_tests": [
+            "pos_safaricom/static/tests/unit/**/*",
         ],
     },
     "author": "Odoo S.A.",

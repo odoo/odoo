@@ -4,6 +4,7 @@ import { click, waitFor } from "@odoo/hoot-dom";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 
 definePosModels();
@@ -33,7 +34,7 @@ describe("onClickSaleOrder", () => {
         expect(currentOrder.lines[1].qty).toBe(2);
     });
 
-    test("settle → calls settleSO", async () => {
+    test("PosSettleOrder: settle → calls settleSO", async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
         await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
@@ -70,7 +71,26 @@ describe("onClickSaleOrder", () => {
         expect(currentOrder.lines[3].prices.total_excluded).toBe(150);
     });
 
-    test("dpPercentage → calls downPaymentSO", async () => {
+    test("PosSettleCustomPrice: settle keeps custom sale order line price when partner changes", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        const saleOrder = await store._getSaleOrder(1);
+        const product = store.models["product.product"].get(5);
+        const productTemplate = store.models["product.template"].get(5);
+        product.lst_price = 150;
+        productTemplate.list_price = 150;
+
+        await store.settleSO(saleOrder, saleOrder.fiscal_position_id);
+
+        const settledLine = order.lines.find((line) => line.sale_order_line_id?.id === 1);
+        expect(settledLine.price_unit).toBe(100);
+
+        store.setPartnerToCurrentOrder(store.models["res.partner"].get(4));
+
+        expect(settledLine.price_unit).toBe(100);
+    });
+
+    test("PoSSaleOrderWithDownpayment / PoSApplyDownpayment: dpPercentage → calls downPaymentSO", async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
         await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
@@ -124,7 +144,7 @@ describe("onClickSaleOrder", () => {
         expect(cell(2, 4)).toHaveText(`$ 150.00 (tax incl.)`);
     });
 
-    test("dpAmount → calls downPaymentSO", async () => {
+    test("PoSSaleOrderWithDownpayment / PoSApplyDownpayment: dpAmount → calls downPaymentSO", async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
         await mountWithCleanup(ProductScreen, { props: { orderUuid: order.uuid } });
@@ -195,6 +215,32 @@ describe("onClickSaleOrder", () => {
         expect(order.lines[2].price_unit).toBe(100);
         expect(order.lines[2].prices.total_excluded).toBe(500);
     });
+
+    test("PosSettleOrderIncompatiblePartner: setting warned partners shows the corresponding alerts", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        const warnedPartnerA = store.models["res.partner"].get(4);
+        const warnedPartnerB = store.models["res.partner"].get(3);
+        warnedPartnerA.name = "A Test Customer 1";
+        warnedPartnerA.sale_warn_msg = "Highly infectious disease";
+        warnedPartnerB.name = "A Test Customer 2";
+        warnedPartnerB.sale_warn_msg = "Cannot afford our services";
+
+        const dialogs = [];
+        store.dialog.add = (component, props) => dialogs.push({ component, props });
+
+        store.setPartnerToCurrentOrder(warnedPartnerB);
+        store.setPartnerToCurrentOrder(warnedPartnerA);
+
+        expect(order.getPartner()).toBe(warnedPartnerA);
+        expect(dialogs).toHaveLength(2);
+        expect(dialogs[0].component).toBe(AlertDialog);
+        expect(dialogs[0].props.title).toBe("Warning for A Test Customer 2");
+        expect(dialogs[0].props.body).toBe("Cannot afford our services");
+        expect(dialogs[1].component).toBe(AlertDialog);
+        expect(dialogs[1].props.title).toBe("Warning for A Test Customer 1");
+        expect(dialogs[1].props.body).toBe("Highly infectious disease");
+    });
 });
 
 describe("getConvertedQuantityFromSaleOrderline", () => {
@@ -229,4 +275,104 @@ describe("getConvertedQuantityFromSaleOrderline", () => {
         const qty = await store.getConvertedQuantityFromSaleOrderline(saleOrderLine, saleOrderLine);
         expect(qty).toBe(6);
     });
+});
+
+test("PosSettleOrderIncompatiblePartner: incompatible partner creates a new POS order", async () => {
+    const store = await setupPosEnv();
+    const initialOrder = store.addNewOrder();
+    const saleOrder1 = await store._getSaleOrder(1);
+    await store.settleSO(saleOrder1, saleOrder1.fiscal_position_id);
+
+    const saleOrder2 = await store._getSaleOrder(11);
+
+    store.dialog.add = (component, props) => {
+        if (props.list && props.getPayload) {
+            props.getPayload("settle");
+            return;
+        }
+        if (props.confirm) {
+            props.confirm();
+        }
+    };
+
+    await store._processSaleOrder(saleOrder2);
+
+    expect(store.getOrder().id).not.toBe(initialOrder.id);
+    expect(store.getOrder().getPartner().id).toBe(4);
+});
+
+test("PosSettleOrder: sale order line notes are merged into customer note", async () => {
+    const store = await setupPosEnv();
+    store.addNewOrder();
+    const saleOrder = await store._getSaleOrder(4);
+
+    await store.settleSO(saleOrder, saleOrder.fiscal_position_id);
+
+    expect(store.getOrder().lines[0].customer_note).toBe("Customer note 2--Customer note 3");
+});
+
+test("test_settle_so_with_non_pos_groupable_uom: settling a non-groupable UoM line preserves converted quantity", async () => {
+    const store = await setupPosEnv();
+    store.addNewOrder();
+    const saleOrder = await store._getSaleOrder(5);
+    const product = store.models["product.product"].get(5);
+    product.uom_id.is_pos_groupable = false;
+
+    await store.settleSO(saleOrder, saleOrder.fiscal_position_id);
+
+    expect(store.getOrder().lines).toHaveLength(1);
+    expect(store.getOrder().lines[0].qty).toBe(0.5);
+    expect(store.getOrder().lines[0].price_unit).toBe(10);
+});
+
+test("test_quantity_updated_settle: re-settling uses updated remaining quantity", async () => {
+    const store = await setupPosEnv();
+    store.addNewOrder();
+    const saleOrder = await store._getSaleOrder(10);
+    await store.settleSO(saleOrder, saleOrder.fiscal_position_id);
+    expect(store.getOrder().lines[0].qty).toBe(5);
+
+    const nextOrder = store.addNewOrder();
+    const originalCall = store.data.call.bind(store.data);
+    store.data.call = async (model, method, args) => {
+        const result = await originalCall(model, method, args);
+        if (model === "sale.order.line" && method === "read_converted") {
+            result[0].qty_delivered = 2;
+        }
+        return result;
+    };
+    const saleOrderLatest = await store._getSaleOrder(10);
+    await store.settleSO(saleOrderLatest, saleOrderLatest.fiscal_position_id);
+    expect(nextOrder.lines[0].qty).toBe(3);
+    expect(nextOrder.lines[0].price_unit).toBe(11.5);
+});
+
+test("test_settle_changed_price_with_lots: settle keeps custom line prices, including lot-tracked products", async () => {
+    const store = await setupPosEnv();
+    store.addNewOrder();
+    const saleOrder = await store._getSaleOrder(8);
+    const product = store.models["product.product"].get(5);
+    product.tracking = "lot";
+    product.lst_price = 100;
+
+    await store.settleSO(saleOrder, saleOrder.fiscal_position_id);
+
+    expect(store.getOrder().priceIncl).toBe(180);
+    expect(store.getOrder().lines.some((line) => line.price_unit === 100)).toBe(false);
+});
+
+test("test_settle_groupable_lot_total_amount: groupable lot-tracked line keeps expected total", async () => {
+    const store = await setupPosEnv();
+    store.addNewOrder();
+    const saleOrder = await store._getSaleOrder(9);
+    const product = store.models["product.product"].get(5);
+    product.tracking = "lot";
+    product.uom_id.is_pos_groupable = true;
+    store.dialog.add = (component, props) => {
+        props?.confirm();
+    };
+
+    await store.settleSO(saleOrder, saleOrder.fiscal_position_id);
+
+    expect(store.getOrder().priceIncl).toBe(12);
 });
