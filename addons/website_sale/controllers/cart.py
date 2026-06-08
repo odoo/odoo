@@ -28,8 +28,7 @@ class Cart(PaymentPortal):
         :return: The rendered cart page.
         :rtype: str
         """
-        website = self.env["website"].get_current_website()
-        if not website.has_ecommerce_access():
+        if not self.env.website.has_ecommerce_access():
             return request.redirect("/web/login")
 
         order_sudo = request.cart
@@ -71,7 +70,7 @@ class Cart(PaymentPortal):
             values["suggested_products"] = order_sudo._cart_accessories()
             values.update(self._get_express_shop_payment_values(order_sudo))
 
-        values.update(website._get_checkout_step_values("/shop/cart"))
+        values.update(self.env.website._get_checkout_step_values("/shop/cart"))
         values.update(self._cart_values(**post))
         values.update(self._prepare_order_history())
         return request.render("website_sale.cart", values)
@@ -120,8 +119,7 @@ class Cart(PaymentPortal):
         :return: The values
         :rtype: dict
         """
-        website = self.env["website"].get_current_website()
-        order_sudo = request.cart or website._create_cart()
+        order_sudo = request.cart or self.env.website._create_cart()
         # Do not allow float values in ecommerce by default
         quantity = (quantity and int(quantity)) or 1
 
@@ -250,32 +248,30 @@ class Cart(PaymentPortal):
     def quick_add(self, product_template_id, product_id, quantity=1.0, **kwargs):
         values = self.add_to_cart(product_template_id, product_id, quantity=quantity, **kwargs)
 
-        website = self.env["website"].get_current_website()
         order_sudo = request.cart
         values.update(self._get_updated_cart_page_values(order_sudo))
         # If the cart was empty, no cart summary was rendered on the page. However, we just
         # added a product, so render it now.
-        values["website_sale.shorter_cart_summary"] = website._render_template(
+        values["website_sale.shorter_cart_summary"] = self.env.website._render_template(
             "website_sale.shorter_cart_summary",
             {
                 "website_sale_order": order_sudo,
                 "show_shorter_cart_summary": True,
                 **self._get_express_shop_payment_values(order_sudo),
-                **website._get_checkout_step_values("/shop/cart"),
+                **self.env.website._get_checkout_step_values("/shop/cart"),
             },
         )
         # Products already in the cart should not appear in quick reorder suggestions.
         # We just added one, so refresh the quick reorder view.
-        values["website_sale.quick_reorder_history"] = website._render_template(
+        values["website_sale.quick_reorder_history"] = self.env.website._render_template(
             "website_sale.quick_reorder_history",
             {"website_sale_order": order_sudo, **self._prepare_order_history()},
         )
         return values
 
     def _get_express_shop_payment_values(self, order, **_kwargs):
-        website = self.env["website"].get_current_website()
         payment_form_values = CustomerPortal._get_payment_values(
-            self, order, website_id=website.id, is_express_checkout=True
+            self, order, website_id=self.env.website.id, is_express_checkout=True
         )
         payment_form_values.update({
             "payment_access_token": payment_form_values.pop("access_token"),  # Rename the key.
@@ -283,7 +279,7 @@ class Cart(PaymentPortal):
             "minor_amount": payment_utils.to_minor_currency_units(
                 order._get_amount_total_excluding_delivery(), order.currency_id
             ),
-            "merchant_name": website.name,
+            "merchant_name": self.env.website.name,
             "transaction_route": f"/shop/payment/transaction/{order.id}",
             "express_checkout_route": WebsiteSale._express_checkout_route,
             "landing_route": "/shop/payment/validate",
@@ -296,7 +292,7 @@ class Cart(PaymentPortal):
             ),
             "shipping_address_update_route": WebsiteSale._express_checkout_delivery_route,
         })
-        if website.is_public_user():
+        if self.env.website.is_public_user():
             payment_form_values["partner_id"] = -1
         return payment_form_values
 
@@ -330,12 +326,11 @@ class Cart(PaymentPortal):
                 :1
             ].id
 
-        website = self.env["website"].get_current_website()
         values = order_sudo._cart_update_line_quantity(line_id, quantity, **kwargs)
         values.update(self._get_updated_cart_page_values(order_sudo))
         # Products already in the cart should not appear in quick reorder suggestions.
         # Since we might have cleared the line (quantity == 0), we need to refresh the view.
-        values["website_sale.quick_reorder_history"] = website._render_template(
+        values["website_sale.quick_reorder_history"] = self.env.website._render_template(
             "website_sale.quick_reorder_history",
             {"website_sale_order": order_sudo, **self._prepare_order_history()},
         )
@@ -396,8 +391,6 @@ class Cart(PaymentPortal):
             """Check if two combo lines have the same linked product combination."""
             return line1_.linked_line_ids.product_id.ids == line2_.linked_line_ids.product_id.ids
 
-        website = request.env["website"].get_current_website()
-
         # Get the last 10 confirmed orders from the current website user.
         previous_orders_lines_sudo = (
             self
@@ -407,7 +400,7 @@ class Cart(PaymentPortal):
                 [
                     ("partner_id", "=", self.env.user.partner_id.id),
                     ("state", "=", "sale"),
-                    ("website_id", "=", website.id),
+                    ("website_id", "=", self.env.website.id),
                 ],
                 order="date_order desc",
                 limit=10,
@@ -427,8 +420,8 @@ class Cart(PaymentPortal):
                 line_sudo.linked_line_id.product_type == "combo"
                 or not line_sudo._is_sellable()
                 or (
-                    website.prevent_sale
-                    and website._prevent_product_sale(
+                    self.env.website.prevent_sale
+                    and self.env.website._prevent_product_sale(
                         line_sudo.product_id,
                         line_sudo.product_id._get_combination_info_variant()["price"] == 0,
                     )

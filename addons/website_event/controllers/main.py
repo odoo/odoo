@@ -68,8 +68,6 @@ class WebsiteEventController(http.Controller):
         if searches['date'] == 'upcoming':
             searches['date'] = 'scheduled'
 
-        website = request.env['website'].get_current_website()
-
         step = 12  # Number of events per page
 
         options = self._get_events_search_options(slug_tags, **searches)
@@ -78,16 +76,16 @@ class WebsiteEventController(http.Controller):
             order = 'date_begin desc'
         order = 'is_published desc, ' + order + ', id desc'
         search = searches.get('search')
-        event_count, details, fuzzy_search_term = website._search_with_fuzzy("events", search,
+        event_count, details, fuzzy_search_term = self.env.website._search_with_fuzzy("events", search,
             offset=0, limit=page * step, order=order, options=options)
         event_details = details[0]
         events = event_details.get('results', Event)
         events = events[(page - 1) * step:page * step]
 
         default_country = None
-        event_location = website.is_view_active('website_event.event_location')
+        event_location = self.env.website.is_view_active('website_event.event_location')
         include_online_events = (
-            event_location and website.is_view_active('website_event.event_location_include_online')
+            event_location and self.env.website.is_view_active('website_event.event_location_include_online')
         )
         if event_location:
             country = request.env["res.country"]
@@ -149,7 +147,7 @@ class WebsiteEventController(http.Controller):
         if searches["country"] != 'all' and searches["country"] != 'online':
             current_country = request.env['res.country'].browse(int(searches['country']))
 
-        pager = website.pager(
+        pager = self.env.website.pager(
             url=f"/event/tags/{slug_tags}" if slug_tags else "/event",
             url_args=searches,
             total=event_count,
@@ -175,9 +173,7 @@ class WebsiteEventController(http.Controller):
             'current_type': current_type,
             'event_ids': events,  # event_ids used in website_event_track so we keep name as it is
             'dates': dates,
-            'categories': request.env['event.tag.category'].search([
-                ('is_published', '=', True), '|', ('website_id', '=', website.id), ('website_id', '=', False)
-            ]),
+            'categories': request.env['event.tag.category'].search(Domain('is_published', '=', True) & self.env.website.website_domain()),
             'countries': countries,
             'include_online_events': include_online_events,
             'pager': pager,
@@ -187,7 +183,7 @@ class WebsiteEventController(http.Controller):
             'slugify_tags': self._slugify_tags,
             'search_count': event_count,
             'original_search': fuzzy_search_term and search,
-            'website': website
+            'website': self.env.website,
         }
 
         return request.render("website_event.index", values)
@@ -217,8 +213,7 @@ class WebsiteEventController(http.Controller):
         try:
             # Every event page view should have its own SEO.
             page = view.key if view else page
-            website = request.env['website'].get_current_website()
-            values['seo_object'] = self.env['ir.ui.view'].with_context(website_id=website.id)._get_template_view(page).sudo()
+            values['seo_object'] = self.env['ir.ui.view'].with_context(website_id=self.env.website.id)._get_template_view(page).sudo()
             values['main_object'] = event
         except ValueError:
             # page not found
@@ -319,8 +314,7 @@ class WebsiteEventController(http.Controller):
             (slot, ticket)
             for ticket in event.event_ticket_ids
         ]
-        website = request.env['website'].get_current_website()
-        return website._render_template("website_event.modal_ticket_registration", {
+        return self.env.website._render_template("website_event.modal_ticket_registration", {
             'event': event,
             'event_slot': slot,
             'seats_available_slot_tickets': {

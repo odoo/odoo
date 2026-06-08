@@ -91,9 +91,6 @@ class QueryURL:
 class Website(Home):
 
     def sitemap_index(env, rule, qs):
-        Website = env['website'].get_current_website()
-        homepage_url = Website.homepage_url
-
         def match(loc):
             return not qs or qs.lower() in loc.lower()
 
@@ -105,8 +102,8 @@ class Website(Home):
             yield {'loc': '/'}
             return
 
-        top_menu = Website.menu_id
-        reachable_menus = top_menu.child_id.filtered(Website.is_reachable)
+        top_menu = env.website.menu_id
+        reachable_menus = top_menu.child_id.filtered(env.website.is_reachable)
         if reachable_menus:
             loc = reachable_menus[0].url
             if match(loc):
@@ -129,8 +126,7 @@ class Website(Home):
         Most DBs will just have a website.page with '/' as URL and keep the
         homepage_url setting empty.
         """
-        website = request.env['website'].get_current_website()
-        homepage_url = website.homepage_url
+        homepage_url = self.env.website.homepage_url
         if homepage_url and homepage_url != '/':
             request.reroute(homepage_url)
 
@@ -148,8 +144,8 @@ class Website(Home):
                 pass
 
         # prefetch all menus (it will prefetch website.page too)
-        top_menu = website.menu_id
-        reachable_menus = top_menu.child_id.filtered(website.is_reachable)
+        top_menu = self.env.website.menu_id
+        reachable_menus = top_menu.child_id.filtered(self.env.website.is_reachable)
         if reachable_menus:
             return request.redirect(reachable_menus[0].url)
 
@@ -202,8 +198,7 @@ class Website(Home):
             path += '?' + werkzeug.urls.url_encode(kw)
 
         if request.env.user._is_internal():
-            website = request.env['website'].get_current_website()
-            path = website.get_client_action_url(path, mode_edit, mode_debug)
+            path = self.env.website.get_client_action_url(path, mode_edit, mode_debug)
 
         return request.redirect(path)
 
@@ -261,8 +256,7 @@ class Website(Home):
 
     @http.route('/website/get_languages', type='jsonrpc', auth="user", website=True, readonly=True)
     def website_languages(self, **kwargs):
-        website = request.env['website'].get_current_website()
-        return [(py_to_js_locale(lg.code), lg.url_code, lg.name) for lg in website.language_ids]
+        return [(py_to_js_locale(lg.code), lg.url_code, lg.name) for lg in self.env.website.language_ids]
 
     @http.route('/website/get_translated_elements', type='jsonrpc', auth="user", readonly=True)
     def translated_elements(self, **kwargs):
@@ -272,8 +266,7 @@ class Website(Home):
     def change_lang(self, lang, r='/', **kwargs):
         """ :param lang: supposed to be value of `url_code` field """
         if lang == 'default':
-            website = request.env['website'].get_current_website()
-            lang = website.default_lang_id.url_code
+            lang = self.env.website.default_lang_id.url_code
             r = '/%s%s' % (lang, r or '/')
         lang_code = request.env['res.lang']._get_data(url_code=lang).code or lang
         # replace context with correct lang, to avoid that the url_for of request.redirect remove the
@@ -300,14 +293,13 @@ class Website(Home):
 
     @http.route('/sitemap.xml', type='http', auth="public", website=True, multilang=False, sitemap=False)
     def sitemap_xml_index(self, **kwargs):
-        website = request.env['website'].get_current_website()
         Attachment = request.env['ir.attachment'].sudo()
         mimetype = 'application/xml;charset=utf-8'
         content = None
         url_root = request.httprequest.url_root
         # For a same website, each domain has its own sitemap (cache)
         hashed_url_root = md5(url_root.encode()).hexdigest()[:8]
-        sitemap_base_url = '/sitemap-%d-%s' % (website.id, hashed_url_root)
+        sitemap_base_url = '/sitemap-%d-%s' % (self.env.website.id, hashed_url_root)
 
         def create_sitemap(url, content):
             return Attachment.create({
@@ -334,15 +326,15 @@ class Website(Home):
             sitemaps.unlink()
 
             pages = 0
-            locs = website.with_user(website.user_id)._enumerate_pages(ignore_custom_homepage=True)
+            locs = self.env.website.with_user(self.env.website.user_id)._enumerate_pages(ignore_custom_homepage=True)
             while True:
                 values = {
                     'locs': islice(locs, 0, LOC_PER_SITEMAP),
                     'url_root': url_root[:-1],
                 }
-                urls = website._render_template('website.sitemap_locs', values)
+                urls = self.env.website._render_template('website.sitemap_locs', values)
                 if urls.strip():
-                    content = website._render_template('website.sitemap_xml', {'content': urls})
+                    content = self.env.website._render_template('website.sitemap_xml', {'content': urls})
                     pages += 1
                     last_sitemap = create_sitemap('%s-%d.xml' % (sitemap_base_url, pages), content)
                 else:
@@ -358,10 +350,10 @@ class Website(Home):
                 })
             else:
                 # TODO: in master/saas-15, move current_website_id in template directly
-                pages_with_website = ["%d-%s-%d" % (website.id, hashed_url_root, p) for p in range(1, pages + 1)]
+                pages_with_website = ["%d-%s-%d" % (self.env.website.id, hashed_url_root, p) for p in range(1, pages + 1)]
 
                 # Sitemaps must be split in several smaller files with a sitemap index
-                content = website._render_template('website.sitemap_index_xml', {
+                content = self.env.website._render_template('website.sitemap_index_xml', {
                     'pages': pages_with_website,
                     # URLs inside the sitemap index have to be on the same
                     # domain as the sitemap index itself
@@ -375,8 +367,7 @@ class Website(Home):
     # opening an order pdf
     @http.route(['/favicon.ico'], type='http', auth='public', website=True, multilang=False, sitemap=False, readonly=True)
     def favicon(self, **kw):
-        website = request.env['website'].get_current_website()
-        response = request.redirect(website.image_url(website, 'favicon'), code=301)
+        response = request.redirect(self.env.website.image_url(self.env.website, 'favicon'), code=301)
         response.headers['Cache-Control'] = f'public, max-age={STATIC_CACHE_LONG}'
         return response
 
@@ -400,11 +391,10 @@ class Website(Home):
     def website_configurator(self, step=1, **kwargs):
         if not request.env.user.has_group('website.group_website_designer'):
             raise werkzeug.exceptions.NotFound()
-        website = request.env['website'].get_current_website()
-        if website.configurator_done:
+        if self.env.website.configurator_done:
             return request.redirect('/')
-        if request.env.lang != website.default_lang_id.code:
-            return request.redirect('/%s%s' % (website.default_lang_id.url_code, request.httprequest.path))
+        if request.env.lang != self.env.website.default_lang_id.code:
+            return request.redirect('/%s%s' % (self.env.website.default_lang_id.url_code, request.httprequest.path))
         action_url = f"/odoo/action-website.website_configurator?menu_id={request.env.ref('website.menu_website_configuration').id}"
         if step > 1:
             action_url += '&step=' + str(step)
@@ -412,17 +402,14 @@ class Website(Home):
 
     @http.route('/website/cookie-policy', type='http', auth="public", website=True, sitemap=False, readonly=True)
     def cookie_policy_redirect(self, **kwargs):
-        website = request.env["website"].get_current_website()
-        url = website.cookie_policy_id.sudo().url or '/cookie-policy'
+        url = self.env.website.cookie_policy_id.sudo().url or '/cookie-policy'
         return request.redirect(url)
 
     @http.route('/website/get_suggested_links', type='jsonrpc', auth="user", website=True, readonly=True)
     def get_suggested_link(self, needle, limit=10):
-        current_website = request.env['website'].get_current_website()
-
         matching_pages = []
         limit = None if limit == "no_limit" else int(limit)
-        for page in current_website.search_pages(needle, limit):
+        for page in self.env.website.search_pages(needle, limit):
             matching_pages.append({
                 'value': page['loc'],
                 'label': 'name' in page and '%s (%s)' % (page['loc'], page['name']) or page['loc'],
@@ -430,7 +417,7 @@ class Website(Home):
         matching_urls = {match['value'] for match in matching_pages}
 
         matching_last_modified = []
-        last_modified_pages = current_website._get_website_pages(order='write_date desc', limit=5)
+        last_modified_pages = self.env.website._get_website_pages(order='write_date desc', limit=5)
         for url, name in last_modified_pages.mapped(lambda p: (p.url, p.name)):
             if needle.lower() in name.lower() or needle.lower() in url.lower() and url not in matching_urls:
                 matching_last_modified.append({
@@ -439,7 +426,7 @@ class Website(Home):
                 })
 
         suggested_controllers = []
-        for name, url, mod in current_website.get_suggested_controllers():
+        for name, url, mod in self.env.website.get_suggested_controllers():
             if needle.lower() in name.lower() or needle.lower() in url.lower():
                 module_sudo = mod and request.env.ref('base.module_%s' % mod, False).sudo()
                 icon = mod and '%s' % (module_sudo and module_sudo.icon or mod) or ''
@@ -459,8 +446,7 @@ class Website(Home):
 
     @http.route('/website/check_existing_link', type='jsonrpc', auth="user", website=True, readonly=True)
     def check_existing_link(self, link):
-        website = request.env['website'].get_current_website()
-        return website.check_existing_page(link)
+        return self.env.website.check_existing_page(link)
 
     @http.route('/website/save_session_layout_mode', type='jsonrpc', auth='public', website=True, readonly=True)
     def save_session_layout_mode(self, layout_mode, view_id):
@@ -471,9 +457,8 @@ class Website(Home):
     def get_dynamic_filter(self, filter_id, **kwargs):
         dynamic_filter_sudo = request.env['website.snippet.filter'].sudo()
         if filter_id:
-            website = request.env['website'].get_current_website()
             dynamic_filter_sudo = dynamic_filter_sudo.search(
-                Domain('id', '=', filter_id) & website.website_domain()
+                Domain('id', '=', filter_id) & self.env.website.website_domain()
             )
         single_record_filter = kwargs.get('limit') == 1 and kwargs.get('res_model') and kwargs.get('res_id')
         dynamic_filter_found = single_record_filter or dynamic_filter_sudo
@@ -483,8 +468,7 @@ class Website(Home):
     def get_dynamic_snippet_filters(self, model_name=None, search_domain=None):
         if not request.env.user.has_group('website.group_website_restricted_editor'):
             raise werkzeug.exceptions.NotFound()
-        website = request.env['website'].get_current_website()
-        domain = website.website_domain()
+        domain = self.env.website.website_domain()
         if search_domain:
             search_domain = Domain(search_domain)
             assert all(condition.field_expr in request.env['website.snippet.filter']._fields for condition in search_domain.iter_conditions())
@@ -522,7 +506,7 @@ class Website(Home):
 
     @http.route('/website/get_current_currency', type='jsonrpc', auth="public", website=True, readonly=True)
     def get_current_currency(self, **kwargs):
-        currency_id = request.env['website'].get_current_website().company_id.currency_id
+        currency_id = self.env.website.company_id.currency_id
         return {
             'id': currency_id.id,
             'symbol': currency_id.symbol,
@@ -658,8 +642,7 @@ class Website(Home):
         """
         order = self._get_search_order(order)
         options = options or {}
-        website = self.env["website"].get_current_website()
-        results_count, search_results, fuzzy_term = website._search_with_fuzzy(search_type, term, offset, limit, order, options)
+        results_count, search_results, fuzzy_term = self.env.website._search_with_fuzzy(search_type, term, offset, limit, order, options)
         # Sort results based on sequence for ordered results.
         search_results.sort(key=lambda d: d.get('sequence', float('inf')))
         if not results_count:
@@ -702,7 +685,7 @@ class Website(Home):
                     model["results"] = results_data[:allocated_count]
 
         term = fuzzy_term or term
-        search_results = website._search_render_results(search_results, limit)
+        search_results = self.env.website._search_render_results(search_results, limit)
 
         mappings = []
         result = {}
@@ -777,8 +760,7 @@ class Website(Home):
     def pages_list(self, page=1, search='', **kw):
         options = self._get_page_search_options(**kw)
         step = 50
-        website = request.env['website'].get_current_website()
-        pages_count, details, fuzzy_search_term = website._search_with_fuzzy(
+        pages_count, details, fuzzy_search_term = self.env.website._search_with_fuzzy(
             "pages", search, offset=0, limit=page * step, order='name asc, website_id desc, id',
             options=options)
         pages = details[0].get('results', request.env['website.page'])
@@ -853,7 +835,7 @@ class Website(Home):
             website = request.env['website'].browse(int(website_id))
             website._force()
         else:
-            website = request.env['website'].get_current_website()
+            website = self.env.website
 
         page = website.new_page(
             path,
@@ -887,9 +869,8 @@ class Website(Home):
     @http.route('/website/get_new_page_templates', type='jsonrpc', auth='user', website=True, readonly=True)
     def get_new_page_templates(self, **kw):
         View = request.env['ir.ui.view']
-        website = request.env['website'].get_current_website()
         result = []
-        groups_html = website._render_template("website.new_page_template_groups")
+        groups_html = self.env.website._render_template("website.new_page_template_groups")
         groups_el = etree.fromstring(f'<data>{groups_html}</data>')
         for group_el in groups_el.getchildren():
             group = {
@@ -898,8 +879,8 @@ class Website(Home):
                 'templates': [],
             }
             if group_el.attrib['id'] == 'custom':
-                for page in website._get_website_pages(domain=[('is_new_page_template', '=', True)]):
-                    html_tree = html.fromstring(website.with_context(inherit_branding=False)._render_template(
+                for page in self.env.website._get_website_pages(domain=[('is_new_page_template', '=', True)]):
+                    html_tree = html.fromstring(self.env.website.with_context(inherit_branding=False)._render_template(
                         page.key,
                     ))
                     wrap_el = html_tree.xpath('//div[@id="wrap"]')[0]
@@ -916,10 +897,10 @@ class Website(Home):
                 '|',
                 ('key', 'like', escape_like_value(f'new_page_template_sections_{group["id"]}_')),
                 ('key', 'like', f'configurator_pages_{group["id"]}'),
-                website.website_domain(),
+                self.env.website.website_domain(),
             ], order='key'):
                 try:
-                    html_tree = html.fromstring(website.with_context(inherit_branding=False)._render_template(
+                    html_tree = html.fromstring(self.env.website.with_context(inherit_branding=False)._render_template(
                         template.key,
                     ))
                     for section_el in html_tree.xpath("//section[@data-snippet]"):
@@ -951,12 +932,11 @@ class Website(Home):
 
     @http.route('/website/save_xml', type='jsonrpc', auth='user', website=True)
     def save_xml(self, view_id, arch):
-        website = request.env['website'].get_current_website()
         disable_delay_translations = self.env['ir.config_parameter'].sudo().get_bool(
             'website.disable_delay_translations'
         )
         request.env['ir.ui.view'].browse(view_id).with_context(
-            lang=website.default_lang_id.code,
+            lang=self.env.website.default_lang_id.code,
             delay_translations=not disable_delay_translations,
         ).arch = arch
 
@@ -1152,20 +1132,18 @@ class Website(Home):
             except AccessError:
                 raise werkzeug.exceptions.Forbidden()
 
-        website = request.env['website'].get_current_website()
         record = request.env[res_model].browse(res_id)
         res = {
             'lang': request.lang,
-            'multi_lang': website.language_count > 1,
-            'default_lang_code': website.default_lang_id.code,
+            'multi_lang': self.env.website.language_count > 1,
+            'default_lang_code': self.env.website.default_lang_id.code,
             'can_edit_seo': True,
         }
         if res_model == 'website.page':
             res["website_is_published"] = record.website_published
 
-        website = request.env['website'].get_current_website()
         try:
-            website._check_user_can_modify(record)
+            self.env.website._check_user_can_modify(record)
         except AccessError:
             res['can_edit_seo'] = False
         if request.env.user.has_group('website.group_website_restricted_editor'):
@@ -1186,10 +1164,10 @@ class Website(Home):
             # before writing from another language, otherwise the translated
             # value may become the fallback/base value.
             res[f'default_{field_name}'] = _get_translation(
-                source_record, field_name, website.default_lang_id.code
+                source_record, field_name, self.env.website.default_lang_id.code
             )
 
-        res['has_social_default_image'] = website.has_social_default_image
+        res['has_social_default_image'] = self.env.website.has_social_default_image
 
         # SEO name handling (custom slugify)
         if res_model not in ('website.page', 'ir.ui.view') and 'seo_name' in record:
@@ -1210,8 +1188,7 @@ class Website(Home):
         for rec in records:
             try:
                 record = request.env[rec['res_model']].browse(rec['res_id'])
-                website = request.env['website'].get_current_website()
-                website._check_user_can_modify(record)
+                self.env.website._check_user_can_modify(record)
                 return True
             except AccessError as e:
                 if not first_error:
@@ -1221,27 +1198,25 @@ class Website(Home):
 
     @http.route(['/google<string(length=16):key>.html'], type='http', auth="public", website=True, sitemap=False, readonly=True)
     def google_console_search(self, key, **kwargs):
-        website = request.env['website'].get_current_website()
-        if not website.google_search_console:
+        if not self.env.website.google_search_console:
             logger.warning('Google Search Console not enable')
             raise werkzeug.exceptions.NotFound()
-        gsc = website.google_search_console
+        gsc = self.env.website.google_search_console
         trusted = gsc[gsc.startswith('google') and len('google'):gsc.endswith('.html') and -len('.html') or None]
 
         if key != trusted:
             if key.startswith(trusted):
-                website.sudo().google_search_console = "google%s.html" % key
+                self.env.website.sudo().google_search_console = "google%s.html" % key
             else:
                 logger.warning('Google Search Console %s not recognize' % key)
                 raise werkzeug.exceptions.NotFound()
 
-        return request.make_response("google-site-verification: %s" % website.google_search_console)
+        return request.make_response("google-site-verification: %s" % self.env.website.google_search_console)
 
     @http.route('/website/google_maps_api_key', type='jsonrpc', auth='public', website=True, readonly=True)
     def google_maps_api_key(self):
-        website = request.env['website'].get_current_website()
         return json.dumps({
-            'google_maps_api_key': website.google_maps_api_key or ''
+            'google_maps_api_key': self.env.website.google_maps_api_key or ''
         })
 
     # ------------------------------------------------------
@@ -1279,8 +1254,7 @@ class Website(Home):
     def _get_customize_data(self, keys, is_view_data):
         model = 'ir.ui.view' if is_view_data else 'ir.asset'
         Model = request.env[model].with_context(active_test=False)
-        website = request.env['website'].get_current_website()
-        domain = Domain("key", "in", keys) & website.website_domain()
+        domain = Domain("key", "in", keys) & self.env.website.website_domain()
         return Model.search(domain).filter_duplicate()
 
     @http.route(['/website/theme_customize_data_get'], type='jsonrpc', auth='user', website=True, readonly=True)

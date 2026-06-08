@@ -309,7 +309,7 @@ class Environment(Mapping[str, "BaseModel"]):
         :returns: current website (possibly empty) - sudoed
         :rtype: :class:`website record<~odoo.addons.base.models.website.Website>`
         """
-        return self(su=True)['website'].browse(self.context.get('website_id'))
+        return self['website'].browse(self.context.get('website_id'))
 
     @functools.cached_property
     def tz(self) -> tzinfo:

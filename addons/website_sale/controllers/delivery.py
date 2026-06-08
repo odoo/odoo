@@ -24,8 +24,7 @@ class Delivery(WebsiteSale):
             "order": order_sudo,  # Needed for accessing default values for pickup points.
         }
         values |= self._get_additional_delivery_context()
-        website = self.env["website"].get_current_website()
-        return website._render_template("website_sale.delivery_form", values)
+        return self.env.website._render_template("website_sale.delivery_form", values)
 
     def _get_additional_delivery_context(self):
         """Update values used for rendering the website_sale.delivery_form template."""
@@ -70,8 +69,7 @@ class Delivery(WebsiteSale):
         """
         Monetary = self.env["ir.qweb.field.monetary"]
         currency = order.currency_id
-        website = self.env["website"].get_current_website()
-        rendered_tax_lines = website._render_template(
+        rendered_tax_lines = self.env.website._render_template(
             "website_sale.order_tax_lines", {"website_sale_order": order}
         )
         return {
@@ -271,7 +269,6 @@ class Delivery(WebsiteSale):
                 lambda t: t.company_id == order.company_id
             )
             if tax_ids:
-                website = request.env["website"].get_current_website()
                 fpos = order.fiscal_position_id
                 tax_ids = fpos.map_tax(tax_ids)
                 taxes = tax_ids.compute_all(
@@ -283,7 +280,7 @@ class Delivery(WebsiteSale):
                 )
                 if (
                     not is_express_checkout_flow
-                    and website.show_line_subtotals_tax_selection == "tax_excluded"
+                    and request.env.website.show_line_subtotals_tax_selection == "tax_excluded"
                 ):
                     rate["price"] = taxes["total_excluded"]
                 else:

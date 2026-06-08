@@ -20,7 +20,7 @@ class WebsiteBackend(http.Controller):
             'dashboards': {}
         }
 
-        current_website = website_id and Website.browse(website_id) or Website.get_current_website()
+        current_website = website_id and Website.browse(website_id) or self.env.website
         multi_website = request.env.user.has_group('website.group_multi_website')
         websites = multi_website and request.env['website'].search([]) or current_website
         dashboard_data['websites'] = websites.read(['id', 'name'])

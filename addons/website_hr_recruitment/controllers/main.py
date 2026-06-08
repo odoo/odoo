@@ -105,7 +105,6 @@ class WebsiteHrRecruitment(WebsiteForm):
             return int(query_arg) if query_arg and query_arg.isdigit() else False
 
         env = request.env(context=dict(request.env.context, show_address=True, no_tag_br=True))
-        website = env['website'].get_current_website()
         department = env['hr.department'].browse(to_int(department_id)).exists().sudo()
         country = env['res.country'].browse(to_int(country_id)).exists()
         office = env['res.partner'].browse(to_int(office_id)).exists()
@@ -116,14 +115,14 @@ class WebsiteHrRecruitment(WebsiteForm):
             and (code := request.geoip.country_code) \
                 and (country := env['res.country'].search([('code', '=', code)], limit=1)):
             country_count = env['hr.job'].sudo().search_count(
-                website.website_domain()
+                self.env.website.website_domain()
                 & Domain('address_id.country_id', '=', country.id)
                 & Domain('is_published', '=', True)
             )
             if not country_count:
                 country = False
 
-        _total_not_used, details, fuzzy_search_term = website._search_with_fuzzy(
+        _total_not_used, details, fuzzy_search_term = self.env.website._search_with_fuzzy(
             "jobs", search,
             offset=0,
             limit=self._jobs_per_page * 50,
@@ -136,7 +135,7 @@ class WebsiteHrRecruitment(WebsiteForm):
         job_filter_values = get_filter_snippets_display_values(searched_jobs)
         found_jobs = searched_jobs.filtered(job_filtering_condition)
         total = len(found_jobs)
-        pager = website.pager(
+        pager = self.env.website.pager(
             url=request.httprequest.path.partition('/page/')[0],
             url_args=request.httprequest.args,
             total=total,
