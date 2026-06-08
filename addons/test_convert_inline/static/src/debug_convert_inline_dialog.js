@@ -1,5 +1,5 @@
 import { DIMENSIONS, useEmailHtmlConverter } from "@mail/convert_inline/hooks";
-import { loadIframe } from "@mail/convert_inline/iframe_utils";
+import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils";
 import { useRef, useState } from "@web/owl2/utils";
 import { Component, onMounted } from "@odoo/owl";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
@@ -47,6 +47,7 @@ export class DebugConvertInlineDialog extends Component {
                     iframe.contentDocument.head.append(
                         renderToFragment("mail.EmailHtmlConverterHead")
                     );
+                    return loadIframeBundles(iframe, ["mass_mailing.assets_mail_clients"]);
                 }),
             ];
             Promise.all(promises).then(async () => {

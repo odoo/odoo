@@ -14,7 +14,7 @@ import {
 import { parseCssValue } from "../css_parsers";
 import { isAllowedContent } from "@html_editor/utils/dom_info";
 
-const { DESKTOP, MOBILE, DESKTOP_MOBILE_BREAKPOINT } = DIMENSIONS;
+const { DESKTOP, MOBILE } = DIMENSIONS;
 // Prevent the last inline-block element from wrapping to the next line due
 // to window zoom px rounding in some cases.
 const ZOOM_WIDTH_CORRECTION = 0.1;
@@ -39,7 +39,6 @@ const VERTICAL_ALIGN = {
 export class HybridFluidStrategyPlugin extends Plugin {
     static id = "hybridFluidStrategy";
     static dependencies = [
-        "dynamicStyleSheet",
         "measurementSnapshot",
         "math",
         "responsiveBlock",
@@ -50,25 +49,6 @@ export class HybridFluidStrategyPlugin extends Plugin {
         element_layout_analysis_processors: this.analyzeElementLayout.bind(this),
         synthetic_email_node_processors: this.fillHybridFluidContainer.bind(this),
     };
-
-    setup() {
-        // inline-block strategy
-        this.addToStyleSheet(
-            ".o-ci-hybrid-fluid-cell, .o-ci-hybrid-fluid-cell-with-offset",
-            { "max-width": { value: "100%", priority: "important" } },
-            DESKTOP_MOBILE_BREAKPOINT.width
-        );
-        // table strategy
-        this.addToStyleSheet(
-            ".o-ci-hybrid-fluid-table, .o-ci-hybrid-fluid-table > tbody, .o-ci-hybrid-fluid-table-row, .o-ci-hybrid-fluid-table-cell",
-            {
-                display: { value: "block", priority: "important" },
-                width: { value: "100%", priority: "important" },
-                "max-width": { value: "100%", priority: "important" },
-            },
-            DESKTOP_MOBILE_BREAKPOINT.width
-        );
-    }
 
     extractHybridFluidInfo(emailNode) {
         const referenceNode = emailNode.lastReferenceNode;

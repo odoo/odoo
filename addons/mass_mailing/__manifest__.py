@@ -126,7 +126,7 @@
             ('include', 'mass_mailing.assets_mail_themes'),
             'mass_mailing/static/src/iframe_assets/**/*',
         ],
-        'mass_mailing.assets_email_html_conversion': [
+        'mass_mailing.assets_mail_clients': [
             # style sheet added in _prepare_mail_values in the
             # email sent, they are added here to create as many inline style
             # rules as possible during html conversion.
