@@ -68,8 +68,7 @@ class PaymentTransaction(models.Model):
         _logger.info(
             "Received response from '/v1/intention/' request:\n%s", pprint.pformat(payment_data)
         )
-        # The provider reference is set to allow fetching the payment status after redirection.
-        self.provider_reference = payment_data.get('id')
+        self.provider_reference = payment_data["intention_order_id"]
         paymob_client_secret = payment_data.get('client_secret')
 
         paymob_url = self.provider_id._paymob_get_api_url()

@@ -32,6 +32,8 @@ class PaymobController(http.Controller):
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'paymob', data
         )
+        if data["order"] != tx_sudo.provider_reference:
+            raise Forbidden()
         self._verify_notification_signature(data, tx_sudo)
         tx_sudo._handle_notification_data('paymob', data)
         return request.redirect('/payment/status')
@@ -53,7 +55,9 @@ class PaymobController(http.Controller):
             tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
                 'paymob', normalized_data
             )
-            self._verify_notification_signature(data, tx_sudo)
+            if normalized_data["order"] != tx_sudo.provider_reference:
+                raise Forbidden()
+            self._verify_notification_signature(normalized_data, tx_sudo)
             tx_sudo._handle_notification_data('paymob', normalized_data)
         except ValidationError:  # Acknowledge the notification to avoid getting spammed.
             _logger.exception("Unable to handle the notification data.")
@@ -91,7 +95,8 @@ class PaymobController(http.Controller):
         })
         return response
 
-    def _verify_notification_signature(self, notification_data, tx_sudo):
+    @staticmethod
+    def _verify_notification_signature(notification_data, tx_sudo):
         """ Check that the received signature matches the expected one.
 
         :param dict notification_data: The notification payload containing the received signature.
@@ -106,7 +111,7 @@ class PaymobController(http.Controller):
 
         # Compare the received signature with the expected signature computed from the payload.
         hmac_key = tx_sudo.provider_id.paymob_hmac_key
-        expected_signature = self._compute_signature(notification_data, hmac_key)
+        expected_signature = PaymobController._compute_signature(notification_data, hmac_key)
         if not hmac.compare_digest(received_signature, expected_signature):
             _logger.warning("Received notification with invalid signature.")
             raise Forbidden()
