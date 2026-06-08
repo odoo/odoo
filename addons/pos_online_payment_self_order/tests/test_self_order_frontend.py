@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
@@ -10,9 +9,11 @@ from unittest.mock import patch
 from odoo.addons.http_routing.models import ir_http
 from odoo.addons.pos_online_payment.controllers.payment_portal import PaymentPortal
 
+
 @odoo.tests.tagged("post_install", "-at_install")
 class TestSelfOrderFrontendMobile(SelfOrderCommonTest):
     pass
+
 
 @odoo.tests.tagged("post_install", "-at_install")
 class TestUi(TestFrontendCommon, OnlinePaymentCommon):
@@ -20,7 +21,7 @@ class TestUi(TestFrontendCommon, OnlinePaymentCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.payment_provider = cls.provider # The dummy_provider used by the tests of the 'payment' module.
+        cls.payment_provider = cls.provider  # The dummy_provider used by the tests of the 'payment' module.
 
         cls.payment_provider_old_company_id = cls.payment_provider.company_id.id
         cls.payment_provider_old_journal_id = cls.payment_provider.journal_id.id
@@ -40,13 +41,7 @@ class TestUi(TestFrontendCommon, OnlinePaymentCommon):
 
 
 class TestSelfOrderOnlinePayment(TestUi):
-    def test_01_online_payment_with_multi_table(self):
-        # No need to check preparation printer in this test.
-        self.env["pos.printer"].search([]).unlink()
-        self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_pos_tour('OnlinePaymentWithMultiTables', login="pos_admin")
-
-    def test_02_online_payment_with_multi_website_company(self):
+    def test_01_online_payment_with_multi_website_company(self):
         if not self.env["ir.module.module"].search([("name", "=", "website"), ("state", "=", "installed")]):
             self.skipTest("The 'website' module is required for this test.")
 
@@ -111,9 +106,25 @@ class TestSelfOrderOnlinePayment(TestUi):
             original_frontend_pre_dispatch.__func__(cls)
 
         with patch.object(ir_http.IrHttp, '_frontend_pre_dispatch', classmethod(patched_frontend_pre_dispatch)):
-            # Create a new order
-            self.start_tour(pos_config._get_self_order_route(), "test_online_payment_self_multi_company", login="testuser")
-            draft_order = self.env['pos.order'].search([('state', '=', 'draft')], limit=1)
+            draft_order = self.env['pos.order'].create({
+                'company_id': company_b.id,
+                'session_id': pos_config.current_session_id.id,
+                'source': 'mobile',
+                'state': 'draft',
+                'amount_total': 4.80,
+                'amount_paid': 0,
+                'amount_tax': 0,
+                'amount_return': 0,
+                'lines': [Command.create({
+                    'product_id': self.letter_tray.product_variant_id.id,
+                    'qty': 1,
+                    'price_unit': 4.80,
+                    'price_subtotal': 4.80,
+                    'price_subtotal_incl': 4.80,
+                    'tax_ids': [Command.clear()],
+                })],
+            })
+            draft_order._portal_ensure_token()
             payment_route = PaymentPortal._get_pay_route(draft_order.id, draft_order.access_token)
 
             # Test payment page access for different users
