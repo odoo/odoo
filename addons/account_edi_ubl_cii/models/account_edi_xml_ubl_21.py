@@ -115,6 +115,15 @@ class AccountEdiXmlUBL21(models.AbstractModel):
             }
 
     def _add_document_line_allowance_charge_nodes(self, line_node, vals):
-        line_node['cac:AllowanceCharge'] = [self._get_line_discount_allowance_charge_node(vals)]
-        if vals['fixed_taxes_as_allowance_charges']:
-            line_node['cac:AllowanceCharge'].extend(self._get_line_fixed_tax_allowance_charge_nodes(vals))
+        # EXTENDS 'account.edi.xml.ubl_20' to format tax blocks properly
+        super()._add_document_line_allowance_charge_nodes(line_node, vals)
+
+        # OIOUBL Rule [F-LIB226]: Every line-level allowance must include one TaxCategory.
+        record = vals.get('base_line', {}).get('record')
+        if line_node.get('cac:AllowanceCharge') and isinstance(record, models.BaseModel):
+            if isinstance(record, self.env['account.move.line'].__class__) and (tax := record.tax_ids[:1]):
+                grouping_key = vals['tax_grouping_function'](vals['base_line'], {'tax': tax})
+                tax_category_vals = [self._get_tax_category_node({**vals, 'grouping_key': grouping_key})]
+
+                for allowance_node in line_node['cac:AllowanceCharge']:
+                    allowance_node['cac:TaxCategory'] = tax_category_vals

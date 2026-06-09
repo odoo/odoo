@@ -236,7 +236,14 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
         invoice.action_post()
         self._send_patched(invoice)
         self.assertTrue(invoice.ubl_cii_xml_id)
-        self._assert_invoice_attachment(invoice.ubl_cii_xml_id, xpaths=None, expected_file_path="from_odoo/oioubl_out_invoice_discount.xml")
+        self._assert_invoice_attachment(
+            invoice.ubl_cii_xml_id,
+            xpaths=[
+                '//cac:InvoiceLine/cac:AllowanceCharge/cac:TaxCategory',
+                '//cac:InvoiceLine/cac:AllowanceCharge/cac:TaxCategory/cbc:ID[text()="StandardRated"]',
+            ],
+            expected_file_path="from_odoo/oioubl_out_invoice_discount.xml"
+        )
         new_invoice = invoice.journal_id._create_document_from_attachment(invoice.ubl_cii_xml_id.ids)
         self.assertRecordValues(new_invoice.invoice_line_ids, [line_vals])
 
