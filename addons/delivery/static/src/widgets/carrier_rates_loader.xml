@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates xml:space="preserve">
+    <t t-name="delivery.carrier_rates_loader" owl="1">
+        <div class="w-100">
+            <span t-if="this.isLoadingPrices()" class="mb-2">
+                Loading Rates
+                <i class="oi oi-spin" data-icon="progress_activity"/>
+            </span>
+            <a t-if="!this.isLoadingPrices() and this.reloadedPrices() and this.carrierListOpen()"
+               class="btn mb-2 text-success w-auto"
+               role="button"
+               t-on-mousedown="this.onSeeRates">
+                See Rates
+                <i class="oi" data-icon="refresh"/>
+            </a>
+        </div>
+    </t>
+</templates>

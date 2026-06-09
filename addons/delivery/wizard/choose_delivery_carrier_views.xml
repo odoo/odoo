@@ -5,14 +5,33 @@
         <field name="model">choose.delivery.carrier</field>
         <field name="arch" type="xml">
             <form>
+                <field name="available_carrier_ids" invisible="1"/>
                 <group>
                     <group>
-                        <field name="carrier_id"/>
                         <label name="carried_weight_label" for="total_weight" groups="uom.group_uom"/>
-                        <div name="carried_weight" class="o_row" groups="uom.group_uom">
-                            <field name="total_weight"/>
-                            <field name="weight_uom_name"/>
+                        <div name="carried_weight" class="d-flex align-items-center" groups="uom.group_uom">
+                            <div style="width: 33%;">
+                                <field name="total_weight" string="Total Weight" class="w-100"/>
+                            </div>
+                            <div style="width: 33%;">
+                                <field name="weight_uom_name" class="w-100"/>
+                            </div>
+                            <div style="width: 34%;"></div>
                         </div>
+                        <label name="carried_id_label" for="carrier_id"/>
+                        <div class="d-flex flex-row align-items-center gap-1">
+                            <field
+                                name="carrier_id"
+                                context="{
+                                    'carrier_prices_dumped': carrier_prices_dumped,
+                                    'wizard_currency_id': currency_id,
+                                    'list_view_ref': 'delivery.view_delivery_carrier_so_list'
+                                }"
+                                options="{'no_open': True}"
+                            />
+                            <widget name="delivery_carrier_rates_loader" class="w-100"/>
+                        </div>
+                        <field name="carrier_prices" invisible="1"/>
                         <field name="delivery_type" invisible="1"/>
                         <field name="currency_id" invisible="1"/>
                         <field name="order_id" invisible="1"/>
@@ -20,9 +39,6 @@
                         <label for="display_price"/>
                         <div class="o_row" name="price_container">
                             <field name='display_price' widget="monetary" options="{'currency_field': 'currency_id'}" invisible="not carrier_id"/>
-                            <button name="update_price" type="object" invisible="delivery_type in ('fixed', 'base_on_rule')">
-                                <i class="oi me-1" data-icon="east"/>Get rate
-                            </button>
                         </div>
                     </group>
                 </group>

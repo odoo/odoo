@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
+import json
 
 import psycopg2
 
@@ -188,6 +189,8 @@ class DeliveryCarrier(models.Model):
         "CHECK(shipping_insurance >= 0 AND shipping_insurance <= 100)",
         "The shipping insurance must be a percentage between 0 and 100.",
     )
+    delivery_cost = fields.Monetary(string="Cost", readonly=True, compute="_compute_delivery_cost", currency_field="delivery_currency_id")
+    delivery_currency_id = fields.Many2one(comodel_name="res.currency", compute="_compute_delivery_currency_id")
 
     @api.constrains("must_have_tag_ids", "excluded_tag_ids")
     def _check_tags(self):
@@ -615,3 +618,54 @@ class DeliveryCarrier(models.Model):
             raise UserError(self.env._("Not available for current order"))
 
         return price
+
+    @api.depends_context("wizard_currency_id")
+    def _compute_delivery_currency_id(self):
+        wizard_currency_id = self.env.context.get("wizard_currency_id")
+        delivery_currency = self.env["res.currency"].browse(wizard_currency_id)
+        for carrier in self:
+            carrier.delivery_currency_id = delivery_currency
+
+    @api.depends("delivery_currency_id")
+    @api.depends_context("carrier_prices_dumped", "formatted_display_name")
+    def _compute_display_name(self):
+        """Change display name for the carrier selection in SO"""
+        carrier_prices_dumped = self.env.context.get("carrier_prices_dumped")
+        formatted_display_name = self.env.context.get('formatted_display_name')
+
+        super()._compute_display_name()
+
+        if not formatted_display_name or not carrier_prices_dumped:
+            return
+
+        carrier_prices = json.loads(carrier_prices_dumped)
+
+        for carrier in self:
+            if not carrier.delivery_currency_id:
+                continue
+
+            delivery_vals = carrier_prices.get(str(carrier.id), {})
+
+            if delivery_vals and "display_price" in delivery_vals:
+                formatted_price = carrier.delivery_currency_id.format(delivery_vals.get("display_price", 0.0))
+                carrier.display_name = f"{carrier.display_name}\t--{formatted_price}--"
+
+    @api.depends("delivery_currency_id")
+    @api.depends_context("carrier_prices_dumped")
+    def _compute_delivery_cost(self):
+        """Provide Cost column for the list view for carriers from SO selection"""
+        carrier_prices_dumped = self.env.context.get("carrier_prices_dumped")
+
+        if not carrier_prices_dumped:
+            for carrier in self:
+                carrier.delivery_cost = None
+            return
+
+        carrier_prices = json.loads(carrier_prices_dumped)
+
+        for carrier in self:
+            if not carrier.delivery_currency_id:
+                continue
+
+            delivery_vals = carrier_prices.get(str(carrier.id), {})
+            carrier.delivery_cost = delivery_vals.get("display_price", 0.0)
