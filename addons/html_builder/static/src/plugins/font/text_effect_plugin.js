@@ -284,6 +284,14 @@ export class SetTextEffectAction extends BuilderAction {
         editingElement.dataset.textEffect = value;
         TextEffectUtil.applyConfiguredEffects(editingElement);
     }
+
+    isApplied({ editingElement, value }) {
+        const currentJson = editingElement.dataset.textEffect;
+        if (!currentJson) {
+            return false;
+        }
+        return JSON.parse(currentJson).preset === JSON.parse(value).preset;
+    }
 }
 
 export class UpdateTextEffectAction extends BuilderAction {
