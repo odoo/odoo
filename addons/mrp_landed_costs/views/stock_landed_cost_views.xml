@@ -7,19 +7,20 @@
         <field name="arch" type="xml">
             <field name="target_model" position="attributes">
                 <attribute name="invisible">0</attribute>
-                <attribute name="groups">stock.group_stock_manager</attribute>
+                <attribute name="groups">mrp.group_mrp_manager,stock.group_stock_manager,account.group_account_user</attribute>
             </field>
             <field name="picking_ids" position="after">
                 <field name="target_model" invisible="1" readonly="state == 'done'"/>
                 <field name="mrp_production_ids" 
-                    widget="many2many_tags" options="{'no_create_edit': True}"
+                    widget="many2many_tags" options="{'no_create': True}"
                     invisible="target_model != 'manufacturing'"
                     readonly="state == 'done'"
+                    groups="mrp.group_mrp_manager,stock.group_stock_manager,account.group_account_user"
                     domain="[('company_id', '=', company_id), ('move_finished_ids.is_in', '!=', False)]"/>
             </field>
             <button name="action_view_pickings" position="after">
                 <button class="oe_stat_button" name="action_view_mrp_productions" icon="fa-wrench"
-                    type="object" invisible="mrp_productions_count == 0">
+                        groups="mrp.group_mrp_user" type="object" invisible="mrp_productions_count == 0">
                     <field name="mrp_productions_count" string="Manufacturing" widget="statinfo"/>
                 </button>
             </button>

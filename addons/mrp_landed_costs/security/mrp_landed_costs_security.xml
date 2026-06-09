@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record model="ir.rule" id="mrp_manager_account_move_mrp_landed_costs">
+        <field name="name">MRP Manager Bills with Landed Costs</field>
+        <field name="model_id" ref="stock_landed_costs.model_account_move"/>
+        <field name="domain_force">['&amp;', ('move_type', '=', 'in_invoice'), ('landed_costs_ids', '!=', False)]</field>
+        <field name="groups" eval="[Command.link(ref('mrp.group_mrp_manager'))]"/>
+        <field name="perm_read"   eval="True"/>
+        <field name="perm_write"  eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record model="ir.rule" id="purchase_manager_stock_landed_cost_mrp_landed_costs">
+        <field name="name">Purchase Manager Landed Costs for Manufacturing Orders</field>
+        <field name="model_id" ref="mrp_landed_costs.model_stock_landed_cost"/>
+        <field name="domain_force">[('target_model', '!=', 'manufacturing')]</field>
+        <field name="groups" eval="[Command.link(ref('purchase.group_purchase_manager'))]"/>
+    </record>
+</odoo>
