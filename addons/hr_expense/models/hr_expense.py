@@ -414,8 +414,7 @@ class HrExpense(models.Model):
                 continue
 
             employee = expense.employee_id
-            is_own_expense = employee.user_id == self.env.user
-            if is_own_expense and expense.state == 'draft':
+            if expense.is_own_expense and expense.state == 'draft':
                 # Anyone can edit their own draft expense
                 expense.is_editable = True
                 continue
@@ -429,7 +428,7 @@ class HrExpense(models.Model):
                 managers |= self.env.user
             if expense.employee_id.id in expenses_employee_ids_under_user_ones:
                     managers |= self.env.user
-            if not is_own_expense and self.env.user in managers:
+            if not expense.is_own_expense and self.env.user in managers:
                 # If Approver-level or designated manager, can edit other people expense
                 expense.is_editable = True
                 continue
