@@ -48,9 +48,14 @@ class ScaleDriver(SerialDriver):
         self.net_weight_char = b'N'
         self.tare_mode = False
 
-    def _read_once(self, _):
+    def _read_once(self, data: dict):
         """Reads the scale current weight value and pushes it to the frontend."""
         self.last_sent_value = self._read_weight()
+        if data.get("detailed_response"):
+            return {
+                "weight": self.last_sent_value,
+                "tare_mode": self.tare_mode,
+            }
         return self.last_sent_value
 
     def _read_weight(self) -> float:
@@ -129,10 +134,10 @@ class ScaleDriver(SerialDriver):
             status_char = status_match.group(1).decode()  # Example: b'D' extracted from b'\x02?D\r'
             binary_status_char = format(ord(status_char), '08b')  # Example: '00001101'
             for index, bit in enumerate(binary_status_char[1:][::-1]):  # Read the bits in reverse order (LSB is at the last char) + ignore the first "parity" bit
-                if int(bit):
-                    # Ignore the 'Net weight' error as it's normal in tare mode
-                    if index == 5 and self.tare_mode:
-                        continue
+                if index == 5:
+                    # Index 5 is Net Weight status
+                    self.tare_mode = bool(bit)
+                elif int(bit):
                     _logger.debug(
                         "Scale error: %s. Status string: %s. Scale answer: %s.",
                         status_char_error_bits[index], binary_status_char, answer
