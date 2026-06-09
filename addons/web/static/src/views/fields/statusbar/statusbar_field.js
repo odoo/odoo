@@ -56,6 +56,7 @@ export class StatusBarField extends Component {
         isDisabled: { type: Boolean, optional: true },
         visibleSelection: { type: Array, element: String, optional: true },
         withCommand: { type: Boolean, optional: true },
+        context: { type: Object, optional: true },
     };
 
     setup() {
@@ -96,7 +97,7 @@ export class StatusBarField extends Component {
         // Special data
         if (this.field.type === "many2one") {
             this.specialData = useSpecialData(async (orm, props) => {
-                const { foldField, name: fieldName, record } = props;
+                const { foldField, name: fieldName, record, context } = props;
                 const { relation } = record.fields[fieldName];
                 const fieldNames = this.getFieldNames(props);
                 if (foldField) {
@@ -104,7 +105,7 @@ export class StatusBarField extends Component {
                 }
                 let domain = getFieldDomain(record, fieldName, props.domain);
                 domain = Domain.and([this.getDomain(props), domain]).toList();
-                const res = await orm.searchRead(relation, domain, fieldNames).catch((error) => {
+                const res = await orm.searchRead(relation, domain, fieldNames, { context }).catch((error) => {
                     if (error instanceof ConnectionLostError) {
                         if (this.props.record.data[this.props.name]) {
                             return [this.props.record.data[this.props.name]];
@@ -386,6 +387,7 @@ export const statusBarField = {
         withCommand: viewType === "form",
         foldField: options.fold_field,
         domain: dynamicInfo.domain,
+        context: dynamicInfo.context,
     }),
 };
 
