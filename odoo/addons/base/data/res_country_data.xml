@@ -45,6 +45,8 @@
             <field name="code">am</field>
             <field name="currency_id" ref="AMD" />
             <field eval="374" name="phone_code" />
+            <field name='state_required'>1</field>
+            <field eval="'%(street)s\n%(street2)s\n%(city)s\n%(state_name)s\n%(country_name)s'" name="address_format"/>
         </record>
         <record id="ao" model="res.country">
             <field name="name">Angola</field>
