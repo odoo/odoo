@@ -148,6 +148,7 @@ def _connect(ssid, password):
     return is_current(ssid)
 
 
+@system.rpi_only
 def reconnect(ssid=None, password=None, force_update=False):
     """Reconnect to the given network. If a connection to the network already exists,
     we can reconnect to it without providing the password (e.g. after a reboot).
@@ -269,6 +270,7 @@ def toggle_access_point(state=START):
         return False
 
 
+@system.rpi_only
 def is_access_point():
     """Check if the device is currently in access point mode.
 
@@ -314,6 +316,7 @@ def generate_qr_code_image(qr_code_data):
     return f"data:image/png;base64,{img_base64}"
 
 
+@system.rpi_only
 def generate_network_qr_codes():
     """Generate a QR codes for the IoT Box network and its homepage
     and return them in base64 image format in a dictionary
