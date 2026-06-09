@@ -393,3 +393,32 @@ class TestRobustness(TransactionCase):
         self.assertRecordValues(product_without_quant.stock_quant_ids, [
             {'location_id': self.ref('stock.stock_location_inter_company'), 'reserved_quantity': 5.0}
         ])
+
+    def test_clean_reservations_quant_of_inactive_company_product(self):
+        """ Opening the quants view must not fail when reserved quants reference
+        a product from a company that is not currently activated.
+        """
+        main_company = self.env.ref('base.main_company')
+        other_company = self.env['res.company'].create({'name': 'Other Company'})
+        product_other_company = self.env['product.product'].create({
+            'name': 'Product of Other Company',
+            'is_storable': True,
+            'company_id': other_company.id,
+        })
+        self.env['stock.quant']._update_available_quantity(
+            product_other_company, self.stock_location, 10,
+        )
+        self.env['stock.quant']._update_reserved_quantity(
+            product_other_company, self.stock_location, 2,
+        )
+        stock_user = self.env['res.users'].create({
+            'name': 'Stock User',
+            'login': 'stock_user_multi_company',
+            'company_id': main_company.id,
+            'company_ids': [Command.set([main_company.id, other_company.id])],
+            'group_ids': [Command.link(self.env.ref('stock.group_stock_user').id)],
+        })
+        self.env['stock.quant'] \
+            .with_user(stock_user) \
+            .with_context(allowed_company_ids=main_company.ids) \
+            .action_view_quants()

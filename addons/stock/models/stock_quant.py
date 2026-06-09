@@ -1224,7 +1224,7 @@ class StockQuant(models.Model):
     @api.model
     def _quant_tasks(self):
         self._merge_quants()
-        self._clean_reservations()
+        self.sudo()._clean_reservations()
         self._unlink_zero_quants()
 
     @api.model
