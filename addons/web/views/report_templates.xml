@@ -457,7 +457,7 @@
 
             <!-- Required for multiple invoice sending, the heading tag in the
                 body is used to identify invoices -->
-            <h3 t-if="report_type == 'pdf'" t-out="layout_document_title" class="opacity-0 mb-0 h-0"/>
+            <h3 t-if="report_type == 'pdf'" t-out="layout_document_title or ' '" class="opacity-0 mb-0 h-0"/>
             <h2 t-if="not hide_title" t-out="layout_document_title"/>
             <t t-out="0"/>
         </div>
