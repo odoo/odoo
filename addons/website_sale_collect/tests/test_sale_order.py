@@ -80,6 +80,66 @@ class TestSaleOrder(ClickAndCollectCommon):
         so._set_delivery_method(self.free_delivery)
         self.assertNotEqual(so.fiscal_position_id, fp_us)
 
+    def test_changing_delivery_method_recomputes_taxes(self):
+        country_fr = self.env.ref('base.fr')
+        country_jp = self.env.ref('base.jp')
+        self.env.company.country_id = country_fr
+        self.warehouse.partner_id.country_id = country_fr
+        fp_jp = self.env['account.fiscal.position'].create({
+            'name': "Test JP fiscal position",
+            'country_id': country_jp.id,
+            'auto_apply': True,
+        })
+        tax_20, tax_0 = self.env['account.tax'].create([
+            {
+                'name': "20%",
+                'amount': 20,
+            },
+            {
+                'name': "Export 0%",
+                'amount': 0,
+                'fiscal_position_ids': fp_jp.ids,
+            },
+        ])
+        tax_0.original_tax_ids = tax_20
+        self.env['account.fiscal.position'].create([
+            {
+                'name': "Test FR fiscal position",
+                'country_id': country_fr.id,
+                'auto_apply': True,
+            },
+        ])
+        self.storable_product.write({
+            'list_price': 100,
+            'taxes_id': [Command.set(tax_20.ids)],
+        })
+        so = self._create_so(
+            partner_id=self.default_partner.id,
+            partner_shipping_id=self.default_partner.id,
+            fiscal_position_id=fp_jp.id,
+            carrier_id=self.free_delivery.id,
+            order_line=[Command.create({
+                'product_id': self.storable_product.id,
+                'product_uom_qty': 1,
+            })],
+        )
+
+        self.assertEqual(so.order_line.tax_ids, tax_0)
+        self.assertRecordValues(so, [{
+            'amount_untaxed': 100,
+            'amount_tax': 0,
+            'amount_total': 100,
+        }])
+
+        so._set_delivery_method(self.in_store_dm)
+        so._set_pickup_location(json.dumps(self.warehouse._prepare_pickup_location_data()))
+        self.assertEqual(so.order_line.tax_ids, tax_20)
+        self.assertRecordValues(so, [{
+            'amount_untaxed': 100,
+            'amount_tax': 20,
+            'amount_total': 120,
+        }])
+
     def test_free_qty_calculated_from_max_in_store_wh_if_no_dm_on_order(self):
         """Test that if no delivery method is set on the order, the free quantity is the
         maximum available in all warehouses associated with the in-store delivery method.

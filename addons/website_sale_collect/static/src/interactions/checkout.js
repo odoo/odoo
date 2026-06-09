@@ -131,4 +131,17 @@ patch(Checkout.prototype, {
             }
         }
     },
+
+    /**
+     * Reload the page after a user-triggered in-store pickup change to refresh all cart values.
+     *
+     * @override method from `@website_sale/interactions/checkout`
+     */
+    async _setPickupLocation(pickupLocationData, reloadPage = false) {
+        await super._setPickupLocation(...arguments);
+        const checkedRadio = this.el.querySelector('input[name="o_delivery_radio"]:checked');
+        if (reloadPage && checkedRadio?.dataset.deliveryType === 'in_store') {
+            window.location.reload();
+        }
+    },
 });

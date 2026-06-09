@@ -159,7 +159,7 @@ export class Checkout extends Interaction {
         this._enableMainButton();
 
         // Show a button to open the location selector if required for the selected delivery method.
-        await this._showPickupLocation(checkedRadio);
+        await this._showPickupLocation(checkedRadio, true);
     }
 
     /**
@@ -178,7 +178,7 @@ export class Checkout extends Interaction {
             save: async location => {
                 const jsonLocation = JSON.stringify(location);
                 // Assign the selected pickup location to the order.
-                await this.waitFor(this._setPickupLocation(jsonLocation));
+                await this.waitFor(this._setPickupLocation(jsonLocation, true));
 
                 //  Show and set the order location details.
                 this._updatePickupLocation(deliveryMethodContainer, location, jsonLocation);
@@ -524,9 +524,10 @@ export class Checkout extends Interaction {
      *
      * @private
      * @param {HTMLInputElement} radio - The radio button linked to the delivery method.
+     * @param {boolean} reloadPage - Whether to reload the page after setting the pickup location.
      * @return {void}
      */
-    async _showPickupLocation(radio) {
+    async _showPickupLocation(radio, reloadPage = false) {
         if (!radio.dataset.isPickupLocationRequired || radio.disabled) {
             return;  // Fetching the delivery rate failed.
         }
@@ -538,7 +539,9 @@ export class Checkout extends Interaction {
         );
         if (editPickupLocationButton.dataset.pickupLocationData) {
             await this.waitFor(
-                this._setPickupLocation(editPickupLocationButton.dataset.pickupLocationData)
+                this._setPickupLocation(
+                    editPickupLocationButton.dataset.pickupLocationData, reloadPage
+                )
             );
         }
 
@@ -550,10 +553,13 @@ export class Checkout extends Interaction {
      *
      * @private
      * @param {String} pickupLocationData - The pickup location's data to set.
+     * @param {boolean} reloadPage - Whether to refresh the page after setting the pickup location.
      * @return {void}
      */
-    async _setPickupLocation(pickupLocationData) {
-        await rpc('/website_sale/set_pickup_location', {pickup_location_data: pickupLocationData});
+    async _setPickupLocation(pickupLocationData, reloadPage = false) {
+        await rpc(
+            '/website_sale/set_pickup_location', {pickup_location_data: pickupLocationData}
+        );
     }
 
     // #=== GETTERS & SETTERS ===#
