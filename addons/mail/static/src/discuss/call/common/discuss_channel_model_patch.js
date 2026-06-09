@@ -39,7 +39,9 @@ const DiscussChannelPatch = {
             async onUpdate() {
                 const hadSelfSession = this.hadSelfSession;
                 const lastSessionIds = this.lastSessionIds;
-                this.hadSelfSession = Boolean(this.store.rtc.selfSession?.in(this.rtc_session_ids));
+                this.hadSelfSession = Boolean(
+                    this.store.rtc?.selfSession?.in(this.rtc_session_ids)
+                );
                 this.lastSessionIds = new Set(this.rtc_session_ids.map((s) => s.id));
                 const shouldPlayJoinSound = [...this.lastSessionIds].some(
                     (id) => !lastSessionIds.has(id)
@@ -66,7 +68,7 @@ const DiscussChannelPatch = {
         this.videoCountNotSelf = fields.Attr(0, {
             compute() {
                 return this.rtc_session_ids.filter(
-                    (s) => s.hasVideo && s.notEq(this.store.rtc.selfSession)
+                    (s) => s.hasVideo && this.store.rtc?.selfSession.notEq(s)
                 ).length;
             },
             onUpdate() {
@@ -155,7 +157,10 @@ const DiscussChannelPatch = {
         this.useCameraByDefault = fields.Attr(null, {
             /** @this {import("models").Thread} */
             compute() {
-                if (this.channel_type === "chat" && this.store.rtc.selfSession?.channel?.eq(this)) {
+                if (
+                    this.channel_type === "chat" &&
+                    this.store.rtc?.selfSession?.channel?.eq(this)
+                ) {
                     return this.store.rtc.selfSession.is_camera_on;
                 }
                 return JSON.parse(
@@ -178,10 +183,10 @@ const DiscussChannelPatch = {
         return this.chatWindow?.isOpen && !this.store.meetingViewOpened;
     },
     get isSelfInCall() {
-        return this.store.rtc.selfSession && this.eq(this.store.rtc.channel);
+        return this.store.rtc?.selfSession && this.eq(this.store.rtc.channel);
     },
     get showCallView() {
-        return !this.store.rtc.isFullscreen && this.hasRtcSessionActive;
+        return this.hasRtcSessionActive && !this.store.rtc.isFullscreen;
     },
     focusAvailableVideo() {
         if (

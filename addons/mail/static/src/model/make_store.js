@@ -83,17 +83,11 @@ export function makeStore(env, { localRegistry } = {}) {
                                 }
                                 return res;
                             }
-                            if (Model._.fieldsCompute.get(name) && !Model._.fieldsEager.get(name)) {
-                                record._.fieldsComputeInNeed.set(name, true);
-                                if (record._.fieldsComputeOnNeed.get(name)) {
-                                    record._.compute(record, name, { fromInNeed: true });
-                                }
+                            if (!record._.fieldsComputeComputing.get(name)) {
+                                record._.fieldsComputeComputed.get(name)?.();
                             }
-                            if (Model._.fieldsSort.get(name) && !Model._.fieldsEager.get(name)) {
-                                record._.fieldsSortInNeed.set(name, true);
-                                if (record._.fieldsSortOnNeed.get(name)) {
-                                    record._.sort(record, name, { fromInNeed: true });
-                                }
+                            if (!record._.fieldsSortComputing.get(name)) {
+                                record._.fieldsSortComputed.get(name)?.();
                             }
                             record._.gettingField = true;
                             const val = recordFullProxy[name];

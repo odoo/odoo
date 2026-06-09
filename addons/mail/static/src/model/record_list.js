@@ -1,6 +1,6 @@
 import { isRecord } from "./misc";
 
-import { markRaw, proxy, toRaw } from "@odoo/owl";
+import { markRaw, proxy, signal, toRaw } from "@odoo/owl";
 
 /** @typedef {import("./record").Record} Record */
 
@@ -12,51 +12,6 @@ function getInverse(reclist) {
 /** @param {RecordList} reclist */
 function getTargetModel(reclist) {
     return reclist._.owner.Model._.fieldsTargetModel.get(reclist._.name);
-}
-
-/** @param {RecordList} reclist */
-function isComputeField(reclist) {
-    return reclist._.owner.Model._.fieldsCompute.get(reclist._.name);
-}
-
-/** @param {RecordList} reclist */
-function isSortField(reclist) {
-    return reclist._.owner.Model._.fieldsSort.get(reclist._.name);
-}
-
-/** @param {RecordList} reclist */
-function isEager(reclist) {
-    return reclist._.owner.Model._.fieldsEager.get(reclist._.name);
-}
-
-/** @param {RecordList} reclist */
-function setComputeInNeed(reclist) {
-    reclist._.owner._.fieldsComputeInNeed.set(reclist._.name, true);
-}
-
-/** @param {RecordList} reclist */
-function setSortInNeed(reclist) {
-    reclist._.owner._.fieldsSortInNeed.set(reclist._.name, true);
-}
-
-/** @param {RecordList} reclist */
-function isComputeOnNeed(reclist) {
-    return reclist._.owner._.fieldsComputeOnNeed.get(reclist._.name);
-}
-
-/** @param {RecordList} reclist */
-function isSortOnNeed(reclist) {
-    return reclist._.owner._.fieldsSortOnNeed.get(reclist._.name);
-}
-
-/** @param {RecordList} reclist */
-function computeField(reclist) {
-    reclist._.owner._.compute(reclist._.owner, reclist._.name, { fromInNeed: true });
-}
-
-/** @param {RecordList} reclist */
-function sortField(reclist) {
-    reclist._.owner._.sort(reclist._.owner, reclist._.name, { fromInNeed: true });
 }
 
 /** @param {RecordList} reclist */
@@ -161,7 +116,14 @@ export class RecordListInternal {
                     }
                 }
             }
-            recordList._proxy.data = newRecords.map((newRecord) => newRecord.localId);
+            if (recordList._.name === "menuThreads") {
+                debugger;
+            }
+            recordList._proxy.data.splice(
+                0,
+                recordList.data.length,
+                ...newRecords.map((newRecord) => newRecord.localId)
+            );
             recordList._.syncLength(recordList);
         });
     }
@@ -255,7 +217,13 @@ export class RecordList extends Array {
     /** @type {import("models").Store} */
     _store;
     /** @type {string[]} */
-    data = [];
+    _data = signal.Array([]);
+    get data() {
+        return this._data();
+    }
+    set data(newData) {
+        this._data = signal.Array(newData);
+    }
     /** @type {this} */
     _raw;
     /** @type {this} */
@@ -289,20 +257,14 @@ export class RecordList extends Array {
                     }
                     return res;
                 }
-                if (isComputeField(recordList) && !isEager(recordList)) {
-                    setComputeInNeed(recordList);
-                    if (isComputeOnNeed(recordList)) {
-                        computeField(recordList);
-                    }
+                if (!recordList._.owner._.fieldsComputeComputing.get(recordList._.name)) {
+                    recordList._.owner._.fieldsComputeComputed.get(recordList._.name)?.();
+                }
+                if (!recordList._.owner._.fieldsSortComputing.get(recordList._.name)) {
+                    recordList._.owner._.fieldsSortComputed.get(recordList._.name)?.();
                 }
                 if (name === "length") {
                     return recordListFullProxy.data.length;
-                }
-                if (isSortField(recordList) && !isEager(recordList)) {
-                    setSortInNeed(recordList);
-                    if (isSortOnNeed(recordList)) {
-                        sortField(recordList);
-                    }
                 }
                 if (typeof name !== "symbol" && !window.isNaN(parseInt(name))) {
                     // support for "array[index]" syntax
@@ -503,7 +465,11 @@ export class RecordList extends Array {
                     recordList._proxy.data[0] = list[0];
                 }
             } else {
-                recordList._proxy.data = list;
+                recordList._proxy.data.splice(
+                    start,
+                    deleteCount,
+                    ...newRecordsProxy.map((newRecordProxy) => toRaw(newRecordProxy)._raw.localId)
+                );
             }
             recordList._.syncLength(recordList);
             for (const oldRecord of oldRecords) {

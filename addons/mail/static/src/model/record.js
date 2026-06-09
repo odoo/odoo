@@ -229,21 +229,20 @@ export class Record {
             }
             Object.assign(recordProxy, { ...ids });
             Model.records[record.localId] = recordProxy;
+            const eagetFieldNames = new Set([
+                ...Model._.fieldsOnUpdate.keys(),
+                ...Model._.fieldsEager.keys(),
+            ]);
+            for (const name of eagetFieldNames) {
+                record._.prepareFieldOnUpdate(record, name, recordProxy);
+            }
             if (record.Model.getName() === "Store") {
                 Object.assign(record, {
                     env: Model._rawStore.env,
                     recordByLocalId: Model._rawStore.recordByLocalId,
                 });
             }
-            // compute inherits fields in priority, as other fields might depend on them
-            for (const fieldName of Model._.inheritsFields) {
-                record._.compute?.(record, fieldName);
-            }
             Model._rawStore.recordByLocalId.set(record.localId, recordProxy);
-            for (const fieldName of record.Model._.fields.keys()) {
-                record._.requestCompute?.(record, fieldName);
-                record._.requestSort?.(record, fieldName);
-            }
             return recordProxy;
         });
     }

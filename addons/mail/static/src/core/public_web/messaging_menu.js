@@ -148,6 +148,7 @@ export class MessagingMenu extends Component {
     }
 
     get threads() {
+        debugger;
         return this.store.menuThreads;
     }
 

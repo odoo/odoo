@@ -83,7 +83,7 @@
         'o-mx-0_5': this.props.inline and !this.hasBtnBg and !this.action.icon,
     })"/>
     <!-- padding -->
-    <t t-set="inMeetingViewCallButtonsFullscreen" t-value="this.props.inline and this.env.inMeetingView and !this.env.inComposer and !this.env.inDiscussActionPanel and this.store.rtc.isFullscreen"/>
+    <t t-set="inMeetingViewCallButtonsFullscreen" t-value="this.props.inline and this.env.inMeetingView and !this.env.inComposer and !this.env.inDiscussActionPanel and this.store.rtc?.isFullscreen"/>
     <t t-set="btnClass" t-value="this.attClassObjectToString({
         [btnClass]: true,
         'px-2 o-py-2_5': inMeetingViewCallButtonsFullscreen,
