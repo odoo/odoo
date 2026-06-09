@@ -979,7 +979,13 @@ class ResPartner(models.Model):
 
         return {
             'criteria': [{
-                'domain': [('bank_ids.acc_number', 'in', account_numbers)],
+                'domain': [
+                    ('bank_ids', 'any', [
+                        '&',
+                        ('acc_number', 'in', account_numbers),
+                        ('allow_out_payment', '=', True),
+                    ]),
+                ],
             }]
         }
 
