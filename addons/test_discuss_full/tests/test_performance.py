@@ -17,21 +17,11 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     # Queries for _query_count_init_store (in order):
     #   1: search res_partner (odooot ref exists)
     #   1: search res_groups (internalUserGroupId ref exists)
-    #   8: store add odoobot:
-    #       - fetch res_partner (_read_format)
-    #       - search res_users (_compute_im_status)
-    #       - search presence (_compute_im_status)
-    #       - fetch presence (_compute_im_status)
-    #       - _get_on_leave_ids (_compute_im_status hr_holidays override)
-    #       - search employee (_compute_im_status hr_homeworking override)
-    #       - fetch employee (_compute_im_status hr_homeworking override)
-    #       - fetch res_users (_read_format)
-    #       - fetch hr_employee (user)
-    #   5: settings:
+    #   6: settings:
     #       - search res_users_settings (_find_or_create_for_user)
+    #       - search res_users_settings_embedded_action (_format_settings)
     #       - fetch res_users_settings (_format_settings)
     #       - search res_users_settings_volumes (_format_settings)
-    #       - search res_users_settings_embedded_action (_format_settings)
     #       - search res_lang_res_users_settings_rel (_format_settings)
     #       - search im_livechat_expertise_res_users_settings_rel (_format_settings)
     #   2: hasCannedResponses
@@ -40,7 +30,18 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   2: show_livechat_category
     #       - search discuss_channel_member (is_self for ACL check)
     #       - search_count discuss_channel_member
-    _query_count_init_store = 21
+    #   10: store add odoobot:
+    #       - fetch res_partner
+    #       - search res_users
+    #       - search presence (_compute_im_status)
+    #       - fetch presence (_compute_im_status)
+    #       - search employee
+    #       - search employee (company specific)
+    #       - fetch res_users
+    #       - search hr_employee_location
+    #       - fetch employee
+    #       - search hr_leave
+    _query_count_init_store = 22
     # Queries for _query_count_init_messaging (in order):
     #   1: insert res_device_log
     #   3: _search_is_member (for current user, first occurence _search_is_member for chathub given channel ids)
