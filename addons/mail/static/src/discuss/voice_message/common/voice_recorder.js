@@ -53,7 +53,7 @@ export function useVoiceRecorder(params = {}) {
     const state = proxy({
         limitWarning: false,
         isActionPending: false,
-        recording: component.props.state?.recording ?? false,
+        recording: false,
         elapsed: "00 : 00",
         volumes: new Array(3).fill(0),
         onClick() {
