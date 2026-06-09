@@ -29,10 +29,31 @@ export const getStrNotes = (note) => {
     return "";
 };
 
-export const filterChangeByCategories = (categoryIdsSet, currentOrderChange, models) => {
+export const parentPosCategIds = (product) => {
+    const current = [];
+    const categories = product.pos_categ_ids;
+
+    const getParent = (categ) => {
+        const parentCat = categ.parent_id;
+
+        if (parentCat) {
+            current.push(parentCat.id);
+            getParent(parentCat);
+        }
+    };
+
+    for (const category of categories) {
+        current.push(category.id);
+        getParent(category);
+    }
+
+    return current;
+};
+
+export const filterChangeByCategories = (categoryIdsSet, currentOrderChange, models, opts = {}) => {
     const matchesCategories = (change) => {
         const product = models["product.product"].get(change["product_id"]);
-        const categoryIds = product.parentPosCategIds;
+        const categoryIds = parentPosCategIds(product);
         for (const categoryId of categoryIds) {
             if (categoryIdsSet.has(categoryId)) {
                 return true;
@@ -55,6 +76,14 @@ export const filterChangeByCategories = (categoryIdsSet, currentOrderChange, mod
         );
     };
 
+    // Don't filter when printing from kitchen print all irrespective of categories
+    if (opts.prepBarcode) {
+        return {
+            new: currentOrderChange["new"],
+            cancelled: currentOrderChange["cancelled"],
+            noteUpdate: currentOrderChange["noteUpdate"],
+        };
+    }
     return {
         new: filterChanges(currentOrderChange["new"]),
         cancelled: filterChanges(currentOrderChange["cancelled"]),

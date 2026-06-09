@@ -46,11 +46,11 @@ export class PosTicketPrinterService {
     }
 
     get receiptPrinters() {
-        return this.config.receipt_printer_ids;
+        return this.config.receipt_printer_ids || [];
     }
 
     get preparationPrinters() {
-        return this.config.preparation_printer_ids;
+        return this.config.preparation_printer_ids || [];
     }
 
     get hasReceiptPrinters() {
@@ -224,6 +224,11 @@ export class PosTicketPrinterService {
         return result;
     }
 
+    getpreparationData(order, opts, printer) {
+        const generator = this.getGenerator({ models: this.data.models, order });
+        const categoryIds = new Set(printer.product_categories_ids.map((c) => c.id));
+        return generator.generatePreparationData(categoryIds, opts);
+    }
     /**
      * Changes use preparation printers via this.config.preparation_printer_ids
      */
@@ -234,10 +239,8 @@ export class PosTicketPrinterService {
         let rawChangeForRetry = null;
 
         for (const printer of printers) {
-            const template = "point_of_sale.pos_order_change_receipt";
-            const generator = this.getGenerator({ models: this.data.models, order });
-            const categoryIds = new Set(printer.product_categories_ids.map((c) => c.id));
-            const changes = generator.generatePreparationData(categoryIds, opts);
+            const template = opts.template || "point_of_sale.pos_order_change_receipt";
+            const changes = this.getpreparationData(order, opts, printer);
 
             for (const ticket of changes) {
                 rawChangeForRetry = rawChangeForRetry || ticket._rawChange;
