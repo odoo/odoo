@@ -39,6 +39,7 @@ from odoo.exceptions import UserError, ValidationError
 from .config import config
 from .i18n import format_list
 from .misc import file_open, file_path, frozendict, get_iso_codes, split_every, OrderedSet, SKIPPED_ELEMENT_TYPES
+from .sql import SQL
 
 if typing.TYPE_CHECKING:
     import types
@@ -1958,7 +1959,6 @@ class TranslationImporter:
         if not self.model_translations and not self.model_terms_translations:
             return
 
-        cr = self.cr
         env = self.env
         env.flush_all()
 
@@ -1969,21 +1969,22 @@ class TranslationImporter:
             # field_name, {xmlid: {src: {lang: value}}}
             for field_name, field_dictionary in model_dictionary.items():
                 field = fields.get(field_name)
-                for sub_xmlids in split_every(cr.IN_MAX, field_dictionary.keys()):
+                for sub_xmlids in split_every(env.cr.IN_MAX, field_dictionary.keys()):
                     # [module_name, imd_name, module_name, imd_name, ...]
-                    params = []
-                    for xmlid in sub_xmlids:
-                        params.extend(xmlid.split('.', maxsplit=1))
-                    cr.execute(f'''
-                        SELECT m.id, imd.module || '.' || imd.name, m."{field_name}", imd.noupdate
-                        FROM "{model_table}" m, "ir_model_data" imd
+                    params = [xmlid.split('.', maxsplit=1) for xmlid in sub_xmlids]
+                    rows = env.execute_query(SQL("""
+                        SELECT m.id, imd.module || '.' || imd.name, m.%s, imd.noupdate
+                        FROM %s m, "ir_model_data" imd
                         WHERE m.id = imd.res_id
-                        AND ({" OR ".join(["(imd.module = %s AND imd.name = %s)"] * (len(params) // 2))})
-                    ''', params)
+                        AND (%s)
+                    """, SQL.identifier(field_name), SQL.identifier(model_table), SQL(" OR ").join(
+                        SQL("(imd.module = %s AND imd.name = %s)", *param)
+                        for param in params
+                    )))
 
                     # [id, translations, id, translations, ...]
                     params = []
-                    for id_, xmlid, values, noupdate in cr.fetchall():
+                    for id_, xmlid, values, noupdate in rows:
                         if not values:
                             continue
                         _value_en = values.get('_en_US', values['en_US'])
@@ -2021,16 +2022,19 @@ class TranslationImporter:
                             if f'_{lang}' in values:
                                 changed_values[f'_{lang}'] = None
                         if changed_values:
-                            params.extend((id_, Json(changed_values)))
+                            params.append((id_, Json(changed_values)))
                     if params:
-                        env.cr.execute(f"""
-                            UPDATE "{model_table}" AS m
-                            SET "{field_name}" = jsonb_strip_nulls("{field_name}" || t.value)
+                        env.execute_query(SQL("""
+                            UPDATE %(table)s AS m
+                            SET %(field_name)s = jsonb_strip_nulls(%(field_name)s || t.value)
                             FROM (
-                                VALUES {', '.join(['(%s, %s::jsonb)'] * (len(params) // 2))}
+                                VALUES %(values)s
                             ) AS t(id, value)
                             WHERE m.id = t.id
-                        """, params)
+                        """, table=SQL.identifier(model_table), field_name=SQL.identifier(field_name), values=SQL(", ").join(
+                            SQL("(%s, %s::jsonb)", *param)
+                            for param in params
+                        )))
 
         self.model_terms_translations.clear()
 
@@ -2038,27 +2042,36 @@ class TranslationImporter:
             Model = env[model_name]
             model_table = Model._table
             for field_name, field_dictionary in model_dictionary.items():
-                for sub_field_dictionary in split_every(cr.IN_MAX, field_dictionary.items()):
+                for sub_field_dictionary in split_every(env.cr.IN_MAX, field_dictionary.items()):
                     # [xmlid, translations, xmlid, translations, ...]
                     params = []
                     for xmlid, translations in sub_field_dictionary:
-                        params.extend([*xmlid.split('.', maxsplit=1), Json(translations)])
+                        params.append([*xmlid.split('.', maxsplit=1), Json(translations)])
                     if not force_overwrite:
-                        value_query = f"""CASE WHEN {overwrite} IS TRUE AND imd.noupdate IS FALSE
-                        THEN m."{field_name}" || t.value
-                        ELSE t.value || m."{field_name}"END"""
+                        value_query = SQL("""CASE WHEN %(overwrite)s IS TRUE AND imd.noupdate IS FALSE
+                        THEN m.%(field_name)s || t.value
+                        ELSE t.value || m.%(field_name)s
+                        END""", overwrite=overwrite, field_name=SQL.identifier(field_name))
                     else:
-                        value_query = f'm."{field_name}" || t.value'
-                    env.cr.execute(f"""
-                        UPDATE "{model_table}" AS m
-                        SET "{field_name}" = {value_query}
+                        value_query = SQL("m.%s || t.value", SQL.identifier(field_name))
+                    env.execute_query(SQL("""
+                        UPDATE %(table)s AS m
+                        SET %(field_name)s = %(value_query)s
                         FROM (
-                            VALUES {', '.join(['(%s, %s, %s::jsonb)'] * (len(params) // 3))}
+                            VALUES %(values)s
                         ) AS t(imd_module, imd_name, value)
                         JOIN "ir_model_data" AS imd
-                        ON imd."model" = '{model_name}' AND imd.name = t.imd_name AND imd.module = t.imd_module
+                        ON imd."model" = %(model_name)s AND imd.name = t.imd_name AND imd.module = t.imd_module
                         WHERE imd."res_id" = m."id"
-                    """, params)
+                    """,
+                    table=SQL.identifier(model_table),
+                    field_name=SQL.identifier(field_name),
+                    model_name=model_name,
+                    value_query=value_query,
+                    values=SQL(", ").join(
+                        SQL("(%s, %s, %s::jsonb)", *param)
+                        for param in params
+                    )))
 
         self.model_translations.clear()
 
