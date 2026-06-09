@@ -1,10 +1,12 @@
-import { proxy } from "@odoo/owl";
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { proxy, useListener } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
-import { useBus, useRefListener, useService } from '@web/core/utils/hooks';
+import { useBus, useService } from "@web/core/utils/hooks";
 
-export const ExpenseDocumentDropZone = (T) => class ExpenseDocumentDropZone extends T {
+// prettier-ignore
+export const ExpenseDocumentDropZone = (T) =>
+    class extends T {
     static props = [
         ...T.props,
         'uploadDocument',
@@ -15,30 +17,14 @@ export const ExpenseDocumentDropZone = (T) => class ExpenseDocumentDropZone exte
         this.dragState = proxy({
             showDragZone: false,
         });
-        this.root = useRef("root");
 
-        useLayoutEffect(
-            (el) => {
-                if (!el) {
-                    return;
-                }
-                const highlight = this.highlight.bind(this);
-                const unhighlight = this.unhighlight.bind(this);
-                const drop = this.onDrop.bind(this);
-                el.addEventListener("dragover", highlight);
-                el.addEventListener("dragleave", unhighlight);
-                el.addEventListener("drop", drop);
-                return () => {
-                    el.removeEventListener("dragover", highlight);
-                    el.removeEventListener("dragleave", unhighlight);
-                    el.removeEventListener("drop", drop);
-                };
-            },
-            () => [document.querySelector('.o_content')]
-        );
+        const getContent = document.querySelector(".o_content");
+        useListener(getContent, "dragover", this.highlight.bind(this));
+        useListener(getContent, "dragleave", this.unhighlight.bind(this));
+        useListener(getContent, "drop", this.onDrop.bind(this));
 
-        useRefListener(this.root, 'click', (ev) => {
-            let targetElement = ev.target;
+        useListener(this.rootRef, 'click', (ev) => {
+            const targetElement = ev.target;
             if (targetElement.closest('.o_view_nocontent_expense_receipt')) {
                 this.props.uploadDocument();
             }
@@ -66,6 +52,7 @@ export const ExpenseDocumentDropZone = (T) => class ExpenseDocumentDropZone exte
     }
 };
 
+// prettier-ignore
 export const AbstractExpenseDocumentUpload = (T) => class AbstractExpenseDocumentUpload extends T {
 
     setup() {
@@ -80,7 +67,7 @@ export const AbstractExpenseDocumentUpload = (T) => class AbstractExpenseDocumen
     async generateOpenExpensesAction(currentAction) {
         const actionName = _t("Generate Expenses");
         let domain = [['id', 'in', this.createdExpenseIds]];
-        let options = {}
+        const options = {}
         if (currentAction && currentAction.name === actionName) {
             domain = Domain.or([domain, currentAction.domain]).toList();
             options['stackPosition'] = 'replaceCurrentAction';
@@ -148,6 +135,7 @@ export const AbstractExpenseDocumentUpload = (T) => class AbstractExpenseDocumen
     }
 }
 
+// prettier-ignore
 export const ExpenseDocumentUpload = (T) => class ExpenseDocumentUpload extends AbstractExpenseDocumentUpload(T) {
     setup() {
         super.setup();
