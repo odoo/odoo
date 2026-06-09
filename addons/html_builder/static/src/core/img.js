@@ -1,4 +1,4 @@
-import { Component, onWillStart, onWillUpdateProps, xml, signal, useEffect } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillStart, onWillUpdateProps, xml, signal } from "@odoo/owl";
 import { Cache } from "@web/core/utils/cache";
 
 const svgCache = new Cache(async (src) => {
@@ -65,7 +65,7 @@ export class Image extends Component {
                 await this.handleImgLoad(nextProps.src);
             }
         });
-        useEffect(() => {
+        const insertSvgChildren = () => {
             if (
                 this.loaded() &&
                 this.svgRef() &&
@@ -80,7 +80,9 @@ export class Image extends Component {
                 }
                 this.svgRef().replaceChildren(...children);
             }
-        });
+        };
+        onMounted(insertSvgChildren);
+        onPatched(insertSvgChildren);
     }
 
     async handleImgLoad(src) {
