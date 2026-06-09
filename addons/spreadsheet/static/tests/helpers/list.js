@@ -46,6 +46,7 @@ export function insertListInSpreadsheet(model, params) {
  * @param {function} [params.mockRPC]
  * @param {number} [params.linesNumber]
  * @param {[number, number]} [params.position]
+ * @param {object} [params.skipWaitForDataLoaded]
  * @param {string} [params.sheetId]
  * @param {object} [params.modelConfig]
  * @param {{name: string, asc: boolean}[]} [params.orderBy]
@@ -68,6 +69,8 @@ export async function createSpreadsheetWithList(params = {}) {
         orderBy: params.orderBy,
     });
 
-    await waitForDataLoaded(model);
+    if (!params.skipWaitForDataLoaded) {
+        await waitForDataLoaded(model);
+    }
     return { model, env };
 }
