@@ -7,9 +7,9 @@ import { registry } from "@web/core/registry";
 import {
     Component,
     onPatched,
-    onWillUpdateProps,
     toRaw,
     proxy,
+    useEffect,
 } from "@odoo/owl";
 import { useNumpadDecimal } from "@web/views/fields/numpad_decimal_hook";
 
@@ -38,7 +38,8 @@ class TaxGroupComponent extends Component {
                 this.inputTax.el.focus(); // Focus the input
             }
         });
-        onWillUpdateProps(() => {
+        useEffect(() => {
+            this.props.taxGroup;
             this.setState("readonly");
         });
         useNumpadDecimal();
