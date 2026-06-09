@@ -1,10 +1,11 @@
 import logging
+import re
 import requests
 
 from urllib import parse
 
-from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo import Command, api, fields, models
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.partner_identifiers import (
     is_identifier_void,
     normalize_identifier,
@@ -13,6 +14,8 @@ from odoo.tools.partner_identifiers import (
 from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
 
 _logger = logging.getLogger(__name__)
+
+siren_siret_re = re.compile(r'\d{9}|\d{14}', flags=re.ASCII)
 
 
 class ResPartner(models.Model):
@@ -211,3 +214,36 @@ class ResPartner(models.Model):
             return None
 
         return decoded_response.get('result')
+
+    def action_pdp_annuaire_lookup(self):
+        self.ensure_one()
+        if not self.routing_endpoint:
+            raise UserError(self.env._("Set up your routing endpoint to enable the lookup"))
+
+        if not siren_siret_re.fullmatch(self.routing_endpoint):
+            raise UserError(self.env._("endpoint must be 9 or 14 characters long and they must be numbers to enable the lookup (ie: siren, siret)"))
+
+        edi_mode = self.env.company._get_peppol_edi_mode()
+        origin = self.env['account_edi_proxy_client.user']._get_proxy_urls()['pdp'][edi_mode]
+        endpoint = f'{origin}/api/pdp/1/pdp_annuaire_lookup'
+
+        response = requests.get(
+            url=endpoint,
+            params={
+                'pdp_endpoint': self.routing_endpoint[:9],  # We only want to take the first 9 char (for the siren)
+            },
+            timeout=10,
+        )
+        response.raise_for_status()
+        data = response.json()
+        if not data.get('annuaire_lines'):
+            raise UserError(self.env._("No annuaire lines found for that identifier"))
+
+        wizard = self.env['l10n_fr_pdp.partner.lookup'].create({
+            'available_annuaire_line_ids': [
+                Command.create(line)
+                for line in data['annuaire_lines']
+            ],
+            'partner_id': self.id,
+        })
+        return wizard._get_records_action(target='new')
