@@ -1,13 +1,17 @@
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 
-/**
- * @typedef {Object} Props
- * @property {import("models").Poll} poll
- * @extends {Component<Props, Env>}
- */
+import { useService } from "@web/core/utils/hooks";
+
 export class PollResult extends Component {
     static template = "mail.PollResult";
-    static props = { poll: Object };
+
+    setup() {
+        super.setup(...arguments);
+        this.store = useService("mail.store");
+        this.props = props({
+            poll: types.instanceOf(this.store["mail.poll"].Class),
+        });
+    }
 
     onClickViewPoll() {
         this.env.messageHighlight.highlightMessage(

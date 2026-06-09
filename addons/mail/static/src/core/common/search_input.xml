@@ -17,7 +17,7 @@
             </label>
             <input
                 t-att-id="`${this.uniqueId}-input`"
-                t-custom-ref="inputRef"
+                t-ref="this.props.inputRef"
                 type="text"
                 class="form-control bg-view ps-4"
                 t-att-class="{ 'pe-4': this.props.onClear }"

@@ -1,6 +1,7 @@
 import { Gif } from "@mail/core/common/gif";
+import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
-import { Component, signal } from "@odoo/owl";
+import { Component, props, signal, types } from "@odoo/owl";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -17,8 +18,16 @@ import { attClassObjectToString } from "@mail/utils/common/format";
 
 class Actions extends Component {
     static components = { Dropdown, DropdownItem };
-    static props = ["actions"];
     static template = "mail.Actions";
+    props = props({
+        actions: types.array(
+            types.object({
+                label: types.string(),
+                icon: types.string(),
+                onSelect: types.function([types.instanceOf(Event)]),
+            })
+        ),
+    });
 
     setup() {
         super.setup();
@@ -26,16 +35,8 @@ class Actions extends Component {
     }
 }
 
-/**
- * @typedef {Object} Props
- * @property {import("models").Attachment[]} attachments
- * @property {function} unlinkAttachment
- * @property {ReturnType<import('@mail/core/common/message_search_hook').useMessageSearch>} [messageSearch]
- * @extends {Component<Props, Env>}
- */
 export class AttachmentList extends Component {
     static components = { Actions, Gif };
-    static props = ["attachments", "unlinkAttachment", "messageSearch?"];
     static template = "mail.AttachmentList";
 
     // make this available for class evaluation in the template
@@ -44,6 +45,12 @@ export class AttachmentList extends Component {
 
     setup() {
         super.setup();
+        this.store = useService("mail.store");
+        this.props = props({
+            attachments: types.array(types.instanceOf(this.store["ir.attachment"].Class)),
+            "messageSearch?": types.instanceOf(MessageSearchState),
+            unlinkAttachment: types.function([types.instanceOf(this.store["ir.attachment"].Class)]),
+        });
         this.ui = useService("ui");
         this.dialog = useService("dialog");
         this.fileViewer = useFileViewer();

@@ -8,9 +8,9 @@ import { usePopover } from "@web/core/popover/popover_hook";
 registerThreadAction("show-threads", {
     actionPanelComponent: SubChannelList,
     actionPanelComponentProps: ({ channel }) => ({ channel: channel.parent_channel_id || channel }),
-    actionPanelOpen({ owner }) {
+    actionPanelOpen({ rootRef }) {
         this.popover?.open(
-            owner.root.el.querySelector(`[name="${this.id}"]`),
+            rootRef().querySelector(`[name="${this.id}"]`),
             this.actionPanelComponentProps
         );
     },

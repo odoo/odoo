@@ -3,7 +3,7 @@ import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
 
-import { Component, proxy, useListener } from "@odoo/owl";
+import { Component, props, proxy, types, useListener } from "@odoo/owl";
 
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
@@ -12,24 +12,25 @@ import { useService } from "@web/core/utils/hooks";
 export class NavigableList extends Component {
     static components = { DiscussAvatar };
     static template = "mail.NavigableList";
-    static props = {
-        anchorRef: { optional: true },
-        class: { type: String, optional: true },
-        onSelect: { type: Function },
-        options: { type: Array },
-        optionTemplate: { type: String, optional: true },
-        position: { type: String, optional: true },
-        closeOnSelect: { type: Boolean, optional: true },
-        isLoading: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        position: "bottom",
-        closeOnSelect: true,
-        isLoading: false,
-    };
-
     setup() {
         super.setup();
+        this.props = props(
+            {
+                "anchorRef?": types.signal(types.instanceOf(HTMLElement)),
+                "class?": types.string(),
+                "closeOnSelect?": types.boolean(),
+                "isLoading?": types.boolean(),
+                onSelect: types.function([types.instanceOf(Event), types.object(), types.object()]),
+                options: types.array(types.object()),
+                "optionTemplate?": types.string(),
+                "position?": types.string(),
+            },
+            {
+                closeOnSelect: true,
+                isLoading: false,
+                position: "bottom",
+            }
+        );
         this.rootRef = useRef("root");
         this.state = proxy({
             activeIndex: null,
@@ -48,7 +49,7 @@ export class NavigableList extends Component {
             this.close();
         });
         // position and size
-        usePosition("root", () => this.props.anchorRef, { position: this.props.position });
+        usePosition("root", () => this.props.anchorRef?.(), { position: this.props.position });
         useLayoutEffect(
             () => {
                 this.open();

@@ -33,12 +33,16 @@ import { router } from "@web/core/browser/router";
  * If it is an input/textarea, set the selection at the end.
  * @param {Object} [params]
  * @param {string} [params.refName] override the ref name "autofocus"
+ * @param {Ref | import("@odoo/owl").Signal<HTMLElement>} [params.ref] use this ref
+ *  directly instead of looking one up by name. Accepts both a legacy `.el` ref and
+ *  an Owl 3 signal ref.
  * @param {boolean} [params.selectAll] if true, will select the entire text value.
  * @param {boolean} [params.mobile] if true, will force autofocus on touch devices.
- * @returns {Ref} the element reference
+ * @returns {Ref | import("@odoo/owl").Signal<HTMLElement>} the element reference
  */
-export function useAutofocus({ refName, selectAll, mobile } = {}) {
-    const ref = useRef(refName || "autofocus");
+export function useAutofocus({ refName, ref, selectAll, mobile } = {}) {
+    ref ||= useRef(refName || "autofocus");
+    const getEl = () => ("el" in ref ? ref.el : ref());
     const uiService = useService("ui");
 
     // Prevent autofocus on touch devices to avoid the virtual keyboard from popping up unexpectedly
@@ -70,7 +74,7 @@ export function useAutofocus({ refName, selectAll, mobile } = {}) {
                 }
             }
         },
-        () => [ref.el]
+        () => [getEl()]
     );
     return ref;
 }

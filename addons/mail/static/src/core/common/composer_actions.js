@@ -198,12 +198,12 @@ class UseComposerActions extends UseActions {
 }
 
 /**
- * @param {Object} [params0={}]
- * @param {Composer|() => Composer} params0.composer
+ * @param {import("@mail/core/common/action").ActionRootRefParam & {composer?: Composer|() => Composer}} [params0={}]
  * @returns {UseComposerActions_Def}
  */
-export function useComposerActions({ composer } = {}) {
+export function useComposerActions({ composer, rootRef } = {}) {
     return useAction(composerActionsRegistry, UseComposerActions, ComposerAction, {
         composer,
+        rootRef,
     });
 }

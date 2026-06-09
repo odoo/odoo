@@ -98,12 +98,12 @@ class UseChannelMemberActions extends UseActions {
 }
 
 /**
- * @param {Object} [params0={}]
- * @param {ChannelMember|() => ChannelMember} params0.member
+ * @param {import("@mail/core/common/action").ActionRootRefParam & {member?: ChannelMember|() => ChannelMember}} [params0={}]
  * @returns {UseChannelMemberActions_Def}
  */
-export function useChannelMemberActions({ member } = {}) {
+export function useChannelMemberActions({ member, rootRef } = {}) {
     return useAction(channelMemberActionsRegistry, UseChannelMemberActions, ChannelMemberAction, {
         member,
+        rootRef,
     });
 }

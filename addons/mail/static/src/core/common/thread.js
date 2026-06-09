@@ -7,20 +7,24 @@ import { useChildRefs, useMessageSelection, useVisible } from "@mail/utils/commo
 
 import {
     Component,
+    computed,
     onMounted,
     onWillDestroy,
     onWillPatch,
     onWillUnmount,
     onWillUpdateProps,
     proxy,
+    signal,
+    types,
     untrack,
     useEffect,
+    useListener,
 } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 
 import { _t } from "@web/core/l10n/translation";
 import { Transition } from "@web/core/transition";
-import { useBus, useRefListener, useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 
 export const PRESENT_VIEWPORT_THRESHOLD = 1;
@@ -31,7 +35,7 @@ export const PRESENT_VIEWPORT_THRESHOLD = 1;
  * @property {"asc"|"desc"} [order="asc"]
  * @property {import("models").Thread} thread
  * @property {string} [searchTerm]
- * @property {import("@web/core/utils/hooks").Ref} [scrollRef]
+ * @property {import("@odoo/owl").Signal<HTMLElement>} [scrollRef]
  * @extends {Component<Props, Env>}
  */
 export class Thread extends Component {
@@ -96,8 +100,8 @@ export class Thread extends Component {
         );
         this.present = useRef("load-newer");
         this.jumpPresentRef = useRef("jump-present");
-        this.root = useRef("messages");
-        this.visibleState = useVisible("messages", () => {
+        this.rootRef = signal(null, { type: types.instanceOf(HTMLDivElement) });
+        this.visibleState = useVisible(this.rootRef, () => {
             this.updateShowJumpPresent();
         });
         /**
@@ -105,11 +109,11 @@ export class Thread extends Component {
          * either be the chatter scrollable (if chatter) or the thread
          * scrollable (in other cases).
          */
-        this.scrollableRef = this.props.scrollRef ?? this.root;
-        useRefListener(
+        this.scrollableRef = computed(() => this.props.scrollRef?.() ?? this.rootRef());
+        useListener(
             this.scrollableRef,
             "scrollend",
-            () => (this.state.scrollTop = this.scrollableRef.el.scrollTop)
+            () => (this.state.scrollTop = this.scrollableRef().scrollTop)
         );
         this.loadOlderState = useVisible(
             "load-older",
@@ -150,7 +154,7 @@ export class Thread extends Component {
         useLayoutEffect(
             (focus) => {
                 if (focus && this.state.mountedAndLoaded) {
-                    this.root.el.focus();
+                    this.rootRef().focus();
                 }
             },
             () => [this.props.autofocus + this.props.thread.autofocus, this.state.mountedAndLoaded]
@@ -363,8 +367,8 @@ export class Thread extends Component {
                 return;
             }
             this.snapshot = {
-                scrollHeight: this.scrollableRef.el.scrollHeight,
-                scrollTop: this.scrollableRef.el.scrollTop,
+                scrollHeight: this.scrollableRef().scrollHeight,
+                scrollTop: this.scrollableRef().scrollTop,
             };
         });
         useLayoutEffect(this.applyScroll);
@@ -389,7 +393,7 @@ export class Thread extends Component {
                     };
                 }
             },
-            () => [this.scrollableRef.el, this.state.mountedAndLoaded]
+            () => [this.scrollableRef(), this.state.mountedAndLoaded]
         );
     }
 
@@ -427,7 +431,7 @@ export class Thread extends Component {
         if (this.snapshot && messagesAtTop) {
             this.setScroll(
                 this.snapshot.scrollTop +
-                    this.scrollableRef.el.scrollHeight -
+                    this.scrollableRef().scrollHeight -
                     this.snapshot.scrollHeight
             );
         } else if (this.snapshot && messagesAtBottom) {
@@ -445,15 +449,15 @@ export class Thread extends Component {
                 }
                 value =
                     this.props.order === "asc"
-                        ? this.scrollableRef.el.scrollHeight - this.scrollableRef.el.clientHeight
+                        ? this.scrollableRef().scrollHeight - this.scrollableRef().clientHeight
                         : 0;
             } else {
                 value =
                     this.props.order === "asc"
                         ? thread.scrollTop
-                        : this.scrollableRef.el.scrollHeight -
+                        : this.scrollableRef().scrollHeight -
                           thread.scrollTop -
-                          this.scrollableRef.el.clientHeight;
+                          this.scrollableRef().clientHeight;
             }
             if (
                 (this.lastSetValue === undefined || Math.abs(this.lastSetValue - value) > 1) &&
@@ -487,7 +491,7 @@ export class Thread extends Component {
             behavior: "instant",
             block: this.props.order === "asc" ? "start" : "end",
         });
-        thread.scrollTop = this.isAtBottom ? "bottom" : this.scrollableRef.el.scrollTop;
+        thread.scrollTop = this.isAtBottom ? "bottom" : this.scrollableRef().scrollTop;
         return true;
     }
 
@@ -500,7 +504,7 @@ export class Thread extends Component {
     }
 
     get viewportEl() {
-        let viewportEl = this.scrollableRef.el;
+        let viewportEl = this.scrollableRef();
         if (viewportEl && viewportEl.clientHeight > browser.innerHeight) {
             while (viewportEl && viewportEl.clientHeight > browser.innerHeight) {
                 viewportEl = viewportEl.parentElement;
@@ -620,11 +624,11 @@ export class Thread extends Component {
             return false;
         }
         return this.props.order === "asc"
-            ? this.scrollableRef.el.scrollHeight -
-                  this.scrollableRef.el.scrollTop -
-                  this.scrollableRef.el.clientHeight <
+            ? this.scrollableRef().scrollHeight -
+                  this.scrollableRef().scrollTop -
+                  this.scrollableRef().clientHeight <
                   30
-            : this.scrollableRef.el.scrollTop < 30;
+            : this.scrollableRef().scrollTop < 30;
     }
 
     onWheel(ev) {
@@ -657,10 +661,10 @@ export class Thread extends Component {
         } else {
             this.props.thread.scrollTop =
                 this.props.order === "asc"
-                    ? this.scrollableRef.el.scrollTop
-                    : this.scrollableRef.el.scrollHeight -
-                      this.scrollableRef.el.scrollTop -
-                      this.scrollableRef.el.clientHeight;
+                    ? this.scrollableRef().scrollTop
+                    : this.scrollableRef().scrollHeight -
+                      this.scrollableRef().scrollTop -
+                      this.scrollableRef().clientHeight;
         }
     }
 
@@ -722,7 +726,7 @@ export class Thread extends Component {
                 this.smoothScrollingTimeout = setTimeout(onSmoothScrollingEnd, 250);
             }
         }
-        this.scrollableRef.el.scrollTo({ behavior: smooth ? "smooth" : undefined, top: value });
+        this.scrollableRef().scrollTo({ behavior: smooth ? "smooth" : undefined, top: value });
         this.lastSetValue = value;
         this.messageHighlight?.resolveStartup?.();
         this.saveScroll();

@@ -17,7 +17,6 @@ import { ChatBubble } from "./chat_bubble";
 
 export class ChatHub extends Component {
     static components = { ActionList, ChatBubble, ChatWindow, Dropdown };
-    static props = [];
     static template = "mail.ChatHub";
 
     get chatHub() {

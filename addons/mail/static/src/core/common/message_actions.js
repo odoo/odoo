@@ -18,7 +18,8 @@ export const messageActionsRegistry = registry.category("mail.message/actions");
 /**
  * @typedef {Object} MessageActionSpecificParams
  * @property {Message} message
- * @property {Thread} thread when set, the thread the message is being viewed
+ * @property {import("@odoo/owl").Signal<HTMLElement>} [reactionAnchorRef] when set, the anchor element for reactions
+ * @property {Thread} [thread] when set, the thread the message is being viewed
  */
 /** @typedef {import("@mail/core/common/action").ActionParams<MessageAction, UseMessageActions_Def> & MessageActionSpecificParams} MessageActionParams */
 /** @typedef {import("@mail/core/common/action").ActionDefinition<MessageActionParams, MessageAction>} MessageActionDefinition */
@@ -38,14 +39,14 @@ registerMessageAction("reaction", {
         action: messageActionsRegistry.get("reaction"),
         messageActive: owner.isActive(),
     }),
-    componentCondition: ({ owner }) => !isMobileOS() && !owner.isMessageContextMenu,
+    componentCondition: ({ reactionAnchorRef }) => !isMobileOS() && !reactionAnchorRef,
     condition: ({ message, thread }) => message.canAddReaction(thread),
     icon: "oi oi-smile-add",
     name: _t("Add a Reaction"),
-    onSelected({ owner }) {
-        const anchorEl = owner.isMessageContextMenu
-            ? owner.anchor.el
-            : owner.rootRef?.()?.querySelector(`[name="${this.id}"]`);
+    onSelected({ owner, reactionAnchorRef, rootRef }) {
+        const anchorEl = reactionAnchorRef
+            ? reactionAnchorRef()
+            : rootRef?.()?.querySelector(`[name="${this.id}"]`);
         return owner.reactionPicker.open({ el: anchorEl });
     },
     setup: ({ message, owner, thread }) =>
@@ -130,8 +131,8 @@ registerMessageAction("reactions", {
     condition: ({ message }) => message.reactions.length,
     icon: "fa fa-smile-o",
     name: _t("View Reactions"),
-    onSelected: ({ message, owner, store }) => {
-        store.env.services.dialog.add(MessageReactionMenu, { message }, { rootRef: owner.rootRef });
+    onSelected: ({ message, rootRef, store }) => {
+        store.env.services.dialog.add(MessageReactionMenu, { message }, { rootRef });
     },
     sequence: 60,
 });
@@ -157,7 +158,7 @@ registerMessageAction("delete", {
     condition: ({ message }) => message.deletable,
     icon: "fa fa-trash",
     name: _t("Delete"),
-    onSelected: ({ message, owner }) => message.showDeleteConfirm(owner),
+    onSelected: ({ message, owner, rootRef }) => message.showDeleteConfirm(owner, rootRef),
     sequence: 120,
     tags: ACTION_TAGS.DANGER,
 });
@@ -214,15 +215,20 @@ registerMessageAction("end-poll", {
 export class MessageAction extends Action {
     /** @type {() => Message} */
     messageFn;
+    /** @type {import("@odoo/owl").Signal<HTMLElement>} */
+    reactionAnchorRef;
     /** @type {() => Thread} */
     threadFn;
     /**
      * @param {Object} param0
-     * @param {Thread|() => Thread} thread
+     * @param {Message|() => Message} param0.message
+     * @param {import("@odoo/owl").Signal<HTMLElement>} [param0.reactionAnchorRef]
+     * @param {Thread|() => Thread} [param0.thread]
      */
-    constructor({ message, thread }) {
+    constructor({ message, reactionAnchorRef, thread }) {
         super(...arguments);
         this.messageFn = typeof message === "function" ? message : () => message;
+        this.reactionAnchorRef = reactionAnchorRef;
         this.threadFn = typeof thread === "function" ? thread : () => thread;
     }
 
@@ -231,6 +237,7 @@ export class MessageAction extends Action {
         return Object.assign(super.params, {
             message: this.messageFn(),
             channel: thread?.channel,
+            reactionAnchorRef: this.reactionAnchorRef,
             thread,
         });
     }
@@ -242,11 +249,16 @@ class UseMessageActions extends UseActions {
 }
 
 /**
- * @param {Object} [params0={}]
- * @param {Message|() => Message} [params0.message]
- * @param {Thread|() => Thread} [params0.thread] when set, the thread the message is being viewed
+ * @param {import("@mail/core/common/action").ActionRootRefParam & {message?: Message|() => Message, reactionAnchorRef?: import("@odoo/owl").Signal<HTMLElement>, thread?: Thread|() => Thread}} [params0={}]
+ *   `reactionAnchorRef`: when set, the anchor element for reactions. `thread`: when set, the thread the
+ *   message is being viewed.
  * @returns {UseMessageActions_Def}
  */
-export function useMessageActions({ message, thread } = {}) {
-    return useAction(messageActionsRegistry, UseMessageActions, MessageAction, { message, thread });
+export function useMessageActions({ message, thread, reactionAnchorRef, rootRef } = {}) {
+    return useAction(messageActionsRegistry, UseMessageActions, MessageAction, {
+        message,
+        reactionAnchorRef,
+        rootRef,
+        thread,
+    });
 }

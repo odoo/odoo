@@ -1,23 +1,27 @@
-import { useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
-import { useForwardRefToParent, useService } from "@web/core/utils/hooks";
 import { ActionList } from "./action_list";
 import { useMessageActions } from "./message_actions";
+
+import { Component, computed, props, types } from "@odoo/owl";
+
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { useService } from "@web/core/utils/hooks";
 
 export class MessageContextMenu extends Component {
     static template = "mail.MessageContextMenu";
     static components = { ActionList, Dropdown };
-    static props = ["anchorRef", "dropdownState", "message", "thread?"];
 
     setup() {
         super.setup();
-        useForwardRefToParent("anchorRef");
         this.store = useService("mail.store");
-        this.anchor = useRef("anchorRef");
-        this.isMessageContextMenu = true;
+        this.props = props({
+            anchorRef: types.signal(types.instanceOf(HTMLElement)),
+            dropdownState: types.object(),
+            message: types.instanceOf(this.store["mail.message"].Class),
+            "thread?": types.instanceOf(this.store["mail.thread"].Class),
+        });
         this.messageActions = useMessageActions({
             message: () => this.props.message,
+            reactionAnchorRef: computed(() => this.props.anchorRef()),
             thread: () => this.props.thread,
         });
     }

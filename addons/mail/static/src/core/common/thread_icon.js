@@ -1,37 +1,31 @@
 import { useService } from "@web/core/utils/hooks";
 
-import { Component } from "@odoo/owl";
-import { Thread } from "./thread_model";
+import { Component, props, types } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { ImStatus } from "./im_status";
 import { attClassObjectToString } from "@mail/utils/common/format";
 
-/**
- * @typedef {Object} Props
- * @property {import("models").Thread} thread
- * @property {string} size
- * @property {string} className
- * @extends {Component<Props, Env>}
- */
 export class ThreadIcon extends Component {
     static template = "mail.ThreadIcon";
     static components = { ImStatus };
-    static props = {
-        thread: { type: Thread },
-        size: { optional: true, validate: (size) => ["small", "medium", "large"].includes(size) },
-        className: { type: String, optional: true },
-        title: { type: Boolean, optional: true },
-        typing: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        size: "medium",
-        className: "",
-        title: true,
-    };
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.props = props(
+            {
+                "className?": types.string(),
+                "size?": types.selection(["small", "medium", "large"]),
+                thread: types.instanceOf(this.store["mail.thread"].Class),
+                "title?": types.boolean(),
+                "typing?": types.boolean(),
+            },
+            {
+                className: "",
+                size: "medium",
+                title: true,
+            }
+        );
         this.attClassObjectToString = attClassObjectToString;
     }
 

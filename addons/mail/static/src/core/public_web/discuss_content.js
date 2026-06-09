@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, computed, proxy, signal } from "@odoo/owl";
+import { useLayoutEffect } from "@web/owl2/utils";
+import { Component, computed, proxy, signal, types } from "@odoo/owl";
 
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
@@ -33,8 +33,8 @@ export class DiscussContent extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.notification = useService("notification");
-        this.threadActions = useThreadActions({ thread: () => this.thread });
-        this.root = useRef("root");
+        this.rootRef = signal(null, { type: types.instanceOf(HTMLDivElement) });
+        this.threadActions = useThreadActions({ rootRef: this.rootRef, thread: () => this.thread });
         this.correspondentLocalDateTimeFormatted = signal("");
         this.state = proxy({ jumpThreadPresent: 0 });
         this.isDiscussContent = true;

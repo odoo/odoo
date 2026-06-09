@@ -124,10 +124,9 @@ class UseThreadActions extends UseActions {
 }
 
 /**
- * @param {Object} [params0={}]
- * @param {Thread|() => Thread} params0.thread
+ * @param {import("@mail/core/common/action").ActionRootRefParam & {thread?: Thread|() => Thread}} [params0={}]
  * @returns {UseThreadActions_Def}
  */
-export function useThreadActions({ thread } = {}) {
-    return useAction(threadActionsRegistry, UseThreadActions, ThreadAction, { thread });
+export function useThreadActions({ thread, rootRef } = {}) {
+    return useAction(threadActionsRegistry, UseThreadActions, ThreadAction, { rootRef, thread });
 }

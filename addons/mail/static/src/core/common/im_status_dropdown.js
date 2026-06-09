@@ -9,7 +9,6 @@ import { rpc } from "@web/core/network/rpc";
 
 export class ImStatusDropdown extends Component {
     static components = { Dropdown, DropdownItem, ImStatus };
-    static props = [];
     static template = "mail.ImStatusDropdown";
 
     setup() {

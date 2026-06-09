@@ -2,7 +2,6 @@ import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class DiscussNotificationSettings extends Component {
-    static props = {};
     static template = "mail.DiscussNotificationSettings";
 
     setup() {

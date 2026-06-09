@@ -366,10 +366,9 @@ class UseCallActions extends UseActions {
 }
 
 /**
- * @param {Object} [params0={}]
- * @param {DiscussChannel|() => DiscussChannel} params0.channel
+ * @param {import("@mail/core/common/action").ActionRootRefParam & {channel?: DiscussChannel|() => DiscussChannel}} [params0={}]
  * @return {UseCallActions_Def}
  */
-export function useCallActions({ channel } = {}) {
-    return useAction(callActionsRegistry, UseCallActions, CallAction, { channel });
+export function useCallActions({ channel, rootRef } = {}) {
+    return useAction(callActionsRegistry, UseCallActions, CallAction, { channel, rootRef });
 }

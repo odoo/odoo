@@ -1,9 +1,9 @@
 import { CallDropdown } from "@mail/discuss/call/common/call_dropdown";
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { Component, onWillUnmount } from "@odoo/owl";
+import { Component, onWillUnmount, props, types } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-
+import { Action as ActionModel } from "@mail/core/common/action";
 import { useService } from "@web/core/utils/hooks";
 
 const actionListProps = [
@@ -14,16 +14,15 @@ const actionListProps = [
     "odooControlPanelSwitchStyle?",
 ];
 
+const actionListPropsSchema = {
+    "dropdown?": types.boolean(),
+    "fw?": types.boolean(),
+    "hasBtnBg?": types.boolean(),
+    "inline?": types.boolean(),
+    "odooControlPanelSwitchStyle?": types.boolean(),
+};
+
 class Action extends Component {
-    static props = [
-        "action",
-        "group?",
-        "isFirstInGroup?",
-        "isLastInGroup?",
-        "style?",
-        ...actionListProps,
-    ];
-    static defaultProps = { fw: true };
     static components = { Action, DropdownItem };
     static template = "mail.Action";
 
@@ -40,6 +39,16 @@ class Action extends Component {
 
     setup() {
         super.setup();
+        this.props = props(
+            {
+                action: types.instanceOf(ActionModel),
+                "isFirstInGroup?": types.boolean(),
+                "isLastInGroup?": types.boolean(),
+                "style?": types.string(),
+                ...actionListPropsSchema,
+            },
+            { fw: true }
+        );
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.attClassObjectToString = attClassObjectToString;
@@ -84,7 +93,6 @@ class Action extends Component {
 
 export class ActionList extends Component {
     static components = { Action };
-    static props = ["actions", "groupClass?", ...actionListProps];
     static template = "mail.ActionList";
 
     getActionProps(action, group, { index, isFirstInGroup, isLastInGroup } = {}) {
@@ -107,6 +115,16 @@ export class ActionList extends Component {
 
     setup() {
         super.setup();
+        this.props = props({
+            actions: types.array(
+                types.or([
+                    types.instanceOf(ActionModel),
+                    types.array(types.instanceOf(ActionModel)),
+                ])
+            ),
+            "groupClass?": types.string(),
+            ...actionListPropsSchema,
+        });
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.actionListProps = actionListProps;

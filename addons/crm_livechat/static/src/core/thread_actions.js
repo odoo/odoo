@@ -15,9 +15,9 @@ registerThreadAction("create-lead", {
         title: _t("Create Lead"),
         icon: "fa fa-handshake-o",
     }),
-    actionPanelOpen({ owner }) {
+    actionPanelOpen({ rootRef }) {
         this.popover?.open(
-            owner.root.el.querySelector(`[name="${this.id}"]`),
+            rootRef().querySelector(`[name="${this.id}"]`),
             this.actionPanelComponentProps
         );
     },

@@ -4,7 +4,7 @@ import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_di
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
 import { SearchInput } from "@mail/core/common/search_input";
 
-import { Component, computed, onWillUpdateProps, onWillStart } from "@odoo/owl";
+import { Component, computed, onWillUpdateProps, onWillStart, props, types } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 import { useService } from "@web/core/utils/hooks";
@@ -27,22 +27,20 @@ export const MEMBER_CATEGORIES = [
     { sequence: 30, getMembers: (ch) => ch.unknownStatusMembers, label: _t("Others") },
 ];
 
-/**
- * @typedef {Object} Props
- * @property {import("models").DiscussChannel} channel
- * @property {string} [className]
- * @property {Function} [openChannelInvitePanel]
- * @property {Function} [close]
- * @extends {Component<Props, Env>}
- */
 export class ChannelMemberList extends Component {
     static components = { ActionPanel, ChannelActionDialog, ChannelMember, SearchInput };
-    static props = ["channel", "close?", "openChannelInvitePanel", "className?"];
     static template = "discuss.ChannelMemberList";
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.props = props({
+            channel: types.instanceOf(this.store["discuss.channel"].Class),
+            "close?": types.function([]),
+            openChannelInvitePanel: types.function([
+                types.object({ keepPrevious: types.boolean() }),
+            ]),
+        });
         this.dialogService = useService("dialog");
         this.search = useSearch({
             fetch: async (term) => {

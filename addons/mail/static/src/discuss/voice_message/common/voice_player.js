@@ -1,18 +1,12 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount, proxy, status } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, props, proxy, status, types } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
 
 const WAVE_COLOR = "#7775";
 
-/**
- * @typedef {Object} Props
- * @property {import("models").Attachment} attachment
- * @extends {Component<Props, Env>}
- */
 export class VoicePlayer extends Component {
-    static props = ["attachment"];
     static template = "mail.VoicePlayer";
 
     /** @type {number} */
@@ -49,6 +43,10 @@ export class VoicePlayer extends Component {
 
     setup() {
         super.setup();
+        this.store = useService("mail.store");
+        this.props = props({
+            attachment: types.instanceOf(this.store["ir.attachment"].Class),
+        });
         this.wrapperRef = useRef("wrapper");
         this.drawerRef = useRef("drawer");
         this.waveRef = useRef("wave");

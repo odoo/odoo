@@ -22,6 +22,13 @@ export const ACTION_TAGS = Object.freeze({
 /** @typedef {Component|Record} ActionOwner */
 
 /**
+ * @typedef {Object} ActionRootRefParam
+ * @property {import("@odoo/owl").Signal<HTMLElement>} [rootRef] Signal pointing at the owner's root
+ *   element, used to anchor popovers and `querySelector` action buttons. The concrete element type is up
+ *   to the caller.
+ */
+
+/**
  * @template Action_T
  * @typedef {Object} ActionPanelCloseSpecificParams
  * @property {Action_T} nextActiveAction
@@ -35,11 +42,7 @@ export const ACTION_TAGS = Object.freeze({
 /**
  * @template Action_T
  * @template UseActions_T
- * @typedef {Object} ActionParams
- * @property {UseActions_T} actions
- * @property {Action_T} action
- * @property {import("models").Store} store
- * @property {ActionOwner} owner
+ * @typedef {ActionRootRefParam & {actions: UseActions_T, action: Action_T, store: import("models").Store, owner: ActionOwner}} ActionParams
  */
 
 /**
@@ -102,6 +105,8 @@ export class Action {
     popover = null;
     /** @type {string} Unique id of this action. */
     id;
+    /** @type {import("@odoo/owl").Signal<HTMLElement>} */
+    rootRef;
     /** @type {import("models").Store} */
     store;
     actionRef = signal(null);
@@ -115,19 +120,27 @@ export class Action {
      * @param {string} params0.id
      * @param {ActionDefinition<ActionParams, Action>} params0.definition
      * @param {import("models").Store} [params0.store]
+     * @param {import("@odoo/owl").Signal<HTMLElement>} [params0.rootRef] @see ActionRootRefParam
      */
-    constructor({ actions, owner, id, definition, store }) {
+    constructor({ actions, owner, id, definition, store, rootRef }) {
         this.actions = actions;
         this.definition = definition;
         this.id = id;
         this.owner = owner;
+        this.rootRef = rootRef;
         this.store =
             store ??
             (owner[STORE_SYM] ? owner : isRecord(owner) ? owner.store : useService("mail.store"));
     }
 
     get params() {
-        return { actions: this.actions, action: this, store: this.store, owner: this.owner };
+        return {
+            actions: this.actions,
+            action: this,
+            store: this.store,
+            owner: this.owner,
+            rootRef: this.rootRef,
+        };
     }
 
     /** Determines whether this action is a one time effect or can be toggled (on or off). */
@@ -723,7 +736,8 @@ function useActionState({ UseActionClass, component }) {
  * @param {import("@web/core/registry").Registry<ActionDefinition<ActionParams_T, Action_T>>} actionRegistry
  * @param {typeof UseActionClass_T} UseActionClass
  * @param {typeof Action_T} ActionClass
- * @param {ActionParams_T} actionClassParams
+ * @param {ActionParams_T & ActionRootRefParam} actionClassParams Forwarded to the `ActionClass`
+ *   constructor; may carry a `rootRef` (@see ActionRootRefParam) shared by all action types.
  * @returns {InstanceType<UseActionClass_T>}
  */
 export function useAction(actionRegistry, UseActionClass, ActionClass, actionClassParams) {
