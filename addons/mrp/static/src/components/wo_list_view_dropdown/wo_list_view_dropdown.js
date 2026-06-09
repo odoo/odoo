@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useService } from "@web/core/utils/hooks";
 import { BadgeField, badgeField } from "@web/views/fields/badge/badge_field";
+import { _t } from "@web/core/l10n/translation";
 
 export class MOListViewDropdown extends BadgeField {
     static template = "mrp.MOViewListDropdown";
@@ -72,9 +73,10 @@ registry.category("fields").add("mo_view_list_dropdown", {
     ...badgeField,
     supportedOptions: [
         {
+            label: _t("Display"),
             name: "display",
-            type: "String"
-        }
+            type: "String",
+        },
     ],
     extractProps: ({ options }) => ({
         display: options.display,
