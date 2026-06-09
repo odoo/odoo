@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class ChooseDeliveryCarrier(models.TransientModel):
@@ -21,6 +23,8 @@ class ChooseDeliveryCarrier(models.TransientModel):
         domain="[('id', 'in', available_carrier_ids)]",
         required=True,
     )
+    carrier_prices = fields.Json(compute="_compute_carrier_prices")
+    carrier_prices_dumped = fields.Char(compute="_compute_carrier_prices_dumped")
     delivery_type = fields.Selection(related="carrier_id.delivery_type")
     delivery_price = fields.Float()
     display_price = fields.Float(string="Cost", readonly=True)
@@ -37,17 +41,6 @@ class ChooseDeliveryCarrier(models.TransientModel):
         string="Total Order Weight", related="order_id.shipping_weight", readonly=False
     )
     weight_uom_name = fields.Char(default=_get_default_weight_uom, readonly=True)
-
-    @api.onchange("carrier_id", "total_weight")
-    def _onchange_carrier_id(self):
-        self.delivery_message = False
-        if self.delivery_type in ("fixed", "base_on_rule"):
-            vals = self._get_delivery_rate()
-            if vals.get("error_message"):
-                return {"error": vals["error_message"]}
-        else:
-            self.display_price = 0
-            self.delivery_price = 0
 
     @api.onchange("order_id")
     def _onchange_order_id(self):
@@ -85,14 +78,28 @@ class ChooseDeliveryCarrier(models.TransientModel):
             )
 
     def _get_delivery_rate(self):
-        vals = self.carrier_id.with_context(order_weight=self.total_weight).rate_shipment(
+        self.ensure_one()
+        delivery_vals = self._get_carrier_delivery_rate(self.carrier_id)
+        if delivery_vals.get("display_price"):
+            self.delivery_message = delivery_vals["delivery_message"]
+            self.delivery_price = delivery_vals["delivery_price"]
+            self.display_price = delivery_vals["display_price"]
+            return {"no_rate": delivery_vals["no_rate"]}
+        return {"error_message": delivery_vals["error_message"]}
+
+    def _get_carrier_delivery_rate(self, carrier):
+        self.ensure_one()
+        vals = carrier.with_context(order_weight=self.total_weight).rate_shipment(
             self.order_id
         )
+
         if vals.get("success"):
-            self.delivery_message = vals.get("warning_message", False)
-            self.delivery_price = vals["price"]
-            self.display_price = vals["carrier_price"]
-            return {"no_rate": vals.get("no_rate", False)}
+            return {
+                "delivery_message": vals.get("warning_message", False),
+                "delivery_price": vals["price"],
+                "display_price": vals["carrier_price"],
+                "no_rate": vals.get("no_rate", False),
+            }
         return {"error_message": vals["error_message"]}
 
     def update_price(self):
@@ -115,3 +122,40 @@ class ChooseDeliveryCarrier(models.TransientModel):
             "recompute_delivery_price": False,
             "delivery_message": self.delivery_message,
         })
+
+    @api.onchange("carrier_id", "carrier_prices")
+    def _onchange_carrier_data(self):
+        if not self.carrier_id or not self.carrier_prices:
+            return
+        delivery_vals = self.carrier_prices.get(str(self.carrier_id.id), {})
+        if delivery_vals.get("error_message"):
+            raise UserError(delivery_vals.get("error_message"))
+
+        if delivery_vals.get("display_price", False):
+            self.delivery_message = delivery_vals["delivery_message"]
+            self.delivery_price = delivery_vals["delivery_price"]
+            self.display_price = delivery_vals["display_price"]
+        else:
+            self.delivery_message = False
+            self.display_price = 0
+            self.delivery_price = 0
+
+    @api.depends("total_weight")
+    def _compute_carrier_prices(self):
+        """Compute delivery prices for all cariers"""
+        for wizard in self:
+            json_result = {}
+            for available_carrier in wizard.available_carrier_ids:
+                hash_val = available_carrier._origin.id or available_carrier.id
+                try:
+                    delivery_vals = wizard._get_carrier_delivery_rate(available_carrier)
+                    json_result[str(hash_val)] = delivery_vals
+                except ValidationError as e:
+                    json_result[str(hash_val)] = {"error_message": e.args[0]}
+            wizard.carrier_prices = json_result
+
+    @api.depends("carrier_prices")
+    def _compute_carrier_prices_dumped(self):
+        """Create a hashable key for context"""
+        for wizard in self:
+            wizard.carrier_prices_dumped = json.dumps(wizard.carrier_prices) if wizard.carrier_prices else "{}"
