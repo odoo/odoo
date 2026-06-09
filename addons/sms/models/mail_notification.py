@@ -21,6 +21,7 @@ class MailNotification(models.Model):
         ('sms_credit', 'Insufficient Credit'),
         ('sms_country_not_supported', 'Country Not Supported'),
         ('sms_registration_needed', 'Country-specific Registration Required'),
+        ('sms_database_non_active', 'Database non active'),
         ('sms_server', 'Server Error'),
         ('sms_acc', 'Unregistered Account'),
         # delivery report errors
@@ -29,7 +30,6 @@ class MailNotification(models.Model):
         ('sms_not_allowed', 'Not Allowed'),
         ('sms_not_delivered', 'Not Delivered'),
         ('sms_rejected', 'Rejected'),
-        ('sms_database_non_active', 'Database non active'),
     ])
 
     @api.depends('sms_id_int', 'notification_type')

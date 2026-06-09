@@ -58,8 +58,8 @@ class SmsApi(SmsApiBase):  # TODO RIGR in master: rename SmsApi to SmsApiIAP, an
     PROVIDER_TO_SMS_FAILURE_TYPE = SmsApiBase.PROVIDER_TO_SMS_FAILURE_TYPE | {
         'country_not_supported': 'sms_country_not_supported',
         'insufficient_credit': 'sms_credit',
-        'unregistered': 'sms_acc',
         'not_active_db': 'sms_database_non_active',
+        'unregistered': 'sms_acc',
     }
 
     def __init__(self, env, account=None):

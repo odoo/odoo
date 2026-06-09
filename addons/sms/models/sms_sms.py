@@ -56,13 +56,13 @@ class SmsSms(models.Model):
         ('sms_country_not_supported', 'Country Not Supported'),
         ('sms_registration_needed', 'Country-specific Registration Required'),
         ('sms_credit', 'Insufficient Credit'),
+        ('sms_database_non_active', 'Database non active'),
         ('sms_server', 'Server Error'),
         ('sms_acc', 'Unregistered Account'),
         # mass mode specific codes, generated internally, not returned by IAP.
         ('sms_blacklist', 'Blacklisted'),
         ('sms_duplicate', 'Duplicate'),
         ('sms_optout', 'Opted Out'),
-        ('sms_database_non_active', 'Database non active'),
     ], copy=False)
     sms_tracker_id = fields.Many2one('sms.tracker', string='SMS trackers', compute='_compute_sms_tracker_id')
     to_delete = fields.Boolean(

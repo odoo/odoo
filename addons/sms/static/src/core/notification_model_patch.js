@@ -16,6 +16,8 @@ const notificationPatch = {
                 return _t("Country Not Supported");
             case "sms_registration_needed":
                 return _t("Country-specific Registration Required");
+            case "sms_database_non_active":
+                return _t("Database non active");
             case "sms_server":
                 return _t("Server Error");
             case "sms_acc":
@@ -30,8 +32,6 @@ const notificationPatch = {
                 return _t("Not Delivered");
             case "sms_rejected":
                 return _t("Rejected");
-            case "sms_database_non_active":
-                return _t("Database non active");
             default:
                 return super.failureMessage;
         }
