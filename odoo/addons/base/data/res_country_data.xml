@@ -817,6 +817,8 @@
             <field name="code">kz</field>
             <field name="currency_id" ref="KZT" />
             <field eval="7" name="phone_code" />
+            <field name='state_required'>1</field>
+            <field eval="'%(street)s\n%(street2)s\n%(city)s\n%(state_name)s\n%(country_name)s'" name="address_format"/>
         </record>
         <record id="la" model="res.country">
             <field name="name">Laos</field>
