@@ -61,6 +61,7 @@ export class ImageToolOptionPlugin extends Plugin {
             el.dataset.formatMimetype = el.dataset.originalMimetype;
             delete el.dataset.originalMimetype;
         }
+        return rootEl;
     }
     /**
      * Gets the CSS value of a color variable name.

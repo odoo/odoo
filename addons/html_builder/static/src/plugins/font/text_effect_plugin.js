@@ -274,6 +274,7 @@ export class TextEffectPlugin extends Plugin {
         for (const el of selectElements(root, "[data-text-effect='{}']")) {
             delete el.dataset.textEffect;
         }
+        return root;
     }
 }
 

@@ -555,6 +555,7 @@ export class FormatPlugin extends Plugin {
             }
         }
         this.mergeAdjacentInlines(root);
+        return root;
     }
 
     cleanForSave(root, { preserveSelection = false } = {}) {
@@ -575,6 +576,7 @@ export class FormatPlugin extends Plugin {
             }
         }
         this.mergeAdjacentInlines(root, { preserveSelection });
+        return root;
     }
 
     removeEmptyInlineElement(selectionData) {

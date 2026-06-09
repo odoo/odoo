@@ -108,6 +108,7 @@ export class CaptionPlugin extends Plugin {
             image.classList.remove(EDITABLE_MEDIA_CLASS);
             image.after(caption);
         }
+        return root;
     }
 
     hasImageCaption(image) {

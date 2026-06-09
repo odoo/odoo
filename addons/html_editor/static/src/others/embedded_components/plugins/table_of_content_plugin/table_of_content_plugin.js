@@ -92,6 +92,7 @@ export class TableOfContentPlugin extends Plugin {
         for (const el of root.querySelectorAll(".o_embedded_toc_header_highlight")) {
             el.classList.remove("o_embedded_toc_header_highlight");
         }
+        return root;
     }
 
     destroy() {

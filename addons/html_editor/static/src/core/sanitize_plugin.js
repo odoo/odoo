@@ -56,6 +56,7 @@ export class SanitizePlugin extends Plugin {
         for (const el of selectElements(element, "[data-oe-aria-label]")) {
             el.setAttribute("aria-label", el.dataset.oeAriaLabel);
         }
+        return element;
     }
 
     /**
@@ -81,5 +82,6 @@ export class SanitizePlugin extends Plugin {
         for (const el of selectElements(root, "[data-oe-aria-label]")) {
             el.removeAttribute("aria-label");
         }
+        return root;
     }
 }

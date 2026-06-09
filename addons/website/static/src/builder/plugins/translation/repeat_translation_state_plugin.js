@@ -36,11 +36,13 @@ class RepeatTranslationStatePlugin extends Plugin {
                 el.replaceChildren(repeater);
             }
             cursors.restore();
+            return root;
         }),
         clean_for_save_processors: (root) => {
             for (const el of selectElements(root, ".o_translation_state_inner_span")) {
                 unwrapContents(el);
             }
+            return root;
         },
     };
 }

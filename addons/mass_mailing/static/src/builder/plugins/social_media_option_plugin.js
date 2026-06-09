@@ -87,6 +87,7 @@ export class MassMailingSocialMediaOptionPlugin extends Plugin {
         root.querySelectorAll(".o_social_snippet_empty_placeholder").forEach((element) =>
             element.remove()
         );
+        return root;
     }
 
     normalize(rootEl) {
@@ -106,6 +107,7 @@ export class MassMailingSocialMediaOptionPlugin extends Plugin {
                 snippet.querySelector(".o_social_snippet_empty_placeholder")?.remove();
             }
         }
+        return rootEl;
     }
 
     applyIconsMediaDialogParams(params) {
@@ -114,8 +116,8 @@ export class MassMailingSocialMediaOptionPlugin extends Plugin {
             params.node.matches(".s_social_media .s_social_media_links .fa")
         ) {
             params.visibleTabs = ["ICONS"];
-            return params;
         }
+        return params;
     }
 
     renderPlaceholderEl() {

@@ -7,7 +7,7 @@ import { DIRECTIONS, nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { DISABLED_NAMESPACE } from "./toolbar/toolbar_plugin";
 
-/** @typedef {((codeElement: HTMLElement) => void)[]} to_inline_code_processors */
+/** @typedef {((codeElement: HTMLElement) => HTMLElement)[]} to_inline_code_processors */
 
 export class InlineCodePlugin extends Plugin {
     static id = "inlineCode";
@@ -269,5 +269,6 @@ export class InlineCodePlugin extends Plugin {
                 el.remove();
             }
         }
+        return rootEl;
     }
 }

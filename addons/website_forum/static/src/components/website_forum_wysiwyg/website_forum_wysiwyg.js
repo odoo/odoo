@@ -82,6 +82,7 @@ export class WebsiteForumWysiwyg extends Wysiwyg {
         // float-start class messes up the post layout OPW 769721
         const classNames = ["o_we_selected_image", "float-start"];
         root.querySelectorAll("img").forEach((img) => removeClass(img, ...classNames));
+        return root;
     }
 
     getTextAreaContent() {

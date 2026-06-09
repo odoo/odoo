@@ -88,9 +88,10 @@ export class HintPlugin extends Plugin {
         this.clearHints();
     }
 
-    normalize() {
+    normalize(root = this.editable) {
         this.clearHints();
         this.updateHints();
+        return root;
     }
 
     triggerDebouncedUpdateHints(selectionData = this.dependencies.selection.getSelectionData()) {
@@ -152,5 +153,6 @@ export class HintPlugin extends Plugin {
         for (const elem of selectElements(root, ".o-we-hint")) {
             this.removeHint(elem);
         }
+        return root;
     }
 }

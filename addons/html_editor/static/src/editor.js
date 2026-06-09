@@ -63,7 +63,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 /**
  * Clean up DOM before taking into account for next history commit remaining in
  * edit mode
- * @typedef {((root: EditorContext["editable"] | HTMLElement) => void)[]} normalize_processors
+ * @typedef {((root: EditorContext["editable"] | HTMLElement) => EditorContext["editable"] | HTMLElement)[]} normalize_processors
  */
 
 /**
@@ -386,8 +386,8 @@ export class Editor {
      * its intent.
      *
      * An item is processed by each processor in sequence, each processor
-     * returning the new value of the item. If a processor returns a falsy
-     * value, the item remains unchanged.
+     * returning the new value of the item. Processors mutating the item in
+     * place must return that item.
      *
      * Example:
      * ```js
@@ -405,7 +405,7 @@ export class Editor {
             warnOfNamingConvention("processThrough", resourceId, { suffix: "processors" });
         }
         this.getResource(resourceId).forEach((processor) => {
-            item = processor(item, ...args) || item;
+            item = processor(item, ...args);
         });
         return item;
     }

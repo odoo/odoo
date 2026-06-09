@@ -18,6 +18,7 @@ export class EditorVersionPlugin extends Plugin {
             delete element.dataset.oeVersion;
         }
         stripVersion(element);
+        return element;
     }
 
     cleanForSave(root) {
@@ -27,5 +28,6 @@ export class EditorVersionPlugin extends Plugin {
         if (firstChild && version) {
             firstChild.dataset.oeVersion = version;
         }
+        return root;
     }
 }

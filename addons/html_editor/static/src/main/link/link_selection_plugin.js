@@ -41,7 +41,10 @@ export class LinkSelectionPlugin extends Plugin {
 
         /** Processors */
         clean_for_save_processors: (root) => this.clearLinkInSelectionClass(root),
-        normalize_processors: () => this.resetLinkInSelection(),
+        normalize_processors: (root) => {
+            this.resetLinkInSelection();
+            return root;
+        },
 
         /** Providers */
         feff_providers: this.addFeffsToLinks.bind(this),
@@ -110,5 +113,6 @@ export class LinkSelectionPlugin extends Plugin {
         for (const link of selectElements(root, ".o_link_in_selection")) {
             removeClass(link, "o_link_in_selection");
         }
+        return root;
     }
 }

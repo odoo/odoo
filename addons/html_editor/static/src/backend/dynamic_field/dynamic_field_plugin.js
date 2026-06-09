@@ -312,6 +312,7 @@ export class DynamicFieldPlugin extends Plugin {
             }
             return false;
         });
+        return node;
     }
 
     cleanQwebExpressionsForCopy(node) {
@@ -322,6 +323,7 @@ export class DynamicFieldPlugin extends Plugin {
                 }
             }
         );
+        return node;
     }
 
     cleanQwebExpressionsForSave(root) {
@@ -337,6 +339,7 @@ export class DynamicFieldPlugin extends Plugin {
             }
             return doChildren;
         });
+        return root;
     }
 }
 

@@ -311,6 +311,7 @@ export class CarouselOptionPlugin extends Plugin {
             // Activate the active slide.
             this.dependencies.builderOptions.setNextTarget(activeItemEl);
         }
+        return activeItemEl;
     }
     /**
      * @param {HTMLElement} editingElement the carousel element

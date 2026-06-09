@@ -84,5 +84,6 @@ export class ContentExpandablePlugin extends Plugin {
             el.querySelector(".o-mail-Message-viewMore-container")?.remove();
             el.setAttribute("data-o-mail-quote", "1");
         }
+        return root;
     }
 }

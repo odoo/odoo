@@ -57,6 +57,7 @@ test("ensure order of operations when hovering an option", async () => {
     patchWithCleanup(EditInteractionPlugin.prototype, {
         refreshInteractions(element) {
             expect.step("refreshInteractions");
+            return element;
         },
     });
     await setupWebsiteBuilder(`<div class="test-options-target">b</div>`);

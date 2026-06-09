@@ -102,6 +102,7 @@ export class PopupVisibilityPlugin extends Plugin {
             this.window.Modal.getOrCreateInstance(modalEl)._hideModal();
             this.window.Modal.getInstance(modalEl).dispose();
         }
+        return rootEl;
     }
 
     /**

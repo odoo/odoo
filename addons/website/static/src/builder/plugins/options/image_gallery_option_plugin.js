@@ -150,6 +150,7 @@ export class ImageGalleryOptionPlugin extends Plugin {
                 this.dependencies.builderOptions.setNextTarget(activeImageEl);
             }
         }
+        return activeItemEl;
     }
 
     /**

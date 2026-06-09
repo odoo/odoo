@@ -90,6 +90,7 @@ export class MailingListSubscribeOptionPlugin extends Plugin {
         for (const newsLetterEl of newsLetterEls) {
             this.removePreview(newsLetterEl);
         }
+        return root;
     }
 
     removePreview(editingElement) {

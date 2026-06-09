@@ -48,6 +48,7 @@ export class SpacingOptionPlugin extends Plugin {
 
     cleanForSave(root) {
         this.removeGridPreviews(root);
+        return root;
     }
 }
 

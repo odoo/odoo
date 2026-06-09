@@ -133,6 +133,7 @@ export class SyntaxHighlightingPlugin extends Plugin {
             pre.textContent = value;
             newlinesToLineBreaks(pre);
         }
+        return root;
     }
 
     /**
@@ -188,6 +189,7 @@ export class SyntaxHighlightingPlugin extends Plugin {
             }
             pre.remove();
         }
+        return root;
     }
 
     setupNewCodeBlock({ name, props }) {

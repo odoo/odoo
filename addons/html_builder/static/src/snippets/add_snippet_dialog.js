@@ -12,7 +12,7 @@ import { useAutofocus, useChildRef, useService } from "@web/core/utils/hooks";
 import { SnippetViewer } from "./snippet_viewer";
 
 /**
- * @typedef {((arg: { iframe: HTMLIFrameElement }) => void)[]} snippet_preview_dialog_stylesheets_processors
+ * @typedef {((arg: { iframe: HTMLIFrameElement }) => { iframe: HTMLIFrameElement })[]} snippet_preview_dialog_stylesheets_processors
  * @typedef {string[]} snippet_preview_dialog_bundles
  */
 

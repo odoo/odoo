@@ -398,11 +398,13 @@ export class AnimateOptionPlugin extends Plugin {
         for (const img of animateImg) {
             img.loading = "eager";
         }
+        return root;
     }
     cleanForSave(root) {
         for (const el of root.querySelectorAll(".o_animate_preview")) {
             el.classList.remove("o_animate_preview");
         }
+        return root;
     }
 }
 

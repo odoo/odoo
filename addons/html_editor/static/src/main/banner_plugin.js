@@ -247,6 +247,7 @@ export class BannerPlugin extends Plugin {
             const spacesElement = document.createTextNode("\u00A0\u00A0\u00A0\u00A0");
             el.replaceWith(spacesElement);
         }
+        return root;
     }
 
     handleShiftTab() {

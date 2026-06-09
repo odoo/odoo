@@ -47,15 +47,15 @@ export class ProductPageOptionPlugin extends Plugin {
 
             const mainEl = el.querySelector(PRODUCT_PAGE_OPTION_SELECTOR);
             if (!mainEl) {
-                return;
+                return el;
             }
             const productDetailMain = mainEl.querySelector("#product_detail_main");
             if (!productDetailMain) {
-                return;
+                return el;
             }
             const accordionEl = productDetailMain.querySelector("#product_accordion");
             if (!accordionEl) {
-                return;
+                return el;
             }
 
             const accordionItemsEls = accordionEl.querySelectorAll(".accordion-item");
@@ -68,6 +68,7 @@ export class ProductPageOptionPlugin extends Plugin {
                     accordionCollapseEl.classList.remove("show");
                 }
             });
+            return el;
         },
         builder_options_render_context: {
             productPageOptionSelector: PRODUCT_PAGE_OPTION_SELECTOR,

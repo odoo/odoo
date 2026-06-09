@@ -51,6 +51,7 @@ export class QWebPlugin extends Plugin {
                 element.removeAttribute("contenteditable");
                 delete element.dataset.oeProtected;
             }
+            return root;
         },
         normalize_processors: withSequence(0, this.normalize.bind(this)),
         clipboard_content_processors: this.clearDataAttributes.bind(this),
@@ -146,6 +147,7 @@ export class QWebPlugin extends Plugin {
             this.dependencies.protectedNode.setProtectingNode(element, true);
         }
         this.applyGroupQwebBranching(root);
+        return root;
     }
 
     checkAllInline(el) {
@@ -306,5 +308,6 @@ export class QWebPlugin extends Plugin {
         for (const node of root.querySelectorAll(dataAttributesSelector)) {
             QWEB_DATA_ATTRIBUTES.forEach((attr) => node.removeAttribute(attr));
         }
+        return root;
     }
 }

@@ -27,6 +27,7 @@ export class EmptyNotEditableElementsPlugin extends Plugin {
         if (!this.dependencies.selection.isSelectionInEditable(selection)) {
             this.dependencies.selection.resetSelection();
         }
+        return element;
     }
 }
 

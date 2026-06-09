@@ -114,6 +114,7 @@ export class VisibilityPlugin extends Plugin {
                 invisibleEl.removeAttribute("data-invisible");
             }
         }
+        return rootEl;
     }
 
     onSnippetDropped({ snippetEl }) {

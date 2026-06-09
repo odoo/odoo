@@ -33,11 +33,13 @@ class EditableButtonPlugin extends Plugin {
             span.append(...button.childNodes);
             button.append(span);
         }
+        return root;
     }
     cleanEditableButtons(root) {
         for (const span of root.querySelectorAll(".o_inner_button_editable_span")) {
             unwrapContents(span);
         }
+        return root;
     }
 }
 

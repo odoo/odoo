@@ -64,6 +64,7 @@ export class EditInteractionPlugin extends Plugin {
 
     refreshInteractions(element) {
         this.websiteEditService.refresh(element);
+        return element;
     }
 
     stopInteractions(element) {
