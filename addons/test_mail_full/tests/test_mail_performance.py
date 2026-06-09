@@ -92,7 +92,11 @@ class TestMailPerformance(FullBaseMailPerformance):
             new_message.notified_partner_ids,
             self.user_follower_emp_email.partner_id + self.user_admin.partner_id + self.customers + self.user_follower_portal.partner_id
         )
-        self.assertEqual(self.push_to_end_point_mocked.call_count, 8, "Not sure why 8")
+        self.assertEqual(
+            self.push_to_end_point_mocked.call_count,
+            2,
+            "Mentioned/Subscribed internal users with a device",
+        )
 
 
 @tagged('mail_performance', 'post_install', '-at_install')
