@@ -757,3 +757,66 @@ class TestMrpStockReports(TestReportsCommon):
         mo.action_confirm()
         self.assertEqual(self.product.with_context(warehouse_id=wh1.id).incoming_qty, 0)
         self.assertEqual(self.product.with_context(warehouse_id=wh2.id).incoming_qty, 10)
+
+    def test_stock_reception_action_assign_sets_group_ids(self):
+        """In this test we check if action_assign correctly links the MO's using the production groups.
+        We expect action_assign to correctly set parent_ids and child_ids in the group. Analog we expect
+        action_unassign to remove them.
+        """
+        warehouse = self.wh_2
+        route_mto = warehouse.mto_pull_id.route_id
+        route_mto.active = True
+        route_manufacture = warehouse.manufacture_pull_id.route_id
+
+        component, sub_component, part1, part2 = self.env['product.product'].create([
+            {'name': 'Component'},
+            {'name': 'Sub Component', 'route_ids': [
+                Command.set([route_manufacture.id, route_mto.id]),
+            ]},
+            {'name': 'Part 1'},
+            {'name': 'Part 2'}
+        ])
+
+        component_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': component.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [
+                Command.create({'product_id': sub_component.id, 'product_qty': 1.0}),
+            ],
+        })
+        sub_component_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': sub_component.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [
+                Command.create({'product_id': part1.id, 'product_qty': 1.0}),
+                Command.create({'product_id': part2.id, 'product_qty': 1.0})
+            ],
+        })
+        component_mo = self.env['mrp.production'].create({
+            'bom_id': component_bom.id,
+            'product_qty': 1,
+        })
+        component_mo.action_confirm()
+        self.assertEqual(len(component_mo.production_group_id.child_ids), 1)
+        component_mo.production_group_id.child_ids.production_ids.action_cancel()
+        sub_component_mo = self.env['mrp.production'].create({
+            'product_id': sub_component.id,
+            'bom_id': sub_component_bom.id,
+            'product_qty': 1,
+        })
+
+        sub_component_mo.action_confirm()
+        in_move = component_mo.move_raw_ids
+        out_move = sub_component_mo.move_finished_ids
+        self.assertEqual(len(in_move), 1)
+        self.assertEqual(len(out_move), 1)
+        self.env['report.stock.report_reception'].action_assign(in_move.ids, [1], out_move.ids)
+
+        component_mo_group = component_mo.production_group_id
+        sub_component_mo_group = sub_component_mo.production_group_id
+        self.assertIn(sub_component_mo_group.id, component_mo_group.child_ids.ids)
+        self.assertIn(component_mo_group.id, sub_component_mo_group.parent_ids.ids)
+
+        self.env['report.stock.report_reception'].action_unassign(in_move.ids, 1, out_move.ids)
+        self.assertNotIn(sub_component_mo_group.id, component_mo_group.child_ids.ids)
+        self.assertNotIn(component_mo_group.id, sub_component_mo_group.parent_ids.ids)
