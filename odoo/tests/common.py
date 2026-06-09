@@ -187,7 +187,11 @@ def flushing_cursor(cr: Cursor):
         return
 
     # simluate cr.commit()
-    state_stack, closing = cr.transaction._state_stack__, cr._closing
+    state_stack = cr.transaction._state_stack__
+    registry_invalidated = cr.transaction._registry_invalidated
+    closing = cr._closing
+    # preserve registry_invalidated flag which is reset when committing
+    # sum them after yielding
     try:
         # Since we simulate an empty stack, make sure the parent layer is set as
         # the cache on the registry. This ensures that existing caches are not
@@ -199,15 +203,20 @@ def flushing_cursor(cr: Cursor):
         cr.transaction._state_stack__ = []  # replace the stack
         with cr.transaction.committing():
             pass  # no real commit
-    finally:
+        # restore the stack
         cr.transaction._state_stack__ = state_stack
         cr._closing = closing
 
-    yield
+        try:
+            yield
+        finally:
+            # the registry may be invalidated during the yield
+            registry_invalidated += cr.transaction._registry_invalidated
 
-    # simulate cr.commit() again to flush changes made by the main cursor
-    state_stack, closing = cr.transaction._state_stack__, cr._closing
-    try:
+        # simulate cr.commit() again to flush changes made by the main cursor
+        state_stack = cr.transaction._state_stack__
+        closing = cr._closing
+
         cr._closing = False  # do a reset
         cr.transaction._state_stack__ = []  # replace the stack
         with cr.transaction.committing():
@@ -215,6 +224,7 @@ def flushing_cursor(cr: Cursor):
     finally:
         cr.transaction._state_stack__ = state_stack
         cr._closing = closing
+        cr.transaction._registry_invalidated = registry_invalidated
 
 
 def standalone(*tags):
