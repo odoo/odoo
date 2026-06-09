@@ -13,7 +13,6 @@ declare module "services" {
     import { localizationService } from "@web/core/l10n/localization_service";
     import { nameService } from "@web/core/name_service";
     import { httpService } from "@web/core/network/http_service";
-    import { notificationService } from "@web/core/notifications/notification_service";
     import { offlineService } from "@web/core/offline/offline_service";
     import { ormService } from "@web/core/orm_plugin";
     import { overlayService } from "@web/core/overlay/overlay_service";
@@ -54,7 +53,6 @@ declare module "services" {
         localization: typeof localizationService;
         menu: typeof menuService;
         name: typeof nameService;
-        notification: typeof notificationService;
         offline: typeof offlineService;
         orm: typeof ormService;
         overlay: typeof overlayService;
