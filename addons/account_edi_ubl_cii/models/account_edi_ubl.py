@@ -2561,11 +2561,11 @@ class AccountEdiUBL(models.AbstractModel):
                 taxes_values = line_collected_values['taxes_values']
                 line_domain = []
                 if len(taxes_values) == 1:
-                    line_domain = [('tax_ids', 'any', [
-                        ('amount', '=', taxes_values[0]['amount']),
-                        ('amount_type', '=', taxes_values[0]['amount_type']),
-                        ('type_tax_use', '=', taxes_values[0]['type_tax_use']),
-                    ])]
+                    line_domain = [
+                        ('tax_ids.amount', '=', taxes_values[0]['amount']),
+                        ('tax_ids.amount_type', '=', taxes_values[0]['amount_type']),
+                        ('tax_ids.type_tax_use', '=', taxes_values[0]['type_tax_use']),
+                    ]
 
                 line_collected_values['predicted_vals'] = self.env['account.move.line']._get_predicted_values(
                     name=line_collected_values['name'],

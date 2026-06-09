@@ -416,10 +416,9 @@ class ProjectProject(models.Model):
         sale_order_line_domain = [
             '&',
                 ('display_type', '=', False),
-                ('order_id', 'any', ['|',
-                    ('id', 'in', self.reinvoiced_sale_order_id.ids),
-                    ('project_id', 'in', self.ids),
-                ]),
+                '|',
+                    ('order_id', 'in', self.reinvoiced_sale_order_id.ids),
+                    ('order_id.project_id', 'in', self.ids),
         ]
         sale_order_line_query = SaleOrderLine._search(sale_order_line_domain, bypass_access=True)
         sale_order_line_sql = sale_order_line_query.select(

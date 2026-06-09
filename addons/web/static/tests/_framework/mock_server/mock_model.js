@@ -3717,9 +3717,12 @@ export class Model extends Array {
                 value,
                 numberGranularity
             );
+            const prefixed = subDomain.map(item =>
+                Array.isArray(item) ? [`${fieldName}.${item[0]}`, item[1], item[2]] : item
+            );
             return value
-                ? [[fieldName, "any", subDomain]]
-                : ["|", [fieldName, "not any", []], [fieldName, "any", subDomain]];
+                ? prefixed
+                : ["|", [fieldName, "=", false], ...prefixed];
         } else if (numberGranularity) {
             return [[`${fieldName}.${numberGranularity}`, "=", value]];
         } else {
@@ -3743,7 +3746,9 @@ export class Model extends Array {
                 from,
                 to
             );
-            return [[fieldName, "any", subDomain]];
+            return subDomain.map(item =>
+                Array.isArray(item) ? [`${fieldName}.${item[0]}`, item[1], item[2]] : item
+            );
         } else {
             return [
                 [fieldName, ">=", from],

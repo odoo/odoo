@@ -1329,8 +1329,8 @@ class Base(models.AbstractModel):
             def formatter_follow_many2one(value):
                 value, domain = sub_formatter(value)
                 if not value:
-                    return value, Domain(field_name, 'not any', []) | Domain(field_name, 'any', domain)
-                return value, Domain(field_name, 'any', domain)
+                    return value, Domain(field_name, '=', False) | Domain(field_name, 'in', model._search(domain))
+                return value, Domain(field_name, 'in', model._search(domain))
 
             return formatter_follow_many2one
 
@@ -1339,7 +1339,7 @@ class Base(models.AbstractModel):
             # Special case for many2many because (<many2many>, '=', False) domain bypass ir.rule.
             def formatter_many2many(value):
                 if not value:
-                    return False, [(field_name, 'not any', [])]
+                    return False, [(field_name, '=', False)]
                 id_ = value.id
                 return (id_, value.sudo().display_name), Domain(field_name, '=', id_)
 

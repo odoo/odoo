@@ -1399,7 +1399,7 @@ Please change the quantity done or the rounding precision in your settings.""",
             ('lot_id', 'in', self.lot_ids.ids),
             ('quantity', '!=', 0),
             ('location_id.usage', 'in', ('internal', 'transit', 'customer')),
-            ('location_id', 'not any', [('location_id', 'child_of', base_location.id)])
+            '!', ('location_id.location_id', 'child_of', base_location.id)
         ])
 
         if quants:

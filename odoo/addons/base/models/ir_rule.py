@@ -182,7 +182,7 @@ class IrRule(models.Model):
         if include_inherits:
             for parent_model_name, parent_field_name in model._inherits.items():
                 if domain := self._compute_domain(parent_model_name, mode):
-                    global_domains.append(Domain(parent_field_name, 'any', domain))
+                    global_domains.append(Domain(parent_field_name, 'any!', domain))
 
         # fetch the model's rules
         rules = self._get_all_rules().get(model_name, ())

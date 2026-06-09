@@ -398,6 +398,6 @@ class AccountMove(models.Model):
             return AccountMoveLine._get_predicted_values(
                 name,
                 move=self,
-                line_domain=[('tax_ids', 'any', domain)],
+                line_domain=[('tax_ids', 'in', self.env['account.tax']._search(domain))],
             ).get('tax_ids', self.env['account.tax'])
         return self.env['account.tax']

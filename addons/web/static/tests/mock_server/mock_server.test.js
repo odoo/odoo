@@ -1598,20 +1598,20 @@ describe("groupby chain of fields", () => {
         expect(result).toEqual([
             {
                 __count: 3,
-                __extra_domain: [["foo_id", "any", [["bar_id", "=", 1]]]],
+                __extra_domain: [["foo_id.bar_id", "=", 1]],
                 "foo_id.bar_id": [1, "bar_a"],
             },
             {
                 __count: 1,
-                __extra_domain: [["foo_id", "any", [["bar_id", "=", 2]]]],
+                __extra_domain: [["foo_id.bar_id", "=", 2]],
                 "foo_id.bar_id": [2, false],
             },
             {
                 __count: 1,
                 __extra_domain: [
                     "|",
-                    ["foo_id", "not any", []],
-                    ["foo_id", "any", [["bar_id", "=", false]]],
+                    ["foo_id", "=", false],
+                    ["foo_id.bar_id", "=", false],
                 ],
                 "foo_id.bar_id": false,
             },
@@ -1648,19 +1648,17 @@ describe("groupby chain of fields", () => {
         expect(result).toEqual([
             {
                 __count: 3,
-                __extra_domain: [["foo_id", "any", [["bar_id", "any", [["name", "=", "bar_a"]]]]]],
+                __extra_domain: [["foo_id.bar_id.name", "=", "bar_a"]],
                 "foo_id.bar_id.name": "bar_a",
             },
             {
                 __count: 2,
                 __extra_domain: [
                     "|",
-                    ["foo_id", "not any", []],
-                    [
-                        "foo_id",
-                        "any",
-                        ["|", ["bar_id", "not any", []], ["bar_id", "any", [["name", "=", false]]]],
-                    ],
+                    ["foo_id", "=", false],
+                    "|",
+                    ["foo_id.bar_id", "=", false],
+                    ["foo_id.bar_id.name", "=", false],
                 ],
                 "foo_id.bar_id.name": false,
             },
@@ -1697,42 +1695,24 @@ describe("groupby chain of fields", () => {
             {
                 __count: 2,
                 __extra_domain: [
-                    [
-                        "foo_id",
-                        "any",
-                        [
-                            ["schedule_datetime", ">=", "1916-08-18 00:00:00"],
-                            ["schedule_datetime", "<", "1916-08-19 00:00:00"],
-                        ],
-                    ],
+                    ["foo_id.schedule_datetime", ">=", "1916-08-18 00:00:00"],
+                    ["foo_id.schedule_datetime", "<", "1916-08-19 00:00:00"],
                 ],
                 "foo_id.schedule_datetime:day": ["1916-08-18 00:00:00", "1916-08-18"],
             },
             {
                 __count: 1,
                 __extra_domain: [
-                    [
-                        "foo_id",
-                        "any",
-                        [
-                            ["schedule_datetime", ">=", "1916-08-19 00:00:00"],
-                            ["schedule_datetime", "<", "1916-08-20 00:00:00"],
-                        ],
-                    ],
+                    ["foo_id.schedule_datetime", ">=", "1916-08-19 00:00:00"],
+                    ["foo_id.schedule_datetime", "<", "1916-08-20 00:00:00"],
                 ],
                 "foo_id.schedule_datetime:day": ["1916-08-19 00:00:00", "1916-08-19"],
             },
             {
                 __count: 2,
                 __extra_domain: [
-                    [
-                        "foo_id",
-                        "any",
-                        [
-                            ["schedule_datetime", ">=", "1916-10-18 00:00:00"],
-                            ["schedule_datetime", "<", "1916-10-19 00:00:00"],
-                        ],
-                    ],
+                    ["foo_id.schedule_datetime", ">=", "1916-10-18 00:00:00"],
+                    ["foo_id.schedule_datetime", "<", "1916-10-19 00:00:00"],
                 ],
                 "foo_id.schedule_datetime:day": ["1916-10-18 00:00:00", "1916-10-18"],
             },
@@ -1740,8 +1720,8 @@ describe("groupby chain of fields", () => {
                 __count: 1,
                 __extra_domain: [
                     "|",
-                    ["foo_id", "not any", []],
-                    ["foo_id", "any", [["schedule_datetime", "=", false]]],
+                    ["foo_id", "=", false],
+                    ["foo_id.schedule_datetime", "=", false],
                 ],
                 "foo_id.schedule_datetime:day": false,
             },
@@ -1770,15 +1750,15 @@ describe("groupby chain of fields", () => {
         expect(result).toEqual([
             {
                 "foo_id.schedule_datetime:month_number": 8,
-                __extra_domain: [["foo_id", "any", [["schedule_datetime.month_number", "=", 8]]]],
+                __extra_domain: [["foo_id.schedule_datetime.month_number", "=", 8]],
                 __count: 1,
             },
             {
                 "foo_id.schedule_datetime:month_number": false,
                 __extra_domain: [
                     "|",
-                    ["foo_id", "not any", []],
-                    ["foo_id", "any", [["schedule_datetime", "=", false]]],
+                    ["foo_id", "=", false],
+                    ["foo_id.schedule_datetime", "=", false],
                 ],
                 __count: 1,
             },

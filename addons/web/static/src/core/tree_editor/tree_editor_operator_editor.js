@@ -82,14 +82,6 @@ const OPERATOR_DESCRIPTIONS = {
                 return _t("match");
         }
     },
-    "not any": (fieldDefType) => {
-        switch (fieldDefType) {
-            case "many2one":
-                return _t("matches none of");
-            default:
-                return _t("match none of");
-        }
-    },
 
     // virtual operators
     set: _t("is set"),

@@ -1005,20 +1005,19 @@ class ProductProduct(models.Model):
             if isinstance(value, str) and (m := re.search(r'\[(.*?)\]', value)):
                 product_domains.append([('default_code', '=', m.group(1))])
 
-        supplier_domain = []
         if partner_id := self.env.context.get('partner_id'):
-            supplier_domain = [
+            tmpl_ids = self.env['product.supplierinfo']._search([
                 ('partner_id', '=', partner_id),
                 '|',
                 ('product_code', operator, value),
                 ('product_name', operator, value),
-            ]
+            ]).product_tmpl_id
+            if tmpl_ids:
+                template_domain.append([('id','in', tmpl_ids)])
 
         # AND clauses properly hit indexes so no need for custom sql in this case.
         if operator in Domain.NEGATIVE_OPERATORS:
             domains = template_domains + product_domains
-            if supplier_domain:
-                domains.append([('product_tmpl_id.seller_ids', 'any', supplier_domain)])
             return Domain.AND(domains)
 
         # Disable active_test to simplify subqueries
@@ -1029,16 +1028,6 @@ class ProductProduct(models.Model):
             ]),
             self_no_active_test._search(Domain.OR(product_domains)),
         ]
-        if supplier_domain:
-            queries.append(
-                self_no_active_test._search([
-                    (
-                        'product_tmpl_id',
-                        'in',
-                        self_no_active_test.env['product.supplierinfo']._search(supplier_domain).subselect('product_tmpl_id'),
-                    )
-                ])
-            )
         query = SQL(
             """(%s)""",
             SQL("UNION ALL").join(
@@ -1087,7 +1076,7 @@ class ProductProduct(models.Model):
                 ('product_code', operator, name),
                 ('product_name', operator, name),
             ])
-            match_domain = Domain('product_tmpl_id.seller_ids', 'any', supplier_domain)
+            match_domain = Domain('product_tmpl_id.seller_ids', 'in', self.env['product.supplierinfo']._search(supplier_domain))
             products = self.search_fetch(domain & match_domain, ['display_name'], limit=limit)
         return [(product.id, product.display_name) for product in products.sudo()]
 

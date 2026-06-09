@@ -733,8 +733,6 @@ class HrEmployee(models.Model):
         self.search([])._compute_current_version_id()
 
     def _search_version_id(self, operator, value):
-        if operator in ('any', 'any!'):
-            return Domain('current_version_id', operator, value)
         domain = Domain('id', operator, value)
         return Domain('id', 'in', self.env['hr.version']._search(domain).select('employee_id'))
 

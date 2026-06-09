@@ -381,7 +381,7 @@ class EventTrack(models.Model):
             track.wishlist_visitor_count = visitor_count
 
     def _search_wishlist_visitor_ids(self, operator, operand):
-        if operator in ('not in', 'not any'):
+        if operator == 'not in':
             raise UserError(self.env._("Unsupported 'Not In' operation on track wishlist visitors"))
 
         subquery = self.env['event.track.visitor'].sudo()._search([

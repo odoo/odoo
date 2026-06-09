@@ -99,12 +99,8 @@ class ResPartner(models.Model):
 
         sale_orders = self.env["sale.order"].search([
             ("company_id", "=", company.id),
-            (
-                "partner_invoice_id",
-                "any",
-                [("commercial_partner_id", "in", commercial_partners.ids)],
-            ),
-            ("order_line", "any", [("untaxed_amount_to_invoice", ">", 0)]),
+            ("partner_invoice_id.commercial_partner_id", "in", commercial_partners.ids),
+            ("order_line.untaxed_amount_to_invoice", ">", 0),
             ("state", "=", "sale"),
             ("invoicing_closed", "=", False),
         ])

@@ -665,7 +665,7 @@ class Properties(Field):
     def filter_function(self, records, field_expr, operator, value):
         getter = self.expression_getter(field_expr)
         domain = None
-        if operator == 'any' or isinstance(value, Domain):
+        if operator in ('any', 'any!') or isinstance(value, Domain):
             domain = Domain(value).optimize(records)
         elif operator == 'in' and isinstance(value, COLLECTION_TYPES) and isinstance(getter(records.browse()), BaseModel):
             domain = Domain('id', 'in', value).optimize(records)

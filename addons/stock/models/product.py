@@ -619,9 +619,8 @@ class ProductProduct(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_product_production_lot_form")
         action['domain'] = [
             ('product_id', '=', self.id),
-            '|', ('location_id', '=', False),
-                 ('location_id', 'any', self.env['stock.location']._check_company_domain(self.env.context['allowed_company_ids']))
-        ]
+            '|', ('location_id', '=', False)
+        ] + self.env['stock.location']._check_company_domain(self.env.context['allowed_company_ids'], 'location_id.')
         action['context'] = {
             'default_product_id': self.id,
             'set_product_readonly': True,
@@ -1172,9 +1171,8 @@ class ProductTemplate(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_product_production_lot_form")
         action['domain'] = [
             ('product_id.product_tmpl_id', '=', self.id),
-            '|', ('location_id', '=', False),
-                 ('location_id', 'any', self.env['stock.location']._check_company_domain(self.env.context['allowed_company_ids']))
-        ]
+            '|', ('location_id', '=', False)
+        ] + self.env['stock.location']._check_company_domain(self.env.context['allowed_company_ids'], 'location_id.')
         action['context'] = {
             'default_product_tmpl_id': self.id,
             'search_default_group_by_location': True,

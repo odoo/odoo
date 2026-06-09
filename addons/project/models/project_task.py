@@ -272,7 +272,6 @@ class ProjectTask(models.Model):
     )
     has_late_and_unreached_milestone = fields.Boolean(
         compute='_compute_has_late_and_unreached_milestone',
-        search='_search_has_late_and_unreached_milestone',
         export_string_translation=False,
     )
     # Task Dependencies fields
@@ -737,14 +736,15 @@ class ProjectTask(models.Model):
         if not self.env.user.share:
             self.display_follow_button = False
             return
-        project_collaborator_read_group = self.env['project.collaborator']._read_group(
-            [('project_id', 'in', self.project_id.ids), ('partner_id', '=', self.env.user.partner_id.id)],
-            ['project_id'],
-            ['limited_access:bool_and'],
-        )
-        limited_access_per_project_id = dict(project_collaborator_read_group)
+        collaborator_project_ids = {
+            project.id
+            for (project,) in self.env['project.collaborator']._read_group(
+                [('project_id', 'in', self.project_id.ids), ('partner_id', '=', self.env.user.partner_id.id)],
+                ['project_id'],
+            )
+        }
         for task in self:
-            task.display_follow_button = not limited_access_per_project_id.get(task.project_id, True)
+            task.display_follow_button = task.project_id.id in collaborator_project_ids
 
     def _get_group_pattern(self):
         return {
@@ -1450,17 +1450,6 @@ class ProjectTask(models.Model):
         ])
         for task in self:
             task.has_late_and_unreached_milestone = task.allow_milestones and task.milestone_id.id in late_milestones
-
-    def _search_has_late_and_unreached_milestone(self, operator, value):
-        if operator != 'in':
-            return NotImplemented
-        return [
-            ('allow_milestones', '=', True),
-            ('milestone_id', 'any', [
-                ('is_reached', '=', False),
-                ('deadline', '<', 'today'),
-            ]),
-        ]
 
     # ---------------------------------------------------
     # Mail gateway

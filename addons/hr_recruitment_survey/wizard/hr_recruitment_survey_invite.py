@@ -245,12 +245,12 @@ class HrRecruitmentSurveyInvite(models.TransientModel):
         accessible_survey_ids = self.env['survey.survey']._search([
             '|',
             ('restrict_user_ids', '=', False),
-            ('restrict_user_ids', 'any', [('id', '=', current_user.id)])
+            ('restrict_user_ids', '=', current_user.id)
         ])
 
-        inaccessible_self_records = self.env['hr.recruitment.survey.invite']._search([
+        inaccessible_self_records = self._search([
             ('survey_ids', '!=', False),
-            ('survey_ids', 'any', [('id', 'not in', accessible_survey_ids)])  # True if one ore more survey(s) are NOT accessible
+            ('survey_ids.id', 'not in', accessible_survey_ids)  # True if one ore more survey(s) are NOT accessible
         ])
 
         domain = [('id', 'not in', inaccessible_self_records)] if value else [('id', 'in', inaccessible_self_records)]
@@ -264,9 +264,9 @@ class HrRecruitmentSurveyInvite(models.TransientModel):
             ('survey_type', '=', 'recruitment'),
         ])
 
-        inaccessible_self_records = self.env['hr.recruitment.survey.invite']._search([
+        inaccessible_self_records = self._search([
             ('survey_ids', '!=', False),
-            ('survey_ids', 'any', [('id', 'not in', recruitment_survey_ids)])  # returns True if one or more survey(s) are NOT of type recruitment
+            ('survey_ids.id', 'not in', recruitment_survey_ids)  # returns True if one or more survey(s) are NOT of type recruitment
         ])
 
         domain = [('id', 'not in', inaccessible_self_records)] if value else [('id', 'in', inaccessible_self_records)]
@@ -279,22 +279,22 @@ class HrRecruitmentSurveyInvite(models.TransientModel):
         current_user = self.env.user
 
         accessible_applications_by_interviewer = self.env['hr.applicant']._search([
-            ('interviewer_ids', 'any', [('id', '=', current_user.id)])
+            ('interviewer_ids', '=', current_user.id)
         ])
 
         accessible_jobs_by_interviewer = self.env['hr.job']._search([
             '|',
-            ('interviewer_ids', 'any', [('id', '=', current_user.id)]),
-            ('application_ids', 'any', [('id', 'in', accessible_applications_by_interviewer)])
+            ('interviewer_ids', '=', current_user.id),
+            ('application_ids', 'in', accessible_applications_by_interviewer)
         ])
 
         accessible_survey_ids_by_interviewer = self.env['survey.survey']._search([
-            ('hr_job_ids', 'any', [('id', 'in', accessible_jobs_by_interviewer)])
+            ('hr_job_ids', 'in', accessible_jobs_by_interviewer)
         ])
 
-        inaccessible_self_records = self.env['hr.recruitment.survey.invite']._search([
+        inaccessible_self_records = self._search([
             ('survey_ids', '!=', False),
-            ('survey_ids', 'any', [('id', 'not in', accessible_survey_ids_by_interviewer)])  # True if one ore more survey(s) are NOT accessible
+            ('survey_ids.id', 'not in', accessible_survey_ids_by_interviewer)  # True if one ore more survey(s) are NOT accessible
         ])
 
         domain = [('id', 'not in', inaccessible_self_records)] if value else [('id', 'in', inaccessible_self_records)]

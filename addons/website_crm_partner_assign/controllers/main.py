@@ -105,7 +105,7 @@ class WebsiteAccount(CustomerPortal):
             'all': {'label': _('Active'), 'domain': []},
             'no_activities': {
                 'label': _('No Activities'),
-                'domain': [('activity_ids', 'not any', [('user_id', '=', request.env.user.id)]), ('stage_id.is_won', '=', False)]
+                'domain': ['!', ('activity_ids.user_id', '=', request.env.user.id), ('stage_id.is_won', '=', False)]
             },
             'overdue': {'label': _('Late Activities'), 'domain': [('activity_date_deadline', '<', today)]},
             'today': {'label': _('Today Activities'), 'domain': [('activity_date_deadline', '=', today)]},

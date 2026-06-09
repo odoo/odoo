@@ -786,14 +786,10 @@ class SaleOrder(models.Model):
                 # same "Invoices is not set" (some lines may have invoices and some
                 # don't)
                 #
-                # A solution is using the 'not any' operators with inverted search first
+                # A solution is using an inverted search first
                 # ("orders with invoiced lines").
                 falsy_domain = [
-                    (
-                        "order_line",
-                        "not any",
-                        [("invoice_lines.move_id.move_type", "in", ("out_invoice", "out_refund"))],
-                    )
+                    "!", ("order_line.invoice_lines.move_id.move_type", "in", ("out_invoice", "out_refund")),
                 ]
                 if len(value) == 1:
                     return falsy_domain
@@ -814,14 +810,8 @@ class SaleOrder(models.Model):
             so_ids = self.env.cr.fetchone()[0] or []
             return [("id", "in", so_ids)] + falsy_domain
         return [
-            (
-                "order_line.invoice_lines",
-                "any",
-                [
-                    ("move_id.move_type", "in", ("out_invoice", "out_refund")),
-                    ("move_id", operator, value),
-                ],
-            )
+            ("order_line.invoice_lines.move_id.move_type", "in", ("out_invoice", "out_refund")),
+            ("order_line.invoice_lines.move_id", operator, value),
         ]
 
     @api.depends("state", "order_line.invoice_status", "invoicing_closed")

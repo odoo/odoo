@@ -43,7 +43,7 @@ class WebsiteForum(WebsiteProfile):
                 return request.env['forum.forum'].search(
                     request.website.website_domain()
                     & Domain('id', '!=', forum.id)
-                    & Domain('post_ids', 'any', post_domain)
+                    & Domain('post_ids', 'in', request.env['forum.post']._search(post_domain))
                 )
             values['my_other_forums'] = tools.lazy(_get_my_other_forums)
         else:

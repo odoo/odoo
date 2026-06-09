@@ -64,7 +64,7 @@ class HrEmployeeType(models.Model):
                 continue
             countries_with_same_employee_type = self.env['hr.employee'].sudo().search_count([
                     ('employee_type_id', '=', record.id),
-                    ('company_id', 'any', [('partner_id.country_code', '!=', record.country_id.code)]),
+                    ('company_id.partner_id.country_code', '!=', record.country_id.code),
             ], limit=1)
             if countries_with_same_employee_type:
                 raise ValidationError(self.env._("This employee type is used in another company, you can't modify the country where it's applicable for now.\nChange the employee type on the employees of the other company to be able to modify this."))

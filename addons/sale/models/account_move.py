@@ -295,15 +295,9 @@ class AccountMove(models.Model):
     def _analytic_line_domain_get_invoiced_lines(self, so_lines):
         return Domain("so_line", "in", so_lines.ids) & (
             Domain("reinvoice_move_id", "=", False)
-            | Domain(
-                "reinvoice_move_id",
-                "any",
-                (
-                    Domain("payment_state", "=", "reversed")
-                    | (
-                        Domain("state", "=", "cancel")
-                        & Domain("payment_state", "!=", "invoicing_legacy")
-                    )
-                ),
+            | Domain("reinvoice_move_id.payment_state", "=", "reversed")
+            | (
+                Domain("reinvoice_move_id.state", "=", "cancel")
+                & Domain("reinvoice_move_id.payment_state", "!=", "invoicing_legacy")
             )
         )

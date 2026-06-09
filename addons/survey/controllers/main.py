@@ -34,11 +34,11 @@ class Survey(http.Controller):
         if not survey_token:
             return SurveySudo, UserInputSudo
         if answer_token:
-            answer_sudo = UserInputSudo.search(
-                Domain('survey_id', 'any',
-                    Domain('access_token', '=', survey_token)
-                    & Domain('active', 'in', (True, False))  # keeping active test for UserInput
-                ) & Domain('access_token', '=', answer_token), limit=1)
+            answer_sudo = UserInputSudo.search([
+                ('survey_id.access_token', '=', survey_token),
+                ('survey_id.active', 'in', (True, False)), # keeping active test for UserInput
+                ('access_token', '=', answer_token)
+            ], limit=1)
             if answer_sudo:
                 return answer_sudo.survey_id, answer_sudo
 

@@ -316,8 +316,7 @@ class MailThread(models.AbstractModel):
     def _search_message_has_error(self, operator, operand):
         if operator != 'in':
             return NotImplemented
-        message_domain = [('has_error', '=', True), ('author_id', '=', self.env.user.partner_id.id)]
-        return [('message_ids', 'any', message_domain)]
+        return [('message_ids.has_error', '=', True), ('message_ids.author_id', '=', self.env.user.partner_id.id)]
 
     def _compute_message_attachment_count(self):
         read_group_var = self.env['ir.attachment']._read_group([('res_id', 'in', self.ids), ('res_model', '=', self._name)],

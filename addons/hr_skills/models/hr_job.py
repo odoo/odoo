@@ -32,21 +32,13 @@ class HrJob(models.Model):
             )
 
     def _search_current_job_skill_ids(self, operator, value):
-        if operator not in ('in', 'not in', 'any'):
+        if operator not in ('in', 'not in'):
             raise NotImplementedError()
-        job_skill_ids = []
         domain = Domain.OR([
             Domain('valid_to', '=', False),
             Domain('valid_to', '>=', 'today'),
-        ])
-        if operator == 'any' and isinstance(value, Domain):
-            domain = Domain.AND([domain, value])
-
-        elif operator in ('in', 'not in'):
-            domain = Domain.AND([domain, Domain('id', 'in', value)])
-
-        job_skill_ids = self.env['hr.job.skill']._search(domain)
-        return Domain('job_skill_ids', 'in', job_skill_ids)
+        ]) & Domain('id', operator, value)
+        return Domain('job_skill_ids', 'in', self.env['hr.job.skill']._search(domain))
 
     @api.depends("job_skill_ids.skill_id")
     def _compute_skill_ids(self):

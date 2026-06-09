@@ -2463,7 +2463,7 @@ class AccountMove(models.Model):
     def _search_next_payment_date(self, operator, value):
         if operator not in ('in', '<', '<='):
             return NotImplemented
-        return [('line_ids', 'any', [('reconciled', '=', False), ('payment_date', operator, value)])]
+        return [('line_ids.payment_date', operator, value)]
 
     @api.depends('line_ids.no_followup')
     def _compute_no_followup(self):

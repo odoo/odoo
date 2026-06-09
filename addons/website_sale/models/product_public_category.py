@@ -172,14 +172,14 @@ class ProductPublicCategory(models.Model):
         )
         # Bypass access rules in the subquery to avoid adding `has_published_products = True` twice.
         subquery = self._search(
-            Domain("product_tmpl_ids", "any", published_products_domain), bypass_access=True
+            Domain("product_tmpl_ids", "in", self.env["product.template"]._search(published_products_domain)), bypass_access=True
         )
         parents_and_self_have_published_products = SQL(
             "SELECT unnest(string_to_array(left(c.parent_path, -1), '/'))::integer FROM %s c",
             subquery.subselect(subquery.table.parent_path),
         )
 
-        return Domain("id", "any", parents_and_self_have_published_products)
+        return Domain("id", "in", parents_and_self_have_published_products)
 
     # === BUSINESS METHODS === #
 

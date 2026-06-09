@@ -783,7 +783,7 @@ class AccountChartTemplate(models.AbstractModel):
                 Domain.AND([
                     company_domain,
                     Domain('taxes_id', '!=', False),
-                    Domain('taxes_id', 'not any', company_domain),
+                    Domain('taxes_id', 'not in', self.env['account.tax']._search(company_domain)),
                 ])
             )
             sudoed_products_sale._force_default_sale_tax(company)
@@ -792,7 +792,7 @@ class AccountChartTemplate(models.AbstractModel):
                 Domain.AND([
                     company_domain,
                     Domain('supplier_taxes_id', '!=', False),
-                    Domain('supplier_taxes_id', 'not any', company_domain),
+                    Domain('supplier_taxes_id', 'not in', self.env['account.tax']._search(company_domain)),
                 ])
             )
             sudoed_products_purchase._force_default_purchase_tax(company)

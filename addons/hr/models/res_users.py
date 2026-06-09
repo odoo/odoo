@@ -53,7 +53,7 @@ def field_employee(field_type: type[fields.Field], name: str, *, field_name='', 
         subdomain = Domain(name, operator, value)
         Employee = self.env['hr.employee']
         if Employee.has_access('read') and Employee.has_field_access(Employee._fields[name], 'read'):
-            return Domain('employee_id', 'any', subdomain)
+            return Domain('employee_id', 'in', Employee._search(subdomain))
         else:
             user = self.env.user.employee_id.filtered_domain(subdomain).user_id
             return Domain('id', 'in', user.ids)

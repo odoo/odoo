@@ -101,7 +101,7 @@ class GamificationBadge(models.Model):
 
         rows = self.env['gamification.badge.user']._read_group([
             ('badge_id', 'in', self.ids),
-            ('user_id', 'any', []),
+            ('user_id', '!=', False),
         ], ['badge_id'], ['user_id:count', 'user_id:recordset'])
         mapping = {
             badge.id: {

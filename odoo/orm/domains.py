@@ -78,8 +78,6 @@ if typing.TYPE_CHECKING:
 _logger = logging.getLogger('odoo.domains')
 
 STANDARD_CONDITION_OPERATORS = frozenset([
-    'any', 'not any',
-    'any!', 'not any!',
     'in', 'not in',
     '<', '>', '<=', '>=',
     'like', 'not like',
@@ -90,15 +88,6 @@ STANDARD_CONDITION_OPERATORS = frozenset([
 """List of standard operators for conditions.
 This should be supported in the framework at all levels.
 
-- `any` works for relational fields and `id` to check if a record matches
-  the condition
-  - if value is SQL or Query, see `any!`
-  - if bypass_search_access is set on the field, see `any!`
-  - if value is a Domain for a many2one (or `id`),
-    _search with active_test=False
-  - if value is a Domain for a x2many,
-    _search on the comodel of the field (with its context)
-- `any!` works like `any` but bypass adding record rules on the comodel
 - `in` for equality checks where the given value is a collection of values
   - the collection is transformed into OrderedSet
   - False value indicates that the value is *not set*
@@ -121,7 +110,7 @@ The non-standard operators can be reduced to standard operators by using the
 optimization function. See the respective optimization functions for the
 details.
 """
-INTERNAL_CONDITION_OPERATORS = frozenset(('any!', 'not any!'))
+INTERNAL_CONDITION_OPERATORS = frozenset(('any', 'not any', 'any!', 'not any!'))
 
 NEGATIVE_CONDITION_OPERATORS = {
     'not any': 'any',
@@ -213,12 +202,14 @@ class Domain:
         In case we have multiple ones, there must be 3 of them:
         a field (str), the operator (str) and a value for the condition.
 
-        By default, the special operators ``'any!'`` and ``'not any!'`` are
-        allowed in domain conditions (``Domain('a', 'any!', dom)``) but not in
-        domain lists (``Domain([('a', 'any!', dom)])``).
+        The ``'any'`` and ``'not any'`` operators are internal and cannot be
+        used directly. Use dot notation on relational fields instead
+        (e.g. ``Domain('field.subfield', '=', value)``).
         """
         if len(args) > 1:
             if isinstance(args[0], str):
+                if not internal and args[1] in ('any', 'not any'):
+                    raise ValueError(f"Domain() operator {args[1]!r} is removed, use dot notation instead")
                 return DomainCondition(*args).checked()
             # special cases like True/False constants
             if args == _TRUE_LEAF:
@@ -879,7 +870,7 @@ class DomainCondition(Domain):
         elif isinstance(value, (Domain, Query, SQL)) and operator not in ('any', 'not any', 'any!', 'not any!', 'in', 'not in'):
             # accept SQL object in the right part for simple operators
             # use case: compare 2 fields
-            _logger.warning("The domain condition %r should use the 'any' or 'not any' operator.", (self.field_expr, self.operator, self.value))
+            _logger.warning("The domain condition %r should use the 'in' or 'not in' operator.", (self.field_expr, self.operator, self.value))
         if value is not self.value:
             return DomainCondition(self.field_expr, operator, value)
         return self
@@ -1030,7 +1021,7 @@ class DomainCondition(Domain):
                 return domain
 
         # final checks
-        if self.operator not in STANDARD_CONDITION_OPERATORS and level == OptimizationLevel.FULL:
+        if self.operator not in STANDARD_CONDITION_OPERATORS and self.operator not in INTERNAL_CONDITION_OPERATORS and level == OptimizationLevel.FULL:
             self._raise("Not standard operator left")
 
         return self
@@ -1044,6 +1035,14 @@ class DomainCondition(Domain):
                 # run search in sudo because the compute is done in sudo as well
                 model = model.sudo()
         operator, value = self.operator, self.value
+        # convert internal 'any' operators to 'in' before calling search methods
+        if operator in ('any', 'not any', 'any!', 'not any!') and field.search:
+            positive = operator in ('any', 'any!')
+            bypass = operator.endswith('!')
+            if field.relational and isinstance(value, Domain):
+                comodel = model.sudo().env[field.comodel_name] if bypass else model.env[field.comodel_name]
+                value = comodel._search(value)
+            operator = 'in' if positive else 'not in'
         # use the `Field.search` function
         original_exception = None
         try:
@@ -1104,7 +1103,7 @@ class DomainCondition(Domain):
             # TODO have a specific implementation for these
             return self._optimize(records, OptimizationLevel.FULL)._as_predicate(records)
 
-        assert operator in STANDARD_CONDITION_OPERATORS, "Expecting a sub-set of operators"
+        assert operator in STANDARD_CONDITION_OPERATORS or operator in INTERNAL_CONDITION_OPERATORS, "Expecting a sub-set of operators"
         field_expr, value = self.field_expr, self.value
         positive_operator = NEGATIVE_CONDITION_OPERATORS.get(operator, operator)
 
@@ -1146,7 +1145,7 @@ class DomainCondition(Domain):
 
     def _to_sql(self, table: TableSQL) -> SQL:
         field_expr, operator, value = self.field_expr, self.operator, self.value
-        assert operator in STANDARD_CONDITION_OPERATORS, \
+        assert operator in STANDARD_CONDITION_OPERATORS or operator in INTERNAL_CONDITION_OPERATORS, \
             f"Invalid operator {operator!r} for SQL in domain term {(field_expr, operator, value)!r}"
         assert self._opt_level >= OptimizationLevel.FULL, \
             f"Must fully optimize before generating the query {(field_expr, operator, value)}"

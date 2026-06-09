@@ -68,7 +68,7 @@ class MyInvoisConsolidateInvoiceWizard(models.TransientModel):
                 ('date', '<=', self.date_to),
                 '|',
                 ('l10n_my_edi_document_ids', '=', False),
-                ('l10n_my_edi_document_ids', 'not any', [('myinvois_state', '!=', 'cancelled')])
+                '!', ('l10n_my_edi_document_ids.myinvois_state', '!=', 'cancelled')
             ])
 
             # Add partner filter. We only pick partners that are marked as General Public via their TIN, or that do not have any tax information set.

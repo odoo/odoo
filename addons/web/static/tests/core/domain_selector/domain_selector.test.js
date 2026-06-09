@@ -2095,177 +2095,6 @@ test("date domain in readonly mode (check localization)", async () => {
     expect(".o_tree_editor_condition").toHaveText("Date\nbetween\n03|11|2023\nand\n13|11|2023");
 });
 
-test(`any/not any operator in editable mode`, async () => {
-    await makeDomainSelector({
-        readonly: false,
-        isDebugMode: true,
-        domain: `[("product_id", "any", ["|", ("team_id", "any", [("name", "=", "Mancester City")]), ("team_id.name", "not in", ["Leicester", "Liverpool"])])]`,
-    });
-    expect(".o_tree_editor").toHaveCount(3);
-    expect(".o_tree_editor_row").toHaveCount(10);
-    expect(getCurrentPath(1)).toBe("Product Team");
-    expect(getCurrentPath(3)).toBe("Product Team > Team Name");
-    expect(getCurrentValue(1)).toBe("Leicester Liverpool");
-    expect(getCurrentOperator(1)).toBe("matches");
-    expect(getCurrentOperator(3)).toBe(label("not in"));
-    await selectOperator("=", 3);
-    expect(getCurrentOperator(3)).toBe(label("="));
-    expect(SELECTORS.debugArea).toHaveValue(
-        `[("product_id", "any", ["|", ("team_id", "any", [("name", "=", "Mancester City")]), ("team_id.name", "=", "")])]`
-    );
-});
-
-test(`any/not any operator in editable mode (add a rule in empty sub domain)`, async () => {
-    await makeDomainSelector({
-        readonly: false,
-        isDebugMode: true,
-        domain: `[("product_id", "any", [])]`,
-    });
-    await addNewRule();
-    expect(getCurrentPath()).toBe("Product");
-    expect(getCurrentOperator()).toBe("matches");
-    expect(getCurrentPath(1)).toBe("Id");
-    expect(getCurrentOperator(1)).toBe(label("="));
-    expect(SELECTORS.debugArea).toHaveValue(`[("product_id", "any", [("id", "=", 1)])]`);
-});
-
-test(`any/not any operator (readonly) with custom domain as value`, async () => {
-    const toTest = [
-        {
-            domain: `[("product_id", "any", [("machin", "in", ["chose", "truc"] )] )]`,
-            text: `Match\nall\nof the following rules:\nProduct\n:\nall\nof:\nmachin\n=\nchose\nor\ntruc`,
-        },
-    ];
-    const parent = await makeDomainSelector({ readonly: true });
-    for (const { domain, text } of toTest) {
-        await parent.set(domain);
-        expect(".o_domain_selector").toHaveText(text);
-    }
-});
-
-test(`any/not any operator (readonly) with invalid domain as value`, async () => {
-    const toTest = [
-        {
-            domain: `[("product_id", "any", A )]`,
-            text: `Match\nall\nof the following rules:\nProduct\n:\n(\nA\n)`,
-        },
-        {
-            domain: `[("product_id", "any", "bete et méchant" )]`,
-            text: `Match\nall\nof the following rules:\nProduct\n:\n(\nbete et méchant\n)`,
-        },
-        {
-            domain: `[("product_id", "any", [("team_id", "any", "bête et méchant")])]`,
-            text: `Match\nall\nof the following rules:\nProduct\n:\nall\nof:\nProduct Team\n:\n(\nbête et méchant\n)`,
-        },
-        {
-            domain: `[("product_id", "any", ["&"])]`,
-            text: `Match\nall\nof the following rules:\nProduct\n:\n(\n&\n)`,
-        },
-    ];
-    const parent = await makeDomainSelector({ readonly: true });
-    for (const { domain, text } of toTest) {
-        await parent.set(domain);
-        expect(".o_domain_selector").toHaveText(text);
-    }
-});
-
-test(`any operator (edit) with invalid domain as value`, async () => {
-    await makeDomainSelector({ domain: `[("product_id", "any", ["&"])]` });
-    expect(SELECTORS.valueEditor).toHaveCount(1);
-    expect(SELECTORS.clearNotSupported).toHaveCount(1);
-    await contains(SELECTORS.clearNotSupported).click();
-    expect(`${SELECTORS.connector}:eq(1)`).toHaveText("all records");
-});
-
-test(`any operator (edit) test getDefaultPath`, async () => {
-    Partner._fields.country_id = fields.Many2one({
-        string: "Country",
-        relation: "country",
-        searchable: true,
-    });
-    await makeDomainSelector({
-        resModel: "partner",
-        domain: `[("country_id", "any", [])]`,
-    });
-    await addNewRule();
-    expect(getCurrentPath(0)).toBe("Country");
-    expect(getCurrentPath(1)).toBe("Stage");
-});
-
-test(`any operator (edit) test defaultValue => defaultCondition`, async () => {
-    Product._fields.country_id = fields.Many2one({
-        string: "Country",
-        relation: "country",
-        searchable: true,
-    });
-    await makeDomainSelector({
-        domain: `[("product_id", "any", [(A, "=", 1)])]`,
-        isDebugMode: true,
-    });
-    await clearNotSupported();
-    expect(getCurrentPath(1)).toBe("Country");
-});
-
-test(`any operator with include archived`, async () => {
-    Partner._fields.active = fields.Boolean({
-        string: "Active",
-        searchable: true,
-    });
-    await makeDomainSelector({
-        readonly: false,
-        isDebugMode: true,
-        domain: `[("product_id", "any", [("name", "=", "Mancester City")])]`,
-    });
-    expect(SELECTORS.condition).toHaveCount(2);
-    expect('.form-switch label:contains("Include archived")').toHaveCount(1, {
-        message: "Sub TreeEditor shouldn't add another checkbox",
-    });
-});
-
-test(`any/not any operator (readonly)`, async () => {
-    const toTest = [
-        {
-            domain: `[("product_id", "any", [("name", "in", [37,41] )] )]`,
-            text: `Match\nall\nof the following rules:\nProduct\n:\nall\nof:\nProduct Name\n=\n37\nor\n41`,
-        },
-        {
-            domain: `[("product_id", "not any", [("name", "in", [37,41] )] )]`,
-            text: `Match\nall\nof the following rules:\nProduct\n: not\nall\nof:\nProduct Name\n=\n37\nor\n41`,
-        },
-        {
-            domain: `[("product_id", "not any", ["|", ("team_id", "any", [("name", "ilike", "mancity")] ), ("name", "in", [37,41] )] )]`,
-            text: `Match\nall\nof the following rules:\nProduct\n: not\nany\nof:\nProduct Team\n:\nall\nof:\nTeam Name\ncontains\nmancity\nProduct Name\n=\n37\nor\n41`,
-        },
-        {
-            domain: `[("product_id", "any", ["|", ("name", "in", [37,41] ), ("bar", "=", True)] )]`,
-            text: `Match\nall\nof the following rules:\nProduct\n:\nany\nof:\nProduct Name\n=\n37\nor\n41\nProduct Bar\nis set`,
-        },
-        {
-            domain: `[("product_id", "any", ["&", ("name", "in", ["JD7", "KDB"]), ("team_id", "not any", ["&", ("id", "=", 17), ("name", "ilike", "mancity")])])]`,
-            text: `Match\nall\nof the following rules:\nProduct\n:\nall\nof:\nProduct Name\n=\nJD7\nor\nKDB\nProduct Team\n: not\nall\nof:\nId\n=\n17\nTeam Name\ncontains\nmancity`,
-        },
-        {
-            domain: `[("product_id", "any", ["|", ("name", "in", ["JD7", "KDB"]), ("team_id", "not any", ["|", ("id", "=", 17), ("name", "ilike", "mancity")])])]`,
-            text: `Match\nall\nof the following rules:\nProduct\n:\nany\nof:\nProduct Name\n=\nJD7\nor\nKDB\nProduct Team\n: not\nany\nof:\nId\n=\n17\nTeam Name\ncontains\nmancity`,
-        },
-    ];
-    const parent = await makeDomainSelector({ readonly: true });
-    for (const { domain, text } of toTest) {
-        await parent.set(domain);
-        expect(".o_domain_selector").toHaveText(text);
-    }
-});
-
-test(`any/not any operator (readonly) for one2many`, async () => {
-    await makeDomainSelector({
-        resModel: "team",
-        domain: `[("player_ids", "any", [('name', 'in', ["Kevin De Bruyne", "Jeremy Doku"])])]`,
-        readonly: true,
-    });
-    const text = `Match\nall\nof the following rules:\nPlayers\n:\nall\nof:\nPlayer Name\n=\nKevin De Bruyne\nor\nJeremy Doku`;
-    expect(".o_domain_selector").toHaveText(text);
-});
-
 test("shorten descriptions of long lists", async () => {
     const values = new Array(500).fill(42525245);
     await makeDomainSelector({
@@ -2332,27 +2161,6 @@ test("many2many: domain in autocompletion", async () => {
     expect(".dropdown-menu").toHaveCount(0);
 });
 
-test("Any operator supported even if not proposed", async () => {
-    await makeDomainSelector({
-        isDebugMode: true,
-        update(domain) {
-            expect.step(domain);
-        },
-        domain: `[("product_id", "any", [])]`,
-    });
-    expect(getOperatorOptions()).toEqual([
-        label("in", "many2one"),
-        label("not in", "many2one"),
-        label("ilike"),
-        label("not ilike"),
-        label("set"),
-        label("not set"),
-        "matches",
-    ]);
-    await addNewRule();
-    expect.verifySteps([`[("product_id", "any", [("id", "=", 1)])]`]);
-});
-
 test("Hierarchical operators", async () => {
     await makeDomainSelector({
         isDebugMode: true,
@@ -2400,39 +2208,6 @@ test("Hierarchical operators", async () => {
     expect(queryAllTexts(".dropdown-menu li")).toEqual(["xpad"]);
     await contains(".dropdown-menu li").click();
     expect.verifySteps(['[("product_id", "parent_of", [37, 41])]']);
-});
-
-test("preserve virtual operators in sub domains", async () => {
-    Team._fields.active = fields.Boolean();
-    await makeDomainSelector({
-        domain: `[("product_id", "any", ["&", ("team_id", "any", ["&", ("active", "=", False), ("name", "=", False)]), ("id", "=", 1)])]`,
-        update(domain) {
-            expect.step(domain);
-        },
-    });
-    expect(getCurrentOperator()).toBe("matches");
-    expect(getCurrentOperator(1)).toBe("matches");
-    expect(getCurrentOperator(2)).toBe(label("not set"));
-    expect(getCurrentOperator(3)).toBe(label("not set"));
-    expect(getCurrentOperator(4)).toBe(label("="));
-
-    await addNewRule(1);
-    expect(getCurrentOperator(2)).toBe(label("not set"));
-    expect(getCurrentOperator(3)).toBe(label("not set"));
-    expect(getCurrentOperator(4)).toBe(label("="));
-    expect(getCurrentOperator(5)).toBe(label("="));
-    expect.verifySteps([
-        `[("product_id", "any", ["&", "&", ("team_id", "any", ["&", ("active", "=", False), ("name", "=", False)]), ("id", "=", 1), ("id", "=", 1)])]`,
-    ]);
-
-    await clickOnButtonDeleteNode(5);
-    expect(getCurrentOperator()).toBe("matches");
-    expect(getCurrentOperator(1)).toBe("matches");
-    expect(getCurrentOperator(2)).toBe(label("not set"));
-    expect(getCurrentOperator(3)).toBe(label("not set"));
-    expect.verifySteps([
-        `[("product_id", "any", ["&", ("team_id", "any", ["&", ("active", "=", False), ("name", "=", False)]), ("id", "=", 1)])]`,
-    ]);
 });
 
 test("don't show avatar for expressions", async () => {
@@ -2870,13 +2645,13 @@ test("properties field: date & datetime", async () => {
             fields: ["product", "product_properties", "date_properties"],
             operator: "in range",
             expectedDomain:
-                '[("product_id", "any", ["&", ("properties.date_properties", ">=", "today"), ("properties.date_properties", "<", "today +1d")])]',
+                '["&", ("product_id.properties.date_properties", ">=", "today"), ("product_id.properties.date_properties", "<", "today +1d")]',
         },
         {
             fields: ["product", "product_properties", "datetime_properties"],
             operator: "in range",
             expectedDomain:
-                '[("product_id", "any", ["&", ("properties.datetime_properties", ">=", "today"), ("properties.datetime_properties", "<", "today +1d")])]',
+                '["&", ("product_id.properties.datetime_properties", ">=", "today"), ("product_id.properties.datetime_properties", "<", "today +1d")]',
         },
         {
             fields: ["product", "product_properties", "date_properties"],
@@ -2905,19 +2680,19 @@ test("properties field: date & datetime", async () => {
             operator: "in range",
             treeValue: "last365Days",
             expectedDomain:
-                '[("product_id", "any", ["&", ("properties.datetime_properties", ">=", "today -365d"), ("properties.datetime_properties", "<", "today")])]',
+                '["&", ("product_id.properties.datetime_properties", ">=", "today -365d"), ("product_id.properties.datetime_properties", "<", "today")]',
         },
         {
             fields: ["product", "product_properties", "date_properties"],
             operator: "in range",
             treeValue: "yearToDate",
-            expectedDomain: `[("product_id", "any", ["&", ("properties.date_properties", ">=", "today =1m =1d"), ("properties.date_properties", "<", "today +1d")])]`,
+            expectedDomain: `["&", ("product_id.properties.date_properties", ">=", "today =1m =1d"), ("product_id.properties.date_properties", "<", "today +1d")]`,
         },
         {
             fields: ["product", "product_properties", "date_properties"],
             operator: "in range",
             treeValue: "relativeRange",
-            expectedDomain: `[("product_id", "any", ["&", ("properties.date_properties", ">=", "today -1d"), ("properties.date_properties", "<", "today")])]`,
+            expectedDomain: `["&", ("product_id.properties.date_properties", ">=", "today -1d"), ("product_id.properties.date_properties", "<", "today")]`,
         },
     ];
     for (const value of values) {

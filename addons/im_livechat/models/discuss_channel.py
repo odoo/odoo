@@ -365,7 +365,7 @@ class DiscussChannel(models.Model):
             )
 
     def _search_livechat_agent_history_ids(self, operator, value):
-        if operator not in ("any", "in"):
+        if operator != "in":
             return NotImplemented
         if operator == "in" and len(value) == 1 and not next(iter(value)):
             return [

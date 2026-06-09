@@ -36,13 +36,6 @@ function _constructTree(ASTs, distributeNot = false, negate = false) {
         tree.operator = toValue(operatorAST);
         tree.value = toValue(valueAST);
         tree.isProperty = false;
-        if (["any", "not any"].includes(tree.operator)) {
-            try {
-                tree.value = constructTreeFromDomain(formatAST(valueAST), distributeNot);
-            } catch {
-                tree.value = Array.isArray(tree.value) ? tree.value : [tree.value];
-            }
-        }
     }
     let remaimingASTs = tailASTs;
     if (tree.type === "connector") {

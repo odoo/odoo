@@ -397,20 +397,23 @@ class PurchaseOrder(models.Model):
     def _search_is_late(self, operator, value):
         if operator not in ["=", "!="]:
             raise ValidationError(self.env._("Unsupported operator"))
-        purchase_domain = self._get_domain_is_late(operator, value)
         if operator == "=" and value or operator == "!=" and not value:
-            purchase_lines_late = Domain('order_id', 'any', purchase_domain) & Domain.custom(
-                to_sql=lambda table: SQL("%s < %s", table.qty_received, table.product_qty),
+            line_domain = (
+                Domain('order_id.state', '=', 'purchase')
+                & Domain('date_planned', '<=', fields.Datetime.now())
+                & Domain.custom(
+                    to_sql=lambda table: SQL("%s < %s", table.qty_received, table.product_qty),
+                )
             )
-            return Domain('order_line', 'any', purchase_lines_late)
         else:
-            purchase_lines_on_time = Domain('order_id', 'any', purchase_domain) & Domain.custom(
-                to_sql=lambda table: SQL("%s >= %s", table.qty_received, table.product_qty),
+            line_domain = (
+                Domain('order_id.state', '=', 'purchase')
+                & (Domain('date_planned', '>', fields.Datetime.now())
+                   | Domain.custom(
+                    to_sql=lambda table: SQL("%s >= %s", table.qty_received, table.product_qty),
+                ))
             )
-            return Domain('order_line', 'any', purchase_lines_on_time)
-
-    def _get_domain_is_late(self, operator, value):
-        return Domain([('state', '=', 'purchase'), ('date_planned', '<=', fields.Datetime.now())])
+        return Domain('order_line', 'in', self.env['purchase.order.line']._search(line_domain))
 
     @api.model_create_multi
     def create(self, vals_list):

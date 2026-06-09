@@ -443,21 +443,15 @@ class AccountAccount(models.Model):
         )
 
     def _search_account_root(self, operator, value):
-        if operator not in ('in', 'child_of', 'any'):
+        if operator not in ('in', 'child_of'):
             return NotImplemented
         extra_domain = Domain.FALSE
-        if operator == 'any':
-            if isinstance(value, Domain) and value.field_expr == 'display_name' and value.operator == 'in':
-                roots = self.env['account.root'].browse(value.value)
-            else:
-                return NotImplemented
-        else:
-            if value and isinstance(value, Iterable) and not all(value):
-                extra_domain = Domain('root_id', '=', False)
-                value = filter(None, value)
-            roots = self.env['account.root'].browse(value)
+        if value and isinstance(value, Iterable) and not all(value):
+            extra_domain = Domain('root_id', '=', False)
+            value = filter(None, value)
+        roots = self.env['account.root'].browse(value)
         return Domain.OR(
-            Domain('placeholder_code', '=ilike', root.name + ('' if operator in ['in', 'any'] and not root.parent_id else '%'))
+            Domain('placeholder_code', '=ilike', root.name + ('' if operator == 'in' and not root.parent_id else '%'))
             for root in roots
         ) | extra_domain
 
@@ -469,8 +463,8 @@ class AccountAccount(models.Model):
         if domain.is_false():
             return {}
 
-        query_account = self.env['account.account']._search(domain, limit=limit)
-        placeholder_code_alias = self.env['account.account']._field_to_sql('account_account', 'code', query_account)
+        query_account = self._search(domain, limit=limit)
+        placeholder_code_alias = self._field_to_sql('account_account', 'code', query_account)
 
         placeholder_codes = self.env.execute_query(query_account.select(placeholder_code_alias))
         return {
@@ -782,7 +776,6 @@ class AccountAccount(models.Model):
         query = self.env['account.move.line'].with_company(company_id)._search([
             *self.env['account.move.line']._check_company_domain(company_id),
             ('partner_id', '=', partner_id),
-            ('account_id', 'any', account_domain),
             ('date', '>=', fields.Date.add(fields.Date.context_today(self), days=-365 * 2)),
             ('move_id.state', '=', 'posted'),
         ], bypass_access=True)

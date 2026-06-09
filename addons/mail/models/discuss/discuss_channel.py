@@ -301,7 +301,7 @@ class DiscussChannel(models.Model):
             outdated.unlink()
 
     def _search_channel_partner_ids(self, operator, operand):
-        return [('channel_member_ids', 'any', [('partner_id', operator, operand)])]
+        return [('channel_member_ids.partner_id', operator, operand)]
 
     @api.depends_context('uid', 'guest')
     @api.depends('channel_member_ids')
@@ -342,9 +342,7 @@ class DiscussChannel(models.Model):
 
     def _search_self_member_id(self, operator, operand):
         if operator == "in":
-            return [("channel_member_ids", "any", [("is_self", "=", True), ("id", "in", operand)])]
-        if operator in ('any', 'any!'):
-            return Domain('channel_member_ids', operator, Domain('is_self', '=', True) & operand)
+            return [("channel_member_ids.is_self", "=", True), ("channel_member_ids", "in", operand)]
         return NotImplemented
 
     @api.depends_context("uid", "guest")

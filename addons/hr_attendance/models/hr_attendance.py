@@ -702,10 +702,8 @@ class HrAttendance(models.Model):
         utc_tz = ZoneInfo('UTC')
         all_open_attendances = self.search([
             ('check_out', '=', False),
-            ('employee_id.company_id', 'any', [
-                ('auto_check_out', '=', True),
-                ('auto_check_out_mode', '=', 'specific_time'),
-            ]),
+            ('employee_id.company_id.auto_check_out', '=', True),
+            ('employee_id.company_id.auto_check_out_mode', '=', 'specific_time'),
         ])
 
         for company, company_attendances in all_open_attendances.grouped(lambda att: att.employee_id.company_id).items():

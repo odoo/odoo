@@ -340,30 +340,24 @@ class FleetVehicle(models.Model):
         today = fields.Date.context_today(self)
         datetime_today = fields.Datetime.from_string(today)
         limit_date = fields.Datetime.to_string(datetime_today + relativedelta(days=+delay_alert_contract))
-        return [('log_contracts', 'any', [
-            ('expiration_date', '>', today),
-            ('expiration_date', '<', limit_date),
-            ('state', 'in', ['open', 'expired']),
-        ])]
+        return [
+            ('log_contracts.expiration_date', '>', today),
+            ('log_contracts.expiration_date', '<', limit_date),
+            ('log_contracts.state', 'in', ['open', 'expired']),
+        ]
 
     def _search_get_overdue_contract_reminder(self, operator, value):
         if operator != 'in':
             return NotImplemented
         today = fields.Date.context_today(self)
-        # get the id of vehicles that have overdue contracts
-        # but exclude those for which a new contract has already been created for them
         return [
-            ("log_contracts", "any", [
-                ('expiration_date', '!=', False),
-                ('expiration_date', '<', today),
-                ('state', 'in', ['open', 'expired'])
-            ]),
+            ('log_contracts.expiration_date', '!=', False),
+            ('log_contracts.expiration_date', '<', today),
+            ('log_contracts.state', 'in', ['open', 'expired']),
             "!",
-                ("log_contracts", "any", [
-                    ('expiration_date', '!=', False),
-                    ('expiration_date', '>=', today),
-                    ('state', 'in', ['open', 'futur'])
-                ]),
+                ('log_contracts.expiration_date', '!=', False),
+                ('log_contracts.expiration_date', '>=', today),
+                ('log_contracts.state', 'in', ['open', 'futur']),
         ]
 
     @api.model_create_multi

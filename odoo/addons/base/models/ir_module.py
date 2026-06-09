@@ -1038,7 +1038,7 @@ class IrModuleModuleDependency(models.Model):
             dep.depend_id = name_mod.get(dep.name)
 
     def _search_depend(self, operator, value):
-        if operator not in ('in', 'any'):
+        if operator != 'in':
             return NotImplemented
         modules = self.env['ir.module.module'].browse(value)
         return [('name', 'in', modules.mapped('name'))]
@@ -1098,7 +1098,7 @@ class IrModuleModuleExclusion(models.Model):
             excl.exclusion_id = name_mod.get(excl.name)
 
     def _search_exclusion(self, operator, value):
-        if operator not in ('in', 'any'):
+        if operator != 'in':
             return NotImplemented
         modules = self.env['ir.module.module'].browse(value)
         return [('name', 'in', modules.mapped('name'))]

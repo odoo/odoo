@@ -103,7 +103,7 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='filter_is_connected']" position="after">
                 <separator/>
-                <filter string="Available" name="filter_not_in_conversation" domain="[('discuss_channel_ids', 'not any', [('livechat_end_dt', '=', False)])]"/>
+                <filter string="Available" name="filter_not_in_conversation" domain="['!', ('discuss_channel_ids.livechat_end_dt', '=', False)]"/>
                 <filter string="In Conversation" name="filter_in_conversation" domain="[('discuss_channel_ids.livechat_end_dt', '=', False)]"/>
             </xpath>
         </field>

@@ -9,7 +9,7 @@
             <xpath expr="//filter[@name='supplier']" position="after">
                 <filter string="Exceeded Declaration of Intent"
                         name="l10n_it_edi_doi_declaration_of_intent_exceeded"
-                        domain="[('l10n_it_edi_doi_ids','any', [('remaining', '&lt;', 0)])]"/>
+                        domain="[('l10n_it_edi_doi_ids.remaining', '&lt;', 0)]"/>
             </xpath>
         </field>
     </record>

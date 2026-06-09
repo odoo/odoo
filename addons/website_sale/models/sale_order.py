@@ -200,15 +200,14 @@ class SaleOrder(models.Model):
         if operator not in {"=", "!="}:
             return NotImplemented
 
-        if (operator == "=" and value) or (operator == "!=" and not value):
-            effective_operator = "any"
-        else:
-            effective_operator = "not any"
-
         line_domain = Domain.custom(
             to_sql=lambda table: SQL("%s < %s", table.qty_delivered, table.product_uom_qty)
         )
-        return Domain("state", "=", "sale") & Domain("order_line", effective_operator, line_domain)
+        line_query = self.env['sale.order.line']._search(line_domain)
+        if (operator == "=" and value) or (operator == "!=" and not value):
+            return Domain("state", "=", "sale") & Domain("order_line", "in", line_query)
+        else:
+            return Domain("state", "=", "sale") & Domain("order_line", "not in", line_query)
 
     # === CRUD METHODS ===#
 

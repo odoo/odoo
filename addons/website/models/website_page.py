@@ -298,7 +298,7 @@ class WebsitePage(models.Model):
             )
             # most_specific_pages is already filtered and ordered
             pages = self.sudo().with_context(active_test=False).search(
-                Domain('view_id', 'any', custom_view_domain)
+                Domain('view_id', 'in', self.env['ir.ui.view']._search(custom_view_domain))
                 & Domain('id', 'in', most_specific_pages.ids)
             )
             # just update the domain for filtering

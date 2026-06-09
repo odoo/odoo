@@ -197,7 +197,7 @@ class ProductProduct(models.Model):
             self.env["sale.order.line"].sudo().search([
                 ("state", "=", "draft"),
                 ("product_id", "in", self.ids),
-                ("order_id", "any", [("website_id", "!=", False)]),
+                ("order_id.website_id", "!=", False),
             ]).unlink()
         return super().write(vals)
 
