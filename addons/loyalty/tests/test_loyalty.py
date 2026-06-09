@@ -375,3 +375,18 @@ class TestLoyalty(TransactionCase):
             5.0,
             "The discount update should be successfully saved to the database.",
         )
+
+    def test_loyalty_program_copy_with_discount_code(self):
+        program = self.env['loyalty.program'].create({
+            'name': 'Test Program',
+            'program_type': 'promo_code',
+            'rule_ids': [Command.create({'code': 'TEST_CODE'})],
+            'reward_ids': [
+                Command.create({
+                    'reward_type': 'product',
+                })
+            ],
+        })
+        copied_program = program.copy()
+        self.assertTrue(copied_program.rule_ids)
+        self.assertEqual(copied_program.rule_ids.code, "TEST_CODE (copy)")
