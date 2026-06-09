@@ -7,4 +7,7 @@
     'depends': ['sale'],
     'installable': True,
     'license': 'LGPL-3',
+    'data': [
+    'views/sale_order_views.xml',
+    ],
 }
