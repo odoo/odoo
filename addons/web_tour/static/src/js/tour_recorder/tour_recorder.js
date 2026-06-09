@@ -6,7 +6,7 @@ import { browser } from "@web/core/browser/browser";
 import { queryAll, queryFirst, queryOne } from "@odoo/hoot-dom";
 import { Component, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { x2ManyCommands } from "@web/core/orm_service";
+import { x2ManyCommands } from "@web/core/orm_plugin";
 import { tourRecorderState } from "./tour_recorder_state";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";

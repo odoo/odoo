@@ -41,7 +41,7 @@ export const Status = {
  *
  * @typedef {import("@web/env").OdooEnv} OdooEnv
  *
- * @typedef {import("@web/core/orm_service").ORM} ORM
+ * @typedef {import("@web/core/orm_plugin").ORM} ORM
  */
 
 export class DashboardLoader {

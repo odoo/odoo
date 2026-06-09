@@ -1,6 +1,6 @@
 import { onWillRender, useChildSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { x2ManyCommands } from "@web/core/orm_service";
+import { x2ManyCommands } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
 import { deepCopy } from "@web/core/utils/objects";
 import { parseXML } from "@web/core/utils/xml";

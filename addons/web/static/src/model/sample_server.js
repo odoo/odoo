@@ -4,7 +4,7 @@ import {
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
-import { ORM } from "@web/core/orm_service";
+import { ORM } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
 import { cartesian, sortBy as arraySortBy, unique } from "@web/core/utils/arrays";
 import { parseServerValue } from "./relational_model/utils";

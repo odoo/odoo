@@ -6,7 +6,7 @@ import {
 } from "@sale/js/sale_order_line_field/sale_order_line_field";
 import { makeContext } from "@web/core/context";
 import { _t } from "@web/core/l10n/translation";
-import { x2ManyCommands } from "@web/core/orm_service";
+import { x2ManyCommands } from "@web/core/orm_plugin";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";

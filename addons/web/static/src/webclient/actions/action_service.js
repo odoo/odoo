@@ -12,7 +12,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { View, ViewNotFoundError } from "@web/views/view";
 import { ActionDialog } from "./action_dialog";
 import { ReportAction } from "./reports/report_action";
-import { UPDATE_METHODS } from "@web/core/orm_service";
+import { UPDATE_METHODS } from "@web/core/orm_plugin";
 import { CallbackRecorder } from "@web/search/action_hook";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { PATH_KEYS, router as _router } from "@web/core/browser/router";

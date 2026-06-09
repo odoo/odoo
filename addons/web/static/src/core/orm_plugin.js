@@ -1,10 +1,12 @@
+import { assertType, plugin, Plugin, types as t } from "@odoo/owl";
+import { services } from "@web/core/services";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { Domain } from "@web/core/domain";
 
 /**
- * This ORM service is the standard way to interact with the ORM in python from
+ * This ORM plugin is the standard way to interact with the ORM in python from
  * the javascript codebase.
  */
 
@@ -64,27 +66,6 @@ export const x2ManyCommands = {
     },
 };
 
-function validateModel(value) {
-    if (typeof value !== "string" || value.length === 0) {
-        throw new Error(`Invalid model name: ${value}`);
-    }
-}
-function validatePrimitiveList(name, type, value) {
-    if (!Array.isArray(value) || value.some((val) => typeof val !== type)) {
-        throw new Error(`Invalid ${name} list: ${value}`);
-    }
-}
-function validateObject(name, obj) {
-    if (typeof obj !== "object" || obj === null || Array.isArray(obj)) {
-        throw new Error(`${name} should be an object`);
-    }
-}
-function validateArray(name, array) {
-    if (!Array.isArray(array)) {
-        throw new Error(`${name} should be an array`);
-    }
-}
-
 export const UPDATE_METHODS = [
     "unlink",
     "create",
@@ -95,13 +76,11 @@ export const UPDATE_METHODS = [
     "action_unarchive",
 ];
 
-export class ORM {
-    constructor() {
-        this.rpc = rpc; // to be overridable by the SampleORM
-        /** @protected */
-        this._silent = false;
-        this._cache = false;
-    }
+export class ORM extends Plugin {
+    rpc = rpc; // to be overridable by the SampleORM
+    /** @protected */
+    _silent = false;
+    _cache = false;
 
     /** @returns {ORM} */
     get silent() {
@@ -124,7 +103,11 @@ export class ORM {
      * @returns {Promise<any>}
      */
     call(model, method, args = [], kwargs = {}) {
-        validateModel(model);
+        assertType(
+            model,
+            t.customValidator(t.string(), (m) => m.length > 0),
+            `Invalid model name: ${model}`
+        );
         const url = `/web/dataset/call_kw/${model}/${method}`;
         const fullContext = Object.assign({}, user.context, kwargs.context || {});
         const fullKwargs = Object.assign({}, kwargs, { context: fullContext });
@@ -147,10 +130,7 @@ export class ORM {
      * @returns {Promise<number>}
      */
     create(model, records, kwargs = {}) {
-        validateArray("records", records);
-        for (const record of records) {
-            validateObject("record", record);
-        }
+        assertType(records, t.array(t.object()), "Invalid records");
         return this.call(model, "create", [records], kwargs);
     }
 
@@ -162,9 +142,9 @@ export class ORM {
      * @returns {Promise<any[]>}
      */
     read(model, ids, fields, kwargs = {}) {
-        validatePrimitiveList("ids", "number", ids);
+        assertType(ids, t.array(t.number()), "Invalid ids");
         if (fields) {
-            validatePrimitiveList("fields", "string", fields);
+            assertType(fields, t.array(t.string()), "Invalid fields");
         }
         if (!ids.length) {
             return Promise.resolve([]);
@@ -181,9 +161,9 @@ export class ORM {
      * @returns {Promise<any[]>}
      */
     formattedReadGroup(model, domain, groupby, aggregates, kwargs = {}) {
-        validateArray("domain", domain);
-        validatePrimitiveList("groupby", "string", groupby);
-        validatePrimitiveList("aggregates", "string", aggregates);
+        assertType(domain, t.array(), "Invalid domain");
+        assertType(groupby, t.array(t.string()), "Invalid groupby");
+        assertType(aggregates, t.array(t.string()), "Invalid aggregates");
         return this.call(model, "formatted_read_group", [], {
             domain,
             groupby,
@@ -206,9 +186,9 @@ export class ORM {
      * @returns {Promise<any[]>}
      */
     formattedReadGroupingSets(model, domain, grouping_sets, aggregates, kwargs = {}) {
-        validateArray("domain", domain);
-        validateArray("groupby", grouping_sets);
-        validatePrimitiveList("aggregates", "string", aggregates);
+        assertType(domain, t.array(), "Invalid domain");
+        assertType(grouping_sets, t.array(), "Invalid grouping_sets");
+        assertType(aggregates, t.array(t.string()), "Invalid aggregates");
         return this.call(model, "formatted_read_grouping_sets", [], {
             domain,
             grouping_sets,
@@ -231,7 +211,7 @@ export class ORM {
      * @returns {Promise<any[]>}
      */
     search(model, domain, kwargs = {}) {
-        validateArray("domain", domain);
+        assertType(domain, t.array(), "Invalid domain");
         return this.call(model, "search", [domain], kwargs);
     }
 
@@ -243,9 +223,9 @@ export class ORM {
      * @returns {Promise<any[]>}
      */
     searchRead(model, domain, fields, kwargs = {}) {
-        validateArray("domain", domain);
+        assertType(domain, t.array(), "Invalid domain");
         if (fields) {
-            validatePrimitiveList("fields", "string", fields);
+            assertType(fields, t.array(t.string()), "Invalid fields");
         }
         return this.call(model, "search_read", [], { ...kwargs, domain, fields });
     }
@@ -257,7 +237,7 @@ export class ORM {
      * @returns {Promise<number>}
      */
     searchCount(model, domain, kwargs = {}) {
-        validateArray("domain", domain);
+        assertType(domain, t.array(), "Invalid domain");
         return this.call(model, "search_count", [domain], kwargs);
     }
 
@@ -268,7 +248,7 @@ export class ORM {
      * @returns {Promise<boolean>}
      */
     unlink(model, ids, kwargs = {}) {
-        validatePrimitiveList("ids", "number", ids);
+        assertType(ids, t.array(t.number()), "Invalid ids");
         if (!ids.length) {
             return Promise.resolve(true);
         }
@@ -284,8 +264,8 @@ export class ORM {
      * @returns {Promise<any[]>}
      */
     webReadGroup(model, domain, groupby, aggregates, kwargs = {}) {
-        validateArray("domain", domain);
-        validatePrimitiveList("aggregates", "string", aggregates);
+        assertType(domain, t.array(), "Invalid domain");
+        assertType(aggregates, t.array(t.string()), "Invalid aggregates");
         return this.call(model, "web_read_group", [], {
             domain,
             groupby,
@@ -303,14 +283,14 @@ export class ORM {
      * @returns {Promise<any[]>}
      */
     webRead(model, ids, kwargs = {}) {
-        validatePrimitiveList("ids", "number", ids);
+        assertType(ids, t.array(t.number()), "Invalid ids");
         return this.call(model, "web_read", [ids], kwargs);
     }
 
     /**
      * @param {string} model
      * @param {number[]} ids
-     * @param {object} [kwargs={}]
+     * @param {any} [kwargs={}]
      * @param {object} [kwargs.context]
      * @param {string} [kwargs.field_name]
      * @param {number} [kwargs.offset]
@@ -318,7 +298,7 @@ export class ORM {
      * @returns {Promise<any[]>}
      */
     webResequence(model, ids, kwargs = {}) {
-        validatePrimitiveList("ids", "number", ids);
+        assertType(ids, t.array(t.number()), "Invalid ids");
         return this.call(model, "web_resequence", [ids], {
             ...kwargs,
             specification: kwargs.specification || {},
@@ -332,7 +312,7 @@ export class ORM {
      * @returns {Promise<any[]>}
      */
     webSearchRead(model, domain, kwargs = {}) {
-        validateArray("domain", domain);
+        assertType(domain, t.array(), "Invalid domain");
         return this.call(model, "web_search_read", [], { ...kwargs, domain });
     }
 
@@ -344,8 +324,8 @@ export class ORM {
      * @returns {Promise<boolean>}
      */
     write(model, ids, data, kwargs = {}) {
-        validatePrimitiveList("ids", "number", ids);
-        validateObject("data", data);
+        assertType(ids, t.array(t.number()), "Invalid ids");
+        assertType(data, t.object(), "Invalid data");
         return this.call(model, "write", [ids, data], kwargs);
     }
 
@@ -359,8 +339,8 @@ export class ORM {
      * @returns {Promise<any[]>}
      */
     webSave(model, ids, data, kwargs = {}) {
-        validatePrimitiveList("ids", "number", ids);
-        validateObject("data", data);
+        assertType(ids, t.array(t.number()), "Invalid ids");
+        assertType(data, t.object(), "Invalid data");
         return this.call(model, "web_save", [ids, data], kwargs);
     }
 
@@ -374,16 +354,20 @@ export class ORM {
      * @returns {Promise<any[]>}
      */
     async webSaveMulti(model, ids, data, kwargs = {}) {
-        validatePrimitiveList("ids", "number", ids);
-        validateArray("data", data);
-        data.forEach((d) => {
-            validateObject("data item", d);
-        });
+        assertType(ids, t.array(t.number()), "Invalid ids");
+        assertType(data, t.array(t.object()), "Invalid data");
         return this.call(model, "web_save_multi", [ids, data], kwargs);
     }
 }
 
+services.add(ORM);
+
 /**
+ * -----------------------------------------------------------------------------
+ * @todo owl3 migration
+ * temporary - to remove when all use of the orm service are removed
+ * -----------------------------------------------------------------------------
+ *
  * Note:
  *
  * To hide RPC errors, use the following API:
@@ -392,7 +376,7 @@ export class ORM {
  * ...
  * const result = await this.orm.silent.read('res.partner', [id]);
  */
-export const ormService = {
+registry.category("services").add("orm", {
     async: [
         "call",
         "create",
@@ -408,8 +392,9 @@ export const ormService = {
         "write",
     ],
     start() {
-        return new ORM();
+        const orm = Object.create(plugin(ORM));
+        // talk to JUM
+        orm.toString = () => "orm";
+        return orm;
     },
-};
-
-registry.category("services").add("orm", ormService);
+});

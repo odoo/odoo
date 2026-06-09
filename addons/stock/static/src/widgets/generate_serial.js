@@ -1,6 +1,6 @@
 import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { x2ManyCommands } from "@web/core/orm_service";
+import { x2ManyCommands } from "@web/core/orm_plugin";
 import { Dialog } from '@web/core/dialog/dialog';
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
