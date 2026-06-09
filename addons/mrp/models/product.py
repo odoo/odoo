@@ -89,7 +89,9 @@ class ProductTemplate(models.Model):
 
     def action_view_mos(self):
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_production_action")
-        action['domain'] = [('state', '=', 'done'), ('product_tmpl_id', 'in', self.ids)]
+        action['domain'] = [('state', '=', 'done'), ('move_finished_ids', 'any', [
+            ('product_tmpl_id', 'in', self.ids), ('state', '!=', 'cancel'), ('picked', '=', True)])
+        ]
         action['context'] = {
             'search_default_filter_plan_date': 1,
         }
@@ -371,7 +373,9 @@ class ProductProduct(models.Model):
 
     def action_view_mos(self):
         action = self.product_tmpl_id.action_view_mos()
-        action['domain'] = [('state', '=', 'done'), ('product_id', 'in', self.ids)]
+        action['domain'] = [('state', '=', 'done'), ('move_finished_ids', 'any', [
+            ('product_id', 'in', self.ids), ('state', '!=', 'cancel'), ('picked', '=', True)])
+        ]
         return action
 
     def action_open_quants(self):
