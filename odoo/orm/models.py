@@ -54,7 +54,7 @@ from odoo.tools import (
     ormcache, partition, Query, split_every, unique,
     SQL, sql, groupby,
 )
-from odoo.tools.constants import PREFETCH_MAX, AVERAGE_NUMBER_OF_FIELDS
+from odoo.tools.constants import PREFETCH_MAX, BIG_RECORDSET_SIZE
 from odoo.tools.lru import LRU
 from odoo.tools.misc import ReversedIterable, exception_to_unicode, unquote
 from odoo.tools.translate import _, LazyTranslate
@@ -5898,8 +5898,6 @@ class BaseModel(metaclass=MetaModel):
             ids = (ids,)
         else:
             ids = tuple(ids)
-        if not self.env.context.get("big_recordset_prefetch", False) and len(ids) > PREFETCH_MAX * AVERAGE_NUMBER_OF_FIELDS:
-            self.env = self.env(context={**self.env.context, "big_recordset_prefetch": True})
         return self.__class__(self.env, ids, ids)
 
     #
@@ -6499,6 +6497,8 @@ class BaseModel(metaclass=MetaModel):
         env = self.env
         prefetch_ids = self._prefetch_ids
         if size > PREFETCH_MAX and prefetch_ids is ids:
+            if "big_recordset_prefetch" not in env.context and size > BIG_RECORDSET_SIZE:
+                env = env(context={**env.context, "big_recordset_prefetch": True})
             for sub_ids in split_every(PREFETCH_MAX, ids):
                 for id_ in sub_ids:
                     yield cls(env, (id_,), sub_ids)
@@ -6519,6 +6519,8 @@ class BaseModel(metaclass=MetaModel):
         env = self.env
         prefetch_ids = self._prefetch_ids
         if size > PREFETCH_MAX and prefetch_ids is ids:
+            if "big_recordset_prefetch" not in env.context and size > BIG_RECORDSET_SIZE:
+                env = env(context={**env.context, "big_recordset_prefetch": True})
             for sub_ids in split_every(PREFETCH_MAX, reversed(ids)):
                 for id_ in sub_ids:
                     yield cls(env, (id_,), sub_ids)
