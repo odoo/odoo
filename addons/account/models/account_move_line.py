@@ -315,6 +315,7 @@ class AccountMoveLine(models.Model):
     )
     # Used to set the recon_limit in the context to enable the residual_at_date computations.
     open_on = fields.Date(
+        string="Unreconciled On",
         store=False,
         search='_search_open_on_date',
         help="Limit the date for the Residual (at date) fields.",
@@ -521,12 +522,12 @@ class AccountMoveLine(models.Model):
     is_refund = fields.Boolean(compute='_compute_is_refund')
 
     no_followup = fields.Boolean(
-        string="No Follow-Up",
+        string="No Reminder",
         compute='_compute_no_followup',
         inverse='_inverse_no_followup',
         store=True,
         readonly=False,
-        help="Exclude this journal item from follow-up reports.",
+        help="Exclude this journal item from Reminder reports.",
     )
 
     _check_credit_debit = models.Constraint(
