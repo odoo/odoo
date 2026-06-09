@@ -133,3 +133,72 @@ test("should contain the 5 available font + default", async () => {
         );
     }
 });
+
+test("should not apply font size directly on a translation wrapper span when fully selected", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><span data-oe-model="ir.ui.view" data-oe-id="1" data-oe-field="arch_db" ' +
+            'data-oe-translation-state="translated" ' +
+            'data-oe-translation-source-sha="testsha" ' +
+            'class="o_editable" contenteditable="true">' +
+            '[De ultieme ervaring van verbinding]</span></p>',
+        stepFunction: async (editor) => {
+            editor.shared.format.formatSelection("setFontSizeClassName", {
+                formatProps: { className: "h5-fs" },
+                applyStyle: true,
+            });
+        },
+        contentAfter:
+            '<p><span data-oe-model="ir.ui.view" data-oe-id="1" data-oe-field="arch_db" ' +
+            'data-oe-translation-state="translated" ' +
+            'data-oe-translation-source-sha="testsha" ' +
+            'class="o_editable" contenteditable="true">' +
+            '<span class="h5-fs">[De ultieme ervaring van verbinding]</span></span></p>',
+    });
+});
+
+test("should not apply a custom font size directly on a translation wrapper span when fully selected", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><span data-oe-model="ir.ui.view" data-oe-id="1" data-oe-field="arch_db" ' +
+            'data-oe-translation-state="translated" ' +
+            'data-oe-translation-source-sha="testsha" ' +
+            'class="o_editable" contenteditable="true">' +
+            '[De ultieme ervaring van verbinding]</span></p>',
+        stepFunction: async (editor) => {
+            editor.shared.format.formatSelection("fontSize", {
+                formatProps: { size: "14px" },
+                applyStyle: true,
+            });
+        },
+        contentAfter:
+            '<p><span data-oe-model="ir.ui.view" data-oe-id="1" data-oe-field="arch_db" ' +
+            'data-oe-translation-state="translated" ' +
+            'data-oe-translation-source-sha="testsha" ' +
+            'class="o_editable" contenteditable="true">' +
+            '<span style="font-size: 14px;">[De ultieme ervaring van verbinding]</span></span></p>',
+    });
+});
+
+test("should still apply font size to an inner span when only part of a translation element is selected", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><span data-oe-model="ir.ui.view" data-oe-id="1" data-oe-field="arch_db" ' +
+            'data-oe-translation-state="translated" ' +
+            'data-oe-translation-source-sha="testsha" ' +
+            'class="o_editable" contenteditable="true">' +
+            'De [ultieme] ervaring van verbinding</span></p>',
+        stepFunction: async (editor) => {
+            editor.shared.format.formatSelection("setFontSizeClassName", {
+                formatProps: { className: "h5-fs" },
+                applyStyle: true,
+            });
+        },
+        contentAfter:
+            '<p><span data-oe-model="ir.ui.view" data-oe-id="1" data-oe-field="arch_db" ' +
+            'data-oe-translation-state="translated" ' +
+            'data-oe-translation-source-sha="testsha" ' +
+            'class="o_editable" contenteditable="true">' +
+            'De <span class="h5-fs">[ultieme]</span> ervaring van verbinding</span></p>',
+    });
+});

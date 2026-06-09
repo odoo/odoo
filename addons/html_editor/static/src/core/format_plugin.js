@@ -396,7 +396,8 @@ export class FormatPlugin extends Plugin {
                 parentNode &&
                 !isBlock(parentNode) &&
                 this.dependencies.split.isUnsplittable(parentNode) &&
-                this.dependencies.selection.areNodeContentsFullySelected(parentNode)
+                this.dependencies.selection.areNodeContentsFullySelected(parentNode) &&
+                !parentNode.dataset["oeTranslationSourceSha"]
             ) {
                 inlineAncestors.push(parentNode);
             }
