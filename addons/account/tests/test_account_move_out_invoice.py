@@ -5169,14 +5169,16 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         )
 
     def test_catalog_with_same_product_on_multiple_lines(self):
+        pack_of_6 = self.env.ref('uom.product_uom_pack_6')
         move = self.env["account.move"].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [
-                Command.create({'product_id': self.product_a.id, 'quantity': 1, 'product_uom_id': self.env['uom.uom'].search([('name', '=', 'Pack of 6')]).id}),
+                Command.create({'product_id': self.product_a.id, 'quantity': 1, 'product_uom_id': pack_of_6.id}),
                 Command.create({'product_id': self.product_a.id, 'quantity': 6}),
             ],
         })
         data = move.invoice_line_ids._get_product_catalog_lines_data()
-        self.assertEqual(data['uomDisplayName'], 'Pack of 6')
+        if self.env['res.groups']._is_feature_enabled('uom.group_uom'):
+            self.assertEqual(data['uomDisplayName'], 'Pack of 6')
         self.assertEqual(data['quantity'], 2)
