@@ -420,6 +420,7 @@ class IrHttp(models.AbstractModel):
         # See /2, no lang in url and default website
         if not url_lang_str and request.lang == default_lang:
             _logger.debug("%r (lang: %r) no lang in url and default website, continue", path, request_url_code)
+            request.future_response.set_cookie('frontend_lang', request.lang.code)
 
         # See /3, missing lang in url but user-agent is a bot
         elif not url_lang_str and request.env['ir.http'].is_a_bot():
