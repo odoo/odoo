@@ -3,7 +3,7 @@
     'name': 'Dominican Republic - Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['do'],
-    'version': '2.0',
+    'version': '2.1',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 
