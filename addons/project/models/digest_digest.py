@@ -18,6 +18,11 @@ class DigestDigest(models.Model):
             additional_domain=[('stage_id.fold', '=', False), ('project_id', '!=', False)],
         )
 
+    def _compute_tips(self, company, user, tips_count=1, consumed=True):
+        return super(DigestDigest, self.with_context(digest_tip_recipient_name=user.name.split()[0]))._compute_tips(
+            company, user, tips_count=tips_count, consumed=consumed,
+        )
+
     def _get_kpi_custom_settings(self, company, user):
         res = super()._get_kpi_custom_settings(company, user)
         menu_id = self.env.ref('project.menu_main_pm').id

@@ -8,14 +8,14 @@
 
     <data>
         <record id="digest_tip_project_0" model="digest.tip">
-            <field name="name">Tip: Use task states to keep track of your tasks' progression</field>
+            <field name="name">Tip: Use task states to track progress</field>
             <field name="sequence">1200</field>
             <field name="group_id" ref="project.group_project_user"/>
             <field name="tip_description" type="html">
             <div>
-                <p class="tip_title">Tip: Use task states to keep track of your tasks' progression</p>
+                <p class="tip_title"><b>Tip: Use task states to track progress</b></p>
                 <p class="tip_content">
-                Quickly check the status of tasks for approvals or change requests and identify those on hold until dependencies are resolved with the hourglass icon.
+                    Quickly identify tasks awaiting approval or change requests, and spot those on hold due to unresolved dependencies.
                 </p>
                 <img src="https://download.odoocdn.com/digests/project/static/src/img/task-state-img.png" width="720" class="illustration_border" />
             </div>
@@ -27,29 +27,24 @@
             <field name="sequence">1300</field>
             <field name="group_id" ref="project.group_project_user"/>
             <field name="tip_description" type="html">
-<div>
-    <t t-set="project_record" t-value="object.env['project.project'].search([('alias_name', '!=', False), ('alias_domain_id', '!=', False)], limit=1, order='sequence asc')"/>
-    <p class="tip_title">Tip: Create tasks from incoming emails</p>
-    <t t-if="project_record.alias_email">
-        <p class="tip_content">Emails sent to <a t-attf-href="mailto:{{project_record.alias_email}}" target="_blank" style="color: #714B67; text-decoration: none;"><t t-out="project_record.alias_email" /></a> will generate tasks in your <t t-out="project_record.name"></t> project.</p>
-    </t>
-    <t t-else="">
-        <p class="tip_content">Create tasks by sending an email to the email address of your project.</p>
-    </t>
-</div>
+            <div>
+                <p class="tip_title"><b>Tip: Create tasks from incoming emails</b></p>
+                <p class="tip_content">Emails sent to your project's email address automatically create tasks in it.</p>
+                <img src="https://download.odoocdn.com/digests/project/static/src/img/create_tasks_emails.png" width="720" class="illustration_border" />
+            </div>
             </field>
         </record>
 
         <record id="digest_tip_project_2" model="digest.tip">
-            <field name="name">Tip: Your Own Personal Kanban</field>
+            <field name="name">Tip: Your personal kanban</field>
             <field name="sequence">3200</field>
             <field name="group_id" ref="project.group_project_user"/>
             <field name="tip_description" type="html">
-<div>
-    <p class="tip_title">Tip: Your Own Personal Kanban</p>
-    <p class="tip_content">Use personal stages to organize your tasks and create your own workflow.</p>
-    <img src="https://download.odoocdn.com/digests/project/static/src/img/18-project-personal-stages.gif" width="540" class="illustration_border"/>
-</div>
+            <div>
+                <p class="tip_title"><b>Tip: Your personal kanban</b></p>
+                <p class="tip_content">Create a personal workflow to organize your assigned tasks and private to-dos.</p>
+                <img src="https://download.odoocdn.com/digests/project/static/src/img/personal_kanban.png" width="540" class="illustration_border"/>
+            </div>
             </field>
         </record>
 
@@ -58,11 +53,91 @@
             <field name="sequence">3900</field>
             <field name="group_id" ref="project.group_project_manager"/>
             <field name="tip_description" type="html">
-<div>
-    <p class="tip_title">Tip: Project-Specific Fields</p>
-    <p class="tip_content">Add project-specific property fields on tasks to customize your project management process.</p>
-    <img src="https://download.odoocdn.com/digests/project/static/src/img/18-project-property-fields.gif" width="540" class="illustration_border"/>
-</div>
+            <div>
+                <p class="tip_title"><b>Tip: Project-Specific Fields</b></p>
+                <p class="tip_content">Add project-specific property fields to tasks to better customize your project management process.</p>
+                <img src="https://download.odoocdn.com/digests/project/static/src/img/project_fields.png" width="540" class="illustration_border"/>
+            </div>
+            </field>
+        </record>
+
+        <record id="digest_tip_project_4" model="digest.tip">
+            <field name="name">Tip: Identify bottlenecks at a glance</field>
+            <field name="sequence">4200</field>
+            <field name="group_id" ref="project.group_project_user"/>
+            <field name="tip_description" type="html">
+            <div>
+                <p class="tip_title"><b>Tip: Identify bottlenecks at a glance</b></p>
+                <p class="tip_content">Check the stage tracker on tasks to quickly spot bottlenecks in your project workflow.</p>
+                <img src="https://download.odoocdn.com/digests/project/static/src/img/task_stage_bottlenecks.png" width="540" class="illustration_border"/>
+            </div>
+            </field>
+        </record>
+
+        <record id="digest_tip_project_5" model="digest.tip">
+            <field name="name">Tip: Create your tasks in an instant</field>
+            <field name="sequence">4500</field>
+            <field name="group_id" ref="project.group_project_user"/>
+            <field name="tip_description" type="html">
+                <div>
+                    <p class="tip_title"><b>Tip: Create your tasks in an instant</b></p>
+                    <p class="tip_content">Use keywords in the title to set task details automatically. For example, type:<br/>
+                    <code>Improve the configuration screen 5h #feature #v20 @<t t-out="ctx.get('digest_tip_recipient_name', 'Name')">Name</t> !</code><br/>
+                    and watch the magic happen!</p>
+                    <img src="https://download.odoocdn.com/digests/project/static/src/img/create_tasks_in_instant.png" width="540" class="illustration_border"/>
+                </div>
+            </field>
+        </record>
+
+        <record id="digest_tip_project_6" model="digest.tip">
+            <field name="name">Tip: Filter your tasks with one click</field>
+            <field name="sequence">4800</field>
+            <field name="group_id" ref="project.group_project_user"/>
+            <field name="tip_description" type="html">
+            <div>
+                <p class="tip_title"><b>Tip: Filter your tasks with one click</b></p>
+                <p class="tip_content">Click the Kanban progress bar to quickly filter tasks by status within the current stage.</p>
+                <img src="https://download.odoocdn.com/digests/project/static/src/img/task_filter.png" width="540" class="illustration_border"/>
+            </div>
+            </field>
+        </record>
+
+        <record id="digest_tip_project_7" model="digest.tip">
+            <field name="name">Tip: Don't let stalled tasks slip under the radar</field>
+            <field name="sequence">5100</field>
+            <field name="group_id" ref="project.group_project_user"/>
+            <field name="tip_description" type="html">
+            <div>
+                <p class="tip_title"><b>Tip: Don't let stalled tasks slip under the radar</b></p>
+                <p class="tip_content">Quickly identify tasks that have been stuck in the same stage for too long.</p>
+                <img src="https://download.odoocdn.com/digests/project/static/src/img/stalled-tasks.png" width="540" class="illustration_border"/>
+            </div>
+            </field>
+        </record>
+
+        <record id="digest_tip_project_8" model="digest.tip">
+            <field name="name">Tip: Save time with task templates</field>
+            <field name="sequence">5400</field>
+            <field name="group_id" ref="project.group_project_user"/>
+            <field name="tip_description" type="html">
+            <div>
+                <p class="tip_title"><b>Tip: Save time with task templates</b></p>
+                <p class="tip_content">Create reusable task templates to quickly set up tasks and standardize your workflows.</p>
+                <img src="https://download.odoocdn.com/digests/project/static/src/img/task_template_guide.png" width="540" class="illustration_border"/>
+            </div>
+            </field>
+        </record>
+
+        <record id="digest_tip_project_9" model="digest.tip">
+            <field name="name">Tip: Access your project easily</field>
+            <field name="sequence">5700</field>
+            <field name="group_id" ref="project.group_project_user"/>
+            <field name="tip_description" type="html">
+            <div>
+                <p class="tip_title"><b>Tip: Access your project easily</b></p>
+                <p class="tip_content">From the task Kanban view, use the top menu to quickly access all project items like timesheets and invoices. Customize actions with your favorite filters and views to suit your needs.</p>
+                <img src="https://download.odoocdn.com/digests/project/static/src/img/project_documents.png" width="540" class="illustration_border"/>
+            </div>
             </field>
         </record>
     </data>
