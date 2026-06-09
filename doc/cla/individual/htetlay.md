@@ -1,4 +1,4 @@
-<country>, 2026-06-09
+Myanmar, 2026-06-09
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
@@ -8,5 +8,5 @@ declaration.
 
 Signed,
 
-Garfield <ninuxcharon@gmail.com> https://github.com/htetlay
+htetlay <ninuxcharon@gmail.com> https://github.com/XharonX
 
