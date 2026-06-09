@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.TeamBoardContactDialog">
+        <Dialog size="'xl'" title.translate="Contact" t-on-keyup="this.handleKeyup" t-on-click="this.handleClick">
+            <div class="row">
+                <div class="col-4">
+                    <img class="img-fluid" t-att-src="this.props.img"/>
+                </div>
+                <div class="col-8">
+                    <t t-out="this.content"/>
+                </div>
+            </div>
+            <div class="mt-4">
+                <button class="btn btn-success" t-custom-ref="website.TeamBoardContactDialogSendButton" t-on-click="this.sendMessage">Send message</button>
+            </div>
+        </Dialog>
+    </t>
+</templates>

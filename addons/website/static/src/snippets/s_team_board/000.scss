@@ -1,48 +1,53 @@
-  [data-layout="list"] {
+.s_team_board {
+  .card:focus-within {
+    outline: 0;
+    box-shadow: 0 0 0 var(--focus-ring-width) var(--focus-ring-color);
+  }
+}
+
+[data-layout="list"] {
+  .col {
+    min-width: 100%;
+
+    .card {
+      flex-direction: row;
+
+      img {
+        max-width: 10%;
+
+        @include media-breakpoint-down(lg) {
+          max-width: 30%;
+        }
+
+        object-fit: cover;
+      }
+    }
+  }
+}
+
+[data-layout="grid"] {
+  .row {
     .col {
-      min-width: 100%;
+      width: calc(100%/3);
+      flex: 0 0 auto;
 
       .card {
-        flex-direction: row;
-
         img {
-          @include media-breakpoint-up(lg) {
-            max-width: 10%;
-          }
-
-          @include media-breakpoint-down(lg) {
-            max-width: 30%;
-          }
-
-          object-fit: cover;
+          width: 100%;
         }
       }
     }
   }
+}
 
-  [data-layout="grid"] {
-    .row {
-      .col {
-        width: 33.33%;
-        flex: 0 0 auto;
+[data-density="dense"] {
+  .card {
+    .card-body {
+      padding: 0rem;
 
-        .card {
-          img {
-            width: 100%;
-          }
-        }
+      & > * {
+        font-size: 0.8em;
       }
     }
   }
-
-  [data-density="dense"] {
-    .card {
-      .card-body {
-        padding: 0rem;
-
-        * {
-          font-size: 80%;
-        }
-      }
-    }
-  }
+}

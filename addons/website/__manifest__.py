@@ -301,6 +301,7 @@
             'website/static/src/js/highlight_utils.js',
             'website/static/src/client_actions/website_preview/website_builder_action.editor.scss',
             'website/static/src/components/user_switch.*',
+            'website/static/src/components/team_board_contact_dialog/**/*',
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/utils/misc.js',
