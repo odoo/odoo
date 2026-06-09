@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website.TeamBoardOption">
+        <BuilderRow label.translate="Cards Layout">
+            <BuilderSelect applyTo="'.s_team_board_wrapper'">
+                <BuilderSelectItem classAction="'s_team_board_grid'">Grid</BuilderSelectItem>
+                <BuilderSelectItem classAction="'s_team_board_list'">List</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Density">
+            <BuilderSelect applyTo="'.card-body'">
+                <BuilderSelectItem classAction="''">Comfortable</BuilderSelectItem>
+                <BuilderSelectItem classAction="'small'">Compact</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+    </t>
+    <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+        <xpath expr="//t[@id='snippet_specific_options']" position="after">
+            <team_board_option
+                template="website.TeamBoardOption"
+                selector=".s_team_board"/>
+        </xpath>
+    </t>
+</templates>

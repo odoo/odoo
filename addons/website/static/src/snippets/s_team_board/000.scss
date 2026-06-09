@@ -1,0 +1,34 @@
+.s_team_board {
+    .s_team_board_wrapper.s_team_board_grid {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 2rem;
+
+        .card {
+            max-width: 24rem;
+        }
+
+        .s_card_img {
+            aspect-ratio: 1 / 1;
+        }
+    }
+
+    .s_team_board_wrapper.s_team_board_list {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+
+        .card {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+        }
+
+        .s_card_img {
+            aspect-ratio: 1 / 1;
+            width: 16rem;
+            min-width: 16rem;
+        }
+    }
+}
