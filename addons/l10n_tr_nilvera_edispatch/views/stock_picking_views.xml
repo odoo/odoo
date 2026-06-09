@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="vpicktree_inherit_l10n_tr_nilvera_edispatch" model="ir.ui.view">
-        <field name="name">stock.picking.view.list.inherit</field>
-        <field name="model">stock.picking</field>
-        <field name="inherit_id" ref="stock.vpicktree"/>
-        <field name="arch" type="xml">
-            <list position="attributes">
-                <attribute name="js_class">l10n_tr_edispatch_tree</attribute>
-            </list>
-        </field>
-    </record>
-
     <record id="view_picking_internal_search_inherit_l10n_tr_nilvera_edispatch" model="ir.ui.view">
         <field name="name">stock.picking.internal.search.inherit.l10n.tr.nilvera.edispatch</field>
         <field name="model">stock.picking</field>
@@ -42,7 +31,7 @@
                 <button name="button_l10n_tr_nilvera_update_data_from_xml"
                         type="object"
                         class="btn-primary"
-                        invisible="country_code != 'TR' or state == 'done' or picking_type_code != 'incoming'"
+                        invisible="country_code != 'TR' or state == 'done' or picking_type_code != 'incoming' or not l10n_tr_nilvera_edispatch_xml_id"
                         string="Update From GİB e-Dispatch (XML)" />
             </xpath>
             <field name="origin" position="after">

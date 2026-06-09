@@ -12,8 +12,8 @@
                 <div class="alert alert-info" role="alert" invisible="state != 'draft' or l10n_tr_nilvera_send_status != 'error' or not l10n_tr_nilvera_uuid">
                     To preserve accounting integrity and comply with legal requirements, invoices cannot be reused once an error occurs. Please create a new invoice to continue.
                 </div>
-                <div invisible="l10n_tr_gib_invoice_scenario != 'TICARIFATURA' or l10n_tr_nilvera_send_status != 'waiting'">
-                    <div class="alert alert-info w-100 d-flex align-items-center gap-1" role="alert" invisible="l10n_tr_nilvera_send_status != 'waiting'">
+                <div invisible="l10n_tr_gib_invoice_scenario != 'TICARIFATURA' or l10n_tr_nilvera_send_status not in ('succeed', 'commercial_approved', 'commercial_answered_automatically', 'commercial_rejected')">
+                    <div class="alert alert-info w-100 d-flex align-items-center gap-1" role="alert" invisible="l10n_tr_nilvera_send_status != 'succeed'">
                         <span>Pending: Awaiting response from </span>
                         <field invisible="move_type != 'out_invoice' or not partner_id" name="partner_id" readonly="True"/>
                         <span invisible="move_type != 'out_invoice' or partner_id">Customer</span>
