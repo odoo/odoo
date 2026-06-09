@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
-import { onWillStart, onWillUpdateProps, Component, proxy } from "@odoo/owl";
+import { Component, asyncComputed } from "@odoo/owl";
 
 export class DepartmentChart extends Component {
     static template = "hr.DepartmentChart";
@@ -15,20 +15,15 @@ export class DepartmentChart extends Component {
 
         this.action = useService("action");
         this.orm = useService("orm");
-        this.state = proxy({
-            hierarchy: {},
-        });
-        onWillStart(async () => await this.fetchHierarchy(this.props.record.resId));
-
-        onWillUpdateProps(async (nextProps) => {
-            await this.fetchHierarchy(nextProps.record.resId);
-        });
-    }
-
-    async fetchHierarchy(departmentId) {
-        this.state.hierarchy = await this.orm.call("hr.department", "get_department_hierarchy", [
-            departmentId,
-        ]);
+        this.hierarchy = asyncComputed(
+            () =>
+                this.orm.call("hr.department", "get_department_hierarchy", [
+                    this.props.record.resId,
+                ]),
+            {
+                initial: {},
+            }
+        );
     }
 
     async openDepartmentEmployees(departmentId) {
