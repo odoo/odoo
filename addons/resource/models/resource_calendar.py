@@ -876,7 +876,7 @@ class ResourceCalendar(models.Model):
         week_type = False
         if self.two_weeks_calendar:
             week_type = str(self.env['resource.calendar.attendance'].get_week_type(date))
-        return sum(attendances_per_week_type[week_type].mapped('duration_hours'))
+        return sum(attendances_per_week_type.get(week_type, self.env['resource.calendar.attendance']).mapped('duration_hours'))
 
     def _get_nb_working_day(self, start_date, stop_date):
         self.ensure_one()
