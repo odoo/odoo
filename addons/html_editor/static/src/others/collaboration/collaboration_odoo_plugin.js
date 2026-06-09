@@ -808,6 +808,7 @@ export class CollaborationOdooPlugin extends Plugin {
         if (firstChild) {
             firstChild.setAttribute("data-last-history-commits", historyIds);
         }
+        return editable;
     }
 
     /**

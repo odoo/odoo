@@ -50,9 +50,9 @@ import { _t } from "@web/core/l10n/translation";
  * @typedef { ((commit: HistoryCommit) => boolean | undefined)[] } has_history_commit_changes_predicates
  * @typedef { ((commit: HistoryCommit) => boolean | undefined)[] } is_history_commit_reversible_predicates
  *
- * @typedef { ((data: HistoryCommitData) => HistoryCommitData | void)[] } pending_history_commit_data_processors
- * @typedef { ((data: HistoryCommitData<"savePoint">) => HistoryCommitData<"savePoint"> | void)[] } save_point_history_commit_data_processors
- * @typedef { ((data: HistoryCommitData<"standard"> & { authorTimestamp: number }) => HistoryCommitData<"standard"> | void)[] } snapshot_history_commit_data_processors
+ * @typedef { ((data: HistoryCommitData) => HistoryCommitData)[] } pending_history_commit_data_processors
+ * @typedef { ((data: HistoryCommitData<"savePoint">) => HistoryCommitData<"savePoint">)[] } save_point_history_commit_data_processors
+ * @typedef { ((data: HistoryCommitData<"standard"> & { authorTimestamp: number }) => HistoryCommitData<"standard">)[] } snapshot_history_commit_data_processors
  */
 
 export const COMMIT_DEBOUNCE_DELAY = 250;

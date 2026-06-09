@@ -85,6 +85,7 @@ export class SaveSnippetPlugin extends Plugin {
             ...this.getResource("clean_for_save_processors"),
             (root) => {
                 escapeTextNodes(root);
+                return root;
             },
         ];
         const savedName = await this.config.saveSnippet(

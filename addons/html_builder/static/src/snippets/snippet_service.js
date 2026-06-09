@@ -340,7 +340,7 @@ export class SnippetModel extends Reactive {
     cleanSnippetForSave(snippetCopyEl, cleanForSaveProcessors) {
         let item = snippetCopyEl;
         cleanForSaveProcessors.forEach((processor) => {
-            item = processor(item) || item;
+            item = processor(item);
         });
         return item;
     }

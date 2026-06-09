@@ -67,7 +67,7 @@ function isUnremovableTableComponent(node, root) {
  */
 
 /**
- * @typedef {((el: HTMLElement) => void)[]} deselect_custom_selected_nodes_processors
+ * @typedef {((el: HTMLElement) => HTMLElement)[]} deselect_custom_selected_nodes_processors
  */
 
 /**
@@ -160,6 +160,7 @@ export class TablePlugin extends Plugin {
         before_insert_processors: this.handleTableInsert.bind(this),
         clean_for_save_processors: (root) => {
             this.deselectTable(root);
+            return root;
         },
         normalize_processors: this.normalizeTable.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
@@ -435,6 +436,7 @@ export class TablePlugin extends Plugin {
                 table.style.backgroundColor = "";
             }
         }
+        return root;
     }
 
     createTable({ rows = 2, cols = 2 } = {}) {

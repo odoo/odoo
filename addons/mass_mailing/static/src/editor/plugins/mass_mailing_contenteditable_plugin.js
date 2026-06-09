@@ -17,6 +17,7 @@ export class MassMailingContenteditablePlugin extends Plugin {
 
     cleanForSave(clone) {
         clone.querySelector(".o_layout .o_mail_no_options")?.removeAttribute("contenteditable");
+        return clone;
     }
 }
 

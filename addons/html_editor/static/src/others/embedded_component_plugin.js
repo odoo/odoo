@@ -331,6 +331,7 @@ export class EmbeddedComponentPlugin extends Plugin {
                 this.dependencies.protectedNode.setProtectingNode(editableDescendant, false);
             }
         });
+        return elem;
     }
 
     cleanForSave(clone) {
@@ -346,6 +347,7 @@ export class EmbeddedComponentPlugin extends Plugin {
             delete host.dataset.oeProtected;
             delete host.dataset.embeddedState;
         });
+        return clone;
     }
 
     preProcessSanitizedElem(elem) {

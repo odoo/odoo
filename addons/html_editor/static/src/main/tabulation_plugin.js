@@ -297,5 +297,6 @@ export class TabulationPlugin extends Plugin {
     }
     normalize(el) {
         this.alignTabs(el);
+        return el;
     }
 }

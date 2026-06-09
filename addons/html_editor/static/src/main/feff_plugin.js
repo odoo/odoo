@@ -59,6 +59,7 @@ export class FeffPlugin extends Plugin {
         } else {
             this.removeFeffs(root, null, { excludeLegit: false });
         }
+        return root;
     }
 
     onWillMergeAdjacentSiblingsHandler(root) {
@@ -187,6 +188,7 @@ export class FeffPlugin extends Plugin {
             exclude: (node) => feffNodesToKeep.has(node),
         });
         cursors.restore();
+        return root;
     }
 
     /**

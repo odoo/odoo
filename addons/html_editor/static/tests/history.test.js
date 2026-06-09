@@ -28,6 +28,7 @@ describe("reset", () => {
             resources = {
                 normalize_processors: () => {
                     this.editable.firstChild.setAttribute("data-test-normalize", "1");
+                    return this.editable;
                 },
             };
         };
@@ -681,6 +682,7 @@ describe("shortcut", () => {
             normalize_processors: (root) => {
                 expect.step("normalize");
                 root.classList.add("test");
+                return root;
             },
         };
         const { editor } = await setupEditor(`<p>[]</p>`, {

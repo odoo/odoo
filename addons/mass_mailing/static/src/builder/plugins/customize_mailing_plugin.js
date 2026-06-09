@@ -28,9 +28,11 @@ export class CustomizeMailingPlugin extends Plugin {
             CustomizeMailingVariable,
         },
         clean_for_save_processors: (root) => this.cleanForSave(root),
-        snippet_preview_dialog_stylesheets_processors: ({ iframe }) => {
+        snippet_preview_dialog_stylesheets_processors: (params) => {
+            const { iframe } = params;
             const styleSheet = this.extractStylesheetForPreview(iframe.contentDocument);
             iframe.contentDocument.adoptedStyleSheets.push(styleSheet);
+            return params;
         },
     };
     getRule = memoize((selector) => this._getRule(selector));
@@ -58,7 +60,7 @@ export class CustomizeMailingPlugin extends Plugin {
     cleanForSave(clone) {
         const layoutEl = clone.querySelector(".o_layout");
         if (!layoutEl) {
-            return;
+            return clone;
         }
         const styleEl = this.document.createElement("STYLE");
         styleEl.id = "design-element";
@@ -71,6 +73,7 @@ export class CustomizeMailingPlugin extends Plugin {
         }
         styleEl.textContent = cssTextArray.join("\n");
         layoutEl.prepend(styleEl);
+        return clone;
     }
 
     extractStylesheetForPreview(contentDocument) {

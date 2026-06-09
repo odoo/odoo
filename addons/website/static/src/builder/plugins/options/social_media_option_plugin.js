@@ -241,6 +241,7 @@ export class SocialMediaOptionPlugin extends Plugin {
                 element.before("\n");
             }
         }
+        return root;
     }
 
     applyMediaDialogParams(params) {
@@ -250,6 +251,7 @@ export class SocialMediaOptionPlugin extends Plugin {
         ) {
             params.visibleTabs = ["IMAGES", "ICONS"];
         }
+        return params;
     }
 
     /**

@@ -404,6 +404,7 @@ export class TextEffectPlugin extends Plugin {
                 unwrapContents(el);
             }
         }
+        return root;
     }
 }
 

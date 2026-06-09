@@ -170,6 +170,7 @@ export class ProtectedNodePlugin extends Plugin {
 
     normalize(elem) {
         this.forEachProtectingElem(elem, this.setProtectingNode.bind(this));
+        return elem;
     }
 
     setProtectingNode(elem, protecting) {
@@ -200,5 +201,6 @@ export class ProtectedNodePlugin extends Plugin {
         this.forEachProtectingElem(clone, (protectingNode) => {
             protectingNode.removeAttribute("contenteditable");
         });
+        return clone;
     }
 }

@@ -72,6 +72,7 @@ export class SetupEditorPlugin extends Plugin {
         for (const savableEl of selectElements(root, ".o_savable")) {
             savableEl.classList.remove("o_savable");
         }
+        return root;
     }
 
     /**

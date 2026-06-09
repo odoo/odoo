@@ -37,6 +37,7 @@ export class FacebookOptionPlugin extends Plugin {
         if (nodes.length) {
             this.loadAndSetEmptyLink(nodes);
         }
+        return root;
     }
 
     async loadAndSetEmptyLink(nodes) {
@@ -56,9 +57,7 @@ export class FacebookOptionPlugin extends Plugin {
 
             // WARNING: the call to ignore is very dangerous,
             // and should be avoided in most cases (if you think you need those, ask html_editor team)
-            const hasChanged = this.dependencies.domObserver.ignore(() =>
-                this.setEmptyLink(nodes)
-            );
+            const hasChanged = this.dependencies.domObserver.ignore(() => this.setEmptyLink(nodes));
 
             if (hasChanged) {
                 const commonAncestor = getCommonAncestor(nodes, this.editable);

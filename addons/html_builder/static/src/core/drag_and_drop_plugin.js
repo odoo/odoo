@@ -107,6 +107,7 @@ export class DragAndDropPlugin extends Plugin {
         selectElements(root, ".o_draggable").forEach((el) => {
             el.classList.remove("o_draggable");
         });
+        return root;
     }
 
     isDraggable(el) {

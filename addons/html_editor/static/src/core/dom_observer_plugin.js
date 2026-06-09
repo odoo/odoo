@@ -117,7 +117,7 @@ export const EDITOR_MUTATION_TYPES = /** @type {const} */ ({
  *
  * @typedef { ((node: Node, attributeName: string, attributeValue: string) => boolean)[] } set_attribute_overrides
  *
- * @typedef { ((value: string, params: { mutation: NativeMutation<"attributes">, ensureMutations?: boolean, wasReversed?: boolean }) => void)[] } attributes_mutation_value_processors
+ * @typedef { ((value: string, params: { mutation: NativeMutation<"attributes">, ensureMutations?: boolean, wasReversed?: boolean }) => string)[] } attributes_mutation_value_processors
  *
  * @typedef { ((mutation: NativeMutation) => boolean | undefined)[] } is_mutation_savable_predicates
  * @typedef { ((mutation: EditorMutation<"classList">) => boolean | undefined)[] } is_classlist_mutation_savable_predicates

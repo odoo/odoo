@@ -254,6 +254,7 @@ export class FontTypePlugin extends Plugin {
                 unwrapContents(el);
             }
         }
+        return root;
     }
 
     get fontTypeName() {

@@ -200,6 +200,7 @@ export class FontSizePlugin extends Plugin {
                 unwrapContents(el);
             }
         }
+        return root;
     }
 
     get fontSizeName() {

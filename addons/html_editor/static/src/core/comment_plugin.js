@@ -15,5 +15,6 @@ export class CommentPlugin extends Plugin {
                 el.remove();
             }
         }
+        return node;
     }
 }

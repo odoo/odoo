@@ -109,6 +109,7 @@ export class DomPlugin extends Plugin {
         /** Handlers */
         clean_for_save_processors: (root) => {
             this.removeEmptyClassAndStyleAttributes(root);
+            return root;
         },
         clipboard_content_processors: this.removeEmptyClassAndStyleAttributes.bind(this),
         is_functional_empty_node_predicates: (node) => {
@@ -775,5 +776,6 @@ export class DomPlugin extends Plugin {
                 node.removeAttribute("style");
             }
         }
+        return root;
     }
 }

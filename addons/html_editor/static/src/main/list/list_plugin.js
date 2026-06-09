@@ -329,6 +329,7 @@ export class ListPlugin extends Plugin {
     }
 
     normalize(root = this.editable) {
+        const originalRoot = root;
         const closestNestedLI = closestElement(root, "li:has(ul, ol)");
         if (closestNestedLI && closestNestedLI.closest("ul, ol")) {
             root = closestNestedLI.parentElement;
@@ -352,6 +353,7 @@ export class ListPlugin extends Plugin {
                 }
             }
         }
+        return originalRoot;
     }
 
     // --------------------------------------------------------------------------

@@ -430,6 +430,7 @@ export class TranslationPlugin extends Plugin {
             root.dataset.oeTranslationSourceSha = root.dataset.oeTranslationSaveSha;
             delete root.dataset.oeTranslationSaveSha;
         }
+        return root;
     }
 }
 

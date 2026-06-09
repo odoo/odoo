@@ -119,7 +119,7 @@ const ONLY_LINK_REGEX = /^(https?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/i;
  * @typedef {((
  *     clonedContents: DocumentFragment,
  *     selection: EditorSelection
- *   ) => void | clonedContents)[]} clipboard_content_processors
+ *   ) => clonedContents)[]} clipboard_content_processors
  * @typedef {((textContent: string) => string)[]} clipboard_text_processors
  */
 

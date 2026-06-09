@@ -287,6 +287,7 @@ test("preview shouldn't let o_dirty", async () => {
                     // apply a mutation when we remove the preview
                     el.classList.add("test");
                 }
+                return root;
             },
         };
     }

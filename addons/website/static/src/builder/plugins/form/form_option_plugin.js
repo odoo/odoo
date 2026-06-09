@@ -194,6 +194,7 @@ export class FormOptionPlugin extends Plugin {
         ].map((selector) => `.s_website_form form ${selector}`),
         clean_for_save_processors: (rootEl) => {
             this.removeSuccessMessagePreviews(rootEl);
+            return rootEl;
         },
         on_will_save_handlers: async (rootEl) => {
             await this.applyDefaultValues(rootEl);
@@ -947,6 +948,7 @@ export class FormOptionPlugin extends Plugin {
     removeSuccessMessagePreviews(rootEl) {
         const toCleanEls = rootEl.querySelectorAll(".o_show_form_success_message");
         toCleanEls.forEach((el) => el.classList.remove("o_show_form_success_message"));
+        return rootEl;
     }
     /**
      * Clear the dataset of the field to avoid keeping old values.

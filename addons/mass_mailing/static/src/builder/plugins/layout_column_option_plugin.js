@@ -35,6 +35,7 @@ export class MassMailingLayoutColumnPlugin extends Plugin {
                 emptySectionCandidate.remove();
             }
         }
+        return element;
     }
 }
 

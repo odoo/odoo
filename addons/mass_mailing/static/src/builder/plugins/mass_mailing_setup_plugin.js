@@ -26,6 +26,7 @@ export class MassMailingSetupPlugin extends Plugin {
         wrapperTd?.classList.remove("oe_empty");
         wrapperTd?.removeAttribute("data-editor-message-default");
         wrapperTd?.removeAttribute("data-editor-message");
+        return root;
     }
 }
 

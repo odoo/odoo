@@ -30,6 +30,7 @@ export class SelectionPlaceholderPlugin extends Plugin {
             for (const placeholder of root.querySelectorAll(PLACEHOLDER_SELECTOR)) {
                 placeholder.remove();
             }
+            return root;
         }),
         split_element_block_overrides: ({ blockToSplit }) => {
             if (blockToSplit.hasAttribute(PLACEHOLDER_ATTRIBUTE)) {
@@ -77,7 +78,7 @@ export class SelectionPlaceholderPlugin extends Plugin {
      * Update all placeholders and blinker classes so they are present
      * everywhere we need them, and absent wherever they are not useful.
      */
-    updatePlaceholders() {
+    updatePlaceholders(root = this.editable) {
         const isSelectionBlocker = (node) =>
             this.checkPredicates("is_selection_blocker_predicates", node) ?? false;
         const placeholderParents = selectElements(this.editable, "*").filter(
@@ -154,6 +155,7 @@ export class SelectionPlaceholderPlugin extends Plugin {
 
         // 3. Reset blinker classes.
         this.resetBlinkerClasses();
+        return root;
     }
 
     /**

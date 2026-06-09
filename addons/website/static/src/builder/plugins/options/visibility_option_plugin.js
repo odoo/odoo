@@ -71,6 +71,7 @@ export class VisibilityOptionPlugin extends Plugin {
         for (const el of selectElements(rootEl, "section, .s_hr")) {
             this.updateCSSSelectors(el);
         }
+        return rootEl;
     }
 
     /**

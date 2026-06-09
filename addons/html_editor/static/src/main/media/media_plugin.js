@@ -172,6 +172,7 @@ export class MediaPlugin extends Plugin {
                 el.textContent = "\u200B";
             }
         }
+        return node;
     }
 
     clean(root) {
@@ -180,6 +181,7 @@ export class MediaPlugin extends Plugin {
                 el.textContent = "";
             }
         }
+        return root;
     }
 
     cleanForSave(root) {
@@ -189,6 +191,7 @@ export class MediaPlugin extends Plugin {
             }
             el.removeAttribute("contenteditable");
         }
+        return root;
     }
 
     async onSaveMediaDialog(element, { node }) {

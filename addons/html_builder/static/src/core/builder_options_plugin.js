@@ -161,6 +161,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 context.selector = this.getReloadSelector(el);
                 context.folded = this.lastContainers.map((c) => c.folded);
             }
+            return context;
         },
         on_editor_started_handlers: () => {
             if (this.config.reloadContext) {
@@ -516,6 +517,7 @@ export class BuilderOptionsPlugin extends Plugin {
                 cleanForSave(el, this.getBuilderOptionContext(Option));
             }
         }
+        return root;
     }
 
     /**

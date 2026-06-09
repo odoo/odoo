@@ -112,6 +112,7 @@ export class ColorPlugin extends Plugin {
                 unwrapContents(el);
             }
         }
+        return root;
     }
 
     getActiveColorInfo() {

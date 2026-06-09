@@ -597,6 +597,7 @@ export class ToggleBlockPlugin extends Plugin {
             const baseContainer = this.dependencies.baseContainer.createBaseContainer();
             emptyToggleNode.replaceChildren(baseContainer);
         }
+        return element;
     }
 
     renderToggleBlock(initialText) {
