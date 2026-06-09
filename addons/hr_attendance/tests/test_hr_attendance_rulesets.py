@@ -76,6 +76,22 @@ class TestHrAttendanceOvertime(TransactionCase):
             'ruleset_id': cls.ruleset.id
         })
 
+    def test_ruleset_unlink_not_linked_to_employee(self):
+        """ A ruleset with rules but not linked to any employee must be deletable. """
+        ruleset = self.env['hr.attendance.overtime.ruleset'].create({
+            'name': 'Unlinked Ruleset',
+            'rule_ids': [Command.create({
+                'name': 'Rule',
+                'base_off': 'quantity',
+                'quantity_period': 'day',
+                'expected_hours': 8,
+            })],
+        })
+        rule_ids = ruleset.rule_ids.ids
+        ruleset.unlink()
+        remaining_rules = self.env['hr.attendance.overtime.rule'].search([('id', 'in', rule_ids)])
+        self.assertFalse(remaining_rules, "Deleting a ruleset must cascade-delete its rules")
+
     def test_daily_overtime_8_hours_rule(self):
         with freeze_time("2021-01-04"):
             # Attendance: 10 hours (8 expected + 2 overtime at 150%)
