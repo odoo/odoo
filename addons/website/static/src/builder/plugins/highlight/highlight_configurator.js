@@ -70,6 +70,7 @@ export class HighlightConfigurator extends Component {
                 selectHighlight: this.selectHighlight.bind(this),
                 previewHighlight: this.props.previewHighlight,
                 revertHighlight: this.props.revertHighlight,
+                currentHighlightId: this.state.highlightId,
                 style: `
                     --text-highlight-width: ${(this.state.thickness || 2) / fontRatio}px;
                     --text-highlight-color: ${this.state.color || "var(--hb-cp-o-color-1)"};

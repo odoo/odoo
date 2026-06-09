@@ -58,7 +58,7 @@
             width: 100%;
             height: $o-we-sidebar-content-field-progress-height;
             // Unfortunately, Chrome does not support customizing the lower part of the track
-            background-color: $o-we-sidebar-content-field-progress-color;
+            background-color: var(--o-hb-range-progress-bg, #{$o-we-sidebar-content-field-progress-color});
             border-color: transparent;
             border-radius: 10rem;
             box-shadow: none;
@@ -82,7 +82,7 @@
         &::-moz-range-track {
             width: 100%;
             height: $o-we-sidebar-content-field-progress-height;
-            background-color: $o-we-sidebar-content-field-progress-color;
+            background-color: var(--o-hb-range-progress-bg, #{$o-we-sidebar-content-field-progress-color});
             border-color: transparent;
             border-radius: 10rem;
             box-shadow: none;
@@ -123,7 +123,7 @@
             @include border-radius($form-range-track-border-radius);
         }
         &::-ms-fill-upper {
-            background-color: $o-we-sidebar-content-field-progress-color;
+            background-color: var(--o-hb-range-progress-bg, #{$o-we-sidebar-content-field-progress-color});
             border-radius: 10rem;
         }
 
@@ -134,10 +134,10 @@
                 background-color: $o-we-sidebar-content-field-progress-active-color;
             }
             &::-moz-range-progress {
-                background-color: $o-we-sidebar-content-field-progress-color;
+                background-color: var(--o-hb-range-progress-bg, #{$o-we-sidebar-content-field-progress-color});
             }
             &::-ms-fill-lower {
-                background-color: $o-we-sidebar-content-field-progress-color;
+                background-color: var(--o-hb-range-progress-bg, #{$o-we-sidebar-content-field-progress-color});
             }
             &::-ms-fill-upper {
                 background-color: $o-we-sidebar-content-field-progress-active-color;
