@@ -348,11 +348,11 @@ class AccountMove(models.Model):
         string='Audit Trail Messages',
     )
     no_followup = fields.Boolean(
-        string="No Follow-Up",
+        string="No Reminder",
         compute='_compute_no_followup',
         inverse='_inverse_no_followup',
         readonly=False,
-        help="Exclude this journal entry from follow-up reports."
+        help="Exclude this journal entry from Reminder reports.",
     )
 
     # === Hash Fields === #
@@ -7379,6 +7379,17 @@ class AccountMove(models.Model):
             raise UserError(_("There is no template that applies to invoices."))
 
         return available_reports
+
+    def is_overdue_invoice(self):
+        self.ensure_one()
+        return (
+            not self.env.context.get('no_invoice_reminder')
+            and self.move_type == 'out_invoice'
+            and not self.highlight_send_button
+            and self.env.user.has_group('account.group_account_basic')
+            and self.amount_residual > 0
+            and self.invoice_date_due < fields.Date.context_today(self)
+        )
 
     # -------------------------------------------------------------------------
     # TOOLING
