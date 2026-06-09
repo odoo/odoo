@@ -4,10 +4,12 @@ import { ExpertiseTagsAutocomplete } from "@im_livechat/core/web/expertise_tags_
 
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { prettifyMessageContent } from "@mail/utils/common/format";
+import { compareDatetime } from "@mail/utils/common/misc";
 
 import { Component } from "@odoo/owl";
 
 import { startUrl } from "@web/core/browser/router";
+import { toLocaleDateTimeString } from "@web/core/l10n/dates";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { url } from "@web/core/utils/urls";
@@ -74,5 +76,18 @@ export class LivechatChannelInfoList extends Component {
             return url(`/${startUrl()}/res.partner/${visitorMember.partner_id.id}`);
         }
         return undefined;
+    }
+
+    get visitorRecentChannels() {
+        return (this.props.thread.channel?.visitor_recent_channel_ids ?? [])
+            .filter((channel) => channel.notEq(this.props.thread.channel))
+            .sort(
+                (t1, t2) =>
+                    compareDatetime(t2.last_interest_dt, t1.last_interest_dt) || t2.id - t1.id
+            );
+    }
+
+    CLOSED_ON_TEXT(channel) {
+        return toLocaleDateTimeString(channel.livechat_end_dt);
     }
 }

@@ -250,5 +250,53 @@ patch(mailDataHelpers, {
             const ResUsers = this.env["res.users"];
             store.add(ResUsers.browse(serverState.userId), ["livechat_expertise_ids"]);
         }
+        if (name === "/im_livechat/session/data") {
+            const DiscussChannel = this.env["discuss.channel"];
+            const LivechatMemberHistory = this.env["im_livechat.channel.member.history"];
+            const [channel] = DiscussChannel.browse(params.channel_id);
+            const visitorHistories = LivechatMemberHistory.browse(
+                channel.livechat_channel_member_history_ids
+            );
+            const livechatCustomerPartnerIds = new Set(
+                visitorHistories
+                    .filter(
+                        (history) =>
+                            history.livechat_member_type === "visitor" && history.partner_id
+                    )
+                    .map((history) => history.partner_id)
+            );
+            const livechatCustomerGuestIds = new Set(
+                visitorHistories
+                    .filter(
+                        (history) => history.livechat_member_type === "visitor" && history.guest_id
+                    )
+                    .map((history) => history.guest_id)
+            );
+            const recentChannelIds = new Set();
+            for (const history of LivechatMemberHistory.browse(LivechatMemberHistory.search([]))) {
+                if (history.livechat_member_type !== "visitor") {
+                    continue;
+                }
+                if (
+                    !livechatCustomerPartnerIds.has(history.partner_id) &&
+                    !livechatCustomerGuestIds.has(history.guest_id)
+                ) {
+                    continue;
+                }
+                const [recentChannel] = DiscussChannel.browse(history.channel_id);
+                if (!recentChannel || recentChannel.channel_type !== "livechat") {
+                    continue;
+                }
+                if (recentChannelIds.has(recentChannel.id)) {
+                    continue;
+                }
+                recentChannelIds.add(recentChannel.id);
+            }
+            store.add(DiscussChannel.browse(channel.id), {
+                visitor_recent_channel_ids: mailDataHelpers.Store.many(
+                    DiscussChannel.browse(Array.from(recentChannelIds))
+                ),
+            });
+        }
     },
 });
