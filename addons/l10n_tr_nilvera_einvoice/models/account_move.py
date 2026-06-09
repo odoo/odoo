@@ -41,7 +41,7 @@ UNSYNCED_COMMERCIAL_MOVE_DOMAIN = [
     ("l10n_tr_gib_invoice_scenario", "=", "TICARIFATURA"),
     ("l10n_tr_nilvera_send_status", "=", "succeed"),
     ("partner_id", "!=", False),  # Partner's status is needed to determine endpoint when fetching response
-    ("company_id.country_code", "=", "TR"),
+    ("company_id.partner_id.country_id.code", "=", "TR"),
     ("company_id.l10n_tr_nilvera_api_key", "!=", False),
 ]
 
@@ -447,6 +447,8 @@ class AccountMove(models.Model):
                     )
 
                     nilvera_status = response.get('InvoiceStatus', {}).get('Code') or response.get('StatusCode')
+                    answer = response.get('Answer') or {}
+                    answer_code = answer.get('AnswerCode')
                     if nilvera_status in dict(invoice._fields['l10n_tr_nilvera_send_status'].selection):
                         if nilvera_status == 'error':
                             invoice.l10n_tr_nilvera_send_status = nilvera_status
@@ -459,11 +461,15 @@ class AccountMove(models.Model):
                                     response.get('InvoiceStatus', {}).get('DetailDescription') or response.get('ReportStatus'),
                                 )
                             )
-                        elif invoice.l10n_tr_gib_invoice_scenario == "TICARIFATURA" and invoice.move_type in {'out_invoice', 'in_invoice'} and nilvera_status == 'succeed':
-                            if response['Answer'] and response['Answer'].get('AnswerCode') in {'approved', 'rejected', 'documentAnsweredAutomatically'}:
-                                invoice.l10n_tr_nilvera_send_status = TICARIFATURA_ANSWER_TO_FIELD_VALUE_MAP[response['Answer']['AnswerCode']]
-                                if response['Answer']['AnswerCode'] == 'rejected':
-                                    invoice._l10n_tr_action_process_rejected_ticarifatura(response['Answer'].get('Description', ''), client)
+                        elif (
+                            invoice.l10n_tr_gib_invoice_scenario == "TICARIFATURA"
+                            and invoice.move_type in {'out_invoice', 'in_invoice'}
+                            and nilvera_status == 'succeed'
+                            and answer_code in {'approved', 'rejected', 'documentAnsweredAutomatically'}
+                        ):
+                            invoice.l10n_tr_nilvera_send_status = TICARIFATURA_ANSWER_TO_FIELD_VALUE_MAP[answer_code]
+                            if answer_code == 'rejected':
+                                invoice._l10n_tr_action_process_rejected_ticarifatura(answer.get('Description', ''), client)
                         else:
                             invoice.l10n_tr_nilvera_send_status = nilvera_status
                     else:
