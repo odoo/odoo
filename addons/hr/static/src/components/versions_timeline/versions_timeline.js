@@ -4,7 +4,6 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { statusBarField, StatusBarField } from "@web/views/fields/statusbar/statusbar_field";
 import { _t } from "@web/core/l10n/translation";
-import { useEffect } from "@odoo/owl";
 
 export class VersionsTimeline extends StatusBarField {
     static template = "hr.VersionsTimeline";
@@ -26,34 +25,6 @@ export class VersionsTimeline extends StatusBarField {
                 return { type: "date" };
             },
         });
-
-        const { specialDataCaches, hooks } = this.props.record.model;
-
-        const clearCache = () => {
-            Object.keys(specialDataCaches).forEach((key) => {
-                // Invalidate cache after creating or removing version.
-                if (JSON.parse(key)[0] == "hr.version") {
-                    delete specialDataCaches[key];
-                }
-            });
-        };
-
-        let first = true; // Skip first execution
-        useEffect(() => {
-            if (!first) {
-                clearCache();
-                this.props.record.model.load();
-            }
-            first = false;
-        }, () => [this.props.record.data["versions_count"]]);
-
-        const onRecordSaved = hooks.onRecordSaved;
-        hooks.onRecordSaved = async (record, changes) => {
-            if (["hr.employee", "hr.version"].includes(record.resModel)) {
-                clearCache();
-            }
-            await onRecordSaved(record, changes);
-        };
     }
 
     /** @override **/
