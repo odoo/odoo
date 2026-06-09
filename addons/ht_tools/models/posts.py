@@ -1,5 +1,7 @@
-from odoo import models, fields, exceptions, api
 import requests
+import json
+import base64
+from odoo import models, fields, api, exceptions
 
 class Post(models.Model):
     _name = "tool.post"
@@ -15,6 +17,21 @@ class Post(models.Model):
         string="Đính kèm"
     )
 
+    # 1. Thêm trường cấu hình cách chọn nhóm
+    post_target = fields.Selection([
+        ('all', 'Đăng vào TẤT CẢ các nhóm'),
+        ('specific', 'Chỉ đăng vào nhóm được chọn bên dưới')
+    ], string="Mục tiêu đăng", default='all', required=True)
+
+    # THÊM TRƯỜNG NÀY: Kết nối bài viết với các Group cần đăng
+    group_ids = fields.Many2many(
+        "tool.group",
+        "tool_post_group_rel",  # Tên bảng trung gian (trùng với khai báo ở trên)
+        "post_id",             # Cột cho model hiện tại
+        "group_id",            # Cột cho model liên kết
+        string="Nhóm mục tiêu"
+    )
+
     @api.constrains("attachment_ids")
     def _check_attachment_limit(self):
         for record in self:
@@ -23,6 +40,16 @@ class Post(models.Model):
                     "A post can have at most 10 attachments."
                 )
             
+    def action_sync_groups_from_fastapi(self):
+        """Hàm này chạy khi bấm nút trên giao diện Group, mở ra popup nhập UID/Username"""
+        return {
+            'name': 'Nhập thông tin tài khoản Facebook',
+            'type': 'ir.actions.act_window',
+            'res_model': 'tool.sync.group.wizard', # Gọi đến model wizard bên dưới
+            'view_mode': 'form',
+            'target': 'new', # Mở dạng popup (new window)
+        }
+
     def action_send_to_bot(self):
         self.ensure_one()
 
@@ -44,13 +71,18 @@ class Post(models.Model):
                     )
                 )
 
+            headers = {
+                "X-API-Key": 'odoo_secret_key'
+            }
+
+            form_data = {
+                "uid": str(self.uid)
+            }
+
             response = requests.post(
-                "http://localhost:8000/run-bot",
-                data={
-                    "uid": self.uid,
-                    "action": "post",
-                    "content": self.content or "",
-                },
+                "http://localhost:8000/api/v1/bot/post-by-group-ids",
+                headers=headers,
+                data=form_data,
                 files=files,
                 timeout=120,
             )

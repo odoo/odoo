@@ -23,6 +23,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/posts_views.xml',
+        'views/group_views.xml',
         'views/menu_views.xml'
         
     ]
