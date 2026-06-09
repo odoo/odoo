@@ -3360,6 +3360,59 @@ class TestRoutes(TestStockCommon):
         self.assertEqual(ship.location_dest_id, final_location)
         self.assertEqual(ship.move_ids.location_dest_id, final_location)
 
+    def test_push_rule_moves_source_location(self):
+        """
+        Check that the source location on pushed moves is accurately set to be the
+        rule.location_src_id if it's a child of the old_move.location_dest_id
+        """
+        warehouse = self.warehouse_1
+        warehouse.reception_steps = 'two_steps'
+        input_subloc = self.env['stock.location'].create({
+            'name': 'Sublocation',
+            'location_id': warehouse.wh_input_stock_loc_id.id,
+        })
+        self.env['stock.rule'].create({
+            'name': 'Input/Sub -> Scrap',
+            'location_src_id': input_subloc.id,
+            'location_dest_id': self.scrap_location.id,
+            'route_id': warehouse.reception_route_id.id,
+            'company_id': self.env.company.id,
+            'picking_type_id': self.picking_type_in.id,
+            'action': 'push',
+            'auto': 'manual',
+        })
+
+        move = self.env['stock.move'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            'picking_type_id': self.picking_type_in.id,
+            'product_id': self.product1.id,
+            'uom_id': self.uom_unit.id,
+            'product_uom_qty': 2.0,
+            'move_line_ids': [
+                Command.create({
+                    'location_dest_id': input_subloc.id,
+                    'quantity': 1.0,
+                }),
+                Command.create({
+                    'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+                    'quantity': 1.0,
+                }),
+            ],
+        })
+        move.picked = True
+        move._action_done()
+
+        self.assertEqual(len(move.move_dest_ids), 2)
+        push_move_a, push_move_b = move.move_dest_ids
+        self.assertEqual(push_move_a.location_id, input_subloc)
+        self.assertEqual(push_move_b.location_id, warehouse.wh_input_stock_loc_id)
+        self.assertEqual(push_move_a.location_dest_id, self.scrap_location)
+        self.assertEqual(push_move_b.location_dest_id, self.stock_location)
+        self.assertNotEqual(push_move_a.picking_id, push_move_b.picking_id)
+        self.assertEqual(push_move_a.picking_id.location_id, input_subloc)
+        self.assertEqual(push_move_b.picking_id.location_id, warehouse.wh_input_stock_loc_id)
+
 
 class TestAutoAssign(TestStockCommon):
     _test_user_groups = (
