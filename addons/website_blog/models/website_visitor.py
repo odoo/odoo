@@ -16,4 +16,10 @@ class WebsiteVisitor(models.Model):
 
     @api.depends("website_track_ids")
     def _compute_blog_statistics(self):
-        self._compute_visitor_statistics(rel_field='blog_post_ids', rel_model='blog.post', count_field='visitor_blog_count')
+        mapped_data = self._get_visitor_statistics(
+            rel_model='blog.post',
+        )
+        for visitor in self:
+            stats = mapped_data.get(visitor.id, {'ids': [], 'count': 0})
+            visitor.blog_post_ids = [(6, 0, stats['ids'])]
+            visitor.visitor_blog_count = stats['count']

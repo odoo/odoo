@@ -11,7 +11,7 @@ const websiteVisitorPatch = {
         return this.last_track_ids
             .map(
                 (track) =>
-                    `${track.page_id.name} (${track.visit_datetime.toLocaleString(
+                    `${track.resRecord?.name} (${track.visit_datetime.toLocaleString(
                         DateTime.TIME_24_SIMPLE
                     )})`
             )

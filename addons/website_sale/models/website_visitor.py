@@ -23,11 +23,13 @@ class WebsiteVisitor(models.Model):
         product_query = self.env['product.product']._search(
             self.env['product.product']._check_company_domain(self.env.companies)
         )
-        self._compute_visitor_statistics(
-            rel_field='product_ids',
+        mapped_data = self._get_visitor_statistics(
             rel_model='product.product',
-            count_field='visitor_product_count',
             extra_domain=[
                 ('res_id', 'in', product_query),
             ],
         )
+        for visitor in self:
+            stats = mapped_data.get(visitor.id, {'ids': [], 'count': 0})
+            visitor.product_ids = [(6, 0, stats['ids'])]
+            visitor.visitor_product_count = stats['count']

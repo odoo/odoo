@@ -359,7 +359,8 @@ class WebsitePage(models.Model):
             kwargs.get('res_model') == self._name
             and (res_id := kwargs.get('res_id'))
         ):
-            extra_tracking_values['page_id'] = res_id
+            extra_tracking_values['res_model'] = self._name
+            extra_tracking_values['res_id'] = res_id
         return extra_tracking_values
 
     @api.model

@@ -16,4 +16,10 @@ class WebsiteVisitor(models.Model):
 
     @api.depends("website_track_ids")
     def _compute_slide_statistics(self):
-        self._compute_visitor_statistics(rel_field='slide_channel_ids', rel_model='slide.channel', count_field='visitor_slide_count')
+        mapped_data = self._get_visitor_statistics(
+            rel_model='slide.channel',
+        )
+        for visitor in self:
+            stats = mapped_data.get(visitor.id, {'ids': [], 'count': 0})
+            visitor.slide_channel_ids = [(6, 0, stats['ids'])]
+            visitor.visitor_slide_count = stats['count']

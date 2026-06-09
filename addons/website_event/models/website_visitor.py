@@ -32,7 +32,13 @@ class WebsiteVisitor(models.Model):
 
     @api.depends("website_track_ids")
     def _compute_event_statistics(self):
-        self._compute_visitor_statistics(rel_field='event_ids', rel_model='event.event', count_field='visitor_event_count')
+        mapped_data = self._get_visitor_statistics(
+            rel_model='event.event',
+        )
+        for visitor in self:
+            stats = mapped_data.get(visitor.id, {'ids': [], 'count': 0})
+            visitor.event_ids = [(6, 0, stats['ids'])]
+            visitor.visitor_event_count = stats['count']
 
     @api.depends('partner_id', 'event_registration_ids.name')
     def _compute_display_name(self):

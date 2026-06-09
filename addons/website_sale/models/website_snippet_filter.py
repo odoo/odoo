@@ -261,14 +261,14 @@ class WebsiteSnippetFilter(models.Model):
             )
             products = self.env["product.product"].browse(
                 [data[0] for data in tracked_products]
-            ).filtered(lambda p: p.website_published)
+            )
 
             if self.env.context.get("hide_variants"):
                 product_ids = products.mapped("product_tmpl_id.product_variant_id.id")
             else:
                 product_ids = products.ids
             if product_ids:
-                domain = Domain(domain) & Domain("id", "in", product_ids)
+                domain = Domain(domain) & Domain("id", "in", product_ids) & Domain("website_published", "=", True)
                 filtered_ids = set(self.env["product.product"]._search(domain, limit=limit))
                 # `search` will not keep the order of tracked products; however, we want to keep
                 # that order (latest viewed first).

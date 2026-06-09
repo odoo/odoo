@@ -51,7 +51,8 @@ class TestWebsiteDigest(TestDigestCommon):
             for track_day in track_days:
                 cls.env['website.track'].create({
                     'visitor_id': visitor.id,
-                    'page_id': page.id,
+                    'res_model': 'website.page',
+                    'res_id': page.id,
                     'url': page.url,
                     'visit_datetime': cls.reference_now + timedelta(days=(-track_day)),
                 })

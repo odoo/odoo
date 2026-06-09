@@ -21,8 +21,7 @@
         <field name="arch" type="xml">
             <list string="Visitor Page Views History" create="0" delete="0">
                 <field name="visitor_id"/>
-                <field name="page_id"/>
-                <field name="res_id" optional="hide"/>
+                <field name="res_id"/>
                 <field name="url"/>
                 <field name="visit_datetime"/>
             </list>
@@ -45,14 +44,14 @@
         <field name="arch" type="xml">
             <search string="Search Visitor">
                 <field name="visitor_id"/>
-                <field name="page_id"/>
+                <field name="res_id"/>
                 <field name="url"/>
                 <field name="visit_datetime"/>
-                <filter string="Pages" name="type_page" domain="[('page_id', '!=', False)]"/>
+                <filter string="Pages" name="type_page" domain="[('res_model', '=', 'website.page'), ('res_id', '!=', False)]"/>
                 <filter string="Urls &amp; Pages" name="type_url" domain="[('url', '!=', False)]"/>
                 <group>
                     <filter string="Visitor" name="group_by_visitor" domain="[]" context="{'group_by': 'visitor_id'}"/>
-                    <filter string="Page" name="group_by_page" domain="[]" context="{'group_by': 'page_id'}"/>
+                    <filter string="Page" name="group_by_page" domain="[]" context="{'group_by': 'res_id'}"/>
                     <filter string="Url" name="group_by_url" domain="[]" context="{'group_by': 'url'}"/>
                     <filter string="Date" name="group_by_date" domain="[]" context="{'group_by': 'visit_datetime'}"/>
                 </group>
@@ -295,8 +294,7 @@
         <field name="arch" type="xml">
             <list string="Visitor Views History" create="0" edit="0" sample="1" delete="0">
                 <field name="visitor_id"/>
-                <field name="page_id"/>
-                <field name="res_id" optional="hide"/>
+                <field name="res_id"/>
                 <field name="url"/>
                 <field name="visit_datetime"/>
             </list>

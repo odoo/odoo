@@ -9,9 +9,6 @@
             <filter name="type_url" position="after">
                 <filter string="Products" name="type_product" domain="[('res_model', '=', 'product.product')]"/>
             </filter>
-            <filter name="group_by_url" position="after">
-                <filter string="Product" name="group_by_product" domain="[('res_model', '=', 'product.product')]" context="{'group_by': 'res_id'}"/>
-            </filter>
         </field>
     </record>
 

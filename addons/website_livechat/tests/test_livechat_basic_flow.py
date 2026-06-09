@@ -297,21 +297,24 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                 "website.track": [
                     {
                         "id": self.track_ids[2].id,
-                        "page_id": self.page_1.id,
+                        "res_model": 'website.page',
+                        "res_id": self.page_1.id,
                         "visit_datetime": fields.Datetime.to_string(
                             self.track_ids[2].visit_datetime
                         ),
                     },
                     {
                         "id": self.track_ids[1].id,
-                        "page_id": self.page_2.id,
+                        "res_model": 'website.page',
+                        "res_id": self.page_2.id,
                         "visit_datetime": fields.Datetime.to_string(
                             self.track_ids[1].visit_datetime
                         ),
                     },
                     {
                         "id": self.track_ids[0].id,
-                        "page_id": self.page_1.id,
+                        "res_model": 'website.page',
+                        "res_id": self.page_1.id,
                         "visit_datetime": fields.Datetime.to_string(
                             self.track_ids[0].visit_datetime
                         ),
