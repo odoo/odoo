@@ -8,8 +8,8 @@ from odoo.tools import BinaryBytes
 from odoo.tools.image import binary_to_image, image_apply_opt
 
 
-@tagged('post_install', '-at_install')
-class TestWebsiteResetPassword(TransactionCase):
+@tagged('-post_install', 'at_install')
+class TestWebsiteIcons(TransactionCase):
 
     def test_01_website_favicon(self):
         """The goal of this test is to make sure the favicon is correctly
@@ -34,3 +34,6 @@ class TestWebsiteResetPassword(TransactionCase):
         self.assertEqual(image.format, 'ICO')
         self.assertEqual(image.size, (256, 256))
         self.assertEqual(image.getpixel((0, 0)), bg_color)
+
+    def test_website_has_logo(self):
+        self.assertFalse(self.env['website'].search([('logo', '=', False)]))
