@@ -27,6 +27,13 @@ import { patch } from "@web/core/utils/patch";
 import { Record } from "@web/model/relational_model/record";
 import { FileUploader } from "@web/views/fields/file_handler";
 
+const CHATTER_PANEL = Object.freeze({
+    ATTACHMENT: "ATTACHMENT",
+    NONE: "NONE",
+    PINNED_MESSAGES: "PINNED_MESSAGES",
+    SEARCH: "SEARCH",
+});
+
 export const DELAY_FOR_SPINNER = 1000;
 
 Object.assign(Chatter.components, {
@@ -84,13 +91,14 @@ const chatterPatch = {
             (record) => this.updateRecipients(record)
         );
         this.attachmentPopout = usePopoutAttachment({ thread: this.thread });
+        this.CHATTER_PANEL = CHATTER_PANEL;
         Object.assign(this.state, {
+            activePanel: this.webChatterProps.isAttachmentBoxVisibleInitially
+                ? CHATTER_PANEL.ATTACHMENT
+                : CHATTER_PANEL.NONE,
             composerType: false,
-            isAttachmentBoxOpened: this.webChatterProps.isAttachmentBoxVisibleInitially,
-            isSearchOpen: false,
             showActivities: true,
             showAttachmentLoading: false,
-            showPinnedMessages: false,
             showScheduledMessages: true,
         });
         this.messageSearch = useMessageSearch();
@@ -126,7 +134,7 @@ const chatterPatch = {
                                 this.reloadParentView();
                             }
                         });
-                        this.state.isAttachmentBoxOpened = true;
+                        this.state.activePanel = CHATTER_PANEL.ATTACHMENT;
                     }
                 },
             },
@@ -148,10 +156,13 @@ const chatterPatch = {
                     );
                 } else {
                     this.state.showAttachmentLoading = false;
-                    this.state.isAttachmentBoxOpened =
-                        this.state.isAttachmentBoxOpened ||
-                        (this.webChatterProps.isAttachmentBoxVisibleInitially &&
-                            this.attachments.length > 0);
+                    if (
+                        this.state.activePanel !== CHATTER_PANEL.ATTACHMENT &&
+                        this.webChatterProps.isAttachmentBoxVisibleInitially &&
+                        this.attachments.length > 0
+                    ) {
+                        this.state.activePanel = CHATTER_PANEL.ATTACHMENT;
+                    }
                 }
                 return () => browser.clearTimeout(this.loadingAttachmentTimeout);
             }
@@ -159,8 +170,12 @@ const chatterPatch = {
         useOnChange(
             () => [this.thread()?.status, this.attachments.length],
             (status, attachmentsLength) => {
-                if (!["new", "loading"].includes(status) && attachmentsLength === 0) {
-                    this.state.isAttachmentBoxOpened = false;
+                if (
+                    !["new", "loading"].includes(status) &&
+                    attachmentsLength === 0 &&
+                    this.state.activePanel === CHATTER_PANEL.ATTACHMENT
+                ) {
+                    this.state.activePanel = CHATTER_PANEL.NONE;
                 }
             }
         );
@@ -299,8 +314,11 @@ const chatterPatch = {
     },
 
     closeSearch() {
+        if (this.state.activePanel !== CHATTER_PANEL.SEARCH) {
+            return;
+        }
         this.messageSearch.reset();
-        this.state.isSearchOpen = false;
+        this.state.activePanel = CHATTER_PANEL.NONE;
     },
 
     /** @override */
@@ -327,11 +345,13 @@ const chatterPatch = {
     },
 
     onClickAddAttachments() {
+        this.closeSearch();
         if (this.attachments.length === 0) {
             return;
         }
-        this.state.isAttachmentBoxOpened = !this.state.isAttachmentBoxOpened;
-        if (this.state.isAttachmentBoxOpened) {
+        const isOpening = this.state.activePanel !== CHATTER_PANEL.ATTACHMENT;
+        this.state.activePanel = isOpening ? CHATTER_PANEL.ATTACHMENT : CHATTER_PANEL.NONE;
+        if (isOpening) {
             this.rootRef().scrollTop = 0;
             this.state.thread.scrollTop = "bottom";
         }
@@ -347,14 +367,19 @@ const chatterPatch = {
         }
     },
     onClickPinnedMessages() {
-        this.state.showPinnedMessages = !this.state.showPinnedMessages;
-        if (this.state.showPinnedMessages) {
+        this.closeSearch();
+        const isOpening = this.state.activePanel !== CHATTER_PANEL.PINNED_MESSAGES;
+        this.state.activePanel = isOpening ? CHATTER_PANEL.PINNED_MESSAGES : CHATTER_PANEL.NONE;
+        if (isOpening) {
             this.state.thread?.fetchPinnedMessages();
         }
     },
     onClickSearch() {
+        this.state.activePanel =
+            this.state.activePanel === CHATTER_PANEL.SEARCH
+                ? CHATTER_PANEL.NONE
+                : CHATTER_PANEL.SEARCH;
         this.state.composerType = false;
-        this.state.isSearchOpen = !this.state.isSearchOpen;
     },
 
     onCloseFullComposerCallback(isDiscard) {
@@ -407,7 +432,7 @@ const chatterPatch = {
                     if (self.webChatterProps.hasParentReloadOnAttachmentsChanged) {
                         self.reloadParentView();
                     }
-                    self.state.isAttachmentBoxOpened = true;
+                    self.state.activePanel = CHATTER_PANEL.ATTACHMENT;
                     if (self.rootRef()) {
                         self.rootRef().scrollTop = 0;
                     }

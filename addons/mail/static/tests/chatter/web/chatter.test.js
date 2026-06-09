@@ -275,6 +275,35 @@ test("chatter: drop attachment should refresh thread data with hasParentReloadOn
     await contains(".o-mail-Attachment iframe", { count: 1 });
 });
 
+test("chatter: dropping attachments should close pinned messages and search panels", async () => {
+    patchUiSize({ size: SIZES.XXL });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Armstrong" });
+    pyEnv["mail.message"].create({
+        body: "Pinned message",
+        model: "res.partner",
+        pinned_at: "2025-01-01 00:00:00",
+        res_id: partnerId,
+    });
+    const text = new File(["hello, world"], "text.txt", { type: "text/plain" });
+    const text2 = new File(["hello, world"], "text2.txt", { type: "text/plain" });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click("[title='Search Messages']");
+    await contains(".o-mail-SearchMessageInput");
+    await dragenterFiles(".o-mail-Chatter", [text]);
+    await dropFiles(".o-Dropzone", [text]);
+    await contains(".o-mail-AttachmentContainer:not(.o-isUploading):has(:text('text.txt'))");
+    await contains(".o-mail-SearchMessageInput", { count: 0 });
+    await click("button[title='Pinned Messages']");
+    await contains(".o-mail-pinnedMessages");
+    await dragenterFiles(".o-mail-Chatter", [text2]);
+    await dropFiles(".o-Dropzone", [text2]);
+    await contains(".o-mail-AttachmentContainer:not(.o-isUploading):has(:text('text.txt'))");
+    await contains(".o-mail-AttachmentContainer:not(.o-isUploading):has(:text('text2.txt'))");
+    await contains(".o-mail-pinnedMessages", { count: 0 });
+});
+
 test("attachment created without message_post refreshes the chatter on reload", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
