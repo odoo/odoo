@@ -1060,8 +1060,8 @@ class Transaction:
 
         env = self.default_env or next(iter(self.envs), None)
         cr = env.cr if env is not None else None
-        if (cr is None or not cr._closing or cr.postrollback) and self.registry.registry_sequence != self._registry_sequence:
-            # registry changed, reset the transaction
+        if (cr is None or not cr._closing or cr.postrollback) and (not self._state_stack__ or self.registry.registry_sequence != self._registry_sequence):
+            # registry changed or rollback, reset the transaction
             self.reset()
             self._registry_invalidated = registry_invalidated
             return
