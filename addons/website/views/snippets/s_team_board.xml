@@ -11,12 +11,12 @@
                     aria-haspopup="dialog"
                     aria-controls="s_team_board_modal">
                     <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
-                        <img class="o_card_img card-img-top rounded pb-0" src="/web/image/website.s_company_team_image_1"/>
+                        <img class="o_card_img card-img-top rounded pb-0 s_team_board_member_image" src="/web/image/website.s_company_team_image_1"/>
                     </figure>
                     <div class="card-body">
-                        <h3 class="card-title h5-fs" style="text-align: left;">Tony Fred</h3>
-                        <p class="card-text text-secondary-emphasis" style="text-align: left;">Chief Executive Officer</p>
-                        <p>Tony shapes product strategy and keeps execution aligned across teams.</p>
+                        <h3 class="card-title h5-fs s_team_board_card_name" style="text-align: left;">Tony Fred</h3>
+                        <p class="card-text text-secondary-emphasis s_team_board_card_designation" style="text-align: left;">Chief Executive Officer</p>
+                        <p class="s_team_board_card_summary">Tony shapes product strategy and keeps execution aligned across teams.</p>
                     </div>
                 </div>
                 <div data-name="Team Board Card" class="card s_card"
@@ -25,12 +25,12 @@
                     aria-haspopup="dialog"
                     aria-controls="s_team_board_modal">
                     <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
-                        <img class="o_card_img card-img-top rounded pb-0" src="/web/image/website.s_company_team_image_2"/>
+                        <img class="o_card_img card-img-top rounded pb-0 s_team_board_member_image" src="/web/image/website.s_company_team_image_2"/>
                     </figure>
                     <div class="card-body">
-                        <h3 class="card-title h5-fs" style="text-align: left;">Mitch Stark</h3>
-                        <p class="card-text text-secondary-emphasis" style="text-align: left;">Chief Commercial Officer</p>
-                        <p>Mitch leads go-to-market initiatives and partner relationships.</p>
+                        <h3 class="card-title h5-fs s_team_board_card_name" style="text-align: left;">Mitch Stark</h3>
+                        <p class="card-text text-secondary-emphasis s_team_board_card_designation" style="text-align: left;">Chief Commercial Officer</p>
+                        <p class="s_team_board_card_summary">Mitch leads go-to-market initiatives and partner relationships.</p>
                     </div>
                 </div>
                 <div 
@@ -41,12 +41,49 @@
                     data-name="Team Board Card"
                     class="card s_card">
                     <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
-                        <img class="o_card_img card-img-top rounded pb-0" src="/web/image/website.s_company_team_image_3"/>
+                        <img class="o_card_img card-img-top rounded pb-0 s_team_board_member_image" src="/web/image/website.s_company_team_image_3"/>
                     </figure>
                     <div class="card-body">
-                        <h3 class="card-title h5-fs" style="text-align: left;">Aline Turner</h3>
-                        <p class="card-text text-secondary-emphasis" style="text-align: left;">Chief Technical Officer</p>
-                        <p>Aline drives platform architecture and engineering quality.</p>
+                        <h3 class="card-title h5-fs s_team_board_card_name" style="text-align: left;">Aline Turner</h3>
+                        <p class="card-text text-secondary-emphasis s_team_board_card_designation" style="text-align: left;">Chief Technical Officer</p>
+                        <p class="s_team_board_card_summary">Aline drives platform architecture and engineering quality.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade s_team_board_modal o_snippet_invisible"
+                id="s_team_board_modal"
+                tabindex="-1"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="s_team_board_modal_title"
+                aria-hidden="true"
+                data-invisible="1"
+                data-bs-backdrop="true"
+                data-bs-keyboard="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                    <div class="modal-content">
+                        <div class="p-2 text-end">
+                            <button type="button" class="btn-close ms-auto"
+                                data-bs-dismiss="modal" aria-label="Close"/>
+                        </div>
+                        <div class="modal-body align-items-start">
+                            <div class="d-flex gap-3 align-items-center">
+                                <figure class="ratio ratio-1x1 mb-0 w-25">
+                                    <img class="s_team_board_member_modal_img rounded" src=""/>
+                                </figure>
+                                <div class="w-75">
+                                    <h2 class="modal-title h4 mb-1 s_team_board_member_modal_name" id="s_team_board_modal_title"></h2>
+                                    <p class="text-muted mb-0 s_team_board_member_modal_role"></p>
+                                    <p class="s_team_board_member_modal_summary"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <button type="button" class="btn btn-success s_team_board_member_send_message_btn">
+                                Send a Message
+                            </button> 
+                            <span class="contact_methods_btn_container"></span>
+                        </div>
                     </div>
                 </div>
             </div>
