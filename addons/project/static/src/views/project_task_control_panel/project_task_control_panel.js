@@ -8,7 +8,9 @@ export class ProjectTaskControlPanel extends ControlPanel {
     setup() {
         super.setup();
         this.showSubtasksKey = "showSubtasks";
-        this.state.showSubtasks = JSON.parse(browser.localStorage.getItem(this.showSubtasksKey) || "false");
+        this.embeddedPanelState.showSubtasks = JSON.parse(
+            browser.localStorage.getItem(this.showSubtasksKey) || "false"
+        );
     }
 
     get showTaskOptions() {
@@ -21,15 +23,23 @@ export class ProjectTaskControlPanel extends ControlPanel {
     }
 
     get taskOptionsTitle() {
-        if (this.state.embeddedInfos.embeddedActions?.length) {
+        if (this.embeddedPanelState.embeddedInfos.embeddedActions?.length) {
             return _t("Show sub-tasks & top menu");
         }
         return _t("Show sub-tasks");
     }
 
     onClickShowSubtasks(ev) {
-        this.state.showSubtasks = !this.state.showSubtasks;
-        browser.localStorage.setItem(this.showSubtasksKey, this.state.showSubtasks);
+        this.embeddedPanelState.showSubtasks = !this.embeddedPanelState.showSubtasks;
+        browser.localStorage.setItem(this.showSubtasksKey, this.embeddedPanelState.showSubtasks);
         this.env.searchModel.search();
+    }
+
+    getDropdownClass(action) {
+        return (!this.env.isSmall && this.embeddedPanelState.isEmbeddedActionVisible(action)) ||
+            (this.env.isSmall &&
+                this.embeddedPanelState.embeddedInfos.currentEmbeddedAction?.id === action.id)
+            ? "selected"
+            : "";
     }
 }
