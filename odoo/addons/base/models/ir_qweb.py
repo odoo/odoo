@@ -371,7 +371,7 @@ import werkzeug
 
 from markupsafe import Markup, escape
 from collections import defaultdict
-from collections.abc import Buffer, Sized, Mapping, Sequence, Iterator
+from collections.abc import Buffer, Callable, Sized, Mapping, Sequence, Iterator
 from copy import deepcopy
 from itertools import count, chain
 from lxml import etree
@@ -3098,30 +3098,28 @@ class IrQweb(models.AbstractModel):
         return bundles
 
 
-def render(template_name, values, load, **options):
+def render(template_name: str | int, values: dict, load: Callable[[str], tuple[etree._Element, str]], **options) -> Markup:
     """ Rendering of a qweb template without database and outside the registry.
     (Widget, field, or asset rendering is not implemented.)
-    :param (string|int) template_name: template identifier
-    :param dict values: template values to be used for rendering
-    :param def load: function like `load(template_name)` which returns an etree
-        from the given template name (from initial rendering or template
-        `t-call`).
+    :param template_name: template identifier
+    :param values: template values to be used for rendering
+    :param load: function like `load(template_name)` which returns a tuple
+        (etree, xmlid) from the given template name (from initial rendering or
+        template `t-call`).
     :param options: used to compile the template
-    :returns: bytes marked as markup-safe (decode to :class:`markupsafe.Markup`
-                instead of `str`)
-    :rtype: MarkupSafe
+    :returns: bytes marked as markup-safe
     """
-    class MockPool:
-        db_name = None
-        registry_caches__ = {
-            cache_name: (0, LRU(cache_size))
-            for cache_name, cache_size in _REGISTRY_CACHES.items()
-        }
+    class MockRegistry:
+        def __init__(self):
+            self.db_name = None
+            self._template_code__ = LRU(_REGISTRY_CACHES['templates'])
+
+    registry = MockRegistry()
 
     class MockIrQWeb(IrQweb):
         _register = False               # not visible in real registry
 
-        pool = MockPool()
+        pool = registry
 
         def _get_template_info(self, id_or_xmlid):
             return defaultdict(lambda: None, id=id_or_xmlid)
@@ -3166,11 +3164,21 @@ def render(template_name, values, load, **options):
         def __init__(self):
             self.cache = {}
 
+    class MockTransaction:
+        def __init__(self):
+            self.ormcaches__ = {
+                cache_name: LRU(cache_size)
+                for cache_name, cache_size in _REGISTRY_CACHES.items()
+            }
+            self.registry = registry
+
     class MockEnv(dict):
         def __init__(self):
             super().__init__()
             self.context = {}
             self.cr = MockCr()
+            self.transaction = MockTransaction()
+            self.registry = registry
 
         def __call__(self, cr=None, user=None, context=None, su=None):
             """ Return an mocked environment based and update the sent context.

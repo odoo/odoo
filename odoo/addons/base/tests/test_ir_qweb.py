@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import itertools
@@ -8,9 +7,9 @@ from lxml import etree
 from unittest.mock import patch
 
 from odoo.tests import tagged
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import BaseCase, TransactionCase
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.addons.base.models.ir_qweb import QWebError
+from odoo.addons.base.models.ir_qweb import QWebError, render as mock_render
 from odoo.tools import file_open, misc, mute_logger
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.exceptions import UserError, MissingError
@@ -2717,3 +2716,12 @@ class TestQwebPerformance(TransactionCaseWithUserDemo):
         self.env.invalidate_all()
 
         check(extend_view_2.id, "<div><div>Hello3</div><article></article><section></section></div>", queries=5, cachemiss=1)
+
+
+class TestQwebMocked(BaseCase):
+    def test_qweb_render_with_mock(self):
+        def loader(template_name):
+            self.assertEqual(template_name, 'abc')
+            return etree.fromstring("""<p>Ok: <t t-out="vv"/></p>"""), template_name
+        content = mock_render('abc', {'vv': 42}, loader)
+        self.assertEqual(str(content).strip(), """<p>Ok: 42</p>""")
