@@ -112,3 +112,46 @@ class TestAccountMoveImport(AccountTestInvoicingCommon):
         bill_2._link_bill_origin_to_purchase_orders()
         self.assertFalse(bill_2.invoice_origin)
         self.assertTrue(all(not line.purchase_order_id for line in bill_2.line_ids))
+
+    def test_po_matching_no_partner_override(self):
+        """
+        When importing a bill, and it matches with a purchase order, the partner on
+        the bill should be the same as the po partner
+        """
+        self.partner_open_wood.vat = 'BE0246697724'
+        # First, should set the parent as no child exists
+        bill = self._create_bill_from_xml('ubl_bis3_PO.xml')
+        expected_parent = [{
+            'invoice_origin': self.purchase_order.name,
+            'partner_id': self.partner_open_wood.id,
+        }]
+        self.assertRecordValues(bill, expected_parent)
+        bill.unlink()
+
+        # Then, create a child of 'invoice' type -> still should set the parent
+        child = self.env['res.partner'].create({
+            'name': 'Test Child openwood',
+            'type': 'invoice',
+            'parent_id': self.partner_open_wood.id,
+        })
+
+        bill = self._create_bill_from_xml('ubl_bis3_PO.xml')
+        self.assertRecordValues(bill, expected_parent)
+
+        # Finally, create a PO with the child as partner -> should find the child
+        po_child = self.env['purchase.order'].create({
+            'partner_id': child.id,
+            'date_order': fields.Date.today(),
+            'order_line': [Command.create({
+                'product_id': self.product.id,
+                'name': self.product.name,
+                'product_qty': 1.0,
+                'tax_ids': [Command.clear()],
+            })],
+        })
+        po_child.button_confirm()
+        bill_child = self._create_bill_from_xml('ubl_bis3_PO.xml')
+        self.assertRecordValues(bill_child, [{
+            'invoice_origin': po_child.name,
+            'partner_id': child.id,
+        }])
