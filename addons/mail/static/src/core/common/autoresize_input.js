@@ -10,10 +10,9 @@ export class AutoresizeInput extends Component {
             "autofocus?": types.boolean(),
             "className?": types.string(),
             "enabled?": types.boolean(),
-            "onValidate?": types.function(),
+            "onValidate?": types.function([types.string()]),
             "placeholder?": types.string(),
-            /** @type {import("@odoo/owl").Signal<string|undefined>} */
-            value: types.signal(),
+            value: types.signal(types.string()),
         },
         {
             autofocus: false,

@@ -1,7 +1,7 @@
 import { useRef } from "@web/owl2/utils";
 import { useSelection } from "@mail/utils/common/hooks";
 
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
@@ -9,9 +9,18 @@ import { isEventHandled } from "@web/core/utils/misc";
 
 export class CreatePollOptionDialog extends Component {
     static template = "mail.CreatePollOptionDialog";
-    static props = ["model", "onClickRemove", "deletable"];
 
     setup() {
+        this.props = props({
+            deletable: types.boolean(),
+            model: types.object({
+                "direction?": types.selection(["forward", "backward", "none"]),
+                "end?": types.number(),
+                label: types.string(),
+                "start?": types.number(),
+            }),
+            onClickRemove: types.function([types.instanceOf(MouseEvent)]),
+        });
         this.pickerRef = useRef("picker");
         this.ui = useService("ui");
         this.selection = useSelection({

@@ -1,22 +1,22 @@
 import { PollVotesPanel } from "@mail/core/common/poll_votes_panel";
 import { useDynamicInterval } from "@mail/utils/common/misc";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, props, proxy, types } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
 const { DateTime } = luxon;
 
-/**
- * @typedef {Object} Props
- * @property {import("models").MailPollModel} poll
- * @extends {Component<Props, Env>}
- */
 export class Poll extends Component {
     static template = "mail.Poll";
-    static props = ["poll"];
 
     setup() {
+        super.setup(...arguments);
+        this.store = useService("mail.store");
+        this.props = props({
+            poll: types.instanceOf(this.store["mail.poll"].Class),
+        });
         this.state = proxy({
             isShowingResults: false,
             selectedOptionIds: new Set(),

@@ -2,7 +2,7 @@ import { useRef, useSubEnv } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { MessageSeenIndicator } from "@mail/discuss/core/common/message_seen_indicator";
 
-import { Component, computed, signal, useEffect } from "@odoo/owl";
+import { Component, computed, props, signal, types, useEffect } from "@odoo/owl";
 
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useHover } from "@mail/utils/common/hooks";
@@ -13,8 +13,15 @@ import { _t } from "@web/core/l10n/translation";
 
 class ChatBubblePreview extends Component {
     static components = { MessageSeenIndicator };
-    static props = ["chatWindow", "close"];
     static template = "mail.ChatBubblePreview";
+
+    setup() {
+        super.setup(...arguments);
+        this.store = useService("mail.store");
+        this.props = props({
+            chatWindow: types.instanceOf(this.store.ChatWindow.Class),
+        });
+    }
 
     /** @returns {import("models").DiscussChannel} */
     get channel() {
@@ -27,18 +34,16 @@ class ChatBubblePreview extends Component {
     }
 }
 
-/**
- * @typedef {Object} Props
- * @extends {Component<Props, Env>}
- */
 export class ChatBubble extends Component {
     static components = { CountryFlag, DiscussAvatar };
-    static props = ["chatWindow"];
     static template = "mail.ChatBubble";
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.props = props({
+            chatWindow: types.instanceOf(this.store.ChatWindow.Class),
+        });
         const popoverRef = useChildRef();
         this.isMobileOS = isMobileOS();
         this.isPopoverOpen = signal(false);

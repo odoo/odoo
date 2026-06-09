@@ -31,7 +31,6 @@ export class CallParticipantCard extends Component {
 
     setup() {
         super.setup();
-        this.contextMenuAnchorRef = useRef("contextMenuAnchor");
         this.root = useRef("root");
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");

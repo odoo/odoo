@@ -1,7 +1,7 @@
 import { useLayoutEffect } from "@web/owl2/utils";
 import { onExternalClick } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, useListener } from "@odoo/owl";
+import { Component, onMounted, props, types, useListener } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
@@ -9,7 +9,6 @@ import { useChildRef, useService } from "@web/core/utils/hooks";
 import { TabHeader, TabPanel, Tabs } from "./tabs";
 
 export class MessageReactionMenu extends Component {
-    static props = ["close", "message", "initialReaction?"];
     static components = { Dialog, Tabs, TabHeader, TabPanel };
     static template = "mail.MessageReactionMenu";
 
@@ -17,6 +16,11 @@ export class MessageReactionMenu extends Component {
         super.setup();
         this.tabsRef = useChildRef();
         this.store = useService("mail.store");
+        this.props = props({
+            close: types.function([]),
+            "initialReaction?": types.instanceOf(this.store.MessageReactions.Class),
+            message: types.instanceOf(this.store["mail.message"].Class),
+        });
         this.ui = useService("ui");
         useLayoutEffect(
             (closeFn) => {

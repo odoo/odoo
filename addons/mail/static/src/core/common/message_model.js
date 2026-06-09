@@ -136,7 +136,6 @@ export class Message extends Record {
     /** @type {boolean} */
     is_transient;
     message_link_preview_ids = fields.Many("mail.message.link.preview", { inverse: "message_id" });
-    /** @type {number[]} */
     parent_id = fields.One("mail.message");
     /**
      * When set, this temporary/pending message failed message post, and the
@@ -726,12 +725,13 @@ export class Message extends Record {
 
     /**
      * @param {Object} owner
+     * @param {import("@odoo/owl").Signal<HTMLElement>} [rootRef]
      */
-    showDeleteConfirm(owner) {
+    showDeleteConfirm(owner, rootRef) {
         this.store.env.services.dialog.add(
             discussComponentRegistry.get("MessageDeleteDialog"),
             { message: this, onConfirm: () => this.onShowDeleteConfirm(owner) },
-            { rootRef: owner.rootRef }
+            { rootRef }
         );
     }
 

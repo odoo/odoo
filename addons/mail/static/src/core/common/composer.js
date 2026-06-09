@@ -27,6 +27,7 @@ import {
     onWillDestroy,
     proxy,
     signal,
+    types,
     useListener,
 } from "@odoo/owl";
 
@@ -93,7 +94,7 @@ class FullComposerRecoveryPopover extends Component {
  * @property {function} [onDiscardCallback]
  * @property {function} [onPostCallback]
  * @property {number} [autofocus]
- * @property {import("@web/core/utils/hooks").Ref} [dropzoneRef]
+ * @property {import("@odoo/owl").Signal<HTMLElement>} [dropzoneRef]
  * @extends {Component<Props, Env>}
  */
 export class Composer extends Component {
@@ -156,14 +157,13 @@ export class Composer extends Component {
         this.composerService = useService("mail.composer");
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
-        this.inputContainerRef = useRef("input-container");
+        this.inputContainerRef = signal(null, { type: types.ref(HTMLSpanElement) });
         this.pickerContainerRef = useRef("picker-container");
         this.state = proxy({
             active: true,
             isFullComposerOpen: false,
         });
-        /** @type {import("@odoo/owl").Signal<Element>} */
-        this.rootRef = signal();
+        this.rootRef = signal(null, { type: types.ref(HTMLDivElement) });
         this.fullComposerRecoveryPopover = usePopover(FullComposerRecoveryPopover, {
             closeOnClickAway: false,
             closeOnEscape: false,
@@ -545,7 +545,7 @@ export class Composer extends Component {
     get navigableListProps() {
         const { loading, searchTerm, results } = this.suggestion.search;
         const props = {
-            anchorRef: this.inputContainerRef.el,
+            anchorRef: this.inputContainerRef,
             position: this.env.inChatter ? "bottom-fit" : "top-fit",
             onSelect: (ev, option) => {
                 this.suggestion.insert(option);
@@ -936,7 +936,7 @@ export class Composer extends Component {
                 })
             );
         } else {
-            this.props.composer.message.showDeleteConfirm(this);
+            this.props.composer.message.showDeleteConfirm(this, this.rootRef);
         }
         this.suggestion?.clearRawMentions();
     }

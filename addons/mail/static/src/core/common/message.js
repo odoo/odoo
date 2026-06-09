@@ -17,7 +17,7 @@ import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
 import { nbsp } from "@web/core/utils/strings";
 
-import { Component, computed, proxy, signal, useEffect } from "@odoo/owl";
+import { Component, computed, proxy, signal, types, useEffect } from "@odoo/owl";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -25,7 +25,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { useChildRef, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { createElementWithContent } from "@web/core/utils/html";
 import { getOrigin, url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
@@ -125,9 +125,8 @@ export class Message extends Component {
                 delete this.rootRef().dataset.rightClicking;
             },
         });
-        this.rightClickAnchor = useChildRef("rightClickAnchor");
-        /** @type {import("@odoo/owl").Signal<Element>} */
-        this.rootRef = signal();
+        this.rightClickAnchor = signal(null, { type: types.ref(HTMLElement) });
+        this.rootRef = signal(null, { type: types.ref(HTMLDivElement) });
         if (isMobileOS()) {
             useLongPress(this.rootRef, {
                 action: () => this.openMobileActions(),
@@ -137,10 +136,8 @@ export class Message extends Component {
         useForwardRefsToParent("messageRefs", (props) => props.message.id, this.rootRef);
         this.messageBody = useRef("body");
         this.messageActions = useMessageActions(this.messageActionsParams);
-        /** @type {import("@odoo/owl").Signal<Element>} */
-        this.shadowBody = signal();
-        /** @type {import("@odoo/owl").Signal<ShadowRoot>} */
-        this.shadowRoot = signal();
+        this.shadowBody = signal(null, { type: types.ref(HTMLDivElement) });
+        this.shadowRoot = signal(null, { type: types.ref(ShadowRoot) });
         this.dialog = useService("dialog");
         this.ui = useService("ui");
         this.openReactionMenu = this.openReactionMenu.bind(this);
@@ -239,6 +236,7 @@ export class Message extends Component {
     get messageActionsParams() {
         return {
             message: () => this.message,
+            rootRef: this.rootRef,
             thread: () => this.props.thread,
         };
     }
@@ -503,7 +501,7 @@ export class Message extends Component {
 
     showRightClickMessageActions(ev) {
         this.rootRef().dataset.rightClicking = true;
-        const el = this.rightClickAnchor.el;
+        const el = this.rightClickAnchor();
         el.style.left = ev.clientX + "px";
         el.style.top = ev.clientY + "px";
         this.rightClickDropdownState.open();

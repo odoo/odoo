@@ -54,7 +54,7 @@
                         'align-self-stretch' : this.extended,
                         'w-100': this.props.composer.message,
                     }"
-                    t-custom-ref="input-container"
+                    t-ref="this.inputContainerRef"
                 >
                     <div t-if="!this.extended" t-attf-class="{{ actionsContainerClass }}">
                         <t t-if="this.moreActions" t-call="mail.Composer.moreActions"/>

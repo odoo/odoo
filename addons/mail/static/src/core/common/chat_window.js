@@ -1,4 +1,4 @@
-import { useChildSubEnv, useRef, useSubEnv } from "@web/owl2/utils";
+import { useChildSubEnv, useSubEnv } from "@web/owl2/utils";
 import { ActionList } from "@mail/core/common/action_list";
 import { Composer } from "@mail/core/common/composer";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
@@ -9,7 +9,7 @@ import { useThreadActions } from "@mail/core/common/thread_actions";
 import { useHover, useMessageScrolling } from "@mail/utils/common/hooks";
 import { isEventHandled } from "@web/core/utils/misc";
 
-import { Component, computed, proxy } from "@odoo/owl";
+import { Component, computed, props, proxy, signal, types } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { localization } from "@web/core/l10n/localization";
@@ -19,12 +19,6 @@ import { Typing } from "@mail/discuss/typing/common/typing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
-/**
- * @typedef {Object} Props
- * @property {import("models").ChatWindow} chatWindow
- * @property {boolean} [right]
- * @extends {Component<Props, Env>}
- */
 export class ChatWindow extends Component {
     static components = {
         ActionList,
@@ -36,13 +30,16 @@ export class ChatWindow extends Component {
         AutoresizeInput,
         Typing,
     };
-    static props = ["chatWindow", "right?"];
     static template = "mail.ChatWindow";
 
     setup() {
-        super.setup();
-        useSubEnv({ inChatWindow: true });
+        super.setup(...arguments);
         this.store = useService("mail.store");
+        this.props = props({
+            chatWindow: types.instanceOf(this.store.ChatWindow.Class),
+            "right?": types.number(),
+        });
+        useSubEnv({ inChatWindow: true });
         this.messageHighlight = useMessageScrolling({ thread: () => this.channel?.thread });
         this.state = proxy({
             actionsMenuOpened: false,
@@ -51,7 +48,7 @@ export class ChatWindow extends Component {
             editingName: false,
         });
         this.ui = useService("ui");
-        this.contentRef = useRef("content");
+        this.chatWindowContentRef = signal(null, { type: types.instanceOf(HTMLDivElement) });
         this.threadActions = useThreadActions({ thread: () => this.channel?.thread });
         this.actionsMenuButtonHover = useHover("actionsMenuButton");
         this.parentChannelHover = useHover("parentChannel");

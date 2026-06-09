@@ -1,4 +1,12 @@
-import { Component, onMounted, onWillUnmount, onWillUpdateProps, signal } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillUnmount,
+    onWillUpdateProps,
+    props,
+    signal,
+    types,
+} from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { deepEqual } from "@web/core/utils/objects";
@@ -8,15 +16,17 @@ import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
 class AbstractAttachmentView extends Component {
     static template = "mail.AttachmentView";
     static components = {};
-    static props = ["threadId", "threadModel"];
 
     setup() {
         super.setup();
+        this.props = props({
+            threadId: types.number(),
+            threadModel: types.string(),
+        });
         this.store = useService("mail.store");
         this.uiService = useService("ui");
         this.iframeViewerPdfRef = useRef("iframeViewerPdf");
-        /** @type {import("@odoo/owl").Signal<import("models").Thread>} */
-        this.thread = signal();
+        this.thread = signal(null, { type: types.instanceOf(this.store["mail.thread"].Class) });
         useLayoutEffect(
             (el) => {
                 if (el) {
@@ -149,12 +159,6 @@ export function usePopoutAttachment() {
     };
 }
 
-/**
- * @typedef {Object} Props
- * @property {number} threadId
- * @property {string} threadModel
- * @extends {Component<Props, Env>}
- */
 export class AttachmentView extends AbstractAttachmentView {
     setup() {
         super.setup();

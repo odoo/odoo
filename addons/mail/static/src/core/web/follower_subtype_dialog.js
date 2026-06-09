@@ -1,5 +1,5 @@
 import { rpc } from "@web/core/network/rpc";
-import { Component, onWillStart, signal } from "@odoo/owl";
+import { Component, onWillStart, signal, types } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -20,8 +20,9 @@ export class FollowerSubtypeDialog extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        /** @type {import("@odoo/owl").Signal<import("models").MailMessageSubtype[]>} */
-        this.subtypes = signal([]);
+        this.subtypes = signal(null, {
+            type: types.array(types.instanceOf(this.store["mail.message.subtype"].Class)),
+        });
         onWillStart(async () => {
             const { store_data, subtype_ids } = await rpc("/mail/read_subscription_data", {
                 follower_id: this.props.follower.id,

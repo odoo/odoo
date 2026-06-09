@@ -69,7 +69,8 @@ declare module "models" {
     export interface Thread extends ThreadClass {}
     export interface Volume extends VolumeClass {}
 
-    type StaticMailRecord<ClassInterface, JSClassType> = Omit<JSClassType, "get" | "insert" | "records"> & {
+    type StaticMailRecord<ClassInterface, JSClassType> = Omit<JSClassType, "Class" | "get" | "insert" | "records"> & {
+        Class: Pick<JSClassType, keyof JSClassType> & { new (...args: any[]): ClassInterface };
         get: (data: any) => ClassInterface;
         insert: <D extends object | object[]>(data: D, options?: object) => D extends object[] ? ClassInterface[] : ClassInterface;
         records: { [localId: string]: ClassInterface };

@@ -1,33 +1,26 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, useListener } from "@odoo/owl";
+import { Component, props, types, useListener } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
 import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { useService } from "@web/core/utils/hooks";
 
-/**
- * @typedef {Object} Props
- * @property {Object} action
- * @property {Object} [classNames]
- * @property {import("models").Message} message
- * @property {boolean} [messageActive]
- * @extends {Component<Props, Env>}
- */
 export class QuickReactionMenu extends Component {
     static template = "mail.QuickReactionMenu";
-    static props = {
-        action: Object,
-        classNames: { type: Object, optional: true },
-        message: Object,
-        messageActive: { type: Boolean, optional: true },
-    };
     static components = { Dropdown };
     static DEFAULT_EMOJIS = ["👍", "❤️", "🤣", "😯", "😅", "🙏"];
 
     setup() {
-        this.toggle = useRef("toggle");
+        super.setup(...arguments);
         this.store = useService("mail.store");
+        this.props = props({
+            action: types.object(),
+            "classNames?": types.record(types.boolean()),
+            message: types.instanceOf(this.store["mail.message"].Class),
+            "messageActive?": types.boolean(),
+        });
+        this.toggle = useRef("toggle");
         this.ui = useService("ui");
         this.loadEmoji = useLoadEmoji();
         this.picker = useEmojiPicker(

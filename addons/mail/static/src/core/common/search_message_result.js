@@ -1,17 +1,22 @@
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 import { MessageCardList } from "./message_card_list";
+import { MessageSearchState } from "@mail/core/common/message_search_hook";
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
-/**
- * @typedef {Object} Props
- * @property {import("@mail/core/common/thread_model").Thread} thread
- * @property {ReturnType<typeof import("@mail/core/common/message_search_hook").useMessageSearch>} messageSearch
- * @property {function} [onClickJump]
- */
 export class SearchMessageResult extends Component {
     static template = "mail.SearchMessageResult";
     static components = { MessageCardList };
-    static props = ["thread", "messageSearch", "onClickJump?"];
+
+    setup() {
+        super.setup(...arguments);
+        this.store = useService("mail.store");
+        this.props = props({
+            messageSearch: types.instanceOf(MessageSearchState),
+            "onClickJump?": types.function([]),
+            thread: types.instanceOf(this.store["mail.thread"].Class),
+        });
+    }
 
     get MESSAGE_FOUND() {
         if (this.props.messageSearch.messages.length === 0) {

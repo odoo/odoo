@@ -106,10 +106,10 @@ registerThreadAction("remove-from-favorites", {
 registerThreadAction("notification-settings", {
     actionPanelComponent: NotificationSettings,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
-    actionPanelOpen({ owner }) {
+    actionPanelOpen({ owner, rootRef }) {
         if (owner.isDiscussContent) {
             this.popover?.open(
-                owner.root.el.querySelector(`[name="${this.id}"]`),
+                rootRef().querySelector(`[name="${this.id}"]`),
                 this.actionPanelComponentProps
             );
         }
@@ -154,7 +154,7 @@ registerThreadAction("attachments", {
 registerThreadAction("invite-people", {
     actionPanelComponent: ChannelInvitation,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
-    actionPanelOpen({ owner, store, channel }) {
+    actionPanelOpen({ owner, store, channel, rootRef }) {
         if (owner.isDiscussSidebarChannelActions) {
             store.env.services.dialog?.add(ChannelActionDialog, {
                 title: channel.displayName,
@@ -167,7 +167,7 @@ registerThreadAction("invite-people", {
             });
         } else if (!owner.env.inMeetingView) {
             this.popover?.open(
-                owner.root.el.querySelector(`[name="${this.id}"]`),
+                rootRef().querySelector(`[name="${this.id}"]`),
                 this.actionPanelComponentProps
             );
         }

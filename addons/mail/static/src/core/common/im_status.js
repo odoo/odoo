@@ -1,8 +1,9 @@
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 import { Typing } from "@mail/discuss/typing/common/typing";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 
 export const imStatusDataRegistry = registry.category("mail.im_status_data");
 
@@ -39,22 +40,27 @@ imStatusDataRegistry.add(
 );
 
 export class ImStatus extends Component {
-    static props = [
-        "className?",
-        "member?",
-        "persona?",
-        "size?",
-        "slots?",
-        "style?",
-        "typing?",
-        "user?",
-    ];
     static template = "mail.ImStatus";
-    static defaultProps = { className: "", style: "", size: "lg", typing: true };
     static components = { Typing };
 
     setup() {
         super.setup();
+        this.store = useService("mail.store");
+        this.props = props(
+            {
+                "className?": types.string(),
+                "member?": types.instanceOf(this.store["discuss.channel.member"].Class),
+                "persona?": types.or([
+                    types.instanceOf(this.store["res.partner"].Class),
+                    types.instanceOf(this.store["mail.guest"].Class),
+                ]),
+                "size?": types.string(),
+                "style?": types.string(),
+                "typing?": types.boolean(),
+                "user?": types.instanceOf(this.store["res.users"].Class),
+            },
+            { className: "", size: "lg", style: "", typing: true }
+        );
         this.attClassObjectToString = attClassObjectToString;
     }
 

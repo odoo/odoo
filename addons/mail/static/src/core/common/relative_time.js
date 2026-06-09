@@ -1,5 +1,5 @@
 import { render } from "@web/owl2/utils";
-import { Component, onWillDestroy, onWillUpdateProps, xml } from "@odoo/owl";
+import { Component, onWillDestroy, onWillUpdateProps, props, types, xml } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 
@@ -7,11 +7,13 @@ const MINUTE = 60 * 1000;
 const HOUR = 60 * MINUTE;
 
 export class RelativeTime extends Component {
-    static props = ["datetime"];
     static template = xml`<t t-out="this.relativeTime"/>`;
 
     setup() {
         super.setup();
+        this.props = props({
+            datetime: types.object(),
+        });
         this.timeout = null;
         this.computeRelativeTime(this.props.datetime);
         onWillDestroy(() => clearTimeout(this.timeout));
