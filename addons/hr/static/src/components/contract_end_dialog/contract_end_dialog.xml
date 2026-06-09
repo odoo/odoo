@@ -12,7 +12,7 @@
 							name="contractEndReason"
 							class="form-check-input"
 							value="correction"
-							t-custom-model="this.state.reason"
+							t-model.proxy="this.state.reason"
 						/>
 						<label class="form-check-label" for="reason_correction">
 							Correction of contract terms
@@ -25,7 +25,7 @@
 							name="contractEndReason"
 							class="form-check-input"
 							value="end_collaboration"
-							t-custom-model="this.state.reason"
+							t-model.proxy="this.state.reason"
 						/>
 						<label class="form-check-label" for="reason_end_collab">
 							End of Collaboration
@@ -38,7 +38,7 @@
 							name="contractEndReason"
 							class="form-check-input"
 							value="new_contract"
-							t-custom-model="this.state.reason"
+							t-model.proxy="this.state.reason"
 						/>
 						<label class="form-check-label" for="reason_new_contract">
 							Start a new contract
