@@ -23,3 +23,23 @@ class StockAllocationReport(models.AbstractModel):
                 lambda m: m.product_id.is_storable and m.state != 'cancel'
             )
         return super()._get_moves(records)
+
+    def _allocate_moves(self, in_move, out_move):
+        res = super()._allocate_moves(in_move, out_move)
+        parent_doc = out_move._get_source_document()
+        child_doc = in_move._get_source_document()
+        if parent_doc and child_doc and parent_doc._name == 'mrp.production' and child_doc._name == 'mrp.production':
+            parent_doc.production_group_id.child_ids += child_doc.production_group_id
+            child_doc.production_group_id.parent_ids += parent_doc.production_group_id
+        return res
+
+    def _unallocate_moves(self, in_move, out_move):
+        res = super()._unallocate_moves(in_move, out_move)
+        if in_move.production_id:
+            in_move.production_id.move_dest_ids -= out_move
+        parent_doc = out_move._get_source_document()
+        child_doc = in_move._get_source_document()
+        if parent_doc and child_doc and parent_doc._name == 'mrp.production' and child_doc._name == 'mrp.production':
+            parent_doc.production_group_id.child_ids -= child_doc.production_group_id
+            child_doc.production_group_id.parent_ids -= parent_doc.production_group_id
+        return res
