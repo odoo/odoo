@@ -171,9 +171,17 @@ const duplicateSinglePage = [
         run: "click",
     },
     {
+        content: "Ok is disabled while the name is empty",
+        trigger: ".modal-footer button.btn-primary:disabled",
+    },
+    {
         content: "Put your website name as 'Test Duplicate' here",
         trigger: 'main.modal-body input[type="text"]',
         run: "edit Test Duplicate",
+    },
+    {
+        content: "Ok is enabled once a name is entered",
+        trigger: ".modal-footer button.btn-primary:not(:disabled)",
     },
     {
         content: "Click on OK",

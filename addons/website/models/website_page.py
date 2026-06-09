@@ -147,7 +147,7 @@ class WebsitePage(models.Model):
                 new_view = page.view_id.copy({'website_id': default.get('website_id')})
                 vals['view_id'] = new_view.id
                 vals['key'] = new_view.key
-            vals['url'] = default.get('url', self.env['website'].get_unique_path(page.url))
+            vals['url'] = default.get('url', self.env['website'].get_unique_path(page.url, website_id=default.get('website_id')))
         return vals_list
 
     @api.model
@@ -156,11 +156,10 @@ class WebsitePage(models.Model):
             :param page_id : website.page identifier
         """
         page = self.browse(int(page_id))
-        website = self.env.website or self.env.website.browse(self.env.context.get('host_id'))
-        copy_param = dict(name=page_name or page.name, website_id=website.id)
+        copy_param = dict(name=page_name or page.name, website_id=page.website_id.id)
         if page_name:
             url = '/' + self.env['ir.http']._slugify(page_name, max_length=1024, path=True)
-            copy_param['url'] = self.env['website'].get_unique_path(url)
+            copy_param['url'] = self.env['website'].get_unique_path(url, website_id=page.website_id.id)
 
         new_page = page.with_context(check_translations=True).copy(copy_param)
         # Should not clone menu if the page was cloned from one website to another

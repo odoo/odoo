@@ -191,9 +191,10 @@ export class DuplicatePageDialog extends Component {
         });
     }
 
-    async duplicate() {
-        const duplicates = [];
-        if (this.state.name) {
+    async duplicate(ev) {
+        const restoreButton = addLoadingEffect(ev.currentTarget);
+        try {
+            const duplicates = [];
             for (let count = 0; count < this.props.pageIds.length; count++) {
                 const name = this.state.name + (count ? ` ${count + 1}` : "");
                 duplicates.push(
@@ -203,8 +204,11 @@ export class DuplicatePageDialog extends Component {
                     ])
                 );
             }
+            this.props.close();
+            this.props.onDuplicate(duplicates);
+        } finally {
+            restoreButton();
         }
-        this.props.onDuplicate(duplicates);
     }
 }
 

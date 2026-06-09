@@ -2,15 +2,23 @@
 <templates>
 
 <t t-name="website.DuplicatePageDialog">
-    <WebsiteDialog close="this.props.close" primaryClick="() => this.duplicate()">
+    <WebsiteDialog close="this.props.close">
         <div class="mb-3 row">
             <label class="col-form-label col-md-3">
                 Page Name
             </label>
             <div class="col-md-9">
-                <input type="text" t-custom-model="this.state.name" class="form-control" required="required" t-custom-ref="autofocus"/>
+                <input type="text" t-custom-model="this.state.name" class="form-control" t-custom-ref="autofocus"/>
             </div>
         </div>
+        <t t-set-slot="footer">
+            <button class="btn btn-primary" t-on-click="(ev) => this.duplicate(ev)" t-att-disabled="!this.state.name.trim()">
+                Ok
+            </button>
+            <button class="btn btn-secondary" t-on-click="() => this.props.close()">
+                Discard
+            </button>
+        </t>
     </WebsiteDialog>
 </t>
 
