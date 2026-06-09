@@ -118,48 +118,6 @@
     }
 }
 
-.o_dragged_embedded_action {
-    transition: transform 0.5s;
-    transform: rotate(2deg);
-    opacity: 0.8;
-}
-
-.o_embedded_actions {
-    max-height: 500px;
-    transition: opacity 0.5s, max-height 0.5s ease;
-
-    &.o-fade-leave, &.o-fade-enter {
-        opacity: 0;
-        max-height: 0;
-    }
-
-    &::before, &::after {
-        flex: 1 1 0;
-        height: 1px;
-        background-color: $border-color;
-        content: "";
-    }
-
-    &:where(:not(:has(.o_dragged_embedded_action))) {
-        overflow: hidden;
-    }
-}
-
-.o_embedded_actions_dropdown_menu {
-    .o_icon_right {
-        transform: translate(-0.45em, 0);
-    }
-
-    .o_save_current_view {
-        &:before {
-            margin-inline-end: map-get($spacers, 1);
-            font-family: FontAwesome;
-            opacity: $o-opacity-muted;
-            content: "\f0c7";
-        }
-    }
-}
-
 @include media-breakpoint-down(md) {
     .o_rtl .o_control_panel .o_back_button:before {
         transform: rotate(180deg);

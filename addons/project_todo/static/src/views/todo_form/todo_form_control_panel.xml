@@ -8,7 +8,7 @@
                 role="button"
                 title="Toggle chatter"
                 data-hotkey="d"
-                t-attf-class="btn btn-light btn-chatter todo_toggle_chatter #{this.state.displayChatter ? 'active' : '' }"
+                t-attf-class="btn btn-light btn-chatter todo_toggle_chatter #{this.embeddedPanelState.displayChatter ? 'active' : '' }"
                 t-on-click="this.toggleChatter"
             >
                 <i class="fa fa-comments"/>

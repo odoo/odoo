@@ -9,7 +9,7 @@ export class TodoFormControlPanel extends ControlPanel {
     setup() {
         super.setup();
         useEffect(() => {
-            if (this.env.isSmall && !this.state.displayChatter) {
+            if (this.env.isSmall && !this.embeddedPanelState.displayChatter) {
                 this.toggleChatter();
             }
         });
@@ -20,7 +20,7 @@ export class TodoFormControlPanel extends ControlPanel {
                 "activity";
             if (
                 !this.env.isSmall &&
-                !this.state.displayChatter &&
+                !this.embeddedPanelState.displayChatter &&
                 (isFromActivityView || JSON.parse(browser.localStorage.getItem("isChatterOpened")))
             ) {
                 this.toggleChatter();
@@ -29,10 +29,12 @@ export class TodoFormControlPanel extends ControlPanel {
     }
 
     toggleChatter(ev) {
-        this.state.displayChatter = !this.state.displayChatter;
+        this.embeddedPanelState.displayChatter = !this.embeddedPanelState.displayChatter;
         if (ev) {
-            browser.localStorage.setItem("isChatterOpened", this.state.displayChatter);
+            browser.localStorage.setItem("isChatterOpened", this.embeddedPanelState.displayChatter);
         }
-        this.env.bus.trigger("TODO:TOGGLE_CHATTER", { displayChatter: this.state.displayChatter });
+        this.env.bus.trigger("TODO:TOGGLE_CHATTER", {
+            displayChatter: this.embeddedPanelState.displayChatter,
+        });
     }
 }
