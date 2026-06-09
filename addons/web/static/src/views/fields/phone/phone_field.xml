@@ -28,6 +28,8 @@
                     t-if="this.value"
                     t-on-click.stop="btn.onSelected"
                     class="o_phone_form_link btn btn-sm btn-link p-1 py-0 text-nowrap"
+                    t-att-class="{ 'o_phone_form_link_danger': btn.isDanger }"
+                    t-att-title="btn.tooltip"
                 >
                     <i t-attf-class="fa {{ btn.icon }}"/><small class="fw-bold ms-1"><t t-out="btn.name"/></small>
                 </button>
@@ -37,7 +39,11 @@
             <button class="btn fa fa-ellipsis-v"/>
             <t t-set-slot="content">
                     <t t-foreach="this.actionButtons" t-as="btn" t-key="btn.name">
-                        <DropdownItem class="'o_phone_form_link d-flex align-items-baseline gap-1'" onSelected="(ev) => btn.onSelected()">
+                        <DropdownItem
+                            class="`o_phone_form_link d-flex align-items-baseline gap-1 ${btn.isDanger ? 'text-danger' : ''}`"
+                            onSelected="(ev) => btn.onSelected()"
+                            attrs="{ title: btn.tooltip }"
+                        >
                             <i t-attf-class="fa {{ btn.icon }}" /><t t-out="btn.name"/>
                         </DropdownItem>
                     </t>

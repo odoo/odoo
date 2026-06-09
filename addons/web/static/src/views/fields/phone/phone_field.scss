@@ -14,6 +14,11 @@ body:not(.o_touch_device) .o_field_phone {
             margin-inline-start: auto;
         }
     }
+    .o_phone_form_link_danger {
+        --#{$prefix}btn-color: #{lighten($danger, 5%)};
+        --#{$prefix}btn-hover-color: #{shade-color($danger, 15%)};
+        --#{$prefix}btn-active-color: #{shade-color($danger, 15%)};
+    }
     @include media-breakpoint-down(md) {
         &:has(.o_phone_form_link:nth-child(2)) {
             .o_phone_form_link {
