@@ -224,7 +224,7 @@ class EmployeePortalAPI(http.Controller):
             'name':                          _s(emp.name),
             'initial':                       _s(emp.x_initial),
             'designation':                   _s(emp.x_designation),
-            'gender':                        _s(emp.sex),
+            'gender':                        _s(emp.x_gender),
             'dob':                           birthday_raw,
             'status':                        _s(emp.x_status or 'active'),
             'mobile_no':                     _s(emp.x_mobile_no),
@@ -408,19 +408,84 @@ class EmployeePortalAPI(http.Controller):
         if err:
             return err
 
-        mobile = (data.get('mobile') or '').strip()
-        email  = (data.get('email')  or '').strip()
+        from datetime import datetime as _dt
 
-        if not mobile:
-            return self._err('Mobile number is required')
-        if not re.match(r'^[+]?[\d\s\-()/]{7,20}$', mobile):
+        def _s(k): return (data.get(k) or '').strip()
+        def _d(k):
+            v = _s(k)
+            if not v:
+                return False
+            for fmt in ('%Y-%m-%d', '%d-%m-%Y', '%d/%m/%Y'):
+                try:
+                    return _dt.strptime(v, fmt).date()
+                except ValueError:
+                    pass
+            return False
+
+        email  = _s('email')
+        mobile = _s('mobile')
+
+        if mobile and not re.match(r'^[+]?[\d\s\-()/]{7,20}$', mobile):
             return self._err('Enter a valid mobile number')
-        if not email:
-            return self._err('Email address is required')
-        if not re.match(r'^[^@\s]+@[^@\s]+\.[^@\s]+$', email):
+        if email and not re.match(r'^[^@\s]+@[^@\s]+\.[^@\s]+$', email):
             return self._err('Enter a valid email address')
 
-        emp.sudo().write({'x_mobile_no': mobile, 'work_email': email})
+        vals = {}
+
+        # Personal
+        if _s('name'):              vals['name']                 = _s('name')
+        # Selection fields must be lowercase to match Odoo selection values
+        if _s('gender').lower() in ('male', 'female', 'other'):
+            vals['x_gender']    = _s('gender').lower()
+        if _s('religion'):          vals['x_religion']           = _s('religion').lower()
+        if _s('community'):         vals['x_community']          = _s('community').lower()
+        if _s('caste'):             vals['x_caste']              = _s('caste')
+        if _s('mother_tongue'):     vals['x_mother_tongue']      = _s('mother_tongue')
+        if _d('dob'):               vals['birthday']             = _d('dob')
+
+        # Contact
+        if mobile:                  vals['x_mobile_no']          = mobile
+        if _s('cug_mobile'):        vals['x_cug_mobile']         = _s('cug_mobile')
+        if email:                   vals['work_email']            = email
+        if _s('native_district'):   vals['x_native_district']    = _s('native_district')
+        if _s('town'):              vals['x_town']               = _s('town')
+        if _s('taluk'):             vals['x_taluk']              = _s('taluk')
+        if _s('permanent_address'): vals['x_permanent_address']  = _s('permanent_address')
+        if _s('spouse_employment'): vals['x_spouse_employment']  = _s('spouse_employment')
+
+        # Service
+        if _s('designation'):       vals['x_designation']        = _s('designation')
+        if _s('panel_year_sl_no'):  vals['x_panel_year_sl_no']   = _s('panel_year_sl_no')
+        if _s('cps_no'):            vals['x_cps_no']             = _s('cps_no')
+        if _s('gpf_no'):            vals['x_gpf_no']             = _s('gpf_no')
+        if _s('education'):         vals['x_education_qualification'] = _s('education')
+        if _s('medals'):            vals['x_medals']             = _s('medals')
+        if _s('rewards'):           vals['x_rewards']            = _s('rewards')
+        if _s('training'):          vals['x_training_undergone'] = _s('training')
+        if _d('date_of_appointment'):  vals['x_date_of_appointment']  = _d('date_of_appointment')
+        if _d('date_of_promotion'):    vals['x_date_of_promotion']    = _d('date_of_promotion')
+        if _d('date_of_retirement'):   vals['x_date_of_retirement']   = _d('date_of_retirement')
+        if _d('date_present_station'): vals['x_date_present_station'] = _d('date_present_station')
+
+        # Current Posting jail IDs
+        def _int(k):
+            try:
+                v = data.get(k)
+                return int(v) if v else False
+            except (ValueError, TypeError):
+                return False
+
+        if _int('central_jail_id'):  vals['x_central_jail_id']  = _int('central_jail_id')
+        if _int('district_jail_id'): vals['x_district_jail_id'] = _int('district_jail_id')
+        if _int('sub_jail_id'):      vals['x_sub_jail_id']      = _int('sub_jail_id')
+
+        if vals:
+            try:
+                emp.sudo().write(vals)
+            except (ValueError, TypeError) as e:
+                _logger.warning('Profile update write error: %s | vals: %s', e, vals)
+                return self._err(f'Invalid value: {e}', status=400)
+
         return self._ok('Profile updated successfully')
 
     # ── GET /api/employee-portal/service-history ─────────────────────────────
@@ -586,29 +651,41 @@ class EmployeePortalAPI(http.Controller):
         if err:
             return err
 
-        reason         = (data.get('transfer_reason') or '').strip()
-        to_central_id  = data.get('to_central_jail_id')
-        to_district_id = data.get('to_district_jail_id')
-        to_sub_id      = data.get('to_sub_jail_id')
+        reason = (data.get('transfer_reason') or '').strip()
+
+        def _jail_id(key):
+            v = data.get(key)
+            if not v:
+                return False
+            try:
+                return int(v)
+            except (TypeError, ValueError):
+                return False
+
+        # Preference 1 (required)
+        p1_central  = _jail_id('to_central_jail_id')
+        p1_district = _jail_id('to_district_jail_id')
+        p1_sub      = _jail_id('to_sub_jail_id')
+        # Preference 2 (optional)
+        p2_central  = _jail_id('p2_central_jail_id')
+        p2_district = _jail_id('p2_district_jail_id')
+        p2_sub      = _jail_id('p2_sub_jail_id')
+        # Preference 3 (optional)
+        p3_central  = _jail_id('p3_central_jail_id')
+        p3_district = _jail_id('p3_district_jail_id')
+        p3_sub      = _jail_id('p3_sub_jail_id')
 
         if not reason:
             return self._err('Transfer reason is required')
-        if not to_central_id:
-            return self._err('Central Prison selection is required')
-        if not to_sub_id:
-            return self._err('Sub Jail selection is required')
-
-        try:
-            i_central  = int(to_central_id)
-            i_sub      = int(to_sub_id)
-            i_district = int(to_district_id) if to_district_id else False
-        except (TypeError, ValueError):
-            return self._err('Invalid jail ID')
+        if not p1_central:
+            return self._err('Preference 1 — Central Prison is required')
+        if not p1_sub:
+            return self._err('Preference 1 — Sub Jail is required')
 
         Jail = request.env['prison.jail'].sudo()
-        if not Jail.browse(i_central).exists():
+        if not Jail.browse(p1_central).exists():
             return self._err('Central Prison not found')
-        if not Jail.browse(i_sub).exists():
+        if not Jail.browse(p1_sub).exists():
             return self._err('Sub Jail not found')
 
         # Prevent duplicate pending requests
@@ -637,9 +714,15 @@ class EmployeePortalAPI(http.Controller):
             'priority':                data.get('priority') or 'medium',
             'state':                   'pending',
             'approval_user_id':        admin_user.id,
-            'requested_central_prison': i_central,
-            'requested_district_jail': i_district or False,
-            'requested_sub_jail':      i_sub,
+            'requested_central_prison':   p1_central,
+            'requested_district_jail':    p1_district or False,
+            'requested_sub_jail':         p1_sub,
+            'preference_2_central_prison': p2_central or False,
+            'preference_2_district_jail':  p2_district or False,
+            'preference_2_sub_jail':       p2_sub or False,
+            'preference_3_central_prison': p3_central or False,
+            'preference_3_district_jail':  p3_district or False,
+            'preference_3_sub_jail':       p3_sub or False,
             'current_central_prison':  emp.x_central_jail_id.id if emp.x_central_jail_id else False,
             'current_district_jail':   emp.x_district_jail_id.id if emp.x_district_jail_id else False,
             'current_sub_jail':        emp.x_sub_jail_id.id if emp.x_sub_jail_id else False,

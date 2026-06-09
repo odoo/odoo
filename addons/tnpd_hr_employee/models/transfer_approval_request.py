@@ -144,6 +144,48 @@ class TransferApprovalRequest(models.Model):
         ondelete='restrict',
     )
 
+    # ── Preference 2 ─────────────────────────────────────────────────────────
+
+    preference_2_central_prison = fields.Many2one(
+        comodel_name='prison.jail',
+        string='Preference 2 — Central Prison',
+        domain=[('jail_type', '=', 'central_jail'), ('active', '=', True)],
+        ondelete='restrict',
+    )
+    preference_2_district_jail = fields.Many2one(
+        comodel_name='prison.jail',
+        string='Preference 2 — District Jail',
+        domain=[('jail_type', '=', 'district_jail'), ('active', '=', True)],
+        ondelete='restrict',
+    )
+    preference_2_sub_jail = fields.Many2one(
+        comodel_name='prison.jail',
+        string='Preference 2 — Sub Jail',
+        domain=[('jail_type', '=', 'sub_jail'), ('active', '=', True)],
+        ondelete='restrict',
+    )
+
+    # ── Preference 3 ─────────────────────────────────────────────────────────
+
+    preference_3_central_prison = fields.Many2one(
+        comodel_name='prison.jail',
+        string='Preference 3 — Central Prison',
+        domain=[('jail_type', '=', 'central_jail'), ('active', '=', True)],
+        ondelete='restrict',
+    )
+    preference_3_district_jail = fields.Many2one(
+        comodel_name='prison.jail',
+        string='Preference 3 — District Jail',
+        domain=[('jail_type', '=', 'district_jail'), ('active', '=', True)],
+        ondelete='restrict',
+    )
+    preference_3_sub_jail = fields.Many2one(
+        comodel_name='prison.jail',
+        string='Preference 3 — Sub Jail',
+        domain=[('jail_type', '=', 'sub_jail'), ('active', '=', True)],
+        ondelete='restrict',
+    )
+
     # ── Workflow ──────────────────────────────────────────────────────────────
 
     approval_user_id = fields.Many2one(
@@ -320,6 +362,20 @@ class TransferApprovalRequest(models.Model):
 
     # ── Actions: Approve / Reject ─────────────────────────────────────────
 
+    def _send_transfer_notification(self, notification_type, message):
+        """Create a tnpd.notification record for the linked employee."""
+        try:
+            self.env['tnpd.notification'].sudo().create({
+                'employee_id':         self.employee_id.id,
+                'transfer_request_id': self.id,
+                'notification_type':   notification_type,
+                'action_type':         notification_type,
+                'message':             message,
+                'sent_by':             self.env.user.id,
+            })
+        except Exception:
+            pass  # Never let notification failure block the approval flow
+
     def action_approve(self):
         self.ensure_one()
         if self.approval_user_id != self.env.user:
@@ -339,6 +395,18 @@ class TransferApprovalRequest(models.Model):
             'approved_by': self.env.user.id,
             'approved_date': fields.Datetime.now(),
         })
+        to_jail = (
+            self.requested_sub_jail.name
+            or self.requested_district_jail.name
+            or self.requested_central_prison.name
+            or 'the requested posting'
+        )
+        self._send_transfer_notification(
+            'transfer_approved',
+            f'Your transfer request (Ref: TRF/{self.id}) has been approved. '
+            f'You have been transferred to {to_jail}. '
+            f'Approved by: {self.env.user.name}.',
+        )
 
     def action_reject(self):
         self.ensure_one()
@@ -354,6 +422,11 @@ class TransferApprovalRequest(models.Model):
             'approved_by': self.env.user.id,
             'approved_date': fields.Datetime.now(),
         })
+        self._send_transfer_notification(
+            'transfer_rejected',
+            f'Your transfer request (Ref: TRF/{self.id}) has been rejected. '
+            f'Please contact your administrator for more information.',
+        )
 
     @api.model
     def _lookup_jail(self, jail_type, name):

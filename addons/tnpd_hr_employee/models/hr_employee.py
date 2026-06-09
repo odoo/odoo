@@ -20,6 +20,13 @@ class HrEmployee(models.Model):
 
     _inherit = 'hr.employee'
 
+    # ── Gender (custom field since base sex field may not be in local DB) ──
+
+    x_gender = fields.Selection(
+        selection=[('male', 'Male'), ('female', 'Female'), ('other', 'Other')],
+        string='Gender',
+    )
+
     # ── Section 1: Service Identification ─────────────────────────────────
 
     x_initial = fields.Char(

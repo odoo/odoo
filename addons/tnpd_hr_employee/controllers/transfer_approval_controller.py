@@ -151,6 +151,17 @@ class TransferApprovalController(http.Controller):
             'to_central_name':          to_central,
             'to_district_name':         to_district,
             'to_sub_name':              to_sub,
+            # Preferences 2 & 3
+            'preference_2': {
+                'central': self._format_jail(getattr(rec, 'preference_2_central_prison', False)),
+                'district': self._format_jail(getattr(rec, 'preference_2_district_jail', False)),
+                'sub':      self._format_jail(getattr(rec, 'preference_2_sub_jail', False)),
+            },
+            'preference_3': {
+                'central': self._format_jail(getattr(rec, 'preference_3_central_prison', False)),
+                'district': self._format_jail(getattr(rec, 'preference_3_district_jail', False)),
+                'sub':      self._format_jail(getattr(rec, 'preference_3_sub_jail', False)),
+            },
             # Workflow
             'state':          rec.state,
             'requested_by':   rec.requested_by.name or '',
@@ -672,6 +683,29 @@ class TransferApprovalController(http.Controller):
                 tar.id, uid, emp.id,
             )
 
+            # ── Send notification to employee portal ──────────────────────
+            try:
+                to_jail = (
+                    tar.requested_sub_jail.name
+                    or tar.requested_district_jail.name
+                    or tar.requested_central_prison.name
+                    or 'the requested posting'
+                )
+                env['tnpd.notification'].sudo().create({
+                    'employee_id':         emp.id,
+                    'transfer_request_id': tar.id,
+                    'notification_type':   'transfer_approved',
+                    'action_type':         'transfer_approved',
+                    'message': (
+                        f'Your transfer request (Ref: TRF/{tar.id}) has been approved. '
+                        f'You have been transferred to {to_jail}. '
+                        f'Approved by: {approved_by_user.name}.'
+                    ),
+                    'sent_by': approved_by_user.id,
+                })
+            except Exception as notif_exc:
+                _logger.warning('Failed to send approval notification: %s', notif_exc)
+
             # --- Build updated employee info for response ------------------
             emp_info = {
                 'employee_id':   emp.id,
@@ -801,6 +835,23 @@ class TransferApprovalController(http.Controller):
                 'Transfer request %d rejected by user=%d (%s)',
                 tar.id, uid, rejecting_user.name,
             )
+
+            # ── Send notification to employee portal ──────────────────────
+            try:
+                rejection_reason = raw_remarks or 'No reason provided.'
+                env['tnpd.notification'].sudo().create({
+                    'employee_id':         tar.employee_id.id,
+                    'transfer_request_id': tar.id,
+                    'notification_type':   'transfer_rejected',
+                    'action_type':         'transfer_rejected',
+                    'message': (
+                        f'Your transfer request (Ref: TRF/{tar.id}) has been rejected. '
+                        f'Reason: {rejection_reason}'
+                    ),
+                    'sent_by': rejecting_user.id,
+                })
+            except Exception as notif_exc:
+                _logger.warning('Failed to send rejection notification: %s', notif_exc)
 
             return self._ok(
                 'Transfer request rejected successfully',

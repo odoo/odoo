@@ -32,7 +32,7 @@ _DATE_FIELDS = {
 _SCALAR_FIELDS = {
     'name':                        'name',
     'initial':                     'x_initial',
-    'gender':                      'sex',
+    'gender':                      'x_gender',
     'designation':                 'x_designation',
     'employee_id':                 'x_employee_code',
     'status':                      'x_status',
@@ -184,7 +184,7 @@ class EmployeeAPI(http.Controller):
 
         return {
             'name':                                        _str(emp.name),
-            'gender':                                      _str(emp.sex),
+            'gender':                                      _str(emp.x_gender),
             'dob':                                         birthday_raw,
             'initial':                                     _str(emp.x_initial),
             'designation':                                 _str(emp.x_designation),
@@ -241,7 +241,7 @@ class EmployeeAPI(http.Controller):
             _s(emp.name),
             _s(emp.x_initial),
             _s(emp.x_designation),
-            _s(emp.sex),
+            _s(emp.x_gender),
             _d(emp.birthday),
             _s(emp.x_status or 'active'),
             _s(emp.x_mobile_no),
