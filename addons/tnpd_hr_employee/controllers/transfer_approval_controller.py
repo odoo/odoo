@@ -578,7 +578,8 @@ class TransferApprovalController(http.Controller):
 
         Body (JSON)
         -----------
-        request_id  int  required
+        request_id  int     required
+        remarks     string  required  (approval remarks, mandatory)
         """
         try:
             uid, err = self._require_auth()
@@ -591,6 +592,10 @@ class TransferApprovalController(http.Controller):
 
             if not data.get('request_id'):
                 return self._err('Missing required field: request_id')
+
+            approval_remarks = (data.get('remarks') or '').strip()
+            if not approval_remarks:
+                return self._err('Approval remarks are required.')
 
             env = request.env(user=uid)
 
@@ -646,6 +651,7 @@ class TransferApprovalController(http.Controller):
                 'state':         'approved',
                 'approved_by':   uid,
                 'approved_date': approved_date_now,
+                'remarks':       approval_remarks,
             })
 
             # --- Decrement vacancy count at target prison ------------------
