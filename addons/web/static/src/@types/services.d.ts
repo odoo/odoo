@@ -15,7 +15,7 @@ declare module "services" {
     import { httpService } from "@web/core/network/http_service";
     import { notificationService } from "@web/core/notifications/notification_service";
     import { offlineService } from "@web/core/offline/offline_service";
-    import { ormService } from "@web/core/orm_service";
+    import { ormService } from "@web/core/orm_plugin";
     import { overlayService } from "@web/core/overlay/overlay_service";
     import { popoverService } from "@web/core/popover/popover_service";
     import { tooltipService } from "@web/core/tooltip/tooltip_service";

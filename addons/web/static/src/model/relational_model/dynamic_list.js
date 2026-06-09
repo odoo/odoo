@@ -1,7 +1,7 @@
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError } from "@web/core/network/rpc";
-import { x2ManyCommands } from "@web/core/orm_service";
+import { x2ManyCommands } from "@web/core/orm_plugin";
 import { unique } from "@web/core/utils/arrays";
 import { DataPoint } from "./datapoint";
 import { Operation } from "./operation";

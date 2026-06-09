@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { ORM } from "@web/core/orm_service";
+import { ORM } from "@web/core/orm_plugin";
 import { unique } from "@web/core/utils/arrays";
 import { Deferred } from "@web/core/utils/concurrency";
 

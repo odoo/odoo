@@ -1,7 +1,7 @@
 import { render } from "@web/owl2/utils";
 import { makeContext } from "@web/core/context";
 import { _t } from "@web/core/l10n/translation";
-import { x2ManyCommands } from "@web/core/orm_service";
+import { x2ManyCommands } from "@web/core/orm_plugin";
 import { Pager } from "@web/core/pager/pager";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";

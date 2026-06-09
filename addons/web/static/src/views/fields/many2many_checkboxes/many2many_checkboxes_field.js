@@ -8,7 +8,7 @@ import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
 import { ConnectionLostError } from "@web/core/network/rpc";
-import { x2ManyCommands } from "@web/core/orm_service";
+import { x2ManyCommands } from "@web/core/orm_plugin";
 
 export class Many2ManyCheckboxesField extends Component {
     static template = "web.Many2ManyCheckboxesField";

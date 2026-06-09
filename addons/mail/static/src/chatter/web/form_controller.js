@@ -1,7 +1,7 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { EventBus } from "@odoo/owl";
 
-import { x2ManyCommands } from "@web/core/orm_service";
+import { x2ManyCommands } from "@web/core/orm_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { createDocumentFragmentFromContent } from "@web/core/utils/html";
 import { patch } from "@web/core/utils/patch";

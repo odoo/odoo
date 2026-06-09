@@ -2,7 +2,7 @@ import { Component } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
-import { x2ManyCommands } from "@web/core/orm_service";
+import { x2ManyCommands } from "@web/core/orm_plugin";
 import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { useService } from "@web/core/utils/hooks";
