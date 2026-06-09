@@ -4,27 +4,11 @@
        <xpath expr="//div[hasclass('pos-topheader')]" position="after">
            <FloorPlanEditorNavBar  t-if="this.floorPlanStore?.isEditToolbarVisible()"/>
        </xpath>
-        <xpath expr="//DropdownItem/i[hasclass('fa-chevron-left')]/.." position="before">
-            <t t-if="this.pos.router.state.current == 'FloorScreen' and this.ui.isSmall">
-                <DropdownItem t-if="this.showEditPlanButton and this.pos.config.floor_ids.length" onSelected="() => this.floorPlanStore.startEditMode()">
-                    <i class="fa fa-fw fa-pencil-square-o" aria-hidden="true" /> Edit Plan
-                </DropdownItem>
-            </t>
-            <DropdownItem t-if="this.pos.router.state.current == 'FloorScreen'" onSelected="() => this.onSwitchButtonClick()">
-                <i class="fa fa-fw fa-eye" aria-hidden="true" /> Switch Floor View
-            </DropdownItem>
-        </xpath>
         <xpath expr="//div[hasclass('pos-leftheader')]//OrderTabs" position="attributes">
             <attribute name="t-if">!this.pos.config.module_pos_restaurant</attribute>
         </xpath>
         <xpath expr="//div[hasclass('pos-leftheader')]//OrderTabs" position="after">
             <span t-if="this.pos.config.module_pos_restaurant and this.pos.getOrder()" t-out="this.currentOrderName" class="badge rounded-pill bg-info-subtle border border-info py-2 fs-6 fw-bolder text-truncate"/>
-        </xpath>
-        <xpath expr="//button[hasclass('register-label')]" position="before">
-            <button t-if="this.pos.config.module_pos_restaurant" class="table-button btn btn-outline-secondary btn-lg lh-lg" t-att-class="{'active': this.mainButton === 'table', 'text-muted': this.pos.getOrder()?.isFilledDirectSale}" t-on-click="() => this.onClickPlanButton()">
-                <span t-if="!this.ui.isSmall">Tables</span>
-                <img t-else="" src="/pos_restaurant/static/img/plan.svg" class="navbar-icon" t-att-class="{'opacity-50': this.pos.getOrder()?.isFilledDirectSale}" alt="Floor Plan"/>
-            </button>
         </xpath>
         <xpath expr="//div[hasclass('navbar-menu')]" position="after">
             <div class="d-flex align-items-center" t-if="this.pos.orderToTransferUuid">
@@ -33,8 +17,30 @@
                 </strong>
             </div>
         </xpath>
+        <xpath expr="//button[hasclass('register-label')]" position="before">
+            <button t-if="this.pos.config.module_pos_restaurant" class="table-button btn btn-outline-secondary btn-lg lh-lg" t-att-class="{'active': this.mainButton === 'table', 'text-muted': this.pos.getOrder()?.isFilledDirectSale}" t-on-click="() => this.onClickPlanButton()">
+                <span t-if="!this.ui.isSmall">Tables</span>
+                <img t-else="" src="/pos_restaurant/static/img/plan.svg" class="navbar-icon" t-att-class="{'opacity-50': this.pos.getOrder()?.isFilledDirectSale}" alt="Floor Plan"/>
+            </button>
+        </xpath>
         <xpath expr="//button[hasclass('orders-button')]" position="attributes">
             <attribute name="t-att-class">{'active': this.mainButton === 'order', 'text-muted': this.pos.getOrder()?.isFilledDirectSale}</attribute>
+        </xpath>
+    </t>
+    <t t-name="pos_restaurant.BurgerMenuDialog" t-inherit="point_of_sale.BurgerMenuDialog" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_pos_burger_menu_buttons')]/t[@t-name='backend']" position="before">
+            <t t-call="point_of_sale.BurgerDialogMenuButton"
+                t-if="this.pos.router.state.current == 'FloorScreen' and this.ui.isSmall and this.showEditPlanButton and this.pos.config.floor_ids.length"
+                iconClasses="'fa fa-pencil-square-o'"
+                onClick="() => this.floorPlanStore.startEditMode()"
+                btnLabel.translate="Edit Plan"
+            />
+            <t t-call="point_of_sale.BurgerDialogMenuButton"
+                t-if="this.pos.router.state.current == 'FloorScreen'"
+                iconClasses="'fa fa-eye'"
+                onClick="() => this.onSwitchButtonClick()"
+                btnLabel.translate="Switch Floor View"
+            />
         </xpath>
     </t>
 </templates>

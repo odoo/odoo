@@ -6,7 +6,7 @@ import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Utils from "@point_of_sale/../tests/pos/tours/utils/common";
-import { refresh } from "@point_of_sale/../tests/generic_helpers/utils";
+import { refresh, negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 import { registry } from "@web/core/registry";
 import { inLeftSide, expectActionTarget } from "@point_of_sale/../tests/pos/tours/utils/common";
 import * as PartnerList from "@point_of_sale/../tests/pos/tours/utils/partner_list_util";
@@ -17,7 +17,7 @@ registry.category("web_tour.tours").add("ChromeTour", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             Chrome.clickMenuButton(),
-            Chrome.clickMenuDropdownOption("Cash In/Out"),
+            Chrome.clickMenuDialogOption("Cash In/Out"),
             Chrome.fillTextArea(".cash-reason", "MOBT"),
             Dialog.confirm(),
             Chrome.clickMenuButton(),
@@ -157,9 +157,10 @@ registry.category("web_tour.tours").add("test_tracking_number_closing_session", 
             FeedbackScreen.clickNextOrder(),
             ProductScreen.isShown(),
             Chrome.clickMenuOption("Close Register"),
+            Chrome.closeRegisterPopupIsShown(),
             {
                 content: `Select button close register`,
-                trigger: `button:contains(close register)`,
+                trigger: `.modal .modal-footer .btn:contains(close register)`,
                 run: "click",
                 expectUnloadPage: true,
             },
@@ -236,13 +237,15 @@ registry.category("web_tour.tours").add("test_cash_in_out", {
             Dialog.confirm("Open Register"),
             Chrome.freezeDateTime(1749965940000),
             Chrome.clickMenuButton(),
-            Chrome.clickMenuDropdownOption("Cash In/Out"),
+            Chrome.clickMenuDialogOption("Cash In/Out"),
             Chrome.checkButtonDisabled("Details"),
             Utils.selectButton("Discard"),
             Chrome.doCashMove("10", "MOBT in"),
             Chrome.doCashMove("5", "MOBT out"),
             Chrome.clickMenuOption("Close Register"),
+            Chrome.closeRegisterPopupIsShown(),
             Utils.selectButton("Cash In/Out"),
+            negateStep(Chrome.checkButtonDisabled("Details")),
             Utils.selectButton("Details"),
             CashMoveList.checkNumberOfRows(2),
             CashMoveList.checkCashMoveShown("10"),

@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="pos_self_order.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
-        <xpath expr="//DropdownItem/i[hasclass('fa-download')]/.." position="before">
-            <DropdownItem t-if="this.ui.isSmall and this.pos.config.module_pos_restaurant" onSelected="() => this.pos.redirectToQrForm()">
-                <i class="fa fa-fw fa-qrcode" aria-hidden="true" /> Get QR Codes
-            </DropdownItem>
+    <t t-name="pos_self_order.BurgerMenuDialog" t-inherit="point_of_sale.BurgerMenuDialog" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_pos_burger_menu_buttons')]/t[@t-name='install-app']" position="before">
+            <t t-call="point_of_sale.BurgerDialogMenuButton"
+                t-if="this.ui.isSmall and this.pos.config.module_pos_restaurant"
+                iconClasses="'fa fa-qrcode'"
+                onClick="() => this.do(() => this.pos.redirectToQrForm())"
+                btnLabel.translate="Get QR Codes"
+            />
         </xpath>
     </t>
 </templates>

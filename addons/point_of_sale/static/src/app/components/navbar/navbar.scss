@@ -1,3 +1,13 @@
+@mixin burger-menu-orphan-child {
+    .btn:last-child {
+        aspect-ratio: auto;
+        grid-column: 1 / -1;
+        flex-direction: row !important;
+        align-items: center !important;
+        height: 5rem;
+    }
+}
+
 .pos .navbar-separator {
     height: 1.5rem;
     width: 1px;
@@ -36,22 +46,31 @@
 
 .pos .sub-menu {
     top: $pos-navbar-height * 2/3;
-    right: $pos-navbar-height * -1/3 ;
+    right: $pos-navbar-height * -1/3;
 }
 
-.pos .dropdown-menu {
-    padding: 0;
-}
+.pos .o_pos_burger_menu_buttons {
+    grid-template-columns: repeat(var(--grid-columns, 1), 1fr);
 
-.pos .pos-burger-menu-items .o-dropdown-item {
-    padding: map-get($spacers, 2);
-    border-radius: $border-radius;
+    @include media-breakpoint-up(md) {
+        --grid-columns: 3;
+        --oi-font-size: 1.5rem;
 
-    &:hover {
-        background-color: $o-gray-200;
+        .btn {
+            aspect-ratio: 1.3;
+        }
+        @include media-breakpoint-down(lg) {
+            &:has(.btn:nth-child(3n + 1):last-child) {
+                @include burger-menu-orphan-child;
+            }
+        }
     }
-}
 
-.pos .o-dropdown--menu .dropdown-item.focus {
-    background-color: $o-gray-200;
+    @include media-breakpoint-up(lg) {
+        --grid-columns: 4;
+
+        &:has(.btn:nth-child(4n + 1):last-child) {
+            @include burger-menu-orphan-child;
+        }
+    }
 }
