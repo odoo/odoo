@@ -117,6 +117,7 @@
         'views/phase9_schedule_layout_views.xml',
         'data/phase9_calendar_settings.xml',
         'views/phase10_deal_line_views.xml',
+        'views/phase11_capping_tab.xml',
         'views/menus_root_action.xml',
     ],
     'assets': {
@@ -126,6 +127,8 @@
             'marathon_ventures/static/src/scss/units_grid.scss',
             'marathon_ventures/static/src/js/units_grid/units_grid.js',
             'marathon_ventures/static/src/js/units_grid/units_grid.xml',
+            'marathon_ventures/static/src/js/capping_grid/capping_grid.js',
+            'marathon_ventures/static/src/js/capping_grid/capping_grid.xml',
         ],
     },
     'installable': True,

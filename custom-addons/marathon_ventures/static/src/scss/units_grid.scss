@@ -384,3 +384,155 @@
 .mv-units-discard {
     color: #6b7280;
 }
+
+.o_field_mv_capping_grid {
+    width: 100%;
+    overflow: scroll;
+}
+
+/* ============================================================================
+   Phase 11 - Capping Grid styling (extends the Units Grid look).
+   Each cell shows "effective/booked" + cap% on two lines.
+   ============================================================================ */
+.mv-cap-grid-wrap {
+    padding: 12px 4px;
+    font-size: 13px;
+    color: #1a1d22;
+    width: 100%;
+}
+
+/* Bulk action bar above the table when rows are selected */
+.mv-cap-bulkbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #eff6ff;
+    border: 1px solid #93c5fd;
+    border-radius: 6px;
+    padding: 8px 14px;
+    margin-bottom: 8px;
+}
+.mv-cap-bulkbar__count {
+    font-weight: 600;
+    color: #1d4ed8;
+}
+.mv-cap-bulkbar__actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* The select-all + per-row checkbox column */
+.mv-cap-check-col {
+    width: 36px;
+    text-align: center;
+    padding: 6px;
+}
+.mv-cap-table .mv-cap-row--selected {
+    background-color: #f0f7ff;
+}
+
+/* Cells: numbers on top, percent below */
+.mv-cap-cell {
+    padding: 6px 4px;
+    text-align: center;
+    vertical-align: middle;
+    border-left: 1px solid #f0f1f3;
+    min-width: 70px;
+}
+.mv-cap-cell__nums {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1d22;
+    line-height: 1.1;
+}
+.mv-cap-cell__nums--muted {
+    color: #9ca3af;
+}
+.mv-cap-cell__pct {
+    width: 56px;
+    text-align: center;
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 2px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 1px 4px;
+    background: transparent;
+}
+.mv-cap-cell__pct:focus {
+    background: #ffffff;
+    border-color: #3b82f6;
+    outline: none;
+}
+.mv-cap-cell__pct--ghost {
+    color: #6b7280;
+    font-weight: 600;
+}
+
+/* Status colours */
+.mv-cap-cell--green {
+    background-color: #ecfdf5;
+}
+.mv-cap-cell--green .mv-cap-cell__nums,
+.mv-cap-cell--green .mv-cap-cell__pct { color: #065f46; }
+
+.mv-cap-cell--amber {
+    background-color: #fef3c7;
+}
+.mv-cap-cell--amber .mv-cap-cell__nums,
+.mv-cap-cell--amber .mv-cap-cell__pct { color: #92400e; }
+
+.mv-cap-cell--gray {
+    background-color: #f3f4f6;
+}
+.mv-cap-cell--gray .mv-cap-cell__nums,
+.mv-cap-cell--gray .mv-cap-cell__pct { color: #6b7280; }
+
+.mv-cap-cell--dashed {
+    background-color: #ffffff;
+    border-style: dashed;
+    border-color: #d1d5db;
+}
+
+.mv-cap-cell--hatched {
+    background-image: repeating-linear-gradient(
+        45deg, #f3f4f6 0px, #f3f4f6 4px,
+        #e4e6eb 4px, #e4e6eb 6px
+    );
+}
+
+/* Dirty (unsaved) - blue dot in the corner */
+.mv-cap-cell--dirty {
+    position: relative;
+}
+.mv-cap-cell--dirty::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 6px;
+    height: 6px;
+    background: #3b82f6;
+    border-radius: 50%;
+}
+
+/* Row total - effective/booked split */
+.mv-cap-row-total {
+    text-align: right;
+    padding: 8px 16px;
+    border-left: 1px solid #f0f1f3;
+    min-width: 110px;
+}
+.mv-cap-row-total__spots {
+    font-weight: 700;
+    color: #1a1d22;
+}
+.mv-cap-row-total__money {
+    color: #6b7280;
+    font-size: 12px;
+}
+.mv-cap-row-total__booked {
+    color: #9ca3af;
+    font-size: 11px;
+    font-style: italic;
+}

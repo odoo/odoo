@@ -260,12 +260,16 @@ class MvDealUnitsGridRpc(models.Model):
                     **inherit_vals,
                 })
             else:
+                # New schedule: default delivery to 100% so the Capping
+                # Report shows it green out of the box. Planners can
+                # cap individual cells / rows from the Capping tab.
                 Sched.create({
                     'deal_parent': self.id,
                     'deal_line_id': dl.id,
                     'week': week_iso,
                     'units_available': units,
                     'status': 'sold',
+                    'cap_pct': 100,
                     **inherit_vals,
                 })
 

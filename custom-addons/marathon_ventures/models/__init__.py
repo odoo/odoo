@@ -119,3 +119,6 @@ from . import phase9_schedule_ui
 from . import mv_deal_line
 from . import phase10_schedule_link
 from . import phase10_units_grid_rpc
+
+# Phase 11 — Capping Grid (cap_pct + effective_spots + RPC)
+from . import phase11_capping
