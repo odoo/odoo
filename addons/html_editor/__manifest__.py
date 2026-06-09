@@ -18,6 +18,11 @@ This addon provides an extensible, maintainable editor.
         'web._assets_primary_variables': [
             ('after', 'web/static/src/scss/primary_variables.scss', 'html_editor/static/src/scss/html_editor.variables.scss'),
         ],
+        "web.assets_frontend_minimal": [
+            "html_editor/static/src/main/media/video/abstract_third_party_video.js",
+            "html_editor/static/src/main/media/video/providers/**/*",
+            "html_editor/static/src/main/media/video/utils.js",
+        ],
         'web.assets_frontend': [
             ('include', 'html_editor.assets_media_dialog'),
             ('include', 'html_editor.assets_readonly'),
