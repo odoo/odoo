@@ -31,7 +31,7 @@ export class HolidaysListController extends ListController {
             if (!hasEmployee && !ignoreHasEmployee) {
                 this.env.services.notification.add(
                     _t("You are not linked to an employee in the current company, so you cannot create requests for yourself."),
-                    { type: "warning", sticky: true }
+                    { type: "warning" }
                 );
             }
         });
