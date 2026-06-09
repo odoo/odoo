@@ -202,6 +202,10 @@ class AccountTax(models.Model):
         help="The country for which this tax is applicable.",
     )
     country_code = fields.Char(related='country_id.code', readonly=True)
+    company_country_code = fields.Char(
+        related='company_id.account_fiscal_country_id.code',
+        string="Fiscal Country Code of the Company",
+    )
     is_used = fields.Boolean(string="Tax used", compute='_compute_is_used')
     repartition_lines_str = fields.Char(string="Repartition Lines", tracking=True, compute='_compute_repartition_lines_str')
     invoice_legal_notes = fields.Html(string="Legal Notes", translate=True, help="Legal mentions that have to be printed on the invoices.")
