@@ -116,7 +116,11 @@ const chatterPatch = {
                                 this.reloadParentView();
                             }
                         });
-                        this.state.isAttachmentBoxOpened = true;
+                        Object.assign(this.state, {
+                            isAttachmentBoxOpened: true,
+                            isSearchOpen: false,
+                            showPinnedMessages: false,
+                        });
                     }
                 },
             },
@@ -319,6 +323,7 @@ const chatterPatch = {
     },
 
     onClickAddAttachments() {
+        this.state.showPinnedMessages = false;
         if (this.attachments.length === 0) {
             return;
         }
@@ -339,14 +344,19 @@ const chatterPatch = {
         }
     },
     onClickPinnedMessages() {
+        this.state.isAttachmentBoxOpened = false;
         this.state.showPinnedMessages = !this.state.showPinnedMessages;
         if (this.state.showPinnedMessages) {
             this.state.thread?.fetchPinnedMessages();
         }
     },
     onClickSearch() {
-        this.state.composerType = false;
-        this.state.isSearchOpen = !this.state.isSearchOpen;
+        Object.assign(this.state, {
+            composerType: false,
+            isAttachmentBoxOpened: false,
+            isSearchOpen: !this.state.isSearchOpen,
+            showPinnedMessages: false,
+        });
     },
 
     onCloseFullComposerCallback(isDiscard) {

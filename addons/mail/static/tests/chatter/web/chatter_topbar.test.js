@@ -269,3 +269,30 @@ test("Send message displays the number of notified followers inside a badge", as
     await click("button:text('Send message')");
     await contains(".o-mail-RecipientsInput .badge:text('2 Followers')");
 });
+
+test("Attach files and Pinned Messages panels are mutually exclusive", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Armstrong" });
+    pyEnv["mail.message"].create({
+        body: "Pinned message",
+        model: "res.partner",
+        pinned_at: "2025-01-01 00:00:00",
+        res_id: partnerId,
+    });
+    pyEnv["ir.attachment"].create({
+        mimetype: "text/plain",
+        name: "A.txt",
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await click("button[title='Attach files']:text('1')");
+    await contains(".o-mail-AttachmentBox");
+    await click("button[title='Pinned Messages']");
+    await contains(".o-mail-pinnedMessages");
+    await contains(".o-mail-AttachmentBox", { count: 0 });
+    await click("button[title='Attach files']:text('1')");
+    await contains(".o-mail-AttachmentBox");
+    await contains(".o-mail-pinnedMessages", { count: 0 });
+});
