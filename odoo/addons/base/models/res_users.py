@@ -2570,4 +2570,3 @@ class APIKeyShow(models.AbstractModel):
     # the field 'id' is necessary for the onchange that returns the value of 'key'
     id = fields.Id()
     key = fields.Char(readonly=True)
-
