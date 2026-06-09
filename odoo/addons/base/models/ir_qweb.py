@@ -620,19 +620,16 @@ class QwebContent:
     html: str | None
     params__: QwebCallParameters  # not available for the python expression inside the xml
 
-    def __init__(self, irQweb: IrQweb, params: QwebCallParameters):
+    def __init__(self, irQweb: IrQweb, params: QwebCallParameters, process):
         self.irQweb = irQweb
         self.html = None
         self.params__ = params
+        self.process__ = process
 
     def __str__(self):
         if self.html is None:
-            process = {
-                'qweb_loaded_functions': {},
-                'qweb_loaded_options': {},
-                'qweb_loaded_codes': {},
-            }
             params = self.params__
+            process = self.process__
             self.html = ''.join(self.irQweb._render_iterall(
                params.view_ref, params.method, params.values, params.root_values, process, params.directive,
             ))
@@ -2180,7 +2177,7 @@ class IrQweb(models.AbstractModel):
                     compile_context['template_functions'][def_name] = def_code
 
                     code.append(indent_code(f"""
-                        values[{varname!r}] = QwebContent(self, QwebCallParameters(self.env.context, {compile_context['ref']!r}, {def_name!r}, values.copy(), root_values, 'root', 't-set', (template_options['ref'], {path!r}, {xml!r})))
+                        values[{varname!r}] = QwebContent(self, QwebCallParameters(self.env.context, {compile_context['ref']!r}, {def_name!r}, values.copy(), root_values, 'root', 't-set', (template_options['ref'], {path!r}, {xml!r})), process)
                     """, level))
                 else:
                     code.append(indent_code(f"values[{varname!r}] = ''", level))
@@ -2671,7 +2668,7 @@ class IrQweb(models.AbstractModel):
 
             code.append(indent_code(f"""
                 t_call_content_values = values.copy()
-                qwebContent = QwebContent(self, QwebCallParameters(self.env.context, {compile_context['ref']!r}, {def_name!r}, t_call_content_values, root_values, 'root', 't-call-content', (template_options['ref'], {path!r}, {xml!r})))
+                qwebContent = QwebContent(self, QwebCallParameters(self.env.context, {compile_context['ref']!r}, {def_name!r}, t_call_content_values, root_values, 'root', 't-call-content', (template_options['ref'], {path!r}, {xml!r})), process)
                 t_call_values = {{ {T_CALL_SLOT}: qwebContent}}
             """, level))
         else:
@@ -2799,7 +2796,7 @@ class IrQweb(models.AbstractModel):
         compile_context['template_functions'][def_name] = def_code
 
         code.append(indent_code(f"""
-            yield QwebContent(self, QwebCallParameters(self.env.context, {ref!r}, {def_name!r}, values, root_values, False, 't-log', ({ref!r}, {path!r}, {xml!r})))
+            yield QwebContent(self, QwebCallParameters(self.env.context, {ref!r}, {def_name!r}, values, root_values, False, 't-log', ({ref!r}, {path!r}, {xml!r})), process)
         """, level))
 
         return code
