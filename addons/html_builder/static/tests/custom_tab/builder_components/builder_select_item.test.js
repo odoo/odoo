@@ -4,6 +4,7 @@ import {
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { Image } from "@html_builder/core/img";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
 import { expect, test, describe, before, getFixture } from "@odoo/hoot";
 import {
@@ -16,7 +17,7 @@ import {
     tick,
 } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
-import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 
@@ -76,6 +77,43 @@ test("set the label of the select from the active select item and be updated on 
     expect(".we-bg-options-container .dropdown").toHaveText("A");
     await contains(".o-snippets-top-actions .fa-repeat").click();
     expect(".we-bg-options-container .dropdown").toHaveText("B");
+});
+test("set the label of the select after SVG Image children are inserted", async () => {
+    patchWithCleanup(Image.prototype, {
+        async getSvg() {
+            const svgEl = new window.DOMParser()
+                .parseFromString(
+                    `<svg width="10" viewBox="0 0 10 10" fill="none">
+                        <rect class="test-svg-child" width="10" height="10"/>
+                    </svg>`,
+                    "text/xml"
+                )
+                .querySelector("svg");
+            return {
+                viewBox: svgEl.getAttribute("viewBox"),
+                width: svgEl.getAttribute("width") || "",
+                fill: svgEl.getAttribute("fill") || "",
+                children: svgEl.children,
+            };
+        },
+    });
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`
+            <BuilderSelect>
+                <BuilderSelectItem classAction="'active'">
+                    <Image src="'/test.svg'"/>
+                </BuilderSelectItem>
+                <BuilderSelectItem classAction="''">None</BuilderSelectItem>
+            </BuilderSelect>
+        `,
+    });
+    await setupHTMLBuilder(`<div class="test-options-target active">x</div>`, {
+        patchImages: false,
+    });
+    await contains(":iframe .test-options-target").click();
+
+    expect(".we-bg-options-container .dropdown-toggle svg .test-svg-child").toHaveCount(1);
 });
 test("consider the priority of the select item", async () => {
     addBuilderOption({

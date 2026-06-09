@@ -214,12 +214,15 @@ export async function setupHTMLBuilder(
         snippets,
         styleContent,
         iframeLangDir = "ltr",
+        patchImages = true,
     } = {}
 ) {
     defineMailModels();
     defineModels([IrUiView]);
 
-    patchWithCleanupImg();
+    if (patchImages) {
+        patchWithCleanupImg();
+    }
 
     if (!snippets) {
         snippets = {
