@@ -449,6 +449,22 @@ class ThreadedServer(CommonServer):
             sys.stderr.flush()
             os._exit(0)
         elif sig == signal.SIGHUP:
+            global _in_preload, _sighup_deferred
+            if _in_preload:
+                # A SIGHUP during the startup critical section
+                # (self.start + preload_registries) cannot be raised
+                # safely: the KeyboardInterrupt below would escape
+                # run()'s try/except and exit the process with code 130.
+                # Defer it; run() replays it once startup is past.
+                _sighup_deferred = True
+                return
+            if getattr(odoo, 'phoenix', False):
+                # A phoenix restart is already pending. A single save
+                # can make the FSWatcher fire several SIGHUPs; a
+                # duplicate raised here would escape the teardown/reexec
+                # path and exit 130. The pending reexec already reloads
+                # fresh code, so ignore it.
+                return
             # restart on kill -HUP
             odoo.phoenix = True
             self.quit_signals_received += 1
@@ -635,9 +651,20 @@ class ThreadedServer(CommonServer):
         The first SIGINT or SIGTERM signal will initiate a graceful shutdown while
         a second one if any will force an immediate exit.
         """
-        self.start(stop=stop)
-
-        rc = preload_registries(preload)
+        global _in_preload, _sighup_deferred
+        _in_preload = True
+        try:
+            self.start(stop=stop)
+            rc = preload_registries(preload)
+        finally:
+            _in_preload = False
+        if _sighup_deferred:
+            # A SIGHUP was deferred during the startup window above;
+            # replay its effect now that we are past the unguarded
+            # region so the wait-loop below performs the phoenix restart.
+            _sighup_deferred = False
+            odoo.phoenix = True
+            self.quit_signals_received += 1
 
         if stop:
             if config['test_enable']:
@@ -1313,6 +1340,8 @@ class WorkerCron(Worker):
 #----------------------------------------------------------
 
 server = None
+_in_preload = False
+_sighup_deferred = False
 
 def load_server_wide_modules():
     server_wide_modules = list(odoo.conf.server_wide_modules)
