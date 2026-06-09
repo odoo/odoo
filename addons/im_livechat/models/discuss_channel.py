@@ -1,12 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from collections import defaultdict
+from datetime import timedelta
 from zoneinfo import ZoneInfo
 
 from markupsafe import Markup
 
 from odoo import _, api, fields, models, tools
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.tools import email_split, format_list, html2plaintext, is_html_empty
 from odoo.tools.mimetypes import get_extension
@@ -741,7 +743,111 @@ class DiscussChannel(models.Model):
         return Markup("").join(parts)
 
     def _store_livechat_extra_fields(self, res: Store.FieldList):
-        pass
+        if not self.env.user.has_group("im_livechat.im_livechat_group_user"):
+            return
+        recent_channels_by_channel, recent_channels_count_by_channel = self._get_recent_channels_data(limit=5)
+        res.many(
+            "recent_channel_ids",
+            ["description", "last_interest_dt", "livechat_end_dt"],
+            value=lambda c: recent_channels_by_channel[c],
+            predicate=is_livechat_channel,
+        )
+        res.attr(
+            "recent_channels_count",
+            value=lambda c: recent_channels_count_by_channel[c],
+            predicate=is_livechat_channel,
+        )
+
+    def _get_recent_channels_match_sql(self):
+        return SQL(
+            """
+            EXISTS (
+                SELECT 1
+                  FROM im_livechat_channel_member_history source_history
+                  JOIN im_livechat_channel_member_history candidate_history
+                    ON candidate_history.partner_id = source_history.partner_id
+                    OR candidate_history.guest_id = source_history.guest_id
+                 WHERE source_history.channel_id = source_channel.id
+                   AND source_history.livechat_member_type = 'visitor'
+                   AND candidate_history.channel_id = candidate_channel.id
+                   AND candidate_history.livechat_member_type = 'visitor'
+            )
+            """,
+        )
+
+    def _get_recent_channels_data(self, limit=None):
+        recent_channels_by_channel = defaultdict(self.browse)
+        recent_channels_count_by_channel = defaultdict(lambda: 0)
+        channels = self.filtered(is_livechat_channel)
+        if not channels:
+            return recent_channels_by_channel, recent_channels_count_by_channel
+        self.env.cr.execute(
+            SQL(
+                """
+                SELECT source_channel.id AS source_channel_id,
+                       ARRAY_AGG(
+                           recent_channel.id
+                           ORDER BY
+                               recent_channel.livechat_end_dt IS NOT NULL,
+                               recent_channel.last_interest_dt DESC,
+                               recent_channel.id DESC
+                       ) AS recent_channel_ids,
+                       MAX(recent_channel.total_count) AS recent_channels_count
+                  FROM discuss_channel source_channel
+          JOIN LATERAL (
+                        SELECT candidate_channel.id,
+                               candidate_channel.last_interest_dt,
+                               candidate_channel.livechat_end_dt,
+                               COUNT(*) OVER () AS total_count
+                          FROM discuss_channel candidate_channel
+                         WHERE candidate_channel.channel_type = 'livechat'
+                           AND candidate_channel.create_date >= %(recent_channels_since)s
+                           AND candidate_channel.id != source_channel.id
+                           AND (%(match_sql)s)
+                      ORDER BY candidate_channel.livechat_end_dt IS NOT NULL,
+                               candidate_channel.last_interest_dt DESC,
+                               candidate_channel.id DESC
+                         LIMIT %(limit)s
+                        ) AS recent_channel ON TRUE
+                 WHERE source_channel.id IN %(source_channel_ids)s
+              GROUP BY source_channel.id
+                """,
+                limit=limit,
+                match_sql=self._get_recent_channels_match_sql(),
+                recent_channels_since=fields.Datetime.now() - timedelta(days=7),
+                source_channel_ids=tuple(channels.ids),
+            ),
+        )
+        results = self.env.cr.fetchall()
+        all_recent_channel_ids = [
+            channel_id
+            for __, recent_channel_ids, __ in results
+            for channel_id in recent_channel_ids
+        ]
+        for channel_id, recent_channel_ids, count in results:
+            recent_channels_by_channel[self.browse(channel_id)] = (
+                self.browse(recent_channel_ids).with_prefetch(all_recent_channel_ids)
+            )
+            recent_channels_count_by_channel[self.browse(channel_id)] = count
+        return recent_channels_by_channel, recent_channels_count_by_channel
+
+    def action_recent_channels(self):
+        self.ensure_one()
+        if not self.env.user.has_group("im_livechat.im_livechat_group_user"):
+            raise AccessError(self.env._("Only Live Chat operators can view recent conversations."))
+        recent_channels_by_channel, __ = self._get_recent_channels_data()
+        return {
+            "domain": Domain("id", "in", recent_channels_by_channel[self].ids),
+            "name": self.env._("Recent Conversations"),
+            "res_model": "discuss.channel",
+            "target": "current",
+            "type": "ir.actions.act_window",
+            "views": [
+                (self.env.ref("im_livechat.discuss_channel_view_kanban").id, "kanban"),
+                (self.env.ref("im_livechat.discuss_channel_view_tree").id, "list"),
+                (self.env.ref("im_livechat.discuss_channel_view_form").id, "form"),
+            ],
+        }
 
     def _apply_livechat_feedback(self, rate, reason=None):
         """Post customer feedback and apply its rating to the live chat session.

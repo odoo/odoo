@@ -12,6 +12,8 @@ export class WebsiteVisitor extends Record {
     country_id = fields.One("res.country");
     /** @type {string} */
     display_name;
+    /** @type {number} */
+    id;
     lang_id = fields.One("res.lang");
     partner_id = fields.One("res.partner");
     website_id = fields.One("website");
