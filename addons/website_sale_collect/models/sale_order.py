@@ -27,6 +27,7 @@ class SaleOrder(models.Model):
         delivery method is not in-store anymore. """
 
         self.ensure_one()
+        fiscal_position_before = self.fiscal_position_id
         was_in_store_order = (
             self.carrier_id.delivery_type == 'in_store'
             and delivery_method.delivery_type != 'in_store'
@@ -35,6 +36,7 @@ class SaleOrder(models.Model):
         if was_in_store_order:
             self._compute_warehouse_id()
             self._compute_fiscal_position_id()
+            self._recompute_cart_if_fiscal_position_changed(fiscal_position_before)
 
     def _set_pickup_location(self, pickup_location_data):
         """ Override `website_sale` to set the pickup location for in-store delivery methods.
@@ -45,6 +47,7 @@ class SaleOrder(models.Model):
         if self.carrier_id.delivery_type != 'in_store':
             return res
 
+        fiscal_position_before = self.fiscal_position_id
         self.pickup_location_data = json.loads(pickup_location_data)
         if self.pickup_location_data:
             self.warehouse_id = self.pickup_location_data['id']
@@ -54,6 +57,7 @@ class SaleOrder(models.Model):
             )
         else:
             self._compute_warehouse_id()
+        self._recompute_cart_if_fiscal_position_changed(fiscal_position_before)
 
     def _get_pickup_locations(self, zip_code=None, country=None, **kwargs):
         """ Override of `website_sale` to ensure that a country is provided when there is a zip
@@ -99,6 +103,15 @@ class SaleOrder(models.Model):
         return super()._check_cart_is_ready_to_be_paid()
 
     # === TOOLING ===#
+
+    def _recompute_cart_if_fiscal_position_changed(self, fiscal_position_before):
+        if (
+            self.website_id
+            and self.state == 'draft'
+            and self.fiscal_position_id != fiscal_position_before
+        ):
+            self._recompute_taxes()
+            self._recompute_prices()
 
     def _is_in_stock(self, wh_id):
         """ Check whether all storable products of the cart are in stock in the given warehouse.

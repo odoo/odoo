@@ -38,6 +38,17 @@ class TestWebsiteSaleDeliveryController(PaymentCommon, SaleCommon):
             order.transaction_ids = self._create_transaction(flow='redirect', state='draft')
             self.Controller.shop_set_delivery_method(dm_id='1')
 
+    def test_set_pickup_location_returns_order_summary(self):
+        with MockRequest(self.env, website=self.website), patch(
+            'odoo.addons.website_sale.models.website.Website.sale_get_order',
+            return_value=self.empty_order,
+        ):
+            result = self.Controller.website_sale_set_pickup_location('{}')
+        self.assertTrue(result['success'])
+        self.assertIn('amount_untaxed', result)
+        self.assertIn('amount_tax', result)
+        self.assertIn('amount_total', result)
+
     def test_available_methods(self):
         self.env['delivery.carrier'].search([]).action_archive()
         self.product_delivery_poste = self.env['product.product'].create({

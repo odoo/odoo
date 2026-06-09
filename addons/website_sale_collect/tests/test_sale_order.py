@@ -66,6 +66,87 @@ class TestSaleOrder(ClickAndCollectCommon):
         so._set_delivery_method(self.free_delivery)
         self.assertNotEqual(so.fiscal_position_id, fp_us)
 
+    def test_delivery_method_change_recomputes_taxes(self):
+        country_fr = self.env.ref('base.fr')
+        country_jp = self.env.ref('base.jp')
+        self.env.company.country_id = country_fr
+        self.warehouse.partner_id.country_id = country_fr
+        tax_20, tax_0 = self.env['account.tax'].create([
+            {
+                'name': "20%",
+                'amount': 20,
+            },
+            {
+                'name': "Export 0%",
+                'amount': 0,
+            },
+        ])
+        fp_fr, fp_jp = self.env['account.fiscal.position'].create([
+            {
+                'name': "Test FR fiscal position",
+                'country_id': country_fr.id,
+                'auto_apply': True,
+            },
+            {
+                'name': "Test JP fiscal position",
+                'country_id': country_jp.id,
+                'auto_apply': True,
+                'tax_ids': [Command.create({
+                    'tax_src_id': tax_20.id,
+                    'tax_dest_id': tax_0.id,
+                })],
+            },
+        ])
+        self.storable_product.write({
+            'list_price': 100,
+            'taxes_id': [Command.set(tax_20.ids)],
+        })
+        (self.dm_product | self.free_delivery.product_id).taxes_id = [Command.set(tax_20.ids)]
+        self.default_partner.country_id = country_jp
+        so = self._create_so(
+            partner_id=self.default_partner.id,
+            partner_shipping_id=self.default_partner.id,
+            order_line=[Command.create({
+                'product_id': self.storable_product.id,
+                'product_uom_qty': 1,
+            })],
+        )
+
+        so._set_delivery_method(self.free_delivery)
+        self.assertEqual(so.fiscal_position_id, fp_jp)
+        self.assertEqual(so.order_line.tax_id, tax_0)
+        self.assertRecordValues(so, [{
+            'amount_untaxed': 100,
+            'amount_tax': 0,
+            'amount_total': 100,
+        }])
+
+        so._set_delivery_method(self.in_store_dm)
+        so._set_pickup_location(json.dumps({'id': self.warehouse.id}))
+        self.assertEqual(so.fiscal_position_id, fp_fr)
+        self.assertEqual(so.order_line.tax_id, tax_20)
+        self.assertRecordValues(so, [{
+            'amount_untaxed': 100,
+            'amount_tax': 20,
+            'amount_total': 120,
+        }])
+        delivery_step_amounts = (so.amount_untaxed, so.amount_tax, so.amount_total)
+        so._recompute_taxes()
+        so._recompute_prices()
+        self.assertEqual(
+            (so.amount_untaxed, so.amount_tax, so.amount_total),
+            delivery_step_amounts,
+        )
+
+        so._set_delivery_method(self.free_delivery)
+        self.assertEqual(so.fiscal_position_id, fp_jp)
+        self.assertEqual(so.order_line.tax_id, tax_0)
+        self.assertRecordValues(so, [{
+            'amount_untaxed': 100,
+            'amount_tax': 0,
+            'amount_total': 100,
+        }])
+
     def test_free_qty_calculated_from_order_wh_if_dm_is_in_store(self):
         self.warehouse_2 = self._create_warehouse()
         self.website.warehouse_id = self.warehouse_2
