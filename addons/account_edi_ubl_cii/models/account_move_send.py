@@ -188,20 +188,15 @@ class AccountMoveSend(models.AbstractModel):
         writer = OdooPdfFileWriter()
         writer.clone_reader_document_root(reader)
 
-        # Pure Leitweg-ID partners (DE B2G) use xrechnung, not zugferd/facturx.
-        is_leitweg = bool(invoice.commercial_partner_id._get_additional_identifier('DE_LTW'))
-        attachment_name = 'factur-x.xml'
-        if invoice.commercial_partner_id.country_code == 'DE' and not is_leitweg:
-            attachment_name = 'zugferd-invoice.xml'
-
-        writer.add_attachment(attachment_name, xml_facturx, subtype='text/xml')
+        writer.add_attachment('factur-x.xml', xml_facturx, subtype='text/xml', afrelationship='/Alternative')
 
         # PDF-A.
         if ((invoice_data.get('ubl_cii_xml_options', {}).get('ubl_cii_format') in ('facturx', 'zugferd')
-                or (invoice.commercial_partner_id.country_code in ('FR', 'DE') and not is_leitweg))
-                and invoice.country_code in ('FR', 'DE')
-                and not writer.is_pdfa
-            ):
+                or (invoice.commercial_partner_id.country_code in ('FR', 'DE')
+                    and not invoice.commercial_partner_id._get_additional_identifier('DE_LTW')))
+            and invoice.country_code in ('FR', 'DE')
+            and not writer.is_pdfa
+        ):
             try:
                 writer.convert_to_pdfa()
             except Exception:
