@@ -321,3 +321,53 @@
         grid-template-columns: 1fr !important;
     }
 }
+
+/* ============================================================================
+   Defensive interactivity guard - if any base-style or browser default
+   leaves an essentials-grid input non-editable, this forces it back on.
+   Excludes explicitly read-only fields (Odoo adds .o_readonly_modifier).
+   ============================================================================ */
+.mv-deal-redesign .mv-essentials-grid input:not(.o_readonly_modifier),
+.mv-deal-redesign .mv-essentials-grid select:not(.o_readonly_modifier),
+.mv-deal-redesign .mv-essentials-grid .o_input,
+.mv-deal-redesign .mv-essentials-grid .o_field_widget:not(.o_readonly_modifier) input,
+.mv-deal-redesign .mv-essentials-grid .o_field_widget:not(.o_readonly_modifier) select {
+    pointer-events: auto !important;
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    cursor: text !important;
+}
+
+/* Many2one / Selection field click target also gets pointer-events on */
+.mv-deal-redesign .mv-essentials-grid .o_field_widget:not(.o_readonly_modifier) {
+    pointer-events: auto !important;
+}
+
+/* ============================================================================
+   CRITICAL FIX - Odoo's Monetary widget renders a ghost overlay span with
+   class .o_input ABOVE the real input (it shows the "$" prefix). My earlier
+   rule that targeted .o_input was painting that span solid white, which
+   hid the real input. Restrict the styled-input rules to <input>/<select>
+   elements only and revert the overlay span back to transparent.
+   ============================================================================ */
+.mv-deal-redesign .mv-essentials-grid span.o_input {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+}
+
+/* Make sure the real <input> in monetary fields is visible above any sibling
+   overlay span (z-index just in case stacking context interferes). */
+.mv-deal-redesign .mv-essentials-grid .o_field_monetary input,
+.mv-deal-redesign .mv-essentials-grid input.o_input {
+    position: relative;
+    z-index: 1;
+    background-color: transparent !important;
+}
+
+/* The wrapper that contains both the overlay span and the real input -
+   make sure it's a positioning context but not painted itself. */
+.mv-deal-redesign .mv-essentials-grid .o_field_monetary > div {
+    background-color: transparent !important;
+}

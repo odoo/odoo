@@ -53,22 +53,28 @@
             </group>
           </group>
 
-          <!-- ===== 2. PRICING ===== -->
+          <!-- ===== 2. PRICING =====
+               currency_id is declared up here so total_dollars's monetary
+               widget can resolve it. The mv-essentials-grid CSS makes
+               labels stack above inputs and inputs go full-width. We use
+               plain (non-monetary) widgets for the editable rate so the
+               input renders as a normal <input type="number"> with no
+               currency-widget rendering surprises. -->
+          <field name="currency_id" invisible="1"/>
           <div class="mv-section-label">PRICING</div>
           <group col="4" name="grp_pricing"
                  class="mv-essentials-grid mv-essentials-grid-4">
             <group>
-              <field name="rate" required="1" widget="monetary"/>
+              <field name="rate" readonly="0"/>
             </group>
             <group>
-              <field name="units_available" required="1"/>
+              <field name="units_available" readonly="0"/>
             </group>
             <group>
               <field name="cap"/>
             </group>
             <group>
-              <field name="total_dollars" widget="monetary" readonly="1"/>
-              <field name="currency_id" invisible="1"/>
+              <field name="total_dollars" readonly="1"/>
             </group>
           </group>
 

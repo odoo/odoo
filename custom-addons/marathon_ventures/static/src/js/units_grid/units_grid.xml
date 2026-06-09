@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+  <t t-name="marathon_ventures.MvUnitsGrid">
+    <div class="mv-units-grid-wrap">
+
+      <!-- Save bar -->
+      <div class="mv-units-savebar">
+        <span t-if="state.dirty" class="mv-units-savebar__pending">
+          You have unsaved changes
+        </span>
+        <span t-elif="state.justSaved" class="mv-units-savebar__saved">
+          All changes saved
+        </span>
+        <button t-if="state.dirty"
+                class="btn btn-light mv-units-discard"
+                t-on-click.prevent="onDiscard"
+                t-att-disabled="state.saving">Discard</button>
+        <button t-if="state.dirty"
+                class="btn btn-primary"
+                t-on-click.prevent="onSave"
+                t-att-disabled="state.saving">
+          <t t-esc="state.saving ? 'Saving...' : 'Save'"/>
+        </button>
+      </div>
+
+      <div t-if="!state.loaded" class="mv-units-loading">Loading units grid...</div>
+
+      <!-- The grid - rendered as soon as we know the week columns -->
+      <table t-if="state.loaded and state.payload" class="mv-units-table">
+        <thead>
+          <tr>
+            <th class="mv-daypart-col">DAYPART</th>
+            <th t-foreach="state.payload.weeks" t-as="w" t-key="w" class="mv-week-col">
+              <div class="mv-week-col__date" t-esc="fmtWeekShort(w)"/>
+              <div class="mv-week-col__dow">Mon</div>
+            </th>
+            <th class="mv-total-col">TOTAL</th>
+            <th class="mv-row-actions-col"></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <!-- Body rows (existing + freshly-added) -->
+          <tr t-foreach="state.payload.rows" t-as="row" t-key="row.id">
+
+            <td class="mv-daypart-cell">
+              <!-- Daypart selector (always editable; planners can switch) -->
+              <select class="mv-daypart-select"
+                      t-on-change="(ev) => this.onDaypartChange(row, ev)">
+                <option t-foreach="dayparts" t-as="opt" t-key="opt.value"
+                        t-att-value="opt.value"
+                        t-att-selected="opt.value === row.daypart ? 'selected' : null">
+                  <t t-esc="opt.label"/>
+                </option>
+              </select>
+              <span class="mv-daypart-range" t-esc="row.time_range"/>
+
+              <!-- Day toggles -->
+              <div class="mv-day-toggles">
+                <span t-foreach="['M','T','W','T','F','S','S']" t-as="dl" t-key="dl_index"
+                      t-att-class="'mv-day-toggle' + (row.days_mask[dl_index] ? ' mv-day-toggle--on' : '')"
+                      t-on-click="() => this.onDayToggle(row, dl_index)">
+                  <t t-esc="dl"/>
+                </span>
+              </div>
+
+              <!-- Rate + run dates -->
+              <div class="mv-daypart-foot">
+                <label class="mv-foot-label">Rate</label>
+                <input type="number" step="0.01" class="mv-foot-input mv-foot-input--rate"
+                       t-att-value="row.rate || 0"
+                       t-on-input="(ev) => this.onRateChange(row, ev)"/>
+                <label class="mv-foot-label">Run</label>
+                <input type="date" class="mv-foot-input mv-foot-input--date"
+                       t-att-value="row.run_start || ''"
+                       t-on-input="(ev) => this.onRunDateChange(row, 'start', ev)"/>
+                <span class="mv-foot-sep">to</span>
+                <input type="date" class="mv-foot-input mv-foot-input--date"
+                       t-att-value="row.run_end || ''"
+                       t-on-input="(ev) => this.onRunDateChange(row, 'end', ev)"/>
+              </div>
+            </td>
+
+            <!-- Week cells -->
+            <td t-foreach="row.cells" t-as="cell" t-key="cell.week"
+                t-att-class="cellClasses(row, cell)">
+              <input t-if="cell.state !== 'hatched'"
+                     type="number"
+                     class="mv-cell-input"
+                     t-att-value="cell.units || ''"
+                     t-on-input="(ev) => this.onCellInput(row, cell, ev)"/>
+            </td>
+
+            <!-- Row total -->
+            <td class="mv-row-total">
+              <div class="mv-row-total__spots">
+                <t t-esc="(row.total_spots || 0).toLocaleString()"/> spots
+              </div>
+              <div class="mv-row-total__money">
+                <t t-esc="fmtCurrency(row.total_revenue)"/>
+              </div>
+            </td>
+
+            <!-- Row delete -->
+            <td class="mv-row-actions">
+              <button class="btn btn-link mv-row-delete"
+                      title="Delete this Day Part"
+                      t-on-click.prevent="() => this.removeRow(row)">×</button>
+            </td>
+          </tr>
+
+          <!-- Add Day Part row: ALWAYS visible, just under the last row
+               (or directly under the headers when no rows yet). -->
+          <tr class="mv-add-row">
+            <td t-att-colspan="state.payload.weeks.length + 3" class="mv-add-cell">
+              <button class="btn btn-link mv-add-daypart"
+                      t-on-click.prevent="addRow">
+                + Add Day Part
+              </button>
+              <span t-if="state.payload.rows.length === 0"
+                    class="mv-add-hint">
+                Click to add your first Day Part. You can pick the daypart,
+                set the rate, choose the run weeks, and enter unit counts
+                per week.
+              </span>
+            </td>
+          </tr>
+
+          <!-- Grand total row -->
+          <tr t-if="state.payload.rows.length > 0" class="mv-grand-row">
+            <td class="mv-grand-cell">
+              <t t-esc="(state.payload.grand_total_spots || 0).toLocaleString()"/> spots total
+            </td>
+            <td t-att-colspan="state.payload.weeks.length"></td>
+            <td t-att-colspan="2" class="mv-grand-cell mv-grand-cell--money">
+              <t t-esc="fmtCurrency(state.payload.grand_total_revenue)"/> total revenue
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </t>
+
+</templates>
