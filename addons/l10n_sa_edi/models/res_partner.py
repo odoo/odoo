@@ -7,7 +7,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     l10n_sa_edi_building_number = fields.Char("Building Number")
-    l10n_sa_edi_plot_identification = fields.Char("Plot Identification")
+    l10n_sa_edi_plot_identification = fields.Char("Secondary Number")
 
     l10n_sa_edi_additional_identification_scheme = fields.Char(
         compute='_compute_l10n_sa_edi_additional_identification_fields',
@@ -22,6 +22,15 @@ class ResPartner(models.Model):
         inverse='_inverse_l10n_sa_edi_additional_identification_fields',
         help="Additional Identification Number for the Seller/Buyer",
     )
+
+    _check_l10n_sa_edi_building_number = models.Constraint(
+        "CHECK (l10n_sa_edi_building_number IS NULL OR l10n_sa_edi_building_number ~ '^[0-9]{4}$')",
+        "Building Number must contain 4 numeric digits.",
+        )
+    _check_l10n_sa_edi_plot_number = models.Constraint(
+        "CHECK (l10n_sa_edi_plot_identification IS NULL OR l10n_sa_edi_plot_identification ~ '^[0-9]{4}$')",
+        "Secondary Number must contain 4 numeric digits.",
+        )
 
     @api.depends('l10n_sa_edi_additional_identification_scheme', 'l10n_sa_edi_additional_identification_number')
     def _compute_is_company(self):
