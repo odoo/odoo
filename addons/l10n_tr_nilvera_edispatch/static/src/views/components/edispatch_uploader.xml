@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="l10n_tr_nilvera_edispatch.EdispatchUploader">
+        <FileUploader
+            acceptedFileExtensions="'.xml'"
+            multiUpload="true"
+            onUploaded.bind="this.onFileUpload"
+            onUploadComplete.bind="this.onUploadComplete"
+            >
+            <t t-set-slot="toggler">
+                <t t-call-slot="toggler"/>
+            </t>
+        </FileUploader>
+    </t>
+
+</templates>

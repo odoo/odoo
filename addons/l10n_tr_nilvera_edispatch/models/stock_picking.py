@@ -174,7 +174,10 @@ class StockPicking(models.Model):
             file_data = next(iter(self.env['account.move']._to_files_data(attachment)), None)
             if file_data is None:
                 continue
+            old_uuid = picking.l10n_tr_nilvera_uuid
             picking._update_data_from_xml(file_data)
+            if picking.l10n_tr_nilvera_uuid != old_uuid or not picking.l10n_tr_nilvera_edispatch_pdf_id:
+                picking._l10n_tr_nilvera_fetch_edispatch_pdf()
 
     @api.depends(
         'l10n_tr_nilvera_carrier_id', 'l10n_tr_nilvera_buyer_id', 'l10n_tr_nilvera_seller_supplier_id',
@@ -445,6 +448,17 @@ class StockPicking(models.Model):
                                     response.get('DespatchStatus', {}).get('Description'),
                                     response.get('DespatchStatus', {}).get('DetailDescription'),
                                 )
+                            )
+                        elif (
+                            nilvera_status == "succeed"
+                            and not stock_picking.l10n_tr_nilvera_edispatch_pdf_id
+                        ):
+                            self._l10n_tr_nilvera_add_pdf_to_picking(
+                                client,
+                                stock_picking,
+                                stock_picking.l10n_tr_nilvera_uuid,
+                                document_category="Sale",
+                                nilvera_channel="edespatch",
                             )
                     else:
                         stock_pickings.message_post(body=_("The dispatch status couldn't be retrieved from Nilvera."))
@@ -826,9 +840,11 @@ class StockPicking(models.Model):
 
         tree = etree.fromstring(response)
         document_id = tree.findtext('./cbc:ID', namespaces=tree.nsmap)
+        customer_name = self._get_tag_text('.//cac:DeliveryCustomerParty/cac:Party/cac:PartyName/cbc:Name', tree)
 
         self.env['ir.attachment'].create({
             'name': '%s_e_Dispatch.xml' % document_id,
+            'description': customer_name,
             'raw': response.encode('utf-8'),
             'type': 'binary',
             'mimetype': 'application/xml',
@@ -863,6 +879,14 @@ class StockPicking(models.Model):
                         nilvera_channel='edespatch',
                     )
 
+    def action_l10n_tr_nilvera_fetch_edispatch_purchases(self):
+        """
+        XMLs must be fetched before PDFs: the PDF pass relies on the pickings
+        created/updated by the attachment pass.
+        """
+        self._cron_nilvera_get_edispatch_purchase_attachments()
+        self._cron_nilvera_get_edispatch_purchase_pdf()
+
     def _l10n_tr_nilvera_add_pdf_to_picking(self, client, picking, document_uuid, document_category="Purchase", nilvera_channel="edespatch"):
         try:
             response = client.request("GET", f"/{nilvera_channel}/{quote(document_category)}/{quote(document_uuid)}/pdf")
@@ -870,7 +894,7 @@ class StockPicking(models.Model):
             _logger.warning("Failed to fetch PDF for picking %s (uuid=%s)", picking.name, document_uuid)
             picking.l10n_tr_nilvera_send_status = 'error'
             return
-        filename = f'{picking.origin}_e_Dispatch.pdf'
+        filename = f"{picking.origin or picking.name}_e_Dispatch.pdf"
 
         attachment = self.env['ir.attachment'].create({
             'name': filename,
@@ -885,3 +909,17 @@ class StockPicking(models.Model):
         picking.l10n_tr_nilvera_send_status = 'succeed'
         picking._message_log(body=_("Nilvera document has been received successfully"))
         picking.message_post(attachment_ids=attachment.ids)
+
+    def _l10n_tr_nilvera_fetch_edispatch_pdf(self):
+        self.ensure_one()
+        if not self.l10n_tr_nilvera_uuid:
+            return
+        self.l10n_tr_nilvera_edispatch_pdf_id.unlink()
+        with _get_nilvera_client(self.env._, self.company_id) as client:
+            self._l10n_tr_nilvera_add_pdf_to_picking(
+                client,
+                self,
+                self.l10n_tr_nilvera_uuid,
+                document_category="Purchase",
+                nilvera_channel="edespatch",
+            )
