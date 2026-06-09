@@ -52,6 +52,20 @@ class Binary(Field[BinaryValue]):
     def _description_sortable(self, env):
         return False
 
+    def update_db(self, model, columns):
+        if self.column_type is None and self.default and model._table_has_rows():
+            model.pool.post_init(self.update_db_binary_attachment, model)
+            return False
+        return super().update_db(model, columns)
+
+    def update_db_binary_attachment(self, model):
+        """Initialized the records for binary fields stored as attachment with the default"""
+        value = self.default(model)
+        # assume already initialized when some records have a value
+        if not value or model.search_count([(self.name, '!=', False)], limit=1):
+            return
+        model.search([(self.name, '=', False)]).write({self.name: value})
+
     def convert_to_column(self, value, record, values=None, validate=True):
         data = self.convert_to_cache(value, record, validate) or EMPTY_BINARY
         value = data.content
@@ -367,4 +381,4 @@ class BinaryValueAttachment(BinaryValue):
         return self.__attachment.raw.open()
 
     def __repr__(self):
-        return f"BinaryAttachment(id={self.__attachment.id})"
+        return f"BinaryValueAttachment(id={self.__attachment.id})"
