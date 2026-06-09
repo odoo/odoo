@@ -103,10 +103,10 @@ export const pickupLocationField = {
         return props;
     },
     relatedFields: [
-        { name: "pickup_location_data" },
-        { name: "zip" },
-        { name: "country_id" },
-    ]
+        { name: "pickup_location_data", type: "json" },
+        { name: "zip", type: "char" },
+        { name: "country_id", type: "many2one" },
+    ],
 };
 
 registry.category("fields").add("pickup_location_many2one", pickupLocationField);
