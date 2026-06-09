@@ -86,6 +86,18 @@ class StockMove(models.Model):
         subcontracted_productions = self._get_subcontract_production()
         production = subcontracted_productions.filtered(lambda p: not p._has_been_recorded())[-1:]
         if not production:
+            # When all linked productions are already recorded (e.g. an MO was
+            # manually marked as done), only the qty exceeding what is already
+            # recorded needs a new MO. Write the already-covered portion
+            # directly to the move lines, then split for the excess only.
+            rounding = self.product_uom.rounding
+            recorded_qty = sum(subcontracted_productions.mapped('qty_producing'))
+            covered_delta = min(qty, max(recorded_qty - self._quantity_done_sml(), 0))
+            if float_compare(covered_delta, 0, precision_rounding=rounding) > 0:
+                super()._set_quantity_done(covered_delta)
+                qty -= covered_delta
+            if float_compare(qty, 0, precision_rounding=rounding) <= 0:
+                return
             # If new quantity is over the already recorded quantity and we have no open production, then create a new one for the missing quantity.
             production = subcontracted_productions[-1:]
             production = production.sudo().with_context(allow_more=True)._split_productions({production: [production.qty_producing, qty]})[-1:]
