@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import odoo
+from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
 
@@ -317,3 +318,113 @@ class TestRedirect(HttpCase):
         resp = self.url_open("/foo?oups=1&bar=2", allow_redirects=False)
         self.assertEqual(resp.status_code, 301)
         self.assertURLEqual(resp.headers.get('Location'), "/new-page-11?oups=1&bar=2")
+
+
+@tagged('-at_install', 'post_install')
+class TestRedirectPortal(HttpCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user_admin = cls.env.ref('base.user_admin')
+        cls.customer = cls.env['res.partner'].create({
+            'country_id': cls.env.ref('base.fr').id,
+            'email': 'mdelvaux34@example.com',
+            'lang': 'en_US',
+            'name': 'Mathias Delvaux',
+        })
+        cls.record_portal = cls.env['website.mail.test.portal'].create({
+            'name': 'Test Portal Record',
+            'partner_id': cls.customer.id,
+            'user_id': cls.user_admin.id,
+        })
+        for group_name, group_func, group_data in cls.record_portal.sudo()._notify_get_recipients_groups(
+            cls.env['mail.message'], False
+        ):
+            if group_name == 'portal_customer' and group_func(cls.customer):
+                cls.record_access_url = group_data['button_access']['url']
+                break
+        else:
+            raise AssertionError('Record access URL not found')
+        cls.website = cls.env.ref('website.default_website')
+
+    @mute_logger('odoo.addons.base.models.ir_model')
+    def test_customer_access_not_logged_language_redirection(self):
+        """Check that the customer is redirected to a page in his language."""
+        self._setup_website_customer_lang('en_US')
+        res = self.url_open(self.record_access_url)
+        self.assertNotIn(f'/en/my/website_test_portal/{self.record_portal.id}', res.url)
+        self.assertIn(f'/my/website_test_portal/{self.record_portal.id}', res.url)
+
+        for lang_code, expected_url_prefix in (('fr_FR', '/fr'), ('es_ES', '/es')):
+            lang = self._setup_website_customer_lang(lang_code)
+            # Language not enabled in the current website: no redirection to customer language to avoid 404
+            self.website.language_ids -= lang
+            res = self.url_open(self.record_access_url)
+            self.assertNotIn(f'{expected_url_prefix}/my/website_test_portal/{self.record_portal.id}', res.url)
+            self.assertIn(f'/my/website_test_portal/{self.record_portal.id}', res.url)
+            # Language enabled in the current website: redirection to customer language
+            self.website.language_ids += lang
+            self.env.registry.clear_cache()
+            res = self.url_open(self.record_access_url)
+            self.assertIn(f'{expected_url_prefix}/my/website_test_portal/{self.record_portal.id}', res.url)
+
+    @mute_logger('odoo.addons.base.models.ir_model')
+    def test_profile_language_redirection(self):
+        """ Profile the portal redirection to a customer language page for which
+        the language is enabled in the website (and not the default one).
+
+        This is the standard case with 2 queries added for adding the language
+        in the URL during the redirection and 3 more added while processing the
+        URL with the prefixed language (compared to not adding it).
+        """
+        self._setup_website_customer_lang('es_ES')
+        self._preload_res_lang_get_available()
+        with self.assertQueryCount(29):
+            self.url_open(self.record_access_url)
+
+    @mute_logger('odoo.addons.base.models.ir_model')
+    def test_profile_language_redirection_default(self):
+        """ Profile the portal redirection to a customer language page for which
+        the language is the default website language.
+
+        There are more queries than in test_profile_language_redirection because the
+        customer language is first added and then removed during the redirection.
+        """
+        self._setup_website_customer_lang('en_US')
+        self._preload_res_lang_get_available()
+        with self.assertQueryCount(31):
+            self.url_open(self.record_access_url)
+
+    @mute_logger('odoo.addons.base.models.ir_model')
+    def test_profile_language_redirection_disabled_language(self):
+        """ Profile the portal redirection to a customer language page for which the
+        language is not enabled in the website (redirected to the default language page).
+
+        There are fewer queries than in test_profile_language_redirection because the
+        customer language is never added in the URL as it is not enabled.
+        """
+        lang = self._setup_website_customer_lang('es_ES')
+        self.website.language_ids -= lang
+        self._preload_res_lang_get_available()
+        with self.assertQueryCount(28):
+            self.url_open(self.record_access_url)
+
+    def _preload_res_lang_get_available(self):
+        """ Preload get_available language for default website and no website
+        (see url_lang called by url_for).
+
+        As res_lang.get_available method is cached, we use this method before measuring the
+        number of queries to avoid to count queries that will be cached most of the time.
+        """
+        with MockRequest(self.env, website=self.website) as request:
+            request.is_front_end = True
+            request.env['res.lang'].with_context(website_id=self.website.id).sudo()._get_frontend()
+
+    def _setup_website_customer_lang(self, lang_code):
+        """ Activate language for the website and set it to the customer. """
+        ResLang = self.env['res.lang']
+        lang = ResLang._activate_lang(lang_code) or ResLang._create_lang(lang_code)
+        self.website.language_ids += lang
+        self.customer.lang = lang_code
+        return lang
