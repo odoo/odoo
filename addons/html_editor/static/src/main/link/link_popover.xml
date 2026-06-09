@@ -14,7 +14,7 @@
                         <label for="o_linkpopover_url_img" class="o_we_input_label">
                             <span class="fa fa-link"></span>
                         </label>
-                        <input id="o_linkpopover_url_img" name="o_linkpopover_url_img" t-custom-ref="url" class="o_we_href_input_link border-dark-subtle form-control form-control-sm" t-custom-model="this.state.url" title="URL" placeholder="Type your URL"
+                        <input id="o_linkpopover_url_img" name="o_linkpopover_url_img" t-custom-ref="url" class="o_we_href_input_link border-dark-subtle form-control form-control-sm" t-model.proxy="this.state.url" title="URL" placeholder="Type your URL"
                             t-on-keydown="this.onKeydownEnter"/>
                         <button class="o_we_apply_link btn btn-sm btn-primary" t-att-class="{'mx-1': this.state.type ===  ''}" t-on-click="this.onClickApply">Apply</button>
                     </div>
@@ -44,7 +44,7 @@
                             <input t-custom-ref="label"
                                 id="o_we_label_link"
                                 class="o_we_label_link border-dark-subtle form-control form-control-sm"
-                                t-custom-model="this.state.label"
+                                t-model.proxy="this.state.label"
                                 title="Label"
                                 placeholder="Add a label for your link"
                                 t-on-input="this.onChange"/>
@@ -57,7 +57,7 @@
                                 id="o_linkpopover_url"
                                 name="o_linkpopover_url"
                                 class="o_we_href_input_link border-dark-subtle form-control form-control-sm"
-                                t-custom-model="this.state.url"
+                                t-model.proxy="this.state.url"
                                 title="URL"
                                 placeholder="e.g. https://www.odoo.com"
                                 t-on-keydown="this.onKeydownEnter"
@@ -94,11 +94,11 @@
                             </Dropdown>
                         </div>
                         <div t-if="this.props.includeStyling and this.state.type !== 'link'" class="input-group mb-2">
-                            <select name="link_style_size" class="form-select form-select-sm border-dark-subtle" t-custom-model="this.state.buttonSize" t-on-change="this.onChange" aria-label="Select button size">
+                            <select name="link_style_size" class="form-select form-select-sm border-dark-subtle" t-model.proxy="this.state.buttonSize" t-on-change="this.onChange" aria-label="Select button size">
                                 <option t-foreach="this.buttonSizesData" t-as="buttonSizesData" t-key="buttonSizesData.size" t-att-value="buttonSizesData.size"
                                     t-att-selected="this.state.buttonSize === buttonSizesData.size" t-out="buttonSizesData.label"/>
                             </select>
-                            <select name="link_style_shape" class="form-select form-select-sm link-style border-dark-subtle" t-custom-model="this.state.buttonShape" t-on-change="this.onChange" aria-label="Select button shape">
+                            <select name="link_style_shape" class="form-select form-select-sm link-style border-dark-subtle" t-model.proxy="this.state.buttonShape" t-on-change="this.onChange" aria-label="Select button shape">
                                 <option t-foreach="this.buttonShapesData" t-as="buttonShapeData" t-key="buttonShapeData.shape" t-att-value="buttonShapeData.shape"
                                     t-att-selected="this.state.buttonShape === buttonShapeData.shape" t-out="buttonShapeData.label"/>
                             </select>
