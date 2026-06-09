@@ -934,6 +934,217 @@ class EmployeeAPI(http.Controller):
                 status=500,
             )
 
+    # ── GET /api/employees/<employee_id>/service-history ─────────────────────
+    @http.route(
+        '/api/employees/<string:employee_id>/service-history',
+        auth='none', type='http', methods=['GET'], csrf=False,
+    )
+    def get_service_history(self, employee_id, **kwargs):
+        """Return parsed service history timeline for an employee."""
+        try:
+            uid, err = self._require_auth()
+            if err:
+                return err
+
+            env = request.env(user=uid)
+            emp = env['hr.employee'].sudo().search(
+                [('x_employee_code', '=', employee_id), ('active', '=', True)], limit=1,
+            )
+            if not emp:
+                return self._json_response({'success': False, 'message': 'Employee not found'}, status=404)
+
+            import re
+
+            raw = (emp.x_service_history or '').strip()
+            history = []
+            # Match dates with 2 or 4-digit years: DD.MM.YY or DD.MM.YYYY (also / separator)
+            date_pat = r'(\d{2}[./]\d{2}[./]\d{2,4})'
+
+            def _fmt_date(d):
+                """Convert DD.MM.YY(YY) or DD/MM/YY(YY) → YYYY-MM-DD."""
+                try:
+                    d = d.replace('/', '.')
+                    parts = d.split('.')
+                    day, month, year = parts[0], parts[1], parts[2]
+                    if len(year) == 2:
+                        year = ('19' if int(year) >= 50 else '20') + year
+                    return f'{year}-{month}-{day}'
+                except Exception:
+                    return d
+
+            def _make_title(designation, event_type, location):
+                """Prefix designation with action verb matching event type."""
+                if event_type == 'appointment':
+                    return f'Appointed as {designation}'
+                if event_type == 'promotion':
+                    return f'Promoted to {designation}'
+                # posting — "Posted to <location>"
+                loc = location.title() if location else designation
+                return f'Posted to {loc}'
+
+            prev_designation = ''
+            first_entry = True
+
+            for line in raw.splitlines():
+                line = line.strip()
+                if not line:
+                    continue
+                # Skip transfer approval log lines prepended by transfer controller
+                if re.match(r'^\[\d{2}-\w{3}-\d{4}\]', line):
+                    continue
+
+                dates = re.findall(date_pat, line)
+
+                # Known designation keywords used to split location from designation
+                DESIG_PAT = re.compile(
+                    r'(GRADE\s+[IVX]+\s+WARDER|HEAD\s+WARDER|CHIEF\s+HEAD\s+WARDER|'
+                    r'CHW|ASSISTANT\s+JAILE?R?|ASST\.?\s+JAILE?R?|JAILE?R?|'
+                    r'INSPECTOR|SUPERINTENDENT|DEPUTY\s+SUPERINTENDENT|'
+                    r'GRADE\s+[IVX]+)',
+                    re.IGNORECASE,
+                )
+
+                # Strip "TILL DATE" so it doesn't confuse parsing
+                line_clean = re.sub(r'\bTILL\s*DATE\b', '', line, flags=re.IGNORECASE).strip()
+
+                if dates:
+                    first_date = dates[0]
+                    pre_parts = re.split(date_pat, line_clean, maxsplit=1)
+                    before_dates = pre_parts[0].strip()
+                    post_parts = re.split(date_pat, line_clean)
+                    after_dates = post_parts[-1].strip().strip('.,').strip()
+
+                    # Ditto marks: ,, / , / " / '' all mean "same as previous"
+                    DITTO = {',,', ',', '"', "''"}
+                    is_ditto = (not after_dates) or (after_dates in DITTO)
+
+                    if not is_ditto:
+                        # Format 1: LOCATION DATE DATE DESIGNATION
+                        location = before_dates.rstrip(',').strip()
+                        designation = after_dates
+                    else:
+                        # Format 2: LOCATION DESIGNATION DATE DATE  (or ditto)
+                        m = DESIG_PAT.search(before_dates)
+                        if m:
+                            location = before_dates[:m.start()].strip().rstrip(',').strip()
+                            designation = before_dates[m.start():].strip().rstrip(',').strip()
+                        else:
+                            location = before_dates.rstrip(',').strip()
+                            designation = prev_designation
+
+                    # Resolve ditto marks → carry forward
+                    if not designation or designation in {',,', ',', '"', "''"}:
+                        designation = prev_designation
+                    date = _fmt_date(first_date)
+                else:
+                    location = ''
+                    date = ''
+                    designation = line
+
+                if not designation:
+                    continue
+
+                # Classify event type (appointment = first chronological entry)
+                lower = designation.lower()
+                if first_entry:
+                    event_type = 'appointment'
+                    first_entry = False
+                elif designation != prev_designation and any(
+                    kw in lower for kw in ('grade i', 'head warder', 'jailer', 'chw', 'chief', 'asst', 'assistant', 'inspector', 'superintendent')
+                ) and not any(kw in lower for kw in ('grade ii', 'grade iii')):
+                    event_type = 'promotion'
+                else:
+                    event_type = 'posting'
+
+                title = _make_title(designation, event_type, location)
+                prev_designation = designation
+
+                history.append({
+                    'date': date,
+                    'title': title,
+                    'location': location.title() if location else '',
+                    'event_type': event_type,
+                    'reference': None,
+                })
+
+            reversed_history = list(reversed(history))
+            # Green dot = current position (first in display order)
+            # Original appointment entry (now last) gets 'posting' dot
+            for i, entry in enumerate(reversed_history):
+                if i == 0:
+                    entry['event_type'] = 'appointment'
+                elif entry['event_type'] == 'appointment':
+                    entry['event_type'] = 'posting'
+            return self._json_response({'success': True, 'history': reversed_history})
+
+        except Exception as exc:
+            _logger.exception('GET /api/employees/%s/service-history failed: %s', employee_id, exc)
+            return self._json_response({'success': False, 'message': 'Internal server error'}, status=500)
+
+    # ── GET /api/employees/<employee_id>/transfers ────────────────────────────
+    @http.route(
+        '/api/employees/<string:employee_id>/transfers',
+        auth='none', type='http', methods=['GET'], csrf=False,
+    )
+    def get_employee_transfers(self, employee_id, **kwargs):
+        """Return transfer history for an employee."""
+        try:
+            uid, err = self._require_auth()
+            if err:
+                return err
+
+            env = request.env(user=uid)
+            emp = env['hr.employee'].sudo().search(
+                [('x_employee_code', '=', employee_id), ('active', '=', True)], limit=1,
+            )
+            if not emp:
+                return self._json_response({'success': False, 'message': 'Employee not found'}, status=404)
+
+            requests = env['transfer.approval.request'].sudo().search(
+                [('employee_id', '=', emp.id)],
+                order='create_date desc',
+            )
+
+            def _jail_name(jail):
+                return jail.name if jail else ''
+
+            def _from_location(rec):
+                if rec.current_sub_jail:
+                    return _jail_name(rec.current_sub_jail)
+                if rec.current_district_jail:
+                    return _jail_name(rec.current_district_jail)
+                return _jail_name(rec.current_central_prison)
+
+            def _to_location(rec):
+                if rec.requested_sub_jail:
+                    return _jail_name(rec.requested_sub_jail)
+                if rec.requested_district_jail:
+                    return _jail_name(rec.requested_district_jail)
+                return _jail_name(rec.requested_central_prison)
+
+            transfers = []
+            for rec in requests:
+                date = ''
+                if rec.approved_date:
+                    date = rec.approved_date.strftime('%d %b %Y')
+                elif rec.create_date:
+                    date = rec.create_date.strftime('%d %b %Y')
+
+                transfers.append({
+                    'date': date,
+                    'from': _from_location(rec),
+                    'to': _to_location(rec),
+                    'order_ref': f'TRF/{rec.id}',
+                    'reason': rec.transfer_reason or '',
+                    'status': rec.state or 'pending',
+                })
+
+            return self._json_response({'success': True, 'transfers': transfers})
+
+        except Exception as exc:
+            _logger.exception('GET /api/employees/%s/transfers failed: %s', employee_id, exc)
+            return self._json_response({'success': False, 'message': 'Internal server error'}, status=500)
+
     # ── DELETE /api/employees/<employee_id> — archive (soft-delete) employee ──
     #
     # auth='none' + _require_auth() so that the website module never intercepts
