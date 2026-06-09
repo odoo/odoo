@@ -5,7 +5,6 @@ import socket
 import platform
 import requests
 import schedule
-import subprocess
 from threading import Thread
 import time
 
@@ -136,19 +135,14 @@ class Manager(Thread):
         """
         _logger.info("==== Starting Odoo IoT Box Service ====")
 
-        if system.IS_RPI:
-            # ensure that the root filesystem is writable retro compatibility (TODO: remove this in 19.0)
-            subprocess.run(["sudo", "mount", "-o", "remount,rw", "/"], check=False)
-            subprocess.run(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/"], check=False)
-
-            wifi.reconnect(system.get_conf('wifi_ssid'), system.get_conf('wifi_password'))
+        wifi.reconnect(system.get_conf('wifi_ssid'), system.get_conf('wifi_password'))
 
         system.start_nginx_server()
         _logger.info("IoT Box Image version: %s", system.get_version(detailed_version=True))
         if system.IS_WINDOWS:
             _logger.info("Windows version: %s", platform.platform())
 
-        if system.IS_RPI and helpers.get_odoo_server_url():
+        if helpers.get_odoo_server_url():
             system.generate_password()
 
         certificate.ensure_validity()
@@ -170,7 +164,7 @@ class Manager(Thread):
             try:
                 if self._get_changes_to_send():
                     self._send_all_devices()
-                if system.IS_RPI and system.get_ip() != '10.11.12.1':
+                if system.get_ip() != '10.11.12.1':
                     wifi.reconnect(system.get_conf('wifi_ssid'), system.get_conf('wifi_password'))
                 time.sleep(3)
 

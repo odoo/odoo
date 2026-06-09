@@ -7,9 +7,23 @@ import time
 
 from odoo.addons.iot_drivers.main import iot_devices, manager
 from odoo.addons.iot_drivers.tools import helpers, system, upgrade, wifi
-from odoo.addons.iot_drivers.tools.system import IS_RPI, IS_TEST, IOT_IDENTIFIER
+from odoo.addons.iot_drivers.tools.system import IS_TEST, IOT_IDENTIFIER
 
 _logger = logging.getLogger(__name__)
+
+
+@system.rpi_only
+def _try_print_pairing_code():
+    printers = [
+        device for device in iot_devices.values()
+        if (
+            device.device_type == "printer"
+            and device.connected_by_usb
+            and device.device_subtype in ["receipt_printer", "label_printer"]
+        )
+    ]
+    for printer in printers:
+        printer.print_status()
 
 
 class ConnectionManager(Thread):
@@ -32,8 +46,7 @@ class ConnectionManager(Thread):
         if all(key in req for key in ['pairing_code', 'pairing_uuid']):
             self.pairing_code = req['pairing_code']
             self.pairing_uuid = req['pairing_uuid']
-            if IS_RPI:
-                self._try_print_pairing_code()
+            _try_print_pairing_code()
             self.iot_box_registered = True
 
     def _get_next_polling_interval(self):
@@ -58,7 +71,7 @@ class ConnectionManager(Thread):
         return (
             not helpers.get_odoo_server_url() and
             system.get_ip() and
-            not (IS_RPI and wifi.is_access_point()) and
+            not wifi.is_access_point() and
             not self.pairing_code_expired
         )
 
@@ -102,11 +115,6 @@ class ConnectionManager(Thread):
         upgrade.check_git_branch()
         # Restart to get a certificate, load the IoT handlers...
         helpers.odoo_restart(2)
-
-    def _try_print_pairing_code(self):
-        printers = [device for device in iot_devices.values() if device.device_type == 'printer' and device.connected_by_usb and device.device_subtype in ['receipt_printer', 'label_printer']]
-        for printer in printers:
-            printer.print_status()
 
 
 connection_manager = ConnectionManager()
