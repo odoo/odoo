@@ -10,6 +10,7 @@
     ],
     'auto_install': True,
     'data': [
+        'data/digest_data.xml',
         'data/todo_template.xml',
         'views/project_task_views.xml',
         'views/project_todo_menus.xml',
