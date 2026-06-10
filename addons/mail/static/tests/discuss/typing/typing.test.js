@@ -888,7 +888,8 @@ test("[text composer] show typing in member list", async () => {
     await contains(".o-discuss-ChannelMemberList [title='Other 10 is typing...']", { count: 0 });
     // check editing doesn't trigger is typing
     await contains(".o-mail-Message-content:has(:text('HelloWorld!'))");
-    await click(".o-mail-Message [title='Edit']");
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:text('Edit')");
     await insertText(".o-mail-Message .o-mail-Composer-input", "GoodByeWorld!");
     await animationFrame();
     await advanceTime(SHORT_TYPING / 2);
@@ -950,7 +951,8 @@ test("show typing in member list", async () => {
     await contains(".o-discuss-ChannelMemberList [title='Other 10 is typing...']", { count: 0 });
     // check editing doesn't trigger is typing
     await contains(".o-mail-Message-content:has(:text('HelloWorld!'))");
-    await click(".o-mail-Message [title='Edit']");
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:text('Edit')");
     await contains(".o-mail-Message .o-mail-Composer-html.odoo-editor-editable");
     const messageComposerEditor = {
         document,

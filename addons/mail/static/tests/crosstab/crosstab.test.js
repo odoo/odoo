@@ -121,7 +121,8 @@ test("Adding attachments", async () => {
     const file = new File(["file content"], "test.txt", { type: "text/plain" });
     await contains(`${env1.selector} .o-mail-Message:contains('Hello world!')`);
     await contains(`${env2.selector} .o-mail-Message:contains('Hello world!')`);
-    await click(`${env1.selector} .o-mail-Message button[title='Edit']`);
+    await click(`${env1.selector} .o-mail-Message button[title='Expand']`);
+    await click(`${env1.selector} .o-dropdown-item:text('Edit')`);
     await click(`${env1.selector} .o-mail-Message .o-mail-Composer button[title='More Actions']`);
     await click(`${env1.selector} .o_popover button[name='upload-files']`);
     await click(`${env1.selector} .o-mail-Message .o-mail-Composer .o_input_file`);
@@ -190,5 +191,5 @@ test("Message (hard) delete notification", async () => {
     });
     await contains(".o-mail-Message", { count: 0 });
     await contains("button:has(:text('Inbox'))", { contains: [".badge", { count: 0 }] });
-    await contains("button:has(:text('Bookmarks'))", { contains: [".badge", { count: 0 }] });
+    await contains("button:has(:text('Bookmarks'))", { count: 0 });
 });

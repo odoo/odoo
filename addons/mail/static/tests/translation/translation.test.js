@@ -116,13 +116,15 @@ test("Do not show translate action if message body is empty", async () => {
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message", { count: 3 });
     await click(".o-mail-Message:eq(0) button[title='Expand']");
-    await waitFor("[title='Pin']");
+    await waitFor(".o-dropdown-item:text('Pin')");
     await waitFor(".o-dropdown-item:contains('Translate'):count(1)");
     await click(".o-mail-Message:eq(0) button[title='Expand']");
-    await waitForNone(".o-mail-Message:eq(1) button[title='Expand']");
+    // The attachment-only message has an empty body, so its menu must not offer translation.
+    await click(".o-mail-Message:eq(1) button[title='Expand']");
+    await waitFor(".dropdown-menu");
+    await waitForNone(".o-dropdown-item:contains('Translate')");
     await click(".o-mail-Message:eq(2) button[title='Expand']");
-    await waitFor("[title='Pin']");
-    await waitFor(".o-dropdown-item:contains('Translate'):count(1)"); // only 1, from first message
+    await waitFor(".o-dropdown-item:text('Pin')");
 });
 
 test.tags("mobile");

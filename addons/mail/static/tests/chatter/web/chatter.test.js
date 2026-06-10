@@ -784,7 +784,8 @@ test("can mark message as unread from chatter", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message-body:text(lorem ipsum)");
-    await click("button[title='Mark as Unread']");
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:text('Mark as Unread')");
     await contains(".o_notification:text(Marked as unread)");
     await click(".o-mail-MessagingMenu-counter:text(1)");
     await contains(".o-mail-NotificationItem-text:text(John Doe: lorem ipsum)");

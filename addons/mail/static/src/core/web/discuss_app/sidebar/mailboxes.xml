@@ -4,7 +4,7 @@
     <t t-name="mail.DiscussSidebarMailboxes">
         <div class="d-flex flex-column flex-grow-0 o-gap-0_5 bg-inherit">
             <Mailbox t-if="this.store.self_user?.notification_type === 'inbox'" mailbox="this.store.inbox"/>
-            <Mailbox mailbox="this.store.bookmarkBox"/>
+            <Mailbox t-if="this.store.bookmarkBox.counter" mailbox="this.store.bookmarkBox"/>
             <Mailbox t-if="this.store.self_user?.notification_type === 'inbox'" mailbox="this.store.history"/>
         </div>
     </t>

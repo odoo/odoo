@@ -64,7 +64,7 @@
                         <t t-out="this.invitationButtonText"/>
                     </button>
                 </t>
-                <hr t-if="this.props.channel?.invitationLink" class="border-dark-subtle"/>
+                <hr t-if="this.store.self_user and this.props.channel?.invitationLink" class="border-dark-subtle"/>
                 <t t-if="this.props.channel?.invitationLink">
                     <div class="input-group">
                         <input class="border border-secondary form-control lh-1 rounded-start border-0 smaller" type="text" t-att-value="this.props.channel.invitationLink" readonly="" disabled="" t-on-focus="this.onFocusInvitationLinkInput"/>

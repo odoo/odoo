@@ -37,7 +37,8 @@ test("poll creation should be disabled during message editing", async () => {
     await openDiscuss(channelId);
     await click(".o-mail-Composer button[title='More Actions']");
     await contains(".o-dropdown-item:text('Start a Poll')");
-    await click(".o-mail-Message [title='Edit']");
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-dropdown-item:text('Edit')");
     await click(".o-mail-Message .o-mail-Composer button[title='More Actions']");
     await contains(".o-dropdown-item:text('Attach Files')");
     await contains(".o-dropdown-item:text('Start a Poll')", { count: 0 });

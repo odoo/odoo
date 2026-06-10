@@ -218,14 +218,7 @@ registerThreadAction("member-list", {
         }
     },
     actionPanelComponent: ChannelMemberList,
-    actionPanelComponentProps: ({ actions, channel }) => ({
-        openChannelInvitePanel({ keepPrevious } = {}) {
-            actions.actions
-                .find(({ id }) => id === "invite-people")
-                ?.actionPanelOpen({ keepPrevious });
-        },
-        channel,
-    }),
+    actionPanelComponentProps: ({ channel }) => ({ channel }),
     actionPanelOpen: ({ owner, store }) => {
         if (owner.env.inDiscussApp) {
             store.discuss.isMemberPanelOpenByDefault = true;

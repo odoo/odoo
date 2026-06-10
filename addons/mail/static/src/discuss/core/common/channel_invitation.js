@@ -1,5 +1,6 @@
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
+import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_dialog";
 
 import { Component, onWillStart, props, proxy, types } from "@odoo/owl";
 
@@ -8,6 +9,25 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { _t } from "@web/core/l10n/translation";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
+
+/**
+ * Open the channel invitation UI as a centered dialog, reusing {@link ChannelInvitation}.
+ *
+ * @param {import("@web/env").OdooEnv} env environment providing the dialog service.
+ * @param {import("models").DiscussChannel} channel channel to invite people to.
+ * @returns {void}
+ */
+export function openChannelInvitationDialog(env, channel) {
+    env.services.dialog.add(ChannelActionDialog, {
+        contentClass: "o-discuss-ChannelInvitation",
+        contentComponent: ChannelInvitation,
+        contentProps: {
+            channel,
+            close: () => env.services.dialog.closeAll(),
+        },
+        title: channel.displayName,
+    });
+}
 
 export class ChannelInvitation extends Component {
     static components = { ActionPanel, DiscussAvatar };

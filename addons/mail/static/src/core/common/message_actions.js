@@ -152,7 +152,6 @@ registerMessageAction("edit", {
         owner.optionsDropdown?.close();
     },
     sequence: ({ message }) => (message.isSelfAuthored ? 20 : 115),
-    tags: ({ message }) => !message.isSelfAuthored && ACTION_TAGS.DANGER,
 });
 registerMessageAction("delete", {
     condition: ({ message }) => message.deletable,
@@ -190,7 +189,7 @@ registerMessageAction("copy-message", {
     onSelected: ({ message }) => message.copyMessageText(),
     name: _t("Copy Text"),
     icon: "fa fa-copy",
-    sequence: 40,
+    sequence: 85,
 });
 registerMessageAction("copy-link", {
     condition: ({ message, thread }) =>
@@ -199,7 +198,7 @@ registerMessageAction("copy-link", {
         thread &&
         (!thread.access_token || thread.hasReadAccess),
     icon: "fa fa-link",
-    name: _t("Copy Link"),
+    name: _t("Copy Message Link"),
     onSelected: ({ message }) => message.copyLink(),
     sequence: 90,
 });

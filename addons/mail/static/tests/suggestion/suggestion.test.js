@@ -120,7 +120,7 @@ test("[text composer] can @user in restricted (group_public_id) channels", async
     await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
-    await click("button[title='Invite People']");
+    await click("button[title='Add People']");
     await contains(
         ".o-discuss-ChannelInvitation-invitationBox:text('Access restricted to group \"Custom Channel Group\"')"
     );
@@ -152,7 +152,7 @@ test("can @user in restricted (group_public_id) channels", async () => {
     composerService.setHtmlComposer();
     await openDiscuss(channelId);
     await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
-    await click("button[title='Invite People']");
+    await click("button[title='Add People']");
     await contains(
         ".o-discuss-ChannelInvitation-invitationBox:text('Access restricted to group \"Custom Channel Group\"')"
     );
@@ -1496,12 +1496,8 @@ test("Recent message authors should be displayed before other partners", async (
 
 test("[text composer] one separator between partner and role mention suggestions", async () => {
     const pyEnv = await startServer();
-    const [roleId] = pyEnv["res.role"].create([
-        { name: "rd-Discuss" },
-    ]);
-    const [userId] = pyEnv["res.users"].create([
-        { role_ids: [roleId] },
-    ]);
+    const [roleId] = pyEnv["res.role"].create([{ name: "rd-Discuss" }]);
+    const [userId] = pyEnv["res.users"].create([{ role_ids: [roleId] }]);
     const [partnerA, partnerB] = pyEnv["res.partner"].create([
         { name: "Alpha Person A", user_ids: [userId] },
         { name: "Alpha Person B" },
@@ -1530,12 +1526,8 @@ test("[text composer] one separator between partner and role mention suggestions
 test.tags("html composer");
 test("one separator between partner and role mention suggestions", async () => {
     const pyEnv = await startServer();
-    const [roleId] = pyEnv["res.role"].create([
-        { name: "rd-Discuss" },
-    ]);
-    const [userId] = pyEnv["res.users"].create([
-        { role_ids: [roleId] },
-    ]);
+    const [roleId] = pyEnv["res.role"].create([{ name: "rd-Discuss" }]);
+    const [userId] = pyEnv["res.users"].create([{ role_ids: [roleId] }]);
     const [partnerA, partnerB] = pyEnv["res.partner"].create([
         { name: "Alpha Person A", user_ids: [userId] },
         { name: "Alpha Person B" },

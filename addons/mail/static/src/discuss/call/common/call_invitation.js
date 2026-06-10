@@ -34,12 +34,15 @@ export class CallInvitation extends Component {
         useSubEnv({ inCallInvitation: true });
     }
 
-    joinCall() {
+    async joinCall() {
         this.props.channel.open({ focus: true });
-        this.rtc.toggleCall(this.props.channel, {
+        await this.rtc.toggleCall(this.props.channel, {
             audio: this.state.hasMicrophone,
             camera: this.state.hasCamera,
         });
+        if (this.props.channel.default_display_mode === "video_full_screen") {
+            await this.rtc.enterFullscreen();
+        }
     }
 
     get acceptOrRejectActions() {

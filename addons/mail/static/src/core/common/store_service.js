@@ -334,7 +334,7 @@ export class Store extends BaseStore {
         channel.chatWindow?.update({ autofocus: 0 });
         await this.env.services["discuss.rtc"].toggleCall(channel, { camera: true });
         if (this.rtc.selfSession) {
-            this.rtc.enterFullscreen({ autoOpenAction: "invite-people" });
+            this.rtc.enterFullscreen();
         }
     }
 

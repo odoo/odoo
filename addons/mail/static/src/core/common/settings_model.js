@@ -49,6 +49,14 @@ export class Settings extends Record {
 
     // Video settings
     backgroundBlurAmount = fields.Attr(10, { localStorage: true });
+    /**
+     * Chosen meeting grid layout, persisted across meetings. Holds every
+     * {@link import("@mail/discuss/call/common/call_layout").CallLayout} except "discuss" (which
+     * exits fullscreen instead of being persisted).
+     *
+     * @type {import("@mail/discuss/call/common/call_layout").CallLayout}
+     */
+    callLayout = fields.Attr("auto", { localStorage: true });
     edgeBlurAmount = fields.Attr(10, { localStorage: true });
     showOnlyVideo = fields.Attr(false, { localStorage: true });
     useBlur = fields.Attr(false, { localStorage: true });

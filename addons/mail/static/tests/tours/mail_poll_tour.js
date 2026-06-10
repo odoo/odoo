@@ -29,7 +29,8 @@ registry.category("web_tour.tours").add("mail_poll_tour.js", {
         { trigger: "body:not(:has(.o-mail-PollVotesPanel))" },
         { trigger: ".o-mail-Poll button:contains('Remove Vote')", run: "click" },
         { trigger: ".o-mail-PollOption:contains('Blue') input:not(:checked)" },
-        { trigger: ".o-mail-Message:has(.o-mail-Poll) [title='Reply']", run: "click" },
+        { trigger: ".o-mail-Message:has(.o-mail-Poll) [title='Expand']", run: "click" },
+        { trigger: ".o-mail-Message-moreMenu [name='reply-to']", run: "click" },
         {
             trigger:
                 ".o-mail-Composer:contains('Replying to Ernest Employee') .o-mail-Composer-input",

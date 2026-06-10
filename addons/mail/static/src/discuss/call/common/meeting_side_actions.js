@@ -4,8 +4,6 @@ import { ActionList } from "@mail/core/common/action_list";
 import { Component } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
-import { useCallActions } from "./call_actions";
-import { ACTION_TAGS } from "@mail/core/common/action";
 
 /** @typedef {"chat"|"invite"} MeetingPanel */
 
@@ -21,7 +19,6 @@ export class MeetingSideActions extends Component {
 
     setup() {
         this.store = useService("mail.store");
-        this.callActions = useCallActions(this.callActionsParams);
         useSubEnv({ inMeetingSideActions: true });
     }
 
@@ -59,11 +56,5 @@ export class MeetingSideActions extends Component {
             })
         );
         this.actions = actions;
-    }
-
-    get layoutActions() {
-        return this.callActions.actions.filter((action) =>
-            action.tags.includes(ACTION_TAGS.CALL_LAYOUT)
-        );
     }
 }

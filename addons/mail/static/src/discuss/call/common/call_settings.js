@@ -95,19 +95,6 @@ export class CallSettings extends Component {
         this.store.settings.usePushToTalk = ev.target.checked;
     }
 
-    onChangeShowOnlyVideo(ev) {
-        const showOnlyVideo = ev.target.checked;
-        this.store.settings.showOnlyVideo = Boolean(showOnlyVideo);
-        const activeRtcSessions = this.store.allActiveRtcSessions;
-        if (showOnlyVideo && activeRtcSessions) {
-            activeRtcSessions
-                .filter((rtcSession) => !rtcSession.videoStream)
-                .forEach((rtcSession) => {
-                    rtcSession.channel.activeRtcSession = undefined;
-                });
-        }
-    }
-
     onInputBackgroundBlurAmount(ev) {
         this.store.settings.backgroundBlurAmount = Number(ev.target.value);
     }

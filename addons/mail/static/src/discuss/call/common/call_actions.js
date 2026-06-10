@@ -2,6 +2,7 @@ import { Action, ACTION_TAGS, useAction, UseActions } from "@mail/core/common/ac
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { ChangeLayoutDialog } from "@mail/discuss/call/common/change_layout_dialog";
 import { QuickVoiceSettings } from "@mail/discuss/call/common/quick_voice_settings";
 import { QuickVideoSettings } from "@mail/discuss/call/common/quick_video_settings";
 import { attClassObjectToString } from "@mail/utils/common/format";
@@ -202,23 +203,17 @@ registerCallAction("share-screen", {
     ],
 });
 registerCallAction("fullscreen", {
-    btnClass: ({ channel }) =>
-        attClassObjectToString({
-            "o-discuss-CallActionList-pulse": Boolean(
-                channel?.promoteFullscreen === CALL_PROMOTE_FULLSCREEN.ACTIVE
-            ),
-        }),
     condition: ({ channel, owner }) => channel?.isSelfInCall && !owner.env.pipWindow,
-    name: ({ store }) => (store.rtc.isFullscreen ? _t("Exit Fullscreen") : _t("Fullscreen")),
-    isActive: ({ store }) => store.rtc.isFullscreen,
+    name: ({ store }) => (store.rtc.isBrowserFullscreen ? _t("Exit Fullscreen") : _t("Fullscreen")),
+    isActive: ({ store }) => store.rtc.isBrowserFullscreen,
     icon: ({ action }) => (action.isActive ? "fa fa-compress" : "fa fa-expand"),
     onSelected: ({ channel, store }) => {
         channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
-        if (store.rtc.isFullscreen) {
+        if (store.rtc.isBrowserFullscreen) {
             store.rtc.exitFullscreen();
         } else {
             store.rtc.closePip();
-            store.rtc.enterFullscreen();
+            store.rtc.enterFullscreen(undefined, { browserFullscreen: true });
         }
     },
     sequence: 80,
@@ -242,6 +237,16 @@ registerCallAction("picture-in-picture", {
         }
     },
     sequence: 70,
+    tags: ACTION_TAGS.CALL_LAYOUT,
+});
+registerCallAction("change-layout", {
+    condition: ({ channel, owner }) =>
+        channel?.isSelfInCall && !owner.env.inCallMenu && !owner.env.pipWindow,
+    name: _t("Change Layout"),
+    icon: "fa fa-fw fa-th-large",
+    onSelected: ({ channel, store }) =>
+        store.env.services.dialog.add(ChangeLayoutDialog, { channel }),
+    sequence: 60,
     tags: ACTION_TAGS.CALL_LAYOUT,
 });
 /** @type {CallActionDefinition} */

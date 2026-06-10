@@ -708,6 +708,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         last_interest_dt = fields.Datetime.to_string(channel.last_interest_dt)
         if channel == self.channel_general:
             return {
+                "avatar_128_access_token": channel._get_avatar_128_access_token(),
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
                 "create_uid": self.user_root.id,
@@ -731,6 +732,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_public_1:
             return {
+                "avatar_128_access_token": channel._get_avatar_128_access_token(),
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
                 "create_uid": self.env.user.id,
@@ -754,6 +756,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_public_2:
             return {
+                "avatar_128_access_token": channel._get_avatar_128_access_token(),
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
                 "create_uid": self.env.user.id,
@@ -777,6 +780,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_group_1:
             return {
+                "avatar_128_access_token": channel._get_avatar_128_access_token(),
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
                 "create_uid": self.env.user.id,
@@ -803,6 +807,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_group_2:
             return {
+                "avatar_128_access_token": channel._get_avatar_128_access_token(),
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
                 "create_uid": self.env.user.id,
@@ -826,6 +831,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_channel_group_4:
             return {
+                "avatar_128_access_token": channel._get_avatar_128_access_token(),
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_type": "channel",
                 "create_uid": self.env.user.id,
@@ -849,6 +855,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if channel == self.channel_group_1:
             return {
+                "avatar_128_access_token": channel._get_avatar_128_access_token(),
                 "avatar_cache_key": channel.avatar_cache_key,
                 "channel_name_member_ids": [member_0.id, member_12.id],
                 "channel_type": "group",

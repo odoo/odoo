@@ -26,7 +26,7 @@ test("no auto-call on joining chat", async () => {
     pyEnv["res.users"].create({ partner_id: partnerId });
     await start();
     await openDiscuss();
-    await click("input[placeholder='Search conversations']");
+    await click("input[placeholder='Search']");
     await contains(".o_command_name", { count: 2 });
     await insertText(
         ".o_command_palette_search input[placeholder='Search conversations']",
@@ -49,7 +49,7 @@ test("no auto-call on joining group chat", async () => {
     pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
     await start();
     await openDiscuss();
-    await click("input[placeholder='Search conversations']");
+    await click("input[placeholder='Search']");
     await click(".o_command_name:text(Mario)");
     await contains(".o-mail-DiscussContent-threadName[title='Mario']");
     await click("[title='Invite People']");

@@ -103,6 +103,15 @@ export class RtcSession extends Record {
     /** @type {boolean} */
     is_muted;
     // Client data
+    isLocallyMuted = fields.Attr(false, {
+        /** @this {import("models").RtcSession} */
+        onUpdate() {
+            if (this.audioElement) {
+                this.audioElement.muted =
+                    this.isLocallyMuted || this.store.rtc.selfSession?.is_deaf;
+            }
+        },
+    });
     /** @type {HTMLAudioElement} */
     audioElement;
     /** @type {MediaStream} */

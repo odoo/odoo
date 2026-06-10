@@ -1,3 +1,21 @@
+.o-discuss-CallContextMenu {
+    .o-discuss-CallContextMenu-muteToggle {
+        @include o-hover-opacity(0.75, 1);
+    }
+
+    .o-discuss-CallContextMenu-item {
+        &:hover,
+        &:focus {
+            background-color: rgba(white, 0.1);
+        }
+
+        &.o-danger:hover,
+        &.o-danger:focus {
+            background-color: rgba($danger, 0.2);
+        }
+    }
+}
+
 .o-mail-CallContextMenu-volumeTooltip {
     /* Visibility */
     visibility: hidden;

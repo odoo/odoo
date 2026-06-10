@@ -1,0 +1,29 @@
+.o-discuss-ChangeLayoutDialog-option.o-selected {
+    background-color: $o-view-background-color;
+    border-color: $o-brand-primary !important;
+}
+
+.o-discuss-ChangeLayoutDialog-thumbnail {
+    width: 3rem;
+    height: 1.75rem;
+    $tile: $gray-400;
+    $gap: $gray-200;
+    // Default (auto): grid of columns.
+    background: repeating-linear-gradient(to right, $tile 0 28%, $gap 28% 33%);
+    &.o-tiled {
+        // Tiled: 4x4 grid of tiles.
+        background-color: $tile;
+        background-image: linear-gradient(to right, $gap 1px, transparent 1px),
+            linear-gradient(to bottom, $gap 1px, transparent 1px);
+        background-size: 25% 25%;
+    }
+    &.o-spotlight {
+        background: $tile;
+    }
+    &.o-sidebar {
+        background: linear-gradient(to right, $tile 0 72%, $gap 72% 76%, $tile 76% 100%);
+    }
+    &.o-discuss {
+        background: linear-gradient(to bottom, $tile 0 70%, $gap 70% 74%, black 74% 100%);
+    }
+}

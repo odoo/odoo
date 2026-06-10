@@ -15,6 +15,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
+import { MeetingReadyBanner } from "./meeting_ready_banner";
 import { MeetingSideActions } from "./meeting_side_actions";
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { useMessageSearch } from "@mail/core/common/message_search_hook";
@@ -25,19 +26,15 @@ const PIP_EXTRA_ACTION_IDS = ["copy-invite-link", "meeting-chat"];
 
 /** @typedef {"chat"|"invite"} MeetingPanel */
 
-/**
- * @typedef {Object} Props
- * @property {ThreadActionDefinition.id} [autoOpenAction]
- * @extends {Component<Props, Env>}
- */
 export class Meeting extends Component {
     static template = "mail.Meeting";
-    static props = ["autoOpenAction?", ...inDiscussCallViewProps];
+    static props = [...inDiscussCallViewProps];
     static components = {
         Call,
         CallActionList,
         Composer,
         Dropdown,
+        MeetingReadyBanner,
         MeetingSideActions,
         Thread,
     };
@@ -54,13 +51,6 @@ export class Meeting extends Component {
             },
             () => []
         );
-        onMounted(() => {
-            if (this.props.autoOpenAction) {
-                this.threadActions.actions
-                    .find((a) => a.id === this.props.autoOpenAction)
-                    ?.onSelected();
-            }
-        });
         useInDiscussCallView();
         useSubEnv({
             inMeetingView: {

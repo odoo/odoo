@@ -680,7 +680,8 @@ test("can reply to email message", async () => {
     await start();
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
-    await click("[title='Reply']");
+    await click("[title='Expand']");
+    await click(".o-dropdown-item:text('Reply')");
     await contains(".o-mail-Composer:has(:text('Replying to md@oilcompany.fr'))");
 });
 

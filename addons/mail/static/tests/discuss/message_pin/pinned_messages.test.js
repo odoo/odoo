@@ -171,7 +171,9 @@ test("Guest user cannot see unpin button", async () => {
     await start({ authenticateAs: false });
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { text: "Test pinned message" });
-    expect(".o-mail-Message [title='Expand']").toHaveCount(0);
+    await click(".o-mail-Message [title='Expand']");
+    await contains(".dropdown-item", { text: "Reply" });
+    await contains(".dropdown-item", { text: "Unpin", count: 0 });
     await assertPinnedPanelUnpinCount(0);
 });
 

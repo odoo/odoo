@@ -28,6 +28,7 @@ registerThreadAction("call-settings", {
     actionPanelComponentProps: () => ({ isCompact: true }),
     condition: ({ channel, owner, store }) =>
         channel?.allowCalls &&
+        store.self_user &&
         (owner.props.chatWindow?.isOpen || store.inPublicPage) &&
         !owner.isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-gear",

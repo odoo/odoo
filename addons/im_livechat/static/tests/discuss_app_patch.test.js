@@ -75,7 +75,7 @@ test("invite button should be present on livechat", async () => {
     await openDiscuss(channelId);
     await contains(".o-livechat-ChannelInfoList"); // wait for auto-open of this panel
     await click("button[title='Members']");
-    await contains("button[title='Invite People']");
+    await contains("button[title='Add People']");
 });
 
 test("livechats are sorted by last activity time in the sidebar: most recent at the top", async () => {
@@ -136,7 +136,7 @@ test("sidebar search finds livechats", async () => {
     });
     await start();
     await openDiscuss();
-    await click("input[placeholder='Search conversations']");
+    await click("input[placeholder='Search']");
     await click("a", { text: "Visitor 11" });
     await contains(".o-mail-DiscussContent-threadName[title='Visitor 11']");
 });
@@ -194,7 +194,8 @@ test("reply to message composer should disappear when livechat conversation ends
     });
     await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Message:has(:text('Hello, I need help!')) [title='Reply']");
+    await click(".o-mail-Message:has(:text('Hello, I need help!')) [title='Expand']");
+    await click(".o-dropdown-item:text('Reply')");
     await contains(".o-mail-Composer:has(:text('Replying to Visitor'))");
     await withGuest(guestId, () =>
         rpc("/im_livechat/visitor_leave_session", { channel_id: channelId })
