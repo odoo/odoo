@@ -1,5 +1,4 @@
-import { render, useComponent, useLayoutEffect } from "@web/owl2/utils";
-import { untrack } from "@odoo/owl";
+import { normalizeRef, render, useComponent, useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
@@ -102,10 +101,8 @@ export function useActionLinks({ resModel, reload }) {
 export function useBounceButton(containerRef, shouldBounce) {
     let timeout;
     const ui = useService("ui");
-    // Transitional: Owl 3 native refs are signals (call to get the element);
-    // legacy refs expose `.el`. Resolve the element in this single place so both keep working.
-    const getContainerEl = () =>
-        typeof containerRef === "function" ? untrack(containerRef) : containerRef?.el;
+    const normRef = normalizeRef(containerRef);
+    const getContainerEl = () => normRef?.el;
     useLayoutEffect(
         (containerEl) => {
             if (!containerEl) {

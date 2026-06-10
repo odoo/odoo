@@ -13,7 +13,11 @@ const owl = globalThis.owl;
  */
 export function normalizeRef(ref) {
     if (typeof ref === "function" && !("el" in ref)) {
-        return { get el() { return owl.untrack(ref); } };
+        return {
+            get el() {
+                return owl.untrack(ref);
+            },
+        };
     }
     return ref;
 }
