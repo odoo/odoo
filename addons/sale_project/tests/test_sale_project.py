@@ -2041,11 +2041,11 @@ class TestSaleProject(TestSaleProjectCommon):
             self.assertEqual(subtask.sale_line_id, sale_order_line, "Subtask '%s' should inherit sale_line_id from parent task" % subtask.name)
 
     def test_section_sale_line_from_template_has_no_task(self):
-        default_task = self.env['project.task'].with_context(tracking_disable=True).create({
+        default_task = self.env['project.task'].create({
             'name': 'Task',
             'project_id': self.project_global.id
         })
-        sale_order = self.env['sale.order'].with_context(tracking_disable=True, default_task_id=default_task.id).create({
+        sale_order = self.env['sale.order'].with_context(default_task_id=default_task.id).create({
             'partner_id': self.partner.id,
         })
 

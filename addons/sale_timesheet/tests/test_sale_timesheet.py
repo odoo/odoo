@@ -1336,7 +1336,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             groups='base.group_portal',
         )
         so_line_1 = self.so.order_line[1]
-        sale_order_2 = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+        sale_order_2 = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'user_id': self.user_employee_company_B.id,
         })
