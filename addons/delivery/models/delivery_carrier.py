@@ -645,7 +645,6 @@ class DeliveryCarrier(models.Model):
                 carrier.delivery_cost = formatted_price
                 carrier.display_name = f"{carrier.display_name} - {formatted_price}"
 
-
     @api.depends_context("carrier_prices", "wizard_currency_id")
     def _compute_delivery_cost(self):
         """Provide Cost column for the list view for carriers from SO selection"""

@@ -24,7 +24,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
         required=True,
     )
     carrier_prices = fields.Json(compute="_compute_carrier_prices")
-    carrier_prices_dumped = fields.Char(compute="_compute_carrier_prices_dumped")
+    carrier_prices_dumped = fields.Char(compute="_compute_carrier_prices")
     delivery_type = fields.Selection(related="carrier_id.delivery_type")
     delivery_price = fields.Float()
     display_price = fields.Float(string="Cost", readonly=True)
@@ -41,6 +41,23 @@ class ChooseDeliveryCarrier(models.TransientModel):
         string="Total Order Weight", related="order_id.shipping_weight", readonly=False
     )
     weight_uom_name = fields.Char(default=_get_default_weight_uom, readonly=True)
+
+    @api.onchange("carrier_id", "carrier_prices")
+    def _onchange_carrier_id(self):
+        if not self.carrier_id or not self.carrier_prices:
+            return
+        delivery_vals = self.carrier_prices.get(str(self.carrier_id.id), {})
+        if delivery_vals.get("error_message"):
+            raise UserError(delivery_vals.get("error_message"))
+
+        if delivery_vals.get("display_price", False):
+            self.delivery_message = delivery_vals["delivery_message"]
+            self.delivery_price = delivery_vals["delivery_price"]
+            self.display_price = delivery_vals["display_price"]
+        else:
+            self.delivery_message = False
+            self.display_price = 0
+            self.delivery_price = 0
 
     @api.onchange("order_id")
     def _onchange_order_id(self):
@@ -123,23 +140,6 @@ class ChooseDeliveryCarrier(models.TransientModel):
             "delivery_message": self.delivery_message,
         })
 
-    @api.onchange("carrier_id", "carrier_prices")
-    def _onchange_carrier_data(self):
-        if not self.carrier_id or not self.carrier_prices:
-            return
-        delivery_vals = self.carrier_prices.get(str(self.carrier_id.id), {})
-        if delivery_vals.get("error_message"):
-            raise UserError(delivery_vals.get("error_message"))
-
-        if delivery_vals.get("display_price", False):
-            self.delivery_message = delivery_vals["delivery_message"]
-            self.delivery_price = delivery_vals["delivery_price"]
-            self.display_price = delivery_vals["display_price"]
-        else:
-            self.delivery_message = False
-            self.display_price = 0
-            self.delivery_price = 0
-
     @api.depends("total_weight")
     def _compute_carrier_prices(self):
         """Compute delivery prices for all cariers"""
@@ -150,12 +150,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
                 try:
                     delivery_vals = wizard._get_carrier_delivery_rate(available_carrier)
                     json_result[str(hash_val)] = delivery_vals
-                except ValidationError as e:
+                except Exception as e:
                     json_result[str(hash_val)] = {"error_message": e.args[0]}
             wizard.carrier_prices = json_result
-
-    @api.depends("carrier_prices")
-    def _compute_carrier_prices_dumped(self):
-        """Create a hashable key for context"""
-        for wizard in self:
-            wizard.carrier_prices_dumped = json.dumps(wizard.carrier_prices) if wizard.carrier_prices else "{}"
+            wizard.carrier_prices_dumped = json.dumps(json_result)
