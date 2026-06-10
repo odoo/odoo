@@ -15,10 +15,6 @@ class TestUi(AccountTestInvoicingCommon, HttpCase):
 
         cls.agrolait = cls.env["res.partner"].create({"name": "Agrolait", "email": "agro@lait.be"})
 
-    def test_01_sale_tour(self):
-        self.env.ref("base.user_admin").write({"email": "mitchell.admin@example.com"})
-        self.start_tour("/odoo", "sale_tour", login="admin")
-
     def test_04_portal_sale_signature_without_name_tour(self):
         """The goal of this test is to make sure the portal user can sign SO even witout a name."""
         self.agrolait.name = ""

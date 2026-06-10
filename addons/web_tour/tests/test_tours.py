@@ -2,6 +2,9 @@ from odoo.tests import tagged
 from odoo import Command
 from odoo.addons.base.tests.common import BaseCommon, HttpCase
 from markupsafe import Markup
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 @tagged('post_install', '-at_install')
@@ -175,3 +178,29 @@ class WebTourHttp(HttpCase):
         self.browser_js("/odoo?debug=0", code, ready=ready, login="admin")
         if "website" in IrAsset._get_installed_addons_list():
             self.browser_js("/?debug=0", code, ready=ready, login="admin")
+
+
+@tagged('post_install', '-at_install')
+class TestOnboardingToursAuto(HttpCase):
+
+    # Tours covered by this test class. Add tour names here as they are
+    # migrated to XML steps and validated to run without any Python setup.
+    _tested_tours = {
+        'sale_tour',
+    }
+
+    def test_onboarding_tours(self):
+        """Run the onboarding tours listed in _tested_tours."""
+        admin = self.env.ref('base.user_admin')
+        admin.email = 'admin@example.com'
+
+        domain = [('custom', '=', False), ('step_ids', '!=', False), ('name', 'in', list(self._tested_tours))]
+        tours = self.env['web_tour.tour'].search(domain)
+        if not tours:
+            self.skipTest("No tested onboarding tours found in database")
+
+        for tour in tours:
+            with self.subTest(tour=tour.name):
+                _logger.info("Running onboarding tour: %s", tour.name)
+                tour.user_consumed_ids = [Command.clear()]
+                self.start_tour(tour.url or '/odoo', tour.name, login='admin')

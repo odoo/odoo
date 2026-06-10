@@ -7,4 +7,140 @@
             <b>Congratulations</b>, your first quotation is sent!<br>Check your email to validate the quote.
         ]]></field>
     </record>
+
+    <record id="sale_tour_step_1" model="web_tour.tour.step">
+        <field name="tour_id" ref="sale_tour"/>
+        <field name="sequence">10</field>
+        <field name="is_active" eval='["community"]'/>
+        <field name="trigger">.o_navbar_apps_menu button</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="sale_tour_step_2" model="web_tour.tour.step">
+        <field name="tour_id" ref="sale_tour"/>
+        <field name="sequence">20</field>
+        <field name="is_active" eval='["community"]'/>
+        <field name="trigger">.o_app[data-menu-xmlid="sale.sale_menu_root"]</field>
+        <field name="content">Let's create a beautiful quotation in a few clicks.</field>
+        <field name="tooltip_position">right</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="sale_tour_step_3" model="web_tour.tour.step">
+        <field name="tour_id" ref="sale_tour"/>
+        <field name="sequence">20</field>
+        <field name="is_active" eval='["enterprise"]'/>
+        <field name="trigger">.o_app[data-menu-xmlid="sale.sale_menu_root"]</field>
+        <field name="content">Let's create a beautiful quotation in a few clicks.</field>
+        <field name="tooltip_position">bottom</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="sale_tour_step_5" model="web_tour.tour.step">
+        <field name="tour_id" ref="sale_tour"/>
+        <field name="sequence">40</field>
+        <field name="trigger">button.o_list_button_add</field>
+        <field name="content">Build your first quotation right here!</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="sale_tour_step_7" model="web_tour.tour.step">
+        <field name="tour_id" ref="sale_tour"/>
+        <field name="sequence">60</field>
+        <field name="trigger">.o_field_res_partner_many2one[name="partner_id"] input</field>
+        <field name="content">Search a customer name, or create one on the fly.</field>
+        <field name="tooltip_position">right</field>
+        <field name="run">edit Agrolait</field>
+    </record>
+
+    <record id="sale_tour_step_7b" model="web_tour.tour.step">
+        <field name="tour_id" ref="sale_tour"/>
+        <field name="sequence">65</field>
+        <field name="trigger">.o-autocomplete--dropdown-item:contains("Agrolait")</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="sale_tour_step_8" model="web_tour.tour.step">
+        <field name="tour_id" ref="sale_tour"/>
+        <field name="sequence">70</field>
+        <field name="trigger">.o_field_x2many_list_row_add > button</field>
+        <field name="content">Click here to add some products or services to your quotation.</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="sale_tour_step_10" model="web_tour.tour.step">
+        <field name="tour_id" ref="sale_tour"/>
+        <field name="sequence">90</field>
+        <field name="trigger">.o_field_widget[name="product_template_id"] .o-autocomplete--input</field>
+        <field name="content">Select a product, or create a new one on the fly.</field>
+        <field name="tooltip_position">right</field>
+        <field name="run">edit DESK0001</field>
+    </record>
+
+    <record id="sale_tour_step_10b" model="web_tour.tour.step">
+        <field name="tour_id" ref="sale_tour"/>
+        <field name="sequence">95</field>
+        <field name="trigger">.o-autocomplete--dropdown-item:contains("DESK0001")</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="sale_tour_step_11" model="web_tour.tour.step">
+        <field name="tour_id" ref="sale_tour"/>
+        <field name="sequence">100</field>
+        <field name="trigger">.oi-arrow-right</field>
+    </record>
+
+    <record id="sale_tour_step_12" model="web_tour.tour.step">
+        <field name="tour_id" ref="sale_tour"/>
+        <field name="sequence">110</field>
+        <field name="trigger">.o_field_widget[name="price_unit"] input</field>
+        <field name="content">Add the price of your product.</field>
+        <field name="tooltip_position">right</field>
+        <field name="run">edit 10.0</field>
+    </record>
+
+    <record id="sale_tour_step_13" model="web_tour.tour.step">
+        <field name="tour_id" ref="sale_tour"/>
+        <field name="sequence">120</field>
+        <field name="trigger">button[name="action_quotation_send"]</field>
+        <field name="content"><![CDATA[<b>Send the quote</b> to yourself and check what the customer will receive.]]></field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="sale_tour_step_14" model="web_tour.tour.step">
+        <field name="tour_id" ref="sale_tour"/>
+        <field name="sequence">130</field>
+        <field name="is_active" eval='["body:not(:has(.modal-footer button.o_mail_send))"]'/>
+        <field name="trigger">.modal-footer button[name="document_layout_save"]</field>
+        <field name="content">Let's continue</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="sale_tour_step_14b" model="web_tour.tour.step">
+        <field name="tour_id" ref="sale_tour"/>
+        <field name="sequence">133</field>
+        <field name="trigger">.o-mail-RecipientsInputTagsListPopover input</field>
+        <field name="run">edit agrolait@example.com</field>
+    </record>
+
+    <record id="sale_tour_step_14c" model="web_tour.tour.step">
+        <field name="tour_id" ref="sale_tour"/>
+        <field name="sequence">135</field>
+        <field name="trigger">.o-mail-RecipientsInputTagsListPopover .btn-primary</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="sale_tour_step_15" model="web_tour.tour.step">
+        <field name="tour_id" ref="sale_tour"/>
+        <field name="sequence">140</field>
+        <field name="trigger">.modal-footer button.o_mail_send</field>
+        <field name="content">Go ahead and send the quotation.</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="sale_tour_step_16" model="web_tour.tour.step">
+        <field name="tour_id" ref="sale_tour"/>
+        <field name="sequence">150</field>
+        <field name="trigger">body:not(:has(.modal))</field>
+    </record>
 </odoo>

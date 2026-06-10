@@ -147,41 +147,36 @@ export class TourService {
     }
 
     /**
+     * Retrieve a tour definition. Database (XML-defined onboarding tours) is
+     * checked first; if not found there the JS registry is used (automatic
+     * tours). This mirrors the priority order of isTourReady().
      * @param {string} name The name of the tour
      */
-    async getTour(name, options) {
-        // Onboarding tour (come from database (.xml files))
-        if (options.mode === "manual") {
-            const tour = await this.orm.call("web_tour.tour", "get_tour_json_by_name", [name]);
-            if (!tour) {
-                throw new Error(`Tour '${name}' is not found in the database.`);
-            }
-            if (!tour.steps.length && tourRegistry.contains(tour.name)) {
-                tour.steps = tourRegistry.get(tour.name).steps;
-            }
-            return {
-                ...tour,
-                steps:
-                    typeof tour.steps === "function"
-                        ? tour.steps()
-                        : Array.isArray(tour.steps)
-                        ? tour.steps
-                        : [],
-            };
+    async getTour(name) {
+        // 1. Synchronous registry check — zero cost for already-loaded tours.
+        if (tourRegistry.contains(name)) {
+            const tour = tourRegistry.get(name);
+            return { ...tour, name, steps: tour.steps() };
         }
-        // Automatic tour (come from registry)
-        else {
-            await this.waitUntilTourRegistered(name);
-            const tour = tourRegistry.get(name, null);
-            if (!tour) {
-                throw new Error(`Tour '${name}' is not found in registry 'web_tour.tours'.`);
+        // 2. Database — covers onboarding tours defined as XML records.
+        try {
+            const dbTour = await this.orm.call("web_tour.tour", "get_tour_json_by_name", [name]);
+            if (dbTour) {
+                return {
+                    ...dbTour,
+                    steps: Array.isArray(dbTour.steps) ? dbTour.steps : [],
+                };
             }
-            return {
-                ...tour,
-                name,
-                steps: tour.steps(),
-            };
+        } catch {
+            // Session expired or insufficient access rights — fall through.
         }
+        // 3. Wait for the registry in case the JS bundle is still loading.
+        await this.waitUntilTourRegistered(name);
+        const tour = tourRegistry.get(name, null);
+        if (tour) {
+            return { ...tour, name, steps: tour.steps() };
+        }
+        throw new Error(`Tour '${name}' is not found in registry 'web_tour.tours' or database.`);
     }
 
     /**
@@ -205,17 +200,28 @@ export class TourService {
     }
 
     /**
-     * Check that the registry contains the tour (only for automatic tour)
-     * @param {string} name The name of the tour
+     * Returns true when the tour can be started.
+     * Registry (automatic tours) is checked first to avoid an unnecessary DB
+     * round-trip; the database is only queried for onboarding tours defined
+     * as XML records.
+     * @param {string} name
      */
-    isTourReady(name) {
-        return tourRegistry.contains(name);
+    async isTourReady(name) {
+        if (tourRegistry.contains(name)) {
+            return true;
+        }
+        try {
+            const dbTour = await this.orm.call("web_tour.tour", "get_tour_json_by_name", [name]);
+            return !!(dbTour && dbTour.steps.length);
+        } catch {
+            return false;
+        }
     }
 
     async resumeTour() {
         const tourName = tourState.getCurrentTour();
         const tourConfig = tourState.getCurrentConfig();
-        const tour = await this.getTour(tourName, tourConfig);
+        const tour = await this.getTour(tourName);
         if (!tour || !tour.steps.length) {
             tourState.clear();
             return;
@@ -287,7 +293,7 @@ export class TourService {
     async startTour(name, options = {}) {
         this.removePointer();
         this.removeTourRecorder();
-        const tour = await this.getTour(name, options);
+        const tour = await this.getTour(name);
 
         if (!session.is_public && !this.toursEnabled && options.mode === "manual") {
             this.toursEnabled = await this.orm.call("res.users", "switch_tour_enabled", [

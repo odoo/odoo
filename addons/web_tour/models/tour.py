@@ -1,4 +1,5 @@
 from odoo import api, fields, models, Command
+from odoo.exceptions import ValidationError
 import json
 
 
@@ -43,6 +44,8 @@ class Web_TourTour(models.Model):
     @api.model
     def get_tour_json_by_name(self, tour_name):
         tour_id = self.search([("name", "=", tour_name)])
+        if not tour_id:
+            return False
         return tour_id._get_tour_json()
 
     def _get_tour_json(self):
@@ -85,27 +88,58 @@ class Web_TourTourStep(models.Model):
     _order = "sequence, id"
 
     trigger = fields.Char(required=True)
-    content = fields.Char()
+    content = fields.Html(translate=True)
     tooltip_position = fields.Selection(selection=[
         ["bottom", "Bottom"],
         ["top", "Top"],
         ["right", "Right"],
         ["left", "left"],
     ], default="bottom")
+    is_active = fields.Json()
     tour_id = fields.Many2one("web_tour.tour", required=True, index=True, ondelete="cascade")
     run = fields.Char()
     sequence = fields.Integer()
 
+    _VALID_ACTIVE_TAGS = {"community", "enterprise", "mobile", "desktop"}
+
+    @api.constrains("is_active")
+    def _check_is_active(self):
+        for step in self:
+            value = step.is_active
+            if not value:
+                continue
+            if isinstance(value, str):
+                try:
+                    value = json.loads(value)
+                except (json.JSONDecodeError, TypeError):
+                    raise ValidationError("is_active must be a valid JSON array.")
+            if not isinstance(value, list):
+                raise ValidationError("is_active must be a JSON array.")
+            if not all(isinstance(v, str) for v in value):
+                raise ValidationError("is_active values must be strings.")
+            invalid = {v for v in value
+                       if v not in self._VALID_ACTIVE_TAGS
+                       and not set(".#[:>~+(").intersection(v)}
+            if invalid:
+                raise ValidationError(
+                    f"Invalid is_active value(s): {invalid}. "
+                    f"Allowed keywords: {self._VALID_ACTIVE_TAGS}"
+                )
+
     def get_steps_json(self):
         steps = []
 
-        for step in self.read(fields=["trigger", "content", "run", "tooltip_position"]):
+        for step in self.read(fields=["trigger", "content", "run", "tooltip_position", "is_active"]):
             del step["id"]
-            step["tooltipPosition"] = step["tooltip_position"]
+            if step["tooltip_position"]:
+                step["tooltipPosition"] = step["tooltip_position"]
             del step["tooltip_position"]
 
             if not step["content"]:
                 del step["content"]
+            if step["is_active"]:
+                step["isActive"] = step["is_active"]
+            del step["is_active"]
             steps.append(step)
 
         return steps
