@@ -21,7 +21,18 @@
                     <field name="username" placeholder="Ví dụ: nguyenvanua"/>
                 </group>
                 <footer>
-                    <button string="Xác nhận Đồng bộ" name="action_confirm_sync" type="object" class="btn-primary"/>
+                    <button string="Xác nhận Đồng bộ" 
+                        name="action_execute" 
+                        type="object" 
+                        class="btn-primary"
+                        invisible="context.get('action_mode') == 'post'"/> 
+
+                    <button string="Tiến hành Đăng Bài" 
+                            name="action_execute" 
+                            type="object" 
+                            class="btn-success"
+                            invisible="context.get('action_mode') != 'post'"/> 
+
                     <button string="Hủy" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>

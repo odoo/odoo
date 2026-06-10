@@ -10,7 +10,6 @@ class Post(models.Model):
     name = fields.Char(string="Tiêu đề", required=True)
     content = fields.Text(string="Nội dung")
     active = fields.Boolean(default=True)
-    uid = fields.Char(string="ID FB", required=True)
 
     attachment_ids = fields.Many2many(
         "ir.attachment",
@@ -32,6 +31,12 @@ class Post(models.Model):
         string="Nhóm mục tiêu"
     )
 
+    @api.onchange('post_target')
+    def _onchange_post_target(self):
+        """Tự động xóa sạch các nhóm đã chọn nếu người dùng chuyển sang chế độ Đăng tất cả"""
+        if self.post_target == 'all':
+            self.group_ids = [(5, 0, 0)]
+
     @api.constrains("attachment_ids")
     def _check_attachment_limit(self):
         for record in self:
@@ -48,58 +53,29 @@ class Post(models.Model):
             'res_model': 'tool.sync.group.wizard', # Gọi đến model wizard bên dưới
             'view_mode': 'form',
             'target': 'new', # Mở dạng popup (new window)
+            'context': {
+                'action_mode': 'sync'
+            }
         }
 
     def action_send_to_bot(self):
-        self.ensure_one()
+        """Hàm này chạy khi bấm nút trên giao diện Group, mở ra popup nhập UID/Username"""
+        fb_group_ids = [str(g.group_id) for g in self.group_ids if g.group_id]
 
-        files = []
-
-        try:
-            for attachment in self.attachment_ids:
-                if not attachment.datas:
-                    continue
-
-                files.append(
-                    (
-                        "images",
-                        (
-                            attachment.name,
-                            attachment.raw,
-                            attachment.mimetype or "application/octet-stream",
-                        ),
-                    )
-                )
-
-            headers = {
-                "X-API-Key": 'odoo_secret_key'
+        return {
+            'name': 'Nhập thông tin tài khoản Facebook',
+            'type': 'ir.actions.act_window',
+            'res_model': 'tool.sync.group.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                # Giữ lại context cũ của hệ thống để không làm mất các biến mặc định khác
+                **self.env.context, 
+                # Truyền tham số tùy chỉnh của bạn (Đặt key tên là gì tùy ý, bắt đầu bằng 'default_' nếu muốn gán thẳng vào field của wizard)
+                'selected_group_ids': fb_group_ids,
+                'mode': self.post_target,
+                'content': self.content,
+                'attachments': self.attachment_ids.ids,
+                'action_mode': 'post'
             }
-
-            form_data = {
-                "uid": str(self.uid)
-            }
-
-            response = requests.post(
-                "http://localhost:8000/api/v1/bot/post-by-group-ids",
-                headers=headers,
-                data=form_data,
-                files=files,
-                timeout=120,
-            )
-
-            response.raise_for_status()
-
-            return {
-                "type": "ir.actions.client",
-                "tag": "display_notification",
-                "params": {
-                    "title": "Success",
-                    "message": "Đã gửi sang Bot thành công",
-                    "type": "success",
-                },
-            }
-
-        except Exception as e:
-            raise exceptions.UserError(
-                f"Gửi Bot thất bại:\n{str(e)}"
-            )
+        }
