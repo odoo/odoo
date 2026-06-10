@@ -305,32 +305,25 @@ class AccountChartTemplate(models.AbstractModel):
         if account_group_count:
             data.pop('account.group', None)
 
-        current_taxes = self.env['account.tax'].with_context(active_test=False).search([
-            *self.env['account.tax']._check_company_domain(company),
-        ])
+        def get_records_and_xmlid_mapping(model):
+            current_records = self.env[model].with_context(active_test=False).search([
+                *self.env[model]._check_company_domain(company),
+            ])
+            xmlid2records = {
+                xml_id.split('.')[1].split('_', maxsplit=1)[1]: self.env[model].browse(record)
+                for record, xml_id in current_records.get_external_id().items()
+                if xml_id.startswith('account.')
+            }
+            return current_records, xmlid2records
 
-        current_fiscal_positions =  self.env['account.fiscal.position'].with_context(active_test=False).search([
-            *self.env['account.fiscal.position']._check_company_domain(company),
-        ])
-
-        current_tax_groups = self.env['account.tax.group'].with_context(active_test=False).search([
-            *self.env['account.tax.group']._check_company_domain(company)
-        ])
+        current_taxes, xmlid2tax = get_records_and_xmlid_mapping('account.tax')
+        _current_fiscal_positions, xmlid2fiscal_position = get_records_and_xmlid_mapping('account.fiscal.position')
+        _current_tax_groups, xmlid2tax_group = get_records_and_xmlid_mapping('account.tax.group')
+        _current_accounts, xmlid2account = get_records_and_xmlid_mapping('account.account')
 
         unique_tax_name_key = lambda t: (t.name, t.type_tax_use, t.tax_scope, t.company_id)
         unique_tax_name_keys = set(current_taxes.mapped(unique_tax_name_key))
-        xmlid2tax = {
-            xml_id.split('.')[1].split('_', maxsplit=1)[1]: self.env['account.tax'].browse(record)
-            for record, xml_id in current_taxes.get_external_id().items() if xml_id.startswith('account.')
-        }
-        xmlid2fiscal_position= {
-            xml_id.split('.')[1].split('_', maxsplit=1)[1]: self.env['account.fiscal.position'].browse(record)
-            for record, xml_id in current_fiscal_positions.get_external_id().items() if xml_id.startswith('account.')
-        }
-        xmlid2tax_group = {
-            xml_id.split('.')[1].split('_', maxsplit=1)[1]: self.env['account.tax.group'].browse(res_id)
-            for res_id, xml_id in current_tax_groups.get_external_id().items() if xml_id.startswith('account.')
-        }
+
         def tax_template_changed(tax, template):
             template_line_ids = [x for x in template.get('repartition_line_ids', []) if x[0] != Command.CLEAR]
             return (
@@ -417,7 +410,7 @@ class AccountChartTemplate(models.AbstractModel):
                         skip_update.add((model_name, xmlid))
                         continue
                     # Point or create xmlid to existing record to avoid duplicate code
-                    account = self.ref(xmlid, raise_if_not_found=False)
+                    account = xmlid2account.get(xmlid)
                     normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}'
                     if not account or not re.match(f'^{values["code"]}0*$', account.code):
                         query = self.env['account.account']._search(self.env['account.account']._check_company_domain(company))
