@@ -355,6 +355,22 @@ describe("inline code", () => {
         await animationFrame();
         expect('.o_command span[title="Create link"]').toHaveCount(0);
     });
+
+    test("should not trigger list shorthand inside a code block", async () => {
+        await testEditor({
+            contentBefore: "<pre>[]<br></pre>",
+            stepFunction: async (editor) => await insertText(editor, "* "),
+            contentAfter: "<pre>* []</pre>",
+        });
+    });
+
+    test("should not trigger heading shorthand inside a code block", async () => {
+        await testEditor({
+            contentBefore: "<pre>[]<br></pre>",
+            stepFunction: async (editor) => await insertText(editor, "# "),
+            contentAfter: "<pre># []</pre>",
+        });
+    });
 });
 
 describe("pre", () => {
