@@ -1,9 +1,26 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import tools
 from odoo.addons.sale.controllers import portal as sale_portal
+from odoo.addons.website.tools import get_base_domain
+from odoo.http import request
 
 
 class CustomerPortal(sale_portal.CustomerPortal):
+    def _get_portal_order_page_redirect(self, order_sudo):
+        redirect = super()._get_portal_order_page_redirect(order_sudo)
+        if redirect:
+            return redirect
+
+        website = order_sudo._get_portal_website()
+        if (
+            website.domain
+            and request.httprequest.environ.get('HTTP_HOST', '') != get_base_domain(website.domain)
+        ):
+            url = tools.urls.urljoin(website.domain, request.httprequest.full_path)
+            return request.redirect(url)
+        return None
+
     def _get_payment_values(self, order_sudo, website_id=None, **kwargs):
         """Override of `sale` to inject the `website_id` into the kwargs.
 

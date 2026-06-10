@@ -234,6 +234,10 @@ class SaleOrder(models.Model):
         return super().create(vals_list)
 
     # === ACTION METHODS ===#
+# Check o_website_switcher_container, it's listing all the website and should not
+    def _get_portal_website(self):
+        self.ensure_one()
+        return self.website_id or super()._get_portal_website()
 
     def action_preview_sale_order(self):
         action = super().action_preview_sale_order()
