@@ -1,4 +1,4 @@
-import { after, afterEach, beforeEach, registerDebugInfo } from "@odoo/hoot";
+import { after, afterEach, beforeEach, destroy, registerDebugInfo } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { startRouter } from "@web/core/browser/router";
 import { createDebugContext } from "@web/core/debug/debug_context";
@@ -64,6 +64,7 @@ export function makeApp(config) {
     if (!currentPluginManager) {
         const app = new App(config);
         currentPluginManager = app.pluginManager;
+        after(() => destroy(app));
         return app;
     }
     const _config = { ...config };
@@ -76,6 +77,7 @@ export function makeApp(config) {
     // this is also gefoireux... it kind of works if we have 2 Apps, but
     // not if we have more
     currentPluginManager.app = app;
+    after(() => destroy(app));
     return app;
 }
 
