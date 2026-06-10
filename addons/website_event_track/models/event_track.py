@@ -651,7 +651,7 @@ class EventTrack(models.Model):
             cal_track.add('summary').value = track.name
             cal_track.add('description').value = track._get_track_calendar_description()
             if track.event_id.contact_address_inline or track.location_id:
-                cal_track.add('location').value = ', '.join([track.event_id.contact_address_inline, track.location_id.sudo().name or ''])
+                cal_track.add('location').value = ', '.join([track.event_id.contact_address_inline or '', track.location_id.sudo().name or ''])
 
             result[track.id] = cal.serialize().encode('utf-8')
         return result
@@ -744,7 +744,7 @@ class EventTrack(models.Model):
         url_date_end = reminder_dates['date_end'].astimezone(ZoneInfo(date_tz)).strftime('%Y%m%dT%H%M%S')
 
         if self.event_id.contact_address_inline or self.location_id:
-            location = ', '.join([self.event_id.sudo().contact_address_inline, self.location_id.sudo().name or ''])
+            location = ', '.join([self.event_id.sudo().contact_address_inline or '', self.location_id.sudo().name or ''])
         else:
             location = ''
 
