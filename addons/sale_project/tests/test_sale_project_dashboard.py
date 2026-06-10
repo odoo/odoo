@@ -89,3 +89,52 @@ class TestDashboardProject(TestProjectDashboardCommon):
         ]
         sale_item_data = self.dashboard_project.get_sale_items_data(limit=5, with_action=False, section_id='service_revenues')
         self.assertEqual(sale_item_data['sol_items'], expected_dict)
+
+    def test_display_project_related_sols_in_the_dashboard(self):
+        """
+        Ensure each project dashboard only displays its related sales order lines.
+        When multiple projects share the same sales order, SOLs should not be displayed
+        across projects through `order_id` matching alone. SOLs without a `project_id`
+        must only be included when their `analytic_distribution` matches the project's analytic account.
+        """
+        self.dashboard_product_delivery_service.service_policy = 'ordered_prepaid'
+
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'New Project - AA',
+            'code': 'AA-007',
+            'plan_id': self.analytic_plan.id,
+        })
+        new_project = self.env['project.project'].with_context({'mail_create_nolog': True}).create({
+            'name': 'New project',
+            'partner_id': self.partner.id,
+            'account_id': analytic_account.id,
+            'allow_billable': True,
+        })
+        service_product = self.env['product.product'].create({
+            'name': "Product service",
+            'standard_price': 20,
+            'list_price': 40,
+            'type': 'service',
+            'uom_id': self.uom_hour.id,
+            'uom_po_id': self.uom_hour.id,
+            'default_code': 'SERV-ORDERED2',
+            'service_tracking': 'task_global_project',
+            'project_id': new_project.id,
+        })
+
+        sol_new_project, sol_dashboard_project = self.dashboardSaleOrderLine.create([{
+                'product_id': service_product.id,
+                'product_uom_qty': 1,
+                'analytic_distribution': {f'{analytic_account.id}': 100},
+            }, {
+                'product_id': self.dashboard_product_delivery_service.id,
+                'product_uom_qty': 1,
+        }])
+
+        # dashboard_project should only show sol_dashboard_project, not sol_new_project
+        sale_item_data = self.dashboard_project.get_sale_items_data(limit=5, with_action=False, section_id='service_revenues')
+        self.assertEqual([item['id'] for item in sale_item_data['sol_items']], [sol_dashboard_project.id])
+
+        # new_project should only show sol_new_project, matched via analytic_distribution
+        sale_item_data = new_project.get_sale_items_data(limit=5, with_action=False, section_id='service_revenues')
+        self.assertEqual([item['id'] for item in sale_item_data['sol_items']], [sol_new_project.id])
