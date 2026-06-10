@@ -1,6 +1,6 @@
 import { useRef } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
-import { Component, onMounted, onWillStart, onWillUnmount, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, signal } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 import { _t } from "@web/core/l10n/translation";
@@ -19,6 +19,9 @@ export class FeedbackScreen extends Component {
         waitFor: { type: Object, optional: true },
     };
 
+    loading = signal(true);
+    timeout = signal(null);
+
     setup() {
         super.setup();
         this.pos = usePos();
@@ -29,10 +32,6 @@ export class FeedbackScreen extends Component {
         this.dialog = useService("dialog");
         this.containerRef = useRef("feedback-screen");
         this.amountRef = useRef("amount");
-        this.state = proxy({
-            loading: true,
-            timeout: false,
-        });
 
         onMounted(() => {
             this.scaleText();
@@ -43,7 +42,7 @@ export class FeedbackScreen extends Component {
         });
 
         onWillUnmount(() => {
-            clearTimeout(this.state.timeout);
+            clearTimeout(this.timeout());
         });
     }
 
@@ -58,12 +57,14 @@ export class FeedbackScreen extends Component {
     }
 
     async _afterWaitFinished() {
-        this.state.loading = false;
+        this.loading.set(false);
 
         if (this.isAutoSkip && !this.ignoreTimeout) {
-            this.state.timeout = setTimeout(() => {
-                this.pos.orderDone(this.currentOrder);
-            }, this.pos.feedbackScreenAutoSkipDelay);
+            this.timeout.set(
+                setTimeout(() => {
+                    this.pos.orderDone(this.currentOrder);
+                }, this.pos.feedbackScreenAutoSkipDelay)
+            );
         }
     }
 
@@ -87,7 +88,7 @@ export class FeedbackScreen extends Component {
 
     onClick(buttonClicked = false) {
         if (!this.isAutoSkip || buttonClicked) {
-            if (this.state.loading) {
+            if (this.loading()) {
                 this.notification.add(
                     _t("A request is still being processed in the background. Please wait."),
                     {
@@ -106,9 +107,9 @@ export class FeedbackScreen extends Component {
         if (!this.isAutoSkip) {
             return;
         }
-        if (this.state.timeout) {
-            clearTimeout(this.state.timeout);
-            this.state.timeout = false;
+        if (this.timeout()) {
+            clearTimeout(this.timeout());
+            this.timeout.set(null);
         } else {
             this.ignoreTimeout = true;
         }
