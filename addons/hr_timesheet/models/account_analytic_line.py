@@ -23,6 +23,16 @@ class AccountAnalyticLine(models.Model):
             ('project_id.allow_timesheets', '=', True)
         ]
 
+    def _get_favorite_task_id_domain(self, employee_id=False):
+        employee_id = employee_id or self.env.user.employee_id.id
+        return [
+            ('employee_id', '=', employee_id),
+            ('task_id', '!=', False),
+            ('task_id.active', '=', True),
+            ('task_id.project_id.allow_timesheets', '=', True),
+            ('task_id.has_template_ancestor', '=', False),
+        ]
+
     @api.model
     def _get_favorite_project_id(self, employee_id=False):
         last_timesheets = self.search_fetch(

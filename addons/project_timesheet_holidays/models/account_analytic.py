@@ -60,3 +60,10 @@ class AccountAnalyticLine(models.Model):
             Domain('holiday_id', '=', False),
             Domain('global_leave_id', '=', False),
         ])
+
+    def _get_favorite_task_id_domain(self, employee_id=False):
+        return Domain.AND([
+            super()._get_favorite_task_id_domain(employee_id),
+            Domain('holiday_id', '=', False),
+            Domain('global_leave_id', '=', False),
+        ])
