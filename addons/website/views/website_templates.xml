@@ -78,7 +78,13 @@
     </li>
 </template>
 
-<template id="layout" name="Main layout" inherit_id="portal.frontend_layout">
+<template id="frontend_layout" inherit_id="web.frontend_layout">
+    <xpath expr="//t[@t-set='frontend_layout_template']" position="after">
+        <t t-if="website" t-set="frontend_layout_template" t-value="'website.layout'"/>
+    </xpath>
+</template>
+
+<template id="layout" name="Main layout" inherit_id="portal.frontend_layout" primary="True">
     <xpath expr="//html" position="before">
         <t t-set="html_data" t-value="{
             'lang': lang.replace('_', '-'),

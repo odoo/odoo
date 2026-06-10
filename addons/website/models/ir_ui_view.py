@@ -453,6 +453,10 @@ class IrUiView(models.Model):
     def _render_template(self, template, values=None):
         if website_id := self.env.context.get('website_id'):
             return self.env['website'].browse(website_id)._render_template(template, values)
+        # The `web.frontend_layout` dispatcher override expects this value even
+        # when no website is selected.
+        values = dict(values or {})
+        values.setdefault('website', self.env['website'])
         return super()._render_template(template, values=values)
 
     @api.model

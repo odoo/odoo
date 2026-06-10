@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="frontend_layout" name="Main Frontend Layout" inherit_id="web.frontend_layout">
+    <template id="frontend_layout" name="Main Frontend Layout" inherit_id="web.frontend_layout_base">
         <xpath expr="//html" position="attributes">
             <attribute name="t-att-dir">request.env['res.lang']._get_data(code=request.env.lang).direction</attribute>
         </xpath>
@@ -159,7 +159,7 @@
     </template>
 
     <template id="portal_layout" name="Portal Layout">
-        <t t-call="portal.frontend_layout" is_portal="True">
+        <t t-call="web.frontend_layout" is_portal="True">
 
             <div t-if="not no_breadcrumbs and not my_details and not breadcrumbs_searchbar" class="o_portal container mt-3">
                 <div class="d-flex justify-content-between align-items-center flex-wrap">

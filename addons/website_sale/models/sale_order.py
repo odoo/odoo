@@ -252,7 +252,10 @@ class SaleOrder(models.Model):
 
     def action_preview_sale_order(self):
         action = super().action_preview_sale_order()
-        if action["url"].startswith("/"):
+        # Only preview the order inside the website editor when its company
+        # actually has a website. Otherwise fall back to the plain portal page,
+        # exactly as if the website module were not installed.
+        if self._get_portal_website() and action["url"].startswith("/"):
             # URL should always be relative, safety check
             action["url"] = f"/@{action['url']}"
         return action

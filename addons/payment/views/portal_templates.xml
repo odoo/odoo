@@ -19,7 +19,7 @@
         -->
         <t t-set="page_title">Payment</t>
         <t t-set="additional_title"><t t-out="page_title"/></t>
-        <t t-call="portal.frontend_layout" page_title="page_title" additional_title="additional_title">
+        <t t-call="web.frontend_layout" page_title="page_title" additional_title="additional_title">
             <div class="wrap">
                 <div class="container">
                     <!-- Portal breadcrumb -->
@@ -87,7 +87,7 @@
     <template id="payment.payment_methods" name="Payment Methods">
         <t t-set="page_title">Payment Methods</t>
         <t t-set="additional_title"><t t-out="page_title"/></t>
-        <t t-call="portal.frontend_layout" page_title="page_title" additional_title="additional_title">
+        <t t-call="web.frontend_layout" page_title="page_title" additional_title="additional_title">
             <div class="wrap">
                 <div class="container">
                     <!-- Portal breadcrumb -->
@@ -107,7 +107,7 @@
     <template id="payment.payment_status" name="Payment Status">
         <t t-set="page_title">Payment Status</t>
         <t t-set="additional_title"><t t-out="page_title"/></t>
-        <t t-call="portal.frontend_layout" page_title="page_title" additional_title="additional_title">
+        <t t-call="web.frontend_layout" page_title="page_title" additional_title="additional_title">
             <div class="wrap">
                 <div class="container">
                     <!-- Payment status page -->
@@ -173,7 +173,7 @@
         -->
         <t t-set="page_title">Payment Confirmation</t>
         <t t-set="additional_title"><t t-out="page_title"/></t>
-        <t t-call="portal.frontend_layout" page_title="page_title" additional_title="additional_title">
+        <t t-call="web.frontend_layout" page_title="page_title" additional_title="additional_title">
             <t t-set="show_pm" t-value="tx.payment_method_code != 'unknown'"/>
             <div class="wrap">
                 <div class="container">
