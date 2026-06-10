@@ -7,6 +7,7 @@ import { Rules } from "../core/rules_models";
 import { registry } from "@web/core/registry";
 import { parseCssValue } from "../css_parsers";
 import { SpacingNode } from "./spacing_models";
+import { RenderPlugin } from "../core/render_plugin";
 
 const { DESKTOP, MOBILE } = DIMENSIONS;
 const MARGINS = ["margin-top", "margin-right", "margin-bottom", "margin-left"];
@@ -28,6 +29,7 @@ const PADDINGS = ["padding-top", "padding-right", "padding-bottom", "padding-lef
 export class SpacingPlugin extends Plugin {
     static id = "spacing";
     static dependencies = ["contextStyle", "referenceNode", "responsiveBlock", "rules", "style"];
+    static shared = ["buildMarginNode", "buildPaddingNode"];
     resources = {
         on_parse_layout_with_dimensions_handlers: this.cacheSpacingStyleInfo.bind(this),
         reference_node_facts_processors: this.addSpacingFacts.bind(this),
@@ -114,9 +116,16 @@ export class SpacingPlugin extends Plugin {
         }
     }
 
+    /**
+     * Only handle basic ElementLayout, every customization should handle
+     * spacing specifically.
+     */
     applyDefaultSpacing(layout, { emailNode }) {
         if (
             layout.constructor !== ElementLayout ||
+            // Only "default" ElementLayout get their "default" spacing.
+            // Custom ones must handle spacing specifically.
+            (layout.pluginIds.size === 1 && layout.pluginIds.has(RenderPlugin.id)) ||
             !emailNode.analysis.facts.desktopBlock ||
             paragraphRelatedElements.includes(layout.tag)
         ) {

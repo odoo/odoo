@@ -113,6 +113,14 @@ export class HybridFluidTableRow extends LayoutModel {
             "row"
         );
     }
+
+    get ancestorTag() {
+        return "TABLE";
+    }
+
+    get descendantTag() {
+        return "TR";
+    }
 }
 
 export class HybridFluidTableCell extends ElementLayout {
