@@ -17,7 +17,16 @@ import { CallbackRecorder } from "@web/search/action_hook";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { PATH_KEYS, router as _router } from "@web/core/browser/router";
 
-import { Component, markup, onError, onMounted, onWillUnmount, proxy, status, xml } from "@odoo/owl";
+import {
+    Component,
+    markup,
+    onError,
+    onMounted,
+    onWillUnmount,
+    proxy,
+    status,
+    xml,
+} from "@odoo/owl";
 import { downloadReport, getReportUrl } from "./reports/utils";
 import { zip } from "@web/core/utils/arrays";
 import { isHtmlEmpty } from "@web/core/utils/html";
@@ -484,7 +493,11 @@ export function makeActionManager(env, router = _router) {
                     return controller.props?.type === "form";
                 },
                 get url() {
-                    return router.stateToUrl(controller.state);
+                    const state = controller.state;
+                    if (env.debug) {
+                        state.debug = env.debug;
+                    }
+                    return router.stateToUrl(state);
                 },
                 onSelected() {
                     restore(controller.jsId);
@@ -843,6 +856,11 @@ export function makeActionManager(env, router = _router) {
         // Session storage is duplicated in the new window
         // https://html.spec.whatwg.org/multipage/webstorage.html#webstorage
         // "After creating a new auxiliary browsing context and document, the session storage is copied over."
+
+        // copy debug flag from current state
+        if (env.debug) {
+            state.debug = env.debug;
+        }
 
         // Store current action of the current window
         const currentAction = browser.sessionStorage.getItem("current_action");
@@ -1380,12 +1398,15 @@ export function makeActionManager(env, router = _router) {
         }
         if (action.report_type === "qweb-html") {
             return _executeReportClientAction(action, options);
-        } else if (action.report_type.startsWith("qweb-pdf") || action.report_type === "qweb-text") {
+        } else if (
+            action.report_type.startsWith("qweb-pdf") ||
+            action.report_type === "qweb-text"
+        ) {
             let type = action.report_type.slice(5);
             let engineName;
             if (type.startsWith("pdf-")) {
                 engineName = type.slice(4);
-                type = "pdf"
+                type = "pdf";
             }
             let success, message;
             env.services.ui.block();
@@ -1394,7 +1415,13 @@ export function makeActionManager(env, router = _router) {
                 if (action.context) {
                     Object.assign(downloadContext, action.context);
                 }
-                ({ success, message } = await downloadReport(rpc, action, type, downloadContext, engineName));
+                ({ success, message } = await downloadReport(
+                    rpc,
+                    action,
+                    type,
+                    downloadContext,
+                    engineName
+                ));
             } finally {
                 env.services.ui.unblock();
             }
