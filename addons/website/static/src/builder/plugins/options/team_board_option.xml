@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="website.teamBoardOptions">
+    <t t-name="website.teamBoardOption">
         <BuilderRow label.translate="Cards Layout">
             <BuilderSelect>
                 <BuilderSelectItem 
@@ -33,12 +33,22 @@
                 </BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
+        <BuilderRow label.translate="Sort">
+            <BuilderButton 
+                action="'sortTeamBoardAlphabetically'"
+                label.translate="Sort Alphabetically"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Members">
+            <BuilderButton 
+                action="'addTeamBoardMember'"
+                label.translate="Add Member"/>
+        </BuilderRow>
     </t>
 
     <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
         <xpath expr="//t[@id='snippet_specific_options']" position="after">
-            <team_board_layout_option
-                template="website.teamBoardOptions"
+            <team_board_option
+                template="website.teamBoardOption"
                 selector=".s_team_board"/>
         </xpath>
     </t>

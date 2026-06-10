@@ -21,11 +21,14 @@
             @include media-breakpoint-up(md) {
                 flex-grow: 0;
                 flex-shrink: 1;
+                flex: 0 1 calc((100% - 2rem) / 3);
             }
         }
 
         @include media-breakpoint-up(md) {
             flex-direction: row;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
     }
 

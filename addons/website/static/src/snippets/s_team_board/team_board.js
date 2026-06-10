@@ -2,6 +2,7 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
+import { browser } from "@web/core/browser/browser";
 
 export class TeamBoard extends Interaction {
     static selector = "section.s_team_board";
@@ -20,6 +21,55 @@ export class TeamBoard extends Interaction {
         this.modalEl = this.el.querySelector(".s_team_board_modal");
         this.contactMethodsRegistry = registry.category("website.s_team_board.contact_methods");
         this.resetState();
+    }
+
+    start() {
+        this.contactModal = window.Modal.getOrCreateInstance(this.modalEl);
+
+        const contactMethodsBtnContainerEl = this.modalEl.querySelector(
+            ".contact_methods_btn_container"
+        );
+
+        const buttons = this.contactMethodsRegistry
+            .getEntries()
+            .map((contactMethod) =>
+                this.createContactMethodsButton(
+                    contactMethod[1].contactType,
+                    contactMethod[1].contactData
+                )
+            );
+
+        contactMethodsBtnContainerEl.replaceChildren(...buttons);
+
+        this.registerCleanup(() => {
+            this.modalEl.addEventListener(
+                "hidden.bs.modal",
+                () => {
+                    this.contactModal.dispose();
+                },
+                { once: true }
+            );
+            this.contactModal.hide();
+        });
+    }
+
+    createContactMethodsButton(contactMethodType, contactMethodData) {
+        const contactMethodBtn = document.createElement("button");
+        const contactMethodSpan = document.createElement("span");
+        contactMethodBtn.classList.add(
+            "btn",
+            "btn-outline-warning",
+            "registered_contact_method_btn"
+        );
+        contactMethodSpan.classList.add("s_contact_method_cta");
+        contactMethodSpan.innerText = `Copy ${contactMethodType}`;
+        contactMethodBtn.appendChild(contactMethodSpan);
+
+        this.addListener(contactMethodBtn, "click", () => {
+            browser.navigator.clipboard.writeText(contactMethodData);
+        });
+
+        return contactMethodBtn;
     }
 
     resetState() {
@@ -55,11 +105,6 @@ export class TeamBoard extends Interaction {
         msgBtn.disabled = true;
         msgBtn.blur();
         msgBtnSpinner.classList.remove("d-none");
-    }
-
-    destroy() {
-        const modalElInstance = window.Modal.getOrCreateInstance(this.modalEl);
-        modalElInstance.hide();
     }
 
     enableMsgBtn() {
