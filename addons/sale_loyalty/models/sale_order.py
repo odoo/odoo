@@ -1555,10 +1555,9 @@ class SaleOrder(models.Model):
                         "This program requires a code to be applied."
                     )
                 elif not minimum_amount_matched:
-                    program_result["error"] = self.env._(
-                        "A minimum of %(amount)s %(currency)s should be purchased to get the"
-                        " reward",
-                        amount=min(program.rule_ids.mapped("minimum_amount")),
+                    program_result['error'] = self.env._(
+                        "To take advantage of this offer, your order must include at least %(amount)s %(currency)s of the eligible products.",
+                        amount=min(program.rule_ids.mapped('minimum_amount')),
                         currency=program.currency_id.name,
                     )
                 elif not product_qty_matched:
