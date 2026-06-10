@@ -110,6 +110,10 @@ class StockRule(models.Model):
                     'mo_id': mo.id,
                     'product_qty': mo.product_id.uom_id._compute_quantity((mo.product_uom_qty + procurement_product_uom_qty), mo.uom_id),
                 }).change_prod_qty()
+                if procurement.values.get('move_dest_ids'):
+                    mo.move_finished_ids.filtered(
+                        lambda m: m.product_id == procurement.product_id and m.state not in ('done', 'cancel')
+                    ).move_dest_ids = [Command.link(m.id) for m in procurement.values['move_dest_ids']]
 
         for company_id in new_productions_values_by_company:
             productions_vals_list = new_productions_values_by_company[company_id]['values']
