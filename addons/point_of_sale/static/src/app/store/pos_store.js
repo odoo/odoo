@@ -1,5 +1,6 @@
 /* global waitForWebfonts */
 
+import { Domain } from "@web/core/domain";
 import { Mutex } from "@web/core/utils/concurrency";
 import { markRaw } from "@odoo/owl";
 import { floatIsZero } from "@web/core/utils/numbers";
@@ -1378,7 +1379,10 @@ export class PosStore extends Reactive {
         }
     }
     async getServerOrders() {
-        return await this.loadServerOrders([
+        return await this.loadServerOrders(this.getServerOrdersDomain().toList());
+    }
+    getServerOrdersDomain() {
+        return new Domain([
             ["config_id", "in", [...this.config.raw.trusted_config_ids, this.config.id]],
             ["state", "=", "draft"],
         ]);
