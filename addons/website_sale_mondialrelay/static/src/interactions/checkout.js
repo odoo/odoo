@@ -5,13 +5,11 @@ import { Checkout } from '@website_sale/interactions/checkout';
 
 // temporary for OnNoResultReturned bug
 import { registry } from '@web/core/registry';
-import { loadJS } from "@web/core/assets";
+import { loadBundle, loadJS } from "@web/core/assets";
 import { ThirdPartyScriptError } from '@web/core/errors/error_service';
 
 const errorHandlerRegistry = registry.category('error_handlers');
 
-// Mondial Relay provides a widget only in jQuery
-const JQUERY_URL = "https://code.jquery.com/jquery-3.7.1.min.js";
 const MONDIALRELAY_SCRIPT_URL =
     "https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js";
 
@@ -122,7 +120,7 @@ patch(Checkout.prototype, {
             () => confirmRelayButton.removeEventListener('click', boundConfirmRelay)
         );
 
-        await loadJS(JQUERY_URL);
+        await loadBundle("web._assets_jquery");
         await loadJS(MONDIALRELAY_SCRIPT_URL);
         // instanciate MondialRelay widget
         const params = {

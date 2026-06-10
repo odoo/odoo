@@ -22,6 +22,9 @@ Delivery price pre-configured is an example, you need to adapt the pricing's rul
             'delivery_mondialrelay/static/src/components/**/*.js',
             'delivery_mondialrelay/static/src/scss/mondialrelay.scss',
         ],
+        'web.assets_unit_tests': [
+            'delivery_mondialrelay/static/tests/**/*',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
