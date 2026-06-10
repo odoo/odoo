@@ -659,6 +659,7 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         self.set_sequence('2101-02-01', 'MISC/01-02/00001')
         move = self.assertNameAtDate('2101-03-01', 'MISC/01-03/00001')
 
+        move.name = '/'
         move.journal_id.sequence_override_regex = move._sequence_year_range_regex
         move.name = 'MISC/00-01/00001'
         self.assertNameAtDate('2101-03-01', 'MISC/00-01/00002')
