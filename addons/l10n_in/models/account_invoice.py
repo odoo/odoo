@@ -232,12 +232,16 @@ class AccountMove(models.Model):
         'company_id.l10n_in_hsn_code_digit',
         'invoice_line_ids.tax_ids',
         'commercial_partner_id.l10n_in_pan_entity_id',
-        'invoice_line_ids.price_total'
+        'invoice_line_ids.price_total',
+        'l10n_in_gst_treatment',
     )
     def _compute_l10n_in_warning(self):
         indian_invoice = self.filtered(lambda m: m.country_code == 'IN' and m.move_type != 'entry')
         line_filter_func = lambda line: line.display_type == 'product' and line.tax_ids and line._origin
         _xmlid_to_res_id = self.env['ir.model.data']._xmlid_to_res_id
+        gst_treatment_name_mapping = dict(
+            self._fields['l10n_in_gst_treatment']._description_selection(self.env),
+        )
         for move in indian_invoice:
             warnings = {}
             company = move.company_id
@@ -298,6 +302,20 @@ class AccountMove(models.Model):
                         'action_text': action_text,
                     }
 
+            partner = move.partner_id
+            if (
+                partner.l10n_in_gst_applicability_date and
+                partner.l10n_in_gst_treatment and
+                (move.l10n_in_gst_treatment != (partner.l10n_in_gst_treatment))
+            ):
+                warnings['change_invoice_gst_treatment'] = {
+                    'message': _(
+                        "%(partner_name)s applicable from %(date)s are you sure you want to go with %(gst_treatment)s?",
+                        partner_name=partner.name,
+                        date=partner.l10n_in_gst_applicability_date,
+                        gst_treatment=gst_treatment_name_mapping.get(move.l10n_in_gst_treatment),
+                    ),
+                }
             move.l10n_in_warning = warnings
         (self - indian_invoice).l10n_in_warning = {}
 

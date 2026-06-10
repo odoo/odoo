@@ -50,6 +50,8 @@ class ResPartner(models.Model):
     l10n_in_gstin_verified_date = fields.Date(string="GSTIN Verified Date", tracking=True)
     l10n_in_gstin_status_feature_enabled = fields.Boolean(compute="_compute_l10n_in_gst_registered_and_status")
 
+    l10n_in_gst_applicability_date = fields.Date(string="GST Applicable from", tracking=True, compute='_compute_l10n_in_gst_applicability_date', store=True)
+
     @api.depends('vat', 'state_id', 'country_id', 'fiscal_country_codes')
     def _compute_l10n_in_gst_state_warning(self):
         for partner in self:
@@ -93,6 +95,14 @@ class ResPartner(models.Model):
             if partner.country_code == 'IN' and (partner.l10n_in_gstin_verified_status or partner.l10n_in_gstin_verified_date):
                 partner.l10n_in_gstin_verified_status = False
                 partner.l10n_in_gstin_verified_date = False
+
+    @api.depends('vat')
+    def _compute_l10n_in_gst_applicability_date(self):
+        for partner in self:
+            if partner.country_code == 'IN' and partner.check_vat_in(partner.vat):
+                partner.l10n_in_gst_applicability_date = fields.Date.context_today(partner)
+            else:
+                partner.l10n_in_gst_applicability_date = False
 
     @api.model_create_multi
     def create(self, vals_list):
