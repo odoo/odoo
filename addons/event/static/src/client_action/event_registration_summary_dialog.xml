@@ -14,7 +14,7 @@
                         </button>
                     </div>
                     <div t-else="" class="alert alert-warning d-flex justify-content-center" role="alert">
-                        <i class="fa fa-exclamation-circle me-2 align-self-center ms-0 ms-sm-5"/>
+                        <i class="fa fa-exclamation-circle me-2 align-self-center"/>
                         <t t-if="this.registrationStatus.value === 'need_manual_confirmation'">
                             <span>This ticket is for another event!<br/>
                             Confirm attendance?</span>
@@ -30,10 +30,11 @@
                                 <span>Ticket was first scanned on <t t-out="this.registration.date_closed_formatted"/></span>
                             </t>
                             <t t-else="">
-                                <span>Ticket already scanned!</span>
+                                <span style="font-size:16px">This Card/Ticket is currently unavailable.<br/>
+                                    The offer may have expired or you may have reached the maximum number of entries allowed.</span>
                             </t>
                         </t>
-                        <button type="button" class="btn btn-link ms-3 ms-sm-5" t-on-click="this.undoRegistration">
+                        <button type="button" t-if="this.registrationStatus.value != 'already_registered'" class="btn btn-link ms-3 ms-sm-5" t-on-click="this.undoRegistration">
                             Undo
                         </button>
                     </div>
@@ -53,6 +54,7 @@
                         <tr><td>Event</td><td><t t-out="this.registration.event_display_name"/></td></tr>
                         <tr t-if="this.registration.slot_name"><td>Slot</td><td><t t-out="this.registration.slot_name"/></td></tr>
                         <tr t-if="this.registration.ticket_name"><td>Ticket Type</td><td><t t-out="this.registration.ticket_name"/></td></tr>
+                        <tr t-if="this.registration.ticket_entry_limit"><td>Remaining Entries</td><td><t t-out="this.registration.remaining_entries"/></td></tr>
                         <tr t-if="this.registration.registration_answers &amp;&amp; this.registration.registration_answers.length > 0">
                             <td class="d-flex">Answers</td>
                             <td>
@@ -67,9 +69,9 @@
                 </div>
             </div>
             <t t-set-slot="footer">
-                <button t-att-disabled="!this.button.enabled" t-custom-ref="continueButton" class="btn btn-primary" t-on-click="() => this.onRegistrationConfirm()">Continue</button>
+                <button t-att-disabled="!this.button.enabled" t-custom-ref="continueButton" class="btn btn-primary" t-on-click="() => this.onRegistrationClose()">Close</button>
                 <button id="print_button" class="btn btn-primary" t-on-click="() => this.onRegistrationPrintPdf()">Print</button>
-                <button class="btn btn-secondary" t-on-click="() => this.onRegistrationView()">Edit</button>
+                <button class="btn btn-secondary" t-on-click="() => this.onRegistrationView()">Edit Ticket</button>
             </t>
         </Dialog>
     </t>

@@ -907,6 +907,48 @@ class TestEventRegistrationData(TestEventInternalsCommon):
         self.assertEqual(new_reg.email, contact.email)
         self.assertEqual(new_reg.phone, contact.phone)
 
+    @users('user_eventmanager')
+    def test_registration_remaining_entries(self):
+        """ Test initial remaining entries of a registration and the computation of that field based on attendances """
+        multi_entry_event = self.env['event.event'].create({
+            'name': 'Multi Entry Event Test',
+            'date_begin': FieldsDatetime.to_string(datetime.today() - timedelta(days=1)),
+            'date_end': FieldsDatetime.to_string(datetime.today() + timedelta(days=1)),
+        })
+        multi_entry_event_ticket = self.env['event.event.ticket'].create({
+            'name': 'Multi Entry Event Ticket Test',
+            'event_id': multi_entry_event.id,
+            'entry_limit': 3,
+        })
+        multi_entry_registration = self.env['event.registration'].create({
+            'name': 'Multi Entry Registration Test',
+            'event_id': multi_entry_event.id,
+            'event_ticket_id': multi_entry_event_ticket.id,
+        })
+        self.assertEqual(multi_entry_registration.remaining_entries, 3,
+            "Assigning a ticket to a registration should set this registration remaining entries to the same amount as the ticket entry limit")
+        multi_entry_registration.action_attend_event()
+        multi_entry_registration._invalidate_cache(['remaining_entries'])
+        self.assertEqual(multi_entry_registration.remaining_entries, 2,
+            "Validating once the registration should lower the remaining entries by 1")
+        self.assertEqual(multi_entry_registration.state, 'open',
+            "Validating once the registration should not change its state")
+        multi_entry_registration.action_attend_event()
+        multi_entry_registration.action_cancel_last_sub_registration()
+        multi_entry_registration._invalidate_cache(['remaining_entries'])
+        self.assertEqual(multi_entry_registration.remaining_entries, 2,
+            "Validating once the registration then canceling the last sub_registration should not change the remaining entries")
+        self.assertEqual(multi_entry_registration.state, 'open',
+            "Validating then canceling last sub registration should not change the registration's state")
+        multi_entry_registration.action_attend_event()
+        multi_entry_registration._invalidate_cache(['remaining_entries'])
+        multi_entry_registration.action_attend_event()
+        multi_entry_registration._invalidate_cache(['remaining_entries'])
+        self.assertEqual(multi_entry_registration.remaining_entries, 0,
+            "Validating enough times should set the registration remaining entries to 0")
+        self.assertEqual(multi_entry_registration.state, 'done',
+            "When there is no remaining entries, the state of the registration should be 'done'")
+
 
 @tagged('event_registration', 'phone_number')
 @tagged('at_install', '-post_install')  # LEGACY at_install

@@ -37,6 +37,10 @@ class EventEventTicket(models.Model):
         string='Is Available', compute='_compute_sale_available', compute_sudo=True,
         help='Whether it is possible to sell these tickets')
     registration_ids = fields.One2many('event.registration', 'event_ticket_id', string='Registrations')
+    entry_limit = fields.Integer(default=0, string="Entry Limit",
+        help="Enable multi-entry tickets\n"
+        "- Set to 0 or 1 to disable.\n"
+        "- Enter 2 or more to define the maximum number of allowed entries.")
     # seats
     seats_reserved = fields.Integer(string='Reserved Seats', compute='_compute_seats', store=False)
     seats_available = fields.Integer(string='Available Seats', compute='_compute_seats', store=False)
@@ -134,6 +138,12 @@ class EventEventTicket(models.Model):
             if ticket.limit_max_per_order < 0:
                 raise UserError(_('The limit per order must be positive. '
                                   'Please check ticket %(ticket_name)s', ticket_name=ticket.name))
+
+    @api.constrains('entry_limit')
+    def _constrains_entry_limit(self):
+        failing = self.filtered(lambda t: t.entry_limit < 0)
+        if failing:
+            raise UserError(_('The Entry Limit of event tickets %(ticket_names)s cannot be lower than 0.', ticket_names=', '.join(failing.mapped('name'))))
 
     @api.depends('seats_max', 'seats_available')
     @api.depends_context('name_with_seats_availability')
