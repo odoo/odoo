@@ -33,10 +33,6 @@ export class DiscussSidebar extends Component {
         return discussSidebarItemsRegistry.getAll();
     }
 
-    onClickViewHiddenConversations() {
-        this.env.services.action.doAction("mail.discuss_my_conversations_action");
-    }
-
     onResize(width) {
         if (!this.mounted) {
             return; // ignore resize from mount not triggered by user
