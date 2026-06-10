@@ -7,8 +7,9 @@ from odoo.tools import format_date
 class StockTraceabilityReport(models.TransientModel):
     _inherit = 'stock.traceability.report'
 
-    def _make_dict_move(self, level, parent_id, move_line, unfoldable=False):
-        formatted_line = super()._make_dict_move(level, parent_id, move_line, unfoldable=unfoldable)
+    @api.model
+    def _make_dict_move(self, move_line, line_type, level, unfoldable=False):
+        formatted_line = super()._make_dict_move(move_line, line_type, level, unfoldable=unfoldable)
         expiration_date_column = self._make_column('expiration_date', format_date(self.env, move_line.lot_id.expiration_date))
         for idx, column in enumerate(formatted_line['columns']):
             if column['name'] == 'lot_name':

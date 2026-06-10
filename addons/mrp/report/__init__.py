@@ -4,5 +4,6 @@ from . import mrp_report_bom_structure
 from . import mrp_label_report
 from . import stock_allocation_report
 from . import stock_forecasted
+from . import stock_traceability
 from . import report_stock_rule
 from . import mrp_report_mo_overview

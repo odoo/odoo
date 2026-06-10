@@ -21,8 +21,13 @@ patch(TraceabilityReport.prototype, {
         return this._hasExpirationDate;
     },
 
-    async toggleLine(line) {
-        await super.toggleLine(line);
+    async onClickUnfold() {
+        await super.onClickUnfold();
+        this.updateExpirationDateColumn();
+    },
+
+    async toggleLine(line, line_type=false) {
+        await super.toggleLine(line, line_type);
         this.updateExpirationDateColumn();
     },
 
