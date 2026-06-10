@@ -156,6 +156,9 @@ export class ShortCutPlugin extends Plugin {
             return;
         }
         const selection = this.dependencies.selection.getEditableSelection();
+        if (!(this.checkPredicates("are_shorthands_available_predicates", selection.anchorNode) ?? true)) {
+            return;
+        }
         const leftDOMPath = leftLeafOnlyNotBlockPath(selection.anchorNode);
         let spaceOffset = selection.anchorOffset;
         let lineBreak;
