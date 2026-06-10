@@ -77,17 +77,11 @@ class MvDealUnitsGridRpc(models.Model):
 
             cells = []
             for w_iso, w_dt in zip(weeks_iso, weeks):
-                in_range = (
-                    dl.run_start and dl.run_end and
-                    dl.run_start <= w_dt <= dl.run_end
-                )
+                # Phase 12: week columns are already filtered to the
+                # deal's quarter by units_start_date, so every visible
+                # week is in-range for every Deal Line. We no longer
+                # gate on the (now-stale) per-row run_start/run_end.
                 sched = sched_by_week.get(w_iso)
-                if not in_range:
-                    cells.append({
-                        'week': w_iso, 'units': 0, 'state': 'hatched',
-                        'sched_id': sched.id if sched else False,
-                    })
-                    continue
                 if not sched or not sched.units_available:
                     cells.append({
                         'week': w_iso, 'units': 0, 'state': 'dashed',
@@ -180,6 +174,17 @@ class MvDealUnitsGridRpc(models.Model):
         deal_update = edits.get('deal_update') or {}
         if 'units_start_date' in deal_update:
             self.write({'units_start_date': deal_update['units_start_date']})
+            # When the deal-level start date moves, propagate the new
+            # range to every existing Deal Line so the load_*_grid
+            # cell-state logic no longer sees stale per-row ranges.
+            new_weeks = mondays_for_start_date(self.units_start_date)
+            if new_weeks:
+                self.env['mv.deal_line'].search(
+                    [('deal_id', '=', self.id)]
+                ).write({
+                    'run_start': new_weeks[0],
+                    'run_end':   new_weeks[-1],
+                })
 
         # Compute the (deal-level) week range so new Deal Lines can
         # inherit run_start / run_end from it.

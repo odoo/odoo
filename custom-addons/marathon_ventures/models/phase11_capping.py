@@ -79,19 +79,9 @@ class MvDealCappingRpc(models.Model):
             row_booked = 0.0
             row_effective = 0.0
             for w_iso, w_dt in zip(weeks_iso, weeks):
-                in_range = (
-                    dl.run_start and dl.run_end and
-                    dl.run_start <= w_dt <= dl.run_end
-                )
+                # Phase 12: week columns are already filtered to the
+                # deal's quarter, so every visible week is in-range.
                 sched = sched_by_week.get(w_iso)
-                if not in_range:
-                    cells.append({
-                        'week': w_iso, 'units_booked': 0,
-                        'units_effective': 0, 'cap_pct': 100,
-                        'state': 'hatched',
-                        'sched_id': sched.id if sched else False,
-                    })
-                    continue
                 if not sched or not sched.units_available:
                     cells.append({
                         'week': w_iso, 'units_booked': 0,
