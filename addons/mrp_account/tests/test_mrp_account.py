@@ -2,6 +2,7 @@
 
 from datetime import timedelta
 
+from odoo.addons.mrp.tests.common import TestMrpCommon
 from odoo.addons.mrp_account.tests.common import TestBomPriceCommon, TestBomPriceOperationCommon
 from odoo.tests import Form, tagged
 from odoo.tests.common import new_test_user
@@ -9,7 +10,7 @@ from odoo.tools import float_compare, float_round
 from odoo import Command, fields
 
 
-class TestMrpAccount(TestBomPriceCommon):
+class TestMrpAccount(TestBomPriceCommon, TestMrpCommon):
 
     def test_00_production_order_with_accounting(self):
         # Inventory Product Table
@@ -274,6 +275,44 @@ class TestMrpAccount(TestBomPriceCommon):
         report_data_after = report._get_report_data(date=fields.Datetime.now())
         cost_after = report_data_after.get('cost_of_production', {}).get('value', 0)
         self.assertNotEqual(cost_after, 0)
+
+    def test_merge_then_qty_change_avco_prices_finished_moves(self):
+        """ Same scenario as mrp's test_merge_then_qty_change_no_double_production
+        but with an AVCO product: an order left with two finished moves for its
+        product must be priced without raising Expected singleton in _cal_price."""
+        mo, _bom, product, component_1, component_2 = self.generate_mo(qty_final=30, qty_base_1=1, qty_base_2=1)
+        # AVCO so that _cal_price prices the finished moves (and would ensure_one).
+        product.product_tmpl_id.categ_id = self.env['product.category'].create({
+            'name': 'AVCO',
+            'property_cost_method': 'average',
+        })
+        self.assertEqual(product.cost_method, 'average')
+        # 1 x component_1 + 1 x component_2 = 17.50 per produced unit.
+        component_1.standard_price = 10
+        component_2.standard_price = 7.5
+
+        productions = mo._split_productions({mo: [10, 10, 10]})
+        sibling_mo = productions[2]
+        productions[:2].action_merge()
+
+        # Create a move to simulate a MTO Manufacturing
+        # so the qty change copies the finished move (-> 2 moves)
+        sibling_mo.move_finished_ids.move_dest_ids = self.env['stock.move'].create({
+            'product_id': product.id,
+            'uom_id': product.uom_id.id,
+            'location_id': sibling_mo.location_dest_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+        })
+        self.env['change.production.qty'].create({'mo_id': sibling_mo.id, 'product_qty': 15}).change_prod_qty()
+        sibling_mo.qty_producing = 15
+        sibling_mo._set_qty_producing()
+        sibling_mo.button_mark_done()
+
+        finished_moves = sibling_mo.move_finished_ids.filtered(lambda m: m.product_id == product)
+        self.assertEqual(sibling_mo.state, 'done')
+        self.assertEqual(sum(finished_moves.mapped('quantity')), 15.0)
+        # Both finished_moves moves must carry the same, correct unit cost.
+        self.assertEqual(finished_moves.mapped('price_unit'), [17.50, 17.50])
 
 
 class TestMrpAccountWorkorder(TestBomPriceOperationCommon):
