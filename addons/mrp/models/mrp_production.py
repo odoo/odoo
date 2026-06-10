@@ -1006,9 +1006,18 @@ class MrpProduction(models.Model):
     def _onchange_qty_producing(self):
         self._change_producing()
 
+    def _is_single_serial_pre_generation(self):
+        self.ensure_one()
+        return (
+            self.product_tracking == 'serial'
+            and self.product_qty == 1
+            and len(self.lot_producing_ids) == 1
+            and not self.qty_producing
+        )
+
     @api.onchange('lot_producing_ids')
     def _onchange_lot_producing(self):
-        if self._change_producing():
+        if self._is_single_serial_pre_generation() or self._change_producing():
             res = self._can_produce_serial_numbers()
             if res is not True:
                 return res
@@ -1577,7 +1586,10 @@ class MrpProduction(models.Model):
 
     def set_qty_producing(self):
         self.ensure_one()
+        if self._is_single_serial_pre_generation():
+            return False
         self._set_qty_producing(False)
+        return True
 
     def action_view_mrp_production_childs(self):
         self.ensure_one()
@@ -1680,8 +1692,6 @@ class MrpProduction(models.Model):
         elif self.product_tracking == 'serial':
             if self.product_qty == 1 and not self.lot_producing_ids:
                 self.lot_producing_ids = [Command.create(self._prepare_stock_lot_values())]
-                self.qty_producing = 1
-                (workorder or self).set_qty_producing()
                 if self.picking_type_id.auto_print_generated_mrp_lot:
                     return self._autoprint_generated_lots(self.lot_producing_ids)
                 return
@@ -2288,11 +2298,11 @@ class MrpProduction(models.Model):
 
     def button_mark_done(self):
         for production in self:
-            if production.product_tracking not in ['lot', 'serial'] or production.lot_producing_ids:
-                continue
-            if not production.qty_producing:
+            if production.product_tracking in ['lot', 'serial'] and not production.qty_producing:
                 production.qty_producing = production.product_qty - production.qty_produced
                 production.set_qty_producing()
+            if production.product_tracking not in ['lot', 'serial'] or production.lot_producing_ids:
+                continue
             if production.product_tracking == 'lot':
                 production.lot_producing_ids = [Command.create(production._prepare_stock_lot_values())]
             else:

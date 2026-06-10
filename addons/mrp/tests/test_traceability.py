@@ -240,6 +240,8 @@ class TestTraceability(TestMrpCommon):
             'name': 'Final_lot_2',
         }))
         mo_backorder = mo_form.save()
+        mo_backorder.qty_producing = 1
+        mo_backorder.set_qty_producing()
 
         details_operation_form = Form(
             mo_backorder.move_raw_ids.filtered(lambda m: m.product_id == product_1),
