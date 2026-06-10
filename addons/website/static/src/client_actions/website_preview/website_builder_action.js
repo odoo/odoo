@@ -33,6 +33,7 @@ import { router } from "@web/core/browser/router";
 import { getScrollingElement } from "@web/core/utils/scrolling";
 import { CreatePageMessage } from "./create_page_message";
 import { post } from "@web/core/network/http_service";
+import { user } from "@web/core/user";
 
 const websiteSystrayRegistry = registry.category("website_systray");
 
@@ -64,6 +65,7 @@ export class WebsiteBuilderClientAction extends Component {
 
     setup() {
         this.reloadContext = null;
+        this.action = useService("action");
         this.orm = useService("orm");
         this.notification = useService("notification");
         this.dialog = useService("dialog");
@@ -137,6 +139,10 @@ export class WebsiteBuilderClientAction extends Component {
                     rpc("/website/get_current_website_id"),
                     ...proms,
                 ]);
+                if (!backendWebsiteId) {
+                    await this.action.doAction("website.action_website_create_new");
+                    return;
+                }
                 updateWebsiteId(backendWebsiteId);
             }
         });
@@ -528,7 +534,12 @@ export class WebsiteBuilderClientAction extends Component {
     }
 
     get websiteId() {
-        return this.props.websiteId || router.current.website_id || this.websiteService.currentWebsiteId || false;
+        return (
+            this.props.websiteId ||
+            router.current.website_id ||
+            this.websiteService.currentWebsiteId ||
+            false
+        );
     }
 
     waitForIframeReady() {
