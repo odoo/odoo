@@ -198,7 +198,7 @@ class HrWorkEntryType(models.Model):
                 public_holiday_to_date = public_holiday.date_to.date()
 
                 if leave_from_date <= public_holiday_to_date and leave_to_date >= public_holiday_from_date:
-                    raise ValidationError(_("You cannot modify the 'Public Holiday Included' setting since one or more leaves for that \
+                    raise ValidationError(self.env._("You cannot modify the 'Public Holiday Included' setting since one or more leaves for that \
 time type are overlapping with public holidays, meaning that the balance of those employees would be affected by this change."))
 
     @api.constrains('count_days_as')
@@ -542,6 +542,7 @@ been taken for this time off type. Changing it now would affect existing employe
                         'max_allowed_negative': work_entry_type.max_allowed_negative,
                         'employee_company': employee.company_id.id,
                         'employee_country': employee.company_id.country_id.id,
+                        'color': work_entry_type.color,
                     },
                     work_entry_type.requires_allocation,
                     work_entry_type.id)

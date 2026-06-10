@@ -346,3 +346,9 @@ class HrLeave(models.Model):
         res = super()._action_user_cancel(reason)
         self._l10n_in_update_neighbors_duration_after_change()
         return res
+
+    def _get_max_allowed_absence_hours(self, base_max_hours):
+        max_hours = super()._get_max_allowed_absence_hours(base_max_hours)
+        if self.work_entry_type_id.l10n_in_is_sandwich_leave:
+            return max(max_hours, self.number_of_hours)
+        return max_hours

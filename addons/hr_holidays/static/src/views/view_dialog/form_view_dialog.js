@@ -39,8 +39,7 @@ export class TimeOffDialogFormController extends FormController {
     get canSave() {
         return (
             this.hasNoWarning &&
-            ((!this.isOwnLeave && this.record.isNew) ||
-                (this.isOwnLeave && this.record.data.state === "confirm"))
+            (this.record.isNew || (this.isOwnLeave && this.record.data.state === "confirm"))
         );
     }
 

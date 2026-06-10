@@ -3,7 +3,6 @@ import { stepUtils } from "@web_tour/tour_utils";
 
 const leaveType = "Overtime Compensation No Allocation";
 const leaveDateFrom = "01/04/2021";
-const leaveDateTo = "01/04/2021";
 
 registry.category("web_tour.tours").add("request_overtime_leave_from_attendance_calendar", {
     steps: () => [
@@ -45,23 +44,13 @@ registry.category("web_tour.tours").add("request_overtime_leave_from_attendance_
         },
         {
             content: "Click on the start date of the leave",
-            trigger: "div[name=request_date_from] button",
+            trigger: "div[name=request_date_from] button, div[name=request_date_from] input",
             run: "click",
         },
         {
             content: "Select the start date of the leave",
             trigger: "input[data-field=request_date_from]",
-            run: `edit ${leaveDateFrom}`,
-        },
-        {
-            content: "Click on the end date of the leave",
-            trigger: "button[data-field=request_date_to]",
-            run: "click",
-        },
-        {
-            content: "Select the end date of the leave",
-            trigger: "input[data-field=request_date_to]",
-            run: `edit ${leaveDateTo} && press Enter`,
+            run: `edit ${leaveDateFrom} && press Enter`,
         },
         {
             content: "Save the leave",

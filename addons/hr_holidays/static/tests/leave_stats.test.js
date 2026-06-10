@@ -87,6 +87,43 @@ beforeEach(() => {
 });
 
 test("leave stats render correctly", async () => {
+    onRpc(({ method, model }) => {
+        if (model === "hr.work.entry.type" && method === "get_allocation_data_request") {
+            return [
+                [
+                    "Legal Leave",
+                    {
+                        leaves_approved: 2,
+                        max_leaves: 20,
+                        remaining_leaves: 18,
+                        unit_of_measure: "day",
+                        color: 1,
+                    },
+                    false,
+                    55,
+                ],
+                [
+                    "Unpaid Leave",
+                    {
+                        leaves_approved: 1,
+                        max_leaves: 5,
+                        remaining_leaves: 4,
+                        unit_of_measure: "hour",
+                        color: 2,
+                    },
+                    false,
+                    65,
+                ],
+            ];
+        }
+        if (model === "hr.work.entry.type" && method === "search_read") {
+            return [
+                { id: 55, color: 1 },
+                { id: 65, color: 2 },
+            ];
+        }
+    });
+
     await mountView({
         type: "form",
         resModel: "hr.leave",
@@ -103,26 +140,36 @@ test("leave stats render correctly", async () => {
 
     const individualLeaves = queryOne(".o_leave_stats #o_leave_stats_employee");
     const DepartmentLeaves = queryOne(".o_leave_stats #o_leave_stats_department");
+
     // Displays leaves with the correct unit
-    expect(queryAll("span:contains(Legal Leave)", { root: individualLeaves })).toHaveCount(1);
-    expect(queryAll("span:contains(2 days)", { root: individualLeaves })).toHaveCount(1);
-    expect(queryAll("span:contains(Unpaid Leave)", { root: individualLeaves })).toHaveCount(1);
-    expect(queryAll("span:contains(1h)", { root: individualLeaves })).toHaveCount(1);
+    expect(individualLeaves).toBeVisible();
+    expect(queryAll("p.fw-bold:contains(Legal Leave)", { root: individualLeaves })).toHaveCount(1);
+    expect(queryAll("p:contains(2)", { root: individualLeaves })).toHaveCount(1);
+    expect(queryAll("p.fw-bold:contains(Unpaid Leave)", { root: individualLeaves })).toHaveCount(1);
+    expect(queryAll("p.mb-2:not(.text-muted):contains(1)", { root: individualLeaves })).toHaveCount(
+        1
+    );
 
     // Displays all leaves for that department
-    expect(queryAll("span:contains(Richard)", { root: DepartmentLeaves })).toHaveCount(2);
-    expect(queryAll("span:contains(10/16/2016)", { root: DepartmentLeaves })).toHaveCount(1);
-    expect(queryAll("span:contains(2h)", { root: DepartmentLeaves })).toHaveCount(1);
-    expect(queryAll("span:contains(10/20/2016)", { root: DepartmentLeaves })).toHaveCount(1);
-    expect(queryAll("span:contains(10/25/2016)", { root: DepartmentLeaves })).toHaveCount(1);
-
+    expect(DepartmentLeaves).toBeVisible();
+    expect(queryAll("h4:contains(Overlaps)", { root: DepartmentLeaves })).toHaveCount(1);
     expect(
-        queryAll("div.o_horizontal_separator:contains(R&D)", { root: DepartmentLeaves })
+        queryAll("p:contains(team members on holiday during this period)", {
+            root: DepartmentLeaves,
+        })
     ).toHaveCount(1);
+    expect(queryAll("a:contains(View Overlaps)", { root: DepartmentLeaves })).toHaveCount(1);
 });
 
 test("leave stats reload when employee/department changes", async () => {
     onRpc(({ args, kwargs, method, model }) => {
+        if (model === "hr.work.entry.type" && method === "get_allocation_data_request") {
+            return [];
+        }
+        if (model === "hr.work.entry.type" && method === "search_read") {
+            return [];
+        }
+
         if (
             model === "hr.leave" &&
             method === "search_read" &&
