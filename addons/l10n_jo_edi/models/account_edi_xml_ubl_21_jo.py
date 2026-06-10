@@ -46,6 +46,8 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         return self._get_line_amount_before_discount_jod(line) * line.discount / 100
 
     def _get_unit_price_jod(self, line):
+        if not line.quantity:
+            return 0
         return self._get_line_amount_before_discount_jod(line) / line.quantity
 
     def _get_line_taxable_amount(self, line):
