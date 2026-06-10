@@ -74,7 +74,7 @@ from odoo.sql_db import Cursor
 from odoo.tools import SQL, DotDict, config, file_open, float_compare, mute_logger, profiler
 from odoo.tools.binary import BinaryBytes
 from odoo.tools.mail import single_email_re
-from odoo.tools.misc import diff_zip, find_in_path, str2bool
+from odoo.tools.misc import diff_zip, find_in_path, real_time, str2bool
 from odoo.tools.safe_eval import safe_whitelist
 from odoo.tools.xml_utils import _validate_xml
 
@@ -2656,17 +2656,21 @@ class HttpCase(TransactionCase):
     def _wait_remaining_requests(self, timeout=10):
 
         def get_http_request_threads():
-            return [t for t in threading.enumerate() if t.name.startswith('odoo.service.http.request.')]
+            return [
+                t for t in threading.enumerate()
+                if t.name.startswith('odoo.service.http.request')
+                if getattr(t, 'processing_http', False)
+            ]
 
-        start_time = time.time()
+        end_time = real_time() + timeout
         request_threads = get_http_request_threads()
         if not request_threads:
             return
 
         self._logger.info('waiting for threads: %s', request_threads)
 
-        for thread in request_threads:
-            thread.join(timeout - (time.time() - start_time))
+        while real_time() < end_time:
+            time.sleep(0.1)
 
         request_threads = get_http_request_threads()
         for thread in request_threads:
