@@ -35,7 +35,7 @@ declare module "models" {
         fetchChannelPromiseByChannelId: Map<number, Promise<DiscussChannel|void>>;
         getRecentChatPartnerIds: () => number[];
         sortMembers: (m1: ChannelMember, m2: ChannelMember) => number;
-        startChat: (partnerIds: number[]) => Promise<void>;
+        startChat: (partnerIds: number[]) => Promise<Thread>;
         updateBusSubscription: (() => unknown) & { cancel: () => void };
     }
     export interface Thread {
