@@ -352,7 +352,7 @@ class TestStockValuationCommon(BaseCommon):
         cls.env["account.chart.template"]._load(
             "generic_coa", cls.company, install_demo=False
         )
-        cls.company = cls.company.with_company(cls.company.id)
+        cls.company = cls.company.with_context(allowed_company_ids=cls.company.ids)
         cls.env = cls.company.env
         cls.env.invalidate_all()
         # We use the admin on tour.
