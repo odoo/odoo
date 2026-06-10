@@ -19,6 +19,7 @@ import { processModelDefs } from "./model_defs";
 import { createExtraField, processModelClasses } from "./model_classes";
 import { ormSerialization } from "./serialization";
 import { toRaw, proxy } from "@odoo/owl";
+import { registry } from "@web/core/registry";
 const AVAILABLE_EVENT = ["create", "update", "delete"];
 
 export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
@@ -686,6 +687,23 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                 mapObj(processedModelDefs, (modelName) => new Model(modelName))
             );
             this[STORE_SYMBOL] = store;
+            this._cachedExtraFieldsMap = null;
+        }
+
+        get modelExtraFieldsMap() {
+            if (!this._cachedExtraFieldsMap) {
+                this._cachedExtraFieldsMap = Object.fromEntries(
+                    registry
+                        .category("pos_available_models")
+                        .getAll()
+                        .filter((posModel) => posModel.pythonModel) // Filter out invalid entries first
+                        .map((posModel) => [
+                            posModel.pythonModel,
+                            Object.keys(posModel.extraFields || {}),
+                        ])
+                );
+            }
+            return this._cachedExtraFieldsMap;
         }
 
         get commands() {
@@ -739,6 +757,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                     const valsArray = rawData[model];
                     const recordStore = this[STORE_SYMBOL];
                     const modelInstance = this[model];
+                    const extraFields = this.modelExtraFieldsMap[model] || [];
                     for (const vals of valsArray) {
                         const existingRecord = recordStore.get(model, modelKey, vals[modelKey]);
                         let record,
@@ -755,10 +774,17 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
                                 existingRecord,
                             });
 
+                            // Collect local extra field values before replacing the raw data and restore them afterwards.
+                            const existingRecordExtraFieldValues = Object.fromEntries(
+                                extraFields
+                                    .map((key) => [key, existingRecord[key]])
+                                    .filter(([_, val]) => val !== undefined)
+                            );
                             // Remove olds references (id string -> id number)
                             recordStore.remove(existingRecord);
                             existingRecord[RAW_SYMBOL] = rawData;
                             recordStore.add(existingRecord);
+                            Object.assign(existingRecord, existingRecordExtraFieldValues);
                             if (dataToConnect) {
                                 modelInstance._connectRecords(existingRecord, dataToConnect);
                             }

@@ -6,8 +6,8 @@
                 Current Balance: <t t-out="line.getGiftCardOrEWalletBalance()"/>
             </li>
             <t t-if="!line.isGiftCardOrEWalletReward() and line.getEWalletGiftCardProgramType() === 'gift_card'">
-                <a t-if="!line.gift_code and line.qty &lt;= 1" class="text-wrap text-action" t-on-click="() => this.manageGiftCard(line)">Sell physical gift card?</a>
-                <div t-if="line.gift_code" class="text-wrap" t-out="line.gift_code"/>
+                <a t-if="!line._gift_code and line.qty &lt;= 1" class="text-wrap text-action" t-on-click="() => this.manageGiftCard(line)">Sell physical gift card?</a>
+                <div t-if="line._gift_code" class="text-wrap" t-out="line._gift_code"/>
             </t>
         </xpath>
         <xpath expr="//OrderDisplay/t[@t-set-slot='details']/div[hasclass('combo-proposition')]" position="before">

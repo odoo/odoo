@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from uuid import uuid4
+
 from odoo import fields, models, api
 
 
@@ -13,6 +15,7 @@ class LoyaltyCard(models.Model):
     source_pos_order_partner_id = fields.Many2one(
         'res.partner', "PoS Order Customer",
         related="source_pos_order_id.partner_id")
+    uuid = fields.Char("UUID", readonly=True, default=lambda self: str(uuid4()), copy=False, help="Unique identifier for this loyalty card across different systems.")
 
     @api.model
     def _load_pos_data_domain(self, data, config):
@@ -20,7 +23,7 @@ class LoyaltyCard(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['partner_id', 'code', 'points', 'points_display', 'program_id', 'expiration_date', 'write_date']
+        return ['partner_id', 'code', 'points', 'points_display', 'program_id', 'expiration_date', 'write_date', 'uuid', 'source_pos_order_id', 'active']
 
     def _has_source_order(self):
         return super()._has_source_order() or bool(self.source_pos_order_id)

@@ -114,6 +114,7 @@ export class PosSession extends models.ServerModel {
                     type: field.type,
                     relation: field.relation,
                     inverse_name: field.inverse_fname_by_model_name?.[field.relation] || false,
+                    relation_table: field.relation_table || false,
                 };
             }
 
