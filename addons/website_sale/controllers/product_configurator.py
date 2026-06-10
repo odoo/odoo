@@ -14,24 +14,12 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         website=True,
         readonly=True,
     )
-    def website_sale_product_configurator_get_values(
-        self, product_template_id=None, is_product_configured=False, *args, **kwargs
-    ):
+    def website_sale_product_configurator_get_values(self, *args, **kwargs):
         self._populate_currency_and_pricelist(kwargs)
-        should_show = self.website_sale_should_show_product_configurator(
-            product_template_id, is_product_configured
-        )
-        if not should_show:
-            return False
-        return super().sale_product_configurator_get_values(
-            product_template_id=product_template_id,
-            is_product_configured=is_product_configured,
-            *args,
-            **kwargs,
-        )
+        return super().sale_product_configurator_get_values(*args, **kwargs)
 
-    def website_sale_should_show_product_configurator(
-        self, product_template_id, is_product_configured
+    def should_show_product_configurator(
+        self, single_product_variant_dict, product_template, **kwargs
     ):
         """Return whether the product configurator dialog should be shown.
 
@@ -40,9 +28,11 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         :rtype: bool
         :return: Whether the product configurator dialog should be shown.
         """
-        product_template = self.env["product.template"].browse(product_template_id)
-        if product_template._is_donation():
-            return False
+        if not request.is_frontend:
+            return super().should_show_product_configurator(
+                single_product_variant_dict, product_template
+            )
+        is_product_configured = kwargs.get("is_product_configured")
         single_product_variant = product_template.get_single_product_variant()
         has_optional_products = bool(
             product_template.optional_product_ids.filtered(self._should_show_product)

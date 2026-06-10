@@ -44,13 +44,10 @@ class SaleProductConfiguratorController(Controller):
             request.update_context(allowed_company_ids=[company_id])
         product_template = self._get_product_template(product_template_id)
 
-        res = (
-            request.env["product.template"].browse(product_template_id).get_single_product_variant()
-        )
+        res = product_template.get_single_product_variant()
 
-        is_template_configurable = not res.get("product_id") or res.get("has_optional_products")
-        if is_template_configurable:
-            combination = request.env["product.template.attribute.value"]
+        if self.should_show_product_configurator(res, product_template, **kwargs):
+            combination = self.env["product.template.attribute.value"]
             if ptav_ids:
                 combination = (
                     request
@@ -68,8 +65,8 @@ class SaleProductConfiguratorController(Controller):
                 )
             if not combination:
                 combination = product_template._get_first_possible_combination()
-            currency = request.env["res.currency"].browse(currency_id)
-            pricelist = request.env["product.pricelist"].browse(pricelist_id)
+            currency = self.env["res.currency"].browse(currency_id)
+            pricelist = self.env["product.pricelist"].browse(pricelist_id)
             so_date = datetime.fromisoformat(so_date)
 
             res["products"] = [
@@ -110,6 +107,13 @@ class SaleProductConfiguratorController(Controller):
             res["currency_id"] = currency_id
 
         return res
+
+    def should_show_product_configurator(
+        self, single_product_variant_dict, product_template, **kwargs
+    ):
+        return not single_product_variant_dict.get("product_id") or single_product_variant_dict.get(
+            "has_optional_products"
+        )
 
     @route(
         route="/sale/product_configurator/create_product",

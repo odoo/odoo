@@ -125,9 +125,11 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
             ],
         })
 
+        single_product_variant_dict = main_product.get_single_product_variant()
+
         with self.mock_request():
-            show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, is_product_configured=False
+            show_configurator = self.pc_controller.should_show_product_configurator(
+                single_product_variant_dict, main_product, is_product_configured=False
             )
 
         self.assertTrue(show_configurator)
@@ -147,9 +149,11 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
             "optional_product_ids": [Command.set(optional_product.ids)],
         })
 
+        single_product_variant_dict = main_product.get_single_product_variant()
+
         with self.mock_request():
-            show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, is_product_configured=False
+            show_configurator = self.pc_controller.should_show_product_configurator(
+                single_product_variant_dict, main_product, is_product_configured=False
             )
 
         self.assertFalse(show_configurator)
@@ -171,9 +175,11 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
             ],
         })
 
+        single_product_variant_dict = main_product.get_single_product_variant()
+
         with self.mock_request():
-            show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, is_product_configured=False
+            show_configurator = self.pc_controller.should_show_product_configurator(
+                single_product_variant_dict, main_product, is_product_configured=False
             )
 
         self.assertFalse(show_configurator)
@@ -199,9 +205,11 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
             ],
         })
 
+        single_product_variant_dict = main_product.get_single_product_variant()
+
         with self.mock_request():
-            show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, is_product_configured=True
+            show_configurator = self.pc_controller.should_show_product_configurator(
+                single_product_variant_dict, main_product, is_product_configured=True
             )
 
         self.assertFalse(show_configurator)
@@ -226,9 +234,11 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
             ],
         })
 
+        single_product_variant_dict = main_product.get_single_product_variant()
+
         with self.mock_request():
-            show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, is_product_configured=False
+            show_configurator = self.pc_controller.should_show_product_configurator(
+                single_product_variant_dict, main_product, is_product_configured=False
             )
 
         self.assertTrue(show_configurator)
@@ -253,9 +263,11 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
             ],
         })
 
+        single_product_variant_dict = main_product.get_single_product_variant()
+
         with self.mock_request():
-            show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, is_product_configured=False
+            show_configurator = self.pc_controller.should_show_product_configurator(
+                single_product_variant_dict, main_product, is_product_configured=False
             )
 
         self.assertTrue(show_configurator)
@@ -279,9 +291,11 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
             ],
         })
 
+        single_product_variant_dict = main_product.get_single_product_variant()
+
         with self.mock_request():
-            show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, is_product_configured=False
+            show_configurator = self.pc_controller.should_show_product_configurator(
+                single_product_variant_dict, main_product, is_product_configured=False
             )
 
         self.assertTrue(show_configurator)
@@ -299,9 +313,11 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
             "optional_product_ids": [Command.set(optional_product.ids)],
         })
 
+        single_product_variant_dict = main_product.get_single_product_variant()
+
         with self.mock_request():
-            show_configurator = self.pc_controller.website_sale_should_show_product_configurator(
-                product_template_id=main_product.id, is_product_configured=False
+            show_configurator = self.pc_controller.should_show_product_configurator(
+                single_product_variant_dict, main_product, is_product_configured=False
             )
             configurator_values = self.pc_controller.website_sale_product_configurator_get_values(
                 product_template_id=main_product.id,
@@ -312,7 +328,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
             )
 
         self.assertFalse(show_configurator)
-        self.assertFalse(configurator_values)
+        self.assertFalse(configurator_values["has_optional_products"])
 
     def test_product_configurator_extra_price_taxes(self):
         """Test that the product configurator applies taxes to PTAV extra prices."""

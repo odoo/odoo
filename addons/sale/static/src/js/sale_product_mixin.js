@@ -75,20 +75,28 @@ export const saleProductMixin = () => ({
         return _t("Edit Configuration");
     },
 
-    async _getProductConfiguratorData() {
-        const saleOrderRecord = this.props.record.model.root;
+    async _getProductConfiguratorData(edit = false) {
+        const saleOrder = this.props.record.model.root.data;
         const saleOrderLine = this.props.record.data;
         const ptavIds = this._getVariantPtavIds(saleOrderLine);
+        if (edit) {
+            /**
+             * no_variant don't need to be given to the configurator for new
+             * products.
+             */
+            ptavIds.push(...this._getNoVariantPtavIds(saleOrderLine));
+        }
         return rpc('/sale/product_configurator/get_values',
             {
                 product_template_id: saleOrderLine.product_template_id.id,
                 quantity: saleOrderLine.product_uom_qty,
                 currency_id: saleOrderLine.currency_id.id,
-                so_date: serializeDateTime(saleOrderRecord.data.date_order),
+                so_date: serializeDateTime(saleOrder.date_order),
                 product_uom_id: saleOrderLine.product_uom_id.id,
-                company_id: saleOrderRecord.data.company_id.id,
-                pricelist_id: saleOrderRecord.data.pricelist_id.id,
+                company_id: saleOrder.company_id.id,
+                pricelist_id: saleOrder.pricelist_id.id,
                 ptav_ids: ptavIds,
+                only_main_product: edit,
                 ...this._getAdditionalRpcParams(),
             });
     },
@@ -101,9 +109,9 @@ export const saleProductMixin = () => ({
                     await this.props.record.update({
                         product_id: { id: result.product_id, display_name: result.product_name },
                     });
-                    this._openComboConfigurator(false, result.has_optional_products, result);
+                    this._openComboConfigurator(false, result);
                 } else if (result.has_optional_products) {
-                    this._openProductConfigurator({ preloadedData: result });
+                    this._openProductConfigurator({ data: result });
                 } else {
                     await this.props.record.update({
                         product_id: { id: result.product_id, display_name: result.product_name },
@@ -112,7 +120,7 @@ export const saleProductMixin = () => ({
                 }
             }
         } else if (!result.mode || result.mode === 'configurator') {
-            this._openProductConfigurator({ preloadedData: result });
+            this._openProductConfigurator({ data: result });
         } else {
             // only triggered when sale_product_matrix is installed.
             this._openGridConfigurator();
@@ -124,45 +132,39 @@ export const saleProductMixin = () => ({
     async _onProductUpdate() {}, // event_booth_sale, event_sale, sale_renting
 
     async onEditConfiguration() {
+        const data = await this._getProductConfiguratorData(true)
         if (this.isCombo) {
-            this._openComboConfigurator(true);
+            this._openComboConfigurator(true, data);
         } else if (this.isConfigurableTemplate) {
-            this._openProductConfigurator({edit: true, preloadedData: await this._getProductConfiguratorData()});
+            this._openProductConfigurator({edit: true, data: data});
         }
     },
 
     async _openProductConfigurator({
         edit = false,
         selectedComboItems = [],
-        preloadedData,
+        data,
     } = {}) {
         const saleOrderRecord = this.props.record.model.root;
         const saleOrderLine = this.props.record.data;
-        const ptavIds = [...this._getVariantPtavIds(saleOrderLine)];
         let customPtavs = [];
 
         if (edit) {
             /**
-             * no_variant and custom attribute don't need to be given to the configurator for new
+             * custom attribute don't need to be given to the configurator for new
              * products.
              */
-            ptavIds.push(...this._getNoVariantPtavIds(saleOrderLine));
             customPtavs = await this._getCustomPtavs(saleOrderLine);
         }
         const {
             products,
             optional_products,
-            currency_id,
-        } = preloadedData;
+        } = data;
         this.dialog.add(ProductConfiguratorDialog, {
             productTemplateId: saleOrderLine.product_template_id.id,
-            ptavIds: ptavIds,
             products: products,
-            optional_products: optional_products,
-            currency_id: currency_id,
+            optionalProducts: optional_products,
             customPtavs: customPtavs,
-            quantity: saleOrderLine.product_uom_qty,
-            productUOMId: saleOrderLine.product_uom_id.id,
             companyId: saleOrderRecord.data.company_id.id,
             pricelistId: saleOrderRecord.data.pricelist_id.id,
             currencyId: saleOrderLine.currency_id.id,
@@ -202,7 +204,7 @@ export const saleProductMixin = () => ({
         });
     },
 
-    async _openComboConfigurator(edit = false, hasOptionalProducts = false, preloadedData) {
+    async _openComboConfigurator(edit = false, data) {
         const saleOrder = this.props.record.model.root.data;
         const comboLineRecord = this.props.record;
         const comboItemLineRecords = getLinkedSaleOrderLines(comboLineRecord).filter(record => !!record.data.combo_item_id);
@@ -231,8 +233,7 @@ export const saleProductMixin = () => ({
                 { 'quantity': remainingData.quantity },
                 preselectedComboItems,
                 edit,
-                hasOptionalProducts,
-                preloadedData
+                data
             );
         }
         this.dialog.add(ComboConfiguratorDialog, {
@@ -247,8 +248,7 @@ export const saleProductMixin = () => ({
                     comboProductData,
                     selectedComboItems,
                     edit,
-                    hasOptionalProducts,
-                    preloadedData,
+                    data,
                 );
             },
             discard: () => saleOrder.order_line.delete(comboLineRecord),
@@ -260,8 +260,7 @@ export const saleProductMixin = () => ({
         comboProductData,
         selectedComboItems,
         edit,
-        hasOptionalProducts,
-        preloadedData,
+        data,
     ) {
         const saleOrder = this.props.record.model.root.data;
         const comboLineRecord = this.props.record;
@@ -277,13 +276,13 @@ export const saleProductMixin = () => ({
         // Ensure that the order lines are sorted according to their sequence.
         await saleOrder.order_line._sort();
 
-        if (hasOptionalProducts && !edit) {
+        if (data.has_optional_products && !edit) {
             const selectedComboProducts = selectedComboItems.map(
                 item => ({ name: item.product.display_name })
             );
             await this._openProductConfigurator({
                 selectedComboItems: selectedComboProducts,
-                preloadedData: preloadedData,
+                data: data,
             });
         }
     },

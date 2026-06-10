@@ -210,25 +210,27 @@ export class CartService {
             ptav_ids: ptavIds,
             product_uom_id: uomId,
             so_date: serializeDateTime(DateTime.now()),
-            pricelist_id: odoo.default_pricelist_id,
             is_product_configured: isConfigured,
-            ...this._getAdditionalRpcParams?.() || {},
             ...rest
         };
 
         const result = await this.rpc('/website_sale/product_configurator/get_values', configDataParams);
-        if (result && (!result.mode || result.mode === 'configurator' || result.has_optional_products)) {
+        if (result.products || result.has_optional_products) {
+            const {
+                products,
+                optional_products,
+                currency_id,
+            } = result;
             return this._openProductConfigurator(
                 productTemplateId,
-                quantity,
-                uomId,
-                ptavIds,
+                products,
+                optional_products,
+                currency_id,
                 productCustomAttributeValues,
                 {
                     isBuyNow: isBuyNow,
                     isMainProductConfigurable: !isConfigured,
                     showQuantity: showQuantity,
-                    preloadedData: result,
                 },
                 rest
             );
@@ -341,31 +343,23 @@ export class CartService {
      */
     async _openProductConfigurator(
         productTemplateId,
-        quantity,
-        uomId,
-        combination,
+        products,
+        optionalProducts,
+        currencyId,
         productCustomAttributeValues,
         options,
         additionalData
     ) {
         return await new Promise((resolve) => {
-            const {
-                products,
-                optional_products,
-                currency_id,
-            } = options.preloadedData;
             this.dialog.add(ProductConfiguratorDialog, {
                 productTemplateId: productTemplateId,
-                ptavIds: combination,
                 products: products,
-                optional_products: optional_products,
-                currency_id: currency_id,
+                optionalProducts: optionalProducts,
+                currencyId: currencyId,
                 customPtavs: productCustomAttributeValues.map(customPtav => ({
                     id: customPtav.custom_product_template_attribute_value_id,
                     value: customPtav.custom_value,
                 })),
-                quantity: quantity,
-                productUOMId: uomId,
                 soDate: serializeDateTime(DateTime.now()),
                 edit: false,
                 isFrontend: true,
