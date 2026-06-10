@@ -1,10 +1,13 @@
 import { Component, markup } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { addLoadingEffect } from "@web/core/utils/ui";
-import { useRef } from "@web/owl2/utils";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { registry } from "@web/core/registry";
+import { _t } from "@web/core/l10n/translation";
+
+export const contactActionRegistry = registry.add("website.team_board.contact_actions");
 
 export class TeamBoardDialog extends Component {
     static template = "website.TeamBoardContactDialog";
@@ -18,23 +21,9 @@ export class TeamBoardDialog extends Component {
     setup() {
         this.content = markup(this.props.content);
 
-        this.sendButtonRef = useRef("website.TeamBoardContactDialogSendButton");
-
         this.notifications = useService("notification");
-    }
 
-    async sendMessage() {
-        const stopLoadingEffect = addLoadingEffect(this.sendButtonRef.el);
-        const result = await rpc("/website/team_board_contact");
-
-        if (!result.ok) {
-            this.notifications.add("Could not send your message", { type: "danger" });
-            stopLoadingEffect();
-            return;
-        }
-
-        this.notifications.add("Your message has been sent", { type: "success" });
-        this.props.close();
+        this.actions = contactActionRegistry.getAll().filter((action) => action);
     }
 
     handleKeyup(event) {
@@ -50,3 +39,22 @@ export class TeamBoardDialog extends Component {
         }
     }
 }
+
+contactActionRegistry.add("send_message", {
+    label: _t("Send a message"),
+    sequence: 0,
+    primary: true,
+    execute: async (event, component) => {
+        const stopLoadingEffect = addLoadingEffect(event.currentTarget);
+        const result = await rpc("/website/team_board_contact");
+
+        if (!result.ok) {
+            component.notifications.add("Could not send your message", { type: "danger" });
+            stopLoadingEffect();
+            return;
+        }
+
+        component.notifications.add("Your message has been sent", { type: "success" });
+        component.props.close();
+    },
+});

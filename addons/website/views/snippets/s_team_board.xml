@@ -1,42 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="s_team_board" name="Team Board">
-        <section class="s_team_board pt64 pb64" data-density="confortable" data-layout="grid">
+        <section class="s_team_board pt64 pb64 o_team_board_grid o_team_board_density_comfortable" data-snippet="s_team_board">
             <div class="container">
                 <h2 class="h3-fs">Meet Our Team</h2>
                 <p class="lead">The people building the experience you rely on every day.</p>
-                <div class="row g-4">
-                    <div class="col" data-name="Team Member">
-                        <div class="card">
-                            <img alt="" src="/web/image/website.s_company_team_image_1"/>
-                            <div class="card-body">
-                                <h3 class="card-title">Tony Fred</h3>
-                                <p class="card-subtitle text-body-secondary">Chief Executive Officer</p>
-                                <p class="card-text">Tony shapes product strategy and keeps execution aligned across teams.</p>
+                <div class="o_team_board_row_wrapper">
+                    <div class="o_team_board_row row s_nb_column_fixed g-4">
+                        <div class="o_team_board_col col" data-name="Team Member">
+                            <div class="s_card o_card_img_top card o_cc o_cc1" data-name="Card" data-snippet="s_card" data-vxml="001">
+                                <figure class="o_card_img_wrapper ratio ratio-4x3 mb-0">
+                                    <img alt="" class="o_card_img card-img-top" src="/web/image/website.s_company_team_image_1"/>
+                                </figure>
+                                <div class="card-body">
+                                    <h3 class="card-title">Tony Fred</h3>
+                                    <p class="card-subtitle text-body-secondary">Chief Executive Officer</p>
+                                    <p class="card-text">Tony shapes product strategy and keeps execution aligned across teams.</p>
+                                </div>
+                                <button class="visually-hidden">Contact</button>
                             </div>
-                            <button class="visually-hidden">Contact</button>
                         </div>
-                    </div>
-                    <div class="col" data-name="Team Member">
-                        <div class="card">
-                            <img alt="" src="/web/image/website.s_company_team_image_2"/>
-                            <div class="card-body">
-                                <h3 class="card-title">Mich Stark</h3>
-                                <p class="card-subtitle text-body-secondary">Chief Commercial Officer</p>
-                                <p class="card-text">Mich leads go-to-market initiatives and partner relationships.</p>
+                        <div class="o_team_board_col col" data-name="Team Member">
+                            <div class="s_card o_card_img_top card o_cc o_cc1" data-name="Card" data-snippet="s_card" data-vxml="001">
+                                <figure class="o_card_img_wrapper ratio ratio-4x3 mb-0">
+                                    <img alt="" class="o_card_img card-img-top" src="/web/image/website.s_company_team_image_2"/>
+                                </figure>
+                                <div class="card-body">
+                                    <h3 class="card-title">Mich Stark</h3>
+                                    <p class="card-subtitle text-body-secondary">Chief Commercial Officer</p>
+                                    <p class="card-text">Mich leads go-to-market initiatives and partner relationships.</p>
+                                </div>
+                                <button class="visually-hidden">Contact</button>
                             </div>
-                            <button class="visually-hidden">Contact</button>
                         </div>
-                    </div>
-                    <div class="col" data-name="Team Member">
-                        <div class="card">
-                            <img alt="" src="/web/image/website.s_company_team_image_3"/>
-                            <div class="card-body">
-                                <h3 class="card-title">Aline Turner</h3>
-                                <p class="card-subtitle text-body-secondary">Chief Technical Officer</p>
-                                <p class="card-text">Aline drives platform architecture and engineering quality.</p>
+                        <div class="o_team_board_col col" data-name="Team Member">
+                            <div class="s_card o_card_img_top card o_cc o_cc1" data-name="Card" data-snippet="s_card" data-vxml="001">
+                                <figure class="o_card_img_wrapper ratio ratio-4x3 mb-0">
+                                    <img alt="" class="o_card_img card-img-top" src="/web/image/website.s_company_team_image_3"/>
+                                </figure>
+                                <div class="card-body">
+                                    <h3 class="card-title">Aline Turner</h3>
+                                    <p class="card-subtitle text-body-secondary">Chief Technical Officer</p>
+                                    <p class="card-text">Aline drives platform architecture and engineering quality.</p>
+                                </div>
+                                <button class="visually-hidden">Contact</button>
                             </div>
-                            <button class="visually-hidden">Contact</button>
                         </div>
                     </div>
                 </div>

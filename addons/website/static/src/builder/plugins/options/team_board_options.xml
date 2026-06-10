@@ -1,23 +1,42 @@
 <templates>
-	<t t-name="website.TeamBoardOption">
-		<BuilderRow label.translate="Card Layout">
-			<BuilderSelect dataAttributeAction="'layout'">
-				<BuilderSelectItem dataAttributeActionValue="'grid'">Grid</BuilderSelectItem>
-				<BuilderSelectItem dataAttributeActionValue="'list'">List</BuilderSelectItem>
-			</BuilderSelect>
-		</BuilderRow>
-		<BuilderRow label.translate="Density">
-			<BuilderSelect dataAttributeAction="'density'">
-				<BuilderSelectItem dataAttributeActionValue="'confortable'">Confortable</BuilderSelectItem>
-				<BuilderSelectItem dataAttributeActionValue="'dense'">Dense</BuilderSelectItem>
-			</BuilderSelect>
-		</BuilderRow>
-	</t>
-	<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
-		<xpath expr="//t[@id='snippet_specific_options']" position="after">
-			<team_board_option
-				template="website.TeamBoardOption"
-				selector=".s_team_board"/>
-		</xpath>
-	</t>
+    <t t-name="website.TeamBoardOption">
+        <BuilderRow label.translate="Card Layout">
+            <BuilderSelect action="'setTeamBoardLayout'">
+                <BuilderSelectItem actionParam="'grid'" classAction="'o_team_board_grid'">Grid</BuilderSelectItem>
+                <BuilderSelectItem actionParam="'list'" classAction="'o_team_board_list'" title.translate="List">List</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Density">
+            <BuilderSelect>
+                <BuilderSelectItem classAction="'o_team_board_density_comfortable'">Comfortable</BuilderSelectItem>
+                <BuilderSelectItem classAction="'o_team_board_density_dense'">Dense</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+        <BuilderRow label.translate="Members">
+            <BuilderButton action="'addTeamBoardCardAction'">Add member</BuilderButton>
+        </BuilderRow>
+        <BuilderRow label.translate="Sort">
+            <BuilderButton action="'sortTeamBoard'">Sort alphabetically</BuilderButton>
+        </BuilderRow>
+    </t>
+    <t t-name="website.s_team_board_card">
+        <div class="o_team_board_col col" data-name="Team Member">
+            <div class="s_card o_card_img_top card o_cc o_cc1" data-name="Card" data-snippet="s_card" data-vxml="001">
+                <figure class="o_card_img_wrapper ratio ratio-4x3 mb-0">
+                    <img alt="" class="o_card_img card-img-top" src="/web/image/website.s_company_team_image_5"/>
+                </figure>
+                <div class="card-body">
+                    <h3 class="card-title">Julien Piron</h3>
+                    <p class="card-subtitle text-body-secondary">Chief Happiness Manager</p>
+                    <p class="card-text">Julien brings food and drink for his colleagues.</p>
+                </div>
+                <button class="visually-hidden">Contact</button>
+            </div>
+        </div>
+    </t>
+    <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+        <xpath expr="//t[@id='snippet_specific_options']" position="after">
+            <team_board_option selector=".s_team_board" template="website.TeamBoardOption"/>
+        </xpath>
+    </t>
 </templates>

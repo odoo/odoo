@@ -302,6 +302,7 @@
             'website/static/src/client_actions/website_preview/website_builder_action.editor.scss',
             'website/static/src/components/user_switch.*',
             'website/static/src/components/team_board_contact_dialog/**/*',
+            'website/static/src/components/team_board_contact_dialog_copy_email/**/*',
         ],
         'web.assets_frontend_minimal': [
             'website/static/src/utils/misc.js',

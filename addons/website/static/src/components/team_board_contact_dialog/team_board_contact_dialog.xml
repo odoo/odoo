@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="website.TeamBoardContactDialog">
-        <Dialog size="'xl'" title.translate="Contact" t-on-keyup="this.handleKeyup" t-on-click="this.handleClick">
+        <Dialog size="'xl'" t-on-click="this.handleClick" t-on-keyup="this.handleKeyup" title.translate="Contact">
             <div class="row">
                 <div class="col-4">
                     <img class="img-fluid" t-att-src="this.props.img"/>
@@ -10,8 +10,8 @@
                     <t t-out="this.content"/>
                 </div>
             </div>
-            <div class="mt-4">
-                <button class="btn btn-success" t-custom-ref="website.TeamBoardContactDialogSendButton" t-on-click="this.sendMessage">Send message</button>
+            <div class="mt-4 d-flex gap-2">
+                <button class="btn" t-as="action" t-attf-class="{{action.primary ? 'btn-primary': 'btn-secondary'}}" t-foreach="this.actions" t-key="action_id" t-on-click="(event) => action.execute(event, this)" t-out="action.label"/>
             </div>
         </Dialog>
     </t>

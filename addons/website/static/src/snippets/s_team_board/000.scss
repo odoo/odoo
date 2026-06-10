@@ -5,49 +5,33 @@
   }
 }
 
-[data-layout="list"] {
-  .col {
+.o_team_board_grid {
+  .o_team_board_col {
+    min-width: calc(100%/3);
+    max-width: calc(100%/3);
+  }
+}
+
+.o_team_board_list {
+  .o_team_board_col {
     min-width: 100%;
-
-    .card {
-      flex-direction: row;
-
-      img {
-        max-width: 10%;
-
-        @include media-breakpoint-down(lg) {
-          max-width: 30%;
-        }
-
-        object-fit: cover;
-      }
-    }
   }
 }
 
-[data-layout="grid"] {
-  .row {
-    .col {
-      width: calc(100%/3);
-      flex: 0 0 auto;
+.o_team_board_density_dense {
+  .card-body {
+    padding: 0.25rem;
 
-      .card {
-        img {
-          width: 100%;
-        }
-      }
+    .card-title {
+      font-size: 1rem;
     }
-  }
-}
 
-[data-density="dense"] {
-  .card {
-    .card-body {
-      padding: 0rem;
+    .card-subtitle {
+      font-size: 0.8rem;
+    }
 
-      & > * {
-        font-size: 0.8em;
-      }
+    .card-text {
+      font-size: 0.8rem;
     }
   }
 }
