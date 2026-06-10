@@ -164,7 +164,7 @@ class IrActionsReport(models.Model):
         self,
         engine_name: str,
         html: str,
-        report_ref: str | bool = False,
+        report_ref: str | Literal[False] = False,
         landscape: bool = False,
         **kwargs,
     ) -> tuple[bytes, list[int]]:
