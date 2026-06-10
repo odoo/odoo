@@ -4,8 +4,27 @@ import { Base } from "@point_of_sale/app/models/related_models";
 const { DateTime } = luxon;
 
 export class LoyaltyCard extends Base {
+    setup(vals) {
+        super.setup();
+        // In case of loyalty loaded from the backend then we want to set active as backend and if
+        // loyalty card generated in frontend the create with active true.
+        this.active = "active" in vals ? vals.active : true;
+    }
     static pythonModel = "loyalty.card";
-
+    static extraFields = {
+        _temp_points: {
+            model: "loyalty.card",
+            name: "_temp_points",
+            type: "float",
+            local: true,
+        },
+        _barcode_base64: {
+            model: "loyalty.card",
+            name: "_barcode_base64",
+            type: "string",
+            local: true,
+        },
+    };
     isExpired() {
         // If no expiration date is set, the card is not expired
         if (!this.expiration_date) {

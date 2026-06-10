@@ -11,6 +11,9 @@ patch(PartnerLine.prototype, {
     },
     _getLoyaltyPointsRepr(loyaltyCard) {
         const program = loyaltyCard.program_id;
+        if (!program) {
+            return "";
+        }
         if (program.program_type === "ewallet") {
             return `${program.name}: ${this.env.utils.formatCurrency(loyaltyCard.points)}`;
         }

@@ -59,6 +59,7 @@ export class DataServiceOptions {
             "calendar.event": ["appointment_resource_ids"],
             "res.partner": ["barcode"],
             "product.uom": ["barcode"],
+            "loyalty.card": ["uuid", "code"],
         };
 
         for (const model in databaseTable) {

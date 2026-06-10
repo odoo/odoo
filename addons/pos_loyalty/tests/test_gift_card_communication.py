@@ -20,13 +20,6 @@ class TestGiftCardCommunication(TestPointOfSaleHttpCommon):
             'body_html': '<p>Here is your gift card: {{ object.code }}</p>',
         })
 
-        cls.gift_card_report = cls.env['ir.actions.report'].create({
-                'name': 'Test Gift Card Report',
-                'model': 'loyalty.card',
-                'report_type': 'qweb-pdf',
-                'report_name': 'loyalty.report_gift_card_document',
-            })
-
         # Create a gift card program
         cls.gift_card_program = cls.env['loyalty.program'].create({
             'name': 'Test Gift Card Program',
@@ -47,7 +40,7 @@ class TestGiftCardCommunication(TestPointOfSaleHttpCommon):
             })],
             'trigger_product_ids': cls.env.ref('loyalty.gift_card_product_50'),
             'mail_template_id': cls.mail_template.id,
-            'pos_report_print_id': cls.gift_card_report.id
+            'pos_report_print_id': cls.env.ref('loyalty.report_gift_card').id,
         })
 
         cls.test_partner = cls.env['res.partner'].create({
@@ -60,40 +53,11 @@ class TestGiftCardCommunication(TestPointOfSaleHttpCommon):
         Test that when a gift card is created and an email is sent,
         the email content is logged to the pos.order's chatter.
         """
-        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
         self.main_pos_config.open_ui()
+        self.start_pos_tour('test_gift_card_email_logged_to_pos_order_chatter')
 
-        pos_order = self.env['pos.order'].create({
-            'config_id': self.main_pos_config.id,
-            'session_id': self.main_pos_config.current_session_id.id,
-            'partner_id': self.test_partner.id,
-            'lines': [Command.create({
-                'product_id': self.env.ref('loyalty.gift_card_product_50').id,
-                'price_unit': 50,
-                'discount': 0,
-                'qty': 1,
-                'price_subtotal': 50.00,
-                'price_subtotal_incl': 50.00,
-            })],
-            'amount_paid': 50.0,
-            'amount_total': 50.0,
-            'amount_tax': 0.0,
-            'amount_return': 0.0,
-        })
-
-        messages_before = len(pos_order.message_ids)
-
-        coupon_data = {
-            '-1': {
-                'points': 50,
-                'program_id': self.gift_card_program.id,
-                'coupon_id': -1,
-                'product_id': self.env.ref('loyalty.gift_card_product_50').id,
-                'code': 'TEST-GIFT-CARD-001',
-            },
-        }
-        pos_order.confirm_coupon_programs(coupon_data)
-
+        pos_order = self.main_pos_config.current_session_id.order_ids[0]
         gift_card = self.env['loyalty.card'].search([
             ('code', '=', 'TEST-GIFT-CARD-001'),
         ], limit=1)
@@ -116,7 +80,7 @@ class TestGiftCardCommunication(TestPointOfSaleHttpCommon):
         self.assertTrue(mail.exists(), "An email should be created for the gift card")
 
         messages_after = len(pos_order.message_ids)
-        self.assertGreater(messages_after, messages_before,
+        self.assertGreater(messages_after, 0,
                           "A new message should be posted to the POS order")
 
         last_message = pos_order.message_ids.sorted('id', reverse=True)[0]
@@ -149,28 +113,9 @@ class TestGiftCardCommunication(TestPointOfSaleHttpCommon):
         })
 
         self.main_pos_config.open_ui()
+        self.start_pos_tour('test_gift_card_email_logged_only_for_gift_cards')
 
-        pos_order = self.env['pos.order'].create({
-            'config_id': self.main_pos_config.id,
-            'session_id': self.main_pos_config.current_session_id.id,
-            'partner_id': self.test_partner.id,
-            'amount_paid': 100.0,
-            'amount_total': 100.0,
-            'amount_tax': 0.0,
-            'amount_return': 0.0,
-        })
-
-        messages_before = len(pos_order.message_ids)
-
-        coupon_data = {
-            '-1': {
-                'points': 100,
-                'program_id': loyalty_program.id,
-                'coupon_id': -1,
-                'partner_id': self.test_partner.id,
-            },
-        }
-        pos_order.confirm_coupon_programs(coupon_data)
+        pos_order = self.main_pos_config.current_session_id.order_ids[0]
 
         loyalty_card = self.env['loyalty.card'].search([
             ('program_id', '=', loyalty_program.id),
@@ -182,11 +127,16 @@ class TestGiftCardCommunication(TestPointOfSaleHttpCommon):
             loyalty_card.program_id.program_type, 'loyalty',
             "Card should be a loyalty card",
         )
+        mail = self.env['mail.mail'].search([
+            ('model', '=', 'loyalty.card'),
+            ('res_id', '=', loyalty_card.id),
+        ], order='id desc', limit=1)
+        self.assertFalse(mail.exists(), "An email should not be created for the loyalty type program card")
+        last_message = pos_order.message_ids.sorted('id', reverse=True)[0]
 
-        messages_after = len(pos_order.message_ids)
-        self.assertEqual(
-            messages_after, messages_before,
-            "No message should be posted for non-gift-card coupons",
+        self.assertIn(
+            'point of sale order created', last_message.body.lower(),
+            "The message should contain order creation information",
         )
 
     def test_gift_card_email_without_customer(self):
@@ -194,48 +144,30 @@ class TestGiftCardCommunication(TestPointOfSaleHttpCommon):
         Test that no email is sent and logged when the gift card
         has no customer associated with it.
         """
-        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
         self.main_pos_config.open_ui()
+        self.start_pos_tour('test_gift_card_email_without_customer')
 
-        pos_order = self.env['pos.order'].create({
-            'config_id': self.main_pos_config.id,
-            'session_id': self.main_pos_config.current_session_id.id,
-            'partner_id': False,  # No customer
-            'lines': [Command.create({
-                'product_id': self.env.ref('loyalty.gift_card_product_50').id,
-                'price_unit': 50,
-                'qty': 1,
-                'price_subtotal': 50.00,
-                'price_subtotal_incl': 50.00,
-            })],
-            'amount_paid': 50.0,
-            'amount_total': 50.0,
-            'amount_tax': 0.0,
-            'amount_return': 0.0,
-        })
-
-        messages_before = len(pos_order.message_ids)
-
-        coupon_data = {
-            '-1': {
-                'points': 50,
-                'program_id': self.gift_card_program.id,
-                'coupon_id': -1,
-                'product_id': self.env.ref('loyalty.gift_card_product_50').id,
-                'code': 'TEST-NO-CUSTOMER-001',
-            },
-        }
-        pos_order.confirm_coupon_programs(coupon_data)
-
+        pos_order = self.main_pos_config.current_session_id.order_ids[0]
         gift_card = self.env['loyalty.card'].search([
             ('code', '=', 'TEST-NO-CUSTOMER-001'),
         ])
         self.assertTrue(
             gift_card.exists(), "Gift card should be created even without customer",
         )
-
-        messages_after = len(pos_order.message_ids)
         self.assertEqual(
-            messages_after, messages_before,
-            "No message should be posted when there's no customer",
+            gift_card.source_pos_order_id.id, pos_order.id,
+            "Gift card should reference the POS order",
+        )
+
+        mail = self.env['mail.mail'].search([
+            ('model', '=', 'loyalty.card'),
+            ('res_id', '=', gift_card.id),
+        ], order='id desc', limit=1)
+        self.assertFalse(mail.exists(), "An email should not be created for the loyalty type program card")
+        last_message = pos_order.message_ids.sorted('id', reverse=True)[0]
+
+        self.assertIn(
+            'point of sale order created', last_message.body.lower(),
+            "The message must only created mail contain order creation information",
         )

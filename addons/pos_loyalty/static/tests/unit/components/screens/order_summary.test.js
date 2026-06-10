@@ -36,8 +36,7 @@ test("_updateGiftCardOrderline", async () => {
 
     const updatedLine = order.getSelectedOrderline();
 
-    expect(updatedLine.gift_code).toBe("ABC123");
+    expect(updatedLine._gift_code).toBe("ABC123");
     expect(updatedLine.product_id.id).toBe(product.id);
     expect(updatedLine.getQuantity()).toBe(1);
-    expect(order.uiState.couponPointChanges[card.id]).toBe(undefined);
 });

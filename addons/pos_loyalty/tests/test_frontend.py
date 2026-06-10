@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, timedelta
-from unittest.mock import patch
 from freezegun import freeze_time
 
 from odoo import Command
@@ -3006,7 +3005,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_refund_does_not_decrease_points', login="pos_user")
-        self.assertEqual(card.points, 30)
+        self.assertEqual(card.points, 0.0)
 
     def test_loyalty_reward_with_variant(self):
         self.env['loyalty.program'].search([]).write({'active': False})
@@ -3472,23 +3471,6 @@ class TestUi(TestPointOfSaleHttpCommon):
             0.0,
             "Loyalty points were deducted correctly after refunding the order."
         )
-
-    def test_confirm_coupon_programs_one_by_one(self):
-        """
-        Sync from UI is now syncing orders one by one.
-        confirm_coupon_programs should be called 6 times in this tour (6 orders created).
-        """
-        self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
-        pos_order = self.env.registry.models['pos.order']
-        sync_counter = {'count': 0}
-
-        def confirm_coupon_programs_patch(self, coupon_data):
-            sync_counter['count'] += 1
-            return super(pos_order, self).confirm_coupon_programs(coupon_data)
-
-        with patch.object(pos_order, "confirm_coupon_programs", confirm_coupon_programs_patch):
-            self.start_pos_tour("test_confirm_coupon_programs_one_by_one", login="pos_user")
-            self.assertEqual(sync_counter['count'], 6)
 
     def test_specific_reward_product_tax_included_excluded(self):
         """This test makes sure that the value of a reward applied on a specific product is

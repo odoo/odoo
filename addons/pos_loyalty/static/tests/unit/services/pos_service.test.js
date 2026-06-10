@@ -25,11 +25,11 @@ describe("PosStore - loyalty essentials", () => {
         order.pricelist_id = { id: 1 };
 
         const line = await addProductLineToOrder(store, order, {
-            gift_code: "XYZ123",
+            _gift_code: "XYZ123",
         });
 
         order.pointsForPrograms = () => ({
-            [program.id]: [{ points: 10 }],
+            [program.id]: [{ points: 10, code: "XYZ123" }],
         });
 
         await store.updatePrograms();
