@@ -11,7 +11,6 @@ class TestMailingContactToList(MailingContactToListCommon):
     @users('user_marketing')
     @warmup
     def test_from_partners_and_compute_use_context_contact(self):
-        self._create_mailing_list()
         mailing_list_context = {'default_list_ids': self.mailing_list_1.ids}
 
         partner = self.env['res.partner'].create({
@@ -189,7 +188,6 @@ class TestMailingContactToList(MailingContactToListCommon):
 
     @users('user_marketing')
     def test_from_partners_prefer_contact_already_subscribed_to_context_list(self):
-        self._create_mailing_list()
         mailing_list_context = {"default_list_ids": self.mailing_list_1.ids}
 
         partner = self.env['res.partner'].create({'name': 'Partner', 'email': 'partner@test.example.com'})
@@ -221,6 +219,55 @@ class TestMailingContactToList(MailingContactToListCommon):
         self.assertEqual(newer_contact._get_sort_key(self.mailing_list_1.id), (0, 0, 0, 0, newer_contact.id))
 
     @users('user_marketing')
+    @warmup
+    def test_from_partners_wizard_multiple_lists(self):
+        """Check subscriptions, notifications, and query performance when adding partners to multiple lists."""
+        n_new, n_sub_all, n_tot = 40, 40, 80
+        all_mailing_lists = self.mailing_list_1 | self.mailing_list_2
+        vals_list = [{'name': f'Partner {idx}', 'email': f'partner_{idx}@test.example.com'} for idx in range(n_tot)]
+        all_partners = self.env['res.partner'].create(vals_list)
+        all_contacts = self.env['mailing.contact'].create(
+            [vals | {'partner_id': all_partners[idx].id} for idx, vals in enumerate(vals_list)]
+        )
+        contacts_no_sub, contacts_all_sub = all_contacts[:n_new], all_contacts[-n_sub_all:]
+        partners_no_sub, all_partners = contacts_no_sub.partner_id, all_contacts.partner_id
+        self.assertEqual(len(all_contacts), len(all_partners))
+
+        self.env['mailing.subscription'].create(
+            [{'contact_id': c.id, 'list_id': lst.id} for c in contacts_all_sub for lst in all_mailing_lists]
+        )
+
+        for idx, (case, mailing_lists, partners, exp_type, exp_message, query_count) in enumerate([
+            ('20 subs() -> 1', self.mailing_list_1, partners_no_sub[:20], 'success', '20 added', 7),
+            ('20 subs() -> 1+2', all_mailing_lists, partners_no_sub[20:], 'success', '20 added', 11),
+            ('20 sub(1) -> 1+2', all_mailing_lists, partners_no_sub[:20], 'success',
+             '20 added%(NOTIF_NEWLINE)s1 opted out', 10),
+            ('80 sub(1, 2) -> 1+2', all_mailing_lists, all_partners, 'info',
+             '0 added%(NOTIF_NEWLINE)s80 already subscribed%(NOTIF_NEWLINE)s1 opted out', 9),
+        ]):
+            with self.subTest(case=case):
+                if idx == 2:
+                    partners_no_sub[0].mailing_contact_ids.subscription_ids.filtered(
+                        lambda s: s.list_id == self.mailing_list_1
+                    ).opt_out = True
+
+                all_partners.invalidate_recordset()
+                all_contacts.invalidate_recordset()
+                all_mailing_lists.invalidate_recordset()
+                self.env['mailing.subscription'].invalidate_model()
+
+                wizard = self.env['mailing.contact.to.list'].create(
+                    {'partner_ids': partners.ids, 'mailing_list_ids': mailing_lists.ids})
+                with (RecordCapturer(self.env['mailing.contact']) as contact_capture,
+                        self.assertQueryCount(query_count)):
+                    action = wizard._action_add_res_partners()
+
+                self.assertFalse(len(contact_capture.records))
+                notification = action['params']['notification']
+                self.assertEqual(notification['type'], exp_type)
+                self.assertIn(exp_message, notification['message'])
+
+    @users('user_marketing')
     def test_mailing_contact_to_list(self):
         contacts = self.env['mailing.contact'].create([{
             'name': 'Contact %02d',
@@ -239,7 +286,7 @@ class TestMailingContactToList(MailingContactToListCommon):
         self.assertEqual(wizard_form.contact_ids.ids, contacts.ids)
 
         # set mailing list and add contacts
-        wizard_form.mailing_list_id = mailing
+        wizard_form.mailing_list_ids.add(mailing)
         wizard = wizard_form.save()
         frozen_time = datetime(2025, 1, 1, 0, 0)
         with self.mock_datetime_and_now(frozen_time):

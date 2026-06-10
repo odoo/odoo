@@ -452,6 +452,7 @@ class MailingContactToListCommon(MassMailCommon):
         super().setUpClass()
         cls.MOCK_ORM_BATCH_SIZE = 20
         cls.MAX_FROM_PARTNERS = 22  # smallest even number > mocked INSERT_BATCH_SIZE/UPDATE_BATCH_SIZE
+        cls._create_mailing_list()
 
     def _assert_from_partner_creates_contacts(self, partners, query_count=None, msg=None):
         (result_contacts, _nb_no_details), new_contacts = self._mock_from_partners_with_capture(partners, query_count)
