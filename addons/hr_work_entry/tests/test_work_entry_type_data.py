@@ -39,6 +39,7 @@ class TestWorkEntryTypeData(TransactionCase):
         }
         excluded_codes_per_country = {
             'us': {'OVERTIME', 'OUT', 'LEAVE100', 'LEAVE105'},
+            'eg': {'LEAVE110'},
         }
         for module in self.env['ir.module.module'].search([('name', '=like', 'l10n____hr_payroll')]):
             country_code = module.name.split('_')[1]
