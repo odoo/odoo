@@ -59,15 +59,29 @@ patch(PaymentForm.prototype, {
             new StripeOptions()._prepareStripeOptions(stripeInlineForm.dataset),
         );
 
+        // Resolve the Stripe payment method type for this payment method code.
+        const stripePmType = (
+            this.stripeInlineFormValues['payment_methods_mapping'][paymentMethodCode]
+            ?? paymentMethodCode
+        );
+
+        // ACSS Debit does not support Stripe's deferred intent flow (Elements `mode` option).
+        // For ACSS, Elements must be initialized with a real `clientSecret` from a pre-created
+        // PaymentIntent. We defer this initialization to _processDirectFlow where the
+        // client_secret is available from processingValues, and skip element mounting here.
+        if (stripePmType === 'acss_debit') {
+            // Store the container reference so we can mount the element later in _processDirectFlow.
+            this._acssStripeInlineForm = stripeInlineForm;
+            this._acssPaymentOptionId = paymentOptionId;
+            return;
+        }
+
         // Instantiate the elements.
         let elementsOptions =  {
             appearance: { theme: 'stripe' },
             currency: this.stripeInlineFormValues['currency_name'],
             captureMethod: this.stripeInlineFormValues['capture_method'],
-            paymentMethodTypes: [
-                this.stripeInlineFormValues['payment_methods_mapping'][paymentMethodCode]
-                ?? paymentMethodCode
-            ],
+            paymentMethodTypes: [stripePmType],
         };
         if (this.paymentContext['mode'] === 'payment') {
             elementsOptions.mode = 'payment';
@@ -132,14 +146,23 @@ patch(PaymentForm.prototype, {
             return;
         }
 
-        // Trigger form validation and wallet collection.
-        try {
-            await this.waitFor(this.stripeElements[paymentOptionId].submit());
-        } catch (error) {
-            this._displayErrorDialog(_t("Incorrect payment details"), error.message);
-            this._enableButton();
-            return;
+        // For ACSS debit, elements are mounted later in _processDirectFlow after the
+        // client_secret is available, so skip the submit step here.
+        const stripePmType = (
+            this.stripeInlineFormValues?.['payment_methods_mapping']?.[paymentMethodCode]
+            ?? paymentMethodCode
+        );
+        if (stripePmType !== 'acss_debit') {
+            // Trigger form validation and wallet collection.
+            try {
+                await this.waitFor(this.stripeElements[paymentOptionId].submit());
+            } catch (error) {
+                this._displayErrorDialog(_t("Incorrect payment details"), error.message);
+                this._enableButton();
+                return;
+            }
         }
+
         await super._initiatePaymentFlow(...arguments);
     },
 
@@ -158,6 +181,46 @@ patch(PaymentForm.prototype, {
         if (providerCode !== 'stripe') {
             await super._processDirectFlow(...arguments);
             return;
+        }
+
+        // For ACSS debit, the Elements instance could not be created during _prepareInlineForm
+        // because acss_debit does not support the deferred intent flow (mode: 'payment').
+        // Now that we have a real client_secret from the pre-created PaymentIntent, we
+        // initialize Elements with it and mount the payment element before confirming.
+        const stripePmType = (
+            this.stripeInlineFormValues?.['payment_methods_mapping']?.[paymentMethodCode]
+            ?? paymentMethodCode
+        );
+        if (stripePmType === 'acss_debit') {
+            const clientSecret = processingValues['client_secret'];
+            this.stripeElements[paymentOptionId] = this.stripeJS.elements({
+                appearance: { theme: 'stripe' },
+                clientSecret: clientSecret,
+            });
+            const paymentElement = this.stripeElements[paymentOptionId].create('payment', {
+                defaultValues: {
+                    billingDetails: this.stripeInlineFormValues['billing_details'],
+                },
+            });
+            paymentElement.on('loaderror', response => {
+                this._displayErrorDialog(
+                    _t("Cannot display the payment form"), response.error.message
+                );
+            });
+            // Mount into the container stored during _prepareInlineForm.
+            paymentElement.mount(this._acssStripeInlineForm);
+
+            // Wait for the element to be fully ready before submitting.
+            await new Promise((resolve) => paymentElement.on('ready', resolve));
+
+            // Submit the element to validate bank account details entered by the customer.
+            try {
+                await this.waitFor(this.stripeElements[paymentOptionId].submit());
+            } catch (error) {
+                this._displayErrorDialog(_t("Incorrect payment details"), error.message);
+                this._enableButton();
+                return;
+            }
         }
 
         const { error } = await this.waitFor(
