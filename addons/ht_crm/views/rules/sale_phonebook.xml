@@ -27,10 +27,24 @@
         <field name="groups" eval="[(4, ref('group_ht_executive'))]"/>
     </record>
 
+    <!-- Data thuộc về từng Sales -->
     <record id="rule_phonebook_user" model="ir.rule">
         <field name="name">User (Phonebook)</field>
         <field name="model_id" ref="model_sale_phonebook"/>
         <field name="domain_force">[('salesperson_id.user_id', '=', user.id)]</field>
         <field name="groups" eval="[(4, ref('group_ht_user'))]"/>
+    </record>
+
+    <!-- Trưởng phòng nắm Data của Team -->
+    <record id="rule_phonebook_manager" model="ir.rule">
+        <field name="name">Manager (Phonebook)</field>
+        <field name="model_id" ref="model_sale_phonebook"/>
+        <field name="domain_force">[
+            '|',
+            ('salesperson_id.user_id', '=', user.id),
+            ('salesperson_id.manager_id.user_id', '=', user.id)
+        ]
+        </field>
+        <field name="groups" eval="[(4, ref('group_ht_leader'))]"/>
     </record>
 </odoo>
