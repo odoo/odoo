@@ -22,7 +22,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search res_users_settings_embedded_action (_format_settings)
     #       - fetch res_users_settings (_format_settings)
     #       - search res_users_settings_volumes (_format_settings)
-    #         [enterprise] fetch voip_provider
     #       - search res_lang_res_users_settings_rel (_format_settings)
     #       - search im_livechat_expertise_res_users_settings_rel (_format_settings)
     #   2: hasCannedResponses
@@ -33,7 +32,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   2: show_livechat_category
     #       - search discuss_channel_member (is_self for ACL check)
     #       - search_count discuss_channel_member
-    #   10: store add odoobot:
+    #   11: store add odoobot:
     #       - fetch res_partner (_read_format)
     #         [enterprise] search ai_agent (_compute_im_status ai override)
     #       - search res_users (_compute_im_status)
@@ -41,11 +40,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search presence (_compute_im_status)
     #       - fetch presence (_compute_im_status)
     #       - search employee (_store_im_status_fields)
+    #       - search employee (_store_im_status_fields company specific)
     #       - fetch res_users (_read_format)
     #       - search hr_employee_location (_store_im_status_fields hr_homeworking override)
     #       - fetch hr_employee (_compute_work_location_type)
     #       - search hr_leave (_compute_leave_status)
-    _query_count_init_store = 22
+    _query_count_init_store = 23
     # Queries for _query_count_init_messaging (in order):
     #   2: _search_is_member (for current user, first occurence _search_is_member for chathub given channel ids)
     #       - fetch res_users
