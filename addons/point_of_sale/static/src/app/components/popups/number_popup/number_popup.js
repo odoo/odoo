@@ -32,13 +32,17 @@ export class NumberPopup extends Component {
     setup() {
         this.numberBuffer = useService("number_buffer");
         this.numberBuffer.use({
-            triggerAtInput: ({ buffer }) => (this.state.buffer = buffer),
+            triggerAtInput: ({ buffer }) => this.updateBuffer(buffer),
         });
         useHotkey("enter", () => this.confirm());
         useHotkey("escape", () => this.cancel());
         this.state = useState({
             buffer: this.props.startingValue,
         });
+    }
+
+    updateBuffer(buffer) {
+        this.state.buffer = buffer;
     }
 
     get confirmButtonLabel() {
