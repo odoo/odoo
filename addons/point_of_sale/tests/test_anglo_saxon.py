@@ -663,3 +663,57 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
             {'product_id': self.product.id, 'credit': 20.0},
             {'product_id': product2.id, 'credit': 100.0},
         ])
+
+    def test_cogs_with_ship_later_invoicing(self):
+        # This test will check that the correct journal entries are created when an order use ship later and is invoiced
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+        current_session.set_opening_control(0, None)
+
+        self.product = self.env['product.product'].create({
+            'name': 'New product 1',
+            'standard_price': 25,
+            'available_in_pos': True,
+            'is_storable': True,
+            'categ_id': self.category.id,
+        })
+
+        # I create a PoS order with 1 unit of New product at 450 EUR
+        self.pos_order_pos0 = self.PosOrder.create({
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'pricelist_id': self.company.partner_id.property_product_pricelist.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'to_invoice': False,
+            'shipping_date': '2023-01-01',
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product.id,
+                'price_unit': 100,
+                'discount': 0.0,
+                'qty': 1.0,
+                'price_subtotal': 100,
+                'price_subtotal_incl': 100,
+            })],
+            'amount_total': 100,
+            'amount_tax': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+            'last_order_preparation_change': '{}'
+        })
+
+        # I make a payment to fully pay the order
+        context_make_payment = {"active_ids": [self.pos_order_pos0.id], "active_id": self.pos_order_pos0.id}
+        self.pos_make_payment_0 = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': 100.0,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        context_payment = {'active_id': self.pos_order_pos0.id}
+        self.pos_make_payment_0.with_context(context_payment).check()
+        self.pos_order_pos0._generate_pos_order_invoice()
+        self.pos_order_pos0
+        self.assertRecordValues(self.pos_order_pos0.account_move.line_ids,
+            [{'account_id': self.category.property_account_income_categ_id.id, 'balance': -100.0},
+            {'account_id': self.account.id, 'balance': 100.0},
+            {'account_id': self.category.property_stock_valuation_account_id.id, 'balance': -25.0},
+            {'account_id': self.category.property_account_expense_categ_id.id, 'balance': 25.0}])

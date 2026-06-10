@@ -290,7 +290,13 @@ class PosOrder(models.Model):
         moves = self.mapped('picking_ids.move_ids')\
             .filtered(lambda m: m.is_valued and m.product_id.valuation == 'real_time' and m.product_id.id == product.id)\
             .sorted(lambda x: x.date)
-        return moves._get_price_unit()
+        if moves:
+            return moves._get_price_unit()
+        else:
+            if product.cost_method in ['standard', 'average']:
+                return product.standard_price
+            else:
+                return product._run_fifo(quantity) / quantity if quantity else 0
 
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
     last_order_preparation_change = fields.Char(string='Last preparation change', help="Last printed state of the order")
