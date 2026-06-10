@@ -12,6 +12,7 @@ patch(AttendeeCalendarModel.prototype, {
             googlePendingSync: false,
             googleIsSync: true,
             googleIsPaused: false,
+            googleSyncError: false,
         });
     },
 
@@ -61,11 +62,12 @@ patch(AttendeeCalendarModel.prototype, {
                 silent,
             },
         );
-        if (["need_config_from_admin", "need_auth", "sync_stopped", "sync_paused"].includes(result.status)) {
+        if (["need_config_from_admin", "need_auth", "sync_stopped", "sync_paused", "sync_failed"].includes(result.status)) {
             this.state.googleIsSync = false;
         } else if (result.status === "no_new_event_from_google" || result.status === "need_refresh") {
             this.state.googleIsSync = true;
         }
+        this.state.googleSyncError = result.status === "sync_failed";
         this.state.googleIsPaused = result.status === "sync_paused";
         this.state.googlePendingSync = false;
         if (this.googleSyncTimedOut && result.status === "need_refresh") {
