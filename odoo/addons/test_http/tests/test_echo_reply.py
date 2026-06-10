@@ -4,6 +4,8 @@ import json
 import time
 from http import HTTPStatus
 
+import requests.exceptions
+
 from odoo.http.session import SESSION_ROTATION_INTERVAL
 from odoo.tests import Like, new_test_user, tagged
 from odoo.tools import mute_logger
@@ -183,6 +185,30 @@ class TestHttpEchoReplyHttpWithDB(TestHttpBase):
         res = self.db_url_open('/test_http/echo-http-csrf?race=Asgard', data={'commander': 'Thor', 'csrf_token': csrf_token})
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.text, "{'race': 'Asgard', 'commander': 'Thor'}")
+
+    def test_echohttp9_post_chunked(self):
+        self.env['ir.config_parameter'].sudo().set_int('web.max_file_upload_size', 10)
+
+        with self.subTest(name="short body"):
+            short_body = iter('""')
+            res = self.db_url_open('/test_http/echo-json-over-http', data=short_body, headers=CT_JSON)
+            req = res.request
+            res.raise_for_status()
+            self.assertEqual(req.headers.get('Transfer-Encoding'), 'chunked')
+            self.assertEqual(res.text, '""')
+            self.assertFalse(list(short_body), "the body should had been sent fully")
+            self.assertEqual(res.status_code, 200)
+
+        with self.subTest(name="long body"):
+            long_body = iter('"this text is too long"')
+            with self.assertRaises(requests.exceptions.ConnectionError) as exc:
+                self.db_url_open('/test_http/echo-json-over-http', data=long_body, headers=CT_JSON)
+            req = exc.exception.request
+            res = exc.exception.response
+            self.assertEqual(req.headers.get('Transfer-Encoding'), 'chunked')
+            self.assertTrue(list(long_body), "the body shouldn't had been sent fully")
+            if res:
+                self.assertEqual(res.status_code, 400)
 
 
 @tagged('post_install', '-at_install')
