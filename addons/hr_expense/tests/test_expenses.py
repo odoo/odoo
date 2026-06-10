@@ -1169,3 +1169,54 @@ class TestExpenses(TestExpenseCommon):
         payable_move_line = payment_entry.line_ids.filtered(lambda l: l.account_id == other_payable_account)
         self.assertTrue(bill.payment_state in ('in_payment', 'paid'), "The bill should be marked as paid/in_payment")
         self.assertTrue(payable_move_line.reconciled, "The payment entry should be reconciled with the bill")
+
+    def test_expense_switch_payment_mode(self):
+        """ Test that switching a bill-matched company expense back to employee-paid must drop the payable
+        account and let the expense to be posted later. Switching back to company account
+        should conserve the existing bill"""
+        other_payable_account = self.company_data['default_account_payable'].copy()
+        partner = self.env['res.partner'].create({
+            'name': 'test partner',
+            'property_account_payable_id': other_payable_account.id,
+        })
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': partner.id,
+            'invoice_date': '2026-01-01',
+            'invoice_line_ids': [Command.create({'name': 'test bill line', 'price_unit': 100.0})],
+        })
+        bill.action_post()
+
+        expense = self.create_expenses({
+            'name': 'Expense matched to bill',
+            'payment_mode': 'company_account',
+            'total_amount_currency': 100.0,
+            'has_existing_bill': True,
+            'existing_bill_id': bill.id,
+        })
+        self.assertEqual(expense.account_id, other_payable_account, "Expense and matched bill uses the bill's payable account")
+
+        expected_expense_account = self.product_c.with_company(expense.company_id).product_tmpl_id._get_product_accounts()['expense']
+
+        # Switch back to employee-paid
+        expense.payment_mode = 'own_account'
+        self.assertFalse(expense.has_existing_bill, "Use existing bill mode should be disabled")
+        self.assertEqual(expense.existing_bill_id, bill)
+        self.assertNotEqual(expense.account_id.account_type, 'liability_payable', "Employee-paid expense must not use a payable account")
+        self.assertEqual(expense.account_id, expected_expense_account)
+
+        # Return to company_account mode
+        expense.payment_mode = 'company_account'
+        self.assertTrue(expense.has_existing_bill, "Use existing bill mode should be enabled")
+        self.assertEqual(expense.account_id, other_payable_account)
+
+        # The employee-paid expense can now be posted without raising
+        expense.payment_mode = 'own_account'
+        expense.action_submit()
+        expense.action_approve()
+        self.post_expenses_with_wizard(expense)
+        self.assertTrue(expense.account_move_id, "The employee-paid expense should have generated a journal entry")
+        self.assertNotIn(
+            other_payable_account, expense.account_move_id.line_ids.account_id,
+            "The posted entry must not be the matched bill's payable account",
+        )

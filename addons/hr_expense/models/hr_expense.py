@@ -272,6 +272,7 @@ class HrExpense(models.Model):
         default='own_account',
         required=True,
         tracking=True,
+        inverse='_inverse_payment_mode',
     )
     vendor_id = fields.Many2one(comodel_name='res.partner', string="Vendor")
     account_id = fields.Many2one(
@@ -727,6 +728,17 @@ class HrExpense(models.Model):
                     ('journal_id.active', '=', True),
                 ])
 
+    @api.onchange('payment_mode')
+    def _inverse_payment_mode(self):
+        for expense in self:
+            expense.has_existing_bill = (
+                expense.payment_mode == 'company_account'
+                and (
+                    expense.has_existing_bill
+                    or expense.existing_bill_id
+                )
+            )
+
     @api.onchange('has_existing_bill')
     def _onchange_has_existing_bill(self):
         if not self.has_existing_bill:
@@ -737,18 +749,18 @@ class HrExpense(models.Model):
         if self.existing_bill_id:
             self.vendor_id = self.existing_bill_id.partner_id
 
-    @api.depends('product_id', 'company_id', 'has_existing_bill', 'existing_bill_id', 'vendor_id')
+    @api.depends('product_id', 'company_id', 'payment_mode', 'has_existing_bill', 'existing_bill_id', 'vendor_id')
     def _compute_account_id(self):
         for _expense in self:
             expense = _expense.with_company(_expense.company_id)
             account = False
 
-            if expense.existing_bill_id:
-                payable_line = expense.existing_bill_id.line_ids.filtered(lambda l: l.account_type == 'liability_payable')
-                account = payable_line[:1].account_id
-
-            elif expense.has_existing_bill:
-                account = expense.vendor_id.commercial_partner_id.property_account_payable_id or expense.company_id.payable_account_id
+            if expense.payment_mode == 'company_account' and expense.has_existing_bill:
+                if expense.existing_bill_id:
+                    payable_line = expense.existing_bill_id.line_ids.filtered(lambda l: l.account_type == 'liability_payable')
+                    account = payable_line[:1].account_id
+                else:
+                    account = expense.vendor_id.commercial_partner_id.property_account_payable_id or expense.company_id.payable_account_id
 
             elif expense.product_id:
                 account = expense.product_id.product_tmpl_id._get_product_accounts()['expense']
