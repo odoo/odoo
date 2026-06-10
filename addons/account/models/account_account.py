@@ -1160,7 +1160,9 @@ class AccountAccount(models.Model):
         }]
 
     def _merge_method(self, destination, source):
-        raise UserError(_("You cannot merge accounts."))
+        return {
+            'error': self.env._("You cannot merge accounts.")
+        }
 
     def action_unmerge(self):
         """ Split the account `self` into several accounts, one per company.
