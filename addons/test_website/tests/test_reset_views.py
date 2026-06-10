@@ -95,10 +95,7 @@ class TestWebsiteResetViews(odoo.tests.HttpCase):
 
     @mute_logger('odoo.http')
     def test_07_reset_page_view_complete_flow(self):
-        self.start_tour(self.env['website'].get_client_action_url('/test_page_view', True), 'test_reset_page_view_complete_flow_part1', login="admin")
-        self.fix_it('/test_page_view')
-        self.start_tour(self.env['website'].get_client_action_url('/test_page_view', False), 'test_reset_page_view_complete_flow_part2', login="admin")
-        self.fix_it('/test_page_view')
+        self.start_tour(self.env['website'].get_client_action_url('/test_page_view', True), 'test_reset_page_view_complete_flow', login="admin")
 
     @mute_logger('odoo.http')
     def test_08_reset_specific_page_view_hard_mode(self):

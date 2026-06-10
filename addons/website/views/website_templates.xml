@@ -3036,17 +3036,23 @@
     <xpath expr="//style" position="after">
         <t t-if='view'>
             <script>
-                $(document).ready(function() {
-                    var button = $('.reset_templates_button');
-                    button.click(function() {
-                        $('#reset_templates_mode').val($(this).data('mode'));
-                        var dialog = $('#reset_template_confirmation').modal('show');
-                        var input = dialog.find('input[type="text"]').val('').focus();
-                        var dialog_form = dialog.find('form');
-                        dialog_form.submit(function() {
-                            if (input.val() == dialog.find('.confirm_word').text()) {
-                                dialog.modal('hide');
-                                button.prop('disabled', true).text('Working...');
+                document.addEventListener('DOMContentLoaded', () =&gt; {
+                    const buttons = document.querySelectorAll('.reset_templates_button');
+                    const onClick = (event) =&gt; {
+                        event.preventDefault();
+                        const button = event.currentTarget;
+                        document.getElementById('reset_templates_mode').value = button.dataset.mode;
+                        const dialog = document.getElementById('reset_template_confirmation');
+                        window.Modal.getOrCreateInstance(dialog).show();
+                        const input = dialog.querySelector('input[type="text"]');
+                        input.value = '';
+                        input.focus();
+                        dialog.querySelector('form').addEventListener('submit', (event) =&gt; {
+                            event.preventDefault();
+                            if (input.value == dialog.querySelector('.confirm_word').textContent) {
+                                window.Modal.getInstance(dialog).hide();
+                                button.disabled = true;
+                                button.textContent = 'Working...';
                                 const id = document.querySelector('input[id="reset_templates_view_id"]').value;
                                 const redirect = document.querySelector('input[name="redirect"]').value;
                                 const mode = document.querySelector('input[id="reset_templates_mode"]').value;
@@ -3058,12 +3064,13 @@
                                     'body': JSON.stringify({'params': {'view_id': id, 'mode': mode}})
                                 }).then(() =&gt; window.location = redirect);
                             } else {
-                                input.val('').focus();
+                                input.value = '';
+                                input.focus();
                             }
                             return false;
                         });
-                        return false;
-                    });
+                    };
+                    buttons.forEach(button =&gt; button.addEventListener("click", onClick));
                 });
             </script>
         </t>
