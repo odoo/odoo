@@ -1,8 +1,7 @@
 import { ActionList } from "@mail/core/common/action_list";
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { ChatWindow } from "@mail/core/common/chat_window";
 import { useHover, useMovable } from "@mail/utils/common/hooks";
-
+import { useRef } from "@web/owl2/utils";
 import { Component, proxy, useListener } from "@odoo/owl";
 
 import { Action } from "@mail/core/common/action";
@@ -48,11 +47,6 @@ export class ChatHub extends Component {
         });
         this.onResize();
         useListener(browser, "resize", () => this.onResize());
-        useLayoutEffect(() => {
-            if (this.chatHub.folded.length && this.store.channels?.status === "not_fetched") {
-                this.store.channels.fetch();
-            }
-        });
         useMovable({
             enable: () => this.chatHub.compact || !this.chatHub.opened.length,
             cursor: "grabbing",
