@@ -21,6 +21,7 @@ const BLACKLISTED_MENUS = new Set([
     "mrp_workorder.menu_mrp_workorder_root", // same here (tablet mode)
     "pos_enterprise.menu_point_kitchen_display_root", // conditional menu that may leads to frontend
     "mail.menu_settings", // menu that leads to another App
+    "website_sale.menu_open_shop", // menu that opens a website editor
 ]);
 // If you change this selector, adapt Studio test "Studio icon matches the clickbot selector"
 const STUDIO_SYSTRAY_ICON_SELECTOR = ".o_web_studio_navbar_item:not(.o_disabled) i";
