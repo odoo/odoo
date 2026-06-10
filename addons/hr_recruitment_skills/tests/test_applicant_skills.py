@@ -502,3 +502,102 @@ class TestApplicantSkills(TransactionCase):
         })
 
         self.assertEqual(self.t_applicant.matching_score, 0)
+
+    def test_compute_matching_skill_ids_scores_and_missing_skills(self):
+        applicant = self.env["hr.applicant"].create({
+            "partner_name": "Matching Applicant",
+            "job_id": self.t_job.id,
+        })
+        applicant.write({
+            "applicant_skill_ids": [
+                (
+                    0,
+                    0,
+                    {
+                        "skill_id": self.t_skill_1.id,
+                        "skill_level_id": self.t_skill_level_2.id,
+                        "skill_type_id": self.t_skill_type.id,
+                    },
+                ),
+            ],
+        })
+        applicant_degree = self.env["hr.recruitment.degree"].create({
+            "name": "Bachelor",
+            "score": 0.75,
+        })
+        job_degree = self.env["hr.recruitment.degree"].create({
+            "name": "Master",
+            "score": 0.5,
+        })
+        applicant.type_id = applicant_degree
+        self.t_job.expected_degree = job_degree
+        self.env["hr.job.skill"].create([
+            {
+                "job_id": self.t_job.id,
+                "skill_id": self.t_skill_1.id,
+                "skill_type_id": self.t_skill_type.id,
+                "skill_level_id": self.t_skill_level_1.id,
+            },
+            {
+                "job_id": self.t_job.id,
+                "skill_id": self.t_skill_3.id,
+                "skill_type_id": self.t_skill_type.id,
+                "skill_level_id": self.t_skill_level_3.id,
+            },
+        ])
+
+        self.assertEqual(applicant.matching_skill_ids, self.t_skill_1)
+        self.assertEqual(applicant.missing_skill_ids, self.t_skill_3)
+        self.assertEqual(applicant.degree_score, 41)
+        self.assertEqual(applicant.skills_score, 37)
+        self.assertEqual(applicant.matching_score, 78)
+        self.assertTrue(applicant.is_degree_score_matching)
+
+    def test_compute_matching_skill_ids_with_matching_job_context(self):
+        source_job = self.env["hr.job"].create({"name": "Source Job"})
+        target_job = self.env["hr.job"].create({"name": "Target Job"})
+        applicant = self.env["hr.applicant"].create({
+            "partner_name": "Context Applicant",
+            "job_id": source_job.id,
+        })
+        applicant.write({
+            "applicant_skill_ids": [
+                (
+                    0,
+                    0,
+                    {
+                        "skill_id": self.t_skill_2.id,
+                        "skill_level_id": self.t_skill_level_2.id,
+                        "skill_type_id": self.t_skill_type.id,
+                    },
+                ),
+            ],
+        })
+        self.env["hr.job.skill"].create({
+            "job_id": target_job.id,
+            "skill_id": self.t_skill_2.id,
+            "skill_type_id": self.t_skill_type.id,
+            "skill_level_id": self.t_skill_level_1.id,
+        })
+
+        applicant_with_matching_job = applicant.with_context(matching_job_id=target_job.id)
+        self.assertEqual(applicant_with_matching_job.matching_skill_ids, self.t_skill_2)
+        self.assertFalse(applicant_with_matching_job.missing_skill_ids)
+        self.assertEqual(applicant_with_matching_job.degree_score, 0)
+        self.assertEqual(applicant_with_matching_job.skills_score, 200)
+        self.assertEqual(applicant_with_matching_job.matching_score, 200)
+        self.assertFalse(applicant_with_matching_job.is_degree_score_matching)
+
+    def test_compute_matching_skill_ids_without_requirements(self):
+        job = self.env["hr.job"].create({"name": "No Requirement Job"})
+        applicant = self.env["hr.applicant"].create({
+            "partner_name": "No Requirement Applicant",
+            "job_id": job.id,
+        })
+
+        self.assertFalse(applicant.matching_skill_ids)
+        self.assertFalse(applicant.missing_skill_ids)
+        self.assertEqual(applicant.matching_score, 0)
+        self.assertEqual(applicant.degree_score, 0)
+        self.assertEqual(applicant.skills_score, 0)
+        self.assertFalse(applicant.is_degree_score_matching)
