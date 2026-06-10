@@ -2650,6 +2650,34 @@ test(`dynamic filters with selection fields`, async () => {
     ).toEqual(["Desert", "Forest", "Undefined"]);
 });
 
+test.tags("desktop");
+test(`string is used as label when provided`, async () => {
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop" all_day="is_all_day" mode="week">
+                <field name="attendee_ids" write_model="filter.partner" write_field="partner_id" filter_field="is_checked" string="Custom Label"/>
+            </calendar>
+        `,
+    });
+    expect(`.o_calendar_filter[data-name="attendee_ids"] .o_cw_filter_label`).toHaveText("Custom Label");
+});
+
+test.tags("desktop");
+test(`filter label falls back to field name when string is absent`, async () => {
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar date_start="start" date_stop="stop" all_day="is_all_day" mode="week">
+                <field name="attendee_ids" write_model="filter.partner" write_field="partner_id" filter_field="is_checked"/>
+            </calendar>
+        `,
+    });
+    expect(`.o_calendar_filter[data-name="attendee_ids"] .o_cw_filter_label`).toHaveText("Attendees");
+});
+
 test(`Colors: cycling through available colors`, async () => {
     FilterPartner._records = range(1, 57).map((id) => ({
         id,
