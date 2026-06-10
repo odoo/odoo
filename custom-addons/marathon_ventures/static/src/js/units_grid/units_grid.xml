@@ -41,7 +41,7 @@
         <label class="mv-deal-startdate-label">Deal Start Date</label>
         <input type="date" class="mv-deal-startdate-input"
                t-att-value="state.payload.deal.units_start_date || ''"
-               t-on-input="(ev) => this.onDealStartDateChange(ev)"/>
+               t-on-change="(ev) => this.onDealStartDateChange(ev)"/>
         <span class="mv-deal-startdate-hint">
           Week columns run through the last Monday of this quarter.
         </span>
