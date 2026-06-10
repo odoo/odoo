@@ -1000,6 +1000,42 @@
         <field name="count_as">working_time</field>
     </record>
 
+    <record id="l10n_be_work_entry_type_guaranteed_wage_interrupted_day_illness" model="hr.work.entry.type">
+        <field name="name">Guaranted wage interrupted day illness</field>
+        <field name="code">LEAVE1742</field>
+        <field name="color">5</field>
+        <field name="display_code">GWI</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">absence</field>
+    </record>
+
+    <record id="l10n_be_work_entry_type_schooldays" model="hr.work.entry.type">
+        <field name="name">Schooldays</field>
+        <field name="code">LEAVE1849</field>
+        <field name="color">5</field>
+        <field name="display_code">SDY</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">absence</field>
+    </record>
+
+    <record id="l10n_be_work_entry_type_paid_absence" model="hr.work.entry.type">
+        <field name="name">Paid Absence</field>
+        <field name="code">LEAVE014</field>
+        <field name="color">5</field>
+        <field name="display_code">PDA</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">absence</field>
+    </record>
+
+    <record id="l10n_be_work_entry_type_holiday_previous_vacation_credit_year" model="hr.work.entry.type">
+        <field name="name">Holiday previous vacation credit year</field>
+        <field name="code">LEAVE2048</field>
+        <field name="color">5</field>
+        <field name="display_code">VPC</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="count_as">absence</field>
+    </record>
+
 <!-- YTI TODO: Encore unpaid work entry types on structure -->
     <record id="l10n_be_work_entry_type_unpaid_recovered_compensatory_rest" model="hr.work.entry.type">
         <field name="name">Unpaid compensatory rest at the time of recovery following hours worked at another time</field>
