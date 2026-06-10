@@ -68,8 +68,11 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
 
         if cls.env["ir.module.module"]._get("payment_custom").state == "installed":
             transfer_provider = cls.env.ref("payment.payment_provider_transfer")
-            transfer_provider.write({"state": "enabled", "is_published": True})
-            transfer_provider._transfer_ensure_pending_msg_is_set()
+            transfer_provider.write({
+                "state": "enabled",
+                "is_published": True,
+                "bank_account_id": cls.bank_account.id,
+            })
 
     def test_01_admin_shop_tour(self):
         self.start_tour(

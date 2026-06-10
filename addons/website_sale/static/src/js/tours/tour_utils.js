@@ -320,7 +320,7 @@ export function payWithTransfer({
             {
                 content: "Last step",
                 trigger:
-                    '[name="order_confirmation"]:contains("Please use the following transfer details")',
+                    '[name="order_confirmation"]:contains("Your order will be confirmed after payment is received.")',
                 timeout: 30000,
             },
         ];
@@ -331,7 +331,7 @@ export function payWithTransfer({
             {
                 content: "Last step",
                 trigger:
-                    '[name="order_confirmation"]:contains("Please use the following transfer details")',
+                    '[name="order_confirmation"]:contains("Your order will be confirmed after payment is received.")',
                 timeout: 30000,
                 run() {
                     window.location.href = '/contactus'; // Redirect in JS to avoid the RPC loop (20x1sec)

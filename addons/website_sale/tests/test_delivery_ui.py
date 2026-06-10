@@ -10,10 +10,16 @@ class TestUi(HttpCase):
         if self.env["ir.module.module"]._get("payment_custom").state != "installed":
             self.skipTest("Transfer provider is not installed")
 
+        self.bank_account = self.env["res.partner.bank"].create({
+            "account_number": "BANK123456789",
+            "partner_id": self.env.company.partner_id.id,
+        })
         transfer_provider = self.env.ref("payment.payment_provider_transfer")
-        transfer_provider.write({"state": "enabled", "is_published": True})
-        transfer_provider._transfer_ensure_pending_msg_is_set()
-
+        transfer_provider.write({
+            "state": "enabled",
+            "is_published": True,
+            "bank_account_id": self.bank_account.id,
+        })
         if "enforce_cities" in self.env["res.country"]._fields:
             self.env.company.country_id.enforce_cities = False
 

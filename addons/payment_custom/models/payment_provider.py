@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 
 from odoo.addons.payment_custom import const
@@ -28,11 +29,22 @@ class PaymentProvider(models.Model):
 
     # === CRUD METHODS ===#
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        providers = super().create(vals_list)
-        providers.filtered(lambda p: p.custom_mode == "wire_transfer").pending_msg = None
-        return providers
+    def _check_required_if_provider(self):
+        """Check that `bank_account_id` have been filled for wire transfer provider."""
+        if "bank_account_id" not in self._fields:
+            return super()._check_required_if_provider()
+
+        wire_transfer_without_bank = self.filtered(
+            lambda provider: (
+                provider.custom_mode == "wire_transfer"
+                and provider.state != "disabled"
+                and not provider.bank_account_id
+            )
+        )
+        if wire_transfer_without_bank:
+            raise ValidationError(self.env._("Bank account must be filled for Wire Transfer."))
+
+        super()._check_required_if_provider()
 
     def _get_default_payment_method_codes(self):
         """Override of `payment` to return the default payment method codes."""
@@ -41,40 +53,45 @@ class PaymentProvider(models.Model):
             return super()._get_default_payment_method_codes()
         return const.DEFAULT_PAYMENT_METHOD_CODES
 
-    # === ACTION METHODS ===#
+    # === BUSINESS METHODS === #
 
-    def action_recompute_pending_msg(self):
-        """Recompute the pending message to include the existing bank accounts."""
-        account_payment_module = self.env["ir.module.module"]._get("account_payment")
-        if account_payment_module.state == "installed":
-            for provider in self.filtered(lambda p: p.custom_mode == "wire_transfer"):
-                company_id = provider.company_id.id
-                accounts = (
-                    self
-                    .env["account.journal"]
-                    .search([
-                        *self.env["account.journal"]._check_company_domain(company_id),
-                        ("type", "=", "bank"),
-                    ])
-                    .bank_account_id
-                )
-                account_names = "".join(
-                    f"<li><pre>{account.display_name}</pre></li>" for account in accounts
-                )
-                bank_account_label = (
-                    provider.env._("Bank Account")
-                    if len(accounts) == 1
-                    else provider.env._("Bank Accounts")
-                )
-                provider.pending_msg = (
-                    f"<div>"
-                    f"<h5>{provider.env._('Please use the following transfer details')}</h5>"
-                    f"<p><br></p>"
-                    f"<h6>{bank_account_label}</h6>"
-                    f"<ul>{account_names}</ul>"
-                    f"<p><br></p>"
-                    f"</div>"
-                )
+    def _get_custom_provider_bank_details(self):
+        """Return bank details configured on the provider.
+
+        :return: A dictionary containing the beneficiary name and bank account number.
+        :rtype: dict
+        """
+        if bank_account := self._get_custom_bank_account():
+            return {
+                "beneficiary": bank_account.holder_name,
+                "bank_account": bank_account.display_name,
+            }
+        return {}
+
+    def _get_custom_bank_account(self):
+        """Return the bank account configured on the custom provider.
+
+        :return: The bank account of the provider.
+        :rtype: record of `res.partner.bank` or None
+        """
+        if (
+            self.custom_mode in self._get_custom_bank_related_modes()
+            and "bank_account_id" in self._fields
+        ):
+            return self.bank_account_id
+
+    @api.model
+    def _get_custom_bank_related_modes(self):
+        """Return custom modes that rely on bank details.
+
+        :return: The list of custom modes.
+        :rtype: list
+        """
+        return ["wire_transfer"]
+
+    def _get_custom_qr_bank_account(self):
+        """Return the bank account used to generate QR codes for custom providers."""
+        return self._get_custom_bank_account() or self.company_id.partner_id.bank_ids[:1]
 
     # === SETUP METHODS === #
 
@@ -91,10 +108,3 @@ class PaymentProvider(models.Model):
         res = super()._get_removal_values()
         res["custom_mode"] = None
         return res
-
-    def _transfer_ensure_pending_msg_is_set(self):
-        transfer_providers_without_msg = self.filtered(
-            lambda p: p.custom_mode == "wire_transfer" and not p.pending_msg
-        )
-        if transfer_providers_without_msg:
-            transfer_providers_without_msg.action_recompute_pending_msg()

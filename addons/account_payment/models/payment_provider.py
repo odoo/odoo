@@ -16,6 +16,17 @@ REPORT_REASONS_MAPPING = {
 class PaymentProvider(models.Model):
     _inherit = 'payment.provider'
 
+    bank_account_id = fields.Many2one(
+        string="Bank Account",
+        comodel_name='res.partner.bank',
+        domain='[("partner_id", "=", company_partner_id)]',
+        compute='_compute_bank_account_id',
+        store=True,
+        readonly=False,
+        copy=False,
+        check_company=True,
+    )
+    company_partner_id = fields.Many2one(comodel_name='res.partner', related='company_id.partner_id')
     journal_id = fields.Many2one(
         string="Payment Journal",
         help="The journal in which the successful transactions are posted.",
@@ -33,6 +44,11 @@ class PaymentProvider(models.Model):
     )
 
     #=== COMPUTE METHODS ===#
+
+    @api.depends('company_id')
+    def _compute_bank_account_id(self):
+        for provider in self:
+            provider.bank_account_id = provider.company_id.partner_id.bank_ids[:1]
 
     def _ensure_payment_method_line(self, allow_create=True):
         self.ensure_one()

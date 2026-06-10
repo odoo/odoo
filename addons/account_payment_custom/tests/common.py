@@ -10,8 +10,14 @@ class AccountPaymentCustomCommon(AccountPaymentCommon, PaymentCustomCommon):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.bank_account = cls.env["res.partner.bank"].create({
+            "account_number": "BANK123456789",
+            "partner_id": cls.env.company.partner_id.id,
+        })
         cls.wire_transfer_provider = cls._prepare_provider(
-            code="custom", custom_mode="wire_transfer"
+            code="custom",
+            custom_mode="wire_transfer",
+            update_values={"bank_account_id": cls.bank_account.id},
         )
 
         cls.provider = cls.wire_transfer_provider
