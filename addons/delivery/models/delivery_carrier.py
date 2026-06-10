@@ -627,6 +627,7 @@ class DeliveryCarrier(models.Model):
         """Change display name for the carrier selection in SO"""
         carrier_prices_dumped = self.env.context.get("carrier_prices_dumped")
         currency_id = self.env.context.get("wizard_currency_id")
+        formatted_display_name = self.env.context.get('formatted_display_name')
 
         super()._compute_display_name()
 
@@ -643,7 +644,10 @@ class DeliveryCarrier(models.Model):
                 price = delivery_vals.get("display_price", 0.0)
                 formatted_price = currency.format(price)
                 carrier.delivery_cost = formatted_price
-                carrier.display_name = f"{carrier.display_name} - {formatted_price}"
+                if formatted_display_name:
+                    carrier.display_name = f"{carrier.display_name}\t--{formatted_price}--"
+                else:
+                    carrier.display_name = f"{carrier.display_name} - {formatted_price}"
 
     @api.depends_context("carrier_prices", "wizard_currency_id")
     def _compute_delivery_cost(self):

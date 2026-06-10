@@ -3,7 +3,7 @@
 import json
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 
 
 class ChooseDeliveryCarrier(models.TransientModel):
@@ -150,7 +150,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
                 try:
                     delivery_vals = wizard._get_carrier_delivery_rate(available_carrier)
                     json_result[str(hash_val)] = delivery_vals
-                except Exception as e:
+                except Exception as e:  # noqa: BLE001
                     json_result[str(hash_val)] = {"error_message": e.args[0]}
             wizard.carrier_prices = json_result
             wizard.carrier_prices_dumped = json.dumps(json_result)
