@@ -23,55 +23,79 @@ class StockTraceabilityReport(models.TransientModel):
     _description = 'Traceability Report'
 
     @api.model
-    def _get_move_lines(self, move_lines):
+    def _get_related_move_lines(self, move_lines, line_type=False):
         lines_seen = move_lines
         lines_todo = list(move_lines)
         while lines_todo:
             move_line = lines_todo.pop(0)
-            # if MTO
-            if move_line.move_id.move_orig_ids:
-                lines = move_line.move_id.move_orig_ids.move_line_ids.filtered(
-                    lambda m: m.lot_id == move_line.lot_id and m.state == 'done'
-                ) - lines_seen
-            # if MTS
-            elif move_line.location_id.usage in ('internal', 'transit'):
-                lines = self.env['stock.move.line'].search([
-                    ('product_id', '=', move_line.product_id.id),
-                    ('lot_id', '=', move_line.lot_id.id),
-                    ('location_dest_id', '=', move_line.location_id.id),
-                    ('id', 'not in', lines_seen.ids),
-                    ('date', '<=', move_line.date),
-                    ('state', '=', 'done')
-                ])
-            else:
-                continue
-            lines_seen |= lines
+            if line_type == 'parent':
+                # if MTO
+                if move_line.move_id.move_orig_ids:
+                    lines = move_line.move_id.move_orig_ids.move_line_ids.filtered(
+                        lambda m: m.lot_id == move_line.lot_id and m.state == 'done'
+                    ) - lines_seen
+                # if MTS
+                elif move_line.location_id.usage in ('internal', 'transit'):
+                    lines = self.env['stock.move.line'].search([
+                        ('product_id', '=', move_line.product_id.id),
+                        ('lot_id', '=', move_line.lot_id.id),
+                        ('location_dest_id', '=', move_line.location_id.id),
+                        ('id', 'not in', lines_seen.ids),
+                        ('date', '<=', move_line.date),
+                        ('state', '=', 'done')
+                    ])
+                else:
+                    continue
+                lines_seen |= lines
+            elif line_type == 'child':
+                if move_line.move_id.move_dest_ids:
+                    lines = move_line.move_id.move_dest_ids.move_line_ids.filtered(
+                        lambda m: m.lot_id == move_line.lot_id and m.state == 'done'
+                    ) - lines_seen
+                elif move_line.location_dest_id.usage in ('internal', 'transit'):
+                    lines = self.env['stock.move.line'].search([
+                        ('product_id', '=', move_line.product_id.id),
+                        ('lot_id', '=', move_line.lot_id.id),
+                        ('location_id', '=', move_line.location_dest_id.id),
+                        ('id', 'not in', lines_seen.ids),
+                        ('date', '>=', move_line.date),
+                        ('state', '=', 'done')
+                    ])
+                else:
+                    continue
+                lines_seen |= lines
         return lines_seen - move_lines
 
     @api.model
-    def get_lines(self, line_id=False, **kw):
+    def get_lines(self, line_type=False, **kw):
         context = dict(self.env.context)
         model = kw and kw['model_name'] or context.get('model')
         record_id = kw and kw['record_id'] or context.get('active_id')
         level = kw and kw['level'] or 1
         lines = self.env['stock.move.line']
         if record_id and model == 'stock.lot':
+            main_location_ids = self.env['stock.warehouse'].search([]).lot_stock_id.ids
             lines = self.env['stock.move.line'].search([
-                ('lot_id', '=', context.get('lot_name') or record_id),
+                ('lot_id', '=', record_id),
                 ('state', '=', 'done'),
+                '|',
+                ('location_id', 'in', main_location_ids),
+                ('location_dest_id', 'in', main_location_ids)
             ])
-        elif record_id and model == 'stock.move.line' and context.get('lot_name'):
+            return self._lot_lines(move_lines=lines, level=level, main_loc_ids=main_location_ids)
+        elif record_id and model == 'stock.move.line' and line_type:
+            move_line = self.env[model].browse(record_id)
+            parent_lines, children_lines = self._get_linked_move_lines(move_line)
+            if line_type == 'parent':
+                lines = parent_lines or self._get_related_move_lines(move_line, line_type)
+            elif line_type == 'child':
+                lines = children_lines or self._get_related_move_lines(move_line, line_type)
+            return self._move_lines(move_lines=lines, level=level, line_type=line_type)
+        elif record_id and model == 'stock.picking':
             record = self.env[model].browse(record_id)
-            dummy, children_lines = self._get_linked_move_lines(record)
-            if children_lines:
-                lines = children_lines
-        elif record_id and model in ('stock.picking', 'mrp.production'):
-            record = self.env[model].browse(record_id)
-            if model == 'stock.picking':
-                lines = record.move_ids.move_line_ids.filtered(lambda m: m.lot_id and m.state == 'done')
-            else:
-                lines = record.move_finished_ids.move_line_ids.filtered(lambda m: m.state == 'done')
-        return self._lines(line_id, record_id=record_id, model=model, level=level, move_lines=lines)
+            lines = record.move_ids.move_line_ids.filtered(lambda m: m.state == 'done')
+            return self._picking_lines(move_lines=lines, level=level)
+        return []
 
     @api.model
     def _get_reference(self, move_line):
@@ -116,18 +140,18 @@ class StockTraceabilityReport(models.TransientModel):
             return source_name, destination_name
 
     @api.model
-    def _make_dict_move(self, level, line_id, move_line, unfoldable=False):
+    def _make_dict_move(self, move_line, line_type, level, unfoldable=False):
         res_model, res_id, reference = self._get_reference(move_line)
-        dummy, children_lines = self._get_linked_move_lines(move_line)
         source_name, destination_name = self._get_location_names(move_line)
+        date = format_datetime(self.env, move_line.move_id.date)
         return {
             'id': autoIncrement(),
-            'model': 'stock.move.line',
+            'model_name': 'stock.move.line',
             'record_id': move_line.id,
-            'parent_id': line_id,
-            'has_children': bool(children_lines),
+            'line_type': line_type,
             'lot_name': move_line.lot_id.name,
             'lot_id': move_line.lot_id.id,
+            'date': date,
             'reference': reference,
             'source_name': source_name,
             'destination_name': destination_name,
@@ -138,7 +162,7 @@ class StockTraceabilityReport(models.TransientModel):
             'columns': [
                 self._make_column('reference', reference),
                 self._make_column('product', move_line.product_id.display_name),
-                self._make_column('date', format_datetime(self.env, move_line.move_id.date, tz=False, dt_format=False)),
+                self._make_column('date', date),
                 self._make_column('lot_name', move_line.lot_id.name),
                 self._make_column('source_name', source_name),
                 self._make_column('destination_name', destination_name),
@@ -160,32 +184,72 @@ class StockTraceabilityReport(models.TransientModel):
         return False, False
 
     @api.model
-    def _lines(self, line_id=False, record_id=False, model=False, level=0, move_lines=None, **kw):
+    def _is_unfoldable(self, move_line, line_type=False):
+        """ To be unfoldable, a line must:
+        - have a lot or serial number
+        - go from one location to another different location
+        - have linked move lines based on line_type """
+        return bool(
+            move_line.lot_id and move_line.location_id != move_line.location_dest_id
+            and (
+                (line_type == 'parent' and (
+                        move_line.consume_line_ids
+                        or self._get_related_move_lines(move_line, line_type)
+                ))
+                or (line_type == 'child' and (
+                    move_line.produce_line_ids
+                    or self._get_related_move_lines(move_line, line_type)
+                ))
+            )
+        )
+
+    @api.model
+    def _lot_lines(self, move_lines=None, level=0, main_loc_ids=None):
         final_vals = []
         lines = move_lines or []
-        if model and line_id:
-            move_line = self.env[model].browse(record_id)
-            parent_lines, dummy = self._get_linked_move_lines(move_line)
-            if parent_lines:
-                lines = parent_lines
-            else:
-                # Traceability in case of consumed in.
-                lines = self._get_move_lines(move_line)
-        for line in sorted(lines, key=lambda l: l.move_id.date, reverse=True):
-            unfoldable = False
-            if line.consume_line_ids or (model != "stock.lot" and line.lot_id and self._get_move_lines(line)):
-                unfoldable = True
-            final_vals.append(self._make_dict_move(level, line_id=line_id, move_line=line, unfoldable=unfoldable))
-        return final_vals
+        main_location_ids = main_loc_ids or []
+        for line in lines:
+            line_type = 'child' if line.location_id.id in main_location_ids else 'parent'
+            if line.location_id == line.location_dest_id:
+                line_type = False
+            unfoldable = self._is_unfoldable(line, line_type)
+            final_vals.append(self._make_dict_move(move_line=line, line_type=line_type, level=level, unfoldable=unfoldable))
+        return sorted(final_vals, key=lambda l: (l['date'], l['id']), reverse=True)
+
+    @api.model
+    def _picking_lines(self, move_lines=None, level=0):
+        """ If we come from a picking and it's a non-return incoming picking, we just process
+        the lines of the picking as child lines because incoming lines should not have parents.
+        In all other cases, the SMLs are considered parents and we check if there's a next line
+        in the chain. Any line found will be processed as a child line. """
+        final_vals = []
+        line_type = 'child' if move_lines.picking_id.picking_type_code == 'incoming' and not move_lines.move_id.origin_returned_move_id else 'parent'
+        initial_lines = move_lines or []
+        for line in initial_lines:
+            unfoldable = self._is_unfoldable(line, line_type)
+            final_vals.append(self._make_dict_move(move_line=line, line_type=line_type, level=level, unfoldable=unfoldable))
+        if line_type == 'parent':
+            children_lines = self._get_related_move_lines(initial_lines, 'child')
+            for line in children_lines:
+                unfoldable = self._is_unfoldable(line, 'child')
+                final_vals.append(self._make_dict_move(move_line=line, line_type='child', level=level, unfoldable=unfoldable))
+        return sorted(final_vals, key=lambda l: (l['date'], l['id']), reverse=True)
+
+    @api.model
+    def _move_lines(self, move_lines=None, level=0, line_type=False):
+        final_vals = []
+        lines = move_lines or []
+        for line in lines:
+            unfoldable = self._is_unfoldable(line, line_type)
+            final_vals.append(self._make_dict_move(move_line=line, line_type=line_type, level=level, unfoldable=unfoldable))
+        return sorted(final_vals, key=lambda l: (l['date'], l['id']), reverse=True)
 
     def get_pdf_lines(self, line_data=[]):
         lines = []
         for line in line_data:
-            model = self.env[line['model_name']].browse(line['record_id'])
-            unfoldable = False
-            if line.get('unfoldable'):
-                unfoldable = True
-            lines.append(self._make_dict_move(line['level'], line_id=line['id'], move_line=model, unfoldable=unfoldable))
+            move_line = self.env[line['model_name']].browse(line['record_id'])
+            unfoldable = line.get('unfoldable')
+            lines.append(self._make_dict_move(move_line=move_line, line_type=line['line_type'], level=line['level'], unfoldable=unfoldable))
         return lines
 
     def get_pdf(self, line_data=None):
@@ -222,5 +286,20 @@ class StockTraceabilityReport(models.TransientModel):
     def get_main_lines(self, given_context=None):
         res = self.search([('create_uid', '=', self.env.uid)], limit=1)
         if not res:
-            return self.create({}).with_context(given_context).get_lines()
+            res = self.create({})
         return res.with_context(given_context).get_lines()
+
+    @api.model
+    def get_expanded_lines(self, given_context=None):
+        expanded_lines = self.get_main_lines(given_context)
+        lines_todo = list(filter(lambda l: l['unfoldable'], expanded_lines))
+        while lines_todo:
+            line = lines_todo.pop(0)
+            sub_lines = self.get_lines(**line)
+            line['lines'] = sub_lines
+            for sub_line in sub_lines:
+                sub_line['lines'] = []
+                sub_line['level'] += 30
+                if sub_line.get('unfoldable'):
+                    lines_todo.append(sub_line)
+        return expanded_lines
