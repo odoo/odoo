@@ -405,6 +405,31 @@
         <field name="supported_currency_ids" eval="[Command.set([ref('base.BRL')])]"/>
     </record>
 
+    <record id="payment_method_acss_direct_debit" model="payment.method">
+        <field name="name">ACSS direct debit</field>
+        <field name="code">acss_direct_debit</field>
+        <field name="provider_id" ref="payment.payment_provider_stripe"/>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="bytes" file="payment_custom/static/img/wire_transfer.png"/>
+        <field name="support_tokenization">True</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">partial</field>
+        <field name="supported_country_ids"
+               eval="[Command.set([
+                         ref('base.ca'),
+                         ref('base.us'),
+                     ])]"
+        />
+        <field name="supported_currency_ids"
+               eval="[Command.set([
+                         ref('base.CAD'),
+                         ref('base.USD'),
+                     ])]"
+        />
+    </record>
+
     <record id="payment_method_promptpay" model="payment.method">
         <field name="name">Prompt Pay</field>
         <field name="code">promptpay</field>

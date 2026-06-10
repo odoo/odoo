@@ -66,6 +66,31 @@ class StripeController(http.Controller):
         with mute_logger("werkzeug"):  # avoid logging secret URL params
             return request.redirect("/payment/status")
 
+    @http.route("/payment/stripe/client_secret", type="jsonrpc", auth="public")
+    def stripe_client_secret_route(
+        self,
+        provider_id,
+        access_token,
+        partner_id=False,
+        amount=False,
+        currency_id=False,
+        payment_method_id=False,
+    ):
+        """Stripe route returning the client_secret.
+
+        :raise Forbidden: If the access token is invalid.
+        """
+        if not payment_utils.check_access_token(access_token, partner_id, amount, currency_id):
+            raise Forbidden
+
+        provider_sudo = self.env["payment.provider"].sudo().browse(int(provider_id))
+        return provider_sudo.stripe_get_client_secret({
+            "partner_id": partner_id,
+            "payment_method_id": payment_method_id,
+            "currency_id": currency_id,
+            "amount": amount,
+        })
+
     @http.route(_webhook_url, type="http", methods=["POST"], auth="public", csrf=False)
     def stripe_webhook(self):
         """Process the payment data sent by Stripe to the webhook.

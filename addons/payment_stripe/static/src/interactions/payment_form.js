@@ -5,11 +5,14 @@ import { _t } from '@web/core/l10n/translation';
 import { patch } from '@web/core/utils/patch';
 
 import { PaymentForm } from '@payment/interactions/payment_form';
+import { useService } from '@web/core/utils/hooks';
+import { rpc } from '@web/core/network/rpc';
 
 patch(PaymentForm.prototype, {
 
     setup() {
         super.setup();
+        this.orm = useService("orm");
         this.stripeElements = {}; // Store the element of each instantiated payment method.
     },
 
@@ -59,6 +62,21 @@ patch(PaymentForm.prototype, {
             new StripeOptions()._prepareStripeOptions(stripeInlineForm.dataset),
         );
 
+        // ACSS uses a pre-created SetupIntent, so initialize Elements directly
+        // with its client_secret instead of the deferred intent flow.
+        if (paymentMethodCode === "acss_direct_debit") {
+            const clientSecret = await rpc("/payment/stripe/client_secret", {
+                provider_id: providerId,
+                access_token: this.stripeInlineFormValues['access_token'],
+                partner_id: this.paymentContext['partnerId'],
+                amount: this.paymentContext['amount'],
+                currency_id: this.paymentContext['currencyId'],
+                payment_method_id: paymentOptionId,
+            });
+            this._initiatePaymentElement(paymentOptionId, { clientSecret }, inlineForm);
+            return;
+        }
+
         // Instantiate the elements.
         let elementsOptions =  {
             appearance: { theme: 'stripe' },
@@ -80,21 +98,12 @@ patch(PaymentForm.prototype, {
             elementsOptions.mode = 'setup';
             elementsOptions.setupFutureUsage = 'off_session';
         }
-        this.stripeElements[paymentOptionId] = this.stripeJS.elements(elementsOptions);
 
-        // Instantiate the payment element.
-        const paymentElementOptions = {
-            defaultValues: {
-                billingDetails: this.stripeInlineFormValues['billing_details'],
-            },
-        };
-        const paymentElement = this.stripeElements[paymentOptionId].create(
-            'payment', paymentElementOptions
+        this._initiatePaymentElement(
+            paymentOptionId,
+            elementsOptions,
+            inlineForm
         );
-        paymentElement.on('loaderror', response => {
-            this._displayErrorDialog(_t("Cannot display the payment form"), response.error.message);
-        });
-        paymentElement.mount(stripeInlineForm);
 
         const tokenizationCheckbox = inlineForm.querySelector(
             'input[name="o_payment_tokenize_checkbox"]'
@@ -110,6 +119,34 @@ patch(PaymentForm.prototype, {
                 });
             });
         }
+    },
+
+    /**
+     * Instantiate and mount the Stripe Payment Element.
+     *
+     * @private
+     * @param {number} paymentOptionId - The id of the payment option handling the transaction.
+     * @param {object} elementsOptions - The options used to instantiate the Stripe Elements.
+     * @param {HTMLElement} inlineForm - The inline form in which to mount the payment element.
+     * @return {void}
+     */
+    _initiatePaymentElement(paymentOptionId, elementsOptions, inlineForm) {
+        const stripeInlineForm = inlineForm.querySelector("[name='o_stripe_element_container']");
+        const paymentElementOptions = {
+            defaultValues: {
+                billingDetails: this.stripeInlineFormValues["billing_details"],
+            },
+        };
+        this.stripeElements[paymentOptionId] = this.stripeJS.elements(elementsOptions);
+
+        // Instantiate the payment element.
+        const paymentElement = this.stripeElements[paymentOptionId].create(
+            'payment', paymentElementOptions
+        );
+        paymentElement.on('loaderror', response => {
+            this._displayErrorDialog(_t("Cannot display the payment form"), response.error.message);
+        });
+        paymentElement.mount(stripeInlineForm);
     },
 
     // #=== PAYMENT FLOW ===#

@@ -275,6 +275,28 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS - PAYMENT FLOW === #
 
+    def stripe_get_client_secret(self, values):
+        """Create a ('virtual') payment.transaction and return the client_secret of
+        the SetupIntent Stripe creates for it.
+
+        This is used to obtain a client_secret ahead of the standard checkout flow, since ACSS's
+        Stripe Elements needs one to mount the Payment Element before the customer confirms the
+        order. The transaction is built with `.new()` so
+        that no DB row is left behind.
+
+        Note: `self.ensure_one()
+
+        :rtype: str
+        """
+        self.ensure_one()
+        transaction = self.env["payment.transaction"].new({
+            "provider_id": self.id,
+            **values,
+            "operation": "validation",
+        })
+        intent = transaction._stripe_create_intent()
+        return intent["client_secret"] if intent else ""
+
     def _stripe_get_publishable_key(self):
         """Return the publishable key of the provider.
 
@@ -351,6 +373,10 @@ class PaymentProvider(models.Model):
             ),
             "payment_methods_mapping": const.PAYMENT_METHODS_MAPPING,
         }
+        if payment_method_sudo.code == "acss_direct_debit":
+            inline_form_values["access_token"] = payment_utils.generate_access_token(
+                partner_id, amount, currency.id
+            )
         return json.dumps(inline_form_values)
 
     def _stripe_get_country(self, country_code):

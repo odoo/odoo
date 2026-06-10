@@ -88,6 +88,19 @@ class PaymentTransaction(models.Model):
 
         return intent
 
+    def _stripe_get_currency_name(self):
+        """Return the currency name to use for the validation mandate.
+
+        :return: currency name (e.g. 'cad', 'usd').
+        :rtype: str
+        """
+        return (
+            self.provider_id
+            .with_context(validation_pm=self.payment_method_id)
+            ._get_validation_currency()
+            .name.lower()
+        )
+
     def _stripe_prepare_setup_intent_payload(self):
         """Prepare the payload for the creation of a SetupIntent object in Stripe format.
 
@@ -135,6 +148,21 @@ class PaymentTransaction(models.Model):
         }
         if payment_method_type == "sepa_direct_debit":
             payment_intent_payload["statement_descriptor"] = self.reference[:22]
+
+        # Add the mandatory ACSS mandate options to the PaymentIntent.
+        if self.payment_method_code == "acss_direct_debit":
+            OPTION_PATH_PREFIX = "payment_method_options[acss_debit][mandate_options]"
+            mandate_options = {
+                f"{OPTION_PATH_PREFIX}[payment_schedule]": "sporadic",
+                f"{OPTION_PATH_PREFIX}[transaction_type]": "business",
+                "payment_method_options[acss_debit][verification_method]": "automatic",
+            }
+            if self.operation == "validation":
+                mandate_options[f"{OPTION_PATH_PREFIX}[currency]"] = (
+                    self._stripe_get_currency_name()
+                )
+            payment_intent_payload.update(mandate_options)
+
         if self.operation in ["online_token", "offline"]:
             if not self.token_id.stripe_payment_method:  # Pre-SCA token, migrate it.
                 self.token_id._stripe_sca_migrate_customer()
@@ -210,15 +238,7 @@ class PaymentTransaction(models.Model):
                 f"{OPTION_PATH_PREFIX}[interval_count]": mandate_values["recurrence_duration"],
             })
         if self.operation == "validation":
-            currency_name = (
-                self.provider_id
-                .with_context(
-                    validation_pm=self.payment_method_id  # Will be converted to a kwarg in master.
-                )
-                ._get_validation_currency()
-                .name.lower()
-            )
-            mandate_options[f"{OPTION_PATH_PREFIX}[currency]"] = currency_name
+            mandate_options[f"{OPTION_PATH_PREFIX}[currency]"] = self._stripe_get_currency_name()
 
         return mandate_options
 
