@@ -1033,6 +1033,9 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             downpayment_invoice.invoice_line_ids,
         )
 
+        final_invoice_downpayment_line.move_id.action_post()
+        self.assertEqual(sale_order.amount_to_invoice, 0.0)
+
         # CASE 2: downpayment generated in POS, invoice settled in POS
         sale_order = sale_orders[0]
         self.start_pos_tour('PoSApplyDownpaymentInvoice2')
