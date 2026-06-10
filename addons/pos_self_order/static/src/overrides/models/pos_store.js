@@ -1,21 +1,25 @@
 import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { patch } from "@web/core/utils/patch";
 import { PosOrder } from "@point_of_sale/app/models/pos_order";
+import { Domain } from "@web/core/domain";
 
 patch(PosStore.prototype, {
-    async getServerOrders() {
+    getServerOrdersDomain() {
+        const base = super.getServerOrdersDomain();
         if (this.session._self_ordering) {
-            await this.loadServerOrders([
-                ["company_id", "=", this.config.company_id.id],
-                ["state", "=", "draft"],
-                "|",
-                ["pos_reference", "ilike", "Kiosk"],
-                ["pos_reference", "ilike", "Self-Order"],
-                ["table_id", "=", false],
+            return Domain.or([
+                base,
+                new Domain([
+                    ["company_id", "=", this.config.company_id.id],
+                    ["state", "=", "draft"],
+                    "|",
+                    ["pos_reference", "ilike", "Kiosk"],
+                    ["pos_reference", "ilike", "Self-Order"],
+                    ["table_id", "=", false],
+                ]),
             ]);
         }
-
-        return await super.getServerOrders(...arguments);
+        return base;
     },
     _shouldLoadOrders() {
         return super._shouldLoadOrders() || this.session._self_ordering;
