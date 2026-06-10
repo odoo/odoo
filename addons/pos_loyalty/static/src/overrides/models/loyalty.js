@@ -488,7 +488,12 @@ patch(Order.prototype, {
             }
 
             //If there is only one possible reward we try to claim the most possible out of it
-            if (claimedReward.reward.reward_product_ids?.length === 1) {
+            if (
+                claimedReward.reward.reward_product_ids?.length === 1 &&
+                allRewardsMerged.filter(
+                    (reward) => reward.reward.program_id.id === claimedReward.reward.program_id.id
+                ).length === 1
+            ) {
                 delete claimedReward.args["quantity"];
             }
             this._applyReward(claimedReward.reward, claimedReward.coupon_id, claimedReward.args);
@@ -532,6 +537,7 @@ patch(Order.prototype, {
             // Update point changes for those that exist
             for (let idx = 0; idx < Math.min(pointsAdded.length, oldChanges.length); idx++) {
                 Object.assign(oldChanges[idx], pointsAdded[idx]);
+                oldChanges[idx].appliedRules = pointsForProgramsCountedRules[program.id];
             }
             if (pointsAdded.length < oldChanges.length || !this._programIsApplicable(program)) {
                 const removedIds = oldChanges.map((pe) => pe.coupon_id);
@@ -1510,12 +1516,9 @@ patch(Order.prototype, {
                 this._isRewardProductPartOfRules(reward, product) &&
                 reward.program_id.applies_on !== "future"
             ) {
-                const line = this.get_orderlines().find(
-                    (line) => line.reward_product_id === product.id
-                );
                 // Compute the correction points once even if there are multiple reward lines.
                 // This is because _getPointsCorrection is taking into account all the lines already.
-                const claimedPoints = line ? this._getPointsCorrection(reward.program_id) : 0;
+                const claimedPoints = this._getPointsCorrection(reward.program_id);
                 return Math.floor((remainingPoints - claimedPoints) / reward.required_points) > 0
                 ? reward.reward_product_qty
                 : 0;
