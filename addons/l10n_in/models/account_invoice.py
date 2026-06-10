@@ -227,6 +227,25 @@ class AccountMove(models.Model):
             }}
         return super()._onchange_name_warning()
 
+    @api.onchange('l10n_in_gst_treatment')
+    def _onchange_l10n_in_gst_treatment_warning(self):
+        if (
+            self.country_code == 'IN'
+            and self.partner_id.l10n_in_gst_applicability_date
+            and (
+                self.l10n_in_gst_treatment != self.partner_id.l10n_in_gst_treatment
+            )
+        ):
+            return {
+                'warning': {
+                    'title': _("Already a registered business"),
+                    'message': _(
+                        "The business is set as a registered business are you sure you want\
+                        to change the gst treatment to unregistered?",
+                    ),
+                }
+            }
+
     @api.depends(
         'invoice_line_ids.l10n_in_hsn_code',
         'company_id.l10n_in_hsn_code_digit',
