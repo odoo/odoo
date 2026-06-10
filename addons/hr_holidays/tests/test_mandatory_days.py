@@ -128,18 +128,19 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             self.assertTrue(day in mandatory_days)
             self.assertEqual(color, mandatory_days[day])
 
-        with Form(self.env['hr.leave'].with_user(self.employee_user.id).with_context(default_employee_id=self.employee_emp.id)) as leave_form:
-            leave_form.work_entry_type_id = self.work_entry_type
-            leave_form.request_date_from = datetime(2021, 11, 1)
-            leave_form.request_date_to = datetime(2021, 11, 1)
+        with Form(self.env['hr.leave'].with_user(self.manager_user).with_context(default_employee_id=self.employee_emp.id)) as leave_form1:
+            leave_form1.work_entry_type_id = self.work_entry_type
+            leave_form1.request_date_from = datetime(2021, 11, 1)
+            leave_form1.request_date_to = datetime(2021, 11, 1)
+        leave1 = leave_form1.save()     # need to be saved to have access to record
+        self.assertFalse(leave1.has_mandatory_day)
 
-            leave_form.save()  # need to be saved to have access to record
-            self.assertFalse(leave_form.record.has_mandatory_day)
-
-            leave_form.request_date_to = datetime(2021, 11, 5)
-
-            leave_form.save()  # need to be saved to have access to record
-            self.assertTrue(leave_form.record.has_mandatory_day)
+        with Form(self.env['hr.leave'].with_user(self.manager_user).with_context(default_employee_id=self.employee_emp.id)) as leave_form2:
+            leave_form2.work_entry_type_id = self.work_entry_type
+            leave_form2.request_date_from = datetime(2021, 11, 2)
+            leave_form2.request_date_to = datetime(2021, 11, 5)
+        leave2 = leave_form2.save()     # need to be saved to have access to record
+        self.assertTrue(leave2.has_mandatory_day)
 
     @freeze_time('2021-10-15')
     def test_department_mandatory_days(self):

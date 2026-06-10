@@ -6,28 +6,46 @@
         <field name="arch" type="xml">
             <form string="Time Off">
                 <group>
-                    <label for="employee_id" string="Employee"/>
+                    <div class="o_row" id="employee_label">
+                        <i class="fa fa-user fa-lg ms-2" title="Employees" name="employee_id"/>
+                        <label for="employee_id" string=""/>
+                    </div>
                     <div class="o_leave_report_employee_row">
                         <field name="employee_id" widget="many2one_avatar_employee"/>
                         <field name="state" widget="badge"
-                            decoration-warning="state in ('confirm','validate1')"
                             decoration-success="state == 'validate'"
-                            decoration-danger="state == 'refuse'"/>
+                            decoration-warning="state in ('confirm','validate1')"
+                            decoration-danger="state == 'refuse'"
+                        />
                     </div>
-                    <field name="work_entry_type_id"/>
-                    <label for="start_datetime" string="Dates" />
+
+                    <div class="o_row" id="work_entry_type_id_label">
+                        <i class="fa fa-tag fa-lg ms-2" title="Work Entry Types" name="work_entry_type_id"/>
+                        <label for="work_entry_type_id" string=""/>
+                    </div>
+                    <field name="work_entry_type_id" nolabel="1"/>
+
+                    <div class="o_row" id="dates_label">
+                        <i class="fa fa-clock-o fa-lg ms-2" title="Dates" name="date"/>
+                        <label for="start_datetime" string=""/>
+                    </div>
                     <!-- Do something here for if the leave is in hours on the same day -->
-                    <div id="full_date" class="o_row gap-2">
+                    <div id="full_date" class="o_row">
                         <field
                             string='dates'
                             name="start_datetime"
                             widget="daterange"
                             readonly='1'
-                            options="{'end_date_field': 'stop_datetime', 'show_time': false}"/>
-                        <field name="start_datetime" invisible="1"/>
+                            options="{'end_date_field': 'stop_datetime', 'show_time': false}"
+                            nolabel="1"/>
                         <span>( <field name="duration_display" readonly="1" class="w-auto"/> )</span>
                     </div>
-                    <field name="description"/>
+
+                    <div class="o_row" id="description_label">
+                        <i class="fa fa-pencil fa-lg ms-2" title="Description" name="description"/>
+                        <label for="description" string=""/>
+                    </div>
+                    <field name="description" nolabel="1"/>
                 </group>
             </form>
         </field>
