@@ -12,12 +12,17 @@ import { loadBundle } from "@web/core/assets";
  * @returns {Promise<T>}
  */
 export function loadIframe(iframe, callback = () => {}) {
-    const { promise: iframeLoaded, resolve } = Promise.withResolvers();
+    const { promise: iframeLoaded, resolve, reject } = Promise.withResolvers();
     const onIframeLoaded = () => {
         if (iframe.isConnected) {
-            resolve(callback(iframe));
+            Promise.resolve(callback(iframe))
+                .then(resolve)
+                .catch((err) => {
+                    if (iframe.isConnected) {
+                        reject(err);
+                    }
+                });
         }
-        resolve(null);
     };
     if (iframe.contentDocument?.readyState === "complete") {
         // Browsers like Chrome don't make use of the load event for iframes without `src`
