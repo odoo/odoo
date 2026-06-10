@@ -124,6 +124,7 @@ class SaleComboConfiguratorController(Controller):
         :param product.combo combo: The combo for which to get the data.
         :param product.combo.item combo_item: The combo for which to get the data.
         :param datetime date: The date to use to compute prices.
+        :param res.currency currency: The currency to express prices in.
         :param product.pricelist pricelist: The pricelist to use to compute prices.
         :param dict kwargs: Locally unused data passed to `_get_additional_configurator_data`.
         :rtype: dict
@@ -144,21 +145,25 @@ class SaleComboConfiguratorController(Controller):
 
         return {
             'id': combo_item.id,
-            'extra_price': combo_item.extra_price,
+            'extra_price': combo_item.currency_id._convert(
+                combo_item.extra_price, currency, request.env.company, date,
+            ) if currency else combo_item.extra_price,
             'is_selected': bool(selected_combo_item) or is_preselected,
             'is_configurable': is_configurable,
             'product': {
                 'id': combo_item.product_id.id,
                 'product_tmpl_id': combo_item.product_id.product_tmpl_id.id,
                 'display_name': combo_item.product_id.display_name,
-                'ptals': self._get_ptals_data(combo_item.product_id, selected_combo_item),
+                'ptals': self._get_ptals_data(
+                    combo_item.product_id, selected_combo_item, date, currency,
+                ),
                 **request.env['product.template']._get_additional_configurator_data(
                     combo_item.product_id, date, currency, pricelist, **kwargs
                 ),
             },
         }
 
-    def _get_ptals_data(self, product, selected_combo_item):
+    def _get_ptals_data(self, product, selected_combo_item, date=None, currency=None):
         """ Return data about the PTALs of the specified product.
 
         :param product.product product: The product for which to get the PTALs.
@@ -171,6 +176,8 @@ class SaleComboConfiguratorController(Controller):
                     'value': str,
                 }),
             }
+        :param datetime|None date: The date to use to convert prices.
+        :param res.currency|None currency: The currency to express prices in.
         :rtype: list(dict)
         :return: A list of dicts containing data about the specified product's PTALs.
         """
@@ -195,21 +202,27 @@ class SaleComboConfiguratorController(Controller):
             'name': ptal.attribute_id.name,
             'create_variant': ptal.attribute_id.create_variant,
             'selected_ptavs': self._get_selected_ptavs_data(
-                ptavs_by_ptal_id.get(ptal.id, []), custom_value_by_ptav_id
+                ptavs_by_ptal_id.get(ptal.id, []), custom_value_by_ptav_id, date, currency,
             ),
         } for ptal in product.attribute_line_ids]
 
-    def _get_selected_ptavs_data(self, selected_ptavs, custom_value_by_ptav_id):
+    def _get_selected_ptavs_data(
+        self, selected_ptavs, custom_value_by_ptav_id, date=None, currency=None
+    ):
         """ Return data about the selected PTAVs of the specified product.
 
         :param list(product.template.attribute.value) selected_ptavs: The selected PTAVs.
         :param dict custom_value_by_ptav_id: A mapping from PTAV ids to custom values.
+        :param datetime|None date: The date to use to convert prices.
+        :param res.currency|None currency: The currency to express prices in.
         :rtype: list(dict)
         :return: A list of dicts containing data about the specified PTAL's selected PTAVs.
         """
         return [{
             'id': ptav.id,
             'name': ptav.name,
-            'price_extra': ptav.price_extra,
+            'price_extra': ptav.currency_id._convert(
+                ptav.price_extra, currency, request.env.company, date,
+            ) if currency else ptav.price_extra,
             'custom_value': custom_value_by_ptav_id.get(ptav.id),
         } for ptav in selected_ptavs]
