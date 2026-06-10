@@ -14,6 +14,7 @@ patch(AttendeeCalendarModel.prototype, {
         this.isAlive = params.isAlive;
         this.microsoftSyncTimedOut = false;
         this.state = proxy({
+            microsoftSyncError: false,
             microsoftPendingSync: false,
             microsoftIsSync: true,
             microsoftIsPaused: false,
@@ -67,11 +68,12 @@ patch(AttendeeCalendarModel.prototype, {
                 silent,
             },
         );
-        if (["need_config_from_admin", "need_auth", "sync_stopped", "sync_paused"].includes(result.status)) {
+        if (["need_config_from_admin", "need_auth", "sync_stopped", "sync_paused", "sync_failed"].includes(result.status)) {
             this.state.microsoftIsSync = false;
         } else if (result.status === "no_new_event_from_microsoft" || result.status === "need_refresh") {
             this.state.microsoftIsSync = true;
         }
+        this.state.microsoftSyncError = result.status === "sync_failed";
         this.state.microsoftIsPaused = result.status === "sync_paused";
         this.state.microsoftPendingSync = false;
         if (this.microsoftSyncTimedOut && result.status === "need_refresh") {

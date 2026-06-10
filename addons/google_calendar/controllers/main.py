@@ -1,9 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
+
+from requests import HTTPError
 
 from odoo import http
 from odoo.http import request
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
 from odoo.addons.calendar.controllers.main import CalendarController
+
+_logger = logging.getLogger(__name__)
 
 
 class GoogleCalendarController(CalendarController):
@@ -42,7 +47,11 @@ class GoogleCalendarController(CalendarController):
                     "url": url
                 }
             # If App authorized, and user access accepted, We launch the synchronization
-            need_refresh = request.env.user.sudo()._sync_google_calendar(GoogleCal)
+            try:
+                need_refresh = request.env.user.sudo()._sync_google_calendar(GoogleCal)
+            except HTTPError as e:
+                _logger.error("Google Calendar synchronization failed. %s", e)
+                return {"status": "sync_failed"}
 
             # If synchronization has been stopped or paused
             sync_status = request.env.user._get_google_sync_status()
