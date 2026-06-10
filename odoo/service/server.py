@@ -413,7 +413,9 @@ class ThreadedServer(CommonServer):
             t.start()
 
     def http_client_thread(self, client, address, prelude=b''):
+        current_thread = threading.current_thread()
         try:
+            current_thread.processing_http = True
             # timeout to avoid chrome headless preconnect during tests
             if config['test_enable']:
                 client.settimeout(5)
@@ -421,11 +423,11 @@ class ThreadedServer(CommonServer):
             http_socket = HTTPSocket(client, address, prelude=prelude)
             http_socket.process_request()
         except BaseException:  # noqa: BLE001
-            current_thread = threading.current_thread()
             _logger.critical("Thread %s (%s) Exception occurred, quitting...",
                 current_thread.name, current_thread.ident, exc_info=True)
         finally:
             client.close()
+            current_thread.processing_http = False
 
     def http_server_thread(self, stop_event):
         try:
