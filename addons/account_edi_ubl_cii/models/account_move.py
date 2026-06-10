@@ -2,13 +2,14 @@ from base64 import b64decode
 from contextlib import suppress
 import binascii
 import re
+import os
 
 from lxml import etree
 
 from odoo import _, api, fields, models, Command
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.exceptions import UserError
-from odoo.tools import frozendict
+from odoo.tools import frozendict, format_date
 
 
 class AccountMove(models.Model):
@@ -60,6 +61,59 @@ class AccountMove(models.Model):
         fields_list = super()._get_fields_to_detach()
         fields_list.append("ubl_cii_xml_file")
         return fields_list
+
+    def _detach_attachments(self):
+        """
+        EXTENDS account.
+        Keep imported UBL/CII XML & generated PDF attachments linked to the invoice.
+        """
+        files_to_detach = self.sudo().env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_id', 'in', self.ids),
+            ('res_field', 'in', self._get_fields_to_detach()),
+        ])
+
+        files_to_keep = self.env['ir.attachment']
+        for attachment in files_to_detach:
+            message = self.env['mail.message'].search(
+                [('attachment_ids', 'in', attachment.id)],
+                limit=1,
+            )
+            # Keep notification attachments linked
+            if message.message_type == 'notification':
+                files_to_keep |= attachment
+
+        files_to_detach -= files_to_keep
+
+        if files_to_detach:
+            files_to_detach.res_field = False
+            today = format_date(self.env, fields.Date.context_today(self))
+            for attachment in files_to_detach:
+                attachment_name, attachment_extension = os.path.splitext(attachment.name)
+                attachment.name = _(
+                    '%(attachment_name)s (detached by %(user)s on %(date)s)%(attachment_extension)s',
+                    attachment_name=attachment_name,
+                    attachment_extension=attachment_extension,
+                    user=self.env.user.name,
+                    date=today,
+                )
+
+    def _message_update_content(self, message, /, *, body, attachment_ids=None, partner_ids=None, **kwargs):
+        if (
+            message.message_type != 'comment'
+            and body == message.body
+            and attachment_ids is None
+            and partner_ids is None
+            and message.attachment_ids._filter_protected_ubl_cii_attachments()
+        ):
+            return
+        return super()._message_update_content(
+            message,
+            body=body,
+            attachment_ids=attachment_ids,
+            partner_ids=partner_ids,
+            **kwargs,
+        )
 
     def _get_invoice_legal_documents(self, filetype, allow_fallback=False):
         # EXTENDS account

@@ -3,6 +3,7 @@ from unittest.mock import patch
 from freezegun import freeze_time
 
 from odoo.tests import tagged
+from odoo.exceptions import UserError
 from odoo.tools.misc import file_open
 
 from odoo.addons.account_edi_ubl_cii.tests.common import TestUblBis3Common, TestUblCiiBECommon
@@ -119,10 +120,46 @@ class TestUblImportBis3InvoiceBE(TestUblBis3Common, TestUblCiiBECommon):
 
         self.assertTrue(bill)
 
-        # Ensure the created move has 2 attachments: the original XML and a generated PDF
+        # Ensure the created move has the original XML and a generated PDF
         self.assertTrue(bill.ubl_cii_xml_id)  # Original XML
-        self.assertEqual(len(bill.attachment_ids), 1)  # Generated PDF
-        self.assertTrue(any('pdf' in attachment.mimetype for attachment in bill.attachment_ids))
+        generated_pdf = self.env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_id', '=', bill.id),
+            ('res_field', '=', 'invoice_pdf_report_file'),
+        ])
+        self.assertEqual(len(generated_pdf), 1)  # Generated PDF
+        self.assertTrue('pdf' in generated_pdf.mimetype)
+
+    def test_generated_pdf_can_be_deleted(self):
+        def _run_wkhtmltopdf(*args, **kwargs):
+            return file_open(f'{self.test_module}/tests/test_files/import/bis3/invoice/be/test_import_invoice_auto_generate_pdf.pdf', 'rb').read()
+
+        with patch.object(self.env.registry['ir.actions.report'], '_run_wkhtmltopdf', _run_wkhtmltopdf):
+            bill = self._import_invoice_as_attachment_on(
+                test_name='test_import_without_embedded_attachment',
+                journal=self.company_data["default_journal_purchase"].with_context(force_report_rendering=True),
+            )
+
+        generated_pdf = self.env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_id', '=', bill.id),
+            ('res_field', '=', 'invoice_pdf_report_file'),
+        ])
+
+        generated_pdf.unlink()
+        self.assertFalse(generated_pdf.exists())
+
+    def test_imported_xml_cannot_be_deleted(self):
+        bill = self._import_invoice_as_attachment_on(
+            test_name='test_import_without_embedded_attachment',
+            journal=self.company_data["default_journal_purchase"],
+        )
+
+        xml_attachment = bill.ubl_cii_xml_id
+        self.assertTrue(xml_attachment)
+
+        with self.assertRaisesRegex(UserError, "Attachment imported electronically cannot be deleted"):
+            xml_attachment.unlink()
 
     @freeze_time('2020-01-01')
     def test_invoice_two_tax_subtotals_because_of_multi_currency(self):
