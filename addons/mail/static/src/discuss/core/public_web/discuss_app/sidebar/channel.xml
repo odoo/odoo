@@ -30,7 +30,7 @@
             t-on-click="(ev) => this.openChannel(ev, this.channel)"
             t-custom-ref="root"
         >
-            <div class="o-mail-DiscussSidebarChannel-itemMain border-0 rounded-start-2 text-reset d-flex align-items-center p-0 flex-grow-1" t-att-class="{ 'justify-content-center': this.store.discuss.isSidebarCompact, 'overflow-hidden': !this.store.discuss.isSidebarCompact }" t-att-title="this.store.discuss.isSidebarCompact ? undefined : this.channel.displayName">
+            <div class="o-mail-DiscussSidebarChannel-itemMain border-0 rounded-start-2 text-reset d-flex align-items-center p-0 flex-grow-1" t-att-class="{ 'justify-content-center': this.store.discuss.isSidebarCompact, 'overflow-hidden': !this.store.discuss.isSidebarCompact }">
                 <div class="position-relative d-flex flex-shrink-0 o-my-0_5 rounded-2" name="threadAvatar" t-att-class="{ 'ms-2': !this.store.discuss.isSidebarCompact }">
                     <DiscussAvatar record="this.channel" size="26"/>
                 </div>
