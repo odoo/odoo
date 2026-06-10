@@ -213,7 +213,6 @@ For more specific needs, you may also assign custom-defined actions
             "web/static/lib/odoo_ui_icons/style.css",
         ],
         'mail.assets_public': [
-            'web/static/lib/jquery/jquery.js',
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
             'web/static/src/scss/pre_variables.scss',
