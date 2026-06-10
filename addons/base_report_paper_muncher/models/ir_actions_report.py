@@ -193,6 +193,7 @@ def partition_on_body(html: str) -> tuple[str, str, str]:
     Get what's before the body, the body and what's after the body.
     When no ``<body>`` was found, it returns ``(html, "", "")``.
     """
+    html = str(html)
     m = _BODY_TAG_RE.search(html)
     if not m:
         return html, '', ''
