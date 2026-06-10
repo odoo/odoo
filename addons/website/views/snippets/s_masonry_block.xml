@@ -161,6 +161,25 @@ Use t-snippet-call and fill it with its inner grid-mode row.
     </t>
 </template>
 
+<template id="s_masonry_block_quad_template" name="Masonry">
+    <t t-snippet-call="website.s_masonry_block">
+        <div class="row o_grid_mode" data-row-count="14" style="gap: 16px;">
+            <div class="o_grid_item o_cc o_cc3 g-height-7 g-col-lg-5 col-lg-5 justify-content-end order-lg-0 rounded-4" data-name="Block" style="--grid-item-padding-y: 20px; --grid-item-padding-x: 20px; z-index: 1; grid-area: 1 / 1 / 8 / 6; order: 1;">
+                <h2 class="display-2-fs">Key<br/>Milestone</h2>
+            </div>
+            <div class="o_grid_item o_grid_item_image g-height-7 g-col-lg-7 col-lg-7 order-lg-0 rounded-4" data-name="Block" style="z-index: 2; grid-area: 1 / 6 / 8 / 13; order: 0;">
+                <img src="/web/image/website.landscape_md_1" class="img img-fluid mx-auto" alt=""/>
+            </div>
+            <div class="o_grid_item o_grid_item_image g-height-7 g-col-lg-7 col-lg-7 order-lg-0 rounded-4" data-name="Block" style="z-index: 3; grid-area: 8 / 1 / 15 / 8; order: 2;">
+                <img src="/web/image/website.landscape_md_2" class="img img-fluid mx-auto" alt=""/>
+            </div>
+            <div class="o_grid_item o_cc o_cc3 g-height-7 g-col-lg-5 col-lg-5 justify-content-end order-lg-0 rounded-4" data-name="Block" style="--grid-item-padding-y: 20px; --grid-item-padding-x: 20px; z-index: 4; grid-area: 8 / 8 / 15 / 13; order: 3;">
+                <h2 class="display-2-fs">Innovation<br/>Center</h2>
+            </div>
+        </div>
+    </t>
+</template>
+
 <!-- Assets -->
 <asset id="website.s_masonry_block_000_scss" name="Masonry block 000 SCSS" active="False">
     <bundle>web.assets_frontend</bundle>
