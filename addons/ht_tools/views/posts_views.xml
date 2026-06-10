@@ -1,4 +1,13 @@
 <odoo>
+    <record id="tool_post_owner_rule" model="ir.rule">
+        <field name="name">Post Owner Rule</field>
+        <field name="model_id" ref="model_tool_post"/>
+        <field name="domain_force">
+            [('user_id', '=', user.id)]
+        </field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+    
     <record id="view_tool_post_form" model="ir.ui.view">
         <field name="name">tool.post.form</field>
         <field name="model">tool.post</field>
@@ -6,7 +15,7 @@
             <form string="Bài viết">
                 <header>
                     <button name="action_send_to_bot" 
-                            string="Gửi Bot" 
+                            string="Đăng bài" 
                             type="object" 
                             class="btn-primary"/>
                 </header>
@@ -48,7 +57,7 @@
                         <page string="Danh sách nhóm đăng" invisible="post_target != 'specific'">
                             <header>
                                 <button name="action_sync_groups_from_fastapi" 
-                                        string="Đồng bộ từ FastAPI" 
+                                        string="Đồng bộ" 
                                         type="object" 
                                         class="btn-primary"/>
                             </header>

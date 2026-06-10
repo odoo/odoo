@@ -31,6 +31,14 @@ class Post(models.Model):
         string="Nhóm mục tiêu"
     )
 
+    user_id = fields.Many2one(
+        "res.users",
+        string="Owner",
+        default=lambda self: self.env.user,
+        required=True,
+        index=True
+    )
+
     @api.onchange('post_target')
     def _onchange_post_target(self):
         """Tự động xóa sạch các nhóm đã chọn nếu người dùng chuyển sang chế độ Đăng tất cả"""

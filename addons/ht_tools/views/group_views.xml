@@ -1,4 +1,13 @@
 <odoo>
+    <record id="tool_group_owner_rule" model="ir.rule">
+        <field name="name">Group Owner Rule</field>
+        <field name="model_id" ref="model_tool_group"/>
+        <field name="domain_force">
+            [('user_id', '=', user.id)]
+        </field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+    
     <record id="view_tool_group_list" model="ir.ui.view">
         <field name="name">tool.group.list</field>
         <field name="model">tool.group</field>

@@ -13,11 +13,20 @@ class Group(models.Model):
     # Kết nối ngược lại với Post để biết nhóm này đã có những bài viết nào (Tùy chọn)
     post_ids = fields.Many2many(
         "tool.post",
-        "tool_post_group_rel",  # Tên bảng trung gian
-        "group_id",            # Cột cho model hiện tại
-        "post_id",             # Cột cho model liên kết
+        "tool_post_group_rel",
+        "group_id",
+        "post_id",
         string="Bài viết đã đăng"
     )
+
+    user_id = fields.Many2one(
+        "res.users",
+        string="Owner",
+        default=lambda self: self.env.user,
+        required=True,
+        index=True
+    )
+
 
     def action_sync_groups_from_fastapi(self):
         """Hàm này chạy khi bấm nút trên giao diện Group, mở ra popup nhập UID/Username"""

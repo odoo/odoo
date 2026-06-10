@@ -33,13 +33,12 @@ class ToolSyncGroupWizard(models.TransientModel):
     uid = fields.Selection(selection=_get_active_fb_accounts, string="Chọn tài khoản FB", required=True)
     
     # 2. Field chứa username tách biệt
-    username = fields.Char(string="Chọn tài khoản HT Tools", required=True, readonly=True)
+    username = fields.Char(string="Chọn tài khoản HT Tools", required=True)
 
     @api.onchange('uid')
     def _onchange_uid(self):
         """
         Hàm này chạy NGAY LẬP TỨC khi user chọn một tài khoản từ dropdown.
-        KHÔNG GỌI API LẦN 2. Trích xuất trực tiếp nhãn hiển thị đã có sẵn trong bộ nhớ Odoo.
         """
         # Thì mới phải gọi API đơn lẻ (hoặc gọi lại endpoint chung)
         headers = {"X-API-Key": 'odoo_secret_key'}
@@ -190,21 +189,26 @@ class ToolSyncGroupWizard(models.TransientModel):
                     continue
 
                 # Kiểm tra trùng lặp dựa vào trường group_id
-                existing_group = GroupModel.search([('group_id', '=', group_id)], limit=1)
+                GroupModel.search([
+                    ('user_id', '=', self.env.uid)
+                ]).unlink()
 
-                if existing_group:
-                    # Nếu có rồi thì cập nhật lại tên mới nhất
-                    existing_group.write({
-                        'name': name
-                    })
-                else:
-                    # Chưa có thì tạo mới
+                sync_count = 0
+
+                for group in groups_list:
+                    group_id = str(group.get("group_id") or "")
+                    name = group.get("group_name")
+
+                    if not group_id:
+                        continue
+
                     GroupModel.create({
                         'name': name,
-                        'group_id': group_id
+                        'group_id': group_id,
+                        'user_id': self.env.uid,
                     })
-                
-                sync_count += 1
+
+                    sync_count += 1
 
             # 4. Bắn thông báo thành công dạng Toast Notification
             return {
