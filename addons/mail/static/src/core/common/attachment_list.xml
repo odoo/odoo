@@ -9,7 +9,7 @@
             }"
             t-ref="this.rootRef"
         >
-            <div class="d-flex flex-wrap gap-2" t-att-class="{'justify-content-end': this.isInChatWindowAndIsAlignedRight and !this.ancestors.inComposer}" role="menu" >
+            <div class="o-mail-AttachmentList-content" t-att-class="{'justify-content-end': this.isInChatWindowAndIsAlignedRight and !this.ancestors.inComposer}" role="menu" >
                 <t t-foreach="this.props.attachmentGroups" t-as="group" t-key="group.attachment.id">
                     <t t-set="attachment" t-value="group.attachment" />
                     <div t-att-aria-label="attachment.name"

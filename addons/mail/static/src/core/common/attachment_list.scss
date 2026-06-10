@@ -1,12 +1,60 @@
+$o-mail-attachment-min-width: 11em;
+$o-mail-attachment-max-width: 13em;
+
+@mixin o-mail-attachment-sizing($flex, $width, $max-width, $min-width) {
+    .o-mail-AttachmentContainer {
+        &:not(.o-inMessage.o-isImage),
+        &.o-inChatter.o-inMessage.o-isImage {
+            flex: $flex;
+            width: $width;
+            max-width: $max-width;
+            min-width: $min-width;
+        }
+    }
+}
+
+.o-mail-AttachmentList-content {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(
+            unquote("min(#{$o-mail-attachment-min-width}, 100%)"),
+            max-content)
+    );
+    gap: 0.5em;
+
+    @include o-mail-attachment-sizing(
+        none,
+        $o-mail-attachment-max-width,
+        100%,
+        0
+    );
+}
+
+.o-mail-Message {
+    .o-mail-AttachmentList-content {
+        display: flex;
+        flex-wrap: wrap;
+
+        @include o-mail-attachment-sizing(
+            0 1 auto,
+            $o-mail-attachment-max-width,
+            $o-mail-attachment-max-width,
+            $o-mail-attachment-min-width
+        );
+    }
+}
+
 .o-mail-AttachmentContainer {
     --o-mail-attachment-height: 10em;
 
     &.o-inMessage.o-isImage:not(.o-inChatter) {
-        min-width: 13em;
+        min-width: $o-mail-attachment-max-width;
         min-height: var(--o-mail-attachment-height);
     }
     &:not(.o-inMessage.o-isImage),&.o-inChatter.o-inMessage.o-isImage {
-        width: 13em;
+        min-width: $o-mail-attachment-min-width;
+        max-width: $o-mail-attachment-max-width;
         height: var(--o-mail-attachment-height);
     }
     background-color: var(--gray-200);
