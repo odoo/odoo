@@ -18,6 +18,9 @@ export const DIMENSIONS = {
     DESKTOP_MOBILE_BREAKPOINT: Object.freeze({
         width: 768,
     }),
+    // Prevent the last inline-block element from wrapping to the next line due
+    // to window zoom px rounding in some cases.
+    ZOOM_WIDTH_CORRECTION: 0.1,
 };
 
 /**

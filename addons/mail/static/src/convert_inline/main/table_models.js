@@ -35,3 +35,12 @@ export class CellLayout extends ElementLayout {
         });
     }
 }
+
+export class EmptyCellLayout extends CellLayout {
+    constructor(root = {}) {
+        super(root);
+        this.setAttributes({
+            style: { height: 0 },
+        });
+    }
+}

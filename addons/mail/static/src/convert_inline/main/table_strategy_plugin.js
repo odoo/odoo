@@ -2,18 +2,45 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
 import { zip } from "@web/core/utils/arrays";
 import { DIMENSIONS } from "../hooks";
+import { CellLayout, EmptyCellLayout, RowLayout, TableLayout } from "./table_models";
+import { Analysis, EmailNode } from "../core/render_models";
 
-const { DESKTOP, MOBILE } = DIMENSIONS;
+const { DESKTOP, MOBILE, ZOOM_WIDTH_CORRECTION } = DIMENSIONS;
+
+const VERTICAL_ALIGN = {
+    start: "top",
+    end: "bottom",
+    center: "middle",
+    "flex-start": "top",
+    "flex-end": "bottom",
+};
 /**
  * TODO EGGMAIL: WORKING HERE
  */
 export class TableStrategyPlugin extends Plugin {
     static id = "tableStrategy";
-    static dependencies = ["responsiveBlock", "referenceNode"];
+    static dependencies = ["math", "responsiveBlock", "referenceNode"];
+    static shared = ["extractRowsFromBands", "fillTableContainer"];
     resources = {
         apply_layout_strategy_overrides: this.applyLayoutStrategy.bind(this),
         element_layout_analysis_processors: this.analyzeElementLayout.bind(this),
+        synthetic_email_node_processors: (emailNode) => {
+            if (!emailNode.analysis.facts.isTableContainer) {
+                return;
+            }
+            return this.fillTableContainer(emailNode);
+        },
     };
+
+    setup() {
+        this.builders = {
+            row: this.buildRow.bind(this),
+            table: this.buildTable.bind(this),
+            cell: this.buildCell.bind(this),
+            emptyCell: this.buildEmptyCell.bind(this),
+            cellWithOffset: this.buildCellWithOffset.bind(this),
+        };
+    }
 
     // TODO EGGMAIL NOW: special case for the first element inside the reference:
     // - basic editor case (investigate)
@@ -21,6 +48,8 @@ export class TableStrategyPlugin extends Plugin {
     // - unknown case (add mega wrapper table -> can use "reference" element for this, if mega table strategy was not applied
     // below)
     analyzeElementLayout({ layout, analysis }, { referenceNode, parentEmailNode }) {
+        // TODO EGGMAIL: enable this function when ready
+        return;
         // TODO EGGMAIL NOW: check that `hasTableLayout` can capture a table
         // if so, maybe we shouldn't hardcode "table" here, because we want to
         // allow a table to be an "hybrid" and match other strategies.
@@ -39,7 +68,7 @@ export class TableStrategyPlugin extends Plugin {
             analysis.parsingFacts.canParentMerge = true;
         }
         analysis.parsingFacts.canMerge = false;
-        analysis.facts.isTable = true;
+        analysis.facts.isTableContainer = true;
         layout.pluginIds.add(TableStrategyPlugin.id);
     }
 
@@ -118,10 +147,232 @@ export class TableStrategyPlugin extends Plugin {
                 return;
             }
         }
-        return isTableCandidate;
+        // TODO EGGMAIL: enable when ready
+        // return isTableCandidate;
+    }
+
+    // TODO EGGMAIL NOW (remark from hybrid_fluid_strategy_plugin)
+    // we have a container which is supposed to be a hybrid fluid table
+    // with potentially multiple rows, each with potentially multiple
+    // cells.
+    // however right now, we only have one container and its children
+    // we have to create a EmailNode for each row, and a EmailNode
+    // for each cell.
+    // some of the existing children can be used as is as a cell
+    // the current emailNode should be replaced with the list of rows
+    // need feature to insert multiple nodes as children of another
+    // emailNode
+    // features needed here:
+    // - replace an item in emailNode.children
+    // // currently setParent appends -> this is not enough
+    // // -> honestly, need to replace the set by a special set+list structure
+    // // done
+    // Logic:
+    // exact copy paste of buildFragment logic except we create a datastructure of
+    // template arguments instead of the templates directly?
+    // Real idea here is that I should create a synthetic emailNode
+    // I already have my basic emailNode from the first pass which identifies the row
+    // and potentially some other emailNode as children of that row that may have any purpose.
+    // Objective here is to make sure that every child of the row is classified as a CELL,
+    // be it a child itself becomes a CELL, or 1+ children are wrapped in a CELL
+    // BTW the row node itself can become multiple row in some circumstances
+    fillTableContainer(emailNode, { withTable = true, builders = this.builders } = {}) {
+        const rowMeasures = this.extractRowsFromBands(emailNode);
+        const rows = [];
+        for (const rowMeasure of rowMeasures) {
+            const width = rowMeasure.width;
+            let ratio = 100;
+            const rowEmailNode = builders["row"](rowMeasure);
+            rows.push(rowEmailNode);
+            for (const cellMeasure of rowMeasure.children) {
+                const widthRatio = this.ratioPercentage(cellMeasure.width, width, ratio);
+                cellMeasure.widthRatio = widthRatio;
+                ratio -= widthRatio;
+                if (cellMeasure.type === "cellWithOffset") {
+                    cellMeasure.offsetWidthRatio = this.ratioPercentage(
+                        cellMeasure.offsetWidth,
+                        width,
+                        ratio
+                    );
+                    ratio -= cellMeasure.offsetWidthRatio;
+                    for (const cell of builders["cellWithOffset"](cellMeasure)) {
+                        rowEmailNode.appendChild(cell);
+                    }
+                } else if (cellMeasure.type === "emptyCell") {
+                    rowEmailNode.appendChild(builders["emptyCell"](cellMeasure));
+                } else if (cellMeasure.type === "cell") {
+                    rowEmailNode.appendChild(builders["cell"](cellMeasure));
+                }
+            }
+        }
+        let children = rows;
+        if (withTable) {
+            const tableNode = builders["table"](rows);
+            children = [tableNode];
+        }
+        emailNode.spliceChildren(0, emailNode.children.length, ...children);
+    }
+
+    extractRowsFromBands(emailNode) {
+        const referenceNode = emailNode.lastReferenceNode;
+        const desktopBlock = this.getLayoutBlock(referenceNode, DESKTOP);
+        // TODO EGGMAIL: some values for text-align are not supported
+        // getStylePropertyValue should probably filter values and only
+        // return what is allowed
+        // TODO EGGMAIL: style should probably be refined in this fragment
+        const styleContext = {
+            style: {
+                "text-align": this.getStylePropertyValue(referenceNode, "text-align"),
+                "font-size": this.getStylePropertyValue(referenceNode, "font-size"),
+            },
+        };
+        // TODO EGGMAIL: approximate vertical alignment support:
+        // start/center/end/stretch -> default stretch
+        const verticalAlign =
+            VERTICAL_ALIGN[this.getStylePropertyValue(referenceNode, "align-items")];
+        // STEP 1: construct measure bundles
+        const rowMeasures = [];
+        for (const band of desktopBlock.bands) {
+            const row = { verticalAlign, children: [] };
+            rowMeasures.push(row);
+            let width = 0;
+            let prevCluster;
+            const hasLastOffset = !this.isZero(desktopBlock.padding.right);
+            if (band.clusters.length > 0) {
+                prevCluster = band.clusters[0];
+                const measures = {
+                    styleContext,
+                    isLast: !hasLastOffset && band.clusters.length === 1,
+                    cluster: prevCluster,
+                    emailNode,
+                    width: prevCluster.rect.width,
+                    verticalAlign,
+                };
+                width += measures.width;
+                if (!this.isZero(desktopBlock.padding.left)) {
+                    const offsetWidth = desktopBlock.padding.left;
+                    width += offsetWidth;
+                    row.children.push(
+                        Object.assign({ type: "cellWithOffset", offsetWidth }, measures)
+                    );
+                } else {
+                    row.children.push(Object.assign({ type: "cell" }, measures));
+                }
+            }
+            for (let i = 1; i < band.clusters.length; i++) {
+                const cluster = band.clusters[i];
+                const gap = this.gapX(prevCluster.rect, cluster.rect);
+                const measures = {
+                    styleContext,
+                    isLast: !hasLastOffset && i === band.clusters.length - 1,
+                    cluster,
+                    emailNode,
+                    width: cluster.rect.width,
+                    verticalAlign,
+                };
+                width += measures.width;
+                if (gap > 0) {
+                    width += gap;
+                    row.children.push(
+                        Object.assign({ type: "cellWithOffset", offsetWidth: gap }, measures)
+                    );
+                } else {
+                    row.children.push(Object.assign({ type: "cell" }, measures));
+                }
+                prevCluster = cluster;
+            }
+            if (hasLastOffset) {
+                width += desktopBlock.padding.right;
+                row.children.push({
+                    type: "emptyCell",
+                    width: desktopBlock.padding.right,
+                    isLast: true,
+                    verticalAlign,
+                });
+            }
+            row.width = width;
+        }
+        return rowMeasures;
+    }
+
+    buildTable(rows) {
+        const layout = new TableLayout();
+        const tableNode = new EmailNode({
+            layout,
+            analysis: new Analysis(),
+        });
+        tableNode.spliceChildren(0, 0, ...rows);
+        return tableNode;
+    }
+
+    buildRow() {
+        const layout = new RowLayout();
+        return new EmailNode({
+            layout,
+            analysis: new Analysis(),
+        });
+    }
+
+    buildCell({ styleContext, cluster, emailNode, widthRatio, verticalAlign }) {
+        const clusterEmailNodes = this.getClusterEmailNodes(emailNode, cluster);
+        const refs = {
+            root: {},
+            styleContext,
+        };
+        const style = { width: `${widthRatio}%` };
+        if (verticalAlign) {
+            style["vertical-align"] = verticalAlign;
+        }
+        Object.assign(refs.root, {
+            style: { width: `${widthRatio}%` },
+            attributes: { width: `${widthRatio}%` },
+        });
+        const layout = new CellLayout(refs.root);
+        const cellEmailNode = new EmailNode({
+            layout,
+            analysis: new Analysis(),
+        });
+        for (const child of clusterEmailNodes) {
+            cellEmailNode.appendChild(child);
+        }
+        return cellEmailNode;
+    }
+
+    buildEmptyCell({ widthRatio }) {
+        const refs = { root: {} };
+        Object.assign(refs.root, {
+            style: { width: `${widthRatio}%` },
+            attributes: { width: `${widthRatio}%` },
+        });
+        const layout = new EmptyCellLayout(refs.root);
+        return new EmailNode({
+            layout,
+            analysis: new Analysis(),
+        });
+    }
+
+    buildCellWithOffset({
+        styleContext,
+        cluster,
+        emailNode,
+        widthRatio,
+        verticalAlign,
+        offsetWidthRatio,
+    }) {
+        const cells = [];
+        const offsetEmailNode = this.buildEmptyCell({ widthRatio: offsetWidthRatio });
+        const cellEmailNode = this.buildCell({
+            styleContext,
+            widthRatio,
+            emailNode,
+            cluster,
+            verticalAlign,
+        });
+        cells.push(offsetEmailNode, cellEmailNode);
+        return cells;
     }
 }
 
-// registry
-//     .category("mail-html-conversion-main-plugins")
-//     .add(TableStrategyPlugin.id, TableStrategyPlugin);
+registry
+    .category("mail-html-conversion-main-plugins")
+    .add(TableStrategyPlugin.id, TableStrategyPlugin);
