@@ -137,6 +137,11 @@ export class AutoComplete extends Component {
     get dropdownOptions() {
         return {
             position: "bottom-start",
+            onPositioned: (popperEl, solution) => {
+                if (["bottom", "top"].includes(solution.direction)) {
+                    popperEl.style.width = getComputedStyle(this.targetDropdown).width;
+                }
+            },
             ...this.props.menuPositionOptions,
         };
     }

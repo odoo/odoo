@@ -107,7 +107,7 @@
         >
             <t t-if="this.props.slots and this.props.slots.choice" t-call-slot="choice" data="choice"/>
             <t t-else="">
-                <div t-out="choice.label" />
+                <div class="text-truncate" t-out="choice.label" />
             </t>
         </DropdownItem>
     </t>
