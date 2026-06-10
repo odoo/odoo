@@ -540,7 +540,7 @@ export class ColorPlugin extends Plugin {
                 newBackgroundImage = "none";
             }
             element.style.backgroundImage = newBackgroundImage;
-            element.style["background-color"] = "";
+            removeStyle(element, "background-color");
         }
 
         const newClassName = oldClassName
@@ -557,13 +557,13 @@ export class ColorPlugin extends Plugin {
         if (isTextGradient && mode === "color" && !isColorGradient(color)) {
             element.style.webkitTextFillColor = color;
         } else if (isColorGradient(color) || color === "") {
-            element.style.webkitTextFillColor = "";
+            removeStyle(element, "-webkit-text-fill-color");
         }
         if (isColorGradient(color)) {
-            element.style[mode] = "";
+            removeStyle(element, mode === "backgroundColor" ? "background-color" : mode);
             parts.gradient = color;
             if (mode === "color") {
-                element.style["background-color"] = "";
+                removeStyle(element, "background-color");
                 element.classList.add("text-gradient");
             } else {
                 // When a gradient is applied as background-image, explicitly set
@@ -581,10 +581,10 @@ export class ColorPlugin extends Plugin {
         } else {
             delete parts.gradient;
             if (hasGradientStyle && !backgroundImagePartsToCss(parts)) {
-                element.style["background-image"] = "";
+                removeStyle(element, "background-image");
             }
             if (color.startsWith("text") || color.startsWith("bg-")) {
-                element.style[mode] = "";
+                removeStyle(element, mode);
                 element.classList.add(color);
             } else {
                 // Change camelCase to kebab-case.
@@ -631,7 +631,7 @@ export class ColorPlugin extends Plugin {
             parts.gradient;
 
         if (!hasBackgroundColor && (isColorGradient(color) || color.startsWith("o_cc"))) {
-            element.style["background-image"] = "";
+            removeStyle(element, "background-image");
             parts.gradient = backgroundImageCssToParts(
                 // Compute the style from o_cc class.
                 getComputedStyle(element).backgroundImage

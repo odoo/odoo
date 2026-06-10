@@ -6,6 +6,7 @@ import { closestElement } from "../utils/dom_traversal";
 import { _t } from "@web/core/l10n/translation";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { getDeepestPosition, isContentEditable } from "@html_editor/utils/dom_info";
+import { removeStyle } from "@html_editor/utils/dom";
 
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
 
@@ -583,7 +584,7 @@ const simpleDraggableHook = {
     onDragEnd({ ctx }) {
         ctx.current.element.remove();
         if (document.body.style.cursor === "grabbing") {
-            document.body.style.cursor = "";
+            removeStyle(document.body, "cursor");
         }
         return ctx.current;
     },

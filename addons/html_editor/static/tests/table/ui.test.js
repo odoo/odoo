@@ -2094,8 +2094,8 @@ test("reset table size to remove custom height", async () => {
         <p data-selection-placeholder=""><br></p>
         <table>
             <tbody>
-                <tr style=""><td class="a">1[]</td></tr>
-                <tr style=""><td class="b">2</td></tr>
+                <tr><td class="a">1[]</td></tr>
+                <tr><td class="b">2</td></tr>
             </tbody>
         </table>
         <p data-selection-placeholder=""><br></p>`)
@@ -2152,17 +2152,17 @@ test("reset row size to remove custom height", async () => {
             `<p data-selection-placeholder=""><br></p>
             <table class="table table-bordered o_table">
                 <tbody>
-                    <tr style="">
+                    <tr>
                         <td class="a">1</td>
                         <td class="b">2</td>
                         <td class="c">3</td>
                     </tr>
-                    <tr style="">
+                    <tr>
                         <td class="d">4[]</td>
                         <td class="e">5</td>
                         <td class="f">6</td>
                     </tr>
-                    <tr style="">
+                    <tr>
                         <td class="g">7</td>
                         <td class="h">8</td>
                         <td class="i">9</td>
@@ -2374,9 +2374,9 @@ test("should redistribute excess width from larger columns to current column", a
                 <colgroup>
                     <col style="width: 120px;">
                     <col style="width: 80px;">
-                    <col style="">
-                    <col style="">
-                    <col style="">
+                    <col>
+                    <col>
+                    <col>
                     <col style="width: 80px;">
                     <col style="width: 120px;">
                 </colgroup>
