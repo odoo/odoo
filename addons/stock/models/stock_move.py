@@ -2623,8 +2623,8 @@ Please change the quantity done or the rounding precision in your settings.""",
             return
 
         product_domains = Domain.OR(
-            [('product_id', '=', move.product_id.id), ('location_id', 'parent_of', move.location_dest_id.id)]
-            for move in self
+            [('product_id', 'in', moves.product_id.ids), ('location_id', 'parent_of', location_dest.id)]
+            for location_dest, moves in self.grouped('location_dest_id').items()
         )
         static_domain = [('state', 'in', ['confirmed', 'partially_available']),
                          ('procure_method', '=', 'make_to_stock'),
