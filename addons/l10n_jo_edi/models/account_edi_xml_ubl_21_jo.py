@@ -72,10 +72,24 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
                     vals['base_lines_edi_ids'][line_idx] = overflow_edi_id
                     overflow_edi_id += 1
 
+<<<<<<< 569fd0c1af04a0a465cba18d2e3dc168bb78de6e
     def _add_invoice_base_lines_vals(self, vals):
         # OVERRIDE account_edi_xml_ubl_20.py
         currency_9_dp = vals['currency_id']
         invoice = vals['invoice']
+||||||| 41f5f7a7b030930f8d2d2bc5fa51fc3c48373119
+    @approximate
+    def _get_line_unit_price_jod(self, base_line):
+        line = base_line['record']
+        return self._get_line_amount_before_discount_jod(base_line) / line.quantity
+=======
+    @approximate
+    def _get_line_unit_price_jod(self, base_line):
+        line = base_line['record']
+        if not line.quantity:
+            return 0
+        return self._get_line_amount_before_discount_jod(base_line) / line.quantity
+>>>>>>> d39c1a61b1bd11b9ea41aace74c8ba57ba085e39
 
         # Compute values for invoice lines. In Jordan, because the web-service has absolutely no tolerance,
         # what we do is: use round per line with 9 decimals (yes!)
