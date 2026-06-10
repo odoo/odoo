@@ -55,6 +55,22 @@
     </BuilderRow>
 </t>
 
+<t t-name="website.s_ecomm_categories_showcase.new_block">
+    <div class="s_ecomm_categories_showcase_block o_cc o_cc5 oe_img_bg rounded-2"
+            data-name="Block"
+            style="background-image: url('/web/image/website.s_ecomm_categories_showcase_1'); background-position: 15% 50%;">
+        <div class="o_we_bg_filter bg-black-25"/>
+        <div class="s_ecomm_categories_showcase_row d-flex">
+            <div class="s_ecomm_categories_showcase_content d-flex flex-column justify-content-end text-start">
+                <h2 class="h3-fs">Category</h2>
+                <p>
+                    <a href="#" role="button" class="btn btn-secondary o_translate_inline">View All</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</t>
+
 <t t-name="website.EcommCategoriesShowcaseBlockDesign" t-inherit="html_builder.VerticalJustifyOption" t-inherit-mode="primary">
     <xpath expr="//BuilderButtonGroup" position="attributes">
         <attribute name="applyTo">'.s_ecomm_categories_showcase_content'</attribute>
