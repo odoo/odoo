@@ -1,8 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
 from unittest import skip
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.tests import Form, common
 from odoo.tools import float_compare, mute_logger
@@ -2817,3 +2818,55 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         correct_amount = 16  # 2.5 * 4 + 6 * 1
         self.assertTrue(expense_line, "COGS entry was not generated")
         self.assertAlmostEqual(expense_line.debit, correct_amount, "COGS entry has the incorrect ammount")
+
+    def test_mto_manufacture_so_qty_update_merges_finished_moves(self):
+        """
+        Create a SO with a MTO+Manufacture product, set a delivery date on the SO, then
+        increase the SO line quantity. This triggers a second finished move on the MO for
+        the delta quantity, which must be merged with the first finished move, so the MO ends up with a
+        single finished move.
+        """
+        self.env['stock.quant']._update_available_quantity(
+            self.component_a, self.company_data['default_warehouse'].lot_stock_id, 10.0
+        )
+        product = self.env['product.product'].create({
+            'name': 'Test MTO Finished',
+            'is_storable': True,
+            'categ_id': self.stock_account_product_categ.id,
+            'route_ids': [Command.set([
+                self.env.ref('stock.route_warehouse0_mto').id,
+                self.env.ref('mrp.route_warehouse0_manufacture').id
+            ])],
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [Command.create({
+                'product_id': self.component_a.id,
+                'product_qty': 1.0,
+            })],
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({
+                'product_id': product.id,
+                'product_uom_qty': 1.0,
+                'price_unit': 50.0,
+            })],
+        })
+        so.action_confirm()
+
+        so.commitment_date = fields.Date.today() + datetime.timedelta(days=1)
+        production = so.stock_reference_ids.production_ids
+        self.assertEqual(production.date_deadline, so.commitment_date)
+        # Increase SO qty to 2; MTO triggers change_production_qty on the existing MO.
+        so.order_line.product_uom_qty = 2.0
+
+        self.assertEqual(len(production), 1)
+        self.assertEqual(production.product_qty, 2.0)
+        # The delta finished move must have been merged into the original one.
+        self.assertEqual(len(production.move_finished_ids), 1, "Expected a single finished move after qty increase")
+        self.assertEqual(production.move_finished_ids.date_deadline, so.commitment_date, "Finished move's deadline should match SO commitment date")
+        production.button_mark_done()
+        self.assertEqual(production.state, 'done')
