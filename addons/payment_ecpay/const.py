@@ -42,7 +42,19 @@ PAYMENT_METHODS_RESPONSE_MAPPING = frozendict({
 
 # Mapping IETF language tags (e.g.: 'fr-BE') to ECPay language codes.
 # If a language tag is not listed, the country code prefix can serve as fallback.
+<<<<<<< f5e7f51e6d372155663158d7ceba12e89fdb393e
 LANGUAGE_CODES_MAPPING = frozendict({"en": "ENG", "ja_JP": "JPN", "ko": "KOR", "zh": "CHI"})
+||||||| 30c9e8c5b1e34b94c8aab8681e2c051a3b70f013
+LANGUAGE_CODES_MAPPING = MappingProxyType({"en": "ENG", "ja_JP": "JPN", "ko": "KOR", "zh": "CHI"})
+=======
+# zh_TW is intentionally omitted so that ECPay defaults to it when Language is missing.
+LANGUAGE_CODES_MAPPING = MappingProxyType({
+    "en": "ENG",
+    "ja_JP": "JPN",
+    "ko": "KOR",
+    "zh_CN": "CHI",
+})
+>>>>>>> 5a600896d1f2918aad4fe75e3ea44be2452280c3
 
 # Mapping of transaction states to ECPay success codes.
 SUCCESS_CODE_MAPPING = frozendict({"done": ("1", "2", "10100073")})
