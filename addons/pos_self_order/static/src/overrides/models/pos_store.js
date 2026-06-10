@@ -1,20 +1,24 @@
 import { PosStore } from "@point_of_sale/app/services/pos_store";
 import { patch } from "@web/core/utils/patch";
+import { Domain } from "@web/core/domain";
 
 patch(PosStore.prototype, {
-    async getServerOrders() {
+    getServerOrdersDomain() {
+        const base = super.getServerOrdersDomain();
         if (this.session._self_ordering) {
-            await this.loadServerOrders([
-                ["company_id", "=", this.config.company_id.id],
-                ["state", "=", "draft"],
-                "|",
-                ["pos_reference", "ilike", "Kiosk"],
-                ["pos_reference", "ilike", "Self-Order"],
-                ["table_id", "=", false],
+            return Domain.or([
+                base,
+                new Domain([
+                    ["company_id", "=", this.config.company_id.id],
+                    ["state", "=", "draft"],
+                    "|",
+                    ["pos_reference", "ilike", "Kiosk"],
+                    ["pos_reference", "ilike", "Self-Order"],
+                    ["table_id", "=", false],
+                ]),
             ]);
         }
-
-        return await super.getServerOrders(...arguments);
+        return base;
     },
     async redirectToQrForm() {
         const user_data = await this.data.call("pos.config", "get_pos_qr_order_data", [
