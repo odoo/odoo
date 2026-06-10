@@ -152,6 +152,8 @@ test("clickbot clickeverywhere test", async () => {
         "Starting ClickEverywhere test",
         "Testing app: App1 (app1)",
         "Testing menu App1 (app1)",
+        "Clicking on: list view's new button",
+        "Clicking on: go back to list view (from new record form view)",
         "Clicking on: open form view from list",
         "Clicking on: go back to list view (from record view)",
         "Testing 2 filters",
@@ -160,12 +162,16 @@ test("clickbot clickeverywhere test", async () => {
         'Clicking on: filter "Date (October)"',
         "Testing view switch: kanban",
         "Clicking on: kanban view switcher",
+        "Clicking on: kanban view's new button",
+        "Clicking on: go back to kanban view (from new record form view)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
         'Clicking on: filter "Date (October)"',
         "Testing app: App2 (app2)",
         "Testing menu menu 1 (app2_menu1)",
+        "Clicking on: kanban view's new button",
+        "Clicking on: go back to kanban view (from new record form view)",
         "Clicking on: open form view from kanban",
         "Clicking on: go back to kanban view (from record view)",
         "Testing 2 filters",
@@ -173,6 +179,8 @@ test("clickbot clickeverywhere test", async () => {
         'Clicking on: filter "Date"',
         'Clicking on: filter "Date (October)"',
         "Testing menu menu 2 (app2_menu2)",
+        "Clicking on: list view's new button",
+        "Clicking on: go back to list view (from new record form view)",
         "Clicking on: open form view from list",
         "Clicking on: go back to list view (from record view)",
         "Testing 2 filters",
@@ -184,6 +192,7 @@ test("clickbot clickeverywhere test", async () => {
         "Tested 3 menus",
         "Tested 4 views",
         "Tested 3 form views",
+        "Tested 4 new record views",
         "Tested 0 modals",
         "Tested 8 filters",
         SUCCESS_SIGNAL,
@@ -249,6 +258,8 @@ test("only one app", async () => {
         "Starting ClickEverywhere test",
         "Testing app: App1 (app1)",
         "Testing menu App1 (app1)",
+        "Clicking on: list view's new button",
+        "Clicking on: go back to list view (from new record form view)",
         "Clicking on: open form view from list",
         "Clicking on: go back to list view (from record view)",
         "Testing 2 filters",
@@ -257,6 +268,8 @@ test("only one app", async () => {
         'Clicking on: filter "Date (October)"',
         "Testing view switch: kanban",
         "Clicking on: kanban view switcher",
+        "Clicking on: kanban view's new button",
+        "Clicking on: go back to kanban view (from new record form view)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
@@ -266,10 +279,11 @@ test("only one app", async () => {
         "Tested 1 menus",
         "Tested 2 views",
         "Tested 1 form views",
+        "Tested 2 new record views",
         "Tested 0 modals",
         "Tested 4 filters",
         SUCCESS_SIGNAL,
-        'savedState: {"logger":true,"studioCount":0,"testedApps":["app1"],"testedMenus":["app1"],"testedFilters":4,"testedModals":0,"testedViews":2,"testedFormsViews":1,"appIndex":0,"menuIndex":0,"errorMenuCount":0,"startTime":43554.39999999106,"xmlId":"app1"}',
+        'savedState: {"logger":true,"studioCount":0,"testedApps":["app1"],"testedMenus":["app1"],"testedFilters":4,"testedModals":0,"testedViews":2,"testedFormsViews":1,"testedNewRecord":2,"appIndex":0,"menuIndex":0,"errorMenuCount":0,"startTime":43554.39999999106,"xmlId":"app1"}',
     ]);
 });
 
@@ -338,6 +352,8 @@ test("clickbot clickeverywhere test (with dropdown menu)", async () => {
         "Starting ClickEverywhere test",
         "Testing app: App2 (app2)",
         "Testing menu menu 1 (app2_menu1)",
+        "Clicking on: kanban view's new button",
+        "Clicking on: go back to kanban view (from new record form view)",
         "Clicking on: open form view from kanban",
         "Clicking on: go back to kanban view (from record view)",
         "Testing 2 filters",
@@ -345,6 +361,8 @@ test("clickbot clickeverywhere test (with dropdown menu)", async () => {
         'Clicking on: filter "Date"',
         'Clicking on: filter "Date (October)"',
         "Testing menu menu 2 (app2_menu2)",
+        "Clicking on: list view's new button",
+        "Clicking on: go back to list view (from new record form view)",
         "Clicking on: open form view from list",
         "Clicking on: go back to list view (from record view)",
         "Testing 2 filters",
@@ -356,6 +374,7 @@ test("clickbot clickeverywhere test (with dropdown menu)", async () => {
         "Tested 2 menus",
         "Tested 2 views",
         "Tested 2 form views",
+        "Tested 2 new record views",
         "Tested 0 modals",
         "Tested 4 filters",
         SUCCESS_SIGNAL,
@@ -412,6 +431,8 @@ test("clickbot test waiting rpc after clicking filter", async () => {
     expect.verifySteps([
         "web_search_read called", // click on the App
         "response",
+        "web_search_read called", // came back to the list view from the new record form view
+        "response",
         "web_search_read called", // came back to the list view from the form view
         "response",
         "web_search_read called", // click on the Filter
@@ -464,7 +485,7 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
     });
     onRpc("web_search_read", () => {
         if (clickBotStarted) {
-            if (id === 4) {
+            if (id === 5) {
                 id++;
                 // click on the Second Filter
                 throw makeServerError({
@@ -584,6 +605,8 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
         "Starting ClickEverywhere test",
         "Testing app: App1 (app1)",
         "Testing menu App1 (app1)",
+        "Clicking on: list view's new button",
+        "Clicking on: go back to list view (from new record form view)",
         "Clicking on: open form view from list",
         "Clicking on: go back to list view (from record view)",
         "Testing 2 filters",
@@ -600,6 +623,8 @@ Error dialog detected when waiting for clicking on filter "Date (April)" : ${exp
 A RPC in error was detected, maybe it's related to the error dialog : ${expectedRpcData}`,
         "Testing app: App2 (app2)",
         "Testing menu App2 (app2)",
+        "Clicking on: kanban view's new button",
+        "Clicking on: go back to kanban view (from new record form view)",
         "Clicking on: open form view from kanban",
         "Clicking on: go back to kanban view (from record view)",
         "Testing 2 filters",
@@ -612,6 +637,7 @@ A RPC in error was detected, maybe it's related to the error dialog : ${expected
         "Error found while testing 1 menus",
         "Tested 1 views",
         "Tested 2 form views",
+        "Tested 2 new record views",
         "Tested 0 modals",
         "Tested 4 filters",
         FAILURE_SIGNAL,
@@ -675,6 +701,8 @@ test("clickbot test waiting render after clicking filter", async () => {
     expect.verifySteps([
         "onWillStart called", // click on APP
         "response",
+        "onWillStart called", // open new recordForm View
+        "response",
         "onWillStart called", // open Form View
         "response",
         "onWillUpdateProps called", // click on filter
@@ -735,6 +763,8 @@ test("clickbot clickeverywhere menu modal", async () => {
         "Starting ClickEverywhere test",
         "Testing app: App1 (app1)",
         "Testing menu App1 (app1)",
+        "Clicking on: list view's new button",
+        "Clicking on: go back to list view (from new record form view)",
         "Clicking on: open form view from list",
         "Clicking on: go back to list view (from record view)",
         "Testing 2 filters",
@@ -743,6 +773,8 @@ test("clickbot clickeverywhere menu modal", async () => {
         'Clicking on: filter "Date (October)"',
         "Testing view switch: kanban",
         "Clicking on: kanban view switcher",
+        "Clicking on: kanban view's new button",
+        "Clicking on: go back to kanban view (from new record form view)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
@@ -756,6 +788,7 @@ test("clickbot clickeverywhere menu modal", async () => {
         "Tested 2 menus",
         "Tested 2 views",
         "Tested 1 form views",
+        "Tested 2 new record views",
         "Tested 1 modals",
         "Tested 4 filters",
         SUCCESS_SIGNAL,
