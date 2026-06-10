@@ -1,18 +1,25 @@
 $o-mail-attachment-height: 10em;
+$cal-min-height: MIN(calc(50% - 0.50em), 13em);
 
 .o-mail-AttachmentContainer {
     &.o-inMessage.o-isImage:not(.o-inChatter) {
-        min-width: 13em;
+        min-width: $cal-min-height;
         min-height: $o-mail-attachment-height;
     }
     &:not(.o-inMessage.o-isImage),&.o-inChatter.o-inMessage.o-isImage {
-        width: 13em;
+        width: $cal-min-height;
         height: $o-mail-attachment-height;
     }
     background-color: $gray-200;
 
-    @include media-breakpoint-down(sm) {
-        width: 12em;
+    @media (max-width: 20em) {
+        width: 100%;
+        &.o-inMessage.o-isImage:not(.o-inChatter) {
+            min-width: 12em;
+        }
+        &:not(.o-inMessage.o-isImage),&.o-inChatter.o-inMessage.o-isImage {
+            min-width: 12em;
+        }
     }
     .o_image, .fa {
         z-index: 1;
