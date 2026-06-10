@@ -8,7 +8,6 @@
     'depends': [
         'account_edi_ubl_cii',
         'l10n_sa',
-        'base_vat',
         'certificate',
     ],
     'summary': "E-Invoicing, Universal Business Language",

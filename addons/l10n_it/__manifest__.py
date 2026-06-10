@@ -4,7 +4,6 @@
     'version': '0.9',
     'depends': [
         'account',
-        'base_vat',
         'account_edi_ubl_cii',
     ],
     'auto_install': ['account'],

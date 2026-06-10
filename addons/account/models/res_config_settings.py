@@ -102,6 +102,7 @@ class ResConfigSettings(models.TransientModel):
     module_account_loan_extract = fields.Boolean("Loans Digitization", compute='_compute_module_account_loan_extract', readonly=False, store=True)
     module_snailmail_account = fields.Boolean(string="Snailmail")
     module_account_peppol = fields.Boolean(string='PEPPOL Invoicing')
+    module_account_vat_vies = fields.Boolean(string='VAT number validation with VIES')
     tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility', readonly=False)
     tax_cash_basis_journal_id = fields.Many2one(
         'account.journal',
@@ -151,6 +152,7 @@ class ResConfigSettings(models.TransientModel):
         help='This is the default credit limit that will be used on partners that do not have a specific limit on them.',
         related='company_id.account_credit_limit',
     )
+    vat_check_vies = fields.Boolean(related='company_id.vat_check_vies', readonly=False, string='Verify VAT Numbers')
 
     # Technical field to hide country specific fields from accounting configuration
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
@@ -238,6 +240,9 @@ class ResConfigSettings(models.TransientModel):
         and self.chart_template != self.company_id.chart_template:
             self.env['account.chart.template'].try_loading(self.chart_template, company=self.company_id)
             self.company_id._initiate_account_onboardings()
+        # Install `account_vat_vies` if the user wants to use the VAT number validation with VIES.
+        if not self.module_account_vat_vies and self.vat_check_vies:
+            self.module_account_vat_vies = True
 
     def reload_template(self):
         self.env['account.chart.template'].try_loading(self.company_id.chart_template, company=self.company_id)

@@ -4878,7 +4878,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'base_import_module',
             'base_install_request',
             'base_setup',
-            'base_vat',
             'calendar',
             'crm',
             'crm_helpdesk',

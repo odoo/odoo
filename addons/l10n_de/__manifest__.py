@@ -16,7 +16,6 @@ German accounting chart and localization.
 By default, the audit trail is enabled for GoBD compliance.
     """,
     'depends': [
-        'base_vat',
         'l10n_din5008',
         'account',
         'account_edi_ubl_cii',

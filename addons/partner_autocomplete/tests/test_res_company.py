@@ -65,8 +65,6 @@ class TestResCompany(common.TransactionCase, MockIAPPartnerAutocomplete):
         """
         Ensure the VAT number is removed when the partner autocomplete return an incorrect VAT number
         """
-        if self.env['ir.module.module']._get('base_vat').state != 'installed':
-            self.skipTest("The module base vat is required to run this test.")
 
         # Mock the company details from the JS call `enrichCompany(company)`
         be_company_data = {

@@ -22,7 +22,7 @@ from odoo.addons.account.tools.partner_identifiers import (
     validate_identifier,
     validation_error_message,
 )
-from odoo.addons.base_vat.models.res_partner import _ref_vat
+from odoo.addons.base_setup.models.res_partner import _ref_vat
 
 _logger = logging.getLogger(__name__)
 
@@ -580,7 +580,6 @@ class ResPartner(models.Model):
     trust = fields.Selection([('good', 'Good Debtor'), ('normal', 'Normal Debtor'), ('bad', 'Bad Debtor')], string='Degree of trust you have in this debtor', company_dependent=True)
     ignore_abnormal_invoice_date = fields.Boolean(company_dependent=True)
     ignore_abnormal_invoice_amount = fields.Boolean(company_dependent=True)
-    vat = fields.Char(inverse='_inverse_vat', store=True)
     additional_identifiers = fields.Json(string="Additional Identifiers", copy=False)
     available_additional_identifiers_metadata = fields.Json(compute='_compute_available_additional_identifiers_metadata')
     global_location_number = fields.Char(
@@ -687,7 +686,7 @@ class ResPartner(models.Model):
         self._check_vat(validation=False)
 
     def _inverse_vat(self):
-        self._check_vat()
+        super()._inverse_vat()
         self._deduce_additional_identifiers_from_vat()
 
     @api.depends('country_id')
@@ -907,32 +906,6 @@ class ResPartner(models.Model):
 
         return frontend_writable_fields
 
-    def _check_vat(self, validation="error"):
-        for partner in self:
-            vat, _country_code = self._run_vat_checks(partner.commercial_partner_id.country_id, partner.vat,
-                                               partner_name=partner.name, validation=validation)
-            if vat != partner.vat:  # To avoid unnecessary queries (perf tested)
-                partner.vat = vat
-
-    @api.model
-    def _run_vat_checks(self, country, vat, partner_name='', validation='error'):
-        """ Checks a VAT number syntactically to ensure its validity upon saving.
-
-        :param country: a country to check for
-        :param vat: a string with the VAT number to check.
-        :param partner_name: to put into the error message
-        :param validation: if False, it will only return the formatted vat without checking if it valid.
-            if 'error', an incorrect number will raise and if 'setnull' it will just return an empty vat
-
-        :return: A two-elements tuple with:
-
-            1. The vat number
-            2. The country code of the country the VAT number was validated for, if it was validated.
-               False if it could not be validated against the provided or guessed country.
-        """
-        assert validation in (False, 'error', 'setnull')
-        return vat, country and country.code or ''
-
     def _get_vat_required_valid(self, company=None):
         """ Hook for determining VAT validity with more complex VAT requirements. (like VIES)"""
         self.ensure_one()
@@ -1114,11 +1087,6 @@ class ResPartner(models.Model):
         return {
             'criteria': criteria,
         }
-
-    @api.model
-    def _get_country_specific_vat_variants(self, normalized_vat, country_prefix):
-        """Return additional formatted VAT values to consider during EDI partner matching."""
-        return []
 
     @api.model
     def _import_retrieve_customer_from_phone(self, customer_values):
