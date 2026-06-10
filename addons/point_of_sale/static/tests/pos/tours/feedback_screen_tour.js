@@ -15,6 +15,7 @@ registry.category("web_tour.tours").add("test_automatic_receipt_printing", {
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
             FeedbackScreen.isShown(),
+            FeedbackScreen.isSuccess(),
             FeedbackScreen.clickScreen(),
             ProductScreen.isShown(),
         ].flat(),
