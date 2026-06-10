@@ -56,6 +56,8 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
     @approximate
     def _get_line_unit_price_jod(self, base_line):
         line = base_line['record']
+        if not line.quantity:
+            return 0
         return self._get_line_amount_before_discount_jod(base_line) / line.quantity
 
     @approximate
