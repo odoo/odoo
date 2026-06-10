@@ -686,7 +686,10 @@ class Website(models.Model):
 
     def _prepare_sale_order_values(self, partner_sudo):
         self.ensure_one()
-
+        affiliate_id = request.session.get('affiliate_id')
+        salesperson_user_sudo = self.env['res.users'].sudo().browse(affiliate_id).exists()
+        if not salesperson_user_sudo:
+            salesperson_user_sudo = self.salesperson_id or partner_sudo.user_id or partner_sudo.parent_id.user_id
         return {
             'company_id': self.company_id.id,
             'partner_id': partner_sudo.id,
@@ -696,6 +699,7 @@ class Website(models.Model):
 
             'team_id': self.salesteam_id.id,
             'website_id': self.id,
+            'user_id': salesperson_user_sudo.id,
         }
 
     def _get_and_cache_current_pricelist(self):
