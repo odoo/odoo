@@ -1,11 +1,10 @@
-import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
-import { loadJS } from "@web/core/assets";
+import { loadBundle, loadJS } from "@web/core/assets";
 
 // temporary for OnNoResultReturned bug
 import { ThirdPartyScriptError } from "@web/core/errors/error_service";
 const errorHandlerRegistry = registry.category("error_handlers");
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, xml, signal, onWillStart, onMounted } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 const MONDIALRELAY_SCRIPT_URL = "https://widget.mondialrelay.com/parcelshop-picker/jquery.plugin.mondialrelay.parcelshoppicker.min.js"
@@ -17,41 +16,24 @@ function corsIgnoredErrorHandler(env, error) {
 }
 
 export class MondialRelayField extends Component {
-    static template = xml`<div t-if="this.enabled" t-custom-ref="root"/>`;
+    static template = xml`<div t-ref="this.root"/>`;
     static props = {...standardFieldProps};
     setup() {
-        this.root = useRef("root");
-        this.state = proxy({
-            libLoaded: false, // Whether the library is loaded or not
+        this.root = signal(null);
+        onWillStart(async () => {
+            await loadBundle("web._assets_jquery");
+            await loadJS(MONDIALRELAY_SCRIPT_URL);
         });
-        onWillRender(() => {
-            // Do nothing if the record is not of type mondial_relay
-            if (!this.enabled || this.state.libLoaded) {
-                return;
-            }
-            loadJS(MONDIALRELAY_SCRIPT_URL).then(() => {this.state.libLoaded = true});
+        onMounted(() => {
+            this.insertWidget($(this.root()));
         });
-
-        useLayoutEffect(
-            (el) => {
-                if (!el) {
-                    return;
-                }
-                this.insertWidget($(el));
-            },
-            () => [this.state.libLoaded && this.root.el],
-        )
-    }
-
-    get enabled() {
-        return this.props.record.data.is_mondialrelay;
     }
 
     insertWidget($el) {
         const params = {
             Target: "", // required but handled by OnParcelShopSelected
             Brand: this.props.record.data.mondialrelay_brand,
-            ColLivMod: this.props.record.data.mondial_realy_colLivMod,
+            ColLivMod: this.props.record.data.mondialrelay_colLivMod,
             AllowedCountries: this.props.record.data.mondialrelay_allowed_countries,
             PostCode: this.props.record.data.shipping_zip || '',
             Country: this.props.record.data.shipping_country_code  || '',
