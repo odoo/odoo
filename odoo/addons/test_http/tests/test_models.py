@@ -110,7 +110,7 @@ class TestHttpModels(TestHttpBase):
 
     def test_models5_max_upload_too_large(self):
         res = self.url_open('/test_http/1/setname', {
-            'name': "too much data" * 1000  # 1.3kB
+            'name': "too much data" * 1000,  # 1.3kB
         })
         self.assertEqual(res.status_code, HTTPStatus.REQUEST_ENTITY_TOO_LARGE)
 
@@ -119,10 +119,11 @@ class TestHttpModels(TestHttpBase):
             with mute_logger('odoo.addons.rpc.controllers.xmlrpc'):
                 self.xmlrpc_object.execute_kw(
                     get_db_name(), self.jackoneill.id, 'jackoneill',
-                   'res.users', 'read', [self.jackoneill.id, ['login']]
+                   'res.users', 'read', [self.jackoneill.id, ['login']],
                 )
             res = self.url_open('/test_http/wsgi_environ')
             res.raise_for_status()
+            res.content  # the server logs the request after it sent the response body
 
         self.assertEqual(capture.output, [
             Like('...POST /xmlrpc/2/object#res.users.read HTTP/...'),
