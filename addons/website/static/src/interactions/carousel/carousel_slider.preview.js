@@ -27,6 +27,19 @@ const CarouselSliderPreview = (I) =>
          */
         mouseEnter() {
             const carousel = window.Carousel.getOrCreateInstance(this.el);
+            const isCarouselMultiple = this.el.classList.contains("s_carousel_multiple");
+            if (isCarouselMultiple) {
+                const carouselItemEls = this.el.querySelectorAll(".carousel-item");
+                this.el.addEventListener("slid.bs.carousel", (ev) => {
+                    const displayedSlides = parseInt(
+                        getComputedStyle(this.el).getPropertyValue("--carousel-multiple-items-per-slide")
+                    );
+                    if (ev.to >= carouselItemEls.length - displayedSlides) {
+                        carousel.to(0);
+                    }
+                    this.el.style.setProperty("--carousel-multiple-current-index", ev.to);
+                });
+            }
             carousel.cycle();
         }
 

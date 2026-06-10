@@ -15,12 +15,18 @@ function isResizable(el) {
  * @property { BuilderOverlayPlugin['showOverlayPreview'] } showOverlayPreview
  * @property { BuilderOverlayPlugin['hideOverlayPreview'] } hideOverlayPreview
  * @property { BuilderOverlayPlugin['refreshOverlays'] } refreshOverlays
+ * @property { BuilderOverlayPlugin['toggleOverlaysVisibility'] } toggleOverlaysVisibility
  */
 
 export class BuilderOverlayPlugin extends Plugin {
     static id = "builderOverlay";
     static dependencies = ["builderOptions", "localOverlay", "history", "operation"];
-    static shared = ["showOverlayPreview", "hideOverlayPreview", "refreshOverlays"];
+    static shared = [
+        "showOverlayPreview",
+        "hideOverlayPreview",
+        "refreshOverlays",
+        "toggleOverlaysVisibility",
+    ];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         on_committed_to_history_handlers: this.refreshOverlays.bind(this),

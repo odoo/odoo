@@ -2,7 +2,7 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
 export class CarouselEdit extends Interaction {
-    static selector = "section > .carousel";
+    static selector = "section > .carousel:not(.s_carousel_multiple)";
     // Prevent enabling the carousel overlay when clicking on the carousel
     // controls (indeed we want it to change the carousel slide then enable
     // the slide overlay) + See "CarouselItem" option.

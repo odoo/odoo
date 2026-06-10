@@ -9,13 +9,15 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 /**
  * @typedef { Object } CarouselOptionShared
  * @property { CarouselOptionPlugin['addSlide'] } addSlide
+ * @property { CarouselOptionPlugin['assignUniqueID'] } assignUniqueID
+ * @property { CarouselOptionPlugin['getTitleExtraInfo'] } getTitleExtraInfo
  * @property { CarouselOptionPlugin['removeSlide'] } removeSlide
  * @property { CarouselOptionPlugin['slideCarousel'] } slideCarousel
  */
 
 const carouselWrapperSelector =
     ".s_carousel_wrapper, .s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper";
-const carouselControlsSelector =
+export const carouselControlsSelector =
     ".carousel-control-prev, .carousel-control-next, .carousel-indicators";
 
 const carouselItemOptionSelector =
@@ -24,7 +26,13 @@ const carouselItemOptionSelector =
 export class CarouselOptionPlugin extends Plugin {
     static id = "carouselOption";
     static dependencies = ["clone", "builderOptions", "builderActions"];
-    static shared = ["addSlide", "removeSlide", "slideCarousel"];
+    static shared = [
+        "addSlide",
+        "assignUniqueID",
+        "getTitleExtraInfo",
+        "removeSlide",
+        "slideCarousel",
+    ];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
@@ -70,7 +78,7 @@ export class CarouselOptionPlugin extends Plugin {
      */
     restoreCarousels(rootEl = this.editable) {
         // Set the first slide as the active one.
-        for (const carouselEl of selectElements(rootEl, ".carousel")) {
+        for (const carouselEl of selectElements(rootEl, ".carousel:not(.s_carousel_multiple)")) {
             carouselEl.querySelectorAll(".carousel-item").forEach((itemEl, i) => {
                 itemEl.classList.remove("next", "prev", "left", "right");
                 itemEl.classList.toggle("active", i === 0);
@@ -294,7 +302,7 @@ export class CarouselOptionPlugin extends Plugin {
      * @param {String} optionName
      */
     reorderCarouselItems(activeItemEl, itemEls, optionName) {
-        if (optionName === "Carousel") {
+        if (optionName === "Carousel" && activeItemEl.matches(carouselItemOptionSelector)) {
             const carouselEl = activeItemEl.closest(".carousel");
 
             // Replace the content with the new slides.
