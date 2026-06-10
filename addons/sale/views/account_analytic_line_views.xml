@@ -30,14 +30,6 @@
         <field name="arch" type="xml">
             <list string="Services &amp; Material" editable="top" multi_edit="1">
                 <field
-                    name="order_id"
-                    string="Customer Order"
-                    context="{'sale_show_partner_name': True}"
-                    domain="[('company_id', '=', company_id), ('locked', '=', False)]"
-                    required="True"
-                    width="250px"
-                />
-                <field
                     name="product_id"
                     domain="[('reinvoice_policy', '!=', 'no')]"
                     context="{
@@ -46,6 +38,14 @@
                     }"
                     required="True"
                     width="350px"
+                />
+                <field
+                    name="order_id"
+                    string="Customer Order"
+                    context="{'sale_show_partner_name': True}"
+                    domain="[('company_id', '=', company_id), ('locked', '=', False)]"
+                    required="True"
+                    width="250px"
                 />
                 <field name="unit_amount" string="Quantity" optional="show"/>
                 <field
