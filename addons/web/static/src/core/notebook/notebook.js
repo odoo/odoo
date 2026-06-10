@@ -1,5 +1,13 @@
-import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
+import {
+    Component,
+    computed,
+    signal,
+    useEffect,
+    types as t,
+    onWillUpdateProps,
+    onPatched,
+    onMounted,
+} from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 
 /**
@@ -67,47 +75,52 @@ export class Notebook extends Component {
     static template = "web.Notebook";
     props = props(notebookProps);
 
+    activePaneRef = signal(null, { type: t.ref() });
+    pages = signal([]);
+    currentPage = signal(null);
+
+    navItems = computed(() => this.pages().filter((e) => e[1].isVisible));
+    page = computed(() => {
+        const found = this.pages().find((e) => e[0] === this.currentPage());
+        return found?.[1]?.Component && found[1];
+    });
+    invalidPages = computed(() => this.computeInvalidPages());
+
     setup() {
-        this.activePane = useRef("activePane");
-        this.pages = this.computePages(this.props);
-        this.invalidPages = new Set();
-        this.state = proxy({ currentPage: null });
-        this.state.currentPage = this.computeActivePage(this.props.defaultPage, true);
+        this.pages.set(this.computePages(this.props));
+        this.currentPage.set(this.computeActivePage(this.props.defaultPage, true));
         this.keepLastPageTransition = new KeepLast();
-        useLayoutEffect(
-            () => {
-                this.props.onPageUpdate(this.state.currentPage);
-                this.activePane.el?.classList.add("show");
-            },
-            () => [this.state.currentPage]
-        );
-        onWillRender(() => {
-            this.computeInvalidPages();
+
+        onMounted(() => {
+            this.props.onPageUpdate(this.currentPage());
         });
+        onPatched(() => {
+            this.props.onPageUpdate(this.currentPage());
+        });
+        useEffect(() => {
+            const page = this.currentPage();
+            const ref = this.activePaneRef();
+            if (ref && page) {
+                ref.classList.add("show");
+            }
+        });
+
         onWillUpdateProps((nextProps) => {
             const activateDefault =
                 this.props.defaultPage !== nextProps.defaultPage || !this.defaultVisible;
-            this.pages = this.computePages(nextProps);
-            this.state.currentPage = this.computeActivePage(nextProps.defaultPage, activateDefault);
+            this.pages.set(this.computePages(nextProps));
+            const newPage = this.computeActivePage(nextProps.defaultPage, activateDefault);
+            this.currentPage.set(newPage);
         });
     }
 
-    get navItems() {
-        return this.pages.filter((e) => e[1].isVisible);
-    }
-
-    get page() {
-        const page = this.pages.find((e) => e[0] === this.state.currentPage)[1];
-        return page.Component && page;
-    }
-
     async activatePage(pageIndex) {
-        if (!this.disabledPages.includes(pageIndex) && this.state.currentPage !== pageIndex) {
+        if (!this.disabledPages.includes(pageIndex) && this.currentPage() !== pageIndex) {
             const prom = (async () => this.props.onWillActivatePage(pageIndex))();
             const canProceed = await this.keepLastPageTransition.add(prom);
             if (canProceed !== false) {
-                this.activePane.el?.classList.remove("show");
-                this.state.currentPage = pageIndex;
+                this.activePaneRef()?.classList.remove("show");
+                this.currentPage.set(pageIndex);
             }
         }
     }
@@ -142,10 +155,12 @@ export class Notebook extends Component {
     }
 
     computeActivePage(defaultPage, activateDefault) {
-        if (!this.pages.length) {
+        if (!this.pages().length) {
             return null;
         }
-        const pages = this.pages.filter((e) => e[1].isVisible).map((e) => e[0]);
+        const pages = this.pages()
+            .filter((e) => e[1].isVisible)
+            .map((e) => e[0]);
 
         if (defaultPage) {
             if (!pages.includes(defaultPage)) {
@@ -157,7 +172,7 @@ export class Notebook extends Component {
                 }
             }
         }
-        const current = this.state.currentPage;
+        const current = this.currentPage?.();
         if (!current || (current && !pages.includes(current))) {
             return pages[0];
         }
@@ -166,14 +181,15 @@ export class Notebook extends Component {
     }
 
     computeInvalidPages() {
-        this.invalidPages = new Set();
-        for (const page of this.navItems) {
+        const result = new Set();
+        for (const page of this.navItems()) {
             const invalid = page[1].fieldNames?.some((fieldName) =>
                 this.env.model?.root.isFieldInvalid(fieldName)
             );
             if (invalid) {
-                this.invalidPages.add(page[0]);
+                result.add(page[0]);
             }
         }
+        return result;
     }
 }
