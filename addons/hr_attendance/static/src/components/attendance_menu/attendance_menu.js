@@ -41,11 +41,6 @@ export class ActivityMenu extends Component {
         });
     }
 
-    async searchReadEmployee() {
-        this.employee = await rpc("/hr_attendance/attendance_user_data");
-        this._searchReadEmployeeFill();
-    }
-
     _searchReadEmployeeFill() {
         if (!this.employee?.id) {
             this.state.isDisplayed = false;
@@ -103,7 +98,6 @@ export class ActivityMenu extends Component {
 
     beforeDropdownOpen() {
         this.setStreamAvailable(null);
-        this.searchReadEmployee();
     }
 
     async checking({ latitude = false, longitude = false, checkInImage = null } = {}) {
