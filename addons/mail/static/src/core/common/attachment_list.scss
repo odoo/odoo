@@ -1,21 +1,70 @@
 $o-mail-attachment-height: 10em;
+$o-mail-attachment-minWidth: 11em;
+$o-mail-attachment-maxWidth: 13em;
+$o-mail-attachment-singleColumnContainer-width: ($o-mail-attachment-minWidth * 2) + 0.5em;
+
+.o-mail-AttachmentList {
+    container-type: inline-size;
+}
+
+.o-mail-Message-content {
+    flex: 1 1 100%;
+    min-width: 0;
+}
+
+.o-mail-AttachmentList-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax($o-mail-attachment-minWidth, 1fr));
+    gap: 0.5em;
+
+    .o-mail-AttachmentContainer {
+        &:not(.o-inMessage.o-isImage),&.o-inChatter.o-inMessage.o-isImage {
+            flex: none;
+            width: 100%;
+            max-width: 100%;
+        }
+    }
+}
+
+.o-mail-Message,.o-mail-Message-content {
+    .o-mail-AttachmentList-content {
+        display: flex;
+        flex-wrap: wrap;
+
+        .o-mail-AttachmentContainer {
+            &:not(.o-inMessage.o-isImage),&.o-inChatter.o-inMessage.o-isImage {
+                flex: 1 1 0;
+                width: auto;
+                max-width: 13em;
+            }
+        }
+    }
+}
 
 .o-mail-AttachmentContainer {
     &.o-inMessage.o-isImage:not(.o-inChatter) {
-        min-width: 13em;
+        min-width: $o-mail-attachment-maxWidth;
         min-height: $o-mail-attachment-height;
     }
     &:not(.o-inMessage.o-isImage),&.o-inChatter.o-inMessage.o-isImage {
-        width: 13em;
+        min-width: $o-mail-attachment-minWidth;
+        max-width: $o-mail-attachment-maxWidth;
         height: $o-mail-attachment-height;
     }
     background-color: $gray-200;
 
-    @include media-breakpoint-down(sm) {
-        width: 12em;
-    }
     .o_image, .oi {
         z-index: 1;
+    }
+}
+
+@container (max-width: #{$o-mail-attachment-singleColumnContainer-width}) {
+    .o-mail-AttachmentList:not(.o-mail-Message-content *) {
+        .o-mail-AttachmentContainer {
+            &:not(.o-inMessage.o-isImage),&.o-inChatter.o-inMessage.o-isImage {
+                max-width: $o-mail-attachment-maxWidth;
+            }
+        }
     }
 }
 
