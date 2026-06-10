@@ -1,8 +1,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
+
+from requests import HTTPError
 
 from odoo import http
 from odoo.http import request
 from odoo.addons.calendar.controllers.main import CalendarController
+
+_logger = logging.getLogger(__name__)
 
 
 class MicrosoftCalendarController(CalendarController):
@@ -41,7 +46,11 @@ class MicrosoftCalendarController(CalendarController):
                 }
 
             # If App authorized, and user access accepted, We launch the synchronization
-            need_refresh = request.env.user.sudo().with_context(dont_notify=True)._sync_microsoft_calendar()
+            try:
+                need_refresh = request.env.user.sudo().with_context(dont_notify=True)._sync_microsoft_calendar()
+            except HTTPError as e:
+                _logger.error("Outlook Calendar synchronization failed. %s", e)
+                return {"status": "sync_failed"}
 
             # If synchronization has been stopped or paused
             sync_status = request.env.user._get_microsoft_sync_status()

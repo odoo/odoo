@@ -46,6 +46,11 @@ patch(AttendeeCalendarController.prototype, {
         render(this, true);
     },
 
+    async onRetryGoogleSync() {
+        await this.orm.call("res.users", "stop_google_synchronization");
+        await this.onGoogleSyncCalendar();
+    },
+
     async onUnpauseGoogleSynchronization() {
         await this.orm.call(
             "res.users",

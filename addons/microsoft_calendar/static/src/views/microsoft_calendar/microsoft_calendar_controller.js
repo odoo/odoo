@@ -45,6 +45,11 @@ patch(AttendeeCalendarController.prototype, {
         render(this, true);
     },
 
+    async onRetryGoogleSync() {
+        await this.orm.call("res.users", "stop_microsoft_synchronization");
+        await this.onGoogleSyncCalendar();
+    },
+
     async onUnpauseMicrosoftSynchronization() {
         await this.orm.call(
             "res.users",
