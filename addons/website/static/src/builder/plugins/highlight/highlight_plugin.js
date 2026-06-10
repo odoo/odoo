@@ -1,4 +1,4 @@
-import { reactive, useChildEnv, useRef } from "@web/owl2/utils";
+import { useChildEnv, useRef } from "@web/owl2/utils";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { Component, xml, proxy } from "@odoo/owl";
@@ -85,7 +85,7 @@ export class HighlightPlugin extends Plugin {
         this.previewableApplyHighlightStyle = this.dependencies.history.makePreviewableOperation(
             this._applyHighlightStyle.bind(this)
         );
-        this.highlightState = reactive({
+        this.highlightState = proxy({
             highlightId: undefined,
             color: "",
             thickness: undefined,

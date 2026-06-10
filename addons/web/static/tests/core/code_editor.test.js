@@ -1,4 +1,3 @@
-import { reactive } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -380,7 +379,7 @@ test("qweb mode readonly attributes", async () => {
         </form>
         `.replace(/^\s*/gm, ""); // simple dedent;
 
-    const state = reactive({
+    const state = proxy({
         value: initialValue,
         mode: "qweb",
         modeOptions: {

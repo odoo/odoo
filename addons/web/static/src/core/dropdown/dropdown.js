@@ -1,10 +1,11 @@
-import { onRendered, reactive, useChildEnv, useLayoutEffect } from "@web/owl2/utils";
+import { onRendered, useChildEnv, useLayoutEffect } from "@web/owl2/utils";
 import {
     Component,
     immediateEffect,
     onMounted,
     onWillDestroy,
     onWillUpdateProps,
+    proxy,
     status,
     untrack,
     xml,
@@ -366,7 +367,7 @@ export class Dropdown extends Component {
             return;
         }
 
-        this.popoverRefresher = reactive({ token: 0 });
+        this.popoverRefresher = proxy({ token: 0 });
         const props = {
             beforeOpen: () => this.props.beforeOpen?.(),
             onOpened: () => this.onOpened(),

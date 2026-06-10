@@ -1,5 +1,5 @@
-import { reactive, useChildSubEnv } from "@web/owl2/utils";
-import { Component, markRaw, xml } from "@odoo/owl";
+import { useChildSubEnv } from "@web/owl2/utils";
+import { Component, markRaw, proxy, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 class DialogWrapper extends Component {
@@ -42,7 +42,7 @@ export const dialogService = {
         const add = (dialogClass, props, options = {}) => {
             const id = nextId++;
             const close = (params) => remove(params);
-            const subEnv = reactive({
+            const subEnv = proxy({
                 id,
                 close,
                 isActive: true,

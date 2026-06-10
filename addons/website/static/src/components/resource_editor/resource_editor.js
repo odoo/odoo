@@ -1,4 +1,4 @@
-import { reactive, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -92,7 +92,7 @@ export class ResourceEditor extends Component {
         });
 
         let showErrorInterval;
-        this.errors = reactive([]);
+        this.errors = proxy([]);
         useEffect(() => {
             clearInterval(showErrorInterval);
             if (this.errors.length) {

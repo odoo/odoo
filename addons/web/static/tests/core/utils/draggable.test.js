@@ -1,4 +1,4 @@
-import { reactive, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import {
     expect,
     manuallyDispatchProgrammaticEvent,
@@ -118,7 +118,7 @@ test("Simple dragging in single group", async () => {
 test("Dynamically disable draggable feature", async () => {
     expect.assertions(3);
 
-    const state = reactive({ enableDrag: true });
+    const state = proxy({ enableDrag: true });
     class List extends Component {
         static template = xml`
             <div t-custom-ref="root" class="root">

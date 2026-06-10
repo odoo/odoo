@@ -1,4 +1,4 @@
-import { reactive } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
 
 /**
  * @deprecated
@@ -22,6 +22,6 @@ import { reactive } from "@web/owl2/utils";
  */
 export class Reactive {
     constructor() {
-        return reactive(this);
+        return proxy(this);
     }
 }

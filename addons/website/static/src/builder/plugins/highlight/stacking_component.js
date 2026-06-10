@@ -1,9 +1,9 @@
-import { reactive, useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { xml, Component, proxy } from "@odoo/owl";
 import { POSITION_BUS } from "@web/core/position/position_hook";
 
 export function useStackingComponentState() {
-    const stack = reactive([]);
+    const stack = proxy([]);
     let counter = 0;
     const push = (component, props, title, withPrevious) => {
         stack.push({ id: counter++, component, props, title, withPrevious });

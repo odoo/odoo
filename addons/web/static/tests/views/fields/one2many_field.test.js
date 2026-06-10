@@ -1,4 +1,3 @@
-import { reactive } from "@web/owl2/utils";
 import { expect, getFixture, test } from "@odoo/hoot";
 import {
     click,
@@ -13242,7 +13241,7 @@ test("one2many causes an onchange on the parent which fails", async () => {
 
 test.tags("desktop");
 test("one2many custom which can be edited in dialog or on the line", async () => {
-    const customState = reactive({ isEditable: false });
+    const customState = proxy({ isEditable: false });
     class CustomX2manyField extends X2ManyField {
         setup() {
             super.setup();

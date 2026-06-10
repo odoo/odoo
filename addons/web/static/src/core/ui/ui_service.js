@@ -1,4 +1,4 @@
-import { reactive, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { throttleForAnimation } from "@web/core/utils/timing";
@@ -7,7 +7,7 @@ import { browser } from "@web/core/browser/browser";
 import { getTabableElements, isFocusable } from "@web/core/utils/ui";
 import { getActiveHotkey } from "../hotkeys/hotkey_service";
 
-import { EventBus } from "@odoo/owl";
+import { EventBus, proxy } from "@odoo/owl";
 
 export const SIZES = { XS: 0, SM: 1, MD: 2, LG: 3, XL: 4, XXL: 5 };
 
@@ -223,7 +223,7 @@ export const uiService = {
         };
         pointerQuery.addEventListener("change", handlePointerChange);
 
-        const ui = reactive({
+        const ui = proxy({
             bus,
             size: utils.getSize(),
             get activeElement() {

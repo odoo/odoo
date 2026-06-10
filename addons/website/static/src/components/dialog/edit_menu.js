@@ -1,4 +1,4 @@
-import { reactive, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import wUtils from "@website/js/utils";
@@ -308,7 +308,7 @@ export class EditMenuDialog extends Component {
             isMegaMenu,
             url: "",
             save: (name, url) => {
-                const newMenu = reactive({
+                const newMenu = proxy({
                     fields: {
                         id: `menu_${new Date().toISOString()}`,
                         name,
