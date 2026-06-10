@@ -294,7 +294,13 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         for index, workorder in enumerate(production.workorder_ids):
             estimate_cost = workorder._should_estimate_cost()
             hourly_cost = workorder.costs_hour or workorder.workcenter_id.costs_hour
-            duration = (workorder.duration_expected if estimate_cost else workorder.get_duration()) / 60
+            if float_is_zero(workorder.duration_expected, precision_digits=2):
+                duration = workorder.get_duration() / 60
+                mo_cost = duration * hourly_cost
+            else:
+                duration = (workorder.duration_expected if estimate_cost else workorder.get_duration()) / 60
+                mo_cost = workorder._compute_expected_operation_cost(without_employee_cost=True)
+
             operation_cost = duration * hourly_cost
             total_duration += duration
             total_duration_expected += workorder.duration_expected
