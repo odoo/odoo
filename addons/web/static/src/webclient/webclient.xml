@@ -3,7 +3,7 @@
 
     <t t-name="web.WebClient">
         <t t-if="!this.state.fullscreen">
-            <NavBar/>
+            <NavBar navbar="this.navbarRef" />
         </t>
         <ActionContainer/>
         <MainComponentsContainer/>

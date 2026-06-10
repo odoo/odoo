@@ -1,11 +1,16 @@
 @include media-breakpoint-down(md) {
     .o_web_client:has(.o_selection_container) .o_navbar {
-        opacity: 0.15;
+        display: none;
+    }
+    .o_control_panel_actions:has(.o_selection_container) {
+        position: absolute;
     }
     .o_selection_container {
         position: fixed;
         top: 0;
         left: 0;
+        background: $o-control-panel-background-color;
+        height: $o-navbar-height;
     }
 }
 .modal-footer .o_selection_box {

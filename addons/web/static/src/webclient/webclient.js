@@ -4,7 +4,7 @@ import { DebugMenu } from "@web/core/debug/debug_menu";
 import { localization } from "@web/core/l10n/localization";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { registry } from "@web/core/registry";
-import { useBus, useService } from "@web/core/utils/hooks";
+import { useBus, useService, useStickyNavbar, useChildRef } from "@web/core/utils/hooks";
 import { ActionContainer } from "./actions/action_container";
 import { NavBar } from "./navbar/navbar";
 
@@ -64,6 +64,14 @@ export class WebClient extends Component {
         this.serviceWorkerActivationResolvers = Promise.withResolvers();
         this.serviceWorkerIsActivated = this.serviceWorkerActivationResolvers.promise;
         onWillStart(this.registerServiceWorker);
+        
+        this.navbarRef = useChildRef();
+        this.controlPanelRef = proxy({ el: null });
+        useStickyNavbar({ navbarRef: this.navbarRef, controlPanelRef: this.controlPanelRef });
+        useBus(this.env.bus, "STICKY_NAVBAR:CONTROL_PANEL_VISIBILITY", ({ detail }) => {
+            this.controlPanelRef.el = detail.controlPanel;
+            this.env.bus.trigger("STICKY_NAVBAR:RESET_STATE", {});
+        });
     }
 
     async loadRouterState() {

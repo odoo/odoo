@@ -266,3 +266,19 @@ body.o_is_superuser .o_menu_systray {
     font-weight: 500;
     @include font-size($font-size-sm);
 }
+
+@include media-breakpoint-down(md) {
+    .o_web_client:has(.o_view_controller) .o_navbar {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: $zindex-sticky;
+    }
+    .o_view_controller:not(.o_form_view), .o_form_view_container {
+        &:before {
+            content: "";
+            height: $o-navbar-height;
+            flex: 0 0 auto;
+        }
+    }
+}

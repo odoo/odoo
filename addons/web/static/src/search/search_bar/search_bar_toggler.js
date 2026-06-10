@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
+import { useEnv, useLayoutEffect } from "@web/owl2/utils";
 import { Component, onWillStart, proxy } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
@@ -27,6 +27,7 @@ export class OfflineSearchBarToggler extends SearchBarToggler {
 
 export function useSearchBarToggler() {
     const ui = useService("ui");
+    const env = useEnv();
 
     let isToggled = false;
     const state = proxy({
@@ -36,6 +37,9 @@ export function useSearchBarToggler() {
     const updateState = () => {
         state.isSmall = ui.isSmall;
         state.showSearchBar = !ui.isSmall || isToggled;
+        env.bus.trigger("STICKY_NAVBAR:RESET_STATE", {
+            isDocked: isToggled,
+        });
     };
     updateState();
 
