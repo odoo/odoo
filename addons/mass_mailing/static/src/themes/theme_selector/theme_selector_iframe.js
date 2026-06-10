@@ -1,4 +1,4 @@
-import { reactive, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { ThemeSelector } from "./theme_selector";
 import { assets, AssetsLoadingError, getBundle } from "@web/core/assets";
 import { Component, markup, onMounted, onWillUnmount, onWillUpdateProps, status, proxy } from "@odoo/owl";
@@ -23,7 +23,7 @@ export class ThemeSelectorIframe extends Component {
             show: false,
         });
         this.themeSelectorProps = {
-            favoriteThemes: reactive({
+            favoriteThemes: proxy({
                 promise: undefined,
             }),
         };

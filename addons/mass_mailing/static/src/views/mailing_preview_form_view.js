@@ -1,4 +1,5 @@
-import { reactive, useSubEnv } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { formView } from "@web/views/form/form_view";
 import { useBus, useService } from "@web/core/utils/hooks";
@@ -8,7 +9,7 @@ class MailingPreviewFormController extends FormController {
     setup() {
         super.setup();
         this.ui = useService("ui");
-        const displayState = reactive({
+        const displayState = proxy({
             isMobileMode: this.ui.isSmall,
             isSmall: this.ui.isSmall,
         });
