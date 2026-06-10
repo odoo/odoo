@@ -31,19 +31,13 @@ export class AvatarCard extends Component {
             id: this.props.id,
             model: this.props.model,
         });
-        useDynamicInterval(
-            (...args) => this.onChangeTz(...args),
-            () => [this.partner?.tz, this.store.self?.tz]
-        );
+        useDynamicInterval(() => this.onChangeTz());
     }
 
-    /**
-     * @param {string} partnerTz
-     * @param {string} currentUserTz
-     */
-    onChangeTz(partnerTz, currentUserTz) {
-        this.partnerLocalDateTimeFormatted.set(formatLocalDateTime(partnerTz, currentUserTz));
-        if (!this.partnerLocalDateTimeFormatted()) {
+    onChangeTz() {
+        const formatted = formatLocalDateTime(this.partner?.tz, this.store.self?.tz);
+        this.partnerLocalDateTimeFormatted.set(formatted);
+        if (!formatted) {
             return;
         }
         return 60000 - (Date.now() % 60000);
