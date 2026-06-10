@@ -25,6 +25,10 @@ export function computeAppsAndMenuItems(menuTree) {
             return;
         }
         const isApp = menuItem.id === menuItem.appID;
+        let href = `/odoo/${menuItem.actionPath || "action-" + menuItem.actionID}`;
+        if (odoo.debug) {
+            href += "?debug=" + odoo.debug;
+        }
         const item = {
             parents: parents
                 .slice(1)
@@ -34,7 +38,7 @@ export function computeAppsAndMenuItems(menuTree) {
             id: menuItem.id,
             xmlid: menuItem.xmlid,
             actionID: menuItem.actionID,
-            href: `/odoo/${menuItem.actionPath || "action-" + menuItem.actionID}`,
+            href,
             appID: menuItem.appID,
         };
         if (isApp) {

@@ -11,6 +11,7 @@ import {
     mockService,
     mountWithCleanup,
     patchWithCleanup,
+    serverState,
 } from "@web/../tests/web_test_helpers";
 
 import { Component, xml } from "@odoo/owl";
@@ -67,6 +68,30 @@ test("href attribute with path on apps menu items", async () => {
     await mountWithCleanup(NavBar);
     await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
     expect(".o-dropdown--menu .dropdown-item").toHaveAttribute("href", "/odoo/my-path");
+});
+
+test.tags("desktop");
+test("href attribute includes debug param when in debug mode", async () => {
+    serverState.debug = "assets";
+    defineMenus([{ id: 1, actionID: 339 }]);
+    await mountWithCleanup(NavBar);
+    await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
+    expect(".o-dropdown--menu .dropdown-item").toHaveAttribute(
+        "href",
+        "/odoo/action-339?debug=assets"
+    );
+});
+
+test.tags("desktop");
+test("href attribute with path includes debug param when in debug mode", async () => {
+    serverState.debug = "assets";
+    defineMenus([{ id: 1, actionID: 339, actionPath: "my-path" }]);
+    await mountWithCleanup(NavBar);
+    await contains(".o_navbar_apps_menu button.dropdown-toggle").click();
+    expect(".o-dropdown--menu .dropdown-item").toHaveAttribute(
+        "href",
+        "/odoo/my-path?debug=assets"
+    );
 });
 
 test.tags("desktop");
