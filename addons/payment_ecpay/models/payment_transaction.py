@@ -79,10 +79,13 @@ class PaymentTransaction(models.Model):
             "ClientBackURL": urljoin(base_url, const.PAYMENT_RETURN_ROUTE),
             "OrderResultURL": urljoin(base_url, const.PAYMENT_RETURN_ROUTE),
             "IgnorePayment": ignored_payment_methods,
-            "Language": payment_utils.get_language_code(
-                self.env.context.get("lang", "en_US"), const.LANGUAGE_CODES_MAPPING
-            ),
         }
+        # Find the language code based on the user lang; ECPay defaults to zh_TW if omitted
+        language_code = payment_utils.get_language_code(
+            self.env.context.get("lang", "en_US"), const.LANGUAGE_CODES_MAPPING, fallback=None
+        )
+        if language_code:
+            rendering_values["Language"] = language_code
         rendering_values.update({
             "CheckMacValue": self.provider_id._ecpay_calculate_signature(rendering_values),
             "api_url": self.provider_id._ecpay_get_api_url(),

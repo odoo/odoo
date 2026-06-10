@@ -65,6 +65,22 @@ class TestPaymentTransaction(EcpayCommon):
         expected_values["api_url"] = "https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5"
         self.assertEqual(tx._get_specific_rendering_values(None), expected_values)
 
+    def test_rendering_values_include_language_for_simplified_chinese(self):
+        self.env["res.lang"]._activate_lang("zh_CN")
+        tx = self._create_transaction(
+            "redirect", payment_method_id=self.env.ref("payment.payment_method_card").id
+        )
+        rendering_values = tx.with_context(lang="zh_CN")._get_specific_rendering_values(None)
+        self.assertEqual(rendering_values.get("Language"), "CHI")
+
+    def test_rendering_values_omit_language_for_traditional_chinese(self):
+        self.env["res.lang"]._activate_lang("zh_TW")
+        tx = self._create_transaction(
+            "redirect", payment_method_id=self.env.ref("payment.payment_method_card").id
+        )
+        rendering_values = tx.with_context(lang="zh_TW")._get_specific_rendering_values(None)
+        self.assertNotIn("Language", rendering_values)
+
     def test_extract_reference_finds_reference(self):
         """Test that the transaction reference is found in the payment data."""
         tx = self._create_transaction("redirect")
