@@ -1,4 +1,10 @@
-import { render, useChildSubEnv, useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import {
+    render,
+    useChildSubEnv,
+    useExternalListener,
+    useLayoutEffect,
+    useRef,
+} from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { DropdownGroup } from "@web/core/dropdown/dropdown_group";
@@ -8,12 +14,7 @@ import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { ErrorHandler } from "@web/core/utils/components";
 
-import {
-    Component,
-    onWillDestroy,
-    onWillUnmount,
-    proxy,
-} from "@odoo/owl";
+import { Component, onWillDestroy, onWillUnmount, proxy } from "@odoo/owl";
 
 const systrayRegistry = registry.category("systray");
 
@@ -226,7 +227,11 @@ export class NavBar extends Component {
     }
 
     getMenuItemHref(payload) {
-        return `/odoo/${payload.actionPath || "action-" + payload.actionID}`;
+        const url = `/odoo/${payload.actionPath || "action-" + payload.actionID}`;
+        if (this.env.debug) {
+            return `${url}?debug=${this.env.debug}`;
+        }
+        return url;
     }
 
     _closeAppMenuSidebar() {

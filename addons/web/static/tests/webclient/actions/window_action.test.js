@@ -493,6 +493,19 @@ test("breadcrumbs are updated when switching between views", async () => {
 });
 
 test.tags("desktop");
+test("breadcrumb href includes debug param when in debug mode", async () => {
+    serverState.debug = "assets";
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(3);
+    await contains(".o_list_view .o_data_cell").click();
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual([
+        "Partners",
+        "First record",
+    ]);
+    expect(".o_control_panel .breadcrumb a").toHaveAttribute("href", "/odoo/action-3?debug=assets");
+});
+
+test.tags("desktop");
 test("switch buttons are updated when switching between views", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);

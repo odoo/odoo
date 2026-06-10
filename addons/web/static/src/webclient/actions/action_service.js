@@ -493,7 +493,11 @@ export function makeActionManager(env, router = _router) {
                     return controller.props?.type === "form";
                 },
                 get url() {
-                    return router.stateToUrl(controller.state);
+                    const state = controller.state;
+                    if (env.debug) {
+                        state.debug = env.debug;
+                    }
+                    return router.stateToUrl(state);
                 },
                 onSelected() {
                     restore(controller.jsId);
@@ -852,6 +856,11 @@ export function makeActionManager(env, router = _router) {
         // Session storage is duplicated in the new window
         // https://html.spec.whatwg.org/multipage/webstorage.html#webstorage
         // "After creating a new auxiliary browsing context and document, the session storage is copied over."
+
+        // copy debug flag from current state
+        if (env.debug) {
+            state.debug = env.debug;
+        }
 
         // Store current action of the current window
         const currentAction = browser.sessionStorage.getItem("current_action");
