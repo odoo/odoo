@@ -829,7 +829,7 @@ export class Form extends Interaction {
      * Compares the value with the comparable (and the between) with
      * comparator as a means to compare
      *
-     * @param {string} comparator The way that $value and $comparable have
+     * @param {string} comparator The way that value and comparable have
      *      to be compared
      * @param {string} [value] The value of the field
      * @param {string} [comparable] The value to compare

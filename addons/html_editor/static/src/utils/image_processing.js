@@ -142,7 +142,7 @@ export function getImageSizeFromCache(src) {
 /**
  * Activates the cropper on a given image.
  *
- * @param {jQuery} $image the image on which to activate the cropper
+ * @param {HTMLElement} image the image on which to activate the cropper
  * @param {Number} aspectRatio the aspectRatio of the crop box
  * @param {DOMStringMap} dataset dataset containing the cropperDataFields
  */

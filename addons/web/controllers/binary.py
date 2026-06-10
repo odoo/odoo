@@ -215,13 +215,9 @@ class Binary(Controller):
         return stream.get_response(**send_file_kwargs)
 
     @route('/web/binary/upload_attachment', type='http', auth="user")
-    def upload_attachment(self, model, id, ufile, callback=None):
+    def upload_attachment(self, model, id, ufile):
         files = request.httprequest.files.getlist('ufile')
         Model = request.env['ir.attachment']
-        out = """<script language="javascript" type="text/javascript">
-                    var win = window.top.window;
-                    win.jQuery(win).trigger(%s, %s);
-                </script>"""
         args = []
         for ufile in files:
 
@@ -251,7 +247,7 @@ class Binary(Controller):
                     'id': attachment.id,
                     'size': attachment.file_size,
                 })
-        return out % (json.dumps(clean(callback)), json.dumps(args)) if callback else json.dumps(args)
+        return json.dumps(args)
 
     @route([
         '/web/binary/company_logo',

@@ -386,7 +386,6 @@ This module provides the core of the Odoo Web Client.
         ],
         'web._assets_jquery': [
             'web/static/lib/jquery/jquery.js',
-            'web/static/src/legacy/js/libs/jquery.js',
         ],
         'web._assets_bootstrap': [
             'web/static/src/scss/import_bootstrap.scss',

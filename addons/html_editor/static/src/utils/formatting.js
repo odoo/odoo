@@ -212,7 +212,7 @@ export function getCSSVariableValue(key, htmlStyle) {
  *   unit A and $2 is the CSS symbol of unit B.
  * - The value is a function that converts the received value (expressed in
  *   unit A) to another value expressed in unit B. Two other parameters is
- *   received: the css property on which the unit applies and the jQuery element
+ *   received: the css property on which the unit applies and the element
  *   on which that css property may change.
  */
 const CSS_UNITS_CONVERSION = {

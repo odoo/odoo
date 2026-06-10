@@ -36,7 +36,7 @@ export class DynamicSnippet extends Interaction {
          * Can be accessed when overriding the _render_content() function in order to generate
          * a new renderedContent from the original data.
          *
-         * @type {*|jQuery.fn.init|jQuery|HTMLElement}
+         * @type {*|HTMLElement}
          */
         this.data = [];
         this.renderedContentNode = document.createDocumentFragment();

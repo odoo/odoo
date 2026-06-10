@@ -224,7 +224,7 @@ export function isFieldCustom(fieldEl) {
  * @param {HTMLElement} fieldEl
  * @returns {string}
  */
-export function getFieldName(fieldEl = this.$target[0]) {
+export function getFieldName(fieldEl) {
     const multipleName = fieldEl.querySelector(".s_website_form_multiple");
     return multipleName
         ? multipleName.dataset.name

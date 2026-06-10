@@ -658,7 +658,10 @@ export function classToStyle(element, cssRules) {
                     node.style.setProperty(styleName, value);
                     if (value.includes("calc(")) {
                         // If value included a calc(), assign the node's computed style property value for Outlook compatibility
-                        node.style.setProperty(styleName, computedStyle.getPropertyValue(styleName));
+                        node.style.setProperty(
+                            styleName,
+                            computedStyle.getPropertyValue(styleName)
+                        );
                     }
                 }
             }
@@ -1683,7 +1686,7 @@ function _computeStyleAndSpecificityOnRules(cssRules) {
     }
 }
 /**
- * Return an array of twelve table cells as JQuery elements.
+ * Return an array of twelve table cells as HTML elements.
  *
  * @returns {Element[]}
  */
