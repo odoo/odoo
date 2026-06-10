@@ -20,7 +20,7 @@
                     <group name="Payment methods">
                         <group>
                             <field name="split_transactions"/>
-                            <field name="journal_id" required="not split_transactions" placeholder="Leave empty to use the receivable account of customer" />
+                            <field name="journal_id" required="not split_transactions" placeholder="Leave empty to use the receivable account of customer" options="{'no_create': True}" context="{'hide_create_wizard': True}"/>
                             <field name="outstanding_account_id" groups="account.group_account_readonly" invisible="type != 'bank'" required="type == 'bank'" placeholder="Selection of outstanding account is required" />
                             <field name="receivable_account_id" groups="account.group_account_readonly" invisible="split_transactions" widget="many2one" options="{'placeholder_field': 'default_pos_receivable_account_name'}"/>
                             <field name="company_id" readonly="1" groups="base.group_multi_company" />
