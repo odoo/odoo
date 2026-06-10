@@ -2,7 +2,50 @@
 <templates xml:space="preserve">
 
   <t t-name="marathon_ventures.MvUnitsGrid">
-    <div class="mv-units-grid-wrap">
+    <div class="mv-units-grid-wrap"
+         t-on-click="() => this.closeMenu()">
+
+      <!-- Delete confirmation dialog -->
+      <div t-if="state.pendingDeleteRow"
+           class="mv-confirm-overlay"
+           t-on-click.stop="() => this.cancelDelete()">
+        <div class="mv-confirm-dialog"
+             t-on-click.stop="() => {}">
+          <div class="mv-confirm-dialog__title">Delete Day Part?</div>
+          <div class="mv-confirm-dialog__body">
+            Are you sure you want to delete this row?
+            <span t-if="state.pendingDeleteRow.daypart_label">
+              (<t t-esc="state.pendingDeleteRow.daypart_label"/>)
+            </span>
+            <br/>
+            <small class="text-muted">
+              This will also remove every schedule linked to this Day Part
+              when you click Save.
+            </small>
+          </div>
+          <div class="mv-confirm-dialog__footer">
+            <button class="btn btn-light"
+                    t-on-click.stop.prevent="() => this.cancelDelete()">
+              Cancel
+            </button>
+            <button class="btn btn-danger"
+                    t-on-click.stop.prevent="() => this.confirmDelete()">
+              Confirm
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 12: deal-level start date strip (drives the week columns) -->
+      <div t-if="state.loaded and state.payload" class="mv-deal-startdate-strip">
+        <label class="mv-deal-startdate-label">Deal Start Date</label>
+        <input type="date" class="mv-deal-startdate-input"
+               t-att-value="state.payload.deal.units_start_date || ''"
+               t-on-input="(ev) => this.onDealStartDateChange(ev)"/>
+        <span class="mv-deal-startdate-hint">
+          Week columns run through the last Monday of this quarter.
+        </span>
+      </div>
 
       <!-- Save bar -->
       <div class="mv-units-savebar">
@@ -65,20 +108,13 @@
                 </span>
               </div>
 
-              <!-- Rate + run dates -->
+              <!-- Phase 12: only Rate stays at the row level. Run dates
+                   moved to the deal-level Start Date strip above. -->
               <div class="mv-daypart-foot">
                 <label class="mv-foot-label">Rate</label>
                 <input type="number" step="0.01" class="mv-foot-input mv-foot-input--rate"
                        t-att-value="row.rate || 0"
                        t-on-input="(ev) => this.onRateChange(row, ev)"/>
-                <label class="mv-foot-label">Run</label>
-                <input type="date" class="mv-foot-input mv-foot-input--date"
-                       t-att-value="row.run_start || ''"
-                       t-on-input="(ev) => this.onRunDateChange(row, 'start', ev)"/>
-                <span class="mv-foot-sep">to</span>
-                <input type="date" class="mv-foot-input mv-foot-input--date"
-                       t-att-value="row.run_end || ''"
-                       t-on-input="(ev) => this.onRunDateChange(row, 'end', ev)"/>
               </div>
             </td>
 
@@ -102,11 +138,22 @@
               </div>
             </td>
 
-            <!-- Row delete -->
+            <!-- Row context menu (⋯) -->
             <td class="mv-row-actions">
-              <button class="btn btn-link mv-row-delete"
-                      title="Delete this Day Part"
-                      t-on-click.prevent="() => this.removeRow(row)">×</button>
+              <div class="mv-row-menu-wrap">
+                <button class="btn btn-link mv-row-menu-btn"
+                        title="Row actions"
+                        t-on-click.stop.prevent="() => this.toggleMenu(row)">
+                  &#8942;
+                </button>
+                <div t-if="state.openMenuRowId === row.id"
+                     class="mv-row-menu-dropdown">
+                  <button class="mv-row-menu-item mv-row-menu-item--danger"
+                          t-on-click.stop.prevent="() => this.requestDelete(row)">
+                    Delete
+                  </button>
+                </div>
+              </div>
             </td>
           </tr>
 

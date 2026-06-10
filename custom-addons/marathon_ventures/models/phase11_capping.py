@@ -61,7 +61,10 @@ class MvDealCappingRpc(models.Model):
     def load_capping_grid(self):
         """Return the data the Capping Grid OWL widget needs."""
         self.ensure_one()
-        weeks = _quarter_mondays()
+        # Phase 12: derive week columns from the deal-level start date
+        from odoo.addons.marathon_ventures.models.phase12_deal_start_date \
+            import mondays_for_start_date
+        weeks = mondays_for_start_date(self.units_start_date)
         weeks_iso = [w.isoformat() for w in weeks]
 
         rows = []

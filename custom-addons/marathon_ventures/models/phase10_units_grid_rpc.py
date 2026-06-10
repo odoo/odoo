@@ -9,23 +9,18 @@ from datetime import date, timedelta
 from odoo import models, api, _
 from odoo.exceptions import UserError, ValidationError
 
+# Phase 12: weeks are now derived from the Deal's units_start_date
+# (see models/phase12_deal_start_date.py). The old _quarter_mondays
+# helper is kept only as a fallback when units_start_date is missing.
+from odoo.addons.marathon_ventures.models.phase12_deal_start_date import (
+    mondays_for_start_date,
+)
+
 
 def _quarter_mondays(today=None):
-    """Return list[date] of Mondays in the current quarter."""
-    today = today or date.today()
-    q_idx = (today.month - 1) // 3  # 0..3
-    q_start_month = q_idx * 3 + 1
-    q_start = date(today.year, q_start_month, 1)
-    # walk back to Monday
-    while q_start.weekday() != 0:
-        q_start -= timedelta(days=1)
-    mondays = []
-    cur = q_start
-    # 13 weeks of a quarter
-    for _i in range(13):
-        mondays.append(cur)
-        cur += timedelta(days=7)
-    return mondays
+    """Legacy fallback - returns Mondays from the start of the current
+    quarter for 13 weeks. New code uses mondays_for_start_date()."""
+    return mondays_for_start_date(today or date.today())
 
 
 class MvDealUnitsGridRpc(models.Model):
@@ -66,7 +61,8 @@ class MvDealUnitsGridRpc(models.Model):
             }
         """
         self.ensure_one()
-        weeks = _quarter_mondays()
+        # Phase 12: derive the week columns from the deal-level start date
+        weeks = mondays_for_start_date(self.units_start_date)
         weeks_iso = [w.isoformat() for w in weeks]
 
         rows = []
@@ -145,6 +141,7 @@ class MvDealUnitsGridRpc(models.Model):
                 'account': self.client_account.display_name if self.client_account else '',
                 'length':  dict(self._fields['length'].selection).get(self.length, '') if self.length else '',
                 'order_number': self.network_deal_number or '',
+                'units_start_date': self.units_start_date.isoformat() if self.units_start_date else None,
             },
             'weeks': weeks_iso,
             'rows': rows,
@@ -179,6 +176,17 @@ class MvDealUnitsGridRpc(models.Model):
         self.ensure_one()
         edits = edits or {}
 
+        # --- Phase 12: deal-level start date update
+        deal_update = edits.get('deal_update') or {}
+        if 'units_start_date' in deal_update:
+            self.write({'units_start_date': deal_update['units_start_date']})
+
+        # Compute the (deal-level) week range so new Deal Lines can
+        # inherit run_start / run_end from it.
+        weeks = mondays_for_start_date(self.units_start_date)
+        deal_run_start = weeks[0].isoformat() if weeks else None
+        deal_run_end   = weeks[-1].isoformat() if weeks else None
+
         # --- row deletes
         if edits.get('row_deletes'):
             self.env['mv.deal_line'].browse(edits['row_deletes']).unlink()
@@ -211,6 +219,11 @@ class MvDealUnitsGridRpc(models.Model):
             temp_id = cre.pop('temp_id', None)
             days = cre.pop('days_mask', None)
             vals = dict(cre, deal_id=self.id)
+            # Phase 12: rows no longer carry run_start/run_end from the UI.
+            # Auto-fill from the deal-level start-of-quarter range so the
+            # required fields on mv.deal_line still get values.
+            vals.setdefault('run_start', deal_run_start)
+            vals.setdefault('run_end',   deal_run_end)
             if days is not None:
                 vals.update({
                     'day_mon': bool(days[0]), 'day_tue': bool(days[1]),

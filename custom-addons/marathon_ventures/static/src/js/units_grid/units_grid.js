@@ -28,6 +28,13 @@ export class MvUnitsGrid extends Component {
             edits: { row_updates: [], row_creates: [], row_deletes: [], cell_updates: [] },
             dirty: false,
             justSaved: false,
+            // Per-row context menu + delete-confirm dialog state.
+            // openMenuRowId is the id (or 'tmp:N') of the row whose ⋯
+            // menu is currently expanded; null if no menu open.
+            openMenuRowId: null,
+            // pendingDeleteRow holds the row object the user has clicked
+            // "Delete" on but not yet confirmed; null if no dialog open.
+            pendingDeleteRow: null,
         });
         onWillStart(this.loadGrid.bind(this));
         onWillUpdateProps((nextProps) => {
@@ -48,8 +55,76 @@ export class MvUnitsGrid extends Component {
     }
 
     resetEdits() {
-        this.state.edits = { row_updates: [], row_creates: [], row_deletes: [], cell_updates: [] };
+        this.state.edits = {
+            row_updates: [], row_creates: [], row_deletes: [],
+            cell_updates: [],
+            deal_update: {},   // Phase 12: holds units_start_date changes
+        };
         this.state.dirty = false;
+    }
+
+    // Phase 12: deal-level start date changed -> snap to Monday,
+    // queue the update, and locally regenerate the week columns so
+    // the planner sees the new range before saving.
+    onDealStartDateChange(ev) {
+        const raw = ev.target.value || null;
+        if (!raw) return;
+        // Always snap to Monday of the picked week
+        const snapped = this._snapToMondayIso(raw);
+        this.state.edits.deal_update = { units_start_date: snapped };
+        this.state.payload.deal.units_start_date = snapped;
+        this._regenerateWeeksLocally(snapped);
+        this._markDirty();
+    }
+
+    _snapToMondayIso(iso) {
+        const d = new Date(iso + "T00:00:00");
+        // JS getDay(): 0=Sun, 1=Mon, ..., 6=Sat
+        while (d.getDay() !== 1) {
+            d.setDate(d.getDate() - 1);
+        }
+        const y = d.getFullYear();
+        const m = String(d.getMonth() + 1).padStart(2, "0");
+        const dd = String(d.getDate()).padStart(2, "0");
+        return `${y}-${m}-${dd}`;
+    }
+
+    _regenerateWeeksLocally(startIso) {
+        // JS mirror of mondays_for_start_date() - includes only
+        // Mondays whose Sunday is still in the same calendar quarter.
+        const d = new Date(startIso + "T00:00:00");
+        // Walk back to Monday
+        const firstMonday = new Date(d);
+        while (firstMonday.getDay() !== 1) {
+            firstMonday.setDate(firstMonday.getDate() - 1);
+        }
+        // Last day of the calendar quarter (using day 0 of month+1)
+        const qIdx = Math.floor(d.getMonth() / 3);
+        const lastMonthOfQ = qIdx * 3 + 2;
+        const lastDayOfQ = new Date(d.getFullYear(), lastMonthOfQ + 1, 0);
+        const weeks = [];
+        const cur = new Date(firstMonday);
+        while (cur <= lastDayOfQ) {
+            const weekSunday = new Date(cur);
+            weekSunday.setDate(weekSunday.getDate() + 6);
+            // Only include the Monday if its FULL week fits in the quarter
+            if (weekSunday <= lastDayOfQ) {
+                const y = cur.getFullYear();
+                const m = String(cur.getMonth() + 1).padStart(2, "0");
+                const dd = String(cur.getDate()).padStart(2, "0");
+                weeks.push(`${y}-${m}-${dd}`);
+            }
+            cur.setDate(cur.getDate() + 7);
+        }
+        this.state.payload.weeks = weeks;
+        // Resize each row's cells to match the new week count
+        for (const row of this.state.payload.rows) {
+            const byWeek = {};
+            for (const c of row.cells) byWeek[c.week] = c;
+            row.cells = weeks.map((w) => byWeek[w] || {
+                week: w, units: 0, state: "dashed", sched_id: false,
+            });
+        }
     }
 
     _markDirty() {
@@ -83,14 +158,15 @@ export class MvUnitsGrid extends Component {
             total_revenue: 0,
         };
         this.state.payload.rows.push(newRow);
+        // Phase 12: run_start / run_end are no longer per-row from the
+        // UI - the server auto-fills them from the deal-level
+        // units_start_date when the row is created.
         this.state.edits.row_creates.push({
             temp_id: tempKey,
             daypart: newRow.daypart,
             time_range: newRow.time_range,
             days_mask: newRow.days_mask.slice(),
             rate: newRow.rate,
-            run_start: newRow.run_start,
-            run_end: newRow.run_end,
         });
         this._markDirty();
     }
@@ -114,6 +190,35 @@ export class MvUnitsGrid extends Component {
         }
         this._markDirty();
         this._recomputeTotals();
+    }
+
+    // ---- Context menu (⋯) + delete confirmation ---------------------
+    toggleMenu(row) {
+        if (this.state.openMenuRowId === row.id) {
+            this.state.openMenuRowId = null;
+        } else {
+            this.state.openMenuRowId = row.id;
+        }
+    }
+
+    closeMenu() {
+        this.state.openMenuRowId = null;
+    }
+
+    requestDelete(row) {
+        // Close the dropdown and open the confirm dialog.
+        this.state.openMenuRowId = null;
+        this.state.pendingDeleteRow = row;
+    }
+
+    confirmDelete() {
+        const row = this.state.pendingDeleteRow;
+        this.state.pendingDeleteRow = null;
+        if (row) this.removeRow(row);
+    }
+
+    cancelDelete() {
+        this.state.pendingDeleteRow = null;
     }
 
     _findOrPushRowUpdate(row) {
