@@ -20,6 +20,7 @@ import {
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import {
     CROSS_TAB_CLIENT_MESSAGE,
     CROSS_TAB_HOST_MESSAGE,
@@ -40,6 +41,7 @@ import {
     queryFirst,
     test,
 } from "@odoo/hoot";
+import { press } from "@odoo/hoot-dom";
 import {
     Command,
     mockService,
@@ -70,7 +72,7 @@ test("basic rendering", async () => {
     await contains(".o-discuss-CallParticipantCard[aria-label='Mitchell Admin']");
     await contains(".o-discuss-CallActionList");
     await contains(".o-discuss-CallMenu-buttonContent");
-    await contains(".o-discuss-CallActionList button", { count: 7 });
+    await contains(".o-discuss-CallActionList button", { count: 8 });
     await contains("button[aria-label='Unmute'], button[aria-label='Mute']"); // FIXME depends on current browser permission
     await contains("button[aria-label='Voice Settings']");
     await contains(".o-discuss-CallActionList button[aria-label='Turn camera on']");
@@ -78,9 +80,10 @@ test("basic rendering", async () => {
     await contains(".o-discuss-CallActionList button[aria-label='Share Screen']");
     await contains("button[aria-label='Raise Hand']");
     await contains(".o-discuss-CallActionList button[aria-label='Disconnect']");
-    await contains(".o-discuss-Call-layoutActions button", { count: 2 });
-    await contains(".o-discuss-Call-layoutActions button[title='Picture in Picture']");
-    await contains(".o-discuss-Call-layoutActions button[title='Fullscreen']");
+    await click(".o-discuss-CallActionList button[title='More']");
+    await contains("[name='fullscreen']");
+    await contains("[name='change-layout']");
+    await contains("[name='picture-in-picture']");
 });
 
 test("mobile UI", async () => {
@@ -103,7 +106,8 @@ test("keep the `more` popover active when hovering it", async () => {
     await click("[title='Start Call']");
     await contains(".o-discuss-Call");
     await contains(".o-discuss-CallActionList");
-    const enterFullScreenSelector = "button[title='Fullscreen']";
+    await click(".o-discuss-CallActionList button[title='More']");
+    const enterFullScreenSelector = "[name='fullscreen']";
     await contains(enterFullScreenSelector);
     await hover(queryFirst(enterFullScreenSelector));
     await contains(enterFullScreenSelector);
@@ -133,6 +137,47 @@ test("should not display call UI when no more members (self disconnect)", async 
     await contains(".o-discuss-Call");
     await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
     await contains(".o-discuss-Call", { count: 0 });
+});
+
+test("leaving the call unpins an empty meeting channel", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        default_display_mode: "video_full_screen",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')");
+    await click("[title='Start Call']");
+    await contains(".o-discuss-Call");
+    await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
+    await contains(".o-discuss-Call", { count: 0 });
+    await contains(".o-mail-DiscussSidebarChannel-itemName", { count: 1 });
+    await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')");
+});
+
+test("leaving the call keeps a meeting channel that has chat messages", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "Meeting",
+        default_display_mode: "video_full_screen",
+    });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "let's keep this around",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message"); // wait for the chat message to load before joining
+    await click("[title='Start Call']");
+    await contains(".o-discuss-Call");
+    await click(".o-discuss-CallActionList button[aria-label='Disconnect']");
+    await contains(".o-discuss-Call", { count: 0 });
+    // The meeting holds actual conversation, so it stays pinned after the call ends.
+    await contains(".o-mail-DiscussSidebarChannel-itemName:text('Meeting')");
 });
 
 test("show call UI in chat window when in call", async () => {
@@ -269,7 +314,6 @@ test("Camera video stream stays in focus when on/off", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Start Call']");
-    await click(".o-discuss-CallParticipantCard-avatar");
     await click("[title='Turn camera on']");
     await click("[title='Stop camera']");
     await click("[title='Turn camera on']");
@@ -277,6 +321,7 @@ test("Camera video stream stays in focus when on/off", async () => {
     // test screen sharing then camera on to check camera aside
     await click("[title='Stop camera']");
     await click("[title='Share Screen']");
+    await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
     await click("[title='Turn camera on']");
     await contains("video[type='screen']:not(.o-inset)");
     await contains("video[type='camera'].o-inset");
@@ -299,15 +344,18 @@ test("Create a direct message channel when clicking on start a meeting", async (
     await contains(".o-mail-Thread:contains('Welcome to #Slytherin!')");
     await contains(".o-mail-Message");
     await click("button[title='New Meeting']");
-    await contains(".o-mail-DiscussSidebarChannel-itemName:text('Meeting - Jan 1, 2026')");
+    await contains(".o-mail-DiscussSidebarChannel-itemName:text('Meeting, Jan 1')");
     await contains(".o-discuss-Call");
-    await contains(".o-mail-Meeting .o-mail-ActionPanel:contains('Invite people')");
+    await contains(".o-mail-MeetingReadyBanner");
     await contains(".o-mail-Meeting-clock:text('3:30 PM')[title='Jan 1, 2026, 3:30 PM']");
-    await contains(".o-mail-MeetingSideActions button", { count: 4 });
-    await contains(".o-mail-MeetingSideActions button[title='Picture in Picture']");
-    await contains(".o-mail-MeetingSideActions button[title='Exit Fullscreen']");
-    await contains(".o-mail-MeetingSideActions button[title='Chat']");
+    await contains(".o-mail-MeetingSideActions button", { count: 2 });
     await contains(".o-mail-MeetingSideActions button[title='Members']");
+    await contains(".o-mail-MeetingSideActions button[title='Chat']");
+    await contains(".o-discuss-CallActionList button[title='More']");
+    await click(".o-discuss-CallActionList button[title='More']");
+    await contains("[name='fullscreen']");
+    await contains("[name='change-layout']");
+    await contains("[name='picture-in-picture']");
 });
 
 test("Can share user camera and screen together", async () => {
@@ -338,18 +386,37 @@ test("Click on inset card should replace the inset and active stream together", 
 test("Inset card is hidden when sidebar is open", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    await start();
+    pyEnv["discuss.channel.rtc.session"].create({
+        channel_member_id: pyEnv["discuss.channel.member"].create({
+            channel_id: channelId,
+            partner_id: pyEnv["res.partner"].create({ name: "Alice" }),
+        }),
+        channel_id: channelId,
+    });
+    const env = await start();
+    const store = env.services["mail.store"];
+    store.settings.callLayout = CALL_GRID_LAYOUT.SPOTLIGHT;
     await openDiscuss(channelId);
-    await click("[title='Start Call']");
+    await click("[title='Join Call']");
     await click("[title='Turn camera on']");
     await click("[title='Share Screen']");
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='fullscreen']");
+    await contains(".o-mail-Meeting");
     await contains(".o-discuss-CallParticipantCard.o-inset");
-    await hover(".o-discuss-Call-mainCards");
-    await click(".o-discuss-Call-sidebarToggler");
+    // Sidebar visibility is driven solely by the layout: switching to it hides the inset.
+    await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // reveal the floating overlay
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='change-layout']");
+    await click(".o-discuss-ChangeLayoutDialog-option:contains('Sidebar')");
+    expect(store.settings.callLayout).toBe(CALL_GRID_LAYOUT.SIDEBAR);
     await contains(".o-discuss-Call-sidebar");
     await contains(".o-discuss-CallParticipantCard.o-inset", { count: 0 });
-    await hover(".o-discuss-Call-mainCards");
-    await click(".o-discuss-Call-sidebarToggler");
+    await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // reveal the floating overlay
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='change-layout']");
+    await click(".o-discuss-ChangeLayoutDialog-option:contains('Spotlight')");
+    expect(store.settings.callLayout).toBe(CALL_GRID_LAYOUT.SPOTLIGHT);
     await contains(".o-discuss-CallParticipantCard.o-inset");
 });
 
@@ -403,14 +470,11 @@ test("'New Meeting' in mobile", async () => {
     await contains("button[title*='Close Chat Window']");
     await click("button:text('Chats')");
     await click("button[title='New Meeting']");
+    await click(".o-mail-MeetingReadyBanner button:text('Add Others')");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('Partner 2'))");
     await click("button:not([disabled]):text('Invite to Meeting')");
     await contains(".o-discuss-Call");
-    await click("[title='Exit Fullscreen']");
-    // dropdown requires an extra delay before click (because handler is registered in useEffect)
-    await contains("[title='Open Actions Menu']");
-    await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Members')");
+    await click(".o-mail-MeetingSideActions button[title='Members']");
     await contains(".o-discuss-ChannelMember:text('Partner 2')");
 });
 
@@ -485,7 +549,8 @@ test("Dropzones below fullscreen meeting view are disabled", async () => {
     await dropFiles(".o-Dropzone", [textFile_1]);
     await contains(".o-mail-Meeting .o-mail-AttachmentContainer:not(.o-isUploading)");
     // check picture-in-picture still enables dropzone
-    await click("button[title='Picture in Picture']");
+    await click(".o-mail-Meeting [title='More']");
+    await click("[name='picture-in-picture']");
     await contains(".o-mail-Meeting:not(.o-fullscreen)", { target: popoutIframe.contentDocument });
     const textFile_2 = new File(["hello, world"], "text-2.txt", { type: "text/plain" });
     await dragenterFiles(".o-mail-Discuss .o-mail-Thread", [textFile_1]);
@@ -842,7 +907,7 @@ test("should also invite to the call when inviting to the channel", async () => 
     await openDiscuss(channelId);
     await click("[title='Start Call']");
     await contains(".o-discuss-Call");
-    await click("button[title='Invite People']");
+    await click("button[title='Add People']");
     await contains(".o-discuss-ChannelInvitation:has(:text('Invite people'))");
     await click(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner'))");
     await click("button[title='Invite']:enabled");
@@ -871,7 +936,8 @@ test("shows warning on infinite mirror effect (screen-sharing then fullscreen)",
     await click("[title='Share Screen']");
     await contains("video");
     await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
-    await click("button[title='Fullscreen']");
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='fullscreen']");
     await contains(".o-discuss-Call-mainCards h1:contains('You are Presenting')");
     await contains("button:contains('Show My Screen Anyway')");
     await contains(".o-discuss-CallPresentationBar-container button[aria-label='Stop presenting']");
@@ -956,7 +1022,11 @@ test("dynamic focus switches to talking participant", async () => {
     const rtc = env.services["discuss.rtc"];
     await openDiscuss(channelId);
     await click("[title='Join Call']");
-    await click(".o-discuss-CallParticipantCard[aria-label='Alice']");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Mitchell Admin']");
+    await contains(".o-discuss-CallParticipantCard[aria-label='Bob']");
+    rtc.channel.activeRtcSession = rtc.channel.rtc_session_ids.find(
+        (session) => session.id === aliceSessionId
+    );
     await contains(".o-discuss-CallParticipantCard[aria-label='Alice']");
     await contains(".o-discuss-CallParticipantCard[aria-label='Bob']", {
         count: 0,
@@ -970,6 +1040,7 @@ test("dynamic focus switches to talking participant", async () => {
     await contains(".o-discuss-CallParticipantCard[aria-label='Alice']");
     rtc.updateSessionInfo({ [aliceSessionId]: { isTalking: false } });
     await contains(".o-discuss-CallParticipantCard[aria-label='Bob']");
+    await hover(".o-discuss-CallParticipantCard[aria-label='Bob']");
     await click("button[aria-label='Video Settings']");
     await click(".o-discuss-QuickVideoSettings button:has(:text('Advanced Settings'))");
     await contains(".o-discuss-CallSettings .o-mail-TabHeader.o-active:has(:text('Video'))");
@@ -996,7 +1067,7 @@ test("Shows warning badge on mic/camera on non-granted permission in meeting con
     await contains("button[title='Stop camera']");
     await contains("button[title='Stop camera'].o-tag-DANGER");
     await contains("button[title='Stop camera'].o-tag-WARNING_BADGE");
-    await click("button[title='Exit Fullscreen']");
+    await rtc.exitFullscreen();
     await click(".o-mail-DiscussSidebarChannel:text('General')");
     await click("[title='Join Call']");
     await contains("button[title='Turn camera on']");
@@ -1263,8 +1334,9 @@ test("auto-focus participant video in one-to-one call in chat window", async () 
     await contains(".o-discuss-CallParticipantCard[aria-label='Batman'] video");
     await contains(".o-discuss-CallParticipantCard");
     await mockedRemote.updateUpload("camera", null);
-    await click(".o-discuss-CallParticipantCard[aria-label='Batman']");
-    await click("[title='Fullscreen']");
+    await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]);
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='fullscreen']");
     await contains(".o-mail-Meeting[data-active]");
     await mockedRemote.updateUpload("camera", createVideoStream().getVideoTracks()[0]);
     await contains(".o-discuss-CallParticipantCard[aria-label='Batman'] video");
@@ -1286,9 +1358,9 @@ test("show pulse effect on fullscreen mode only when another participant's camer
     await aliceRemote.updateConnectionState("connected");
     await contains(".o-discuss-Call");
     await aliceRemote.updateInfo({ is_camera_on: true });
-    await contains(".o-discuss-CallActionList-pulse[title='Fullscreen']");
+    await contains(".o-discuss-CallActionList-pulse[title='More']");
     await aliceRemote.updateInfo({ is_camera_on: false });
-    await contains(".o-discuss-CallActionList-pulse[title='Fullscreen']", { count: 0 });
+    await contains(".o-discuss-CallActionList-pulse[title='More']", { count: 0 });
 });
 
 test.tags("focus required");
@@ -1338,17 +1410,19 @@ test("open conversation from call invitation (discuss app)", async () => {
 
 test("Meeting chat panel excludes call notifications for 'New Meeting' channels", async () => {
     mockDate("2026-01-01 10:00:00");
-    await start();
+    const env = await start();
+    const rtc = env.services["discuss.rtc"];
     await openDiscuss();
     await click("[title='New Meeting']");
-    await click("[title='Exit Fullscreen']");
-    await contains(".o-mail-Thread:has(:text('Meeting - Jan 1, 2026'))");
+    await contains(".o-mail-MeetingReadyBanner");
+    await press("escape");
+    await contains(".o-mail-Thread:has(:text('Meeting, Jan 1'))");
     await contains(".o-mail-NotificationMessage:text('Mitchell Admin started a call.11:00 AM')");
-    await click("[title='Fullscreen']");
+    await rtc.enterFullscreen();
     await contains(".o-mail-Meeting");
     await click("[title='Chat']");
     await contains(".o-mail-ActionPanel-header:text('In call messages')");
-    await contains(".o-mail-Thread:has(:text('Meeting - Jan 1, 2026'))");
+    await contains(".o-mail-Thread:has(:text('Meeting, Jan 1'))");
     await contains(".o-mail-NotificationMessage:text('Mitchell Admin started a call.11:00 AM')", {
         count: 0,
     });
@@ -1410,7 +1484,8 @@ test("Escape closes meeting UI layers sequentially", async () => {
     await openDiscuss(channelId);
     await click("[title='Start Call']");
     await contains(".o-discuss-Call");
-    await click("[title='Fullscreen']");
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='fullscreen']");
     await contains(".o-mail-Meeting");
     await click("[title='Chat']");
     await contains(".o-mail-ActionPanel-header:text('In call messages')");
@@ -1431,7 +1506,7 @@ test("Access to Pinned Messages from Meeting Chat", async () => {
     await start();
     await openDiscuss();
     await click("[title='New Meeting']");
-    await contains(".o-mail-ActionPanel-header:has(:text('Invite People'))");
+    await contains(".o-mail-MeetingReadyBanner");
     await click("[title='Chat']");
     await contains(".o-mail-ActionPanel-header:has(:text('In call messages'))");
     await insertText(".o-mail-Meeting .o-mail-Composer-input", "hey");
@@ -1469,4 +1544,76 @@ test("show warning when blur hardware acceleration is not available", async () =
     expect(".o-discuss-CallDropdown-content:has(:text('Performance Warning:'))").toBeVisible();
     await click("[title='Dismiss warning']");
     await contains(".o-discuss-BlurPerformanceWarning-button", { count: 0 });
+});
+
+test("Adjust view: switching between Tiled and Spotlight changes the meeting grid", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    for (const name of ["Alice", "Bob"]) {
+        pyEnv["discuss.channel.rtc.session"].create({
+            channel_member_id: pyEnv["discuss.channel.member"].create({
+                channel_id: channelId,
+                partner_id: pyEnv["res.partner"].create({ name }),
+            }),
+            channel_id: channelId,
+        });
+    }
+    const env = await start();
+    const store = env.services["mail.store"];
+    store.settings.callLayout = "auto";
+    await openDiscuss(channelId);
+    await click("[title='Join Call']");
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='fullscreen']");
+    await contains(".o-mail-Meeting");
+    // 3 participants with "auto" resolve to tiled: every card is shown in the grid.
+    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard", { count: 3 });
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='change-layout']");
+    await click(".o-discuss-ChangeLayoutDialog-option:contains('Spotlight')");
+    expect(store.settings.callLayout).toBe("spotlight");
+    // Spotlight collapses the grid to a single focused card.
+    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard");
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='change-layout']");
+    await click(".o-discuss-ChangeLayoutDialog-option:contains('Tiled')");
+    expect(store.settings.callLayout).toBe("tiled");
+    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard", { count: 3 });
+});
+
+test("Auto layout switches to the sidebar while someone is presenting", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const env = await start();
+    const store = env.services["mail.store"];
+    store.settings.callLayout = "auto";
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await click("[title='Share Screen']");
+    await contains("video");
+    // Sharing makes self the active session, so the controller floats: reveal the overlay.
+    await triggerEvents(".o-discuss-Call-mainCards", ["mousemove"]); // show overlay
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='fullscreen']");
+    await contains(".o-mail-Meeting");
+    // On auto, presenting puts the shared screen in the main window and everyone in the sidebar.
+    await contains(".o-discuss-Call-sidebar");
+    // Stopping the presentation reverts the auto layout (a lone participant is not a sidebar).
+    await click(".o-discuss-CallPresentationBar-container button[aria-label='Stop presenting']");
+    await contains(".o-discuss-Call-sidebar", { count: 0 });
+});
+
+test("Adjust view: sidebar layout always shows the sidebar, even alone", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const env = await start();
+    const store = env.services["mail.store"];
+    store.settings.callLayout = "sidebar";
+    await openDiscuss(channelId);
+    await click("[title='Start Call']");
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='fullscreen']");
+    await contains(".o-mail-Meeting");
+    // Sidebar mode always shows the sidebar column, even with a single participant.
+    await contains(".o-discuss-Call-sidebar");
 });

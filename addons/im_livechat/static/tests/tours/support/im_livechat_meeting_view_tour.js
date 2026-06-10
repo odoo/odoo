@@ -22,7 +22,12 @@ registry.category("web_tour.tours").add("im_livechat.meeting_view_tour", {
             run: "click",
         },
         {
-            trigger: ".o-livechat-root:shadow .o-discuss-Call [title='Fullscreen']",
+            trigger:
+                ".o-livechat-root:shadow .o-discuss-Call .o-discuss-CallActionList button[title='More']",
+            run: "click",
+        },
+        {
+            trigger: ".o-livechat-root:shadow [name='fullscreen']",
             run: "click",
         },
         {

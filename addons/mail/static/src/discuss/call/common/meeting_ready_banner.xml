@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="discuss.MeetingReadyBanner">
+        <div t-if="this.show" class="o-mail-MeetingReadyBanner position-absolute bottom-0 start-0 m-3 p-3 bg-white rounded-3 border shadow z-1">
+            <button class="o-mail-MeetingReadyBanner-close btn btn-link p-0 position-absolute top-0 end-0 m-2 text-reset" title="Close" aria-label="Close" t-on-click="() => this.rtc.isMeetingReadyBannerDismissed = true">
+                <i class="oi oi-close"/>
+            </button>
+            <h5 class="mb-2 pe-4">Your Meeting is Ready</h5>
+            <button class="btn btn-primary mb-2" t-on-click="() => this.openChannelInvitationDialog(this.env, this.channel)">Add Others</button>
+            <p class="text-muted mb-2">or share this permanent link with others you want in the meeting:</p>
+            <div class="input-group input-group-sm">
+                <input class="form-control" type="text" t-att-value="this.channel.invitationLink" readonly="" disabled="" t-on-focus="(ev) => ev.target.select()"/>
+                <button class="btn btn-light border" title="Copy link" aria-label="Copy link" t-on-click="() => this.channel.copyInvitationLink()">
+                    <i class="fa fa-copy"/>
+                </button>
+            </div>
+        </div>
+    </t>
+</templates>

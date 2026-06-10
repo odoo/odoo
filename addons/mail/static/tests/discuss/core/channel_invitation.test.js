@@ -3,14 +3,12 @@ import {
     contains,
     defineMailModels,
     insertText,
-    mockPermissionsPrompt,
     openDiscuss,
     setupChatHub,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 import { Command, getService, serverState, withUser } from "@web/../tests/web_test_helpers";
 
@@ -35,7 +33,7 @@ test("Can invite people from member panel", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
-    await click("button[title='Invite People']");
+    await click("button[title='Add People']");
 });
 
 test("can invite users in channel from chat window", async () => {
@@ -88,7 +86,7 @@ test("should be able to search for a new user to invite from an existing chat", 
     await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
-    await click("button[title='Invite People']");
+    await click("button[title='Add People']");
     await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
     await contains(".o-discuss-ChannelInvitation-selectable:has(:text('TestPartner2'))");
 });
@@ -111,7 +109,7 @@ test("Invitation form should display channel group restriction", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
-    await click("button[title='Invite People']");
+    await click("button[title='Add People']");
     await contains(
         ".o-discuss-ChannelInvitation div:text('Access restricted to group \"testGroup\"')",
         {
@@ -247,15 +245,4 @@ test("Invite sidebar action has the correct title for group chats", async () => 
     await click("button[title='Chat Actions']");
     await click(".o-dropdown-item:text('Invite People')");
     await contains(".modal-title:text('Mitchell Admin and Demo')");
-});
-
-test("Active dialog retains focus over invite input", async () => {
-    await startServer();
-    mockPermissionsPrompt();
-    await start();
-    await openDiscuss();
-    await click("button[title='New Meeting']");
-    await animationFrame();
-    await contains(".o-discuss-ChannelInvitation");
-    await contains("button:focus", { text: "Use Camera" });
 });

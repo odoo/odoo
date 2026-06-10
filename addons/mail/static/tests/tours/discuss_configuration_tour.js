@@ -61,9 +61,6 @@ registry.category("web_tour.tours").add("discuss_configuration_tour", {
             run: "click",
         },
         {
-            trigger: "input[aria-label='Show video participants only']",
-        },
-        {
             trigger: "input[aria-label='Blur video background']",
             run: "click",
         },

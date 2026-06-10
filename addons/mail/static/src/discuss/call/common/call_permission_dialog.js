@@ -53,7 +53,7 @@ export class CallPermissionDialog extends Component {
         this.props.close();
     }
 
-    get primaryActionText() {
+    get secondaryActionText() {
         return this.props.media === "camera" ? _t("Use Camera") : _t("Use Microphone");
     }
 

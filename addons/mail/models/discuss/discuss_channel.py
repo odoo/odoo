@@ -14,7 +14,7 @@ from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_TYPE
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import BinaryBytes, format_list, email_normalize, html_escape
-from odoo.tools.misc import hash_sign, OrderedSet
+from odoo.tools.misc import hash_sign, limited_field_access_token, OrderedSet
 from odoo.tools.sql import SQL
 
 channel_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 530.06">
@@ -268,6 +268,15 @@ class DiscussChannel(models.Model):
                 channel.avatar_cache_key = 'no-avatar'
             else:
                 channel.avatar_cache_key = sha512(channel.avatar_128).hexdigest()
+
+    def _get_avatar_128_access_token(self):
+        """Return a scoped access token for the `avatar_128` field so guests and
+        other portal users can fetch the channel avatar without read access.
+
+        :rtype: str
+        """
+        self.ensure_one()
+        return limited_field_access_token(self, "avatar_128", scope="binary")
 
     def _generate_avatar(self):
         if self.channel_type not in ('channel', 'group'):
@@ -549,6 +558,7 @@ class DiscussChannel(models.Model):
         # keys are bus subchannel names, values are lists of field names to sync
         super()._sync_field_names(res)
         res[None].attr("avatar_cache_key", predicate=is_channel_or_group)
+        res[None].attr("avatar_128_access_token", lambda c: c._get_avatar_128_access_token(), predicate=is_channel_or_group)
         # sudo: discuss.category - guests can read categories of accessible channels
         res[None].one("discuss_category_id", "_store_category_fields", sudo=True)
         res[None].extend(["channel_type", "create_uid", "default_display_mode"])
@@ -1290,6 +1300,7 @@ class DiscussChannel(models.Model):
             "_store_member_fields",
         )._build_result()
         res.attr("avatar_cache_key", predicate=is_channel_or_group)
+        res.attr("avatar_128_access_token", lambda c: c._get_avatar_128_access_token(), predicate=is_channel_or_group)
         # sudo: discuss.category - guests can read categories of accessible channels
         res.one("discuss_category_id", "_store_category_fields", sudo=True)
         res.attr("channel_type")

@@ -93,13 +93,7 @@ test("show only video 'on'", async () => {
     patchUiSize({ size: SIZES.SM });
     await start();
     await openDiscuss(channelId);
-    // dropdown requires an extra delay before click (because handler is registered in useEffect)
-    await contains("[title='Open Actions Menu']");
-    await click("[title='Open Actions Menu']");
-    await click(".o-dropdown-item:text('Voice & Video Settings')");
-    await contains(".o-discuss-CallSettings");
-    await click("button[title='Video']");
-    await contains("input[title='Show video participants only']:checked");
+    expect(getService("mail.store").settings.showOnlyVideo).toBe(true);
     const showOnlyVideoKey = makeRecordFieldLocalId(Settings.localId(), "showOnlyVideo");
     expect(localStorage.getItem(showOnlyVideoKey)).toBe(toRawValue(true));
     expect(localStorage.getItem("mail_user_setting_show_only_video")).toBe(null);

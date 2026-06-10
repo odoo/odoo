@@ -169,6 +169,14 @@ export class CallParticipantCard extends Component {
         return this.rtcSession && this.rtcSession.eq(this.rtcSession.channel?.activeRtcSession);
     }
 
+    get isPinned() {
+        return this.rtcSession?.eq(this.rtcSession.channel?.pinnedRtcSession);
+    }
+
+    get isLocallyMuted() {
+        return this.rtcSession?.isLocallyMuted;
+    }
+
     async onClick(ev) {
         if (isEventHandled(ev, "CallParticipantCard.clickVolumeAnchor")) {
             return;
@@ -178,18 +186,21 @@ export class CallParticipantCard extends Component {
             return;
         }
         if (this.rtcSession) {
+            if (!this.props.inset) {
+                return;
+            }
             const channel = this.rtcSession.channel;
+            // The inset only swaps which stream of the spotlighted participant is shown (e.g.
+            // screen ⇄ camera); it must not promote a different participant into the spotlight.
+            if (this.rtcSession.notEq(channel.activeRtcSession)) {
+                return;
+            }
             this.rtcSession.mainVideoStreamType = this.props.cardData.type;
-            if (this.rtcSession.eq(channel.activeRtcSession) && !this.props.inset) {
-                channel.activeRtcSession = undefined;
-                this.rtcSession.mainVideoStreamType = undefined;
-            } else {
-                const activeRtcSession = channel.activeRtcSession;
-                const currentMainVideoType = this.rtcSession.mainVideoStreamType;
-                channel.activeRtcSession = this.rtcSession;
-                if (this.props.inset && activeRtcSession) {
-                    this.props.inset(activeRtcSession, currentMainVideoType);
-                }
+            const activeRtcSession = channel.activeRtcSession;
+            const currentMainVideoType = this.rtcSession.mainVideoStreamType;
+            channel.activeRtcSession = this.rtcSession;
+            if (activeRtcSession) {
+                this.props.inset(activeRtcSession, currentMainVideoType);
             }
             return;
         }

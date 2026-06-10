@@ -28,7 +28,7 @@ function getMeetingViewTourSteps({ inWelcomePage = false } = {}) {
         },
         {
             trigger:
-                ".o-mail-Meeting .o-mail-ActionPanel .o-mail-Thread:contains('Meeting - Jan 1, 2026')",
+                ".o-mail-Meeting .o-mail-ActionPanel .o-mail-Thread:contains('Meeting, Jan 1')",
         },
         {
             trigger: ".o-mail-Meeting .o-mail-ActionPanel .o-mail-Composer-input",
@@ -66,8 +66,8 @@ function getMeetingViewTourSteps({ inWelcomePage = false } = {}) {
         },
         { trigger: ".o-mail-Meeting:not(:has(.o-mail-ActionPanel))" },
         {
-            trigger: ".o-mail-Meeting [title='Exit Fullscreen']",
-            run: "click",
+            trigger: ".o-mail-Meeting",
+            run: "press Escape",
         },
         { trigger: "body:not(:has(.o-mail-Meeting))" },
     ];

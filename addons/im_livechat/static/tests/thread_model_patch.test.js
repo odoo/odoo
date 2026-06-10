@@ -35,7 +35,7 @@ test("Thread name unchanged when inviting new users", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-DiscussContent-threadName[title='Visitor #20']");
     await click("button[title='Members']");
-    await click("button[title='Invite People']");
+    await click("button[title='Add People']");
     await click("input", {
         parent: [".o-discuss-ChannelInvitation-selectable", { text: "James" }],
     });

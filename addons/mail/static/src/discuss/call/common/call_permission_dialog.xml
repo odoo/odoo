@@ -11,8 +11,8 @@
                 <p class="text-muted" t-out="this.permissionNote"/>
             </t>
             <t t-set-slot="footer">
-                <button class="btn btn-primary" t-on-click="this.props.media === 'microphone' ? this.onClickUseMicrophone : this.onClickUseCamera" t-out="this.primaryActionText"/>
-                <button class="btn btn-secondary" t-if="this.props.suggestAllMedias and this.rtc.cameraPermission !== 'granted' and this.rtc.microphonePermission !== 'granted'" t-on-click="this.onClickUseMicAndCamera">Use microphone and camera</button>
+                <button class="btn btn-primary" t-if="this.props.suggestAllMedias and this.rtc.cameraPermission !== 'granted' and this.rtc.microphonePermission !== 'granted'" t-on-click="this.onClickUseMicAndCamera">Use microphone and camera</button>
+                <button class="btn btn-secondary" t-on-click="this.props.media === 'microphone' ? this.onClickUseMicrophone : this.onClickUseCamera" t-out="this.secondaryActionText"/>
             </t>
         </PermissionPromptDialog>
     </t>

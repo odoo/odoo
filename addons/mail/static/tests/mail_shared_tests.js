@@ -96,16 +96,12 @@ export async function mailChatterMessageActionsInvisibleWhenNotHovered() {
     await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Message-actions.invisible");
-    await contains(".o-mail-Message-actions button", { count: 4 });
+    await contains(".o-mail-Message-actions button", { count: 2 });
     expect(isNodeVisible(".o-mail-Message-actions button:eq(0)")).toBe(false);
     expect(isNodeVisible(".o-mail-Message-actions button:eq(1)")).toBe(false);
-    expect(isNodeVisible(".o-mail-Message-actions button:eq(2)")).toBe(false);
-    expect(isNodeVisible(".o-mail-Message-actions button:eq(3)")).toBe(false);
     await hover(".o-mail-Message");
     await contains(".o-mail-Message-actions:not(.invisible)");
-    await contains(".o-mail-Message-actions button", { count: 4 });
+    await contains(".o-mail-Message-actions button", { count: 2 });
     expect(isNodeVisible(".o-mail-Message-actions button:eq(0)")).toBe(true);
     expect(isNodeVisible(".o-mail-Message-actions button:eq(1)")).toBe(true);
-    expect(isNodeVisible(".o-mail-Message-actions button:eq(2)")).toBe(true);
-    expect(isNodeVisible(".o-mail-Message-actions button:eq(3)")).toBe(true);
 }

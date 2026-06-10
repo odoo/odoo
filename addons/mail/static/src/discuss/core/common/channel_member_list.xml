@@ -3,9 +3,9 @@
 
     <t t-name="discuss.ChannelMemberList">
         <ActionPanel close="this.props.close" title.translate="Members" minWidth="200" initialWidth="this.env.inMeetingView ? 400 : 250" icon="'oi oi-users'">
-            <div class="o-discuss-ChannelMemberList-search input-group input-group-sm flex-nowrap">
+            <div class="o-discuss-ChannelMemberList-search d-flex flex-nowrap gap-1">
                 <SearchInput search="this.search" placeholder.translate="Search members"/>
-                <button name="inviteButton" t-on-click="() => this.onClickInviteButton()" class="btn btn-outline-secondary" title="Invite People" aria-label="Invite People"><i class="oi oi-user-plus"/></button>
+                <button name="inviteButton" t-on-click="() => this.openChannelInvitationDialog(this.env, this.props.channel)" class="btn btn-sm btn-primary text-nowrap" title="Add People" aria-label="Add People">Add People</button>
             </div>
             <t t-foreach="this.categories()" t-as="category" t-key="category_index">
                 <t t-if="category.filtered.length > 0">

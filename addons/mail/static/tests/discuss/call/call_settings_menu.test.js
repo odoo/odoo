@@ -3,6 +3,7 @@ import {
     contains,
     defineMailModels,
     editInput,
+    mockGetMedia,
     openDiscuss,
     patchUiSize,
     SIZES,
@@ -12,7 +13,7 @@ import {
 import { parseRawValue, toRawValue } from "@mail/utils/common/local_storage";
 import { Settings } from "@mail/core/common/settings_model";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
-import { describe, keyDown, test, expect } from "@odoo/hoot";
+import { describe, keyDown, mockDate, test, expect } from "@odoo/hoot";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { browser } from "@web/core/browser/browser";
@@ -75,7 +76,6 @@ test("Renders the call settings", async () => {
     await click(".o-mail-DeviceSelect-button[data-kind='videoinput']:has(:text('Default'))");
     await contains(".o-dropdown-item:text('mockVideoDeviceLabel')");
     await contains(`.o-dropdown-item:text(${browserDefaultLabel})`);
-    await contains("label span:text('Show video participants only')");
     await contains("label span:text('Auto-focus speaker')");
     await contains("label span:text('Blur video background')");
 });
@@ -129,8 +129,6 @@ test("local storage for call settings", async () => {
     localStorage.setItem(backgroundBlurAmountKey, toRawValue(3));
     const edgeBlurAmountKey = makeRecordFieldLocalId(Settings.localId(), "edgeBlurAmount");
     localStorage.setItem(edgeBlurAmountKey, toRawValue(5));
-    const showOnlyVideoKey = makeRecordFieldLocalId(Settings.localId(), "showOnlyVideo");
-    localStorage.setItem(showOnlyVideoKey, toRawValue(true));
     const useBlurLocalStorageKey = makeRecordFieldLocalId(Settings.localId(), "useBlur");
     localStorage.setItem(useBlurLocalStorageKey, toRawValue(true));
     const voiceActivationThresholdKey = makeRecordFieldLocalId(
@@ -140,7 +138,6 @@ test("local storage for call settings", async () => {
     const callSettingsKeys = [
         backgroundBlurAmountKey,
         edgeBlurAmountKey,
-        showOnlyVideoKey,
         voiceActivationThresholdKey,
     ];
     patchWithCleanup(localStorage, {
@@ -169,12 +166,47 @@ test("local storage for call settings", async () => {
     await editInput(document.body, "input[title='Voice detection sensitivity']", 0.3);
     await expect.waitForSteps([`${voiceActivationThresholdKey}: 0.3`]);
     await click("button[title='Video']");
-    await contains("input[title='Show video participants only']:checked");
     await contains("input[title='Blur video background']:checked");
     await contains("div[title='Background blur intensity']:has(:text('15%'))");
     await contains("div[title='Edge blur intensity']:has(:text('25%'))");
-    await click("input[title='Show video participants only']");
-    await expect.waitForSteps([`${showOnlyVideoKey}: removed`]);
     await click("input[title='Blur video background']");
     expect(localStorage.getItem(useBlurLocalStorageKey)).toBe(null);
+});
+
+test("Adjust view dialog: each layout option and the prioritize-video toggle persist the setting", async () => {
+    mockGetMedia();
+    mockDate("2026-01-01 10:00:00");
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const env = await start();
+    const store = env.services["mail.store"];
+    await openDiscuss(channelId);
+    await click("button[title='New Meeting']");
+    await contains(".o-mail-Meeting");
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='change-layout']");
+    await contains(".o-discuss-ChangeLayoutDialog");
+    await contains(".o-discuss-ChangeLayoutDialog-option", { count: 5 });
+    // Each grid layout is persisted and reflected as the selected row.
+    await click(".o-discuss-ChangeLayoutDialog-option:contains('Tiled')");
+    expect(store.settings.callLayout).toBe("tiled");
+    await contains(".o-discuss-ChangeLayoutDialog-option.o-selected:contains('Tiled')");
+    await click(".o-discuss-ChangeLayoutDialog-option:contains('Spotlight')");
+    expect(store.settings.callLayout).toBe("spotlight");
+    await click(".o-discuss-ChangeLayoutDialog-option:contains('Sidebar')");
+    expect(store.settings.callLayout).toBe("sidebar");
+    await click(".o-discuss-ChangeLayoutDialog-option:contains('Auto (dynamic)')");
+    expect(store.settings.callLayout).toBe("auto");
+    await contains(".o-discuss-ChangeLayoutDialog-option.o-selected:contains('Auto (dynamic)')");
+    // "Prioritize tiles with video" is only offered while the tiled layout is selected.
+    await contains(".o-discuss-ChangeLayoutDialog input[type='checkbox'][role='switch']", {
+        count: 0,
+    });
+    await click(".o-discuss-ChangeLayoutDialog-option:contains('Tiled')");
+    expect(store.settings.showOnlyVideo).toBe(false);
+    await click(".o-discuss-ChangeLayoutDialog input[type='checkbox'][role='switch']");
+    expect(store.settings.showOnlyVideo).toBe(true);
+    // "Discuss" exits the fullscreen meeting view.
+    await click(".o-discuss-ChangeLayoutDialog-option:contains('Discuss')");
+    await contains(".o-mail-Meeting", { count: 0 });
 });

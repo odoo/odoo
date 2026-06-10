@@ -116,10 +116,17 @@ export class DiscussChannel extends Record {
         return this.member_count === this.channel_member_ids.length;
     }
     /** @type {string} */
+    avatar_128_access_token;
+    /** @type {string} */
     avatar_cache_key;
     get avatarUrl() {
         if (["channel", "group"].includes(this.channel_type)) {
+            const accessTokenParam = {};
+            if (this.store.self_user?.share !== false) {
+                accessTokenParam.access_token = this.avatar_128_access_token;
+            }
             return imageUrl("discuss.channel", this.id, "avatar_128", {
+                ...accessTokenParam,
                 unique: this.avatar_cache_key,
             });
         }
@@ -137,6 +144,15 @@ export class DiscussChannel extends Record {
             !this.correspondent?.persona.eq(this.store.odoobot) &&
             !this.is_readonly
         );
+    }
+    /**
+     * Whether the channel holds actual chat messages, i.e. excluding call/join/rename and
+     * other system notifications. Used to decide whether an ended meeting is worth keeping.
+     *
+     * @returns {boolean}
+     */
+    get hasChatMessages() {
+        return this.persistentMessages.some((message) => !message.isNotification);
     }
     canHide = fields.Attr(false, {
         compute() {
@@ -223,10 +239,11 @@ export class DiscussChannel extends Record {
             const localizedDatetime = this.store.self?.tz
                 ? this.create_date.setZone(this.store.self?.tz)
                 : this.create_date.toLocal();
-            const formatDate = localizedDatetime.toLocaleString(luxon.DateTime.DATE_MED, {
-                locale: user.lang,
-            });
-            return _t("Meeting - %(date)s", { date: formatDate });
+            const formatDate = localizedDatetime.toLocaleString(
+                { month: "short", day: "numeric" },
+                { locale: user.lang }
+            );
+            return _t("Meeting, %(date)s", { date: formatDate });
         }
         if (this.channel_type === "chat" && this.correspondent) {
             return this.correspondent.name;

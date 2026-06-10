@@ -338,7 +338,7 @@ export class Message extends Component {
         if (isMobileOS()) {
             return 1;
         }
-        return this.env.inChatWindow || this.env.inMeetingChat ? 2 : 4;
+        return 2;
     }
 
     get showSubtypeDescription() {

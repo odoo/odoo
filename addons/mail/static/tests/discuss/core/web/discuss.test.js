@@ -49,7 +49,7 @@ test("can create a new channel", async () => {
     ]);
     await contains(".o-mail-Discuss");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('abc')", { count: 0 });
-    await click("input[placeholder='Search conversations']");
+    await click("input[placeholder='Search']");
     await insertText(".o_command_palette_search input[placeholder='Search conversations']", "abc");
     await expect.waitForSteps([
         `/discuss/search - {"term":""}`,
@@ -90,7 +90,7 @@ test("can create a read-only channel", async () => {
     const pyEnv = await startServer();
     await start();
     await openDiscuss();
-    await click("input[placeholder='Search conversations']");
+    await click("input[placeholder='Search']");
     await insertText(".o_command_palette input", "abc");
     await click("a:text('Create Channel abc')");
     await click("input[type='checkbox'][name='readonly']");
@@ -132,7 +132,7 @@ test("can make a DM chat", async () => {
     await waitStoreFetch(["channels_as_member"]);
     await contains(".o-mail-Discuss");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mario')", { count: 0 });
-    await click("input[placeholder='Search conversations']");
+    await click("input[placeholder='Search']");
     await contains(".o_command_name", { count: 2 });
     await insertText(
         ".o_command_palette_search input[placeholder='Search conversations']",
@@ -166,7 +166,7 @@ test("can create a group chat conversation", async () => {
     pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
     await start();
     await openDiscuss();
-    await click("input[placeholder='Search conversations']");
+    await click("input[placeholder='Search']");
     await click(".o_command_name:text(Mario)");
     await contains(".o-mail-DiscussContent-threadName[title='Mario']");
     await click("[title='Invite People']");
@@ -193,7 +193,7 @@ test("Chat is pinned on other tabs when joined", async () => {
     const env2 = await start({ asTab: true });
     await openDiscuss(undefined, { target: env1 });
     await openDiscuss(undefined, { target: env2 });
-    await click(`${env1.selector} input[placeholder='Search conversations']`);
+    await click(`${env1.selector} input[placeholder='Search']`);
     await contains(`${env1.selector} .o_command_name`, { count: 2 });
     await insertText(
         `${env1.selector} .o_command_palette_search input[placeholder='Search conversations']`,
@@ -266,7 +266,7 @@ test("can access portal partner profile from avatar popover", async () => {
 test("Preserve letter case and accents when creating channel from sidebar", async () => {
     await start();
     await openDiscuss();
-    await click("input[placeholder='Search conversations']");
+    await click("input[placeholder='Search']");
     await insertText(
         ".o_command_palette_search input[placeholder='Search conversations']",
         "Crème brûlée Fan Club"
@@ -279,7 +279,7 @@ test("Preserve letter case and accents when creating channel from sidebar", asyn
 test("Create channel must have a name", async () => {
     await start();
     await openDiscuss();
-    await click("input[placeholder='Search conversations']");
+    await click("input[placeholder='Search']");
     await insertText(".o_command_palette input", "abc");
     await click(".o-mail-DiscussCommand-nameContainer:text('Create Channel')");
     await insertText("input[placeholder='Channel name']:value(abc)", "", { replace: true });

@@ -1,7 +1,6 @@
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { ChannelMember } from "@mail/discuss/core/common/channel_member";
-import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_dialog";
-import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
+import { openChannelInvitationDialog } from "@mail/discuss/core/common/channel_invitation";
 import { SearchInput } from "@mail/core/common/search_input";
 
 import { Component, computed, onWillUpdateProps, onWillStart, props, types } from "@odoo/owl";
@@ -28,7 +27,7 @@ export const MEMBER_CATEGORIES = [
 ];
 
 export class ChannelMemberList extends Component {
-    static components = { ActionPanel, ChannelActionDialog, ChannelMember, SearchInput };
+    static components = { ActionPanel, ChannelMember, SearchInput };
     static template = "discuss.ChannelMemberList";
 
     setup() {
@@ -37,11 +36,9 @@ export class ChannelMemberList extends Component {
         this.props = props({
             channel: types.instanceOf(this.store["discuss.channel"].Class),
             "close?": types.function([]),
-            openChannelInvitePanel: types.function([
-                types.object({ keepPrevious: types.boolean() }),
-            ]),
         });
         this.dialogService = useService("dialog");
+        this.openChannelInvitationDialog = openChannelInvitationDialog;
         this.search = useSearch({
             fetch: async (term) => {
                 await this.props.channel.searchChannelMembers(term);
@@ -99,21 +96,5 @@ export class ChannelMemberList extends Component {
                 remaining -= filtered.length;
                 return { label, matching, filtered, showCount };
             });
-    }
-
-    onClickInviteButton() {
-        if (this.env.inMeetingView) {
-            this.props.openChannelInvitePanel?.({ keepPrevious: true });
-        } else {
-            this.dialogService.add(ChannelActionDialog, {
-                contentClass: "o-discuss-ChannelInvitation",
-                contentComponent: ChannelInvitation,
-                contentProps: {
-                    channel: this.props.channel,
-                    close: () => this.store.env.services.dialog.closeAll(),
-                },
-                title: this.props.channel.displayName,
-            });
-        }
     }
 }

@@ -245,7 +245,7 @@ test("default thread rendering", async () => {
     const pyEnv = await startServer();
     pyEnv["res.users"].write(serverState.userId, { notification_type: "inbox" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-    pyEnv["discuss.channel"].create([
+    const channelIds = pyEnv["discuss.channel"].create([
         { name: "General", channel_type: "channel" },
         { name: "MyGroup", channel_type: "group" },
         {
@@ -256,19 +256,23 @@ test("default thread rendering", async () => {
             channel_type: "chat",
         },
     ]);
+    pyEnv["mail.message"].create({
+        body: "Bookmarked message",
+        bookmarked_partner_ids: [serverState.partnerId],
+        model: "discuss.channel",
+        res_id: channelIds[0],
+    });
     await start();
     await openDiscuss("mail.box_inbox");
     await contains("button:text('Inbox')");
-    await contains("button:text('Bookmarks')");
+    await contains("button:has(:text('Bookmarks'))");
     await contains("button:text('History')");
     await contains(".o-mail-DiscussSidebar-item:has(:text('General'))");
     await contains("button.o-active:text('Inbox')");
     await contains(".o-mail-Thread:text('You're all caught up!')");
-    await click("button:text('Bookmarks')");
-    await contains("button.o-active:text('Bookmarks')");
-    await contains(
-        ".o-mail-Thread:text('Bookmark important messages Save messages here to easily keep track of them.')"
-    );
+    await click("button:has(:text('Bookmarks'))");
+    await contains("button.o-active:has(:text('Bookmarks'))");
+    await contains(".o-mail-Message", { text: "Bookmarked message" });
     await click("button:text('History')");
     await contains("button.o-active:text('History')");
     await contains(
@@ -852,7 +856,6 @@ test("Can unpin chat channel", async () => {
     await click("[title='Chat Actions']");
     await click(".o-dropdown-item:text('Hide Until New Message')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin')", { count: 0 });
-    await contains(".o-mail-DiscussSidebar button:has(:text('View hidden conversations'))");
 });
 
 test("No 'Hide Until New Message' on conversation with self in call", async () => {
@@ -918,26 +921,21 @@ test("opening a hidden channel re-pins it", async () => {
     await openDiscuss();
     await contains(".o-mail-DiscussSidebarChannel");
     await contains(".o-mail-DiscussSidebarChannel:has(:text('InitialChannel'))");
-    await contains(".o-mail-DiscussSidebar button:has(:text('View hidden conversations'))");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin')", { count: 0 });
-    await click("input[placeholder='Search conversations']");
+    await click("input[placeholder='Search']");
     await insertText(
         ".o_command_palette_search input[placeholder='Search conversations']",
         "Mitchell Admin"
     );
     await click(".o-mail-DiscussCommand-nameContainer:text('Mitchell Admin')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mitchell Admin')");
-    await contains(".o-mail-DiscussSidebar button:has(:text('View hidden conversations'))");
-    await click("input[placeholder='Search conversations']");
+    await click("input[placeholder='Search']");
     await insertText(
         ".o_command_palette_search input[placeholder='Search conversations']",
         "General"
     );
     await click(".o-mail-DiscussCommand-nameContainer:text('General')");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('General')");
-    await contains(".o-mail-DiscussSidebar button:has(:text('View hidden conversations'))", {
-        count: 0,
-    });
 });
 
 test("Can leave channel", async () => {

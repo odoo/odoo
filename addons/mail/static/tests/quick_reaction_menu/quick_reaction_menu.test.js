@@ -153,7 +153,8 @@ test("return focus to message edition composer on close", async () => {
     await contains(".o-mail-Composer-input", { value: "" });
     await insertText(".o-mail-Composer-input", "Goodbye world!!");
     await press("Enter");
-    await click("[title='Edit']");
+    await click(".o-mail-Message:last [title='Expand']");
+    await click(".o-dropdown-item:text('Edit')");
     await contains(".o-mail-Message .o-mail-Composer-input:focus");
     await click("[title='Add a Reaction']");
     await contains(".o-mail-QuickReactionMenu-emoji:focus:text('👍')");

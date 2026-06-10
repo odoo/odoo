@@ -26,6 +26,7 @@ test("Show looking for help in the sidebar while active or still seeking help", 
         group_ids: pyEnv["res.groups"]
             .search_read([["id", "=", serverState.groupLivechatId]])
             .map(({ id }) => id),
+        notification_type: "inbox",
     });
     const bobPartnerId = pyEnv["res.partner"].create({
         name: "bob",
@@ -65,7 +66,7 @@ test("Show looking for help in the sidebar while active or still seeking help", 
     await contains(".o-livechat-LivechatStatusSelection .o-inProgress.active");
     await waitForChannels([`discuss.channel_${bobChannelId}`]);
     await contains(".o-mail-DiscussSidebarChannel", { text: "bob" });
-    await click(".o-mail-Mailbox[data-mailbox-id=bookmark]");
+    await click(".o-mail-Mailbox[data-mailbox-id=inbox]");
     await contains(".o-mail-DiscussSidebarChannel", { text: "bob", count: 0 });
     await waitForChannels([`discuss.channel_${bobChannelId}`], { operation: "delete" });
 });

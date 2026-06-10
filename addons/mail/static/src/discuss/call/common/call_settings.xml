@@ -127,12 +127,6 @@
                                 </t>
                                 <hr class="border-secondary opacity-75 m-0"/>
                                 <t t-call="discuss.CallSettings.textToggler"
-                                    text.translate="Show video participants only"
-                                    description.translate="Hide participants who have turned off their camera."
-                                    value="this.store.settings.showOnlyVideo"
-                                    onchange="this.onChangeShowOnlyVideo"/>
-                                <hr class="border-secondary opacity-75 m-0"/>
-                                <t t-call="discuss.CallSettings.textToggler"
                                     text.translate="Auto-focus speaker"
                                     description.translate="Automatically enlarge the person currently speaking."
                                     value="this.store.settings.useCallAutoFocus"

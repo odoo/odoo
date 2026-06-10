@@ -1,4 +1,5 @@
 import { fields } from "@mail/model/export";
+import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import { DiscussChannel } from "@mail/discuss/core/common/discuss_channel_model";
 
 import { localeCompare } from "@web/core/l10n/utils";
@@ -85,26 +86,24 @@ const DiscussChannelPatch = {
             },
         });
         this.focusStack = fields.Many("discuss.channel.rtc.session");
+        this.pinnedRtcSession = fields.One("discuss.channel.rtc.session");
         /** @type {import("@mail/discuss/call/common/call").CardData[]} */
         this.visibleCards = fields.Attr([], {
             compute() {
                 const raisingHandCards = [];
                 const sessionCards = [];
                 const invitationCards = [];
-                const filterVideos = this.store.settings.showOnlyVideo && this.videoCount > 0;
                 for (const session of this.rtc_session_ids) {
                     const target = session.raisingHand ? raisingHandCards : sessionCards;
                     const cameraStream = session.is_camera_on
                         ? session.videoStreams.get("camera")
                         : undefined;
-                    if (!filterVideos || cameraStream) {
-                        target.push({
-                            key: "session_main_" + session.id,
-                            session,
-                            type: "camera",
-                            videoStream: cameraStream,
-                        });
-                    }
+                    target.push({
+                        key: "session_main_" + session.id,
+                        session,
+                        type: "camera",
+                        videoStream: cameraStream,
+                    });
                     const screenStream = session.is_screen_sharing_on
                         ? session.videoStreams.get("screen")
                         : undefined;
@@ -117,10 +116,8 @@ const DiscussChannelPatch = {
                         });
                     }
                 }
-                if (!filterVideos) {
-                    for (const member of this.invited_member_ids) {
-                        invitationCards.push({ key: "member_" + member.id, member });
-                    }
+                for (const member of this.invited_member_ids) {
+                    invitationCards.push({ key: "member_" + member.id, member });
                 }
                 raisingHandCards.sort((c1, c2) => c1.session.raisingHand - c2.session.raisingHand);
                 sessionCards.sort((c1, c2) => {
@@ -183,8 +180,33 @@ const DiscussChannelPatch = {
     get showCallView() {
         return !this.store.rtc.isFullscreen && this.hasRtcSessionActive;
     },
+    /**
+     * Pin a participant to the main window from the participant menu.
+     * - sidebar/spotlight: keep the current layout, just move the pinned face to the main window.
+     * - tiled (and any non-sidebar/spotlight layout, e.g. auto): switch to the sidebar layout so the
+     *   pinned face takes the main window with the other participants stacked beside it.
+     *
+     * @param {import("models").RtcSession} session
+     */
+    pin(session) {
+        this.pinnedRtcSession = session;
+        this.activeRtcSession = session;
+        session.mainVideoStreamType = session.is_camera_on
+            ? "camera"
+            : session.is_screen_sharing_on
+            ? "screen"
+            : "camera";
+        const layout = this.store.settings.callLayout;
+        if (layout !== CALL_GRID_LAYOUT.SPOTLIGHT && layout !== CALL_GRID_LAYOUT.SIDEBAR) {
+            this.store.settings.callLayout = CALL_GRID_LAYOUT.SIDEBAR;
+        }
+    },
+    unpin() {
+        this.pinnedRtcSession = undefined;
+    },
     focusAvailableVideo() {
         if (
+            this.pinnedRtcSession ||
             !this.store.settings.useCallAutoFocus ||
             !(
                 this.store.env.services.ui.isSmall ||
@@ -210,6 +232,7 @@ const DiscussChannelPatch = {
      */
     updateCallFocusStack(session) {
         if (
+            this.pinnedRtcSession ||
             this.notEq(this.store.rtc?.channel) ||
             session.eq(this.store.rtc.selfSession) ||
             !this.activeRtcSession ||

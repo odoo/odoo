@@ -152,7 +152,7 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             run: `hover && click ${messageSelector} [title='Expand']`,
         },
         {
-            trigger: `.o-mail-Message-moreMenu [title='Edit'], ${messageSelector} [title='Edit']`,
+            trigger: `.o-mail-Message-moreMenu [name='edit']`,
             run: "click",
         },
         {
