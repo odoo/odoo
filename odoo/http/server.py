@@ -154,6 +154,7 @@ class HTTPSocket:
             'wsgi.version': (1, 0),
             'wsgi.url_scheme': 'http',
             'wsgi.input': HTTPBodyReader(self.sock, self.conn),
+            'wsgi.input_terminated': True,  # non standard, needed by werkzeug for chunked
             'wsgi.errors': sys.stderr,
             'wsgi.multithread': not config['workers'] and not odoo.evented,
             'wsgi.multiprocess': config['workers'] and not odoo.evented,
@@ -193,7 +194,7 @@ class HTTPSocket:
         reset_thread_info()
 
         # Receive the HTTP request
-        try:
+        try:  # noqa: PLW0717
             event = self.conn.next_event()
             while event is h11.NEED_DATA:
                 try:
@@ -380,7 +381,7 @@ class HTTPBodyReader(io.RawIOBase):
             buff[:size], self._buffered = self._buffered[:size], self._buffered[size:]
             return size
 
-        try:
+        try:  # noqa: PLW0717
             event = self._conn.next_event()
             while event is h11.NEED_DATA:
                 try:
