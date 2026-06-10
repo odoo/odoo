@@ -151,7 +151,7 @@ export class TimeOffCalendarController extends CalendarController {
                     onRecordDeleted: (record) =>
                         this._deleteRecord(record.resId, record.data.can_cancel),
                     onLeaveCancelled: onDialogClosed,
-                    size: "md",
+                    size: "sm",
                 },
                 { onClose: () => resolve() }
             );

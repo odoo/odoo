@@ -3,78 +3,50 @@
     <div t-name="hr_holidays.LeaveStatsComponent" class="o_leave_stats">
         <div t-if="this.state.employee and this.state.leaves.length !== 0" id="o_leave_stats_employee" class="sub_table px-3 py-2 mb-3">
             <div>
-                <div class="d-flex align-items-end">
-                    <div class="mx-1">
-                        <KanbanMany2OneAvatarEmployeeField
-                            record="this.props.record"
-                            name="'employee_id'"
-                        />
-                    </div>
-                    <div class="o_hr_leave_subtitle">
-                        <t t-out="this.state.employee.display_name"/>'s summary (<t t-out="this.thisYear"/>)
-                    </div>
-                </div>
+                <h4 class="d-flex">
+                    Summary <t t-out="this.thisYear"/>
+                </h4>
             </div>
             <div class="d-flex flex-column mb-1">
-                <div t-foreach="this.state.leaves" t-as="leave" t-key="leave.id" class="d-flex mb-2 gap-1 o_employee_leave">
-                    <span class="col-3 fw-bold" t-out="leave.work_entry_type_id.display_name"/>
-                    <div t-if="leave.work_entry_type_request_unit == 'hour'" class="d-flex gap-2 col-6 flex-wrap">
-                        <span t-out="leave.date_from"/>
-                        <span t-out="leave.hour_from" class="fst-italic"/>
-                        <i class="fa fa-long-arrow-right my-1" aria-label="Arrow icon" title="Arrow"/>
-                        <span t-out="leave.hour_to" class="fst-italic"/>
+                <div t-foreach="this.state.leaves" t-as="record_leave" t-key="record_leave.data.id" class="d-flex mb-2 gap-2">
+                    <t t-set="leave" t-value="record_leave.data"/>
+                    <div t-att-class="'rounded-circle border-0 flex-shrink-0 o_colorlist_toggler o_colorlist_item_color_' + leave.color"
+                         style="width: 16px; height: 16px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);"></div>
+                    <div t-out="leave.name" class="col-5 fw-bold"/>
+                    <div class="d-flex mb-1">
+                        <span t-out="record_leave.leaves_approved" class="me-1"/>
+                        <div t-if="record_leave.max_leaves">
+                            / <span t-out="record_leave.max_leaves" class="mx-1"/>
+                        </div>
+                        <span t-if="record_leave.unit_of_measure == 'day'">days</span>
                     </div>
-                    <div t-else="" class="col-6 d-flex gap-2 flex-wrap">
-                        <span t-out="leave.date_from"/>
-                        <i class="fa fa-long-arrow-right my-1" aria-label="Arrow icon" title="Arrow"/>
-                        <span t-out="leave.date_to"/>
+                    <div t-if="record_leave.remaining_leaves > 0" class="text-muted ms-2">
+                        (<span t-out="record_leave.remaining_leaves" class="mx-1"/>
+                        <span t-if="record_leave.unit_of_measure == 'day'">days</span> remaining )
                     </div>
-                    <div class="col-3 flex-wrap">
-                    (
-                        <span t-if="leave.work_entry_type_request_unit == 'hour'"><t t-out="leave.number_of_hours"/></span>
-                        <span t-else=""><t t-out="leave.number_of_days"/> days</span>
-                    )
+                    <div>
                     </div>
                 </div>
             </div>
         </div>
-        <div t-if="this.state.department and this.state.departmentLeaves.length !== 0" id="o_leave_stats_department" class="sub_table px-3 py-2">
-            <div class="o_horizontal_separator o_hr_leave_subtitle d-flex align-items-center justify-content-between">
-                <div>
-                    <span t-if="this.state.has_parent_department" class="mx-1">.../</span>
-                    <span t-out="this.state.department_name"/>
-                    <span>'s summary in this period</span>
-                </div>
+
+        <div t-if="this.state.department and this.state.nbEmployee > 0" id="o_leave_stats_department" class="alert alert-info px-3 py-2 mt-3" role="alert">
+            <div>
+                <h4>
+                    <t t-out="this.state.department_name"/>
+                    Overlaps
+                </h4>
             </div>
-            <div class="d-flex flex-column mb-1">
-                <div t-foreach="this.state.departmentLeaves" t-as="leave" t-key="leave.id" class="d-flex flex-column mb-2">
-                    <div class=" d-flex my-1 gap-1">
-                        <div class="col-3 d-flex">
-                            <KanbanMany2OneAvatarEmployeeField
-                                record="{'data' : {'employee_id': leave.employee_id}, 'fields': this.props.record.fields}"
-                                name="'employee_id'" relation="'hr.employee.public'"
-                            />
-                            <span t-out="leave.employee_id.display_name" class="mx-1 fw-bold"/>
-                        </div>
-                        <div t-if="leave.work_entry_type_request_unit == 'hour'" class="d-flex gap-2 col-6 flex-wrap">
-                            <span t-out="leave.date_from"/>
-                            <span t-out="leave.hour_from" class="fst-italic"/>
-                            <i class="fa fa-long-arrow-right my-1" aria-label="Arrow icon" title="Arrow"/>
-                            <span t-out="leave.hour_to" class="fst-italic"/>
-                        </div>
-                        <div t-else="" class="col-6 d-flex gap-2 flex-wrap">
-                            <span t-out="leave.date_from"/>
-                            <i class="fa fa-long-arrow-right my-1" aria-label="Arrow icon" title="Arrow"/>
-                            <span t-out="leave.date_to"/>
-                        </div>
-                        <div class="col-3 flex-wrap">
-                            (
-                            <span t-if="leave.work_entry_type_request_unit == 'hour'"><t t-out="leave.number_of_hours"/></span>
-                            <span t-else=""><t t-out="leave.number_of_days"/> days</span>
-                            )
-                        </div>
-                    </div>
-                </div>
+            <div>
+                <b t-out="this.state.nbEmployee"/>
+                team members on holiday during this period
+                <a class="oe_link fw-bold"
+                    href="#"
+                    t-on-click="this.action_department_leaves"
+                    icon="oi-arrow-right">
+                    <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                    View Overlaps
+                </a>
             </div>
         </div>
     </div>

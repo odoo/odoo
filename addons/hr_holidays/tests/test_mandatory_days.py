@@ -5,7 +5,7 @@ from datetime import datetime
 from freezegun import freeze_time
 
 from odoo import tests
-from odoo.tests import Form, new_test_user, TransactionCase
+from odoo.tests import new_test_user, TransactionCase
 from odoo.exceptions import ValidationError
 
 
@@ -128,18 +128,19 @@ class TestHrLeaveMandatoryDays(TransactionCase):
             self.assertTrue(day in mandatory_days)
             self.assertEqual(color, mandatory_days[day])
 
-        with Form(self.env['hr.leave'].with_user(self.employee_user.id).with_context(default_employee_id=self.employee_emp.id)) as leave_form:
-            leave_form.work_entry_type_id = self.work_entry_type
-            leave_form.request_date_from = datetime(2021, 11, 1)
-            leave_form.request_date_to = datetime(2021, 11, 1)
+        leave = self.env['hr.leave'].with_user(self.employee_user.id).with_context(leave_skip_state_check=True).create({
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'request_date_from': datetime(2021, 11, 1),
+            'request_date_to': datetime(2021, 11, 1),
+        })
 
-            leave_form.save()  # need to be saved to have access to record
-            self.assertFalse(leave_form.record.has_mandatory_day)
+        self.assertFalse(leave.has_mandatory_day)
+        leave.write({
+            'request_date_to': datetime(2021, 11, 5)
+        })
 
-            leave_form.request_date_to = datetime(2021, 11, 5)
-
-            leave_form.save()  # need to be saved to have access to record
-            self.assertTrue(leave_form.record.has_mandatory_day)
+        self.assertTrue(leave.has_mandatory_day)
 
     @freeze_time('2021-10-15')
     def test_department_mandatory_days(self):

@@ -16,6 +16,7 @@ from odoo.addons.resource.models.utils import HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.date_utils import float_to_time, sum_intervals
 from odoo.fields import Command, Date, Domain
+from odoo.tools.date_utils import time_to_float
 from odoo.tools.float_utils import float_round, float_compare, float_is_zero
 from odoo.tools.intervals import Intervals
 from odoo.tools.misc import clean_context, format_date, format_duration
@@ -187,7 +188,7 @@ class HrLeave(models.Model):
         'Duration (Days)', compute='_compute_duration', store=True, tracking=True,
         help='Number of days of the time off request. Used in the calculation.')
     number_of_hours = fields.Float(
-        'Duration (Hours)', compute='_compute_duration', store=True, tracking=True,
+        'Duration (Hours)', compute='_compute_duration', store=True, tracking=True, inverse="_inverse_number_of_hours",
         help='Number of hours of the time off request. Used in the calculation.')
     last_several_days = fields.Boolean("All day", compute="_compute_last_several_days")
     duration_display = fields.Char('Requested', compute='_compute_duration_display')
@@ -225,6 +226,8 @@ class HrLeave(models.Model):
     # Interface fields used when using hour-based computation
     request_hour_from = fields.Float(string='Hour from', compute='_compute_request_hour_from_to', readonly=False, store=True)
     request_hour_to = fields.Float(string='Hour to', compute='_compute_request_hour_from_to', readonly=False, store=True)
+    request_date_hour_from = fields.Datetime(compute='_compute_request_date_hour_from_to')
+    request_date_hour_to = fields.Datetime(compute='_compute_request_date_hour_from_to')
     # used only when the leave is taken in half days
     request_date_from_period = fields.Selection([
         ('am', 'Morning'), ('pm', 'Afternoon')],
@@ -237,9 +240,22 @@ class HrLeave(models.Model):
     is_striked = fields.Boolean('Striked', compute='_compute_is_hatched')
     has_mandatory_day = fields.Boolean(compute='_compute_has_mandatory_day')
     work_entry_type_increases_duration = fields.Char(compute='_compute_work_entry_type_increases_duration')
-
+    request_duration = fields.Selection(
+        [
+            ("full", "Full Day"),
+            ("am", "Morning"),
+            ("pm", "Afternoon"),
+            ("specific", "Specific"),
+        ],
+        default="full",
+        string="Duration",
+    )
+    request_duration_allowed = fields.Json(compute="_compute_request_duration_allowed")
     # warning message
     dashboard_warning_message = fields.Char(compute='_compute_dashboard_warning_message')
+    exceeds_allocation = fields.Boolean(compute='_compute_allocation_warning')
+    allocation_display_warning = fields.Char(compute='_compute_allocation_warning')
+
     _date_check2 = models.Constraint(
         'CHECK ((date_from <= date_to))',
         'The start date must be before or equal to the end date.',
@@ -270,6 +286,19 @@ class HrLeave(models.Model):
         self.request_hour_from = min(max(self.request_hour_from, 0.0), 23.99)
         self.request_hour_to = min(max(self.request_hour_to, 0.0), 24)
 
+    def action_open_employee_calendar(self):
+        self.ensure_one()
+        return {
+            'name': 'Time Off Calendar',
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.leave',
+            'views': [[self.env.ref('hr_holidays.hr_leave_employee_view_dashboard').id, 'calendar']],
+            'domain': [('employee_id', '=', self.employee_id.id)],
+            'context': {
+                'default_employee_id': self.employee_id.id,
+            },
+        }
+
     @api.depends('employee_id', 'request_date_from', 'request_date_to')
     def _compute_request_hour_from_to(self):
         env_company_calendar = self.env.company.resource_calendar_id
@@ -288,6 +317,75 @@ class HrLeave(models.Model):
                 hour_from, hour_to = leave._get_hour_from_to(leave.request_date_from, leave.request_date_to)
                 leave.request_hour_from = hour_from
                 leave.request_hour_to = hour_to
+
+    @api.depends(
+        'virtual_remaining_leaves', 'number_of_days', 'number_of_hours',
+        'work_entry_type_id', 'employee_id', 'request_date_from', 'request_date_to',
+        'last_several_days', 'work_entry_type_request_unit'
+    )
+    def _compute_allocation_warning(self):
+        for leave in self:
+            leave.exceeds_allocation = False
+            leave.allocation_display_warning = False
+            is_multi_employee = self.env.context.get('default_is_multi_employee', False)
+            if not leave.employee_id or is_multi_employee or not leave.work_entry_type_requires_allocation:
+                continue
+            remaining = leave.virtual_remaining_leaves
+            if leave.work_entry_type_request_unit == 'hour':
+                request_amount = leave.number_of_hours
+            else:
+                request_amount = leave.number_of_days
+            max_excess = leave.work_entry_type_id.max_allowed_negative if leave.work_entry_type_id.allows_negative else 0
+            unit = self.env._('hours') if leave.work_entry_type_request_unit == 'hour' else self.env._('days')
+            formatted_remaining = "%g" % (float_round(remaining, precision_digits=2))
+            leave.allocation_display_warning = self.env._("Only %(remaining)s %(unit)s available", remaining=formatted_remaining, unit=unit)
+            if request_amount > (remaining + max_excess):
+                leave.exceeds_allocation = True
+
+    @api.depends("work_entry_type_request_unit", "last_several_days")
+    def _compute_request_duration_allowed(self):
+        for leave in self:
+            leave.request_duration_allowed = leave._get_request_duration_allowed()
+
+    def _get_request_duration_allowed(self):
+        self.ensure_one()
+        if self.last_several_days or self.work_entry_type_request_unit == "day":
+            return ["full"]
+        if self.work_entry_type_request_unit == "half_day":
+            return ["full", "am", "pm"]
+        if self.work_entry_type_request_unit == "hour":
+            return ["full", "am", "pm", "specific"]
+        return ["full"]
+
+    @api.depends('request_date_from', 'request_hour_from', 'request_date_to', 'request_hour_to')
+    def _compute_request_date_hour_from_to(self):
+        for leave in self:
+            if not (leave.request_date_from and leave.request_date_to):
+                leave.request_date_hour_from = False
+                leave.request_date_hour_to = False
+                continue
+            hour_from = float_to_time(leave.request_hour_from)
+            hour_to = float_to_time(leave.request_hour_to)
+            user_tz_str = self.env.user.tz or 'UTC'
+            user_tz = ZoneInfo(user_tz_str)
+            leave.request_date_hour_from = datetime.combine(leave.request_date_from, hour_from).replace(
+                tzinfo=user_tz).astimezone(UTC).replace(tzinfo=None)
+            leave.request_date_hour_to = datetime.combine(leave.request_date_to, hour_to).replace(
+                tzinfo=user_tz).astimezone(UTC).replace(tzinfo=None)
+
+    @api.onchange('request_date_hour_from', 'request_date_hour_to')
+    def _onchange_request_date_hour_from(self):
+        for leave in self:
+            if not (leave.request_date_hour_from and leave.request_date_hour_to):
+                continue
+            user_tz_str = self.env.user.tz or 'UTC'
+            user_tz = ZoneInfo(user_tz_str)
+            date_hour_from_user_tz = leave.request_date_hour_from.astimezone(user_tz).replace(tzinfo=None)
+            date_hour_to_user_tz = leave.request_date_hour_to.astimezone(user_tz).replace(tzinfo=None)
+            leave.request_date_from = date_hour_from_user_tz.date()
+            leave.request_date_to = date_hour_to_user_tz.date()
+            leave.request_hour_from = time_to_float(date_hour_from_user_tz.time())
+            leave.request_hour_to = time_to_float(date_hour_to_user_tz.time())
 
     @api.depends('employee_id', 'state', 'request_date_from', 'request_date_to',
             'request_hour_from', 'request_hour_to', 'request_date_from_period', 'request_date_to_period')
@@ -512,20 +610,25 @@ class HrLeave(models.Model):
             ]
         return domain
 
+    # so that when we consider allocated work entry types for employees that don't have allocations, it doesn't revert back to a generic one
     @api.depends('employee_id', 'request_date_from', 'request_date_to')
     def _compute_work_entry_type_id(self):
         for holiday in self:
-            local_work_entry_types = self.env['hr.work.entry.type'].with_context(default_date_from=holiday.request_date_from, default_date_to=holiday.request_date_to).search([('country_id', 'in', [holiday.employee_id.country_id.id or holiday.employee_id.company_id.country_id.id] + [False])])
-            all_valid_work_entry_types = local_work_entry_types.with_context(default_date_from=holiday.request_date_from, default_date_to=holiday.request_date_to).filtered_domain([('has_valid_allocation', '=', True)])
-            no_allocation_required_work_entry_types = local_work_entry_types.with_context(default_date_from=holiday.request_date_from, default_date_to=holiday.request_date_to).filtered_domain([('requires_allocation', '=', False)])
-            if not holiday.work_entry_type_id.requires_allocation:
+            allowed_country_ids = [holiday.employee_id.country_id.id or holiday.employee_id.company_id.country_id.id, False]
+            local_work_entry_types = self.env['hr.work.entry.type'].with_context(default_date_from=holiday.request_date_from, default_date_to=holiday.request_date_to).search([('country_id', 'in', allowed_country_ids)])
+            if holiday.work_entry_type_id and holiday.work_entry_type_id in local_work_entry_types:
                 continue
-            if not holiday.work_entry_type_id.get_work_entry_types_with_valid_allocations(holiday.request_date_from, holiday.request_date_to, holiday.employee_id.id):
+            all_valid_work_entry_types = local_work_entry_types.filtered_domain([('has_valid_allocation', '=', True)])
+            no_alloc_types = local_work_entry_types.filtered_domain([('requires_allocation', '=', False)])
+            if holiday.employee_id:
                 valid_types = all_valid_work_entry_types.get_work_entry_types_with_valid_allocations(holiday.request_date_from, holiday.request_date_to, holiday.employee_id.id)
-                if not valid_types or not holiday.employee_id:
-                    holiday.work_entry_type_id = no_allocation_required_work_entry_types[0] if no_allocation_required_work_entry_types else None
-                else:
+                if valid_types:
                     holiday.work_entry_type_id = valid_types[0]
+                    continue
+            if no_alloc_types:
+                holiday.work_entry_type_id = no_alloc_types[0]
+            else:
+                holiday.work_entry_type_id = False
 
     @api.depends('employee_id')
     def _compute_department_id(self):
@@ -746,9 +849,10 @@ class HrLeave(models.Model):
     def _compute_duration(self):
         durations = self._get_durations()
         for leave in self:
-            days, hours = durations[leave.id]
-            leave.number_of_hours = hours
-            leave.number_of_days = days
+            days, hours = durations.get(leave.id, (0, 0))
+            leave_context = leave.with_context(leave_skip_state_check=True, skip_number_of_hours_inverse=True)
+            leave_context.number_of_hours = hours
+            leave_context.number_of_days = days
 
     @api.depends('employee_company_id')
     def _compute_company_id(self):
@@ -778,18 +882,49 @@ class HrLeave(models.Model):
     def _compute_duration_display(self):
         for leave in self:
             duration = leave.number_of_days
-            unit = _('days')
-            display = "%g %s" % (float_round(duration, precision_digits=2), unit)
+            display = f"{float_round(duration, precision_digits=2):g}"
             if leave.work_entry_type_request_unit == "hour":
                 hours, minutes = divmod(abs(leave.number_of_hours) * 60, 60)
                 minutes = round(minutes)
                 if minutes == 60:
                     minutes = 0
                     hours += 1
-                duration = '%d:%02d' % (hours, minutes)
-                unit = _("hours")
-                display = f"{duration} {unit}"
+                display = f"{int(hours):02d}:{int(minutes):02d}"
+
             leave.duration_display = display
+
+    @api.onchange('number_of_hours')
+    def _inverse_number_of_hours(self):
+        for leave in self:
+            if not leave.employee_id or not leave.request_date_from or not leave.date_from or self.env.context.get('skip_number_of_hours_inverse'):
+                continue
+            if leave.work_entry_type_id.count_as != 'absence' and leave.work_entry_type_id.request_unit == 'hour':
+                if not leave.request_date_hour_from:
+                    continue
+                request_date_hour_to = leave.request_date_hour_from + relativedelta(hours=leave.number_of_hours)
+            else:
+                calendar = leave.employee_id.sudo()._get_version(leave.request_date_from).resource_calendar_id
+                compute_leaves = not leave.work_entry_type_id.include_public_holidays_in_duration
+                request_date_hour_to = calendar.plan_hours(
+                    leave.number_of_hours,
+                    leave.date_from,
+                    compute_leaves=compute_leaves,
+                    resource=leave.employee_id.resource_id
+                )
+            if request_date_hour_to:
+                leave_tz = ZoneInfo(leave.tz or 'UTC')
+                date_hour_to_user_tz = request_date_hour_to.astimezone(leave_tz).replace(tzinfo=None)
+                if leave.work_entry_type_id.request_unit == 'hour':
+                    is_spillover = date_hour_to_user_tz.date() > leave.request_date_from
+                    new_hour_to = time_to_float(date_hour_to_user_tz.time())
+                    is_night_shift = leave.request_hour_from > new_hour_to
+                    if is_spillover and not is_night_shift:
+                        is_multi_day = leave.request_date_to and leave.request_date_to > leave.request_date_from
+                        if leave.number_of_hours > 0 and not (self.env.context.get('is_multi_day_selection') or is_multi_day):
+                            raise ValidationError(self.env._("You cannot request more hours than your scheduled working hours for a single day."))
+                leave.request_date_to = date_hour_to_user_tz.date()
+                leave.request_hour_to = time_to_float(date_hour_to_user_tz.time())
+                self.env.remove_to_compute(self._fields['work_entry_type_id'], self)
 
     @api.depends('state', 'employee_id', 'department_id')
     def _compute_can_approve(self):
@@ -858,9 +993,52 @@ class HrLeave(models.Model):
             holiday.attachment_ids = holiday.supported_attachment_ids
         self.invalidate_recordset(['attachment_ids'])
 
+    @api.constrains('number_of_hours', 'request_date_from', 'request_date_to', 'work_entry_type_id')
+    def _check_max_absence_per_day(self):
+        for leave in self:
+            if leave.work_entry_type_request_unit != 'hour':
+                continue
+
+            calendar = leave.resource_calendar_id or leave.employee_id.resource_calendar_id
+            if not calendar or not leave.request_date_from or not leave.request_date_to:
+                continue
+
+            start_dt = datetime.combine(leave.request_date_from, datetime.min.time())
+            end_dt = datetime.combine(leave.request_date_to, datetime.max.time())
+            expected_attendance = calendar.get_work_hours_count(start_dt, end_dt, compute_leaves=False)
+            days_spanned = (leave.request_date_to - leave.request_date_from).days + 1
+            max_allowed_absence = (24.0 * days_spanned) - expected_attendance
+
+            is_24h_schedule = float_compare(expected_attendance, 24.0 * days_spanned, precision_digits=2) >= 0
+            is_flexible = 'is_flexible' in leave.employee_id._fields and leave.employee_id.sudo().is_flexible
+            if is_24h_schedule or is_flexible:
+                max_allowed_absence = 24.0 * days_spanned
+
+            is_sandwich = 'l10n_in_is_sandwich_leave' in leave.work_entry_type_id._fields and leave.work_entry_type_id.l10n_in_is_sandwich_leave
+            if is_sandwich:
+                max_allowed_absence = max(max_allowed_absence, leave.number_of_hours)
+
+            if float_compare(leave.number_of_hours, max_allowed_absence, precision_digits=2) == 1:
+                raise ValidationError(
+                    self.env._(
+                        "You cannot encode more absence hours than allowed for this period.\n"
+                        "Expected attendance: %(attendance)g hours.\n"
+                        "Maximum allowed absence: %(max_absence)g hours.\n"
+                        "Requested absence: %(requested)g hours.",
+                        attendance=expected_attendance,
+                        max_absence=max_allowed_absence,
+                        requested=leave.number_of_hours
+                    )
+                )
+
     @api.constrains('date_from', 'date_to', 'employee_id', 'state')
     def _check_date(self):
-        if self.env.context.get('leave_skip_date_check', False):
+        skip_check = any(self.env.context.get(key) for key in [
+            'leave_skip_date_check',
+            'leave_fast_create',
+            'l10n_in_hr_holidays_sandwich_leave'
+        ])
+        if skip_check or self.env.context.get('install_mode'):
             return
         for holiday in self:
             if holiday.state in ('refuse', 'cancel'):
@@ -870,7 +1048,7 @@ class HrLeave(models.Model):
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date_state(self):
-        if self.env.context.get('leave_skip_state_check'):
+        if self.env.context.get('leave_skip_state_check') or self.env.context.get('install_mode'):
             return
         for holiday in self:
             if holiday.state in ['validate1', 'validate']:
@@ -950,6 +1128,10 @@ class HrLeave(models.Model):
             date_from_utc = leave.date_from and leave.date_from.astimezone(user_tz).date()
             date_to_utc = leave.date_to and leave.date_to.astimezone(user_tz).date()
             time_off_type_display = leave.work_entry_type_id.display_code or leave.work_entry_type_id.name
+            if leave.work_entry_type_request_unit == 'hour':
+                formatted_duration = self.env._('%(duration)s hours', duration=leave.duration_display)
+            else:
+                formatted_duration = self.env._('%(duration)s days', duration=leave.duration_display)
             if leave.work_entry_type_request_unit == "hour":
                 base_duration = format_duration(leave.number_of_hours)
                 hours_str, minutes_str = base_duration.split(":")
@@ -962,14 +1144,16 @@ class HrLeave(models.Model):
             else:
                 days = float_round(leave.number_of_days, precision_digits=2)
                 custom_duration = self.env._("%(days)gd", days=days)
+
             if self.env.context.get('short_name'):
-                short_leave_name = leave.name or time_off_type_display or _('Time Off')
-                leave.display_name = _("%(name)s: %(duration)s", name=short_leave_name, duration=leave.duration_display)
+                short_leave_name = leave.name or time_off_type_display or self.env._('Time Off')
+                leave.display_name = self.env._("%(name)s: %(duration)s", name=short_leave_name,
+                                                duration=formatted_duration)
             else:
                 target = leave.employee_id.name or ""
                 display_date = format_date(self.env, date_from_utc) or ""
                 if leave.number_of_days > 1 and date_from_utc and date_to_utc:
-                    display_date += _(' to %(date_to_utc)s',
+                    display_date += self.env._(' to %(date_to_utc)s',
                         date_to_utc=format_date(self.env, date_to_utc) or ""
                     )
                 if not target or self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
@@ -984,16 +1168,16 @@ class HrLeave(models.Model):
                             start=display_date,
                         )
                 elif not time_off_type_display:
-                    leave.display_name = _("%(person)s: %(duration)s (%(start)s)",
+                    leave.display_name = self.env._("%(person)s: %(duration)s (%(start)s)",
                         person=target,
-                        duration=leave.duration_display,
+                        duration=formatted_duration,
                         start=display_date,
                     )
                 else:
-                    leave.display_name = _("%(person)s on %(work_entry_type)s: %(duration)s (%(start)s)",
+                    leave.display_name = self.env._("%(person)s on %(work_entry_type)s: %(duration)s (%(start)s)",
                         person=target,
                         work_entry_type=time_off_type_display,
-                        duration=leave.duration_display,
+                        duration=formatted_duration,
                         start=display_date,
                     )
 
@@ -1322,7 +1506,7 @@ class HrLeave(models.Model):
             'LEAVE117',  # Work Accident (Unpaid)
         ]
         return self.filtered(
-            lambda l: l.employee_id and not l.number_of_days and l.work_entry_type_id.count_as == 'absence' and l.work_entry_type_id.code not in bypass_work_entry_types)
+            lambda l: l.employee_id and not l.number_of_days and not l.number_of_hours and l.work_entry_type_id.count_as == 'absence' and l.work_entry_type_id.code not in bypass_work_entry_types)
 
     def _split_leaves(self, split_date_from, split_date_to=False):
         """
@@ -1808,6 +1992,12 @@ class HrLeave(models.Model):
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
         employee_id = self.env.context.get('employee_id', False)
+        if isinstance(employee_id, (list, tuple)) and employee_id:
+            employee_id = employee_id[0]
+        elif isinstance(employee_id, dict):
+            employee_id = employee_id.get('id', False)
+        elif isinstance(employee_id, str) and employee_id.isdigit():
+            employee_id = int(employee_id)
         employee = self.env['hr.employee'].browse(employee_id) if employee_id else self.env.user.employee_id
         return employee.sudo(False)._get_unusual_days(date_from, date_to)
 

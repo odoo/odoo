@@ -37,12 +37,12 @@ class HrWorkEntryType(models.Model):
         deductible_time_off_types = self.env['hr.work.entry.type'].search([
             ('overtime_deductible', '=', True),
             ('requires_allocation', '=', False)])
-        work_entry_type_names = deductible_time_off_types.mapped('name')
+        work_entry_type_ids = deductible_time_off_types.ids
         unspent_overtime = employees._get_deductible_employee_overtime()
         for employee in res:
             total_overtime = employee.sudo().total_overtime
             for leave_data in res[employee]:
-                if leave_data[0] in work_entry_type_names:
+                if leave_data[0]['id'] in work_entry_type_ids:
                     leave_data[1]['virtual_remaining_leaves'] = unspent_overtime[employee]
                     leave_data[1]['max_leaves'] += total_overtime
                     leave_data[1]['remaining_leaves'] += total_overtime

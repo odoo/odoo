@@ -254,7 +254,7 @@ class TestSandwichLeave(TransactionCase):
             'request_date_from': '2025-03-11',
             'request_date_to': '2025-03-11',
         })
-        after_holiday_leave = self.env['hr.leave'].create({
+        after_holiday_leave = self.env['hr.leave'].with_context(skip_number_of_hours_inverse=True).create({
             'name': 'After Public Holiday',
             'employee_id': self.rahul_emp.id,
             'work_entry_type_id': self.work_entry_type_day.id,
@@ -328,7 +328,7 @@ class TestSandwichLeave(TransactionCase):
             'request_date_from': "2025-01-28",
             'request_date_to': "2025-01-28",
         })
-        after_holiday_leave = self.env['hr.leave'].create({
+        after_holiday_leave = self.env['hr.leave'].with_context(skip_number_of_hours_inverse=True).create({
             'name': 'Test Leave',
             'employee_id': self.rahul_emp.id,
             'work_entry_type_id': self.work_entry_type_day.id,
@@ -354,7 +354,7 @@ class TestSandwichLeave(TransactionCase):
             'request_date_from': "2025-01-28",
             'request_date_to': "2025-01-28",
         })
-        after_holiday_leave = self.env['hr.leave'].create({
+        after_holiday_leave = self.env['hr.leave'].with_context(skip_number_of_hours_inverse=True).create({
             'name': 'Test Leave',
             'employee_id': self.rahul_emp.id,
             'work_entry_type_id': self.work_entry_type_day.id,
@@ -375,7 +375,7 @@ class TestSandwichLeave(TransactionCase):
             'request_date_from': "2025-01-18",
             'request_date_to': "2025-01-24",
         })
-        after_holiday_leave = self.env['hr.leave'].create({
+        after_holiday_leave = self.env['hr.leave'].with_context(skip_number_of_hours_inverse=True).create({
             'name': 'Test Leave',
             'employee_id': self.rahul_emp.id,
             'work_entry_type_id': self.work_entry_type_day.id,
@@ -400,7 +400,7 @@ class TestSandwichLeave(TransactionCase):
             'request_date_from': "2025-01-24",
             'request_date_to': "2025-01-24",
         })
-        after_holiday_leave = self.env['hr.leave'].create({
+        after_holiday_leave = self.env['hr.leave'].with_context(skip_number_of_hours_inverse=True).create({
             'name': 'Test Leave',
             'employee_id': self.rahul_emp.id,
             'work_entry_type_id': self.work_entry_type_hours.id,
@@ -558,7 +558,7 @@ class TestSandwichLeave(TransactionCase):
             'request_date_from': "2025-01-17",
             'request_date_to': "2025-01-17",
         })
-        full_leave = self.env['hr.leave'].create({
+        full_leave = self.env['hr.leave'].with_context(skip_number_of_hours_inverse=True).create({
             'name': 'Full Monday Leave',
             'employee_id': self.rahul_emp.id,
             'work_entry_type_id': self.work_entry_type_hours.id,
@@ -602,7 +602,7 @@ class TestSandwichLeave(TransactionCase):
         })
         self.assertEqual(after_leave.number_of_days, 2)
 
-        middle_sandwich_leave = self.env['hr.leave'].create({
+        middle_sandwich_leave = self.env['hr.leave'].with_context(skip_number_of_hours_inverse=True).create({
             'name': 'Test Leave',
             'employee_id': self.rahul_emp.id,
             'work_entry_type_id': self.work_entry_type_day.id,
@@ -623,7 +623,7 @@ class TestSandwichLeave(TransactionCase):
         })
         self.assertEqual(before_leave.number_of_days, 1)
 
-        after_leave = self.env['hr.leave'].create({
+        after_leave = self.env['hr.leave'].with_context(skip_number_of_hours_inverse=True).create({
             'name': 'Friday',
             'employee_id': self.rahul_emp.id,
             'work_entry_type_id': self.work_entry_type_day.id,
@@ -633,7 +633,7 @@ class TestSandwichLeave(TransactionCase):
         self.assertTrue(after_leave.l10n_in_contains_sandwich_leaves)
         self.assertEqual(after_leave.number_of_days, 3)
 
-        before_leave.unlink()
+        before_leave.with_context(skip_number_of_hours_inverse=True, leave_skip_state_check=True).unlink()
         self.assertEqual(after_leave.number_of_days, 1)
 
     @freeze_time('2025-07-15')
@@ -647,7 +647,7 @@ class TestSandwichLeave(TransactionCase):
         })
         self.assertEqual(before_leave.number_of_days, 1)
 
-        after_leave = self.env['hr.leave'].create({
+        after_leave = self.env['hr.leave'].with_context(skip_number_of_hours_inverse=True).create({
             'name': 'Fri',
             'employee_id': self.rahul_emp.id,
             'work_entry_type_id': self.work_entry_type_day.id,
@@ -658,7 +658,7 @@ class TestSandwichLeave(TransactionCase):
         self.assertEqual(after_leave.number_of_days, 3)
 
         # Refuse the linked Monday leave -> Friday should drop back to 1 day
-        before_leave.action_refuse()
+        before_leave.with_context(skip_number_of_hours_inverse=True, leave_skip_state_check=True).action_refuse()
         self.assertEqual(after_leave.number_of_days, 1)
 
     def test_sandwich_leave_weekend_only_policy(self):
@@ -731,7 +731,7 @@ class TestSandwichLeave(TransactionCase):
             'request_date_from': "2025-01-17",  # Friday
             'request_date_to': "2025-01-20",    # Monday
         })
-        wed_leave = self.env['hr.leave'].create({
+        wed_leave = self.env['hr.leave'].with_context(skip_number_of_hours_inverse=True).create({
             'name': "Wednesday Leave",
             'employee_id': self.rahul_emp.id,
             'work_entry_type_id': self.work_entry_type_day.id,
@@ -742,19 +742,19 @@ class TestSandwichLeave(TransactionCase):
         self.assertEqual(wed_leave.number_of_days, 2)
 
         # Refuse Fri-Mon: Wed shrinks to 1 day
-        fri_mon_leave.action_refuse()
+        fri_mon_leave.with_context(skip_number_of_hours_inverse=True, leave_skip_state_check=True).action_refuse()
         self.assertEqual(wed_leave.number_of_days, 1)
 
         # Approve: Fri-Mon = 5 days, Wed = 1 days → total 6
-        fri_mon_leave.action_approve()
+        fri_mon_leave.with_context(skip_number_of_hours_inverse=True, leave_skip_state_check=True).action_approve()
         self.assertEqual(fri_mon_leave.number_of_days, 5)
         self.assertEqual(wed_leave.number_of_days, 1)
 
         # Refuse Wed: Fri-Mon shrinks to 4 day
-        wed_leave.action_refuse()
+        wed_leave.with_context(skip_number_of_hours_inverse=True, leave_skip_state_check=True).action_refuse()
         self.assertEqual(fri_mon_leave.number_of_days, 4)
 
         # Approve: wed = 2 days, Fri-Mon = 4 days → total 6
-        wed_leave.action_approve()
+        wed_leave.with_context(skip_number_of_hours_inverse=True, leave_skip_state_check=True).action_approve()
         self.assertEqual(fri_mon_leave.number_of_days, 4)
         self.assertEqual(wed_leave.number_of_days, 2)

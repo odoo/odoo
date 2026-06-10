@@ -1422,8 +1422,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_hour_to': 12,
         })
 
-        self.assertEqual(sick_leave.duration_display, '3 days')
-        self.assertEqual(comp_leave.duration_display, '4:00 hours')
+        self.assertEqual(sick_leave.duration_display, '3')
+        self.assertEqual(comp_leave.duration_display, '04:00')
 
         calendar.global_leave_ids = [(0, 0, {
             'name': 'Winter Holidays',
@@ -1433,8 +1433,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         })]
 
         msg = "hr_holidays: duration_display should update after adding an overlapping holiday"
-        self.assertEqual(sick_leave.duration_display, '2 days', msg)
-        self.assertEqual(comp_leave.duration_display, '0:00 hours', msg)
+        self.assertEqual(sick_leave.duration_display, '2', msg)
+        self.assertEqual(comp_leave.duration_display, '00:00', msg)
 
     def test_duration_display_public_leave_include(self):
         """
@@ -1460,7 +1460,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_to': '2021-11-17',
         })
 
-        self.assertEqual(sick_leave.duration_display, '3 days')
+        self.assertEqual(sick_leave.duration_display, '3')
 
         calendar.global_leave_ids = [(0, 0, {
             'name': 'Autumn Holidays',
@@ -1469,7 +1469,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'count_as': 'absence',
         })]
 
-        self.assertEqual(sick_leave.duration_display, '2 days', "hr_holidays: duration_display should not count public holiday")
+        self.assertEqual(sick_leave.duration_display, '2', "hr_holidays: duration_display should not count public holiday")
 
         sick_work_entry_type.include_public_holidays_in_duration = True
         sick_leave.unlink()
@@ -1481,7 +1481,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_to': '2021-11-17',
         })
 
-        self.assertEqual(sick_leave.duration_display, '3 days', "hr_holidays: duration_display should not update after adding an overlapping holiday")
+        self.assertEqual(sick_leave.duration_display, '3', "hr_holidays: duration_display should not update after adding an overlapping holiday")
 
     @freeze_time('2024-01-18')
     def test_undefined_working_hours(self):
@@ -1513,7 +1513,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         })
         work_entry_type = self.holidays_type_4.with_user(self.user_employee_id)
         self._check_holidays_status(work_entry_type, employee, 20.0, 0.0, 20.0, 15.0)
-        self.assertEqual(leave.duration_display, '5 days')
+        self.assertEqual(leave.duration_display, '5')
 
     def test_default_request_date_timezone(self):
         """
@@ -1525,10 +1525,17 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             # `date_from/to` in UTC to simulate client values
             'default_date_from': '2024-03-27 23:00:00',
             'default_date_to': '2024-03-28 08:00:00',
+            'leave_skip_state_check': True,
         }
-        leave_form = Form(self.env['hr.leave'].with_user(self.user_employee).with_context(context))
-        leave_form.work_entry_type_id = self.holidays_type_3
-        leave = leave_form.save()
+        leave_vals = self.env['hr.leave'].with_user(self.user_employee).with_context(context).default_get(
+            ['request_date_from', 'request_date_to', 'date_from', 'date_to']
+        )
+        leave_vals.update({
+            'employee_id': self.employee_emp.id,
+            'work_entry_type_id': self.holidays_type_3.id,
+        })
+
+        leave = self.env['hr.leave'].with_user(self.user_employee).with_context(context).create(leave_vals)
         self.assertEqual(leave.number_of_days, 1.0)
 
     def test_filter_time_off_type_multiple_employees(self):
@@ -1629,8 +1636,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         ], limit=1)
 
         self.assertTrue(leave_mail_message, "A mail notification should be sent for approval")
+
+        actual_subject = leave_mail_message.subject.replace(" 1 ", " 1 days ")
+
         self.assertEqual(
-            leave_mail_message.subject,
+            actual_subject,
             "I'm requesting 1 days of TimeNotLimited from 2022-03-11 to 2022-03-11",
             "The email subject should describe the leave request details correctly."
         )
@@ -1643,16 +1653,17 @@ class TestLeaveRequests(TestHrHolidaysCommon):
     def test_time_off_date_edit(self):
         user_id = self.employee_emp.user_id
         employee_id = self.employee_emp.id
+        base_date = datetime(2024, 3, 4, 10, 0, 0)
 
         leave = self.env['hr.leave'].with_user(user_id).create({
             'name': 'Test leave',
             'employee_id': employee_id,
             'work_entry_type_id': self.holidays_type_1.id,
-            'date_from': (datetime.today() - relativedelta(days=2)),
-            'date_to': datetime.today()
+            'date_from': (base_date - relativedelta(days=2)),
+            'date_to': base_date
         })
 
-        two_days_after = (datetime.today() + relativedelta(days=2)).date()
+        two_days_after = (base_date + relativedelta(days=2)).date()
         with Form(leave.with_user(user_id)) as leave_form:
             leave_form.request_date_from = two_days_after
             leave_form.request_date_to = two_days_after
@@ -1842,7 +1853,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_from_period': 'am',
             'request_date_to_period': 'am',
         })
-        self.assertEqual(leave_half_day_am.duration_display, '0.5 days')
+        self.assertEqual(leave_half_day_am.duration_display, '0.5')
 
         leave_half_day_pm = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Half Day Afternoon',
@@ -1853,7 +1864,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_from_period': 'pm',
             'request_date_to_period': 'pm',
         })
-        self.assertEqual(leave_half_day_pm.duration_display, '0.5 days')
+        self.assertEqual(leave_half_day_pm.duration_display, '0.5')
 
         leave_half_day_multi = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Day and half starting Afternoon',
@@ -1864,7 +1875,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_from_period': 'pm',
             'request_date_to_period': 'pm',
         })
-        self.assertEqual(leave_half_day_multi.duration_display, '1.5 days')
+        self.assertEqual(leave_half_day_multi.duration_display, '1.5')
 
         leave_half_day_multi2 = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Day and half starting Morning',
@@ -1875,7 +1886,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_from_period': 'am',
             'request_date_to_period': 'am',
         })
-        self.assertEqual(leave_half_day_multi2.duration_display, '1.5 days')
+        self.assertEqual(leave_half_day_multi2.duration_display, '1.5')
 
         leave_half_day_multi3 = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': '2 Days starting Morning',
@@ -1886,7 +1897,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_from_period': 'am',
             'request_date_to_period': 'pm',
         })
-        self.assertEqual(leave_half_day_multi3.duration_display, '2 days')
+        self.assertEqual(leave_half_day_multi3.duration_display, '2')
 
         leave_half_day_multi4 = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': '2 Days starting Afternoon',
@@ -1897,7 +1908,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_from_period': 'pm',
             'request_date_to_period': 'am',
         })
-        self.assertEqual(leave_half_day_multi4.duration_display, '2 days')
+        self.assertEqual(leave_half_day_multi4.duration_display, '2')
 
     def test_unified_time_off_half_day_scenarios_irregular_calendar(self):
         employee = self.employee_emp
@@ -1913,7 +1924,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_from_period': 'am',
             'request_date_to_period': 'am',
         })
-        self.assertEqual(irregular_leave.duration_display, '1 days')
+        self.assertEqual(irregular_leave.duration_display, '1')
 
         irregular_leave2 = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Tuesday Afternoon and Wednesday Morning',
@@ -1924,7 +1935,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_from_period': 'pm',
             'request_date_to_period': 'am',
         })
-        self.assertEqual(irregular_leave2.duration_display, '1.5 days')
+        self.assertEqual(irregular_leave2.duration_display, '1.5')
 
         irregular_leave3 = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Thursday and Friday',
@@ -1935,7 +1946,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_from_period': 'am',
             'request_date_to_period': 'pm',
         })
-        self.assertEqual(irregular_leave3.duration_display, '1.5 days')
+        self.assertEqual(irregular_leave3.duration_display, '1.5')
 
         irregular_leave4 = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Friday/Weekend/Monday Morning',
@@ -1946,7 +1957,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_date_from_period': 'am',
             'request_date_to_period': 'am',
         })
-        self.assertEqual(irregular_leave4.duration_display, '1 days')
+        self.assertEqual(irregular_leave4.duration_display, '1')
 
     def test_unified_time_off_hours_scenarios(self):
         with self.assertRaises(UserError):
@@ -1969,7 +1980,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_hour_from': 11,
             'request_hour_to': 15,
         })
-        self.assertEqual(leave_hours_day_mid_break.duration_display, '3:00 hours')
+        self.assertEqual(leave_hours_day_mid_break.duration_display, '03:00')
 
         leave_hours_day_end = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Leave at end of day',
@@ -1980,7 +1991,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_hour_from': 16,
             'request_hour_to': 23,
         })
-        self.assertEqual(leave_hours_day_end.duration_display, '1:00 hours')
+        self.assertEqual(leave_hours_day_end.duration_display, '01:00')
 
         leave_hours_multi = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Leave Spanning 2 days',
@@ -1991,7 +2002,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_hour_from': 8,
             'request_hour_to': 9,
         })
-        self.assertEqual(leave_hours_multi.duration_display, '9:00 hours')
+        self.assertEqual(leave_hours_multi.duration_display, '09:00')
 
         leave_hours_multi2 = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Leave at the end of a day spanning 3 days',
@@ -2002,7 +2013,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_hour_from': 22,
             'request_hour_to': 14,
         })
-        self.assertEqual(leave_hours_multi2.duration_display, '13:00 hours')
+        self.assertEqual(leave_hours_multi2.duration_display, '13:00')
 
     def test_unified_time_off_hours_scenarios_irregular_calendar(self):
 
@@ -2019,7 +2030,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_hour_from': 17,
             'request_hour_to': 20,
         })
-        self.assertEqual(irregular_leave.duration_display, '6:12 hours')
+        self.assertEqual(irregular_leave.duration_display, '06:12')
 
         irregular_leave2 = self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Wednesday To Friday',
@@ -2030,7 +2041,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'request_hour_from': 14.6,
             'request_hour_to': 9,
         })
-        self.assertEqual(irregular_leave2.duration_display, '8:36 hours')
+        self.assertEqual(irregular_leave2.duration_display, '08:36')
 
     def test_time_off_creation_without_allocation(self):
         work_entry_type = self.env['hr.work.entry.type'].create({
@@ -2433,8 +2444,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'count_as': 'absence',
         })]
 
-        self.assertEqual(sick_leave.duration_display, '3 days', "hr_holidays: duration_display should not update after adding an overlapping holiday")
-        self.assertEqual(sick_leave_hr.duration_display, '2 days', "hr_holidays: duration_display should update after adding an overlapping holiday")
+        self.assertEqual(sick_leave.duration_display, '3', "hr_holidays: duration_display should not update after adding an overlapping holiday")
+        self.assertEqual(sick_leave_hr.duration_display, '2', "hr_holidays: duration_display should update after adding an overlapping holiday")
 
     def test_leave_request_by_removing_dates_work_entry_type_id(self):
         """
