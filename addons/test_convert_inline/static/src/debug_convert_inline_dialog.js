@@ -1,7 +1,7 @@
 import { DIMENSIONS, useEmailHtmlConverter } from "@mail/convert_inline/hooks";
 import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils";
-import { useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted } from "@odoo/owl";
+import { useRef } from "@web/owl2/utils";
+import { Component, onMounted, proxy } from "@odoo/owl";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
@@ -21,7 +21,7 @@ export class DebugConvertInlineDialog extends Component {
 
     setup() {
         this.outputIframeRef = useRef("outputIframe");
-        this.state = useState({
+        this.state = proxy({
             isMobile: false,
             height: DESKTOP.height,
             width: DESKTOP.width,
