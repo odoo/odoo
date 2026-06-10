@@ -23,18 +23,9 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { Message } from "@mail/core/common/message";
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
 import { describe, expect, test } from "@odoo/hoot";
-import {
-    animationFrame,
-    leave,
-    pointerDown,
-    press,
-    queryFirst,
-    rightClick,
-    waitFor,
-} from "@odoo/hoot-dom";
+import { animationFrame, leave, pointerDown, press, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { advanceTime, mockDate, mockTouch, mockUserAgent, tick } from "@odoo/hoot-mock";
 import {
     contains as webContains,
@@ -770,7 +761,7 @@ test("Other messages are grayed out when replying to another one", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message", { count: 2 });
-    await rightClick(".o-mail-Message", {
+    await click(".o-mail-Message button[title='Expand']", {
         parent: [".o-mail-Message:has(:text('Hello world'))"],
     });
     await click(".o-dropdown-item:contains('Reply')");
@@ -797,7 +788,7 @@ test("Parent message body is displayed on replies", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
-    await rightClick(".o-mail-Message");
+    await click(".o-mail-Message button[title='Expand']");
     await click(".o-dropdown-item:contains('Reply')");
     await insertText(".o-mail-Composer-input", "FooBarFoo");
     await press("Enter");
@@ -1212,7 +1203,7 @@ test("add message to bookmark", async () => {
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
-    await rightClick(".o-mail-Message");
+    await click(".o-mail-Message [title='Expand']");
     await contains(".o-dropdown-item:text('Bookmark')");
     await contains(".o-dropdown-item:text('Bookmark') i.fa-bookmark-o");
     await contains("button:has(:text('Bookmarks'))", { contains: [".badge", { count: 0 }] });
@@ -1236,16 +1227,13 @@ test("remove message from bookmarks", async () => {
     await openDiscuss(channelId);
     await contains("button:has(:text('Bookmarks'))", { contains: [".badge:text('1')"] });
     await contains(".o-mail-Message [title='Bookmarked']");
-    await rightClick(".o-mail-Message");
-    await contains(".o-mail-Message[data-right-clicking]");
+    await click(".o-mail-Message [title='Expand']");
     await contains(".o-dropdown-item:text('Remove from Bookmarks') i.fa-bookmark");
     await click(".o-dropdown-item:text('Remove from Bookmarks')");
     await contains("button:has(:text('Bookmarks'))", { contains: [".badge", { count: 0 }] });
     await waitStoreFetch([["remove_bookmark", { message_id: messageId }]]);
     await contains(".o-mail-Message:not(:has([title='Bookmarked']))");
-    await contains(".o-mail-Message:not([data-right-clicking])");
-    await rightClick(".o-mail-Message");
-    await contains(".o-mail-Message[data-right-clicking]");
+    await click(".o-mail-Message [title='Expand']");
     await contains(".o-dropdown-item:text('Bookmark') i.fa-bookmark-o");
 });
 
@@ -1607,7 +1595,7 @@ test("Toggle bookmark should update bookmark counter on all tabs", async () => {
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(undefined, { target: env2 });
     await contains(`${env1.selector} .o-mail-Message`);
-    await rightClick(`${env1.selector} .o-mail-Message`);
+    await click(`${env1.selector} .o-mail-Message [title='Expand']`);
     await click(`.o-dropdown-item:contains('Bookmark')`);
     await contains(`${env2.selector} button:has(:text('Bookmarks'))`, {
         contains: [".badge:text('1')"],
@@ -2224,7 +2212,7 @@ test("Click on view reactions shows the reactions on the message", async () => {
     await contains(".o-mail-MessageReactionMenu", { count: 0 });
 });
 
-test("Click on view reactions from right-click on message shows the reactions", async () => {
+test("Click on view reactions from message actions shows the reactions", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
@@ -2245,7 +2233,7 @@ test("Click on view reactions from right-click on message shows the reactions", 
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
-    await rightClick(".o-mail-Message");
+    await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:contains('View Reactions')");
     await contains(".o-mail-MessageReactionMenu:has(:text('😅 1'))");
 });
@@ -2541,38 +2529,6 @@ test("Prevent adding reactions on messages without a mail thread", async () => {
     await contains("[title='Add a Reaction']");
     await contains(".o-mail-Message:eq(0) [title='Add a Reaction']");
     await contains(".o-mail-Message:eq(1):not(:has([title='Add a Reaction']))");
-});
-
-test("context menu should not open on right-click when editing a message", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "Barbie" });
-    pyEnv["mail.message"].create({
-        body: "Batman",
-        message_type: "comment",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    patchWithCleanup(Message.prototype, {
-        onContextMenu() {
-            expect.step("Message.onContextMenu");
-            super.onContextMenu(...arguments);
-        },
-        showRightClickMessageActions() {
-            expect.step("Message.showRightClickMessageActions");
-            super.showRightClickMessageActions(...arguments);
-        },
-    });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-Message");
-    await rightClick(".o-mail-Message");
-    await expect.waitForSteps(["Message.onContextMenu", "Message.showRightClickMessageActions"]);
-    await click(".o-dropdown-item:contains('Edit')");
-    await contains(".o-mail-Message.o-editing .o-mail-Composer-input", { value: "Batman" });
-    await rightClick(".o-mail-Message");
-    await expect.waitForSteps(["Message.onContextMenu"]);
-    await animationFrame();
-    expect.verifySteps([]);
 });
 
 test.tags("html composer");

@@ -3,7 +3,7 @@ import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
 import { Record } from "@mail/model/export";
-import { useChildRefs, useMessageSelection, useVisible } from "@mail/utils/common/hooks";
+import { useChildRefs, useVisible } from "@mail/utils/common/hooks";
 
 import {
     Component,
@@ -68,7 +68,6 @@ export class Thread extends Component {
         this.applyScroll = this.applyScroll.bind(this);
         this.saveScroll = this.saveScroll.bind(this);
         this.onScroll = this.onScroll.bind(this);
-        this.onWheel = this.onWheel.bind(this);
         this.messageRefs = useChildRefs();
         useEffect(() => {
             this.messageRefs.size; // trigger effect only when messageRefs changes
@@ -142,7 +141,6 @@ export class Thread extends Component {
             },
             { ready: false }
         );
-        this.messageSelection = useMessageSelection();
         this.presentThresholdState = useVisible("present-treshold", () =>
             this.updateShowJumpPresent()
         );
@@ -380,12 +378,10 @@ export class Thread extends Component {
             (el, mountedAndLoaded) => {
                 if (el && mountedAndLoaded) {
                     el.addEventListener("scroll", this.onScroll);
-                    el.addEventListener("wheel", this.onWheel);
                     observer.observe(el);
                     return () => {
                         observer.unobserve(el);
                         el.removeEventListener("scroll", this.onScroll);
-                        el.removeEventListener("wheel", this.onWheel);
                     };
                 }
             },
@@ -625,13 +621,6 @@ export class Thread extends Component {
                   this.scrollableRef.el.clientHeight <
                   30
             : this.scrollableRef.el.scrollTop < 30;
-    }
-
-    onWheel(ev) {
-        if (this.messageSelection.size) {
-            ev.stopPropagation();
-            ev.preventDefault();
-        }
     }
 
     shouldMarkAsReadOnScroll(thread) {

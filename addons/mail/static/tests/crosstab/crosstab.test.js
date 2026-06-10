@@ -9,7 +9,7 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, setInputFiles, test } from "@odoo/hoot";
-import { press, rightClick } from "@odoo/hoot-dom";
+import { press } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
 import { getService, mockService, serverState } from "@web/../tests/web_test_helpers";
@@ -180,7 +180,7 @@ test("Message (hard) delete notification", async () => {
     await start();
     await openDiscuss("mail.box_inbox");
     await contains(".o-mail-Message");
-    await rightClick(".o-mail-Message");
+    await click(".o-mail-Message button[title='Expand']");
     await click(".o-dropdown-item:contains('Bookmark')");
     await contains("button:has(:text('Inbox'))", { contains: [".badge:text('1')"] });
     await contains("button:has(:text('Bookmarks'))", { contains: [".badge:text('1')"] });

@@ -38,14 +38,12 @@ registerMessageAction("reaction", {
         action: messageActionsRegistry.get("reaction"),
         messageActive: owner.isActive(),
     }),
-    componentCondition: ({ owner }) => !isMobileOS() && !owner.isMessageContextMenu,
+    componentCondition: () => !isMobileOS(),
     condition: ({ message, thread }) => message.canAddReaction(thread),
     icon: "oi oi-smile-add",
     name: _t("Add a Reaction"),
     onSelected({ owner }) {
-        const anchorEl = owner.isMessageContextMenu
-            ? owner.anchor.el
-            : owner.rootRef?.()?.querySelector(`[name="${this.id}"]`);
+        const anchorEl = owner.rootRef?.()?.querySelector(`[name="${this.id}"]`);
         return owner.reactionPicker.open({ el: anchorEl });
     },
     setup: ({ message, owner, thread }) =>

@@ -18,7 +18,7 @@ import { toRawValue } from "@mail/utils/common/local_storage";
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { describe, expect, test, waitFor } from "@odoo/hoot";
-import { animationFrame, drag, press, queryFirst, rightClick } from "@odoo/hoot-dom";
+import { animationFrame, drag, press, queryFirst } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 import { Command, getService, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
@@ -1176,7 +1176,7 @@ test("Redirect to the thread containing the bookmark and highlight the message",
     await openDiscuss("mail.box_inbox");
     await click(".o-mail-DiscussSidebarChannel-itemName:text('General')");
     await contains(".o-mail-Message");
-    await rightClick(".o-mail-Message");
+    await click(".o-mail-Message button[title='Expand']");
     await click(".o-dropdown-item:contains('Bookmark')");
     await click("button:has(:text('Bookmarks'))", { contains: [".badge"] });
     await click(".o-mail-Message-header a:text('#General')");
