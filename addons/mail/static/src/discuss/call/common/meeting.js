@@ -47,13 +47,10 @@ export class Meeting extends Component {
         this.ui = useService("ui");
         this.rtc = useService("discuss.rtc");
         this.datetimeNow = signal(DateTime.now());
-        useDynamicInterval(
-            () => {
-                this.datetimeNow.set(DateTime.now());
-                return 60_000 - (Date.now() % 60_000);
-            },
-            () => []
-        );
+        useDynamicInterval(() => {
+            this.datetimeNow.set(DateTime.now());
+            return 60_000 - (Date.now() % 60_000);
+        });
         useInDiscussCallView();
         useSubEnv({
             inMeetingView: {

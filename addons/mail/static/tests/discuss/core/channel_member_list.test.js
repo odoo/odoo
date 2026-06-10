@@ -158,9 +158,7 @@ test("Avatar card shows local timezone", async () => {
     await contains(".o-discuss-ChannelMemberList");
     // Case 1: correspondent tz !== self tz
     await click(".o-discuss-ChannelMember:has(:text('Demo'))");
-    changeTzResolver = Promise.withResolvers();
     await waitStoreFetch(["avatar_card"]);
-    await changeTzResolver.promise;
     await animationFrame();
     await contains(".o-mail-avatar-card-name:text('Demo')");
     await contains(".o-mail-avatar-card-localtime:contains('17:30 local time')");

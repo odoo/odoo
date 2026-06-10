@@ -1,6 +1,5 @@
-import { effect, immediateEffect, proxy, untrack } from "@odoo/owl";
+import { effect, immediateEffect, proxy, untrack, useEffect } from "@odoo/owl";
 
-import { useLayoutEffect } from "@web/owl2/utils";
 import { AssetsLoadingError, getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
 
@@ -249,25 +248,24 @@ export const hasHardwareAcceleration = memoize(() => {
  * A hook that repeatedly calls a function with dynamically computed
  * intervals.
  *
- * @template D type of dependencies
- * @param {(...dependencies: D) => Number|void} fn A callback that is
- * invoked initially, after dependencies change (if the dependencies are
- * wrapped in `proxy` or otherwise triggers a re-render) or when the
- * delay has passed. Returning a falsy value cancels the interval.
- * @param {() => D} dependencies Returns an array of dependencies.
+ * @param {() => number|void} fn A callback that is invoked initially, after
+ * signals, proxies, or computed values read during the callback change, or
+ * when the delay has passed. Returning a falsy value cancels the interval.
+ * Avoid reading reactive values that the callback itself writes unless they
+ * are intended dependencies.
  */
-export function useDynamicInterval(fn, dependencies) {
-    useLayoutEffect((...dependencies) => {
+export function useDynamicInterval(fn) {
+    useEffect(() => {
         let timer;
         function tick() {
-            const nextDelay = fn(...dependencies);
+            const nextDelay = fn();
             if (nextDelay) {
                 timer = setTimeout(tick, Math.ceil(nextDelay));
             }
         }
         tick();
         return () => clearTimeout(timer);
-    }, dependencies);
+    });
 }
 
 /**
