@@ -5,7 +5,7 @@ import { DIMENSIONS } from "../hooks";
 import { CellLayout, EmptyCellLayout, RowLayout, TableLayout } from "./table_models";
 import { Analysis, EmailNode } from "../core/render_models";
 
-const { DESKTOP, MOBILE, ZOOM_WIDTH_CORRECTION } = DIMENSIONS;
+const { DESKTOP, MOBILE } = DIMENSIONS;
 
 const VERTICAL_ALIGN = {
     start: "top",
@@ -19,10 +19,9 @@ const VERTICAL_ALIGN = {
  */
 export class TableStrategyPlugin extends Plugin {
     static id = "tableStrategy";
-    static dependencies = ["math", "responsiveBlock", "referenceNode"];
+    static dependencies = ["math", "measurementSnapshot", "responsiveBlock", "referenceNode"];
     static shared = ["extractRowsFromBands", "fillTableContainer"];
     resources = {
-        apply_layout_strategy_overrides: this.applyLayoutStrategy.bind(this),
         element_layout_analysis_processors: this.analyzeElementLayout.bind(this),
         synthetic_email_node_processors: (emailNode) => {
             if (!emailNode.analysis.facts.isTableContainer) {

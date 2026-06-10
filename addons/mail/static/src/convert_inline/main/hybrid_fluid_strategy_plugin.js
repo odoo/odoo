@@ -14,7 +14,14 @@ import {
 import { parseCssValue } from "../css_parsers";
 import { isAllowedContent } from "@html_editor/utils/dom_info";
 
-const { DESKTOP, MOBILE, ZOOM_WIDTH_CORRECTION } = DIMENSIONS;
+const { DESKTOP, MOBILE } = DIMENSIONS;
+
+// When multiple sized elements are displayed horizontally, the user zoom
+// may introduce rounding errors. This correction must be subtracted from
+// the width (px) of one element to accommodate for the error.
+// Prevent the last inline-block element from wrapping to the next line due
+// to window zoom px rounding in some cases.
+const ZOOM_WIDTH_CORRECTION = 0.1;
 
 /**
  * TODO EGGMAIL NOW:

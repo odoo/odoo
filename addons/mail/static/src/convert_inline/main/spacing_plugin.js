@@ -123,9 +123,10 @@ export class SpacingPlugin extends Plugin {
     applyDefaultSpacing(layout, { emailNode }) {
         if (
             layout.constructor !== ElementLayout ||
-            // Only "default" ElementLayout get their "default" spacing.
-            // Custom ones must handle spacing specifically.
-            (layout.pluginIds.size === 1 && layout.pluginIds.has(RenderPlugin.id)) ||
+            // TODO EGGMAIL: investigate cases where an element uses a
+            // LayoutModel and don't get its natural spacing. The following condition
+            // is incorrect as hybrid fluid and table strategies use the default spacing.
+            // (layout.pluginIds.size === 1 && layout.pluginIds.has(RenderPlugin.id)) ||
             !emailNode.analysis.facts.desktopBlock ||
             paragraphRelatedElements.includes(layout.tag)
         ) {
