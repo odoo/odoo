@@ -209,4 +209,20 @@ describe("inline code", () => {
             contentAfter: "<p>`````[]</p>",
         });
     });
+
+    test("should not trigger list shorthand inside a code block", async () => {
+        await testEditor({
+            contentBefore: "<pre>[]<br></pre>",
+            stepFunction: async (editor) => await insertText(editor, "* "),
+            contentAfter: "<pre>* []<br></pre>",
+        });
+    });
+
+    test("should not trigger heading shorthand inside a code block", async () => {
+        await testEditor({
+            contentBefore: "<pre>[]<br></pre>",
+            stepFunction: async (editor) => await insertText(editor, "# "),
+            contentAfter: "<pre># []<br></pre>",
+        });
+    });
 });
