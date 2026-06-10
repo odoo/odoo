@@ -373,16 +373,13 @@ class Website(models.Model):
         category_settings = {}
         views_to_disable = []
         views_to_enable = []
-        scss_customization_params = {}
         ThemeUtils = self.env["theme.utils"].with_context(website_id=website.id)
-        Assets = self.env["website.assets"]
 
         def parse_style_config(style_config_):
             website_settings.update(style_config_["website_fields"])
             category_settings.update(style_config_.get("category_fields", {}))
             views_to_disable.extend(style_config_["views"]["disable"])
             views_to_enable.extend(style_config_["views"]["enable"])
-            scss_customization_params.update(style_config_.get("scss_customization_params", {}))
 
         # Extract shop page settings.
         if shop_page_style_option:
@@ -441,39 +438,8 @@ class Website(models.Model):
                     footer_updated = True
                     footer_div_node[0].set("class", "o_container_small s_allow_columns")
 
-                if footer_id == "website_sale.template_footer_website_sale":
-                    ecommerce_categories_node = arch_tree.xpath(
-                        "//t[@t-set='ecommerce_categories']"
-                    )
-                    if not ecommerce_categories_node:
-                        logger.warning(
-                            "Skipping ecommerce categories in ecommerce footer view %s", footer_id
-                        )
-                    else:
-                        # Logic for inserting eCommerce categories in footer
-                        ecommerce_categories = self.env["product.public.category"].search(
-                            [], limit=6
-                        )
-                        # Deliberately hardcode categories inside the view arch, it will be
-                        # transformed into static nodes after a save/edit thanks to the t-ignore
-                        # in parent node.
-                        footer_updated = True
-                        ecommerce_categories_node[0].attrib["t-value"] = json.dumps([
-                            {"name": cat.name, "id": cat.id} for cat in ecommerce_categories
-                        ])
-
                 if footer_updated:
                     footer_view.write({"arch": etree.tostring(arch_tree)})
-
-        if "website_sale.template_footer_website_sale" in views_to_enable:
-            scss_customization_params["footer-template"] = "website_sale"
-
-        # For a website editor to recognize the correct header/footer templates
-        # (reason `isApplied` method of footer plugin)
-        if scss_customization_params:
-            Assets.make_scss_customization(
-                "/website/static/src/scss/options/user_values.scss", scss_customization_params
-            )
 
         return res
 
