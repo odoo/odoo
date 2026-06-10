@@ -553,3 +553,24 @@ class TestPackingDelivery(TestPackingCommon):
         return_picking.button_validate()
         self.test_carrier.can_generate_return = True
         self.assertFalse(return_picking.is_return_picking)
+
+    def test_order_package_split_preserves_totals(self):
+        """Splitting an order by weight keeps the manifest quantity and declared value."""
+        package_type = self.env['stock.package.type'].create({
+            'name': 'Box 5kg',
+            'max_weight': 5.0,
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
+            'order_line': [Command.create({
+                'product_id': self.product_aw.id,  # 2.4 kg each, so two packages
+                'product_uom_qty': 3,
+                'price_unit': 120.0,
+            })],
+        })
+        packages = self.test_carrier._get_packages_from_order(so, package_type)
+        commodities = [c for p in packages for c in p.commodities]
+        unit_value = so.order_line.price_reduce_taxinc
+        self.assertEqual(len(packages), 2)
+        self.assertEqual(sum(c.qty for c in commodities), 3)
+        self.assertEqual({c.monetary_value for c in commodities}, {unit_value})
