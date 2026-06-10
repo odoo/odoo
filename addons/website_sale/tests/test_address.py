@@ -216,10 +216,10 @@ class TestCheckoutAddress(WebsiteSaleCommon):
         })
 
         with self.mock_request(sale_order_id=so.id):
-            self.WebsiteSaleController.pricelist("EUR_test")
+            self.WebsiteSaleController.pricelist_apply("EUR_test")
             self.assertEqual(so.pricelist_id, eur_pl, "Ensure EUR_test is applied")
 
-            self.WebsiteSaleController.pricelist("")
+            self.WebsiteSaleController.pricelist_apply("")
             self.assertNotEqual(
                 so.pricelist_id, eur_pl, "Pricelist should be removed when sending an empty pl code"
             )

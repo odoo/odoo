@@ -3,7 +3,6 @@ import { formatCurrency } from "@web/core/currency";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { useService, useBus } from "@web/core/utils/hooks";
-import { useRef } from "@web/owl2/utils";
 
 export class CartTotal extends Component {
     static template = "website_sale.CartTotal";
@@ -16,9 +15,12 @@ export class CartTotal extends Component {
     setup() {
         this.state = useState({
             totals: {},
-            errorMessage: "",
+            notification: {
+                success: false,
+                message: "",
+            },
+            promoCode: "",
         });
-        this.promoInput = useRef("promoInput");
         this.promoInputPlaceholder = _t("Discount code...");
         this.cartService = useService("cart");
 
@@ -26,9 +28,11 @@ export class CartTotal extends Component {
             await this.updateTotals();
         });
 
-        useBus(this.cartService.bus, "cart_update", () => {
+        useBus(this.cartService.bus, "cart_update", (ev) => {
             this.updateTotals();
-            this.state.errorMessage = "";
+            if (!ev.detail?.keepAlerts) {
+                this.state.notification = {};
+            }
         });
     }
 
@@ -38,15 +42,19 @@ export class CartTotal extends Component {
         });
     }
 
+    updatePromoCode(value) {
+        this.state.promoCode = value;
+    }
+
     async applyPromoCode() {
         const data = await rpc("/shop/pricelist/apply", {
-            promo: this.promoInput.el.value,
+            promo: this.state.promoCode,
         });
 
-        if (!data.success) {
-            this.state.errorMessage = data.message;
-        } else {
-            this.cartService.bus.trigger("cart_update");
+        this.state.notification = data;
+
+        if (data.success) {
+            this.cartService.bus.trigger("cart_update", { keepAlerts: true });
         }
     }
 

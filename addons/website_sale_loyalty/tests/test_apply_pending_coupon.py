@@ -55,7 +55,7 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
                 quantity=2,
             )
             order = request.cart
-            self.WebsiteSaleController.pricelist(self.global_program.rule_ids.code)
+            self.WebsiteSaleController.pricelist_apply(self.global_program.rule_ids.code)
             self.assertEqual(
                 order.amount_total, 576, "The order total should equal 576: 2*320 - 10% discount "
             )
@@ -92,7 +92,7 @@ class TestSaleCouponApplyPending(TestSaleCouponNumbersCommon, WebsiteSaleCommon)
                 quantity=1,
             )
             order = request.cart
-            self.WebsiteSaleController.pricelist(self.global_program.rule_ids.code)
+            self.WebsiteSaleController.pricelist_apply(self.global_program.rule_ids.code)
             self.assertEqual(self.largeCabinet.lst_price, 320)
             cabinet_sol = order.order_line.filtered(lambda sol: sol.product_id == self.largeCabinet)
             promo_sol = order.order_line - cabinet_sol

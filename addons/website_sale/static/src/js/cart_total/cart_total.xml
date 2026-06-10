@@ -71,6 +71,19 @@
             />
             <!-- promo button -->
             <t t-if="!this.props.hidePromotions" t-call="website_sale.ReductionCode"/>
+            <tbody>
+                <tr>
+                    <td colspan="3" class="text-end text-xl-end border-0 p-0">
+                        <div
+                            t-if="this.state.notification.message"
+                            t-out="this.state.notification.message"
+                            t-attf-class="alert-#{this.state.notification.success ? 'success' : 'danger'}"
+                            class="alert text-start mt-2 mb-0 py-2 w-100"
+                            role="alert"
+                        />
+                    </td>
+                </tr>
+            </tbody>
         </table>
     </t>
 
@@ -125,23 +138,18 @@
                             <input
                                 name="promo"
                                 type="text"
-                                t-custom-ref="promoInput"
+                                t-att-value="this.state.promoCode"
+                                t-on-input="(event) => this.updatePromoCode(event.target.value)"
                                 t-att-placeholder="this.promoInputPlaceholder"
                                 class="form-control"
                             />
                             <button
                                 t-out="this.props.templateData.applyPromoLabel"
+                                t-att-disabled="!this.state.promoCode"
                                 class="btn btn-light border"
                                 t-on-click="() => this.applyPromoCode()"
                             />
                         </div>
-
-                        <div
-                            t-if="this.state.errorMessage"
-                            t-out="this.state.errorMessage"
-                            class="alert alert-danger text-start mt-2 mb-0 py-2"
-                            role="alert"
-                        />
                     </div>
                 </td>
             </tr>

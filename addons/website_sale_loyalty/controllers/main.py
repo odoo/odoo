@@ -68,9 +68,8 @@ class WebsiteSale(main.WebsiteSale):
 
     @route("/shop/claimreward", type="http", auth="public", website=True, sitemap=False)
     def claim_reward(self, reward_id, code=None, **post):
-        redirect = post.get("r", "/shop/cart")
         if not (order_sudo := request.cart):
-            return request.redirect(redirect)
+            return {"success": False}
 
         try:
             reward_id = int(reward_id)
@@ -79,12 +78,12 @@ class WebsiteSale(main.WebsiteSale):
 
         reward_sudo = self.env["loyalty.reward"].sudo().browse(reward_id).exists()
         if not reward_sudo:
-            return request.redirect(redirect)
+            return {"success": False}
 
         if reward_sudo.multi_product and "product_id" in post:
             request.update_context(product_id=int(post["product_id"]))
         else:
-            request.redirect(redirect)
+            return {"success": False}
 
         program_sudo = reward_sudo.program_id
         claimable_rewards = order_sudo._get_claimable_and_showable_rewards()
@@ -103,10 +102,10 @@ class WebsiteSale(main.WebsiteSale):
                         and program_sudo.program_type not in ("ewallet", "loyalty")
                     )
                 ):
-                    return self.pricelist(code, reward_id=reward_id)
+                    return self.pricelist_apply(code, reward_id=reward_id)
         if coupon:
             self._apply_reward(order_sudo, reward_sudo, coupon)
-        return request.redirect(redirect)
+        return {"success": True}
 
     def _apply_reward(self, order, reward, coupon):
         """Try to apply the given program reward.

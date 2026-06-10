@@ -8,11 +8,6 @@
     >
         <div id="cart_totals" position="after">
             <span t-if="not hide_promotions" class="oe_website_sale_gift_card">
-                <t t-if="website_sale_order.get_promo_code_error(delete=False)">
-                    <div class="alert alert-danger text-start small" role="alert">
-                        <t t-out="website_sale_order.get_promo_code_error()"/>
-                    </div>
-                </t>
                 <t t-if="website_sale_order">
                     <t t-foreach="website_sale_order._get_claimable_and_showable_rewards().items()" t-as="coupon_reward">
                         <t t-set="coupon" t-value="coupon_reward[0]"/>

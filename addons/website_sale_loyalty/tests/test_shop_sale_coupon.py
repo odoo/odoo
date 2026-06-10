@@ -457,24 +457,25 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
         for __ in http.routing_map._generate_routing_rules(installed_modules, nodb_only=False):
             pass
 
-        with self.mock_request(path="/shop/cart", sale_order_id=order.id) as request:
+        with self.mock_request(path="/shop/cart", sale_order_id=order.id):
             # Check the base cart value
             self.assertEqual(order.amount_total, 100.0, "The base cart value is incorrect.")
 
             # Apply coupon for the first time
-            WebsiteSaleController.pricelist(promo=self.coupon.code)
+            WebsiteSaleController.pricelist_apply(promo=self.coupon.code)
 
             # Check that the coupon has been applied
             self.assertEqual(order.amount_total, 90.0, "The coupon is not applied.")
 
             # Apply the coupon again
-            WebsiteSaleController.pricelist(promo=self.coupon.code)
+            result = WebsiteSaleController.pricelist_apply(promo=self.coupon.code)
             Cart().cart()
-            error_msg = request.session.get("error_promo_code")
 
             # Check that the coupon stay applied
             self.assertEqual(
-                bool(error_msg), True, "Apply a coupon twice should display an error message"
+                bool(result.get("message", False)),
+                True,
+                "Apply a coupon twice should display an error message",
             )
             self.assertEqual(order.amount_total, 90.0, "Apply a coupon twice shouldn't delete it")
 

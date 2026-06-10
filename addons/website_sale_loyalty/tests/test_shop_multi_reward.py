@@ -108,7 +108,7 @@ class TestClaimReward(WebsiteSaleCommon):
         discount_reward = self.coupon_program.reward_ids.filtered("discount")
 
         with self.mock_request(user=self.user_portal, sale_order_id=cart.id):
-            self.WebsiteSaleController.pricelist(promo=self.coupon.code)
+            self.WebsiteSaleController.pricelist_apply(promo=self.coupon.code)
             self.assertFalse(cart.order_line.reward_id)
 
             self.WebsiteSaleController.claim_reward(discount_reward.id, code=self.coupon.code)
@@ -134,7 +134,7 @@ class TestClaimReward(WebsiteSaleCommon):
         multiproduct_reward = self.coupon_program.reward_ids.filtered("reward_product_tag_id")
 
         with self.mock_request(user=self.user_portal, sale_order_id=cart.id):
-            self.WebsiteSaleController.pricelist(promo=self.coupon.code)
+            self.WebsiteSaleController.pricelist_apply(promo=self.coupon.code)
             self.assertFalse(cart.order_line.reward_id)
 
             self.WebsiteSaleController.claim_reward(
