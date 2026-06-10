@@ -1,4 +1,5 @@
-import { reactive, useSubEnv } from "@web/owl2/utils";
+import { proxy } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { DashboardKanbanRecord } from "./account_dashboard_kanban_record";
 
@@ -13,7 +14,7 @@ export class DashboardKanbanRenderer extends KanbanRenderer {
     setup() {
         super.setup();
         useSubEnv({
-            dashboardState: reactive({isDragging: false}),
+            dashboardState: proxy({isDragging: false}),
             setDragging: this.setDragging.bind(this),
         });
     }

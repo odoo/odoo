@@ -1,4 +1,4 @@
-import { onRendered, reactive, useComponent, useRef } from "@web/owl2/utils";
+import { onRendered, useComponent, useRef } from "@web/owl2/utils";
 import { effect, onMounted, onPatched, onWillDestroy, toRaw, proxy } from "@odoo/owl";
 
 /**
@@ -348,7 +348,7 @@ export class StateChangeManager {
      */
     constructEmbeddedState(state) {
         this.state = state;
-        this.embeddedState = reactive(this.assignDeepProxyCopy({}, state));
+        this.embeddedState = proxy(this.assignDeepProxyCopy({}, state));
         this.embeddedStateProxy = new Proxy(
             this.embeddedState,
             embeddedStateProxyHandler(state, this)

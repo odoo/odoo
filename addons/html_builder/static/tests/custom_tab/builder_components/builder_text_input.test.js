@@ -1,4 +1,3 @@
-import { reactive } from "@web/owl2/utils";
 import {
     addBuilderAction,
     addBuilderOption,
@@ -53,7 +52,7 @@ test("hide/display base on applyTo", async () => {
 test("update default prop", async () => {
     const defaultValueA = "Default Value A";
     const defaultValueB = "Default Value B";
-    const state = reactive({ default: defaultValueA });
+    const state = proxy({ default: defaultValueA });
     addBuilderOption({
         selector: ".parent-target",
         Component: class extends BaseOptionComponent {

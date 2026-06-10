@@ -1,5 +1,4 @@
 import {
-    reactive,
     useComponent,
     useEnv,
     useLayoutEffect,
@@ -232,7 +231,7 @@ export function useSelectableComponent(id, { onItemChange } = {}) {
     const refreshCurrentItemDebounced = useDebounced(refreshCurrentItem, 0, { immediate: true });
     const env = useEnv();
 
-    const state = reactive({
+    const state = proxy({
         currentSelectedItem: null,
     });
 
