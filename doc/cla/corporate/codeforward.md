@@ -16,3 +16,4 @@ Chris Bergman chris.bergman@codeforward.nl https://github.com/chrisb-c01
 Joep Sanders joep.sanders@codeforward.nl https://github.com/joepsanders
 Lars Quaedvlieg lars.quaedvlieg@codeforward.nl https://github.com/Larsq1
 Sander Lienaerts sander.lienaerts@codeforward.nl https://github.com/sanderlienaerts
+Djody Kort djody.kort@codeforward.nl https://github.com/DjodyKort
