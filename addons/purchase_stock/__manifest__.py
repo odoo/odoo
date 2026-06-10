@@ -10,6 +10,7 @@
     'data': [
         'security/ir.model.access.csv',
         'data/purchase_stock_data.xml',
+        'data/purchase_tour.xml',
         'data/mail_templates.xml',
         'report/vendor_delay_report.xml',
         'views/purchase_views.xml',

@@ -4,4 +4,209 @@
         <field name="name">purchase_tour</field>
         <field name="sequence">40</field>
     </record>
+
+    <record id="purchase_tour_step_1" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">10</field>
+        <field name="is_active" eval='["community", "desktop"]'/>
+        <field name="trigger">.o_navbar_apps_menu button</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="purchase_tour_step_2" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">20</field>
+        <field name="is_active" eval='["community"]'/>
+        <field name="trigger">.o_app[data-menu-xmlid="purchase.menu_purchase_root"]</field>
+        <field name="content">Let's try the Purchase app to manage the flow from purchase to reception and invoice control.</field>
+        <field name="tooltip_position">right</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="purchase_tour_step_3" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">20</field>
+        <field name="is_active" eval='["enterprise"]'/>
+        <field name="trigger">.o_app[data-menu-xmlid="purchase.menu_purchase_root"]</field>
+        <field name="content">Let's try the Purchase app to manage the flow from purchase to reception and invoice control.</field>
+        <field name="tooltip_position">bottom</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="purchase_tour_step_4" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">30</field>
+        <field name="trigger">.o_purchase_order</field>
+    </record>
+
+    <record id="purchase_tour_step_5" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">40</field>
+        <field name="trigger">.o_list_button_add</field>
+        <field name="content">Let's create your first request for quotation.</field>
+        <field name="tooltip_position">bottom</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="purchase_tour_step_6" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">50</field>
+        <field name="trigger">.o_purchase_order</field>
+    </record>
+
+    <record id="purchase_tour_step_7" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">60</field>
+        <field name="trigger">.o_field_res_partner_many2one[name="partner_id"] input</field>
+        <field name="content">Search a vendor name, or create one on the fly.</field>
+        <field name="tooltip_position">bottom</field>
+        <field name="run">edit Azure Interior</field>
+    </record>
+
+    <record id="purchase_tour_step_7b" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">65</field>
+        <field name="trigger">.o-autocomplete--dropdown-item:contains("Azure Interior")</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="purchase_tour_step_8" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">70</field>
+        <field name="trigger">.o_field_res_partner_many2one[name="partner_id"] .o_external_button</field>
+    </record>
+
+    <record id="purchase_tour_step_9" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">80</field>
+        <field name="trigger">.o_field_x2many_list_row_add > button</field>
+        <field name="content">Add some products or services to your quotation.</field>
+        <field name="tooltip_position">bottom</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="purchase_tour_step_10" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">90</field>
+        <field name="trigger">.o_purchase_order</field>
+    </record>
+
+    <record id="purchase_tour_step_11" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">100</field>
+        <field name="trigger">.o_field_widget[name=product_id] input</field>
+        <field name="content">Select a product, or create a new one on the fly.</field>
+        <field name="tooltip_position">right</field>
+        <field name="run">edit DESK0001</field>
+    </record>
+
+    <record id="purchase_tour_step_11b" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">105</field>
+        <field name="trigger">.o-autocomplete--dropdown-item:contains("DESK0001")</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="purchase_tour_step_12" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">110</field>
+        <field name="trigger">.o_purchase_order</field>
+    </record>
+
+    <record id="purchase_tour_step_13" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">120</field>
+        <field name="trigger">.o_purchase_order</field>
+    </record>
+
+    <record id="purchase_tour_step_14" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">130</field>
+        <field name="trigger">div.o_field_widget[name="product_qty"] input</field>
+        <field name="content">Indicate the product quantity you want to order.</field>
+        <field name="tooltip_position">right</field>
+        <field name="run">edit 12.0</field>
+    </record>
+
+    <record id="purchase_tour_step_15" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">140</field>
+        <field name="trigger">button[name="action_rfq_send"]</field>
+        <field name="content">Send the request for quotation to your vendor.</field>
+        <field name="tooltip_position">bottom</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="purchase_tour_step_15b" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">143</field>
+        <field name="trigger">.o-mail-RecipientsInputTagsListPopover input</field>
+        <field name="run">edit azure@example.com</field>
+    </record>
+
+    <record id="purchase_tour_step_15c" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">145</field>
+        <field name="trigger">.o-mail-RecipientsInputTagsListPopover .btn-primary</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="purchase_tour_step_16" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">150</field>
+        <field name="trigger">.modal-footer button[name="action_send_mail"]</field>
+    </record>
+
+    <record id="purchase_tour_step_17" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">160</field>
+        <field name="trigger">.modal-footer button[name="action_send_mail"]</field>
+        <field name="content">Send the request for quotation to your vendor.</field>
+        <field name="tooltip_position">left</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="purchase_tour_step_18" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">170</field>
+        <field name="trigger">body:not(:has(.modal)) .o_purchase_order</field>
+    </record>
+
+    <record id="purchase_tour_step_19" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">180</field>
+        <field name="trigger">.o_data_cell[name="price_unit"]</field>
+        <field name="content">Once you get the price from the vendor, you can complete the purchase order with the right price.</field>
+        <field name="tooltip_position">right</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="purchase_tour_step_19b" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">185</field>
+        <field name="trigger">.o_data_cell[name="price_unit"] input</field>
+        <field name="run">edit 200.00</field>
+    </record>
+
+    <record id="purchase_tour_step_19c" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">187</field>
+        <field name="trigger">.o_form_button_save:enabled</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="purchase_tour_step_19d" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">188</field>
+        <field name="trigger">.o_form_saved</field>
+    </record>
+
+    <record id="purchase_tour_step_20" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase_tour"/>
+        <field name="sequence">190</field>
+        <field name="trigger">button[name="button_confirm"]</field>
+        <field name="content">Confirm your purchase.</field>
+        <field name="tooltip_position">bottom</field>
+        <field name="run">click</field>
+    </record>
 </odoo>

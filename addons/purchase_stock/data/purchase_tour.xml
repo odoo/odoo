@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchase_tour_step_stock_1" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase.purchase_tour"/>
+        <field name="sequence">200</field>
+        <field name="trigger">.o-form-buttonbox button[name="action_view_picking"]</field>
+    </record>
+
+    <record id="purchase_tour_step_stock_2" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase.purchase_tour"/>
+        <field name="sequence">210</field>
+        <field name="trigger">.o-form-buttonbox button[name="action_view_picking"]</field>
+        <field name="content">Receive the ordered products.</field>
+        <field name="tooltip_position">bottom</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="purchase_tour_step_stock_3" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase.purchase_tour"/>
+        <field name="sequence">220</field>
+        <field name="trigger">.o_statusbar_buttons button[name="button_validate"]</field>
+        <field name="content">Validate the receipt of all ordered products.</field>
+        <field name="tooltip_position">bottom</field>
+        <field name="run">click</field>
+    </record>
+
+    <record id="purchase_tour_step_stock_6" model="web_tour.tour.step">
+        <field name="tour_id" ref="purchase.purchase_tour"/>
+        <field name="sequence">250</field>
+        <field name="trigger">.o_back_button a</field>
+        <field name="content">Go back to the purchase order to generate the vendor bill.</field>
+        <field name="tooltip_position">bottom</field>
+        <field name="run">click</field>
+    </record>
+
+</odoo>

@@ -187,6 +187,7 @@ class TestOnboardingToursAuto(HttpCase):
     # migrated to XML steps and validated to run without any Python setup.
     _tested_tours = {
         'sale_tour',
+        'purchase_tour',
     }
 
     def test_onboarding_tours(self):
