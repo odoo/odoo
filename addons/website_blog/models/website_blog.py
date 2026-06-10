@@ -205,12 +205,17 @@ class BlogPost(models.Model):
 
     @api.depends('content', 'teaser_manual')
     def _compute_teaser(self):
+        manual_field = self._fields['teaser_manual']
+        lang = self.env.lang or 'en_US'
         for blog_post in self:
             if blog_post.teaser_manual:
-                blog_post.teaser = blog_post.teaser_manual
-            else:
-                content = text_from_html(blog_post.content, True)
-                blog_post.teaser = content[:200] + '...'
+                # ensure we are showing current language and not en_US fallback
+                translations = lang != 'en_US' and manual_field._get_stored_translations(blog_post)
+                if not translations or translations.get(lang):
+                    blog_post.teaser = blog_post.teaser_manual
+                    continue
+            content = text_from_html(blog_post.content, True)
+            blog_post.teaser = content[:200] + '...'
 
     def _set_teaser(self):
         for blog_post in self:
