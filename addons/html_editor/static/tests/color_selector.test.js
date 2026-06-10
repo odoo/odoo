@@ -86,7 +86,7 @@ test("should add opacity to custom background colors but not to theme colors", a
 
     await contains(".o_color_button[data-color='o-color-1']").click(); // Select a theme color
     await waitFor(".o-we-toolbar");
-    expect(getContent(el)).toBe(`<p><font style="" class="bg-o-color-1">[test]</font></p>`);
+    expect(getContent(el)).toBe(`<p><font class="bg-o-color-1">[test]</font></p>`);
     // Verify computed background color has no opacity.
     expect(queryFirst("p font", { root: el })).toHaveStyle({
         backgroundColor: "rgb(113, 75, 103)",
@@ -905,7 +905,7 @@ test("custom tab color navigation using keys", async () => {
     await press("ArrowDown");
     expect('.o_font_color_selector button[data-color="black"]').toBeFocused(); // Should do nothing
     await press("Enter");
-    expect(getContent(el)).toBe(`<p><font style="" class="text-black">[test]</font></p>`);
+    expect(getContent(el)).toBe(`<p><font class="text-black">[test]</font></p>`);
 });
 
 describe.tags("desktop");
