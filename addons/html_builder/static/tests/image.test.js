@@ -14,3 +14,36 @@ test("Size should not be displayed on CORS protected images", async () => {
     await waitSidebarUpdated();
     expect(".o-hb-image-size-info").toHaveCount(0);
 });
+
+test("Handle legacy image shapes from older versions", async () => {
+    const oldShapeId = "web_editor/basic/bsc_organic_2";
+    const testImageUrl = "/web/image/123/test_image.jpg";
+
+    onRpc("/web_editor/static/image_shapes/basic/bsc_organic_2.svg", () => "");
+    onRpc("/html_builder/static/image_shapes/basic/bsc_organic_2.svg", () => "");
+
+    onRpc(testImageUrl, () => dataURItoBlob(dummyBase64Img));
+
+    onRpc("/html_editor/get_image_info", () => ({
+        original: {
+            id: 123,
+            image_src: testImageUrl,
+            mimetype: "image/jpeg",
+        },
+    }));
+
+    const { waitSidebarUpdated } = await setupHTMLBuilder(`
+        <img class="img-fluid test-image"
+            src="${testImageUrl}"
+            data-original-id="123"
+            data-mimetype="image/jpeg"
+            data-shape="${oldShapeId}"
+            width="100" height="100"
+            style="display: block;">
+    `);
+
+    await contains(":iframe img.test-image").click();
+    await waitSidebarUpdated();
+
+    expect(":iframe img").toHaveCount(1);
+});

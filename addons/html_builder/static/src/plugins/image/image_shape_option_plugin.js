@@ -288,6 +288,10 @@ export class ImageShapeOptionPlugin extends Plugin {
             shapeColors: newDataset.shapeColors,
         });
 
+        if (!svg) {
+            return;
+        }
+
         const svgAspectRatio =
             parseInt(svg.getAttribute("width")) / parseInt(svg.getAttribute("height"));
         const imgAspectRatio = svg.dataset.imgAspectRatio;
@@ -296,11 +300,11 @@ export class ImageShapeOptionPlugin extends Plugin {
         if ((isNewImage || isNewShape) && !("aspectRatio" in newDataset)) {
             const data = getImageTransformationData({ ...img.dataset, ...newDataset });
 
-            // We consider the aspect ratio as default if it has not been set or
-            // if it has the aspect ratio of the current shape set on the image.
+            // The togglable ratio is squared by default.
             const isDefaultAspectRatio =
                 !img.dataset.aspectRatio ||
                 img.dataset.aspectRatio === this.aspectRatioShape(img.dataset.shape);
+
             if (isDefaultAspectRatio && !shouldPreventGifTransformation(data)) {
                 newDataset.aspectRatio = this.isTogglableRatioShape(shapeId)
                     ? this.aspectRatioShape(shapeId)
@@ -378,6 +382,10 @@ export class ImageShapeOptionPlugin extends Plugin {
      */
     async computeShape(svgText, params) {
         const { shapeId, shapeFlip, shapeRotate, shapeAnimationSpeed, shapeColors } = params;
+
+        if (!this.imageShapes[shapeId]) {
+            return;
+        }
         // Apply the colors to the shape.
         svgText = this.replaceSvgColors(svgText, shapeColors.split(";"));
         // Apply the right animation speed if there is an animated shape.
@@ -488,43 +496,48 @@ export class ImageShapeOptionPlugin extends Plugin {
         const svgColors = this.getSvgColors(shapeSvgText);
         return svgColors.map((color, i) => (color !== null ? `o-color-${i + 1}` : null));
     }
+
+    getImageShape(shapeId) {
+        return this.imageShapes[shapeId] || {};
+    }
+
     applyShapeColors(editingElement, newColors) {}
     isTransformableShape(shapeId) {
         if (!shapeId) {
             return false;
         }
-        const canTransform = this.imageShapes[shapeId].transform;
+        const canTransform = this.getImageShape(shapeId).transform;
         return typeof canTransform === "undefined" ? true : canTransform;
     }
     isTechnicalShape(shapeId) {
         if (!shapeId) {
             return false;
         }
-        return this.imageShapes[shapeId].isTechnical;
+        return this.getImageShape(shapeId).isTechnical;
     }
     getShapeLabel(shapeId) {
         if (!shapeId) {
             return _t("None");
         }
-        return this.imageShapes[shapeId].selectLabel || _t("None");
+        return this.getImageShape(shapeId).selectLabel || _t("None");
     }
     isAnimableShape(shape) {
         if (!shape) {
             return false;
         }
-        return this.imageShapes[shape].animated;
+        return !!this.getImageShape(shape).animated;
     }
     isTogglableRatioShape(shape) {
         if (!shape) {
             return false;
         }
-        return this.imageShapes[shape].togglableRatio ?? false;
+        return !!this.getImageShape(shape).togglableRatio;
     }
     aspectRatioShape(shape) {
         if (!shape || !this.isTogglableRatioShape(shape)) {
             return undefined;
         }
-        return this.imageShapes[shape].aspectRatio || "1/1";
+        return this.getImageShape(shape).aspectRatio || "1/1";
     }
     getImageShapeGroups() {
         if (!this.imageShapeGroups) {
