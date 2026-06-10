@@ -35,7 +35,7 @@ class PaymentTransaction(models.Model):
             order_reference = False
 
         invoice_journal = self.env["account.journal"].search(
-            [("type", "=", "sale"), ("company_id", "=", self.env.company.id)], limit=1
+            [("type", "=", "sale"), ("company_id", "=", self.company_id.id)], limit=1
         )
         if invoice_journal:
             order_reference = invoice_journal._process_reference_for_sale_order(order_reference)
