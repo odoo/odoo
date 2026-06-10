@@ -145,6 +145,7 @@ class _FlushingSavepoint(Savepoint):
         cr = self._cr
         assert isinstance(cr, Cursor)
         super().rollback()
+        cr.precommit.clear()  # they were flushed in the init
         if cr.transaction is not None:
             cr.transaction.restore_state()
 
