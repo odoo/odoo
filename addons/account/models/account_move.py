@@ -5770,7 +5770,9 @@ class AccountMove(models.Model):
 
         def is_computed_with_mixin(move):
             # if computed with the mixin we are guaranteed to not have gaps, need to bypass to avoid concurrency issues
-            format_string, format_values = move._get_next_sequence_format()
+            if not move.name or move.name == '/':
+                return False
+            format_string, format_values = move._get_sequence_format_param(move.name)
             format_values.pop('seq')
             cache_key = (format_string.format(**format_values, seq=0), self._sequence_index and self[self._sequence_index])
             return sequence_mixin_cache.get(cache_key) is not None
