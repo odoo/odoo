@@ -27,14 +27,20 @@
                                 </field>
                             </group>
                             <group>
-                                <field name="matching_score" invisible="is_pool_applicant" nolabel="1" widget="skill_match_gauge_field" options="{'max_value': 100}" />
-                            </group>
-                            <group>
-                                <!-- empty group to align matching and missing skills below the job position matching widget -->
-                            </group>
-                            <group>
-                                <field name="matching_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="is_pool_applicant"/>
-                                <field name="missing_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="is_pool_applicant"/>
+                                <!-- both invisible fields are needed for the widget -->
+                                <field name="degree_score" invisible="1"/>
+                                <field name="skills_score" invisible="1"/>
+                                <widget
+                                    name="gauge_chart"
+                                    invisible="is_pool_applicant"
+                                    score_fields="skills_score,degree_score"
+                                    max_value="100"
+                                    title="Job Position Matching"
+                                />
+                                <group class="w-100">
+                                    <field name="matching_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="is_pool_applicant"/>
+                                    <field name="missing_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="is_pool_applicant"/>
+                                </group>
                             </group>
                         </group>
                     </div>

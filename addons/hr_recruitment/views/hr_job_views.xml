@@ -320,7 +320,6 @@
             </group>
 
             <group name="job" position="inside">
-                <field name="expected_degree" groups="hr_recruitment.group_hr_recruitment_interviewer"/>
                 <label for="salary_min" string="Salary Range" groups="hr.group_hr_user,hr_recruitment.group_hr_recruitment_user"/>
                 <div class="d-flex gap-2 align-items-baseline" groups="hr.group_hr_user,hr_recruitment.group_hr_recruitment_user">
                     <field name="currency_id" invisible="1"/>
@@ -336,6 +335,7 @@
                     <span invisible="address_id" class="oe_read_only">Remote</span>
                     <field name="address_id" context="{'show_address': 1, 'default_parent_id': company_partner_id, 'default_type': 'other'}" placeholder="Remote"/>
                 </div>
+                <field name="expected_degree" groups="hr_recruitment.group_hr_recruitment_interviewer"/>
             </group>
 
             <xpath expr="//group" position="after">

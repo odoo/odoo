@@ -20,15 +20,17 @@ class HrApplicant(models.Model):
     skill_ids = fields.Many2many("hr.skill", compute="_compute_skill_ids", store=True)
     matching_skill_ids = fields.Many2many(
         comodel_name="hr.skill",
-        string="Matching Skills",
+        string="Matching Factors",
         compute="_compute_matching_skill_ids",
     )
     missing_skill_ids = fields.Many2many(
         comodel_name="hr.skill",
-        string="Missing Skills",
+        string="Missing Factors",
         compute="_compute_matching_skill_ids",
     )
     matching_score = fields.Integer(string="Matching Score", compute="_compute_matching_skill_ids")
+    degree_score = fields.Integer(string="Degree Score", compute="_compute_matching_skill_ids")
+    skills_score = fields.Integer(string="Skills Score", compute="_compute_matching_skill_ids")
 
     @api.depends("applicant_skill_ids")
     def _compute_current_applicant_skill_ids(self):
@@ -52,6 +54,8 @@ class HrApplicant(models.Model):
                 applicant.matching_skill_ids = False
                 applicant.missing_skill_ids = False
                 applicant.matching_score = False
+                applicant.degree_score = False
+                applicant.skills_score = False
                 continue
             job_skills = job.job_skill_ids
             job_degree = job.expected_degree.sudo().score * 100
@@ -62,18 +66,20 @@ class HrApplicant(models.Model):
                 lambda a: a.skill_id in job_skill_map,
             )
             applicant_degree = applicant.type_id.score * 100 if job_degree > 1 else 0
-            applicant_total = (
-                sum(min(skill.level_progress, job_skill_map[skill.skill_id] * 2) for skill in matching_applicant_skills)
-                + applicant_degree
-            )
+            skills_total = sum(min(skill.level_progress, job_skill_map[skill.skill_id] * 2) for skill in matching_applicant_skills)
+            applicant_total = skills_total + applicant_degree
 
             matching_skill_ids = matching_applicant_skills.mapped("skill_id")
             missing_skill_ids = job_skills.mapped("skill_id") - matching_applicant_skills.mapped("skill_id")
             matching_score = round(applicant_total / job_total * 100) if job_total else 0
+            degree_score = round(applicant_degree / job_total * 100) if job_total else 0
+            skills_score = round(skills_total / job_total * 100) if job_total else 0
 
             applicant.matching_skill_ids = matching_skill_ids
             applicant.missing_skill_ids = missing_skill_ids
             applicant.matching_score = matching_score
+            applicant.degree_score = degree_score
+            applicant.skills_score = skills_score
 
     def _get_employee_create_vals(self):
         vals = super()._get_employee_create_vals()
