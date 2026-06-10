@@ -326,6 +326,18 @@ export class FontPlugin extends Plugin {
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
         set_block_overrides: this.handleSetBlock.bind(this),
 
+        /** Predicates */
+        are_shorthands_available: (node) => {
+            if (closestElement(node, "pre")) {
+                return false;
+            }
+        },
+        is_powerbox_available_predicates: (node) => {
+            if (closestElement(node, "pre")) {
+                return false;
+            }
+        },
+
         /** Processors */
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         before_insert_processors: this.handleInsertWithinPre.bind(this),
