@@ -7,12 +7,14 @@
             <field name="arch" type="xml">
                 <form string="Send a Sample Mail">
                     <group>
-                        <field name="mailing_list_id" options="{'no_create_edit': True, 'no_open': True}" placeholder="Select a list..."/>
+                        <field name="mailing_list_ids" widget="many2many_tags"
+                            options="{'no_create_edit': True, 'no_open': True, 'color_field': 'color'}"
+                            placeholder="Select lists..."/>
                         <field name="contact_ids" invisible="1"/>
                         <field name="partner_ids" invisible="1"/>
                     </group>
                     <footer>
-                        <button string="Add to List" name="action_add_contacts" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Add to Lists" name="action_add_contacts" type="object" class="btn-primary" data-hotkey="q"/>
                         <button class="btn-secondary" special="cancel" data-hotkey="x"/>
                     </footer>
                 </form>
