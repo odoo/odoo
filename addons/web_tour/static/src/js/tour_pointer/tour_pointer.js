@@ -1,4 +1,4 @@
-import { reactive, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { Component, proxy } from "@odoo/owl";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
@@ -21,7 +21,7 @@ const oppositeSides = {
  * @property {boolean} [isZone]
  * @property {Direction} [position]
  */
-export const pointerState = reactive({
+export const pointerState = proxy({
     trigger: undefined,
     content: "",
     isZone: false,

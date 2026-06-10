@@ -1,4 +1,3 @@
-import { reactive } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { click, edit } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
@@ -46,7 +45,7 @@ test("reactivity: update inert object", async () => {
 });
 
 test("reactivity: useState & update getter object", async () => {
-    const pickerProps = reactive({
+    const pickerProps = proxy({
         value: false,
         type: "date",
     });

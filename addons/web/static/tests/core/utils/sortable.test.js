@@ -1,4 +1,4 @@
-import { reactive, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { advanceFrame, animationFrame, disableAnimations } from "@odoo/hoot-mock";
@@ -391,7 +391,7 @@ test("draggable area contains overflowing visible elements", async () => {
 test("Dynamically disable sortable feature", async () => {
     expect.assertions(3);
 
-    const state = reactive({ enableSortable: true });
+    const state = proxy({ enableSortable: true });
     class List extends Component {
         static props = ["*"];
         static template = xml`

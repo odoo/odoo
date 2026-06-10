@@ -1,4 +1,4 @@
-import { reactive, render } from "@web/owl2/utils";
+import { render } from "@web/owl2/utils";
 import { describe, destroy, expect, getFixture, mockUserAgent, test } from "@odoo/hoot";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockTouch } from "@odoo/hoot-mock";
@@ -28,7 +28,7 @@ import {
 describe("useAutofocus", () => {
     test.tags("desktop");
     test("simple usecase", async () => {
-        const state = reactive({ text: "" });
+        const state = proxy({ text: "" });
 
         class MyComponent extends Component {
             static props = ["*"];
@@ -56,7 +56,7 @@ describe("useAutofocus", () => {
 
     test.tags("desktop");
     test("simple usecase when input type is number", async () => {
-        const state = reactive({ counter: 0 });
+        const state = proxy({ counter: 0 });
 
         class MyComponent extends Component {
             static props = ["*"];
@@ -84,7 +84,7 @@ describe("useAutofocus", () => {
 
     test.tags("desktop");
     test("conditional autofocus", async () => {
-        const state = reactive({ showInput: true });
+        const state = proxy({ showInput: true });
 
         class MyComponent extends Component {
             static props = ["*"];
@@ -168,7 +168,7 @@ describe("useAutofocus", () => {
 
     test.tags("desktop");
     test("supports different ref names", async () => {
-        const state = reactive({ showSecond: true });
+        const state = proxy({ showSecond: true });
 
         class MyComponent extends Component {
             static props = ["*"];
@@ -226,7 +226,7 @@ describe("useAutofocus", () => {
 
     test.tags("desktop");
     test("autofocus outside of active element doesn't work (CommandPalette)", async () => {
-        const state = reactive({
+        const state = proxy({
             showPalette: true,
             text: "",
         });
@@ -266,7 +266,7 @@ describe("useAutofocus", () => {
 
 describe("useBus", () => {
     test("simple usecase", async () => {
-        const state = reactive({ child: true });
+        const state = proxy({ child: true });
 
         class MyComponent extends Component {
             static props = ["*"];
@@ -340,7 +340,7 @@ describe("useService", () => {
 
     test("async service with protected methods", async () => {
         useServiceProtectMethodHandling.fn = useServiceProtectMethodHandling.original;
-        const state = reactive({ child: true });
+        const state = proxy({ child: true });
         let nbCalls = 0;
         let def = new Deferred();
         let objectService;

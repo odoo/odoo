@@ -1,4 +1,4 @@
-import { reactive, useChildSubEnv } from "@web/owl2/utils";
+import { useChildSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
@@ -17,7 +17,7 @@ import { CallbackRecorder } from "@web/search/action_hook";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { PATH_KEYS, router as _router } from "@web/core/browser/router";
 
-import { Component, markup, onMounted, onWillUnmount, onError, xml, status } from "@odoo/owl";
+import { Component, markup, onError, onMounted, onWillUnmount, proxy, status, xml } from "@odoo/owl";
 import { downloadReport, getReportUrl } from "./reports/utils";
 import { zip } from "@web/core/utils/arrays";
 import { isHtmlEmpty } from "@web/core/utils/html";
@@ -879,7 +879,7 @@ export function makeActionManager(env, router = _router) {
             return _openActionInNewWindow(action, makeState(nextStack));
         }
         // Compute breadcrumbs
-        controller.config.breadcrumbs = reactive(
+        controller.config.breadcrumbs = proxy(
             action.target === "new" ? [] : _getBreadcrumbs(nextStack)
         );
         controller.config.getDisplayName = () => controller.displayName;

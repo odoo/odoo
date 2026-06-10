@@ -1,4 +1,4 @@
-import { reactive, useExternalListener, useRef, useSubEnv } from "@web/owl2/utils";
+import { useExternalListener, useRef, useSubEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { parseXML } from "@web/core/utils/xml";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -29,7 +29,7 @@ export class QuickCreateState {
         this.isOpen = false;
         this.id = null;
         this.bus = new EventBus();
-        return reactive(this);
+        return proxy(this);
     }
 
     async openQuickCreate(id) {

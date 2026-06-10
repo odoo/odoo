@@ -1,4 +1,4 @@
-import { reactive, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { queryFirst, queryOne, queryRect } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -788,7 +788,7 @@ test("Sorting with nesting - move child up", async () => {
 test("Dynamically disable NestedSortable feature", async () => {
     expect.assertions(3);
 
-    const state = reactive({ enableNestedSortable: true });
+    const state = proxy({ enableNestedSortable: true });
     class NestedSortable extends Component {
         static props = ["*"];
         static template = xml`

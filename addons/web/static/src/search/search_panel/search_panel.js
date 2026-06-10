@@ -1,4 +1,4 @@
-import { reactive, render, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { render, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useBus } from "@web/core/utils/hooks";
 
@@ -141,12 +141,12 @@ export class SearchPanel extends Component {
 
     getDropdownState(sectionId) {
         if (!this.dropdownStates[sectionId]) {
-            const state = reactive({
+            const state = proxy({
                 isOpen: false,
                 open: () => (state.isOpen = true),
                 close: () => (state.isOpen = false),
             });
-            this.dropdownStates[sectionId] = reactive(state);
+            this.dropdownStates[sectionId] = proxy(state);
         }
         return this.dropdownStates[sectionId];
     }

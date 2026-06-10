@@ -1,5 +1,4 @@
 import {
-    reactive,
     useEnv,
     useExternalListener,
     useLayoutEffect,
@@ -1084,7 +1083,7 @@ export class Configurator extends Component {
         });
 
         const initialStep = router.current.step;
-        const store = reactive(new Store());
+        const store = proxy(new Store());
         let isStoreStarted = false;
         useEffect(() => {
             if (!isStoreStarted) {

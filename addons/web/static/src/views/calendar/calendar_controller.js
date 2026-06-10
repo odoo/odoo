@@ -1,4 +1,3 @@
-import { reactive } from "@web/owl2/utils";
 import {
     deleteConfirmationMessage,
     ConfirmationDialog,
@@ -226,7 +225,7 @@ export class CalendarController extends Component {
     }
 
     prepareMultiSelectionButtonsReactive() {
-        return reactive({
+        return proxy({
             onCancel: this.cleanSquareSelection.bind(this),
             onAdd: (multiCreateData) => {
                 this.onMultiCreate(multiCreateData, this.selectedCells);
