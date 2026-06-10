@@ -515,3 +515,37 @@ class TestPackingDelivery(TestPackingCommon):
         return_picking.button_validate()
         self.test_carrier.can_generate_return = True
         self.assertFalse(return_picking.is_return_picking)
+
+    def test_order_package_split_preserves_totals(self):
+        """ Splitting an order into several packages by weight must preserve the
+        manifest totals: the quantity and declared value summed over the packages
+        must equal the order's, and the per-unit value must not be divided. """
+        package_type = self.env['stock.package.type'].create({
+            'name': 'Box 5kg',
+            'max_weight': 5.0,
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
+            'order_line': [Command.create({
+                'product_id': self.product_aw.id,  # 2.4 kg each
+                'product_uom_qty': 3,
+                'price_unit': 120.0,
+            })],
+        })
+        # 3 x 2.4 kg = 7.2 kg over a 5 kg max weight -> two packages.
+        packages = self.test_carrier._get_packages_from_order(so, package_type)
+        self.assertEqual(len(packages), 2)
+
+        commodities = self.test_carrier._get_commodities_from_order(so)
+        expected_qty = sum(c.qty for c in commodities)
+        expected_value = sum(c.qty * c.monetary_value for c in commodities)
+        unit_values = {c.monetary_value for c in commodities}
+
+        split_qty = sum(c.qty for p in packages for c in p.commodities)
+        split_value = sum(c.qty * c.monetary_value for p in packages for c in p.commodities)
+        self.assertEqual(split_qty, expected_qty, "All ordered units must appear across the packages.")
+        self.assertEqual(split_value, expected_value, "Total declared value must equal the order value.")
+        self.assertTrue(
+            all(c.monetary_value in unit_values for p in packages for c in p.commodities),
+            "The per-unit value must be preserved, not divided across packages.",
+        )
