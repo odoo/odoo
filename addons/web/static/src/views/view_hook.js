@@ -1,4 +1,5 @@
 import { render, useComponent, useLayoutEffect } from "@web/owl2/utils";
+import { untrack } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
@@ -104,7 +105,7 @@ export function useBounceButton(containerRef, shouldBounce) {
     // Transitional: Owl 3 native refs are signals (call to get the element);
     // legacy refs expose `.el`. Resolve the element in this single place so both keep working.
     const getContainerEl = () =>
-        typeof containerRef === "function" ? containerRef() : containerRef?.el;
+        typeof containerRef === "function" ? untrack(containerRef) : containerRef?.el;
     useLayoutEffect(
         (containerEl) => {
             if (!containerEl) {

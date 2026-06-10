@@ -33,6 +33,7 @@ import {
     onWillPatch,
     onWillStart,
     signal,
+    types as t,
     status,
     proxy,
 } from "@odoo/owl";
@@ -133,6 +134,8 @@ export class ListRenderer extends Component {
         "readonly?",
     ];
 
+    rootRef = signal(null, { type: t.ref() });
+
     setup() {
         this.uiService = useService("ui");
         this.offlineService = useService("offline");
@@ -232,7 +235,6 @@ export class ListRenderer extends Component {
         useAutofocus({ refName: "groupInput" });
         let dataRowId;
         let dataGroupId;
-        this.rootRef = useRef("root");
         this.resequencePromise = Promise.resolve();
         useSortable({
             enable: () => this.canResequenceRows,
@@ -2318,7 +2320,8 @@ export class ListRenderer extends Component {
             return;
         }
         // Overlay
-        if (this.rootRef.el.closest(".o-overlay-item") !== target.closest(".o-overlay-item")) {
+        const rootEl = this.rootRef();
+        if (!rootEl || rootEl.closest(".o-overlay-item") !== target.closest(".o-overlay-item")) {
             return;
         }
         // Specific data attribute to explicitly ignore clicks
