@@ -1851,6 +1851,7 @@
         <field name="color">0</field>
         <field name="display_code">OoC</field>
         <field name="code">OUT</field>
+        <field name="amount_rate">0</field>
         <field name="country_id" ref="base.eg"/>
     </record>
 
@@ -1886,15 +1887,7 @@
         <field name="color">5</field>
         <field name="display_code">UN</field>
         <field name="code">LEAVE90</field>
-        <field name="count_as">absence</field>
-        <field name="country_id" ref="base.eg"/>
-    </record>
-
-    <record id="eg_work_entry_type_sick_leave" model="hr.work.entry.type">
-        <field name="name">Sick Time Off</field>
-        <field name="display_code">STO</field>
-        <field name="code">LEAVE110</field>
-        <field name="color">5</field>
+        <field name="amount_rate">0</field>
         <field name="count_as">absence</field>
         <field name="country_id" ref="base.eg"/>
     </record>
@@ -1946,6 +1939,7 @@
     <record id="l10n_eg_work_entry_type_sick_leave_75" model="hr.work.entry.type">
         <field name="name">Sick Time off (75% Paid)</field>
         <field name="code">EGSICKLEAVE75</field>
+        <field name="amount_rate">0.75</field>
         <field name="country_id" ref="base.eg"/>
         <field name="count_as">absence</field>
     </record>
@@ -1953,6 +1947,7 @@
     <record id="l10n_eg_work_entry_type_sick_leave_unpaid" model="hr.work.entry.type">
         <field name="name">Sick Time off (Unpaid)</field>
         <field name="code">EGSICKLEAVE0</field>
+        <field name="amount_rate">0</field>
         <field name="country_id" ref="base.eg"/>
         <field name="count_as">absence</field>
     </record>
