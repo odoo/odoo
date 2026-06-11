@@ -26,7 +26,6 @@ const checkTOCNavBar = function (tocPosition, activeHeaderPosition) {
 registerWebsitePreviewTour(
     "snippet_table_of_content",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
     },
     () => [
@@ -81,8 +80,12 @@ registerWebsitePreviewTour(
         ...unfoldOptionsGroup("Table of Content"),
         {
             content: "Hide the first TOC on mobile",
-            trigger: '[data-action-param="no_mobile"]',
+            trigger:
+                '.options-container[data-container-title="Table of Content"] [data-action-param="no_mobile"]',
             run: "click",
+        },
+        {
+            trigger: ":iframe .s_table_of_content:eq(0).o_snippet_mobile_invisible",
         },
         // Go back to blocks tabs to avoid changing the first ToC options
         goBackToBlocks(),
@@ -94,8 +97,12 @@ registerWebsitePreviewTour(
         ...unfoldOptionsGroup("Table of Content"),
         {
             content: "Hide the second TOC on desktop",
-            trigger: '[data-action-param="no_desktop"]',
+            trigger:
+                '.options-container[data-container-title="Table of Content"] [data-action-param="no_desktop"]',
             run: "click",
+        },
+        {
+            trigger: ":iframe .s_table_of_content:eq(1).o_snippet_desktop_invisible:not(:visible)",
         },
         ...clickOnSave(),
         {
