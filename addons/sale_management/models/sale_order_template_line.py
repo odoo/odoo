@@ -144,6 +144,9 @@ class SaleOrderTemplateLine(models.Model):
         string="Unit Price", digits="Product Price", min_display_digits="Product Price"
     )
     tax_ids = fields.Many2many(string="Taxes", comodel_name="account.tax", check_company=True)
+    purchase_price = fields.Float(
+        string="Unit Cost", min_display_digits="Product Price", copy=False
+    )
 
     mandatory_product = fields.Boolean(
         string="Is Product Mandatory", compute="_compute_mandatory_product"
@@ -378,6 +381,9 @@ class SaleOrderTemplateLine(models.Model):
                 "discount": self.discount,
                 "price_unit": self.sale_order_template_id.currency_id._convert(
                     from_amount=self.price_unit, to_currency=currency
+                ),
+                "purchase_price": self.sale_order_template_id.currency_id._convert(
+                    from_amount=self.purchase_price, to_currency=currency
                 ),
             })
 

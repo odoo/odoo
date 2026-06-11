@@ -25,8 +25,49 @@ class SaleOrder(models.Model):
             ('company_id', '=', company_id),
         ]""",
     )
+    margin = fields.Monetary("Margin", compute="_compute_margin", store=True)
+    margin_percent = fields.Float(
+        "Margin (%)", compute="_compute_margin", store=True, aggregator="avg"
+    )
 
     # === COMPUTE METHODS ===#
+
+    @api.depends("order_line.margin", "amount_untaxed")
+    def _compute_margin(self):
+        if not all(self._ids):
+            for order in self:
+                order.margin = sum(order.order_line.mapped("margin"))
+                order.margin_percent = order.amount_untaxed and order.margin / order.amount_untaxed
+        else:
+            # On batch records recomputation (e.g. at install), compute the margins
+            # with a single read_group query for better performance.
+            # This isn't done in an onchange environment because (part of) the data
+            # may not be stored in database (new records or unsaved modifications).
+            grouped_order_lines_data = self.env["sale.order.line"]._read_group(
+                [("order_id", "in", self.ids)], ["order_id"], ["margin:sum"]
+            )
+            mapped_data = {order.id: margin for order, margin in grouped_order_lines_data}
+            for order in self:
+                order.margin = mapped_data.get(order.id, 0.0)
+                order.margin_percent = order.amount_untaxed and order.margin / order.amount_untaxed
+
+    @api.depends("margin")
+    def _compute_extra_total_fields(self):
+        super()._compute_extra_total_fields()
+
+        for order in self:
+            if not order.margin:
+                continue
+
+            groups = order.extra_total_fields
+            for basic_group in filter(lambda group: group.get("name") == "basic", groups):
+                basic_group["lines"].append({
+                    "label": self.env._(
+                        "Margin (%(percent).0f%%)", percent=order.margin_percent * 100
+                    ),
+                    "value": order.margin,
+                })
+                order.extra_total_fields = groups
 
     @api.depends("partner_id", "sale_order_template_id")
     def _compute_note(self):

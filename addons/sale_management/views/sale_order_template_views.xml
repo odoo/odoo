@@ -187,6 +187,13 @@
                                     invisible="product_id"
                                     optional="hide"
                                 />
+                                <field
+                                    name="purchase_price"
+                                    column_invisible="not parent.has_productless_lines"
+                                    readonly="product_id"
+                                    invisible="product_id"
+                                    optional="hide"
+                                />
                                 <widget
                                     name="section_state"
                                     options="{'is_optional': 'radio_button_checked'}"
