@@ -3,7 +3,7 @@ import logging
 from markupsafe import Markup
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError, RedirectWarning
+from odoo.exceptions import UserError
 from odoo.fields import Domain
 
 _logger = logging.getLogger(__name__)
@@ -262,22 +262,7 @@ class PdpFlow(models.Model):
     # -------------------------------------------------------------------------
 
     def action_send(self, check_totp=True):
-        """Send flow payload to transport gateway."""
-        auth_totp_disabled = (
-            not self.env.user.totp_enabled
-            and not bool(self.env['ir.config_parameter'].sudo().get_param('auth_totp.policy'))
-            and self.env.company._get_peppol_edi_mode() != 'demo'
-        )
-        if check_totp and auth_totp_disabled:
-            raise RedirectWarning(
-                message=self.env._("To be able to send the report, you need to enable the two-factor authentication."),
-                action=self.env.user._get_records_action(
-                    target='new',
-                    views=[(self.env.ref('base.view_users_form_simple_modif').id, "form")],
-                ),
-                button_text=self.env._("Go to the Preferences panel"),
-            )
-
+        """Send flow payload to transport gateway. The parameter check totp is no longer useful and will be remove in master """
         for flow in self:
             if flow.state != 'ready':
                 continue
