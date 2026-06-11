@@ -56,15 +56,16 @@ class kioskAttendanceApp extends Component {
             displayDemoMessage:
                 browser.localStorage.getItem("hr_attendance.ShowDemoMessage") !== "false",
             isStreamAvailable: false,
+            kioskMode: this.props.kioskMode,
         });
         this.lockScanner = false;
         this.cameraCapture = null;
-        if (this.props.kioskMode === "settings" || this.props.fromTrialMode) {
+        if (this.state.kioskMode === "settings" || this.props.fromTrialMode) {
             this.manualKioskMode = false;
             useBus(this.barcode.bus, "barcode_scanned", (ev) =>
                 this.onBarcodeScanned(ev.detail.barcode)
             );
-        } else if (this.props.kioskMode !== "manual") {
+        } else if (this.state.kioskMode !== "manual") {
             useBus(this.barcode.bus, "barcode_scanned", (ev) =>
                 this.onBarcodeScanned(ev.detail.barcode)
             );
@@ -94,15 +95,13 @@ class kioskAttendanceApp extends Component {
             token: this.props.token,
             mode: mode,
         });
-        this.props.kioskMode = mode;
+        this.state.kioskMode = mode;
         if (mode !== "manual") {
             this.manualKioskMode = false;
             this.state.active_display = "main";
-            this.props.kioskMode = mode;
         } else {
             this.manualKioskMode = true;
             this.state.active_display = "manual";
-            this.props.kioskMode = "manual";
         }
     }
 
@@ -134,16 +133,16 @@ class kioskAttendanceApp extends Component {
             history.back();
         } else if (["confirmation", "pin", "greet"].includes(this.state.active_display)) {
             this.switchDisplay(
-                ["barcode_manual", "barcode"].includes(this.props.kioskMode) ? "main" : "manual"
+                ["barcode_manual", "barcode"].includes(this.state.kioskMode) ? "main" : "manual"
             );
         } else if (
-            (["manual", "barcode"].includes(this.props.kioskMode) ||
-                (this.props.kioskMode === "barcode_manual" &&
+            (["manual", "barcode"].includes(this.state.kioskMode) ||
+                (this.state.kioskMode === "barcode_manual" &&
                     this.state.active_display === "main")) &&
             this.props.fromTrialMode
         ) {
             this.switchDisplay("settings");
-        } else if (this.props.kioskMode === "manual") {
+        } else if (this.state.kioskMode === "manual") {
             this.switchDisplay("manual");
         } else {
             this.switchDisplay("main");
