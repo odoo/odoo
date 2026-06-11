@@ -7,7 +7,6 @@ from odoo.tools import convert
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
-    iface_splitbill = fields.Boolean(string='Bill Splitting', help='Enables Bill Splitting in the Point of Sale.')
     floor_ids = fields.Many2many('restaurant.floor', string='Restaurant Floors', help='The restaurant floors served by this point of sale.', copy=False)
     default_screen = fields.Selection([('tables', 'Tables'), ('register', 'Register')], string='Default Screen', default='tables')
     use_course_allocation = fields.Boolean(string="Enable Course Allocation")
@@ -66,7 +65,6 @@ class PosConfig(models.Model):
             'company_id': self.env.company.id,
             'journal_id': journal.id,
             'payment_method_ids': payment_methods_ids,
-            'iface_splitbill': True,
             'module_pos_restaurant': True,
             'default_screen': 'register'
         })
@@ -112,7 +110,6 @@ class PosConfig(models.Model):
             'company_id': self.env.company.id,
             'journal_id': journal.id,
             'payment_method_ids': payment_methods_ids,
-            'iface_splitbill': True,
             'module_pos_restaurant': True,
             'use_presets': bool(presets),
             'default_preset_id': presets[0] if presets else False,

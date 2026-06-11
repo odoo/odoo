@@ -102,7 +102,7 @@ class PosConfig(models.Model):
     @api.model
     def _load_pos_self_data_fields(self, pos_config_id):
         return ['id', 'name', 'company_id', 'journal_id', 'payment_method_ids', 'limit_categories',
-            'iface_available_categ_ids', 'iface_splitbill', 'module_pos_restaurant', 'self_ordering_mode',
+            'iface_available_categ_ids', 'module_pos_restaurant', 'self_ordering_mode',
             'self_ordering_service_mode', 'self_ordering_default_language_id', 'self_ordering_available_language_ids',
             'self_ordering_image_home_ids', 'self_ordering_default_user_id', 'self_ordering_pay_after',
             'self_ordering_image_brand', 'self_ordering_image_brand_name', 'currency_id', 'has_paper',
@@ -416,7 +416,6 @@ class PosConfig(models.Model):
             'payment_method_ids': not_cash_payment_methods_ids,
             'limit_categories': True,
             'iface_available_categ_ids': restaurant_categories,
-            'iface_splitbill': True,
             'module_pos_restaurant': True,
             'self_ordering_mode': 'kiosk',
             'self_ordering_pay_after': 'each',
