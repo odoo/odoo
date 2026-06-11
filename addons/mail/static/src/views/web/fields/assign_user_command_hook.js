@@ -1,43 +1,47 @@
-import { useComponent } from "@web/owl2/utils";
-
 import { useCommand } from "@web/core/commands/command_hook";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { getFieldDomain } from "@web/model/relational_model/utils";
+import { props, types, useScope } from "@odoo/owl";
 
 /**
  * Use this hook to add "Assign to.." and "Assign/Unassign me" to the command palette.
  */
 
 export function useAssignUserCommand() {
-    const component = useComponent();
+    const component = useScope().component;
+    const cprops = props({
+        record: types.any(),
+        name: types.string(),
+        context: types.any(),
+    });
     const orm = useService("orm");
-    const type = component.props.record.fields[component.props.name].type;
+    const type = cprops.record.fields[cprops.name].type;
     if (component.relation !== "res.users") {
         return;
     }
 
     const getCurrentIds = () => {
-        if (type === "many2one" && component.props.record.data[component.props.name]) {
-            return [component.props.record.data[component.props.name].id];
+        if (type === "many2one" && cprops.record.data[cprops.name]) {
+            return [cprops.record.data[cprops.name].id];
         } else if (type === "many2many") {
-            return component.props.record.data[component.props.name].currentIds;
+            return cprops.record.data[cprops.name].currentIds;
         }
         return [];
     };
 
     const add = async (record) => {
         if (type === "many2one") {
-            component.props.record.update({
-                [component.props.name]: {
+            cprops.record.update({
+                [cprops.name]: {
                     id: record[0],
                     display_name: record[1],
                 },
             });
         } else if (type === "many2many") {
-            component.props.record.data[component.props.name].linkTo(record[0], {
+            cprops.record.data[cprops.name].linkTo(record[0], {
                 display_name: record[1],
             });
         }
@@ -45,20 +49,16 @@ export function useAssignUserCommand() {
 
     const remove = async (record) => {
         if (type === "many2one") {
-            component.props.record.update({ [component.props.name]: false });
+            cprops.record.update({ [cprops.name]: false });
         } else if (type === "many2many") {
-            component.props.record.data[component.props.name].unlinkFrom(record[0]);
+            cprops.record.data[cprops.name].unlinkFrom(record[0]);
         }
     };
 
     const provide = async (env, options) => {
         const value = options.searchValue.trim();
-        let domain = getFieldDomain(
-            component.props.record,
-            component.props.name,
-            component.props.domain
-        );
-        const context = component.props.context;
+        let domain = getFieldDomain(cprops.record, cprops.name, cprops.domain);
+        const context = cprops.context;
         if (type === "many2many") {
             const selectedUserIds = getCurrentIds();
             if (selectedUserIds.length) {
@@ -83,12 +83,11 @@ export function useAssignUserCommand() {
     const options = {
         category: "smart_action",
         global: true,
-        identifier: component.props.string,
+        identifier: cprops.string,
     };
-    if (component.props.record.id !== component.props.record.model.root.id) {
+    if (cprops.record.id !== cprops.record.model.root.id) {
         // Only List View
-        options.isAvailable = () =>
-            component.props.record.model.multiEdit && component.props.record.selected;
+        options.isAvailable = () => cprops.record.model.multiEdit && cprops.record.selected;
     } else {
         options.isAvailable = () => true;
     }
@@ -124,7 +123,7 @@ export function useAssignUserCommand() {
             hotkey: "alt+shift+i",
         }
     );
-    if (component.props.record.id === component.props.record.model.root.id) {
+    if (cprops.record.id === cprops.record.model.root.id) {
         // Only Form View
         useCommand(
             _t("Unassign from me"),
