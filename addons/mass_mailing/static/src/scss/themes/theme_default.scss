@@ -30,6 +30,10 @@ div.col:not([align]) {
 // ===== Layout =====
 .o_layout {
     overflow: hidden;
+    .container:not(.o_mail_wrapper) {
+        max-width: unset;
+        margin: 0;
+    }
 
     > .o_mail_wrapper {
         width: 100%;

@@ -17,7 +17,7 @@ import { rpc } from "@web/core/network/rpc";
 
 export class ImageSavePlugin extends Plugin {
     static id = "imageSave";
-    static shared = ["savePendingImages"];
+    static shared = ["createAttachment", "savePendingImages"];
 
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -172,9 +172,7 @@ export class ImageSavePlugin extends Plugin {
                     "image/jpeg": canvas.toDataURL("image/jpeg").split(",")[1],
                 };
                 if (size !== originalSize) {
-                    altData[size]["image/webp"] = canvas
-                        .toDataURL("image/webp")
-                        .split(",")[1];
+                    altData[size]["image/webp"] = canvas.toDataURL("image/webp").split(",")[1];
                 }
             }
         }

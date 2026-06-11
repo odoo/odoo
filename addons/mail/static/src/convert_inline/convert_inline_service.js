@@ -31,8 +31,12 @@ export const convertInlineIframeService = {
             props: { share },
         });
 
-        const add = (iframe) => {
-            share.root.el.append(iframe);
+        const add = (iframe, ref = {}) => {
+            if (ref.el) {
+                ref.el.append(iframe);
+            } else {
+                share.root.el.append(iframe);
+            }
             return () => iframe.remove();
         };
 

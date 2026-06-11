@@ -1,4 +1,7 @@
-html:has(.o_layout, .o_basic_theme) {
+html:has(.o_layout) {
+    margin: 0 !important;
+    padding: 0 !important;
+
     &:has(body:not(.o_mass_mailing_iframe_fullscreen)) {
         height: auto !important;
     }
@@ -36,6 +39,12 @@ html:has(.o_layout, .o_basic_theme) {
         .note-editable {
             padding: 0;
             border: none;
+            .o_layout {
+                overflow: visible;
+                * {
+                    box-sizing: border-box !important;
+                }
+            }
         }
         .o_mass_mailing_value {
             overflow-wrap: break-word !important;
@@ -43,15 +52,12 @@ html:has(.o_layout, .o_basic_theme) {
         .o_mass_mailing_value ~ .o_loading_screen {
             display: none !important;
         }
+        font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
+        overflow-wrap: break-word;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
-    .container {
-        padding-left: 0;
-        padding-right: 0;
-    }
-}
-
-html:has(.o_layout) {
     .editor_enable .o_mail_wrapper_td.oe_empty:empty {
         &:not(:focus) {
             &:before {

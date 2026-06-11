@@ -1,5 +1,7 @@
 import { loadBundle } from "@web/core/assets";
 
+// TODO EGGMAIL: move this file in web or in mail/utils
+
 /**
  * Execute a callback once an iframe is ready/loaded in the DOM. The iframe must
  * have same origin sandbox policy enabled, and must be in the DOM (Chrome does
@@ -7,15 +9,21 @@ import { loadBundle } from "@web/core/assets";
  *
  * @param {HTMLIFrameElement} iframe
  * @param {Function} [callback]
- * @returns {Promise}
+ * @param {Object} [options]
+ * @returns {Promise} Forever pending if the iframe is disconnected
  */
 export function loadIframe(iframe, callback = () => {}) {
-    const { promise: iframeLoaded, resolve } = Promise.withResolvers();
-    const onIframeLoaded = () => {
+    const { promise: iframeLoaded, resolve, reject } = Promise.withResolvers();
+    const onIframeLoaded = async () => {
         if (iframe.isConnected) {
-            resolve(callback(iframe));
+            Promise.resolve(callback(iframe))
+                .then(resolve)
+                .catch((err) => {
+                    if (iframe.isConnected) {
+                        reject(err);
+                    }
+                });
         }
-        resolve(null);
     };
     if (iframe.contentDocument?.readyState === "complete") {
         // Browsers like Chrome don't make use of the load event for iframes without `src`
@@ -35,7 +43,7 @@ export function loadIframe(iframe, callback = () => {}) {
  * @param {HTMLIFrameElement} iframe
  * @param {Array<string>} bundles assets bundle names
  * @param {Object} [options] type of files to load
- * @returns {Promise}
+ * @returns {Promise} Forever pending if the iframe is disconnected
  */
 export function loadIframeBundles(iframe, bundles, { css = true, js = false } = {}) {
     return loadIframe(iframe, async () =>
