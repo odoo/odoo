@@ -34,7 +34,6 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.env.user.totp_secret = 'test'
         cls.fakenow = datetime.datetime(2024, 12, 5)
         cls.startClassPatcher(freeze_time(cls.fakenow))
 
