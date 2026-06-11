@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="account_journal_dashboard_kanban_view_in" model="ir.ui.view">
+        <field name="name">account.journal.dashboard.kanban.in</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.account_journal_dashboard_kanban_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//t[@t-name='JournalBodySalePurchase']//div[@name='kanban_primary_right']/div[1]" position="before">
+                <div class="row" t-if="dashboard.l10n_in_edi_to_send_count > 0">
+                    <div class="col overflow-hidden text-start">
+                        <a type="object" name="action_l10n_in_einvoice_open_pending">
+                            <t t-out="dashboard.l10n_in_edi_to_send_count"/> To Send For E-Invoicing
+                        </a>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

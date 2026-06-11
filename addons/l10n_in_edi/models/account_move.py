@@ -34,6 +34,7 @@ class AccountMove(models.Model):
             ('cancelled', "Cancelled"),
         ],
         copy=False,
+        index='btree_not_null',
         tracking=True,
         readonly=True,
     )
