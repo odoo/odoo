@@ -49,7 +49,7 @@ const NAV_KEYS = [
 ];
 const F_KEYS = range(1, 13).map((n) => `f${n}`);
 const MODIFIERS = ["alt", "control", "shift"];
-const AUTHORIZED_KEYS = [...ALPHANUM_KEYS, ...NAV_KEYS, ...F_KEYS, "escape", "<", ">"];
+const AUTHORIZED_KEYS = [...ALPHANUM_KEYS, ...NAV_KEYS, ...F_KEYS, "escape", "<", ">", ".", "?"];
 
 /**
  * Get the actual hotkey being pressed.
