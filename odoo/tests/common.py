@@ -1708,7 +1708,6 @@ class ChromeBrowser:
             '--disable-crash-reporter': '',  # Disable crash report generation
             '--disable-dev-shm-usage': '',  # Use /tmp instead of /dev/shm
             '--disable-namespace-sandbox': '',  # Disable Linux namespace sandboxing
-            '--disable-translate': '',  # Disables Chrome translation
             '--no-sandbox': '',  # Disable OS-level sandboxing
             '--disable-gpu': '',  # Disable hardware GPU acceleration
             '--enable-unsafe-swiftshader': '',  # Allow software rendering fallback for WebGL when GPU is disabled
@@ -1718,7 +1717,10 @@ class ChromeBrowser:
             # required for tours that use Youtube autoplay conditions (namely website_slides' "course_tour")
             '--autoplay-policy': 'no-user-gesture-required',  # Allow media autoplay without requiring a user click
             '--disable-default-apps': '',  # Disable installation of default apps
-            '--disable-device-discovery-notifications': '',  # Stop scanning for local Cast or media devices
+            '--disable-features': ','.join([
+                'Translate',  # Disables Chrome translation
+                'MediaRouter',  # Stop scanning for local Cast or media devices
+            ]),
             '--no-default-browser-check': '',  # Bypass the prompt asking to make Chrome the default browser
             '--no-first-run': '',  # Skip the welcome screen and first-run setup wizards
             '--remote-debugging-address': HOST,
