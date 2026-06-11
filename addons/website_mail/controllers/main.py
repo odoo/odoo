@@ -11,7 +11,7 @@ class WebsiteMail(http.Controller):
     @http.route(['/website_mail/follow'], type='json', auth="public", website=True)
     def website_message_subscribe(self, id=0, object=None, message_is_follower="on", email=False, **post):
         # TDE FIXME: check this method with new followers
-        if not request.env['ir.http']._verify_request_recaptcha_token('website_mail_follow'):
+        if not post.get("no_recaptcha") and not request.env['ir.http']._verify_request_recaptcha_token('website_mail_follow'):
             raise UserError(_("Suspicious activity detected by Google reCaptcha."))
         res_id = int(id)
         is_follower = message_is_follower == 'on'

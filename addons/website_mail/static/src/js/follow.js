@@ -137,23 +137,29 @@ publicWidget.registry.follow = publicWidget.Widget.extend({
 
         var email = $email.length ? $email.val() : false;
         if (email || this.isUser) {
-            const tokenCaptcha = await this._recaptcha.getToken("website_mail_follow");
-            const token = tokenCaptcha.token;
+            const noRecaptcha = $jsFollow.hasClass("o_website_mail_follow_no_recaptcha");
+            let token = false;
 
-            if (tokenCaptcha.error) {
-                self.notification.add(tokenCaptcha.error, {
-                    type: "danger",
-                    title: _t("Error"),
-                    sticky: true
-                });
-                return false;
+            if (!noRecaptcha) {
+                const tokenCaptcha = await this._recaptcha.getToken("website_mail_follow");
+                token = tokenCaptcha.token;
+
+                if (tokenCaptcha.error) {
+                    self.notification.add(tokenCaptcha.error, {
+                        type: "danger",
+                        title: _t("Error"),
+                        sticky: true
+                    });
+                    return false;
+                }
             }
             rpc("/website_mail/follow", {
                 "id": +$jsFollow.data("id"),
                 "object": $jsFollow.data("object"),
                 "message_is_follower": $jsFollow.attr("data-follow") || "off",
                 "email": email,
-                "recaptcha_token_response": token
+                "recaptcha_token_response": token,
+                "no_recaptcha": noRecaptcha
             }).then(function(follow) {
                 self._toggleSubscription(follow, email, $jsFollow);
             });
