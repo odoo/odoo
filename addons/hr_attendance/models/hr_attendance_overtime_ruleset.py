@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields
+from odoo import api, fields, models
 from odoo.fields import Domain
 
 
@@ -11,11 +11,14 @@ class HrAttendanceOvertimeRuleset(models.Model):
     name = fields.Char(required=True)
     description = fields.Html()
     rule_ids = fields.One2many('hr.attendance.overtime.rule', 'ruleset_id', copy=True)
-    company_id = fields.Many2one('res.company', "Company", default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', "Company", default=lambda self: self.env.company, index='btree_not_null')
     country_id = fields.Many2one(
         'res.country',
-        default=lambda self: self.env.company.country_id,
+        compute='_compute_country_id',
+        store=True,
+        readonly=False,
         domain=lambda self: [('id', 'in', self.env.companies.country_id.ids)],
+        index='btree_not_null',
     )
     rate_combination_mode = fields.Selection([
             ('max', "Maximum Rate"),
@@ -35,6 +38,14 @@ class HrAttendanceOvertimeRuleset(models.Model):
     active = fields.Boolean(default=True, readonly=False)
     version_ids = fields.One2many('hr.version', 'ruleset_id')
     versions_count = fields.Integer(compute="_compute_versions_count")
+
+    @api.depends('company_id.country_id')
+    def _compute_country_id(self):
+        for ruleset in self:
+            if ruleset.company_id:
+                ruleset.country_id = ruleset.company_id.country_id
+            elif not ruleset.country_id:
+                ruleset.country_id = self.env.company.country_id
 
     def _get_versions_with_current_ruleset_domain(self):
         return Domain.AND([[("ruleset_id", "in", self.ids)], self.env["hr.version"]._get_current_versions_domain()])
