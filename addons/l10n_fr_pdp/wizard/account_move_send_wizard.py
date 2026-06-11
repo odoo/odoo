@@ -1,5 +1,4 @@
 from odoo import models
-from odoo.exceptions import RedirectWarning
 
 
 class AccountMoveSendWizard(models.TransientModel):
@@ -33,20 +32,3 @@ class AccountMoveSendWizard(models.TransientModel):
         if reason:
             return f" ({reason})"
         return ""
-
-    def action_send_and_print(self, allow_fallback_pdf=False):
-        auth_totp_disabled = (
-            not self.env.user.totp_enabled
-            and not bool(self.env['ir.config_parameter'].sudo().get_param('auth_totp.policy'))
-            and self.env.company._get_peppol_edi_mode() != 'demo'
-        )
-        if self.company_id._get_peppol_proxy_type() == 'pdp' and auth_totp_disabled:
-            raise RedirectWarning(
-                message=self.env._("To use the French e-invoicing, you need to enable the two-factor authentication."),
-                action=self.env.user._get_records_action(
-                    target='new',
-                    views=[(self.env.ref('base.view_users_form_simple_modif').id, "form")],
-                ),
-                button_text=self.env._("Go to the Preferences panel"),
-            )
-        return super().action_send_and_print(allow_fallback_pdf=allow_fallback_pdf)
