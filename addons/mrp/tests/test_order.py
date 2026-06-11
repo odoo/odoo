@@ -3319,7 +3319,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
         # New planning: Gift Wrap Maching is at 8:00 (90 minutes),
         # then Cutting Machine at 9:30 (40 minutes), then Weld Machine at 10:10.
-        self.assertRecordValues(mo.workorder_ids, [
+        self.assertRecordValues(mo.workorder_ids.sorted('sequence'), [
             {'date_start': datetime(2025, 10, 1, 8, 0)},
             {'date_start': datetime(2025, 10, 1, 9, 30)},
             {'date_start': datetime(2025, 10, 1, 10, 10)},
@@ -5533,6 +5533,100 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         test_bom.allow_operation_dependencies = False
         mo.button_plan()
         self.assertTrue(mo.is_planned)
+
+    def test_update_bom_removes_deleted_operation_workorder(self):
+        """
+        When an operation is deleted from the BOM and action_update_bom is called on a
+        confirmed MO, the workorder for the deleted operation must be removed from workorder_ids.
+        """
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'operation_ids': [
+                Command.create({'name': 'Operation 1', 'workcenter_id': self.workcenter_1.id}),
+                Command.create({'name': 'Operation 2', 'workcenter_id': self.workcenter_2.id}),
+            ],
+        })
+        operation_to_update, operation_to_delete = bom.operation_ids
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product.id,
+            'bom_id': bom.id,
+            'product_qty': 1.0,
+        })
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+        workorder_to_delete = mo.workorder_ids.filtered(lambda wo: wo.operation_id == operation_to_delete)
+        self.assertRecordValues(mo.workorder_ids - workorder_to_delete, [{'duration_expected': 90.0}])
+
+        operation_to_update.time_cycle_manual = 40.0
+        operation_to_delete.unlink()
+        mo.action_update_bom()
+        self.assertRecordValues(mo.workorder_ids, [{'operation_id': operation_to_update.id, 'duration_expected': 65.0}])
+
+    def test_update_bom_with_cancelled_workorder_of_deleted_operation(self):
+        """
+        Check that updating the BoM of a confirmed MO still works when an operation whose
+        work order is cancelled has been removed from the BoM.
+        """
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'operation_ids': [
+                Command.create({'name': 'Operation 1', 'workcenter_id': self.workcenter_1.id}),
+                Command.create({'name': 'Operation 2', 'workcenter_id': self.workcenter_2.id}),
+            ],
+        })
+        cancelled_operation, remaining_operation = bom.operation_ids
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product.id,
+            'bom_id': bom.id,
+            'product_qty': 1.0,
+        })
+        mo.action_confirm()
+        cancelled_workorder = mo.workorder_ids.filtered(lambda wo: wo.operation_id == cancelled_operation)
+        cancelled_workorder.action_cancel()
+        self.assertEqual(cancelled_workorder.state, 'cancel')
+        # the Update BoM button is only shown on a draft or confirmed MO
+        self.assertEqual(mo.state, 'confirmed')
+
+        cancelled_operation.unlink()
+        mo.action_update_bom()
+        self.assertRecordValues(mo.workorder_ids, [
+            {'operation_id': False, 'state': 'cancel'},
+            {'operation_id': remaining_operation.id, 'state': 'ready'},
+        ])
+
+    @freeze_time('2025-10-01 08:00')
+    def test_update_bom_keeps_workorder_planning(self):
+        """
+        Check that updating the BoM of a planned MO after a component change keeps its work
+        orders planned at the same time.
+        """
+        final_product, component = self.product, self.product_1
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': final_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 1})],
+            'operation_ids': [
+                Command.create({'name': 'Operation 1', 'workcenter_id': self.workcenter_1.id}),
+                Command.create({'name': 'Operation 2', 'workcenter_id': self.workcenter_2.id}),
+            ],
+        })
+        mo = self.env['mrp.production'].create({
+            'product_id': final_product.id,
+            'bom_id': bom.id,
+            'product_qty': 1.0,
+        })
+        mo.action_confirm()
+        mo.button_plan()
+        self.assertTrue(mo.is_planned)
+        planned_starts = mo.workorder_ids.sorted('sequence').mapped('date_start')
+
+        bom.write({'bom_line_ids': [Command.update(bom.bom_line_ids.id, {'product_qty': 2})]})
+        self.assertTrue(mo.is_outdated_bom)
+        mo.action_update_bom()
+        self.assertTrue(mo.is_planned)
+        self.assertEqual(mo.workorder_ids.sorted('sequence').mapped('date_start'), planned_starts)
 
 
 class TestMrpOrderPostInstall(TestMrpCommon):
