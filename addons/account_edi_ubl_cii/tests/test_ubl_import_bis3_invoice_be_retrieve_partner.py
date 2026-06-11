@@ -88,3 +88,44 @@ class TestUblImportBis3InvoiceBERetrievePartner(TestUblImportBis3InvoiceBE):
         )
         self.assertEqual(invoice.partner_id.vat, 'BE0239843188')
         self.assertEqual(invoice.partner_bank_id.partner_id, invoice.partner_id)
+
+    def test_partial_import_partner_retrieval_bank_account_number(self):
+        """Check that the bank account number is used to retrieve the partner when importing a Bis 3 xml."""
+        partner_bank = self.env['res.partner.bank'].create({
+            'acc_number': 'BE43200112345678',
+            'partner_id': self.partner_a.id,
+            'allow_out_payment': True,
+        })
+        # Update partner_a and link it with the bank account we created
+        self.partner_a.update({
+            'name': "Test Partner",
+            'street': "42 Maze street",
+            'city': "Berlin",
+            'zip': "6534",
+            'vat': False,  # Clear the VAT field so the partner can only be found through the bank account number
+            'country_id': self.env.ref('base.be').id,
+            'bank_ids': partner_bank.ids,
+        })
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_partial_import_partner_retrieval_bank_account_number',
+            journal=self.company_data['default_journal_sale'],
+        )
+        # partner_a should be matched through the bank account number and its VAT should be filled in from the XML
+        self.assertEqual(invoice.partner_id, self.partner_a)
+        self.assertEqual(invoice.partner_id.vat, self.partner_a.vat)
+
+        # Change the VAT to trigger the VAT mismatch logic
+        self.partner_a.vat = 'BE4695478703'
+        # A new partner should be created
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_partial_import_partner_retrieval_bank_account_number',
+            journal=self.company_data['default_journal_sale'],
+        )
+        self.assertRecordValues(invoice.partner_id, [{
+            'name': "My Belgian Partner",
+            'street': "Rue des Trucs 9",
+            'city': "Bidule",
+            'zip': "6713",
+            'vat': 'BE4018517582',
+            'country_id': self.env.ref('base.be').id,
+        }])
