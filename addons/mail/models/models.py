@@ -487,6 +487,8 @@ class Base(models.AbstractModel):
         if user_field and user_field.type == 'many2one' and user_field.comodel_name == 'res.users':
             # SUPERUSER because of a read on res.users that would crash otherwise
             for record_su in self.sudo():
+                if record_su.user_id.partner_id == self.env.user.partner_id:
+                    continue
                 suggested[record_su.id]['partners'] += record_su.user_id.partner_id
 
         # add customers
