@@ -422,6 +422,13 @@ class AdvancedFollowersTest(MailCommon):
         })
         self.assertEqual(sub.message_partner_ids, (self.user_employee.partner_id | self.user_admin.partner_id))
 
+        # After unsubscribing, current user should not appear in suggested recipients
+        sub.message_unsubscribe(partner_ids=self.user_admin.partner_id.ids)
+        suggested = sub.with_user(self.user_admin)._message_get_suggested_recipients()
+        suggested_partner_ids = [r['partner_id'] for r in suggested if r.get('partner_id')]
+        self.assertNotIn(self.user_admin.partner_id.id, suggested_partner_ids,
+                         'Current user should not appear in suggested recipients after unsubscribing')
+
     @mute_logger('odoo.models.unlink')
     def test_auto_subscribe_defaults(self):
         """ Test auto subscription based on an container record. This mimics
