@@ -125,3 +125,7 @@ class PurchaseOrderLine(models.Model):
                 name += '\n' + line.product_description_variants
             pol.name = name
         super(PurchaseOrderLine, po_lines_without_requisition)._compute_price_unit_and_date_planned_and_name()
+
+    def _get_product_sellers(self):
+        seller = super()._get_product_sellers()
+        return seller.filtered(lambda s: not s.purchase_requisition_id or s.purchase_requisition_id in self.mapped('order_id.requisition_id'))

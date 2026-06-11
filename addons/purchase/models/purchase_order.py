@@ -742,7 +742,7 @@ class PurchaseOrder(models.Model):
         for line in self.order_line:
             product = line.product_id
             is_variant = product.product_variant_count > 1
-            already_seller = any(s.partner_id in allowed_partners and (not is_variant or s.product_id == product) for s in product.seller_ids)
+            already_seller = any(s.partner_id in allowed_partners and (not is_variant or s.product_id == product) for s in line._get_product_sellers())
             if product and not already_seller and len(product.seller_ids) <= 10:
                 price = line.price_unit
                 # Compute the price for the template's UoM, because the supplier's UoM is related to that UoM.
