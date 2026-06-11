@@ -24,14 +24,18 @@ _logger = logging.getLogger(__name__)
 
 @odoo.tests.tagged('post_install', '-at_install', 'post_install_l10n')
 class TestReports(odoo.tests.TransactionCase):
-    def test_reports(self):
-        invoice_domain = [('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund', 'in_receipt'))]
-        specific_model_domains = {
+
+    def _get_specific_model_domains(self, invoice_domain):
+        return {
             'account.report_original_vendor_bill': [('move_type', 'in', ('in_invoice', 'in_receipt'))],
             'account.report_invoice_with_payments': invoice_domain,
             'account.report_invoice': invoice_domain,
             'l10n_th.report_commercial_invoice': invoice_domain,
         }
+
+    def test_reports(self):
+        invoice_domain = [('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund', 'in_receipt'))]
+        specific_model_domains = self._get_specific_model_domains(invoice_domain)
         Report = self.env['ir.actions.report']
         for report in Report.search([('report_type', 'like', 'qweb')]):
             report_model = 'report.%s' % report.report_name
