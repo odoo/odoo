@@ -53,18 +53,18 @@
                                 <p class="o_view_nocontent_smiling_face">No Product Yet?</p>
                                 <p>Scan a barcode to create automatically, or load our sample data.</p>
                                 <p >
-                                    <button class="btn btn-lg btn-primary me-2" t-on-click="()=> doLoadSampleData.call()" t-att-disabled="doLoadSampleData.status === 'loading' ? 'disabled' : null">
+                                    <button class="btn btn-lg btn-primary me-2" t-on-click="()=> doLoadSampleData.call()" t-att-disabled="doLoadSampleData.status === 'loading' ? 'disabled' : null" name="load_sample_btn">
                                         <t t-if="doLoadSampleData.status === 'loading'">Loading...</t>
                                         <t t-else="">Load Sample</t>
                                      </button>
-                                    <button role="button" class="btn btn-lg btn-secondary" t-on-click="()=>pos.editProduct()">Create Manually</button>
+                                    <button role="button" class="btn btn-lg btn-secondary" t-on-click="()=>pos.editProduct()" name="create_manually_btn">Create Manually</button>
                                 </p>
                             </div>
                         </div>
                         <p t-else="">There are no products in this category.</p>
                     </div>
                     <div t-if="searchWord" class="search-more-button d-flex justify-content-center m-2">
-                        <button class="btn btn-primary btn-lg lh-lg" t-on-click="onPressEnterKey">Search more</button>
+                        <button class="btn btn-primary btn-lg lh-lg" t-on-click="onPressEnterKey" name="search_more_btn">Search more</button>
                     </div>
                 </div>
                 <t t-if="ui.isSmall">

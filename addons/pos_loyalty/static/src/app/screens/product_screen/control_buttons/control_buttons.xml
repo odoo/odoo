@@ -10,7 +10,8 @@
                 <t t-set="_eWalletRewards" t-value="_getEWalletRewards(pos.getOrder())" />
                 <button t-att-class="buttonClass"
                     t-on-click="onClickWallet"
-                    t-attf-class="{{(_orderTotal lt 0 and _eWalletPrograms.length gte 1) or _eWalletRewards.length gte 1 ? 'highlight text-action': 'disabled'}}">
+                    t-attf-class="{{(_orderTotal lt 0 and _eWalletPrograms.length gte 1) or _eWalletRewards.length gte 1 ? 'highlight text-action': 'disabled'}}"
+                    name="ewallet">
                     <i class="fa fa-credit-card me-1" />
                     <t t-if="_orderTotal lt 0 and _eWalletPrograms.length">eWallet Refund</t>
                     <t t-elif="_eWalletRewards.length">eWallet Pay</t>
@@ -18,7 +19,7 @@
                 </button>
             </t>
             <t t-if="pos.models['loyalty.program'].some((p) => ['coupons', 'promotion', 'gift_card', 'promo_code', 'next_order_coupons'].includes(p.program_type))">
-                <button t-att-class="buttonClass"
+                <button t-att-class="buttonClass" name="promo_code"
                     t-on-click="() => this.clickPromoCode()">
                     <i class="fa fa-barcode me-1"/>Enter Code
                 </button>
@@ -27,14 +28,15 @@
                 <button class="control-button"
                     t-att-class="buttonClass"
                     t-attf-class="{{state.nbrRewards ? 'highlight' : 'disabled'}}"
-                    t-on-click="() => this.clickRewards()">
+                    t-on-click="() => this.clickRewards()"
+                    name="rewards">
                     <i class="fa fa-star me-1 text-favourite"/>Reward
                 </button>
             </t>
         </xpath>
         <xpath expr="//t[@t-if='props.showRemainingButtons']/div/button[hasclass('o_pricelist_button')]" position="before">
             <t t-if="pos.models['loyalty.program'].some((p) => ['coupons', 'promotion'].includes(p.program_type)) and this.pos.cashier._role !== 'minimal'">
-                <button class="btn btn-secondary btn-lg py-5" t-att-class="{'disabled': !pos.getOrder().isProgramsResettable()}"
+                <button class="btn btn-secondary btn-lg py-5" t-att-class="{'disabled': !pos.getOrder().isProgramsResettable()}" name="reset_programs"
                     t-on-click="() => this.pos.resetPrograms()">
                     <i class="fa fa-star me-1"/>Reset Programs
                 </button>

@@ -20,10 +20,10 @@
                             </div>
                             <div class="receipt-options d-flex flex-column gap-2">
                                 <div class="d-flex gap-1">
-                                    <button class="button print btn btn-lg btn-secondary w-100 py-3" t-on-click="() => doFullPrint.call()">
+                                    <button name="print_full_receipt_btn" class="button print btn btn-lg btn-secondary w-100 py-3" t-on-click="() => doFullPrint.call()">
                                         <i t-attf-class="fa {{doFullPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Full Receipt
                                     </button>
-                                    <button t-if="pos.config.basic_receipt" class="button print btn btn-lg btn-secondary w-100 py-3" t-on-click="() => doBasicPrint.call()">
+                                    <button name="print_basic_receipt_btn" t-if="pos.config.basic_receipt" class="button print btn btn-lg btn-secondary w-100 py-3" t-on-click="() => doBasicPrint.call()">
                                         <i t-attf-class="fa {{doBasicPrint.status === 'loading' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-print'}} me-1" />Print Basic Receipt
                                     </button>
                                 </div>
@@ -31,7 +31,7 @@
                                     <div class="d-flex">
                                         <input type="text" class="send-receipt-email-input o_input position-relative p-3 border border-end-0 rounded-start-2 text-body" t-attf-placeholder="e.g. john.doe@mail.com" t-model="state.email" />
                                         <div>
-                                            <button t-att-style="`width: ${this.ui.isSmall ? '4rem' : '8rem'}`" class="btn btn-primary btn-lg lh-lg rounded-start-0 h-100" t-att-disabled="!isValidEmail" t-on-click="() => this.actionSendReceiptOnEmail()">
+                                            <button name="send_receipt_on_email_btn" t-att-style="`width: ${this.ui.isSmall ? '4rem' : '8rem'}`" class="btn btn-primary btn-lg lh-lg rounded-start-0 h-100" t-att-disabled="!isValidEmail" t-on-click="() => this.actionSendReceiptOnEmail()">
                                                 <i t-attf-class="fa {{sendReceipt.status === 'loading' and sendReceipt.lastArgs?.[0]?.name === 'Email' ? 'fa-fw fa-spin fa-circle-o-notch' : 'fa-paper-plane'}}" />
                                             </button>
                                         </div>
