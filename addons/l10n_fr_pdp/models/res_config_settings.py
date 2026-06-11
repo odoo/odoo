@@ -54,10 +54,3 @@ class ResConfigSettings(models.TransientModel):
     def _inverse_l10n_fr_pdp_pilot_phase(self):
         for record in self:
             record.company_id._l10n_fr_pdp_update_pilot_phase(record.l10n_fr_pdp_pilot_phase)
-
-    def button_peppol_reregister(self):
-        # Extend `account_peppol` to check for the 2FA before starting the reregistration
-        self.ensure_one()
-        registration_wizard = self.env['pdp.registration'].create({'company_id': self.company_id.id})
-        registration_wizard._check_can_register()
-        return super().button_peppol_reregister()
