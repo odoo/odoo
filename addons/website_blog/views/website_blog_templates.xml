@@ -58,7 +58,7 @@ list of filtered posts (by date or tag).
         <t t-set="is_split_grid_sticky" t-value="opt_blog_split_grid_view and len(posts) >= 3"/>
 
         <!-- Container width: use per-blog value when set, else global view toggle. -->
-        <t t-set="opt_blog_fullwidth" t-value="(blog.blog_page_container == 'fluid') if (blog and blog.blog_page_container) else is_view_active('website_blog.opt_blog_fullwidth')"/>
+        <t t-set="opt_blog_fullwidth" t-value="not opt_blog_simple_list_view and ((blog.blog_page_container == 'fluid') if (blog and blog.blog_page_container) else is_view_active('website_blog.opt_blog_fullwidth'))"/>
         <t t-set="opt_posts_loop_show_date" t-value="is_view_active('website_blog.opt_posts_loop_show_date')"/>
         <div id="o_wblog_blog_top" t-att-class="blog and 'o_wblog_homepage_top'">
             <!-- Selectively display droppable-areas for 'all blogs' or single-blog pages -->
@@ -303,12 +303,12 @@ list of filtered posts (by date or tag).
             <div t-attf-class="#{(opt_blog_post_split_cover or opt_blog_post_sidebar) and 'row' or ''}">
                 <!-- Sidebar-enabled Layout -->
                 <t t-if="opt_blog_post_sidebar">
-                    <div id="o_wblog_post_content" t-attf-class="col-12 #{'col-lg-7 offset-lg-1' if opt_blog_post_split_cover else 'col-lg-6 offset-lg-1'}">
+                    <div id="o_wblog_post_content" t-attf-class="col-12 #{'col-lg-7 offset-lg-1' if opt_blog_post_split_cover else ('col-lg-9' if opt_blog_post_large_container else 'col-lg-6 offset-lg-1')}">
                         <t t-call="website_blog.blog_post_content"
                             opt_blog_post_regular_cover="opt_blog_post_regular_cover"
                             opt_blog_post_breadcrumb="opt_blog_post_breadcrumb"/>
                     </div>
-                    <div id="o_wblog_post_sidebar_col" t-att-class="('col-lg-4' if opt_blog_post_split_cover else 'col-lg-3') + ' pt-5 pt-lg-0' + (' offset-lg-1' if not opt_blog_post_split_cover else ' order-lg-first')">
+                    <div id="o_wblog_post_sidebar_col" t-att-class="('col-lg-4' if opt_blog_post_split_cover else 'col-lg-3') + ' pt-5 pt-lg-0' + (' order-lg-first' if opt_blog_post_split_cover else ('' if opt_blog_post_large_container else ' offset-lg-1'))">
                         <t t-call="website_blog.blog_post_sidebar"/>
                     </div>
                 </t>
@@ -344,7 +344,7 @@ list of filtered posts (by date or tag).
     </t>
     <div t-field="blog_post.content"
         class="o_wblog_post_content_field"/>
-        <div id="o_wblog_post_footer_meta" class="d-flex align-items-center flex-wrap gap-3 justify-content-between mt-5">
+        <div t-if="blog_post.tag_ids or has_footer_share" id="o_wblog_post_footer_meta" class="d-flex align-items-center flex-wrap gap-3 justify-content-between mt-5">
             <div t-if="blog_post.tag_ids">
                 <t t-foreach="blog_post.tag_ids" t-as="one_tag">
                     <a t-attf-class="badge post_link text-decoration-none o_tag o_color_#{one_tag.color}" t-attf-href="#{blog_url(tag=slug(one_tag))}" t-out="one_tag.name"/>
@@ -354,8 +354,11 @@ list of filtered posts (by date or tag).
 </template>
 
 <template id="blog_post_content_share_links" inherit_id="website_blog.blog_post_content">
+    <xpath expr="//div[@id='o_wblog_post_footer_meta']" position="before">
+        <t t-set="has_footer_share" t-value="True"/>
+    </xpath>
     <xpath expr="//div[@id='o_wblog_post_footer_meta']/div[@t-if='blog_post.tag_ids']" position="before">
-        <div t-if="opt_blog_post_header_share_links_display" t-ignore="true">
+        <div t-ignore="true">
             <t t-snippet-call="website.s_share"
                 string="Share"
                 _classes.f="no_icon_color"
@@ -387,10 +390,9 @@ list of filtered posts (by date or tag).
 -->
 <template id="opt_blog_post_regular_cover" name="'Regular' Cover" inherit_id="website_blog.blog_post_complete" active="True">
     <xpath expr="//div[@id='title']" position="replace">
-        <div t-att-class="'container' if not opt_blog_post_full_width_cover else 'container-fluid'">
-
-            <div id="title" class="blog_header o_wblog_regular_cover_container row">
-                <div class="col-12 col-lg-8 offset-lg-2">
+        <div class="container">
+            <div id="title" t-att-class="'blog_header o_wblog_regular_cover_container' + (' row' if (opt_blog_post_large_container or opt_blog_post_sidebar) else '')">
+                <div t-att-class="'col-12 col-lg-8 offset-lg-2' if (opt_blog_post_large_container or opt_blog_post_sidebar) else 'o_container_small'">
                     <t t-if="opt_blog_post_breadcrumb" t-call="website_blog.post_breadcrumbs"/>
 
                     <div t-attf-class="o_wblog_post_title mb-3" t-ignore="False">
@@ -413,11 +415,13 @@ list of filtered posts (by date or tag).
                         </div>
                     </div>
                 </div>
-                <t t-call="website.record_cover"
-                    _record="blog_post"
-                    additionnal_classes.f="o_wblog_post_page_cover o_wblog_post_page_cover_regular o_cc3 mt-5 ratio"
-                    use_size="False"/>
             </div>
+        </div>
+        <div t-att-class="'container' if not opt_blog_post_full_width_cover else 'container-fluid g-0'">
+            <t t-call="website.record_cover"
+                _record="blog_post"
+                additionnal_classes.f="o_wblog_post_page_cover o_wblog_post_page_cover_regular o_cc3 mt-5 ratio"
+                use_size="False"/>
         </div>
     </xpath>
     <xpath expr="//div[@id='o_wblog_post_header_actions']/t[@t-call='website_blog.blog_post_comment_count']" position="before">

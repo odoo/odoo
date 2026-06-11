@@ -9,7 +9,6 @@
 
     <nav t-attf-class="#{(opt_blog_fullwidth or is_split_grid_sticky) and 'container-fluid' or 'container'}" aria-label="Blog navigation">
         <h1 t-if="not website.is_view_active('website_blog.opt_blog_cover_post')" class="visually-hidden">Blog Posts</h1>
-        <div class="oe_structure" id="oe_structure_blog_nav_0"/>
         <div t-attf-class="position-relative z-1 d-flex gap-2 flex-nowrap py-4 #{additionnal_classes} #{len(blogs) == 1 and not website.is_view_active('website_blog.opt_blog_cover_post') and 'align-items-center'}">
             <!-- Desktop -->
             <ul t-if="len(blogs) > 1" class="o_wblog_category list-unstyled d-none d-lg-flex flex-wrap gap-2 mb-0">

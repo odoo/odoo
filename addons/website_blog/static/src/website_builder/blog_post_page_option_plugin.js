@@ -74,6 +74,7 @@ export class BlogPostPageOptionPlugin extends Plugin {
         for (const el of contentEl.querySelectorAll("[id^='blog_table_of_content_']")) {
             if (!el.matches("h1, h2, h3, h4, h5, h6")) {
                 el.removeAttribute("id");
+                el.removeAttribute("data-anchor");
             }
         }
         const headingEls = [...contentEl.querySelectorAll("h1, h2, h3, h4, h5, h6")];

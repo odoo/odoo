@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-name="website_blog.BlogNavSheet">
         <ul class="list-unstyled mb-0">
-            <t t-foreach="props.blogs" t-as="blog" t-key="blog.href">
+            <t t-foreach="this.props.blogs" t-as="blog" t-key="blog.href">
                 <li>
                     <a t-att-href="blog.href"
                        t-att-class="'dropdown-item d-flex justify-content-between' + (blog.active ? ' active' : '')"

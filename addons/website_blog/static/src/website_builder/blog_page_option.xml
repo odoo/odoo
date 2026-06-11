@@ -36,6 +36,17 @@
             <BuilderCheckbox t-if="this.isActiveItem('regular_cover')" actionParam="{views: ['website_blog.opt_blog_post_full_width_cover']}"/>
         </BuilderRow>
 
+        <BuilderRow
+            label.translate="Container Size"
+            tooltip.translate="Adapt the size of the blog post's content"
+            t-if="!this.isActiveItem('split_cover')"
+        >
+            <BuilderSelect>
+                <BuilderSelectItem actionParam="{views: []}">Default</BuilderSelectItem>
+                <BuilderSelectItem actionParam="{views: ['website_blog.opt_blog_post_large_container']}">Large</BuilderSelectItem>
+            </BuilderSelect>
+        </BuilderRow>
+
         <BuilderRow label.translate="Comments">
             <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_comment']}"/>
         </BuilderRow>
@@ -86,16 +97,6 @@
             <BuilderCheckbox id="'blog_post_archive_opt'" actionParam="{views: ['website_blog.opt_blog_post_archive_display']}"/>
         </BuilderRow>
 
-        <BuilderRow
-            label.translate="Container Size"
-            tooltip.translate="Adapt the size of the blog post's content"
-            t-if="!this.isActiveItem('split_cover') and !this.isActiveItem('blog_post_archive_opt') and !this.isActiveItem('blog_post_author_opt') and !this.isActiveItem('blog_post_blogs_opt') and !this.isActiveItem('blog_post_share_links_opt') and !this.isActiveItem('blog_post_tags_opt') and !this.isActiveItem('blog_post_toc_opt')"
-        >
-            <BuilderSelect>
-                <BuilderSelectItem actionParam="{views: []}">Default</BuilderSelectItem>
-                <BuilderSelectItem actionParam="{views: ['website_blog.opt_blog_post_large_container']}">Large</BuilderSelectItem>
-            </BuilderSelect>
-        </BuilderRow>
     </BuilderContext>
 </t>
 

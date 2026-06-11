@@ -113,12 +113,12 @@
         --aspect-ratio: 50%;
 
         @include media-breakpoint-down(lg) {
-            --aspect-ratio: calc(3 / 4 * 100%);
+            --aspect-ratio: 75%; // ratio: 3/4
         }
     }
 
     .o_wblog_post_page_cover_split {
-        --aspect-ratio: calc(10 / 16 * 100%);
+        --aspect-ratio: 62.5%; // ratio: 10/16
     }
 
     .breadcrumb-item {
