@@ -23,9 +23,22 @@ MANIFEST_KEYS = {
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class ManifestLinter(BaseCase):
-
     def test_manifests(self):
-        for manifest in Manifest.all_addon_manifests():
+        module_logger = logging.getLogger('odoo.modules.module')
+        assert_no_logs = self.assertNoLogs(module_logger, logging.DEBUG)
+        try:
+            with assert_no_logs:
+                all_manifests = Manifest.all_addon_manifests()
+        except AssertionError:
+            for record in assert_no_logs.watcher.records:
+                if "Failed to parse" in record.msg:
+                    # requalify the verbosity from DEBUG to WARNING
+                    record.levelno = logging.WARNING
+                    record.levelname = "WARNING"
+                if module_logger.isEnabledFor(record.levelno):
+                    _logger.handle(record)
+
+        for manifest in all_manifests:
             with self.subTest(module=manifest.name):
                 # we want to check the content of the manifest directly without
                 # parsed values
