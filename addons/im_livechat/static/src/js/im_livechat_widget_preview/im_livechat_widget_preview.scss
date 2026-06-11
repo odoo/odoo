@@ -1,0 +1,29 @@
+.o_im_livechat_preview {
+    .o-mail-ChatWindow {
+        position: relative;
+        z-index: 0;
+        width: $o-mail-ChatWindow-width !important;
+        max-width: 100%;
+        height: Min(95vh, $o-mail-ChatWindow-width * 15 / 9) !important;
+    }
+
+    .o-mail-ChatWindow-header {
+        color: var(--o-mail-livechat-btn-color);
+        background-color: var(--o-mail-livechat-header-bg) !important;
+
+        .o-mail-ActionList button {
+            --btn-color: var(--o-mail-livechat-btn-color);
+            --btn-hover-color: var(--o-mail-livechat-btn-color);
+            --btn-active-color: var(--o-mail-livechat-btn-color);
+
+            &:not(:hover, &:focus-visible, &:active) {
+                --o-mail-ActionList-Button-opacity: 1;
+            }
+        }
+    }
+
+    .o-livechat-LivechatButton {
+        color: var(--o-mail-livechat-btn-color);
+        background-color: var(--o-mail-livechat-header-bg);
+    }
+}
