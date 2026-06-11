@@ -3,7 +3,7 @@ import { ChannelMember } from "@mail/discuss/core/common/channel_member";
 import { openChannelInvitationDialog } from "@mail/discuss/core/common/channel_invitation";
 import { SearchInput } from "@mail/core/common/search_input";
 
-import { Component, computed, onWillUpdateProps, onWillStart, props, types } from "@odoo/owl";
+import { Component, computed, props, types, useEffect } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 import { useService } from "@web/core/utils/hooks";
@@ -46,17 +46,9 @@ export class ChannelMemberList extends Component {
             },
         });
         this.categories = computed(() => this.computeCategories(this.search.searchTerm));
-        onWillStart(() => {
+        useEffect(() => {
             if (this.props.channel.fetchMembersState === "not_fetched") {
                 this.props.channel.fetchChannelMembers();
-            }
-        });
-        onWillUpdateProps((nextProps) => {
-            if (nextProps.channel.fetchMembersState === "not_fetched") {
-                nextProps.channel.fetchChannelMembers();
-            }
-            if (nextProps.channel.notEq(this.props.channel)) {
-                this.search.reset();
             }
         });
     }
