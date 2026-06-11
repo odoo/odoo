@@ -1875,6 +1875,7 @@ class TestQueries(TransactionCase):
                     )
                     AND (
                         "res_partner_category"."parent_id" IS NOT NULL
+                        AND "res_partner_category__parent_id"."id" IS NOT NULL
                         AND "res_partner_category__parent_id"."name" ->> %s ILIKE %s
                     )
                 )
@@ -2006,7 +2007,9 @@ class TestMany2one(TransactionCase):
             FROM "res_partner"
             LEFT JOIN "res_company" AS "res_partner__company_id"
             ON ("res_partner"."company_id" = "res_partner__company_id"."id")
-            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."name" LIKE %s)
+            WHERE ("res_partner"."company_id" IS NOT NULL
+                AND "res_partner__company_id"."id" IS NOT NULL
+                AND "res_partner__company_id"."name" LIKE %s)
             ORDER BY ...
         ''']):
             self.Partner.search([('company_id.name', 'like', self.company.name)])
@@ -2018,7 +2021,9 @@ class TestMany2one(TransactionCase):
             ON ("res_partner"."company_id" = "res_partner__company_id"."id")
             LEFT JOIN "res_partner" AS "res_partner__company_id__partner_id"
             ON ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
-            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id__partner_id"."name" LIKE %s)
+            WHERE ("res_partner"."company_id" IS NOT NULL
+                AND "res_partner__company_id"."id" IS NOT NULL
+                AND "res_partner__company_id__partner_id"."name" LIKE %s)
             ORDER BY ...
         ''']):
             self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
@@ -2031,8 +2036,12 @@ class TestMany2one(TransactionCase):
             LEFT JOIN "res_country" AS "res_partner__country_id"
             ON ("res_partner"."country_id" = "res_partner__country_id"."id")
             WHERE (
-                ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."name" LIKE %s)
-                OR ("res_partner"."country_id" IS NOT NULL AND "res_partner__country_id"."code" LIKE %s)
+                ("res_partner"."company_id" IS NOT NULL
+                    AND "res_partner__company_id"."id" IS NOT NULL
+                    AND "res_partner__company_id"."name" LIKE %s)
+                OR ("res_partner"."country_id" IS NOT NULL
+                    AND "res_partner__country_id"."id" IS NOT NULL
+                    AND "res_partner__country_id"."code" LIKE %s)
             )
             ORDER BY ...
         ''']):
@@ -2145,7 +2154,9 @@ class TestMany2one(TransactionCase):
             FROM "res_partner"
             LEFT JOIN "res_company" AS "res_partner__company_id" ON
                 ("res_partner"."company_id" = "res_partner__company_id"."id")
-            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."name" LIKE %s)
+            WHERE ("res_partner"."company_id" IS NOT NULL
+                AND "res_partner__company_id"."id" IS NOT NULL
+                AND "res_partner__company_id"."name" LIKE %s)
             ORDER BY ...
         ''']):
             self.Partner.search([('company_id.name', 'like', self.company.name)])
@@ -2157,7 +2168,9 @@ class TestMany2one(TransactionCase):
                 ("res_partner"."company_id" = "res_partner__company_id"."id")
             LEFT JOIN "res_partner" AS "res_partner__company_id__partner_id" ON
                 ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
-            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id__partner_id"."name" LIKE %s)
+            WHERE ("res_partner"."company_id" IS NOT NULL
+                AND "res_partner__company_id"."id" IS NOT NULL
+                AND "res_partner__company_id__partner_id"."name" LIKE %s)
             ORDER BY ...
         ''']):
             self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
@@ -2167,7 +2180,9 @@ class TestMany2one(TransactionCase):
             FROM "res_partner"
             LEFT JOIN "res_company" AS "res_partner__company_id" ON
                 ("res_partner"."company_id" = "res_partner__company_id"."id")
-            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."parent_id" IS NULL)
+            WHERE ("res_partner"."company_id" IS NOT NULL
+                AND "res_partner__company_id"."id" IS NOT NULL
+                AND "res_partner__company_id"."parent_id" IS NULL)
             ORDER BY ...
         ''']):
             self.Partner.search([('company_id.parent_id', '=', False)])
@@ -2184,7 +2199,9 @@ class TestMany2one(TransactionCase):
                 ("res_partner"."company_id" = "res_partner__company_id"."id")
             LEFT JOIN "res_partner" AS "res_partner__company_id__partner_id" ON
                 ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
-            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id__partner_id"."name" LIKE %s)
+            WHERE ("res_partner"."company_id" IS NOT NULL
+                AND "res_partner__company_id"."id" IS NOT NULL
+                AND "res_partner__company_id__partner_id"."name" LIKE %s)
             ORDER BY ...
         ''']):
             self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
@@ -2201,7 +2218,9 @@ class TestMany2one(TransactionCase):
                 ("res_partner"."company_id" = "res_partner__company_id"."id")
             LEFT JOIN "res_partner" AS "res_partner__company_id__partner_id" ON
                 ("res_partner__company_id"."partner_id" = "res_partner__company_id__partner_id"."id")
-            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id__partner_id"."name" LIKE %s)
+            WHERE ("res_partner"."company_id" IS NOT NULL
+                AND "res_partner__company_id"."id" IS NOT NULL
+                AND "res_partner__company_id__partner_id"."name" LIKE %s)
             ORDER BY ...
         ''']):
             self.Partner.search([('company_id.partner_id.name', 'like', self.company.name)])
@@ -2223,8 +2242,12 @@ class TestMany2one(TransactionCase):
             LEFT JOIN "res_country" AS "res_partner__country_id" ON
                 ("res_partner"."country_id" = "res_partner__country_id"."id")
             WHERE (
-                ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."name" LIKE %s)
-                OR ("res_partner"."country_id" IS NOT NULL AND "res_partner__country_id"."code" LIKE %s)
+                ("res_partner"."company_id" IS NOT NULL
+                    AND "res_partner__company_id"."id" IS NOT NULL
+                    AND "res_partner__company_id"."name" LIKE %s)
+                OR ("res_partner"."country_id" IS NOT NULL
+                    AND "res_partner__country_id"."id" IS NOT NULL
+                    AND "res_partner__country_id"."code" LIKE %s)
             )
             ORDER BY ...
         ''']):
@@ -2242,7 +2265,9 @@ class TestMany2one(TransactionCase):
             FROM "res_partner"
             LEFT JOIN "res_company" AS "res_partner__company_id"
             ON ("res_partner"."company_id" = "res_partner__company_id"."id")
-            WHERE ("res_partner"."company_id" IS NOT NULL AND "res_partner__company_id"."name" LIKE %s)
+            WHERE ("res_partner"."company_id" IS NOT NULL
+                AND "res_partner__company_id"."id" IS NOT NULL
+                AND "res_partner__company_id"."name" LIKE %s)
             ORDER BY ...
         ''']):
             self.Partner.search([('company_id', 'like', self.company.name)])
@@ -2457,7 +2482,9 @@ class TestOne2many(TransactionCase):
                 WHERE (
                     "res_partner"."active" IS TRUE
                     AND "res_partner"."parent_id" IS NOT NULL
-                    AND ("res_partner"."state_id" IS NOT NULL AND "res_partner__state_id__country_id"."code" LIKE %s)
+                    AND ("res_partner"."state_id" IS NOT NULL
+                        AND "res_partner__state_id"."id" IS NOT NULL
+                        AND "res_partner__state_id__country_id"."code" LIKE %s)
                 )
             ) AS __sub WHERE __inverse = "res_partner"."id")
             ORDER BY ...
