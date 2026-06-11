@@ -26,7 +26,10 @@ export class HeaderOptionPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_actions: { HeaderTemplateConfigAction },
+        builder_actions: {
+            HeaderTemplateConfigAction,
+            CustomizeHeaderBgBlurAction,
+        },
         builder_header_middle_buttons: [
             {
                 Component: HeaderTopOptions,
@@ -109,6 +112,19 @@ export class HeaderOptionPlugin extends Plugin {
 
     getHeaderTemplates() {
         return this.headerTemplates;
+    }
+}
+
+export class CustomizeHeaderBgBlurAction extends WebsiteConfigAction {
+    static id = "customizeHeaderBgBlur";
+
+    getValue() {
+        return this.dependencies.customizeWebsite.getWebsiteVariableValue("header-bg-blur");
+    }
+
+    apply(context) {
+        context.params = { ...context.params, vars: { "header-bg-blur": context.value } };
+        return super.apply(context);
     }
 }
 
