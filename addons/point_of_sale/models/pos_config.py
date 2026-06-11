@@ -1139,6 +1139,14 @@ class PosConfig(models.Model):
         # filters out unavailable external id
         return [self.env.ref(record).id for record in recordRefs if self.env.ref(record, raise_if_not_found=False)]
 
+    def _load_product_demo_data(self, files):
+        """Load the given (file, check_xmlid) product demo data pairs, skipping
+        any file whose check record already exists (loaded by product's own demo
+        data, or by a previous onboarding scenario)."""
+        for file, check_xmlid in files:
+            if not self.env.ref(check_xmlid, raise_if_not_found=False):
+                convert.convert_file(self._env_with_clean_context(), 'product', file, idref=None, mode='init', noupdate=True)
+
     def load_demo_data(self):
         self = self.with_context(bypass_categories_forbidden_change=True)
         xml_id = self.get_external_id().get(self.id) or self._get_default_demo_data_xml_id()
@@ -1180,9 +1188,7 @@ class PosConfig(models.Model):
         self.ensure_one()
         convert.convert_file(self._env_with_clean_context(), 'point_of_sale', 'data/scenarios/clothes_category_data.xml', idref=None, mode='init', noupdate=True)
         if with_demo_data:
-            product_module = self.env['ir.module.module'].search([('name', '=', 'product')])
-            if not product_module.demo:
-                convert.convert_file(self._env_with_clean_context(), 'product', 'data/product_attribute_demo.xml', idref=None, mode='init', noupdate=True)
+            self._load_product_demo_data([('data/product_attribute_demo.xml', 'product.pa_sides')])
             convert.convert_file(self._env_with_clean_context(), 'point_of_sale', 'data/scenarios/clothes_data.xml', idref=None, mode='init', noupdate=True)
         clothes_categories = self.get_record_by_ref([
             'point_of_sale.pos_category_upper',
@@ -1252,11 +1258,11 @@ class PosConfig(models.Model):
         self.ensure_one()
         convert.convert_file(self._env_with_clean_context(), 'point_of_sale', 'data/scenarios/furniture_category_data.xml', idref=None, mode='init', noupdate=True)
         if with_demo_data:
-            product_module = self.env['ir.module.module'].search([('name', '=', 'product')])
-            if not product_module.demo:
-                convert.convert_file(self._env_with_clean_context(), 'product', 'data/product_category_demo.xml', idref=None, mode='init', noupdate=True)
-                convert.convert_file(self._env_with_clean_context(), 'product', 'data/product_attribute_demo.xml', idref=None, mode='init', noupdate=True)
-                convert.convert_file(self._env_with_clean_context(), 'product', 'data/product_demo.xml', idref=None, mode='init', noupdate=True)
+            self._load_product_demo_data([
+                ('data/product_category_demo.xml', 'product.product_category_furniture'),
+                ('data/product_attribute_demo.xml', 'product.pa_sides'),
+                ('data/product_demo.xml', 'product.desk_organizer'),
+            ])
             convert.convert_file(self._env_with_clean_context(), 'point_of_sale', 'data/scenarios/furniture_data.xml', idref=None, mode='init', noupdate=True)
 
         furniture_categories = self.get_record_by_ref([
