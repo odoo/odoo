@@ -1,6 +1,5 @@
-import { Component, onWillUnmount, props, proxy, status, types } from "@odoo/owl";
+import { Component, onWillUnmount, props, proxy, useScope, status, types } from "@odoo/owl";
 
-import { useComponent } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -48,7 +47,6 @@ export const patchable = {
  */
 export function useVoiceRecorder(params = {}) {
     const maxDuration = params.maxDuration ?? 60;
-    const component = useComponent();
     const onRecordReady = params.onRecordReady;
     /** @type {MediaStream} */
     let microphone;
@@ -87,6 +85,7 @@ export function useVoiceRecorder(params = {}) {
             }
         },
     });
+    const scope = useScope();
     /** @type {ReturnType<typeof import("@web/core/notifications/notification_service").notificationService.start>} */
     const dialog = useService("dialog");
     const notification = useService("notification");
@@ -121,7 +120,7 @@ export function useVoiceRecorder(params = {}) {
                 microphone = await browser.navigator.mediaDevices.getUserMedia({
                     audio: store.settings.audioConstraints,
                 });
-                if (status(component) === "destroyed") {
+                if (status(scope.status) === "destroyed") {
                     cleanUp();
                     return;
                 }
