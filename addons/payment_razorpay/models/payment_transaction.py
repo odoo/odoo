@@ -11,7 +11,6 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.urls import urljoin as url_join
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_razorpay import const
 from odoo.addons.payment_razorpay.controllers.main import RazorpayController
@@ -123,7 +122,7 @@ class PaymentTransaction(models.Model):
         :return: The request payload.
         :rtype: dict
         """
-        converted_amount = payment_utils.to_minor_currency_units(self.amount, self.currency_id)
+        converted_amount = self.provider_id._to_minor_currency_units(self.amount, self.currency_id)
         pm_code = (self.payment_method_id.primary_payment_method_id or self.payment_method_id).code
         payload = {
             "amount": converted_amount,
@@ -134,7 +133,7 @@ class PaymentTransaction(models.Model):
             payload["customer_id"] = customer_id  # Required for only non-subsequent payments.
             if self.tokenize:
                 payload["token"] = {
-                    "max_amount": payment_utils.to_minor_currency_units(
+                    "max_amount": self.provider_id._to_minor_currency_units(
                         self._razorpay_get_mandate_max_amount(), self.currency_id
                     ),
                     "expire_at": time.mktime(
@@ -254,7 +253,7 @@ class PaymentTransaction(models.Model):
             return super()._send_refund_request()
 
         # Send the refund request to Razorpay.
-        converted_amount = payment_utils.to_minor_currency_units(
+        converted_amount = self.provider_id._to_minor_currency_units(
             -self.amount, self.currency_id
         )  # The amount is negative for refund transactions.
         payload = {
@@ -274,7 +273,7 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "razorpay":
             return super()._send_capture_request()
 
-        converted_amount = payment_utils.to_minor_currency_units(self.amount, self.currency_id)
+        converted_amount = self.provider_id._to_minor_currency_units(self.amount, self.currency_id)
         payload = {"amount": converted_amount, "currency": self.currency_id.name}
         response_content = self._send_api_request(
             "POST", f"payments/{self.provider_reference}/capture", json=payload
@@ -349,7 +348,7 @@ class PaymentTransaction(models.Model):
         if not refund_provider_reference or not amount_to_refund:
             raise ValidationError(self.env._("Received incomplete refund data."))
 
-        converted_amount = payment_utils.to_major_currency_units(
+        converted_amount = self.provider_id._to_major_currency_units(
             amount_to_refund, source_tx.currency_id
         )
         return source_tx._create_child_transaction(
@@ -446,7 +445,7 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "razorpay":
             return super()._extract_amount_data(payment_data)
 
-        amount = payment_utils.to_major_currency_units(payment_data["amount"], self.currency_id)
+        amount = self.provider_id._to_major_currency_units(payment_data["amount"], self.currency_id)
         return {"amount": amount, "currency_code": payment_data["currency"]}
 
     def _extract_token_values(self, payment_data):

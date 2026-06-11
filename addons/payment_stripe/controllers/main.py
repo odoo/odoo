@@ -12,7 +12,6 @@ from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import file_open, mute_logger
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_stripe import const
 from odoo.addons.payment_stripe import utils as stripe_utils
@@ -177,12 +176,9 @@ class StripeController(http.Controller):
         :rtype: recordset of `payment.transaction`
         """
         amount_to_refund = refund_object["amount"]
-        converted_amount = payment_utils.to_major_currency_units(
+        converted_amount = source_tx_sudo.provider_id._to_major_currency_units(
             amount_to_refund,
             source_tx_sudo.currency_id,
-            arbitrary_decimal_number=source_tx_sudo.provider_id._get_amount_precision(
-                source_tx_sudo.currency_id
-            ),
         )
         return source_tx_sudo._create_child_transaction(converted_amount, is_refund=True)
 

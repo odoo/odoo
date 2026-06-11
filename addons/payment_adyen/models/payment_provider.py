@@ -6,7 +6,6 @@ import re
 from odoo import api, fields, models
 from odoo.tools.urls import urljoin
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_adyen import const
 
@@ -124,11 +123,7 @@ class PaymentProvider(models.Model):
         """
         currency_code = currency and currency.name
         converted_amount = (
-            amount
-            and currency_code
-            and payment_utils.to_minor_currency_units(
-                amount, currency, self._get_amount_precision(currency)
-            )
+            amount and currency_code and self._to_minor_currency_units(amount, currency)
         )
         return {"value": converted_amount, "currency": currency_code}
 
