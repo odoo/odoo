@@ -247,7 +247,7 @@ No Stock On Hand. This analysis gives you an overview of the current stock level
         <field name="model">stock.quant</field>
         <field name="arch" type="xml">
             <form string="Create Stock">
-                <div class="alert alert-warning" role="alert" invisible="context.get('readonly_form')">
+                <div class="alert alert-warning" role="alert">
                 You are going to pick products that are not referenced
 in this location. That leads to a negative stock.
                 </div>
@@ -258,11 +258,11 @@ in this location. That leads to a negative stock.
                         <field name="product_id" invisible="1"/>
                         <field name="product_id" force_save="1" invisible="1"/>
                         <field name="lot_id" domain="[('product_id', '=', product_id)]"
-                            groups="stock.group_production_lot" readonly="context.get('readonly_form')"
+                            groups="stock.group_production_lot"
                             context="{'default_product_id': product_id, 'active_picking_id': context.get('active_picking_id')}"/>
-                        <field name="location_id" groups="stock.group_stock_multi_locations" readonly="context.get('readonly_form')"/>
-                        <field name="package_id" groups="stock.group_tracking_lot" invisible="context.get('readonly_form')"/>
-                        <field name="owner_id" groups="stock.group_tracking_owner" invisible="context.get('readonly_form')"/>
+                        <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                        <field name="package_id" groups="stock.group_tracking_lot"/>
+                        <field name="owner_id" groups="stock.group_tracking_owner"/>
                     </group>
                 </group>
             </form>

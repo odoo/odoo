@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import datetime
-
 from odoo import api, fields, models, _
 
 
@@ -45,7 +43,5 @@ class ExpiryPickingConfirmation(models.TransientModel):
     def process_no_expired(self):
         """ Remove the expired mls and confirm the picking. """
         pickings_to_validate = self.env['stock.picking'].browse(self.env.context.get('button_validate_picking_ids'))
-        self.picking_ids.move_line_ids.filtered(
-            lambda ml: ml.use_expiration_date and ml.removal_date and ml.removal_date < datetime.now()
-        ).unlink()
+        self.picking_ids._get_move_lines_to_warn().unlink()
         return pickings_to_validate.button_validate()

@@ -1138,7 +1138,11 @@ Please change the quantity done or the rounding precision in your settings.""",
                 if key in self.env['stock.move.line'] and isinstance(self.env['stock.move.line'][key], models.Model):
                     values[key] = {
                         'id': value,
-                        'display_name': self.env['stock.move.line'][key].browse(value).display_name
+                        'display_name': (
+                            self.env['stock.move.line'][key]
+                            .browse(value)
+                            .with_context(show_lot_removal_date=context_data.get('show_lot_removal_date')).display_name
+                        ),
                     }
         if product.lot_sequence_id and first_lot:
             current_sequence = product.lot_sequence_id._get_current_sequence()

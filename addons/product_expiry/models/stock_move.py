@@ -27,6 +27,15 @@ class StockMove(models.Model):
                 vals['expiration_date'] = vals.get('expiration_date') or expiration_date
         return vals_list
 
+    def action_show_details(self):
+        action = super().action_show_details()
+        if self.use_expiration_date:
+            action['context'].update({
+                'show_lot_removal_date': True,
+                'show_lot_expiration_date': self.has_tracking in ['lot', 'serial'] and self.picking_type_id.use_create_lots,
+            })
+        return action
+
     def _generate_serial_move_line_commands(self, field_data, location_dest_id=False, origin_move_line=None):
         """Override to add a default `expiration_date` into the move lines values."""
         move_lines_commands = super()._generate_serial_move_line_commands(field_data, location_dest_id, origin_move_line)
