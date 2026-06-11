@@ -139,7 +139,10 @@ class IrModuleModule(models.Model):
                 err = _("Unknown module dependencies:") + "\n - " + "\n - ".join(wrong_dependencies)
                 raise UserError(err)
             to_install = known_mods.filtered(lambda mod: mod.name in unmet_dependencies)
+            _logger.info("Unmet dependencies during import of %s: %s", module, to_install.mapped('name'))
             to_install.button_immediate_install()
+            # Rebrowse to use the new registry
+            return self.env[self._name].browse(self._ids)._import_module(module, path, force=force, with_demo=with_demo)
         elif 'web_studio' not in installed_mods and _is_studio_custom(path):
             raise UserError(_("Studio customizations require the Odoo Studio app."))
 
@@ -314,6 +317,7 @@ class IrModuleModule(models.Model):
             article_record.write({'body': body})
 
         mod._update_from_terp(terp)
+        self.env.cr.flush()
         _logger.info("Successfully imported module '%s'", module)
 
         return True
@@ -373,12 +377,14 @@ class IrModuleModule(models.Model):
                     if is_data_file or is_static or is_translation:
                         z.extract(file, module_dir)
 
+                env_sudo = self.sudo().env
                 for mod_name in sorted_dirs:
                     module_names.append(mod_name)
                     try:
                         # assert mod_name.startswith('theme_')
                         path = opj(module_dir, mod_name)
-                        self.sudo()._import_module(mod_name, path, force=force, with_demo=with_demo)
+                        # call import module after rebinding to the new registry
+                        env_sudo[self._name]._import_module(mod_name, path, force=force, with_demo=with_demo)
                     except Exception as e:
                         raise UserError(_(
                             "Error while importing module '%(module)s'.\n\n %(error_message)s \n\n",
