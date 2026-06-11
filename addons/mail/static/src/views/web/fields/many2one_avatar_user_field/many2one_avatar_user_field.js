@@ -10,6 +10,7 @@ import {
 } from "@web/views/fields/many2one/many2one_field";
 import { Avatar } from "../avatar/avatar";
 import { Many2XAvatarUserAutocomplete } from "../avatar_autocomplete/avatar_many2x_autocomplete";
+import { user } from "@web/core/user";
 
 export class Many2OneAvatarUser extends Many2One {
     static components = {
@@ -53,7 +54,7 @@ export class Many2OneAvatarUserField extends Component {
 export const many2OneAvatarUserField = {
     ...buildM2OFieldDescription(Many2OneAvatarUserField),
     additionalClasses: ["o_field_many2one_avatar"],
-    relatedFields: [{ name: "write_date", type: "datetime" }],
+    relatedFields: user.isInternalUser ? [{ name: "write_date", type: "datetime" }] : [],
     extractProps(staticInfo, dynamicInfo) {
         return {
             ...extractM2OFieldProps(staticInfo, dynamicInfo),
