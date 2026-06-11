@@ -373,7 +373,7 @@ class TestSyncOdoo2Google(TestSyncGoogle):
             'login': 'jean-luc@opoo.com',
             'partner_id': partner.id,
         })
-        user.stop_google_synchronization()
+        user.with_user(user).stop_google_synchronization()
         event = self.env['calendar.event'].with_user(user).create({
             'google_id': google_id,
             'name': "Event",

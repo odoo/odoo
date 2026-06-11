@@ -144,11 +144,11 @@ class User(models.Model):
 
     def stop_google_synchronization(self):
         self.ensure_one()
-        self.sudo().google_synchronization_stopped = True
+        self.env.user.google_synchronization_stopped = True
 
     def restart_google_synchronization(self):
         self.ensure_one()
-        self.sudo().google_synchronization_stopped = False
+        self.env.user.google_synchronization_stopped = False
         self.env['calendar.recurrence']._restart_google_sync()
         self.env['calendar.event']._restart_google_sync()
 
