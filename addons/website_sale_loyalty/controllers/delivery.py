@@ -4,7 +4,6 @@ from functools import partial
 
 from odoo.http import request, route
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.website_sale.controllers.delivery import Delivery
 
 
@@ -15,7 +14,9 @@ class WebsiteSaleLoyaltyDelivery(Delivery):
         res = super().express_checkout_process_delivery_address(partial_delivery_address)
         order_sudo = request.cart
         if free_shipping_lines := order_sudo._get_free_shipping_lines():
-            res["delivery_discount_minor_amount"] = payment_utils.to_minor_currency_units(
+            res["delivery_discount_minor_amount"] = self.env[
+                "payment.provider"
+            ]._to_minor_currency_units(
                 sum(free_shipping_lines.mapped("price_total")), order_sudo.currency_id
             )
         return res
@@ -30,9 +31,9 @@ class WebsiteSaleLoyaltyDelivery(Delivery):
         if free_shipping_lines:
             shipping_discount = sum(free_shipping_lines.mapped("price_total"))
             res["amount_delivery_discounted"] = to_html(shipping_discount)
-            res["delivery_discount_minor_amount"] = payment_utils.to_minor_currency_units(
-                shipping_discount, order.currency_id
-            )
+            res["delivery_discount_minor_amount"] = self.env[
+                "payment.provider"
+            ]._to_minor_currency_units(shipping_discount, order.currency_id)
         discount_lines = order.order_line.filtered(
             lambda line: line.reward_id.reward_type == "discount"
         )
