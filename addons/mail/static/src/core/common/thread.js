@@ -12,7 +12,6 @@ import {
     onWillDestroy,
     onWillPatch,
     onWillUnmount,
-    onWillUpdateProps,
     proxy,
     signal,
     types,
@@ -242,16 +241,20 @@ export class Thread extends Component {
                 this.props.thread.fetchNewMessages();
             }
         });
-        onWillUpdateProps((nextProps) => {
-            if (nextProps.thread.notEq(this.props.thread)) {
-                this.lastJumpPresent = nextProps.jumpPresent;
+        let sameThread = true;
+        useEffect(() => {
+            if (!sameThread) {
+                this.lastJumpPresent = this.props.jumpPresent;
             }
             if (!this.env.chatter || this.env.chatter?.shouldFetchMessages) {
                 if (this.env.chatter) {
                     this.env.chatter.shouldFetchMessages = false;
                 }
-                nextProps.thread.fetchNewMessages();
+                if (!sameThread) {
+                    this.props.thread.fetchNewMessages();
+                }
             }
+            sameThread = false;
         });
     }
 
@@ -351,15 +354,17 @@ export class Thread extends Component {
                 this.reset();
             }
         });
-        onWillUpdateProps((nextProps) => {
-            if (nextProps.thread.notEq(this.props.thread)) {
+        let sameThread = true;
+        useEffect(() => {
+            if (!sameThread) {
                 stopOnChange();
-                stopOnChange = Record.onChange(nextProps.thread, "isLoaded", () => {
-                    if (!nextProps.thread.isLoaded || !this.state.mountedAndLoaded) {
+                stopOnChange = Record.onChange(this.props.thread, "isLoaded", () => {
+                    if (!this.props.thread.isLoaded || !this.state.mountedAndLoaded) {
                         this.reset();
                     }
                 });
             }
+            sameThread = false;
         });
         onWillDestroy(() => stopOnChange());
         onWillPatch(() => {
