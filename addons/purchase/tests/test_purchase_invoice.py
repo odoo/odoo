@@ -1025,18 +1025,42 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertTrue(invoice.id not in po.invoice_ids.ids)
 
     def test_manual_matching(self):
-        po = self.init_purchase(confirm=True, products=[self.product_order])
-        bill = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
+        """ Test bill matching with different configurations """
+        test_data = [(2, 2), (2, 3), (3, 2)]
+        expected_vals_dict = {
+            'purchase': [
+                [[1, 1], [1, 1]],
+                [[1, 2], [1, 1, 1]],
+                [[1, 1, 1], [1, 1, 1]],
+            ],
+            'receive': [
+                [[1, 1], [1, 1]],
+                [[1, 2], [1, 1, 1]],
+                [[1, 1, 0], [1, 1, 0]],
+            ],
+        }
 
-        self.env['account.move.line'].flush_model()  # necessary to get the bill lines
-        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+        for method, expected_vals in expected_vals_dict.items():
+            for i, test_vals in enumerate(test_data):
+                with self.subTest(test_data=test_data, expected_vals=expected_vals[i], method=method):
+                    nb_order_lines, nb_amls = test_vals
+                    expected_po_lines, expected_amls = expected_vals[i]
+                    if self.product_order.purchase_method != method:
+                        self.product_order.purchase_method = method
+                    po = self.init_purchase(confirm=True, products=[self.product_order] * nb_order_lines)
+                    bill = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order] * nb_amls)
+                    self.env['account.move.line'].flush_model()  # necessary to get the bill lines
 
-        expected_ids = po.order_line.ids + [-lid for lid in bill.invoice_line_ids.ids]
-        self.assertListEqual(match_lines.ids, expected_ids)
+                    match_lines_action = po.action_bill_matching()
+                    match_lines = self.env['purchase.bill.line.match'].search(match_lines_action['domain'])
 
-        match_lines.action_match_lines()
-        self.assertEqual(bill.invoice_line_ids.purchase_line_id, po.order_line)
-        self.assertEqual(po.order_line.qty_invoiced, bill.invoice_line_ids.quantity)
+                    expected_ids = po.order_line.ids + [-lid for lid in bill.invoice_line_ids.ids]
+                    self.assertListEqual(match_lines.ids, expected_ids)
+
+                    match_lines.action_match_lines()
+                    self.assertEqual(bill.invoice_line_ids.purchase_line_id, po.order_line)
+                    self.assertListEqual(po.order_line.mapped('qty_invoiced'), expected_po_lines)
+                    self.assertListEqual(bill.invoice_line_ids.mapped('quantity'), expected_amls)
 
     def test_manual_matching_restrict_no_pol(self):
         """ raises when there's no POL found """
