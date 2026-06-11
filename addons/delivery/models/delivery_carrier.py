@@ -622,7 +622,16 @@ class DeliveryCarrier(models.Model):
 
         return price
 
-    @api.depends_context("carrier_prices", "wizard_currency_id")
+    def _get_carrier_data(self, carrier_prices_dumped, currency_id):
+        carrier_prices = json.loads(carrier_prices_dumped)
+        currency = self.env["res.currency"].browse(currency_id)
+        return carrier_prices, currency
+
+    def _get_delivery_formatted_price(self, delivery_vals, currency):
+        price = delivery_vals.get("display_price", 0.0)
+        return currency.format(price)
+
+    @api.depends_context("carrier_prices", "wizard_currency_id", "formatted_display_name")
     def _compute_display_name(self):
         """Change display name for the carrier selection in SO"""
         carrier_prices_dumped = self.env.context.get("carrier_prices_dumped")
@@ -631,23 +640,17 @@ class DeliveryCarrier(models.Model):
 
         super()._compute_display_name()
 
-        if not carrier_prices_dumped or not currency_id:
+        if not formatted_display_name or not carrier_prices_dumped or not currency_id:
             return
 
-        carrier_prices = json.loads(carrier_prices_dumped)
-        currency = self.env["res.currency"].browse(currency_id)
+        carrier_prices, currency = self._get_carrier_data(carrier_prices_dumped, currency_id)
 
         for carrier in self:
             delivery_vals = carrier_prices.get(str(carrier.id))
 
             if delivery_vals and "display_price" in delivery_vals:
-                price = delivery_vals.get("display_price", 0.0)
-                formatted_price = currency.format(price)
-                carrier.delivery_cost = formatted_price
-                if formatted_display_name:
-                    carrier.display_name = f"{carrier.display_name}\t--{formatted_price}--"
-                else:
-                    carrier.display_name = f"{carrier.display_name} - {formatted_price}"
+                formatted_price = self._get_delivery_formatted_price(delivery_vals, currency)
+                carrier.display_name = f"{carrier.display_name}\t--{formatted_price}--"
 
     @api.depends_context("carrier_prices", "wizard_currency_id")
     def _compute_delivery_cost(self):
@@ -655,22 +658,13 @@ class DeliveryCarrier(models.Model):
         carrier_prices_dumped = self.env.context.get("carrier_prices_dumped")
         currency_id = self.env.context.get("wizard_currency_id")
 
-        super()._compute_display_name()
-
         if not carrier_prices_dumped or not currency_id:
+            for carrier in self:
+                carrier.delivery_cost = None
             return
 
-        carrier_prices = json.loads(carrier_prices_dumped)
-        currency = self.env["res.currency"].browse(currency_id)
+        carrier_prices, currency = self._get_carrier_data(carrier_prices_dumped, currency_id)
 
         for carrier in self:
             delivery_vals = carrier_prices.get(str(carrier.id))
-
-            # fallback value if there was an error for some carrier
-            formatted_price = currency.format(0.0)
-
-            if delivery_vals and "display_price" in delivery_vals:
-                price = delivery_vals.get("display_price", 0.0)
-                formatted_price = currency.format(price)
-
-            carrier.delivery_cost = formatted_price
+            carrier.delivery_cost = self._get_delivery_formatted_price(delivery_vals, currency)
