@@ -102,7 +102,9 @@ class PaymentTransaction(models.Model):
             },
             "order": {
                 "amountOfMoney": {
-                    "amount": payment_utils.to_minor_currency_units(self.amount, self.currency_id),
+                    "amount": self.provider_id._to_minor_currency_units(
+                        self.amount, self.currency_id
+                    ),
                     "currencyCode": self.currency_id.name,
                 },
                 "customer": {  # required to create a token and for some redirected payment methods
@@ -161,7 +163,9 @@ class PaymentTransaction(models.Model):
             },
             "order": {
                 "amountOfMoney": {
-                    "amount": payment_utils.to_minor_currency_units(self.amount, self.currency_id),
+                    "amount": self.provider_id._to_minor_currency_units(
+                        self.amount, self.currency_id
+                    ),
                     "currencyCode": self.currency_id.name,
                 },
                 "references": {"merchantReference": self.reference},
@@ -284,7 +288,7 @@ class PaymentTransaction(models.Model):
         amount_of_money = (
             payment_result.get("payment", {}).get("paymentOutput", {}).get("amountOfMoney", {})
         )
-        amount = payment_utils.to_major_currency_units(
+        amount = self.provider_id._to_major_currency_units(
             amount_of_money.get("amount", 0), self.currency_id
         )
         currency_code = amount_of_money.get("currencyCode")

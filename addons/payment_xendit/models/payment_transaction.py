@@ -146,9 +146,7 @@ class PaymentTransaction(models.Model):
             self._process("xendit", charge_payment_data)
 
     def _get_rounded_amount(self):
-        decimal_places = const.CURRENCY_DECIMALS.get(
-            self.currency_id.name, self.currency_id.decimal_places
-        )
+        decimal_places = self.provider_id._get_amount_precision(self.currency_id)
         return float_round(self.amount, decimal_places, rounding_method="DOWN")
 
     @api.model
@@ -205,7 +203,6 @@ class PaymentTransaction(models.Model):
         return {
             "amount": float(amount),
             "currency_code": currency_code,
-            "precision_digits": const.CURRENCY_DECIMALS.get(currency_code),
         }
 
     def _extract_token_values(self, payment_data):

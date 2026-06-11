@@ -42,8 +42,9 @@ class PaymentTransaction(models.Model):
 
         # Some payment methods don't support float values, even for currencies that does. Therefore,
         # we must round them.
-        is_mandatory_integer_pm = self.payment_method_code in const.INTEGER_METHODS
-        rounding = 0 if is_mandatory_integer_pm else self.currency_id.decimal_places
+        rounding = self.provider_id._get_amount_precision(
+            self.currency_id, payment_method_code=self.payment_method_code
+        )
         rounded_amount = float_round(self.amount, rounding, rounding_method="DOWN")
 
         # Phone numbers need to be standardized and validated.
@@ -164,8 +165,9 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "nuvei":
             return super()._extract_amount_data(payment_data)
 
-        is_mandatory_integer_pm = self.payment_method_code in const.INTEGER_METHODS
-        rounding = 0 if is_mandatory_integer_pm else self.currency_id.decimal_places
+        rounding = self.provider_id._get_amount_precision(
+            self.currency_id, payment_method_code=self.payment_method_code
+        )
 
         amount = payment_data.get("totalAmount")
         currency_code = payment_data.get("currency")

@@ -8,7 +8,6 @@ from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools.urls import urljoin as url_join
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_stripe import const
 from odoo.addons.payment_stripe import utils as stripe_utils
@@ -324,10 +323,9 @@ class PaymentProvider(models.Model):
             "currency_name": currency_name,
             "minor_amount": (
                 amount
-                and payment_utils.to_minor_currency_units(
+                and self.provider_id._to_minor_currency_units(
                     amount,
                     currency,
-                    arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(currency.name),
                 )
             ),
             "capture_method": "manual" if self.capture_manually else "automatic",
@@ -364,6 +362,20 @@ class PaymentProvider(models.Model):
         :rtype: str
         """
         return const.COUNTRY_MAPPING.get(country_code, country_code)
+
+    def _get_amount_precision(self, currency, **kwargs):
+        """Override of `payment` to return the amount precision for Stripe.
+
+        :param recordset currency: The currency of the transaction, as a `res.currency` record.
+        :return: The number of decimal places.
+        :rtype: int
+        """
+        if self.code != "stripe":
+            return super()._get_amount_precision(currency, **kwargs)
+
+        return const.CURRENCY_DECIMALS.get(
+            currency.name, super()._get_amount_precision(currency, **kwargs)
+        )
 
     # === BUSINESS METHODS - STRIPE CONNECT ONBOARDING === #
 

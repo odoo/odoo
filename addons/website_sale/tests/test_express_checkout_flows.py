@@ -5,7 +5,6 @@ from unittest.mock import Mock, patch
 from odoo.tests import HttpCase, tagged
 from odoo.tools import urls
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.website_sale.controllers.cart import Cart
 from odoo.addons.website_sale.controllers.delivery import Delivery as WebsiteSaleDeliveryController
 from odoo.addons.website_sale.controllers.main import WebsiteSale
@@ -107,7 +106,7 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
 
     def test_express_checkout_takes_order_amount_without_delivery(self):
         """Test that the amount to pay does not include the delivery costs in express checkout."""
-        amount_without_delivery = payment_utils.to_minor_currency_units(
+        amount_without_delivery = self.env["payment.provider"]._to_minor_currency_units(
             self.cart.amount_total, self.cart.currency_id
         )
         self.carrier.fixed_price = 20

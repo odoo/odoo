@@ -10,7 +10,6 @@ from odoo.exceptions import UserError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_razorpay.tests.common import RazorpayCommon
 
 
@@ -29,7 +28,7 @@ class TestPaymentTransaction(RazorpayCommon):
             tx.tokenize = tokenize
             request_payload = tx._razorpay_prepare_order_payload(customer_id=self.customer_id)
             self.maxDiff = 10000  # Allow comparing large dicts.
-            converted_amount = payment_utils.to_minor_currency_units(tx.amount, tx.currency_id)
+            converted_amount = self.provider._to_minor_currency_units(tx.amount, tx.currency_id)
             expected_payload = {
                 "amount": converted_amount,
                 "currency": tx.currency_id.name,
@@ -76,7 +75,7 @@ class TestPaymentTransaction(RazorpayCommon):
         for state in all_states:
             tx1.state = state
             for other_tx in other_txs:
-                converted_amount = payment_utils.to_minor_currency_units(
+                converted_amount = self.provider._to_minor_currency_units(
                     other_tx.amount, other_tx.currency_id
                 )
                 with patch(
