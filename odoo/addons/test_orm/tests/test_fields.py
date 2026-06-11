@@ -5165,6 +5165,33 @@ class TestPrecompute(TransactionCase):
         self.assertEqual(record.baz, 'baz')
         self.assertEqual(record.baz2, 'baz')
 
+    def test_precompute_editable_multi(self):
+        model = self.env['test_orm.precompute.editable']
+
+        # no value for boo1, no value for boo2
+        record = model.create({'foo': 'foo'})
+        self.assertEqual(record.boo1, 'COMPUTED')
+        self.assertEqual(record.boo2, 'COMPUTED')
+        self.assertEqual(record.choo, 'COMPUTED')
+
+        # value for boo1, no value for boo2: boo1 prevents boo2 from being computed
+        record = model.create({'foo': 'foo', 'boo1': 'boo1'})
+        self.assertEqual(record.boo1, 'boo1')
+        self.assertEqual(record.boo2, False)
+        self.assertEqual(record.choo, False)
+
+        # no value for boo1, value for boo2: boo2 prevents boo1 from being computed
+        record = model.create({'foo': 'foo', 'boo2': 'boo2'})
+        self.assertEqual(record.boo1, False)
+        self.assertEqual(record.boo2, 'boo2')
+        self.assertEqual(record.choo, 'boo2')
+
+        # value for boo1, value for boo2
+        record = model.create({'foo': 'foo', 'boo1': 'boo1', 'boo2': 'boo2'})
+        self.assertEqual(record.boo1, 'boo1')
+        self.assertEqual(record.boo2, 'boo2')
+        self.assertEqual(record.choo, 'boo2')
+
     def test_precompute_readonly(self):
         """
         Ensures
