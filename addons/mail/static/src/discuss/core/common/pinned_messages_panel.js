@@ -1,7 +1,8 @@
 import { MessageCardList } from "@mail/core/common/message_card_list";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
+import { useOnChange } from "@mail/utils/common/hooks";
 
-import { Component, onWillStart, onWillUpdateProps, props, t } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
@@ -19,14 +20,10 @@ export class PinnedMessagesPanel extends Component {
             channel: t.instanceOf(this.store["discuss.channel"].Class),
             close: t.function([]).optional(),
         });
-        onWillStart(() => {
-            this.props.channel.fetchPinnedMessages();
-        });
-        onWillUpdateProps((nextProps) => {
-            if (nextProps.channel.notEq(this.props.channel)) {
-                nextProps.channel.fetchPinnedMessages();
-            }
-        });
+        useOnChange(
+            () => [this.props.channel],
+            (channel) => channel.fetchPinnedMessages()
+        );
     }
 
     /**

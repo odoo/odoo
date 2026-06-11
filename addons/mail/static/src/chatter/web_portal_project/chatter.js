@@ -1,9 +1,9 @@
 import { useChildSubEnv, useSubEnv } from "@web/owl2/utils";
 import { Composer } from "@mail/core/common/composer";
 import { Thread } from "@mail/core/common/thread";
-import { useMessageScrolling } from "@mail/utils/common/hooks";
+import { useMessageScrolling, useOnChange } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, onWillUpdateProps, props, proxy, signal, t } from "@odoo/owl";
+import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { router } from "@web/core/browser/router";
@@ -44,20 +44,24 @@ export class Chatter extends Component {
         useSubEnv(this.subEnv);
 
         onMounted(this._onMounted);
-        onWillUpdateProps((nextProps) => {
-            if (
-                this.props.threadId !== nextProps.threadId ||
-                this.props.threadModel !== nextProps.threadModel
-            ) {
-                this.changeThread(nextProps.threadModel, nextProps.threadId);
-            }
-            if (!this.env.chatter || this.env.chatter?.fetchThreadData) {
-                if (this.env.chatter) {
-                    this.env.chatter.fetchThreadData = false;
+
+        useOnChange(
+            () => [this.props.threadId, this.props.threadModel],
+            (threadId, threadModel) => this.changeThread(threadModel, threadId),
+            { initialRun: false }
+        );
+        useOnChange(
+            () => [this.state.thread],
+            (thread) => {
+                if (!this.env.chatter || this.env.chatter?.fetchThreadData) {
+                    if (this.env.chatter) {
+                        this.env.chatter.fetchThreadData = false;
+                    }
+                    this.load(thread, this.requestList);
                 }
-                this.load(this.state.thread, this.requestList);
-            }
-        });
+            },
+            { initialRun: false }
+        );
     }
 
     get afterPostRequestList() {
@@ -125,7 +129,7 @@ export class Chatter extends Component {
      * @param {string[]} requestList
      */
     async load(thread, requestList) {
-        if (!thread.id || !this.state.thread?.eq(thread)) {
+        if (!thread?.id || !this.state.thread?.eq(thread)) {
             return;
         }
         await thread.fetchThreadData(requestList, {
