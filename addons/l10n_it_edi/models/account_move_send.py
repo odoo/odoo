@@ -6,12 +6,20 @@ from odoo import _, api, models
 class AccountMoveSend(models.AbstractModel):
     _inherit = 'account.move.send'
 
+    def _has_generated_pdf_without_xml(self, move):
+        return (
+            move.company_id.account_fiscal_country_id.code == 'IT'
+            and move.invoice_pdf_report_id
+            and not move.l10n_it_edi_attachment_id
+        )
+
     @api.model
     def _is_it_edi_applicable(self, move):
         return all([
             move.company_id.account_fiscal_country_id.code == 'IT'
             and move._l10n_it_edi_ready_for_xml_export()
             and move.l10n_it_edi_state != 'rejected'
+            and not self._has_generated_pdf_without_xml(move)
         ])
 
     def _get_all_extra_edis(self) -> dict:
@@ -30,6 +38,14 @@ class AccountMoveSend(models.AbstractModel):
         if it_moves := moves.filtered(lambda m: 'it_edi_send' in moves_data[m]['extra_edis']):
             if it_alerts := it_moves._l10n_it_edi_export_data_check():
                 alerts.update(**it_alerts)
+
+        if moves.filtered(self._has_generated_pdf_without_xml):
+            alerts['l10n_it_edi_pdf_already_generated'] = {
+                'level': 'warning',
+                'message': _(
+                    "The 'Send to Tax Agency' option is unavailable to avoid inconsistencies between the PDF and XML documents. To enable it again, delete the PDF attachment."
+                ),
+            }
         return alerts
 
     # -------------------------------------------------------------------------
