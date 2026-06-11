@@ -5198,7 +5198,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'sale_expense',
             'sale_loyalty',
             'sale_management',
-            'sale_margin',
             'sale_pdf_quote_builder',
             'sale_planning',
             'sale_product_matrix',
