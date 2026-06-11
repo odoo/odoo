@@ -48,7 +48,7 @@ const NAV_KEYS = [
     "space",
 ];
 const F_KEYS = range(1, 13).map((n) => `f${n}`);
-const MODIFIERS = ["alt", "control", "shift"];
+const MODIFIERS = ["alt", "control", "shift", "⌃", "⌘"];
 const AUTHORIZED_KEYS = [...ALPHANUM_KEYS, ...NAV_KEYS, ...F_KEYS, "escape", "<", ">"];
 
 /**
