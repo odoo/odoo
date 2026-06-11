@@ -41,12 +41,16 @@
                 <t t-if="this.displayInputInToggler">
                     <t t-set="inputClass" t-value="'o_select_menu_toggler ' + (!this.displayInputInDropdown ? 'o_select_menu_input ' : '') + this.props.togglerClass"/>
                     <t t-set="inputRefName" t-value="'inputRefToggler'"/>
-                    <div class="w-100 d-flex flex-wrap">
+                    <div class="w-100 d-flex flex-column">
                         <t t-if="this.props.multiSelect">
-                            <TagsList t-if="this.props.value.length" tags="this.multiSelectChoices"/>
+                            <div t-if="this.props.value.length" class="d-flex flex-wrap mb-1">
+                                <TagsList tags="this.multiSelectChoices"/>
+                            </div>
                         </t>
-                        <t t-call="web.SelectMenu.search" />
-                        <span class="o_dropdown_button" />
+                        <div class="position-relative d-flex">
+                            <t t-call="web.SelectMenu.search" />
+                            <span class="o_dropdown_button" />
+                        </div>
                     </div>
                 </t>
                 <t t-else="">
