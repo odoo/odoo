@@ -22,7 +22,7 @@
                 t-attf-class="o-mail-DeviceSelect-button btn btn-secondary d-flex align-items-center {{ env.inDialog ? 'w-50' : 'w-100' }}"
                 t-att-data-kind="props.kind"
                 t-on-pointerdown.prevent="() => this.showPermissionDialog(props.kind)"
-                t-on-keydown.prevent="() => this.showPermissionDialog(props.kind)"
+                t-on-keydown="this.handlePermissionKeydown"
             >
                 <i t-if="props.icon" t-att-class="props.icon"/>
                 <span
