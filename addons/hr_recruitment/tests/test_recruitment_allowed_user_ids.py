@@ -1,3 +1,5 @@
+import ast
+
 from odoo.tests import tagged, TransactionCase
 
 
@@ -97,6 +99,14 @@ class TestRecruitmentAllowedRecruiters(TransactionCase):
             'company_id': self.company_a.id,
         })
 
+    def _get_allowed_recruiters(self, record):
+        # The recruiter field carries a client-side string domain referencing
+        # `company_id`; bind that single variable, then parse it with
+        # ast.literal_eval (CI forbids safe_eval).
+        domain_str = record.fields_get(['recruiter_id'])['recruiter_id']['domain']
+        domain = ast.literal_eval(domain_str.replace(', company_id)', f', {record.company_id.id})'))
+        return self.env['hr.employee'].search(domain)
+
     def test_recruiter_with_company(self):
         # Test job with company A - should allow employee_a but not employee_b
         job_a = self.env['hr.job'].create({
@@ -109,10 +119,20 @@ class TestRecruitmentAllowedRecruiters(TransactionCase):
         self.assertEqual(job_a.recruiter_id, self.employee_a)
 
         # Validate that the domain defined on hr.job.recruiter_id contains employee_a, but excludes employee_b
-        domain = job_a._recruiter_domain() + [('company_id', '=', job_a.company_id.id)]
-        allowed_recruiter_ids = self.env['hr.employee'].search(domain)
+        allowed_recruiter_ids = self._get_allowed_recruiters(job_a)
         self.assertIn(self.employee_a, allowed_recruiter_ids)
         self.assertNotIn(self.employee_b, allowed_recruiter_ids)
+
+    def test_recruiter_without_company(self):
+        """A job position visible to all companies offers recruiters from every company."""
+        job = self.env['hr.job'].create({
+            'name': 'Job Position Without Company',
+            'company_id': False,
+        })
+
+        allowed_recruiter_ids = self._get_allowed_recruiters(job)
+        self.assertIn(self.employee_a, allowed_recruiter_ids)
+        self.assertIn(self.employee_b, allowed_recruiter_ids)
 
     def test_applicant_access_rights(self):
         job = self.env['hr.job'].create({
@@ -127,9 +147,24 @@ class TestRecruitmentAllowedRecruiters(TransactionCase):
             'department_id': self.dep_a.id,
         })
 
-        domain = applicant._recruiter_domain() + [('company_id', '=', applicant.company_id.id)]
-        allowed_recruiter_ids = self.env['hr.employee'].search(domain)
+        allowed_recruiter_ids = self._get_allowed_recruiters(applicant)
 
         self.assertNotIn(self.manager_employee_company_b, allowed_recruiter_ids, "Manager of different company should not appear in recruiter dropdown.")
         self.assertIn(self.officer_employee_company_a, allowed_recruiter_ids, "Officer should appear in recruiter dropdown.")
         self.assertNotIn(self.interviewer_employee_company_a, allowed_recruiter_ids, "Access error: Interviewer should not appear in recruiter dropdown.")
+
+    def test_applicant_recruiter_without_company(self):
+        """An applicant without a company offers recruiters from every company."""
+        job = self.env['hr.job'].create({
+            'name': 'Job Position Without Company',
+            'company_id': False,
+        })
+        applicant = self.env['hr.applicant'].create({
+            'partner_name': "Tito Applicantson",
+            'job_id': job.id,
+            'company_id': False,
+        })
+
+        allowed_recruiter_ids = self._get_allowed_recruiters(applicant)
+        self.assertIn(self.manager_employee_company_b, allowed_recruiter_ids)
+        self.assertIn(self.officer_employee_company_a, allowed_recruiter_ids)
