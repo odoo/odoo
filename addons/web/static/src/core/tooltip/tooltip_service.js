@@ -42,6 +42,8 @@ import { whenReady } from "@odoo/owl";
 export const OPEN_DELAY = 400;
 export const CLOSE_DELAY = 200;
 export const SHOW_AFTER_DELAY = 250;
+const TOOLTIP_SELECTOR = "[data-tooltip], [data-tooltip-template]";
+const TOOLTIP_SELECTOR_WITH_TITLE = TOOLTIP_SELECTOR + ", [title]";
 
 export const tooltipService = {
     dependencies: ["popover"],
@@ -136,14 +138,16 @@ export const tooltipService = {
          * after a delay.
          *
          * @param {HTMLElement} el
+         * @param { boolean | undefined } titleTooltip
          */
-        function openElementsTooltip(el) {
+        function openElementsTooltip(el, titleTooltip) {
             // Fix weird behavior in Firefox where MouseEvent can be dispatched
             // from TEXT_NODE, even if they shouldn't...
             if (el.nodeType === Node.TEXT_NODE) {
                 return;
             }
-            const element = el.closest("[data-tooltip], [data-tooltip-template]");
+            const selector = titleTooltip ? TOOLTIP_SELECTOR_WITH_TITLE : TOOLTIP_SELECTOR;
+            const element = el.closest(selector);
             if (element && element === target) {
                 return;
             }
@@ -152,7 +156,9 @@ export const tooltipService = {
             } else if (element) {
                 const dataset = element.dataset;
                 const params = {
-                    tooltip: dataset.tooltip,
+                    tooltip: titleTooltip
+                        ? element.dataset.tooltip || element.title
+                        : element.dataset.tooltip,
                     template: dataset.tooltipTemplate,
                     position: dataset.tooltipPosition,
                 };
@@ -205,8 +211,23 @@ export const tooltipService = {
             cleanup();
             const timeoutDelay = isHelpNode(ev.target) ? 0 : SHOW_AFTER_DELAY;
             showTimer = browser.setTimeout(() => {
-                openElementsTooltip(ev.target);
+                openElementsTooltip(ev.target, true);
             }, timeoutDelay);
+        }
+
+        function onTouchCancelEnd(ev) {
+            if (isHelpNode(ev.target)) {
+                ev.preventDefault();
+                return;
+            }
+            if (ev.target.closest(TOOLTIP_SELECTOR_WITH_TITLE)) {
+                if (!ev.target.dataset.tooltipTouchTapToShow) {
+                    browser.clearTimeout(showTimer);
+                    showTimer = null;
+                    browser.clearTimeout(openTooltipTimeout);
+                    openTooltipTimeout = null;
+                }
+            }
         }
 
         whenReady(() => {
@@ -219,31 +240,8 @@ export const tooltipService = {
 
             if (hasTouch()) {
                 document.body.addEventListener("touchstart", onTouchStart);
-
-                document.body.addEventListener("touchend", (ev) => {
-                    if (isHelpNode(ev.target)) {
-                        ev.preventDefault();
-                        return;
-                    }
-                    if (ev.target.closest("[data-tooltip], [data-tooltip-template]")) {
-                        if (!ev.target.dataset.tooltipTouchTapToShow) {
-                            browser.clearTimeout(showTimer);
-                            browser.clearTimeout(openTooltipTimeout);
-                        }
-                    }
-                });
-                document.body.addEventListener("touchcancel", (ev) => {
-                    if (isHelpNode(ev.target)) {
-                        ev.preventDefault();
-                        return;
-                    }
-                    if (ev.target.closest("[data-tooltip], [data-tooltip-template]")) {
-                        if (!ev.target.dataset.tooltipTouchTapToShow) {
-                            browser.clearTimeout(showTimer);
-                            browser.clearTimeout(openTooltipTimeout);
-                        }
-                    }
-                });
+                document.body.addEventListener("touchend", onTouchCancelEnd);
+                document.body.addEventListener("touchcancel", onTouchCancelEnd);
             }
 
             // Listen (using event delegation) to "mouseenter" events to open the tooltip if any
