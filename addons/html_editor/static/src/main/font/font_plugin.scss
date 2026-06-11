@@ -16,8 +16,7 @@ $padding-blockquote: $spacer/2 $spacer;
 
 blockquote {
     padding: $padding-blockquote;
-    border-left: 5px solid;
-    border-color: map-get($grays, '300');
+    border-inline-start: 5px solid map-get($grays, '300');
     font-style: italic;
 
     &.o-we-hint::after {
