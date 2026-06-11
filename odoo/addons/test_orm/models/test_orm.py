@@ -1956,6 +1956,10 @@ class TestOrmPrecomputeEditable(models.Model):
     baz = fields.Char(compute='_compute_baz', precompute=True, store=True, readonly=False)
     baz2 = fields.Char(compute='_compute_baz2', precompute=True, store=True)
 
+    boo1 = fields.Char(compute='_compute_boos', precompute=True, store=True, readonly=False)
+    boo2 = fields.Char(compute='_compute_boos', precompute=True, store=True, readonly=False)
+    choo = fields.Char(compute='_compute_choo', precompute=True, store=True)
+
     @api.depends('foo')
     def _compute_bar(self):
         self.bar = "COMPUTED"
@@ -1970,6 +1974,16 @@ class TestOrmPrecomputeEditable(models.Model):
         # during the precomputation of bar
         for record in self:
             record.baz2 = record.baz
+
+    @api.depends('foo')
+    def _compute_boos(self):
+        self.boo1 = "COMPUTED"
+        self.boo2 = "COMPUTED"
+
+    @api.depends('boo2')
+    def _compute_choo(self):
+        for record in self:
+            record.choo = record.boo2
 
 
 class TestOrmPrecomputeReadonly(models.Model):

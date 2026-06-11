@@ -4219,6 +4219,14 @@ class BaseModel(metaclass=MetaModel):
         if not precomputable:
             return
 
+        # when several fields have the same compute, setting any of them should
+        # not compute the others (and leave them to False)
+        for vals in vals_list:
+            given_fnames = [fname for fname in vals if fname in precomputable]
+            for fname in given_fnames:
+                for field in self.pool.field_computed[self._fields[fname]]:
+                    vals.setdefault(field.name, False)
+
         # determine which vals must be completed
         vals_list_todo = [
             vals
