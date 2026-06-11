@@ -1,7 +1,7 @@
 import { AttachmentView } from "@mail/core/common/attachment_view";
 import { Chatter } from "@mail/chatter/web_portal_project/chatter";
 
-import { onMounted, onWillUnmount, signal, types } from "@odoo/owl";
+import { computed, onMounted, onWillUnmount, signal, types } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { SIZES } from "@web/core/ui/ui_service";
@@ -17,6 +17,8 @@ patch(FormRenderer.prototype, {
             AttachmentView,
             Chatter,
         };
+        this.threadId = computed(() => this.props.record.resId);
+        this.threadModel = computed(() => this.props.record.resModel);
         if (this.env.services["mail.store"]) {
             this.mailStore = useService("mail.store");
             this.thread = signal(null, {

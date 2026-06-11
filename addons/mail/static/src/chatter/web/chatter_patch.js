@@ -14,7 +14,7 @@ import { FollowerList } from "@mail/core/web/follower_list";
 import { useHover, useOnChange } from "@mail/utils/common/hooks";
 import { assignGetter, isDragSourceExternalFile } from "@mail/utils/common/misc";
 
-import { props, status, t } from "@odoo/owl";
+import { computed, props, status, t } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -77,7 +77,9 @@ const chatterPatch = {
             },
             (record) => this.updateRecipients(record)
         );
-        this.attachmentPopout = usePopoutAttachment();
+        const threadId = computed(() => this.props.threadId);
+        const threadModel = computed(() => this.props.threadModel);
+        this.attachmentPopout = usePopoutAttachment(threadId, threadModel);
         Object.assign(this.state, {
             composerType: false,
             isAttachmentBoxOpened: this.webChatterProps.isAttachmentBoxVisibleInitially,

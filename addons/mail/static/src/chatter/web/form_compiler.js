@@ -35,8 +35,8 @@ function compileAttachmentPreview(node, params) {
     const webClientViewAttachmentViewContainerXml = createElement("t");
     setAttributes(webClientViewAttachmentViewContainerXml, {
         "t-component": "__comp__.mailComponents.AttachmentView",
-        threadId: "__comp__.props.record.resId or undefined",
-        threadModel: "__comp__.props.record.resModel",
+        threadId: "__comp__.threadId or undefined",
+        threadModel: "__comp__.threadModel",
     });
     append(webClientViewAttachmentViewContainerHookXml, webClientViewAttachmentViewContainerXml);
     return webClientViewAttachmentViewContainerHookXml;
