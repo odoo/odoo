@@ -75,7 +75,6 @@ __all__ = [
     'format_duration',
     'format_time',
     'frozendict',
-    'get_iso_codes',
     'get_lang',
     'groupby',
     'hash_sign',
@@ -431,14 +430,6 @@ def merge_sequences[T](*iterables: Iterable[T]) -> list[T]:
                 deps[item].append(prev)
             prev = item
     return topological_sort(deps)
-
-
-def get_iso_codes(lang: str) -> str:
-    if lang.find('_') != -1:
-        lang_items = lang.split('_')
-        if lang_items[0] == lang_items[1].lower():
-            lang = lang_items[0]
-    return lang
 
 
 def mod10r(number: str) -> str:

@@ -38,7 +38,7 @@ import odoo
 from odoo.exceptions import UserError, ValidationError
 from .config import config
 from .i18n import format_list
-from .misc import file_open, file_path, frozendict, get_iso_codes, split_every, OrderedSet, SKIPPED_ELEMENT_TYPES
+from .misc import file_open, file_path, frozendict, split_every, OrderedSet, SKIPPED_ELEMENT_TYPES
 from .sql import SQL
 
 if typing.TYPE_CHECKING:
@@ -50,8 +50,9 @@ if typing.TYPE_CHECKING:
     from odoo.orm.fields_textual import BaseString
 
 __all__ = [
-    "_",
     "LazyTranslate",
+    "_",
+    "get_iso_codes",
     "html_translate",
     "xml_translate",
 ]
@@ -91,6 +92,14 @@ FIELD_TRANSLATE = {
     None: False,
     'standard': True,
 }
+
+
+def get_iso_codes(lang: str) -> str:
+    if lang.find('_') != -1:
+        lang_items = lang.split('_')
+        if lang_items[0] == lang_items[1].lower():
+            lang = lang_items[0]
+    return lang
 
 
 def _get_frame(stack_level: int = 0) -> types.FrameType | None:

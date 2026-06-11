@@ -50,7 +50,7 @@ class BaseLanguageExport(models.TransientModel):
 
         filename = 'new'
         if lang:
-            filename = tools.get_iso_codes(lang)
+            filename = tools.translate.get_iso_codes(lang)
         elif self.export_type == 'model':
             filename = self.model_name.replace('.', '_')
         elif len(mods) == 1:
