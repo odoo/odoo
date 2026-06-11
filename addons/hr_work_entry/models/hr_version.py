@@ -17,12 +17,32 @@ class HrVersion(models.Model):
 
     def _get_default_work_entry_type_id(self):
         country_code = self.country_code
+        default_type_id_by_country = self.env.context.get('default_work_entry_type_id_by_country')
+        if default_type_id_by_country is not None and country_code in default_type_id_by_country:
+            return default_type_id_by_country[country_code]
         country_attendance = self.env['hr.work.entry.type'].search([
             ('code', '=', 'WORK100'),
             ('country_code', '=', country_code),
         ], limit=1)
         attendance = country_attendance or self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
         return attendance.id if attendance else False
+
+    def _get_default_work_entry_type_id_by_country(self):
+        # Batched version of _get_default_work_entry_type_id: a single search
+        # for all the countries of the versions in self instead of one search
+        # per attendance interval.
+        country_codes = set(self.mapped('country_code'))
+        country_attendances = self.env['hr.work.entry.type'].search([
+            ('code', '=', 'WORK100'),
+            ('country_code', 'in', list(country_codes)),
+        ])
+        generic_attendance = self.env.ref('hr_work_entry.generic_work_entry_type_attendance', raise_if_not_found=False)
+        default_type_id_by_country = dict.fromkeys(country_codes, generic_attendance.id if generic_attendance else False)
+        # reversed so that the first record by search order wins, like the
+        # limit=1 search of _get_default_work_entry_type_id
+        for work_entry_type in reversed(country_attendances):
+            default_type_id_by_country[work_entry_type.country_code] = work_entry_type.id
+        return default_type_id_by_country
 
     def _get_leave_work_entry_type_dates(self, leave, date_from, date_to, employee):
         return self._get_leave_work_entry_type(leave)
@@ -133,6 +153,23 @@ class HrVersion(models.Model):
         for leave in resource_calendar_leaves:
             all_leaves_by_resource[leave.resource_id.id] |= leave
 
+        # The flexible and attendance-based branches below need the static
+        # (calendar) attendance intervals: compute them in batch per calendar
+        # instead of one _attendance_intervals_batch call per version.
+        static_intervals_by_calendar = {}
+        versions_needing_static_by_calendar = defaultdict(lambda: self.env['hr.version'])
+        for version in self:
+            if (version.is_flexible and not version.is_fully_flexible) or not version.has_static_work_entries():
+                versions_needing_static_by_calendar[version.resource_calendar_id] |= version
+
+        def _get_static_attendances(version, resource):
+            calendar = version.resource_calendar_id
+            if calendar not in static_intervals_by_calendar:
+                calendar_versions = versions_needing_static_by_calendar[calendar]
+                static_intervals_by_calendar[calendar] = calendar._attendance_intervals_batch(
+                    start_dt, end_dt, resources_per_tz=calendar_versions._get_resources_per_tz())
+            return static_intervals_by_calendar[calendar][resource.id]
+
         tz_dates = {}
         for version in self:
             employee = version.employee_id
@@ -189,16 +226,12 @@ class HrVersion(models.Model):
                 # this will mean the virtual schedule and for time off in hours the chosen hours
                 one_day_leaves = Intervals([l for l in leaves if l[0].astimezone(tz).date() == l[1].astimezone(tz).date()], keep_distinct=True)
                 multi_day_leaves = leaves - one_day_leaves
-                resources_per_tz = version._get_resources_per_tz()
-                static_attendances = calendar._attendance_intervals_batch(
-                    start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
+                static_attendances = _get_static_attendances(version, resource)
                 real_leaves = (static_attendances & multi_day_leaves) | one_day_leaves
             elif version.has_static_work_entries() or not leaves:
                 real_leaves = version._get_real_leaves_static(leaves, expected_attendances)
             else:
-                resources_per_tz = version._get_resources_per_tz()
-                static_attendances = calendar._attendance_intervals_batch(
-                    start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
+                static_attendances = _get_static_attendances(version, resource)
                 real_leaves = version._get_real_leaves_static_attendance(leaves, static_attendances)
 
             real_worked_leaves = version._get_real_worked_leaves(worked_leaves, real_leaves)
@@ -279,6 +312,11 @@ class HrVersion(models.Model):
         Generate a work_entries list between date_start and date_stop for one version.
         :return: list of dictionnary.
         """
+        if 'default_work_entry_type_id_by_country' not in self.env.context:
+            # cache the default work entry types for the whole generation
+            # instead of searching them per attendance interval
+            self = self.with_context(  # noqa: PLW0642
+                default_work_entry_type_id_by_country=self._get_default_work_entry_type_id_by_country())
         if isinstance(date_start, datetime):
             version_vals = self._get_version_work_entries_values(date_start, date_stop)
         else:

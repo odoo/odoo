@@ -162,15 +162,42 @@ class ResourceResource(models.Model):
     def _get_calendar_data_at(self, date_target, tz=False):
         result = super()._get_calendar_data_at(date_target)
         resources_with_employee = self.filtered('employee_id')
-        employee_calendars = resources_with_employee.employee_id._get_calendars(date_target.astimezone(tz))
-        employee_hours_per_week = resources_with_employee.employee_id._get_hours_per_week_batch(date_target.astimezone(tz))
-        employee_hours_per_day = resources_with_employee.employee_id._get_hours_per_day_batch(date_target.astimezone(tz))
+        if not resources_with_employee:
+            return result
+        date_from = fields.Date.to_date(date_target.astimezone(tz))
+        # One read_group instead of three: _get_calendars,
+        # _get_hours_per_week_batch and _get_hours_per_day_batch resolve the
+        # same version with the same domain, so fetch it only once.
+        versions_by_employee_id = {
+            employee.id: versions
+            for employee, versions in self.env['hr.version'].sudo()._read_group(
+                domain=[
+                    ('employee_id', 'in', resources_with_employee.employee_id.ids),
+                    ('contract_date_start', '!=', False),
+                    ('contract_date_start', '<=', date_from),
+                    '|',
+                        ('contract_date_end', '=', False),
+                        ('contract_date_end', '>=', date_from),
+                ],
+                groupby=['employee_id'],
+                aggregates=['id:recordset'],
+            )
+        }
         for resource in resources_with_employee:
-            result[resource] = {
-                'resource_calendar_id': employee_calendars[resource.employee_id.id],
-                'hours_per_week': employee_hours_per_week[resource.employee_id.id],
-                'hours_per_day': employee_hours_per_day[resource.employee_id.id],
-            }
+            employee = resource.employee_id
+            versions = versions_by_employee_id.get(employee.id)
+            if versions:
+                result[resource] = {
+                    'resource_calendar_id': versions[0].resource_calendar_id.sudo(self.env.su),
+                    'hours_per_week': versions[0].hours_per_week,
+                    'hours_per_day': versions[0].hours_per_day,
+                }
+            else:
+                result[resource] = {
+                    'resource_calendar_id': employee.resource_calendar_id,
+                    'hours_per_week': employee.hours_per_week,
+                    'hours_per_day': employee.hours_per_day,
+                }
         return result
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
