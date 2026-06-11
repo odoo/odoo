@@ -7,7 +7,11 @@ export class LivechatChannel extends models.ServerModel {
 
     are_you_inside = fields.Boolean({ compute: "_compute_are_you_inside" });
     available_operator_ids = fields.Many2many({ relation: "res.users" }); // FIXME: somehow not fetched properly
+    button_text = fields.Char();
+    default_message = fields.Char();
     user_ids = fields.Many2many({ relation: "res.users" }); // FIXME: somehow not fetched properly
+    widget_background_color = fields.Char({ default: "#875A7B" });
+    widget_text_color = fields.Char({ default: "#FFFFFF" });
 
     /** @param {integer} id */
     action_join(id) {
