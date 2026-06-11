@@ -6,6 +6,7 @@ import {
     props,
     proxy,
     types,
+    untrack,
     useEffect,
     xml,
 } from "@odoo/owl";
@@ -1000,4 +1001,21 @@ export class UseForwardRefsToParent {
  */
 export function useForwardRefsToParent(propName, getRefIdFn, ref) {
     new UseForwardRefsToParent(propName, getRefIdFn, ref);
+}
+
+/**
+ * @template {readonly any[]} [T=any[]]
+ * @param {() => T} dependencies
+ * @param {(...deps: T) => void} callback
+ * @param {boolean} [options.immediate] determine if the hook should skip the first run
+ */
+export function useOnChange(dependencies, callback, options = { immediate: true }) {
+    let firstRun = true;
+    useEffect(() => {
+        const dep = dependencies();
+        if (options.immediate || !firstRun) {
+            untrack(() => callback(...dep));
+        }
+        firstRun = false;
+    });
 }
