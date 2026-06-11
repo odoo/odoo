@@ -145,6 +145,7 @@ class PosConfig(models.Model):
         self.ensure_one()
         convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/restaurant_category_data.xml', idref=None, mode='init', noupdate=True)
         if with_demo_data:
+            self._load_product_demo_data([('data/product_attribute_demo.xml', 'product.pa_sides')])
             convert.convert_file(self._env_with_clean_context(), 'pos_restaurant', 'data/scenarios/restaurant_demo_data.xml', idref=None, mode='init', noupdate=True)
         restaurant_categories = self.get_record_by_ref([
             'pos_restaurant.food',
