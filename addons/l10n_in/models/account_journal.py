@@ -1,8 +1,14 @@
-from odoo import models
+from odoo import fields, models
 
 
 class AccountJournal(models.Model):
     _inherit = "account.journal"
+
+    l10n_in_enable_self_invoice = fields.Boolean(
+        string='Self Invoice',
+        help="This journal is for self-invoices."
+             "Invoices will be created using a different sequence as you configured.",
+    )
 
     def _update_payment_method_lines(self, payment_type):
         bank_journals = self.filtered(lambda j: j.type == "bank" and j.company_id.chart_template == "in")

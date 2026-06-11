@@ -47,6 +47,7 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'views/l10n_in_pan_entity_views.xml',
         'views/l10n_in_section_alert_views.xml',
         'views/account_account_views.xml',
+        'views/account_report.xml',
         'views/account_invoice_views.xml',
         'views/account_move_line_views.xml',
         'views/account_payment_views.xml',
