@@ -2,6 +2,8 @@
     'name': 'My Subscription',
     'summary': 'Backend Subscription App',
     'category': 'Sales',
+    'license': 'LGPL-3',
+    'author': 'Odoo S.A.',
     'depends': ['base', 'web', 'iap'],
     'data': [
         'views/menus.xml',
@@ -13,7 +15,4 @@
             'mysubscription/static/src/**/*.scss',
         ],
     },
-    'license': 'LGPL-3',
-    'author': 'Odoo S.A.',
-    'application': True,
 }

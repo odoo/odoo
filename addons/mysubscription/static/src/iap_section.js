@@ -4,7 +4,17 @@ import { useService } from "@web/core/utils/hooks";
 class IapContainer extends Component {
     static template = "mysubscription.IapContainer";
 
-    props = props({ account: t.object() });
+    props = props({
+        account: t.object({
+            action: t.object(),
+            balance: t.string(),
+            credit_url: t.string(),
+            data: t.string(),
+            description: t.string(),
+            name: t.string(),
+            service_name: t.string(),
+        })
+    });
 
     setup() {
         this.actionService = useService("action");
@@ -54,7 +64,6 @@ export class IapSection extends Component {
     static components = {
         IapContainer,
     };
-    static props;
 
     setup() {
         this.orm = useService("orm");

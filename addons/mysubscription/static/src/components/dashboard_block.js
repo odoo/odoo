@@ -4,7 +4,7 @@ export class DashboardBlock extends Component {
     static template = "mysubscription.DashboardBlock";
 
     props = props({
-        "subtitle?": t.string(),
+        subtitle: t.string().optional(),
     });
 
     setup() {};

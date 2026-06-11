@@ -45,6 +45,5 @@ class MySubscription(models.AbstractModel):
                 'service_name': account.service_name,
                 'action': account.action_open_iap_account(),
                 'description': account.description,
-                'data': account,
             })
         return data

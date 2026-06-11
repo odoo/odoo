@@ -2,6 +2,8 @@ import { Component, onWillStart, signal, plugin, props, types as t } from "@odoo
 import { DashboardPlugin } from "./dashboard_plugin";
 import { session } from "@web/session";
 import { user } from "@web/core/user";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 
@@ -10,7 +12,7 @@ import { DatabaseDialog } from "./components/database_dialog"
 
 export class DatabaseSection extends Component {
     static template = "mysubscription.DatabaseSection";
-    static components = { DashboardBlock, DatabaseDialog };
+    static components = { DashboardBlock, DatabaseDialog, Dropdown, DropdownItem };
 
     props = props({
         baseUrl: t.string(),
@@ -30,7 +32,6 @@ export class DatabaseSection extends Component {
     }
 
     get databaseUrl() {
-        // return this.dashboardState.baseUrl || origin;
         return this.dashboardState.baseUrl;
     }
 
@@ -68,7 +69,7 @@ export class DatabaseSection extends Component {
 
     get upgradeHref() {
         return this.dashboardState.hasSubscription
-            ? "https://upgrade.odoo.com"
+            ? "https://upgrade.odoo.com/#onpremise"
             : "https://www.odoo.com/pricing";
     }
 }

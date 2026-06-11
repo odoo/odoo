@@ -3,6 +3,7 @@ import { DashboardPlugin } from "./dashboard_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { DashboardBlock } from "./components/dashboard_block";
 import { PlanBox } from "./components/plan_box"
+import { SubscriptionDialog } from "./components/subscription_dialog";
 
 export class PlanSection extends Component {
     static template = "mysubscription.PlanSection";
@@ -14,40 +15,66 @@ export class PlanSection extends Component {
 
     setup() {
         this.subscription = useService("enterprise_subscription");
+        this.dialog = useService("dialog");
         this.inputRef = signal(null);
         this.state = proxy({buttonText: "Submit"});
         this.dashboardState = plugin(DashboardPlugin).state;
+
+        this.hrefCommunityPlan = "https://www.odoo.com/page/editions";
     }
 
-    get enterprisePlanButton() {
+    get hrefEnterprisePlan() {
         return this.dashboardState.hasSubscription
-            ? { href: "https://accounts.odoo.com/my/home", text: "View", class: "btn-primary" }
-            : { href: "https://www.odoo.com/pricing", text: "Upgrade", class: "btn-primary" }
+            ? "https://accounts.odoo.com/my/home"
+            : "https://www.odoo.com/pricing";
     }
 
-    get communityPlan() {
+    get enterprisePlanButtons() {
+        if (this.dashboardState.hasSubscription) {
+            return [
+                {
+                    text: "Subscription",
+                    class: "btn-primary",
+                    onClick: () => this.openSubscriptionDialog(),
+                },
+                {
+                    text: "My Account",
+                    class: "btn-primary",
+                    href: this.hrefEnterprisePlan,
+                },
+            ]
+        } else {
+            return [{
+                text: "Switch",
+                class: "btn-primary",
+                href: this.hrefEnterprisePlan,
+            }];
+        }
+    }
+
+    get communityPlanProps() {
         return {
             id: "community",
             title: "Odoo Community",
             price: "Free",
-            button: {
-                href: "https://www.odoo.com/page/editions",
+            buttons: [{
                 text: "Compare",
-                class: "btn-outline-secondary"
-            },
+                class: "btn-secondary",
+                href: this.hrefCommunityPlan,
+            }],
             content: {
                 subtitle: "Open Source Apps",
                 addons: [],
-            }
+            },
+            onClickPlan: () =>  window.open(this.hrefCommunityPlan, "_blank"),
         };
     }
 
-    get enterprisePlan() {
+    get enterprisePlanProps() {
         return {
             id: "enterprise",
             title: "Odoo Enterprise",
-            price: "???€",
-            button: this.enterprisePlanButton,
+            buttons: this.enterprisePlanButtons,
             content: {
                 subtitle: "Open Source Apps +",
                 addons: [
@@ -59,25 +86,12 @@ export class PlanSection extends Component {
                     { category: "Productivity", apps: "AI, Sign, ESG, Timesheets" },
                     { category: "Studio" },
                 ],
-            }
+            },
+            onClickPlan: () =>  window.open(this.hrefEnterprisePlan, "_blank"),
         };
     }
 
-    async onCodeSubmit() {
-        const enterpriseCode = this.inputRef().value;
-        if (!enterpriseCode) {
-            return;
-        }
-        await this.subscription.submitCode(enterpriseCode);
-        if (this.subscription.lastRequestStatus === "success") {
-            console.log("SUCCESS");
-        } else {
-            console.log("NOT A SUCCESS");
-            this.state.buttonText = "Retry";
-        }
-    }
-
-    showSubscriptionCode() {
-        return !this.dashboardState.hasSubscription;
+    openSubscriptionDialog() {
+        this.dialog.add(SubscriptionDialog, {});
     }
 }

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mysubscription.SubscriptionDialog">
+        <Dialog title="'Subscription'" size="'md'">
+            <div class="mb-3">
+                <label class="form-label fw-bold">Subscription Code</label>
+                <input type="text" class="form-control" t-model="this.code" placeholder="Paste code here..." autocomplete="off"/>
+            </div>
+
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="this.onSubmit">Apply</button>
+                <button class="btn btn-secondary" t-on-click="this.props.close">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

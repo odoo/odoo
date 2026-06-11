@@ -1,7 +1,7 @@
 import { Component, markup } from "@odoo/owl";
 import { isDisplayStandalone, isMacOS } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
-import { rpc } from "@web/core/network/rpc";
+// import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { session } from "@web/session";
 import { router } from "@web/core/browser/router";
@@ -72,23 +72,23 @@ export function preferencesItem(env) {
     };
 }
 
-export function odooAccountItem(env) {
-    return {
-        type: "item",
-        id: "account",
-        description: _t("My Odoo.com Account"),
-        callback: () => {
-            rpc("/web/session/account")
-                .then((url) => {
-                    browser.open(url, "_blank");
-                })
-                .catch(() => {
-                    browser.open("https://accounts.odoo.com/account", "_blank");
-                });
-        },
-        sequence: 60,
-    };
-}
+// export function odooAccountItem(env) {
+//     return {
+//         type: "item",
+//         id: "account",
+//         description: _t("My Odoo.com Account"),
+//         callback: () => {
+//             rpc("/web/session/account")
+//                 .then((url) => {
+//                     browser.open(url, "_blank");
+//                 })
+//                 .catch(() => {
+//                     browser.open("https://accounts.odoo.com/account", "_blank");
+//                 });
+//         },
+//         sequence: 60,
+//     };
+// }
 
 function installPWAItem(env) {
     let description = _t("Install App");
@@ -158,7 +158,7 @@ registry
     .add("shortcuts", shortCutsItem)
     .add("separator", separator)
     .add("preferences", preferencesItem)
-    .add("odoo_account", odooAccountItem)
+    // .add("odoo_account", odooAccountItem)
     .add("install_pwa", installPWAItem)
     .add("log_out", logOutItem)
     .add("share_url", shareUrlMenuItem);

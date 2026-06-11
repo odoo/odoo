@@ -30,15 +30,12 @@ export class DatabaseDialog extends Component {
 
     get title() {
         const titles = {
-            backup: "Download Database Backup",
-            duplicate: "Duplicate Database",
-            rename: "Rename Database",
-            drop: "Delete Database",
+            backup: "Backup",
+            duplicate: "Duplicate",
+            rename: "Rename",
+            drop: "Delete",
         }
-        // if (!(this.props.action in titles)) {
-        //     throw "Val";
-        // }
-        return titles[this.props.action];
+        return `${titles[this.props.action]} ${this.props.dbName}`;
     }
 
     get formData() {
@@ -132,5 +129,22 @@ export class DatabaseDialog extends Component {
     async onSubmit() {
         this.isProcessing.set(true);
         await this._executeAction(this.props.action);
+    }
+
+    get confirmButtonText() {
+        if (this.isProcessing()) {
+            return "Processing...";
+        } else {
+            switch (this.props.action) {
+                case "backup":
+                    return "Backup";
+                case "duplicate":
+                    return "Duplicate";
+                case "rename":
+                    return "Rename";
+                case "drop":
+                    return "Delete";
+            }
+        }
     }
 }

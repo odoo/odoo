@@ -7,9 +7,9 @@ export class DashboardPlugin extends Plugin {
         expirationDate: null,
         enterpriseCode: null,
         baseUrl: null,
-        // showSub: false,
     });
 
+    // TODO: remove this when im done
     setup() {
         effect(() => {
             console.log("Dashboard modified:", JSON.parse(JSON.stringify(this.state)));

@@ -2,22 +2,22 @@
 <templates xml:space="preserve">
 
     <t t-name="mysubscription.IapSection" owl="1">
-        <h1 class="text-primary mb-3">Extra Services</h1>
+        <h1 class="text-primary mb-3 o_mysub_title">Services</h1>
         <div class="row gx-5 mb-3">
             <div class="col-lg-3">
-                <h4 class="text-primary mb-1 fw-bold">Services</h4>
+                <h3 class="text-primary mb-1 fw-bold">In-App Purchases</h3>
                 <div class="d-flex justify-content-between align-items-start mb-2">
-                    <div>Usage Based Pricing.</div>
+                    <div>Provide Services to Odoo Users directly from their database through In-App Purchases.</div>
                 </div>
             </div>
             <div class="col-lg-9">
                 <t t-foreach="this.iapAccounts" t-as="account" t-key="account.name">
                     <IapContainer account="account"/>
-                    <!-- <hr class="my-4 text-muted opacity-25"/> -->
                 </t>
             </div>
         </div>
     </t>
+
     <t t-name="mysubscription.IapContainer">
         <div
             t-attf-class="card mb-3 p-3 rounded-3 o_mysub_shadow_card"
@@ -29,7 +29,6 @@
                 </div>
                 <div class="flex-grow-1 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
                     <div class="mb-3 mb-md-0">
-                        <!-- <h3 class="text-primary mb-1 fw-bold" t-out="this.name"/> -->
                         <h3 class="text-primary mb-1 fw-bold cursor-pointer custom-hover-link"
                             t-on-click.stop="() => this.openSettings()"
                             t-out="this.name"
@@ -47,12 +46,6 @@
                         >
                             Top Up
                         </a>
-                        <!-- <button -->
-                            <!-- class="btn btn-outline-secondary px-4 py-2 text-nowrap" -->
-                            <!-- t-on-click.stop="() => this.openSettings()" -->
-                        <!-- > -->
-                            <!-- Settings -->
-                        <!-- </button> -->
                     </div>
 
                 </div>

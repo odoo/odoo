@@ -2,23 +2,19 @@
 <templates xml:space="preserve">
 
     <t t-name="mysubscription.Dashboard" owl="1">
-        <div class="o_action_manager bg-view position-relative h-100 overflow-auto">
-            <div class="container-fluid py-4 px-5">
+        <div class="o_mysubscription o_action_manager w-100 bg-view position-relative h-100 overflow-auto">
+            <div class="container py-4 px-5">
 
-                <t t-if="this.showSubscriptionSection">
-                    <SubscriptionSection/>
-                    <hr class="my-4 text-muted opacity-25"/>
-                </t>
-
-                <PlanSection hasSubscription="this.state.hasSubscription"/>
+                <PlanSection hasSubscription="this.dashboardState.hasSubscription"/>
                 <hr class="my-4 text-muted opacity-25"/>
 
                 <IapSection/>
                 <hr class="my-4 text-muted opacity-25"/>
 
-                <DatabaseSection baseUrl="this.state.baseUrl"/>
-
+                <DatabaseSection baseUrl="this.dashboardState.baseUrl"/>
                 <hr class="my-2 text-info"/>
+
+                <!-- TODO: remove this when im done -->
                 <span class="text-info">
                     This section is for testing purposes.
                 </span>
