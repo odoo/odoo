@@ -332,14 +332,14 @@ test("activity view: Activity rendering with done activities", async () => {
     await contains(".o-mail-ActivityListPopover .badge.text-bg-success", { text: "3" }); // 3 planned
     for (const actIdx of [0, 1, 2]) {
         await contains(".o-mail-ActivityListPopoverItem", {
-            text: uploadPlannedActs[actIdx].user_id[1],
+            text: `${uploadPlannedActs[actIdx].user_id[1]}-`,
         });
     }
     await contains(".o-mail-ActivityListPopoverItem", { text: "Due in 4 days" });
     await contains(".o-mail-ActivityListPopoverItem", { text: "Due in 5 days" });
     await contains(".o-mail-ActivityListPopoverItem", { text: "Due in 6 days" });
     await contains(".o-mail-ActivityListPopover .badge.text-bg-secondary", { text: "1" }); // 1 done
-    await contains(".o-mail-ActivityListPopoverItem", { text: uploadDoneActs[0].user_id[1] });
+    await contains(".o-mail-ActivityListPopoverItem", { text: `${uploadDoneActs[0].user_id[1]}-` });
     await contains(".o-mail-ActivityListPopoverItem", {
         text: formatDate(luxon.DateTime.fromISO(uploadDoneActs[0].date_done)),
     });
@@ -352,7 +352,7 @@ test("activity view: Activity rendering with done activities", async () => {
             text: formatDate(luxon.DateTime.fromISO(uploadDoneActs[actIdx].date_done)),
         });
         await contains(".o-mail-ActivityListPopoverItem", {
-            text: uploadDoneActs[actIdx].user_id[1],
+            text: `${uploadDoneActs[actIdx].user_id[1]}-`,
         });
     }
 });

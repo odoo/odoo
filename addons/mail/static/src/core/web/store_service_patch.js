@@ -115,7 +115,7 @@ const StorePatch = {
                 {
                     onClose: resolve,
                     additionalContext: {
-                        dialog_size: "large",
+                        dialog_size: "medium",
                     },
                 }
             )

@@ -30,8 +30,10 @@
             <div class="o-mail-ActivityListPopoverItem-user d-flex align-items-center flex-wrap mx-3">
                 <img class="me-2 rounded object-fit-cover" t-if="this.props.activity.user_id?.partner_id" t-att-src="this.props.activity.user_id.partner_id.avatarUrl" style="max-width: 1.5rem; max-height: 1.5rem;"/>
                 <div class="mt-1">
-                    <small t-if="this.props.activity.user_id" class="text-truncate" t-out="this.props.activity.user_id.name"/>
-                    <small t-if="this.props.activity.state !== 'today'" class="mx-1">-</small>
+                    <small t-if="this.props.activity.user_id" class="text-truncate">
+                        <t t-out="this.props.activity.user_id.name"/>
+                        <span t-if="this.props.activity.state !== 'today'" class="mx-1">-</span>
+                    </small>
                     <small t-if="['overdue', 'planned'].includes(this.props.activity.state)" class="fw-bold" t-att-title="this.props.activity.dateDeadlineFormatted" t-out="this.delayLabel"/>
                     <small t-if="this.props.activity.state === 'done'" class="fw-bold" t-att-title="this.dateDoneFormatted" t-out="this.props.activity.dateDoneFormatted"/>
                 </div>
