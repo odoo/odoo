@@ -1,5 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { Component, onMounted, signal, types as t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 export class CalendarScheduleSection extends Component {
@@ -8,24 +7,21 @@ export class CalendarScheduleSection extends Component {
         model: Object,
         editRecord: Function,
     };
+    rootRef = signal(null, { type: t.ref() });
+    collapsed = signal(false, { type: t.boolean });
     setup() {
-        this.rootRef = useRef("eventsToSchedule");
-        this.state = proxy({ collapsed: false });
-        useLayoutEffect(
-            (el) => {
-                new FullCalendar.Interaction.Draggable(el, {
-                    itemSelector: ".o_event_to_schedule_draggable",
-                    eventData: function (el) {
-                        return {
-                            title: el.innerText,
-                            id: el.dataset.resId,
-                        };
-                    },
-                    appendTo: document.body,
-                });
-            },
-            () => [this.rootRef.el]
-        );
+        onMounted(() => {
+            new FullCalendar.Interaction.Draggable(this.rootRef(), {
+                itemSelector: ".o_event_to_schedule_draggable",
+                eventData: function (el) {
+                    return {
+                        title: el.innerText,
+                        id: el.dataset.resId,
+                    };
+                },
+                appendTo: document.body,
+            });
+        });
     }
 
     get displayLoadMoreButton() {
