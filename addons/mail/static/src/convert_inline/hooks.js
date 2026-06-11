@@ -1,5 +1,4 @@
-import { useComponent } from "@web/owl2/utils";
-import { onMounted, onWillDestroy, onWillUnmount, status } from "@odoo/owl";
+import { onMounted, onWillDestroy, onWillUnmount, useScope, status } from "@odoo/owl";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { renderToElement, renderToFragment } from "@web/core/utils/render";
 import { getCSSRules, toInline } from "@mail/views/web/fields/html_mail_field/convert_inline";
@@ -23,14 +22,14 @@ export const EMAIL_MOBILE_DIMENSIONS = {
 export function useEmailHtmlConverter({ bundles = [] }) {
     let reference, referenceDocument; // Element and Document in which the conversion takes place.
     let currentConfig = {};
-    const cmp = useComponent();
+    const scope = useScope();
     const convertInlineIframeService = useService("convert_inline_iframe");
     const referenceIframe = renderToElement("mail.EmailHtmlConverterReferenceIframe", {
         isBrowserSafari,
     });
     const setupIframe = async () => {
         await convertInlineIframeService.readyPromise;
-        if (status(cmp) === "destroyed") {
+        if (status(scope.component) === "destroyed") {
             return;
         }
         convertInlineIframeService.add(referenceIframe);
@@ -47,7 +46,7 @@ export function useEmailHtmlConverter({ bundles = [] }) {
         });
         const loadPromise = Promise.all([contentPromise, assetsPromise]);
         loadPromise.catch((error) => {
-            if (status(cmp) === "destroyed") {
+            if (status(scope.component) === "destroyed") {
                 // Ignore loading errors if the Component was destroyed, since the
                 // iframe was removed, there is nothing to load for.
                 return;
