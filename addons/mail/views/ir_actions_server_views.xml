@@ -52,6 +52,12 @@
                                     placeholder="Choose a user..."
                                     widget="many2one_avatar_user"
                                     required="state == 'next_activity' and activity_user_type == 'specific' "/>
+                                <field name="activity_role_id"
+                                    invisible="activity_user_type != 'role'"
+                                    placeholder="Choose a role..."
+                                    options="{'no_quick_create': True}"
+                                    domain="[('user_ids', '!=', False)]"
+                                    required="state == 'next_activity' and activity_user_type == 'role' "/>
                             </div>
                         </group>
                         <group colspan="2" invisible="not activity_type_id">

@@ -12,6 +12,9 @@
             <xpath expr="//div[hasclass('o_outlined')][.//field[@name='activity_user_id']]" position="attributes">
                   <attribute name="invisible">activity_category == 'meeting'</attribute>
             </xpath>
+            <xpath expr="//div[hasclass('o_outlined')][.//field[@name='activity_role_id']]" position="attributes">
+                  <attribute name="invisible">activity_category == 'meeting'</attribute>
+            </xpath>
             <xpath expr="//button[@name='action_schedule_activities']" position="attributes">
                   <attribute name="invisible" add="activity_category == 'meeting' or id" separator="or"/>
             </xpath>
@@ -22,7 +25,7 @@
                 <attribute name="invisible">activity_category == 'meeting'</attribute>
             </xpath>
             <xpath expr="//div[hasclass('o_outlined')][.//field[@name='note']]" position="before">
-                <div invisible="activity_category != 'meeting'" class="o_outlined d-flex align-items-baseline mb-3 gap-2">
+                <div invisible="activity_category != 'meeting'" class="o_outlined d-flex align-items-baseline mb-2 gap-2">
                     <i class="fa fa-calendar" title="Calendar"/>
                     <button string="Schedule"
                         invisible="activity_category != 'meeting'"

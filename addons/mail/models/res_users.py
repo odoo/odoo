@@ -267,8 +267,20 @@ class ResUsers(models.Model):
         return write_res
 
     def action_archive(self):
-        activities_to_delete = self.env['mail.activity'].sudo().search([('user_id', 'in', self.ids)])
-        activities_to_delete.unlink()
+        activities_sudo = self.env['mail.activity'].sudo().search_fetch(
+            [('user_id', 'in', self.ids)],
+            ['res_model', 'role_id', 'create_uid', 'user_id'],
+        )
+        record_activities_sudo = activities_sudo.filtered('res_model')
+        if personal_activities_sudo := activities_sudo - record_activities_sudo:
+            personal_activities_sudo.unlink()
+        to_unassign_sudo = record_activities_sudo.filtered(
+            lambda a: a.role_id or not a.create_uid.active or a.create_uid in self)
+        if to_unassign_sudo:
+            to_unassign_sudo.user_id = False
+        if to_reassign_sudo := (record_activities_sudo - to_unassign_sudo).grouped('create_uid'):
+            for creator_sudo, activities_sudo in to_reassign_sudo.items():
+                activities_sudo.user_id = creator_sudo
         return super().action_archive()
 
     def _notify_security_setting_update(self, subject, content, mail_values=None, **kwargs):
@@ -478,6 +490,18 @@ class ResUsers(models.Model):
 
     def _store_user_fields(self, res: Store.FieldList):
         res.one("partner_id", "_store_partner_fields")
+
+    @api.model
+    @api.readonly
+    def _get_activities_to_assign_count(self):
+        """Activities targeting one of the current user's roles (including archived), not yet assigned to anyone."""
+        role_ids = self.env.user.with_context(active_test=False).role_ids.ids
+        if not role_ids:
+            return 0
+        return self.env['mail.activity'].search_count([
+            ('user_id', '=', False),
+            ('role_id', 'in', role_ids),
+        ])
 
     @api.model
     def _get_activity_groups(self):

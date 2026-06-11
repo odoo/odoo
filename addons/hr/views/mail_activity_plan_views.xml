@@ -10,7 +10,7 @@
                     <field name="responsible_type"
                            invisible="res_model != 'hr.employee'"/>
                     <field name="responsible_type" widget="filterable_selection"
-                           options="{'whitelisted_values': ['on_demand', 'other']}"
+                           options="{'whitelisted_values': ['on_demand', 'other', 'role']}"
                            invisible="res_model == 'hr.employee'"/>
                 </xpath>
             </field>
@@ -26,7 +26,7 @@
                          edited in the list view, so that there are not present for other model that are edited in the
                          list view. -->
                     <field name="responsible_type" widget="filterable_selection"
-                           options="{'whitelisted_values': ['on_demand', 'other']}"/>
+                           options="{'whitelisted_values': ['on_demand', 'other', 'role']}"/>
                 </xpath>
                 <xpath expr="//group[@name='group_plan_fields']/group[@name='company_id']" position="before">
                     <field name="department_assignable" invisible="1"/>

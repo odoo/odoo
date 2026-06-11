@@ -88,52 +88,6 @@
     }
 }
 
-/* summary table */
-.o_mail_activity_schedule_wizard {
-    .o_mail_activity_schedule_summary {
-        table {
-            --table-hover-bg: transparent;
-            --table-active-bg: transparent;
-            --table-striped-bg: transparent;
-            --table-border-color: transparent;
-        }
-
-        .cursor-pointer {
-            cursor: default !important;
-        }
-
-        .o_list_table {
-            .o_data_cell {
-                padding-top: 0px;
-                padding-left: 0px;
-                padding-bottom: 3px;
-            }
-        }
-
-        tfoot {
-            display: none;
-        }
-
-        th {
-            padding: 0px;
-        }
-
-        tr {
-            vertical-align: middle;
-        }
-
-        td[name="responsible_user_id"] {
-            img {
-                outline: none;
-            }
-
-            .o_many2one {
-                display: none !important;
-            }
-        }
-    }
-}
-
 .o_activity_details {
     .o_outlined { // See .o_calendar_event_form_quick_create
         > i {

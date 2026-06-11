@@ -64,6 +64,7 @@ class MailActivityType(models.Model):
         help='Actions may trigger specific behavior like opening calendar view or automatically mark as done when a document is uploaded')
     mail_template_ids = fields.Many2many('mail.template', string='Email templates')
     default_user_id = fields.Many2one("res.users", string="Default User")
+    default_role_id = fields.Many2one("res.role", string="Role")
     default_note = fields.Html(string="Default Note", translate=True)
     kpi_provider_visibility = fields.Selection([
             ('none', 'None'),

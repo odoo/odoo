@@ -1,6 +1,7 @@
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
+import { ActivityAssignPopover } from "@mail/core/web/activity_assign_popover";
 import { computeDelay } from "@mail/utils/common/dates";
 import { toggleFn } from "@mail/utils/common/signal";
 
@@ -8,6 +9,7 @@ import { Component, props, signal, t } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { FileUploader } from "@web/views/fields/file_handler";
 
 export class ActivityListPopoverItem extends Component {
@@ -25,6 +27,7 @@ export class ActivityListPopoverItem extends Component {
         });
         this.hasMarkDoneView = signal(false);
         this.toggleFn = toggleFn;
+        this.assignPopover = usePopover(ActivityAssignPopover, { position: "right" });
         if (this.props.activity.activity_category === "upload_file") {
             this.attachmentUploader = useAttachmentUploader(
                 this.store["mail.thread"].insert({
@@ -55,6 +58,11 @@ export class ActivityListPopoverItem extends Component {
         return activity.state !== "done" && activity.can_write;
     }
 
+    get hasAssignButton() {
+        const activity = this.props.activity;
+        return activity.state !== "done" && activity.can_write && !activity.user_id;
+    }
+
     get hasFileUploader() {
         const activity = this.props.activity;
         return activity.state !== "done" && activity.activity_category === "upload_file";
@@ -67,6 +75,18 @@ export class ActivityListPopoverItem extends Component {
     onClickEditActivityButton() {
         this.props.onClickEditActivityButton();
         this.props.activity.edit().then(() => this.props.onActivityChanged?.());
+    }
+
+    onClickAssignButton(ev) {
+        if (this.assignPopover.isOpen) {
+            this.assignPopover.close();
+            return;
+        }
+        this.assignPopover.open(ev.currentTarget, {
+            activity: this.props.activity,
+            hasHeader: true,
+            onActivityChanged: (thread) => this.props.onActivityChanged?.(thread),
+        });
     }
 
     async onFileUploaded(data) {

@@ -11,6 +11,9 @@
                         <b class="text-900 me-2 text-truncate" t-out="this.props.activity.activity_type_id[1]"/>
                     </t>
                 </span>
+                <button t-if="this.hasAssignButton" class="o-mail-ActivityListPopoverItem-assignbtn btn btn-sm btn-success btn-link" title="Assign" aria-label="Assign" t-on-click="this.onClickAssignButton">
+                    <i class="fa fa-user" role="img" aria-label="Assign"/>
+                </button>
                 <t t-if="this.props.activity.can_write">
                     <FileUploader t-if="this.hasFileUploader" onUploaded.bind="this.onFileUploaded">
                         <t t-set-slot="toggler">
@@ -29,9 +32,17 @@
             </div>
             <div class="o-mail-ActivityListPopoverItem-user d-flex align-items-center flex-wrap mx-3">
                 <img class="me-2 rounded object-fit-cover" t-if="this.props.activity.user_id?.partner_id" t-att-src="this.props.activity.user_id.partner_id.avatarUrl" style="max-width: 1.5rem; max-height: 1.5rem;"/>
+                <div t-elif="this.props.activity.role_id" class="me-2 rounded bg-200 text-600 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 1.5rem; height: 1.5rem;">
+                    <i class="fa fa-users" role="img" title="Role" aria-label="Role" style="font-size: 12px;"/>
+                </div>
                 <div class="mt-1">
                     <small t-if="this.props.activity.user_id" class="text-truncate">
                         <t t-out="this.props.activity.user_id.name"/>
+                        <span t-if="this.props.activity.state !== 'today'" class="mx-1">-</span>
+                    </small>
+                    
+                    <small t-elif="this.props.activity.role_id" class="text-truncate text-muted">
+                        @<t t-out="this.props.activity.role_id.name"/>
                         <span t-if="this.props.activity.state !== 'today'" class="mx-1">-</span>
                     </small>
                     <small t-if="['overdue', 'planned'].includes(this.props.activity.state)" class="fw-bold" t-att-title="this.props.activity.dateDeadlineFormatted" t-out="this.delayLabel"/>

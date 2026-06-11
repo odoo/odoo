@@ -6,17 +6,20 @@
         <div class="o-mail-Activity-sidebar d-flex flex-shrink-0 position-relative align-items-start justify-content-center">
             <div class="o-mail-Activity-avatarContainer position-relative d-flex align-items-center justify-content-center" t-att-role="this.props.activity.user_id ? 'button' : 'img'" t-on-click="this.onClickAvatar">
                 <img t-if="this.props.activity.user_id?.partner_id" class="o-mail-Activity-avatar o_avatar rounded" t-att-src="this.props.activity.user_id.partner_id.avatarUrl" />
+                <div t-elif="this.props.activity.role_id" class="o-mail-Activity-avatar rounded w-100 h-100 d-flex align-items-center justify-content-center bg-200 text-600">
+                    <i class="fa fa-users fs-4" role="img" title="Role" aria-label="Role"/>
+                </div>
                 <div
                     class="o-mail-Activity-iconContainer rounded-circle d-flex align-items-center justify-content-center"
                     t-att-class="{
-                        'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1 w-50 h-50': this.props.activity.user_id,
+                        'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1 w-50 h-50': this.props.activity.user_id || this.props.activity.role_id,
                         'text-bg-success': this.props.activity.state === 'planned',
                         'text-bg-warning': this.props.activity.state === 'today',
                         'text-bg-danger': this.props.activity.state === 'overdue',
                         }"
-                    t-attf-style="{{!this.props.activity.user_id ? 'height:80%; width:80%;' : ''}}"
+                    t-attf-style="{{(this.props.activity.user_id || this.props.activity.role_id) ? '' : 'height:80%; width:80%;'}}"
                 >
-                    <i class="fa small" t-attf-class="{{ this.props.activity.icon }} {{this.props.activity.user_id ? 'small' : 'fs-2'}}"/>
+                    <i class="fa small" role="img" t-attf-class="{{ this.props.activity.icon }} {{this.props.activity.user_id || this.props.activity.role_id ? 'small' : 'fs-2'}}"/>
                 </div>
             </div>
         </div>
@@ -29,6 +32,7 @@
                 <span class="fw-bolder text-warning" t-else="">Today:</span>
                 <span class="fw-bolder ps-2 pe-1 text-break"><t t-out="this.displayName"/></span>
                 <span class="o-mail-Activity-user pe-1" t-if="this.props.activity.user_id?.partner_id" >for <t t-out="this.props.activity.user_id.partner_id.displayName"/></span>
+                <span class="o-mail-Activity-role pe-1" t-elif="!this.props.activity.user_id and this.props.activity.role_id">for @<t t-out="this.props.activity.role_id.name"/></span>
                 <i class="fa fa-info-circle p-0" role="img" title="Info" aria-label="Info"
                     data-tooltip-template="mail.ActivityTooltip" t-att-data-tooltip-info="this.tooltipInfo"/>
             </div>
@@ -38,6 +42,9 @@
             </div>
             <div t-if="this.props.activity.can_write" class="lh-lg">
                 <t name="tools">
+                    <button t-if="!this.props.activity.user_id" class="o-mail-Activity-assign btn btn-link text-action p-0 me-3" t-on-click="this.onClickAssign">
+                        <i class="fa fa-user" role="img" aria-label="User"/> Assign
+                    </button>
                     <button class="o-mail-Activity-markDone btn btn-link btn-success p-0 me-3" t-on-click="this.onClickMarkAsDone">
                         <i class="fa fa-check"/> Done
                     </button>
@@ -61,7 +68,8 @@
     <span t-if="activity.activity_type_id">Activity type: <t t-out="activity.activity_type_id.name"/></span><br/>
     <span>Created on: <t t-out="activity.dateCreateFormatted"/></span><br/>
     <span>Created by: <t t-out="activity.create_uid_name"/></span><br/>
-    <span t-if="activity.user_id_name">Assigned to: <t t-out="activity.user_id_name"/></span><br/>
+    <t t-if="activity.user_id_name"><span>Assigned to: <t t-out="activity.user_id_name"/></span><br/></t>
+    <t t-elif="activity.role_id_name"><span>Role: <t t-out="activity.role_id_name"/></span><br/></t>
     <span>Due on: <t t-out="activity.dateDeadlineFormatted"/></span>
 </t>
 

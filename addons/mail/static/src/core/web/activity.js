@@ -1,4 +1,5 @@
 import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hook";
+import { ActivityAssignPopover } from "@mail/core/web/activity_assign_popover";
 import { ActivityMailTemplate } from "@mail/core/web/activity_mail_template";
 import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay, getMsToTomorrow } from "@mail/utils/common/dates";
@@ -25,6 +26,7 @@ export class Activity extends Component {
             onActivityChanged: types.function([]),
             reloadParentView: types.function([]),
         });
+        this.assignPopover = usePopover(ActivityAssignPopover, { position: "bottom" });
         this.markDonePopover = usePopover(ActivityMarkAsDone, { position: "right" });
         this.avatarCard = usePopover(AvatarCard);
         onMounted(() => {
@@ -47,6 +49,7 @@ export class Activity extends Component {
                 dateDeadlineFormatted: activity.dateDeadlineFormatted,
                 create_uid_name: activity.create_uid?.name,
                 user_id_name: activity.user_id?.name,
+                role_id_name: activity.role_id?.name,
             },
         });
     }
@@ -61,6 +64,17 @@ export class Activity extends Component {
 
     get delay() {
         return computeDelay(this.props.activity.date_deadline);
+    }
+
+    async onClickAssign(ev) {
+        if (this.assignPopover.isOpen) {
+            this.assignPopover.close();
+            return;
+        }
+        this.assignPopover.open(ev.currentTarget, {
+            activity: this.props.activity,
+            onActivityChanged: this.props.onActivityChanged,
+        });
     }
 
     async onClickMarkAsDone(ev) {

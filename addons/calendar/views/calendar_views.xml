@@ -321,13 +321,13 @@
                     <span class="w-100 mb-1">The following attendees do not have an email address set. They will not be invited to the event.</span>
                     <field name="invalid_email_partner_ids" widget="many2many_tags"/>
                 </div>
-                <div class="o_outlined d-flex align-items-baseline mb-3 gap-2">
+                <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
                     <i class="fa fa-tag" title="Booking Name"/>
                     <field name="name" nolabel="1" class="w-100"
                         placeholder="Add Title"
                     />
                 </div>
-                <div class="o_outlined d-flex align-items-baseline mb-3 gap-2 flex-wrap">
+                <div class="o_outlined d-flex align-items-baseline mb-2 gap-2 flex-wrap">
                     <!--when "stop" is set manually, "duration" is computed. When "start" is changed
                     "stop" is computed based on the previously-computed "duration". Hence we need to
                     keep the last computed duration in the front-end model and send it with "start"
@@ -353,14 +353,14 @@
                     </span>
                     <field name="stop" invisible="1"/>
                 </div>
-                <div class="o_outlined d-flex align-items-baseline mb-3 gap-2">
+                <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
                     <i class="fa fa-user" title="Participants"/>
                     <field name="partner_ids" nolabel="1" class="w-100"
                         widget="many2many_tags"
                         placeholder="Participants"
                     />
                 </div>
-                <div class="o_outlined d-flex align-items-baseline mb-3 gap-2">
+                <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
                     <i class="fa fa-map" title="Location"/>
                     <field name="location" nolabel="1" class="w-100"
                         placeholder="Room or Location"
@@ -375,21 +375,21 @@
                         <span class="fa fa-plus me-1"/>Video conference
                     </button>
                 </div>
-                <div class="o_outlined d-flex align-items-baseline mb-3 gap-2" invisible="not videocall_location">
+                <div class="o_outlined d-flex align-items-baseline mb-2 gap-2" invisible="not videocall_location">
                     <i class="fa fa-video-camera" title="Videocall URL"/>
                     <field name="videocall_location" class="w-100 text-truncate" nolabel="1" widget="CopyClipboardChar"/>
                     <button name="clear_videocall_location" class="btn btn-link btn-link-inline"><i class="fa fa-remove" title="Remove"/></button>
                 </div>
-                <div class="o_outlined d-flex align-items-baseline mb-3 gap-2">
+                <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
                     <i class="fa fa-lock" title="Visibility"/>
                     <field name="privacy_placeholder" invisible="1"/> <!-- Used to generate the privacy field's placeholder. -->
                     <field name="privacy" nolabel="1" options="{'placeholder_field': 'privacy_placeholder'}" class="w-100"/>
                 </div>
-                <div class="o_outlined d-flex align-items-baseline mb-3 gap-2">
+                <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
                     <i class="fa fa-circle" title="Show as"/>
                     <field name="show_as" nolabel="1" class="w-100"/>
                 </div>
-                <div class="o_outlined d-flex align-items-start mb-3 gap-2">
+                <div class="o_outlined d-flex align-items-start mb-2 gap-2">
                     <i class="fa fa-sticky-note" title="Notes"/>
                     <field name="notes" nolabel="1" class="w-100" placeholder="Notes" widget="calendar_event_notes_html"/>
                 </div>
