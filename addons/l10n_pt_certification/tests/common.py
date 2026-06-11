@@ -10,21 +10,20 @@ class TestL10nPtCommon(AccountTestInvoicingCommon):
     @AccountTestInvoicingCommon.setup_country('pt')
     def setUpClass(cls):
         def create_at_series(year):
-            series = cls.env['l10n_pt.at.series'].create({
+            sale_journal = cls.company_data['default_journal_sale']
+            bank_journal = cls.company_data['default_journal_bank']
+            series = cls.env['l10n_pt.at.series'].create([{
                 'name': year,
                 'company_id': cls.company_pt.id,
                 'training_series': True,
-                'sale_journal_id': cls.company_data['default_journal_sale'].id,
-                'payment_journal_id': cls.company_data['default_journal_bank'].id,
-                'at_series_line_ids': [
-                    Command.create({
-                        'type': series_type,
-                        'prefix': prefix,
-                        'at_code': f'AT-TEST{prefix}{year}',
-                    })
-                    for series_type, prefix in (('out_invoice', 'INV'), ('out_refund', 'RINV'), ('payment_receipt', 'PAY'))
-                ]
-            })
+                'company_exclusive_series': True,
+                'date_start': f"{year}-01-01",
+                'date_end': f"{year}-12-31",
+                'journal_id': bank_journal.id if series_type == 'payment_receipt' else sale_journal.id,
+                'document_type': series_type,
+                'prefix': prefix,
+                'at_code': f'AT-TEST{prefix}{year}',
+            } for series_type, prefix in (('out_invoice', 'INV'), ('out_refund', 'RINV'), ('payment_receipt', 'PAY'))])
             return series
 
         super().setUpClass()
@@ -62,9 +61,10 @@ class TestL10nPtCommon(AccountTestInvoicingCommon):
                 }),
             ],
         }
-        # For years 2017 and 2024, the AT series will be computed. If move is in a different year, set an AT Series
-        if invoice_data['invoice_date'].year not in ('2017', '2024'):
-            invoice_data['l10n_pt_at_series_id'] = cls.series_2024.id
+        # Explicitly assign the AT series matching the invoice year
+        year = str(invoice_data['invoice_date'].year)
+        series_for_year = cls.series_2017 if year == '2017' else cls.series_2024
+        invoice_data['l10n_pt_at_series_id'] = series_for_year.filtered(lambda s: s.document_type == move_type).id
 
         move = cls.env['account.move'].with_company(cls.company_pt).create(invoice_data)
         move.action_post()

@@ -1,4 +1,3 @@
-from freezegun import freeze_time
 from datetime import timedelta
 from unittest.mock import patch
 
@@ -6,7 +5,7 @@ from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.models import Model
 from odoo.tests import tagged
-
+from odoo.tests.common import freeze_time
 from odoo.addons.l10n_pt_certification.tests.common import TestL10nPtCommon
 from odoo.addons.sale.tests.common import TestSaleCommon
 
@@ -15,13 +14,17 @@ class TestL10nPtSaleCommon(TestL10nPtCommon, TestSaleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        for index, series in enumerate([cls.series_2017, cls.series_2024]):
-            series.write({
-                'at_series_line_ids': [
-                    Command.create({'type': 'quotation', 'prefix': 'OR', 'at_code': f'AT-TESTQUOT-{index}'}),
-                    Command.create({'type': 'sales_order', 'prefix': 'NE', 'at_code': f'AT-TESTSO-{index}'}),
-                ],
-            })
+        cls.series_2024_quotation, cls.series_2024_sales_order = cls.env['l10n_pt.at.series'].create([{
+            'name': '2024',
+            'company_id': cls.company_pt.id,
+            'training_series': True,
+            'date_start': '2024-01-01',
+            'date_end': '2024-12-31',
+            'journal_id': cls.company_data['default_journal_sale'].id,
+            'document_type': doc_type,
+            'prefix': prefix,
+            'at_code': f'AT-TEST{doc_type.upper().replace("_", "")[:4]}-{index}',
+        } for index, (doc_type, prefix) in enumerate([('quotation', 'OR'), ('sales_order', 'NE')])])
 
     def create_quotation(self, date_order="2024-01-01", l10n_pt_hashed_on=None, amount=1000.0, tax=None,
                          partner=None, product=False, company=None):
@@ -37,8 +40,7 @@ class TestL10nPtSaleCommon(TestL10nPtCommon, TestSaleCommon):
             })]
         }
 
-        if quotation_data['date_order'].year not in ('2017', '2024'):
-            quotation_data['l10n_pt_at_series_id'] = self.series_2024.id
+        quotation_data['l10n_pt_at_series_id'] = self.series_2024_quotation.id
 
         quotation = self.env['sale.order'].with_company(company or self.company_pt).create(quotation_data)
         return quotation
@@ -57,6 +59,7 @@ class TestL10nPtSaleCommon(TestL10nPtCommon, TestSaleCommon):
         return quotation.sales_order_ids
 
 
+@freeze_time('2024-06-15')
 @tagged('external_l10n', '-at_install', 'post_install', '-standard', 'external')
 class TestL10nPtSaleHashing(TestL10nPtSaleCommon):
     def test_l10n_pt_sale_hash_sequence(self):
@@ -146,6 +149,7 @@ class TestL10nPtSaleHashing(TestL10nPtSaleCommon):
         self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on sales order with id {sales_order3.id} ({sales_order3.l10n_pt_document_number}).')
 
 
+@freeze_time('2024-06-15')
 @tagged('external_l10n', '-at_install', 'post_install', '-standard', 'external')
 class TestL10nPtSaleMiscRequirements(TestL10nPtSaleCommon):
     def test_l10n_pt_sale_document_no(self):
@@ -177,6 +181,7 @@ class TestL10nPtSaleMiscRequirements(TestL10nPtSaleCommon):
                 'company_id': self.company_pt.id,
                 'partner_id': self.partner_a.id,
                 'date_order': fields.Date.from_string('2024-02-04'),
+                'l10n_pt_at_series_id': self.series_2024_quotation.id,
                 'order_line': [
                     Command.create({
                         'product_id': self.company_data['product_order_no'].id,
@@ -238,6 +243,7 @@ class TestL10nPtSaleMiscRequirements(TestL10nPtSaleCommon):
             'company_id': self.company_pt.id,
             'partner_id': self.partner_a.id,
             'date_order': fields.Date.from_string('2024-02-04'),
+            'l10n_pt_at_series_id': self.series_2024_quotation.id,
             'l10n_pt_global_discount': 10.0,
             'order_line': [
                 Command.create({

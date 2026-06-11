@@ -39,8 +39,8 @@ class PoSPaymentMethod(models.Model):
         payment_methods = self.filtered(
             lambda pm: not (
                     pm.l10n_pt_pos_default_at_series_id
-                    and pm.l10n_pt_pos_default_at_series_id.payment_journal_id == pm.journal_id
-                    and pm.l10n_pt_pos_default_at_series_id.at_series_active
+                    and pm.l10n_pt_pos_default_at_series_id.journal_id == pm.journal_id
+                    and pm.l10n_pt_pos_default_at_series_id.active
             ))
 
         for (company, journal), grouped_payment_methods in payment_methods.grouped(lambda pm: (pm.company_id, pm.journal_id)).items():
@@ -55,7 +55,8 @@ class PoSPaymentMethod(models.Model):
                     ('company_id', 'in', company.parent_ids.ids),
                     ('company_exclusive_series', '=', False),
                     ('active', '=', True),
-                    ('payment_journal_id', '=', journal.id),
+                    ('document_type', '=', 'payment_receipt'),
+                    ('journal_id', '=', journal.id),
                 ], limit=1)
                 grouped_payment_methods.l10n_pt_pos_default_at_series_id = at_series
             else:
@@ -63,11 +64,10 @@ class PoSPaymentMethod(models.Model):
 
     @api.constrains('l10n_pt_pos_default_at_series_id')
     def _check_l10n_pt_pos_default_at_series_id(self):
-        # If there are no AT Series lines of type Payment Receipt, request user to add one
         for payment_method in self.filtered(lambda c: c.company_id.country_id.code == 'PT'):
             if (
                 payment_method.l10n_pt_pos_default_at_series_id
-                and not payment_method.l10n_pt_pos_default_at_series_id.at_series_line_ids.filtered(lambda line: line.type == 'payment_receipt')
+                and payment_method.l10n_pt_pos_default_at_series_id.document_type != 'payment_receipt'
             ):
                 action_error = {
                     'view_mode': 'form',

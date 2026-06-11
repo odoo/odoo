@@ -13,7 +13,7 @@ class ProductTemplate(models.Model):
             ('product_id.product_tmpl_id', 'in', pt_product_templates.ids),
             ('picking_id.state', '=', 'done'),
             ('product_id.product_tmpl_id.name', '!=', False),
-            ('country_code', '=', 'PT'),
+            ('picking_id.country_code', '=', 'PT'),
         ]):
             raise UserError(_("You cannot modify the name of a product that has been used in a transfer in Portugal."))
         return super().write(values)

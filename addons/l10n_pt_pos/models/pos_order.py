@@ -79,15 +79,15 @@ class PosOrder(models.Model):
             lambda tax: dict(tax._fields['l10n_pt_tax_exemption_reason'].selection).get(tax.l10n_pt_tax_exemption_reason)
         )))
 
-    @api.depends('country_code', 'config_id.l10n_pt_pos_at_series_line_id')
+    @api.depends('country_code', 'config_id.l10n_pt_pos_at_series_id')
     def _compute_l10n_pt_document_number(self):
         for order in self:
             if (
                 order.country_code == 'PT'
-                and order.config_id.l10n_pt_pos_at_series_line_id
+                and order.config_id.l10n_pt_pos_at_series_id
                 and not order.l10n_pt_document_number
             ):
-                order.l10n_pt_document_number = order.config_id.l10n_pt_pos_at_series_line_id._l10n_pt_get_document_number_sequence().next_by_id()
+                order.l10n_pt_document_number = order.config_id.l10n_pt_pos_at_series_id._l10n_pt_get_document_number_sequence().next_by_id()
             else:
                 order.l10n_pt_document_number = False
 
@@ -139,36 +139,33 @@ class PosOrder(models.Model):
     @api.model
     def _find_last_order(self, at_series):
         return self.sudo().search([
-            ('l10n_pt_at_series_id', '=', at_series.at_series_id.id),
+            ('l10n_pt_at_series_id', '=', at_series.id),
             ('l10n_pt_pos_inalterable_hash', '!=', False),
         ], order='date_order desc', limit=1)
 
-    def l10n_pt_pos_compute_missing_hashes(self, pos_config_id=None, at_series_line=None):
+    def l10n_pt_pos_compute_missing_hashes(self, pos_config_id=None, at_series=None):
         """
         Compute the hash/atcud for all records that do not have one yet
         (because they were not printed/previewed yet)
         """
         if pos_config_id:
-            at_series_line = self.env['l10n_pt.at.series.line'].search([
-                ('at_series_id', '=', self.env['pos.config'].browse(pos_config_id).l10n_pt_pos_at_series_id.id),
-                ('type', '=', 'pos_order'),
-            ])
-        if not at_series_line:
+            at_series = self.env['pos.config'].browse(pos_config_id).l10n_pt_pos_at_series_id
+        if not at_series:
             raise UserError(_("No AT Series of type 'Invoice/Receipt (FR)' was found for this POS Configuration."))
         orders = self.sudo().search([
-            ('l10n_pt_at_series_id', '=', at_series_line.at_series_id.id),
+            ('l10n_pt_at_series_id', '=', at_series.id),
             ('state', 'in', ['paid', 'done', 'invoiced']),
             ('l10n_pt_pos_inalterable_hash', '=', False),
         ], order='date_order')
 
-        previous_order = self._find_last_order(at_series_line)
+        previous_order = self._find_last_order(at_series)
         try:
             previous_hash = previous_order.l10n_pt_pos_inalterable_hash.split("$")[2] if previous_order.l10n_pt_pos_inalterable_hash else ""
         except IndexError:  # hash is not correctly formatted (it has been altered!)
             previous_hash = "123"  # will never be a valid hash
         for order in orders.sorted(key=lambda pos_order: (pos_order.write_date, pos_order.name)):
             current_atcud_number = int(order.l10n_pt_document_number.split('/')[-1])
-            order.l10n_pt_pos_atcud = f"{order.config_id.l10n_pt_pos_at_series_line_id._get_at_code()}-{current_atcud_number}"
+            order.l10n_pt_pos_atcud = f"{order.l10n_pt_at_series_id._get_at_code()}-{current_atcud_number}"
 
         orders_hashes = orders._calculate_hashes(previous_hash)
         for order, l10n_pt_pos_inalterable_hash in orders_hashes.items():

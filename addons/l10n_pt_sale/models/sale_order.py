@@ -129,12 +129,7 @@ class SaleOrder(models.Model):
         compute='_compute_l10n_pt_at_series_id',
         readonly=False,
         store=True,
-    )
-    l10n_pt_at_series_line_id = fields.Many2one(
-        comodel_name="l10n_pt.at.series.line",
-        string="Document-specific AT Series",
-        compute='_compute_l10n_pt_at_series_line_id',
-        store=True,
+        domain="[('document_type', 'in', ('quotation', 'sales_order'))]",
     )
     # Document type used in invoice template (when printed, documents have to present the document type on each page)
     l10n_pt_document_type = fields.Selection(
@@ -200,7 +195,7 @@ class SaleOrder(models.Model):
     def action_quotation_send(self):
         if not self.env.context.get('has_reprint_reason'):
             self._check_l10n_pt_dates()
-            self._l10n_pt_check_so_at_series_line()
+            self._l10n_pt_check_at_series()
             self._set_l10n_pt_document_number()
             reprint = False
             for order in self.filtered(lambda o: o.country_code == 'PT'):
@@ -224,14 +219,14 @@ class SaleOrder(models.Model):
                 ('l10n_pt_sale_inalterable_hash', '=', False),
                 ('l10n_pt_document_number', '=', False),
             ], order='date_order')
-            orders._l10n_pt_check_so_at_series_line()
+            orders._l10n_pt_check_at_series()
             orders.filtered(lambda so: so.state == 'sale')._set_l10n_pt_document_number()
         return super()._create_invoices(grouped=grouped, final=final, date=date)
 
     def action_preview_sale_order(self):
         self.ensure_one()
         self._check_l10n_pt_dates()
-        self._l10n_pt_check_so_at_series_line()
+        self._l10n_pt_check_at_series()
         self._set_l10n_pt_document_number()
         if self.state == 'sale':
             self._l10n_pt_compute_missing_hashes()
@@ -265,7 +260,7 @@ class SaleOrder(models.Model):
     def action_l10n_pt_create_sales_order(self):
         self.ensure_one()
         self._check_l10n_pt_dates()
-        self._l10n_pt_check_so_at_series_line()
+        self._l10n_pt_check_at_series()
         self._set_l10n_pt_document_number()
 
         action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
@@ -357,18 +352,18 @@ class SaleOrder(models.Model):
         no other document may be issued with the current or previous date within the same series"
         """
         now = fields.Datetime.now()
-        series_ids = self.mapped('l10n_pt_at_series_line_id').ids
+        series_ids = self.mapped('l10n_pt_at_series_id').ids
 
         grouped = self.env['sale.order'].read_group(
             domain=[
-                ('l10n_pt_at_series_line_id', 'in', series_ids),
-                ('l10n_pt_at_series_line_id', '!=', False),
+                ('l10n_pt_at_series_id', 'in', series_ids),
+                ('l10n_pt_at_series_id', '!=', False),
             ],
-            fields=['l10n_pt_at_series_line_id', 'date_order:max', 'l10n_pt_hashed_on:max'],
-            groupby=['l10n_pt_at_series_line_id']
+            fields=['l10n_pt_at_series_id', 'date_order:max', 'l10n_pt_hashed_on:max'],
+            groupby=['l10n_pt_at_series_id']
         )
         max_dates_per_series = {
-            group['l10n_pt_at_series_line_id'][0]: {
+            group['l10n_pt_at_series_id'][0]: {
                 'max_order_date': group['date_order'],
                 'max_hashed_on_date': group['l10n_pt_hashed_on']
             }
@@ -376,10 +371,10 @@ class SaleOrder(models.Model):
         }
 
         for order in self:
-            if not order.l10n_pt_at_series_line_id:
+            if not order.l10n_pt_at_series_id:
                 continue
 
-            series_id = order.l10n_pt_at_series_line_id.id
+            series_id = order.l10n_pt_at_series_id.id
             max_dates = max_dates_per_series.get(series_id)
             if not max_dates:
                 continue
@@ -393,27 +388,27 @@ class SaleOrder(models.Model):
                     "You cannot create a quotation or sales order with a date earlier than the date of the last "
                     "document issued in this AT series (%(name)s - %(prefix)s).",
                     name=order.l10n_pt_at_series_id.name,
-                    prefix=order.l10n_pt_at_series_line_id.prefix,
+                    prefix=order.l10n_pt_at_series_id.prefix,
                 ))
 
             if max_hashed_on_date and max_hashed_on_date > now:
                 raise UserError(_(
                     "There exists secured sales orders with a lock date ahead of the present time in this AT series (%(name)s - %(prefix)s).",
                     name=order.l10n_pt_at_series_id.name,
-                    prefix=order.l10n_pt_at_series_line_id.prefix,
+                    prefix=order.l10n_pt_at_series_id.prefix,
                 ))
 
-    def _l10n_pt_check_so_at_series_line(self):
-        self._compute_l10n_pt_at_series_line_id()
-        sale_orders = self.filtered(lambda so: so.l10n_pt_at_series_id and not so.l10n_pt_at_series_line_id)
-        if len(sale_orders.l10n_pt_at_series_id) == 1:
+    def _l10n_pt_check_at_series(self):
+        sale_orders = self.filtered(lambda so: not so.l10n_pt_at_series_id)
+        if not sale_orders:
+            return
+        if len(sale_orders) == 1:
             action_error = {
                 'view_mode': 'form',
                 'name': _('AT Series'),
                 'res_model': 'l10n_pt.at.series',
-                'res_id': sale_orders.l10n_pt_at_series_id.id,
                 'type': 'ir.actions.act_window',
-                'views': [[self.env.ref('l10n_pt_certification.view_l10n_pt_at_series_form').id, 'form']],
+                'views': [[self.env.ref('l10n_pt_certification.view_l10n_pt_at_series_tree').id, 'list']],
                 'target': 'new',
             }
             document_types = sale_orders.mapped('l10n_pt_document_type')
@@ -422,26 +417,22 @@ class SaleOrder(models.Model):
             else:
                 document_type = "type " + dict(sale_orders[0]._fields['l10n_pt_document_type'].selection).get(document_types[0])
             raise RedirectWarning(
-                _("There is no AT series for the document %(document_type)s registered under the series name %(series_name)s. "
+                _("There is no AT series for the document %(document_type)s. "
                   "Create a new series or view existing series via the Accounting Settings.",
-                  document_type=document_type,
-                  series_name=sale_orders.l10n_pt_at_series_id.name),
+                  document_type=document_type),
                 action_error,
                 _('Add an AT Series'),
             )
-        elif len(sale_orders.l10n_pt_at_series_id) > 1:
+        else:
             action_error = {
                 'view_mode': 'form',
                 'name': _('AT Series'),
                 'res_model': 'l10n_pt.at.series',
-                'res_ids': sale_orders.l10n_pt_at_series_id.ids,
                 'type': 'ir.actions.act_window',
                 'views': [[self.env.ref('l10n_pt_certification.view_l10n_pt_at_series_tree').id, 'list']],
             }
             raise RedirectWarning(
-                _("Please ensure that there are AT series for the document types Quotation (OR) and Sales Order (NE) "
-                  "registered under the active series: %(series_names)s.",
-                  series_name=",".join(sale_orders.l10n_pt_at_series_id.mapped('name'))),
+                _("Please ensure that there are AT series for the document types Quotation (OR) and Sales Order (NE)."),
                 action_error,
                 _('Add an AT Series'),
             )
@@ -491,20 +482,10 @@ class SaleOrder(models.Model):
                     ('active', '=', True),
                 ], limit=1)
 
-    @api.depends('l10n_pt_at_series_id')
-    def _compute_l10n_pt_at_series_line_id(self):
-        sales_orders = self.filtered(lambda o: not o.l10n_pt_at_series_line_id and o.l10n_pt_at_series_id)
-        for (document_type, series), orders in sales_orders.grouped(lambda o: (o.l10n_pt_document_type, o.l10n_pt_at_series_id)).items():
-            at_series_line = series._get_line_for_type(document_type)
-            if at_series_line:
-                orders.l10n_pt_at_series_line_id = at_series_line
-
     def _set_l10n_pt_document_number(self):
         for order in self.filtered(lambda o: o.country_code == 'PT').sorted('date_order'):
-            if order.l10n_pt_at_series_id and not order.l10n_pt_at_series_line_id:
-                order._compute_l10n_pt_at_series_line_id()
-            if not order.l10n_pt_document_number:
-                order.l10n_pt_document_number = order.l10n_pt_at_series_line_id._l10n_pt_get_document_number_sequence().next_by_id()
+            if order.l10n_pt_at_series_id and not order.l10n_pt_document_number:
+                order.l10n_pt_document_number = order.l10n_pt_at_series_id._l10n_pt_get_document_number_sequence().next_by_id()
         self._check_l10n_pt_document_number()
 
     @api.depends('state', 'country_code')
@@ -520,7 +501,7 @@ class SaleOrder(models.Model):
         for order in self:
             if order.country_code == 'PT' and not order.l10n_pt_atcud and order.l10n_pt_document_number:
                 current_seq_number = int(order.l10n_pt_document_number.split('/')[-1])
-                order.l10n_pt_atcud = f"{order.l10n_pt_at_series_line_id._get_at_code()}-{current_seq_number}"
+                order.l10n_pt_atcud = f"{order.l10n_pt_at_series_id._get_at_code()}-{current_seq_number}"
 
     ####################################
     # HASH AND QR CODE
@@ -563,9 +544,9 @@ class SaleOrder(models.Model):
                 order.l10n_pt_inalterable_hash_short = False
 
     @api.model
-    def _find_last_order(self, at_series_line):
+    def _find_last_order(self, at_series):
         return self.sudo().search([
-            ('l10n_pt_at_series_line_id', '=', at_series_line.id),
+            ('l10n_pt_at_series_id', '=', at_series.id),
             ('l10n_pt_sale_inalterable_hash', '!=', False),
         ], order='date_order desc, l10n_pt_document_number desc', limit=1)
 
@@ -578,12 +559,12 @@ class SaleOrder(models.Model):
 
         # When printing an order before previewing or creating an invoice from it, at series may not be set yet
         if active_ids := self.env.context.get('active_ids'):
-            orders_to_check = self.browse(active_ids).filtered(lambda so: not so.l10n_pt_at_series_line_id)
-            orders_to_check._l10n_pt_check_so_at_series_line()
+            orders_to_check = self.browse(active_ids).filtered(lambda so: not so.l10n_pt_at_series_id)
+            orders_to_check._l10n_pt_check_at_series()
             orders_to_check._set_l10n_pt_document_number()
 
         # Get all AT series that apply to sale.order to find unhashed orders per series
-        at_series_lines = self.env['l10n_pt.at.series.line'].search([
+        at_series_records = self.env['l10n_pt.at.series'].search([
             '|',
             '&',
             ('company_id', '=', company.id),
@@ -591,16 +572,16 @@ class SaleOrder(models.Model):
             '&',
             ('company_id', 'in', company.parent_ids.ids),
             ('company_exclusive_series', '=', False),
-            ('type', 'in', ('sales_order', 'quotation')),
+            ('document_type', 'in', ('sales_order', 'quotation')),
         ])
-        for at_series_line in at_series_lines:
+        for at_series in at_series_records:
             orders = self.sudo().search([
-                ('l10n_pt_at_series_line_id', '=', at_series_line.id),
+                ('l10n_pt_at_series_id', '=', at_series.id),
                 ('l10n_pt_sale_inalterable_hash', '=', False),
             ], order='date_order')
 
             orders._set_l10n_pt_document_number()
-            previous_order = self._find_last_order(at_series_line)
+            previous_order = self._find_last_order(at_series)
             try:
                 previous_hash = previous_order.l10n_pt_sale_inalterable_hash.split("$")[2] if previous_order.l10n_pt_sale_inalterable_hash else ""
             except IndexError:  # hash is not correctly formatted (it has been altered!)

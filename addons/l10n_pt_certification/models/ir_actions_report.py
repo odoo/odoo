@@ -24,7 +24,7 @@ class IrActionsReport(models.Model):
                 and pt_companies != self.env.companies
             ):
                 raise UserError(_("It is not possible to print documents with the template %s for Portuguese and "
-                                  "non-Portuguese companies at the same time.") % report.name)
+                                  "non-Portuguese companies at the same time.", report.name))
         return super()._pre_render_qweb_pdf(report_ref, res_ids=res_ids, data=data)
 
     def _l10n_pt_report_compliance(self, model, res_ids, compute_hash=False, update_print_version=True):

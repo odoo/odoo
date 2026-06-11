@@ -12,6 +12,11 @@
                            optional="show"
                            required="payment_type == 'inbound' and parent.country_code == 'PT'"/>
                 </xpath>
+                <xpath expr="//notebook" position="inside">
+                    <page string="AT Series" name="at_series" invisible="country_code != 'PT' or type not in ('sale', 'bank', 'credit', 'cash')">
+                        <field name="l10n_pt_at_series_ids"/>
+                    </page>
+                </xpath>
             </field>
         </record>
     </data>

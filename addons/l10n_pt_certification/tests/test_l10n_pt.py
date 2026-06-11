@@ -5,11 +5,13 @@ from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.models import Model
 from odoo.tests import tagged
+from odoo.tests.common import freeze_time
 from odoo.tools import format_date
 
 from odoo.addons.l10n_pt_certification.tests.common import TestL10nPtCommon
 
 
+@freeze_time('2024-06-15')
 @tagged('external_l10n', '-at_install', 'post_install', '-standard', 'external')
 class TestL10nPtHashing(TestL10nPtCommon):
     def test_l10n_pt_hash_sequence(self):
@@ -101,6 +103,7 @@ class TestL10nPtHashing(TestL10nPtCommon):
         self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on journal entry with id {out_invoice4.id} ({out_invoice4.name}).')
 
 
+@freeze_time('2024-06-15')
 @tagged('external_l10n', '-at_install', 'post_install', '-standard', 'external')
 class TestL10nPtMiscRequirements(TestL10nPtCommon):
     def test_l10n_pt_document_no(self):
@@ -131,6 +134,7 @@ class TestL10nPtMiscRequirements(TestL10nPtCommon):
                 'move_type': 'out_invoice',
                 'partner_id': self.partner_a.id,
                 'invoice_date': fields.Date.from_string('2024-02-04'),
+                'l10n_pt_at_series_id': self.series_2024.filtered(lambda s: s.document_type == 'out_invoice').id,
                 'line_ids': [
                     Command.create({
                         'name': 'Product A',
@@ -214,7 +218,7 @@ class TestL10nPtMiscRequirements(TestL10nPtCommon):
             'journal_id': self.company_data['default_journal_bank'].id,
             'date': fields.Date.from_string(fields.Date.today() + timedelta(days=1)),
             'amount': 100.0,
-            'l10n_pt_at_series_id': self.series_2024.id
+            'l10n_pt_at_series_id': self.series_2024.filtered(lambda s: s.document_type == 'payment_receipt').id
         }
         self.env['account.payment'].create(payment_vals).action_post()
 
@@ -257,6 +261,7 @@ class TestL10nPtMiscRequirements(TestL10nPtCommon):
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
             'invoice_date': fields.Date.from_string('2024-02-04'),
+            'l10n_pt_at_series_id': self.series_2024.filtered(lambda s: s.document_type == 'out_invoice').id,
             'l10n_pt_global_discount': 10.0,
             'line_ids': [
                 Command.create({

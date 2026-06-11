@@ -23,7 +23,7 @@ class ResCompany(models.Model):
 
         results = []
 
-        at_series_lines = self.env['l10n_pt.at.series.line'].search([
+        at_series_records = self.env['l10n_pt.at.series'].search([
             '|',
             '&',
             ('company_id', '=', self.id),
@@ -31,14 +31,14 @@ class ResCompany(models.Model):
             '&',
             ('company_id', 'in', self.parent_ids.ids),
             ('company_exclusive_series', '=', False),
-            ('type', 'in', ('outgoing', 'internal', 'incoming')),
+            ('document_type', 'in', ('outgoing', 'internal', 'incoming')),
         ])
 
-        for at_series_line in at_series_lines:
+        for at_series in at_series_records:
             query = self.env['stock.picking'].sudo()._search(
                 domain=[
-                    ('l10n_pt_at_series_id', '=', at_series_line.at_series_id.id),
-                    ('picking_type_code', '=', at_series_line.type),
+                    ('l10n_pt_at_series_id', '=', at_series.id),
+                    ('picking_type_code', '=', at_series.document_type),
                     ('l10n_pt_stock_inalterable_hash', '!=', False),
                 ],
                 order="name",
@@ -54,7 +54,7 @@ class ResCompany(models.Model):
                 pickings = self.env['stock.picking'].browse([picking_id[0] for picking_id in picking_ids])
                 if not pickings and not last_picking:
                     results.append({
-                        'series_at_code': at_series_line.at_code,
+                        'series_at_code': at_series.at_code,
                         'status': 'no_data',
                         'msg_cover': _('No delivery orders found for this configuration.'),
                     })
@@ -74,8 +74,8 @@ class ResCompany(models.Model):
             self.env.execute_query(SQL("CLOSE hashed_pickings"))
             if corrupted_picking:
                 results.append({
-                    'series_document_identifier': at_series_line.document_identifier,
-                    'series_at_code': at_series_line._get_at_code(),
+                    'series_document_identifier': at_series.document_identifier,
+                    'series_at_code': at_series._get_at_code(),
                     'status': 'corrupted',
                     'msg_cover': _(
                         "Corrupted data on delivery order with id %(id)s (%(name)s).",
@@ -85,8 +85,8 @@ class ResCompany(models.Model):
                 })
             elif first_picking and last_picking:
                 results.append({
-                    'series_document_identifier': at_series_line.document_identifier,
-                    'series_at_code': at_series_line._get_at_code(),
+                    'series_document_identifier': at_series.document_identifier,
+                    'series_at_code': at_series._get_at_code(),
                     'status': 'verified',
                     'msg_cover': _("Delivery orders are correctly hashed"),
                     'first_picking': first_picking,

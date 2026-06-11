@@ -1,10 +1,9 @@
 import json
 import re
 import urllib.parse
-from collections import defaultdict
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError, ValidationError, RedirectWarning
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools import SQL, float_repr
 
 from odoo.addons.l10n_pt_certification.utils import hashing as pt_hash_utils
@@ -126,11 +125,6 @@ class AccountMove(models.Model):
         compute='_compute_l10n_pt_at_series_id',
         readonly=False, store=True,
     )
-    l10n_pt_at_series_line_id = fields.Many2one(
-        comodel_name="l10n_pt.at.series.line",
-        string="Document-specific AT Series",
-        compute='_compute_l10n_pt_at_series_line_id',
-    )
     # Cancelling reason is a PT requirement, added to the SAF-T
     l10n_pt_cancel_reason = fields.Char(
         string="Reason for Cancellation",
@@ -160,9 +154,25 @@ class AccountMove(models.Model):
         copy=False,
     )
 
+    def _is_pt_move(self):
+        """Helper method to check if the move requires PT handling."""
+        self.ensure_one()
+        return self.country_code == 'PT' and self.move_type in AT_SERIES_TYPE_SAFT_TYPE_MAP
+
     ####################################
     # OVERRIDES
     ####################################
+
+    def _get_starting_sequence(self):
+        self.ensure_one()
+        if self.country_code == 'PT' and self.move_type in AT_SERIES_TYPE_SAFT_TYPE_MAP:
+            if self.l10n_pt_at_series_id:
+                return f"{self.l10n_pt_at_series_id.document_identifier}/00000"
+            standard = super()._get_starting_sequence()
+            if re.match(r'^[A-Z0-9]+/\d.+/\d+$', standard):  # "INV/2026/00000" → "INV 2026/00000"
+                return standard.replace('/', ' ', 1)
+            return standard
+        return super()._get_starting_sequence()
 
     def action_reverse(self):
         """
@@ -174,10 +184,18 @@ class AccountMove(models.Model):
         return super().action_reverse()
 
     def action_post(self):
-        for move in self.filtered(lambda m: m.country_code == 'PT').sorted('invoice_date'):
+        pt_moves = self.filtered(lambda m: m._is_pt_move()).sorted('invoice_date')
+        for move in pt_moves:
+            if not move.journal_id:
+                raise UserError(_("You cannot post an invoice without a journal. Please select a journal and try again."))
+
+            if not move.l10n_pt_at_series_id:
+                move.l10n_pt_at_series_id = move._l10n_pt_create_at_series_from_sequence()
+
             move._check_l10n_pt_at_series_id()
-            move._check_l10n_pt_document_number()
             move._check_l10n_pt_dates()
+            move.name = move.l10n_pt_at_series_id._l10n_pt_get_document_number_sequence().next_by_id()
+            move._check_l10n_pt_document_number()
         return super().action_post()
 
     def write(self, vals):
@@ -256,7 +274,7 @@ class AccountMove(models.Model):
         self.ensure_one()
         # If document is reprint and does not yet have a reason, call reprint reason wizard. Else, proceed with print
         if (
-            self.country_code == 'PT'
+            self._is_pt_move()
             and self.move_type in self.get_sale_types(include_receipts=True)
             and self.l10n_pt_print_version
             and not self.env.context.get('has_reprint_reason')
@@ -358,7 +376,7 @@ class AccountMove(models.Model):
 
     def update_l10n_pt_print_version(self):
         for move in self.filtered(lambda m: (
-                m.country_code == 'PT' and m.move_type in self.get_sale_types(include_receipts=True)
+                m._is_pt_move() and m.move_type in self.get_sale_types(include_receipts=True)
         )):
             if not move.l10n_pt_print_version:
                 move.l10n_pt_print_version = 'original'
@@ -379,97 +397,148 @@ class AccountMove(models.Model):
             return 'l10n_pt_certification.report_invoice_document'
         return super()._get_name_invoice_report()
 
+    @api.onchange('name')
+    def _onchange_l10n_pt_name(self):
+        if self._is_pt_move() and self.name and not re.match(r'^[^ ]+ [^/^ ]+/[0-9]+$', self.name):
+            raise ValidationError(_(
+                "The document number (%s) is invalid. It must start with the internal code "
+                "of the document type, a space, the name of the series followed by a slash and the number of the "
+                "document within the series (e.g. INV 2025A/1).",
+                self.name
+            ))
+
     ####################################
     # PT FIELDS - ATCUD, AT SERIES
     ####################################
 
-    @api.depends('move_type', 'company_id', 'date', 'journal_id')
+    @api.depends('move_type', 'company_id', 'date', 'journal_id', 'l10n_pt_document_type', 'name', 'invoice_date')
     def _compute_l10n_pt_at_series_id(self):
         # Do not recompute AT series if move already has one and journal of AT series matches the move journal
         moves_to_compute = self.filtered(
-            lambda m: m.move_type in AT_SERIES_TYPE_SAFT_TYPE_MAP and m.journal_id and m.country_code == 'PT'
-            and not (m.l10n_pt_at_series_id and m.l10n_pt_at_series_id.sale_journal_id == m.journal_id)
+            lambda m: (
+                m._is_pt_move()
+                and m.journal_id
+                and (
+                    not m.l10n_pt_at_series_id
+                    or m.l10n_pt_at_series_id.journal_id != m.journal_id
+                    or not m.l10n_pt_at_series_id.active
+                )
+            )
         )
-        moves_by_key = defaultdict(self.env['account.move'].browse)
         for move in moves_to_compute:
-            # Group moves of the same company, journal and move_type
-            moves_by_key[move.company_id, move.journal_id, move.move_type] |= move
-        # Find the AT Series per group
-        for key, moves in moves_by_key.items():
-            company_id, journal_id, move_type = key
-            # Get the last move with an AT series for each group
+            # Get the last move with an AT series for this journal and document type
             last_move = self.env['account.move'].search([
-                ('company_id', '=', company_id.id),
-                ('journal_id', '=', journal_id.id),
-                ('move_type', '=', move_type),
+                ('company_id', '=', move.company_id.id),
+                ('journal_id', '=', move.journal_id.id),
+                ('l10n_pt_document_type', '=', move.l10n_pt_document_type),
                 ('l10n_pt_at_series_id', '!=', False),
+                ('l10n_pt_at_series_id.active', '=', True),
             ], order='id desc', limit=1)
             # If no AT series used in a move in this journal, fallback to an active series for this journal
             at_series = last_move.l10n_pt_at_series_id or self.env['l10n_pt.at.series'].search([
                 '|',
                 '&',
-                ('company_id', '=', company_id.id),
+                ('company_id', '=', move.company_id.id),
                 ('company_exclusive_series', '=', True),
                 '&',
-                ('company_id', 'in', company_id.parent_ids.ids),
+                ('company_id', 'in', move.company_id.parent_ids.ids),
                 ('company_exclusive_series', '=', False),
                 ('active', '=', True),
-                ('sale_journal_id', '=', journal_id.id),
+                ('journal_id', '=', move.journal_id.id),
+                ('document_type', '=', move.l10n_pt_document_type),
+                ('active', '=', True),
             ], limit=1)
 
-            moves.l10n_pt_at_series_id = at_series
+            move.l10n_pt_at_series_id = at_series
+
+    def _l10n_pt_create_at_series_from_sequence(self):
+        """ Auto-create an AT series based on the move's sequence prefix and date metadata.
+        This is called when no matching AT series exists for a new sequence period.
+
+        :return: The newly created l10n_pt.at.series record, or an empty recordset if creation fails.
+        """
+        self.ensure_one()
+
+        seq_source = self.name if (self.name and self.name != '/') else self._get_starting_sequence()
+        format_string, format_values = self._get_sequence_format_param(seq_source)
+
+        prefix1 = format_values.get('prefix1', '')
+        prefix = re.sub(r'[^a-zA-Z0-9]', '', prefix1.strip())
+
+        sequence_number_reset = self._deduce_sequence_number_reset(
+            format_string.format(**{**format_values, 'seq': 1})
+        )
+        date_start, date_end, forced_year_start, forced_year_end = self._get_sequence_date_range(sequence_number_reset)
+
+        year = forced_year_start or format_values.get('year') or date_start.year
+        year_end = forced_year_end or format_values.get('year_end') or ''
+
+        month = format_values.get('month')
+        month_str = str(month).zfill(2) if month else "00"
+
+        if sequence_number_reset == 'month':
+            series_name = f"{year}{month_str}"
+        elif sequence_number_reset == 'year_range_month':
+            series_name = f"{year}{year_end}{month_str}"
+        elif sequence_number_reset == 'year_range':
+            series_name = f"{year}{year_end}"
+        elif sequence_number_reset == 'year':
+            series_name = str(year)
+        else:
+            series_name = f"{prefix}{year}"
+
+        return self.env['l10n_pt.at.series'].create({
+            'name': series_name,
+            'prefix': prefix,
+            'document_type': self.l10n_pt_document_type,
+            'journal_id': self.journal_id.id,
+            'company_id': self.company_id.id,
+            'date_start': date_start,
+            'date_end': date_end,
+            # TODO: to be handled later
+            'training_series': True,
+            'at_code': f'AT-{prefix}{series_name}',
+        })
 
     def _check_l10n_pt_at_series_id(self):
         self.ensure_one()
         if self.move_type in ('out_invoice', 'out_receipt', 'out_refund'):
             if not self.l10n_pt_at_series_id:
                 raise UserError(_("Please select a series for this move."))
-            if not self.l10n_pt_at_series_id.active:
+            series = self.l10n_pt_at_series_id
+            invoice_date = self.invoice_date or fields.Date.context_today(self)
+            series_date_valid = (
+                (not series.date_start or series.date_start <= invoice_date)
+                and (not series.date_end or series.date_end >= invoice_date)
+            )
+            if not series.active and not series_date_valid:
                 raise UserError(_("An inactive series cannot be used."))
+            if not series.at_code:
+                raise UserError(self.env._(
+                        "The AT Series '%(series)s' is missing the AT Validation Code. "
+                        "Please fill in the AT Validation Code obtained from the Portal das Finanças before posting.",
+                        series=series.display_name,
+                    )
+                )
 
-    @api.depends('l10n_pt_at_series_id')
-    def _compute_l10n_pt_at_series_line_id(self):
-        for (document_type, series), moves in self.grouped(lambda m: (m.l10n_pt_document_type, m.l10n_pt_at_series_id)).items():
-            moves.l10n_pt_at_series_line_id = series._get_line_for_type(document_type) if series else None
-
-    @api.depends('l10n_pt_at_series_id', 'l10n_pt_at_series_line_id', 'move_type', 'company_id', 'state')
+    @api.depends('name', 'move_type', 'company_id', 'state')
     def _compute_l10n_pt_document_number(self):
         for move in self:
             if (
-                move.country_code == 'PT'
+                move._is_pt_move()
                 and move.move_type in self.env['account.move'].get_sale_types(include_receipts=True)
-                and move.l10n_pt_at_series_line_id
+                and move.name and move.name != '/'
             ):
-                if move.state == 'posted' and not move.l10n_pt_document_number:
-                    move.l10n_pt_document_number = move.l10n_pt_at_series_line_id._l10n_pt_get_document_number_sequence().next_by_id()
+                move.l10n_pt_document_number = move.name
             else:
                 move.l10n_pt_document_number = False
 
     def _check_l10n_pt_document_number(self):
         for move in self.filtered(lambda m: (
-            m.country_code == 'PT'
+            m._is_pt_move()
             and m.move_type in self.get_sale_types(include_receipts=True)
             and m.l10n_pt_at_series_id
         )):
-            # If an AT series line could not be computed, user should create a new line.
-            if not move.l10n_pt_at_series_line_id:
-                action_error = {
-                    'view_mode': 'form',
-                    'name': _('AT Series'),
-                    'res_model': 'l10n_pt.at.series',
-                    'res_id': move.l10n_pt_at_series_id.id,
-                    'type': 'ir.actions.act_window',
-                    'views': [[self.env.ref('l10n_pt_certification.view_l10n_pt_at_series_form').id, 'form']],
-                    'target': 'new',
-                }
-                raise RedirectWarning(
-                    _("There is no AT series for the document type %(move_type)s registered under the series name %(series_name)s. "
-                      "Create a new series or view existing series via the Accounting Settings.",
-                      move_type=dict(move._fields['l10n_pt_document_type'].selection).get(move.l10n_pt_document_type),
-                      series_name=move.l10n_pt_at_series_id.name),
-                    action_error,
-                    _("Add an AT Series"),
-                )
             if move.l10n_pt_document_number and not re.match(r'^[^ ]+ [^/^ ]+/[0-9]+$', move.l10n_pt_document_number):
                 raise ValidationError(_(
                     "The document number (%s) is invalid. It must start with the internal code "
@@ -483,7 +552,7 @@ class AccountMove(models.Model):
         # Debit notes need to be set to the correct PT document type
         for move in self:
             if (
-                move.country_code == 'PT'
+                move._is_pt_move()
                 and move.move_type in self.env['account.move'].get_sale_types(include_receipts=True)
             ):
                 if 'debit_origin_id' in self.env['account.move']._fields and move.debit_origin_id:
@@ -497,14 +566,14 @@ class AccountMove(models.Model):
     def _compute_l10n_pt_atcud(self):
         for move in self:
             if (
-                move.country_code == 'PT'
+                move._is_pt_move()
                 and not move.l10n_pt_atcud
                 and move.inalterable_hash
                 and move.move_type in self.env['account.move'].get_sale_types(include_receipts=True)
                 and move.l10n_pt_document_number
             ):
                 current_seq_number = int(move.l10n_pt_document_number.split('/')[-1])
-                move.l10n_pt_atcud = f"{move.l10n_pt_at_series_line_id._get_at_code()}-{current_seq_number}"
+                move.l10n_pt_atcud = f"{move.l10n_pt_at_series_id._get_at_code()}-{current_seq_number}"
             else:
                 move.l10n_pt_atcud = move.l10n_pt_atcud or False
 
@@ -577,7 +646,7 @@ class AccountMove(models.Model):
 
     def l10n_pt_verify_prerequisites_qr_code(self):
         self.ensure_one()
-        if self.country_code == 'PT' and self.move_type in self.get_sale_types(include_receipts=True):
+        if self._is_pt_move() and self.move_type in self.get_sale_types(include_receipts=True):
             return pt_hash_utils.verify_prerequisites_qr_code(self, self.inalterable_hash, self.l10n_pt_atcud)
 
     @api.depends('l10n_pt_atcud')
@@ -618,7 +687,7 @@ class AccountMove(models.Model):
             return res
 
         for move in self.filtered(lambda m: (
-            m.country_code == "PT"
+            m._is_pt_move()
             and m.move_type in self.get_sale_types(include_receipts=True)
             and m.inalterable_hash
             and not m.l10n_pt_qr_code_str  # Skip if already computed

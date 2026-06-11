@@ -21,7 +21,7 @@ class ResCompany(models.Model):
 
         results = []
 
-        at_series_lines = self.env['l10n_pt.at.series.line'].search([
+        at_series_records = self.env['l10n_pt.at.series'].search([
             '|',
             '&',
             ('company_id', '=', self.id),
@@ -29,14 +29,14 @@ class ResCompany(models.Model):
             '&',
             ('company_id', 'in', self.parent_ids.ids),
             ('company_exclusive_series', '=', False),
-            ('type', '=', 'pos_order'),
+            ('document_type', '=', 'pos_order'),
         ])
 
-        for at_series_line in at_series_lines:
-            self.env['pos.order'].l10n_pt_pos_compute_missing_hashes(at_series_line=at_series_line)
+        for at_series in at_series_records:
+            self.env['pos.order'].l10n_pt_pos_compute_missing_hashes(at_series=at_series)
             query = self.env['pos.order'].sudo()._search(
                 domain=[
-                    ('l10n_pt_at_series_id', '=', at_series_line.at_series_id.id),
+                    ('l10n_pt_at_series_id', '=', at_series.id),
                     # Since an AT series can only be used in one POS Config, we can filter the orders by the active companies
                     ('company_id', 'in', self.env.companies.ids),
                     ('l10n_pt_pos_inalterable_hash', '!=', False),
@@ -54,7 +54,7 @@ class ResCompany(models.Model):
                 orders = self.env['pos.order'].browse([order_id[0] for order_id in order_ids])
                 if not orders and not last_order:
                     results.append({
-                        'series_at_code': at_series_line.at_code,
+                        'series_at_code': at_series.at_code,
                         'status': 'no_data',
                         'msg_cover': _('No POS orders found for this configuration.'),
                     })
@@ -74,8 +74,8 @@ class ResCompany(models.Model):
             self.env.execute_query(SQL("CLOSE hashed_orders"))
             if corrupted_order:
                 results.append({
-                    'series_document_identifier': at_series_line.document_identifier,
-                    'series_at_code': at_series_line._get_at_code(),
+                    'series_document_identifier': at_series.document_identifier,
+                    'series_at_code': at_series._get_at_code(),
                     'status': 'corrupted',
                     'msg_cover': _(
                         "Corrupted data on POS order with id %(id)s (%(name)s).",
@@ -85,8 +85,8 @@ class ResCompany(models.Model):
                 })
             elif first_order and last_order:
                 results.append({
-                    'series_document_identifier': at_series_line.document_identifier,
-                    'series_at_code': at_series_line._get_at_code(),
+                    'series_document_identifier': at_series.document_identifier,
+                    'series_at_code': at_series._get_at_code(),
                     'status': 'verified',
                     'msg_cover': _("Orders are correctly hashed"),
                     'first_order': first_order,

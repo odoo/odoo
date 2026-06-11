@@ -1,9 +1,9 @@
-import freezegun
 from unittest.mock import patch
 
-from odoo import Command, fields
+from odoo import fields
 from odoo.models import Model
 from odoo.tests import tagged
+from odoo.tests.common import freeze_time
 from odoo.exceptions import UserError
 
 from odoo.addons.stock.tests.common import TestStockCommon
@@ -13,23 +13,19 @@ class TestL10nPtStockCommon(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         def create_at_series(year, picking_types):
-            series = cls.env['l10n_pt.at.series'].create({
+            series_list = cls.env['l10n_pt.at.series'].create([{
                 'name': year,
                 'company_id': cls.company_pt.id,
                 'training_series': True,
-                'sale_journal_id': cls.sale_journal.id,
-            })
-            series.write({
-                'at_series_line_ids': [
-                    Command.create({
-                        'type': picking_type.code,
-                        'prefix': picking_type.sequence_code,
-                        'at_code': f'AT-{picking_type.sequence_code}{year}-TEST',
-                    })
-                    for picking_type in picking_types
-                ]
-            })
-            return series
+                'date_start': f'{year}-01-01',
+                'date_end': f'{year}-12-31',
+                'journal_id': cls.sale_journal.id,
+                'document_type': picking_type.code,
+                'prefix': picking_type.sequence_code,
+                'at_code': f'AT-{picking_type.sequence_code}{year}-TEST',
+            } for picking_type in picking_types])
+            # Return the outgoing series as the "representative" series for backward compat
+            return series_list.filtered(lambda s: s.document_type == 'outgoing') or series_list[0]
 
         super().setUpClass()
         cls.company_pt = cls.env['res.company'].create({
@@ -136,11 +132,12 @@ class TestL10nPtStockCommon(TestStockCommon):
             'move_line_ids': move_line,
         })
         if validate:
-            with freezegun.freeze_time(l10n_pt_hashed_on):
+            with freeze_time(l10n_pt_hashed_on):
                 picking.with_context(skip_backorder=True).button_validate()
         return picking
 
 
+@freeze_time('2023-06-15')
 @tagged('external_l10n', '-at_install', 'post_install', '-standard', 'external')
 class TestL10nPtStockHashing(TestL10nPtStockCommon):
     def test_l10n_pt_stock_hash_sequence(self):
@@ -177,7 +174,7 @@ class TestL10nPtStockHashing(TestL10nPtStockCommon):
                 patch('odoo.addons.l10n_pt_stock.models.stock_picking.StockPicking._get_l10n_pt_stock_document_number', _get_l10n_pt_stock_document_number_patched),
                 patch('odoo.addons.l10n_pt_stock.models.stock_picking.StockPicking._get_l10n_pt_stock_gross_total', _get_l10n_pt_stock_gross_total_patched)
             ):
-                with freezegun.freeze_time(l10n_pt_hashed_on):
+                with freeze_time(l10n_pt_hashed_on):
                     picking = self.create_picking(picking_type, l10n_pt_hashed_on=l10n_pt_hashed_on, validate=True)  # No previous record
                     picking._l10n_pt_compute_missing_hashes(self.company_pt)
                     actual_hash = picking.l10n_pt_stock_inalterable_hash.split("$")[2] if picking.l10n_pt_stock_inalterable_hash else picking.l10n_pt_stock_inalterable_hash
@@ -208,7 +205,7 @@ class TestL10nPtStockHashing(TestL10nPtStockCommon):
         picking3 = self.create_picking(self.picking_type_out, l10n_pt_hashed_on='2023-01-03', validate=True)
         picking4 = self.create_picking(self.picking_type_out, l10n_pt_hashed_on='2023-01-04', validate=True)
 
-        at_series_out = self.picking_type_out.l10n_pt_stock_at_series_id.at_series_line_ids.filtered(lambda s: s.type == 'outgoing')
+        at_series_out = self.picking_type_out.l10n_pt_stock_at_series_id
         integrity_check = next(filter(lambda r: r['series_at_code'] == at_series_out._get_at_code(), self.company_pt._l10n_pt_stock_check_hash_integrity()['results']))
         self.assertEqual(integrity_check['status'], 'verified')
         self.assertRegex(integrity_check['msg_cover'], 'Delivery orders are correctly hashed')
@@ -230,6 +227,7 @@ class TestL10nPtStockHashing(TestL10nPtStockCommon):
         self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on delivery order with id {picking4.id} ({picking4.l10n_pt_document_number}).')
 
 
+@freeze_time('2023-06-15')
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestL10nPtStockMiscRequirements(TestL10nPtStockCommon):
     def test_l10n_pt_stock_partner(self):

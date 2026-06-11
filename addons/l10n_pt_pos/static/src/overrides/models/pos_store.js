@@ -71,9 +71,12 @@ patch(PosStore.prototype, {
             orderValues = await this.data.call("pos.order", "l10n_pt_get_order_vals", [order.id]);
         } catch (error) {
             if (notifyOnError) {
-                this.notification.add(error?.data?.message || _t("Unable to load the receipt data."), {
-                    type: "warning",
-                });
+                this.notification.add(
+                    error?.data?.message || _t("Unable to load the receipt data."),
+                    {
+                        type: "warning",
+                    }
+                );
             }
             return false;
         }

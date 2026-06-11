@@ -39,7 +39,7 @@
                             <field name="l10n_pt_at_series_id"
                                    readonly="state in ['in_process', 'paid', 'canceled']"
                                    required="payment_type == 'inbound' and country_code == 'PT'"
-                                   domain="[('active', '=', True), ('payment_journal_id', '=', journal_id)]"/>
+                                   domain="[('active', '=', True), ('journal_id', '=', journal_id)]"/>
                             <field name="l10n_pt_document_number"/>
                             <field name="l10n_pt_atcud"/>
                             <field name="l10n_pt_cancel_reason"

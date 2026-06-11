@@ -23,7 +23,7 @@ class ResCompany(models.Model):
 
         results = []
 
-        at_series_lines = self.env['l10n_pt.at.series.line'].search([
+        at_series_records = self.env['l10n_pt.at.series'].search([
             '|',
             '&',
             ('company_id', '=', self.id),
@@ -31,13 +31,13 @@ class ResCompany(models.Model):
             '&',
             ('company_id', 'in', self.parent_ids.ids),
             ('company_exclusive_series', '=', False),
-            ('type', 'in', ('sales_order', 'quotation')),
+            ('document_type', 'in', ('sales_order', 'quotation')),
         ])
 
-        for at_series_line in at_series_lines:
+        for at_series in at_series_records:
             query = self.env['sale.order'].sudo()._search(
                 domain=[
-                    ('l10n_pt_at_series_line_id', '=', at_series_line.id),
+                    ('l10n_pt_at_series_id', '=', at_series.id),
                     ('l10n_pt_sale_inalterable_hash', '!=', False),
                 ],
                 order="name",
@@ -53,11 +53,11 @@ class ResCompany(models.Model):
                 orders = self.env['sale.order'].browse([order_id[0] for order_id in order_ids])
                 if not orders and not last_order:
                     results.append({
-                        'series_at_code': at_series_line.at_code,
+                        'series_at_code': at_series.at_code,
                         'status': 'no_data',
                         'msg_cover': _(
                             'No %(doc_type)s found for this AT series.',
-                            doc_type='sales orders' if at_series_line.type == 'sales_order' else 'quotation',
+                            doc_type='sales orders' if at_series.document_type == 'sales_order' else 'quotation',
                         ),
                     })
                     continue
@@ -76,24 +76,24 @@ class ResCompany(models.Model):
             self.env.execute_query(SQL("CLOSE hashed_orders"))
             if corrupted_order:
                 results.append({
-                    'series_document_identifier': at_series_line.document_identifier,
-                    'series_at_code': at_series_line._get_at_code(),
+                    'series_document_identifier': at_series.document_identifier,
+                    'series_at_code': at_series._get_at_code(),
                     'status': 'corrupted',
                     'msg_cover': _(
                         "Corrupted data on %(doc_type)s with id %(id)s (%(name)s).",
-                        doc_type='sales order' if at_series_line.type == 'sales_order' else 'quotation',
+                        doc_type='sales order' if at_series.document_type == 'sales_order' else 'quotation',
                         id=corrupted_order.id,
                         name=corrupted_order.l10n_pt_document_number,
                     ),
                 })
             elif first_order and last_order:
                 results.append({
-                    'series_document_identifier': at_series_line.document_identifier,
-                    'series_at_code': at_series_line._get_at_code(),
+                    'series_document_identifier': at_series.document_identifier,
+                    'series_at_code': at_series._get_at_code(),
                     'status': 'verified',
                     'msg_cover': _(
                         "%(doc_type)s are correctly hashed",
-                        doc_type=_('Sales Orders') if at_series_line.type == 'sales_order' else _('Quotations'),
+                        doc_type=_('Sales Orders') if at_series.document_type == 'sales_order' else _('Quotations'),
                     ),
                     'first_order': first_order,
                     'last_order': last_order,

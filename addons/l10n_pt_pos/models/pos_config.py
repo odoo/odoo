@@ -10,11 +10,7 @@ class PosConfig(models.Model):
         'l10n_pt.at.series',
         string="Official Series of the Tax Authority",
         copy=False,
-    )
-    l10n_pt_pos_at_series_line_id = fields.Many2one(
-        'l10n_pt.at.series.line',
-        string="Document-specific AT Series",
-        compute="_compute_l10n_pt_pos_at_series_line_id",
+        domain="[('document_type', '=', 'pos_order')]",
     )
     l10n_pt_pos_at_series_id_domain = fields.Binary(string="AT Series Domain", compute="_compute_l10n_pt_pos_at_series_id_domain")
 
@@ -38,10 +34,11 @@ class PosConfig(models.Model):
                 '&', ('company_id', '=', config.company_id.id), ('company_exclusive_series', '=', True),
                 '&', ('company_id', 'in', config.company_id.parent_ids.ids), ('company_exclusive_series', '=', False),
                 ('active', '=', False),
+                ('document_type', '=', 'pos_order'),
             ]
 
     def _l10n_pt_pos_verify_config(self):
-        if not self.l10n_pt_pos_at_series_id or self.l10n_pt_pos_at_series_line_id.type != 'pos_order':
+        if not self.l10n_pt_pos_at_series_id or self.l10n_pt_pos_at_series_id.document_type != 'pos_order' or not self.l10n_pt_pos_at_series_id.active:
             raise RedirectWarning(
                 _('You have to set an Official Series of type Invoice/Receipt (FR) for this POS configuration.'),
                 {
@@ -111,31 +108,3 @@ class PosConfig(models.Model):
                 raise UserError(_("You cannot change the AT series of a Point of Sale with an open session. "
                                   "Try again once the session is closed."))
         return super().write(vals)
-
-    @api.constrains('l10n_pt_pos_at_series_id')
-    def _check_l10n_pt_pos_at_series_id(self):
-        for config in self.filtered(lambda c: c.country_code == 'PT'):
-            if (
-                config.l10n_pt_pos_at_series_id
-                and not config.l10n_pt_pos_at_series_id.at_series_line_ids.filtered(lambda line: line.type == 'pos_order')
-            ):
-                action_error = {
-                    'view_mode': 'form',
-                    'name': _('AT Series'),
-                    'res_model': 'l10n_pt.at.series',
-                    'res_id': config.l10n_pt_pos_at_series_id.id,
-                    'type': 'ir.actions.act_window',
-                    'views': [[self.env.ref('l10n_pt_certification.view_l10n_pt_at_series_form').id, 'form']],
-                    'target': 'new',
-                }
-                raise RedirectWarning(
-                    _("There is no AT series of type 'Invoice/Receipt (FR)' for this POS Configuration registered under the series name %(series_name)s. Create a new series or view existing series via the Accounting Settings.",
-                      series_name=config.l10n_pt_pos_at_series_id.name),
-                    action_error,
-                    _('Add an AT Series'),
-                )
-
-    @api.depends('l10n_pt_pos_at_series_id')
-    def _compute_l10n_pt_pos_at_series_line_id(self):
-        for at_series, config in self.grouped('l10n_pt_pos_at_series_id').items():
-            config.l10n_pt_pos_at_series_line_id = at_series._get_line_for_type('pos_order') if at_series else None

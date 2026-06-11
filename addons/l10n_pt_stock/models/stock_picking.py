@@ -19,11 +19,6 @@ class PickingType(models.Model):
 
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code')
     l10n_pt_stock_at_series_id = fields.Many2one('l10n_pt.at.series', string="Official Series of the Tax Authority")
-    l10n_pt_stock_at_series_line_id = fields.Many2one(
-        'l10n_pt.at.series.line',
-        string="Document-specific AT Series",
-        compute='_compute_l10n_pt_stock_at_series_line_id',
-    )
 
     _sql_constraints = [
         (
@@ -33,18 +28,13 @@ class PickingType(models.Model):
         )
     ]
 
-    @api.depends('l10n_pt_stock_at_series_id')
-    def _compute_l10n_pt_stock_at_series_line_id(self):
-        for (code, series), orders in self.grouped(lambda o: (o.code, o.l10n_pt_stock_at_series_id)).items():
-            orders.l10n_pt_stock_at_series_line_id = series._get_line_for_type(code) if series else None
-
     @api.constrains('l10n_pt_stock_at_series_id')
     def _check_l10n_pt_stock_at_series_id(self):
         for picking_type in self:
             if (
                 picking_type.country_code == 'PT'
                 and picking_type.l10n_pt_stock_at_series_id
-                and not picking_type.l10n_pt_stock_at_series_line_id.filtered(lambda l: l.type == picking_type.code)
+                and picking_type.l10n_pt_stock_at_series_id.document_type != picking_type.code
             ):
                 action_error = {
                     'view_mode': 'form',
@@ -138,10 +128,10 @@ class StockPicking(models.Model):
     # MISC REQUIREMENTS
     ####################################
 
-    @api.depends('picking_type_id.l10n_pt_stock_at_series_line_id')
+    @api.depends('picking_type_id.l10n_pt_stock_at_series_id')
     def _compute_l10n_pt_show_no_at_series_warning(self):
         for picking in self:
-            picking.l10n_pt_show_no_at_series_warning = not picking.picking_type_id.l10n_pt_stock_at_series_line_id
+            picking.l10n_pt_show_no_at_series_warning = not picking.picking_type_id.l10n_pt_stock_at_series_id
 
     def action_open_reprint_wizard(self):
         self.ensure_one()
@@ -184,16 +174,16 @@ class StockPicking(models.Model):
     # PT FIELDS - ATCUD, AT SERIES
     ####################################
 
-    @api.depends('picking_type_id.l10n_pt_stock_at_series_line_id', 'company_id', 'state')
+    @api.depends('picking_type_id.l10n_pt_stock_at_series_id', 'company_id', 'state')
     def _compute_l10n_pt_document_number(self):
         for picking in self:
             if (
                 picking.country_code == 'PT'
-                and picking.picking_type_id.l10n_pt_stock_at_series_line_id
+                and picking.picking_type_id.l10n_pt_stock_at_series_id
                 and picking.state != 'draft'
                 and not picking.l10n_pt_document_number
             ):
-                picking.l10n_pt_document_number = picking.picking_type_id.l10n_pt_stock_at_series_line_id._l10n_pt_get_document_number_sequence().next_by_id()
+                picking.l10n_pt_document_number = picking.picking_type_id.l10n_pt_stock_at_series_id._l10n_pt_get_document_number_sequence().next_by_id()
 
     ####################################
     # HASH AND QR CODE
@@ -244,10 +234,10 @@ class StockPicking(models.Model):
                 picking.l10n_pt_inalterable_hash_short = False
 
     @api.model
-    def _find_last_picking(self, at_series_line):
+    def _find_last_picking(self, at_series):
         return self.sudo().search([
-            ('l10n_pt_at_series_id', '=', at_series_line.at_series_id.id),
-            ('picking_type_code', '=', at_series_line.type),
+            ('l10n_pt_at_series_id', '=', at_series.id),
+            ('picking_type_code', '=', at_series.document_type),
             ('l10n_pt_stock_inalterable_hash', '!=', False),
         ], order='date_done desc', limit=1)
 
@@ -258,8 +248,8 @@ class StockPicking(models.Model):
         """
         company = company or self.env.company
 
-        # Get all AT series lines that apply to stock.pickings to find unhashed pickings per series
-        at_series_lines = self.env['l10n_pt.at.series.line'].search([
+        # Get all AT series that apply to stock.pickings to find unhashed pickings per series
+        at_series_records = self.env['l10n_pt.at.series'].search([
             '|',
             '&',
             ('company_id', '=', company.id),
@@ -267,22 +257,22 @@ class StockPicking(models.Model):
             '&',
             ('company_id', 'in', company.parent_ids.ids),
             ('company_exclusive_series', '=', False),
-            ('type', 'in', ('outgoing', 'internal', 'incoming')),
+            ('document_type', 'in', ('outgoing', 'internal', 'incoming')),
         ])
         unhashed_pickings = self.sudo().search([
-            ('l10n_pt_at_series_id', 'in', at_series_lines.mapped('at_series_id.id')),
+            ('l10n_pt_at_series_id', 'in', at_series_records.ids),
             ('state', '=', 'done'),
             ('l10n_pt_stock_inalterable_hash', '=', False),
         ], order='date_done')
 
-        # Group unhashed pickings by AT series and picking type. This allows matching pickings with their AT Series line
+        # Group unhashed pickings by AT series and picking type. This allows matching pickings with their AT Series
         pickings_grouped = unhashed_pickings.grouped(lambda p: (p.l10n_pt_at_series_id.id, p.picking_type_code))
-        for at_series_line in at_series_lines:
-            pickings = pickings_grouped.get((at_series_line.at_series_id.id, at_series_line.type))
+        for at_series in at_series_records:
+            pickings = pickings_grouped.get((at_series.id, at_series.document_type))
             if not pickings:
                 continue
 
-            previous_picking = self._find_last_picking(at_series_line)
+            previous_picking = self._find_last_picking(at_series)
             try:
                 previous_hash = previous_picking.l10n_pt_stock_inalterable_hash.split("$")[2] if previous_picking.l10n_pt_stock_inalterable_hash else ""
             except IndexError:  # hash is not correctly formatted (it has been altered!)
@@ -292,7 +282,7 @@ class StockPicking(models.Model):
                     raise UserError(_("Transfer %s does not have a Unique Document Number. "
                                       "Verify that its operation type has an AT Series.", picking.name))
                 current_atcud_number = int(picking.l10n_pt_document_number.split('/')[-1])
-                picking.l10n_pt_stock_atcud = f"{at_series_line._get_at_code()}-{current_atcud_number}"
+                picking.l10n_pt_stock_atcud = f"{at_series._get_at_code()}-{current_atcud_number}"
 
             pickings_hashes = pickings._calculate_hashes(previous_hash)
             for picking, l10n_pt_stock_inalterable_hash in pickings_hashes.items():

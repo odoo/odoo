@@ -8,7 +8,7 @@ class AccountPaymentRegister(models.TransientModel):
         comodel_name="l10n_pt.at.series",
         string="AT Series",
         compute='_compute_l10n_pt_at_series_id',
-        domain="[('payment_journal_id', '=', available_l10n_pt_at_series_ids)]",
+        domain="[('journal_id', '=', available_l10n_pt_at_series_ids)]",
         readonly=False, store=True,
     )
     available_l10n_pt_at_series_ids = fields.Many2many('l10n_pt.at.series', compute="_compute_available_l10n_pt_at_series_ids")
@@ -18,6 +18,7 @@ class AccountPaymentRegister(models.TransientModel):
         inbound_wizards = self.filtered(lambda w: w.journal_id and w.payment_type == 'inbound' and w.country_code == 'PT')
         for journal, wizards in inbound_wizards.grouped('journal_id').items():
             wizards.available_l10n_pt_at_series_ids = self.env['l10n_pt.at.series'].search([
+                ('document_type', '=', 'payment_receipt'),
                 '|',
                 '&',
                 ('company_id', '=', wizards.company_id.id),
@@ -26,7 +27,7 @@ class AccountPaymentRegister(models.TransientModel):
                 ('company_id', 'in', wizards.company_id.parent_ids.ids),
                 ('company_exclusive_series', '=', False),
                 ('active', '=', True),
-                ('payment_journal_id', '=', journal.id),
+                ('journal_id', '=', journal.id),
             ]).ids
 
     @api.depends('payment_type', 'company_id', 'journal_id')

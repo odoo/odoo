@@ -2,7 +2,7 @@ from odoo import Command, fields
 from odoo.exceptions import RedirectWarning, UserError
 from odoo.models import Model
 from odoo.tests import tagged
-
+from odoo.tests.common import freeze_time
 from odoo.addons.l10n_pt_certification.tests.common import TestL10nPtCommon
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
@@ -12,22 +12,27 @@ class TestL10nPtPosCommon(TestL10nPtCommon, TestPoSCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.env['l10n_pt.at.series.line'].create({
-            'at_series_id': cls.series_2024.id,
-            'type': 'pos_order',
+        cls.pos_series = cls.env['l10n_pt.at.series'].create({
+            'name': '2024',
+            'company_id': cls.company_pt.id,
+            'training_series': True,
+            'date_start': '2024-01-01',
+            'date_end': '2024-12-31',
+            'journal_id': cls.company_data['default_journal_sale'].id,
+            'document_type': 'pos_order',
             'prefix': 'POS',
             'at_code': 'AT-TESTPOS',
         })
         category_pt = cls.env['pos.category'].create({'name': 'Test Category'})
         cls.config = cls.basic_config
         cls.config.write({
-            'l10n_pt_pos_at_series_id': cls.series_2024.id,
+            'l10n_pt_pos_at_series_id': cls.pos_series.id,
             'limit_categories': True,
             'iface_available_categ_ids': [Command.set(category_pt.ids)],
         })
         cls.config.payment_method_ids.write({
             'l10n_pt_pos_payment_mechanism': 'TB',
-            'l10n_pt_pos_default_at_series_id': cls.series_2024.id,
+            'l10n_pt_pos_default_at_series_id': cls.series_2024.filtered(lambda s: s.document_type == 'payment_receipt').id,
         })
         cls.product1 = cls.env['product.product'].create({
             'name': 'Product 1',
@@ -54,6 +59,7 @@ class TestL10nPtPosCommon(TestL10nPtCommon, TestPoSCommon):
         return order
 
 
+@freeze_time('2024-06-15')
 @tagged('external_l10n', '-at_install', 'post_install', '-standard', 'external')
 class TestL10nPtPosHash(TestL10nPtPosCommon):
     def test_l10n_pt_pos_hash_inalterability(self):
@@ -88,7 +94,7 @@ class TestL10nPtPosHash(TestL10nPtPosCommon):
         self.assertEqual(order1.l10n_pt_pos_inalterable_hash, False)
         order1.l10n_pt_pos_compute_missing_hashes(order1.config_id.id)  # Called when printing the receipt in JS
 
-        integrity_check = next(filter(lambda r: r['series_at_code'] == order1.config_id.l10n_pt_pos_at_series_line_id._get_at_code(),
+        integrity_check = next(filter(lambda r: r['series_at_code'] == order1.config_id.l10n_pt_pos_at_series_id._get_at_code(),
                                       self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))
         self.assertEqual(integrity_check['status'], 'verified')
         self.assertEqual(integrity_check['msg_cover'], 'Orders are correctly hashed')
@@ -98,7 +104,7 @@ class TestL10nPtPosHash(TestL10nPtPosCommon):
         # Let's change one of the fields used by the hash. It should be detected by the integrity report.
         # We need to bypass the write method of pos.order to do so.
         Model.write(order3, {'date_order': fields.Date.from_string('2024-01-07')})
-        integrity_check = next(filter(lambda r: r['series_at_code'] == order1.config_id.l10n_pt_pos_at_series_line_id._get_at_code(),
+        integrity_check = next(filter(lambda r: r['series_at_code'] == order1.config_id.l10n_pt_pos_at_series_id._get_at_code(),
                                       self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))
         self.assertEqual(integrity_check['status'], 'corrupted')
         self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on POS order with id {order3.id} ({order3.l10n_pt_document_number}).')
@@ -106,12 +112,13 @@ class TestL10nPtPosHash(TestL10nPtPosCommon):
         # Let's try with the l10n_pt_pos_inalterable_hash field itself
         Model.write(order3, {'date_order': fields.Date.from_string("2024-01-03")})  # Revert the previous change
         Model.write(order4, {'l10n_pt_pos_inalterable_hash': 'fake_hash'})
-        integrity_check = next(filter(lambda r: r['series_at_code'] == order1.config_id.l10n_pt_pos_at_series_line_id._get_at_code(),
+        integrity_check = next(filter(lambda r: r['series_at_code'] == order1.config_id.l10n_pt_pos_at_series_id._get_at_code(),
                                       self.company_pt._l10n_pt_pos_check_hash_integrity()['results']))
         self.assertEqual(integrity_check['status'], 'corrupted')
         self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on POS order with id {order4.id} ({order4.l10n_pt_document_number}).')
 
 
+@freeze_time('2024-06-15')
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestL10nPtPosMiscRequirements(TestL10nPtPosCommon):
     def test_l10n_pt_pos_partner(self):

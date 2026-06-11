@@ -1,4 +1,3 @@
-from odoo import Command
 from odoo.tests import tagged
 
 from odoo.addons.l10n_pt_certification.tests.test_taxes_tax_totals_summary import TestTaxesTaxTotalsSummaryL10nPt
@@ -13,15 +12,16 @@ class TestL10nPtTaxTotalsSummarySale(TestTaxCommonSale, TestTaxesTaxTotalsSummar
     @TestTaxCommon.setup_country('pt')
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['l10n_pt.at.series'].create({
+        cls.env['l10n_pt.at.series'].create([{
             'name': 'Test',
             'company_id': cls.company_data['company'].id,
             'training_series': True,
-            'at_series_line_ids': [
-                Command.create({'type': 'quotation', 'prefix': 'OR', 'at_code': 'AT-TESTQUOT'}),
-                Command.create({'type': 'sales_order', 'prefix': 'NE', 'at_code': 'AT-TESTSO'}),
-            ],
-        })
+            'date_start': '2024-01-01',
+            'journal_id': cls.company_data['default_journal_sale'].id,
+            'document_type': doc_type,
+            'prefix': prefix,
+            'at_code': f'AT-TEST{doc_type.upper().replace("_", "")[:4]}',
+        } for doc_type, prefix in (('quotation', 'OR'), ('sales_order', 'NE'))])
 
     def test_taxes_l10n_pt_sale_orders(self):
         for test_index, document, expected_values in self._test_taxes_l10n_pt():
