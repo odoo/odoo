@@ -391,3 +391,15 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
 
         self.assertNotEqual(bill.l10n_it_edi_attachment_id.name, attachment_name)
         self.assertTrue('detached' in bill.l10n_it_edi_attachment_id.name.lower())
+
+    def test_invoice_send_email_then_sdi(self):
+        invoice = self.init_invoice(self.partner_a)
+        self.partner_a.with_company(invoice.company_id).invoice_edi_format = False
+
+        settings_email = {'sending_methods': {'email'}, 'extra_edis': set()}
+        self.env['account.move.send']._generate_and_send_invoices(invoice, **settings_email)
+        self.assertTrue(invoice.invoice_pdf_report_id)
+        self.assertFalse(invoice.l10n_it_edi_attachment_id)
+
+        wizard = self.env['account.move.send.wizard'].create({'move_id': invoice.id})
+        self.assertIn('l10n_it_edi_pdf_already_generated', wizard.alerts)
