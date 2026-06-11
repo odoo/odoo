@@ -2,7 +2,7 @@ import { registry } from "@web/core/registry";
 import { Plugin } from "../plugin";
 import { zip } from "@web/core/utils/arrays";
 import { DIMENSIONS } from "../hooks";
-import { Analysis, EmailNode } from "../core/render_models";
+import { EmailNode } from "../core/render_models";
 import {
     HybridFluidCell,
     HybridFluidEmptyCell,
@@ -44,15 +44,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
     ];
     resources = {
         element_layout_analysis_processors: this.analyzeElementLayout.bind(this),
-        synthetic_email_node_processors: (emailNode) => {
-            if (!emailNode.analysis.facts.isHybridFluidContainer) {
-                return;
-            }
-            return this.fillTableContainer(emailNode, {
-                withTable: false,
-                builders: this.builders,
-            });
-        },
+        synthetic_email_node_processors: this.fillHybridFluidContainer.bind(this),
     };
 
     setup() {
@@ -84,6 +76,16 @@ export class HybridFluidStrategyPlugin extends Plugin {
         // is no positioning consideration between the 2
         analysis.facts.isHybridFluidContainer = true;
         layout.pluginIds.add(HybridFluidStrategyPlugin.id);
+    }
+
+    fillHybridFluidContainer(emailNode) {
+        if (!emailNode.analysis.facts.isHybridFluidContainer) {
+            return;
+        }
+        return this.fillTableContainer(emailNode, {
+            withTable: false,
+            builders: this.builders,
+        });
     }
 
     /**
@@ -160,10 +162,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
 
     buildRow(rowMeasure) {
         const layout = rowMeasure.verticalAlign ? new HybridFluidRow() : new HybridFluidTableRow();
-        return new EmailNode({
-            layout,
-            analysis: new Analysis(),
-        });
+        return new EmailNode({ layout });
     }
 
     buildCell({ styleContext, isLast, cluster, emailNode, width, widthRatio, verticalAlign }) {
@@ -193,7 +192,6 @@ export class HybridFluidStrategyPlugin extends Plugin {
             layout,
             // TODO EGGMAIL: evaluate what positioning facts should be shared
             // and how
-            analysis: new Analysis(),
         });
         for (const child of clusterEmailNodes) {
             cellEmailNode.appendChild(child);
@@ -217,10 +215,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
             });
             layout = new HybridFluidEmptyTableCell(refs.root);
         }
-        return new EmailNode({
-            layout,
-            analysis: new Analysis(),
-        });
+        return new EmailNode({ layout });
     }
 
     buildCellWithOffset({
@@ -254,7 +249,6 @@ export class HybridFluidStrategyPlugin extends Plugin {
             Object.assign(refs.root, { style: { "max-width": `${cellWidth}px` } });
             const cellWithOffsetEmailNode = new EmailNode({
                 layout: new HybridFluidCell({ refs }),
-                analysis: new Analysis(),
             });
             cellWithOffsetEmailNode.appendChild(offsetEmailNode);
             cellWithOffsetEmailNode.appendChild(cellEmailNode);

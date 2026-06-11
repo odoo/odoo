@@ -90,20 +90,14 @@ export class RenderPlugin extends Plugin {
             if (parentEmailNode && parentParsingFacts.canMerge) {
                 parentEmailNode.pushReferenceNode(referenceNode);
                 if (
-                    !this.delegateTo("email_node_merge_overrides", {
+                    !this.delegateTo("merge_email_node_overrides", {
                         parentEmailNode,
                         layout,
                         analysis,
                     })
                 ) {
-                    parentEmailNode.layout = this.mergeElementLayout(
-                        parentEmailNode.layout,
-                        layout
-                    );
-                    parentEmailNode.analysis = this.mergeElementAnalysis(
-                        parentEmailNode.analysis,
-                        analysis
-                    );
+                    this.mergeElementLayout({ parentEmailNode, layout, analysis });
+                    this.mergeElementAnalysis({ parentEmailNode, layout, analysis });
                 }
             } else {
                 emailNode = new EmailNode({
@@ -134,30 +128,41 @@ export class RenderPlugin extends Plugin {
      * Default merge logic for layouts, childLayout overrides parentLayout
      * values
      */
-    mergeElementLayout(parentLayout, childLayout) {
+    mergeElementLayout({ parentEmailNode, layout, analysis }) {
+        if (this.delegateTo("merge_layout_overrides", { parentEmailNode, layout, analysis })) {
+            return;
+        }
+        // TODO EGGMAIL: review default merge behavior
+        const parentLayout = parentEmailNode.layout;
         const mergedLayout = new ElementLayout({
-            tag: childLayout.ancestorTag || parentLayout.ancestorTag || "DIV",
+            tag: layout.ancestorTag || parentLayout.ancestorTag || "DIV",
         });
         mergedLayout.setAttributes(parentLayout.getRef());
-        mergedLayout.setAttributes(childLayout.getRef());
-        return mergedLayout;
+        mergedLayout.setAttributes(layout.getRef());
+        parentEmailNode.layout = mergedLayout;
     }
 
     /**
      * Default merge logic for analysis, childAnalysis overrides parentAnalysis
      * values, and constraints are concatenated
      */
-    mergeElementAnalysis(parentAnalysis, childAnalysis) {
+    mergeElementAnalysis({ parentEmailNode, layout, analysis }) {
+        //parentAnalysis, childAnalysis) {
+        if (this.delegateTo("merge_analysis_overrides", { parentEmailNode, layout, analysis })) {
+            return;
+        }
+        // TODO EGGMAIL: review default merge behavior
+        const parentAnalysis = parentEmailNode.analysis;
         const mergedAnalysis = new Analysis(parentAnalysis);
-        Object.assign(mergedAnalysis.parsingFacts, childAnalysis.parsingFacts);
+        this.mergeFacts(parentEmailNode, analysis.parsingFacts);
+        this.mergeFacts(parentEmailNode, analysis.facts);
         mergedAnalysis.constraintsForAncestors = mergedAnalysis.constraintsForAncestors.concat(
-            childAnalysis.constraintsForAncestors
+            analysis.constraintsForAncestors
         );
         mergedAnalysis.constraintsForDescendants = mergedAnalysis.constraintsForAncestors.concat(
-            childAnalysis.constraintsForDescendants
+            analysis.constraintsForDescendants
         );
-        Object.assign(mergedAnalysis.facts, childAnalysis.facts);
-        return mergedAnalysis;
+        parentEmailNode.analysis = mergedAnalysis;
     }
 
     /**
@@ -215,6 +220,23 @@ export class RenderPlugin extends Plugin {
         });
     }
 
+    mergeFacts(emailNode, facts = {}) {
+        for (const [fact, value] of Object.entries(facts)) {
+            if (!this.delegateTo("merge_fact_overrides", { emailNode, fact, value })) {
+                // TODO EGGMAIL: not sure if delegate is the best action here
+                // (only one plugin can interfere with a fact)
+                // TODO EGGMAIL: maybe we need another argument (exception, ...)?
+                // TODO EGGMAIL: maybe we can use the Rules structure for facts?
+                // TODO EGGMAIL: better default action for merging current fact with a new value
+                // should we save descendantFacts separately from localFacts?
+                // TODO EGGMAIL: here a fact from a descendant is directly applied to the current
+                // emailNode, maybe it makes sense to aggregate all descendant facts, then apply
+                // the final result on the current emailNode?
+                emailNode.analysis.facts[fact] = value;
+            }
+        }
+    }
+
     /**
      * Allow descendants to propagate facts to their ancestors through constraints
      * callbacks (reverse DFS propagation)
@@ -232,16 +254,7 @@ export class RenderPlugin extends Plugin {
                 const newConstraint = annotations.constraint ?? constraint;
                 propagatedConstraints.push(newConstraint);
             }
-            for (const [fact, value] of Object.entries(annotations.facts ?? {})) {
-                if (!this.delegateTo("merge_fact_overrides", { emailNode, fact, value })) {
-                    // TODO EGGMAIL: better default action for merging current fact with a new value
-                    // should we save descendantFacts separately from localFacts?
-                    // TODO EGGMAIL: here a fact from a descendant is directly applied to the current
-                    // emailNode, maybe it makes sense to aggregate all descendant facts, then apply
-                    // the final result on the current emailNode?
-                    emailNode.analysis.facts[fact] = value;
-                }
-            }
+            this.mergeFacts(emailNode, annotations.facts);
         }
         return emailNode.analysis.constraintsForAncestors.concat(propagatedConstraints);
     }
@@ -257,13 +270,7 @@ export class RenderPlugin extends Plugin {
             if (annotations.shouldPropagate) {
                 propagatedConstraints.push(constraint);
             }
-            for (const [fact, value] of Object.entries(annotations.facts ?? {})) {
-                if (!this.delegateTo("merge_fact_overrides", { emailNode, fact, value })) {
-                    // TODO EGGMAIL: same considerations as in addBottomUpConstraints to
-                    // aggregate facts
-                    emailNode.analysis.facts[fact] = value;
-                }
-            }
+            this.mergeFacts(emailNode, annotations.facts);
         }
         for (const child of emailNode.children) {
             this.addTopDownConstraints(

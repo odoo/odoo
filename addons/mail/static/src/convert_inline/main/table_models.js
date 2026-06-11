@@ -1,4 +1,4 @@
-import { ElementLayout } from "../core/render_models";
+import { ElementLayout, LayoutModel } from "../core/render_models";
 
 export class TableLayout extends ElementLayout {
     constructor(root = {}) {
@@ -23,6 +23,26 @@ export class RowLayout extends ElementLayout {
         this.setAttributes({
             classNames: "o-ci-row-layout",
         });
+    }
+}
+
+// TODO EGGMAIL: fill up the blanks here, missing some stuff
+// WORKING HERE:
+export class EmptyRowLayout extends LayoutModel {
+    static template = "mail.EmptyRowLayout";
+    constructor(options = {}) {
+        const refs = options.refs ?? {};
+        options.refs = refs;
+        super(options);
+        this.setAttributes({ style: { height: 0 } }, "cell");
+    }
+
+    get ancestorTag() {
+        return "TR";
+    }
+
+    get descendantTag() {
+        return "TD";
     }
 }
 

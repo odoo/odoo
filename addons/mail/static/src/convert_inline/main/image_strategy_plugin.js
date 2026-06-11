@@ -15,7 +15,7 @@ export class ImageStrategyPlugin extends Plugin {
     ];
     resources = {
         element_layout_analysis_processors: this.analyzeImageLayout.bind(this),
-        email_node_merge_overrides: this.discardImageEmailNodeInLink.bind(this),
+        merge_email_node_overrides: this.discardImageEmailNodeInLink.bind(this),
         attribute_rules_processors: [
             [this.provideAttributeRules.bind(this), ImageStrategyPlugin.id],
         ],

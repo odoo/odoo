@@ -1,17 +1,17 @@
 import { paragraphRelatedElements } from "@html_editor/utils/dom_info";
 import { DIMENSIONS } from "../hooks";
 import { Plugin } from "../plugin";
-import { ElementLayout } from "../core/render_models";
 import { StyleInfo } from "../core/style_models";
 import { Rules } from "../core/rules_models";
 import { registry } from "@web/core/registry";
 import { parseCssValue } from "../css_parsers";
 import { SpacingNode } from "./spacing_models";
-import { RenderPlugin } from "../core/render_plugin";
+import { withSequence } from "@html_editor/utils/resource";
 
-const { DESKTOP, MOBILE } = DIMENSIONS;
-const MARGINS = ["margin-top", "margin-right", "margin-bottom", "margin-left"];
-const PADDINGS = ["padding-top", "padding-right", "padding-bottom", "padding-left"];
+const { DESKTOP } = DIMENSIONS;
+const SIDES = ["top", "right", "bottom", "left"];
+
+export const DEFAULT_SPACING_SEQUENCE = 20;
 
 /**
  * TODO EGGMAIL: handle vertical alignment? (should be done at a higher level),
@@ -28,27 +28,53 @@ const PADDINGS = ["padding-top", "padding-right", "padding-bottom", "padding-lef
  */
 export class SpacingPlugin extends Plugin {
     static id = "spacing";
-    static dependencies = ["contextStyle", "referenceNode", "responsiveBlock", "rules", "style"];
-    static shared = ["buildMarginNode", "buildPaddingNode"];
+    static dependencies = [
+        "contextStyle",
+        "measurementSnapshot",
+        "referenceNode",
+        "responsiveBlock",
+        "rules",
+        "style",
+    ];
+    static shared = ["getSpacingStyleInfo", "buildMarginNode", "buildPaddingNode"];
     resources = {
         on_parse_layout_with_dimensions_handlers: this.cacheSpacingStyleInfo.bind(this),
         reference_node_facts_processors: this.addSpacingFacts.bind(this),
-        refine_layout_processors: this.applyDefaultSpacing.bind(this),
+        refine_layout_processors: withSequence(
+            DEFAULT_SPACING_SEQUENCE,
+            this.applyDefaultSpacing.bind(this)
+        ),
         style_rules_processors: [[this.provideStyleRules.bind(this), SpacingPlugin.id]],
+        merge_fact_overrides: this.mergeSpacingInfo.bind(this),
     };
 
     setup() {
-        this.spacingStyleRules = new Rules();
+        this.marginStyleRules = new Rules();
+        this.paddingStyleRules = new Rules();
         this.provideSpacingStyleRules();
     }
 
     addSpacingFacts(facts, { referenceNode }) {
-        Object.assign(facts, {
-            desktopSpacingStyleInfo: this.getSpacingStyleInfo(referenceNode, DESKTOP),
-            desktopBlock: this.getLayoutBlock(referenceNode, DESKTOP),
-            mobileSpacingStyleInfo: this.getSpacingStyleInfo(referenceNode, MOBILE),
-            mobileBlock: this.getLayoutBlock(referenceNode, MOBILE),
-        });
+        const desktopMarginStyleInfo = this.getSpacingStyleInfo(
+            referenceNode,
+            this.marginStyleRules,
+            DESKTOP
+        );
+        const desktopPaddingStyleInfo = this.getSpacingStyleInfo(
+            referenceNode,
+            this.paddingStyleRules,
+            DESKTOP
+        );
+        Object.assign(facts, { desktopMarginStyleInfo, desktopPaddingStyleInfo });
+    }
+
+    mergeSpacingInfo({ fact }) {
+        if (fact === "desktopMarginStyleInfo") {
+            // Prevent override of desktopMarginStyleInfo:
+            // use case is top -> down traversal, margin info of the ancestor is
+            // kept.
+            return true;
+        }
     }
 
     // TODO EGGMAIL NOW: generalize the content of this function, there are
@@ -62,7 +88,7 @@ export class SpacingPlugin extends Plugin {
         // for % values, use computed value in px (desktop mode) instead
         const marginNode = new SpacingNode();
         const marginLayout = marginNode.layout;
-        const styleInfo = facts.desktopSpacingStyleInfo;
+        const styleInfo = facts.desktopMarginStyleInfo;
         let isRelevant = false;
         const setAttributes = (options, ref) => {
             marginLayout.setAttributes(options, ref);
@@ -83,11 +109,13 @@ export class SpacingPlugin extends Plugin {
             setAttributes({ attributes: { align: "left" } });
             setAttributes({ attributes: { align: "left" } }, "cell");
         }
-        for (const margin of MARGINS) {
-            const value = styleInfo.getPropertyValue(margin);
+        for (const side of SIDES) {
+            const value = styleInfo.getPropertyValue(`margin-${side}`);
             const { number, unit } = parseCssValue(value);
             if (number > 0 && unit === "px") {
-                setAttributes({ style: { [margin]: value } }, "cell");
+                // The margin spacing node is meant as a wrapper and replaces
+                // static margin by padding on the main wrapper cell.
+                setAttributes({ style: { [`padding-${side}`]: value } }, "cell");
             }
         }
         if (isRelevant) {
@@ -98,17 +126,17 @@ export class SpacingPlugin extends Plugin {
     buildPaddingNode(facts) {
         const paddingNode = new SpacingNode();
         const paddingLayout = paddingNode.layout;
-        const styleInfo = facts.desktopSpacingStyleInfo;
+        const styleInfo = facts.desktopPaddingStyleInfo;
         let isRelevant = false;
         const setAttributes = (options, ref) => {
             paddingLayout.setAttributes(options, ref);
             isRelevant = true;
         };
-        for (const padding of PADDINGS) {
-            const value = styleInfo.getPropertyValue(padding);
+        for (const side of SIDES) {
+            const value = styleInfo.getPropertyValue(`padding-${side}`);
             const { number, unit } = parseCssValue(value);
             if (number > 0 && unit === "px") {
-                setAttributes({ style: { [padding]: value } }, "cell");
+                setAttributes({ style: { [`padding-${side}`]: value } }, "cell");
             }
         }
         if (isRelevant) {
@@ -116,37 +144,33 @@ export class SpacingPlugin extends Plugin {
         }
     }
 
-    /**
-     * Only handle basic ElementLayout, every customization should handle
-     * spacing specifically.
-     */
     applyDefaultSpacing(layout, { emailNode }) {
-        if (
-            layout.constructor !== ElementLayout ||
-            // TODO EGGMAIL: investigate cases where an element uses a
-            // LayoutModel and don't get its natural spacing. The following condition
-            // is incorrect as hybrid fluid and table strategies use the default spacing.
-            // (layout.pluginIds.size === 1 && layout.pluginIds.has(RenderPlugin.id)) ||
-            !emailNode.analysis.facts.desktopBlock ||
-            paragraphRelatedElements.includes(layout.tag)
-        ) {
-            return;
-        }
         // TODO EGGMAIL: arbitrary fallback on body, maybe recursive search on parent is more
         // appropriate?
         const contextNode = emailNode.lastReferenceNode ?? this.config.referenceDocument.body;
-        const styleContext = {
-            style: this.getContextStyleInfo(contextNode),
-        };
-        const marginNode = this.buildMarginNode(emailNode.analysis.facts);
-        if (marginNode) {
-            marginNode.layout.setAttributes(styleContext, "cell");
-            emailNode.marginNode = marginNode;
+        if (!this.isBlock(contextNode)) {
+            return;
         }
-        const paddingNode = this.buildPaddingNode(emailNode.analysis.facts);
-        if (paddingNode) {
-            paddingNode.layout.setAttributes(styleContext, "cell");
-            emailNode.paddingNode = paddingNode;
+        const styleContext = { style: this.getContextStyleInfo(contextNode) };
+        if (
+            emailNode.analysis.facts.desktopMarginStyleInfo &&
+            !paragraphRelatedElements.includes(layout.ancestorTag)
+        ) {
+            const marginNode = this.buildMarginNode(emailNode.analysis.facts);
+            if (marginNode) {
+                marginNode.layout.setAttributes(styleContext, "cell");
+                emailNode.marginNode = marginNode;
+            }
+        }
+        if (
+            emailNode.analysis.facts.desktopPaddingStyleInfo &&
+            !paragraphRelatedElements.includes(layout.descendantTag)
+        ) {
+            const paddingNode = this.buildPaddingNode(emailNode.analysis.facts);
+            if (paddingNode) {
+                paddingNode.layout.setAttributes(styleContext, "cell");
+                emailNode.paddingNode = paddingNode;
+            }
         }
     }
 
@@ -180,16 +204,12 @@ export class SpacingPlugin extends Plugin {
     /**
      * Returns a normalized spacing styleInfo containing only longhand css
      * properties. Only support simple padding/margin variants.
-     * @see spacingStyleRules
      *
      * @returns {StyleInfo}
      */
-    getSpacingStyleInfo(referenceNode, layoutDimensions = undefined) {
-        const rawSpacingStyleInfo = this.filterStyleInfo(
-            this.getRawStyleInfo(referenceNode, layoutDimensions),
-            referenceNode,
-            this.spacingStyleRules
-        );
+    getSpacingStyleInfo(referenceNode, rules, layoutDimensions = undefined) {
+        const rawStyleInfo = this.getRawStyleInfo(referenceNode, layoutDimensions);
+        const filteredStyleInfo = this.filterStyleInfo(rawStyleInfo, referenceNode, rules);
         // TODO EGGMAIL: this is incomplete CSS value parsing, would be unnecessary
         // if we have a complete value parser.
         const longhandStyleInfo = new StyleInfo();
@@ -204,7 +224,7 @@ export class SpacingPlugin extends Plugin {
         for (const [
             propertyName,
             { value, priority, sequence },
-        ] of rawSpacingStyleInfo.getSortedEntries()) {
+        ] of filteredStyleInfo.getSortedEntries()) {
             if (propertyName === "padding" || propertyName === "margin") {
                 const values = this.decomposeSpacingShorthandValue(value);
                 setShorthandPropertyValues(propertyName, values, priority, sequence);
@@ -216,10 +236,11 @@ export class SpacingPlugin extends Plugin {
     }
 
     provideSpacingStyleRules() {
-        const spacingRules = this.spacingStyleRules.forPlugin(SpacingPlugin.id);
+        const paddingRules = this.paddingStyleRules.forPlugin(SpacingPlugin.id);
+        const marginRules = this.paddingStyleRules.forPlugin(SpacingPlugin.id);
         // TODO EGGMAIL: support more spacing cases?
-        spacingRules.allow(/^padding(-(top|right|bottom|left))?$/);
-        spacingRules.allow(/^margin(-(top|right|bottom|left))?$/);
+        paddingRules.allow(/^padding(-(top|right|bottom|left))?$/);
+        marginRules.allow(/^margin(-(top|right|bottom|left))?$/);
     }
 
     provideStyleRules(rules) {
