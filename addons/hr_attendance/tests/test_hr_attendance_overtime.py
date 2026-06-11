@@ -1257,6 +1257,7 @@ class TestHrAttendanceOvertime(HttpCase):
         self.assertEqual(ruleset.rule_ids.timing_type, 'work_days',
                  "Employee work Timing type should default to 'work_days' when not set.")
 
+    @freeze_time("2026-01-01 15:00:00")
     def test_employee_overtime_with_multiple_attendance_lines(self):
         """Validate that multiple overtime lines for today are summed correctly
         and that the entire attendance_employee_data response is consistent.
