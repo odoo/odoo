@@ -659,7 +659,10 @@ export class SelfOrder extends Reactive {
     }
 
     shouldUpdateLastOrderChange() {
-        return this.config.self_ordering_mode !== "kiosk";
+        return (
+            this.config.self_ordering_mode !== "kiosk" &&
+            this.config.self_ordering_mode !== "mobile"
+        );
     }
 
     async sendDraftOrderToServer() {
