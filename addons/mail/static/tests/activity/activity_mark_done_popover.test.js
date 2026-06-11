@@ -24,7 +24,7 @@ test("activity mark done popover simplest layout", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".btn:text('Mark Done')");
+    await click(".btn:text('Done')");
     await contains(".o-mail-ActivityMarkAsDone");
     await contains(".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']");
     await contains(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
@@ -53,7 +53,7 @@ test("activity mark done popover mark done without feedback", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".btn:text('Mark Done')");
+    await click(".btn:text('Done')");
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done']");
     await expect.waitForSteps(["action_feedback"]);
 });
@@ -85,7 +85,7 @@ test("activity mark done popover mark done with feedback", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".btn:text('Mark Done')");
+    await click(".btn:text('Done')");
     await insertText(
         ".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']",
         "This task is done"
@@ -130,7 +130,7 @@ test("activity mark done popover mark done and schedule next", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".btn:text('Mark Done')");
+    await click(".btn:text('Done')");
     await insertText(
         ".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']",
         "This task is done"
@@ -168,7 +168,7 @@ test("[technical] activity mark done & schedule next with new action", async () 
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".btn:text('Mark Done')");
+    await click(".btn:text('Done')");
     await click(".o-mail-ActivityMarkAsDone button[aria-label='Done and Schedule Next']");
     await doActionCalled;
     await expect.waitForSteps(["activity_action"]);

@@ -1,4 +1,4 @@
-import { describe, expect, test } from "@odoo/hoot";
+import { describe, expect, runAllTimers, test } from "@odoo/hoot";
 
 import {
     click,
@@ -11,6 +11,7 @@ import {
     startServer,
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
+import { hover } from "@odoo/hoot-dom";
 import { advanceTime, mockDate } from "@odoo/hoot-mock";
 import { mockService, onRpc, serverState } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime, serializeDate, today } from "@web/core/l10n/dates";
@@ -86,7 +87,7 @@ test("activity simplest layout", async () => {
     await contains(".o-mail-Activity-mailTemplates", { count: 0 });
     await contains(".btn:text('Edit')", { count: 0 });
     await contains(".o-mail-Activity .btn:text('Cancel')", { count: 0 });
-    await contains(".btn:text('Mark Done')", { count: 0 });
+    await contains(".btn:text('Done')", { count: 0 });
     await contains(".o-mail-Activity .btn:text('Upload Document')", { count: 0 });
 });
 
@@ -211,7 +212,7 @@ test("activity with a summary layout", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity .o-mail-Activity-info span:text('“test summary”')");
+    await contains(".o-mail-Activity .o-mail-Activity-info span:text('test summary')");
 });
 
 test("activity without summary layout", async () => {
@@ -241,13 +242,13 @@ test("activity details toggle", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await contains(".o-mail-Activity");
-    await contains(".o-mail-Activity-details", { count: 0 });
     await contains(".o-mail-Activity i[aria-label='Info']");
-    await click(".o-mail-Activity i[aria-label='Info']");
-    await contains(".o-mail-Activity-details");
-    await click(".o-mail-Activity i[aria-label='Info']");
-    await contains(".o-mail-Activity-details", { count: 0 });
+    expect(".o_popover").toHaveCount(0);
+
+    await hover(".o-mail-Activity i[aria-label='Info']");
+    await runAllTimers();
+    expect(".o_popover").toHaveCount(1);
+    expect(".o_popover").toHaveText(/Created on: /);
 });
 
 test("activity with mail template layout", async () => {
@@ -331,7 +332,7 @@ test("activity with mail template: send mail", async () => {
     await expect.waitForSteps(["activity_send_mail"]);
 });
 
-test("activity click on mark as done", async () => {
+test("activity click on Done", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const activityTypeId = pyEnv["mail.activity.type"].search([["name", "=", "Email"]])[0];
@@ -345,9 +346,9 @@ test("activity click on mark as done", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity");
-    await click(".btn:text('Mark Done')");
+    await click(".btn:text('Done')");
     await contains(".o-mail-ActivityMarkAsDone");
-    await click(".btn:text('Mark Done')");
+    await click(".o-mail-Activity-markDone.btn:text('Done')");
     await contains(".o-mail-ActivityMarkAsDone", { count: 0 });
 });
 
@@ -366,7 +367,7 @@ test("activity mark as done popover should focus feedback input on open", async 
     await start();
     await openFormView("res.partner", partnerId);
     await contains(".o-mail-Activity");
-    await click(".btn:text('Mark Done')");
+    await click(".btn:text('Done')");
     await contains(".o-mail-ActivityMarkAsDone textarea[placeholder='Write Feedback']:focus");
 });
 
@@ -422,7 +423,7 @@ test("activity click on edit should pass correct context", async () => {
             expect(action.context).toEqual({
                 default_res_model: "res.partner",
                 default_res_id: partnerId,
-                dialog_size: "large",
+                dialog_size: "medium",
             });
             return super.doAction(...arguments);
         },
@@ -467,7 +468,7 @@ test("activity mark done popover close on ESCAPE", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".btn:text('Mark Done')");
+    await click(".btn:text('Done')");
     await contains(".o-mail-ActivityMarkAsDone");
     triggerHotkey("Escape");
     await contains(".o-mail-ActivityMarkAsDone", { count: 0 });
@@ -486,7 +487,7 @@ test("activity mark done popover click on discard", async () => {
     });
     await start();
     await openFormView("res.partner", partnerId);
-    await click(".btn:text('Mark Done')");
+    await click(".btn:text('Done')");
     await click(".o-mail-ActivityMarkAsDone button:text('Discard')");
     await contains(".o-mail-ActivityMarkAsDone", { count: 0 });
 });

@@ -70,7 +70,6 @@ class ActivityScheduleCase(MailCommon):
         last_message = record.message_ids[0]
         self.assertEqual(last_message.mail_activity_type_id, activity_type)
         self.assertIn(activity_type.name, last_message.body)
-        self.assertIn('done', last_message.body)
 
     def assertActivitiesFromPlan(self, plan, record, expected_deadlines, expected_responsible=None):
         """ Check that the last activities on the record correspond to the one

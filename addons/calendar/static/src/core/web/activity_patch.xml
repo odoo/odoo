@@ -9,19 +9,22 @@
             <div t-if="this.meeting" class="mt-1">
                 <t t-set="startToday" t-value="this.isToday(this.meeting.start)"/>
                 <t t-set="stopToday" t-value="this.isToday(this.meeting.stop)"/>
-                <div t-if="!startToday || !stopToday">
-                    <t t-if="startToday">Today</t>
-                    <t t-else="" t-out="this.meeting.start.toLocaleString(this.dateFormat)"/>
-                    <t t-if="this.meeting.stop > this.meeting.start.startOf('day').plus({days: 1})">
-                        -
-                        <t t-if="stopToday">Today</t>
-                        <t t-else="" t-out="this.meeting.stop.toLocaleString(this.dateFormat)"/>
-                    </t>
+                <div>
+                    <span t-if="!startToday || !stopToday">
+                        <t t-if="startToday">Today</t>
+                        <t t-else="" t-out="this.meeting.start.toLocaleString(this.dateFormat)"/>
+                        <t t-if="this.meeting.stop > this.meeting.start.startOf('day').plus({days: 1})">
+                            -
+                            <t t-if="stopToday">Today</t>
+                            <t t-else="" t-out="this.meeting.stop.toLocaleString(this.dateFormat)"/>
+                        </t>
+                        <span class="px-1">-</span>
+                    </span>
+                    <span>
+                        <t t-out="this.meeting.start.toLocaleString(this.timeFormat)"/> - <t t-out="this.meeting.stop.toLocaleString(this.timeFormat)"/>
+                    </span>
                 </div>
-                <div class="d-flex flex-nowrap gap-4">
-                    <t t-out="this.meeting.start.toLocaleString(this.timeFormat)"/> - <t t-out="this.meeting.stop.toLocaleString(this.timeFormat)"/>
-                    <span t-if="this.attendeeNames" t-out="this.truncatedAttendeeNames" t-att-title="this.attendeeNames" class="text-muted"/>
-                </div>
+                <div t-if="this.attendeeNames" t-out="this.truncatedAttendeeNames" t-att-title="this.attendeeNames" class="text-muted py-1"/>
                 <t t-if="this.meeting.location" t-out="this.meeting.location"/>
                 <t t-else="">Online</t>
             </div>
