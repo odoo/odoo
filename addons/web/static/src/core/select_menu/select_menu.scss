@@ -37,6 +37,13 @@
     .form-select + .o_select_menu_caret {
         display: none;
     }
+
+    .badge {
+        .o_badge_text, .o_tag_badge_text {
+            @include o-text-overflow(inline-block);
+            max-width: var(--Tag-max-width, 200px);
+        }
+    }
 }
 
 .o_select_menu_menu {
