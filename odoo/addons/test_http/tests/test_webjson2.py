@@ -306,7 +306,7 @@ class TestHttpWebJson_2(TestHttpBase):
             headers=self.bearer_header,
             json={
                 'key': key,
-                'scope': None,
+                'scope': 'rpc',
                 'name': 'Second key',
                 'expiration_date': in_ten_minutes.isoformat(sep=' '),
             },
@@ -317,7 +317,7 @@ class TestHttpWebJson_2(TestHttpBase):
         apikeys = self.env['res.users.apikeys'].search([('user_id', '=', self.jackoneill.id)])
         self.assertIn(apikey, apikeys)
         self.assertRecordValues(apikeys - apikey, [
-            {'name': 'Second key', 'scope': False, 'expiration_date': in_ten_minutes},
+            {'name': 'Second key', 'scope': 'rpc', 'expiration_date': in_ten_minutes},
         ])
 
         # the new key can be used to create a new one
@@ -326,7 +326,7 @@ class TestHttpWebJson_2(TestHttpBase):
             headers={'Authorization': f'Bearer {key2}'},
             json={
                 'key': key2,
-                'scope': 'api',
+                'scope': 'rpc',
                 'name': 'Third key',
                 'expiration_date': in_twenty_minutes.isoformat(sep=' '),
             },
@@ -358,5 +358,5 @@ class TestHttpWebJson_2(TestHttpBase):
         apikeys = self.env['res.users.apikeys'].search([('user_id', '=', self.jackoneill.id)])
         self.assertIn(apikey, apikeys)
         self.assertRecordValues(apikeys - apikey, [
-            {'name': 'Third key', 'scope': 'api', 'expiration_date': in_twenty_minutes},
+            {'name': 'Third key', 'scope': 'rpc', 'expiration_date': in_twenty_minutes},
         ])

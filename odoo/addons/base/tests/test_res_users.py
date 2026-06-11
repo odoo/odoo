@@ -733,8 +733,7 @@ class TestApiKeys(UsersCommonCase):
         cls.env['ir.config_parameter'].set_bool('base.enable_programmatic_api_keys', True)
         UsersApiKeys = cls.env['res.users.apikeys'].with_user(cls.user_internal)
         cls.tomorrow = datetime.now() + timedelta(days=1)
-        cls.unscoped_key = UsersApiKeys._generate(None, 'Key without a scope', cls.tomorrow)
-        cls.scoped_key = UsersApiKeys._generate('scope', 'Key with a scope', cls.tomorrow)
+        cls.api_key = UsersApiKeys._generate('scope', 'Key ', cls.tomorrow)
 
     def test_programmatic_apikey_management_is_deactivated_by_default(self):
         self.env['ir.config_parameter'].set_bool('base.enable_programmatic_api_keys', None)
@@ -742,59 +741,43 @@ class TestApiKeys(UsersCommonCase):
         # Attempting to create a key raises an error
         with self.assertRaisesRegex(UserError, 'Programmatic API keys are not enabled'):
             self.env['res.users.apikeys'].with_user(self.user_internal).generate(
-                self.unscoped_key, None, 'Another key without a scope', self.tomorrow)
+                self.api_key, 'scope', 'Another key', self.tomorrow)
 
         # Attempting to revoke a key raises an error
         with self.assertRaisesRegex(UserError, 'Programmatic API keys are not enabled'):
-            self.env['res.users.apikeys'].with_user(self.user_internal).revoke(self.unscoped_key)
+            self.env['res.users.apikeys'].with_user(self.user_internal).revoke(self.api_key)
 
     def test_generate_apikey_is_limited(self):
-        # create 8 new keys, which makes 10 keys in total for user_internal
-        for i in range(8):
+        # create 9 new keys, which makes 10 keys in total for user_internal
+        for i in range(9):
             self.env['res.users.apikeys'].with_user(self.user_internal).generate(
-                self.unscoped_key, None, 'Another key without a scope', self.tomorrow)
+                self.api_key, 'scope', 'Another key', self.tomorrow)
 
         with self.assertRaisesRegex(UserError, 'Limit of 10 API keys is reached'):
             self.env['res.users.apikeys'].with_user(self.user_internal).generate(
-                self.unscoped_key, None, 'Another key without a scope', self.tomorrow)
+                self.api_key, 'scope', 'Another key', self.tomorrow)
 
         # This ICP can change the limit
         self.env['ir.config_parameter'].set_int('base.programmatic_api_keys_limit', 11)
         self.env['res.users.apikeys'].with_user(self.user_internal).generate(
-            self.unscoped_key, None, 'Another key without a scope', self.tomorrow)
-
-    def test_generate_apikey_raises_when_creating_unscoped_key_from_scoped_key(self):
-        # Creating an unscoped key from a scoped key raises an error
-        with self.assertRaisesRegex(UserError, 'The provided API key is invalid or does not belong to the current user'):
-            self.env['res.users.apikeys'].with_user(self.user_internal).generate(
-                self.scoped_key, None, 'Another key without a scope', self.tomorrow)
+            self.api_key, 'scope', 'Another key', self.tomorrow)
 
     def test_generate_apikey_raises_when_creating_key_from_differently_scoped_key(self):
         # Creating a key with a different scope raises an error
         with self.assertRaisesRegex(UserError, 'The provided API key is invalid or does not belong to the current user'):
             self.env['res.users.apikeys'].with_user(self.user_internal).generate(
-                self.scoped_key, 'other', 'Another key with another scope', self.tomorrow)
+                self.api_key, 'other', 'Another key with another scope', self.tomorrow)
 
     def test_generate_apikey_accepts_creating_key_from_identically_scoped_key(self):
         # Creating a key with the same scope doesn't raise
         self.env['res.users.apikeys'].with_user(self.user_internal).generate(
-            self.scoped_key, 'scope', 'Another key with a scope', self.tomorrow)
-
-    def test_generate_apikey_accepts_creating_scoped_key_from_unscoped_key(self):
-        # Creating a key with a scope from an unscoped key doesn't raise
-        self.env['res.users.apikeys'].with_user(self.user_internal).generate(
-            self.unscoped_key, 'scope', 'Another key with a scope', self.tomorrow)
-
-    def test_generate_apikey_accepts_creating_unscoped_key_from_unscoped_key(self):
-        # Creating an unscoped key from another unscoped key doesn't raise
-        self.env['res.users.apikeys'].with_user(self.user_internal).generate(
-            self.unscoped_key, None, 'Another key without a scope', self.tomorrow)
+            self.api_key, 'scope', 'Another key with same scope', self.tomorrow)
 
     def test_generate_apikey_checks_ownership(self):
         # Check that an API key cannot be generated from another user's API key
         with self.assertRaisesRegex(UserError, 'The provided API key is invalid or does not belong to the current user'):
             self.env['res.users.apikeys'].with_user(SUPERUSER_ID).generate(
-                self.unscoped_key, None, 'Another key without a scope', self.tomorrow)
+                self.api_key, 'scope', 'Another key', self.tomorrow)
 
 
 class TestResUsersForm(TransactionCase):

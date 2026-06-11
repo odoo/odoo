@@ -49,6 +49,7 @@ class WebJson2Controller(http.Controller):
         '/json/2/<__model__>/<__method__>',
         methods=['POST'],
         auth='bearer',
+        bearer_scope='rpc',
         type='json2',
         readonly=_web_json_2_rpc_readonly,
         save_session=False,

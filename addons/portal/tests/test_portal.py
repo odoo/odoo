@@ -137,7 +137,7 @@ class TestUsersHttp(BaseCommon, HttpCase):
         # Create a portal user with data which should be removed on deactivation
         portal_user = self.portal_user
         self.env['res.users.apikeys'].with_user(portal_user)._generate(
-            None,
+            'rpc',
             'Portal API Key',
             datetime.now() + timedelta(days=1)
         )

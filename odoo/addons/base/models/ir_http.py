@@ -304,7 +304,7 @@ class IrHttp(models.AbstractModel):
         return [request.env['ir.model.data']._xmlid_to_res_model_res_id('base.public_user')[1]]
 
     @classmethod
-    def _auth_method_bearer(cls):
+    def _auth_method_bearer(cls, routing: dict):
         headers = request.httprequest.headers
 
         def get_http_authorization_bearer_token():
@@ -329,7 +329,7 @@ class IrHttp(models.AbstractModel):
 
         if token := get_http_authorization_bearer_token():
             # 'rpc' scope does not really exist, we basically require a global key (scope NULL)
-            uid = request.env['res.users.apikeys']._check_credentials(scope='rpc', key=token)
+            uid = request.env['res.users.apikeys']._check_credentials(scope=routing['bearer_scope'], key=token)
             if not uid:
                 e = "Invalid apikey"
                 raise Unauthorized(e, www_authenticate=WWWAuthenticate('bearer'))
@@ -344,32 +344,32 @@ class IrHttp(models.AbstractModel):
         elif not check_sec_headers():
             e = 'Missing "Authorization" or Sec-headers for interactive usage.'
             raise werkzeug.exceptions.Unauthorized(e, www_authenticate=WWWAuthenticate('bearer'))
-        cls._authenticate_explicit('user')
+        cls._authenticate_explicit(dict(routing, auth='user'))
 
     @classmethod
-    def _auth_method_user(cls):
+    def _auth_method_user(cls, routing: dict):
         if request.env.uid in [None] + cls._get_public_users():
             e = "user is not connected"
             raise SessionExpiredException(e)
 
     @classmethod
-    def _auth_method_none(cls):
+    def _auth_method_none(cls, routing: dict):
         request.env = api.Environment(request.env.cr, None, request.env.context)
         request.env.transaction.default_env = request.env
 
     @classmethod
-    def _auth_method_public(cls):
+    def _auth_method_public(cls, routing: dict):
         if request.env.uid is None:
             public_user = request.env.ref('base.public_user')
             request.update_env(user=public_user.id)
 
     @classmethod
     def _authenticate(cls, endpoint):
-        auth = 'none' if is_cors_preflight(request, endpoint) else endpoint.routing['auth']
-        cls._authenticate_explicit(auth, check_identity=endpoint.routing.get('check_identity', True))
+        routing = dict(endpoint.routing, auth='none') if is_cors_preflight(request, endpoint) else endpoint.routing
+        cls._authenticate_explicit(routing)
 
     @classmethod
-    def _authenticate_explicit(cls, auth, **extra):
+    def _authenticate_explicit(cls, routing: dict):
         session_expired_exc = None
         try:
             if request.session.uid is not None:
@@ -381,7 +381,7 @@ class IrHttp(models.AbstractModel):
                     session_expired_exc = exc  # save the traceback
                     safe_context.update(request.session.context)
                     request.env = api.Environment(request.env.cr, None, safe_context)
-            getattr(cls, f'_auth_method_{auth}')()
+            getattr(cls, f'_auth_method_{routing['auth']}')(routing)
         except SessionExpiredException as exc:
             if session_expired_exc:
                 raise exc from session_expired_exc
@@ -393,13 +393,13 @@ class IrHttp(models.AbstractModel):
             raise AccessDenied()
 
         if (
-            auth == 'user'
+            routing['auth'] == 'user'
             and request.session.uid is not None
             and (must_check_identity := cls._must_check_identity())
         ):
             if must_check_identity.get('logout'):
                 raise SessionExpiredException(f'User {request.session.uid} needs to login again')
-            if must_check_identity.get('check_identity') and extra.get('check_identity', True):
+            if must_check_identity.get('check_identity') and routing.get('check_identity', True):
                 raise CheckIdentityException(f'User {request.session.uid} needs to confirm his identity')
 
     @classmethod

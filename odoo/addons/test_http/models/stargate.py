@@ -86,5 +86,5 @@ class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
     @classmethod
-    def _auth_method_thing(cls):
+    def _auth_method_thing(cls, routing: dict):
         raise AccessDenied()

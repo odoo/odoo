@@ -42,7 +42,7 @@ class TestTOTPMail(TestTOTPMixin, HttpCase):
 
         # Create an API key for the user
         api_key = self.env['res.users.apikeys'].with_user(self.user_test)._generate(
-            None, 'Foo', datetime.now() + timedelta(days=1)
+            'rpc', 'Foo', datetime.now() + timedelta(days=1)
         )
 
         # With TOTP by mail, xmlrpc using an API key is expected

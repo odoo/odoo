@@ -402,7 +402,7 @@ class IrHttp(models.AbstractModel):
         # the public user. Don't try it at home!
         real_env = request.env
         try:
-            request.registry['ir.http']._auth_method_public()  # it calls update_env
+            request.registry['ir.http']._auth_method_public({})  # it calls update_env
             nearest_url_lang = request.env['ir.http'].get_nearest_lang(request.env['res.lang']._get_data(url_code=url_lang_str).code or url_lang_str)
             cookie_lang = request.env['ir.http'].get_nearest_lang(request.cookies.get('frontend_lang'))
             context_lang = request.env['ir.http'].get_nearest_lang(real_env.context.get('lang'))
@@ -579,7 +579,7 @@ class IrHttp(models.AbstractModel):
 
         # minimal setup to serve frontend pages
         if not request.env.uid:
-            cls._auth_method_public()
+            cls._auth_method_public({})
         cls._handle_debug()
         cls._frontend_pre_dispatch()
         request.params = request.get_http_params()
