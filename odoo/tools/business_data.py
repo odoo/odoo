@@ -1,8 +1,13 @@
+import re
+
 from stdnum import get_cc_module
 from stdnum.util import clean
 
+_ADDRESS_REGEX = re.compile(r'^(.*?)(\s[0-9][0-9\S]*)?(?: - (.+))?$', flags=re.DOTALL)
+_REGIONAL_INDICATOR_OFFSET = ord('\N{Regional Indicator Symbol Letter A}') - ord('A')
 
-def split_vat(vat, default_country_code=''):
+
+def split_vat(vat: str, default_country_code: str = '') -> tuple[str, str]:
     """
     Return Country Code and VAT number without country prefix.
 
@@ -42,3 +47,36 @@ def split_vat(vat, default_country_code=''):
         vat = vat.removeprefix(country_code)
 
     return country_code, vat
+
+
+def get_flag(country_code: str) -> str:
+    """Get the emoji representing the flag linked to the country code.
+
+    This emoji is composed of the two regional indicator emoji of the country code.
+    """
+    if not re.fullmatch(r'[A-Z]{2}', country_code):
+        return ""
+    return "".join(chr(_REGIONAL_INDICATOR_OFFSET + ord(c)) for c in country_code)
+
+
+def mod10r(number: str) -> str:
+    """
+    Input number: account or invoice number
+    Output return: the same number completed with the recursive mod10 key
+    """
+    codec = [0, 9, 4, 6, 8, 2, 7, 1, 3, 5]
+    report = 0
+    for digit in number:
+        if digit.isdigit():
+            report = codec[(int(digit) + report) % 10]
+    return number + str((10 - report) % 10)
+
+
+def street_split(street: str) -> dict[str, str]:
+    match = _ADDRESS_REGEX.match(street or '')
+    results = match.groups('') if match else ('', '', '')
+    return {
+        'street_name': results[0].strip(),
+        'street_number': results[1].strip(),
+        'street_number2': results[2],
+    }

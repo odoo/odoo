@@ -809,7 +809,7 @@ def _initialize_safe_whitelist():
     safe_whitelist.add_function('odoo.tools.misc.format_amount')
     safe_whitelist.add_function('odoo.tools.misc.format_date')
     safe_whitelist.add_function('odoo.tools.misc.format_duration')
-    safe_whitelist.add_function('odoo.tools.misc.street_split')
+    safe_whitelist.add_function('odoo.tools.business_data.street_split')
     safe_whitelist.add_function('odoo.tools.translate.html_translate')
     # Psycopg2
     safe_whitelist.add_class('psycopg2.InterfaceError')

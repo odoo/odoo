@@ -4,7 +4,7 @@ import re
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-from odoo.tools.misc import mod10r
+from odoo.tools.business_data import mod10r
 
 L10N_CH_QRR_NUMBER_LENGTH = 27
 

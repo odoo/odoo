@@ -2,7 +2,8 @@ from importlib import import_module
 from inspect import getmembers, ismodule, isclass, isfunction
 
 from odoo import api, fields, models, modules
-from odoo.tools.misc import frozendict, get_flag
+from odoo.tools.business_data import get_flag
+from odoo.tools.misc import frozendict
 
 
 def templ(env, code2country, name=None, country_code='', **kwargs):

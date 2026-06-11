@@ -7,7 +7,7 @@ from odoo.tests import tagged, freeze_time
 
 
 from odoo.addons.l10n_ch.models.res_bank import UNICODE_ALLOWED
-from odoo.tools.misc import mod10r
+from odoo.tools.business_data import mod10r
 
 CH_IBAN = 'CH15 3881 5158 3845 3843 7'
 QR_IBAN = 'CH21 3080 8001 2345 6782 7'

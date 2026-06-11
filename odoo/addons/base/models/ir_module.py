@@ -23,7 +23,8 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.module import Manifest, MissingDependency
 from odoo.tools import SQL, BinaryBytes, config
-from odoo.tools.misc import file_open, get_flag, topological_sort
+from odoo.tools.business_data import get_flag
+from odoo.tools.misc import file_open, topological_sort
 from odoo.tools.parse_version import parse_version
 from odoo.tools.translate import (
     TranslationImporter,
