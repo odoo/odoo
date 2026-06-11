@@ -159,29 +159,29 @@ class User(models.Model):
     def _check_microsoft_calendar_credentials(self):
         # Create the Calendar Credentials for the current user if not already created.
         self.ensure_one()
-        if not self.microsoft_calendar_account_id:
-            self.microsoft_calendar_account_id = self.env['microsoft.calendar.credentials'].sudo().create([{'user_ids': [Command.set(self.ids)]}])
+        if not self.env.user.microsoft_calendar_account_id:
+            self.env.user.microsoft_calendar_account_id = self.env['microsoft.calendar.credentials'].sudo().create([{'user_ids': [Command.set(self.env.user.ids)]}])
         return True
 
     def stop_microsoft_synchronization(self):
         self.ensure_one()
         self._check_microsoft_calendar_credentials()
-        self.microsoft_synchronization_stopped = True
-        self.microsoft_last_sync_date = None
+        self.env.user.microsoft_synchronization_stopped = True
+        self.env.user.microsoft_last_sync_date = None
 
     def restart_microsoft_synchronization(self):
         self.ensure_one()
         self._check_microsoft_calendar_credentials()
-        self.microsoft_last_sync_date = fields.datetime.now()
-        self.microsoft_synchronization_stopped = False
+        self.env.user.microsoft_last_sync_date = fields.datetime.now()
+        self.env.user.microsoft_synchronization_stopped = False
         self.env['calendar.recurrence']._restart_microsoft_sync()
         self.env['calendar.event']._restart_microsoft_sync()
 
     def unpause_microsoft_synchronization(self):
-        self.env['ir.config_parameter'].sudo().set_param("microsoft_calendar_sync_paused", False)
+        self.env['ir.config_parameter'].set_param("microsoft_calendar_sync_paused", False)
 
     def pause_microsoft_synchronization(self):
-        self.env['ir.config_parameter'].sudo().set_param("microsoft_calendar_sync_paused", True)
+        self.env['ir.config_parameter'].set_param("microsoft_calendar_sync_paused", True)
 
     @api.model
     def check_calendar_credentials(self):
