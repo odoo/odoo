@@ -13,13 +13,23 @@ except ImportError:
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    fapiao = fields.Char(string='Fapiao Number', size=8, copy=False, tracking=True)
+    # Paper fapiao use an 8-digit invoice number. Fully digitized e-fapiao
+    # (全电发票), rolled out nationwide by China's STA from Dec 2024, use a
+    # unique 20-digit invoice number.
+    fapiao = fields.Char(string='Fapiao Number', size=20, copy=False, tracking=True)
 
     @api.constrains('fapiao')
     def _check_fapiao(self):
         for record in self:
-            if record.fapiao and (len(record.fapiao) != 8 or not record.fapiao.isdecimal()):
-                raise ValidationError(_("Fapiao number is an 8-digit number. Please enter a correct one."))
+            if not record.fapiao:
+                continue
+            if not record.fapiao.isdecimal():
+                raise ValidationError(_("Fapiao number must contain digits only."))
+            if len(record.fapiao) not in (8, 20):
+                raise ValidationError(_(
+                    "Fapiao number must be 8 digits (paper fapiao) or 20 digits "
+                    "(fully digitized e-fapiao)."
+                ))
 
     @api.model
     def check_cn2an(self):
