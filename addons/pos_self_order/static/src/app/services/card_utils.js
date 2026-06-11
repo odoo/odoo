@@ -92,6 +92,28 @@ export function getOrderLineValues(
         price_type: "original",
     };
 
+    if (selfOrder.config.use_course_allocation) {
+        const posCourse = product.pos_categ_ids?.[0]?.course_id;
+        let orderCourse = false;
+        if (posCourse) {
+            orderCourse = currentOrder.course_ids.find((c) => c.course_id?.id === posCourse.id);
+            if (!orderCourse) {
+                orderCourse = models["restaurant.order.course"].create({
+                    order_id: currentOrder,
+                    course_id: posCourse,
+                    name: posCourse.name,
+                    index: currentOrder.course_ids.length + 1,
+                });
+            }
+        } else {
+            orderCourse =
+                [...currentOrder.lines].reverse().find((line) => line.course_id)?.course_id ||
+                false;
+        }
+
+        values.course_id = orderCourse;
+    }
+
     if (Object.entries(selectedValues).length > 0) {
         const productVariant = getProductVariantByAttributes(
             models,

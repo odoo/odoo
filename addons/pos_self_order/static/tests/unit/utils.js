@@ -160,6 +160,11 @@ export async function checkKioskPreparationTicketData(store, expectedData) {
         if (String(found.qty) !== String(expected.qty)) {
             return `Qty mismatch for ${expected.name}: expected ${expected.qty}, got ${found.qty}`;
         }
+        if (expected.course) {
+            if (found.group.name !== expected.course) {
+                return `Course mismatch for ${expected.name}: expected ${expected.course}, got ${found.group.name}`;
+            }
+        }
         if (expected.attributes) {
             for (const attr of expected.attributes) {
                 const foundAttr = found.attributes?.find((a) => a.includes(attr));

@@ -63,6 +63,7 @@ class PosSelfOrderController(http.Controller):
         return {
             'pos.order': orders,
             'pos.order.line': self.env['pos.order.line']._load_pos_self_data_read(order.lines, config),
+            'restaurant.order.course': self.env['restaurant.order.course']._load_pos_self_data_read(order.course_ids, config),
             'pos.payment': self.env['pos.payment']._load_pos_self_data_read(order.payment_ids, config),
             'product.attribute.custom.value': self.env['product.attribute.custom.value']._load_pos_self_data_read(order.lines.custom_attribute_value_ids, config),
             'pos.prep.order': self.env['pos.prep.order']._load_pos_data_read(order.prep_order_ids, config) if config else [],
