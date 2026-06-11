@@ -461,6 +461,25 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
         """
         self._assert_export_invoice(self.inps_tax_invoice, 'inps_tax_invoice.xml')
 
+    def test_multiple_pension_funds_per_line(self):
+        """Test that multiple pension fund taxes can be applied to a single invoice line."""
+
+        invoice = self._create_invoice(
+            partner_id=self.italian_partner_a,
+            company_id=self.company,
+            invoice_date='2023-10-01',
+            invoice_line_ids=[
+                self._prepare_invoice_line(price_unit=1000.0, tax_ids=[
+                    self.company.account_sale_tax_id.id,
+                    self.pension_fund_sale_tax.id,
+                    self.enasarco_sale_tax.id,
+                ])
+            ]
+        )
+
+        errors = invoice._l10n_it_edi_export_taxes_check()
+        self.assertNotIn('move_pension_fund_tax_per_line', errors)
+
     ####################################################
     # RA 23% WITHHOLDING TAX
     ####################################################
