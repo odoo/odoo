@@ -4270,8 +4270,7 @@ class AccountMove(models.Model):
                 where_string += " AND false "
         return where_string, param
 
-    def _get_starting_sequence(self):
-        # EXTENDS account sequence.mixin
+    def _get_sequence_date_info(self):
         self.ensure_one()
         move_date = self.date or self.invoice_date or fields.Date.context_today(self)
         year_part = "%04d" % move_date.year
@@ -4285,6 +4284,14 @@ class AccountMove(models.Model):
                 year_part = "%s-%s" % (move_date.strftime('%y'), (move_date + relativedelta(years=1)).strftime('%y'))
             else:
                 year_part = "%s-%s" % ((move_date + relativedelta(years=-1)).strftime('%y'), move_date.strftime('%y'))
+
+        return year_part, move_date, is_staggered_year
+
+    def _get_starting_sequence(self):
+        # EXTENDS account sequence.mixin
+        self.ensure_one()
+
+        year_part, move_date, is_staggered_year = self._get_sequence_date_info()
         # Arbitrarily use annual sequence for sales documents, but monthly
         # sequence for other documents
         if self.journal_id.type in ['sale', 'bank', 'cash', 'credit']:
