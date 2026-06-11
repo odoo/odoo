@@ -13,6 +13,7 @@ export class ProductPricelist extends Base {
         this.rulesByTmplId = {};
         this.uiState = {
             generalRulesIdsByCateg: {},
+            generalRulesIdsByPosCateg: {},
             generalRulesIds: {},
         };
 
@@ -44,6 +45,18 @@ export class ProductPricelist extends Base {
 
     getRulesByTmplId(tmplId) {
         return this.rulesByTmplId[tmplId] || [];
+    }
+
+    getPosCategRulesIds(posCategoryIds) {
+        const rules = {};
+
+        for (const id of posCategoryIds) {
+            if (this.uiState.generalRulesIdsByPosCateg[id]) {
+                Object.assign(rules, this.uiState.generalRulesIdsByPosCateg[id]);
+            }
+        }
+
+        return Object.values(rules);
     }
 
     computeRuleIndexes() {
@@ -81,6 +94,14 @@ export class ProductPricelist extends Base {
                 }
 
                 this.uiState.generalRulesIdsByCateg[item.categ_id.id][i] = item.id;
+                continue;
+            }
+            if (item.pos_categ_id) {
+                if (!this.uiState.generalRulesIdsByPosCateg[item.pos_categ_id.id]) {
+                    this.uiState.generalRulesIdsByPosCateg[item.pos_categ_id.id] = {};
+                }
+
+                this.uiState.generalRulesIdsByPosCateg[item.pos_categ_id.id][i] = item.id;
                 continue;
             }
 

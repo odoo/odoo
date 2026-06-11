@@ -34,6 +34,7 @@
         'views/account_journal_view.xml',
         'views/pos_payment_method_views.xml',
         'views/pos_payment_views.xml',
+        'views/product_pricelist_item_views.xml',
         'views/pos_config_view.xml',
         'views/pos_bill_view.xml',
         'views/pos_session_view.xml',

@@ -391,6 +391,46 @@ registry.category("web_tour.tours").add("limitedProductPricelistLoading", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("PosCategDiscountPercentagePricelistsTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Desk Pad", "1"),
+            // Discounted price should apply on Test product 1 (pos_category: Category 1) => 1.98 - 0.198 (10% of 1.98) = 1.78
+            inLeftSide(Order.hasLine({ productName: "Desk Pad", price: "1.78" })),
+            // No discount applied on Test product 2 (pos_category: Category 2)
+            ProductScreen.addOrderline("Letter Tray", "1"),
+            inLeftSide(Order.hasLine({ productName: "Letter Tray", price: "5.28" })),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosCategFixedPricePricelistTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.addOrderline("Desk Pad", "1"),
+            // Fixed price should apply on Test product 1 (pos_category: Category 1) => 15
+            inLeftSide(Order.hasLine({ productName: "Desk Pad", price: "15.00" })),
+            // Fixed price should apply on Test product 2 (pos_category: Category 2) => 17 + taxes (10%) = 18.7
+            ProductScreen.addOrderline("Letter Tray", "1"),
+            inLeftSide(Order.hasLine({ productName: "Letter Tray", price: "18.70" })),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("PosCategFormulaPricelistsTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.addOrderline("Desk Pad", "1"),
+            // Formula price should apply on Test product 1 (pos_category: Category 1) => 1.98(list_price) * 0.9 + 2.00 = 3.78
+            inLeftSide(Order.hasLine({ productName: "Desk Pad", price: "3.78" })),
+            // Fixed price should apply on Test product 2 (pos_category: Category 2) => 17 as per pricelist item 2
+            ProductScreen.addOrderline("Letter Tray", "1"),
+            inLeftSide(Order.hasLine({ productName: "Letter Tray", price: "18.70" })),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_restricted_categories_combo_product", {
     steps: () =>
         [
