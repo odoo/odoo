@@ -1698,34 +1698,34 @@ class ChromeBrowser:
     ):
         headless_switches = {
             '--headless': '',
-            '--disable-extensions': '',
-            '--disable-background-networking' : '',
-            '--disable-background-timer-throttling' : '',
-            '--disable-backgrounding-occluded-windows': '',
-            '--disable-renderer-backgrounding' : '',
-            '--disable-breakpad': '',
-            '--disable-client-side-phishing-detection': '',
-            '--disable-crash-reporter': '',
-            '--disable-dev-shm-usage': '',
-            '--disable-namespace-sandbox': '',
-            '--disable-translate': '',
-            '--no-sandbox': '',
-            '--disable-gpu': '',
-            '--enable-unsafe-swiftshader': '',
-            '--mute-audio': '',
+            '--disable-extensions': '',  # Disable all chrome extensions
+            '--disable-background-networking': '',  # Stop background requests (telemetry, updates, safe browsing)
+            '--disable-background-timer-throttling': '',  # Prevent Chrome from slowing down JS in inactive tabs
+            '--disable-backgrounding-occluded-windows': '',  # Prevent Chrome from suspending hidden windows
+            '--disable-renderer-backgrounding': '',  # Keep background rendering processes running at normal priority
+            '--disable-breakpad': '',  # Disable the Breakpad crash reporting system
+            '--disable-client-side-phishing-detection': '',  # Disable local machine-learning phishing analysis
+            '--disable-crash-reporter': '',  # Disable crash report generation
+            '--disable-dev-shm-usage': '',  # Use /tmp instead of /dev/shm
+            '--disable-namespace-sandbox': '',  # Disable Linux namespace sandboxing
+            '--disable-translate': '',  # Disables Chrome translation
+            '--no-sandbox': '',  # Disable OS-level sandboxing
+            '--disable-gpu': '',  # Disable hardware GPU acceleration
+            '--enable-unsafe-swiftshader': '',  # Allow software rendering fallback for WebGL when GPU is disabled
+            '--mute-audio': '',  # Prevent audio playback from allocating system resources
         }
         switches = {
             # required for tours that use Youtube autoplay conditions (namely website_slides' "course_tour")
-            '--autoplay-policy': 'no-user-gesture-required',
-            '--disable-default-apps': '',
-            '--disable-device-discovery-notifications': '',
-            '--no-default-browser-check': '',
+            '--autoplay-policy': 'no-user-gesture-required',  # Allow media autoplay without requiring a user click
+            '--disable-default-apps': '',  # Disable installation of default apps
+            '--disable-device-discovery-notifications': '',  # Stop scanning for local Cast or media devices
+            '--no-default-browser-check': '',  # Bypass the prompt asking to make Chrome the default browser
+            '--no-first-run': '',  # Skip the welcome screen and first-run setup wizards
             '--remote-debugging-address': HOST,
             '--remote-debugging-port': str(self.remote_debugging_port),
             '--user-data-dir': user_data_dir,
             '--enable-logging': '',
             '--v': str(int(os.environ.get("ODOO_BROWSER_LOG_VERBOSITY", "0"))),
-            '--no-first-run': '',
             # FIXME: these next 2 flags are temporarily uncommented to allow client
             # code to manually run garbage collection. This is done as currently
             # the Chrome unit test process doesn't have access to its available
