@@ -26,7 +26,7 @@
                 t-att-data-kind="props.kind"
                 t-attf-class="{{ props.roundedType === 'pill' ? 'rounded-pill' : 'rounded' }}"
                 t-on-pointerdown.prevent="() => this.showPermissionDialog(props.kind)"
-                t-on-keydown.prevent="() => this.showPermissionDialog(props.kind)"
+                t-on-keydown="this.handlePermissionKeydown"
             >
                 <i t-if="props.icon" t-att-class="props.icon"/>
                 <span
