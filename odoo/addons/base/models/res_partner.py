@@ -14,6 +14,7 @@ from werkzeug import urls
 
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
+from odoo.tools.business_data import street_split
 from odoo.tools.date_utils import all_timezones
 from odoo.tools.translate import LazyGettext
 from odoo.tools.partner_identifiers import (
@@ -335,8 +336,7 @@ class ResPartner(models.Model):
     )
 
     def _get_street_split(self):
-        self.ensure_one()
-        return tools.street_split(self.street or '')
+        return street_split(self.street or '')
 
     @api.depends('name', 'user_ids.share', 'image_1920', 'is_company', 'type')
     def _compute_avatar_1920(self):

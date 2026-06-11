@@ -1,5 +1,6 @@
-from odoo import _, models, tools
+from odoo import _, models
 from odoo.tools import html2plaintext
+from odoo.tools.business_data import street_split
 from odoo.tools.float_utils import float_round
 
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
@@ -65,7 +66,7 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
 
         for partner_type in ('supplier', 'customer'):
             partner = vals[partner_type]
-            building_number = tools.street_split(partner.street).get('street_number')
+            building_number = street_split(partner.street).get('street_number')
             if not building_number:
                 constraints[f"oioubl21_{partner_type}_building_number_required"] = _("The following partner's street number is missing: %s", partner.display_name)
             if partner.country_code == "FR" and not partner.commercial_partner_id._get_additional_identifier('FR_SIRET'):
@@ -114,7 +115,7 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_20
         address_node = super()._get_address_node(vals)
         # https://www.oioubl.info/Classes/en/Address.html
-        address = tools.street_split(vals['partner'].street)
+        address = street_split(vals['partner'].street)
         street_name = address.get('street_name')
         building_number = address.get('street_number')
         address_node.update({

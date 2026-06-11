@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models
+from odoo.tools.business_data import street_split
 
 
 class ResPartner(models.Model):
@@ -34,7 +34,7 @@ class ResPartner(models.Model):
         """Splits street value into sub-fields.
         Recomputes the fields of STREET_FIELDS when `street` of a partner is updated"""
         for partner in self:
-            partner.update(tools.street_split(partner.street))
+            partner.update(street_split(partner.street))
 
     def _get_street_split(self):
         self.ensure_one()

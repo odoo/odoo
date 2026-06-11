@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -9,8 +8,8 @@ from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner_bank import sanitize_account_number
 from odoo.addons.account.tools import format_account_number, validate_iban, get_iban_part
 from odoo.exceptions import ValidationError
-from odoo.tools import LazyTranslate, street_split
-from odoo.tools.misc import mod10r
+from odoo.tools import LazyTranslate
+from odoo.tools.business_data import street_split, mod10r
 
 _lt = LazyTranslate(__name__)
 

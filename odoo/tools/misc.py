@@ -83,7 +83,6 @@ __all__ = [
     'human_size',
     'is_list_of',
     'merge_sequences',
-    'mod10r',
     'mute_logger',
     'parse_date',
     'partition',
@@ -94,7 +93,6 @@ __all__ = [
     'reverse_enumerate',
     'split_every',
     'str2bool',
-    'street_split',
     'topological_sort',
     'unique',
     'verify_hash_signed',
@@ -430,22 +428,6 @@ def merge_sequences[T](*iterables: Iterable[T]) -> list[T]:
                 deps[item].append(prev)
             prev = item
     return topological_sort(deps)
-
-
-def mod10r(number: str) -> str:
-    """
-    Input number : account or invoice number
-    Output return: the same number completed with the recursive mod10
-    key
-    """
-    codec=[0,9,4,6,8,2,7,1,3,5]
-    report = 0
-    result=""
-    for digit in number:
-        result += digit
-        if digit.isdigit():
-            report = codec[ (int(digit) + report) % 10 ]
-    return result + str((10 - report) % 10)
 
 
 def str2bool(s: str, default: bool | None = None) -> bool:
@@ -1544,6 +1526,7 @@ def _format_time_ago(
     return babel.dates.format_timedelta(-time_delta, add_direction=add_direction, locale=locale)
 
 
+# expose
 def format_decimalized_number(number: float, decimal: int = 1) -> str:
     """Format a number to display to nearest metrics unit next to it.
 
@@ -1910,17 +1893,6 @@ def verify_limited_field_access_token(record, field_name, access_token, *, scope
     ) and datetime.datetime.now() < datetime.datetime.fromtimestamp(int(timestamp, 16))
 
 
-ADDRESS_REGEX = re.compile(r'^(.*?)(\s[0-9][0-9\S]*)?(?: - (.+))?$', flags=re.DOTALL)
-def street_split(street):
-    match = ADDRESS_REGEX.match(street or '')
-    results = match.groups('') if match else ('', '', '')
-    return {
-        'street_name': results[0].strip(),
-        'street_number': results[1].strip(),
-        'street_number2': results[2],
-    }
-
-
 def is_list_of(values, type_: type) -> bool:
     """Return True if the given values is a list / tuple of the given type.
 
@@ -1941,14 +1913,6 @@ def has_list_types(values, types: tuple[type, ...]) -> bool:
         isinstance(values, (list, tuple)) and len(values) == len(types)
         and all(itertools.starmap(isinstance, zip(values, types)))
     )
-
-
-def get_flag(country_code: str) -> str:
-    """Get the emoji representing the flag linked to the country code.
-
-    This emoji is composed of the two regional indicator emoji of the country code.
-    """
-    return "".join(chr(int(f"1f1{ord(c)+165:02x}", base=16)) for c in country_code)
 
 
 def named_to_positional_printf(string: str, args: Mapping) -> tuple[str, tuple]:

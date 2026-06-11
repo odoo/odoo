@@ -2,7 +2,7 @@
 import re
 
 from odoo import _, models, fields, api
-from odoo.tools import mod10r
+from odoo.tools.business_data import mod10r
 
 
 class AccountPayment(models.Model):
