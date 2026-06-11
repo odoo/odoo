@@ -2,11 +2,13 @@ import {
     click,
     contains,
     defineMailModels,
+    focus,
     mockGetMedia,
     mockPermissionsPrompt,
     openDiscuss,
     start,
     startServer,
+    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 
 import { describe, test } from "@odoo/hoot";
@@ -100,4 +102,34 @@ test("Combined mic+camera button only shown when both permissions not granted", 
     await click(".o-discuss-CallActionList button[title='Unmute']");
     await contains(".modal-footer button");
     await contains(".modal-footer button", { text: "Use Microphone" });
+});
+
+test("Pressing Escape key on voice & video wizard does not trigger permission dialog", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    mockGetMedia();
+    mockPermissionsPrompt();
+    const env = await start();
+    const rtc = env.services["discuss.rtc"];
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer.o-focused");
+    await click("[title='Start Call']");
+    await click(".o-discuss-CallActionList button[aria-label='Voice Settings']");
+    await click(".dropdown-menu button:has(:text('Voice Settings'))");
+    await contains(".o-discuss-CallSettings select[name='inputDevice']:first");
+    rtc.microphonePermission = "denied";
+    rtc.cameraPermission = "denied";
+    await focus(".o-discuss-CallSettings select[name='inputDevice']:first");
+    triggerHotkey("Enter");
+    await contains(".o_notification:contains('access blocked. Enable in browser settings.')");
+    await contains(".o-discuss-CallSettings");
+    await click(".o_notification_close");
+    await contains(".o_notification", { count: 0 });
+    await focus(".o-discuss-CallSettings select[name='inputDevice']:first");
+    triggerHotkey("Tab");
+    await contains(".o_notification", { count: 0 });
+    await contains(".o-discuss-CallSettings");
+    triggerHotkey("Escape");
+    await contains(".o-discuss-CallSettings", { count: 0 });
+    await contains(".o_notification", { count: 0 });
 });
