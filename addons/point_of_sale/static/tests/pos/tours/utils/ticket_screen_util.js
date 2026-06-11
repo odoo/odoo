@@ -47,7 +47,7 @@ export function loadSelectedOrder() {
     return [
         ProductScreen.clickReview(),
         {
-            trigger: ".ticket-screen .pads .button.validation.load-order-button",
+            trigger: ".ticket-screen .pads .button.validation.load-order-button:not(.syncing)",
             run: "click",
         },
     ];
