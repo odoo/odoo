@@ -36,6 +36,36 @@
         </div>
       </div>
 
+      <!-- Discard confirmation dialog. Opens when the planner clicks
+           the Discard button in the Save bar so accidental clicks
+           don't blow away unsaved edits. -->
+      <div t-if="state.pendingDiscard"
+           class="mv-confirm-overlay"
+           t-on-click.stop="() => this.cancelDiscard()">
+        <div class="mv-confirm-dialog"
+             t-on-click.stop="() => {}">
+          <div class="mv-confirm-dialog__title">Discard changes?</div>
+          <div class="mv-confirm-dialog__body">
+            Are you sure you want to discard all the changes made?
+            <br/>
+            <small class="text-muted">
+              This action cannot be undone. Any edits you've made since
+              the last save will be lost.
+            </small>
+          </div>
+          <div class="mv-confirm-dialog__footer">
+            <button class="btn btn-light"
+                    t-on-click.stop.prevent="() => this.cancelDiscard()">
+              Cancel
+            </button>
+            <button class="btn btn-danger"
+                    t-on-click.stop.prevent="() => this.confirmDiscard()">
+              Discard
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Phase 12: deal-level start date strip (drives the week columns) -->
       <div t-if="state.loaded and state.payload" class="mv-deal-startdate-strip">
         <label class="mv-deal-startdate-label">Deal Start Date</label>
@@ -84,8 +114,14 @@
         </thead>
 
         <tbody>
-          <!-- Body rows (existing + freshly-added) -->
-          <tr t-foreach="state.payload.rows" t-as="row" t-key="row.id">
+          <!-- Body rows (existing + freshly-added).
+               Each row in payload.rows renders as TWO <tr>s:
+                 1. The data row (daypart / week cells / total / actions)
+                 2. The bulk-allocation row beneath it.
+               Wrapped in a <t t-foreach> so the bulk row iterates with
+               the data row instead of rendering only once. -->
+          <t t-foreach="state.payload.rows" t-as="row" t-key="row.id">
+          <tr>
 
             <td class="mv-daypart-cell">
               <!-- Daypart selector (always editable; planners can switch) -->
@@ -126,12 +162,23 @@
                      class="mv-cell-input"
                      t-att-value="cell.units || ''"
                      t-on-input="(ev) => this.onCellInput(row, cell, ev)"/>
+              <!-- Cancelled-units annotation: `x: 0/<units>` in red,
+                   only shown if this week has cancelled history. -->
+              <div t-if="(cell.cancelled_units || 0) > 0"
+                   class="mv-cell-cancelled-note"
+                   t-att-title="'Cancelled units: ' + cell.cancelled_units">
+                x: 0/<t t-esc="cell.cancelled_units"/>
+              </div>
             </td>
 
             <!-- Row total -->
             <td class="mv-row-total">
               <div class="mv-row-total__spots">
                 <t t-esc="(row.total_spots || 0).toLocaleString()"/> spots
+              </div>
+              <div t-if="(row.total_cancelled || 0) > 0"
+                   class="mv-row-total__cancelled">
+                Cancelled: <t t-esc="(row.total_cancelled || 0).toLocaleString()"/>
               </div>
               <div class="mv-row-total__money">
                 <t t-esc="fmtCurrency(row.total_revenue)"/>
@@ -157,14 +204,75 @@
             </td>
           </tr>
 
-          <!-- Add Day Part row: ALWAYS visible, just under the last row
-               (or directly under the headers when no rows yet). -->
+
+          <!-- Bulk allocation strip - aligned directly UNDER the week
+               cells inside the same row container (no separator between
+               data and bulk). Empty cells flank the strip so DAYPART /
+               TOTAL / ACTIONS columns stay visually clean. -->
+          <tr class="mv-bulk-row">
+            <td t-att-colspan="state.payload.weeks.length + 3"
+                class="mv-bulk-row__cell">
+              <div class="mv-bulk-wrap">
+
+                <div class="mv-bulk-section">
+                  <span class="mv-bulk-field">
+                    <span class="mv-bulk-field__label">From</span>
+                    <input type="date"
+                           class="mv-bulk-input mv-bulk-input--locked"
+                           readonly="readonly"
+                           t-att-value="state.payload.deal.units_start_date || ''"/>
+                  </span>
+                  <span class="mv-bulk-field">
+                    <span class="mv-bulk-field__label">To</span>
+                    <input type="date" class="mv-bulk-input mv-bulk-input--date"
+                           t-att-value="(row._bulk and row._bulk.sec1_end) || ''"
+                           t-on-input="(ev) => this.onBulkInputChange(row, 'sec1_end', ev)"/>
+                  </span>
+                  <span class="mv-bulk-field">
+                    <span class="mv-bulk-field__label">Units</span>
+                    <input type="number" min="0"
+                           class="mv-bulk-input mv-bulk-input--units"
+                           t-att-value="(row._bulk and row._bulk.sec1_units) || ''"
+                           t-on-input="(ev) => this.onBulkInputChange(row, 'sec1_units', ev)"/>
+                  </span>
+                  <button class="btn btn-primary btn-sm mv-bulk-go"
+                          t-on-click.prevent="() => this.applyBulkAllocation(row, 'sec1')">
+                    Go
+                  </button>
+                </div>
+
+                <div class="mv-bulk-section mv-bulk-section--secondary">
+                  <span class="mv-bulk-field">
+                    <span class="mv-bulk-field__label">To</span>
+                    <input type="date" class="mv-bulk-input mv-bulk-input--date"
+                           t-att-value="(row._bulk and row._bulk.sec2_end) || ''"
+                           t-on-input="(ev) => this.onBulkInputChange(row, 'sec2_end', ev)"/>
+                  </span>
+                  <button class="btn btn-primary btn-sm mv-bulk-go"
+                          t-on-click.prevent="() => this.applyBulkAllocation(row, 'sec2')"
+                          title="Mark every week after this date as Cancelled">
+                    Go
+                  </button>
+                </div>
+
+              </div>
+            </td>
+          </tr>
+          </t>
+
+          <!-- Add Day Part row: ALWAYS visible, just under the last row -->
           <tr class="mv-add-row">
             <td t-att-colspan="state.payload.weeks.length + 3" class="mv-add-cell">
               <button class="btn btn-link mv-add-daypart"
                       t-on-click.prevent="addRow">
                 + Add Day Part
               </button>
+              <span t-if="state.payload.rows.length === 0"
+                    class="mv-add-hint">
+                Click to add your first Day Part. You can pick the daypart,
+                set the rate, choose the run weeks, and enter unit counts
+                per week.
+              </span>
               <span t-if="state.payload.rows.length === 0"
                     class="mv-add-hint">
                 Click to add your first Day Part. You can pick the daypart,
@@ -178,6 +286,10 @@
           <tr t-if="state.payload.rows.length > 0" class="mv-grand-row">
             <td class="mv-grand-cell">
               <t t-esc="(state.payload.grand_total_spots || 0).toLocaleString()"/> spots total
+              <span t-if="(state.payload.grand_total_cancelled || 0) > 0"
+                    class="mv-grand-cell__cancelled">
+                (Cancelled: <t t-esc="(state.payload.grand_total_cancelled || 0).toLocaleString()"/>)
+              </span>
             </td>
             <td t-att-colspan="state.payload.weeks.length"></td>
             <td t-att-colspan="2" class="mv-grand-cell mv-grand-cell--money">

@@ -4,8 +4,11 @@
 * `units_start_date` is always snapped to the Monday of the picked
   week (onchange + write/create override).
 * Week columns include only Mondays whose Sunday (Mon + 6 days) is
-  still inside the same calendar quarter as the start date - any
-  Monday whose week spills into the next quarter is excluded.
+  still inside the same BROADCAST quarter as the start date - any
+  Monday whose week spills into the next broadcast quarter is excluded.
+  A broadcast quarter starts on the Monday of the calendar week that
+  contains the 1st of Jan / Apr / Jul / Oct (so broadcast Q2 2026
+  starts Mon March 30, 2026 because April 1, 2026 is a Wednesday).
 """
 from datetime import date, timedelta
 from odoo import models, fields, api
@@ -20,30 +23,62 @@ def _snap_to_monday(d):
     return d
 
 
-def _last_day_of_quarter(d):
-    """Return the calendar last day of the quarter containing `d`."""
-    q_idx = (d.month - 1) // 3                # 0..3
-    last_month_in_q = q_idx * 3 + 3           # 3, 6, 9, 12
-    if last_month_in_q == 12:
-        next_q_first = date(d.year + 1, 1, 1)
-    else:
-        next_q_first = date(d.year, last_month_in_q + 1, 1)
-    return next_q_first - timedelta(days=1)
+def _broadcast_month_start(year, month):
+    """Return the Monday of the calendar week containing the 1st of
+    (year, month). That Monday is the first day of the broadcast month.
+
+    Example: April 1, 2026 is a Wednesday, so the broadcast April begins
+    on Monday March 30, 2026. This in turn is the first day of the
+    broadcast Q2 2026.
+    """
+    first = date(year, month, 1)
+    # weekday(): Monday=0, Sunday=6
+    return first - timedelta(days=first.weekday())
+
+
+def _broadcast_quarter_bounds(d):
+    """Return (start_monday, end_sunday) of the BROADCAST quarter
+    containing date `d`.
+
+    A broadcast quarter starts at the broadcast month of the first
+    calendar month of the quarter (Jan / Apr / Jul / Oct) and ends the
+    day before the next broadcast quarter starts.
+
+    Implementation: enumerate every quarter-start in a +/- 1 year window
+    and pick the bracket that contains `d`. Naturally handles 53-week
+    broadcast years (the bracket will simply be 14 weeks).
+    """
+    candidates = []
+    for y in (d.year - 1, d.year, d.year + 1):
+        for m in (1, 4, 7, 10):
+            candidates.append(_broadcast_month_start(y, m))
+    candidates.sort()
+    for i, s in enumerate(candidates):
+        next_s = candidates[i + 1] if i + 1 < len(candidates) else None
+        if s <= d and (next_s is None or next_s > d):
+            if next_s is None:
+                # Shouldn't happen with a +/-1y window, but be safe:
+                # default to a 13-week bracket.
+                return (s, s + timedelta(days=13 * 7 - 1))
+            return (s, next_s - timedelta(days=1))
+    # Fallback (date is somehow before our earliest candidate):
+    return (candidates[0], candidates[1] - timedelta(days=1))
 
 
 def mondays_for_start_date(start_date):
-    """Return list[date] of Mondays such that the FULL week (Mon..Sun)
-    sits inside the same calendar quarter as `start_date`."""
+    """Return list[date] of Mondays from the deal start date through the
+    end of the BROADCAST quarter containing that start date. Only Mondays
+    whose full Mon..Sun week stays inside the broadcast quarter are
+    included.
+    """
     if not start_date:
         start_date = date.today()
     first_monday = _snap_to_monday(start_date)
-    last_day_of_q = _last_day_of_quarter(start_date)
+    q_start, q_end = _broadcast_quarter_bounds(first_monday)
     mondays = []
     cur = first_monday
-    while cur <= last_day_of_q:
-        week_sunday = cur + timedelta(days=6)
-        if week_sunday <= last_day_of_q:
-            mondays.append(cur)
+    while cur + timedelta(days=6) <= q_end:
+        mondays.append(cur)
         cur += timedelta(days=7)
     return mondays
 
@@ -57,7 +92,7 @@ class MvDealUnitsStartDate(models.Model):
         default=fields.Date.context_today,
         help='Drives the Units / Capping Report week columns. Columns '
              'run from the Monday of this date through the last Monday '
-             'whose week ends within the same calendar quarter.',
+             'whose week ends within the same broadcast quarter.',
     )
 
     # ------------------------------------------------------------------

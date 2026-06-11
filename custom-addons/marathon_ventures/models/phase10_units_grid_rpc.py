@@ -68,42 +68,67 @@ class MvDealUnitsGridRpc(models.Model):
         rows = []
         grand_spots = 0.0
         grand_rev = 0.0
+        grand_cancelled = 0.0
         for dl in self.env['mv.deal_line'].search([('deal_id', '=', self.id)]):
-            # Index schedules by week for fast lookup
-            sched_by_week = {}
+            # Index schedules by week. A week can carry up to TWO
+            # schedules now: an active one (status != 'canceled') and a
+            # cancelled one (status == 'canceled'). They render as two
+            # separate UI elements in the same cell: the active is the
+            # editable input, the cancelled is the small red label below.
+            active_by_week = {}     # week_iso -> sched (status != canceled)
+            cancelled_by_week = {}  # week_iso -> [sched, sched, ...]
             for sched in dl.schedule_ids:
-                if sched.week:
-                    sched_by_week[sched.week.isoformat()] = sched
+                if not sched.week:
+                    continue
+                w = sched.week.isoformat()
+                if (sched.status or '') == 'canceled':
+                    cancelled_by_week.setdefault(w, []).append(sched)
+                else:
+                    # If two non-canceled schedules ever exist for the
+                    # same week, keep the most recent (highest id) as
+                    # the active one; the rest fall back to the
+                    # cancelled bucket so they show up somewhere.
+                    prev = active_by_week.get(w)
+                    if prev is None or sched.id > prev.id:
+                        if prev is not None:
+                            cancelled_by_week.setdefault(w, []).append(prev)
+                        active_by_week[w] = sched
+                    else:
+                        cancelled_by_week.setdefault(w, []).append(sched)
 
             cells = []
+            row_cancelled_units = 0.0
             for w_iso, w_dt in zip(weeks_iso, weeks):
-                # Phase 12: week columns are already filtered to the
-                # deal's quarter by units_start_date, so every visible
-                # week is in-range for every Deal Line. We no longer
-                # gate on the (now-stale) per-row run_start/run_end.
-                sched = sched_by_week.get(w_iso)
-                if not sched or not sched.units_available:
-                    cells.append({
-                        'week': w_iso, 'units': 0, 'state': 'dashed',
-                        'sched_id': sched.id if sched else False,
-                    })
-                    continue
-                # Map cap/status -> visual state
-                cap = sched.cap or 'uncapped'
-                status = sched.status or ''
-                state = 'green'
-                if status == 'canceled':
-                    state = 'gray'
-                elif cap == 'ghost':
-                    state = 'gray'
-                elif cap in ('v_50', 'v_50_2', 'v_80', 'v_80_in_ov',
-                              'v_1_2_in_pr_and_1_2_in_ov'):
-                    state = 'amber'
+                active = active_by_week.get(w_iso)
+                cancelled_list = cancelled_by_week.get(w_iso) or []
+                cancelled_units = sum(
+                    (s.units_available or 0.0) for s in cancelled_list
+                )
+                row_cancelled_units += cancelled_units
+
+                # Active-side state (the editable input)
+                if not active or not active.units_available:
+                    state = 'dashed'
+                    active_units = 0
+                    active_id = active.id if active else False
+                else:
+                    cap = active.cap or 'uncapped'
+                    state = 'green'
+                    if cap == 'ghost':
+                        state = 'gray'
+                    elif cap in ('v_50', 'v_50_2', 'v_80', 'v_80_in_ov',
+                                 'v_1_2_in_pr_and_1_2_in_ov'):
+                        state = 'amber'
+                    active_units = active.units_available
+                    active_id = active.id
+
                 cells.append({
                     'week': w_iso,
-                    'units': sched.units_available,
+                    'units': active_units,
                     'state': state,
-                    'sched_id': sched.id,
+                    'sched_id': active_id,
+                    'cancelled_units': cancelled_units,
+                    'cancelled_sched_ids': [s.id for s in cancelled_list],
                 })
 
             row = {
@@ -120,10 +145,12 @@ class MvDealUnitsGridRpc(models.Model):
                 'cells': cells,
                 'total_spots': dl.total_spots,
                 'total_revenue': dl.total_revenue,
+                'total_cancelled': row_cancelled_units,
             }
             rows.append(row)
             grand_spots += dl.total_spots
             grand_rev += dl.total_revenue
+            grand_cancelled += row_cancelled_units
 
         return {
             'deal': {
@@ -141,6 +168,7 @@ class MvDealUnitsGridRpc(models.Model):
             'rows': rows,
             'grand_total_spots': grand_spots,
             'grand_total_revenue': grand_rev,
+            'grand_total_cancelled': grand_cancelled,
             'currency': {
                 'id': self.currency_id.id,
                 'symbol': self.currency_id.symbol or '$',
@@ -244,6 +272,12 @@ class MvDealUnitsGridRpc(models.Model):
         # creating one if missing. If a cell is zeroed AND a schedule
         # already exists for that (deal_line, week), DELETE the schedule
         # so the grid stays clean.
+        #
+        # Exception - cell_update with `cancelled: True` is a
+        # cancellation marker (sent by Section 2 of the bulk allocation
+        # bar): set status='canceled' on the existing schedule, KEEP
+        # units_available unchanged, and DO NOT create a stub schedule
+        # if none exists yet.
         Sched = self.env['mv.schedules']
         touched_dl_ids = set()
         for cu in edits.get('cell_updates') or []:
@@ -259,28 +293,45 @@ class MvDealUnitsGridRpc(models.Model):
                 continue
             touched_dl_ids.add(dl.id)
             week_iso = cu.get('week')
-            units = cu.get('units') or 0
-            sched = Sched.search([
-                ('deal_line_id', '=', dl.id), ('week', '=', week_iso)
+            # ACTIVE schedule = anything not 'canceled'. We treat the
+            # cancelled schedule(s) as historical and never touch them
+            # during units writes.
+            active = Sched.search([
+                ('deal_line_id', '=', dl.id),
+                ('week', '=', week_iso),
+                ('status', '!=', 'canceled'),
             ], limit=1)
+
+            # --- Cancellation marker (Section 2 of bulk allocation)
+            if cu.get('cancelled'):
+                if active:
+                    # Flip the currently-active schedule to canceled.
+                    # Its units_available is preserved so the front-end
+                    # can render it as `x: 0/<units>` below the input.
+                    active.write({'status': 'canceled'})
+                # else: no active schedule -> nothing to cancel.
+                continue
+
+            # --- Standard units write (affects ONLY the active schedule)
+            units = cu.get('units') or 0
             if units <= 0:
-                # Zeroed cell -> remove the schedule entirely
-                if sched:
-                    sched.unlink()
+                # Zeroed cell -> drop the active schedule. Cancelled
+                # schedules at the same week stay intact.
+                if active:
+                    active.unlink()
                 continue
             # Fields the child Schedule inherits from its parent Deal Line
             # (rate, days_allowed, start_time, end_time) - centralised on
             # the Deal Line so changing them in one place propagates here.
             inherit_vals = dl.schedule_inherit_vals()
-            if sched:
-                sched.write({
+            if active:
+                active.write({
                     'units_available': units,
                     **inherit_vals,
                 })
             else:
-                # New schedule: default delivery to 100% so the Capping
-                # Report shows it green out of the box. Planners can
-                # cap individual cells / rows from the Capping tab.
+                # New active schedule: default delivery to 100% so the
+                # Capping Report shows it green out of the box.
                 Sched.create({
                     'deal_parent': self.id,
                     'deal_line_id': dl.id,

@@ -239,6 +239,37 @@
     );
 }
 
+/* Cancelled-units annotation. The week cell stays editable (input is
+   left alone); only the small red `x: 0/<n>` label below the input
+   indicates that some units for this week were cancelled. */
+.mv-cell-cancelled-note {
+    margin-top: 2px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: center;
+    color: #b91c1c;
+    letter-spacing: 0.02em;
+    pointer-events: none;
+    user-select: none;
+    position: absolute;
+}
+
+/* Row-total cancelled subtitle (under the Spot Total). */
+.mv-row-total__cancelled {
+    margin-top: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #b91c1c;
+}
+
+/* Inline cancelled note next to "N spots total" in the grand-total row. */
+.mv-grand-cell__cancelled {
+    margin-left: 6px;
+    font-weight: 600;
+    color: #b91c1c;
+}
+
 /* Dirty (unsaved) indicator overrides the status colour */
 .mv-cell--dirty .mv-cell-input {
     border-color: #f59e0b !important;
@@ -681,4 +712,95 @@
 }
 .mv-units-table tbody tr:not(.mv-add-row):not(.mv-grand-row) > td {
     border-bottom: 1px dashed #cbd5e1 !important;
+}
+
+/* ============================================================================
+   Bulk allocation row - sits below each data row, two-section form
+   ============================================================================ */
+.mv-units-table .mv-bulk-row {
+    background-color: #fafbfc;
+}
+.mv-bulk-row__cell {
+    padding: 8px 14px;
+    border-top: 1px dashed #e4e6eb !important;
+    border-bottom: 1px dashed #cbd5e1 !important;
+}
+.mv-bulk-wrap {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.mv-bulk-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 6px 10px;
+    background: #ffffff;
+    border: 1px solid #e4e6eb;
+    border-radius: 6px;
+}
+.mv-bulk-section--secondary {
+    background: #eff6ff;
+    border-color: #c7dafc;
+}
+.mv-bulk-section__label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #1d4ed8;
+    font-weight: 700;
+    margin-right: 4px;
+}
+.mv-bulk-field {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.mv-bulk-field__label {
+    font-size: 10px;
+    color: #6b7280;
+    text-transform: uppercase;
+}
+.mv-bulk-input {
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 12px;
+    background: #ffffff;
+}
+.mv-bulk-input--locked {
+    background: #f3f4f6;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+.mv-bulk-input--units {
+    width: 80px;
+}
+.mv-bulk-go {
+    padding: 3px 14px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+}
+
+/* ============================================================================
+   Bulk row repositioned: aligned UNDER the week cells but visually fused
+   with the data row above. No top border between data row and bulk strip.
+   Empty spacer <td>s sit under DAYPART / TOTAL / ACTIONS.
+   ============================================================================ */
+.mv-units-table .mv-bulk-row > td {
+    border-top: none !important;
+    background-color: #ffffff !important;
+}
+.mv-units-table .mv-bulk-row > .mv-bulk-row__spacer {
+    border-bottom: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+}
+.mv-bulk-row__cell {
+    padding: 8px 8px 10px !important;
+    border-bottom: 1px dashed #cbd5e1 !important;
+    background-color: #f8fafc !important;
+    border-top: 1px dashed #e4e6eb !important;
 }
