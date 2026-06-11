@@ -322,6 +322,7 @@ class DockerDeb(Docker):
         # - Write the date into the email line so SOURCE_DATE_EPOCH is set correctly from it
         changelog = f"odoo ({VERSION}.{TSTAMP}) stable; urgency=low\n\n  * {VERSION}\n\n -- Odoo Bot <info@odoo.com>  {TFULL}"
         cmds = ["echo '%s' > debian/changelog" % changelog]
+        cmds.append('dpkg-buildpackage -rfakeroot -uc -us -tc')
         # As the packages are built in the parent of the buildir, we move them back to build_dir
         cmds.append('mv ../odoo_* ./')
         self.run(' && '.join(cmds), self.args.build_dir, 'odoo-deb-build-%s' % TSTAMP)
