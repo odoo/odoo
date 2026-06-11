@@ -592,13 +592,17 @@ class HrLeave(models.Model):
                 # For flexible employees, if it's a single day leave, we force it to the real duration since the virtual intervals might not match reality on that day, especially for custom hours
                 # sudo as is_flexible is on version model and employee does not have access to it.
                 if leave.employee_id.sudo().is_flexible and leave.request_date_to == leave.request_date_from:
-                    public_holidays = self.env['resource.calendar.leaves'].search([
+                    # Only subtract public holidays if the leave type does NOT include public holidays in duration.
+                    # When include_public_holidays_in_duration is True ("Public Holiday Included" enabled),
+                    # the leave should count the full day even if it falls on a public holiday.
+                    resource_calendar_leaves = self.env['resource.calendar.leaves']
+                    public_holidays = resource_calendar_leaves.search([
                         ('resource_id', '=', False),
                         ('date_from', '<', leave.date_to),
                         ('date_to', '>', leave.date_from),
                         ('calendar_id', 'in', [False, calendar.id]),
                         ('company_id', '=', leave.company_id.id)
-                    ])
+                    ]) if not leave.holiday_status_id.include_public_holidays_in_duration else resource_calendar_leaves
                     if public_holidays:
                         public_holidays_intervals = Intervals([(ph.date_from, ph.date_to, ph) for ph in public_holidays])
                         leave_intervals = Intervals([(leave.date_from, leave.date_to, leave)])
