@@ -646,6 +646,7 @@ class IrModuleModule(models.Model):
         self.env.cr.commit()
         modules.registry.Registry.new(self.env.cr.dbname, update_module=True)
         self.env.cr.rollback()
+        assert (self.env.transaction.default_env or self.env).registry is self.env.transaction.registry, "env is bound correctly to the transaction's registry"
         if request:
             assert request.env.transaction is self.env.transaction, "request on another transaction than the model"
             request.registry = request.env.registry
