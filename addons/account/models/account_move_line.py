@@ -383,7 +383,7 @@ class AccountMoveLine(models.Model):
     product_uom_id = fields.Many2one(
         comodel_name='uom.uom',
         string='Unit',
-        domain="[('id', 'in', allowed_uom_ids)]",
+        domain="[('id', 'in', allowed_uom_ids)] if allowed_uom_ids else []",
         compute='_compute_product_uom_id', store=True, readonly=False, precompute=True,
         ondelete="restrict",
     )
@@ -1158,11 +1158,15 @@ class AccountMoveLine(models.Model):
             account_taxes = all_account_taxes.filtered(lambda tax: tax.type_tax_use == 'sale')
             tax_ids = filtered_taxes_id or account_taxes
 
+            if not tax_ids and not self.product_id and self.env.context.get('from_invoice_tab') and not self.move_id.quick_edit_mode:
+                tax_ids = self.company_id.account_sale_tax_id
+
         elif self.move_id.is_purchase_document(include_receipts=True):
             # In invoice.
             filtered_supplier_taxes_id = self.product_id.sudo().supplier_taxes_id.filtered_domain(company_domain)
             account_taxes = all_account_taxes.filtered(lambda tax: tax.type_tax_use == 'purchase')
             tax_ids = filtered_supplier_taxes_id or account_taxes
+            # Default company purchase tax is intentionally omitted; the predictive billing system handles vendor bill tax suggestion.
 
         elif self.env.context.get('account_default_taxes'):
             tax_ids = all_account_taxes

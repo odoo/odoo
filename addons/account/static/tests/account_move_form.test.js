@@ -104,7 +104,7 @@ test("Update description on product line", async() => {
                         <field name="invoice_line_ids" mode="list" widget="product_label_section_and_note_field_o2m">
                             <list name="journal_items" editable="bottom" string="Journal Items">
                                 <field name="product_id" widget="product_label_section_and_note_field" readonly="0"/>
-                                <field name="name" widget="section_and_note_text" optional="show"/>
+                                <field name="name" widget="account_label_text" optional="show"/>
                             </list>
                         </field>
                     </page>
@@ -114,12 +114,10 @@ test("Update description on product line", async() => {
     });
 
     await click(".o_many2one");
-    await contains("#labelVisibilityButtonId").click()
     await insertText("textarea[placeholder='Enter a description']", "testDescription");
     await click(".o_form_button_save");
     await expect.waitForSteps(["save"]);
 
     const line = pyEnv["account.move.line"].browse([1])[0];
     expect(line.name).toBe("testProduct\ntestDescription");
-
 });

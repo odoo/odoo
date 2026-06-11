@@ -1037,7 +1037,7 @@ class SaleOrder(models.Model):
                 continue
             dates_list = order.order_line.filtered(
                 lambda line: (
-                    line.product_id.type == "consu"
+                    (not line.product_id or line.product_id.type == "consu")
                     and not line.display_type
                     and not line._is_delivery()
                 )
@@ -1572,14 +1572,6 @@ class SaleOrder(models.Model):
         self.ensure_one()
         if self.state not in {"draft", "sent"}:
             return self.env._("Some orders are not in a state requiring confirmation.")
-        if any(
-            not line.display_type and not line.is_downpayment and not line.product_id
-            for line in self.order_line
-        ):
-            return self.env._(
-                "Some order lines are missing a product, you need to correct them before going"
-                " further."
-            )
 
         return False
 

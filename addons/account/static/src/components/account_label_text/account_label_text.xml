@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="account.AccountLabelTextField">
+        <t t-if="this.props.readonly">
+            <div
+                name="account_label_text_readonly"
+                class="d-flex align-items-start justify-content-between gap-1"
+            >
+                <span
+                    class="flex-grow-1"
+                    t-att-class="{'o_has_product': this.product}"
+                    style="white-space: pre-wrap"
+                    t-out="this.props.record.data[this.props.name] or ''"
+                />
+            </div>
+        </t>
+        <t t-else="">
+            <div name="account_label_text" class="o_account_label_text" t-custom-ref="root">
+                <div class="d-flex align-items-start">
+                    <div class="flex-grow-1 position-relative">
+                        <textarea
+                            class="o_input w-100"
+                            t-att-class="{'o_has_product': this.product}"
+                            t-att-id="this.props.id"
+                            t-att-placeholder="this.props.placeholder"
+                            t-att-rows="this.rowCount"
+                            t-custom-ref="textarea"
+                            t-on-blur="this.onBlur"
+                            t-on-input="this.debouncedOnLabelInput"
+                            t-on-keydown="this.onLabelKeydown"
+                        />
+                        <div class="o_m2o_overlay position-absolute top-0 start-0 end-0 bottom-0">
+                            <Many2XAutocomplete t-props="this.m2xAutocompleteProps"/>
+                        </div>
+                    </div>
+                    <button
+                        t-if="this.product"
+                        name="internal_link"
+                        class="o_external_button btn btn-link text-action p-0 flex-shrink-0 border-top-0"
+                        type="button"
+                        tabindex="-1"
+                        draggable="false"
+                        aria-label="Internal link"
+                        data-tooltip="Internal link"
+                        t-custom-click="(_, isMiddleClick) => this.openProduct(isMiddleClick)"
+                    >
+                        <i class="oi oi-arrow-right"/>
+                    </button>
+                </div>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="account.AccountLabelSectionAndNoteText">
+        <t t-component="this.componentToUse" t-props="this.componentProps"/>
+    </t>
+
+</templates>

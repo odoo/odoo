@@ -16,11 +16,11 @@ class SaleReport(models.Model):
             / {self._case_value_or_one("s.currency_rate")})
         """
         res["margin_percent"] = "MAX(l.margin_percent)"
-        res[
-            "purchase_price"
-        ] = f"""CASE WHEN l.product_id IS NOT NULL THEN SUM((l.purchase_price * l.product_uom_qty)
-                / {self._case_value_or_one("s.currency_rate")}
-                ) ELSE 0
-            END
+        res["purchase_price"] = f"""
+            CASE WHEN COALESCE(l.is_downpayment, false) = false
+            THEN SUM(
+                l.purchase_price * l.product_uom_qty / {self._case_value_or_one("s.currency_rate")}
+            )
+            ELSE 0 END
         """
         return res

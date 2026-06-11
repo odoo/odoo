@@ -6,14 +6,6 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
-    # Defaults
-    default_invoice_policy = fields.Selection(
-        selection=[("order", "Invoice what is ordered"), ("delivery", "Invoice what is delivered")],
-        string="Invoicing Policy",
-        default="order",
-        default_model="product.template",
-    )
-
     # Groups
     group_auto_done_setting = fields.Boolean(
         string="Lock Confirmed Sales", implied_group="sale.group_auto_done_setting"
@@ -34,16 +26,6 @@ class ResConfigSettings(models.TransientModel):
     )
 
     # Config params
-    automatic_invoice = fields.Boolean(
-        string="Automatic Invoice",
-        help="The invoice is generated automatically and available in the customer portal when the "
-        "transaction is confirmed by the payment provider.\nThe invoice is marked as paid and "
-        "the payment is registered in the payment journal defined in the configuration of the "
-        "payment provider.\nThis mode is advised if you issue the final invoice at the order "
-        "and not after the delivery.",
-        config_parameter="sale.automatic_invoice",
-    )
-
     invoice_mail_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="Email Template",
@@ -51,6 +33,12 @@ class ResConfigSettings(models.TransientModel):
         config_parameter="sale.default_invoice_email_template",
         help="Email sent to the customer once the invoice is available.",
     )
+
+    sale_order_mandatory_product = fields.Boolean(
+        string="Mandatory Product", config_parameter="sale.mandatory_product"
+    )
+
+    # Company dependent
     quotation_validity_days = fields.Integer(
         related="company_id.quotation_validity_days", readonly=False
     )
@@ -69,6 +57,10 @@ class ResConfigSettings(models.TransientModel):
     )
     downpayment_account_active = fields.Boolean(
         related="downpayment_account_id.active", string="Down payment Account Active"
+    )
+    sale_invoice_policy = fields.Selection(related="company_id.sale_invoice_policy", readonly=False)
+    sale_automatic_invoice = fields.Boolean(
+        related="company_id.sale_automatic_invoice", readonly=False
     )
 
     # Modules
@@ -121,12 +113,17 @@ class ResConfigSettings(models.TransientModel):
                 }
             }
 
-    # === CRUD METHODS ===#
+    @api.onchange("sale_invoice_policy")
+    def _onchange_sale_invoice_policy(self):
+        if self.sale_invoice_policy != "order":
+            self.sale_automatic_invoice = False
 
     def set_values(self):
         super().set_values()
-        if self.default_invoice_policy != "order":
-            self.env["ir.config_parameter"].set_bool("sale.automatic_invoice", False)
+        if mandatory_product_view := self.env.ref(
+            "sale.view_order_form_mandatory_product", raise_if_not_found=False
+        ):
+            mandatory_product_view.active = self.sale_order_mandatory_product
 
     # === ACTION METHODS === #
 

@@ -74,11 +74,15 @@ class SaleOrder(models.Model):
         if not self.sale_order_template_id:
             return
 
-        sale_order_template = self.sale_order_template_id.with_context(lang=self.partner_id.lang)
+        sale_order_template = self.sale_order_template_id.with_context(
+            lang=self.partner_id.lang
+        ).with_company(self.company_id)
 
         order_lines_data = [fields.Command.clear()]
         order_lines_data += [
-            fields.Command.create(line._prepare_order_line_values())
+            fields.Command.create(
+                line._prepare_order_line_values(self.fiscal_position_id, self.currency_id)
+            )
             for line in sale_order_template.sale_order_template_line_ids
         ]
 

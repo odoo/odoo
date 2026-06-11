@@ -842,7 +842,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             })
         self.env.user.group_ids |= self.env.ref('sales_team.group_sale_salesman')
 
-        self.env['ir.config_parameter'].sudo().set_bool('sale.automatic_invoice', True)
+        self.env.company.sale_automatic_invoice = True
         so = self._create_sale_order_one_line(product_id=product, partner_id=partner)
 
         payment_method = self.env.ref('payment.payment_method_unknown')

@@ -35,7 +35,7 @@ saleModels.SaleOrder._views.form = /* xml */ `
             <list editable="bottom">
                 <field name="product_id" widget="sol_product_many2one"/>
                 <field name="product_template_id" widget="sol_product_many2one"/>
-                <field name="name" widget="sol_text"/>
+                <field name="name" widget="sol_label_text"/>
             </list>
         </field>
     </form>

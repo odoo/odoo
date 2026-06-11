@@ -1,10 +1,10 @@
-import { SaleOrderLineProductField } from "@sale/js/sale_product_field";
+import { SaleOrderLineProductField } from "@sale/js/sale_product_field/sale_product_field";
+import { SaleLabelTextField } from "@sale/js/sale_label_text/sale_label_text";
 import { x2ManyCommands } from "@web/core/orm_plugin";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
-
-patch(SaleOrderLineProductField.prototype, {
+const eventBoothSaleProductMixin = () => ({
     setup() {
         super.setup();
         this.action = useService("action");
@@ -74,3 +74,6 @@ patch(SaleOrderLineProductField.prototype, {
         );
     },
 });
+
+patch(SaleLabelTextField.prototype, eventBoothSaleProductMixin());
+patch(SaleOrderLineProductField.prototype, eventBoothSaleProductMixin());

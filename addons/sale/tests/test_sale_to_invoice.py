@@ -2117,3 +2117,44 @@ class TestSaleToInvoice(TestSaleCommon):
             2,
             msg="Refound overages only, the product is still invoiced on ordered.",
         )
+
+    def test_productless_sol_invoicing(self):
+        tax = self.env["account.tax"].create({
+            "name": "Test Tax",
+            "amount": 15,
+            "amount_type": "percent",
+            "type_tax_use": "sale",
+            "company_id": self.company.id,
+        })
+
+        order = self.env["sale.order"].create({
+            "partner_id": self.partner_a.id,
+            "order_line": [
+                Command.create({
+                    "name": "Productless SOL",
+                    "product_uom_qty": 2,
+                    "price_unit": 150,
+                    "tax_ids": [Command.set(tax.ids)],
+                })
+            ],
+        })
+
+        order.action_confirm()
+
+        invoice = order._create_invoices()
+        invoice_lines = invoice.invoice_line_ids.filtered(
+            lambda line: line.display_type == "product"
+        )
+
+        self.assertRecordValues(
+            invoice_lines,
+            [
+                {
+                    "name": "Productless SOL",
+                    "quantity": 2,
+                    "price_unit": 150,
+                    "product_id": False,
+                    "tax_ids": tax.ids,
+                }
+            ],
+        )

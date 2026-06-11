@@ -9,7 +9,7 @@ from zoneinfo import ZoneInfo
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
-from odoo.tools import float_round, lazy, str2bool
+from odoo.tools import float_round, lazy
 
 
 def _generate_random_reward_code():
@@ -446,6 +446,7 @@ class SaleOrder(models.Model):
         cheapest_line = False
         cheapest_line_price_unit = False
         domain = reward._get_discount_product_domain()
+        empty_domain = domain.is_true()
         for line in self.order_line - self._get_no_effect_on_threshold_lines():
             line_price_unit = self._get_order_line_price(line, "price_unit")
             if (
@@ -453,7 +454,7 @@ class SaleOrder(models.Model):
                 or line.combo_item_id
                 or not line.product_uom_qty
                 or not line_price_unit
-                or not line.product_id.filtered_domain(domain)
+                or not (empty_domain or line.product_id.filtered_domain(domain))
             ):
                 continue
             if not cheapest_line or cheapest_line_price_unit > line_price_unit:
@@ -492,7 +493,7 @@ class SaleOrder(models.Model):
             if (
                 not line.reward_id
                 and not line.combo_item_id
-                and line.product_id.filtered_domain(domain)
+                and (domain.is_true() or line.product_id.filtered_domain(domain))
             ):
                 discountable_lines |= line._get_lines_with_price()
         return discountable_lines
@@ -1380,7 +1381,9 @@ class SaleOrder(models.Model):
             point_entries_to_unlink.sudo().unlink()
 
     def _get_not_rewarded_order_lines(self):
-        return self.order_line.filtered(lambda line: line.product_id and not line.reward_id)
+        return self.order_line.filtered(
+            lambda line: not line.display_type and not line.is_downpayment and not line.reward_id
+        )
 
     def _get_order_line_price(self, order_line, price_type):
         return sum(order_line._get_lines_with_price().mapped(price_type))
@@ -1398,15 +1401,21 @@ class SaleOrder(models.Model):
         order_lines = self._get_not_rewarded_order_lines().filtered(
             lambda line: not line.combo_item_id
         )
+        productless_order_lines = order_lines.filtered(lambda line: not line.product_id)
         products = order_lines.product_id
         products_qties = dict.fromkeys(products, 0)
-        for line in order_lines:
+        for line in order_lines - productless_order_lines:
             product_qty = line.product_uom_id._compute_quantity(
                 line.product_uom_qty, line.product_id.uom_id
             )
             products_qties[line.product_id] += product_qty
         # Contains the products that can be applied per rule
         products_per_rule = programs._get_valid_products(products)
+        productless_order_lines_per_rule = {
+            rule: productless_order_lines
+            for rule in programs.rule_ids
+            if rule._get_valid_product_domain().is_true() and rule.program_type != "gift_card"
+        }
 
         # Prepare amounts
         so_products_per_rule = programs._get_valid_products(self.order_line.product_id)
@@ -1424,7 +1433,9 @@ class SaleOrder(models.Model):
                     continue
                 for rule in program.rule_ids:
                     # Skip lines to which the rule doesn't apply.
-                    if line.product_id in so_products_per_rule.get(rule, []):
+                    if line.product_id in so_products_per_rule.get(
+                        rule, []
+                    ) or line in productless_order_lines_per_rule.get(rule, []):
                         lines_per_rule[rule] |= line._get_lines_with_price()
 
         result = {}
@@ -1457,13 +1468,16 @@ class SaleOrder(models.Model):
                 ):
                     continue
                 minimum_amount_matched = True
-                if not products_per_rule.get(rule):
+                rule_products = products_per_rule.get(rule, self.env["product.product"])
+                rule_productless_lines = productless_order_lines_per_rule.get(
+                    rule, self.env["sale.order.line"]
+                )
+                if not rule_products and not rule_productless_lines:
                     continue
-                rule_products = products_per_rule[rule]
                 ordered_rule_products_qty = sum(
                     products_qties[product] for product in rule_products
-                )
-                if ordered_rule_products_qty < rule.minimum_qty or not rule_products:
+                ) + sum(rule_productless_lines.mapped("product_uom_qty"))
+                if ordered_rule_products_qty < rule.minimum_qty:
                     continue
                 product_qty_matched = True
                 if not rule.reward_point_amount:
@@ -1484,7 +1498,10 @@ class SaleOrder(models.Model):
                             if (
                                 line.is_reward_line
                                 or line.combo_item_id
-                                or line.product_id not in rule_products
+                                or (
+                                    line.product_id not in rule_products
+                                    and line not in rule_productless_lines
+                                )
                                 or line.product_uom_qty <= 0
                             ):
                                 continue
@@ -1518,7 +1535,11 @@ class SaleOrder(models.Model):
                         ]:
                             continue
                         line_price_total = self._get_order_line_price(line, "price_total")
-                        amount_paid += line_price_total if line.product_id in rule_products else 0.0
+                        amount_paid += (
+                            line_price_total
+                            if line.product_id in rule_products or line in rule_productless_lines
+                            else 0.0
+                        )
 
                     points += float_round(
                         rule.reward_point_amount * amount_paid,
@@ -1756,8 +1777,7 @@ class SaleOrder(models.Model):
         super()._validate_order()
         if self.amount_total or not self.reward_amount:
             return
-        auto_invoice = self.env["ir.config_parameter"].get_bool("sale.automatic_invoice")
-        if str2bool(auto_invoice):
+        if self.company_id.sale_automatic_invoice:
             # create an invoice for order with zero total amount and automatic invoice enabled
             self._force_lines_to_invoice_policy_order()
             invoice = self._create_invoices(final=True)
