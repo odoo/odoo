@@ -110,6 +110,32 @@
         <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Description of the event</h2>
         <t t-out="object.event_id.description">Internal meeting for discussion for new pricing for product and services.</t>
     </div>
+    <br/>
+    <table style="width: auto;">
+        <tr>
+            <td>
+                <strong>Add to calendar</strong>
+            </td>
+            <td>
+                <a t-attf-href="/calendar/ics/{{ object.event_id.sudo().access_token }}"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/apple-calendar-128.png" alt="iCal" title="iCal" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+            <td>
+                <a t-attf-href="/calendar/ics/{{ object.event_id.sudo().access_token }}"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/outlook-calendar-128.png" alt="Outlook" title="Outlook" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+            <td>
+                <a t-att-href="object.event_id._get_google_url()" target="new"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/google-calendar-128.png" alt="Google" title="Google" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+        </tr>
+    </table>
     <p style="margin: 32px 0 0;">
         Thank you!
         <t t-if="object.event_id.user_id.signature">
@@ -239,6 +265,32 @@
         <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Description of the event</h2>
         <t t-out="object.event_id.description">Internal meeting for discussion for new pricing for product and services.</t>
     </div>
+    <br/>
+    <table style="width: auto;">
+        <tr>
+            <td>
+                <strong>Add to calendar</strong>
+            </td>
+            <td>
+                <a t-attf-href="/calendar/ics/{{ object.event_id.sudo().access_token }}"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/apple-calendar-128.png" alt="iCal" title="iCal" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+            <td>
+                <a t-attf-href="/calendar/ics/{{ object.event_id.sudo().access_token }}"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/outlook-calendar-128.png" alt="Outlook" title="Outlook" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+            <td>
+                <a t-att-href="object.event_id._get_google_url()" target="new"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/google-calendar-128.png" alt="Google" title="Google" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+        </tr>
+    </table>
     <p style="margin: 32px 0 0;">
         Thank you!
         <t t-if="organizer.signature">
@@ -349,6 +401,32 @@
         <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Description of the event</h2>
         <t t-out="object.event_id.description">Internal meeting for discussion for new pricing for product and services.</t>
     </div>
+    <br/>
+    <table style="width: auto;">
+        <tr>
+            <td>
+                <strong>Add to calendar</strong>
+            </td>
+            <td>
+                <a t-attf-href="/calendar/ics/{{ object.event_id.sudo().access_token }}"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/apple-calendar-128.png" alt="iCal" title="iCal" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+            <td>
+                <a t-attf-href="/calendar/ics/{{ object.event_id.sudo().access_token }}"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/outlook-calendar-128.png" alt="Outlook" title="Outlook" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+            <td>
+                <a t-att-href="object.event_id._get_google_url()" target="new"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/google-calendar-128.png" alt="Google" title="Google" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+        </tr>
+    </table>
     <p style="margin: 32px 0 0;">
         Thank you!
         <t t-if="object.event_id.user_id.signature">
@@ -450,6 +528,32 @@
         <h2 t-attf-style="margin-bottom: 12px; font-size: 14px; font-weight: bold; color: {{user.company_id.email_secondary_color or '#875A7B'}};">Description of the event</h2>
         <t t-out="object.description">Internal meeting for discussion for new pricing for product and services.</t>
     </div>
+    <br/>
+    <table style="width: auto;">
+        <tr>
+            <td>
+                <strong>Add to calendar</strong>
+            </td>
+            <td>
+                <a t-attf-href="/calendar/ics/{{ object.sudo().access_token }}"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/apple-calendar-128.png" alt="iCal" title="iCal" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+            <td>
+                <a t-attf-href="/calendar/ics/{{ object.sudo().access_token }}"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/outlook-calendar-128.png" alt="Outlook" title="Outlook" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+            <td>
+                <a t-att-href="object._get_google_url()" target="new"
+                    style="padding-top: 10px; padding-right: 8px; padding-bottom: 2px; padding-left: 8px; margin-left: 8px; border-radius: 3px; background-color: #E7E9ED;">
+                    <img src="/calendar/static/src/img/google-calendar-128.png" alt="Google" title="Google" style="height: 20px; vertical-align: baseline;"/>
+                </a>
+            </td>
+        </tr>
+    </table>
     <p style="margin: 32px 0 0;">
         Thank you!
         <t t-if="object.user_id.signature">
