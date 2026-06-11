@@ -207,7 +207,15 @@ class AccountEdiProxyClientUser(models.Model):
         if 'pilot_phase' in proxy_user:
             self.sudo().company_id.l10n_fr_pdp_pilot_phase = proxy_user['pilot_phase']
 
+    def _peppol_get_new_documents(self, skip_no_journal=False):
+        if 'pdp_einvoicing_chatter_messages' not in self.env.context:
+            return self.with_context(pdp_einvoicing_chatter_messages={})._peppol_get_new_documents(skip_no_journal=skip_no_journal)
+        return super()._peppol_get_new_documents(skip_no_journal=skip_no_journal)
+
     def _pdp_get_regulatory_documents(self, batch_size=None):
+        if 'pdp_einvoicing_chatter_messages' not in self.env.context:
+            return self.with_context(pdp_einvoicing_chatter_messages={})._pdp_get_regulatory_documents(batch_size)
+
         job_count = batch_size or BATCH_SIZE
         need_retrigger = False
         for edi_user in self:
@@ -251,6 +259,7 @@ class AccountEdiProxyClientUser(models.Model):
     def _peppol_process_messages_status(self, messages, uuid_to_record):
         self.ensure_one()
         processed_message_uuids = []
+        updated_moves = self.env['account.move']
         other_messages = {}
         for uid, content in messages.items():
             record = uuid_to_record[uid]
@@ -268,38 +277,44 @@ class AccountEdiProxyClientUser(models.Model):
                     peppol_response.peppol_state = 'not_serviced'
                 else:
                     peppol_response.peppol_state = 'error'
-                    peppol_response.move_id._message_log(
-                        body=self.env._("French e-invoicing response error: %s", content['error'].get('data', {}).get('message') or content['error']['message']),
+                    self._pdp_log_einvoicing_chatter(
+                        peppol_response.move_id,
+                        pa_status='error',
+                        errors=[self._pdp_proxy_error_message(content['error'])],
+                        error_source=self.env._("PA Lifecycle"),
                     )
                 processed_message_uuids.append(uid)
                 continue
 
+            previous_state = peppol_response.peppol_state
             peppol_response.peppol_state = content['state']
             processed_message_uuids.append(uid)
 
-            origin_move = peppol_response.move_id
-            decoded_document = self._peppol_get_decoded_document(content)
-            filename = content["filename"] or 'lifecycle'
-            attachment = self.env["ir.attachment"].create(
-                {
-                    "name": f"{filename}.xml",
-                    "raw": decoded_document,
-                    "type": "binary",
-                    "mimetype": "application/xml",
-                    "res_id": origin_move.id,
-                    "res_model": 'account.move',
-                }
+            if previous_state != peppol_response.peppol_state:
+                updated_moves |= peppol_response.move_id
+        processed_message_uuids += super()._peppol_process_messages_status(other_messages, uuid_to_record)
+        for move in updated_moves:
+            self._pdp_log_einvoicing_chatter(move)
+        return processed_message_uuids
+
+    def _peppol_get_message_status_error_body(self, move, error):
+        self.ensure_one()
+        if self.proxy_type == 'pdp':
+            return self._pdp_format_einvoicing_message(
+                pa_status=self._pdp_selection_label(move, 'peppol_move_state', 'error'),
+                errors=[self._pdp_proxy_error_message(error)],
+                error_source=self.env._("PA Invoice"),
             )
-            response_code_description = PDP_STATUSES.get(peppol_response.response_code) or peppol_response.response_code
-            origin_move._message_log(
-                body=self.env._(
-                    "The Response issued on %(issue_date)s with Response Code '%(response_code)s' was sent by the access point.",
-                    response_code=response_code_description,
-                    issue_date=format_date(self.env, peppol_response.pdp_issue_date),
-                ),
-                attachment_ids=attachment.ids,
+        return super()._peppol_get_message_status_error_body(move, error)
+
+    def _peppol_get_message_status_update_body(self, move, content):
+        self.ensure_one()
+        if self.proxy_type == 'pdp':
+            return self._pdp_format_einvoicing_message(
+                pa_status=self._pdp_selection_label(move, 'peppol_move_state', move.peppol_move_state),
+                ppf_status=self._pdp_selection_label(move, 'pdp_ppf_move_state', move.pdp_ppf_move_state),
             )
-        return processed_message_uuids + super()._peppol_process_messages_status(other_messages, uuid_to_record)
+        return super()._peppol_get_message_status_update_body(move, content)
 
     def _pdp_send_response(self, reference_moves, status, additional_info=None):
         self.ensure_one()
@@ -366,7 +381,7 @@ class AccountEdiProxyClientUser(models.Model):
             for message, move in zip(response.get('messages'), reference_moves)
         ])
         log_message = self.env._(
-            "A French e-invoicing response with Response Code '%(status)s' was sent to the French e-invoicing Access Point.",
+            "A French e-invoicing response with Response Code '%(status)s' was sent to the Approved Platform.",
             status=status_string,
         )
         reference_moves._message_log_batch(bodies={move.id: log_message for move in reference_moves})
@@ -460,17 +475,21 @@ class AccountEdiProxyClientUser(models.Model):
         if not origin_move:
             return self.env['account.move']
 
-        # Do not update the transport status if we already received a lifecycle
-        if origin_move.pdp_ppf_move_state:
+        # Do not update the transport status if we already received a lifecycle.
+        if origin_move.pdp_ppf_move_state and origin_move.pdp_ppf_move_state != 'in_progress':
             return origin_move
 
         if content.get('error'):
-            body = self.env._("[Flow 1] There was an error when sending the tax extract to the PPF: %s",
-                              content['error'].get('data', {}).get('message') or content['error']['message'])
-            origin_move._message_log(body=body)
             origin_move.pdp_ppf_move_state = 'error'
+            self._pdp_log_einvoicing_chatter(
+                origin_move,
+                ppf_status='error',
+                errors=[self._pdp_proxy_error_message(content['error'])],
+                error_source=self.env._("PPF Invoice"),
+            )
         else:
             origin_move.pdp_ppf_move_state = 'sent'
+            self._pdp_log_einvoicing_chatter(origin_move)
 
         return origin_move
 
@@ -484,8 +503,8 @@ class AccountEdiProxyClientUser(models.Model):
             lambda r: r.peppol_message_uuid == origin_peppol_lifecycle_uuid
         )[:1]
         if not response:
-            _logger.warning('[Flow %s] The status response sent to the PPF with UUID %s could not be imported: Original journal entry (UUID %s) not found.',
-                            content['flow_number'], uuid, origin_move.peppol_message_uuid)
+            _logger.warning('[Flow %s] The status response sent to the PPF with UUID %s could not be imported: Original response (UUID %s) not found.',
+                            content['flow_number'], uuid, origin_peppol_lifecycle_uuid)
             return response
 
         # Do not update the transport status if we already received a lifecycle
@@ -493,12 +512,13 @@ class AccountEdiProxyClientUser(models.Model):
             return response
 
         if content.get('error'):
-            error_message = content['error'].get('data', {}).get('message') or content['error']['message']
-            status = dict(response._fields['response_code']._description_selection(self.env))[response.response_code]
-            body = self.env._("[Flow 6] There was an error when sending a '%(status)s' response (UUID %(uuid)s) to the PPF: %(error)s",
-                              status=status, uuid=response.peppol_message_uuid, error=error_message)
-            origin_move._message_log(body=body)
             response.pdp_ppf_state = 'error'
+            self._pdp_log_einvoicing_chatter(
+                origin_move,
+                ppf_status='error',
+                errors=[self._pdp_proxy_error_message(content['error'])],
+                error_source=self.env._("PPF Lifecycle"),
+            )
         else:
             response.pdp_ppf_state = 'sent'
 
@@ -520,7 +540,7 @@ class AccountEdiProxyClientUser(models.Model):
         origin_ref_status_code = content.get("origin_ref_status_code")
         origin_peppol_lifecycle_uuid = content.get("origin_peppol_lifecycle_uuid")
         origin_ref_status = PROCESS_CONDITION_CODE_TO_RESPONSE_CODE.get(origin_ref_status_code)
-        markup_status_info = Markup('<br/><br/>').join([self._format_status_info(status, separator=Markup('<br/>')) for status in status_infos])
+        status_details = self._pdp_status_infos_to_details(status_infos)
         response_code_description = PDP_STATUSES.get(response_code)
         ref_status_code_description = PDP_STATUSES.get(origin_ref_status)
 
@@ -538,22 +558,14 @@ class AccountEdiProxyClientUser(models.Model):
                     response_code=response_code_description,
                     issue_date=format_date(self.env, issue_date),
                 )
-            origin_move._message_log(
-                body=self._pdp_format_message_body(flow_number, main_message, markup_status_info),
+            self._pdp_log_einvoicing_chatter(
+                origin_move,
+                pa_status='error' if flow_number == '2' else None,
+                ppf_status='error' if flow_number in ('1', '6') else None,
+                errors=[main_message] + status_details,
+                error_source=self.env._("PA Lifecycle") if flow_number == '2' else self.env._("PPF Lifecycle"),
             )
             return response
-
-        filename = content["filename"] or 'lifecycle'
-        attachment = self.env["ir.attachment"].create(
-            {
-                "name": f"{filename}.xml",
-                "raw": decoded_document,
-                "type": "binary",
-                "mimetype": "application/xml",
-                "res_id": origin_move.id,
-                "res_model": 'account.move',
-            }
-        )
 
         response = self.env['account.peppol.response'].create({
             'peppol_message_uuid': uuid,
@@ -568,22 +580,15 @@ class AccountEdiProxyClientUser(models.Model):
             'pdp_payment_info': [payment_info for status in status_infos for payment_info in status.get('payment_infos', [])],
         })
         if content['state'] == 'done':
-            if origin_ref_status_code:
-                main_message = self.env._(
-                    "Received response for status %(ref_status_info)s with Response Code '%(response_code)s' issued on %(issue_date)s.",
-                    ref_status_info=(ref_status_code_description or origin_ref_status_code),
-                    response_code=response_code_description,
-                    issue_date=format_date(self.env, issue_date),
-                )
-            else:
-                main_message = self.env._(
-                    "Received response with Response Code '%(response_code)s' issued on %(issue_date)s.",
-                    response_code=response_code_description,
-                    issue_date=format_date(self.env, issue_date),
-                )
-            origin_move._message_log(
-                body=self._pdp_format_message_body(flow_number, main_message, markup_status_info),
-                attachment_ids=attachment.ids,
+            self._pdp_log_einvoicing_chatter(
+                origin_move,
+                details=status_details if response_code != 'RE' else None,
+                errors=status_details if response_code == 'RE' else None,
+                pa_status='error' if response_code == 'RE' and flow_number == '2' else None,
+                ppf_status='error' if response_code == 'RE' and flow_number in ('1', '6') else None,
+                error_source=(
+                    self.env._("PA Lifecycle") if flow_number == '2' else self.env._("PPF Lifecycle")
+                ) if response_code == 'RE' else None,
             )
         return response
 
@@ -674,6 +679,118 @@ class AccountEdiProxyClientUser(models.Model):
         return separator.join(infos)
 
     @api.model
+    def _pdp_status_infos_to_details(self, status_infos):
+        return [
+            status_message
+            for status in status_infos
+            if (status_message := self._format_status_info(status))
+        ]
+
+    @api.model
+    def _pdp_proxy_error_message(self, error):
+        return error.get('data', {}).get('message') or error.get('message') or error.get('subject') or self.env._("Unknown error")
+
+    @api.model
+    def _pdp_selection_label(self, record, field_name, value):
+        if not value:
+            return None
+        return dict(record._fields[field_name]._description_selection(self.env)).get(value, value)
+
+    @api.model
+    def _pdp_format_multiline_value(self, value):
+        return Markup('<br/>').join(str(value).splitlines())
+
+    @api.model
+    def _pdp_log_einvoicing_chatter(
+        self, move, pa_status=None, ppf_status=None, details=None, errors=None, error_source=None,
+    ):
+        if pa_status is None and ppf_status is None:
+            pa_status = move.peppol_move_state
+            ppf_status = move.pdp_ppf_move_state
+
+        chatter_messages = self.env.context.get('pdp_einvoicing_chatter_messages')
+        message, previous_details = (chatter_messages or {}).get(move, (None, []))
+        log_directly = chatter_messages is None or errors is not None
+        logged_details = details if log_directly else previous_details + (details or [])
+        body = self._pdp_format_einvoicing_message(
+            pa_status=self._pdp_selection_label(move, 'peppol_move_state', pa_status),
+            ppf_status=self._pdp_selection_label(move, 'pdp_ppf_move_state', ppf_status),
+            details=logged_details,
+            errors=errors,
+            error_source=error_source,
+        )
+        if not body:
+            return
+
+        if log_directly:
+            move._message_log(body=body)
+            return
+
+        if message:
+            message.body = body
+        else:
+            message = move._message_log(body=body)
+        chatter_messages[move] = (message, logged_details)
+
+    @api.model
+    def _pdp_format_einvoicing_message(
+        self, pa_status=None, ppf_status=None, details=None, errors=None, error_source=None,
+    ):
+        items = []
+        if pa_status:
+            items.append(
+                Markup('<li><strong>')
+                + self.env._("PA Status:")
+                + Markup('</strong> ')
+                + pa_status
+                + Markup('</li>')
+            )
+        if ppf_status:
+            items.append(
+                Markup('<li><strong>')
+                + self.env._("PPF Status:")
+                + Markup('</strong> ')
+                + ppf_status
+                + Markup('</li>')
+            )
+        if details:
+            detail_items = Markup('').join(
+                Markup('<li>') + self._pdp_format_multiline_value(detail) + Markup('</li>')
+                for detail in details
+            )
+            items.append(
+                Markup('<li><strong>')
+                + self.env._("Details:")
+                + Markup('</strong><ul>')
+                + detail_items
+                + Markup('</ul></li>')
+            )
+        if errors is not None:
+            error_items = Markup('').join(
+                Markup('<li>') + self._pdp_format_multiline_value(error) + Markup('</li>')
+                for error in errors
+            )
+            items.append(
+                Markup('<li><strong>')
+                + (
+                    self.env._("Errors from %(error_source)s:", error_source=error_source)
+                    if error_source else self.env._("Errors:")
+                )
+                + Markup('</strong><ul>')
+                + error_items
+                + Markup('</ul></li>')
+            )
+        if not items:
+            return Markup()
+        return (
+            Markup('<strong>')
+            + self.env._("E-Invoicing Status Update")
+            + Markup('</strong><ul class="mb-0">')
+            + Markup('').join(items)
+            + Markup('</ul>')
+        )
+
+    @api.model
     def _pdp_format_message_body(self, flow_number, main_message, markup_status_info):
         messages = [
             self.env._("[Flow %(flow_number)s] %(main_message)s", flow_number=flow_number, main_message=main_message),
@@ -681,7 +798,7 @@ class AccountEdiProxyClientUser(models.Model):
         if markup_status_info:
             status_message = Markup('<br/>').join([
                 self.env._("It included the following status info:"),
-                markup_status_info
+                markup_status_info,
             ])
             messages.append(status_message)
         return Markup('<br/><br/>').join(messages)

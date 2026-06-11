@@ -539,9 +539,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             return True
 
         # Invoice
-        error_message = get_peppol_error_message(self.env, content['error'])
-        record._message_log(body=error_message)
         record.peppol_move_state = 'error'
+        record._message_log(body=self._peppol_get_message_status_error_body(record, content['error']))
         return True
 
     def _peppol_process_messages_status(self, messages, uuid_to_record):
@@ -559,9 +558,17 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             else:
                 # Invoice
                 record.peppol_move_state = content['state']
-                record._message_log(body=self.env._('Peppol status update: %s', content['state']))
+                record._message_log(body=self._peppol_get_message_status_update_body(record, content))
             processed_message_uuids.append(uuid)
         return processed_message_uuids
+
+    def _peppol_get_message_status_error_body(self, move, error):
+        self.ensure_one()
+        return self._get_peppol_error_message(error)
+
+    def _peppol_get_message_status_update_body(self, move, content):
+        self.ensure_one()
+        return self.env._('Peppol status update: %s', content['state'])
 
     def _peppol_process_participant_status(self, proxy_user):
         self.ensure_one()
