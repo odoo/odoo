@@ -25,6 +25,7 @@ from glob import glob
 ROOTDIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 TSTAMP = time.strftime("%Y%m%d", time.gmtime())
 TSEC = time.strftime("%H%M%S", time.gmtime())
+TFULL = time.strftime("%a, %d %b %Y %H:%M:%S %z", time.gmtime())
 # Get some variables from release.py
 version = ...
 version_info = ...
@@ -316,9 +317,11 @@ class DockerDeb(Docker):
 
     def build(self):
         logging.info('Start building debian package')
-        # Append timestamp to version for the .dsc to refer the right .tar.gz
-        cmds = ["sed -i '1s/^.*$/odoo (%s.%s) stable; urgency=low/' debian/changelog" % (VERSION, TSTAMP)]
-        cmds.append('dpkg-buildpackage -rfakeroot -uc -us -tc')
+        # Generate new debian/changelog
+        # - Append timestamp to version for the .dsc to refer the right .tar.gz
+        # - Write the date into the email line so SOURCE_DATE_EPOCH is set correctly from it
+        changelog = f"odoo ({VERSION}.{TSTAMP}) stable; urgency=low\n\n  * {VERSION}\n\n -- Odoo Bot <info@odoo.com>  {TFULL}"
+        cmds = ["echo '%s' > debian/changelog" % changelog]
         # As the packages are built in the parent of the buildir, we move them back to build_dir
         cmds.append('mv ../odoo_* ./')
         self.run(' && '.join(cmds), self.args.build_dir, 'odoo-deb-build-%s' % TSTAMP)
