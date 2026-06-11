@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="im_livechat.ImLivechatWidgetPreview">
+    <div class="o_im_livechat_preview pe-none d-flex flex-wrap justify-content-center gap-3"
+        t-attf-style="--o-mail-livechat-btn-color: {{ this.props.record.data.widget_text_color }}; --o-mail-livechat-header-bg: {{ this.props.record.data.widget_background_color }};">
+        <ChatWindow chatWindow="this.chatWindow"/>
+        <div class="d-flex align-items-end min-w-0 gap-2 mb-2">
+            <div t-if="this.props.record.data.button_text" class="pe-auto cursor-pointer min-w-0 bg-100 py-2 px-3 mb-3 rounded" t-att-data-tooltip="this.props.record.data.button_text">
+                <p class="m-0 text-truncate" t-out="this.props.record.data.button_text"/>
+            </div>
+            <ChatBubble chatWindow="this.chatWindow"/>
+        </div>
+    </div>
+</t>
+
+</templates>
