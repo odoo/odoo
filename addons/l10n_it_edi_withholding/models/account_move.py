@@ -128,6 +128,11 @@ class AccountMove(models.Model):
             errors.update(self._l10n_it_edi_check_lines_for_tax_kind(kind_code, kind_desc, min_len=0))
         return errors
 
+    def _l10n_it_edi_get_max_limit_per_tax(self, kind_code):
+        if kind_code == 'pension_fund':
+            return 2
+        return super()._l10n_it_edi_get_max_limit_per_tax(kind_code)
+
     # -------------------------------------------------------------------------
     # Import
     # -------------------------------------------------------------------------
