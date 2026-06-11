@@ -14,7 +14,10 @@ export class DiscussSidebarChannelActions extends Component {
             channel: types.instanceOf(this.store["discuss.channel"].Class),
         });
         this.isDiscussSidebarChannelActions = true;
-        this.threadActions = useThreadActions({ thread: () => this.channel.thread });
+        this.threadActions = useThreadActions({
+            thread: () => this.channel.thread,
+            isDiscussSidebarChannelActions: this.isDiscussSidebarChannelActions,
+        });
     }
 
     get channel() {

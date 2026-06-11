@@ -51,7 +51,14 @@ export class ChatWindow extends Component {
         });
         this.ui = useService("ui");
         this.chatWindowContentRef = signal.ref(HTMLDivElement);
-        this.threadActions = useThreadActions({ thread: () => this.channel?.thread });
+        this.threadActions = useThreadActions({
+            chatWindow: () => this.props.chatWindow,
+            close: (options) => this.close(options),
+            homeMenuHasHomeMenu: this.env.services["home_menu"]?.hasHomeMenu,
+            inDiscussApp: () => this.env.inDiscussApp,
+            thread: () => this.channel?.thread,
+            toggleFold: () => this.toggleFold(),
+        });
         this.actionsMenuButtonHover = useHover("actionsMenuButton");
         this.parentChannelHover = useHover("parentChannel");
         this.isMobileOS = isMobileOS();

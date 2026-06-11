@@ -36,7 +36,12 @@ export class DiscussContent extends Component {
         this.ui = useService("ui");
         this.notification = useService("notification");
         this.rootRef = signal.ref(HTMLDivElement);
-        this.threadActions = useThreadActions({ rootRef: this.rootRef, thread: () => this.thread });
+        this.threadActions = useThreadActions({
+            inDiscussApp: () => this.env.inDiscussApp,
+            isDiscussContent: this.isDiscussContent,
+            rootRef: this.rootRef,
+            thread: () => this.thread,
+        });
         this.correspondentLocalDateTimeFormatted = signal("");
         this.state = proxy({ jumpThreadPresent: 0 });
         this.isDiscussContent = true;

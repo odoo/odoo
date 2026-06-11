@@ -56,7 +56,10 @@ export class Meeting extends Component {
                         ?.actionPanelOpen(),
             },
         });
-        this.threadActions = useThreadActions({ thread: () => this.channel.thread });
+        this.threadActions = useThreadActions({
+            thread: () => this.channel.thread,
+            inMeetingView: () => this.env.inMeetingView,
+        });
         this.messageHighlight = useMessageScrolling({ thread: () => this.channel.thread });
         this.messageSearch = useMessageSearch(this.channel.thread);
         useChildSubEnv({

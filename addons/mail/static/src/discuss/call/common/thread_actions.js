@@ -20,25 +20,25 @@ registerThreadAction("camera-call", {
         channel?.hasRtcSessionActive ? _t("Join the Call with Camera") : _t("Start Video Call"),
     onSelected: ({ channel, store }) => store.rtc.toggleCall(channel, { camera: true }),
     sequence: 5,
-    sequenceQuick: ({ owner }) => (owner.env.inDiscussApp ? 25 : 35),
+    sequenceQuick: ({ inDiscussApp }) => (inDiscussApp ? 25 : 35),
     tags: [ACTION_TAGS.SUCCESS, ACTION_TAGS.JOIN_LEAVE_CALL],
 });
 registerThreadAction("call-settings", {
     actionPanelComponent: CallSettings,
     actionPanelComponentProps: () => ({ isCompact: true }),
-    condition: ({ channel, owner, store }) =>
+    condition: ({ channel, chatWindow, isDiscussSidebarChannelActions, store }) =>
         channel?.allowCalls &&
         store.self_user &&
-        (owner.props.chatWindow?.isOpen || store.inPublicPage) &&
-        !owner.isDiscussSidebarChannelActions,
+        (chatWindow?.isOpen || store.inPublicPage) &&
+        !isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-gear",
     name: _t("Voice & Video Settings"),
     sequence: 5,
     sequenceGroup: 30,
 });
 registerThreadAction("disconnect", {
-    condition: ({ channel, owner, store }) =>
-        store.rtc.selfSession?.in(channel?.rtc_session_ids) && owner.isDiscussSidebarChannelActions,
+    condition: ({ channel, isDiscussSidebarChannelActions, store }) =>
+        store.rtc.selfSession?.in(channel?.rtc_session_ids) && isDiscussSidebarChannelActions,
     onSelected: ({ channel, store }) => store.rtc.toggleCall(channel),
     icon: "fa fa-fw fa-phone",
     name: _t("Disconnect"),
