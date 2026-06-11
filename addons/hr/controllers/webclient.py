@@ -9,7 +9,7 @@ from odoo.addons.mail.tools.store_handler import store_handler
 
 class HrWebclientController(WebclientController):
     @store_handler("hr.employee.public")
-    def store_hr_employee_public(self, store: Store, id):
+    def store_hr_employee_public(self, store: Store, id, **kwargs):
         emp_public = request.env["hr.employee.public"].search_fetch([("id", "=", id)])
         store.add(emp_public, "_store_avatar_card_fields")
 
