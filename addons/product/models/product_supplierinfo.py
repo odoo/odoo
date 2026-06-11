@@ -120,4 +120,4 @@ class ProductSupplierinfo(models.Model):
         return res
 
     def _get_filtered_supplier(self, company_id, product_id, params=False):
-        return self.filtered(lambda s: (not s.company_id or s.company_id.id == company_id.id) and (s.partner_id.active and (not s.product_id or s.product_id == product_id)))
+        return self.filtered(lambda s: (not s.company_id or s.company_id.id == company_id.id) and (s.partner_id.sudo().active and (not s.product_id or s.product_id == product_id)))
