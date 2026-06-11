@@ -1,0 +1,29 @@
+.o_im_livechat_preview {
+    .bg-white {
+        background-color: #fff !important;
+    }
+
+    .o_im_livechat_preview_chatwindow {
+        width: $o-mail-ChatWindow-width;
+        height: 560px;
+    }
+
+    .o_im_livechat_preview_text {
+        color: #212529 !important;
+    }
+
+    .o_im_livechat_preview_muted {
+        color: #6c757d !important;
+    }
+
+    .o-mail-Message-bubble.o-blue {
+        $_border-base: mix($info, #212529, 75%);
+        --o-message-bubble-bg: #{mix(#fff, $info, 90%)};
+        --o-message-bubble-border-color: #{mix(#fff, $_border-base, 80%)};
+    }
+
+    .o-livechat-LivechatButton {
+        width: $o-mail-ChatBubble-sizeBig;
+        height: $o-mail-ChatBubble-sizeBig;
+    }
+}

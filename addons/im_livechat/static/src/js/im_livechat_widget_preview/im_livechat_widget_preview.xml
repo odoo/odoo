@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="im_livechat.ImLivechatWidgetPreview">
+        <div class="o_im_livechat_preview user-select-none pe-none w-100 d-flex justify-content-center">
+            <div class="d-inline-flex flex-column flex-lg-row align-items-center align-items-lg-end gap-2 overflow-visible">
+                <div class="o_im_livechat_preview_chatwindow overflow-hidden d-flex flex-column flex-shrink-0 rounded-3 shadow border border-dark o-border-opacity-15 bg-white text-dark">
+                    <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 border-bottom border-dark o-border-opacity-15"
+                        t-attf-style="color: {{this.props.record.data.widget_text_color}} !important; background-color: {{this.props.record.data.widget_background_color}} !important; --o-mail-livechat-btn-color: {{this.props.record.data.widget_text_color}};"
+                    >
+                        <div class="o-mail-ChatWindow-threadAvatar position-relative my-0 me-1 ms-1 py-1 ps-2">
+                            <img class="rounded-2 object-fit-cover" src="/mail/static/src/img/smiley/avatar.jpg" alt=""/>
+                        </div>
+                        <div class="o-mail-ChatWindow-displayName text-truncate fw-bold border border-transparent o-mx-0_5 my-0 py-2">Agent</div>
+                        <div class="ms-1 flex-grow-1"/>
+                        <div class="d-flex flex-shrink-0 me-3 gap-3 small">
+                            <i class="fa fa-minus"/>
+                            <i class="fa fa-close"/>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column flex-grow-1 overflow-hidden">
+                        <div class="flex-grow-1 overflow-hidden bg-white py-3 px-2">
+                            <div class="o-mail-Message position-relative rounded-0 px-2">
+                                <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
+                                    <div class="o-mail-Message-sidebar d-flex flex-shrink-0 align-items-start flex-column o-inChatWindow">
+                                        <div class="o-mail-Message-avatarContainer position-relative rounded-3 o-inChatWindow">
+                                            <img class="o-mail-Message-avatar w-100 h-100 rounded-3 object-fit-cover" src="/mail/static/src/img/smiley/avatar.jpg" alt=""/>
+                                        </div>
+                                    </div>
+                                    <div class="w-100 min-w-0">
+                                        <div class="o-mail-Message-header d-flex flex-wrap align-items-baseline lh-1 mb-1">
+                                            <span class="o-mail-Message-author smaller opacity-100">
+                                                <strong class="o_im_livechat_preview_text fw-bold me-1">Agent</strong>
+                                            </span>
+                                            <small class="o-mail-Message-date o_im_livechat_preview_muted o-xsmaller">12:00 PM</small>
+                                        </div>
+                                        <div class="o-mail-Message-contentContainer position-relative d-flex">
+                                            <div class="o-mail-Message-content min-w-0">
+                                                <div class="o-mail-Message-textContent position-relative d-flex">
+                                                    <div class="position-relative overflow-x-auto overflow-y-hidden d-inline-block o-discuss-text-body o_im_livechat_preview_text o-rounded-end-bubble o-rounded-bottom-bubble">
+                                                        <div class="o-mail-Message-bubble position-absolute top-0 start-0 w-100 h-100 border o-rounded-end-bubble o-rounded-bottom-bubble o-blue"/>
+                                                        <div class="position-relative text-break o-mail-Message-body o_im_livechat_preview_text mb-0 py-2 px-2" t-out="this.props.record.data.default_message"/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-shrink-0 px-2 pb-2">
+                            <div class="d-flex align-items-center border border-dark o-border-opacity-15 o-rounded-bubble bg-white py-1 px-1">
+                                <i class="fa fa-plus-circle o_im_livechat_preview_muted opacity-50 p-1"/>
+                                <span class="flex-grow-1 min-w-0 text-truncate py-1 px-1 o_im_livechat_preview_muted opacity-50">Write a message...</span>
+                                <i class="fa fa-smile-o o_im_livechat_preview_muted opacity-50 p-1"/>
+                                <i class="fa fa-paper-plane-o o_im_livechat_preview_muted opacity-50 p-1"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-shrink-0 overflow-visible pb-2 pb-lg-0">
+                    <button class="btn o-livechat-LivechatButton p-3 d-flex justify-content-center align-items-center shadow rounded-circle"
+                        t-attf-style="color: {{this.props.record.data.widget_text_color}} !important; background-color: {{this.props.record.data.widget_background_color}} !important; border-color: {{this.props.record.data.widget_background_color}} !important;"
+                    >
+                        <i class="fa fa-commenting" style="font-size: 22px;"/>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

@@ -3,13 +3,13 @@
     <data noupdate="1">
         <template id="livechat_email_template">
 <!-- sudo: visitor can access header background color -->
-<t t-set="header_background_color" t-value="channel.livechat_channel_id.sudo().header_background_color or '#875A7B'" />
-<!-- sudo: visitor can access title color -->
-<t t-set="title_color" t-value="channel.livechat_channel_id.sudo().title_color or '#FFFFFF'" />
+<t t-set="widget_background_color" t-value="channel.livechat_channel_id.sudo().widget_background_color or '#875A7B'" />
+<!-- sudo: visitor can access widget text color -->
+<t t-set="widget_text_color" t-value="channel.livechat_channel_id.sudo().widget_text_color or '#FFFFFF'" />
 <div style="font-size: 13px; margin: 10px; padding: 24px 32px 0px 32px; background-color: #ffffff; border: thin solid #dee2e6;">
 <div style="font-size: 13px; padding: 5px 0;">
     Here's a copy of your conversation with
-    <span t-attf-style="color: {{header_background_color}};" t-out="correspondent_names"/> on
+    <span t-attf-style="color: {{widget_background_color}};" t-out="correspondent_names"/> on
     <span t-out="channel.create_date.astimezone(tz).strftime('%m/%d/%y')"/> at
     <span t-out="channel.create_date.astimezone(tz).strftime('%I:%M %p')"/>.
 </div>
@@ -36,7 +36,7 @@
                             </td>
                             <td style="vertical-align: top;">
                                 <div style="margin-bottom:4px;">
-                                    <strong t-attf-style="color:{{header_background_color}}; font-size: 13px; margin-right: 2px;" t-out="author_name"/>
+                                    <strong t-attf-style="color:{{widget_background_color}}; font-size: 13px; margin-right: 2px;" t-out="author_name"/>
                                     <span style="font-size:10px; color:#666666;" t-out="message.date.astimezone(tz).strftime('%I:%M %p')"/>
                                 </div>
                                 <t t-set="is_deleted_message" t-value="message in deleted_messages"/>

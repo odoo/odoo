@@ -173,26 +173,8 @@
                                     </group>
                             </page>
                             <page string="Options" name="options" groups="im_livechat.im_livechat_group_manager">
-                                <group>
-                                    <group string="Live Chat Button">
-                                        <field name="button_text" string="Notification Text" placeholder="e.g. Need help? Chat with us."/>
-                                        <label for="button_background_color" string="Button Colors" />
-                                        <div class="o_livechat_layout_colors d-flex align-items-center align-middle">
-                                            <field name="button_background_color" widget="color" class="mb-4 w-auto o_im_livechat_field_widget_color"/>
-                                            <field name="button_text_color" widget="color" class="mb-4 w-auto o_im_livechat_field_widget_color"/>
-                                            <widget name="colors_reset_button" options="{'default_colors': {'button_background_color': '#878787', 'button_text_color': '#FFFFFF'}}" />
-                                        </div>
-                                    </group>
-                                    <group string="Live Chat Window">
-                                        <field name="default_message" placeholder="e.g. Hello, how may I help you?"/>
-                                        <label for="header_background_color" string="Window Colors" />
-                                        <div class="o_livechat_layout_colors d-flex align-items-center align-middle">
-                                            <field name="header_background_color" widget="color" class="mb-4 w-auto o_im_livechat_field_widget_color"/>
-                                            <field name="title_color" widget="color" class="mb-4 w-auto o_im_livechat_field_widget_color"/>
-                                            <widget name="colors_reset_button" options="{'default_colors': {'header_background_color': '#875A7B', 'title_color': '#FFFFFF'}}" />
-                                        </div>
-                                        <field name="review_link" placeholder="Do not redirect visitors"/>
-                                    </group>
+                                <group string="Review">
+                                    <field name="review_link" placeholder="Do not redirect visitors"/>
                                 </group>
                                 <group string="Session Limits">
                                     <group>
@@ -201,6 +183,31 @@
                                         <field name="block_assignment_during_call"/>
                                     </group>
                                 </group>
+                            </page>
+                            <page string="Design" name="design" groups="im_livechat.im_livechat_group_manager">
+                                <div class="row">
+                                    <div class="col-lg-5">
+                                        <group string="Colors">
+                                            <label for="widget_background_color" string="Colors"/>
+                                            <div class="d-flex align-items-center">
+                                                <field name="widget_background_color" widget="color" class="mb-4 w-auto o_im_livechat_field_widget_color"/>
+                                                <field name="widget_text_color" widget="color" class="mb-4 w-auto o_im_livechat_field_widget_color"/>
+                                                <widget name="colors_reset_button" options="{'default_colors': {'widget_background_color': '#875A7B', 'widget_text_color': '#FFFFFF'}}"/>
+                                            </div>
+                                        </group>
+                                        <group string="Live Chat Button">
+                                            <field name="button_text" string="Notification Text" placeholder="e.g. Need help? Chat with us."/>
+                                        </group>
+                                        <group string="Live Chat Window">
+                                            <field name="default_message" placeholder="e.g. Hello, how may I help you?"/>
+                                        </group>
+                                    </div>
+                                    <div class="col-lg-7">
+                                        <group string="Preview">
+                                            <widget name="im_livechat_widget_preview" colspan="2" nolabel="1"/>
+                                        </group>
+                                    </div>
+                                </div>
                             </page>
                             <page string="Rules" name="channel_rules" groups="im_livechat.im_livechat_group_manager">
                                 <field name="rule_ids" colspan="2"/>
