@@ -279,7 +279,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
 
     def _proxy_success_response(self, identifier='FLOW-TEST-001'):
         return {
-            'uid': identifier,
+            'uuid': identifier,
             'flow_id': identifier,
         }
 
