@@ -295,7 +295,7 @@ class CardCampaign(models.Model):
 <div class="row">
 <div class="col o_mail_no_options o_mail_wrapper_td bg-white oe_structure o_editable theme_selection_done">
 
-<div class="s_text_block o_mail_snippet_general pt24 pb24" style="padding-left: 15px; padding-right: 15px;" data-snippet="s_text_block" data-name="Text">
+<div class="s_text_block o_mail_snippet_general pt24 pb24" style="padding-left: 15px; padding-right: 15px;" data-snippet="s_text_block" data-name="Text" data-vxml="001">
     <div class="container s_allow_columns">
         <p>{_("Hello everyone")}</p>
         <p>{_("Here's the link to advertise your participation.")}
