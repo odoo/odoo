@@ -75,7 +75,8 @@ DEMO_ENDPOINTS = {  # pdp reports specific endpoints not already mocked by l10n_
     },
     'participant_status': lambda params: {},
     'send_document': lambda params: {
-        'ppf_messages': [{'uid': f'demo_{uuid.uuid4()}', 'flow_id': f'demo_{uuid.uuid4()}'} for _d in params['documents']],
+        'messages': [{'message_uuid': f'demo_{uuid.uuid4()}'} for _d in params['documents']],
+        'ppf_messages': [{'uuid': f'demo_{uuid.uuid4()}', 'flow_id': f'demo_{uuid.uuid4()}'} for _d in params['documents']],
     },
     'pdp_state': lambda params: {},
 }
