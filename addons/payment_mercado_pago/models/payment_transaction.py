@@ -30,33 +30,27 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "mercado_pago":
             return super()._get_specific_rendering_values(processing_values)
 
-        if self.payment_method_code == "pix" and not self.partner_email:
-            raise ValidationError(
-                _("An email is required to process PIX payments. Please update your profile.")
-            )
-
         # Initiate the payment and retrieve the payment link data.
-        payload = self._mercado_pago_prepare_preference_request_payload()
-        endpoint = "/v1/orders" if self.payment_method_code == "pix" else "/checkout/preferences"
+        idempotency_key = None
+        if self.payment_method_code == "pix":
+            payload = self._mercado_pago_prepare_pix_payload()
+            endpoint = "/v1/orders"
+            idempotency_key = payment_utils.generate_idempotency_key(
+                self, scope="payment_request_order"
+            )
+        else:
+            payload = self._mercado_pago_prepare_preference_request_payload()
+            endpoint = "/checkout/preferences"
         try:
             response_content = self._send_api_request(
-                "POST",
-                endpoint,
-                json=payload,
-                idempotency_key=payment_utils.generate_idempotency_key(self, scope="token_payment"),
+                "POST", endpoint, json=payload, idempotency_key=idempotency_key
             )
         except ValidationError as error:
             self._set_error(str(error))
             return {}
 
-        if self.payment_method_code == "pix":
-            api_url = response_content["transactions"]["payments"][0]["payment_method"][
-                "ticket_url"
-            ]
-        else:
-            api_url = response_content[
-                "init_point" if self.provider_id.is_live else "sandbox_init_point"
-            ]
+        api_url = self._mercado_pago_get_api_url(response_content)
+
         return {
             "api_url": api_url,
             "http_method": "get",
@@ -69,23 +63,6 @@ class PaymentTransaction(models.Model):
         :return: The preference request payload.
         :rtype: dict
         """
-        if self.payment_method_code == "pix":
-            return {
-                "type": "online",
-                "total_amount": str(self.amount),
-                "external_reference": self.reference,
-                "processing_mode": "automatic",
-                "transactions": {
-                    "payments": [
-                        {
-                            "amount": str(self.amount),
-                            "payment_method": {"id": "pix", "type": "bank_transfer"},
-                        }
-                    ]
-                },
-                "payer": {"email": self.partner_email},
-            }
-
         payload = self._mercado_pago_prepare_base_request_payload()
 
         base_url = self.provider_id.get_base_url()
@@ -151,6 +128,39 @@ class PaymentTransaction(models.Model):
             "notification_url": webhook_url,
             "statement_descriptor": self.company_id.name,
         }
+
+    def _mercado_pago_prepare_pix_payload(self):
+        """Create the specific payload for Pix payment requests.
+
+        :return: The Pix specific request payload.
+        :rtype: dict
+        """
+        if not self.partner_email:
+            raise ValidationError(
+                _("An email is required to process PIX payments. Please update your profile.")
+            )
+
+        return {
+            "type": "online",
+            "total_amount": str(self.amount),
+            "external_reference": self.reference,
+            "processing_mode": "automatic",
+            "transactions": {
+                "payments": [
+                    {
+                        "amount": str(self.amount),
+                        "payment_method": {"id": "pix", "type": "bank_transfer"},
+                    }
+                ]
+            },
+            "payer": {"email": self.partner_email},
+        }
+
+    def _mercado_pago_get_api_url(self, response_content):
+        if self.payment_method_code == "pix":
+            return response_content["transactions"]["payments"][0]["payment_method"]["ticket_url"]
+
+        return response_content["init_point" if self.provider_id.is_live else "sandbox_init_point"]
 
     def _send_payment_request(self):
         """Override of `payment` to send a payment request to Mercado Pago.
