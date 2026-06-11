@@ -1,4 +1,5 @@
 import logging
+import copy
 import re
 
 from contextlib import contextmanager
@@ -67,6 +68,9 @@ class AccountMove(models.Model):
     l10n_in_warning = fields.Json(compute="_compute_l10n_in_warning")
     l10n_in_is_gst_registered_enabled = fields.Boolean(related='company_id.l10n_in_is_gst_registered')
     l10n_in_tds_deduction = fields.Selection(related='commercial_partner_id.l10n_in_pan_entity_id.tds_deduction', string="TDS Deduction")
+
+    # self - invoice related field
+    l10n_in_is_self_invoice = fields.Boolean(related='journal_id.l10n_in_self_invoice')
 
     # withholding related fields
     l10n_in_is_withholding = fields.Boolean(
@@ -232,7 +236,9 @@ class AccountMove(models.Model):
         'company_id.l10n_in_hsn_code_digit',
         'invoice_line_ids.tax_ids',
         'commercial_partner_id.l10n_in_pan_entity_id',
-        'invoice_line_ids.price_total'
+        'invoice_line_ids.price_total',
+        'l10n_in_is_self_invoice',
+        'invoice_line_ids.l10n_in_gstr_section',
     )
     def _compute_l10n_in_warning(self):
         indian_invoice = self.filtered(lambda m: m.country_code == 'IN' and m.move_type != 'entry')
@@ -260,6 +266,18 @@ class AccountMove(models.Model):
                     warnings['tds_tcs_threshold_alert'] = {
                         'message': applicable_sections._get_warning_message(),
                     }
+
+            if move.l10n_in_is_self_invoice and any(
+                line.l10n_in_gstr_section != 'purchase_b2c_rcm'
+                for line in move.invoice_line_ids
+                if line._origin
+            ):
+                warnings['invalid_self_invoice'] = {
+                    'message': _(
+                        "This invoice does not meet the Self Invoice conditions. "
+                        "Please verify before printing.",
+                    ),
+                }
 
             if (
                 company.l10n_in_is_gst_registered
@@ -358,6 +376,69 @@ class AccountMove(models.Model):
                 )
             else:
                 move.l10n_in_total_withholding_amount = 0.0
+
+    def _l10n_in_get_invoice_totals_for_self_invoice(self):
+        """
+        Returns a customized tax_totals dictionary for the PDF report.
+        For Self Invoices (Reverse Charge), the net tax is 0. This method injects
+        the positive side of the tax and adjusts the Total so it prints
+        correctly on the PDF, without affecting the actual accounting move.
+        """
+        self.ensure_one()
+
+        if not self.tax_totals or not self.l10n_in_is_self_invoice:
+            return self.tax_totals
+
+        tax_totals = copy.deepcopy(self.tax_totals)
+        rc_tax_currency_to_add = 0.0
+        rc_tax_balance_to_add = 0.0
+
+        lines_group_by_tax_group_id = self.line_ids.grouped(lambda line: line.tax_group_id.id)
+
+        for subtotal in tax_totals.get('subtotals', []):
+            for tax_group in subtotal.get('tax_groups', []):
+                tax_lines = lines_group_by_tax_group_id[tax_group['id']]
+
+                if any(tax.l10n_in_reverse_charge for tax in tax_lines.tax_line_id):
+                    # Because it's Reverse Charge, there is a Debit (+100) and Credit (-100).
+                    # We sum only the positive amounts to get the gross tax value to display.
+                    positive_tax_currency = sum(line.amount_currency for line in tax_lines if line.amount_currency > 0)
+                    positive_tax_balance = sum(line.balance for line in tax_lines if line.balance > 0)
+
+                    tax_group['tax_amount_currency'] = positive_tax_currency
+                    tax_group['tax_amount'] = positive_tax_balance
+
+                    rc_tax_currency_to_add += positive_tax_currency
+                    rc_tax_balance_to_add += positive_tax_balance
+
+        tax_totals['total_amount_currency'] += rc_tax_currency_to_add
+        tax_totals['total_amount'] += rc_tax_balance_to_add
+
+        return tax_totals
+
+    def _get_starting_sequence(self):
+        self.ensure_one()
+        # Override the default starting sequence to keep self-invoice numbers
+        # within the 16-character limit required for GSTR Summary submission.
+        # Format: SELF/25-26/0000
+        if self.l10n_in_is_self_invoice:
+            year_part, _, _ = self._get_sequence_date_info()
+            return f"{self.journal_id.code}/{year_part}/0000"
+
+        return super()._get_starting_sequence()
+
+    def action_l10n_in_print_self_invoice(self):
+        self.ensure_one()
+
+        report = self.env.ref('account.account_invoices')
+        content, _ = report._render_qweb_pdf(report.id, res_ids=self.ids)
+
+        self.message_post(
+            body=self.env._("Self Invoice has been generated and printed."),
+            attachments=[(f"{self.name}.pdf", content)],
+        )
+
+        return report.report_action(self)
 
     def action_l10n_in_withholding_entries(self):
         self.ensure_one()
@@ -574,6 +655,16 @@ class AccountMove(models.Model):
         self.ensure_one()
         base_lines, _tax_lines = self._get_rounded_base_and_tax_lines()
         display_uom = self.env.user.has_group('uom.group_uom')
+        if self.l10n_in_is_self_invoice:
+            for base_line in base_lines:
+                taxes_data = base_line.get('tax_details', {}).get('taxes_data', [])
+
+                for tax_data in taxes_data:
+                    # Keep only the positive side of RC taxes
+                    if tax_data['is_reverse_charge']:
+                        tax_data['tax_amount_currency'] = 0.0
+                        tax_data['tax_amount'] = 0.0
+
         return self.env['account.tax']._l10n_in_get_hsn_summary_table(base_lines, display_uom)
 
     def _l10n_in_get_bill_from_irn(self, irn):

@@ -67,6 +67,12 @@
                 <field name="l10n_in_hsn_code" optional="hide" column_invisible="parent.country_code != 'IN'"/>
             </xpath>
             <xpath expr="//header" position="inside">
+                <button name="action_l10n_in_print_self_invoice"
+                        string="Print Self Invoice"
+                        type="object"
+                        class="btn btn-secondary"
+                        invisible="state == 'draft' or not l10n_in_is_self_invoice"/>
+
                 <button name="%(l10n_in_withholding_entry_form_action)d" string="TDS Entry" type="action" class="btn btn-secondary float-end"
                         invisible="country_code != 'IN' or l10n_in_tds_deduction == 'no' or not l10n_in_tds_feature_enabled or move_type not in ('out_invoice', 'in_invoice', 'out_refund', 'in_refund') or state != 'posted'"/>
             </xpath>

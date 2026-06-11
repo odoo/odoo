@@ -15,13 +15,16 @@
         <xpath expr="//div[@id='partner_vat_no_shipping']" position="attributes">
             <attribute name="t-if" add="o.company_id.l10n_in_is_gst_registered" separator="and"/>
         </xpath>
-        <xpath expr="//t[@name='address_not_same_as_shipping']" position="inside">
+        <xpath expr="//t[@name='address_not_same_as_shipping']/address" position="before">
+            <strong t-if="o.l10n_in_is_self_invoice" class="d-block mb-1">Bill From:</strong>
             <t t-call="l10n_in.place_of_supply"/>
         </xpath>
-        <xpath expr="//t[@name='address_same_as_shipping']" position="inside">
+        <xpath expr="//t[@name='address_same_as_shipping']/address" position="before">
+            <strong t-if="o.l10n_in_is_self_invoice" class="d-block mb-1">Bill From:</strong>
             <t t-call="l10n_in.place_of_supply"/>
         </xpath>
-        <xpath expr="//t[@name='no_shipping']" position="inside">
+        <xpath expr="//t[@name='no_shipping']/address" position="before">
+            <strong t-if="o.l10n_in_is_self_invoice" class="d-block mb-1">Bill From:</strong>
             <t t-call="l10n_in.place_of_supply"/>
         </xpath>
 
@@ -68,11 +71,49 @@
                 <span t-out="o._get_l10n_in_invoice_label()"/>
             </t>
         </t>
+
+        <t name="vendor_bill_title" position="replace">
+            <t name="vendor_bill_title">
+                <span t-if="o.l10n_in_is_self_invoice">Tax Invoice</span>
+                <span t-else="">Vendor Bill</span>
+            </t>
+        </t>
+
         <t name="proforma_invoice_title" position="replace">
             <t name="proforma_invoice_title">
                 Proforma <span t-out="o._get_l10n_in_invoice_label()"/>
             </t>
         </t>
+
+        <xpath expr="//t[@t-call='account.document_tax_totals']" position="attributes">
+            <attribute name="tax_totals">
+                o._l10n_in_get_invoice_totals_for_self_invoice() if o.l10n_in_is_self_invoice else o.tax_totals
+            </attribute>
+        </xpath>
+
+        <xpath expr="//span[@t-field='o.amount_total_words']" position="replace">
+            <t t-if="o.l10n_in_is_self_invoice">
+                <t t-set="self_invoice_totals" t-value="o._l10n_in_get_invoice_totals_for_self_invoice()"/>
+                <span t-out="o.currency_id.amount_to_text(self_invoice_totals.get('total_amount_currency', o.amount_total)).replace(',', '')"/>
+            </t>
+            <span t-else="" t-field="o.amount_total_words"/>
+        </xpath>
+
+        <xpath expr="//div[p[@name='payment_communication']]" position="attributes">
+            <attribute name="t-if" add="o.l10n_in_is_self_invoice" separator=" or "/>
+        </xpath>
+
+        <xpath expr="//p[@name='payment_communication']/span[@t-field='o.payment_reference']" position="replace">
+            <span t-if="o.l10n_in_is_self_invoice" class="fw-bold" t-out="o.name"/>
+            <span t-else="" class="fw-bold" t-field="o.payment_reference">INV/2023/00001</span>
+        </xpath>
+
+        <xpath expr="//div[p[@name='payment_communication']]" position="after">
+            <div t-if="o.l10n_in_is_self_invoice" class="text-muted mt-2">
+                <p class="mb-0">THE SUPPLY IS SUBJECT TO REVERSE CHARGE MECHANISM, SO THE RECIPIENT IS RESPONSIBLE FOR PAYING TAX.</p>
+                <p class="mb-0">THIS SELF TAX INVOICE IS ISSUED UNDER SEC 31(3)(f) OF CGST ACT 2017.</p>
+            </div>
+        </xpath>
 
         <xpath expr="//div[@id='payment_term']" position="after">
             <t t-if="o.company_id.account_fiscal_country_id.code == 'IN' and o.company_id.l10n_in_is_gst_registered">
