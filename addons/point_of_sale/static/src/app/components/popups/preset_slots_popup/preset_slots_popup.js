@@ -27,25 +27,7 @@ export class PresetSlotsPopup extends Component {
             await Promise.all(
                 this.timedPresets.map((preset) => this.pos.syncPresetSlotAvaibility(preset))
             );
-            this.selectPreset(this.state.selectedPresetId, false);
         });
-    }
-
-    selectPreset(presetId, forceFirstAvail = true) {
-        this.state.selectedPresetId = presetId;
-        const preset = this.pos.models["pos.preset"].get(presetId);
-        if (!preset?.availabilities) {
-            return;
-        }
-        const hasAvailableSlot = (date) =>
-            Object.values(preset.availabilities[date]).some((s) => !s.isFull);
-        if (!forceFirstAvail && hasAvailableSlot(this.state.selectedDate)) {
-            return;
-        }
-        const firstAvailDate = Object.keys(preset.availabilities).find(hasAvailableSlot);
-        if (firstAvailDate) {
-            this.state.selectedDate = firstAvailDate;
-        }
     }
 
     get timedPresets() {

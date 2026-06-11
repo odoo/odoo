@@ -9,7 +9,7 @@
                         t-key="preset.id"
                         class="btn btn-lg flex-grow-1"
                         t-attf-class="{{ preset.id === state.selectedPresetId ? 'btn-primary' : 'btn-secondary' }}"
-                        t-on-click="() => this.selectPreset(preset.id)"
+                        t-on-click="() => state.selectedPresetId = preset.id"
                         t-esc="preset.name" />
                 </div>
                 <div t-foreach="timedPresets"
@@ -17,14 +17,13 @@
                     t-key="preset.id"
                     t-attf-class="{{ preset.id === state.selectedPresetId ? '' : 'd-none' }}">
                     <div class="d-flex w-100 flex-wrap gap-2 mt-2">
-                        <t t-foreach="Object.keys(preset.availabilities)" t-as="sqlDate" t-key="sqlDate">
-                            <button class="btn flex-grow-1"
-                                t-if="Object.values(preset.availabilities[sqlDate]).some(s => !s.isFull)"
-                                t-attf-class="{{ state.selectedDate === sqlDate ? 'btn-primary' : 'btn-secondary' }}"
-                                t-att-class="{'o_colorlist_item_color_transparent_6': Object.values(preset.availabilities[sqlDate]).length === 0}"
-                                t-on-click="() => state.selectedDate = sqlDate"
-                                t-esc="formatDate(sqlDate)" />
-                        </t>
+                        <button class="btn flex-grow-1"
+                            t-foreach="Object.keys(preset.availabilities)" t-as="sqlDate" t-key="sqlDate"
+                            t-if="Object.values(preset.availabilities[sqlDate]).some(s => !s.isFull)"
+                            t-attf-class="{{ state.selectedDate === sqlDate ? 'btn-primary' : 'btn-secondary' }}"
+                            t-att-class="{'o_colorlist_item_color_transparent_6': Object.values(preset.availabilities[sqlDate]).length === 0}"
+                            t-on-click="() => state.selectedDate = sqlDate"
+                            t-esc="formatDate(sqlDate)" />
                     </div>
                     <div t-if="!Object.keys(preset.availabilities).some(sqlDate => Object.values(preset.availabilities[sqlDate]).some(s => !s.isFull))" class="alert alert-warning mt-3" role="alert">
                         No slot available for the next 8 days
