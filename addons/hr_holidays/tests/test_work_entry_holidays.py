@@ -474,3 +474,30 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
         self.assertEqual(work_entries_vals[0]['work_entry_type_id'], self.work_entry_type_leave)
         self.assertEqual(work_entries_vals[0]['duration'], 8.0)
         self.assertEqual(work_entries_vals[0]['date'], date(2019, 10, 10))
+
+    def test_working_on_non_work_period(self):
+        """
+        Test that creating a time off of type "working time" behaves correctly on non working days (e.g. weekends)
+        This test should fail if the display duration or the requested hours are set to 0
+        """
+
+        self.work_entry_type.unit_of_measure = "hour"
+        self.work_entry_type.request_unit = "hour"
+
+        working_leave = self.env['hr.leave'].create({
+            'name': 'Working time',
+            'employee_id': self.jules_emp.id,
+            'work_entry_type_id': self.work_entry_type.id,
+            'request_date_from': datetime(2026, 6, 7),
+            'request_date_to': datetime(2026, 6, 7),
+
+        })
+
+        working_leave.write({
+            'request_hour_from': 11,
+            'request_hour_to': 17
+        })
+
+        self.assertEqual(working_leave.request_hour_from, 11)
+        self.assertEqual(working_leave.request_hour_to, 17)
+        self.assertEqual(working_leave.with_context(leave_skip_state_check=True).duration_display, "6:00 hours")
