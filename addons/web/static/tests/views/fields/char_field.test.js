@@ -1019,6 +1019,65 @@ test("translating a char field inside one2many saves the parent record", async (
     expect.verifySteps(["partner.type"]);
 });
 
+test("translating a char field inside a one2many form dialog saves the record", async () => {
+    installLanguages({
+        en_US: "English",
+        fr_BE: "Français",
+        es_ES: "Español",
+    });
+
+    Partner._fields.type_id = fields.Many2one({
+        relation: "partner.type",
+    });
+    PartnerType._fields.partner_ids = fields.One2many({
+        string: "Partners",
+        relation: "res.partner",
+        relation_field: "type_id",
+    });
+    Partner._fields.name.translate = true;
+
+    PartnerType._records[0].partner_ids = [1];
+
+    serverState.lang = "en_US";
+    serverState.multiLang = true;
+
+    onRpc("web_save", ({ model, args }) => {
+        expect.step(`web_save ${model}`);
+        expect(args[1]).toEqual({ name: "move things" });
+    });
+
+    onRpc("/web/translations/get_translation_for_field", () => {
+        expect.step("/web/translations/get_translation_for_field");
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner.type",
+        resId: 12,
+        arch: `
+        <form>
+            <field name="partner_ids">
+                <list>
+                    <field name="name"/>
+                </list>
+                <form>
+                    <field name="name"/>
+                </form>
+            </field>
+        </form>`,
+    });
+
+    await contains(".o_data_row .o_data_cell").click();
+    await contains(".modal .o_field_widget[name='name'] input").edit("move things", {
+        confirm: false,
+    });
+    await contains(".modal .o_field_char .btn.o_field_translate").click();
+
+    expect.verifySteps(["web_save res.partner", "/web/translations/get_translation_for_field"]);
+    expect(".o_translation_dialog").toHaveCount(1);
+    expect(".o_translation_dialog input#en_US").toHaveValue("move things");
+});
+
 test("translation dialog opens in editable list when the required field is set", async () => {
     installLanguages({
         en_US: "EN",
