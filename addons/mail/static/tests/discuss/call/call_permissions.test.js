@@ -1,12 +1,14 @@
 import {
     click,
     defineMailModels,
+    focus,
     MENU_ACTIVE_IDS,
     mockGetMedia,
     mockPermissionsPrompt,
     openDiscuss,
     start,
     startServer,
+    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { getService } from "@web/../tests/web_test_helpers";
 
@@ -183,4 +185,33 @@ test("Microphone permission warning is hidden while the permission dialog is ope
     await click(".modal-footer button:text('Use microphone and camera')");
     await waitFor(".o-discuss-CallActionList button[title='Turn camera off']:count(1)");
     await waitForNone(".o_popover");
+});
+
+test("Pressing Escape key on voice & video wizard does not trigger permission dialog", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    mockGetMedia();
+    mockPermissionsPrompt();
+    const env = await start();
+    const rtc = env.services["discuss.rtc"];
+    await openDiscuss(channelId);
+    await waitFor(".o-mail-Composer.o-focused:count(1)");
+    await click("[title='Start Call']");
+    await click(".o-discuss-CallActionList button[aria-label='Voice Settings']");
+    await waitFor(".o-mail-DeviceSelect-button[data-kind='audioinput']:count(1)");
+    rtc.microphonePermission = "denied";
+    rtc.cameraPermission = "denied";
+    await focus(".o-mail-DeviceSelect-button[data-kind='audioinput']");
+    triggerHotkey("Enter");
+    await waitFor(".o-discuss-CallPermissionDeniedDialog:count(1)");
+    await waitFor(".o-mail-DeviceSelect-button[data-kind='audioinput']:count(1)");
+    await click(".o-discuss-CallPermissionDeniedDialog .btn-close");
+    await waitForNone(".o-discuss-CallPermissionDeniedDialog");
+    await waitFor(".o-mail-DeviceSelect-button[data-kind='audioinput']:count(1)");
+    triggerHotkey("Tab");
+    await waitForNone(".o-discuss-CallPermissionDeniedDialog");
+    await waitFor(".o-mail-DeviceSelect-button[data-kind='audioinput']:count(1)");
+    triggerHotkey("Escape");
+    await waitForNone(".o-mail-DeviceSelect-button[data-kind='audioinput']");
+    await waitForNone(".o-discuss-CallPermissionDeniedDialog");
 });

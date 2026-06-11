@@ -30,7 +30,7 @@
                 t-att-class="{ [rowClass]: this.props.label, 'btn-secondary rounded-3 bg-300': !this.props.label }"
                 t-att-data-kind="this.props.kind"
                 t-on-pointerdown.prevent="(ev) => this.onPointerdownButton(ev)"
-                t-on-keydown.prevent="() => this.showPermissionDialog(this.props.kind)"
+                t-on-keydown="this.handlePermissionKeydown"
                 t-ref="this.rootRef"
             >
                 <t t-if="this.props.label" t-call="discuss.CallDeviceSelect.row" subtitle="this.CLICK_TO_ACTIVATE"/>
