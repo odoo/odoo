@@ -28,15 +28,28 @@ export class AdditionalIdentifiersCommon extends Component {
     setup() {
         super.setup();
 
+        // Filter the forceDisplayIdentifiers
+        this.forceDisplayIdentifiers = this.props.forceDisplayIdentifiers;
+        this.forceDisplayIdentifiers = Object.fromEntries(
+            Object.entries(this.props.forceDisplayIdentifiers)
+            .filter(([k,v]) => Object.keys(this.props.record.data[METADATA_FIELD]).includes(k))
+        );
+
         this.state = proxy({
-            identifiers: parseJson(this.props.record.data[this.props.name]),
+            identifiers: parseJson(Object.assign({}, this.forceDisplayIdentifiers, this.props.record.data[this.props.name])),
             metadata: parseJson(this.props.record.data[METADATA_FIELD]),
         });
 
         this.debouncedCommitChanges = debounce(this.commitChanges.bind(this), 50);
 
         useRecordObserver((record) => {
-            this.state.identifiers = parseJson(record.data[this.props.name]);
+            this.state.identifiers = parseJson(
+                Object.assign(
+                    {},
+                    this.forceDisplayIdentifiers,
+                    record.data[this.props.name]
+                )
+            );
             this.state.metadata = parseJson(record.data[METADATA_FIELD]);
         });
     }
@@ -86,7 +99,7 @@ export class AdditionalIdentifiersList extends AdditionalIdentifiersCommon {
 
     onUpdateValue(identifierType, event) {
         const currentVal = event.target.value.trim();
-        if (currentVal === "") {
+        if (currentVal === "" && !Object.keys(this.forceDisplayIdentifiers).includes(identifierType)) {
             delete this.state.identifiers[identifierType];
         } else {
             this.state.identifiers[identifierType] = currentVal;
@@ -100,12 +113,32 @@ const metadataFieldDependency = [{ name: METADATA_FIELD, type: "json", readonly:
 export const additionalIdentifiersButton = {
     component: AdditionalIdentifiersButton,
     supportedTypes: ["json"],
+    supportedOptions: [
+        {
+            label: "Always displayed identifiers",
+            name: "force_display",
+            type: "list",
+        },
+    ],
+    extractProps: ({ options }) => ({
+        forceDisplayIdentifiers: options.force_display ? Object.fromEntries(options.force_display.map(key => [key, ""])) : {},
+    }),
     fieldDependencies: metadataFieldDependency,
 };
 
 export const additionalIdentifiersList = {
     component: AdditionalIdentifiersList,
     supportedTypes: ["json"],
+    supportedOptions: [
+        {
+            label: "Always displayed identifiers",
+            name: "force_display",
+            type: "list",
+        },
+    ],
+    extractProps: ({ options }) => ({
+        forceDisplayIdentifiers: options.force_display ? Object.fromEntries(options.force_display.map(key => [key, ""])) : {},
+    }),
     fieldDependencies: metadataFieldDependency,
 };
 

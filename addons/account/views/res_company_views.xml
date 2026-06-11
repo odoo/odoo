@@ -17,6 +17,15 @@
             <field name="vat" position="attributes">
                 <attribute name="options">{'placeholder_field': 'company_vat_placeholder'}</attribute>
             </field>
+            <div id="vat_div" position="attributes">
+                <attribute name="class">o_row d-flex</attribute>
+            </div>
+            <div id="vat_div" position="inside">
+                <field name="additional_identifiers" widget="additional_identifiers_button" nolabel="1"/>
+            </div>
+            <div id="vat_div" position="after">
+                <field name="additional_identifiers" widget="additional_identifiers_list" colspan="2" nolabel="1"/>
+            </div>
         </field>
     </record>
 

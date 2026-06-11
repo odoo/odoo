@@ -177,6 +177,9 @@ class ResCompany(models.Model):
         }),
     )
 
+    additional_identifiers = fields.Json(related='partner_id.additional_identifiers', readonly=False)
+    available_additional_identifiers_metadata = fields.Json(related='partner_id.available_additional_identifiers_metadata', readonly=False)
+
     #Fields of the setup step for opening move
     account_opening_move_id = fields.Many2one(string='Opening Journal Entry', comodel_name='account.move', help="The journal entry containing the initial balance of all this company's accounts.")
     account_opening_journal_id = fields.Many2one(string='Opening Journal', comodel_name='account.journal', related='account_opening_move_id.journal_id', help="Journal where the opening entry of this company's accounting has been posted.", readonly=False)

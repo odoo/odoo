@@ -39,7 +39,10 @@
                                         <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                         <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                     </div>
-                                    <field name="vat"/>
+                                    <label for="vat"/>
+                                    <div id="vat_div">
+                                        <field name="vat" no_label="1"/>
+                                    </div>
                                     <field name="company_registry"/>
                                     <field name="currency_id" options="{'no_create': True, 'no_open': True}" id="company_currency" context="{'active_test': False}"/>
                                 </group>
