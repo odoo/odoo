@@ -8,24 +8,17 @@ class HrVersion(models.Model):
     _name = 'hr.version'
     _inherit = 'hr.version'
 
-    @api.model
-    def _domain_current_countries(self):
-        return ['|',
-            ('country_id', '=', False),
-            ('country_id', 'in', self.env.companies.country_id.ids),
-        ]
-
     def _default_ruleset_id(self):
-        country_ruleset = self.env['hr.attendance.overtime.ruleset'].sudo().search([
-            ('country_id', 'in', self.env.companies.country_id.ids),
+        company_ruleset = self.env['hr.attendance.overtime.ruleset'].sudo().search([
+            ('company_id', '=', self.env.company.id),
         ], limit=1).sudo(False)
-        if country_ruleset:
-            return country_ruleset
-        return self.env.ref('hr_attendance.hr_attendance_default_ruleset', raise_if_not_found=False)
+        if company_ruleset:
+            return company_ruleset
+        default_ruleset = self.env.ref('hr_attendance.hr_attendance_default_ruleset', raise_if_not_found=False)
+        return default_ruleset if default_ruleset and default_ruleset.sudo().active else False
 
     ruleset_id = fields.Many2one(
          "hr.attendance.overtime.ruleset",
-         domain=_domain_current_countries,
          groups="hr.group_hr_manager",
          tracking=True,
          index='btree_not_null',

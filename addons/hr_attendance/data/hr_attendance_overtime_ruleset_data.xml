@@ -16,6 +16,7 @@
             <field name="name">Oman Ruleset</field>
             <field name="rate_combination_mode">sum</field>
             <field name="country_id" ref="base.om"/>
+            <field name="company_id" eval="False"/>
         </record>
         <record id="l10n_om_week_days_daytime_overtime_rule" model="hr.attendance.overtime.rule">
             <field name="name">Weekday(s) Daytime Overtime</field>
@@ -51,6 +52,7 @@
             <field name="name">Oman Special Ruleset</field>
             <field name="rate_combination_mode">sum</field>
             <field name="country_id" ref="base.om"/>
+            <field name="company_id" eval="False"/>
         </record>
         <record id="l10n_om_week_days_daytime_special_rule" model="hr.attendance.overtime.rule">
             <field name="name">Weekday(s) Daytime Special Overtime</field>
@@ -87,12 +89,14 @@
             <field name="name">Saudi Overtime Ruleset</field>
             <field name="rate_combination_mode">sum</field>
             <field name="country_id" ref="base.sa"/>
+            <field name="company_id" eval="False"/>
         </record>
 <!-- JO : Jordan -->
         <record id="l10n_jo_overtime_ruleset" model="hr.attendance.overtime.ruleset">
             <field name="name">Jordan Ruleset</field>
             <field name="rate_combination_mode">max</field>
             <field name="country_id" ref="base.jo"/>
+            <field name="company_id" eval="False"/>
         </record>
         <record id="l10n_jo_public_holidays_overtime_rule" model="hr.attendance.overtime.rule">
             <field name="name">Public Holidays Overtime</field>
@@ -124,6 +128,7 @@
             <field name="name">Egypt Ruleset</field>
             <field name="rate_combination_mode">max</field>
             <field name="country_id" ref="base.eg"/>
+            <field name="company_id" eval="False"/>
         </record>
 
         <record id="hr_attendance_overtime_rule_1_eg" model="hr.attendance.overtime.rule">
@@ -184,6 +189,7 @@
             <field name="name">Iraq Ruleset</field>
             <field name="rate_combination_mode">sum</field>
             <field name="country_id" ref="base.iq"/>
+            <field name="company_id" eval="False"/>
         </record>
         <record id="l10n_iq_day_time_1_overtime_rule" model="hr.attendance.overtime.rule">
             <field name="name">Day Time Overtime</field>
@@ -227,6 +233,7 @@
             <field name="name">Indonesia Overtime</field>
             <field name="rate_combination_mode">max</field>
             <field name="country_id" ref="base.id"/>
+            <field name="company_id" eval="False"/>
         </record>
         <record id="l10n_id_overtime_rule_first_hour" model="hr.attendance.overtime.rule">
             <field name="name">First One Hour</field>
@@ -254,6 +261,7 @@
             <field name="name">UAE Ruleset</field>
             <field name="rate_combination_mode">max</field>
             <field name="country_id" ref="base.ae"/>
+            <field name="company_id" eval="False"/>
         </record>
         <record id="hr_attendance_overtime_rule_1_ae" model="hr.attendance.overtime.rule">
             <field name="name">Day Time Overtime</field>

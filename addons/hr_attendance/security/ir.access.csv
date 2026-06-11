@@ -28,7 +28,15 @@ access_hr_attendance_overtime_rule_own,hr.attendance.own.overtime.rule,hr.attend
 access_hr_attendance_overtime_ruleset_admin,hr.attendance.admin.overtime.ruleset,hr.attendance.overtime.ruleset,hr_attendance.group_hr_attendance_manager,crud,
 access_hr_attendance_overtime_ruleset_own,hr.attendance.own.overtime.ruleset,hr.attendance.overtime.ruleset,hr_attendance.group_hr_attendance_own,r,
 access_hr_attendance_overtime_ruleset_hr_manager,hr.attendance.admin.overtime.ruleset,hr.attendance.overtime.ruleset,hr.group_hr_manager,r,
-hr_attendance_overtime_ruleset_rule_multi_company,Overtime Ruleset: Multi Company,hr.attendance.overtime.ruleset,,crud,"[('country_id', 'in', user.env.companies.mapped('country_id').ids + [False])]"
+hr_attendance_overtime_ruleset_rule_multi_company,Overtime Ruleset: Multi Company,hr.attendance.overtime.ruleset,,crud,"[
+                '|',
+                ('company_id', 'in', company_ids),
+                '&',
+                ('company_id', '=', False),
+                '|',
+                ('country_id', 'in', user.env['res.company'].browse(company_ids).country_id.ids),
+                ('country_id', '=', False)
+            ]"
 hr_attendance_overtime_line_rule_admin,Overtime Line Administrator: Full access,hr.attendance.overtime.line,hr_attendance.group_hr_attendance_user,crud,
 hr_attendance_overtime_line_rule_officer,Overtime Line Officer: Restrict to managed employees,hr.attendance.overtime.line,hr_attendance.group_hr_attendance_officer,crud,"[('employee_id.attendance_manager_id', '=', user.id)]"
 hr_attendance_overtime_line_rule_own_reader,Overtime Line base user: Read his own overtime lines,hr.attendance.overtime.line,hr_attendance.group_hr_attendance_own_reader,r,"[('employee_id.user_id', '=', user.id)]"
