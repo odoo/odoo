@@ -6,7 +6,6 @@ import { useOwnedDialogs } from "@web/core/utils/hooks";
 
 import { TranslationDialog } from "./translation_components";
 import { TranslateModel } from "./translation_model";
-import { Record } from "@web/model/relational_model/record";
 import { omit } from "@web/core/utils/objects";
 
 export class TranslationButton extends Component {
@@ -125,7 +124,7 @@ export class TranslationButton extends Component {
         };
     }
 
-    async beforeOpen() {
+    beforeOpen() {
         if (this.props.beforeOpen) {
             return this.props.beforeOpen();
         }
@@ -133,12 +132,7 @@ export class TranslationButton extends Component {
         if (!record) {
             return;
         }
-
-        const saved =
-            record.model.root instanceof Record
-                ? await record.model.root.save()
-                : await record?.save();
-        return saved;
+        return record.saveToTranslate();
     }
 
     async onClick() {

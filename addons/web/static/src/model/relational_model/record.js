@@ -344,6 +344,29 @@ export class Record extends DataPoint {
         return succeeded;
     }
 
+    saveToTranslate() {
+        if (this._parentRecord && this.isNew) {
+            // A new record in a relation is not translatable
+            // We couldn't match the id from the server with "this"
+            return false;
+        }
+        const root = this.model.root;
+        let recordToSave;
+        if (root instanceof Record && !this._noUpdateParent) {
+            // Save the main Form view record if we are not an extended Record
+            // => We are a record being edited in a x2m list
+            //    OR the main record itself
+            recordToSave = root;
+        } else {
+            // We are in editing a record in a main List view (root is not a Record)
+            // OR a record in a X2M relation being edited in its Form view (this._noUpdateParent can be true)
+            // We have an ID already, we just have to save the current changes
+            // In order for the PY translations to update with any new value we have
+            recordToSave = this;
+        }
+        return recordToSave.save();
+    }
+
     setOfflineChanges(id) {
         let scheduledORM;
         if (id) {
