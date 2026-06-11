@@ -5,6 +5,7 @@
 """
 from __future__ import annotations
 
+import contextvars
 import functools
 import logging
 import os
@@ -20,7 +21,7 @@ from operator import attrgetter
 
 import psycopg2.sql
 
-from odoo import sql_db
+from odoo import netsvc, sql_db
 from odoo.tools import (
     SQL,
     OrderedSet,
@@ -73,6 +74,9 @@ _CACHES_BY_KEY = {
 
 _REPLICA_RETRY_TIME = 20 * 60  # 20 minutes
 
+_registry_invalidated = contextvars.ContextVar('registry_invalidated', default=False)
+_caches_invalidated = contextvars.ContextVar[set[str]]('caches_invalidated')
+
 
 def _unaccent(x: SQL | str | psycopg2.sql.Composable) -> SQL | str | psycopg2.sql.Composed:
     if isinstance(x, SQL):
@@ -112,8 +116,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
         """ Return the registry for the given database name."""
         assert db_name, "Missing database name"
         # set the database name for logging
-        current_thread = threading.current_thread()
-        current_thread.dbname = db_name
+        netsvc.ExecutionInfo.get().db_name = db_name
         with cls._lock:
             try:
                 return cls.registries[db_name]
@@ -1104,7 +1107,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 except psycopg2.OperationalError:
                     self._db_readonly_failed_time = time.monotonic()
                     _logger.warning("Failed to open a readonly cursor, falling back to read-write cursor for %dmin %dsec", *divmod(_REPLICA_RETRY_TIME, 60))
-            threading.current_thread().cursor_mode = 'ro->rw'
+            netsvc.ExecutionInfo.get().cursor_mode = 'ro->rw'
         return self._db.cursor()
 
 

@@ -4,7 +4,6 @@ import contextlib
 import logging.config
 import os
 import sys
-import threading
 import time
 
 if __name__ == '__main__':
@@ -15,7 +14,7 @@ from odoo import api
 from odoo.modules.db import _check_faketime_mode
 from odoo.modules.module import initialize_sys_path
 from odoo.modules.registry import Registry
-from odoo.netsvc import init_logger
+from odoo.netsvc import ExecutionInfo, init_logger
 from odoo.tests import standalone_tests
 from odoo.tools import config, profiler, topological_sort, unique
 
@@ -214,7 +213,7 @@ def test_standalone(args):
 if __name__ == '__main__':
     args = parse_args()
 
-    config['db_name'] = threading.current_thread().dbname = args.database
+    config['db_name'] = args.database
     # handle paths option
     if args.addons_path:
         config['addons_path'] = args.addons_path + config['addons_path']
@@ -243,7 +242,7 @@ if __name__ == '__main__':
             collectors.append('sql')
         prof = profiler.Profiler(db=args.database, collectors=collectors)
     try:
-        with prof:
+        with ExecutionInfo('test_module_operations', db_name=config['db_name']), prof:
             args.func(args)
     except Exception:
         _logger.exception("%s tests failed", args.func.__name__[5:])

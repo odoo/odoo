@@ -11,7 +11,7 @@ from lxml import etree
 from urllib3.util import parse_url
 
 import odoo
-from odoo import api, models
+from odoo import api, netsvc, models
 from odoo import SUPERUSER_ID
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
@@ -248,7 +248,7 @@ class IrHttp(models.AbstractModel):
         # The format of `httprequest.host` is `domain:port`
         domain_name = (
             (request and request.httprequest.host)
-            or getattr(threading.current_thread(), 'url', None)
+            or netsvc.ExecutionInfo.get().url
             or '')
         return self._get_website_id_from_domain(domain_name)
 

@@ -4,7 +4,6 @@ import datetime as dt
 import functools
 import logging
 import re
-import threading
 import typing
 from contextlib import nullcontext
 from os.path import join as opj
@@ -31,12 +30,14 @@ except ImportError:
 
 import odoo.modules.db
 from odoo.api import Environment
+from odoo import netsvc
 from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.modules.module import (
     Manifest,
     initialize_sys_path,
 )
 from odoo.modules.registry import Registry
+from odoo.netsvc import ExecutionInfo
 from odoo.tools import config, file_open, file_path, profiler
 from odoo.tools.misc import submap
 
@@ -136,13 +137,15 @@ def dispatch_rpc(service_name: str, method: str, params: Mapping[str, typing.Any
         raise ValueError(f"Invalid service name: {service_name}")
 
     # Remove the request to simulate that the call does not come from HTTP
+    info = netsvc.ExecutionInfo.get()
+    uid, dbname = info.uid, info.db_name
     request_reset = request_var.set(None)
     try:
-        threading.current_thread().uid = None
-        threading.current_thread().dbname = None
+        info.uid = info.db_name = None
         return dispatch(method, params)
     finally:
         request_var.reset(request_reset)
+        info.uid, info.db_name = uid, dbname
 
 
 class RegistryError(RuntimeError):
@@ -247,10 +250,16 @@ class Application:
             server that this application must call in order to send the
             HTTP response status line and the response headers.
         """
+        try:
+            execution = netsvc.ExecutionInfo._execution_var.get()
+        except LookupError:
+            # called from a WSGI serer, setup the execution info context
+            execution = netsvc.ExecutionInfo('http')
+            execution.__enter__()  # never exit so that the server uses this context
+
         if config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
             # It is done in our wsgi server already, but people might be
             # using another wsgi server.
-            # The ProxyFix middleware has a side effect of updating the
             # environ, see https://github.com/pallets/werkzeug/pull/2184
             def fake_app(environ, start_response):
                 return []
@@ -263,7 +272,7 @@ class Application:
             request_reset = request_var.set(request)
             try:
                 _set_session_and_dbname(request)
-                threading.current_thread().url = httprequest.url
+                execution.url = httprequest.url
 
                 if self.get_static_file(httprequest.path):
                     response = serve_static(request)
@@ -408,7 +417,7 @@ def serve_db(request: Request) -> Response:
         # keep on using the RO cursor when a readonly route matched,
         # and for serve fallback
         if readonly and cr.readonly:
-            threading.current_thread().cursor_mode = 'ro'
+            ExecutionInfo.get().cursor_mode = 'ro'
             try:
                 return retrying(serve_func, env=request.env)
             except ReadOnlySqlTransaction as exc:
@@ -416,11 +425,11 @@ def serve_db(request: Request) -> Response:
                 # attempted a write operation, try again using a
                 # read/write cursor
                 _logger.warning("%s, retrying with a read/write cursor", exc.args[0].rstrip(), exc_info=True)
-                threading.current_thread().cursor_mode = 'ro->rw'
+                ExecutionInfo.get().cursor_mode = 'ro->rw'
             except Exception as exc:  # noqa: BLE001
                 raise _update_served_exception(request, exc)
         else:
-            threading.current_thread().cursor_mode = 'rw'
+            ExecutionInfo.get().cursor_mode = 'rw'
 
         # we must use a RW cursor when a read/write route matched, or
         # there was a ReadOnlySqlTransaction error
@@ -522,7 +531,7 @@ def _set_session_and_dbname(request: Request) -> None:
     session.is_dirty = False
     request.session = session
     request.db = dbname
-    threading.current_thread().sess_id = request.session.sid[:8]
+    netsvc.ExecutionInfo.get().sess_id = request.session.sid[:8]
 
 
 def _set_request_dispatcher(request: Request, rule: werkzeug.routing.Rule):

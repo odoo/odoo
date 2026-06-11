@@ -18,6 +18,7 @@ from http import HTTPStatus
 from zlib import adler32
 
 from odoo.api import Environment
+from odoo.netsvc import ExecutionInfo
 from odoo.tools import config, consteq, get_lang
 
 from . import request
@@ -546,11 +547,12 @@ class SessionStore:
         else:
             self.delete(session)
             session.sid = self.generate_key()
-            if hasattr(threading.current_thread(), 'sess_id'):
+            info = ExecutionInfo.get()
+            if info.sess_id:
                 _logger.info(
-                    'Session rotated: %s -> %s', threading.current_thread().sess_id, session.sid[:8]
+                    'Session rotated: %s -> %s', info.sess_id, session.sid[:8]
                 )
-            threading.current_thread().sess_id = session.sid[:8]
+            info.sess_id = session.sid[:8]
         if session.uid:
             assert env, "saving this session requires an environment"
             update_session_token(session, env)

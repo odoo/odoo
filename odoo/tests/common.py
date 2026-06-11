@@ -55,7 +55,7 @@ from werkzeug.exceptions import BadRequest
 import odoo.cli
 import odoo.models
 import odoo.orm.registry
-from odoo import api
+from odoo import api, netsvc
 from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.http import request, request_var
@@ -126,8 +126,9 @@ def get_db_name():
     # use the one on the thread (which means if it is provided on
     # the command-line, this will break when installing another
     # database from XML-RPC).
-    if not dbnames and hasattr(threading.current_thread(), 'dbname'):
-        return threading.current_thread().dbname
+
+    if not dbnames and (name := netsvc.ExecutionInfo.get().db_name):
+        return name
     if len(dbnames) > 1:
         sys.exit("-d/--database/db_name has multiple database, please provide a single one")
     return dbnames[0]
@@ -1866,7 +1867,9 @@ class ChromeBrowser:
             ws.close()
 
     def _receive(self, dbname):
-        threading.current_thread().dbname = dbname
+        execution_info = netsvc.ExecutionInfo._execution_var.get(None)
+        if execution_info is not None:
+            execution_info.db_name = dbname
         # So CDT uses a streamed JSON-RPC structure, meaning a request is
         # {id, method, params} and eventually a {id, result | error} should
         # arrive the other way, however for events it uses "notifications"
