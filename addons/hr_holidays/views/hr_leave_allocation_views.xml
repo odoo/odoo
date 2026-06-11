@@ -402,7 +402,7 @@
         <field name="name">hr.leave.allocation.view.kanban</field>
         <field name="model">hr.leave.allocation</field>
         <field name="arch" type="xml">
-            <kanban class="o_holidays_view_kanban" sample="1">
+            <kanban class="o_holidays_view_kanban" sample="1" js_class="hr_holidays_request_kanban">
                 <header>
                     <button type="action"
                         name="%(hr_holidays.action_hr_leave_allocation_generate_multi_wizard)d"

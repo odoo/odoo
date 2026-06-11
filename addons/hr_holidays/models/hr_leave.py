@@ -105,6 +105,22 @@ class HrLeave(models.Model):
 
         return defaults
 
+    @api.model
+    def get_empty_list_help(self, help_message):
+        if not self.env.user.employee_id:
+            return '''
+                <p class="o_view_nocontent_smiling_face">
+                    %s
+                </p><p>
+                    %s
+                </p>
+            ''' % (
+                _("Your employee is missing"),
+                _("You can not manage your time offs without an employee linked to your user.")
+            )
+
+        return super().get_empty_list_help(help_message)
+
     def _default_get_request_dates(self, values):
         # The UI views initialize date_{from,to} due to how calendar views work.
         # However it is request_date_{from,to} that should be used instead.

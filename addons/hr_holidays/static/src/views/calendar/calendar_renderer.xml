@@ -2,9 +2,32 @@
 <templates xml:space="preserve">
 
     <t t-name="hr_holidays.CalendarRenderer">
-        <div class="o_timeoff_calendar d-flex flex-column">
-            <TimeOffDashboard t-if="this.showDashboard" employeeId="this.employeeId"/>
-            <t t-call="web.CalendarRenderer"/>
+        <div class="o_timeoff_calendar d-flex flex-column h-100 position-relative">
+
+            <div t-attf-class="d-flex flex-column h-100 #{(!this.props.hasEmployee()) ? 'pe-none opacity-25' : ''}">
+                <TimeOffDashboard t-if="this.showDashboard" employeeId="this.employeeId"/>
+                <t t-call="web.CalendarRenderer"/>
+            </div>
+            
+            <t t-if="!this.props.hasEmployee()">
+                <div class="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column align-items-center justify-content-start text-center p-5" 
+                     style="background: rgba(108, 117, 125, 0.12); z-index: 1050; padding-top: 12% !important;">
+
+                    <div class="o_view_nocontent d-flex align-items-center justify-content-center m-0 position-relative" 
+                         style="z-index: 1051; max-width: 600px; height: auto;">
+                        <div class="o_nocontent_help d-flex flex-column align-items-center justify-content-center text-center m-0 p-0 position-static">
+                            <p class="o_view_nocontent_smiling_face mb-2">
+                               Your employee is missing
+                            </p>
+                            <p class="text-dark fw-bold m-0 fs-5" style="max-width: 400px;">
+                                You can not manage your time offs without an employee linked to your user.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </t>
+
         </div>
     </t>
 

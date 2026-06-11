@@ -11,7 +11,7 @@ import { TimeOffCalendarMobileFilterPanel } from "./calendar_filter_panel/calend
 import { TimeOffNewDropdown } from "../../components/time_off_new_dropdown/time_off_new_dropdown";
 import { TimeOffFormViewDialog } from "../view_dialog/form_view_dialog";
 import { useLeaveCancelWizard, useNewAllocationRequest } from "../hooks";
-import { EventBus, onWillStart } from "@odoo/owl";
+import { EventBus, onWillStart, signal } from "@odoo/owl";
 
 export class TimeOffCalendarController extends CalendarController {
     static components = {
@@ -28,15 +28,10 @@ export class TimeOffCalendarController extends CalendarController {
         });
         this.leaveCancelWizard = useLeaveCancelWizard();
         this.newAllocRequest = useNewAllocationRequest();
-
+        this.hasEmployee = signal(false)
         onWillStart(async () => {
-            this.hasEmployee = await userHasEmployeeInCurrentCompany(this.orm);
-            if (!this.employeeId && !this.hasEmployee) {
-                this.env.services.notification.add(
-                    _t("You are not linked to an employee in the current company, so you cannot create requests for yourself."),
-                    { type: "warning" }
-                );
-            }
+            const hasEmployeRes = await userHasEmployeeInCurrentCompany(this.orm)
+            this.hasEmployee.set(await hasEmployeRes);
         });
     }
 
@@ -44,8 +39,15 @@ export class TimeOffCalendarController extends CalendarController {
         return this.model.employeeId;
     }
 
+    get rendererProps() {
+        return {
+          ...super.rendererProps,
+          hasEmployee: this.hasEmployee
+        }
+    }
+
     newTimeOffRequest() {
-        if (!this.employeeId && !this.hasEmployee) {
+        if (!this.employeeId && !this.hasEmployee()) {
             this.displayDialog(AlertDialog, {
                 title: _t("UserError"),
                 body: _t("This operation is not allowed as you are not linked to an employee in the current company."),
@@ -85,7 +87,7 @@ export class TimeOffCalendarController extends CalendarController {
     }
 
     newAllocationRequest() {
-        if (!this.employeeId && !this.hasEmployee) {
+        if (!this.employeeId && !this.hasEmployee()) {
             this.displayDialog(AlertDialog, {
                 title: _t("UserError"),
                 body: _t("This operation is not allowed as you are not linked to an employee in the current company."),
@@ -125,7 +127,7 @@ export class TimeOffCalendarController extends CalendarController {
     }
 
     _editRecord(record, context, props = {}) {
-        if (!this.employeeId && !this.hasEmployee) {
+        if (!this.employeeId && !this.hasEmployee()) {
             this.displayDialog(AlertDialog, {
                 title: _t("UserError"),
                 body: _t("This operation is not allowed as you are not linked to an employee in the current company."),

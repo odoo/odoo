@@ -1,11 +1,14 @@
 import { useSubEnv } from "@web/owl2/utils";
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { listView } from "@web/views/list/list_view";
 import { ListController } from "@web/views/list/list_controller";
-import { onWillStart } from "@odoo/owl";
-import { _t } from "@web/core/l10n/translation";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { userHasEmployeeInCurrentCompany } from "@hr_holidays/utils";
+
+import { onWillStart } from "@odoo/owl";
+
 
 export class HolidaysListController extends ListController {
     static template = "hr_holidays.HolidaysListView";
@@ -13,28 +16,31 @@ export class HolidaysListController extends ListController {
     setup() {
         super.setup();
         this.orm = useService("orm");
+        this.dialogService = useService("dialog");
 
         // Store reference to original button click handler for fallback
         this.onClickViewButton = this.env.onClickViewButton;
-
+        
         useSubEnv({
             onClickViewButton: (params) => this.handleViewButtonClick(params),
         });
 
+        this.hasEmployee = false;
         onWillStart(async () => {
-            const hasEmployee = await userHasEmployeeInCurrentCompany(this.orm);
-            const ignoreActions = [
-                "hr_holidays.hr_leave_action_action_approve_department",
-                "hr_holidays.hr_leave_allocation_action_approve_department",
-            ];
-            const ignoreHasEmployee = ignoreActions.includes(this.env.config.actionXmlId);
-            if (!hasEmployee && !ignoreHasEmployee) {
-                this.env.services.notification.add(
-                    _t("You are not linked to an employee in the current company, so you cannot create requests for yourself."),
-                    { type: "warning" }
-                );
-            }
+            this.hasEmployee = await userHasEmployeeInCurrentCompany(this.orm);
         });
+    }
+
+    async onClickCreate() {
+        if (!this.hasEmployee) {
+            this.dialogService.add(AlertDialog, {
+                title: _t("UserError"),
+                body: _t("This operation is not allowed as you are not linked to an employee in the current company."),
+            });
+            return;
+        }
+
+        return super.onClickCreate();
     }
 
     /**
