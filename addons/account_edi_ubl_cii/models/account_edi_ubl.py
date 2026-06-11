@@ -3109,7 +3109,7 @@ class AccountEdiUBL(models.AbstractModel):
             if vehicle_values in cache:
                 vehicles = cache[vehicle_values]
             else:
-                vehicles = self.env['fleet.vehicle'].search([  # noqa: OLS03001
+                vehicles = self.env['fleet.vehicle'].sudo().search([  # noqa: OLS03001
                     ('company_id', '=', company.id),
                 ] + Domain.OR([
                     [(field, 'in', vals)] for field, vals in vehicle_values
