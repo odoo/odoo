@@ -3123,18 +3123,7 @@ class MrpProduction(models.Model):
         return {}
 
     def action_open_label_layout(self):
-        view = self.env.ref('stock.product_label_layout_form_picking')
-        return {
-            'name': _('Choose Labels Layout'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'product.label.layout',
-            'views': [(view.id, 'form')],
-            'target': 'new',
-            'context': {
-                'default_product_ids': self.move_finished_ids.product_id.ids,
-                'default_move_ids': self.move_finished_ids.ids,
-                'default_move_quantity': 'move'},
-        }
+        return self.move_finished_ids.action_open_label_layout()
 
     def action_open_label_type(self):
         move_line_ids = self.move_finished_ids.mapped('move_line_ids')

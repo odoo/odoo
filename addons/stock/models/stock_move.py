@@ -936,6 +936,21 @@ Please change the quantity done or the rounding precision in your settings.""",
         }
         return self.env.ref('stock.label_picking').report_action(self, data=data, config=False)
 
+    def action_open_label_layout(self):
+        view = self.env.ref('stock.product_label_layout_form_picking')
+        return {
+            'name': _('Choose Labels Layout'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'product.label.layout',
+            'views': [(view.id, 'form')],
+            'target': 'new',
+            'context': {
+                'default_product_ids': self.product_id.ids,
+                'default_move_ids': self.ids,
+                'default_move_quantity': 'move',
+            },
+        }
+
     def action_show_details(self):
         """ Returns an action that will open a form view (in a popup) allowing to work on all the
         move lines of a particular move. This form view is used when "show operations" is not
