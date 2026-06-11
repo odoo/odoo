@@ -777,6 +777,8 @@ class Transaction:
                 self.ormcaches__[name] = CacheLayer(data)
             if _logger_signaling.isEnabledFor(logging.DEBUG):
                 changes += "[Registry - %s -> %s]" % (registry_sequence, db_registry_sequence)
+            # rebind all environments to the new registry
+            self.clear()
         # Check if the model caches must be invalidated.
         else:
             invalidated = set()
