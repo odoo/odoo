@@ -1163,6 +1163,17 @@ class expression(object):
                     if len(path) > 1:
                         right = comodel._search([(path[1], operator, right)])
                         operator = 'in'
+                    if (
+                        operator in ('any', 'not any')
+                        and comodel is not None  # we have a comodel
+                        and isinstance(right, (list, tuple))  # the value is a domain
+                        and not field.related  # related fields handle any properly
+                    ):
+                        if field.type in ('many2many', 'one2many'):
+                            right = comodel.with_context(**field.context)._search(right)
+                        else:
+                            right = comodel.with_context(active_test=False)._search(right)
+                        operator = 'in' if operator == 'any' else 'not in'
                     domain = field.determine_domain(model, operator, right)
                     model._flush_search(domain)
 

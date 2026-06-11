@@ -3,6 +3,7 @@ from itertools import combinations
 
 from odoo import Command
 from odoo.tests import common
+from unittest.mock import patch
 
 
 class TestDomain(common.TransactionCase):
@@ -217,3 +218,12 @@ class TestDomain(common.TransactionCase):
 
         res_search = Child.search([('tag_ids', 'not any', [('name', '=', 'Urgent')])])
         self.assertEqual(res_search, child_2 + child_3)
+
+    def test_any_in_search_field(self):
+        Message = self.env.registry['test_new_api.message']
+        with patch.object(Message, '_search_author_partner', side_effect=Message._search_author_partner, autospec=True) as mock:
+            self.env[Message._name].search([('author_partner', 'any', [('name', '=', 'demo')])])
+            call_args = mock.call_args.args
+            self.assertEqual(call_args[1], 'in')
+            from odoo.tools.query import Query  # noqa: PLC0415
+            self.assertIsInstance(call_args[2], Query, "Domain should be compiled into a Query")
