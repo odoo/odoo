@@ -6,6 +6,7 @@ import { useService, useChildRef, useAutofocus } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
 import { fuzzyTest, fuzzyLookup } from "@web/core/utils/search";
+import { SearchBarDropdown } from "@web/search/search_bar_dropdown";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -19,6 +20,7 @@ export class DashboardSearchBar extends Component {
         DashboardFacet,
         DashboardDateFilter,
         DashboardSearchBarMenu,
+        SearchBarDropdown,
         Dropdown,
         DropdownItem,
     };
@@ -33,6 +35,11 @@ export class DashboardSearchBar extends Component {
         this.searchModel = this.loader.getDashboard(this.loader.activeDashboardId).searchModel;
 
         this.inputRef = useAutofocus("autofocus");
+
+        this.popoverWillCloseOnClickAway = (target) => {
+            const inputEl = this.inputRef.el;
+            return !(inputEl && (inputEl === target || inputEl.contains(target)));
+        };
 
         this.state = proxy({
             showDropdown: false,

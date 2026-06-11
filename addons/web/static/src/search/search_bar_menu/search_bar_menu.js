@@ -1,6 +1,7 @@
 import { Component, props, proxy, t } from "@odoo/owl";
-import { Dropdown, dropdownProps } from "@web/core/dropdown/dropdown";
 import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
+import { SearchBarDropdown } from "../search_bar_dropdown";
+import { dropdownProps } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { sortBy } from "@web/core/utils/arrays";
@@ -19,7 +20,7 @@ const favoriteMenuRegistry = registry.category("favoriteMenu");
 export class SearchBarMenu extends Component {
     static template = "web.SearchBarMenu";
     static components = {
-        Dropdown,
+        SearchBarDropdown,
         DropdownItem,
         CheckboxItem,
         CustomGroupByItem,
@@ -33,6 +34,7 @@ export class SearchBarMenu extends Component {
             })
             .optional(),
         dropdownState: dropdownProps.state,
+        popoverWillCloseOnClickAway: t.function().optional(() => () => true),
     });
 
     setup() {

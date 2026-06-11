@@ -3,7 +3,7 @@
     <t t-name="spreadsheet_dashboard.DashboardSearchBar">
         <div class="o_sp_dashboard_search d-flex flex-wrap flex-lg-nowrap gap-1 gap-lg-2 w-100 w-lg-auto" t-if="!this.searchModel.state.isLoading">
             <div class="d-flex flex-grow-1 input-group w-auto" t-if="this.visibilityState.showSearchBar" >
-                <Dropdown
+                <SearchBarDropdown
                     state="this.inputDropdownState"
                     manual="true"
                     noClasses="true"
@@ -13,6 +13,7 @@
                     onStateChanged.bind="this.onInputDropdownChanged"
                     menuRef="this.menuRef"
                     bottomSheet="false"
+                    popoverWillCloseOnClickAway="this.popoverWillCloseOnClickAway"
                 >
 
                     <div
@@ -46,18 +47,24 @@
                         </t>
 
                     </div>
-                </Dropdown>
-                <Dropdown menuClass="'o_search_bar_menu py-3'"
+                </SearchBarDropdown>
+                <SearchBarDropdown menuClass="'o_search_bar_menu py-3'"
                     manual="true"
                     position="'bottom-end'"
-                    state="this.searchBarDropdownMenu">
+                    state="this.searchBarDropdownMenu"
+                    popoverWillCloseOnClickAway="this.popoverWillCloseOnClickAway"
+                >
                     <button
                         class="o_searchview_dropdown_toggler btn btn-outline-secondary o-dropdown-caret rounded-start-0 o-dropdown dropdown-toggle dropdown"
                         t-on-click="this.toggleFilterValueDropdown" />
                     <t t-set-slot="content">
-                        <DashboardSearchBarMenu model="this.props.model" close.bind="this.closeFilterValueDropdown" />
+                        <DashboardSearchBarMenu
+                            model="this.props.model"
+                            close.bind="this.closeFilterValueDropdown"
+                            popoverWillCloseOnClickAway="this.popoverWillCloseOnClickAway"
+                        />
                     </t>
-                </Dropdown>
+                </SearchBarDropdown>
             </div>
             <div class="o_sp_date_filter_button d-flex" t-if="this.searchModel.firstDateFilter">
                 <DashboardDateFilter value="this.firstDateFilterValue"
