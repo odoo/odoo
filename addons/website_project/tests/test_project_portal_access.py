@@ -54,6 +54,34 @@ class TestProjectPortalAccess(TestProjectSharingCommon, HttpCase):
         task = self.env['project.task'].browse(response.json().get('id'))
         self.assertTrue(task.exists())
         self.assertEqual(partner.name, 'Jean Michel')
+        self.assertEqual(partner, task.partner_id)
         # The description should not contain the partner_phone since it was not provided
         self.assertEqual(str(task.description), ('<p>Fix this</p><h4>Other Information</h4>Email : jean@michel.com<br>\n'
             'partner_name : Not Jean Michel<br>\npartner_company_name : foo'))
+
+    def test_portal_task_submission_different_company(self):
+        """ When the partner of the contact is not visible inside the company, we cannot use it. """
+        self.authenticate(None, None)
+        company = self.env["res.company"].create({
+            "name": "Another Company",
+        })
+        self.project_portal.company_id = self.env.company
+        self.assertNotEqual(company, self.project_portal.company_id)
+        partner = self.env['res.partner'].create({
+            'name': 'Jean Michel',
+            'email': 'jean@michel.com',
+            "company_id": company.id,
+        })
+        ticket_data = {
+            'name': 'FIX',
+            'partner_name': 'Not Jean Michel',
+            'email_from': 'jean@michel.com',
+            'partner_company_name': 'foo',
+            'description': 'Fix this',
+            'project_id': self.project_portal.id,
+            'csrf_token': http.Request.csrf_token(self),
+        }
+        response = self.url_open('/website/form/project.task', data=ticket_data)
+        task = self.env['project.task'].browse(response.json().get('id'))
+        self.assertTrue(task.exists())
+        self.assertNotEqual(partner, task.partner_id)
