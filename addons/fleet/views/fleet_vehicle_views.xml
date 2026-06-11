@@ -66,8 +66,7 @@
                             class="oe_stat_button"
                             icon="fa-tachometer"
                             context="{'xml_id':'fleet_vehicle_odometer_action'}"
-                            help="show the odometer logs for this vehicle"
-                            invisible="vehicle_type != 'car'">
+                            help="show the odometer logs for this vehicle">
                             <field name="odometer_count" widget="statinfo" string="Odometer"/>
                         </button>
                     </div>
@@ -95,11 +94,11 @@
                         <group string="Vehicle">
                             <field name="category_id"/>
                             <field name="order_date"/>
-                            <field name="acquisition_date" invisible="vehicle_type != 'car'"/>
-                            <field name="write_off_date" invisible="vehicle_type != 'car'"/>
+                            <field name="acquisition_date"/>
+                            <field name="write_off_date"/>
                             <field name="vin_sn"/>
-                            <label for="odometer" invisible="vehicle_type != 'car'"/>
-                            <div class="o_row o_fleet_narrow_field" invisible="vehicle_type != 'car'">
+                            <label for="odometer"/>
+                            <div class="o_row o_fleet_narrow_field">
                                 <field class="o_fleet_odometer_value" name="odometer"/>
                                 <field class="o_fleet_odometer_unit" name="odometer_unit"/>
                                 <button name="action_open_odometer_report" type="object" class="fa fa-line-chart me-1" title="Odometer Report"/>
