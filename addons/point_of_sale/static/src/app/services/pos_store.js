@@ -50,6 +50,7 @@ import OrderPaymentValidation from "../utils/order_payment_validation";
 import { logPosMessage } from "../utils/pretty_console_log";
 import { initLNA } from "../utils/init_lna";
 import { Domain } from "@web/core/domain";
+import { accountTaxHelpers } from "@account/helpers/account_tax";
 
 const { DateTime } = luxon;
 export const CONSOLE_COLOR = "#F5B427";
@@ -1698,8 +1699,82 @@ export class PosStore extends WithLazyGetterTrap {
             productProduct?.id,
         ]);
 
-        const productTaxDetails = productTemplate.getTaxDetails();
-        const priceWithoutTax = productTaxDetails.total_excluded;
+        const orderline = order?.getSelectedOrderline();
+        const isSelectedLine =
+            orderline && orderline.product_id.product_tmpl_id.id === productTemplate.id;
+
+        let baseLines = [];
+        if (productTemplate.isCombo()) {
+            if (isSelectedLine) {
+                baseLines = orderline.combo_line_ids.map((cl) =>
+                    cl.getBaseLine({
+                        quantity: cl.getQuantity() / orderline.getQuantity(),
+                    })
+                );
+            } else {
+                const childLineConf = productTemplate.combo_ids.map((combo) => ({
+                    combo_item_id: combo.combo_item_ids[0],
+                    qty: combo.qty_free || 1,
+                }));
+                const comboItems = computeComboItems(
+                    productTemplate.product_variant_ids[0],
+                    childLineConf,
+                    order?.pricelist_id,
+                    this.data.models["decimal.precision"].getAll(),
+                    this.data.models["product.template.attribute.value"].getAllBy("id"),
+                    [],
+                    this.currency
+                );
+                baseLines = comboItems.map((comboItem) => {
+                    const product = comboItem.combo_item_id.product_id;
+                    return product.getBaseLine({
+                        overridedValues: {
+                            price: comboItem.price_unit,
+                            quantity: comboItem.qty,
+                            fiscalPosition: order?.fiscal_position_id,
+                            pricelist: order?.pricelist_id,
+                        },
+                    });
+                });
+            }
+        } else {
+            baseLines = [
+                productTemplate.getBaseLine({
+                    overridedValues: {
+                        price: productTemplate.getPrice(
+                            order?.pricelist_id,
+                            quantity,
+                            priceExtra,
+                            false,
+                            productProduct
+                        ),
+                        quantity: quantity,
+                        fiscalPosition: order?.fiscal_position_id,
+                        pricelist: order?.pricelist_id,
+                    },
+                }),
+            ];
+        }
+
+        const company = this.config.company_id;
+        accountTaxHelpers.add_tax_details_in_base_lines(baseLines, company);
+        accountTaxHelpers.round_base_lines_tax_details(baseLines, company);
+
+        const cashRounding = this.config.cash_rounding ? this.config.rounding_method : null;
+        const taxDetails = accountTaxHelpers.get_tax_totals_summary(
+            baseLines,
+            this.currency,
+            company,
+            {
+                cash_rounding: cashRounding,
+            }
+        );
+
+        // Override backend values with correct frontend tax/price values (aware of combo items and fiscal position)
+        productInfo.all_prices.price_without_tax = taxDetails.base_amount / quantity;
+        productInfo.all_prices.price_with_tax = taxDetails.total_amount_currency / quantity;
+
+        const priceWithoutTax = taxDetails.base_amount / quantity;
         const margin = priceWithoutTax - productTemplate.standard_price;
         const orderPriceWithoutTax = order.priceExcl;
         const orderCost = order.getTotalCost();
@@ -1710,10 +1785,16 @@ export class PosStore extends WithLazyGetterTrap {
         const orderPriceWithTaxCurrency = this.env.utils.formatCurrency(
             order.prices.taxDetails.order_sign * order.prices.taxDetails.total_amount_currency
         );
-        const taxAmount = this.env.utils.formatCurrency(
-            productTaxDetails.taxes_data.reduce((sum, d) => sum + d.tax_amount_currency, 0)
-        );
-        const taxName = productTemplate.taxes_id.map((t) => t.name)?.join(", ");
+        const taxAmount = this.env.utils.formatCurrency(taxDetails.tax_amount_currency / quantity);
+        const taxNames = [
+            ...new Set(
+                baseLines
+                    .flatMap((bl) => bl.tax_ids)
+                    .map((t) => t.name)
+                    .filter(Boolean)
+            ),
+        ].join(", ");
+        const taxName = taxNames || productTemplate.taxes_id.map((t) => t.name)?.join(", ");
 
         const costCurrency = this.env.utils.formatCurrency(productTemplate.standard_price);
         const marginCurrency = this.env.utils.formatCurrency(margin);
