@@ -4,7 +4,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { useService } from "@web/core/utils/hooks";
 import { useX2ManyCrud } from "@web/views/fields/relational_utils";
 
-import { Component } from "@odoo/owl";
+import { Component, onMounted } from "@odoo/owl";
 import { FileUploader } from "@web/views/fields/file_handler";
 
 export class MailComposerAttachmentSelector extends Component {
@@ -18,6 +18,11 @@ export class MailComposerAttachmentSelector extends Component {
         this.operations = useX2ManyCrud(() => {
             return this.props.record.data["attachment_ids"];
         }, true);
+        // Turn attachments into links if needed when opening the composer.
+        onMounted(() => {
+            // The delay is required for the html-editor to be ready to receive the event that does the work.
+            setTimeout(this.onAttachmentAdded.bind(this), 1000);
+        });
     }
 
     /** @param {Object} data */
@@ -46,10 +51,22 @@ export class MailComposerAttachmentSelector extends Component {
             await this.operations.saveRecord([attachment.id]);
         }
     }
+
+    onAttachmentAdded() {
+        this.env.fullComposerBus?.trigger("ATTACHMENT_ADDED", {
+            attachments: this.props.record.data.attachment_ids.records,
+        });
+    }
 }
 
 export const mailComposerAttachmentSelector = {
     component: MailComposerAttachmentSelector,
+    relatedFields: () => {
+        return [
+            { name: "file_size", type: "integer", readOnly: true },
+            { name: "id", type: "integer", readonly: true },
+        ];
+    },
 };
 
 registry
