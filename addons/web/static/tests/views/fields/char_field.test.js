@@ -996,6 +996,71 @@ test("translating a char field inside one2many saves the parent record", async (
     expect.verifySteps(["partner.type"]);
 });
 
+test("translating a char field inside a one2many form dialog saves the record", async () => {
+    Partner._fields.type_id = fields.Many2one({
+        relation: "partner.type",
+    });
+    PartnerType._fields.partner_ids = fields.One2many({
+        string: "Partners",
+        relation: "res.partner",
+        relation_field: "type_id",
+    });
+    Partner._fields.name.translate = true;
+
+    PartnerType._records[0].partner_ids = [1];
+
+    serverState.lang = "en_US";
+    serverState.multiLang = true;
+
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English"],
+        ["fr_BE", "French (Belgium)"],
+    ]);
+
+    onRpc("res.partner", "get_field_translations", () => {
+        expect.step("get_field_translations");
+        return [
+            [
+                { lang: "en_US", source: "move things", value: "move things" },
+                { lang: "fr_BE", source: "move things", value: "breakfast" },
+            ],
+            {
+                translation_type: "char",
+                translation_show_source: false,
+            },
+        ];
+    });
+
+    onRpc("web_save", ({ model, args }) => {
+        expect.step(`web_save ${model}`);
+        expect(args[1]).toEqual({ name: "move things" });
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner.type",
+        resId: 12,
+        arch: `
+        <form>
+            <field name="partner_ids">
+                <list>
+                    <field name="name"/>
+                </list>
+                <form>
+                    <field name="name"/>
+                </form>
+            </field>
+        </form>`,
+    });
+
+    await contains(".o_data_row .o_data_cell").click();
+    await fieldInput("name").edit("move things", { confirm: false });
+    await contains(".modal .o_field_char .btn.o_field_translate").click();
+
+    expect.verifySteps(["web_save res.partner", "get_field_translations"]);
+    expect(".o_translation_dialog").toHaveCount(1);
+});
+
 test("translation dialog opens in editable list when the required field is set", async () =>{
     Partner._fields.name.translate = true;
     Partner._fields.name.required = true;
