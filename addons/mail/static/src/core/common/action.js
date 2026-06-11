@@ -1,4 +1,3 @@
-import { isRecord, STORE_SYM } from "@mail/model/misc";
 import { Component, proxy, signal, useScope } from "@odoo/owl";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
@@ -17,12 +16,10 @@ export const ACTION_TAGS = Object.freeze({
 });
 
 /** @typedef {import("@odoo/owl").Component} Component */
-/** @typedef {import("@mail/model/record").Record} Record */
-/** @typedef {Component|Record} ActionOwner */
 
 /**
  * @typedef {Object} ActionRootRefParam
- * @property {import("@odoo/owl").Signal<HTMLElement>} [rootRef] Signal pointing at the owner's root
+ * @property {import("@odoo/owl").Signal<HTMLElement>} [rootRef] Signal pointing at the using component's root
  *   element, used to anchor popovers and `querySelector` action buttons. The concrete element type is up
  *   to the caller.
  */
@@ -41,7 +38,7 @@ export const ACTION_TAGS = Object.freeze({
 /**
  * @template Action_T
  * @template UseActions_T
- * @typedef {ActionRootRefParam & {actions: UseActions_T, action: Action_T, store: import("models").Store, owner: ActionOwner}} ActionParams
+ * @typedef {ActionRootRefParam & {actions: UseActions_T, action: Action_T, store: import("models").Store}} ActionParams
  */
 
 /**
@@ -93,8 +90,6 @@ export class Action {
     actions;
     /** @type {ActionDefinition<ActionParams_T>}  User-defined explicit definition of this action */
     definition;
-    /** @type {ActionOwner} Entity that is using this action */
-    owner;
     /**
      * When this action opens a popover, must save usePopover() in this attribute, i.e. action.popover = usePopover().
      * Useful for action that open an action panel in some contexts and popovers in others. See @actionPanel
@@ -115,21 +110,17 @@ export class Action {
      *
      * @param {Object} params0
      * @param {UseActionClass_T} [params0.actions]
-     * @param {ActionOwner} params0.owner
      * @param {string} params0.id
      * @param {ActionDefinition<ActionParams, Action>} params0.definition
      * @param {import("models").Store} [params0.store]
      * @param {import("@odoo/owl").Signal<HTMLElement>} [params0.rootRef] @see ActionRootRefParam
      */
-    constructor({ actions, owner, id, definition, store, rootRef }) {
+    constructor({ actions, id, definition, store, rootRef }) {
         this.actions = actions;
         this.definition = definition;
         this.id = id;
-        this.owner = owner;
         this.rootRef = rootRef;
-        this.store =
-            store ??
-            (owner[STORE_SYM] ? owner : isRecord(owner) ? owner.store : useService("mail.store"));
+        this.store = store ?? useService("mail.store");
     }
 
     get params() {
@@ -137,7 +128,6 @@ export class Action {
             actions: this.actions,
             action: this,
             store: this.store,
-            owner: this.owner,
             rootRef: this.rootRef,
         };
     }
@@ -584,7 +574,7 @@ export class Action {
 
     /** @param {Action} action @returns {true|undefined} */
     _setup(action) {}
-    /** setup is executed when the owner is being setup. */
+    /** setup is executed when the using component is being setup. */
     setup() {
         return this._setup(this.params) ?? this.definition.setup?.call(this, this.params);
     }
@@ -655,7 +645,6 @@ export class UseActions extends Reactive {
         } else {
             moreAction = new this.ActionClass({
                 ...actionsParams,
-                owner: this.component,
                 id: `more-action:${id}`,
                 definition: {
                     ...data,
@@ -748,7 +737,6 @@ export function useAction(actionRegistry, UseActionClass, ActionClass, actionCla
         ([id, definition]) =>
             new ActionClass({
                 actions,
-                owner: component,
                 id,
                 definition,
                 ...actionClassParams,

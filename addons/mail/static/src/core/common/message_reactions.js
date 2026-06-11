@@ -21,7 +21,7 @@ export class MessageReactions extends Component {
         this.ui = useService("ui");
         this.addRef = useRef("add");
         this.isMobileOS = isMobileOS();
-        this.messageActions = useMessageActions({ message: this.message });
+        this.messageActions = useMessageActions({ env: this.env, message: this.message });
         this.emojiPicker = useEmojiPicker(this.addRef, {
             onSelect: (emoji) => {
                 const reaction = this.message().reactions.find(

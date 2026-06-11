@@ -17,26 +17,26 @@ export const joinChannelAction = {
     icon: "fa fa-fw fa-sign-in",
     name: _t("Join Channel"),
     sequence: 20,
-    sequenceGroup: ({ owner }) => (owner.isDiscussContent ? undefined : 5),
+    sequenceGroup: ({ isDiscussContent }) => (isDiscussContent ? undefined : 5),
     tags: [ACTION_TAGS.PRIMARY],
 };
 registerThreadAction("join-channel", joinChannelAction);
 registerThreadAction("expand-discuss", {
-    condition: ({ channel, owner, store }) =>
+    condition: ({ channel, chatWindow, isDiscussSidebarChannelActions, store }) =>
         channel &&
-        owner.props.chatWindow?.isOpen &&
+        chatWindow?.isOpen &&
         !store.env.services.ui.isSmall &&
-        !owner.isDiscussSidebarChannelActions,
+        !isDiscussSidebarChannelActions,
     icon: "fa fa-fw fa-expand",
     name: _t("Open in Discuss"),
-    onSelected({ channel, owner, store }) {
+    onSelected({ channel, homeMenuHasHomeMenu, store }) {
         store.env.services.action.doAction(
             {
                 type: "ir.actions.client",
                 tag: "mail.action_discuss",
             },
             {
-                clearBreadcrumbs: owner.env.services["home_menu"]?.hasHomeMenu,
+                clearBreadcrumbs: homeMenuHasHomeMenu,
                 additionalContext: { active_id: channel.id },
             }
         );
@@ -46,9 +46,8 @@ registerThreadAction("expand-discuss", {
     sequenceQuick: expandDiscussSequenceQuick,
 });
 registerThreadAction("advanced-settings", {
-    condition: ({ channel, owner }) =>
-        ["owner", "admin"].includes(channel?.self_member_id?.channel_role) &&
-        !owner.isDiscussContent,
+    condition: ({ channel, isDiscussContent }) =>
+        ["owner", "admin"].includes(channel?.self_member_id?.channel_role) && !isDiscussContent,
     onSelected: ({ channel, store }) => {
         store.env.services.action.doAction({
             type: "ir.actions.act_window",

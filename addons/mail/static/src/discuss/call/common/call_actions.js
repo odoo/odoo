@@ -8,7 +8,7 @@ import { QuickVideoSettings } from "@mail/discuss/call/common/quick_video_settin
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/discuss_channel_model_patch";
 import { MicrophoneWarning } from "@mail/discuss/call/common/microphone_warning";
-import { Component, useEffect } from "@odoo/owl";
+import { useEffect } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 export const callActionsRegistry = registry.category("discuss.call/actions");
@@ -36,14 +36,14 @@ export const muteAction = {
     badge: ({ store }) =>
         store.rtc.microphonePermission !== "granted" || store.rtc.showMicrophoneSilentWarning,
     badgeIcon: "fa fa-exclamation",
-    condition: ({ owner, store, channel }) =>
-        channel?.isSelfInCall && (owner.env.inCallMenu || !store.rtc.selfSession?.is_deaf),
+    condition: ({ inCallMenu, store, channel }) =>
+        channel?.isSelfInCall && (inCallMenu || !store.rtc.selfSession?.is_deaf),
     disabledCondition: ({ store }) => store.rtc.showMicrophoneSilentWarning,
     name: ({ store }) => (store.rtc.selfSession?.isMute ? _t("Unmute") : _t("Mute")),
     isActive: ({ store }) => store.rtc.selfSession?.isMute,
-    icon: ({ action, owner, store }) =>
+    icon: ({ action, inCallMenu, store }) =>
         action.isActive
-            ? store.rtc.selfSession?.is_deaf && !owner.env.inCallMenu
+            ? store.rtc.selfSession?.is_deaf && !inCallMenu
                 ? CALL_ICON_DEAFEN
                 : CALL_ICON_MUTED
             : "fa fa-microphone",
@@ -51,8 +51,8 @@ export const muteAction = {
     onSelected: ({ action, store }) => store.rtc.toggleMicrophone({ rootRef: action.actionRef }),
     sequence: 10,
     sequenceGroup: 100,
-    setup({ action, owner, store }) {
-        if (owner instanceof Component) {
+    setup({ action, inComponent, store }) {
+        if (inComponent) {
             this.popover = usePopover(MicrophoneWarning, {
                 closeOnClickAway: false,
                 closeOnEscape: false,
@@ -84,13 +84,11 @@ export const muteAction = {
 registerCallAction("mute", muteAction);
 /** @type {CallActionDefinition} */
 export const quickActionSettings = {
-    condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
+    condition: ({ channel, inCallMenu }) => !inCallMenu && channel?.isSelfInCall,
     dropdown: true,
     dropdownComponent: QuickVoiceSettings,
-    dropdownMenuClass: ({ owner }) =>
-        owner.env.inMeetingView
-            ? "o-discuss-CallActionList-menu overflow-x-hidden"
-            : "p-1 overflow-x-hidden",
+    dropdownMenuClass: ({ inMeetingView }) =>
+        inMeetingView ? "o-discuss-CallActionList-menu overflow-x-hidden" : "p-1 overflow-x-hidden",
     dropdownPosition: "top-end",
     icon: "oi oi-chevron-up o-xsmaller",
     name: _t("Voice Settings"),
@@ -99,8 +97,8 @@ export const quickActionSettings = {
 };
 registerCallAction("quick-voice-settings", quickActionSettings);
 registerCallAction("deafen", {
-    condition: ({ owner, store, channel }) =>
-        channel?.isSelfInCall && (owner.env.inCallMenu || store.rtc.selfSession?.is_deaf),
+    condition: ({ inCallMenu, store, channel }) =>
+        channel?.isSelfInCall && (inCallMenu || store.rtc.selfSession?.is_deaf),
     name: ({ store }) => (store.rtc.selfSession?.is_deaf ? _t("Undeafen") : _t("Deafen")),
     isActive: ({ store }) => store.rtc.selfSession?.is_deaf,
     icon: ({ action }) => (action.isActive ? CALL_ICON_DEAFEN : "fa fa-headphones"),
@@ -115,8 +113,8 @@ registerCallAction("deafen", {
 });
 /** @type {CallActionDefinition} */
 export const cameraOnAction = {
-    badge: ({ owner, store, channel }) =>
-        !owner.env.inCallMenu &&
+    badge: ({ inCallMenu, store, channel }) =>
+        !inCallMenu &&
         channel?.default_display_mode === "video_full_screen" &&
         store.rtc.cameraPermission !== "granted",
     badgeIcon: "fa fa-exclamation",
@@ -130,8 +128,8 @@ export const cameraOnAction = {
             : _t("Turn camera on"),
     isActive: ({ store }) => store.rtc.selfSession?.is_camera_on,
     icon: "fa fa-video-camera",
-    onSelected: ({ action, owner, store }) =>
-        store.rtc.toggleVideo("camera", { env: owner.env, rootRef: action.actionRef }),
+    onSelected: ({ action, pipWindow, store }) =>
+        store.rtc.toggleVideo("camera", { env: { pipWindow }, rootRef: action.actionRef }),
     sequence: 10,
     sequenceGroup: 120,
     tags: ({ action, store, channel }) => {
@@ -151,13 +149,11 @@ export const cameraOnAction = {
 registerCallAction("camera-on", cameraOnAction);
 /** @type {CallActionDefinition} */
 export const quickVideoSettings = {
-    condition: ({ owner, channel }) => !owner.env.inCallMenu && channel?.isSelfInCall,
+    condition: ({ inCallMenu, channel }) => !inCallMenu && channel?.isSelfInCall,
     dropdown: true,
     dropdownComponent: QuickVideoSettings,
-    dropdownMenuClass: ({ owner }) =>
-        owner.env.inMeetingView
-            ? "o-discuss-CallActionList-menu overflow-x-hidden"
-            : "p-1 overflow-x-hidden",
+    dropdownMenuClass: ({ inMeetingView }) =>
+        inMeetingView ? "o-discuss-CallActionList-menu overflow-x-hidden" : "p-1 overflow-x-hidden",
     dropdownPosition: "top-end",
     icon: "oi oi-chevron-up o-xsmaller",
     name: _t("Video Settings"),
@@ -202,7 +198,7 @@ registerCallAction("share-screen", {
             : _t("Share Screen"),
     isActive: ({ store }) => store.rtc.selfSession?.is_screen_sharing_on,
     icon: "fa fa-desktop",
-    onSelected: ({ owner, store }) => store.rtc.toggleVideo("screen", { env: owner.env }),
+    onSelected: ({ pipWindow, store }) => store.rtc.toggleVideo("screen", { env: { pipWindow } }),
     sequence: 40,
     sequenceGroup: 200,
     tags: ({ action }) => [
@@ -212,10 +208,11 @@ registerCallAction("share-screen", {
 });
 registerCallAction("fullscreen", {
     btnAttrs: { "data-available-offline": true },
-    condition: ({ channel, owner, store }) =>
-        channel?.isSelfInCall && !owner.env.pipWindow && !store.rtc.isBrowserFullscreen,
+    condition: ({ channel, pipWindow, store }) =>
+        channel?.isSelfInCall && !pipWindow && !store.rtc.isBrowserFullscreen,
     name: _t("Fullscreen"),
     icon: "fa fa-expand",
+    isActive: ({ store }) => store.rtc.isBrowserFullscreen,
     onSelected: ({ channel, store }) => {
         channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
         store.rtc.closePip();
@@ -249,28 +246,28 @@ registerCallAction("minimize", {
     tags: ACTION_TAGS.CALL_LAYOUT,
 });
 registerCallAction("picture-in-picture", {
-    condition: ({ owner, channel, store }) =>
-        channel?.isSelfInCall && !store.env?.isSmall && !owner.env.pipWindow,
+    condition: ({ channel, pipWindow, store }) =>
+        channel?.isSelfInCall && !store.env?.isSmall && !pipWindow,
     disabledCondition: ({ store }) => store.rtc?.isRemote,
     name: ({ store }) =>
         store.rtc?.isPipMode ? _t("Exit Picture in Picture") : _t("Picture in Picture"),
     isActive: ({ store }) => store.rtc?.isPipMode,
     icon: "oi oi-launch",
-    onSelected: ({ owner, channel, store }) => {
+    onSelected: ({ channel, root, store }) => {
         channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
         const isPipMode = store.rtc?.isPipMode;
         if (isPipMode) {
             store.rtc.closePip();
         } else {
-            store.rtc.openPip({ context: owner });
+            store.rtc.openPip({ context: { root } });
         }
     },
     sequence: 90,
     tags: ACTION_TAGS.CALL_LAYOUT,
 });
 registerCallAction("change-layout", {
-    condition: ({ channel, owner }) =>
-        channel?.isSelfInCall && !owner.env.inCallMenu && !owner.env.pipWindow,
+    condition: ({ channel, inCallMenu, pipWindow }) =>
+        channel?.isSelfInCall && !inCallMenu && !pipWindow,
     name: _t("Change Layout"),
     icon: "fa fa-fw fa-th-large",
     onSelected: ({ channel, store }) =>
@@ -293,16 +290,12 @@ export const acceptWithCamera = {
 };
 registerCallAction("accept-with-camera", acceptWithCamera);
 registerCallAction("join-back", {
-    btnClass: ({ owner }) =>
-        attClassObjectToString({
-            "text-nowrap pe-2 rounded-pill": true,
-            "mx-1": !owner.env.inCallInvitation,
-        }),
+    btnClass: () => attClassObjectToString({ "text-nowrap pe-2 rounded-pill mx-1": true }),
     condition: ({ channel }) =>
         !channel?.isSelfInCall && typeof channel?.useCameraByDefault === "boolean",
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     icon: ({ channel }) => (channel.useCameraByDefault ? "fa fa-video-camera" : "fa fa-phone"),
-    inlineName: ({ owner }) => (owner.env.inCallInvitation ? undefined : _t("Join")),
+    inlineName: _t("Join"),
     name: ({ channel }) => (channel?.useCameraByDefault ? _t("Join Video Call") : _t("Join Call")),
     onSelected: ({ channel, store }) =>
         store.rtc.toggleCall(channel, { camera: channel.useCameraByDefault }),
@@ -344,16 +337,16 @@ export const joinAction = {
 registerCallAction("join", joinAction);
 /** @type {CallActionDefinition} */
 export const rejectAction = {
-    btnClass: ({ owner, channel }) =>
+    btnClass: ({ channel, inCallInvitation }) =>
         attClassObjectToString({
             "pe-2 rounded-pill": typeof channel?.useCameraByDefault === "boolean",
-            "mx-1": !owner.env.inCallInvitation && typeof channel?.useCameraByDefault === "boolean",
+            "mx-1": !inCallInvitation && typeof channel?.useCameraByDefault === "boolean",
         }),
     condition: ({ channel }) => channel?.self_member_id?.rtc_inviting_session_id,
     disabledCondition: ({ store }) => store.rtc?.hasPendingRequest,
     icon: "oi oi-close",
-    inlineName: ({ owner, channel }) =>
-        !owner.env.inCallInvitation && typeof channel?.useCameraByDefault === "boolean"
+    inlineName: ({ channel, inCallInvitation }) =>
+        !inCallInvitation && typeof channel?.useCameraByDefault === "boolean"
             ? _t("Reject")
             : undefined,
     name: _t("Reject"),
@@ -383,19 +376,51 @@ registerCallAction("disconnect", {
 export class CallAction extends Action {
     /** @type {() => import("models").DiscussChannel} */
     channelFn;
+    /** @type {() => boolean} */
+    inCallMenu;
+    /** @type {boolean} */
+    inComponent;
 
     /**
      * @param {Object} param0
      * @param {import("models").DiscussChannel|() => import("models").DiscussChannel} channel
      */
-    constructor({ channel }) {
+    constructor({
+        channel,
+        inCallInvitation,
+        inCallMenu,
+        inComponent,
+        inMeetingView,
+        pipWindow,
+        root,
+    }) {
         super(...arguments);
         this.channelFn = typeof channel === "function" ? channel : () => channel;
+        this.inCallInvitation = inCallInvitation;
+        this.inCallMenu = inCallMenu;
+        this.inComponent = inComponent;
+        this.inMeetingView = inMeetingView;
+        this.pipWindow = pipWindow;
+        this.root = root;
     }
 
     get params() {
         const channel = this.channelFn();
-        return Object.assign(super.params, { channel });
+        const inCallInvitation = this.inCallInvitation?.();
+        const inCallMenu = this.inCallMenu?.();
+        const inComponent = this.inComponent;
+        const inMeetingView = this.inMeetingView?.();
+        const pipWindow = this.pipWindow?.();
+        const root = this.root?.();
+        return Object.assign(super.params, {
+            channel,
+            inCallInvitation,
+            inCallMenu,
+            inComponent,
+            inMeetingView,
+            pipWindow,
+            root,
+        });
     }
 }
 
@@ -405,9 +430,31 @@ class UseCallActions extends UseActions {
 }
 
 /**
- * @param {import("@mail/core/common/action").ActionRootRefParam & {channel?: DiscussChannel|() => DiscussChannel}} [params0={}]
+ * @param {import("@mail/core/common/action").ActionRootRefParam & {
+ * channel?: DiscussChannel|() => DiscussChannel,
+ * inCallMenu?: () => boolean,
+ * inComponent?: boolean,
+ * }} [params0={}]
  * @return {UseCallActions_Def}
  */
-export function useCallActions({ channel, rootRef } = {}) {
-    return useAction(callActionsRegistry, UseCallActions, CallAction, { channel, rootRef });
+export function useCallActions({
+    channel,
+    inCallInvitation,
+    inCallMenu,
+    inComponent,
+    inMeetingView,
+    pipWindow,
+    root,
+    rootRef,
+} = {}) {
+    return useAction(callActionsRegistry, UseCallActions, CallAction, {
+        channel,
+        inCallInvitation,
+        inCallMenu,
+        inComponent,
+        inMeetingView,
+        pipWindow,
+        root,
+        rootRef,
+    });
 }

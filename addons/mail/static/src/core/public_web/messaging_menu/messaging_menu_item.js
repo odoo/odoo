@@ -51,6 +51,8 @@ export class MessagingMenuItem extends Component {
         this.hasTouch = hasTouch;
         this.isActive = computed(() => this._isActive);
         this.messageActions = useMessageActions({
+            env: this.env,
+            inMessagingMenu: () => this.env.inMessagingMenu,
             message: () => this.message,
             thread: () => this.message?.thread,
         });
