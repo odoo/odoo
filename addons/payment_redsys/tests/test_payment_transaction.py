@@ -2,7 +2,6 @@
 
 from odoo.tests import tagged
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_redsys.tests.common import RedsysCommon
 
 
@@ -22,7 +21,7 @@ class TestPaymentTransaction(RedsysCommon):
         """Test that all important items are present in the merchant parameters."""
         tx = self._create_transaction(flow="redirect")
         merchant_parameters = tx._redsys_prepare_merchant_parameters()
-        converted_amount = payment_utils.to_minor_currency_units(tx.amount, tx.currency_id)
+        converted_amount = tx.provider_id._to_minor_currency_units(tx.amount, tx.currency_id)
         self.assertEqual(merchant_parameters["DS_MERCHANT_AMOUNT"], str(converted_amount))
         self.assertEqual(merchant_parameters["DS_MERCHANT_CURRENCY"], tx.currency_id.iso_numeric)
         self.assertEqual(merchant_parameters["DS_MERCHANT_ORDER"], tx.reference)
