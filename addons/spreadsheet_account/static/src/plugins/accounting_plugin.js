@@ -13,11 +13,15 @@ import { camelToSnakeObject, toServerDateString } from "@spreadsheet/helpers/hel
 export class AccountingPlugin extends OdooUIPlugin {
     static getters = /** @type {const} */ ([
         "getAccountPrefixCredit",
+        "getAccountCredit",
         "getAccountPrefixDebit",
+        "getAccountDebit",
         "getAccountGroupCodes",
         "getFiscalStartDate",
         "getFiscalEndDate",
+        "getAccountPrefixResidual",
         "getAccountResidual",
+        "getAccountPrefixPartnerData",
         "getAccountPartnerData",
         "getAccountTagData",
         "getCurrentFiscalYearStart",
@@ -40,6 +44,24 @@ export class AccountingPlugin extends OdooUIPlugin {
         return this._serverData;
     }
 
+    /**
+     *
+     * @param {DateRange} dateRange start date of the period to look
+     * @param {number} offset end  date of the period to look
+     */
+    _applyOffsetToDateRange(dateRange, offset) {
+        dateRange = deepCopy(dateRange);
+        dateRange.year += offset;
+        // Excel dates start at 1899-12-30, we should not support date ranges
+        // that do not cover dates prior to it.
+        // Unfortunately, this check needs to be done right before the server
+        // call as a date to low (year <= 1) can raise an error server side.
+        if (dateRange.year < 1900) {
+            throw new EvaluationError(_t("%s is not a valid year.", dateRange.year));
+        }
+        return dateRange;
+    }
+
     // -------------------------------------------------------------------------
     // Getters
     // -------------------------------------------------------------------------
@@ -54,7 +76,24 @@ export class AccountingPlugin extends OdooUIPlugin {
      * @returns {number}
      */
     getAccountPrefixCredit(codes, dateRange, offset, companyId, includeUnposted) {
-        const data = this._fetchAccountData(codes, dateRange, offset, companyId, includeUnposted);
+        const data = this._fetchAccountPrefixData(
+            codes,
+            dateRange,
+            offset,
+            companyId,
+            includeUnposted
+        );
+        return data.credit;
+    }
+
+    getAccountCredit(accountIds, dateRange, offset, companyId, includeUnposted) {
+        const data = this._fetchAccountData(
+            accountIds,
+            dateRange,
+            offset,
+            companyId,
+            includeUnposted
+        );
         return data.credit;
     }
 
@@ -68,7 +107,24 @@ export class AccountingPlugin extends OdooUIPlugin {
      * @returns {number}
      */
     getAccountPrefixDebit(codes, dateRange, offset, companyId, includeUnposted) {
-        const data = this._fetchAccountData(codes, dateRange, offset, companyId, includeUnposted);
+        const data = this._fetchAccountPrefixData(
+            codes,
+            dateRange,
+            offset,
+            companyId,
+            includeUnposted
+        );
+        return data.debit;
+    }
+
+    getAccountDebit(accountIds, dateRange, offset, companyId, includeUnposted) {
+        const data = this._fetchAccountData(
+            accountIds,
+            dateRange,
+            offset,
+            companyId,
+            includeUnposted
+        );
         return data.debit;
     }
 
@@ -116,20 +172,21 @@ export class AccountingPlugin extends OdooUIPlugin {
      * @param {boolean} includeUnposted wether or not select unposted entries
      * @returns {{ debit: number, credit: number }}
      */
-    _fetchAccountData(codes, dateRange, offset, companyId, includeUnposted) {
-        dateRange = deepCopy(dateRange);
-        dateRange.year += offset;
-        // Excel dates start at 1899-12-30, we should not support date ranges
-        // that do not cover dates prior to it.
-        // Unfortunately, this check needs to be done right before the server
-        // call as a date to low (year <= 1) can raise an error server side.
-        if (dateRange.year < 1900) {
-            throw new EvaluationError(_t("%s is not a valid year.", dateRange.year));
-        }
+    _fetchAccountPrefixData(codes, dateRange, offset, companyId, includeUnposted) {
+        dateRange = this._applyOffsetToDateRange(dateRange, offset);
         return this.serverData.batch.get(
             "account.account",
             "spreadsheet_fetch_debit_credit",
             camelToSnakeObject({ dateRange, codes, companyId, includeUnposted })
+        );
+    }
+
+    _fetchAccountData(accountIds, dateRange, offset, companyId, includeUnposted) {
+        dateRange = this._applyOffsetToDateRange(dateRange, offset);
+        return this.serverData.batch.get(
+            "account.account",
+            "spreadsheet_fetch_debit_credit",
+            camelToSnakeObject({ dateRange, accountIds, companyId, includeUnposted })
         );
     }
 
@@ -161,20 +218,27 @@ export class AccountingPlugin extends OdooUIPlugin {
      * @param {boolean} includeUnposted whether or not select unposted entries
      * @returns {number | undefined}
      */
-    getAccountResidual(codes, dateRange, offset, companyId, includeUnposted) {
-        dateRange = deepCopy(dateRange);
-        dateRange.year += offset;
-        // Excel dates start at 1899-12-30, we should not support date ranges
-        // that do not cover dates prior to it.
-        // Unfortunately, this check needs to be done right before the server
-        // call as a date to low (year <= 1) can raise an error server side.
-        if (dateRange.year < 1900) {
-            throw new EvaluationError(_t("%s is not a valid year.", dateRange.year));
-        }
+    getAccountPrefixResidual(codes, dateRange, offset, companyId, includeUnposted) {
+        dateRange = this._applyOffsetToDateRange(dateRange, offset);
         const result = this.serverData.batch.get(
             "account.account",
             "spreadsheet_fetch_residual_amount",
             camelToSnakeObject({ codes, dateRange, companyId, includeUnposted })
+        );
+        if (result === false) {
+            throw new EvaluationError(
+                _t("The residual amount for given accounts could not be computed.")
+            );
+        }
+        return result.amount_residual;
+    }
+
+    getAccountResidual(accountIds, dateRange, offset, companyId, includeUnposted) {
+        dateRange = this._applyOffsetToDateRange(dateRange, offset);
+        const result = this.serverData.batch.get(
+            "account.account",
+            "spreadsheet_fetch_residual_amount",
+            camelToSnakeObject({ accountIds, dateRange, companyId, includeUnposted })
         );
         if (result === false) {
             throw new EvaluationError(
@@ -195,20 +259,25 @@ export class AccountingPlugin extends OdooUIPlugin {
      * @param {number[]} partnerIds ids of the partners
      * @returns {number | undefined}
      */
-    getAccountPartnerData(codes, dateRange, offset, companyId, includeUnposted, partnerIds) {
-        dateRange = deepCopy(dateRange);
-        dateRange.year += offset;
-        // Excel dates start at 1899-12-30, we should not support date ranges
-        // that do not cover dates prior to it.
-        // Unfortunately, this check needs to be done right before the server
-        // call as a date to low (year <= 1) can raise an error server side.
-        if (dateRange.year < 1900) {
-            throw new EvaluationError(_t("%s is not a valid year.", dateRange.year));
-        }
+    getAccountPrefixPartnerData(codes, dateRange, offset, companyId, includeUnposted, partnerIds) {
+        dateRange = this._applyOffsetToDateRange(dateRange, offset);
         const result = this.serverData.batch.get(
             "account.account",
             "spreadsheet_fetch_partner_balance",
             camelToSnakeObject({ dateRange, codes, companyId, includeUnposted, partnerIds })
+        );
+        if (result === false) {
+            throw new EvaluationError(_t("The balance for given partners could not be computed."));
+        }
+        return result.balance;
+    }
+
+    getAccountPartnerData(accountIds, dateRange, offset, companyId, includeUnposted, partnerIds) {
+        dateRange = this._applyOffsetToDateRange(dateRange, offset);
+        const result = this.serverData.batch.get(
+            "account.account",
+            "spreadsheet_fetch_partner_balance",
+            camelToSnakeObject({ dateRange, accountIds, companyId, includeUnposted, partnerIds })
         );
         if (result === false) {
             throw new EvaluationError(_t("The balance for given partners could not be computed."));
@@ -227,15 +296,7 @@ export class AccountingPlugin extends OdooUIPlugin {
      * @returns {number | undefined}
      */
     getAccountTagData(accountTagIds, dateRange, offset, companyId, includeUnposted) {
-        dateRange = deepCopy(dateRange);
-        dateRange.year += offset;
-        // Excel dates start at 1899-12-30, we should not support date ranges
-        // that do not cover dates prior to it.
-        // Unfortunately, this check needs to be done right before the server
-        // call as a date too low (year <= 1) can raise an error server side.
-        if (dateRange.year < 1900) {
-            throw new EvaluationError(_t("%s is not a valid year.", dateRange.year));
-        }
+        dateRange = this._applyOffsetToDateRange(dateRange, offset);
         const result = this.serverData.batch.get(
             "account.account",
             "spreadsheet_fetch_balance_tag",

@@ -35,6 +35,33 @@ test("Basic evaluation", async () => {
     expect(getCellValue(model, "A1")).toBe(26);
 });
 
+test("Basic evaluation with id", async () => {
+    const { model } = await createModelWithDataSource({
+        mockRPC: async function (route, args) {
+            if (args.method === "spreadsheet_fetch_partner_balance") {
+                expect.step("spreadsheet_fetch_partner_balance");
+                expect(args.args[0]).toEqual([
+                    {
+                        partner_ids: [14, 16],
+                        account_ids: [42],
+                        date_range: {
+                            range_type: "year",
+                            year: 2023,
+                        },
+                        company_id: 0,
+                        include_unposted: false,
+                    },
+                ]);
+                return [{ balance: 26 }];
+            }
+        },
+    });
+    setCellContent(model, "A1", `=ODOO.PARTNER.BALANCE.ID("14, 16", 42, 2023)`);
+    await waitForDataLoaded(model);
+    expect.verifySteps(["spreadsheet_fetch_partner_balance"]);
+    expect(getCellValue(model, "A1")).toBe(26);
+});
+
 test("with wrong date format", async () => {
     const { model } = await createModelWithDataSource();
     setCellContent(

@@ -77,6 +77,8 @@ class AccountAccount(models.Model):
             account_domain = code_domain | default_domain
             account_ids = self.env["account.account"].with_company(company_id).search(account_domain).ids
             account_id_domain = [("account_id", "in", account_ids)]
+        elif 'account_ids' in formula_params:
+            account_id_domain = [("account_id", "in", formula_params["account_ids"])]
         else:
             account_id_domain = Domain.FALSE
 

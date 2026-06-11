@@ -34,6 +34,32 @@ test("Basic evaluation", async () => {
     expect(getCellValue(model, "A1")).toBe(111.11);
 });
 
+test("Basic evaluation with id", async () => {
+    const { model } = await createModelWithDataSource({
+        mockRPC: async function (route, args) {
+            if (args.method === "spreadsheet_fetch_residual_amount") {
+                expect.step("spreadsheet_fetch_residual_amount");
+                expect(args.args[0]).toEqual([
+                    {
+                        account_ids: [987],
+                        date_range: {
+                            range_type: "year",
+                            year: 2023,
+                        },
+                        company_id: 0,
+                        include_unposted: false,
+                    },
+                ]);
+                return [{ amount_residual: 111.11 }];
+            }
+        },
+    });
+    setCellContent(model, "A1", `=ODOO.RESIDUAL.ID(987, 2023)`);
+    await waitForDataLoaded(model);
+    expect.verifySteps(["spreadsheet_fetch_residual_amount"]);
+    expect(getCellValue(model, "A1")).toBe(111.11);
+});
+
 test("with wrong date format", async () => {
     const { model } = await createModelWithDataSource();
     setCellContent(model, "A1", `=ODOO.RESIDUAL("112", "This is not a valid date")`);
