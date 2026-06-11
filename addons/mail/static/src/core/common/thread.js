@@ -3,7 +3,12 @@ import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
 import { Record } from "@mail/model/export";
-import { useChildRefs, useMessageSelection, useVisible } from "@mail/utils/common/hooks";
+import {
+    useChildRefs,
+    useMessageSelection,
+    useOnChange,
+    useVisible,
+} from "@mail/utils/common/hooks";
 
 import {
     Component,
@@ -12,13 +17,10 @@ import {
     onWillDestroy,
     onWillPatch,
     onWillUnmount,
-    onWillUpdateProps,
     props,
     proxy,
     signal,
     t,
-    untrack,
-    useEffect,
     useListener,
 } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
@@ -70,10 +72,10 @@ export class Thread extends Component {
         this.onScroll = this.onScroll.bind(this);
         this.onWheel = this.onWheel.bind(this);
         this.messageRefs = useChildRefs();
-        useEffect(() => {
-            this.messageRefs.size; // trigger effect only when messageRefs changes
-            untrack(() => this.scrollToHighlighted());
-        });
+        useOnChange(
+            () => [this.messageRefs.size],
+            () => this.scrollToHighlighted()
+        );
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.state = proxy({
@@ -238,17 +240,19 @@ export class Thread extends Component {
                 this.props.thread.fetchNewMessages();
             }
         });
-        onWillUpdateProps((nextProps) => {
-            if (nextProps.thread.notEq(this.props.thread)) {
-                this.lastJumpPresent = nextProps.jumpPresent;
-            }
-            if (!this.env.chatter || this.env.chatter?.shouldFetchMessages) {
-                if (this.env.chatter) {
-                    this.env.chatter.shouldFetchMessages = false;
+        useOnChange(
+            () => [this.props.thread],
+            (thread) => {
+                this.lastJumpPresent = this.props.jumpPresent;
+                if (!this.env.chatter || this.env.chatter?.shouldFetchMessages) {
+                    if (this.env.chatter) {
+                        this.env.chatter.shouldFetchMessages = false;
+                    }
+                    thread.fetchNewMessages();
                 }
-                nextProps.thread.fetchNewMessages();
-            }
-        });
+            },
+            { initialRun: false }
+        );
     }
 
     get channel() {
@@ -347,16 +351,18 @@ export class Thread extends Component {
                 this.reset();
             }
         });
-        onWillUpdateProps((nextProps) => {
-            if (nextProps.thread.notEq(this.props.thread)) {
+        useOnChange(
+            () => [this.props.thread],
+            (thread) => {
                 stopOnChange();
-                stopOnChange = Record.onChange(nextProps.thread, "isLoaded", () => {
-                    if (!nextProps.thread.isLoaded || !this.state.mountedAndLoaded) {
+                stopOnChange = Record.onChange(thread, "isLoaded", () => {
+                    if (!thread.isLoaded || !this.state.mountedAndLoaded) {
                         this.reset();
                     }
                 });
-            }
-        });
+            },
+            { initialRun: false }
+        );
         onWillDestroy(() => stopOnChange());
         onWillPatch(() => {
             if (!this.loadedAndPatched) {

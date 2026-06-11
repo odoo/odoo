@@ -298,7 +298,7 @@ const chatterPatch = {
     /** @override */
     async load(thread, requestList) {
         await super.load(...arguments);
-        if (!thread.id || !this.state.thread?.eq(thread)) {
+        if (!thread?.id || !this.state.thread?.eq(thread)) {
             return;
         }
         this.updateRecipients(this.props.record);
