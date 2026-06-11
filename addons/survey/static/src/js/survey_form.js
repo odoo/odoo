@@ -1228,7 +1228,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         form.querySelector('button[type="submit"]').classList.add('d-none');
         const nextPageBtn = form.querySelector('button[id="next_page"]');
         nextPageBtn.classList.remove('d-none');
-        nextPageBtn.addEventListener('click', () => {
+        nextPageBtn.addEventListener('click', (ev) => {
+            ev.preventDefault();
             this._nextScreen(submitPromise, options);
         });
         // Replacing the original onKeyDown listener to block everything except for the
