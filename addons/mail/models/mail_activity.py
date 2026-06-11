@@ -620,19 +620,7 @@ class MailActivity(models.Model):
 
                 # post message on activity, before deleting it
                 if record_sudo in existing:
-                    activity_message = record_sudo.message_post_with_source(
-                        'mail.message_activity_done',
-                        attachment_ids=attachment_ids,
-                        author_id=self.env.user.partner_id.id,
-                        render_values={
-                            'activity': activity,
-                            'feedback': feedback,
-                            'display_assignee': activity.user_id != self.env.user,
-                            **self._get_activity_done_message_extra_values(activity),
-                        },
-                        mail_activity_type_id=activity.activity_type_id.id,
-                        subtype_xmlid='mail.mt_activities',
-                    )
+                    activity_message = activity._generate_done_message(record_sudo, feedback, attachment_ids)
                 else:
                     activity_message = self.env['mail.message']
                     activities_to_remove += activity
@@ -668,6 +656,23 @@ class MailActivity(models.Model):
         if feedback:
             (self - activities_to_remove).feedback = feedback
         return messages
+
+    def _generate_done_message(self, record_sudo, feedback, attachment_ids):
+        """ Generate and post the chatter message for a completed activity. """
+        self.ensure_one()
+        return record_sudo.message_post_with_source(
+            'mail.message_activity_done',
+            attachment_ids=attachment_ids,
+            author_id=self.env.user.partner_id.id,
+            render_values={
+                'activity': self,
+                'feedback': feedback,
+                'display_assignee': self.user_id != self.env.user,
+                **self._get_activity_done_message_extra_values(self),
+            },
+            mail_activity_type_id=self.activity_type_id.id,
+            subtype_xmlid='mail.mt_activities',
+        )
 
     @api.readonly
     def action_close_dialog(self):
