@@ -164,6 +164,20 @@ class MailMessage(models.Model):
                    },
                 },
             )
+        linked_messages = self.linked_message_ids - self
+        linked_messages_vals_list = linked_messages._read_format({"id", "model", "res_id"})
+        record_by_linked_message = linked_messages._record_by_message()
+        for message, values in zip(linked_messages, linked_messages_vals_list):
+            if record := record_by_linked_message.get(message):
+                values["thread"] = {
+                    "id": record.id,
+                    "model": record._name,
+                    # sudo: mail.thread - reading display_name of accessed thread is acceptable
+                    "display_name": record.sudo().display_name,
+                }
+            else:
+                values["thread"] = False
+        vals_list.extend(linked_messages_vals_list)
         return vals_list
 
     def _portal_message_format_attachments(self, attachment_values):
