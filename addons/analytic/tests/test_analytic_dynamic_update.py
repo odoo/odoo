@@ -1,12 +1,12 @@
 from contextlib import contextmanager
 from unittest.mock import patch
 
-from odoo.tests import tagged
+from odoo.tests import tagged, HttpCase
 from odoo.addons.analytic.tests.common import AnalyticCommon
 
 
 @tagged('post_install', '-at_install')
-class TestAnalyticDynamicUpdate(AnalyticCommon):
+class TestAnalyticDynamicUpdate(AnalyticCommon, HttpCase):
     def test_configurations(self):
         @contextmanager
         def capture_create():
@@ -238,3 +238,25 @@ class TestAnalyticDynamicUpdate(AnalyticCommon):
                     lines.analytic_distribution = update
                 lines.invalidate_recordset(['analytic_distribution'])
                 self.assertRecordValues(lines + container['created'], expect)
+
+    def test_tour_analytic_distribution_widget(self):
+        plan_1_col = self.analytic_plan_1._column_name()
+        plan_2_col = self.analytic_plan_2._column_name()
+        self.env['account.analytic.line'].create({
+            'name': 'Analytic Item 1',
+            plan_1_col: self.analytic_account_1.id,
+            plan_2_col: self.analytic_account_3.id,
+        })
+        self.env['account.analytic.line'].create({
+            'name': 'Analytic Item 2',
+            plan_1_col: self.analytic_account_1.id,
+            plan_2_col: self.analytic_account_4.id,
+        })
+        self.env['account.analytic.account'].create([{
+            'name': 'Other Account',
+            'plan_id': self.analytic_plan_1.id,
+            'company_id': False,
+        }])
+        url = "/odoo?plan_1_col=%s" % plan_1_col
+        self.env.user.group_ids += self.env.ref('account.group_account_manager')
+        self.start_tour(url, 'analytic_distribution_widget', login=self.env.user.login)
