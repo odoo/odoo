@@ -1626,11 +1626,18 @@ class AccountMove(models.Model):
     def _l10n_it_edi_export_taxes_check(self):
         return self._l10n_it_edi_check_lines_for_tax_kind('vat', _('VAT'))
 
+    def _l10n_it_edi_get_max_limit_per_tax(self, kind_code):
+        return 1
+
     def _l10n_it_edi_check_lines_for_tax_kind(self, kind_code, kind_desc, min_len=1):
         assert min_len in (0, 1)
+
+        # TODO: pass this as a parameter of the function in master
+        max_len = self._l10n_it_edi_get_max_limit_per_tax(kind_code)
+
         if self.invoice_line_ids.filtered(lambda line:
             line.display_type == 'product'
-            and not (min_len <= len(line.tax_ids._l10n_it_filter_kind(kind_code)) <= 1)
+            and not (min_len <= len(line.tax_ids._l10n_it_filter_kind(kind_code)) <= max_len)
         ):
             return {
                 f'l10n_it_edi_move_{kind_code}_tax_per_line': {
