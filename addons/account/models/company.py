@@ -362,10 +362,10 @@ class ResCompany(models.Model):
     def _compute_domestic_fiscal_position_id(self):
         for company in self:
             potential_domestic_fps = company.fiscal_position_ids.filtered_domain(
-            Domain('country_id', '=', company.country_id.id)
+            Domain('country_id', '=', company.account_fiscal_country_id.id)
             | Domain([
                     ('country_id', '=', False),
-                    ('country_group_id', 'in', company.country_id.country_group_ids.ids),
+                    ('country_group_id', 'in', company.account_fiscal_country_id.country_group_ids.ids),
                 ]),
             ).sorted(lambda x: x.country_id.id or float('inf')).sorted('sequence')
             company.domestic_fiscal_position_id = potential_domestic_fps[0] if potential_domestic_fps else False
