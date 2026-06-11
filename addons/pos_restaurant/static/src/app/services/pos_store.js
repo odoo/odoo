@@ -564,7 +564,9 @@ patch(PosStore.prototype, {
     },
     createOrderIfNeeded(data) {
         if (this.config.module_pos_restaurant && !data["table_id"]) {
-            let order = this.models["pos.order"].find((order) => order.isDirectSale);
+            let order = this.models["pos.order"].find(
+                (order) => order.isDirectSale && !order.isSynced
+            );
             if (!order) {
                 order = this.createNewOrder(data);
             }
@@ -674,6 +676,7 @@ patch(PosStore.prototype, {
                     !o.table_id &&
                     !o.finalized &&
                     o.lines.length === 0 &&
+                    !o.isSynced &&
                     !o.floating_order_name &&
                     !o.preset_time &&
                     (!o.preset_id || o.preset_id.id === this.config.default_preset_id?.id)
