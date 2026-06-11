@@ -5,11 +5,11 @@
         <field name="model">res.company</field>
         <field name="inherit_id" ref="base.view_company_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='vat']" position="attributes">
+            <xpath expr="//label[@for='vat']" position="attributes">
                 <attribute name="invisible" add="country_code == 'NZ'" separator=" or "/> 
             </xpath>
-            <xpath expr="//field[@name='vat']" position="after">
-                <field name="vat" string="GST" invisible="country_code != 'NZ'"/>
+            <xpath expr="//label[@for='vat']" position="after">
+                <label for="vat" string="GST" invisible="country_code != 'NZ'"/>
             </xpath>
             <xpath expr="//field[@name='company_registry']" position="attributes">
                 <attribute name="invisible" add="country_code == 'NZ'" separator=" or "/> 
