@@ -266,6 +266,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         if not fields:
             return res
 
+        self.check_access('read')
         IrDefault = self.env['ir.default']
         IrConfigParameter = self.env['ir.config_parameter'].sudo()
         classified = self._get_classified_fields(fields)
