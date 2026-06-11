@@ -35,21 +35,15 @@ export class TableStrategyPlugin extends Plugin {
         "referenceNode",
         "spacing",
     ];
-    static shared = [
-        "addOuterSpacingFacts",
-        "applyCellMobileMarginBottom",
-        "applyRowDesktopMarginBottom",
-        "applyCellPaddingRight",
-        "extractRowsFromBands",
-        "fillTableContainer",
-    ];
+    static shared = ["extractRowsFromBands", "fillTableContainer"];
     resources = {
         element_layout_analysis_processors: this.analyzeElementLayout.bind(this),
         synthetic_email_node_processors: (emailNode) => {
             if (!emailNode.analysis.facts.isTableContainer) {
                 return;
             }
-            return this.fillTableContainer(emailNode);
+            const rowMeasures = this.extractRowsFromBands(emailNode);
+            return this.fillTableContainer(emailNode, rowMeasures);
         },
         refine_layout_processors: withSequence(
             DEFAULT_SPACING_SEQUENCE - 1,
@@ -68,6 +62,9 @@ export class TableStrategyPlugin extends Plugin {
     }
 
     applyTableSpacing(layout, { emailNode }) {
+        if (!emailNode.analysis.facts.useTableStrategy) {
+            return;
+        }
         // apply outer spacing
         // - identify that the node is a tableLayout or a hybridTableLayout
         // - define/override the "desktopMarginStyleInfo" as per the spacing_plugin spec
@@ -100,13 +97,16 @@ export class TableStrategyPlugin extends Plugin {
         }
     }
 
-    addOuterSpacingFacts(layout, { emailNode }) {
+    addTableOuterSpacingFacts(layout, { emailNode }) {
         // Rely on the spacing_plugin to build a margin wrapper
         // around the table
         // TODO EGGMAIL: replace test value
-        emailNode.analysis.facts.desktopMarginStyleInfo = StyleInfo.from({
-            margin: "16px",
-        });
+        emailNode.analysis.facts.desktopMarginStyleInfo = this.getMarginStyleInfo(
+            StyleInfo.from({
+                margin: "16px",
+            }),
+            emailNode.layout.ancestorTag
+        );
     }
 
     applyCellMobileMarginBottom(layout, { emailNode }) {
@@ -288,8 +288,11 @@ export class TableStrategyPlugin extends Plugin {
     // Objective here is to make sure that every child of the row is classified as a CELL,
     // be it a child itself becomes a CELL, or 1+ children are wrapped in a CELL
     // BTW the row node itself can become multiple row in some circumstances
-    fillTableContainer(emailNode, { withTable = true, builders = this.builders } = {}) {
-        const rowMeasures = this.extractRowsFromBands(emailNode);
+    fillTableContainer(
+        emailNode,
+        rowMeasures,
+        { withTable = true, builders = this.builders } = {}
+    ) {
         const rows = [];
         for (const rowMeasure of rowMeasures) {
             const width = rowMeasure.width;
@@ -415,6 +418,7 @@ export class TableStrategyPlugin extends Plugin {
         const layout = new TableLayout();
         const tableNode = new EmailNode({ layout });
         tableNode.analysis.facts.acceptTableOuterSpacing = true;
+        tableNode.analysis.facts.useTableStrategy = true;
         tableNode.spliceChildren(0, 0, ...rows);
         return tableNode;
     }
@@ -425,6 +429,7 @@ export class TableStrategyPlugin extends Plugin {
         if (!isLast) {
             emailNode.analysis.facts.acceptRowDesktopMarginBottom = true;
         }
+        emailNode.analysis.facts.useTableStrategy = true;
         return new EmailNode({ layout });
     }
 
@@ -451,6 +456,7 @@ export class TableStrategyPlugin extends Plugin {
             cellEmailNode.analysis.facts.acceptCellMobileMarginBottom = true;
             cellEmailNode.analysis.facts.acceptCellPaddingRight = true;
         }
+        emailNode.analysis.facts.useTableStrategy = true;
         return cellEmailNode;
     }
 
@@ -459,7 +465,9 @@ export class TableStrategyPlugin extends Plugin {
             style: { width: `${widthRatio}%` },
             attributes: { width: `${widthRatio}%` },
         });
-        return new EmailNode({ layout });
+        const emailNode = new EmailNode({ layout });
+        emailNode.analysis.facts.useTableStrategy = true;
+        return emailNode;
     }
 
     buildCellWithOffset({

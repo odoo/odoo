@@ -138,12 +138,3 @@ export class HybridFluidTableCell extends ElementLayout {
         });
     }
 }
-
-export class HybridFluidEmptyTableCell extends HybridFluidTableCell {
-    constructor(root = {}) {
-        super(root);
-        this.setAttributes({
-            style: { height: 0 },
-        });
-    }
-}

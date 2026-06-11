@@ -65,6 +65,9 @@ export class RulesPlugin extends Plugin {
     }
 
     filterAttributes(attributes, referenceNode, rules = this.attributeRules) {
+        if (typeof referenceNode === "string") {
+            referenceNode = this.config.referenceDocument.createElement(referenceNode);
+        }
         let attributesMap = attributes;
         if (Array.isArray(attributes)) {
             attributesMap = new Map(attributes);
@@ -122,6 +125,9 @@ export class RulesPlugin extends Plugin {
      * Return a new styleInfo instance filtered with rules
      */
     filterStyleInfo(styleInfo, referenceNode, rules = this.styleRules) {
+        if (typeof referenceNode === "string") {
+            referenceNode = this.config.referenceDocument.createElement(referenceNode);
+        }
         const filteredStyleInfo = new StyleInfo();
         if (!rules) {
             return filteredStyleInfo.merge(styleInfo);

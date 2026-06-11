@@ -6,13 +6,16 @@ import { EmailNode } from "../core/render_models";
 import {
     HybridFluidCell,
     HybridFluidEmptyCell,
-    HybridFluidEmptyTableCell,
     HybridFluidRow,
     HybridFluidTableCell,
     HybridFluidTableRow,
 } from "./hybrid_fluid_models";
 import { parseCssValue } from "../css_parsers";
 import { isAllowedContent } from "@html_editor/utils/dom_info";
+import { withSequence } from "@html_editor/utils/resource";
+import { DEFAULT_SPACING_SEQUENCE } from "./spacing_plugin";
+import { StyleInfo } from "../core/style_models";
+import { EmptyCellLayout } from "./table_models";
 
 const { DESKTOP, MOBILE } = DIMENSIONS;
 
@@ -40,20 +43,81 @@ export class HybridFluidStrategyPlugin extends Plugin {
         "responsiveBlock",
         "rules",
         "referenceNode",
+        "spacing",
         "tableStrategy",
     ];
     resources = {
         element_layout_analysis_processors: this.analyzeElementLayout.bind(this),
         synthetic_email_node_processors: this.fillHybridFluidContainer.bind(this),
+        refine_layout_processors: withSequence(
+            DEFAULT_SPACING_SEQUENCE - 1,
+            this.applyTableSpacing.bind(this)
+        ),
     };
 
     setup() {
-        this.builders = {
-            row: this.buildRow.bind(this),
-            cell: this.buildCell.bind(this),
-            emptyCell: this.buildEmptyCell.bind(this),
-            cellWithOffset: this.buildCellWithOffset.bind(this),
+        this.hybridBuilders = {
+            row: this.buildHybridRow.bind(this),
+            cell: this.buildHybridCell.bind(this),
+            emptyCell: this.buildHybridEmptyCell.bind(this),
+            cellWithOffset: this.buildHybridCellWithOffset.bind(this),
         };
+        this.tableBuilders = {
+            row: this.buildTableRow.bind(this),
+            cell: this.buildTableCell.bind(this),
+            emptyCell: this.buildTableEmptyCell.bind(this),
+            cellWithOffset: this.buildTableCellWithOffset.bind(this),
+        };
+    }
+
+    applyTableSpacing(layout, { emailNode }) {
+        if (!emailNode.analysis.facts.useHybridFluidTableStrategy) {
+            return;
+        }
+        if (emailNode.analysis.facts.acceptTableOuterSpacing) {
+            this.addTableOuterSpacingFacts(layout, { emailNode });
+        }
+        if (emailNode.analysis.facts.acceptCellMobileMarginBottom) {
+            this.applyCellMobileMarginBottom(layout, { emailNode });
+        }
+        if (emailNode.analysis.facts.acceptCellPaddingRight) {
+            this.applyCellPaddingRight(layout, { emailNode });
+        }
+    }
+
+    addTableOuterSpacingFacts(layout, { emailNode }) {
+        // Rely on the spacing_plugin to build a margin wrapper
+        // around the table
+        // TODO EGGMAIL: replace test value
+        emailNode.analysis.facts.desktopMarginStyleInfo = this.getMarginStyleInfo(
+            StyleInfo.from({
+                margin: "16px",
+            }),
+            emailNode.layout.ancestorTag
+        );
+    }
+
+    applyCellMobileMarginBottom(layout, { emailNode }) {
+        // TODO EGGMAIL: replace test value
+        layout.setAttributes({ classNames: "o-ci-m-margin-bottom-16" });
+    }
+
+    applyCellPaddingRight(layout, { emailNode }) {
+        const parent = emailNode.parent;
+        if (!parent) {
+            return;
+        }
+        // TODO EGGMAIL: replace test value
+        parent.spliceChildren(
+            parent.children.indexOf(emailNode) + 1,
+            0,
+            new EmailNode({
+                layout: new EmptyCellLayout({
+                    style: { width: `3%` },
+                    attributes: { width: `3%` },
+                }),
+            })
+        );
     }
 
     analyzeElementLayout({ layout, analysis }, { referenceNode }) {
@@ -82,9 +146,15 @@ export class HybridFluidStrategyPlugin extends Plugin {
         if (!emailNode.analysis.facts.isHybridFluidContainer) {
             return;
         }
-        return this.fillTableContainer(emailNode, {
+        const rowMeasures = this.extractRowsFromBands(emailNode);
+        const firstRowMeasure = rowMeasures.at(0);
+        let verticalAlign;
+        if (firstRowMeasure) {
+            verticalAlign = firstRowMeasure.verticalAlign;
+        }
+        return this.fillTableContainer(emailNode, rowMeasures, {
             withTable: false,
-            builders: this.builders,
+            builders: verticalAlign ? this.hybridBuilders : this.tableBuilders,
         });
     }
 
@@ -160,34 +230,31 @@ export class HybridFluidStrategyPlugin extends Plugin {
         return clusterEmailNodes;
     }
 
-    buildRow(rowMeasure) {
-        const layout = rowMeasure.verticalAlign ? new HybridFluidRow() : new HybridFluidTableRow();
-        return new EmailNode({ layout });
+    buildHybridRow() {
+        return new EmailNode({ layout: new HybridFluidRow() });
     }
 
-    buildCell({ styleContext, isLast, cluster, emailNode, width, widthRatio, verticalAlign }) {
+    buildTableRow() {
+        const emailNode = new EmailNode({ layout: new HybridFluidTableRow() });
+        emailNode.analysis.facts.useHybridFluidTableStrategy = true;
+        emailNode.analysis.facts.acceptTableOuterSpacing = true;
+        return emailNode;
+    }
+
+    buildHybridCell({ styleContext, isLast, cluster, emailNode, width, verticalAlign }) {
         const clusterEmailNodes = this.getClusterEmailNodes(emailNode, cluster);
         const refs = {
             root: {},
             styleContext,
         };
-        let layout;
-        if (verticalAlign) {
-            const cellWidth = width - (isLast ? ZOOM_WIDTH_CORRECTION : 0);
-            Object.assign(refs.root, {
-                style: {
-                    "vertical-align": verticalAlign,
-                    "max-width": `${cellWidth}px`,
-                },
-            });
-            layout = new HybridFluidCell({ refs });
-        } else {
-            Object.assign(refs.root, {
-                style: { width: `${widthRatio}%` },
-                attributes: { width: `${widthRatio}%` },
-            });
-            layout = new HybridFluidTableCell(refs.root);
-        }
+        const cellWidth = width - (isLast ? ZOOM_WIDTH_CORRECTION : 0);
+        Object.assign(refs.root, {
+            style: {
+                "vertical-align": verticalAlign,
+                "max-width": `${cellWidth}px`,
+            },
+        });
+        const layout = new HybridFluidCell({ refs });
         const cellEmailNode = new EmailNode({
             layout,
             // TODO EGGMAIL: evaluate what positioning facts should be shared
@@ -199,70 +266,108 @@ export class HybridFluidStrategyPlugin extends Plugin {
         return cellEmailNode;
     }
 
-    buildEmptyCell({ isLast, width, widthRatio, verticalAlign }) {
-        const refs = { root: {} };
-        let layout;
-        if (verticalAlign) {
-            const cellWidth = width - (isLast ? ZOOM_WIDTH_CORRECTION : 0);
-            Object.assign(refs.root, {
-                style: { "max-width": `${cellWidth}px` },
-            });
-            layout = new HybridFluidEmptyCell({ refs });
-        } else {
-            Object.assign(refs.root, {
-                style: { width: `${widthRatio}%` },
-                attributes: { width: `${widthRatio}%` },
-            });
-            layout = new HybridFluidEmptyTableCell(refs.root);
+    buildTableCell({ styleContext, isLast, cluster, emailNode, widthRatio }) {
+        const clusterEmailNodes = this.getClusterEmailNodes(emailNode, cluster);
+        const refs = {
+            root: {},
+            styleContext,
+        };
+        Object.assign(refs.root, {
+            style: { width: `${widthRatio}%` },
+            attributes: { width: `${widthRatio}%` },
+        });
+        const layout = new HybridFluidTableCell(refs.root);
+        const cellEmailNode = new EmailNode({
+            layout,
+            // TODO EGGMAIL: evaluate what positioning facts should be shared
+            // and how
+        });
+        for (const child of clusterEmailNodes) {
+            cellEmailNode.appendChild(child);
         }
+        if (!isLast) {
+            cellEmailNode.analysis.facts.acceptCellMobileMarginBottom = true;
+            cellEmailNode.analysis.facts.acceptCellPaddingRight = true;
+        }
+        cellEmailNode.analysis.facts.useHybridFluidTableStrategy = true;
+        return cellEmailNode;
+    }
+
+    buildHybridEmptyCell({ isLast, width }) {
+        const refs = { root: {} };
+        const cellWidth = width - (isLast ? ZOOM_WIDTH_CORRECTION : 0);
+        Object.assign(refs.root, {
+            style: { "max-width": `${cellWidth}px` },
+        });
+        const layout = new HybridFluidEmptyCell({ refs });
         return new EmailNode({ layout });
     }
 
-    buildCellWithOffset({
+    buildTableEmptyCell({ widthRatio }) {
+        const refs = { root: {} };
+        Object.assign(refs.root, {
+            style: { width: `${widthRatio}%` },
+            attributes: { width: `${widthRatio}%` },
+        });
+        const layout = new EmptyCellLayout(refs.root);
+        const emailNode = new EmailNode({ layout });
+        emailNode.analysis.facts.useHybridFluidTableStrategy = true;
+        return emailNode;
+    }
+
+    buildHybridCellWithOffset({
         styleContext,
         isLast,
         cluster,
         emailNode,
         width,
-        widthRatio,
         verticalAlign,
         offsetWidth,
-        offsetWidthRatio,
     }) {
         const refs = { root: {} };
         const cells = [];
-        if (verticalAlign) {
-            const cellOffsetWidth = offsetWidth - (isLast ? ZOOM_WIDTH_CORRECTION : 0);
-            const cellWidth = width + cellOffsetWidth;
-            const offsetEmailNode = this.buildEmptyCell({
-                verticalAlign,
-                width: cellOffsetWidth,
-                isLast,
-            });
-            const cellEmailNode = this.buildCell({
-                styleContext,
-                cluster,
-                emailNode,
-                width,
-                verticalAlign,
-            });
-            Object.assign(refs.root, { style: { "max-width": `${cellWidth}px` } });
-            const cellWithOffsetEmailNode = new EmailNode({
-                layout: new HybridFluidCell({ refs }),
-            });
-            cellWithOffsetEmailNode.appendChild(offsetEmailNode);
-            cellWithOffsetEmailNode.appendChild(cellEmailNode);
-            cells.push(cellWithOffsetEmailNode);
-        } else {
-            const offsetEmailNode = this.buildEmptyCell({ widthRatio: offsetWidthRatio });
-            const cellEmailNode = this.buildCell({
-                styleContext,
-                widthRatio,
-                emailNode,
-                cluster,
-            });
-            cells.push(offsetEmailNode, cellEmailNode);
-        }
+        const cellOffsetWidth = offsetWidth - (isLast ? ZOOM_WIDTH_CORRECTION : 0);
+        const cellWidth = width + cellOffsetWidth;
+        const offsetEmailNode = this.buildHybridEmptyCell({
+            verticalAlign,
+            width: cellOffsetWidth,
+            isLast,
+        });
+        const cellEmailNode = this.buildHybridCell({
+            styleContext,
+            cluster,
+            emailNode,
+            width,
+            verticalAlign,
+        });
+        Object.assign(refs.root, { style: { "max-width": `${cellWidth}px` } });
+        const cellWithOffsetEmailNode = new EmailNode({
+            layout: new HybridFluidCell({ refs }),
+        });
+        cellWithOffsetEmailNode.appendChild(offsetEmailNode);
+        cellWithOffsetEmailNode.appendChild(cellEmailNode);
+        cells.push(cellWithOffsetEmailNode);
+        return cells;
+    }
+
+    buildTableCellWithOffset({
+        styleContext,
+        isLast,
+        cluster,
+        emailNode,
+        widthRatio,
+        offsetWidthRatio,
+    }) {
+        const cells = [];
+        const offsetEmailNode = this.buildTableEmptyCell({ widthRatio: offsetWidthRatio });
+        const cellEmailNode = this.buildTableCell({
+            styleContext,
+            widthRatio,
+            emailNode,
+            cluster,
+            isLast,
+        });
+        cells.push(offsetEmailNode, cellEmailNode);
         return cells;
     }
 }

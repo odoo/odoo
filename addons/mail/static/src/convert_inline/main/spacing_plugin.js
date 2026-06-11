@@ -36,7 +36,12 @@ export class SpacingPlugin extends Plugin {
         "rules",
         "style",
     ];
-    static shared = ["getSpacingStyleInfo", "buildMarginNode", "buildPaddingNode"];
+    static shared = [
+        "getPaddingStyleInfo",
+        "getMarginStyleInfo",
+        "buildMarginNode",
+        "buildPaddingNode",
+    ];
     resources = {
         on_parse_layout_with_dimensions_handlers: this.cacheSpacingStyleInfo.bind(this),
         reference_node_facts_processors: this.addSpacingFacts.bind(this),
@@ -55,16 +60,9 @@ export class SpacingPlugin extends Plugin {
     }
 
     addSpacingFacts(facts, { referenceNode }) {
-        const desktopMarginStyleInfo = this.getSpacingStyleInfo(
-            referenceNode,
-            this.marginStyleRules,
-            DESKTOP
-        );
-        const desktopPaddingStyleInfo = this.getSpacingStyleInfo(
-            referenceNode,
-            this.paddingStyleRules,
-            DESKTOP
-        );
+        const rawStyleInfo = this.getRawStyleInfo(referenceNode, DESKTOP);
+        const desktopMarginStyleInfo = this.getMarginStyleInfo(rawStyleInfo, referenceNode);
+        const desktopPaddingStyleInfo = this.getPaddingStyleInfo(rawStyleInfo, referenceNode);
         Object.assign(facts, { desktopMarginStyleInfo, desktopPaddingStyleInfo });
     }
 
@@ -145,9 +143,15 @@ export class SpacingPlugin extends Plugin {
     }
 
     applyDefaultSpacing(layout, { emailNode }) {
-        // TODO EGGMAIL: arbitrary fallback on body, maybe recursive search on parent is more
-        // appropriate?
-        const contextNode = emailNode.lastReferenceNode ?? this.config.referenceDocument.body;
+        let contextNode;
+        let currentNode = emailNode;
+        do {
+            contextNode = currentNode.lastReferenceNode;
+            currentNode = currentNode.parent;
+        } while (currentNode && !contextNode);
+        if (!contextNode) {
+            contextNode = this.config.referenceDocument.body;
+        }
         if (!this.isBlock(contextNode)) {
             return;
         }
@@ -201,15 +205,22 @@ export class SpacingPlugin extends Plugin {
         return values;
     }
 
+    getMarginStyleInfo(styleInfo, referenceNode) {
+        return this.getSpacingStyleInfo(styleInfo, referenceNode, this.marginStyleRules);
+    }
+
+    getPaddingStyleInfo(styleInfo, referenceNode) {
+        return this.getSpacingStyleInfo(styleInfo, referenceNode, this.paddingStyleRules);
+    }
+
     /**
      * Returns a normalized spacing styleInfo containing only longhand css
      * properties. Only support simple padding/margin variants.
      *
      * @returns {StyleInfo}
      */
-    getSpacingStyleInfo(referenceNode, rules, layoutDimensions = undefined) {
-        const rawStyleInfo = this.getRawStyleInfo(referenceNode, layoutDimensions);
-        const filteredStyleInfo = this.filterStyleInfo(rawStyleInfo, referenceNode, rules);
+    getSpacingStyleInfo(styleInfo, referenceNode, rules) {
+        const filteredStyleInfo = this.filterStyleInfo(styleInfo, referenceNode, rules);
         // TODO EGGMAIL: this is incomplete CSS value parsing, would be unnecessary
         // if we have a complete value parser.
         const longhandStyleInfo = new StyleInfo();
@@ -237,7 +248,7 @@ export class SpacingPlugin extends Plugin {
 
     provideSpacingStyleRules() {
         const paddingRules = this.paddingStyleRules.forPlugin(SpacingPlugin.id);
-        const marginRules = this.paddingStyleRules.forPlugin(SpacingPlugin.id);
+        const marginRules = this.marginStyleRules.forPlugin(SpacingPlugin.id);
         // TODO EGGMAIL: support more spacing cases?
         paddingRules.allow(/^padding(-(top|right|bottom|left))?$/);
         marginRules.allow(/^margin(-(top|right|bottom|left))?$/);

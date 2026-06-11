@@ -154,7 +154,8 @@ export class RenderPlugin extends Plugin {
         // TODO EGGMAIL: review default merge behavior
         const parentAnalysis = parentEmailNode.analysis;
         const mergedAnalysis = new Analysis(parentAnalysis);
-        this.mergeFacts(parentEmailNode, analysis.parsingFacts);
+        parentEmailNode.analysis = mergedAnalysis;
+        this.mergeFacts(parentEmailNode, analysis.parsingFacts, "parsingFacts");
         this.mergeFacts(parentEmailNode, analysis.facts);
         mergedAnalysis.constraintsForAncestors = mergedAnalysis.constraintsForAncestors.concat(
             analysis.constraintsForAncestors
@@ -162,7 +163,6 @@ export class RenderPlugin extends Plugin {
         mergedAnalysis.constraintsForDescendants = mergedAnalysis.constraintsForAncestors.concat(
             analysis.constraintsForDescendants
         );
-        parentEmailNode.analysis = mergedAnalysis;
     }
 
     /**
@@ -190,6 +190,10 @@ export class RenderPlugin extends Plugin {
             this.getDefaultEmailNodeArguments(referenceNode),
             { referenceNode, parentEmailNode }
         );
+        // TODO EGGMAIL: all layouts don't provide pluginIds
+        // The API is not friendly
+        // we should get constructor wrappers which, in a plugin, automatically
+        // add the pluginId, or scrap the whole concept
         if (layout.pluginIds.size === 0) {
             layout.pluginIds.add(RenderPlugin.id);
         }
@@ -220,9 +224,9 @@ export class RenderPlugin extends Plugin {
         });
     }
 
-    mergeFacts(emailNode, facts = {}) {
+    mergeFacts(emailNode, facts = {}, factType = "facts") {
         for (const [fact, value] of Object.entries(facts)) {
-            if (!this.delegateTo("merge_fact_overrides", { emailNode, fact, value })) {
+            if (!this.delegateTo("merge_fact_overrides", { emailNode, fact, value, factType })) {
                 // TODO EGGMAIL: not sure if delegate is the best action here
                 // (only one plugin can interfere with a fact)
                 // TODO EGGMAIL: maybe we need another argument (exception, ...)?
@@ -232,7 +236,7 @@ export class RenderPlugin extends Plugin {
                 // TODO EGGMAIL: here a fact from a descendant is directly applied to the current
                 // emailNode, maybe it makes sense to aggregate all descendant facts, then apply
                 // the final result on the current emailNode?
-                emailNode.analysis.facts[fact] = value;
+                emailNode.analysis[factType][fact] = value;
             }
         }
     }
