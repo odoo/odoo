@@ -112,4 +112,11 @@ export class DeviceSelect extends Component {
         }
         return this.store.rtc.microphonePermission === "granted";
     }
+
+    async isPreventableKey(ev, kind) {
+        if (ev.key === "Enter" || ev.key === " ") {
+            ev.preventDefault();
+            await this.showPermissionDialog(kind);
+        }
+    }
 }

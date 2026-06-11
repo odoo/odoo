@@ -7,7 +7,7 @@
             name="inputDevice"
             class="form-select d-flex shadow-sm"
             t-on-pointerdown.prevent="() => this.showPermissionDialog(props.kind)"
-            t-on-keydown.prevent="() => this.showPermissionDialog(props.kind)"
+            t-on-keydown="(ev) => this.isPreventableKey(ev, props.kind)"
         >
             <option value="">Permission Needed</option>
         </select>
