@@ -1069,8 +1069,9 @@ export class CustomizeWebsiteColorAction extends BuilderAction {
                     reloadBundles: false,
                 }
             );
+            const gradientColorValue = isColorCombination ? nullValue : gradientValue || nullValue;
             await this.dependencies.customizeWebsite.customizeWebsiteVariables({
-                [gradientColor]: isColorCombination ? nullValue : gradientValue || nullValue,
+                [gradientColor]: gradientColorValue,
             }); // reloads bundles
         } else {
             await this.dependencies.customizeWebsite.customizeWebsiteColors(
