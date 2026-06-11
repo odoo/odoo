@@ -307,7 +307,7 @@ class TestActivitySchedule(ActivityScheduleCase):
                 form.plan_date = plan_date
                 form.plan_on_demand_user_id = self.env['res.users']
                 self.assertTrue(form.has_error)
-                self.assertIn(f'No responsible specified for {self.activity_type_todo.name}: Book a place',
+                self.assertIn(f'No responsible or role specified for {self.activity_type_todo.name}: Book a place',
                               form.error)
                 form.plan_on_demand_user_id = responsible_id
                 self.assertFalse(form.has_error)

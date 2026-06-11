@@ -145,6 +145,7 @@ class WebclientController(ThreadController):
         bus_last_id = request.env["bus.bus"].sudo()._bus_last_id()
         groups = request.env["res.users"]._get_activity_groups()
         store.add_global_values(
+            activities_to_assign_count=request.env["res.users"]._get_activities_to_assign_count(),
             activityCounter=sum(group.get("total_count", 0) for group in groups),
             activity_counter_bus_id=bus_last_id,
             activityGroups=groups,

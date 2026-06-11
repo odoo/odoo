@@ -38,6 +38,14 @@ export class ActivityMenu extends Component {
         this.store.fetchStoreData("systray_get_activities");
     }
 
+    openUnassignedRoleActivities(newWindow) {
+        this.dropdown.close();
+        this.action.doAction("mail.mail_activity_action_to_assign", {
+            newWindow,
+            clearBreadcrumbs: true,
+        });
+    }
+
     availableViews(group) {
         return [
             [false, "kanban"],

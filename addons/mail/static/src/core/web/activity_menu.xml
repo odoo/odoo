@@ -34,8 +34,13 @@
                             </div>
                         </div>
                     </t>
-                    <span class="list-group-item list-group-item-action border-0 text-primary text-center cursor-pointer" t-custom-click="(ev, isMiddleClick) => this.openMyActivities(isMiddleClick)">
-                        View all Activities
+                    <span class="list-group-item list-group-item-action text-primary text-center cursor-pointer" t-custom-click="(ev, isMiddleClick) => this.openMyActivities(isMiddleClick)">
+                        View all activities
+                    </span>
+                    <span t-if="this.store.activities_to_assign_count > 0"
+                        class="list-group-item list-group-item-action text-primary text-center cursor-pointer fw-bold"
+                        t-custom-click="(ev, isMiddleClick) => this.openUnassignedRoleActivities(isMiddleClick)">
+                        <t t-out="this.store.activities_to_assign_count"/> To Assign
                     </span>
                 </div>
             </div>

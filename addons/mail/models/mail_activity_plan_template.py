@@ -43,13 +43,18 @@ class MailActivityPlanTemplate(models.Model):
     summary = fields.Char('Summary', compute="_compute_summary", store=True, readonly=False)
     responsible_type = fields.Selection([
         ('on_demand', 'Ask at launch'),
-        ('other', 'Default user'),
+        ('other', 'Specific User'),
+        ('role', 'Role'),
     ], default='on_demand', string='Assignment', required=True,
         compute="_compute_responsible_type", store=True, readonly=False)
     responsible_id = fields.Many2one(
         'res.users',
         'Assigned to',
         check_company=True, compute="_compute_responsible_id", store=True, readonly=False)
+    role_id = fields.Many2one(
+        'res.role',
+        'Role',
+        compute="_compute_role_id", store=True, readonly=False)
     note = fields.Html('Note', compute="_compute_note", store=True, readonly=False)
     suggested_next_type_id = fields.Many2one(string='Suggested Next Activity', related='activity_type_id.suggested_next_type_id')
 
@@ -71,12 +76,15 @@ class MailActivityPlanTemplate(models.Model):
                      )
                 )
 
-    @api.constrains('responsible_id', 'responsible_type')
+    @api.constrains('responsible_id', 'role_id', 'responsible_type')
     def _check_responsible(self):
-        """ Ensure that responsible_id is set when responsible is set to "other". """
         for template in self:
             if template.responsible_type == 'other' and not template.responsible_id:
-                raise ValidationError(_('When selecting "Default user" assignment, you must specify a responsible.'))
+                msg = self.env._('When selecting "Specific User" assignment, you must specify a responsible user.')
+                raise ValidationError(msg)
+            elif template.responsible_type == 'role' and not template.role_id:
+                msg = self.env._('When selecting "Role" assignment, you must specify an assigned role.')
+                raise ValidationError(msg)
 
     @api.depends('activity_type_id')
     def _compute_note(self):
@@ -90,11 +98,20 @@ class MailActivityPlanTemplate(models.Model):
             if template.responsible_type != 'other' and template.responsible_id:
                 template.responsible_id = False
 
+    @api.depends('activity_type_id', 'responsible_type')
+    def _compute_role_id(self):
+        for template in self:
+            template.role_id = template.activity_type_id.default_role_id
+            if template.responsible_type != 'role' and template.role_id:
+                template.role_id = False
+
     @api.depends('activity_type_id')
     def _compute_responsible_type(self):
         for template in self:
             if template.activity_type_id.default_user_id:
                 template.responsible_type = 'other'
+            elif template.activity_type_id.default_role_id:
+                template.responsible_type = 'role'
             else:
                 template.responsible_type = 'on_demand'
 
@@ -112,7 +129,7 @@ class MailActivityPlanTemplate(models.Model):
             return base_date + delta
         return base_date - delta
 
-    def _determine_responsible(self, on_demand_responsible, on_demand_responsible_fname, applied_on_record):
+    def _determine_responsible(self, on_demand_responsible, on_demand_responsible_fname, applied_on_record, on_demand_role=False):
         """ Determine the responsible for the activity based on the template
         for the given record and on demand responsible.
 
@@ -132,7 +149,9 @@ class MailActivityPlanTemplate(models.Model):
             record to find the responsible when not given by 'on_demand_responsible'
         :param recordset applied_on_record: the record on which the activity
             will be created
-        :returns: {'responsible': <res.user>, error: str|False}
+        :param <res.role> on_demand_role: role chosen at launch, used only to know
+            whether a user is still required for on-demand templates
+        :returns: {'responsible': <res.users>, 'error': str|False, 'warning': str|False}
         :rtype: dict
         """
         self.ensure_one()
@@ -141,9 +160,11 @@ class MailActivityPlanTemplate(models.Model):
         warning = False
         if self.responsible_type == 'other':
             responsible = self.responsible_id
+        elif self.responsible_type == 'role':
+            responsible = self.env['res.users']
         elif self.responsible_type == 'on_demand':
             responsible = on_demand_responsible
-            if not responsible and on_demand_responsible_fname:
+            if not responsible and not on_demand_role and on_demand_responsible_fname:
                 try:
                     user = applied_on_record.mapped(on_demand_responsible_fname)
                 except Exception:  # noqa: BLE001
@@ -156,8 +177,8 @@ class MailActivityPlanTemplate(models.Model):
                         )
                     elif user:
                         responsible = user[0]
-            if not responsible:
-                error = _('No responsible specified for %(activity_type_name)s: %(activity_summary)s.%(error_detail)s',
+            if not responsible and not on_demand_role:
+                error = _('No responsible or role specified for %(activity_type_name)s: %(activity_summary)s.%(error_detail)s',
                           activity_type_name=self.activity_type_id.name,
                           activity_summary=self.summary or '-',
                           error_detail=f"\n\n{error_detail}" if error_detail else '')

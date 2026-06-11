@@ -19,6 +19,7 @@ const StorePatch = {
         super.setup(...arguments);
         this.activityCounter = 0;
         this.activity_counter_bus_id = 0;
+        this.activities_to_assign_count = undefined;
         /** @type {Object[]} */
         this.activityGroups = fields.Attr([], {
             onUpdate() {

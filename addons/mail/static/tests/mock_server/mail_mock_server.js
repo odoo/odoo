@@ -1264,6 +1264,13 @@ function _process_request_for_internal_user(store, name, params) {
     if (name === "systray_get_activities" && this.env.user?.partner_id) {
         const bus_last_id = this.env["bus.bus"].lastBusNotificationId;
         const groups = ResUsers._get_activity_groups();
+        const roleIds = this.env.user.role_ids || [];
+        const activities_to_assign_count = roleIds.length
+            ? MailActivity._filter([
+                  ["user_id", "=", false],
+                  ["role_id", "in", roleIds],
+              ]).length
+            : 0;
         store.add_global_values({
             activityCounter: groups.reduce(
                 (counter, group) => counter + (group.total_count || 0),
@@ -1271,6 +1278,7 @@ function _process_request_for_internal_user(store, name, params) {
             ),
             activity_counter_bus_id: bus_last_id,
             activityGroups: groups,
+            activities_to_assign_count,
         });
     }
     if (name === "mail.canned.response") {

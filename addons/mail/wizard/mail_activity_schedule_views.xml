@@ -20,57 +20,99 @@
                             nolabel="1"
                             classname="pb-2"
                         />
+                        <br/>
                         <field name="activity_type_id"
-                            class="mb-4"
+                            class="mb-3"
                             domain="[('id', 'in', activity_type_available_ids)]"
                             required="not plan_id"
                             widget="badges_many2one"
                             options="{'related_icon_field': 'icon', 'badge_limit': 8}"
                             nolabel="1"/>
-                        <group invisible="not plan_id">
-                            <div>
-                                <div class="o_outlined d-flex align-items-baseline mb-3 gap-2">
+                        <div class="row o_activity_details" invisible="not plan_id">
+                            <div class="col-lg-5">
+                                <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
                                     <i class="fa fa-calendar" title="Due date"/>
                                     <field name="plan_date" nolabel="1" class="w-100" placeholder="Default deadline for the activities"/>
                                 </div>
-                                <div class="o_outlined d-flex align-items-center mb-3 gap-2">
+                                <div class="o_outlined d-flex align-items-center mb-2 gap-2">
                                     <i class="fa fa-user mb-2" title="Assigned to"/>
                                     <field name="plan_on_demand_user_id" widget="many2one_avatar_user" nolabel="1" class="w-100"
-                                        invisible="not plan_has_user_on_demand" string="Responsible"/>
+                                        invisible="not plan_has_user_on_demand" string="Responsible" placeholder="Responsible"/>
+                                </div>
+                                <div class="o_outlined d-flex align-items-center mb-2 gap-2" invisible="not plan_has_user_on_demand">
+                                    <i class="fa fa-users mb-2" role="img" title="Role" aria-label="Role"/>
+                                    <field name="plan_on_demand_role_id" placeholder="Role" options="{'no_quick_create': True}"
+                                        nolabel="1" class="w-100" domain="[('user_ids', '!=', False)]"/>
                                 </div>
                             </div>
-                            <group>
-                                <label for="plan_schedule_line_ids" string="Plan Summary" class="o_form_label mb-n2" colspan="2"/>
-                                <field name="plan_schedule_line_ids" nolabel="1" class="text-muted mt-n2 small" colspan="2">
-                                    <list edit="0" no_open="1" class="o_mail_activity_schedule_summary">
-                                        <field name="responsible_user_id" nolabel="1" widget="many2one_avatar_user" width="22px"/>
-                                        <field name="line_description" nolabel="1"/>
-                                        <field name="line_date_deadline" nolabel="1"/>
-                                    </list>
+                            <div class="col-lg-7">
+                                <label for="plan_schedule_line_ids" string="Plan Summary" class="o_form_label mb-1" colspan="2"/>
+                                <field name="plan_schedule_line_ids" nolabel="1" colspan="2">
+                                    <kanban create="false" can_open="false" class="o_mail_activity_schedule_kanban">
+                                        <field name="responsible_user_id"/>
+                                        <field name="role_id"/>
+                                        <field name="line_description"/>
+                                        <field name="line_date_deadline"/> 
+                                        <templates>
+                                            <div t-name="card" class="d-flex w-100 align-items-center p-0 shadow-none border-0">
+                                                <div class="col-6 d-flex align-items-center text-truncate pe-2">
+                                                    <div class="o-activity-assignee-avatar d-flex align-items-center justify-content-center flex-shrink-0 me-2"
+                                                        style="width: 24px; height: 24px;">
+                                                        <field t-if="record.responsible_user_id.raw_value"
+                                                            name="responsible_user_id" widget="many2one_avatar_user" nolabel="1"/>
+                                                        <div t-elif="record.role_id.raw_value"
+                                                            class="d-flex align-items-center justify-content-center bg-200 text-600 rounded w-100 h-100">
+                                                            <i class="fa fa-users" role="img" title="Role" aria-label="Role" style="font-size: 12px;"/>
+                                                        </div>
+                                                        <div t-else=""
+                                                            class="d-flex align-items-center justify-content-center bg-200 text-600 rounded w-100 h-100">
+                                                            <i class="fa fa-hourglass-end" role="img" title="To Assign" aria-label="To Assign" style="font-size: 12px;"/>
+                                                        </div>
+                                                    </div>
+                                                    <span class="text-truncate small">
+                                                        <field t-if="record.responsible_user_id.raw_value" name="responsible_user_id" nolabel="1"/>
+                                                        <span t-elif="record.role_id.raw_value">@<field name="role_id" nolabel="1"/></span>
+                                                        <span t-else="" class="text-muted">To Assign</span>
+                                                    </span>
+                                                </div>
+                                                <div class="col-4 text-muted small text-truncate pe-2">
+                                                    <field name="line_description"/>
+                                                </div>
+                                                <div class="col-2 text-end text-muted small">
+                                                    <field name="line_date_deadline"/>
+                                                </div>
+                                            </div>
+                                        </templates>
+                                    </kanban>
                                 </field>
-                            </group>
-                        </group>
+                            </div>
+                        </div>
                         <div invisible="not activity_type_id" class="o_activity_details">
-                            <div class="o_outlined d-flex align-items-baseline mb-3 gap-2">
+                            <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
                                 <i class="fa fa-tag" title="Summary"/>
                                 <field name="summary" nolabel="1" class="w-100" placeholder="Summary"/>
                             </div>
-                            <div class="o_outlined d-flex align-items-baseline mb-3 gap-2">
+                            <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
                                 <i class="fa fa-calendar" title="Due date"/>
                                 <field name="date_deadline" nolabel="1" class="w-100" placeholder="Due on"/>
                             </div>
-                            <div class="o_outlined d-flex align-items-center mb-3 gap-2">
+                            <div class="o_outlined d-flex align-items-center mb-2 gap-2">
                                 <i class="fa fa-user mb-2" title="Assigned to"/>
                                 <field name="activity_user_id" widget="many2one_avatar_user" nolabel="1" class="w-100"
                                     placeholder="Assigned to" domain="[('share', '=', False)]"
-                                    options="{'no_create': True}"/>
+                                    options="{'no_create': True}" required="not activity_role_id and not res_model"/>
                             </div>
-                            <div class="o_outlined d-flex align-items-baseline mb-3 gap-2" invisible="id or context.get('active_model')">
+                            <div class="o_outlined d-flex align-items-center mb-2 gap-2">
+                                <i class="fa fa-users mb-2" role="img" title="Role" aria-label="Role"/>
+                                <field name="activity_role_id" placeholder="Role" options="{'no_quick_create': True}" 
+                                    nolabel="1" class="w-100" required="not activity_user_id" domain="[('user_ids', '!=', False)]"/>
+                            </div>
+                            <div class="o_outlined d-flex align-items-baseline mb-2 gap-2" invisible="id or context.get('active_model')">
                                 <i class="oi oi-odoo" title="Link to"/>
                                 <field name="res_model" widget="activity_model_selector" string="Link to" nolabel="1"
-                                    class="w-100" required="activity_user_id != context.get('uid')"/>
+                                    class="w-100" required="not activity_role_id and activity_user_id != context.get('uid')"/>
                             </div>
-                            <div class="o_outlined d-flex align-items-start mb-3 gap-2">
+                            <div class="o_outlined d-flex align-items-start mb-2 gap-2">
                                 <i class="fa fa-sticky-note pt-1" title="Note"/>
                                 <field name="note" class="oe-bordered-editor w-100 embedded-editor-height-4"
                                     placeholder="Log a note" widget="html_mail" options="{'no_move_node_plugin': 1}"/>

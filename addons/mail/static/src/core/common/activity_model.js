@@ -55,6 +55,7 @@ export class Activity extends Record {
     res_id;
     /** @type {string} */
     res_name;
+    role_id = fields.One("res.role");
     /** @type {'overdue'|'planned'|'today'} */
     state;
     /** @type {string} */
@@ -66,7 +67,7 @@ export class Activity extends Record {
     write_uid;
 
     serialize() {
-        return JSON.parse(JSON.stringify(this.toData(["user_id"])));
+        return JSON.parse(JSON.stringify(this.toData(["user_id", "role_id"])));
     }
 }
 

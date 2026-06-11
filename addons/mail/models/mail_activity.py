@@ -124,6 +124,10 @@ class MailActivity(models.Model):
         'res.users', 'Assigned to',
         index=True, required=False, ondelete='cascade',
         compute='_compute_user_id', precompute=True, store=True, readonly=False)
+    role_id = fields.Many2one(
+        'res.role', 'Role',
+        index='btree_not_null', required=False, ondelete='set null',
+        compute='_compute_role_id', precompute=True, store=True, readonly=False)
     user_tz = fields.Selection(string='Timezone', related="user_id.tz", store=True)
     state = fields.Selection([
         ('overdue', 'Overdue'),
@@ -144,13 +148,15 @@ class MailActivity(models.Model):
         )""",
         'Activities have to be linked to records with a not null res_id.',
     )
-    # if no model: user_id is required (no floating activities noone can see)
+    # if no model: user_id is required (no personal activities noone can see)
     _check_user_id_is_set_if_model = models.Constraint(
         """CHECK(
             (COALESCE(res_model, '') <> '' OR user_id IS NOT NULL)
         )""",
         'Activities must be assigned if not attached to a document.',
     )
+
+    _unassigned_role_idx = models.Index("(role_id) WHERE user_id IS NULL")
 
     @api.depends('active')
     def _compute_date_done(self):
@@ -220,10 +226,16 @@ class MailActivity(models.Model):
     @api.depends('activity_type_id')
     def _compute_user_id(self):
         for activity in self:
-            if activity.activity_type_id.default_user_id:
+            if activity.activity_type_id.default_user_id or activity.activity_type_id.default_role_id:
                 activity.user_id = activity.activity_type_id.default_user_id
-            elif not activity.user_id:
+            elif not activity.user_id and not activity.role_id:
                 activity.user_id = self.env.user
+
+    @api.depends('activity_type_id')
+    def _compute_role_id(self):
+        for activity in self:
+            if activity.activity_type_id.default_user_id or activity.activity_type_id.default_role_id:
+                activity.role_id = activity.activity_type_id.default_role_id
 
     def _compute_res_access(self, operation: str):
         """ Determine the subset of ``self`` for which ``operation`` is allowed.
@@ -728,6 +740,7 @@ class MailActivity(models.Model):
         res.one("create_uid", lambda res: res.one("partner_id", ["name"]))
         res.extend(["date_deadline", "date_done", "display_name", "icon", "note"])
         res.extend(["res_id", "res_model", "state", "summary"])
+        res.one("role_id", ["name"])
         res.one("user_id", lambda res: res.one("partner_id", "_store_partner_fields"))
         res.many("attachment_ids", ["name"])
         res.many("mail_template_ids", ["name"])
@@ -775,6 +788,8 @@ class MailActivity(models.Model):
               * ``state`` (dict) -- aggregated state of the related
                 activities;
               * ``user_assigned_ids`` (list) -- activity responsible IDs
+                ordered by closest deadline of the related activities;
+              * ``role_assigned_ids`` (list) -- role IDs
                 ordered by closest deadline of the related activities;
               * ``attachments_info`` (dict) -- information about the
                 attachments, ``{'count': int, 'most_recent_id': int,
@@ -839,6 +854,7 @@ class MailActivity(models.Model):
                 res_id_to_date_done[res_id] = date_done
             # As ongoing is sorted on date_deadline, we get assignees on activity with oldest deadline first
             user_assigned_ids = ongoing.user_id.ids
+            role_assigned_ids = ongoing.role_id.ids
             attachments = [attachments_by_id[attach.id] for attach in completed.attachment_ids]
 
             grouped_activities[res_id][activity_type_id.id] = {
@@ -849,6 +865,7 @@ class MailActivity(models.Model):
                 'reporting_date': ongoing and date_deadline or date_done or None,
                 'state': self._compute_state_from_date(date_deadline, user_tz) if ongoing else 'done',
                 'user_assigned_ids': user_assigned_ids,
+                'role_assigned_ids': role_assigned_ids,
                 'summaries': [act.summary if act.summary else '' for act in activities],
             }
             if attachments:

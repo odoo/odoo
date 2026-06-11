@@ -15,6 +15,7 @@ declare module "models" {
     }
     export interface Store {
         _onActivityBroadcastChannelMessage: (param0: { data: { type: "INSERT"|"DELETE"|"RELOAD_CHATTER", payload: Partial<Activity> } }) => void;
+        activities_to_assign_count: number;
         activity_counter_bus_id: number;
         activityCounter: number;
         activityGroups: Object[];

@@ -7,6 +7,7 @@ from datetime import datetime, UTC
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.tools import partition, SQL
+from odoo.tools.misc import clean_context
 
 _logger = logging.getLogger(__name__)
 
@@ -389,7 +390,7 @@ class MailActivityMixin(models.AbstractModel):
                 'res_id': record.id,
             }
             create_vals.update(act_values)
-            if not create_vals.get('user_id') and activity_user_id_fname:
+            if not create_vals.get('user_id') and not create_vals.get('role_id') and activity_user_id_fname:
                 try:
                     user = record.mapped(activity_user_id_fname)
                 except Exception:  # noqa: BLE001
@@ -405,10 +406,10 @@ class MailActivityMixin(models.AbstractModel):
                     )
                 if user:
                     create_vals['user_id'] = user.ids[0]
-            if not create_vals.get('user_id') and activity_type.default_user_id:
+            if not create_vals.get('user_id') and not create_vals.get('role_id') and activity_type.default_user_id:
                 create_vals['user_id'] = activity_type.default_user_id.id
             create_vals_list.append(create_vals)
-        return self.env['mail.activity'].create(create_vals_list)
+        return self.env['mail.activity'].with_context(clean_context(self.env.context)).create(create_vals_list)
 
     def _activity_schedule_with_view(self, act_type_xmlid='', date_deadline=None, summary='', views_or_xmlid='', render_context=None, **act_values):
         """ Helper method: Schedule an activity on each record of the current record set.
