@@ -9,6 +9,7 @@ from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import SQL, clean_context
+from odoo.tools.misc import unquote
 from odoo.tools.translate import _
 
 
@@ -46,6 +47,7 @@ class HrApplicant(models.Model):
             Domain("user_id", "!=", False)
             & Domain("user_id.share", "=", False)
             & Domain("user_id.group_ids", "in", recruiter_groups)
+            & Domain("company_id", "=?", unquote("company_id"))
         )
 
     sequence = fields.Integer(string='Sequence', index=True, default=10)
@@ -95,7 +97,7 @@ class HrApplicant(models.Model):
     categ_ids = fields.Many2many('hr.applicant.category', string="Tags")
     currency_id = fields.Many2one('res.currency', string='Currency', related='company_id.currency_id')
     company_id = fields.Many2one('res.company', "Company", compute='_compute_company', store=True, readonly=False, tracking=True)
-    recruiter_id = fields.Many2one('hr.employee', "Recruiter", compute='_compute_recruiter', domain=_recruiter_domain, check_company=True,
+    recruiter_id = fields.Many2one('hr.employee', "Recruiter", compute='_compute_recruiter', domain=lambda self: str(self._recruiter_domain()),
         tracking=True, store=True, readonly=False)
     date_closed = fields.Datetime("Hire Date", compute='_compute_date_closed', store=True, readonly=False, tracking=True, copy=False)
     date_open = fields.Datetime("Assigned", readonly=True)

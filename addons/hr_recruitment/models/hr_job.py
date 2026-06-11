@@ -6,6 +6,7 @@ from collections import defaultdict
 from odoo import SUPERUSER_ID, Command, _, api, fields, models
 from odoo.tools import SQL
 from odoo.tools.convert import convert_file
+from odoo.tools.misc import unquote
 
 
 class HrJob(models.Model):
@@ -38,13 +39,14 @@ class HrJob(models.Model):
         return [
             ("user_id", "!=", False),
             ("user_id.share", "=", False),
-            ("user_id.group_ids", "in", recruiter_groups)
+            ("user_id.group_ids", "in", recruiter_groups),
+            ("company_id", "=?", unquote("company_id")),
         ]
 
     expected_employees = fields.Integer(groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user")
     no_of_employee = fields.Integer(groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user")
     requirements = fields.Text(groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user")
-    recruiter_id = fields.Many2one(domain=_recruiter_domain, check_company=True, groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user")
+    recruiter_id = fields.Many2one(domain=lambda self: str(self._recruiter_domain()), groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user")
     address_id = fields.Many2one(
         'res.partner', "Job Location", default=_default_address_id,
         domain=lambda self: self._address_id_domain(), tracking=True,

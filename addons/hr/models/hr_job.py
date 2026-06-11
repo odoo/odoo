@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.tools.misc import unquote
 from odoo.addons.html_editor.tools import handle_history_divergence
 
 
@@ -15,6 +16,7 @@ class HrJob(models.Model):
         return [
             ("user_id", "!=", False),
             ("user_id.share", "=", False),
+            ("company_id", "=?", unquote("company_id")),
         ]
 
     active = fields.Boolean(default=True)
@@ -32,8 +34,7 @@ class HrJob(models.Model):
     recruiter_id = fields.Many2one(
         'hr.employee',
         "Recruiter",
-        domain=_recruiter_domain,
-        check_company=True,
+        domain=lambda self: str(self._recruiter_domain()),
         default=lambda self: self.env.user.employee_id,
         groups="hr.group_hr_user",
         tracking=True,
