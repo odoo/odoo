@@ -6,6 +6,7 @@ import {
     props,
     proxy,
     types,
+    untrack,
     useEffect,
     xml,
 } from "@odoo/owl";
@@ -1000,4 +1001,15 @@ export class UseForwardRefsToParent {
  */
 export function useForwardRefsToParent(propName, getRefIdFn, ref) {
     new UseForwardRefsToParent(propName, getRefIdFn, ref);
+}
+
+/**
+ * @param {function} callback
+ * @param {() => []} dependencies
+ */
+export function useOnChange(callback, dependencies) {
+    useEffect(() => {
+        const dep = dependencies();
+        untrack(() => callback(...dep));
+    });
 }
