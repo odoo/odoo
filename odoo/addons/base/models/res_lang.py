@@ -215,7 +215,7 @@ class ResLang(models.CachedModel):
         """ Create the given language and make it active. """
         # create the language with locale information
         fail = True
-        iso_lang = tools.get_iso_codes(lang)
+        iso_lang = tools.translate.get_iso_codes(lang)
         for ln in tools.translate.get_locales(lang):
             try:
                 locale.setlocale(locale.LC_ALL, str(ln))
