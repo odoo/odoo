@@ -64,7 +64,7 @@ export class Record {
     static async getOrFetch(id, field_names = []) {
         let record = this.get(id);
         if (!record || field_names.some((fieldName) => record[fieldName] === undefined)) {
-            await this.store.fetchStoreData(this.getName(), { id, field_names });
+            await this.store.fetchStoreData(this.getName(), { id });
             record = this.get(id);
             if (!record?.exists()) {
                 return;
