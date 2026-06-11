@@ -1,12 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
-import {
-    fillEmpty,
-    removeClass,
-    removeStyle,
-    toggleClass,
-    unwrapContents,
-} from "@html_editor/utils/dom";
+import { fillEmpty, removeClass, toggleClass, unwrapContents } from "@html_editor/utils/dom";
 import {
     getDeepestEditablePosition,
     getDeepestPosition,
@@ -1171,7 +1165,7 @@ export class ListPlugin extends Plugin {
                     removeClass(node, ...classesToRemove);
 
                     if (node.style.color) {
-                        removeStyle(node, "color");
+                        this.dependencies.color.colorElement(node, color, mode);
                     }
                 }
 
