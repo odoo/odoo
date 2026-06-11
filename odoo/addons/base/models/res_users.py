@@ -1488,7 +1488,7 @@ class ResUsersApikeys(models.Model):
 
     name = fields.Char("Description", required=True, readonly=True)
     user_id = fields.Many2one('res.users', index=True, required=True, readonly=True, ondelete="cascade")
-    scope = fields.Char("Scope", readonly=True)
+    scope = fields.Char("Scope", required=True, readonly=True)
     create_date = fields.Datetime("Creation Date", readonly=True)
     expiration_date = fields.Datetime("Expiration Date", readonly=True)
 
@@ -1552,7 +1552,7 @@ class ResUsersApikeys(models.Model):
 
     def _generate(self, scope, name, expiration_date):
         """Generates an api key.
-        :param str|None scope: the scope of the key. If None, the key will give access to any rpc.
+        :param str scope: the scope of the key.
         :param str name: the name of the key, mainly intended to be displayed in the UI.
         :param datetime.datetime expiration_date: the expiration date of the key.
         :returns: the key.
@@ -1606,7 +1606,7 @@ class ResUsersApikeys(models.Model):
         To renew a key, generate the new one, store it, and then call `revoke` on the previous one.
 
         :param str key: an active API key belonging to the current user
-        :param str|None scope: the scope of the key. If None, the key will give access to any rpc.
+        :param str scope: the scope of the key.
         :param str name: the name of the key, mainly intended to be displayed in the UI.
         :param str|datetime.datetime expiration_date: the expiration date of the key. String values
             may be either ISO 8601 dates (``"2026-12-30"``) or space-separated datetimes
@@ -1631,14 +1631,12 @@ class ResUsersApikeys(models.Model):
             if nb_keys >= nb_keys_limit:
                 raise UserError(_('Limit of %s API keys is reached for programmatic creation', nb_keys_limit))
 
-            # Scope compatibility rules:
-            # - A global key can generate credentials for any scope (including global).
-            # - A scoped key can only generate credentials for its own scope.
+            # A key can only generate credentials for its own scope.
             #
             # This is enforced in _check_credentials by validating scope usage,
             # and the validated scope is then reused when calling _generate.
 
-            uid = self.env['res.users.apikeys']._check_credentials(scope=scope or 'rpc', key=key)
+            uid = self.env['res.users.apikeys']._check_credentials(scope=scope, key=key)
             if not uid or uid != self.env.uid:
                 raise AccessDenied(_("The provided API key is invalid or does not belong to the current user."))
             new_key = self._generate(scope, name, expiration_date)
@@ -1702,7 +1700,7 @@ def _check_apikey_credentials(cr, *, scope, key, table='res_users_apikeys'):
         FROM %(table)s INNER JOIN res_users u ON (u.id = user_id)
         WHERE
             u.active and index = %(index)s
-            AND (scope IS NULL OR scope = %(scope)s)
+            AND scope = %(scope)s
             AND (
                 expiration_date IS NULL OR
                 expiration_date >= now() at time zone 'utc'
@@ -1738,6 +1736,17 @@ class ResUsersApikeysDescription(models.TransientModel):
         )) + [custom_duration]
 
     name = fields.Char("Description", required=True)
+    scope = fields.Selection(
+        [('rpc', 'RPC')],
+        help="""
+        A token with scope 'A' can only be used for endpoints requiring a bearer token of scope 'A' and
+        can't be used for endpoints requiring any other scope than 'A'.
+        """,
+        string='Scope',
+        required=True,
+        default='rpc',
+    )
+    available_scopes_count = fields.Integer(compute='_compute_available_scopes_count')
     duration = fields.Selection(
         selection='_selection_duration', string='Duration', required=True,
         default=lambda self: self._selection_duration()[0][0]
@@ -1754,6 +1763,12 @@ class ResUsersApikeysDescription(models.TransientModel):
                     if int(record.duration)
                     else None
                 )
+
+    @api.depends('scope')
+    def _compute_available_scopes_count(self):
+        selection_values = self._fields['scope'].get_values(self.env)
+        for record in self:
+            record.available_scopes_count = len(selection_values)
 
     @api.onchange('expiration_date')
     def _onchange_expiration_date(self):
@@ -1779,7 +1794,7 @@ class ResUsersApikeysDescription(models.TransientModel):
         self.check_access_make_key()
 
         description = self.sudo()
-        k = self.env['res.users.apikeys']._generate(None, description.name, self.expiration_date)
+        k = self.env['res.users.apikeys']._generate(description.scope, description.name, self.expiration_date)
         description.unlink()
 
         return {

@@ -45,7 +45,7 @@ class DocController(http.Controller):
         res.headers['X-Frame-Options'] = 'deny'
         return res
 
-    @http.route('/doc-bearer/index.json', type='json2', auth='bearer')
+    @http.route('/doc-bearer/index.json', type='json2', auth='bearer', bearer_scope='rpc')
     def doc_bearer_index(self):
         return self.doc_index()
 
@@ -163,7 +163,7 @@ class DocController(http.Controller):
         ]
         return modules, models
 
-    @http.route('/doc-bearer/<model_name>.json', type='json2', auth='bearer', readonly=True)
+    @http.route('/doc-bearer/<model_name>.json', type='json2', auth='bearer', bearer_scope='rpc', readonly=True)
     def doc_bearer_modec(self, model_name):
         return self.doc_model(model_name)
 

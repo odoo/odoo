@@ -572,7 +572,7 @@ def _serve_ir_http_fallback(request: Request, not_found: NotFound) -> Response:
     provided a response, a generic 404 - Not Found page is returned.
     """
     request.params = request.get_http_params()
-    request.registry['ir.http']._auth_method_public()
+    request.registry['ir.http']._auth_method_public({})
     response = request.registry['ir.http']._serve_fallback()
     if response:
         request.registry['ir.http']._post_dispatch(response)

@@ -167,7 +167,7 @@ class IrHttp(models.AbstractModel):
         return public_users
 
     @classmethod
-    def _auth_method_public(cls):
+    def _auth_method_public(cls, routing: dict):
         """ If no user logged, set the public user of current website, or default
             public user as request uid.
         """
@@ -178,7 +178,7 @@ class IrHttp(models.AbstractModel):
                 request.update_env(user=website.user_id.id)
 
         if not request.env.uid:
-            super()._auth_method_public()
+            super()._auth_method_public(routing)
 
     @classmethod
     def _match(cls, path):

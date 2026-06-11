@@ -119,7 +119,7 @@ class Home(Controller):
         if request.env.uid is None:
             if request.session.uid is None:
                 # no user -> auth=public with specific website public user
-                request.env["ir.http"]._auth_method_public()
+                request.env["ir.http"]._auth_method_public({})
             else:
                 # auth=user
                 request.update_env(user=request.session.uid)

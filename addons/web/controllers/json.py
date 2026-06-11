@@ -36,7 +36,7 @@ class WebJsonController(http.Controller):
             HTTPStatus.TEMPORARY_REDIRECT
         )
 
-    @http.route('/json/1/<path:subpath>', auth='bearer', type='http', readonly=True)
+    @http.route('/json/1/<path:subpath>', auth='bearer', bearer_scope='rpc', type='http', readonly=True)
     def web_json_1(self, subpath, **kwargs):
         """Simple JSON representation of the views.
 

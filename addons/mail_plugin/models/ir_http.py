@@ -15,7 +15,7 @@ class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
     @classmethod
-    def _auth_method_outlook(cls):
+    def _auth_method_outlook(cls, routing: dict):
         access_token = request.httprequest.headers.get('Authorization')
         if not access_token:
             raise Unauthorized('Access token missing', www_authenticate=WWWAuthenticate('bearer'))

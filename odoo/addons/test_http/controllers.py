@@ -55,10 +55,14 @@ class TestHttp(http.Controller):
         assert self.env.cr.readonly == str2bool(readonly)
         return "Tek'ma'te"
 
-    @http.route('/test_http/greeting-bearer', type='http', auth='bearer', readonly=_readonly)
+    @http.route('/test_http/greeting-bearer', type='http', auth='bearer', bearer_scope='rpc', readonly=_readonly)
     def greeting_bearer(self, readonly=True):
         assert self.env.user, "ORM should be initialized"
         assert self.env.cr.readonly == str2bool(readonly)
+        return f"Tek'ma'te; user={self.env.user.login}"
+
+    @http.route('/test_http/greeting-bearer-other-scope', type='http', auth='bearer', bearer_scope='other_scope', readonly=True)
+    def greeting_bearer_other_scope(self):
         return f"Tek'ma'te; user={self.env.user.login}"
 
     @http.route('/test_http/wsgi_environ', type='http', auth='none')

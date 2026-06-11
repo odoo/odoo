@@ -352,19 +352,23 @@
                     <h3 class="fw-bold">
                         Name your key
                     </h3>
-                    <p>Enter a description of and purpose for the key.</p>
+                    <p>Enter a description of and purpose for the key. <strong>it will be the only way to identify the key once created</strong></p>
                     <field name="name" placeholder="What's this key for?"/>
-                    <p>
-                        It is very important that this description be clear
-                        and complete, <strong>it will be the only way to
-                        identify the key once created</strong>.
-                    </p>
+                    <div invisible="available_scopes_count == 1">
+                        <h3 class="fw-bold">
+                            Select a scope
+                        </h3>
+                        <field name="scope"/>
+                        <p class="text-muted">
+                            The API key will only be valid for the selected scope and can't be used for other scopes.
+                        </p>
+                    </div>
                     <h3 class="fw-bold">
                         Give a duration for the key's validity
                     </h3>
                     <field name="duration"/>
                     <field name="expiration_date" invisible="duration != '-1'"/>
-                    <p>
+                    <p class="text-muted">
                         The key will be deleted once this period has elapsed.
                     </p>
                     <footer>
