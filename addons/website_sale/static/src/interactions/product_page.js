@@ -328,7 +328,7 @@ export class ProductPage extends Interaction {
      */
     _toggleDisable(parent, isCombinationPossible) {
         parent.classList.toggle('css_not_available', !isCombinationPossible);
-        parent.querySelectorAll('button[name="add_to_cart"]').forEach(
+        parent.querySelectorAll('#add_to_cart_wrap button[name="add_to_cart"]').forEach(
             el => el.disabled = !isCombinationPossible
         );
     }
@@ -343,7 +343,7 @@ export class ProductPage extends Interaction {
         const parent = ev.target.closest('.js_product');
         if (!parent) return Promise.resolve();
         const combination = wSaleUtils.getSelectedAttributeValues(parent);
-        const addToCart = parent.querySelector('button[name="add_to_cart"]');
+        const addToCart = parent.querySelector('#add_to_cart_wrap button[name="add_to_cart"]');
 
         const combinationInfo = await this.waitFor(rpc('/website_sale/get_combination_info', {
             'product_template_id': parseInt(addToCart?.dataset?.productTemplateId),
