@@ -34,12 +34,16 @@
                 >
                 <t t-if="displayInputInToggler">
                     <t t-set="inputClass" t-value="'o_select_menu_toggler ' + (!displayInputInDropdown ? 'o_select_menu_input ' : '') + props.togglerClass"/>
-                    <div class="w-100 d-flex flex-wrap">
+                    <div class="w-100 d-flex flex-column">
                         <t t-if="props.multiSelect">
-                            <TagsList t-if="props.value.length" tags="multiSelectChoices"/>
+                            <div t-if="props.value.length" class="d-flex flex-wrap mb-1">
+                                <TagsList tags="multiSelectChoices"/>
+                            </div>
                         </t>
-                        <t t-call="web.SelectMenu.search" />
-                        <span class="o_select_menu_caret align-self-center" />
+                        <div class="position-relative d-flex">
+                            <t t-call="web.SelectMenu.search" />
+                            <span class="o_select_menu_caret align-self-center" />
+                        </div>
                     </div>
                 </t>
                 <t t-else="">
