@@ -3,7 +3,6 @@
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request, route
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 
@@ -190,7 +189,7 @@ class Delivery(WebsiteSale):
                     "id": dm.id,
                     "name": dm.name,
                     "description": dm.website_description,
-                    "minorAmount": payment_utils.to_minor_currency_units(
+                    "minorAmount": self.env["payment.provider"]._to_minor_currency_units(
                         price, order_sudo.currency_id
                     ),
                 }
@@ -221,7 +220,7 @@ class Delivery(WebsiteSale):
         # Return the list of delivery methods available for the sales order.
         return {
             "delivery_methods": sorted_delivery_methods,
-            "adjusted_minor_amount": payment_utils.to_minor_currency_units(
+            "adjusted_minor_amount": self.env["payment.provider"]._to_minor_currency_units(
                 amount_without_delivery, order_sudo.currency_id
             ),
         }
