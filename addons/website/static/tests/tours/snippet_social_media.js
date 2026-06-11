@@ -94,7 +94,6 @@ const addNewSocialNetwork = function (optionIndex, url, replaceIcon = false) {
 registerWebsitePreviewTour(
     "snippet_social_media",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
     },
     () => [
@@ -109,6 +108,9 @@ registerWebsitePreviewTour(
         {
             content: "Ensure twitter became first",
             trigger: ':iframe .s_social_media:has(a:eq(0)[href="https://twitter.com/Odoo"])',
+        },
+        {
+            trigger: ".o_social_media_list tr:nth-child(8):last-child",
         },
         {
             content: "Drag the twitter link at the end of the list",
