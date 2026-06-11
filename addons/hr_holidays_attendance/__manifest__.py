@@ -6,6 +6,7 @@
     'description': """
 Convert employee's extra hours to leave allocations.
     """,
+    'version': '1.1',
     'depends': ['hr_attendance', 'hr_holidays'],
     'auto_install': True,
     'data': [

@@ -1711,3 +1711,81 @@ class TestTimeRulePipeline(TransactionCase):
             (date(2022, 12, 12), 9, wt_type),
             (date(2022, 12, 12), 3, self.overtime_type),
         ])
+
+    def test_multiple_attendances_overtime_spanning_utc_day(self):
+        """Brussels employee (UTC+2), two back-to-back attendances on Sat Apr 11 (UTC).
+
+        Att 0: 12:00-18:00 UTC = 14:00-20:00 Brussels Sat  ->  6h OT
+
+        Att 1: 18:00-00:00 UTC = 20:00 Sat (02:00 Sun Brussels):
+            Sat portion 20:00-24:00 Brussels              ->  4h OT
+            Sun portion 00:00-02:00 Brussels              ->  2h OT
+
+        Expected: 10h OT on Sat Brussels, 2h OT on Sun Brussels.
+        """
+        emp = self.env['hr.employee'].create({
+            'name': 'Brussels Overtime Employee',
+            'tz': 'Europe/Brussels',
+            'attendance_based': False,
+            'resource_calendar_id': self.calendar.id,
+            'date_version': '2026-01-01',
+            'contract_date_start': '2026-01-01',
+            'wage': 3000,
+        })
+        self.env['hr.attendance'].create([{
+            'employee_id': emp.id,
+            'check_in': datetime(2026, 4, 11, 12, 0, 0),
+            'check_out': datetime(2026, 4, 11, 18, 0, 0),
+        }, {
+            'employee_id': emp.id,
+            'check_in': datetime(2026, 4, 11, 18, 0, 0),
+            'check_out': datetime(2026, 4, 12, 0, 0, 0),
+        }])
+
+        vals = emp.version_id.generate_work_entries(date(2026, 4, 11), date(2026, 4, 12))
+        vals = [v for v in vals if v['duration'] > 0]
+
+        sat_total = sum(v['duration'] for v in vals if v['date'] == date(2026, 4, 11))
+        sun_total = sum(v['duration'] for v in vals if v['date'] == date(2026, 4, 12))
+
+        self.assertAlmostEqual(sat_total, 10.0, places=5,
+            msg="Saturday Brussels: att0 6h + att1 Sat portion 4h = 10h overtime (0h schedule)")
+        self.assertAlmostEqual(sun_total, 2.0, places=5,
+            msg="Sunday Brussels: att1 Sun portion 00:00-02:00 Brussels = 2h overtime (0h schedule)")
+
+        # check the output leaves
+        output_leaves = self.env['hr.leave'].search([
+            ('employee_id', '=', emp.id),
+            ('is_time_rule_output', '=', True),
+        ])
+        self.assertTrue(
+            all(l.work_entry_type_id == self.overtime_type for l in output_leaves),
+            "All output leaves must be of the overtime type",
+        )
+        total_ot = sum((l.date_to - l.date_from).total_seconds() / 3600 for l in output_leaves)
+        self.assertAlmostEqual(total_ot, 12.0, places=5,
+            msg="Total output leave hours: 10h Sat + 2h Sun = 12h")
+
+        # Saturday Brussels = [2026-04-10 22:00 UTC, 2026-04-11 22:00 UTC)
+        sat_leaves = output_leaves.filtered(
+            lambda l: datetime(2026, 4, 10, 22) <= l.date_from < datetime(2026, 4, 11, 22)
+        )
+        sat_ot = sum((l.date_to - l.date_from).total_seconds() / 3600 for l in sat_leaves)
+        self.assertAlmostEqual(sat_ot, 10.0, places=5,
+            msg="Output leaves attributed to Saturday Brussels must total 10h")
+
+        # Sunday Brussels = [2026-04-11 22:00 UTC, 2026-04-12 22:00 UTC)
+        # The att1 Sunday portion spans 22:00 UTC Apr 11 -> 00:00 UTC Apr 12:
+        # date_from is after Brussels midnight (22:00 UTC Apr 11), date_to is UTC midnight.
+        sun_leaves = output_leaves.filtered(
+            lambda l: datetime(2026, 4, 11, 22) <= l.date_from < datetime(2026, 4, 12, 22)
+        )
+        sun_ot = sum((l.date_to - l.date_from).total_seconds() / 3600 for l in sun_leaves)
+        self.assertAlmostEqual(sun_ot, 2.0, places=5,
+            msg="Output leaves attributed to Sunday Brussels must total 2h")
+
+        # the Sunday Brussels leave must end at exactly UTC midnight
+        self.assertTrue(
+            any(l.date_to == datetime(2026, 4, 12, 0, 0, 0) for l in sun_leaves),
+            "The Sunday Brussels output leave must end at 00:00 UTC Apr 12 (past UTC end-of-day Apr 11)",
+        )
