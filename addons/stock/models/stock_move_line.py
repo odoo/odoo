@@ -77,7 +77,7 @@ class StockMoveLine(models.Model):
     move_partner_id = fields.Many2one(related='move_id.partner_id', readonly=True)
     picking_code = fields.Selection(related='picking_type_id.code', readonly=True)
     picking_type_id = fields.Many2one(
-        'stock.picking.type', 'Operation type', compute='_compute_picking_type_id', search='_search_picking_type_id')
+        'stock.picking.type', 'Operation type', compute='_compute_picking_type_id', store=True, index=True)
     picking_type_use_create_lots = fields.Boolean(related='picking_type_id.use_create_lots', readonly=True)
     picking_type_use_existing_lots = fields.Boolean(related='picking_type_id.use_existing_lots', readonly=True)
     state = fields.Selection(related='move_id.state', store=True)
@@ -140,11 +140,6 @@ class StockMoveLine(models.Model):
                 line.location_id = line.move_id.location_id or line.picking_id.location_id
             if not line.location_dest_id or line._origin.picking_id.location_dest_id != line.picking_id.location_dest_id:
                 line.location_dest_id = line.move_id.location_dest_id or line.picking_id.location_dest_id
-
-    def _search_picking_type_id(self, operator, value):
-        if operator in Domain.NEGATIVE_OPERATORS:
-            return NotImplemented
-        return Domain('picking_id.picking_type_id', operator, value)
 
     @api.depends('quant_id')
     def _compute_quantity(self):
