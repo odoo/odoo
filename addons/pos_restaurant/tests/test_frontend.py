@@ -44,7 +44,6 @@ class TestFrontendCommon(TestPointOfSaleHttpCommon):
         cls.pos_config = cls.env['pos.config'].create({
             'name': 'Bar Prout',
             'module_pos_restaurant': True,
-            'iface_splitbill': True,
             'iface_printbill': True,
             'use_order_printer': True,
             'preparation_printer_ids': [(4, printer.id)],
