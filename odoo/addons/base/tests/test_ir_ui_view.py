@@ -5076,7 +5076,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'payment',
             'payment_adyen',
             'payment_custom',
-            'payment_demo',
             'planning',
             'point_of_sale',
             'portal',

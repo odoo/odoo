@@ -7,9 +7,21 @@
         <field name="arch" type="xml">
             <form string="Payment Transactions" create="false" edit="false">
                 <header>
-                    <button type="object" name="action_capture" invisible="state != 'authorized'" string="Capture Transaction" class="oe_highlight"/>
-                    <button type="object" name="action_void" invisible="state != 'authorized'" string="Void Transaction"
-                            confirm="Are you sure you want to void the authorized transaction? This action can't be undone."/>
+                    <button
+                        string="Capture Transaction"
+                        type="object"
+                        name="action_capture"
+                        invisible="state != 'authorized'"
+                        class="oe_highlight"
+                    />
+                    <button
+                        string="Void Transaction"
+                        type="object"
+                        name="action_void"
+                        confirm="Are you sure you want to void the authorized transaction? This
+                                 action can't be undone."
+                        invisible="state != 'authorized'"
+                    />
                     <button
                         string="Post-process"
                         help="Run the post-processing step for this transaction."
@@ -18,68 +30,94 @@
                         invisible="is_post_processed"
                         groups="base.group_no_one"
                     />
-                    <field name="state" widget="statusbar"/>
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,pending,done,cancel,error"
+                        invisible="capture_manually"
+                    />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,pending,authorized,done,cancel,error"
+                        invisible="not capture_manually"
+                    />
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_view_refunds"
-                                type="object"
-                                class="oe_stat_button"
-                                icon="fa-money"
-                                invisible="refunds_count == 0">
-                            <field name="refunds_count" widget="statinfo" string="Refunds"/>
+                        <button
+                            type="object"
+                            name="action_view_refunds"
+                            icon="fa-money"
+                            invisible="refunds_count == 0"
+                            class="oe_stat_button"
+                        >
+                            <field string="Refunds" name="refunds_count" widget="statinfo"/>
                         </button>
                         <button
-                            name="action_view_payment_data"
                             type="object"
-                            class="oe_stat_button"
+                            name="action_view_payment_data"
                             icon="fa-refresh"
                             invisible="payment_data_count == 0"
                             groups="base.group_no_one"
+                            class="oe_stat_button"
                         >
                             <field
                                 string="Pending Updates" name="payment_data_count" widget="statinfo"
                             />
                         </button>
+                        <button
+                            type="object"
+                            name="action_view_child_transactions"
+                            icon="fa-history"
+                            invisible="child_transaction_count == 0"
+                            class="oe_stat_button"
+                        >
+                            <field
+                                string="Operations"
+                                name="child_transaction_count"
+                                widget="statinfo"
+                            />
+                        </button>
                     </div>
-                    <group>
-                        <group name="transaction_details">
-                            <field name="reference"/>
-                            <field name="source_transaction_id"
-                                   invisible="not source_transaction_id"/>
-                            <field name="amount"/>
-                            <field name="currency_id" invisible="1"/>
-                            <field name="payment_method_id"/>
-                            <field name="provider_id"/>
-                            <field name="company_id" groups="base.group_multi_company"/>
-                            <!-- Used by some provider-specific views -->
-                            <field name="provider_code" invisible="1"/>
-                            <field name="provider_reference"/>
-                            <field name="token_id" invisible="not token_id"/>
-                            <field name="create_date"/>
-                            <field name="last_state_change"/>
-                            <field name="is_live"/>
-                            <field name="is_post_processed" groups="base.group_no_one"/>
-                        </group>
-                        <group name="transaction_partner">
-                            <field name="partner_id" widget="res_partner_many2one"/>
-                            <label for="partner_address" string="Address"/>
-                            <div class="o_address_format">
-                                <field name="partner_address" placeholder="Address" class="o_address_street"/>
-                                <field name="partner_city" placeholder="City" class="o_address_city"/>
-                                <field name="partner_state_id" placeholder="State" class="o_address_state" options="{'no_open': True}"/>
-                                <field name="partner_zip" placeholder="ZIP" class="o_address_zip"/>
-                                <field name="partner_country_id" placeholder="Country" class="o_address_country" options="{'no_open': True}"/>
-                            </div>
-                            <field name="partner_email" widget="email"/>
-                            <field name="partner_phone" widget="phone"/>
-                            <field name="partner_lang"/>
-                        </group>
+                    <div class="float-end d-flex gap-2">
+                        <span
+                            invisible="is_live"
+                            class="badge rounded-pill text-bg-warning fs-6"
+                        >
+                            Test Mode
+                        </span>
+                        <span
+                            invisible="not is_post_processed"
+                            groups="base.group_no_one"
+                            class="badge rounded-pill text-bg-success fs-6"
+                        >
+                            Post-processed
+                        </span>
+                    </div>
+                    <div class="oe_title">
+                        <label string="Reference" for="reference"/>
+                        <h1><field name="reference" class="text-break"/></h1>
+                    </div>
+                    <group name="transaction_details">
+                        <field name="currency_id" invisible="1"/>
+                        <field name="amount"/>
+                        <field name="partner_id" widget="res_partner_many2one"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="create_date"/>
                     </group>
-                    <separator string="Child transactions" invisible="not child_transaction_ids"/>
-                    <field name="child_transaction_ids" invisible="not child_transaction_ids"/>
+                    <notebook>
+                        <page string="Payment">
+                            <group name="payment_details">
+                                <field name="provider_id"/>
+                                <field name="payment_method_id"/>
+                                <field name="provider_reference"/>
+                                <field name="token_id" invisible="not token_id"/>
+                            </group>
+                        </page>
+                    </notebook>
                     <group string="Message" invisible="not state_message">
-                        <field colspan="2" name="state_message" nolabel="1"/>
+                        <field name="state_message" colspan="2" nolabel="1"/>
                     </group>
                 </sheet>
             </form>
@@ -91,15 +129,21 @@
         <field name="model">payment.transaction</field>
         <field name="arch" type="xml">
             <list string="Payment Transactions" create="false">
+                <field name="create_date"/>
+                <field
+                    name="state"
+                    widget="badge"
+                    decoration-info="state == 'pending'"
+                    decoration-danger="state in ['cancel','error']"
+                    decoration-success="state in ['done','authorized']"
+                />
                 <field name="reference"/>
+                <field name="payment_method_id" string="Method"/>
+                <field name="provider_id"/>
                 <field name="partner_id"/>
                 <!-- Needed to display the currency of the amounts -->
                 <field name="currency_id" column_invisible="True"/>
                 <field name="amount"/>
-                <field name="provider_id"/>
-                <field name="payment_method_id"/>
-                <field name="state"/>
-                <field name="create_date"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                 <field name="is_live" optional="hide"/>
             </list>
@@ -126,15 +170,24 @@
                     domain="[('is_live', '=', True)]"
                 />
                 <group>
-                    <filter string="Provider" name="provider_id" context="{'group_by': 'provider_id'}"/>
-                    <filter string="Partner" name="partner_id" context="{'group_by': 'partner_id'}"/>
+                    <filter
+                        string="Provider" name="provider_id" context="{'group_by': 'provider_id'}"
+                    />
+                    <filter
+                        string="Partner" name="partner_id" context="{'group_by': 'partner_id'}"
+                    />
                     <filter string="Status" name="state" context="{'group_by': 'state'}"/>
                     <filter
                         string="Production Environment"
                         name="is_live"
                         context="{'group_by': 'is_live'}"
                     />
-                    <filter string="Company" name="company" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    <filter
+                        string="Company"
+                        name="company"
+                        context="{'group_by': 'company_id'}"
+                        groups="base.group_multi_company"
+                    />
                 </group>
             </search>
         </field>

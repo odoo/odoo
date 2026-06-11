@@ -35,9 +35,10 @@ class PaymentTransaction(models.Model):
         string="Provider", comodel_name="payment.provider", readonly=True, required=True, index=True
     )
     provider_code = fields.Selection(string="Provider Code", related="provider_id.code")
+    capture_manually = fields.Boolean(related="provider_id.capture_manually")
     company_id = fields.Many2one(
         related="provider_id.company_id", store=True, index=True
-    )  # Indexed to speed-up ORM searches (from ir_rule or others)
+    )  # Indexed to speed-up ORM searches (from ir_access or others)
     payment_method_id = fields.Many2one(
         string="Payment Method",
         comodel_name="payment.method",
@@ -139,6 +140,7 @@ class PaymentTransaction(models.Model):
         readonly=True,
     )
     refunds_count = fields.Integer(string="Refunds Count", compute="_compute_refunds_count")
+    child_transaction_count = fields.Integer(compute="_compute_child_transaction_count")
 
     # Fields used for user redirection & payment post-processing
     is_post_processed = fields.Boolean(
@@ -197,6 +199,17 @@ class PaymentTransaction(models.Model):
         data = {source_transaction.id: count for source_transaction, count in rg_data}
         for record in self:
             record.refunds_count = data.get(record.id, 0)
+
+    @api.depends("child_transaction_ids")
+    def _compute_child_transaction_count(self):
+        rg_data = self.env["payment.transaction"]._read_group(
+            domain=[("source_transaction_id", "in", self.ids)],
+            groupby=["source_transaction_id"],
+            aggregates=["__count"],
+        )
+        data = {source_transaction.id: count for source_transaction, count in rg_data}
+        for record in self:
+            record.child_transaction_count = data.get(record.id, 0)
 
     # === CONSTRAINT METHODS === #
 
@@ -341,6 +354,21 @@ class PaymentTransaction(models.Model):
         if self.payment_data_count == 1:
             action.update({"view_mode": "form", "res_id": self.payment_data_ids.id})
         return action
+
+    def action_view_child_transactions(self):
+        """Return a window action to browse the child transactions.
+
+        :return: A window action
+        :rtype: dict
+        """
+        self.ensure_one()
+        return {
+            "name": self.env._("Operations"),
+            "type": "ir.actions.act_window",
+            "res_model": "payment.transaction",
+            "view_mode": "list,form",
+            "domain": [("source_transaction_id", "=", self.id)],
+        }
 
     def action_capture(self):
         """Open the partial capture wizard if it is supported by the related providers, otherwise

@@ -647,7 +647,7 @@ class PaymentProvider(models.Model):
         self.ensure_one()
         return {
             "type": "ir.actions.act_window",
-            "name": self.env._("Payment Transactions"),
+            "name": self.env._("Payment History"),
             "res_model": "payment.transaction",
             "view_mode": "list,form",
             "domain": [("id", "in", self.payment_transaction_ids.ids)],

@@ -13,9 +13,13 @@
                     <field name="invoices_count" widget="statinfo" string="Invoice(s)"/>
                 </button>
             </button>
-            <field name="reference" position="after">
-                <field name="payment_id"/>
-            </field>
+            <notebook position="inside">
+                <page string="Accounting">
+                    <group name="accounting_details">
+                        <field name="payment_id"/>
+                    </group>
+                </page>
+            </notebook>
         </field>
     </record>
 
