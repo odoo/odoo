@@ -11,7 +11,7 @@ import { SearchBarMenu } from "../search_bar_menu/search_bar_menu";
 import { Component, props, proxy, status, t } from "@odoo/owl";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { hasTouch } from "@web/core/browser/feature_detection";
-import { Dropdown } from "@web/core/dropdown/dropdown";
+import { SearchBarDropdown } from "../search_bar_dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useNavigation } from "@web/core/navigation/navigation";
 
@@ -47,7 +47,7 @@ export class SearchBar extends Component {
     static template = "web.SearchBar";
     static components = {
         SearchBarMenu,
-        Dropdown,
+        SearchBarDropdown,
         DropdownItem,
     };
     props = props({
@@ -98,6 +98,11 @@ export class SearchBar extends Component {
             this.env.config.disableSearchBarAutofocus || !this.props.autofocus
                 ? useRef("autofocus")
                 : useAutofocus({ mobile: this.ui.isSmall }); // only force the focus on touch devices on small screens
+
+        this.popoverWillCloseOnClickAway = (target) => {
+            const inputEl = this.inputRef.el;
+            return !(inputEl && (inputEl === target || inputEl.contains(target)));
+        };
 
         useBus(this.env.searchModel, "focus-search", () => {
             this.inputRef.el.focus();

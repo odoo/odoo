@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { queryAll, press, queryAllTexts } from "@odoo/hoot-dom";
+import { queryAll, press, queryAllTexts, pointerDown } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { getBasicData, Product } from "@spreadsheet/../tests/helpers/data";
 import { createSpreadsheetDashboard } from "@spreadsheet_dashboard/../tests/helpers/dashboard_action";
@@ -461,6 +461,29 @@ test("Can open the dialog by clicking on the search bar", async function () {
 
     await contains(".o_searchview input").click();
     expect(".o-filter-values").toHaveCount(1);
+});
+
+test("pointerDown on the search input should not hide the search menu", async () => {
+    const spreadsheetData = {
+        globalFilters: [
+            {
+                id: "1",
+                type: "relation",
+                label: "Relation Filter",
+                modelName: "product",
+                defaultValue: { operator: "in", ids: [37] }, // xphone
+            },
+        ],
+    };
+    const serverData = getServerData(spreadsheetData);
+    await createSpreadsheetDashboard({ serverData });
+
+    await contains(".o_searchview_input").click();
+    expect(`.o-filter-values`).toHaveCount(1);
+
+    await pointerDown(".o_searchview_input");
+    await animationFrame();
+    expect(`.o-filter-values`).toHaveCount(1);
 });
 
 test("Changes of global filters are not dispatched while inside the dialog", async function () {

@@ -80,7 +80,7 @@
 
     <t t-name="web.SearchBar">
         <div t-if="this.visibilityState.showSearchBar" class="o_cp_searchview d-flex input-group" role="search" t-custom-ref="root">
-            <Dropdown
+            <SearchBarDropdown
                 state="this.inputDropdownState"
                 manual="true"
                 noClasses="true"
@@ -90,6 +90,7 @@
                 onStateChanged.bind="this.onInputDropdownChanged"
                 menuRef="this.menuRef"
                 bottomSheet="false"
+                popoverWillCloseOnClickAway="this.popoverWillCloseOnClickAway"
             >
                 <div class="o_searchview form-control d-print-contents d-flex align-items-center py-1 border-end-0"
                     role="search" aria-autocomplete="list">
@@ -119,8 +120,11 @@
                 <t t-set-slot="content">
                     <t t-call="web.SearchBar.QuickSearchItems"/>
                 </t>
-            </Dropdown>
-            <SearchBarMenu dropdownState="this.searchBarDropdownState">
+            </SearchBarDropdown>
+            <SearchBarMenu
+                dropdownState="this.searchBarDropdownState"
+                popoverWillCloseOnClickAway="this.popoverWillCloseOnClickAway"
+            >
                 <t t-call-slot="search-bar-additional-menu"/>
             </SearchBarMenu>
         </div>

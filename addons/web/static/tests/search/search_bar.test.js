@@ -1652,6 +1652,19 @@ test("clicking on search input trigger the search menu", async () => {
     expect(`.o_search_bar_menu`).toHaveCount(1);
 });
 
+test.tags("desktop");
+test("pointerDown on the search input should not hide the search menu", async () => {
+    await mountWithSearch(SearchBar, {
+        resModel: "partner",
+    });
+    await contains(".o_searchview_input").click();
+    expect(`.o_search_bar_menu`).toHaveCount(1);
+
+    await pointerDown(".o_searchview_input");
+    await animationFrame();
+    expect(`.o_search_bar_menu`).toHaveCount(1);
+});
+
 test("clicking on the searchview icon trigger the search", async () => {
     await mountWithSearch(SearchBar, {
         resModel: "partner",
