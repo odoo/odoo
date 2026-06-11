@@ -41,8 +41,8 @@ class SaleOrderLine(models.Model):
     )
     sequence = fields.Integer(string="Sequence", default=10)
 
-    # A dummy field just to create the column in the user interface
-    visual_line_no = fields.Char(string=" ", default="", store=False)
+    # An empty field just to create the column in the user interface
+    line_number = fields.Char(string="Line number column", store=False)
 
     # Order-related fields
     company_id = fields.Many2one(

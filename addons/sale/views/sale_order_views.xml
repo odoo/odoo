@@ -704,11 +704,13 @@
                                 <!-- Standard fields -->
                                 <field name="sequence" invisible="combo_item_id" widget="handle"/>
                                 <field
-                                    name="visual_line_no"
+                                    name="line_number"
                                     class="css_line_number"
                                     readonly="1"
-                                    column_invisible="not parent.show_sale_line_numbers"
-                                    width="20px"/>
+                                    nolabel="1"
+                                    column_invisible="not parent.show_sol_numbers"
+                                    width="20px"
+                                />
                                 <field
                                     name="product_id"
                                     string="Product Variant"

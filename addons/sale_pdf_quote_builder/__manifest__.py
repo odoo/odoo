@@ -8,7 +8,6 @@
     "data": [
         "data/ir_cron.xml",
         "data/sale_pdf_form_field.xml",
-        "report/ir_actions_report_templates.xml",
         "report/ir_actions_report.xml",
         "views/product_document_views.xml",
         "views/quotation_document_views.xml",

@@ -1,6 +1,6 @@
 .o_field_widget[name="order_line"] {
 
-    th[data-name="visual_line_no"] {
+    th[data-name="line_number"] {
         width: 36px !important;
         min-width: 36px !important;
         max-width: 36px !important;
@@ -16,7 +16,7 @@
 
     tr.o_data_row:not(.o_is_line_section):not(.o_is_line_subsection):not(.o_is_line_note):not(.text-muted):not(.d-none) {
 
-        td[name="visual_line_no"] {
+        td[name="line_number"] {
             position: relative;
             box-sizing: border-box;
             width: 36px !important;
@@ -37,7 +37,7 @@
         }
     }
 
-    &:has(th[data-name="visual_line_no"]:not(.d-none)) {
+    &:has(th[data-name="line_number"]:not(.d-none)) {
 
         tr.o_data_row.o_is_line_section:not(.d-none),
         tr.o_data_row.o_is_line_subsection:not(.d-none),
@@ -50,7 +50,7 @@
         }
 
         tr.o_data_row.o_is_line_section:not(.d-none),
-        tr.o_data_row.o_is_line_subsection:not(.d-none),
+        tr.o_data_row.o_is_line_subsection:not(.text-muted):not(.d-none),
         tr.o_data_row.o_is_line_note:not(.text-muted):not(.d-none) {
 
             td.o_handle_cell + td {
