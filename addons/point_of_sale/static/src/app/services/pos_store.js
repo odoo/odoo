@@ -1548,6 +1548,7 @@ export class PosStore extends WithLazyGetterTrap {
             (order) =>
                 order.isEmptyOrder() &&
                 !order.finalized &&
+                !order.isSynced &&
                 (!order.partner_id || order.partner_id.id === defaultPartnerId) &&
                 order.pricelist_id?.id === this.config.pricelist_id?.id &&
                 order.fiscal_position_id?.id === this.config.default_fiscal_position_id?.id
