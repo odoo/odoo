@@ -1,6 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
+import { showProductColumn } from "@account/js/tours/tour_utils";
 
 import { markup } from "@odoo/owl";
 
@@ -728,6 +729,8 @@ stepUtils.autoExpandMoreButtons(),
 },
 // Create a quotation
 ...stepUtils.statusbarButtonsSteps('New Quotation', markup(_t('<p><b>Create a quotation</p>'))),
+// Searchable label field does't support on the fly creation of products. Use the product column instead.
+...showProductColumn("product_template_id"),
 {
     isActive: ["desktop"],
     trigger: ".o_field_widget[name=order_line] .o_field_x2many_list_row_add > button",
@@ -778,7 +781,7 @@ stepUtils.autoExpandMoreButtons(),
 ...stepUtils.mobileKanbanSearchMany2X('Product', 'the_flow.product'),
 {
     isActive: ["desktop"],
-    trigger: ".o_field_widget[name=order_line] button:contains(add a product)",
+    trigger: ".o_field_widget[name=order_line] button:contains(Add Line)",
     content: _t("Click here to add some lines to your quotations."),
     tooltipPosition: "bottom",
     run: "click",
@@ -824,7 +827,7 @@ stepUtils.autoExpandMoreButtons(),
     isActive: ["desktop"],
     trigger: ".ui-menu-item:first > a:contains('the_flow.service')",
     run: "click",
-}, 
+},
 {
     isActive: ["desktop"],
     trigger: `body:not(:has(.o_popover)) .o_data_row:eq(1) [name=product_template_id] input:value(the_flow.service)`,

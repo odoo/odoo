@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import fields, models
 from odoo.fields import Command, Domain
 
 
@@ -11,35 +11,6 @@ class SaleOrderLine(models.Model):
     is_optional = fields.Boolean(
         string="Optional Line", copy=True, default=False
     )  # Whether this section's lines are optional in the portal.
-
-    # === COMPUTE METHODS === #
-
-    @api.depends("product_id")
-    def _compute_name(self):
-        # Take the description on the order template if the product is present in it
-        super()._compute_name()
-        for line in self:
-            order = line.order_id
-            if line.product_id and order.sale_order_template_id and line._use_template_name():
-                for template_line in order.sale_order_template_id.sale_order_template_line_ids:
-                    if line.product_id == template_line.product_id and template_line.name:
-                        # If a specific description was set on the template, use it
-                        # Otherwise the description is handled by the super call
-                        lang = order.partner_id.lang
-                        line.name = (
-                            template_line.with_context(lang=lang).name
-                            + line.with_context(
-                                lang=lang
-                            )._get_sale_order_line_multiline_description_variants()
-                        )
-                        break
-
-    def _use_template_name(self):
-        """Decide whether the quotation template description should be used for this line (if any
-        template line matches the current one).
-        """
-        self.ensure_one()
-        return True
 
     # === PUBLIC === #
 
@@ -78,12 +49,15 @@ class SaleOrderLine(models.Model):
         ]
 
         if existing_template:
-            template_lines_data = [Command.clear(), *template_lines]
+            vals = {"sale_order_template_line_ids": [Command.clear(), *template_lines]}
+            if existing_template.currency_id != self.order_id.currency_id:
+                vals["currency_id"] = self.order_id.currency_id.id
+
             # .sudo because we allow salesman to update their own templates
-            existing_template.sudo().sale_order_template_line_ids = template_lines_data
+            existing_template.sudo().write(vals)
             return existing_template.read(["id", "name", "create_uid"], load="")[0]
 
-        # .sudo because we allow salesman to and maintaincreate their own templates
+        # .sudo because we allow salesman to maintain and create their own templates
         new_template = (
             self
             .env["sale.order.template"]
@@ -93,6 +67,7 @@ class SaleOrderLine(models.Model):
                 "template_type": "section",
                 "sale_order_template_line_ids": template_lines,
                 "company_id": self.order_id.company_id.id,
+                "currency_id": self.order_id.currency_id.id,
                 "share_template": False,
             })
         )
@@ -118,11 +93,14 @@ class SaleOrderLine(models.Model):
     def _prepare_template_line_values(self):
         """Prepare create values for a sale order template line from a sale order line.
 
+        If the line is linked to a product, the product is stored and pricing is recomputed later.
+        For product lines without a product, price, discount, and taxes are copied explicitly.
+
         :return: `sale.order.template.line` create values
         :rtype: dict
         """
         self.ensure_one()
-        return {
+        vals = {
             "name": self.name,
             "product_uom_qty": self.product_uom_qty,
             "product_uom_id": self.product_uom_id.id,
@@ -132,3 +110,15 @@ class SaleOrderLine(models.Model):
             "collapse_composition": self.collapse_composition,
             "collapse_prices": self.collapse_prices,
         }
+
+        if not self.product_id:
+            vals.update({
+                "tax_ids": [Command.set(self.tax_ids.ids)],
+                "discount": self.discount,
+                "price_unit": self.price_unit,
+            })
+        else:
+            # Try to remove the default product display_name from the line name
+            vals["name"] = self.name.removeprefix(f"{self.product_id.display_name}\n")
+
+        return vals

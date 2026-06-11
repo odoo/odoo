@@ -5,8 +5,7 @@ import * as tourUtils from '@sale/js/tours/tour_utils';
 
 registry.category('web_tour.tours').add('sale_order_keep_uom_on_variant_wizard_quantity_change', {
     steps: () => [
-        tourUtils.editLineMatching("Sofa"),
-        tourUtils.editConfiguration(),
+        tourUtils.editConfiguration("Sofa"),
         productConfiguratorTourUtils.increaseProductQuantity("Sofa"),
         ...productConfiguratorTourUtils.saveConfigurator(),
         ...stepUtils.saveForm(),

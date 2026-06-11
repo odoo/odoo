@@ -566,6 +566,39 @@ class TestLoyalty(TestSaleCouponCommon):
         order.action_confirm()
         self.assertEqual(loyalty_card.points, 90)
 
+    def test_points_awarded_productless_line_no_domain_program(self):
+        """Check that productless sale order lines award points for all-products programs."""
+        loyalty_program = self.env["loyalty.program"].create(
+            self.env["loyalty.program"]._get_template_values()["loyalty"]
+        )
+        loyalty_card = self.env["loyalty.card"].create({
+            "program_id": loyalty_program.id,
+            "partner_id": self.partner.id,
+            "points": 0,
+        })
+
+        order = (
+            self
+            .env["sale.order"]
+            .with_user(self.user_salemanager)
+            .create({
+                "partner_id": self.partner.id,
+                "order_line": [
+                    Command.create({
+                        "name": "Manual service",
+                        "price_unit": 100,
+                        "product_uom_qty": 1,
+                        "tax_ids": False,
+                    })
+                ],
+            })
+        )
+
+        self.assertFalse(order.order_line.product_id)
+        self.assertEqual(order.amount_total, 100)
+        order.action_confirm()
+        self.assertEqual(loyalty_card.points, 100)
+
     def test_points_awarded_general_discount_code_specific_domain_program(self):
         """Check the calculation for points awarded when there is a discount coupon applied and the
         loyalty program applies on a specific domain.

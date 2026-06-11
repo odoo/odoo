@@ -6,9 +6,21 @@ import {
     contains,
     defineModels,
     fields,
+    models,
     mountView,
     onRpc,
 } from '@web/../tests/web_test_helpers';
+
+class AccountFiscalPosition extends models.ServerModel {
+    _name = "account.fiscal.position";
+
+    _records = [
+        {
+            id: 1,
+            name: "Test Fiscal Position",
+        },
+    ];
+}
 
 class SaleOrderLine extends saleManagementModels.SaleOrderLine {
     // for skipping tax setup required for prices computation to run correctly
@@ -107,12 +119,14 @@ class SaleOrder extends saleManagementModels.SaleOrder {
             name: "Optional Sections Sale order",
             order_line: SaleOrderLine._records.map(record => record.id),
             company_id: 1,
+            fiscal_position_id: 1,
         },
     ];
     _views = {
         form: `
             <form>
                 <field name="company_id" invisible="1"/>
+                <field name="fiscal_position_id" invisible="1"/>
                 <field
                     name="order_line"
                     widget="sol_o2m"
@@ -141,7 +155,7 @@ class SaleOrder extends saleManagementModels.SaleOrder {
     };
 }
 
-defineModels({ ...saleManagementModels, SaleOrderLine, SaleOrder });
+defineModels({ ...saleManagementModels, SaleOrderLine, SaleOrder, AccountFiscalPosition });
 
 const EXPECTED_LINE_RECORDS = [
     "r1",
@@ -418,7 +432,7 @@ test("Selecting a section template should append its section and lines to the or
         resId: 1,
     });
 
-    await contains("button:contains(Add a Section)").click();
+    await contains("button:contains(Add Section)").click();
     expect(".o_section_templates_dropdown").toBeVisible();
 
     await contains("span.o-dropdown-item:contains(Section Template 1)").click();

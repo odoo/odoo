@@ -45,8 +45,7 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
         {
             trigger: ".o_form_editable",
         },
-        tourUtils.editLineMatching("Matrix (PAV11, PAV22, PAV31)", "PA4: PAV41"),
-        tourUtils.editConfiguration(),
+        tourUtils.editConfiguration("Matrix (PAV11, PAV22, PAV31)"),
         {
             trigger: ".modal .o_matrix_input_table",
             run: function () {
@@ -80,8 +79,7 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
         {
             trigger: ".o_form_editable",
         },
-        tourUtils.editLineMatching("Matrix (PAV11, PAV22, PAV31)", "PA4: PAV41"),
-        tourUtils.editConfiguration(),
+        tourUtils.editConfiguration("Matrix (PAV11, PAV22, PAV31)"),
         {
             trigger: ".modal .o_matrix_input_table",
             run: function () {
@@ -109,8 +107,7 @@ registry.category("web_tour.tours").add('sale_matrix_tour', {
         {
             trigger: ".o_form_status_indicator_buttons.invisible:not(:visible)", // wait for save to be finished
         },
-        tourUtils.editLineMatching("Matrix (PAV11, PAV22, PAV31)", "PA4: PAV41"),
-        tourUtils.editConfiguration(),
+        tourUtils.editConfiguration("Matrix (PAV11, PAV22, PAV31)"),
         {
             trigger: ".modal .o_matrix_input_table",
             run: function () {

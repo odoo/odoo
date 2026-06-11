@@ -56,7 +56,10 @@
             <list string="Sales Analysis" action="action_open_order" type="object">
                 <field name="date"/>
                 <field name="order_reference" optional="show"/>
-                <field name="product_id" string="Product" optional="show"/>
+                <column>
+                    <field name="product_id" string="Product" optional="show"/>
+                    <field name="line_name" invisible="product_id"/>
+                </column>
                 <field name="partner_id"/>
                 <field name="user_id" optional="show" widget="many2one_avatar_user"/>
                 <field name="team_id" optional="hide"/>

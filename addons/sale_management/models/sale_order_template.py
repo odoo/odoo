@@ -15,6 +15,7 @@ class SaleOrderTemplate(models.Model):
         help="If unchecked, it will allow you to hide the Order template without removing it.",
     )
     company_id = fields.Many2one(comodel_name="res.company", default=lambda self: self.env.company)
+    currency_id = fields.Many2one(string="Currency", comodel_name="res.currency")
 
     name = fields.Char(string="Template", required=True)
     note = fields.Html(string="Terms and conditions", translate=True)
@@ -83,6 +84,7 @@ class SaleOrderTemplate(models.Model):
         compute="_compute_user_has_access",
         search="_search_user_has_access",
     )
+    has_productless_lines = fields.Boolean(compute="_compute_has_productless_lines")
 
     # === COMPUTE METHODS ===#
 
@@ -135,6 +137,14 @@ class SaleOrderTemplate(models.Model):
                 | Domain("team_ids.user_id", x2many_operator, self.env.user.ids)
             )
         ) | Domain("create_uid", x2many_operator, self.env.user.ids)
+
+    @api.depends("sale_order_template_line_ids")
+    def _compute_has_productless_lines(self):
+        for template in self:
+            template.has_productless_lines = any(
+                not (line.product_id or line.display_type)
+                for line in self.sale_order_template_line_ids
+            )
 
     # === ONCHANGE METHODS ===#
 
@@ -310,7 +320,9 @@ class SaleOrderTemplate(models.Model):
         )
         return self.search_read(domain, fields=["id", "name", "create_uid"], load="")
 
-    def prepare_section_template_order_lines(self, order_changes, fields_spec):
+    def prepare_section_template_order_lines(
+        self, order_changes, fiscal_position_id, company_id, currency_id, fields_spec
+    ):
         """Prepare `sale.order.line` value dicts from a section template.
 
         Builds order line values from the given section template, applies
@@ -318,15 +330,23 @@ class SaleOrderTemplate(models.Model):
         returns the resulting values ready for insertion.
 
         :param dict order_changes: Order values to consider for onchange
+        :param int fiscal_position_id: fiscal position of the order
+        :param int company_id: company of the order
+        :param int currency_id: currency of the order
         :param dict fields_spec: Fields specification for onchange
         :return: Prepared sale order line values
         :rtype: list[dict]
         """
         self.ensure_one()
         result = []
+        fiscal_position = self.env["account.fiscal.position"].browse(fiscal_position_id)
+        currency = self.env["res.currency"].browse(currency_id)
 
-        for line in self.sale_order_template_line_ids:
-            onchange_values = {**line._prepare_order_line_values(), **order_changes}
+        for line in self.with_company(company_id).sale_order_template_line_ids:
+            onchange_values = {
+                **line._prepare_order_line_values(fiscal_position, currency),
+                **order_changes,
+            }
             onchange_result = self.env["sale.order.line"].onchange(onchange_values, [], fields_spec)
             result.append(onchange_result.get("value", {}))
 

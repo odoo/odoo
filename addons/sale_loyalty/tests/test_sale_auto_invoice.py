@@ -9,7 +9,7 @@ from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 @tagged("post_install", "-at_install")
 class TestSaleAutoInvoice(TestSaleCouponCommon):
     def test_automatic_invoice_on_zero_amount_order(self):
-        self.env["ir.config_parameter"].sudo().set_bool("sale.automatic_invoice", True)
+        self.env.company.sale_automatic_invoice = True
         # Create a loyalty program with 100% discount
         self.env["loyalty.program"].sudo().create({
             "name": "100discount",

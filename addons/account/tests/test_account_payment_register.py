@@ -892,7 +892,8 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
         ''' When registering a payment manually with a payment register,
         we shouldn't sent email notification automatically.
         '''
-        self.env['ir.config_parameter'].set_bool('sale.automatic_invoice', True)
+        if self.env['ir.module.module']._get('sale').state == 'installed':
+            self.env.company.sale_automatic_invoice = True
         if self.env['ir.module.module']._get('payment_demo').state == 'installed':
             payment_token = self._create_token(provider_id=self._prepare_provider(code='demo').id,
                                                demo_simulated_state='done')

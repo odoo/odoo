@@ -28,6 +28,7 @@ class SaleReport(models.Model):
             -MIN(l.id) AS id,
             l.product_id AS product_id,
             NULL AS line_invoice_status,
+            NULL AS line_name,
             t.uom_id AS product_uom_id,
             SUM(l.qty) AS product_uom_qty,
             SUM(l.qty_delivered) AS qty_delivered,

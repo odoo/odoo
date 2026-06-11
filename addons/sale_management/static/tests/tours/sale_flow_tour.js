@@ -17,6 +17,10 @@ registry.category("web_tour.tours").add("test_basic_sale_flow_with_minimal_acces
             trigger: ".o_field_many2many_tags[name=tax_ids] .o_tag",
         },
         {
+            content: "Wait for the UoM to be set by the onchange",
+            trigger: ".o_many2one_uom_cell input:value('Dozens')",
+        },
+        {
             trigger: "button[name=action_confirm]",
             run: "click",
         },

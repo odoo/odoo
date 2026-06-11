@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t
+        t-name="sale.SaleLabelTextField"
+        t-inherit="account.AccountLabelTextField"
+        t-inherit-mode="primary"
+    >
+        <div name="account_label_text_readonly" position="inside">
+            <!-- Show configuration button for custom lines/products -->
+            <button
+                t-if="this.hasConfigurationButton and !this.props.record.isInEdition"
+                type="button"
+                class="o_configuration_button btn btn-link text-action p-0 small d-print-none fa fa-pencil"
+                tabindex="-1"
+                draggable="false"
+                t-att-aria-label="this.configurationButtonHelp"
+                t-att-data-tooltip="this.configurationButtonHelp"
+                t-on-click="() => this.onEditConfiguration()"
+            />
+        </div>
+    </t>
+
+    <t t-name="sale.ListSaleLabelSectionAndNoteText">
+        <t t-component="this.componentToUse" t-props="this.componentProps"/>
+    </t>
+
+</templates>

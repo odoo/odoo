@@ -48,7 +48,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_optional_prod
             trigger: 'div[name="sale_warning_text"]:contains("Conference Chair"):contains("sold")',
         },
         {
-            trigger: 'tr.text-warning td[name="product_template_id"]:contains("Conference Chair")',
+            trigger: 'tr.text-warning td[name="name"]:contains("Conference Chair")',
         },
         {
             trigger: 'tr:has(td.o_data_cell:contains("Customizable Desk")) td.o_data_cell:contains("2.0")',

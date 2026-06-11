@@ -96,6 +96,6 @@ registry.category("web_tour.tours").add('test_add_section_from_product_catalog_o
             trigger: '.o_field_res_partner_many2one .dropdown-item:not([id$="_loading"]):first',
             run: 'click',
         },
-        ...addSectionFromProductCatalog(),
-    ]
+        ...addSectionFromProductCatalog("name"),
+    ],
 });

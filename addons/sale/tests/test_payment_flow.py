@@ -170,7 +170,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         - Two emails sent: SO confirmation and default invoice email template
         """
         # Set automatic invoice
-        self.env["ir.config_parameter"].sudo().set_bool("sale.automatic_invoice", True)
+        self.env.company.sale_automatic_invoice = True
 
         # Create the payment
         self.amount = self.sale_order.amount_total
@@ -198,7 +198,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         - Two emails sent: SO confirmation and invoice email using the custom template
         """
         # Set automatic invoice
-        self.env["ir.config_parameter"].sudo().set_bool("sale.automatic_invoice", True)
+        self.env.company.sale_automatic_invoice = True
         custom_template = self.env["mail.template"].create({
             "name": "Custom Test Invoice Template",
             "model_id": self.env.ref("account.model_account_move").id,
@@ -238,7 +238,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         - Two emails sent: SO confirmation and invoice email using the DEFAULT template
         """
         # Set automatic invoice
-        self.env["ir.config_parameter"].sudo().set_bool("sale.automatic_invoice", True)
+        self.env.company.sale_automatic_invoice = True
         custom_template = self.env["mail.template"].create({
             "name": "Custom Test Invoice Template",
             "model_id": self.env.ref("account.model_account_move").id,
@@ -268,7 +268,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
 
     def test_auto_done_and_auto_invoice(self):
         # Set automatic invoice
-        self.env["ir.config_parameter"].sudo().set_bool("sale.automatic_invoice", True)
+        self.env.company.sale_automatic_invoice = True
         # Lock the sale orders when confirmed
         self.group_user.implied_ids += self.env.ref("sale.group_auto_done_setting")
 
@@ -288,7 +288,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
 
     def test_so_partial_payment_no_invoice(self):
         # Set automatic invoice
-        self.env["ir.config_parameter"].sudo().set_bool("sale.automatic_invoice", True)
+        self.env.company.sale_automatic_invoice = True
 
         # Create the payment
         self.amount = self.sale_order.amount_total / 10.0
@@ -304,7 +304,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
 
     def test_already_confirmed_so_payment(self):
         # Set automatic invoice
-        self.env["ir.config_parameter"].sudo().set_bool("sale.automatic_invoice", True)
+        self.env.company.sale_automatic_invoice = True
 
         # Confirm order before payment
         self.sale_order.action_confirm()
@@ -322,7 +322,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
     def test_invoice_is_final(self):
         """Test that invoice generated from a payment are always final."""
         # Set automatic invoice
-        self.env["ir.config_parameter"].sudo().set_bool("sale.automatic_invoice", True)
+        self.env.company.sale_automatic_invoice = True
 
         # Create the payment
         self.amount = self.sale_order.amount_total
@@ -427,7 +427,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         the order and automatic invoice is checked.
         """
         self.sale_order.prepayment_percent = 0.2
-        self.env["ir.config_parameter"].sudo().set_bool("sale.automatic_invoice", True)
+        self.env.company.sale_automatic_invoice = True
 
         tx = self._create_transaction(
             flow="direct",
@@ -506,7 +506,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             self.assertEqual(self.sale_order.state, "sale")
 
     def test_automatic_invoice_mail_author(self):
-        self.env["ir.config_parameter"].sudo().set_bool("sale.automatic_invoice", True)
+        self.env.company.sale_automatic_invoice = True
 
         portal_user = self.env["res.users"].create({
             "name": "Portal Customer",

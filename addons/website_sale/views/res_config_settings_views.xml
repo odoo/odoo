@@ -81,15 +81,15 @@
                            created but not of products already existing."
                     info="This setting is common to all websites."
                 >
-                    <field name="default_invoice_policy" widget="radio" class="o_light_label"/>
+                    <field name="sale_invoice_policy" widget="radio" class="o_light_label"/>
                 </setting>
                 <setting
                     id="automatic_invoice_generation_setting"
                     help="Invoice automatically on payment."
-                    invisible="default_invoice_policy == 'delivery'"
+                    invisible="sale_invoice_policy == 'delivery'"
                 >
-                    <field name="automatic_invoice"/>
-                    <div invisible="not automatic_invoice">
+                    <field name="sale_automatic_invoice"/>
+                    <div invisible="not sale_automatic_invoice">
                         <label for="invoice_mail_template_id" class="o_light_label me-2"/>
                         <field name="invoice_mail_template_id" class="oe_inline"/>
                     </div>

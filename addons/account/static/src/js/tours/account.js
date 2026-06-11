@@ -86,12 +86,6 @@ registry.category("web_tour.tours").add('account_tour', {
         run: "click",
     },
     {
-        trigger: `.o_form_view_container${accountTourSteps.draftInvoiceSelector} div[name=invoice_line_ids] div[name=product_id] button[id=labelVisibilityButtonId]`,
-        content: _t("Click here to add a description to your product."),
-        tooltipPosition: "bottom",
-        run: "click",
-    },
-    {
         trigger: `.o_form_view_container${accountTourSteps.draftInvoiceSelector} div[name=invoice_line_ids] div[name=product_id] textarea`,
         content: _t("Add a description to your item."),
         tooltipPosition: "bottom",

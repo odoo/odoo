@@ -1,8 +1,9 @@
 import { patch } from "@web/core/utils/patch";
-import { SaleOrderLineProductField } from "@sale/js/sale_product_field";
+import { SaleOrderLineProductField } from "@sale/js/sale_product_field/sale_product_field";
+import { SaleLabelTextField } from "@sale/js/sale_label_text/sale_label_text";
 import { useService } from "@web/core/utils/hooks";
 
-patch(SaleOrderLineProductField.prototype, {
+const eventSaleProductMixin = () => ({
     setup() {
         super.setup();
         this.action = useService("action");
@@ -82,3 +83,6 @@ patch(SaleOrderLineProductField.prototype, {
         );
     },
 });
+
+patch(SaleLabelTextField.prototype, eventSaleProductMixin());
+patch(SaleOrderLineProductField.prototype, eventSaleProductMixin());

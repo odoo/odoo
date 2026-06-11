@@ -169,11 +169,11 @@
                                     <table width="100%" style="max-width: 590px; font-size: 14px; border-collapse: collapse;" role="presentation">
                                         <tr>
                                             <td width="24%" style="max-width: 120px; padding: 0 10px 10px 0; vertical-align: top;">
-                                                <img t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128" t-attf-style="width: 64px; height: {{object.website_id and object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: cover; object-position: center;" alt="Product image"></img>
+                                                <img t-if="line.product_id" t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128" t-attf-style="width: 64px; height: {{object.website_id and object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: cover; object-position: center;" alt="Product image"></img>
                                             </td>
                                             <td align="left" style="vertical-align: top; padding-bottom: 22px;">
                                                 <h3 t-attf-style="mso-line-height-rule:exactly; margin:0; font-size: 14px; {{'margin-bottom: 6px;' if line.product_type == 'combo' else ''}}">
-                                                    <strong t-out="line.product_id.name or ''" t-attf-style="color: #{color};">Taking care of Trees Course</strong>
+                                                    <strong t-out="line.product_id.name or line.name" t-attf-style="color: #{color};">Taking care of Trees Course</strong>
                                                     <span t-if="line.product_id.product_template_attribute_value_ids" style="opacity: 0.5;">
                                                         <t t-out="', '.join(line.product_id.product_template_attribute_value_ids.mapped('name'))" />
                                                     </span>

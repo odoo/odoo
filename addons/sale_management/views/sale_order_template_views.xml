@@ -109,7 +109,34 @@
                                 <field
                                     name="product_uom_id"
                                     groups="uom.group_uom"
-                                    required="not display_type"/>
+                                    required="not display_type"
+                                />
+                                <field
+                                    name="price_unit"
+                                    column_invisible="not parent.has_productless_lines"
+                                    readonly="product_id"
+                                    invisible="product_id"
+                                    optional="hide"
+                                />
+                                <field
+                                    name="tax_ids"
+                                    widget="many2many_tax_tags"
+                                    options="{'no_create': True}"
+                                    context="{'search_view_ref': 'account.account_tax_view_search'}"
+                                    column_invisible="not parent.has_productless_lines"
+                                    readonly="product_id"
+                                    invisible="product_id"
+                                    optional="hide"
+                                />
+                                <field
+                                    name="discount"
+                                    string="Disc %"
+                                    groups="sale.group_discount_per_so_line"
+                                    column_invisible="not parent.has_productless_lines"
+                                    readonly="product_id"
+                                    invisible="product_id"
+                                    optional="hide"
+                                />
                                 <widget
                                     name="section_state"
                                     options="{'is_optional': 'fa fa-dot-circle-o'}"
