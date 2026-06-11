@@ -15,7 +15,7 @@
                         the corresponding achieved amounts. The other column is left unchanged.
                     </div>
                     <group string="Sales File">
-                        <div class="alert alert-secondary mx-3" role="note" style="font-size:0.85em;">
+                        <div class="alert alert-secondary mx-3" role="status" style="font-size:0.85em;">
                             Expected columns: Account number · Customer name ·
                             Sales (VAT-incl.) · <b>Pre-tax sales ← imported</b> · Salesman
                         </div>
@@ -23,7 +23,7 @@
                         <field name="sales_filename" invisible="1"/>
                     </group>
                     <group string="Collection File">
-                        <div class="alert alert-secondary mx-3" role="note" style="font-size:0.85em;">
+                        <div class="alert alert-secondary mx-3" role="status" style="font-size:0.85em;">
                             Expected columns: Account number · Customer name ·
                             Balance · Aging · <b>Target ← imported</b> ·
                             <b>Collected ← imported</b> · Rep name · Collection %
@@ -31,7 +31,7 @@
                         <field name="collection_file" widget="binary" filename="collection_filename"/>
                         <field name="collection_filename" invisible="1"/>
                         <field name="collection_exclude_vat" widget="boolean_toggle"/>
-                        <div class="alert alert-secondary mx-3 mt-1" role="note"
+                        <div class="alert alert-secondary mx-3 mt-1" role="status"
                              style="font-size:0.85em;"
                              invisible="not collection_exclude_vat">
                             <i class="fa fa-calculator me-1" role="img" aria-label="VAT"/>

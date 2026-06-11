@@ -106,7 +106,7 @@ class KswDeduction(models.Model):
     # Installment schedule
     # ------------------------------------------------------------------
     line_ids = fields.One2many('ksw.deduction.line', 'deduction_id',
-                               string='Installments', copy=False)
+                               string='Installment Lines', copy=False)
     total_paid = fields.Monetary(
         compute='_compute_progress', store=True,
     )

@@ -62,7 +62,7 @@ class KswDeductionLine(models.Model):
     x_pending_commission_sheet_id = fields.Many2one(
         'ksw.commission.sheet',
         string='Pending Commission Sheet',
-        compute='_compute_pending_commission_sheet',
+        compute='_compute_pending_commission_sheet', store=True,
         help='The (existing) commission sheet that will settle this '
              'parked installment when finalised. Empty if no sheet '
              'exists yet for that employee/month.',

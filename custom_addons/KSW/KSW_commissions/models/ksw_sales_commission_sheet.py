@@ -253,7 +253,7 @@ class KswSalesCommissionLine(models.Model):
     # exception to a salesperson who didn't meet the threshold.
     x_condition_override = fields.Boolean(
         string='Condition Overridden',
-        copy=False, readonly=True, tracking=True,
+        copy=False, readonly=True,
         help='Set by a Sales Manager via the "Override Condition" '
              'button. While True, the commission is paid even when '
              'the rule\'s condition (threshold / formula) does not '
@@ -262,13 +262,13 @@ class KswSalesCommissionLine(models.Model):
     )
     x_override_by = fields.Many2one(
         'res.users', string='Overridden By',
-        readonly=True, copy=False, tracking=True,
+        readonly=True, copy=False,
     )
     x_override_date = fields.Datetime(
         string='Override Date', readonly=True, copy=False,
     )
     x_override_reason = fields.Char(
-        string='Override Reason', readonly=True, copy=False, tracking=True,
+        string='Override Reason', readonly=True, copy=False,
     )
 
     currency_id = fields.Many2one(

@@ -38,12 +38,24 @@ class KswAnnualLeave(models.Model):
     )
     leaves_taken = fields.Float(
         string='Leaves Taken',
-        related='allocation_id.leaves_taken',
+        compute='_compute_leaves_taken',
         digits=(10, 4),
         help='Total approved annual leave days taken (from linked allocation). '
              'When an opening reset date is set, only leaves after that date '
              'are counted (the allocation date_from is set accordingly).',
     )
+
+    @api.depends('allocation_id', 'allocation_id.leaves_taken')
+    def _compute_leaves_taken(self):
+        for rec in self:
+            try:
+                # Use exists() to avoid MissingError on deleted allocation
+                if rec.allocation_id and rec.allocation_id.exists():
+                    rec.leaves_taken = rec.allocation_id.leaves_taken
+                else:
+                    rec.leaves_taken = 0.0
+            except Exception:
+                rec.leaves_taken = 0.0
     remaining_balance = fields.Float(
         string='Remaining Balance',
         compute='_compute_remaining_balance',
@@ -109,6 +121,14 @@ class KswAnnualLeave(models.Model):
                         % rec.employee_id.name
                     )
         return super().write(vals)
+
+    def unlink(self):
+        """Delete linked allocations when dashboard record is deleted."""
+        allocations = self.mapped('allocation_id').sudo()
+        result = super().unlink()
+        if allocations:
+            allocations.unlink()
+        return result
 
     # ------------------------------------------------------------------
     # Effective start date (stored for reliability in views/reports)
@@ -177,10 +197,7 @@ class KswAnnualLeave(models.Model):
             # When x_opening_reset_date is set, the allocation's date_from is
             # also set to that date, so allocation.leaves_taken only counts
             # post-reset leaves automatically (Odoo allocation date_from filter).
-            taken = (
-                rec.allocation_id.sudo().leaves_taken
-                if rec.allocation_id else 0.0
-            )
+            taken = rec.leaves_taken
 
             # --- Two-tier daily accrual (Saudi Labor Law Art. 109) ---
             # We compute tier-1 and tier-2 calendar days in the EFFECTIVE
@@ -239,7 +256,18 @@ class KswAnnualLeave(models.Model):
     @api.depends('total_accrued_days', 'leaves_taken')
     def _compute_remaining_balance(self):
         for rec in self:
-            rec.remaining_balance = round(rec.total_accrued_days - rec.leaves_taken, 4)
+            # Handle cases where allocation_id was deleted but leaves_taken related field
+            # might return a default value (like 0.0) without the warning if accessed carefully,
+            # but we explicitly check here to be sure.
+            try:
+                # Check exists() explicitly to prevent MissingError on related field access
+                if rec.allocation_id and rec.allocation_id.exists():
+                    taken = rec.leaves_taken
+                else:
+                    taken = 0.0
+            except Exception:
+                taken = 0.0
+            rec.remaining_balance = round(rec.total_accrued_days - taken, 4)
 
     # ------------------------------------------------------------------
     # Refresh accrual — called whenever leaves_taken changes
@@ -303,14 +331,14 @@ class KswAnnualLeave(models.Model):
             else:
                 effective_start = joining
 
-            if rec.allocation_id:
+            if rec.allocation_id and rec.allocation_id.exists():
                 # Update existing allocation – days and date_from
                 vals = {'number_of_days': rec.total_accrued_days}
                 if effective_start and rec.allocation_id.date_from != effective_start:
                     vals['date_from'] = effective_start
                 rec.allocation_id.sudo().write(vals)
             else:
-                # Create new allocation
+                # Create new allocation (or replace missing one)
                 alloc = Allocation.with_context(
                     mail_create_nosubscribe=True,
                     mail_notrack=True,
@@ -529,8 +557,11 @@ class KswAnnualLeave(models.Model):
 
         # Get previously taken vacation days (excluding current leave)
         taken = 0.0
-        if ksw_rec and ksw_rec.allocation_id:
-            taken = ksw_rec.allocation_id.sudo().leaves_taken or 0.0
+        try:
+            if ksw_rec and ksw_rec.allocation_id and ksw_rec.allocation_id.exists():
+                taken = ksw_rec.allocation_id.sudo().leaves_taken or 0.0
+        except Exception:
+            taken = 0.0
         taken = max(taken - exclude_days, 0.0)
 
         # Deduct previously-taken days FIFO from oldest segments.
