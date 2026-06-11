@@ -313,7 +313,7 @@ class PdpFlow(models.Model):
             flow._message_post_once(self.env._(
                 "Flow sent: status %(status)s, (message uuid %(transport)s).",
                 status=flow.state,
-                transport=response['uid'],
+                transport=response['uuid'],
             ))
 
             # create rectificative flow for error moves that must still be send
