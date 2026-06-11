@@ -2,11 +2,13 @@ import {
     click,
     contains,
     defineMailModels,
+    focus,
     mockGetMedia,
     mockPermissionsPrompt,
     openDiscuss,
     start,
     startServer,
+    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 
 import { describe, test } from "@odoo/hoot";
@@ -100,4 +102,33 @@ test("Combined mic+camera button only shown when both permissions not granted", 
     await click(".o-discuss-CallActionList button[title='Unmute']");
     await contains(".modal-footer button");
     await contains(".modal-footer button", { text: "Use Microphone" });
+});
+
+test("Pressing Escape key on voice & video wizard does not trigger permission dialog", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    mockGetMedia();
+    mockPermissionsPrompt();
+    const env = await start();
+    const rtc = env.services["discuss.rtc"];
+    await openDiscuss(channelId);
+    await contains(".o-mail-Composer.o-focused");
+    await click("[title='Start Call']");
+    await click(".o-discuss-CallActionList button[aria-label='Voice Settings']");
+    await contains(".o-mail-DeviceSelect-button[data-kind='audioinput']");
+    rtc.microphonePermission = "denied";
+    rtc.cameraPermission = "denied";
+    await focus(".o-mail-DeviceSelect-button[data-kind='audioinput']");
+    triggerHotkey("Enter");
+    await contains(".o-discuss-CallPermissionDeniedDialog");
+    await contains(".o-mail-DeviceSelect-button[data-kind='audioinput']");
+    await click(".o-discuss-CallPermissionDeniedDialog .btn-close");
+    await contains(".o-discuss-CallPermissionDeniedDialog", { count: 0 });
+    await contains(".o-mail-DeviceSelect-button[data-kind='audioinput']");
+    triggerHotkey("Tab");
+    await contains(".o-discuss-CallPermissionDeniedDialog", { count: 0 });
+    await contains(".o-mail-DeviceSelect-button[data-kind='audioinput']");
+    triggerHotkey("Escape");
+    await contains(".o-mail-DeviceSelect-button[data-kind='audioinput']", { count: 0 });
+    await contains(".o-discuss-CallPermissionDeniedDialog", { count: 0 });
 });
