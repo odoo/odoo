@@ -546,7 +546,7 @@ test(`date: "in range" operator`, async () => {
     expect(getCurrentValue()).toBe("Last 12 months");
     expect.verifySteps([
         formatExpr(
-            `date >= (context_today() + relativedelta(day = 1, months = -12)).strftime("%Y-%m-%d") and date < (context_today() + relativedelta(day = 1)).strftime("%Y-%m-%d")`
+            `date >= (context_today() + relativedelta(months = -12)).strftime("%Y-%m-%d") and date < context_today().strftime("%Y-%m-%d")`
         ),
     ]);
 
@@ -670,9 +670,9 @@ test(`datetime: "in range" operator`, async () => {
     expect.verifySteps([
         formatExpr(
             `
-                datetime >= datetime.datetime.combine(context_today() + relativedelta(day = 1, months = -12), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+                datetime >= datetime.datetime.combine(context_today() + relativedelta(months = -12), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
                     and
-                datetime < datetime.datetime.combine(context_today() + relativedelta(day = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+                datetime < datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
             `
         ),
     ]);

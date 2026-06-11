@@ -409,22 +409,22 @@ test(`"in range" operator: introduction/elimination for datetime fields (generat
                     "datetime_1",
                     ">=",
                     expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(day = 1, months = -12), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
+                        `datetime.datetime.combine(context_today() + relativedelta(months = -12), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
                     )
                 ),
                 condition(
                     "datetime_1",
                     "<",
                     expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(day = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
+                        `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
                     )
                 ),
             ]),
             tree: condition("datetime_1", "in range", ["datetime", "last 12 months", false, false]),
             domain: [
                 "&",
-                ["datetime_1", ">=", "2024-06-30 23:00:00"],
-                ["datetime_1", "<", "2025-06-30 23:00:00"],
+                ["datetime_1", ">=", "2024-07-02 23:00:00"],
+                ["datetime_1", "<", "2025-07-02 23:00:00"],
             ],
         },
         {
@@ -653,17 +653,13 @@ test(`"in range" operator: introduction/elimination for date fields (generateSma
                     "date_1",
                     ">=",
                     expression(
-                        `(context_today() + relativedelta(day = 1, months = -12)).strftime('%Y-%m-%d')`
+                        `(context_today() + relativedelta(months = -12)).strftime('%Y-%m-%d')`
                     )
                 ),
-                condition(
-                    "date_1",
-                    "<",
-                    expression(`(context_today() + relativedelta(day = 1)).strftime('%Y-%m-%d')`)
-                ),
+                condition("date_1", "<", expression(`context_today().strftime("%Y-%m-%d")`)),
             ]),
             tree: condition("date_1", "in range", ["date", "last 12 months", false, false]),
-            domain: ["&", ["date_1", ">=", "2024-07-01"], ["date_1", "<", "2025-07-01"]],
+            domain: ["&", ["date_1", ">=", "2024-07-03"], ["date_1", "<", "2025-07-03"]],
         },
         {
             tree_py: connector(
@@ -956,11 +952,11 @@ test(`"in range" operator: introduction/elimination for datetime fields`, async 
         },
         {
             tree_py: connector("&", [
-                condition("datetime_1", ">=", "today =1d -12m"),
-                condition("datetime_1", "<", "today =1d"),
+                condition("datetime_1", ">=", "today -12m"),
+                condition("datetime_1", "<", "today"),
             ]),
             tree: condition("datetime_1", "in range", ["datetime", "last 12 months", false, false]),
-            domain: ["&", ["datetime_1", ">=", "today =1d -12m"], ["datetime_1", "<", "today =1d"]],
+            domain: ["&", ["datetime_1", ">=", "today -12m"], ["datetime_1", "<", "today"]],
         },
         {
             tree_py: connector(
@@ -1125,11 +1121,11 @@ test(`"in range" operator: introduction/elimination for date fields`, async () =
         },
         {
             tree_py: connector("&", [
-                condition("date_1", ">=", "today =1d -12m"),
-                condition("date_1", "<", "today =1d"),
+                condition("date_1", ">=", "today -12m"),
+                condition("date_1", "<", "today"),
             ]),
             tree: condition("date_1", "in range", ["date", "last 12 months", false, false]),
-            domain: ["&", ["date_1", ">=", "today =1d -12m"], ["date_1", "<", "today =1d"]],
+            domain: ["&", ["date_1", ">=", "today -12m"], ["date_1", "<", "today"]],
         },
         {
             tree_py: connector(

@@ -2527,7 +2527,7 @@ test(`datetime: "in range" operator`, async () => {
     await selectValue("last 12 months");
     expect(getCurrentValue()).toBe("Last 12 months");
     expect.verifySteps([
-        `["&", ("datetime", ">=", "today =1d -12m"), ("datetime", "<", "today =1d")]`,
+        `["&", ("datetime", ">=", "today -12m"), ("datetime", "<", "today")]`,
     ]);
 
     await selectValue("custom range");
@@ -2599,7 +2599,7 @@ test(`date: "in range" operator`, async () => {
 
     await selectValue("last 12 months");
     expect(getCurrentValue()).toBe("Last 12 months");
-    expect.verifySteps([`["&", ("date", ">=", "today =1d -12m"), ("date", "<", "today =1d")]`]);
+    expect.verifySteps([`["&", ("date", ">=", "today -12m"), ("date", "<", "today")]`]);
 
     await selectValue("custom range");
     expect(queryOne(`${SELECTORS.valueEditor} select`).value).toBe('"custom range"');
@@ -2790,7 +2790,7 @@ test("properties field: date & datetime", async () => {
             operator: "in range",
             treeValue: "last 12 months",
             expectedDomain:
-                '[("product_id", "any", ["&", ("properties.datetime_properties", ">=", "today =1d -12m"), ("properties.datetime_properties", "<", "today =1d")])]',
+                '[("product_id", "any", ["&", ("properties.datetime_properties", ">=", "today -12m"), ("properties.datetime_properties", "<", "today")])]',
         },
         {
             fields: ["product", "product_properties", "date_properties"],
