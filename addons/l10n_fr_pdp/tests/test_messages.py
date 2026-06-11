@@ -152,7 +152,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
 
         wizard.sending_methods = ['peppol']
         wizard.action_send_and_print()
-        self.assertEqual(self._get_mail_message(move).preview, 'The invoice has been sent to the Peppol Access Point. The following attachments were sent with the XML:')
+        self.assertEqual(self._get_mail_message(move).preview, 'The invoice has been sent to the Approved Platform. The following attachments were sent with the XML:')
 
     def test_send_pdp_not_receiver(self):
         self.env.company.account_peppol_proxy_state = False
@@ -238,6 +238,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
             move,
             [{
                 'peppol_move_state': 'done',
+                'pdp_ppf_move_state': 'in_progress',
                 'peppol_message_uuid': FAKE_UUID[0],
             }],
         )
@@ -574,7 +575,7 @@ class TestPdpMessage(TestL10nFrPdpCommon, TestAccountMoveSendCommon):
         self.assertEqual(move.pdp_lifecycle_residual, move.amount_total)
 
         # We only sent the payment lifecycle automatically in case the Flow 1 succeeded
-        self.assertFalse(move.pdp_ppf_move_state)
+        self.assertEqual(move.pdp_ppf_move_state, 'in_progress')
         self.env.ref('l10n_fr_pdp.ir_cron_pdp_send_lifecycles').method_direct_trigger()
         self.assertFalse(move.peppol_response_ids)
 

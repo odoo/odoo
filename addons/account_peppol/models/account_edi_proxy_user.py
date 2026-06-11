@@ -338,15 +338,21 @@ class AccountEdiProxyClientUser(models.Model):
                     # "Peppol request not ready" error:
                     # thrown when the IAP is still processing the message
                     continue
-                move._message_log(body=self.env._("Peppol error: %s", content['error'].get('data', {}).get('message') or content['error']['message']))
                 move.peppol_move_state = 'error'
+                move._message_log(body=self._peppol_get_message_status_error_body(move, content['error']))
                 processed_message_uuids.append(uuid)
                 continue
 
             move.peppol_move_state = content['state']
-            move._message_log(body=self.env._('Peppol status update: %s', content['state']))
+            move._message_log(body=self._peppol_get_message_status_update_body(move, content))
             processed_message_uuids.append(uuid)
         return processed_message_uuids
+
+    def _peppol_get_message_status_error_body(self, move, error):
+        return self.env._("Peppol error: %s", error.get('data', {}).get('message') or error['message'])
+
+    def _peppol_get_message_status_update_body(self, move, content):
+        return self.env._('Peppol status update: %s', content['state'])
 
     def _peppol_process_participant_status(self, proxy_user):
         self.ensure_one()
