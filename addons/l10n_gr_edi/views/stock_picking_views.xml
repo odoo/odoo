@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="stock_picking_form_inherit_l10n_gr_edi" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.l10n_gr_edi</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+
+            <header position="inside">
+                <button name="l10n_gr_edi_try_send_delivery_note"
+                        type="object"
+                        string="Send to myDATA"
+                        invisible="state != 'done' or l10n_gr_edi_state == 'delivery_note_sent'"/>
+            </header>
+
+            <header position="after">
+                <div class="m-0" role="alert" invisible="not l10n_gr_edi_alerts">
+                    <field name="l10n_gr_edi_alerts" class="o_field_html" widget="actionable_errors"/>
+                </div>
+            </header>
+
+            <xpath expr="//field[@name='picking_type_id']" position="after">
+                <label for="l10n_gr_edi_loading_address_street"
+                       string="myDATA Loading Address"
+                       invisible="not is_greek_company"/>
+                <div invisible="not is_greek_company">
+                    <div class="o_row">
+                        <field name="l10n_gr_edi_loading_address_street"
+                            placeholder="Street"
+                            readonly="l10n_gr_edi_state == 'delivery_note_sent'"
+                            required="1"/>
+                        <field name="l10n_gr_edi_loading_address_number"
+                            placeholder="Number"
+                            readonly="l10n_gr_edi_state == 'delivery_note_sent'"
+                            required="1"/>
+                    </div>
+                    <div class="o_row">
+                        <field name="l10n_gr_edi_loading_address_zip"
+                            placeholder="Postal Code"
+                            readonly="l10n_gr_edi_state == 'delivery_note_sent'"
+                            required="1"/>
+                        <field name="l10n_gr_edi_loading_address_city"
+                            placeholder="City"
+                            readonly="l10n_gr_edi_state == 'delivery_note_sent'"
+                            required="1"/>
+                    </div>
+                </div>
+                <label for="l10n_gr_edi_delivery_address_street"
+                    string="myDATA Delivery Address"
+                    invisible="not is_greek_company"/>
+                <div invisible="not is_greek_company">
+                    <div class="o_row">
+                        <field name="l10n_gr_edi_delivery_address_street"
+                            placeholder="Street"
+                            readonly="l10n_gr_edi_state == 'delivery_note_sent'"
+                            required="1"/>
+                        <field name="l10n_gr_edi_delivery_address_number"
+                            placeholder="Number"
+                            readonly="l10n_gr_edi_state == 'delivery_note_sent'"
+                            required="1"/>
+                    </div>
+                    <div class="o_row">
+                        <field name="l10n_gr_edi_delivery_address_zip"
+                            placeholder="Postal Code"
+                            readonly="l10n_gr_edi_state == 'delivery_note_sent'"
+                            required="1"/>
+                        <field name="l10n_gr_edi_delivery_address_city"
+                            placeholder="City"
+                            readonly="l10n_gr_edi_state == 'delivery_note_sent'"
+                            required="1"/>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='owner_id']" position="after">
+                <field name="l10n_gr_edi_move_purpose"
+                       invisible="not is_greek_company"
+                       readonly="l10n_gr_edi_state == 'delivery_note_sent'"
+                       required="1"/>
+                <field name="l10n_gr_edi_other_move_purpose"
+                       invisible="l10n_gr_edi_move_purpose != '19'"
+                       readonly="l10n_gr_edi_state == 'delivery_note_sent'"
+                       required="l10n_gr_edi_move_purpose == '19'"/>
+                <field name="l10n_gr_edi_vehicle_number"
+                       class="text-uppercase"
+                       invisible="not is_greek_company"
+                       placeholder="ARJ9273"
+                       readonly="l10n_gr_edi_state == 'delivery_note_sent'"/>
+            </xpath>
+            <!-- myDATA Documents Tab -->
+            <xpath expr="//page[@name='extra']" position="after">
+                <page id="l10n_gr_edi_documents"
+                      string="myDATA"
+                      invisible="not l10n_gr_edi_document_ids">
+                    <field name="l10n_gr_edi_document_ids">
+                        <list create="false" delete="false" edit="false" no_open="1"
+                              decoration-danger="state == 'delivery_note_error'"
+                              decoration-success="state == 'delivery_note_sent'">
+                            <field name="message" column_invisible="1"/>
+                            <field name="attachment_id" column_invisible="1"/>
+                            <field name="datetime"/>
+                            <field name="state" widget="account_document_state"/>
+                            <button name="action_download"
+                                    type="object"
+                                    string="Download"
+                                    invisible="not attachment_id"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="view_out_vpicktree_inherit_l10n_gr_edi" model="ir.ui.view">
+        <field name="name">account.out.invoice.list.inherit.l10n_gr_edi</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="l10n_gr_edi_state"
+                optional="hide"
+                decoration-success="l10n_gr_edi_state == 'delivery_note_sent'"
+                decoration-warning="l10n_gr_edi_state == 'delivery_note_error'"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
