@@ -9,10 +9,14 @@ class AccountJournal(models.Model):
         Extend to also fetch regulatory messages (exchanged with the PPF).
         This also includes outgoing messages sent by the user (i.e. to update the status in case of a sending error).
         """
-        super().button_fetch_in_einvoices()
-        edi_users = self.env['account_edi_proxy_client.user'].search([
+        # The generic Peppol fetch runs before the PPF fetch. Share the same
+        # collector so a PPF status replaces the intermediate PA status.
+        chatter_messages = {}
+        journals = self.with_context(pdp_einvoicing_chatter_messages=chatter_messages)
+        super(AccountJournal, journals).button_fetch_in_einvoices()
+        edi_users = journals.env['account_edi_proxy_client.user'].search([
             ('company_id.account_peppol_proxy_state', '=', 'receiver'),
-            ('company_id', 'in', self.company_id.ids),
+            ('company_id', 'in', journals.company_id.ids),
             ('proxy_type', '=', 'pdp'),
         ])
         edi_users._pdp_get_regulatory_documents()
