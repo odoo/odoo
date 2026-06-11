@@ -58,6 +58,7 @@ PAYMENT_STATE_SELECTION = [
         ('invoicing_legacy', 'Invoicing App Legacy'),
 ]
 REVIEW_STATE_SELECTION = [
+    ('no_review', "No Review"),
     ('todo', "To Review"),
     ('reviewed', "Reviewed"),
     ('supervised', "Supervised"),
@@ -319,12 +320,10 @@ class AccountMove(models.Model):
     hide_post_button = fields.Boolean(compute='_compute_hide_post_button', readonly=True)
     review_state = fields.Selection(
         string="Review",
-        selection=[
-            ('no_review', "No Review"),
-            *REVIEW_STATE_SELECTION,
-        ],
+        selection=REVIEW_STATE_SELECTION,
+        required=True,
+        default='no_review',
         tracking=True, copy=False,
-        default='no_review', required=True,
     )
     posted_before = fields.Boolean(copy=False)
     suitable_journal_ids = fields.Many2many(
@@ -3952,7 +3951,7 @@ class AccountMove(models.Model):
                         move_ids_review_done.append(move.id)
                 elif move.set_to_review_documents:
                     move_ids_review_todo.append(move.id)
-            if not is_user_able_to_review and move.review_state in ('reviewed', 'supervised') and modified_accounting_fields and move.set_to_review_documents:
+            if not is_user_able_to_review and move.review_state in ('no_review', 'reviewed', 'supervised') and modified_accounting_fields and move.set_to_review_documents:
                 move_ids_review_todo.append(move.id)
 
             violated_fields = set(vals).intersection(move._get_integrity_hash_fields() + ['inalterable_hash'])

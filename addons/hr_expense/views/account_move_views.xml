@@ -43,8 +43,9 @@
                     <field name="company_currency_id" column_invisible="True"/>
                     <field name="review_state" optional="hide" groups="account.group_account_user"
                            widget="account_review_state_selection_badge"
+                           invisible="review_state == 'no_review'"
                            options="{
-                               False: {'can_edit': 'account.group_account_user,account.group_account_manager'},
+                               'no_review': {'decoration': 'muted', 'can_edit': 'account.group_account_user,account.group_account_manager'},
                                'todo': {'decoration': 'info'},
                                'reviewed': {'decoration': 'success'},
                                'supervised': {'decoration': 'success', 'can_edit': 'account.group_account_manager'},
