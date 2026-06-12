@@ -15,11 +15,25 @@ def migrate(cr, version):
         "tax_luxury_sales_pemungut_ppn",
         "tax_PT6", "tax_PT7",
     ]
+    dependency_taxes = [
+        "tax_luxury_sales",
+        "tax_ST0", "tax_ST3", "tax_PT3",
+    ]
+    new_fiscal_positions = [
+        "l10n_id_domestic_fiscal_position",
+        "l10n_id_foreign_trade_fiscal_position",
+        "l10n_id_pemungut_ppn",
+    ]
 
     for company in companies:
         ChartTemplate = env["account.chart.template"].with_company(company)
         # =============================
         # Load new tax data
+        fiscal_position_data = {
+            xmlid: data
+            for xmlid, data in ChartTemplate._get_account_fiscal_position("id").items()
+            if xmlid in new_fiscal_positions
+        }
         tax_group_data = {
             xmlid: data
             for xmlid, data in ChartTemplate._get_account_tax_group("id").items()
@@ -29,6 +43,7 @@ def migrate(cr, version):
             xmlid: data
             for xmlid, data in ChartTemplate._get_account_tax("id").items()
             if xmlid in new_taxes
+            or (xmlid in dependency_taxes and not ChartTemplate.ref(xmlid, raise_if_not_found=False))
         }
         new_tax_group_data = {}
         if (tax_group_data):
@@ -38,6 +53,10 @@ def migrate(cr, version):
                 if not ChartTemplate.ref(g, raise_if_not_found=False)
             }
 
+        if fiscal_position_data:
+            data = {"account.fiscal.position": fiscal_position_data}
+            ChartTemplate._pre_reload_data(company, {}, data)
+            ChartTemplate._load_data(data)
         if new_tax_group_data:
             data = {"account.tax.group": new_tax_group_data}
             ChartTemplate._pre_reload_data(company, {}, data)
