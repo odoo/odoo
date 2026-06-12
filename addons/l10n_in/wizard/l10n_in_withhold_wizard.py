@@ -2,7 +2,7 @@ from markupsafe import Markup
 
 from odoo import _, api, Command, fields, models
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_round
 
 
 class L10n_InWithholdWizard(models.TransientModel):
@@ -206,7 +206,7 @@ class L10n_InWithholdWizard(models.TransientModel):
                     is_refund=False,
                 )
                 tax_amount = taxes_res['total_included'] - taxes_res['total_excluded']
-            wizard.amount = abs(tax_amount)
+            wizard.amount = abs(float_round(tax_amount, precision_digits=0, rounding_method='UP'))
 
     def _get_withhold_type(self):
         if self.related_move_id:
@@ -229,8 +229,39 @@ class L10n_InWithholdWizard(models.TransientModel):
 
         # Withhold creation and posting
         vals = self._prepare_withhold_header()
+        withhold_type = self._get_withhold_type()
+        sign = 1 if withhold_type in ('in_withhold', 'out_refund_withhold') else -1
+        AccountTax = self.env['account.tax']
+        base_line_vals = {
+            'quantity': 1.0,
+            'balance': sign * self.base,
+            'account_id': withholding_account_id,
+            'tax_ids': self.tax_id,
+            'currency_id': self.currency_id,
+            'amount_currency': sign * self.base,
+        }
+        base_line = AccountTax._prepare_base_line_for_taxes_computation(base_line_vals, company=self.company_id)
+        base_line['manual_tax_amounts'] = {str(self.tax_id.id): {'base_amount': sign * self.base,
+                                                                 'tax_amount': sign * self.amount,
+                                                                 'base_amount_currency': sign * self.base,
+                                                                 'tax_amount_currency': sign * self.amount}}
+        base_lines = [base_line]
+        AccountTax._add_tax_details_in_base_lines(base_lines, company=self.company_id)
+        AccountTax._round_base_lines_tax_details(base_lines, company=self.company_id)
+
+        AccountTax._add_accounting_data_in_base_lines_tax_details(base_lines, company=self.company_id)
+        tax_lines = AccountTax._prepare_tax_lines(base_lines, company=self.company_id)
+        tax_line = tax_lines['tax_lines_to_add'][0]
+        base_line_vals['account_id'] = withholding_account_id.id
+        base_line_vals['currency_id'] = self.currency_id.id
+        base_line_vals['tax_ids'] = self.tax_id.ids
+        base_line_vals['extra_tax_data'] = AccountTax._export_base_line_extra_tax_data(base_line)
         move_lines = self._prepare_withhold_move_lines(withholding_account_id)
-        vals['line_ids'] = [Command.create(line) for line in move_lines]
+
+        lines = [Command.create(base_line_vals), Command.create(move_lines[1]), Command.create(tax_line),
+         Command.create(move_lines[2])]
+        vals.update(line_ids=lines)
+
         withhold = self.with_company(self.company_id).env['account.move'].create(vals)
         withhold.action_post()
 
@@ -303,8 +334,8 @@ class L10n_InWithholdWizard(models.TransientModel):
         vals.append(append_vals(1.0, total_amount, debit, credit, withholding_account_id, False))
 
         # Create move line for the tax amount
-        debit = total_tax if withhold_type in ('in_withhold', 'out_refund_withhold') else 0.0
-        credit = 0.0 if withhold_type in ('in_withhold', 'out_refund_withhold') else total_tax
+        credit = total_tax if withhold_type in ('in_withhold', 'out_refund_withhold') else 0.0
+        debit = 0.0 if withhold_type in ('in_withhold', 'out_refund_withhold') else total_tax  # TODO: check why this change!
         vals.append(append_vals(1.0, total_tax, debit, credit, partner_account, False))
 
         return vals
