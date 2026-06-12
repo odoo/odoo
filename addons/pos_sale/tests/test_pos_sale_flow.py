@@ -1495,7 +1495,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.env["pos.config"].with_company(branch).create({
             "name": "Branch Point of Sale"
         })
-        self.env['pos.config']._ensure_downpayment_product()
+        self.env['pos.config']._ensure_default_products()
 
     def test_amount_unpaid_with_refund_pos_order(self):
         product = self.env['product.product'].create({

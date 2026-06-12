@@ -2,6 +2,15 @@
 <odoo>
     <data>
         <template id="pos_sale.pos_orderline_receipt_information" inherit_id="point_of_sale.pos_orderline_receipt_information">
+            <div name="product-name" position="replace">
+                <div
+                    t-if="line.get('has_default_product')"
+                    name="product-name"
+                    class="name text-large"
+                    t-out="line['sale_order_line_name']"
+                />
+                <t t-else="">$0</t>
+            </div>
             <div name="extra-info" position="inside">
                 <t t-if="line.get('sale_order_name')">
                     <div class="text-small mt-1">

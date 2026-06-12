@@ -47,7 +47,7 @@ describe("onClickSaleOrder", () => {
         const currentOrder = store.getOrder();
 
         expect(currentOrder.id).toBe(order.id);
-        expect(currentOrder.lines.length).toBe(4);
+        expect(currentOrder.lines.length).toBe(5);
 
         expect(currentOrder.lines[0].product_id.id).toBe(5);
         expect(currentOrder.lines[0].qty).toBe(3);
@@ -68,6 +68,12 @@ describe("onClickSaleOrder", () => {
         expect(currentOrder.lines[3].qty).toBe(3);
         expect(currentOrder.lines[3].price_unit).toBe(50);
         expect(currentOrder.lines[3].prices.total_excluded).toBe(150);
+
+        // adding a productless SOL takes the default product from config in POS order
+        expect(currentOrder.lines[4].product_id.id).toBe(store.config.default_product_id.id);
+        expect(currentOrder.lines[4].qty).toBe(2);
+        expect(currentOrder.lines[4].price_unit).toBe(55);
+        expect(currentOrder.lines[4].prices.total_excluded).toBe(110);
     });
 
     test("dpPercentage → calls downPaymentSO", async () => {
@@ -102,8 +108,8 @@ describe("onClickSaleOrder", () => {
 
         expect(currentOrder.lines[2].product_id.id).toBe(105);
         expect(currentOrder.lines[2].qty).toBe(1);
-        expect(currentOrder.lines[2].price_unit).toBe(325);
-        expect(currentOrder.lines[2].prices.total_excluded).toBe(325);
+        expect(currentOrder.lines[2].price_unit).toBe(407.5);
+        expect(currentOrder.lines[2].prices.total_excluded).toBe(407.5);
 
         const comp = await mountWithCleanup(Orderline, {
             props: { line: currentOrder.lines[2] },

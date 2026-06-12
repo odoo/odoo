@@ -14,6 +14,18 @@ class PosOrderLine(models.Model):
         compute='_compute_qty_delivered',
         store=True, readonly=False, copy=False)
 
+    sale_order_line_name = fields.Text(related="sale_order_line_id.name")
+    has_default_product = fields.Boolean(
+        compute='_compute_has_default_product',
+        help="To check whether the product is default product from pos.config or not. In case of "
+        "description only SOLs we use default product from pos.config."
+    )
+
+    @api.depends('product_id')
+    def _compute_has_default_product(self):
+        for line in self:
+            line.has_default_product = line.product_id == line.order_id.config_id.default_product_id
+
     @api.depends('order_id.state')
     def _compute_qty_delivered(self):
         for order_line in self:
@@ -25,5 +37,11 @@ class PosOrderLine(models.Model):
     @api.model
     def _load_pos_data_fields(self, config):
         params = super()._load_pos_data_fields(config)
-        params += ['sale_order_origin_id', 'sale_order_line_id', 'down_payment_details']
+        params += [
+            'sale_order_origin_id',
+            'sale_order_line_id',
+            'down_payment_details',
+            'has_default_product',
+            'sale_order_line_name'
+        ]
         return params

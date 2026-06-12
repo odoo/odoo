@@ -3,6 +3,16 @@ import { formatCurrency } from "@point_of_sale/app/models/utils/currency";
 import { patch } from "@web/core/utils/patch";
 
 patch(PosOrderline.prototype, {
+    get orderDisplayProductName() {
+        if (this.config.default_product_id.id === this.product_id.id) {
+            return {
+                name: this.sale_order_line_id.name,
+                attributeString: "",
+            };
+        }
+        return super.orderDisplayProductName;
+    },
+
     get saleDetails() {
         let down_payment_details = [];
 
