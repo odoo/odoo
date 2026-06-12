@@ -1353,6 +1353,47 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui/%d" % self.main_pos_config.id, 'BarcodeScanningProductPackagingTour', login="pos_user")
 
+    def test_10_pos_pricelist_on_pos_category(self):
+        base_pricelist = self.env['product.pricelist'].create({'name': 'base_pricelist'})
+
+        # Test for percentage discount
+        base_pricelist_item = self.env['product.pricelist.item'].create({
+            'pricelist_id': base_pricelist.id,
+            'compute_price': 'percentage',
+            'applied_on': '4_pos_category',
+            'percent_price': 10,
+            'pos_categ_id': self.pos_cat_desk_test.id,
+        })
+        self.main_pos_config.write({
+            'pricelist_id': base_pricelist.id,
+            'available_pricelist_ids': [(6, 0, [base_pricelist.id])],
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('PosCategDiscountPercentagePricelistsTour', login='pos_user')
+
+        # Test for fixed price
+        base_pricelist_item.write({
+            'compute_price': 'fixed',
+            'fixed_price': 15,
+        })
+        self.env['product.pricelist.item'].create({
+            'pricelist_id': base_pricelist.id,
+            'compute_price': 'fixed',
+            'applied_on': '4_pos_category',
+            'fixed_price': 17,
+            'pos_categ_id': self.pos_cat_chair_test.id,
+        })
+        self.start_pos_tour('PosCategFixedPricePricelistTour', login='pos_user')
+
+        # Test for formula
+        base_pricelist_item.write({
+            'compute_price': 'formula',
+            'price_discount': 10,
+            'price_surcharge': 2,
+        })
+        # so rule applied will be (list_price * 0.9 + 2.00)
+        self.start_pos_tour('PosCategFormulaPricelistsTour', login='pos_user')
+
     def test_GS1_pos_barcodes_scan(self):
         barcodes_gs1_nomenclature = self.env.ref("barcodes_gs1_nomenclature.default_gs1_nomenclature")
         default_nomenclature_id = self.env.ref("barcodes.default_barcode_nomenclature")

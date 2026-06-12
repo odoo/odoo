@@ -113,6 +113,16 @@ export class ProductTemplateAccounting extends Base {
             }
         }
 
+        // 3. PoS Category Rules
+        if (!rule) {
+            const posCategRulesIds = pricelist.getPosCategRulesIds(this.parentPosCategIds);
+            if (posCategRulesIds.length > 0) {
+                const posCategRules =
+                    this.models["product.pricelist.item"].readMany(posCategRulesIds);
+                rule = pricelist.findBestRule(posCategRules, quantity);
+            }
+        }
+
         // 4. Global Rules
         if (!rule) {
             const globalRulesIds = pricelist.getGlobalRulesIds();
