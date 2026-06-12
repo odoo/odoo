@@ -164,7 +164,7 @@
             </div>
             <div name="header" />
             <div t-if="order['state'] == 'draft'" class="text-center fs-2 mb-1">Pro forma receipt</div>
-            <div t-if="config['receipt_header']" class="text-center mb-1" t-out="config['receipt_header']" />
+            <div t-if="config['receipt_header']" class="text-center mb-1" style="white-space:pre-line" t-out="config['receipt_header']" />
         </template>
 
         <template id="point_of_sale.pos_orderline_receipt">
@@ -204,7 +204,7 @@
             <div class="w-100 text-center mt-3">
                 <div class="w-100 mt-2" name="footer" />
                 <t t-call="point_of_sale.company_info_receipt" />
-                <div t-if="config['receipt_footer']" class="w-100 text-center mt-2 mb-2" t-out="config['receipt_footer']" />
+                <div t-if="config['receipt_footer']" class="w-100 text-center mt-2 mb-2" style="white-space:pre-line" t-out="config['receipt_footer']" />
                 <div class="w-100 text-center mt-3">
                     Powered by <strong>Odoo</strong>
                 </div>
