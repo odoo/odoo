@@ -3,9 +3,10 @@
 
 import json
 
-from odoo import _
-from odoo.http import request
+from odoo import _, Command
 from odoo.addons.website.controllers.form import WebsiteForm
+from odoo.http import request
+from odoo.tools import email_normalize
 
 
 class WebsiteNewsletterForm(WebsiteForm):
@@ -24,3 +25,26 @@ class WebsiteNewsletterForm(WebsiteForm):
                                ', '.join(private_list_ids.mapped('name')))
                 })
         return super()._handle_website_form(model_name, **kwargs)
+
+    def insert_record(self, request, model_sudo, values, custom, meta=None):
+        model_name = model_sudo.model
+        partner = request.env.user.partner_id
+        list_ids = values.get('list_ids')
+        if (
+            model_name != 'mailing.contact'
+            or request.env.user.is_public
+            or not list_ids or list_ids[0][0] != Command.SET
+            or not (email := values.get('email'))
+            or email_normalize(email, strict=False) != partner.email_normalized
+        ):
+            return super().insert_record(request, model_sudo, values, custom, meta=meta)
+        list_ids = list_ids[0][2]
+        contacts = request.env["mailing.list"].browse(list_ids).sudo()._update_subscription_from_email(
+            partner.email_normalized, opt_out=False)
+        if not contacts:
+            values['partner_id'] = partner.id
+            return super().insert_record(request, model_sudo, values, custom, meta=meta)
+        contact = contacts[:1]
+        if not contact.partner_id:
+            contact.partner_id = partner
+        return contact.id
