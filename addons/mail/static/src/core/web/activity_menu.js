@@ -12,7 +12,6 @@ import { _t } from "@web/core/l10n/translation";
 
 export class ActivityMenu extends Component {
     static components = { Dropdown };
-    static props = [];
     static template = "mail.ActivityMenu";
 
     setup() {

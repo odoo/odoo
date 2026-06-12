@@ -15,7 +15,7 @@ export class MessagePinDialog extends Component {
         this.store = useService("mail.store");
         this.props = props(
             {
-                close: types.function([]),
+                close: types.function([types.instanceOf(MouseEvent)]),
                 "isUnpin?": types.boolean(),
                 message: types.instanceOf(this.store["mail.message"].Class),
             },

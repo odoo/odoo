@@ -1,6 +1,6 @@
 import { toggleFn } from "@mail/utils/common/signal";
 
-import { Component, signal, useListener } from "@odoo/owl";
+import { Component, props, signal, types, useListener } from "@odoo/owl";
 
 import { useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { useNavigation } from "@web/core/navigation/navigation";
@@ -13,23 +13,18 @@ import { getFirstElementOfNode } from "@web/core/dropdown/dropdown";
  */
 export class CallDropdown extends Component {
     static template = "discuss.CallDropdown";
-    static props = {
-        position: { type: String, optional: true },
-        class: { type: String, optional: true },
-        menuClass: { type: String, optional: true },
-        slots: { optional: true },
-        openByDefault: { type: Boolean, optional: true },
-        state: { type: Object, optional: true },
-    };
-    static defaultProps = {
-        position: "bottom",
-        class: "",
-        menuClass: "",
-        openByDefault: false,
-    };
 
     setup() {
         super.setup();
+        this.props = props(
+            {
+                "class?": types.string(),
+                "menuClass?": types.string(),
+                "openByDefault?": types.boolean(),
+                "position?": types.string(),
+            },
+            { class: "", menuClass: "", openByDefault: false, position: "bottom" }
+        );
         this.menuRef = useRef("menu");
         this.isOpen = signal(this.props.openByDefault);
         usePosition("menu", () => this.triggerRef.el, {

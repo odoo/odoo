@@ -1,36 +1,26 @@
 import { ActivityListPopoverItem } from "@mail/core/web/activity_list_popover_item";
 import { compareDatetime } from "@mail/utils/common/misc";
 
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillUpdateProps, props, types } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 
-/**
- * @typedef {Object} Props
- * @property {number[]} activityIds
- * @property {function} close
- * @property {number} [defaultActivityTypeId]
- * @property {function} onActivityChanged
- * @property {number} resId
- * @property {string} resModel
- * @extends {Component<Props, Env>}
- */
 export class ActivityListPopover extends Component {
     static components = { ActivityListPopoverItem };
-    static props = [
-        "activityIds",
-        "close",
-        "defaultActivityTypeId?",
-        "onActivityChanged",
-        "resId",
-        /** Ids of record selection used to schedule activities in batch; it must include resId. */
-        "resIds?",
-        "resModel",
-    ];
     static template = "mail.ActivityListPopover";
 
     setup() {
         super.setup();
+        this.props = props({
+            activityIds: types.array(types.number()),
+            close: types.function([]),
+            "defaultActivityTypeId?": types.number(),
+            onActivityChanged: types.function([]),
+            resId: types.number(),
+            /** Ids of record selection used to schedule activities in batch; it must include resId. */
+            "resIds?": types.array(types.number()),
+            resModel: types.string(),
+        });
         this.store = useService("mail.store");
         this.updateFromProps(this.props);
         onWillUpdateProps((props) => this.updateFromProps(props));

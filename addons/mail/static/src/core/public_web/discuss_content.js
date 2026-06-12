@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, computed, proxy, signal, types } from "@odoo/owl";
+import { Component, computed, props, proxy, signal, types } from "@odoo/owl";
 
 import { useThreadActions } from "@mail/core/common/thread_actions";
 import { AutoresizeInput } from "@mail/core/common/autoresize_input";
@@ -25,12 +25,12 @@ export class DiscussContent extends Component {
         Composer,
         FileUploader,
     };
-    static props = ["thread?"];
     static template = "mail.DiscussContent";
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.props = props({ "thread?": types.instanceOf(this.store["mail.thread"].Class) });
         this.ui = useService("ui");
         this.notification = useService("notification");
         this.rootRef = signal(null, { type: types.instanceOf(HTMLDivElement) });

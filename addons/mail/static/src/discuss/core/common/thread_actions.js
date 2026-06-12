@@ -160,7 +160,6 @@ registerThreadAction("invite-people", {
                 title: channel.displayName,
                 contentComponent: ChannelInvitation,
                 contentProps: {
-                    autofocus: true,
                     channel,
                     close: () => store.env.services.dialog.closeAll(),
                 },

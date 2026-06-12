@@ -12,29 +12,24 @@ import { CallSettingsDialog } from "@mail/discuss/call/common/call_settings";
 import { DeviceSelect } from "@mail/discuss/call/common/device_select";
 import { closeStream, onChange } from "@mail/utils/common/misc";
 
-import { Component, onWillDestroy, proxy, status } from "@odoo/owl";
+import { Component, onWillDestroy, props, proxy, status, types } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
-/**
- * @typedef {Object} Props
- * @property {Number} [activateCamera]
- * @property {Number} [activateMicrophone]
- * @property {({ microphone?: boolean, camera?: boolean }) => void} [onSettingsChanged]
- * @extends {Component<Props, Env>}
- */
 export class CallPreview extends Component {
     static template = "mail.CallPreview";
-    static props = [
-        "activateCamera?",
-        "activateMicrophone?",
-        "onSettingsChanged?",
-        "hasSettingsAtBottom?",
-    ];
     static components = { ActionList, DeviceSelect };
 
     setup() {
+        this.props = props({
+            "activateCamera?": types.number(),
+            "activateMicrophone?": types.number(),
+            "hasSettingsAtBottom?": types.boolean(),
+            "onSettingsChanged?": types.function([
+                types.object({ "camera?": types.boolean(), "microphone?": types.boolean() }),
+            ]),
+        });
         this.dialog = useService("dialog");
         this.notification = useService("notification");
         this.rtc = useService("discuss.rtc");

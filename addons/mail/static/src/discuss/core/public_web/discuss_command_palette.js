@@ -1,6 +1,6 @@
 import { cleanTerm } from "@mail/utils/common/format";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, props, proxy, types } from "@odoo/owl";
 
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -17,11 +17,14 @@ const VIEW_HIDDEN = "VIEW_HIDDEN";
 
 class CreateChannelDialog extends Component {
     static components = { Dialog };
-    static props = ["close", "name?"];
     static template = "mail.CreateChannelDialog";
 
     setup() {
         super.setup();
+        this.props = props({
+            close: types.function([types.instanceOf(MouseEvent)]),
+            "name?": types.string(),
+        });
         this.store = useService("mail.store");
         this.orm = useService("orm");
         this.state = proxy({
@@ -56,22 +59,27 @@ class CreateChannelDialog extends Component {
 export class DiscussCommand extends Component {
     static components = { DiscussAvatar };
     static template = "mail.DiscussCommand";
-    static props = {
-        counter: { type: Number, optional: true },
-        executeCommand: Function,
-        imgUrl: { type: String, optional: true },
-        name: String,
-        persona: { type: Object, optional: true },
-        channel: { type: Object, optional: true },
-        action: { type: Object, optional: true },
-        searchValue: String,
-        slots: Object,
-    };
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
         this.ui = useService("ui");
+        this.props = props({
+            "action?": types.object({
+                "icon?": types.string(),
+                "searchValueSuffix?": types.boolean(),
+            }),
+            "channel?": types.instanceOf(this.store["discuss.channel"].Class),
+            "counter?": types.number(),
+            executeCommand: types.function(),
+            name: types.string(),
+            "persona?": types.or([
+                types.instanceOf(this.store["res.partner"].Class),
+                types.instanceOf(this.store["mail.guest"].Class),
+            ]),
+            searchValue: types.string(),
+            slots: types.object(),
+        });
     }
 
     get formattedEmail() {

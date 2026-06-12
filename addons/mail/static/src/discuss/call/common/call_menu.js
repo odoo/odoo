@@ -10,7 +10,6 @@ import { useService } from "@web/core/utils/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 
 export class CallMenu extends Component {
-    static props = [];
     static template = "discuss.CallMenu";
     static components = { ActionList, Dropdown };
     setup() {

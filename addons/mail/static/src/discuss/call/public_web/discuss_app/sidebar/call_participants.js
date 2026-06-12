@@ -1,4 +1,4 @@
-import { Component, signal, useEffect } from "@odoo/owl";
+import { Component, props, signal, types, useEffect } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { CALL_ICON_DEAFEN, CALL_ICON_MUTED } from "@mail/discuss/call/common/call_actions";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
@@ -10,20 +10,17 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
 import { localeCompare } from "@web/core/l10n/utils";
 
-/**
- * @typedef {Object} Props
- * @property {import("models").DiscussChannel} channel
- * @property {Boolean|undefined} [compact]
- * @extends {Component<Props, Env>}
- */
 export class DiscussSidebarCallParticipants extends Component {
     static template = "mail.DiscussSidebarCallParticipants";
-    static props = ["channel", "compact?"];
     static components = { AvatarStack, DiscussSidebarCallParticipants, Dropdown };
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.props = props({
+            channel: types.instanceOf(this.store["discuss.channel"].Class),
+            "compact?": types.boolean(),
+        });
         this.rtc = useService("discuss.rtc");
         this.hover = useHover(["root", "floating"], {
             onHover: () => (this.floating.isOpen = true),

@@ -1,4 +1,4 @@
-import { Component, onMounted, onWillUnmount, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, props, proxy, types } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -10,7 +10,6 @@ import { CONNECTION_TYPES } from "@mail/discuss/call/common/rtc_service";
 const PROTOCOLS_TEXT = { host: "HOST", srflx: "STUN", prflx: "STUN", relay: "TURN" };
 
 export class CallContextMenu extends Component {
-    static props = ["rtcSession", "close?"];
     static template = "discuss.CallContextMenu";
 
     updateStatsTimeout;
@@ -21,6 +20,9 @@ export class CallContextMenu extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.props = props({
+            rtcSession: types.instanceOf(this.store["discuss.channel.rtc.session"].Class),
+        });
         this.rtc = useService("discuss.rtc");
         this.state = proxy({
             downloadStats: {},

@@ -5,12 +5,6 @@ import { _t } from "@web/core/l10n/translation";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { useBackButton, useService } from "@web/core/utils/hooks";
 
-/**
- * @typedef {Object} Props
- * @prop {string} title
- * @prop {Object} [slots]
- * @extends {Component<Props, Env>}
- */
 export class ActionPanel extends Component {
     static template = "mail.ActionPanel";
     static components = { ResizablePanel };
@@ -18,14 +12,13 @@ export class ActionPanel extends Component {
         super.setup();
         this.props = props(
             {
-                "close?": types.function([]),
+                "close?": types.function([types.instanceOf(MouseEvent)]),
                 "contentPadding?": types.boolean(),
                 "contentRef?": types.signal(types.instanceOf(HTMLDivElement)),
                 "icon?": types.string(),
                 "initialWidth?": types.number(),
                 "minWidth?": types.number(),
                 "resizable?": types.boolean(),
-                "slots?": types.object(),
                 "title?": types.string(),
             },
             {

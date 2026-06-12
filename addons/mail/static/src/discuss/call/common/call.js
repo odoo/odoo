@@ -6,7 +6,7 @@ import { CallPresentationBar } from "@mail/discuss/call/common/call_presentation
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
 import { PttAdBanner } from "@mail/discuss/call/common/ptt_ad_banner";
 
-import { Component, onMounted, onPatched, onWillUnmount, proxy } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillUnmount, props, proxy, types } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -14,7 +14,7 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useService } from "@web/core/utils/hooks";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { useCallActions } from "@mail/discuss/call/common/call_actions";
-import { inDiscussCallViewProps, useInDiscussCallView } from "@mail/utils/common/hooks";
+import { inDiscussCallViewPropsSchema, useInDiscussCallView } from "@mail/utils/common/hooks";
 
 /** @typedef {import("@mail/discuss/call/common/call_layout").CallLayout} CallLayout */
 
@@ -33,12 +33,6 @@ const MIN_TILED_TILE_WIDTH = 320;
  * @property {import("models").ChannelMember} [member]
  */
 
-/**
- * @typedef {Object} Props
- * @property {import("models").Thread} thread
- * @property {boolean} [compact]
- * @extends {Component<Props, Env>}
- */
 export class Call extends Component {
     static components = {
         BlurPerformanceWarning,
@@ -47,8 +41,6 @@ export class Call extends Component {
         CallParticipantCard,
         PttAdBanner,
     };
-    static props = ["channel?", "compact?", "hasOverlay?", ...inDiscussCallViewProps];
-    static defaultProps = { hasOverlay: true };
     static template = "discuss.Call";
 
     overlayTimeout;
@@ -72,6 +64,15 @@ export class Call extends Component {
             insetCard: undefined,
         });
         this.store = useService("mail.store");
+        this.props = props(
+            {
+                "channel?": types.instanceOf(this.store["discuss.channel"].Class),
+                "compact?": types.boolean(),
+                "hasOverlay?": types.boolean(),
+                ...inDiscussCallViewPropsSchema,
+            },
+            { hasOverlay: true }
+        );
         this.callActions = useCallActions({ channel: () => this.channel });
         onMounted(() => {
             this.resizeObserver = new ResizeObserver(() => this.arrangeTiles());

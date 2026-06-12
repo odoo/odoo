@@ -5,7 +5,7 @@ import { computeDelay, getMsToTomorrow } from "@mail/utils/common/dates";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 import { toggleFn } from "@mail/utils/common/signal";
 
-import { Component, onMounted, onWillUnmount, signal } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, props, signal, types } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -14,21 +14,18 @@ import { useService } from "@web/core/utils/hooks";
 import { render } from "@web/owl2/utils";
 import { FileUploader } from "@web/views/fields/file_handler";
 
-/**
- * @typedef {Object} Props
- * @property {import("models").Activity} activity
- * @property {function} onActivityChanged
- * @property {function} reloadParentView
- * @extends {Component<Props, Env>}
- */
 export class Activity extends Component {
     static components = { ActivityMailTemplate, FileUploader };
-    static props = ["activity", "onActivityChanged", "reloadParentView"];
     static template = "mail.Activity";
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.props = props({
+            activity: types.instanceOf(this.store["mail.activity"].Class),
+            onActivityChanged: types.function([]),
+            reloadParentView: types.function([]),
+        });
         this.showDetails = signal(false);
         this.toggleFn = toggleFn;
         this.markDonePopover = usePopover(ActivityMarkAsDone, { position: "right" });

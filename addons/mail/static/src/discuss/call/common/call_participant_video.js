@@ -1,20 +1,22 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, onPatched, status, useListener } from "@odoo/owl";
+import { Component, onMounted, onPatched, props, status, types, useListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
-/**
- * @typedef {Object} Props
- * @property {import("models").RtcSession} session
- * @extends {Component<Props, Env>}
- */
 export class CallParticipantVideo extends Component {
-    static props = ["session", "type", "inset?"];
     static template = "discuss.CallParticipantVideo";
 
     setup() {
         super.setup();
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
+        this.props = props({
+            "inset?": types.function([
+                types.instanceOf(this.store["discuss.channel.rtc.session"].Class),
+                types.selection(["camera", "screen"]),
+            ]),
+            session: types.instanceOf(this.store["discuss.channel.rtc.session"].Class),
+            type: types.selection(["camera", "screen"]),
+        });
         this.root = useRef("root");
         onMounted(() => this._update());
         onPatched(() => this._update());

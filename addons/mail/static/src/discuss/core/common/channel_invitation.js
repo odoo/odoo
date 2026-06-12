@@ -38,10 +38,9 @@ export class ChannelInvitation extends Component {
         this.orm = useService("orm");
         this.store = useService("mail.store");
         this.props = props({
-            "autofocus?": types.or([types.boolean(), types.object()]),
             "channel?": types.instanceOf(this.store["discuss.channel"].Class),
             "className?": types.string(),
-            "close?": types.function([]),
+            "close?": types.function([types.instanceOf(MouseEvent)]),
             "state?": types.object(),
         });
         this.rtc = useService("discuss.rtc");

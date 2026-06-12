@@ -7,7 +7,6 @@ import { useService } from "@web/core/utils/hooks";
 
 export class CallPresentationBar extends Component {
     static template = "discuss.CallPresentationBar";
-    static props = {};
     static components = { AvatarStack };
 
     setup() {

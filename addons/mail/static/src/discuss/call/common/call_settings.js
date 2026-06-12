@@ -1,4 +1,4 @@
-import { Component, onWillStart, useListener, xml } from "@odoo/owl";
+import { Component, onWillStart, props, types, useListener, xml } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
@@ -12,14 +12,19 @@ import { Dialog } from "@web/core/dialog/dialog";
 
 export class CallSettings extends Component {
     static template = "discuss.CallSettings";
-    static props = ["close?", "initialTab?", "isCompact?", "withActionPanel?"];
-    static defaultProps = {
-        withActionPanel: true,
-    };
     static components = { ActionPanel, DeviceSelect, Tabs, TabHeader, TabPanel };
 
     setup() {
         super.setup();
+        this.props = props(
+            {
+                "close?": types.function([types.instanceOf(MouseEvent)]),
+                "initialTab?": types.string(),
+                "isCompact?": types.boolean(),
+                "withActionPanel?": types.boolean(),
+            },
+            { withActionPanel: true }
+        );
         this.notification = useService("notification");
         this.store = useService("mail.store");
         this.rtc = useService("discuss.rtc");
@@ -110,6 +115,10 @@ export class CallSettingsDialog extends Component {
             <CallSettings initialTab="this.props.initialTab" withActionPanel="false"/>
         </Dialog>
     `;
-    static props = ["initialTab?"];
     static components = { CallSettings, Dialog };
+
+    setup() {
+        super.setup();
+        this.props = props({ "initialTab?": types.string() });
+    }
 }

@@ -15,7 +15,7 @@ export class PollVotesPanel extends Component {
         super.setup(...arguments);
         this.store = useService("mail.store");
         this.props = props({
-            "close?": types.function([]),
+            "close?": types.function([types.instanceOf(MouseEvent)]),
             poll: types.instanceOf(this.store["mail.poll"].Class),
         });
         this.ui = useService("ui");

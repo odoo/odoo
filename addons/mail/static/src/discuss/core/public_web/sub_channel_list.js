@@ -3,24 +3,20 @@ import { SearchInput } from "@mail/core/common/search_input";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { SubChannelPreview } from "@mail/discuss/core/public_web/sub_channel_preview";
 import { useSearch, useVisible } from "@mail/utils/common/hooks";
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
 
-/**
- * @typedef {Object} Props
- * @property {import("@mail/core/common/thread_model").Thread} thread
- * @property {function} [close]
- * @extends {Component<Props, Env>}
- */
 export class SubChannelList extends Component {
     static template = "mail.SubChannelList";
     static components = { ActionPanel, NotificationItem, SearchInput, SubChannelPreview };
 
-    static props = ["channel", "close?"];
-
     setup() {
         this.store = useService("mail.store");
+        this.props = props({
+            channel: types.instanceOf(this.store["discuss.channel"].Class),
+            "close?": types.function([types.instanceOf(MouseEvent)]),
+        });
         this.search = useSearch({
             initialResults: this.props.channel.sub_channel_ids,
             fetch: (term) => this.props.channel.loadMoreSubChannels({ searchTerm: term }),

@@ -20,6 +20,7 @@ patch(DiscussClientAction.prototype, {
         browser.history.replaceState(browser.history.state, null, url.toString());
         browser.addEventListener("popstate", () => this.restoreDiscussThread(this.props));
     },
+    /** @override */
     getActiveId() {
         const currentURL = new URL(browser.location);
         if (!/\/discuss\/channel\/\d+$/.test(currentURL.pathname)) {

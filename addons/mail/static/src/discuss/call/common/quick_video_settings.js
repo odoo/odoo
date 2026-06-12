@@ -8,7 +8,6 @@ import { isBrowserSafari } from "@web/core/browser/feature_detection";
 
 export class QuickVideoSettings extends Component {
     static template = "discuss.QuickVideoSettings";
-    static props = [];
     static components = { DeviceSelect };
 
     setup() {

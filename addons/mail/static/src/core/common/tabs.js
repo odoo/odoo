@@ -12,7 +12,6 @@ export class Tabs extends Component {
                 "direction?": types.selection(["h", "v"]),
                 "initialTabId?": types.or([types.string(), types.number()]),
                 "ref?": types.function(),
-                "slots?": types.object(),
             },
             { direction: "v" }
         );
@@ -59,7 +58,6 @@ export class InternalTabHeader extends Component {
         this.props = props({
             headerRefs: types.object(),
             id: types.or([types.string(), types.number()]),
-            "slots?": types.object(),
             "title?": types.string(),
         });
         this.rootRef = signal();
@@ -90,7 +88,6 @@ export class TabHeader extends Component {
         super.setup(...arguments);
         this.props = props({
             id: types.any(),
-            "slots?": types.object(),
             "title?": types.string(),
         });
     }
@@ -104,7 +101,6 @@ export class TabPanel extends Component {
         this.props = props({
             id: types.any(),
             "onBecameVisible?": types.function([]),
-            "slots?": types.object(),
         });
         useLayoutEffect(
             (active) => {

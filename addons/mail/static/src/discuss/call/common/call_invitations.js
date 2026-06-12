@@ -6,7 +6,6 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallInvitations extends Component {
-    static props = [];
     static components = { CallInvitation };
     static template = "discuss.CallInvitations";
 
