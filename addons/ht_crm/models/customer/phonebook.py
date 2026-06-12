@@ -111,6 +111,27 @@ class PhonebookBatch(models.Model):
         for phone in invalid_phones:
             phone.unlink()
     
+    def action_notify(self, message):
+        # 1. Định nghĩa nội dung tin nhắn của Bot
+        message_body = message
+        
+        # 2. Tìm kênh 'General' (Kênh chung mặc định của Odoo)
+        channel = self.env['discuss.channel'].search([('name', '=', 'sales')], limit=1)
+        
+        if channel:
+            # 3. Lấy ID của OdooBot (System Root User)
+            odoobot_id = self.env.ref('base.user_root').id
+            
+            # 4. Ép quyền gửi dưới danh nghĩa OdooBot
+            channel.with_user(odoobot_id).message_post(
+                body=message_body,
+                message_type='comment',
+                subtype_xmlid='mail.mt_comment'
+            )
+        else:
+            # Trường hợp không tìm thấy kênh General, báo lỗi nhẹ để biết
+            raise exceptions.UserError("Không tìm thấy kênh mang tên 'general' trong Discuss.")
+
     def action_distribute(self):
         employees = self.e_p_rel_ids.mapped('sales_id')
 

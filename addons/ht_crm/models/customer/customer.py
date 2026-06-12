@@ -1,7 +1,9 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, exceptions
 import xlsxwriter
 from io import BytesIO
+import logging
 
+_logger = logging.getLogger(__name__)
 
 class Customer(models.Model):
     _name = 'sale.customer'
@@ -47,6 +49,28 @@ class Customer(models.Model):
         mail.send()
 
         return result
+
+    def button_test_odoobot(self):
+        # 1. Định nghĩa nội dung tin nhắn của Bot
+        message_body = f"Vui lòng kiểm tra Data!"
+        
+        # 2. Tìm kênh 'General' (Kênh chung mặc định của Odoo)
+        channel = self.env['discuss.channel'].search([('name', '=', 'sales')], limit=1)
+        
+        if channel:
+            # 3. Lấy ID của OdooBot (System Root User)
+            odoobot_id = self.env.ref('base.user_root').id
+            
+            # 4. Ép quyền gửi dưới danh nghĩa OdooBot
+            channel.with_user(odoobot_id).message_post(
+                body=message_body,
+                message_type='comment',
+                subtype_xmlid='mail.mt_comment'
+            )
+        else:
+            # Trường hợp không tìm thấy kênh General, báo lỗi nhẹ để biết
+            raise exceptions.UserError("Không tìm thấy kênh mang tên 'general' trong Discuss.")
+        
 
     @api.depends('permanent_address')
     def _compute_permanent_address_preview(self):
