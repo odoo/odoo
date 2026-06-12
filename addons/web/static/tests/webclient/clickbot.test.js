@@ -146,39 +146,39 @@ test("clickbot clickeverywhere test", async () => {
         },
     ]);
     const webClient = await mountWithCleanup(WebClient);
-    new Clickbot(webClient.env).start();
+    new Clickbot(webClient.env, { logger: true }).start();
     await promise;
     expect.verifySteps([
         "Starting ClickEverywhere test",
         "Testing app: App1 (app1)",
         "Testing menu App1 (app1)",
         "Clicking on: open form view from list",
-        "Clicking on: go back to list view",
+        "Clicking on: go back to list view (from record view)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
-        'Clicking on: filter option "October"',
+        'Clicking on: filter "Date (October)"',
         "Testing view switch: kanban",
         "Clicking on: kanban view switcher",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
-        'Clicking on: filter option "October"',
+        'Clicking on: filter "Date (October)"',
         "Testing app: App2 (app2)",
         "Testing menu menu 1 (app2_menu1)",
         "Clicking on: open form view from kanban",
-        "Clicking on: go back to kanban view",
+        "Clicking on: go back to kanban view (from record view)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
-        'Clicking on: filter option "October"',
+        'Clicking on: filter "Date (October)"',
         "Testing menu menu 2 (app2_menu2)",
         "Clicking on: open form view from list",
-        "Clicking on: go back to list view",
+        "Clicking on: go back to list view (from record view)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
-        'Clicking on: filter option "October"',
+        'Clicking on: filter "Date (October)"',
         "Test took 0 seconds",
         "Tested 2 apps",
         "Tested 3 menus",
@@ -243,24 +243,24 @@ test("only one app", async () => {
         },
     ]);
     const webClient = await mountWithCleanup(WebClient);
-    new Clickbot(webClient.env, { xmlId: "app1" }).start();
+    new Clickbot(webClient.env, { xmlId: "app1", logger: true }).start();
     await promise;
     expect.verifySteps([
         "Starting ClickEverywhere test",
         "Testing app: App1 (app1)",
         "Testing menu App1 (app1)",
         "Clicking on: open form view from list",
-        "Clicking on: go back to list view",
+        "Clicking on: go back to list view (from record view)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
-        'Clicking on: filter option "October"',
+        'Clicking on: filter "Date (October)"',
         "Testing view switch: kanban",
         "Clicking on: kanban view switcher",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
-        'Clicking on: filter option "October"',
+        'Clicking on: filter "Date (October)"',
         "Test took 0 seconds",
         "Tested 1 apps",
         "Tested 1 menus",
@@ -269,7 +269,7 @@ test("only one app", async () => {
         "Tested 0 modals",
         "Tested 4 filters",
         SUCCESS_SIGNAL,
-        'savedState: {"studioCount":0,"testedApps":["app1"],"testedMenus":["app1"],"testedFilters":4,"testedModals":0,"testedViews":2,"testedFormsViews":1,"appIndex":0,"menuIndex":0,"errorMenuCount":0,"startTime":43554.39999999106,"xmlId":"app1"}',
+        'savedState: {"logger":true,"studioCount":0,"testedApps":["app1"],"testedMenus":["app1"],"testedFilters":4,"testedModals":0,"testedViews":2,"testedFormsViews":1,"appIndex":0,"menuIndex":0,"errorMenuCount":0,"startTime":43554.39999999106,"xmlId":"app1"}',
     ]);
 });
 
@@ -332,25 +332,25 @@ test("clickbot clickeverywhere test (with dropdown menu)", async () => {
     await runAllTimers();
     await animationFrame();
     expect(".o_menu_sections .dropdown-toggle").toHaveText("a dropdown");
-    new Clickbot(webClient.env).start();
+    new Clickbot(webClient.env, { logger: true }).start();
     await promise;
     expect.verifySteps([
         "Starting ClickEverywhere test",
         "Testing app: App2 (app2)",
         "Testing menu menu 1 (app2_menu1)",
         "Clicking on: open form view from kanban",
-        "Clicking on: go back to kanban view",
+        "Clicking on: go back to kanban view (from record view)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
-        'Clicking on: filter option "October"',
+        'Clicking on: filter "Date (October)"',
         "Testing menu menu 2 (app2_menu2)",
         "Clicking on: open form view from list",
-        "Clicking on: go back to list view",
+        "Clicking on: go back to list view (from record view)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
-        'Clicking on: filter option "October"',
+        'Clicking on: filter "Date (October)"',
         "Test took 0 seconds",
         "Tested 1 apps",
         "Tested 2 menus",
@@ -407,7 +407,7 @@ test("clickbot test waiting rpc after clicking filter", async () => {
     await runAllTimers();
     await animationFrame();
     clickBotStarted = true;
-    new Clickbot(webClient.env).start();
+    new Clickbot(webClient.env, { logger: true }).start();
     await promise;
     expect.verifySteps([
         "web_search_read called", // click on the App
@@ -495,7 +495,7 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
     await runAllTimers();
     await animationFrame();
     clickBotStarted = true;
-    new Clickbot(webClient.env).start();
+    new Clickbot(webClient.env, { logger: true }).start();
     await promise;
     await tick();
 
@@ -585,21 +585,27 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
         "Testing app: App1 (app1)",
         "Testing menu App1 (app1)",
         "Clicking on: open form view from list",
-        "Clicking on: go back to list view",
+        "Clicking on: go back to list view (from record view)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
-        'Clicking on: filter option "April"',
-        `A RPC in error was detected, maybe it's related to the error dialog : ${expectedRpcData}`,
-        `Error dialog detected ${expectedModalHtml}\n on testing menu App1 (app1)`,
+        'Clicking on: filter "Date (April)"',
+        `Error found:
+ - Current testing app is App1 (app1)
+ - Current testing menu is App1 (app1)
+ - Current testing view is list
+ - Current testing filter is Date (April)
+The error is :
+Error dialog detected when waiting for filter "Date (April)" : ${expectedModalHtml}
+A RPC in error was detected, maybe it's related to the error dialog : ${expectedRpcData}`,
         "Testing app: App2 (app2)",
         "Testing menu App2 (app2)",
         "Clicking on: open form view from kanban",
-        "Clicking on: go back to kanban view",
+        "Clicking on: go back to kanban view (from record view)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
-        'Clicking on: filter option "April"',
+        'Clicking on: filter "Date (April)"',
         "Test took 0 seconds",
         "Tested 2 apps",
         "Tested 2 menus",
@@ -664,7 +670,7 @@ test("clickbot test waiting render after clicking filter", async () => {
     await runAllTimers();
     await animationFrame();
     clickBotStarted = true;
-    new Clickbot(webClient.env).start();
+    new Clickbot(webClient.env, { logger: true }).start();
     await promise;
     expect.verifySteps([
         "onWillStart called", // click on APP
@@ -723,24 +729,24 @@ test("clickbot clickeverywhere menu modal", async () => {
         },
     ]);
     const webClient = await mountWithCleanup(WebClient);
-    new Clickbot(webClient.env).start();
+    new Clickbot(webClient.env, { logger: true }).start();
     await promise;
     expect.verifySteps([
         "Starting ClickEverywhere test",
         "Testing app: App1 (app1)",
         "Testing menu App1 (app1)",
         "Clicking on: open form view from list",
-        "Clicking on: go back to list view",
+        "Clicking on: go back to list view (from record view)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
-        'Clicking on: filter option "October"',
+        'Clicking on: filter "Date (October)"',
         "Testing view switch: kanban",
         "Clicking on: kanban view switcher",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
-        'Clicking on: filter option "October"',
+        'Clicking on: filter "Date (October)"',
         "Testing app: App Modal (test.modal)",
         "Testing menu App Modal (test.modal)",
         "Modal detected: App Modal (test.modal)",

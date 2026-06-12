@@ -144,12 +144,13 @@ const EXCEPTION_RECORD_ACTIONS = {
 const STUDIO_SYSTRAY_ICON_SELECTOR = ".o_web_studio_navbar_item:not(.o_disabled) i";
 
 export class Clickbot {
-    constructor(env, { xmlId, light, currentState } = {}) {
+    constructor(env, { xmlId, logger, light, currentState } = {}) {
         this.env = env;
         this.xmlId = xmlId;
         this.state = proxy(
             currentState || {
                 light,
+                logger,
                 studioCount: 0,
                 testedApps: [],
                 testedMenus: [],
@@ -170,7 +171,9 @@ export class Clickbot {
 
     async start() {
         this._setup();
-        console.log("Starting ClickEverywhere test");
+        if (this.state.logger) {
+            console.log("Starting ClickEverywhere test");
+        }
         this.state.startTime = this.state.startTime || performance.now();
         try {
             if (this.xmlId) {
@@ -179,10 +182,12 @@ export class Clickbot {
                 if (!app) {
                     throw new Error(`No app found for xmlid ${this.xmlId}`);
                 }
+                this.currentAPP = app;
                 await this._testApp(app);
             } else {
                 const apps = this.env.services.menu.getApps();
                 while (this.state.appIndex < apps.length) {
+                    this.currentAPP = apps[this.state.appIndex];
                     await this._testApp(apps[this.state.appIndex]);
                     this.state.appIndex++;
                 }
@@ -192,7 +197,7 @@ export class Clickbot {
             if (this.state.errorMenuCount === 0) {
                 console.log(SUCCESS_SIGNAL);
             } else {
-                console.error(FAILURE_SIGNAL);
+                this._originalError(FAILURE_SIGNAL);
             }
         } catch (err) {
             this._logStatistics();
@@ -200,8 +205,8 @@ export class Clickbot {
                 console.log("Clickbot stopped by user");
                 console.log(SUCCESS_SIGNAL);
             } else {
-                console.error(err);
-                console.error(FAILURE_SIGNAL);
+                this._originalError(err);
+                this._originalError(FAILURE_SIGNAL);
             }
         } finally {
             this._cleanup();
@@ -231,10 +236,28 @@ export class Clickbot {
         this._disposeEffect = effect(() => {
             localStorage.setItem("running.clickbot", JSON.stringify(this.state));
         });
+        this._originalWarn = console.warn;
+        console.warn = (...args) => {
+            let msg = `Warning detected:\n`;
+            msg += this._currentTraceback();
+            msg += `The warning is :\n`;
+            msg += args;
+            this._originalWarn(msg);
+        };
+        this._originalError = console.error;
+        console.error = (...args) => {
+            let msg = `Error detected:\n`;
+            msg += this._currentTraceback();
+            msg += `The error is :\n`;
+            msg += args;
+            this._originalError(msg);
+        };
     }
 
     _cleanup() {
         this._disposeEffect();
+        console.warn = this._originalWarn;
+        console.error = this._originalError;
         localStorage.removeItem("running.clickbot");
         this.env.bus.removeEventListener("ACTION_MANAGER:UI-UPDATED", this._uiUpdate);
         rpcBus.removeEventListener("RPC:REQUEST", this._onRPCRequest);
@@ -243,6 +266,9 @@ export class Clickbot {
     }
 
     _logStatistics() {
+        if (!this.state.logger) {
+            return;
+        }
         console.log(`Test took ${(performance.now() - this.state.startTime) / 1000} seconds`);
         console.log(`Tested ${this.state.testedApps.length} apps`);
         console.log(`Tested ${this.state.testedMenus.length} menus`);
@@ -257,6 +283,19 @@ export class Clickbot {
             console.log(`Tested ${this.state.studioCount} views in Studio`);
         }
     }
+
+    _currentTraceback() {
+        let msg = ` - Current testing app is ${this.currentAPP.name} (${this.currentAPP.xmlid})\n`;
+        msg += ` - Current testing menu is ${this.currentMenu.name} (${this.currentMenu.xmlid})\n`;
+        if (this.currentView) {
+            msg += ` - Current testing view is ${this.currentView}\n`;
+        }
+        if (this.currentFilter) {
+            msg += ` - Current testing filter is ${this.currentFilter}\n`;
+        }
+        return msg;
+    }
+
     _onRPCRequest = ({ detail }) => {
         this._calledRPC[detail.data.id] = detail.url;
     };
@@ -279,11 +318,9 @@ export class Clickbot {
 
     async _triggerClick(target, elDescription) {
         if (!target) {
-            throw new Error(
-                `No element "${elDescription}" found. Testing "${this.currentMenu.name}" ("${this.currentMenu.xmlid}") menu.`
-            );
+            throw new Error(`No element "${elDescription}" found.`);
         }
-        if (elDescription) {
+        if (elDescription && this.state.logger) {
             console.log(`Clicking on: ${elDescription}`);
         }
         MOUSE_EVENTS.forEach((type) => {
@@ -293,7 +330,7 @@ export class Clickbot {
         await this._waitForNextAnimationFrame();
     }
 
-    async _waitForCondition(stopCondition) {
+    async _waitForCondition(stopCondition, message) {
         const interval = 25;
         const initialTime = 30000;
         let timeLimit = initialTime;
@@ -308,17 +345,16 @@ export class Clickbot {
         };
         const errorDialog = () => {
             if (document.querySelector(".o_error_dialog")) {
+                let msg = `Error dialog detected when waiting for ${message} : ${
+                    document.querySelector(".o_error_dialog").innerHTML
+                }`;
                 if (this._errorRPC) {
-                    console.error(
-                        "A RPC in error was detected, maybe it's related to the error dialog : " +
-                            JSON.stringify(this._errorRPC)
-                    );
+                    msg += `\nA RPC in error was detected, maybe it's related to the error dialog : ${JSON.stringify(
+                        this._errorRPC
+                    )}`;
                 }
-                throw new Error(
-                    `Error dialog detected ${
-                        document.querySelector(".o_error_dialog").innerHTML
-                    }\n on testing menu ${this.currentMenu.name} (${this.currentMenu.xmlid})`
-                );
+
+                throw new Error(msg);
             }
             return false;
         };
@@ -328,7 +364,7 @@ export class Clickbot {
                 throw new ClickbotStopError("Clickbot stopped by user");
             }
             if (timeLimit <= 0) {
-                let msg = `Timeout, the clicked element took more than ${
+                let msg = `Timeout when: ${message}, it took more than ${
                     initialTime / 1000
                 } seconds to load\n`;
                 msg += `Waiting for:\n`;
@@ -347,7 +383,6 @@ export class Clickbot {
                 if (!stopCondition()) {
                     msg += ` * stopCondition: ${stopCondition.toString()}\n`;
                 }
-                msg += ` on testing menu ${this.currentMenu.name} (${this.currentMenu.xmlid})`;
                 throw new Error(msg);
             }
             await new Promise((resolve) => setTimeout(resolve, interval));
@@ -361,10 +396,14 @@ export class Clickbot {
             return;
         }
         await this._triggerClick(studioIcon, "entering studio");
-        await this._waitForCondition(() => document.querySelector(".o_in_studio"));
+        await this._waitForCondition(
+            () => document.querySelector(".o_in_studio"),
+            "entering studio"
+        );
         await this._triggerClick(document.querySelector(".o_web_studio_leave"), "leaving studio");
-        await this._waitForCondition(() =>
-            document.querySelector(".o_main_navbar:not(.o_studio_navbar) .o_menu_toggle")
+        await this._waitForCondition(
+            () => document.querySelector(".o_main_navbar:not(.o_studio_navbar) .o_menu_toggle"),
+            "leaving studio"
         );
         this.state.studioCount++;
     }
@@ -390,13 +429,16 @@ export class Clickbot {
             ".o_filter_menu > .dropdown-item.o_menu_item:not(.o_add_custom_filter)";
         const dateFilterSel = ".o_filter_menu > .o_accordion";
         const filterMenuItems = document.querySelectorAll(`${simpleFilterSel},${dateFilterSel}`);
-        console.log(`Testing ${filterMenuItems.length} filters`);
+        if (this.state.logger) {
+            console.log(`Testing ${filterMenuItems.length} filters`);
+        }
         this.state.testedFilters += filterMenuItems.length;
         for (const filter of filterMenuItems) {
             if (filter.classList.contains("o_accordion")) {
+                this.currentFilter = filter.innerText.trim();
                 await this._triggerClick(
                     filter.querySelector(".o_accordion_toggle"),
-                    `filter "${filter.innerText.trim()}"`
+                    `filter "${this.currentFilter}"`
                 );
                 // If a filter has options, it will simply unfold and show all options.
                 // We then click on the first one.
@@ -404,19 +446,19 @@ export class Clickbot {
                     ".o_accordion > .o_accordion_values > .dropdown-item"
                 );
                 if (firstOption) {
-                    await this._triggerClick(
-                        firstOption,
-                        `filter option "${firstOption.innerText.trim()}"`
-                    );
-                    await this._waitForCondition(() => true);
+                    this.currentFilter = `${this.currentFilter} (${firstOption.innerText.trim()})`;
+                    await this._triggerClick(firstOption, `filter "${this.currentFilter}"`);
+                    await this._waitForCondition(() => true, `filter "${this.currentFilter}"`);
                     await this._testClickingRecord();
                 }
             } else {
-                await this._triggerClick(filter, `filter "${filter.innerText.trim()}"`);
-                await this._waitForCondition(() => true);
+                this.currentFilter = filter.innerText.trim();
+                await this._triggerClick(filter, `filter "${this.currentFilter}"`);
+                await this._waitForCondition(() => true, `filter "${this.currentFilter}"`);
                 await this._testClickingRecord();
             }
         }
+        this.currentFilter = undefined;
     }
 
     /**
@@ -426,9 +468,11 @@ export class Clickbot {
 
     async _testClickingRecord() {
         if (BLACKLISTED_RECORD_ACTIONS.has(this.currentMenu.xmlid)) {
-            console.log(
-                `Skipping blacklisted form menu ${this.currentMenu.name} (${this.currentMenu.xmlid})`
-            );
+            if (this.state.logger) {
+                console.log(
+                    `Skipping blacklisted form menu ${this.currentMenu.name} (${this.currentMenu.xmlid})`
+                );
+            }
             return;
         }
 
@@ -461,14 +505,16 @@ export class Clickbot {
                 }
                 if (exceptionActions?.list?.toCheck) {
                     await this._waitForCondition(
-                        () => document.querySelector(exceptionActions?.list?.toCheck) !== null
+                        () => document.querySelector(exceptionActions?.list?.toCheck) !== null,
+                        `open record view from list (${exceptionActions?.list?.toCheck})`
                     );
                 } else {
                     // Wait for the form view to be loaded or the list to be editable
                     await this._waitForCondition(
                         () =>
                             document.querySelector(".o_form_view") !== null ||
-                            document.querySelector(".o_data_row.o_selected_row") !== null
+                            document.querySelector(".o_data_row.o_selected_row") !== null,
+                        `open record view from list`
                     );
                 }
 
@@ -476,14 +522,14 @@ export class Clickbot {
                 if (exceptionActions?.list?.toGoBack) {
                     await this._triggerClick(
                         document.querySelector(exceptionActions?.list?.toGoBack),
-                        "go back to list view"
+                        "go back to list view (from special record view)"
                     );
                 } else if (document.querySelector(".o_form_view")) {
                     this.formviewTested = true;
                     this.state.testedFormsViews++;
                     await this._triggerClick(
                         document.querySelector(".o_back_button"),
-                        "go back to list view"
+                        "go back to list view (from record view)"
                     );
                 } else {
                     await this._triggerClick(
@@ -491,7 +537,10 @@ export class Clickbot {
                         "discard the editable list"
                     );
                 }
-                await this._waitForCondition(() => document.querySelector(`.o_list_view`) !== null);
+                await this._waitForCondition(
+                    () => document.querySelector(`.o_list_view`) !== null,
+                    `go back to list view from record view`
+                );
             }
         } else if (document.querySelector(".o_kanban_view")) {
             if (this.formviewTested && !exceptionActions?.kanban) {
@@ -513,11 +562,13 @@ export class Clickbot {
                 await this._triggerClick(card, "open form view from kanban");
                 if (exceptionActions?.kanban?.toCheck) {
                     await this._waitForCondition(
-                        () => document.querySelector(exceptionActions?.kanban?.toCheck) !== null
+                        () => document.querySelector(exceptionActions?.kanban?.toCheck) !== null,
+                        `open record view from kanban (${exceptionActions?.kanban?.toCheck})`
                     );
                 } else {
                     await this._waitForCondition(
-                        () => document.querySelector(`.o_form_view`) !== null
+                        () => document.querySelector(`.o_form_view`) !== null,
+                        `open record view from kanban`
                     );
                 }
 
@@ -525,7 +576,7 @@ export class Clickbot {
                 if (exceptionActions?.kanban?.toGoBack) {
                     await this._triggerClick(
                         document.querySelector(exceptionActions?.kanban?.toGoBack),
-                        "go back to kanban view"
+                        "go back to kanban view (from special record view)"
                     );
                 } else {
                     // form view
@@ -533,26 +584,35 @@ export class Clickbot {
                     this.state.testedFormsViews++;
                     await this._triggerClick(
                         document.querySelector(".o_back_button"),
-                        "go back to kanban view"
+                        "go back to kanban view (from record view)"
                     );
                 }
                 await this._waitForCondition(
-                    () => document.querySelector(`.o_kanban_view`) !== null
+                    () => document.querySelector(`.o_kanban_view`) !== null,
+                    `go back to kanban view from record view`
                 );
             }
         }
     }
 
-    async _testView() {
+    async _testView(viewType) {
+        this.currentView = viewType;
         this.recordTested = false;
         await this._testClickingRecord();
         await this._testStudio();
         await this._testFilters();
+        this.currentView = undefined;
     }
 
     async _testViews() {
         this.formviewTested = false;
-        await this._testView();
+        let viewType;
+        if (document.querySelector(".o_view_controller")) {
+            viewType = [...document.querySelector(".o_view_controller").classList]
+                .find((c) => c.startsWith(`o_`) && c.endsWith(`_view`))
+                .split("_")[1];
+        }
+        await this._testView(viewType);
         this.state.testedViews++;
         if (this.state.light === true) {
             return;
@@ -565,7 +625,9 @@ export class Clickbot {
             const viewType = [...switchButton.classList]
                 .find((cls) => cls !== "o_switch_view" && cls.startsWith("o_"))
                 .slice(2);
-            console.log(`Testing view switch: ${viewType}`);
+            if (this.state.logger) {
+                console.log(`Testing view switch: ${viewType}`);
+            }
             // timeout to avoid click debounce
             setTimeout(() => {
                 const target = document.querySelector(
@@ -576,9 +638,10 @@ export class Clickbot {
                 }
             }, 250);
             await this._waitForCondition(
-                () => document.querySelector(`.o_switch_view.o_${viewType}.active`) !== null
+                () => document.querySelector(`.o_switch_view.o_${viewType}.active`) !== null,
+                `switch view (${viewType})`
             );
-            await this._testView();
+            await this._testView(viewType);
             this.state.testedViews++;
         }
     }
@@ -586,24 +649,30 @@ export class Clickbot {
     async _testMenuItem(menu) {
         this.currentMenu = menu;
         if (BLACKLISTED_MENUS.has(menu.xmlid)) {
-            console.log(`Skipping blacklisted menu ${menu.name} (${menu.xmlid})`);
+            if (this.state.logger) {
+                console.log(`Skipping blacklisted menu ${menu.name} (${menu.xmlid})`);
+            }
             return;
         }
-        console.log(`Testing menu ${menu.name} (${menu.xmlid})`);
+        if (this.state.logger) {
+            console.log(`Testing menu ${menu.name} (${menu.xmlid})`);
+        }
         this.state.testedMenus.push(menu.xmlid);
         const startActionCount = this._actionCount;
-        await this.env.services.menu.selectMenu(menu);
         try {
+            await this.env.services.menu.selectMenu(menu);
             let isModal = false;
             await this._waitForCondition(() => {
                 if (document.querySelector(".o_dialog:not(.o_error_dialog)")) {
                     isModal = true;
-                    console.log(`Modal detected: ${menu.name} (${menu.xmlid})`);
+                    if (this.state.logger) {
+                        console.log(`Modal detected: ${menu.name} (${menu.xmlid})`);
+                    }
                     this.state.testedModals++;
                     return true;
                 }
                 return startActionCount !== this._actionCount;
-            });
+            }, `selecting menu ${menu.name} (${menu.xmlid})`);
             if (isModal) {
                 await this._triggerClick(
                     document.querySelector(".o_dialog header > .btn-close"),
@@ -617,12 +686,18 @@ export class Clickbot {
                 throw err;
             }
             this.state.errorMenuCount++;
-            console.error(err.message);
+            let msg = `Error found:\n`;
+            msg += this._currentTraceback();
+            msg += `The error is :\n`;
+            msg += err.message;
+            this._originalError(msg);
         }
     }
 
     async _testApp(app) {
-        console.log(`Testing app: ${app.name} (${app.xmlid})`);
+        if (this.state.logger) {
+            console.log(`Testing app: ${app.name} (${app.xmlid})`);
+        }
         if (!this.state.testedApps.includes(app.xmlid)) {
             this.state.testedApps.push(app.xmlid);
         }
