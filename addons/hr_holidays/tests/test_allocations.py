@@ -2,7 +2,7 @@ from datetime import date, timedelta
 
 from freezegun import freeze_time
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Date, Datetime
 from odoo.tests import Form, tagged, users
 from odoo.tools import format_date
@@ -681,3 +681,18 @@ class TestAllocations(TestHrHolidaysCommon):
             allocation_form.holiday_status_id = leave_type
             allocation_form.number_of_hours_display = 8
             self.assertEqual(allocation_form.name, "Test Time Off (8.0 hour(s))")
+
+    def test_allocation_with_zero_hours_per_day(self):
+        """
+        Test allocation for employee with calendar havinhg 0 average hours per day.
+        """
+        self.calendar_35h.schedule_type = 'flexible'
+        self.calendar_35h.hours_per_day = 0.0
+        self.employee.resource_calendar_id = self.calendar_35h
+        self.leave_type.request_unit = 'hour'
+        with self.assertRaises(UserError):
+            self.env['hr.leave.allocation'].with_user(self.user_hrmanager).create({
+                'allocation_type': 'regular',
+                'employee_id': self.employee.id,
+                'holiday_status_id': self.leave_type.id,
+            })
