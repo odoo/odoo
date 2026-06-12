@@ -101,7 +101,9 @@ export class GeneratePrinterData {
                 taxes: processedTaxes,
                 sold: processData(saleDetails.products),
                 refund: processData(saleDetails.refund_products),
+                cancel: processData(saleDetails.cancelled_products),
                 payments: processedPayments,
+                session_state: saleDetails.session_state,
             },
         };
     }
