@@ -60,9 +60,13 @@ export class TextEffectPlugin extends Plugin {
                     isHtmlContentSupported(selection) && !selection.isCollapsed,
             }),
         ],
-        has_format_predicates: (node) => {
-            const effectEl = closestElement(node, "[data-text-effect]");
-            if (effectEl && !!JSON.parse(effectEl.dataset.textEffect).preset) {
+        can_remove_format_predicates: (editableTargetedNodes) => {
+            if (
+                editableTargetedNodes.some((node) => {
+                    const effectEl = closestElement(node, "[data-text-effect]");
+                    return effectEl && JSON.parse(effectEl.dataset.textEffect).preset;
+                })
+            ) {
                 return true;
             }
         },
