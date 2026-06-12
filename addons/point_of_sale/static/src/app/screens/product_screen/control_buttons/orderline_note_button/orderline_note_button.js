@@ -100,6 +100,9 @@ export class NoteButton extends Component {
 }
 export class InternalNoteButton extends NoteButton {
     static template = "point_of_sale.NoteButton";
+    static props = {
+        ...NoteButton.props,
+    };
 
     // Useful to handle name and color together for internal notes
     reframeNotes(payload) {

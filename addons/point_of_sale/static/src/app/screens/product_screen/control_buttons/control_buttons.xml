@@ -17,7 +17,7 @@
         <!-- All buttons always displayed -->
         <t t-if="!this.props.showRemainingButtons">
             <SelectPartnerButton partner="this.partner"/>
-            <InternalNoteButton label.translate="Note" class="'btn-secondary '"/>
+            <InternalNoteButton label.translate="Note" class="'btn-secondary '" icon="this.ui.isSmall ? 'fa fa-pencil' : ''"/>
             <button 
                 t-if="this.pos.config.use_presets"
                 class="btn btn-secondary btn-lg border-0 lh-lg text-truncate"
@@ -37,7 +37,7 @@
         <t t-if="this.props.showRemainingButtons">
             <div class="control-buttons control-buttons-modal d-grid grid-auto-flow-columns gap-2">
                 <t t-if="(this.ui.isSmall and this.props.showRemainingButtons)">
-                    <InternalNoteButton label.translate="Note" class="'btn-secondary '"/>
+                    <InternalNoteButton label.translate="Note" class="'btn-secondary '" icon="'fa fa-pencil'"/>
                 </t>
                 <NoteButton
                     label.translate="Customer Note"
