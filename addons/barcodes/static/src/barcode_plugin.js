@@ -57,7 +57,7 @@ export class BarcodePlugin extends Plugin {
     }
 
     cleanBarcode(barcode) {
-        return barcode.replace(/Alt|Shift|Control/g, '');
+        return barcode.replace(/Alt|Shift|Control|\x00/g, '');
     }
 
     handleBarcode(barcode) {
