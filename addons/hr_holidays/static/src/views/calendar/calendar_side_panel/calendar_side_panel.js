@@ -2,7 +2,7 @@ import { CalendarSidePanel } from "@web/views/calendar/calendar_side_panel/calen
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { Cache } from "@web/core/utils/cache";
 import { useService } from "@web/core/utils/hooks";
-import { onWillStart, onWillUpdateProps, proxy } from "@odoo/owl";
+import { asyncComputed, onWillStart } from "@odoo/owl";
 
 export class TimeOffCalendarSidePanel extends CalendarSidePanel {
     static components = {
@@ -27,11 +27,6 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
                 end.toLocaleString({ month: s, day: n, year: n })
             );
         };
-        this.leaveState = proxy({
-            mandatoryDays: [],
-            bankHolidays: [],
-            holidays: [],
-        });
 
         this._specialDaysCache = new Cache(
             (start, end) => this.fetchSpecialDays(start, end),
@@ -40,13 +35,14 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
 
         this.currentDateTime = luxon.DateTime.now();
 
+        this.specialDays = asyncComputed(() => this.getSpecialDays());
+        this.holidays = asyncComputed(() => this.getHolidayData());
+
         onWillStart(async () => {
-            await this.updateSpecialDays();
-            await this.loadHolidayData();
-        });
-        onWillUpdateProps(async () => {
-            await this.updateSpecialDays();
-            await this.loadHolidayData();
+            await Promise.all([
+                this.specialDays.currentPromise(),
+                this.holidays.currentPromise(),
+            ]);
         });
     }
 
@@ -64,7 +60,7 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
         );
     }
 
-    async loadHolidayData() {
+    async getHolidayData() {
         if (!this.env.isSmall) {
             return;
         }
@@ -87,10 +83,10 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
         data.forEach((leave) => {
             filterData[leave[3]] = leave;
         });
-        this.leaveState.holidays = Object.values(filterData);
+        return Object.values(filterData);
     }
 
-    async updateSpecialDays() {
+    async getSpecialDays() {
         const { rangeStart, rangeEnd } = this.props.model;
         const specialDays = await this._specialDaysCache.read(rangeStart, rangeEnd);
         specialDays["bankHolidays"].forEach((bankHoliday) => {
@@ -101,7 +97,17 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
             mandatoryDay.start = luxon.DateTime.fromISO(mandatoryDay.start);
             mandatoryDay.end = luxon.DateTime.fromISO(mandatoryDay.end);
         });
-        this.leaveState.bankHolidays = specialDays["bankHolidays"];
-        this.leaveState.mandatoryDays = specialDays["mandatoryDays"];
+        return {
+            bankHolidays: specialDays.bankHolidays,
+            mandatoryDays: specialDays.mandatoryDays,
+        };
+    }
+
+    get leaveState() {
+        return {
+            bankHolidays: this.specialDays()?.bankHolidays || [],
+            mandatoryDays: this.specialDays()?.mandatoryDays || [],
+            holidays: this.holidays() || [],
+        };
     }
 }
