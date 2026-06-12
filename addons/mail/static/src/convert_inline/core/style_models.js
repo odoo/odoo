@@ -66,6 +66,9 @@ export class StyleInfo extends Map {
             sequence,
         });
     }
+    removeProperty(propertyName) {
+        return this.delete(propertyName);
+    }
     set(key, value) {
         this.dirty = true;
         if (typeof value === "string" || typeof value === "number") {

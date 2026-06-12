@@ -4,6 +4,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { Rules } from "../core/rules_models";
 import { MainTableLayout, MainTableWrapper } from "./main_table_models";
 import { StyleInfo } from "../core/style_models";
+import { DEFAULT_SPACING_SEQUENCE } from "./spacing_plugin";
 
 export class MainTableStrategyPlugin extends Plugin {
     static id = "mainTableStrategy";
@@ -12,6 +13,7 @@ export class MainTableStrategyPlugin extends Plugin {
         "filterContent",
         "measurementSnapshot",
         "rules",
+        "spacing",
         "style",
         "referenceNode",
     ];
@@ -19,7 +21,12 @@ export class MainTableStrategyPlugin extends Plugin {
         // Sequence 1 is used so that this strategy is applied before e.g. the table strategy,
         // which would also match but is less relevant.
         element_layout_analysis_processors: withSequence(1, this.analyzeElementLayout.bind(this)),
+        merge_layout_overrides: this.mergeNeutralReference.bind(this),
         on_reference_content_loaded_handlers: this.identifyLayout.bind(this),
+        refine_layout_processors: withSequence(
+            DEFAULT_SPACING_SEQUENCE - 1,
+            this.discardMarginInfo.bind(this)
+        ),
     };
 
     setup() {
@@ -29,11 +36,31 @@ export class MainTableStrategyPlugin extends Plugin {
         };
         this.wrapperRulesByRef = {
             root: new Rules(),
-            td: new Rules(),
         };
         this.provideLayoutStyleRules();
         this.provideWrapperStyleRules();
         this.provideBodyGlobalStyleRules();
+    }
+
+    mergeNeutralReference({ parentEmailNode, layout }) {
+        if (
+            parentEmailNode.referenceNodes.length !== 1 ||
+            parentEmailNode.referenceNodes.at(0) !== this.config.reference
+        ) {
+            return;
+        }
+        if (parentEmailNode.layout.isNeutral()) {
+            parentEmailNode.layout = layout;
+            return true;
+        }
+    }
+
+    discardMarginInfo(layout, { emailNode }) {
+        if (emailNode.analysis.facts.isMainTable) {
+            // Margin is already included in the main table layout, no need
+            // for an extra wrapper
+            emailNode.analysis.facts.desktopMarginStyleInfo = new StyleInfo();
+        }
     }
 
     provideBodyGlobalStyleRules() {
@@ -50,11 +77,8 @@ export class MainTableStrategyPlugin extends Plugin {
 
     provideWrapperStyleRules() {
         const root = this.wrapperRulesByRef.root.forPlugin(MainTableStrategyPlugin.id);
-        const td = this.wrapperRulesByRef.td.forPlugin(MainTableStrategyPlugin.id);
         root.allow("max-width");
         root.allow(/^margin(-.*)?$/);
-
-        td.allow(/^padding(-.*)?$/);
     }
 
     /**
@@ -88,6 +112,7 @@ export class MainTableStrategyPlugin extends Plugin {
                 this.layoutRulesByRef
             );
             analysis.facts.isMainTableLayout = true;
+            analysis.parsingFacts.canParentMerge = this.config.reference !== referenceNode;
         } else if ((isMainTable = this.detectMainTableWrapper(referenceNode))) {
             layout = this.buildMainTableLayout(
                 referenceNode,
@@ -95,13 +120,11 @@ export class MainTableStrategyPlugin extends Plugin {
                 this.wrapperRulesByRef
             );
             analysis.facts.isMainTableWrapper = true;
+            analysis.parsingFacts.canParentMerge = false;
         }
         if (isMainTable) {
             analysis.facts.isMainTable = true;
-            Object.assign(analysis.parsingFacts, {
-                canMerge: false,
-                canParentMerge: false,
-            });
+            analysis.parsingFacts.canMerge = false;
             layout.pluginIds.add(MainTableStrategyPlugin.id);
             return { layout, analysis };
         }

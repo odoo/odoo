@@ -88,7 +88,6 @@ export class RenderPlugin extends Plugin {
             }
             emailNode = parentEmailNode;
             if (parentEmailNode && parentParsingFacts.canMerge) {
-                parentEmailNode.pushReferenceNode(referenceNode);
                 if (
                     !this.delegateTo("merge_email_node_overrides", {
                         parentEmailNode,
@@ -99,6 +98,7 @@ export class RenderPlugin extends Plugin {
                     this.mergeElementLayout({ parentEmailNode, layout, analysis });
                     this.mergeElementAnalysis({ parentEmailNode, layout, analysis });
                 }
+                parentEmailNode.pushReferenceNode(referenceNode);
             } else {
                 emailNode = new EmailNode({
                     layout,

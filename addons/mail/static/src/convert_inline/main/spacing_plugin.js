@@ -7,9 +7,9 @@ import { registry } from "@web/core/registry";
 import { parseCssValue } from "../css_parsers";
 import { SpacingNode } from "./spacing_models";
 import { withSequence } from "@html_editor/utils/resource";
+import { DIRECTION_VARIANTS } from "../core/utils";
 
 const { DESKTOP } = DIMENSIONS;
-const SIDES = ["top", "right", "bottom", "left"];
 
 export const DEFAULT_SPACING_SEQUENCE = 20;
 
@@ -107,7 +107,7 @@ export class SpacingPlugin extends Plugin {
             setAttributes({ attributes: { align: "left" } });
             setAttributes({ attributes: { align: "left" } }, "cell");
         }
-        for (const side of SIDES) {
+        for (const side of DIRECTION_VARIANTS) {
             const value = styleInfo.getPropertyValue(`margin-${side}`);
             const { number, unit } = parseCssValue(value);
             if (number > 0 && unit === "px") {
@@ -130,7 +130,7 @@ export class SpacingPlugin extends Plugin {
             paddingLayout.setAttributes(options, ref);
             isRelevant = true;
         };
-        for (const side of SIDES) {
+        for (const side of DIRECTION_VARIANTS) {
             const value = styleInfo.getPropertyValue(`padding-${side}`);
             const { number, unit } = parseCssValue(value);
             if (number > 0 && unit === "px") {
@@ -225,9 +225,8 @@ export class SpacingPlugin extends Plugin {
         // if we have a complete value parser.
         const longhandStyleInfo = new StyleInfo();
         const shorthandStyleInfo = new StyleInfo();
-        const suffixes = ["top", "right", "bottom", "left"];
         const setShorthandPropertyValues = (propertyName, values, priority, sequence) => {
-            suffixes.forEach((suffix, index) => {
+            DIRECTION_VARIANTS.forEach((suffix, index) => {
                 const name = `${propertyName}-${suffix}`;
                 shorthandStyleInfo.setProperty(name, values[index], priority, sequence);
             });

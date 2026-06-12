@@ -26,15 +26,13 @@ export class RowLayout extends ElementLayout {
     }
 }
 
-// TODO EGGMAIL: fill up the blanks here, missing some stuff
-// WORKING HERE:
 export class EmptyRowLayout extends LayoutModel {
     static template = "mail.EmptyRowLayout";
     constructor(options = {}) {
         const refs = options.refs ?? {};
         options.refs = refs;
         super(options);
-        this.setAttributes({ style: { height: 0 } }, "cell");
+        this.setAttributes({ classNames: "o-ci-empty-row-cell" }, "cell");
     }
 
     get ancestorTag() {
@@ -61,6 +59,7 @@ export class EmptyCellLayout extends CellLayout {
         super(root);
         this.setAttributes({
             style: { height: 0 },
+            attributes: { height: 0 },
         });
     }
 }

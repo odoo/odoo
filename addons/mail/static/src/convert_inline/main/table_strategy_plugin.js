@@ -13,6 +13,9 @@ import { EmailNode } from "../core/render_models";
 import { withSequence } from "@html_editor/utils/resource";
 import { DEFAULT_SPACING_SEQUENCE } from "./spacing_plugin";
 import { StyleInfo } from "../core/style_models";
+import { Rules } from "../core/rules_models";
+import { computeRect } from "../core/utils";
+import { parseCssText, parseCssValue } from "../css_parsers";
 
 const { DESKTOP, MOBILE } = DIMENSIONS;
 
@@ -23,9 +26,7 @@ const VERTICAL_ALIGN = {
     "flex-start": "top",
     "flex-end": "bottom",
 };
-/**
- * TODO EGGMAIL: WORKING HERE
- */
+
 export class TableStrategyPlugin extends Plugin {
     static id = "tableStrategy";
     static dependencies = [
@@ -37,7 +38,10 @@ export class TableStrategyPlugin extends Plugin {
     ];
     static shared = ["extractRowsFromBands", "fillTableContainer"];
     resources = {
-        element_layout_analysis_processors: this.analyzeElementLayout.bind(this),
+        element_layout_analysis_processors: [
+            this.analyzeElementLayout.bind(this),
+            this.addBottomUpConstraintsForTables.bind(this),
+        ],
         synthetic_email_node_processors: (emailNode) => {
             if (!emailNode.analysis.facts.isTableContainer) {
                 return;
@@ -59,6 +63,16 @@ export class TableStrategyPlugin extends Plugin {
             emptyCell: this.buildEmptyCell.bind(this),
             cellWithOffset: this.buildCellWithOffset.bind(this),
         };
+        this.borderStyleRules = new Rules();
+        this.backgroundStyleRules = new Rules();
+        this.provideStyleRules();
+    }
+
+    provideStyleRules() {
+        const borderRules = this.borderStyleRules.forPlugin(TableStrategyPlugin.id);
+        const backgroundRules = this.backgroundStyleRules.forPlugin(TableStrategyPlugin.id);
+        borderRules.allow(/^border.*/);
+        backgroundRules.allow(/^background.*/);
     }
 
     applyTableSpacing(layout, { emailNode }) {
@@ -126,7 +140,7 @@ export class TableStrategyPlugin extends Plugin {
             new EmailNode({
                 layout: new EmptyRowLayout({
                     refs: {
-                        root: {
+                        cell: {
                             style: { height: "16px" },
                             attributes: { height: "16" },
                         },
@@ -152,6 +166,106 @@ export class TableStrategyPlugin extends Plugin {
                 }),
             })
         );
+    }
+
+    /**
+     * algo:
+* if Node has a border and/or a background, create a "report" for nodes above
+*   (containing also margin dimensions),and reset any received "report" from descendants
+* if Node receive a "report" from a descendant, but does not have the same internal
+*   dimensions (subtracting the current padding if any) as the report dimensions
+*   (adding the report "margin" section if any), stop the report
+* if Node has a padding and/or a margin, and received a "report" from a direct descendant,
+*   and has the same internal dimensions (subtracting the padding if any) as the descendant
+*   add the margin and/or padding to the report "margin section"
+* if Node is a "stretched table cell" and receives a report compatible with its dimensions,
+*   stop the report propagation, agglomerate the report values on the related "stretched table"
+*   using the "margin section dimensions" as a "padding cells", and propagate the instruction to
+*   nullify all sources (border, bacgkround, margin, padding) of the report (towards descendants)
+     * 
+     */
+    addBottomUpConstraintsForTables({ layout, analysis }, { referenceNode, parentEmailNode }) {
+        return;
+        if (referenceNode.nodeType !== Node.ELEMENT_NODE) {
+            return;
+        }
+        const styleInfo = layout.getRef().styleInfo;
+        const borderStyleInfo = this.filterStyleInfo(
+            styleInfo,
+            referenceNode,
+            this.borderStyleRules
+        );
+        const backgroundStyleInfo = this.filterStyleInfo(
+            styleInfo,
+            referenceNode,
+            this.backgroundStyleRules
+        );
+        if (borderStyleInfo.size === 0 && backgroundStyleInfo.size === 0) {
+            return;
+        }
+        // In a topdown traversal (existing only if the propagationReport was accepted)
+        // we can search for all owners (keys) and remove their ownership by key:
+        // i.e. we find the emailNode which has referenceNode in its referenceNodes,
+        // then we remove all propertyInfo by key /!\ in case of merge, we may not
+        // remove all that is necessary but oh well for now.
+        const ownerships = new Map();
+        const ownedInfo = {
+            styleInfo: [borderStyleInfo, backgroundStyleInfo],
+            facts: {},
+        };
+        const marginStyleInfo = analysis.facts.desktopMarginStyleInfo;
+        const referenceRect = this.getBoundingClientRect(referenceNode);
+        let marginRect = { ...referenceRect };
+        if (marginStyleInfo.size > 0) {
+            // TODO EGGMAIL: cleanup this code, as it will probably be reused
+            // we probably need to check that the margin is really in px in
+            // the style
+            const computedStyle = this.getComputedStyle(referenceNode);
+            const top = parseCssValue(computedStyle.getPropertyValue("margin-top"));
+            const right = parseCssValue(computedStyle.getPropertyValue("margin-right"));
+            const bottom = parseCssValue(computedStyle.getPropertyValue("margin-bottom"));
+            const left = parseCssValue(computedStyle.getPropertyValue("margin-left"));
+            marginRect = computeRect(referenceRect, {
+                top: -top.number,
+                right: right.number,
+                bottom: bottom.number,
+                left: -left.number,
+            });
+            ownedInfo.facts.desktopMarginStyleInfo = marginStyleInfo;
+        }
+        ownerships.set(referenceNode, ownedInfo);
+        analysis.facts.tableStrategyReport = {
+            borderStyleInfo,
+            backgroundStyleInfo,
+            marginRect,
+            referenceRect,
+            ownerships,
+        };
+        // TODO EGGMAIL NOW: WORKING HERE: create propagating constraint function
+        // to decide if this should propagate or not
+        //  check if ancestor has tableStrategyReport => yes => stop
+        //  no => analysis
+
+        // get margin info as ownership, and computed style to get the
+        // final margin rectangle.
+        // for comparison, ancestors rect - padding should match the marginRect
+        // if true, add padding and margin of the ancestor to the marginrect
+        // if false, end the report propagation
+        // if an ancestor element also has a report, end the report propagation
+        // if an ancestor match the dimensions, and also has the relevant acceptance
+        // fact, => take the info and continue propagating the rest up to the table.
+        // acceptTableOuterSpacing always terminates the propagation
+
+        // check margin:
+        // can check desktopMarginStyleInfo and desktopPaddingStyleInfo, were
+        // added during addSpacingFacts
+        // check border:
+        // use a rule to extract the border style info from the layout styleinfo
+        // if not empty => match
+        // check background:
+        // use a rule to extract the background style info from the layout styleinfo
+        // if not empty => match
+        // need internal dimensions to compare to ancestors and potentially stop the propagation
     }
 
     // TODO EGGMAIL NOW: special case for the first element inside the reference:
@@ -457,6 +571,8 @@ export class TableStrategyPlugin extends Plugin {
             cellEmailNode.analysis.facts.acceptCellPaddingRight = true;
         }
         emailNode.analysis.facts.useTableStrategy = true;
+        cellEmailNode.analysis.facts.acceptDescendantBackground = true;
+        cellEmailNode.analysis.facts.acceptDescendantBorder = true;
         return cellEmailNode;
     }
 

@@ -1,4 +1,4 @@
-import { assignDefaultElementOptions, LayoutModel } from "../core/render_models";
+import { LayoutModel } from "../core/render_models";
 
 /**
  * TODO EGGMAIL: evaluate if the browser does add `<tbody>` element to the final
@@ -10,11 +10,6 @@ export class MainTable extends LayoutModel {
     constructor(options = {}) {
         const refs = options.refs ?? {};
         options.refs = refs;
-        refs.td = assignDefaultElementOptions(refs.td, {
-            style: {
-                padding: "0",
-            },
-        });
         super(options);
         this.setAttributes({
             style: {

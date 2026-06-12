@@ -26,15 +26,6 @@ const { DESKTOP, MOBILE } = DIMENSIONS;
 // to window zoom px rounding in some cases.
 const ZOOM_WIDTH_CORRECTION = 0.1;
 
-/**
- * TODO EGGMAIL NOW:
- * WORKING HERE:
- * check out getContextStyleInfo for the "table" case to revert table styling
- * currently a table inside the td will not take the full height of the td
- * current solution does not support well padding + border inside padding
- * real solution implies converting the padding to filler cells and move the
- * border on the stretched TD
- */
 export class HybridFluidStrategyPlugin extends Plugin {
     static id = "hybridFluidStrategy";
     static dependencies = [
@@ -290,6 +281,8 @@ export class HybridFluidStrategyPlugin extends Plugin {
             cellEmailNode.analysis.facts.acceptCellPaddingRight = true;
         }
         cellEmailNode.analysis.facts.useHybridFluidTableStrategy = true;
+        cellEmailNode.analysis.facts.acceptDescendantBackground = true;
+        cellEmailNode.analysis.facts.acceptDescendantBorder = true;
         return cellEmailNode;
     }
 
