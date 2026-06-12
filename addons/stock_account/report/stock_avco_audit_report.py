@@ -45,7 +45,7 @@ SELECT
     sm.company_id,
     sm.reference,
     CASE WHEN sm.is_in THEN sm.value ELSE -sm.value END AS value,
-    CASE WHEN sm.is_in THEN sm.quantity ELSE -sm.quantity END AS quantity,
+    CASE WHEN sm.is_in THEN sm.quantity * (um.factor / up.factor) ELSE -sm.quantity * (um.factor / up.factor) END AS quantity,
     'stock.move' AS res_model_name,
     'Operation' AS description
 FROM
@@ -60,6 +60,10 @@ LEFT JOIN
     product_category pc ON pt.categ_id = pc.id
 LEFT JOIN
     ir_default cost_method_default ON cost_method_default.company_id = sm.company_id
+LEFT JOIN
+    uom_uom um ON um.id = sm.uom_id
+LEFT JOIN
+    uom_uom up ON up.id = pt.uom_id
                                   AND cost_method_default.field_id = (SELECT id FROM ir_model_fields WHERE name = 'property_cost_method' AND model = 'product.category')
 WHERE
     sm.state = 'done'
