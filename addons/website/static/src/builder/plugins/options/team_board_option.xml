@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="website.TeamBoardOption">
+    <BuilderRow label.translate="Cards Layout">
+        <BuilderSelect>
+            <BuilderSelectItem id="'team_board_layout_grid_opt'" classAction="'s_team_board_card_layout_grid'">
+                Grid
+            </BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_team_board_card_layout_list'">List</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Density">
+        <BuilderSelect applyTo="'.s_team_board_members'">
+            <BuilderSelectItem id="'team_board_density_comfortable_opt'" classAction="'s_team_board_density_comfortable'">
+                Comfortable
+            </BuilderSelectItem>
+            <BuilderSelectItem classAction="'s_team_board_density_compact'">Compact</BuilderSelectItem>
+        </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label.translate="Members">
+        <BuilderButton
+                action="'addItem'"
+                actionParam="'.s_team_board_member:last-of-type'"
+                preview="false"
+                applyTo="'.s_team_board_members'">
+            Add member
+        </BuilderButton>
+    </BuilderRow>
+    <BuilderRow label.translate="Sort">
+        <BuilderButton action="'sortTeamBoardMembersAlphabetically'" preview="false">
+            Sort alphabetically
+        </BuilderButton>
+    </BuilderRow>
+</t>
+
+<t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
+    <xpath expr="//t[@id='snippet_specific_options']" position="after">
+        <team_board_option template="website.TeamBoardOption" selector=".s_team_board"/>
+    </xpath>
+</t>
+
+</templates>

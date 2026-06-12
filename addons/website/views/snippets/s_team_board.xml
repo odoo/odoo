@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_team_board" name="Team Board">
+    <section class="s_team_board s_team_board_card_layout_grid pt48 pb48">
+        <div class="container">
+            <h2 class="h3-fs">Meet Our Team</h2>
+            <p class="lead mb-4">The people building the experience you rely on every day.</p>
+            <div class="row g-4 s_team_board_members s_team_board_density_comfortable">
+                <div class="col-12 col-md-6 col-xl-3 s_team_board_member" data-member-id="member_1" data-member-email="tony.fred@example.com" data-name="Team Member">
+                    <article class="card h-100 border-0 shadow-sm position-relative">
+                        <button type="button" class="s_team_board_member_button o_btn_reset o_button_area cursor-pointer z-1" aria-label="Tony Fred's information"/>
+                        <img class="card-img-top o_editable_media" src="/web/image/website.s_company_team_image_1" alt="Tony Fred"/>
+                        <div class="card-body">
+                            <h3 class="h5-fs card-title">Tony Fred</h3>
+                            <p class="text-muted mb-2">Chief Executive Officer</p>
+                            <p class="card-text">Tony shapes product strategy and keeps execution aligned across teams.</p>
+                        </div>
+                    </article>
+                </div>
+                <div class="col-12 col-md-6 col-xl-3 s_team_board_member" data-member-id="member_2" data-member-email="mich.stark@example.com" data-name="Team Member">
+                    <article class="card h-100 border-0 shadow-sm position-relative">
+                        <button type="button" class="s_team_board_member_button o_btn_reset o_button_area cursor-pointer z-1" aria-label="Mich Stark's information"/>
+                        <img class="card-img-top o_editable_media" src="/web/image/website.s_company_team_image_2" alt="Mich Stark"/>
+                        <div class="card-body">
+                            <h3 class="h5-fs card-title">Mich Stark</h3>
+                            <p class="text-muted mb-2">Chief Commercial Officer</p>
+                            <p class="card-text">Mich leads go-to-market initiatives and partner relationships.</p>
+                        </div>
+                    </article>
+                </div>
+                <div class="col-12 col-md-6 col-xl-3 s_team_board_member" data-member-id="member_3" data-member-email="aline.turner@example.com" data-name="Team Member">
+                    <article class="card h-100 border-0 shadow-sm position-relative">
+                        <button type="button" class="s_team_board_member_button o_btn_reset o_button_area cursor-pointer z-1" aria-label="Aline Turner's information"/>
+                        <img class="card-img-top o_editable_media" src="/web/image/website.s_company_team_image_3" alt="Aline Turner"/>
+                        <div class="card-body">
+                            <h3 class="h5-fs card-title">Aline Turner</h3>
+                            <p class="text-muted mb-2">Chief Technical Officer</p>
+                            <p class="card-text">Aline drives platform architecture and engineering quality.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<asset id="website.s_team_board_000_scss" name="Team Board 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_team_board/000.scss</path>
+</asset>
+
+</odoo>

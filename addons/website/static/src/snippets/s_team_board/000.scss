@@ -1,0 +1,62 @@
+.s_team_board {
+    .s_team_board_member {
+        .card-img-top {
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+        }
+
+        .card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        &:hover .card,
+        &:focus-within .card {
+            box-shadow: $box-shadow !important;
+            transform: translateY(-2px);
+        }
+    }
+
+    &.s_team_board_card_layout_list {
+        .s_team_board_member {
+            flex: 0 0 auto;
+            max-width: 100%;
+            width: 100%;
+        }
+
+        .card {
+            flex-direction: row;
+        }
+
+        .card-img-top {
+            flex: 0 0 100px;
+            width: 100px;
+        }
+    }
+
+    .s_team_board_members.s_team_board_density_compact {
+        --bs-gutter-x: #{map-get($spacers, 3)};
+        --bs-gutter-y: #{map-get($spacers, 3)};
+
+        .card-body {
+            padding: map-get($spacers, 2);
+            font-size: 0.8rem;
+        }
+    }
+}
+
+.s_team_board_modal {
+    .s_team_board_modal_dialog {
+        max-width: 760px;
+    }
+
+    .modal-content {
+        overflow: hidden;
+    }
+
+    .s_team_board_modal_image {
+        aspect-ratio: 1 / 1;
+        background-color: $gray-100;
+        object-fit: cover;
+        width: 100%;
+    }
+}

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.s_team_board.modal">
+        <div class="s_team_board_modal modal fade" tabindex="-1" role="dialog" aria-labelledby="s_team_board_modal_name">
+            <div class="modal-dialog modal-dialog-centered s_team_board_modal_dialog">
+                <article class="modal-content border-0 shadow">
+                    <div class="modal-header border-0 pb-0">
+                        <button type="button" class="btn-close s_team_board_modal_close" data-bs-dismiss="modal" aria-label="Close"/>
+                    </div>
+                    <div class="modal-body px-4 pt-0 pb-4">
+                        <div class="row g-4 align-items-start">
+                            <div class="col-12 col-lg-4">
+                                <img class="s_team_board_modal_image img-fluid rounded" alt=""/>
+                            </div>
+                            <div class="col-12 col-lg-8">
+                                <h3 id="s_team_board_modal_name" class="h4-fs s_team_board_modal_name mb-1"/>
+                                <p class="text-muted s_team_board_modal_role mb-3"/>
+                                <p class="s_team_board_modal_bio mb-0"/>
+                            </div>
+                        </div>
+                    </div>
+                    <footer class="modal-footer bg-transparent border-0 px-4 pt-0 pb-4 justify-content-start">
+                        <div class="d-flex flex-wrap gap-2 s_team_board_contact_methods">
+                            <button type="button" class="btn btn-primary s_team_board_contact_method_button" data-contact-method-id="sendMessage">
+                                Send a message
+                            </button>
+                            <div class="d-flex flex-wrap gap-2 s_team_board_extra_contact_methods"/>
+                        </div>
+                    </footer>
+                </article>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="website.s_team_board.extra_contact_methods">
+        <t t-foreach="contactMethods" t-as="contactMethod" t-key="contactMethod.id">
+            <button type="button"
+                    class="btn btn-outline-primary s_team_board_contact_method_button"
+                    t-att-data-contact-method-id="contactMethod.id"
+                    t-out="contactMethod.label"/>
+        </t>
+    </t>
+</templates>
