@@ -32,7 +32,7 @@ class DigestDigest(models.Model):
                                     ('weekly', 'Weekly'),
                                     ('monthly', 'Monthly'),
                                     ('quarterly', 'Quarterly')],
-                                   string='Periodicity', default='daily', required=True)
+                                   string='Frequency', default='daily', required=True)
     next_run_date = fields.Date(string='Next Mailing Date')
     currency_id = fields.Many2one(related="company_id.currency_id", string='Currency', readonly=False)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)

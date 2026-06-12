@@ -14,7 +14,7 @@ class SaleOrderLine(models.Model):
     reward_identifier_code = fields.Char(
         help="Technical field used to link multiple reward lines from the same reward together."
     )
-    points_cost = fields.Float(help="How much point this reward costs on the loyalty card.")
+    points_cost = fields.Float(help="How many points this reward costs on the reward card.")
 
     def _compute_name(self):
         # Avoid computing the name for reward lines

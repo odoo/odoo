@@ -118,7 +118,7 @@ class FetchmailServer(models.Model):
     error_message = fields.Text(string='Last Error Message', readonly=True)
     user = fields.Char(string='Username', readonly=False)
     password = fields.Char()
-    object_id = fields.Many2one('ir.model', string="Create a New Record", help="Process each incoming mail as part of a conversation "
+    object_id = fields.Many2one('ir.model', string="Create a New Record", help="Process each incoming email as part of a conversation "
                                                                                 "corresponding to this document type. This will create "
                                                                                 "new documents for new conversations, or attach follow-up "
                                                                                 "emails to the existing conversations (documents).")

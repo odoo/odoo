@@ -37,7 +37,7 @@ class CalendarAttendee(models.Model):
     phone = fields.Char('Phone', related='partner_id.phone')
     common_name = fields.Char('Common name', compute='_compute_common_name', store=True)
     access_token = fields.Char('Invitation Token', default=_default_access_token, groups="base.group_system")
-    mail_tz = fields.Selection(_tz_get, compute='_compute_mail_tz', help='Timezone used for displaying time in the mail template')
+    mail_tz = fields.Selection(_tz_get, compute='_compute_mail_tz', help='Timezone used for displaying time in the email template')
     # state
     state = fields.Selection(STATE_SELECTION, string='Status', default='needsAction')
     availability = fields.Selection(

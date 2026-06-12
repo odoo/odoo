@@ -107,9 +107,9 @@ class HrApplicant(models.Model):
     priority = fields.Selection(AVAILABLE_PRIORITIES, "Evaluation", default='0')
     salary_proposed = fields.Monetary("Proposed", aggregator="avg", currency_field='currency_id', help="Salary Proposed by the Organisation", groups="hr_recruitment.group_hr_recruitment_user")
     job_id = fields.Many2one('hr.job', "Job Position", domain="company_id and [('company_id', '=', company_id)] or []", tracking=True, index=True, copy=False)
-    salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra advantages", groups="hr_recruitment.group_hr_recruitment_user")
+    salary_proposed_extra = fields.Char("Proposed Salary Extra", help="Salary Proposed by the Organisation, extra benefits", groups="hr_recruitment.group_hr_recruitment_user")
     salary_expected = fields.Monetary("Expected", aggregator="avg", currency_field='currency_id', help="Salary Expected by Applicant", groups="hr_recruitment.group_hr_recruitment_user")
-    salary_expected_extra = fields.Char("Expected Salary Extra", help="Salary Expected by Applicant, extra advantages", groups="hr_recruitment.group_hr_recruitment_user")
+    salary_expected_extra = fields.Char("Expected Salary Extra", help="Salary Expected by Applicant, extra benefits", groups="hr_recruitment.group_hr_recruitment_user")
     schedule_pay = fields.Selection([
         ('hourly', 'Hour'),
         ('daily', 'Day'),

@@ -63,7 +63,7 @@ patch(OrderSummary.prototype, {
                 if (duplicate) {
                     this.dialog.add(AlertDialog, {
                         title: _t("Validation Error"),
-                        body: _t("A coupon/loyalty card must have a unique code."),
+                        body: _t("A coupon/reward card must have a unique code."),
                     });
                     return;
                 }

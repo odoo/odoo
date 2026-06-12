@@ -29,8 +29,7 @@ class MailTemplatePreview(models.TransientModel):
     def _selection_languages(self):
         return self.env['res.lang'].get_installed()
 
-
-    mail_template_id = fields.Many2one('mail.template', string='Related Mail Template', required=True)
+    mail_template_id = fields.Many2one('mail.template', string='Related Email Template', required=True)
     model_id = fields.Many2one('ir.model', string='Targeted model', related="mail_template_id.model_id")
     resource_ref = fields.Reference(
         string='Record',

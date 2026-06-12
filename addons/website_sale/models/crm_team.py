@@ -10,7 +10,7 @@ class CrmTeam(models.Model):
         string="Websites", comodel_name="website", inverse_name="salesteam_id"
     )
     abandoned_carts_amount = fields.Integer(
-        string="Amount of Abandoned Carts", compute="_compute_abandoned_carts"
+        string="Abandoned Carts Amount", compute="_compute_abandoned_carts"
     )
     abandoned_carts_count = fields.Integer(
         string="Number of Abandoned Carts", compute="_compute_abandoned_carts"
