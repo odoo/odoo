@@ -4,6 +4,10 @@ import { session } from "@web/session";
 import { cookie } from "@web/core/browser/cookie";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { Time } from "@web/core/l10n/time";
+import { _t } from "@web/core/l10n/translation";
+
+const { DateTime } = luxon;
+
 /*
  * comes from o_spreadsheet.js
  * https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
@@ -280,4 +284,25 @@ export function imageDataUri(base64Source) {
     }
     const imageType = FILETYPE_BY_MAGIC_CHAR[base64Source.charAt(0)] || "png";
     return `data:image/${imageType};base64,${base64Source}`;
+}
+
+export function getDisplayDateInfo(sqlDate) {
+    const dateTime = deserializeDateTime(sqlDate);
+    if (!dateTime.isValid) {
+        return {
+            dayLabel: "",
+            monthDayLabel: "",
+            isTodayOrTomorrow: false,
+        };
+    }
+
+    const today = DateTime.now().startOf("day");
+    const isToday = dateTime.hasSame(today, "day");
+    const isTomorrow = !isToday && dateTime.hasSame(today.plus({ days: 1 }), "day");
+
+    return {
+        isTodayOrTomorrow: isToday || isTomorrow,
+        dayLabel: isToday ? _t("Today") : isTomorrow ? _t("Tomorrow") : dateTime.toFormat("cccc"),
+        monthDayLabel: dateTime.toLocaleString({ month: "long", day: "numeric" }),
+    };
 }

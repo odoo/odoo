@@ -3,9 +3,7 @@ import { Component, proxy } from "@odoo/owl";
 import { scrollToSelected } from "@pos_self_order/app/utils/scroll_to_selected";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
-import { _t } from "@web/core/l10n/translation";
-
-const { DateTime } = luxon;
+import { getDisplayDateInfo } from "@point_of_sale/utils";
 
 /**
  * PillsSelectionPopup component
@@ -91,29 +89,11 @@ export class PillsSelectionPopup extends Component {
         return this.props.selectionType == "table";
     }
 
-    getCategoryDisplayName(category) {
+    getCategoryInfo(category) {
         if (!this.isTimeSelection) {
-            return category.name;
+            return { label: category.name };
         }
 
-        try {
-            const categoryDate = DateTime.fromISO(category.id);
-            if (!categoryDate.isValid) {
-                return category.name;
-            }
-
-            const today = DateTime.now().startOf("day");
-            const tomorrow = today.plus({ days: 1 });
-
-            if (categoryDate.hasSame(today, "day")) {
-                return _t("Today");
-            } else if (categoryDate.hasSame(tomorrow, "day")) {
-                return _t("Tomorrow");
-            }
-        } catch {
-            return category.name;
-        }
-
-        return category.name;
+        return getDisplayDateInfo(category.id);
     }
 }
