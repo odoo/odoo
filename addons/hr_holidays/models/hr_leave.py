@@ -1315,10 +1315,12 @@ class HrLeave(models.Model):
             'LEAVE280',  # Long Term Sick
             'LEAVE264',  # Incapacity for work with guaranteed salary - 1st week
             'LEAVE218',  # Incapacity for work with guaranteed salary system for workers - 2nd week
+            'LEAVE272',  # Incapacity for work with guaranteed salary system for workers - 2nd week (Short Term Employee)
             'LEAVE219',  # Incapacity for work with salary supplement for workers - after the 2nd week CCT 12bis/13bis
             'LEAVE214',  # Sick Time Off (Without Guaranteed Salary)
             'LEAVE227',  # Work accident or occupational illness with normal daily pay at 100% for the first week
             'LEAVE229',  # Work accident or occupational illness with employer supplement from the 2nd week of CCT 12bis/13bis
+            'LEAVE271',  # Work accident or occupational illness with employer supplement from the 2nd week of CCT 12bis/13bis (Short Term Employee)
             'LEAVE117',  # Work Accident (Unpaid)
         ]
         return self.filtered(
