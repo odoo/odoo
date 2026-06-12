@@ -961,6 +961,18 @@ class DomainCondition(Domain):
     def _optimize_field_search_method(self, model: BaseModel) -> Domain:
         field = self._field(model)
         operator, value = self.operator, self.value
+        if (
+            operator in ('any', 'not any')
+            and field.relational
+            and isinstance(value, Domain)
+            and not field.related  # related fields handle any properly
+        ):
+            comodel = model.env[field.comodel_name]
+            if field.type in ('many2many', 'one2many'):
+                query = comodel.with_context(**field.context)._search(value)
+            else:
+                query = comodel.with_context(active_test=False)._search(value)
+            value = Domain('id', 'in', query)
         # use the `Field.search` function
         original_exception = None
         try:
@@ -989,14 +1001,14 @@ class DomainCondition(Domain):
             if original_exception is None:
                 original_exception = e
         # raise the error
-        if original_exception:
+        if isinstance(original_exception, UserError):
             raise original_exception
         raise UserError(model.env._(
             "Unsupported operator on %(field_label)s %(model_label)s in %(domain)s",
             domain=repr(self),
             field_label=self._field(model).get_description(model.env, ['string'])['string'],
             model_label=f"{model.env['ir.model']._get(model._name).name!r} ({model._name})",
-        ))
+        )) from original_exception
 
     def _as_predicate(self, records):
         if not records:
