@@ -9,9 +9,9 @@ import {
     buildM2OFieldDescription,
     extractM2OFieldProps,
     m2oSupportedOptions,
-    Many2OneField,
 } from "@web/views/fields/many2one/many2one_field";
-import { Component, proxy } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { exprToBoolean } from "@web/core/utils/strings";
 
 export class MailingFilterDropdown extends Dropdown {
@@ -40,17 +40,28 @@ export class FieldMany2OneMailingFilter extends Component {
         Many2One,
         MailingFilterDropdown,
     };
-    static props = {
-        ...Many2OneField.props,
-        domain_field: { type: String, optional: true },
-        model_field: { type: String, optional: true },
-        noLabel: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        domain_field: "mailing_domain",
-        model_field: "mailing_model_id",
-        noLabel: false,
-    };
+    // inlined from Many2OneField.props (still old-style)
+    props = props({
+        ...standardFieldProps,
+        canCreate: t.boolean().optional(),
+        canCreateEdit: t.boolean().optional(),
+        canOpen: t.boolean().optional(),
+        canQuickCreate: t.boolean().optional(),
+        canScanBarcode: t.boolean().optional(),
+        canWrite: t.boolean().optional(),
+        context: t.object().optional(),
+        decorations: t.object().optional(),
+        domain: t.or([t.array(), t.function()]).optional(),
+        nameCreateField: t.string().optional(),
+        openActionContext: t.string().optional(),
+        placeholder: t.string().optional(),
+        searchLimit: t.number().optional(),
+        searchThreshold: t.number().optional(),
+        string: t.string().optional(),
+        domain_field: t.string().optional("mailing_domain"),
+        model_field: t.string().optional("mailing_model_id"),
+        noLabel: t.boolean().optional(false),
+    });
 
     setup() {
         super.setup();

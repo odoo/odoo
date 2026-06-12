@@ -1,8 +1,7 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onMounted, proxy } from "@odoo/owl";
+import { Component, onMounted, props, proxy, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useDebounced } from "@web/core/utils/timing";
 import { cookie } from "@web/core/browser/cookie";
@@ -17,19 +16,19 @@ export const MAX_FONT_SIZE = 144;
 
 export class FontSizeSelector extends Component {
     static template = "html_editor.FontSizeSelector";
-    static props = {
-        getItems: Function,
-        getDisplay: Function,
-        onFontSizeInput: Function,
-        onSelected: Function,
-        onBlur: { type: Function, optional: true },
-        document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
-        maxFontSize: { type: Number, optional: true },
-        ...toolbarButtonProps,
-    };
-    static defaultProps = {
-        maxFontSize: MAX_FONT_SIZE,
-    };
+    props = props({
+        getItems: t.function(),
+        getDisplay: t.function(),
+        onFontSizeInput: t.function(),
+        onSelected: t.function(),
+        onBlur: t.function().optional(),
+        document: t.customValidator(t.any(), (p) => p.nodeType === Node.DOCUMENT_NODE),
+        maxFontSize: t.number().optional(MAX_FONT_SIZE),
+        // from toolbarButtonProps
+        title: t.or([t.string(), t.function()]),
+        getSelection: t.function(),
+        isDisabled: t.boolean(),
+    });
     static components = { Dropdown, DropdownItem };
 
     setup() {

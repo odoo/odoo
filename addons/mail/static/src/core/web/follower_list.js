@@ -17,8 +17,8 @@ export class FollowerList extends Component {
         this.store = useService("mail.store");
         this.props = props({
             dropdown: types.instanceOf(DropdownState),
-            "onAddFollowers?": types.function([]),
-            "onFollowerChanged?": types.function([]),
+            onAddFollowers: types.function([]).optional(),
+            onFollowerChanged: types.function([]).optional(),
             thread: types.instanceOf(this.store["mail.thread"].Class),
         });
         useVisible("load-more", (isVisible) => {

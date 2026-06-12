@@ -17,7 +17,7 @@ import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
 import { nbsp } from "@web/core/utils/strings";
 
-import { Component, computed, proxy, signal, types, useEffect } from "@odoo/owl";
+import { Component, computed, props, proxy, signal, t, useEffect } from "@odoo/owl";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -36,6 +36,23 @@ import { ActionList } from "@mail/core/common/action_list";
 import { loadCssFromBundle } from "@mail/utils/common/misc";
 import { MessageContextMenu } from "@mail/core/common/message_context_menu";
 import { Priority } from "@mail/core/common/priority";
+
+export const messageProps = {
+    asCard: t.any().optional(),
+    hasActions: t.any().optional(true),
+    onParentMessageClick: t.any().optional(),
+    message: t.any(),
+    messageSelection: t.any().optional(),
+    messageRefs: t.any().optional(),
+    previousMessage: t.any().optional(),
+    squashed: t.any().optional(),
+    thread: t.any().optional(),
+    messageSearch: t.any().optional(),
+    className: t.any().optional(),
+    showDates: t.any().optional(true),
+    isFirstMessage: t.any().optional(),
+    isReadOnly: t.any().optional(),
+};
 
 /**
  * @typedef {Object} Props
@@ -73,26 +90,7 @@ export class Message extends Component {
         NotificationMessage,
         Priority,
     };
-    static defaultProps = {
-        hasActions: true,
-        showDates: true,
-    };
-    static props = [
-        "asCard?",
-        "hasActions?",
-        "onParentMessageClick?",
-        "message",
-        "messageSelection?",
-        "messageRefs?",
-        "previousMessage?",
-        "squashed?",
-        "thread?",
-        "messageSearch?",
-        "className?",
-        "showDates?",
-        "isFirstMessage?",
-        "isReadOnly?",
-    ];
+    props = props(messageProps);
     static template = "mail.Message";
 
     /**
@@ -125,8 +123,8 @@ export class Message extends Component {
                 delete this.rootRef().dataset.rightClicking;
             },
         });
-        this.rightClickAnchor = signal(null, { type: types.ref(HTMLElement) });
-        this.rootRef = signal(null, { type: types.ref(HTMLDivElement) });
+        this.rightClickAnchor = signal(null, { type: t.ref(HTMLElement) });
+        this.rootRef = signal(null, { type: t.ref(HTMLDivElement) });
         if (isMobileOS()) {
             useLongPress(this.rootRef, {
                 action: () => this.openMobileActions(),
@@ -136,8 +134,8 @@ export class Message extends Component {
         useForwardRefsToParent("messageRefs", (props) => props.message.id, this.rootRef);
         this.messageBody = useRef("body");
         this.messageActions = useMessageActions(this.messageActionsParams);
-        this.shadowBody = signal(null, { type: types.ref(HTMLDivElement) });
-        this.shadowRoot = signal(null, { type: types.ref(ShadowRoot) });
+        this.shadowBody = signal(null, { type: t.ref(HTMLDivElement) });
+        this.shadowRoot = signal(null, { type: t.ref(ShadowRoot) });
         this.dialog = useService("dialog");
         this.ui = useService("ui");
         this.openReactionMenu = this.openReactionMenu.bind(this);

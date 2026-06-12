@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { usePosition } from "@web/core/position/position_hook";
@@ -57,30 +57,15 @@ class TourPointerPopover extends Component {
 
 /** @extends {Component<TourPointerProps, any>} */
 export class TourPointer extends Component {
-    static props = {
-        pointerState: {
-            type: Object,
-            shape: {
-                trigger: { type: HTMLElement, optional: true },
-                content: { type: String, optional: true },
-                isZone: { type: Boolean, optional: true },
-                position: {
-                    type: [
-                        { value: "left" },
-                        { value: "right" },
-                        { value: "top" },
-                        { value: "bottom" },
-                    ],
-                    optional: true,
-                },
-            },
-        },
-        bounce: { type: Boolean, optional: true },
-    };
-
-    static defaultProps = {
-        bounce: true,
-    };
+    props = props({
+        pointerState: t.object({
+            trigger: t.instanceOf(HTMLElement).optional(),
+            content: t.string().optional(),
+            isZone: t.boolean().optional(),
+            position: t.selection(["left", "right", "top", "bottom"]).optional(),
+        }),
+        bounce: t.boolean().optional(true),
+    });
 
     static template = "web_tour.TourPointer";
     static width = 28; // in pixels

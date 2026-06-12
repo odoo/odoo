@@ -15,7 +15,7 @@ export class WelcomePage extends Component {
 
     setup() {
         super.setup();
-        this.props = props({ "proceed?": types.function([]) });
+        this.props = props({ proceed: types.function([]).optional() });
         this.description = signal();
         this.store = useService("mail.store");
         this.ui = useService("ui");

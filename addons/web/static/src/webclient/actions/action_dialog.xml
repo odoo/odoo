@@ -9,11 +9,11 @@
   <t t-name="web.ActionDialog" t-inherit="web.Dialog" t-inherit-mode="primary">
     <xpath expr="//main[hasclass('modal-body')]" position="attributes">
       <attribute name="t-att-class">
-        {"o_act_window": this.props.actionType === "ir.actions.act_window"}
+        {"o_act_window": this.actionProps.actionType === "ir.actions.act_window"}
       </attribute>
     </xpath>
     <xpath expr="//t[@t-call-slot='default']" position="replace">
-      <t t-if="this.props.ActionComponent" t-component="this.props.ActionComponent" t-props="this.props.actionProps"/>
+      <t t-if="this.actionProps.ActionComponent" t-component="this.actionProps.ActionComponent" t-props="this.actionProps.actionProps"/>
     </xpath>
     <xpath expr="//t[@t-call-slot='header']" position="replace">
       <t t-call="web.ActionDialog.header" fullscreen="this.props.isFullscreen"/>

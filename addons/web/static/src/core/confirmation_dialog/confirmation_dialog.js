@@ -2,7 +2,7 @@ import { Dialog } from "../dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useChildRef } from "@web/core/utils/hooks";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 export const deleteConfirmationMessage = _t(
     `Ready to make your record disappear into thin air? Are you sure? It will be gone forever!
@@ -10,36 +10,26 @@ export const deleteConfirmationMessage = _t(
 Think twice before you click that 'Delete' button!`
 );
 
+const isValidTitle = (m) =>
+    typeof m === "string" || (typeof m === "object" && typeof m.toString === "function");
+
+export const confirmationDialogProps = {
+    close: t.function(),
+    title: t.customValidator(t.any(), isValidTitle).optional(_t("Confirmation")),
+    size: t.string().optional("sm"),
+    body: t.string().optional(),
+    confirm: t.function().optional(),
+    confirmLabel: t.string().optional(_t("Ok")),
+    confirmClass: t.string().optional("btn-primary"),
+    cancel: t.function().optional(),
+    cancelLabel: t.string().optional(_t("Discard")),
+    dismiss: t.function().optional(),
+};
+
 export class ConfirmationDialog extends Component {
     static template = "web.ConfirmationDialog";
     static components = { Dialog };
-    static props = {
-        close: Function,
-        title: {
-            validate: (m) => {
-                return (
-                    typeof m === "string" ||
-                    (typeof m === "object" && typeof m.toString === "function")
-                );
-            },
-            optional: true,
-        },
-        size: { type: String, optional: true },
-        body: { type: String, optional: true },
-        confirm: { type: Function, optional: true },
-        confirmLabel: { type: String, optional: true },
-        confirmClass: { type: String, optional: true },
-        cancel: { type: Function, optional: true },
-        cancelLabel: { type: String, optional: true },
-        dismiss: { type: Function, optional: true },
-    };
-    static defaultProps = {
-        confirmLabel: _t("Ok"),
-        cancelLabel: _t("Discard"),
-        confirmClass: "btn-primary",
-        title: _t("Confirmation"),
-        size: "sm",
-    };
+    props = props(confirmationDialogProps);
 
     setup() {
         this.env.dialogData.dismiss = () => this._dismiss();
@@ -91,14 +81,13 @@ export class ConfirmationDialog extends Component {
     }
 }
 
+export const alertDialogProps = {
+    ...confirmationDialogProps,
+    title: t.customValidator(t.any(), isValidTitle).optional(_t("Alert")),
+    contentClass: t.string().optional(),
+};
+
 export class AlertDialog extends ConfirmationDialog {
     static template = "web.AlertDialog";
-    static props = {
-        ...ConfirmationDialog.props,
-        contentClass: { type: String, optional: true },
-    };
-    static defaultProps = {
-        ...ConfirmationDialog.defaultProps,
-        title: _t("Alert"),
-    };
+    props = props(alertDialogProps);
 }

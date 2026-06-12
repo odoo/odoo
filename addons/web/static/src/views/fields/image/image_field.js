@@ -8,7 +8,7 @@ import { generateImageVariants } from "@web/core/utils/image_library";
 import { FileUploader } from "../file_handler";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 
 export const fileTypeMagicWordMap = {
     "/": "jpg",
@@ -24,26 +24,20 @@ export class ImageField extends Component {
     static components = {
         FileUploader,
     };
-    static props = {
+    props = props({
         ...standardFieldProps,
-        alt: { type: String, optional: true },
-        enableZoom: { type: Boolean, optional: true },
-        imgClass: { type: String, optional: true },
-        zoomDelay: { type: Number, optional: true },
-        previewImage: { type: String, optional: true },
-        acceptedFileExtensions: { type: String, optional: true },
-        width: { type: Number, optional: true },
-        height: { type: Number, optional: true },
-        reload: { type: Boolean, optional: true },
-        convertToWebp: { type: Boolean, optional: true },
-        fileNameField: { type: String, optional: true },
-    };
-    static defaultProps = {
-        acceptedFileExtensions: "image/*",
-        alt: _t("Binary file"),
-        imgClass: "",
-        reload: true,
-    };
+        alt: t.string().optional(_t("Binary file")),
+        enableZoom: t.boolean().optional(),
+        imgClass: t.string().optional(""),
+        zoomDelay: t.number().optional(),
+        previewImage: t.string().optional(),
+        acceptedFileExtensions: t.string().optional("image/*"),
+        width: t.number().optional(),
+        height: t.number().optional(),
+        reload: t.boolean().optional(true),
+        convertToWebp: t.boolean().optional(),
+        fileNameField: t.string().optional(),
+    });
 
     setup() {
         this.notification = useService("notification");
@@ -75,7 +69,8 @@ export class ImageField extends Component {
     }
 
     get containerClass() {
-        let containerClass = "position-absolute d-flex justify-content-between w-100 bottom-0 opacity-0 opacity-100-hover";
+        let containerClass =
+            "position-absolute d-flex justify-content-between w-100 bottom-0 opacity-0 opacity-100-hover";
         if (this.isMobile) {
             containerClass += " o_mobile_controls";
         }

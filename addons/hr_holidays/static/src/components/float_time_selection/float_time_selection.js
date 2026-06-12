@@ -1,9 +1,13 @@
-import { onWillStart, proxy } from "@odoo/owl";
+import { onWillStart, props, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { FloatTimeSelectionPopover } from "./float_time_selection_popover";
 
-import { FloatTimeField, floatTimeField } from "@web/views/fields/float_time/float_time_field";
+import {
+    FloatTimeField,
+    floatTimeField,
+    floatTimeFieldProps,
+} from "@web/views/fields/float_time/float_time_field";
 const { DateTime } = luxon;
 
 function floatToHoursMinutes(floatValue) {
@@ -18,9 +22,9 @@ function hoursMinutesToFloat(hours, minutes) {
 
 export class FloatTimeSelectionField extends FloatTimeField {
     static template = "hr_holidays.FloatTimeSelectionField";
-    static props = {
-        ...FloatTimeField.props,
-    };
+    props = props({
+        ...floatTimeFieldProps,
+    });
 
     setup() {
         super.setup();

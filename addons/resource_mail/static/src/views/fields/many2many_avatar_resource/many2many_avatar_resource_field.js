@@ -111,17 +111,17 @@ registry.category("fields").add("list.many2many_avatar_resource", listMany2ManyA
 
 export class Many2ManyTagsAvatarResourceFieldPopover extends WithResourceFieldMixin(Many2ManyTagsAvatarFieldPopover) {}
 
-export class KanbanMany2ManyAvatarResourceField extends WithResourceFieldMixin(CardMany2ManyTagsAvatarUserField) {
+export class CardMany2ManyAvatarResourceField extends WithResourceFieldMixin(CardMany2ManyTagsAvatarUserField) {
     static PopoverClass = Many2ManyTagsAvatarResourceFieldPopover;
 
     get placeholder() {
         return _t("Search resources...");
     }
 }
-export const kanbanMany2ManyAvatarResourceField = {
+export const cardMany2ManyAvatarResourceField = {
     ...cardMany2ManyTagsAvatarUserField,
     ...resourceFieldMixin,
-    component: KanbanMany2ManyAvatarResourceField,
+    component: CardMany2ManyAvatarResourceField,
 };
-registry.category("fields").add("card.many2many_avatar_resource", kanbanMany2ManyAvatarResourceField);
-registry.category("fields").add("activity.many2many_avatar_resource", kanbanMany2ManyAvatarResourceField);
+registry.category("fields").add("card.many2many_avatar_resource", cardMany2ManyAvatarResourceField);
+registry.category("fields").add("activity.many2many_avatar_resource", cardMany2ManyAvatarResourceField);

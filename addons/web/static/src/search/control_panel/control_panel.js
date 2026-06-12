@@ -17,9 +17,13 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { Transition } from "@web/core/transition";
 import { Breadcrumbs } from "../breadcrumbs/breadcrumbs";
 
-import { Component, onMounted, proxy } from "@odoo/owl";
+import { Component, onMounted, props, proxy, t } from "@odoo/owl";
 
 const STICKY_CLASS = "o_mobile_sticky";
+const DEFAULT_DISPLAY = {
+    actions: true,
+    buttons: true,
+};
 
 /**
  * @typedef EmbeddedAction
@@ -98,16 +102,10 @@ export class ControlPanel extends Component {
         CheckBox,
         Transition,
     };
-    static props = {
-        display: { type: Object, optional: true },
-        slots: { type: Object, optional: true },
-    };
-    static defaultProps = {
-        display: {
-            actions: true,
-            buttons: true,
-        },
-    };
+    props = props({
+        display: t.object().optional(DEFAULT_DISPLAY),
+        slots: t.object().optional(),
+    });
 
     setup() {
         this.actionService = useService("action");
@@ -309,7 +307,7 @@ export class ControlPanel extends Component {
      */
     get display() {
         return {
-            ...this.constructor.defaultProps.display,
+            ...DEFAULT_DISPLAY,
             ...this.props.display,
         };
     }

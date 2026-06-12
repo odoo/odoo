@@ -4,7 +4,7 @@ import { localization } from "@web/core/l10n/localization";
 import { clamp } from "@web/core/utils/numbers";
 import { hasTouch } from "@web/core/browser/feature_detection";
 
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, props, t } from "@odoo/owl";
 
 const isScrollSwipable = (scrollables) => ({
     left: !scrollables.filter((e) => e.scrollLeft !== 0).length,
@@ -24,39 +24,27 @@ const isScrollSwipable = (scrollables) => ({
  */
 export class ActionSwiper extends Component {
     static template = "web.ActionSwiper";
-    static props = {
-        onLeftSwipe: {
-            type: Object,
-            shape: {
-                action: { type: Function, optional: true },
-                icon: { type: String, optional: true },
-                bgColor: { type: String, optional: true },
-                slot: { type: Object, optional: true },
-            },
-            optional: true,
-        },
-        onRightSwipe: {
-            type: Object,
-            shape: {
-                action: { type: Function, optional: true },
-                icon: { type: String, optional: true },
-                bgColor: { type: String, optional: true },
-                slot: { type: Object, optional: true },
-            },
-            optional: true,
-        },
-        enabledDuration: {
-            type: Number,
-            optional: true,
-        },
-        slots: Object,
-        animationType: { type: String, optional: true },
-    };
-    static defaultProps = {
-        onLeftSwipe: undefined,
-        onRightSwipe: undefined,
-        animationType: "bounce",
-    };
+    props = props({
+        onLeftSwipe: t
+            .object({
+                action: t.function().optional(),
+                icon: t.string().optional(),
+                bgColor: t.string().optional(),
+                slot: t.object().optional(),
+            })
+            .optional(),
+        onRightSwipe: t
+            .object({
+                action: t.function().optional(),
+                icon: t.string().optional(),
+                bgColor: t.string().optional(),
+                slot: t.object().optional(),
+            })
+            .optional(),
+        enabledDuration: t.number().optional(),
+        slots: t.object(),
+        animationType: t.string().optional("bounce"),
+    });
     static swipeDistanceRatio = 2;
     static swipeEffectiveThreshold = 20;
     static animationLength = 400;

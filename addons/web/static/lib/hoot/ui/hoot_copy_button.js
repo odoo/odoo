@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, props, signal, types as t, xml } from "@odoo/owl";
+import { Component, props, signal, t, xml } from "@odoo/owl";
 import { copy, hasClipboard } from "../hoot_utils";
 
 export class HootCopyButton extends Component {
@@ -20,7 +20,7 @@ export class HootCopyButton extends Component {
 
     // Props & plugins
     props = props({
-        "altText?": t.string(),
+        altText: t.string().optional(),
         text: t.string(),
     });
 

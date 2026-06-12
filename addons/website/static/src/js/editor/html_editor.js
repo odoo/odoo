@@ -1,7 +1,8 @@
 import { useLayoutEffect } from "@web/owl2/utils";
 import { LinkPopover } from "@html_editor/main/link/link_popover";
 import { _t } from "@web/core/l10n/translation";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { AutoComplete, autoCompleteProps } from "@web/core/autocomplete/autocomplete";
+import { props, t } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
 import { useChildRef } from "@web/core/utils/hooks";
 import wUtils from "@website/js/utils";
@@ -23,11 +24,11 @@ import { session } from "@web/session";
  * - updateValue: to update the URL of the link element
  */
 export class AutoCompleteInLinkPopover extends AutoComplete {
-    static props = {
-        ...AutoComplete.props,
-        inputClass: { type: String, optional: true },
-        updateValue: { type: Function, optional: true },
-    };
+    props = props({
+        ...autoCompleteProps,
+        inputClass: t.string().optional(),
+        updateValue: t.function().optional(),
+    });
     static template = "website.AutoCompleteInLinkPopover";
 
     // overwrite the div class to avoid breaking the popover style

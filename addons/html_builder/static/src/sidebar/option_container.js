@@ -1,6 +1,6 @@
 import { useExternalListener, useRef } from "@web/owl2/utils";
 import { getSnippetName, useOptionsSubEnv } from "@html_builder/utils/utils";
-import { onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { onWillStart, onWillUpdateProps, props, t } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { useOperation } from "../core/operation_plugin";
@@ -12,29 +12,21 @@ import { browser } from "@web/core/browser/browser";
 export class OptionsContainer extends BaseOptionComponent {
     static template = "html_builder.OptionsContainer";
     static dependencies = ["builderOptions", "remove", "clone"];
-    static props = {
-        toggleOverlayPreview: { type: Function, optional: true },
-        options: { type: Array },
-        editingElement: true, // HTMLElement from iframe
-        isRemovable: { type: Boolean, optional: true },
-        toggleFold: { type: Function, optional: true },
-        folded: { type: Boolean, optional: true },
-        removeDisabledReason: { type: String, optional: true },
-        isClonable: { type: Boolean, optional: true },
-        cloneDisabledReason: { type: String, optional: true },
-        optionTitleComponents: { type: Array, optional: true },
-        containerTopButtons: { type: Array },
-        containerTitle: { type: Object, optional: true },
-        headerMiddleButtons: { type: Array, optional: true },
-    };
-    static defaultProps = {
-        toggleOverlayPreview: () => {},
-        containerTitle: {},
-        headerMiddleButtons: [],
-        optionTitleComponents: [],
-        isRemovable: false,
-        isClonable: false,
-    };
+    props = props({
+        toggleOverlayPreview: t.function().optional(() => () => {}),
+        options: t.array(),
+        editingElement: t.any(), // HTMLElement from iframe
+        isRemovable: t.boolean().optional(false),
+        toggleFold: t.function().optional(),
+        folded: t.boolean().optional(),
+        removeDisabledReason: t.string().optional(),
+        isClonable: t.boolean().optional(false),
+        cloneDisabledReason: t.string().optional(),
+        optionTitleComponents: t.array().optional([]),
+        containerTopButtons: t.array(),
+        containerTitle: t.object().optional({}),
+        headerMiddleButtons: t.array().optional([]),
+    });
 
     setup() {
         useOptionsSubEnv(() => [this.props.editingElement]);

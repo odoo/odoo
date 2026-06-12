@@ -910,12 +910,13 @@ test("A new MediaDialog after switching record in a Form view should have the co
             this.title = "TEST";
             this.tabs = [];
             this.notebookPages = [];
-            this.activeTab = signal(null);
+            this.activeTab = signal("");
             this.isSaving = signal(false);
             this.selectedMedia = proxy({});
             // no call to super to avoid services dependencies
             // this test only cares about the props given to the dialog
         },
+        onTabChange() {},
     });
     await mountView({
         type: "form",

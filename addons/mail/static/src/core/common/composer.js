@@ -25,9 +25,10 @@ import {
     EventBus,
     immediateEffect,
     onWillDestroy,
+    props,
     proxy,
     signal,
-    types,
+    t,
     useListener,
 } from "@odoo/owl";
 
@@ -84,6 +85,23 @@ class FullComposerRecoveryPopover extends Component {
     }
 }
 
+export const composerProps = {
+    composer: t.any(),
+    autofocus: t.any().optional(0),
+    onCloseFullComposerCallback: t.any().optional(),
+    onDiscardCallback: t.any().optional(),
+    onPostCallback: t.any().optional(),
+    mode: t.any().optional("normal"),
+    placeholder: t.any().optional(),
+    dropzoneRef: t.any().optional(),
+    className: t.any().optional(""),
+    sidebar: t.any().optional(true),
+    type: t.any().optional(),
+    showFullComposer: t.any().optional(true),
+    allowUpload: t.any().optional(true),
+    disabled: t.any().optional(),
+};
+
 /**
  * @typedef {Object} Props
  * @property {import("models").Composer} composer
@@ -107,30 +125,7 @@ export class Composer extends Component {
         NavigableList,
         Wysiwyg,
     };
-    static defaultProps = {
-        autofocus: 0,
-        mode: "normal",
-        className: "",
-        sidebar: true,
-        showFullComposer: true,
-        allowUpload: true,
-    };
-    static props = [
-        "composer",
-        "autofocus?",
-        "onCloseFullComposerCallback?",
-        "onDiscardCallback?",
-        "onPostCallback?",
-        "mode?",
-        "placeholder?",
-        "dropzoneRef?",
-        "className?",
-        "sidebar?",
-        "type?",
-        "showFullComposer?",
-        "allowUpload?",
-        "disabled?",
-    ];
+    props = props(composerProps);
     static template = "mail.Composer";
 
     setup() {
@@ -157,13 +152,13 @@ export class Composer extends Component {
         this.composerService = useService("mail.composer");
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
-        this.inputContainerRef = signal(null, { type: types.ref(HTMLSpanElement) });
+        this.inputContainerRef = signal(null, { type: t.ref(HTMLSpanElement) });
         this.pickerContainerRef = useRef("picker-container");
         this.state = proxy({
             active: true,
             isFullComposerOpen: false,
         });
-        this.rootRef = signal(null, { type: types.ref(HTMLDivElement) });
+        this.rootRef = signal(null, { type: t.ref(HTMLDivElement) });
         this.fullComposerRecoveryPopover = usePopover(FullComposerRecoveryPopover, {
             closeOnClickAway: false,
             closeOnEscape: false,

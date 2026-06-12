@@ -1,19 +1,16 @@
-import { Component, xml } from "@odoo/owl";
+import { Component, props, t, xml } from "@odoo/owl";
 
 const NO_OP = () => {};
 
 export class Switch extends Component {
-    static props = {
-        value: { type: Boolean, optional: true },
-        extraClasses: String,
-        disabled: { type: Boolean, optional: true },
-        label: { type: String, optional: true },
-        description: { type: String, optional: true },
-        onChange: { type: Function, optional: true },
-    };
-    static defaultProps = {
-        onChange: NO_OP,
-    };
+    props = props({
+        value: t.boolean().optional(),
+        extraClasses: t.string(),
+        disabled: t.boolean().optional(),
+        label: t.string().optional(),
+        description: t.string().optional(),
+        onChange: t.function().optional(() => NO_OP),
+    });
     static template = xml`
     <label t-att-class="'o_switch' + this.extraClasses">
         <input type="checkbox"

@@ -306,7 +306,7 @@ test("StateSelectionField in editable list view", async () => {
     // Click on the third status button to make the dropdown appear
     await click(".o_state_selection_cell .o_field_state_selection span.o_status:eq(2)");
     await animationFrame();
-    expect(".o-dropdown--menu").toHaveCount(1, "there should be a dropdown".msg);
+    expect(".o-dropdown--menu").toHaveCount(1, { message: "there should be a dropdown" });
     expect(".o-dropdown--menu .dropdown-item").toHaveCount(3, {
         message: "there should be three options in the dropdown",
     });

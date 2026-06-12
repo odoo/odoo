@@ -1,7 +1,7 @@
 import { Editor } from "@html_editor/editor";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils";
-import { Component, onMounted, onWillDestroy, onWillUnmount, status, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, onWillUnmount, props, status, proxy, t } from "@odoo/owl";
 import { LazyComponent } from "@web/core/lazy_component";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { localization } from "@web/core/l10n/localization";
@@ -22,23 +22,19 @@ export class MassMailingIframe extends Component {
         LazyComponent,
         LocalOverlayContainer,
     };
-    static props = {
-        config: { type: Object },
-        iframeRef: { type: Function },
-        iframeWrapperRef: { type: Function },
-        showThemeSelector: { type: Boolean, optional: true },
-        showCodeView: { type: Boolean, optional: true },
-        toggleCodeView: { type: Function, optional: true },
-        readonly: { type: Boolean, optional: true },
-        onEditorLoad: { type: Function, optional: true },
-        onFocus: { type: Function, optional: true },
-        extraClass: { type: String, optional: true },
-        withBuilder: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        onEditorLoad: () => {},
-        onFocus: () => {},
-    };
+    props = props({
+        config: t.object(),
+        iframeRef: t.function(),
+        iframeWrapperRef: t.function(),
+        showThemeSelector: t.boolean().optional(),
+        showCodeView: t.boolean().optional(),
+        toggleCodeView: t.function().optional(),
+        readonly: t.boolean().optional(),
+        onEditorLoad: t.function().optional(() => () => {}),
+        onFocus: t.function().optional(() => () => {}),
+        extraClass: t.string().optional(),
+        withBuilder: t.boolean().optional(),
+    });
 
     setup() {
         this.overlayRef = useChildRef();

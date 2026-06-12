@@ -6,7 +6,9 @@ import {
     onWillDestroy,
     onWillUpdateProps,
     proxy,
+    props,
     status,
+    t,
     untrack,
     xml,
 } from "@odoo/owl";
@@ -50,76 +52,58 @@ export function getFirstElementOfNode(node) {
  * also allowed as items to be able to create nested
  * dropdown menus.
  */
+export const dropdownProps = {
+    menuClass: t.any().optional(""),
+    position: t.string().optional(),
+    slots: t.object({
+        default: t.any().optional(),
+        content: t.any().optional(),
+    }),
+
+    items: t
+        .array(
+            t.object({
+                label: t.string(),
+                onSelected: t.function(),
+                class: t.any().optional(),
+            })
+        )
+        .optional(),
+
+    menuRef: t.function().optional(), // to be used with useChildRef
+    disabled: t.boolean().optional(false),
+    holdOnHover: t.boolean().optional(false),
+    focusToggleOnClosed: t.boolean().optional(true),
+
+    beforeOpen: t.function().optional(),
+    onOpened: t.function().optional(),
+    onStateChanged: t.function().optional(),
+
+    /** Manual state handling, @see useDropdownState */
+    state: t
+        .object({
+            isOpen: t.boolean(),
+            close: t.function(),
+            open: t.function(),
+        })
+        .optional(),
+    manual: t.boolean().optional(),
+
+    /** When true, do not add optional styling css classes on the target*/
+    noClasses: t.boolean().optional(false),
+
+    /**
+     * Override the internal navigation hook options
+     * @type {import("@web/core/navigation/navigation").NavigationOptions}
+     */
+    navigationOptions: t.object().optional({}),
+    bottomSheet: t.boolean().optional(true),
+};
+
 export class Dropdown extends Component {
     static template = xml`<t t-call-slot="default"/>`;
     static components = {};
-    static props = {
-        menuClass: { optional: true },
-        position: { type: String, optional: true },
-        slots: {
-            type: Object,
-            shape: {
-                default: { optional: true },
-                content: { optional: true },
-            },
-        },
-
-        items: {
-            optional: true,
-            type: Array,
-            element: {
-                type: Object,
-                shape: {
-                    label: String,
-                    onSelected: Function,
-                    class: { optional: true },
-                    "*": true,
-                },
-            },
-        },
-
-        menuRef: { type: Function, optional: true }, // to be used with useChildRef
-        disabled: { type: Boolean, optional: true },
-        holdOnHover: { type: Boolean, optional: true },
-        focusToggleOnClosed: { type: Boolean, optional: true },
-
-        beforeOpen: { type: Function, optional: true },
-        onOpened: { type: Function, optional: true },
-        onStateChanged: { type: Function, optional: true },
-
-        /** Manual state handling, @see useDropdownState */
-        state: {
-            type: Object,
-            shape: {
-                isOpen: Boolean,
-                close: Function,
-                open: Function,
-                "*": true,
-            },
-            optional: true,
-        },
-        manual: { type: Boolean, optional: true },
-
-        /** When true, do not add optional styling css classes on the target*/
-        noClasses: { type: Boolean, optional: true },
-
-        /**
-         * Override the internal navigation hook options
-         * @type {import("@web/core/navigation/navigation").NavigationOptions}
-         */
-        navigationOptions: { type: Object, optional: true },
-        bottomSheet: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        disabled: false,
-        holdOnHover: false,
-        focusToggleOnClosed: true,
-        menuClass: "",
-        state: undefined,
-        noClasses: false,
-        navigationOptions: {},
-        bottomSheet: true,
-    };
+    props = props(dropdownProps);
 
     setup() {
         this.menuRef = this.props.menuRef || useChildRef();

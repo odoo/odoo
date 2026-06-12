@@ -10,30 +10,22 @@ import { useAutofocus } from "@web/core/utils/hooks";
 import { renderToString } from "@web/core/utils/render";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, props, proxy, t } from "@odoo/owl";
 
 let htmlId = 0;
 export class NameAndSignature extends Component {
     static template = "web.NameAndSignature";
     static components = { Dropdown, DropdownItem };
-    static props = {
-        signature: { type: Object },
-        defaultFont: { type: String, optional: true },
-        displaySignatureRatio: { type: Number, optional: true },
-        fontColor: { type: String, optional: true },
-        signatureType: { type: String, optional: true },
-        noInputName: { type: Boolean, optional: true },
-        mode: { type: String, optional: true },
-        onSignatureChange: { type: Function, optional: true },
-    };
-    static defaultProps = {
-        defaultFont: "",
-        displaySignatureRatio: 3.0,
-        fontColor: "DarkBlue",
-        signatureType: "signature",
-        noInputName: false,
-        onSignatureChange: () => {},
-    };
+    props = props({
+        signature: t.object(),
+        defaultFont: t.string().optional(""),
+        displaySignatureRatio: t.number().optional(3.0),
+        fontColor: t.string().optional("DarkBlue"),
+        signatureType: t.string().optional("signature"),
+        noInputName: t.boolean().optional(false),
+        mode: t.string().optional(),
+        onSignatureChange: t.function().optional(() => () => {}),
+    });
 
     setup() {
         this.htmlId = htmlId++;

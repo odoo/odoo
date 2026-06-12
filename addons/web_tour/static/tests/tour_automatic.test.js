@@ -78,74 +78,92 @@ test("Step Tour validity", async () => {
     tourRegistry.add("tour1", {
         steps: () => steps,
     });
-    const expectedKeys = [
-        "trigger",
-        "id?",
-        "isActive?",
-        "run?",
-        "content?",
-        "expectUnloadPage?",
-        "timeout?",
-        "tooltipPosition?",
-    ];
     await makeMockEnv({});
-    const waited_error1 = `Error in schema for TourStep\n${JSON.stringify(
-        [
-            {
-                received: steps[0],
-                path: "",
-                message: "object value has unknown keys",
-                unknownKeys: ["Belgium", "wins", "EURO2024"],
-                expectedKeys,
-            },
-        ],
-        null,
-        2
-    )}`;
-    const waited_error2 = `Error in schema for TourStep\n${JSON.stringify(
-        [
-            {
-                received: steps[1],
-                path: "",
-                message: "object value has unknown keys",
-                unknownKeys: ["my_title", "doku"],
-                expectedKeys,
-            },
-        ],
-        null,
-        2
-    )}`;
-    const waited_error3 = `Error in schema for TourStep\n${JSON.stringify(
-        [
-            {
-                received: steps[2].run,
-                path: "run",
-                message: "value does not match union type",
-                subIssues: [
-                    {
-                        received: "[Known object]",
-                        path: "run",
-                        message: "value is not a string",
-                    },
-                    {
-                        received: "[Known object]",
-                        path: "run",
-                        message: "value is not a function",
-                    },
-                    {
-                        received: "[Known object]",
-                        path: "run",
-                        message: "value is not a boolean",
-                    },
-                ],
-            },
-        ],
-        null,
-        2
-    )}`;
     await getService("tour_service").startTour("tour1");
     await animationFrame();
-    expect.verifySteps([waited_error1, waited_error2, waited_error3]);
+    expect.verifySteps([
+        `Error in schema for TourStep
+[
+  {
+    "received": {
+      "Belgium": true,
+      "wins": "of course",
+      "EURO2024": true,
+      "trigger": "button.foo"
+    },
+    "path": "",
+    "message": "object value has unknown keys",
+    "unknownKeys": [
+      "Belgium",
+      "wins",
+      "EURO2024"
+    ],
+    "expectedKeys": [
+      "trigger",
+      "id",
+      "isActive",
+      "run",
+      "content",
+      "expectUnloadPage",
+      "timeout",
+      "tooltipPosition"
+    ]
+  }
+]`,
+        `Error in schema for TourStep
+[
+  {
+    "received": {
+      "my_title": "EURO2024",
+      "trigger": "button.bar",
+      "doku": "Lukaku 10"
+    },
+    "path": "",
+    "message": "object value has unknown keys",
+    "unknownKeys": [
+      "my_title",
+      "doku"
+    ],
+    "expectedKeys": [
+      "trigger",
+      "id",
+      "isActive",
+      "run",
+      "content",
+      "expectUnloadPage",
+      "timeout",
+      "tooltipPosition"
+    ]
+  }
+]`,
+        `Error in schema for TourStep
+[
+  {
+    "received": [
+      "Enjoy euro 2024"
+    ],
+    "path": "run",
+    "message": "value does not match union type",
+    "subIssues": [
+      {
+        "received": "[Known object]",
+        "path": "run",
+        "message": "value is not a string"
+      },
+      {
+        "received": "[Known object]",
+        "path": "run",
+        "message": "value is not a function"
+      },
+      {
+        "received": "[Known object]",
+        "path": "run",
+        "message": "value is not a boolean"
+      }
+    ]
+  }
+]`,
+    ]);
 });
 
 test("a tour with invalid step trigger", async () => {

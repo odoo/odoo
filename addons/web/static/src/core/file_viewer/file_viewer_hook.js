@@ -10,8 +10,8 @@ const fileViewerService = {
         return (owner) => {
             let closeFn;
             /**
-             * @param {import("@web/core/file_viewer/file_viewer").FileViewer.props.files[]} file
-             * @param {import("@web/core/file_viewer/file_viewer").FileViewer.props.files} files
+             * @param {import("@web/core/file_viewer/file_viewer").File} file
+             * @param {import("@web/core/file_viewer/file_viewer").File[]} files
              */
             function open(file, files = [file]) {
                 closeFn?.();

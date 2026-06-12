@@ -1,9 +1,11 @@
+import { props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { Many2XAutocomplete, many2XAutocompleteProps } from "@web/views/fields/relational_utils";
 import {
     Many2ManyTagsField,
     many2ManyTagsField,
+    many2ManyTagsFieldProps,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { roundDecimals } from "@web/core/utils/numbers";
 
@@ -18,12 +20,12 @@ export function getProductRelatedModel() {
 }
 
 export class Many2XUomTagsAutocomplete extends Many2XAutocomplete {
-    static props = {
-        ...Many2XAutocomplete.props,
-        productModel: { type: String, optional: true },
-        productId: { type: Number, optional: true },
-        productQuantity: { type: Number, optional: true },
-    };
+    props = props({
+        ...many2XAutocompleteProps,
+        productModel: t.string().optional(),
+        productId: t.number().optional(),
+        productQuantity: t.number().optional(),
+    });
 
     async search(name) {
         let roundingDigitsPromise = null;
@@ -91,16 +93,11 @@ export class Many2ManyUomTagsField extends Many2ManyTagsField {
         ...Many2ManyTagsField.components,
         Many2XAutocomplete: Many2XUomTagsAutocomplete,
     };
-    static props = {
-        ...Many2ManyTagsField.props,
-        productField: { type: String, optional: true },
-        quantityField: { type: String, optional: true },
-    };
-    static defaultProps = {
-        ...Many2ManyTagsField.defaultProps,
-        productField: "product_id",
-        quantityField: "product_uom_qty",
-    };
+    props = props({
+        ...many2ManyTagsFieldProps,
+        productField: t.string().optional("product_id"),
+        quantityField: t.string().optional("product_uom_qty"),
+    });
 
     async setup() {
         super.setup();

@@ -6,28 +6,23 @@ import { formatFloat } from "../formatters";
 import { parseFloat } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
+
+export const floatFieldProps = {
+    ...standardFieldProps,
+    formatNumber: t.boolean().optional(true),
+    inputType: t.string().optional("text"),
+    step: t.number().optional(),
+    digits: t.array().optional(),
+    minDigits: t.number().optional(),
+    humanReadable: t.boolean().optional(false),
+    decimals: t.number().optional(0),
+    trailingZeros: t.boolean().optional(true),
+};
 
 export class FloatField extends Component {
     static template = "web.FloatField";
-    static props = {
-        ...standardFieldProps,
-        formatNumber: { type: Boolean, optional: true },
-        inputType: { type: String, optional: true },
-        step: { type: Number, optional: true },
-        digits: { type: Array, optional: true },
-        minDigits: {type: Number, optional: true },
-        humanReadable: { type: Boolean, optional: true },
-        decimals: { type: Number, optional: true },
-        trailingZeros: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        formatNumber: true,
-        inputType: "text",
-        humanReadable: false,
-        decimals: 0,
-        trailingZeros: true,
-    };
+    props = props(floatFieldProps);
 
     setup() {
         this.state = proxy({

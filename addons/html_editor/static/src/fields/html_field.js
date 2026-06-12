@@ -15,7 +15,7 @@ import {
 } from "@html_editor/others/embedded_components/embedding_sets";
 import { normalizeHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
-import { Component, markup, status, proxy } from "@odoo/owl";
+import { Component, markup, props, status, proxy, t } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -48,24 +48,23 @@ function computeContainsComplexHTML(value) {
     return !!parsedOriginal.head.innerHTML.trim();
 }
 
+export const htmlFieldProps = {
+    ...standardFieldProps,
+    isCollaborative: t.boolean().optional(),
+    collaborativeTrigger: t.string().optional(),
+    dynamicField: t.boolean().optional(false),
+    dynamicFieldReferenceModel: t.string().optional(),
+    migrateHTML: t.boolean().optional(),
+    cssReadonlyAssetId: t.string().optional(),
+    sandboxedPreview: t.boolean().optional(),
+    codeview: t.boolean().optional(),
+    editorConfig: t.object().optional(),
+    embeddedComponents: t.boolean().optional(),
+};
+
 export class HtmlField extends Component {
     static template = "html_editor.HtmlField";
-    static props = {
-        ...standardFieldProps,
-        isCollaborative: { type: Boolean, optional: true },
-        collaborativeTrigger: { type: String, optional: true },
-        dynamicField: { type: Boolean, optional: true },
-        dynamicFieldReferenceModel: { type: String, optional: true },
-        migrateHTML: { type: Boolean, optional: true },
-        cssReadonlyAssetId: { type: String, optional: true },
-        sandboxedPreview: { type: Boolean, optional: true },
-        codeview: { type: Boolean, optional: true },
-        editorConfig: { type: Object, optional: true },
-        embeddedComponents: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        dynamicField: false,
-    };
+    props = props(htmlFieldProps);
     static components = {
         Wysiwyg,
         HtmlViewer,

@@ -1,4 +1,14 @@
-import { Component, onMounted, onPatched, onWillStart, onWillUpdateProps, xml, signal } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    onWillStart,
+    onWillUpdateProps,
+    props,
+    signal,
+    t,
+    xml,
+} from "@odoo/owl";
 import { Cache } from "@web/core/utils/cache";
 
 const svgCache = new Cache(async (src) => {
@@ -22,17 +32,14 @@ const svgCache = new Cache(async (src) => {
 }, JSON.stringify);
 
 export class Image extends Component {
-    static props = {
-        src: String,
-        class: { type: String, optional: true },
-        style: { type: String, optional: true },
-        alt: { type: String, optional: true },
-        attrs: { type: Object, optional: true },
-        svgCheck: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        svgCheck: true,
-    };
+    props = props({
+        src: t.string(),
+        class: t.string().optional(),
+        style: t.string().optional(),
+        alt: t.string().optional(),
+        attrs: t.object().optional(),
+        svgCheck: t.boolean().optional(true),
+    });
     static template = xml`
         <t t-if="this.loaded()">
             <svg xmlns="http://www.w3.org/2000/svg" t-if="this.isSvg(this.props.src)" t-ref="this.svgRef"

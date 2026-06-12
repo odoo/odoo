@@ -1,12 +1,10 @@
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { props, t } from "@odoo/owl";
+import { DropdownItem, dropdownItemProps } from "@web/core/dropdown/dropdown_item";
 
 export class CheckboxItem extends DropdownItem {
     static template = "web.CheckboxItem";
-    static props = {
-        ...DropdownItem.props,
-        checked: {
-            type: Boolean,
-            optional: false,
-        },
-    };
+    props = props({
+        ...dropdownItemProps,
+        checked: t.boolean(),
+    });
 }

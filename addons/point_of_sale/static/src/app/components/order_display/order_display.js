@@ -1,22 +1,21 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/centered_icon";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { formatCurrency } from "@web/core/currency";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 
 // This methods is service-less, see PoS knowledges for more information
+export const orderDisplayProps = {
+    order: t.object(),
+    slots: t.object(),
+    mode: t.string().optional("display"), // display, receipt
+};
+
 export class OrderDisplay extends Component {
     static template = "point_of_sale.OrderDisplay";
     static components = { CenteredIcon, Orderline, BadgeTag };
-    static props = {
-        order: Object,
-        slots: Object,
-        mode: { type: String, optional: true }, // display, receipt
-    };
-    static defaultProps = {
-        mode: "display",
-    };
+    props = props(orderDisplayProps);
 
     setup() {
         this.scrollableRef = useRef("scrollable");

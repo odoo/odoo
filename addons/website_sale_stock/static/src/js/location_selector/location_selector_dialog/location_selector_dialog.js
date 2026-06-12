@@ -1,5 +1,5 @@
 import { useLayoutEffect } from '@web/owl2/utils';
-import { Component, onMounted, onWillUnmount, proxy } from '@odoo/owl';
+import { Component, onMounted, onWillUnmount, props, proxy, t } from '@odoo/owl';
 import { browser } from '@web/core/browser/browser';
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from '@web/core/l10n/translation';
@@ -8,21 +8,20 @@ import { useDebounced } from '@web/core/utils/timing';
 import { LocationList } from '@website_sale_stock/js/location_selector/location_list/location_list';
 import { MapContainer } from '@website_sale_stock/js/location_selector/map_container/map_container';
 
+export const locationSelectorDialogProps = {
+    isFrontend: t.boolean().optional(),
+    deliveryMethodId: t.number().optional(),
+    countryId: t.number().optional(),
+    zipCode: t.string(),
+    selectedLocationId: t.string().optional(false),
+    save: t.function(),
+    close: t.function(), // This is the close from the env of the Dialog Component
+};
+
 export class LocationSelectorDialog extends Component {
     static components = { Dialog, LocationList, MapContainer };
     static template = 'website_sale_stock.locationSelector.dialog';
-    static props = {
-        isFrontend: { type: Boolean, optional: true },
-        deliveryMethodId: { type: Number, optional: true },
-        countryId: { type: Number, optional: true },
-        zipCode: String,
-        selectedLocationId: { type: String, optional: true },
-        save: Function,
-        close: Function, // This is the close from the env of the Dialog Component
-    };
-    static defaultProps = {
-        selectedLocationId: false,
-    };
+    props = props(locationSelectorDialogProps);
 
     setup() {
         this.state = proxy({

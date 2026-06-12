@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 
-import { Component, onMounted, proxy, signal } from "@odoo/owl";
+import { Component, onMounted, props, proxy, signal, t } from "@odoo/owl";
 import { Switch } from "@html_editor/components/switch/switch";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
@@ -63,21 +63,13 @@ export class VideoSelector extends Component {
         VideoIframe,
         VideoOption,
     };
-    static props = {
-        selectMedia: Function,
-        errorMessages: Function,
-        vimeoPreviewIds: { type: Array, optional: true },
-        isForBgVideo: { type: Boolean, optional: true },
-        media: {
-            validate: (p) => p.nodeType === Node.ELEMENT_NODE,
-            optional: true,
-        },
-        "*": true,
-    };
-    static defaultProps = {
-        vimeoPreviewIds: [],
-        isForBgVideo: false,
-    };
+    props = props({
+        selectMedia: t.function(),
+        errorMessages: t.function(),
+        vimeoPreviewIds: t.array().optional([]),
+        isForBgVideo: t.boolean().optional(false),
+        media: t.customValidator(t.any(), (p) => p.nodeType === Node.ELEMENT_NODE).optional(),
+    });
 
     urlInputRef = signal(null);
 

@@ -1,4 +1,4 @@
-import { Component, proxy } from '@odoo/owl';
+import { Component, props, proxy, t } from '@odoo/owl';
 import { rpc } from '@web/core/network/rpc';
 import { registry } from '@web/core/registry';
 import { useBus, useService } from '@web/core/utils/hooks';
@@ -9,22 +9,19 @@ import {
 
 export class ClickAndCollectAvailability extends Component {
     static template = 'website_sale_collect.ClickAndCollectAvailability';
-    static props = {
-        productId: Number,
-        active: { type: Boolean, optional: true },
-        zipCode: { type: String, optional: true },
-        selectedLocationData: { type: Object, optional: true },
-        inStoreStockData: { type: Object, optional: true },
-        deliveryStockData: { type: Object, optional: true },
-        showSelectStoreButton: { type: Boolean, optional: true },
-        countryCode: { type: String, optional: true },
-        deliveryMethodId: Number,
-        deliveryMethodType: String,
-        deliveryMethodName: String,
-    }
-    static defaultProps = {
-        active: true,
-    }
+    props = props({
+        productId: t.number(),
+        active: t.boolean().optional(true),
+        zipCode: t.string().optional(),
+        selectedLocationData: t.object().optional(),
+        inStoreStockData: t.object().optional(),
+        deliveryStockData: t.object().optional(),
+        showSelectStoreButton: t.boolean().optional(),
+        countryCode: t.string().optional(),
+        deliveryMethodId: t.number(),
+        deliveryMethodType: t.string(),
+        deliveryMethodName: t.string(),
+    });
     setup() {
         super.setup();
         this.dialog = useService('dialog');

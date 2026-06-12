@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, xml } from "@odoo/owl";
+import { Component, props, t, xml } from "@odoo/owl";
 import { useIsChildLarger } from "@point_of_sale/app/hooks/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -27,16 +27,13 @@ class ListContainerDialog extends Component {
 }
 
 export class ListContainer extends Component {
-    static props = {
-        items: Array,
-        onClickPlus: { type: Function, optional: true },
-        slots: { type: Object },
-        class: { type: String, optional: true },
-        forceSmall: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        class: "",
-    };
+    props = props({
+        items: t.array(),
+        onClickPlus: t.function().optional(),
+        slots: t.object(),
+        class: t.string().optional(""),
+        forceSmall: t.boolean().optional(),
+    });
     static template = xml`
         <div class="d-flex gap-1 align-items-center flex-grow-1" t-attf-class="{{this.props.class}}" t-att-class="{'overflow-hidden': !this.isUiSmall}">
             <button t-if="this.props.onClickPlus" class="list-plus-btn btn btn-secondary btn-lg flex-shrink-0 lh-lg" t-on-click="this.props.onClickPlus">

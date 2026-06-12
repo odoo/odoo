@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, xml as owlXml, props, signal, types as t, toRaw } from "@odoo/owl";
+import { Component, xml as owlXml, props, signal, t, toRaw } from "@odoo/owl";
 import { isNode, toSelector } from "@web/../lib/hoot-dom/helpers/dom";
 import { isInstanceOf, isIterable, isPromise } from "@web/../lib/hoot-dom/hoot_dom_utils";
 import { logger } from "../core/logger";
@@ -182,7 +182,7 @@ export class HootTechnicalValue extends Component {
 
     // Props & plugins
     props = props({
-        "value?": t.any(),
+        value: t.any().optional(),
     });
 
     rawValue = toRaw(this.props.value);

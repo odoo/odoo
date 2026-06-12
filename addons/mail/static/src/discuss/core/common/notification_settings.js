@@ -1,4 +1,4 @@
-import { Component, props, types, xml } from "@odoo/owl";
+import { Component, props, t, xml } from "@odoo/owl";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -25,8 +25,8 @@ export class NotificationSettings extends Component {
     setup() {
         this.store = useService("mail.store");
         this.props = props({
-            channel: types.instanceOf(this.store["discuss.channel"].Class),
-            "close?": types.function([types.instanceOf(MouseEvent)]),
+            channel: t.instanceOf(this.store["discuss.channel"].Class),
+            close: t.function([]).optional(),
         });
         this.dialog = useService("dialog");
         this.ui = useService("ui");

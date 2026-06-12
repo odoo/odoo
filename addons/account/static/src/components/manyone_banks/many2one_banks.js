@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
-import { markup } from "@odoo/owl";
+import { markup, props, t } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { extractData, Many2One } from "@web/views/fields/many2one/many2one";
+import { extractData, Many2One, many2OneProps } from "@web/views/fields/many2one/many2one";
 import { buildM2OFieldDescription, Many2OneField } from "@web/views/fields/many2one/many2one_field";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
@@ -37,10 +37,10 @@ function extractDataBank(record) {
 
 export class Many2OneBank extends Many2One {
     static template = "account.Many2OneBank";
-    static props = {
-        ...Many2One.props,
-        bankAllowOutPayment: { type: Boolean, optional: true },
-    };
+    props = props({
+        ...many2OneProps,
+        bankAllowOutPayment: t.boolean().optional(),
+    });
     static components = {
         ...Many2One.components,
         Many2XAutocomplete: Many2XAutocompleteBank,

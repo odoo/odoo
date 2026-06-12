@@ -1,7 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onWillDestroy, markup, proxy } from "@odoo/owl";
+import { Component, onWillDestroy, markup, props, proxy, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { GoogleTranslator, ChatGPTTranslator } from "./translator";
@@ -58,17 +58,17 @@ const POSTPROCESS_GENERATED_CONTENT = (content, baseContainer) => {
 export class TranslateDialog extends Component {
     static template = "html_editor.TranslateDialog";
     static components = { Dialog, Dropdown, DropdownItem };
-    static props = {
-        insert: { type: Function },
-        close: { type: Function },
-        sanitize: { type: Function },
-        baseContainer: { type: String, optional: true },
-        originalText: String,
-        targetLang: { type: Object, shape: { languageCode: String, languageName: String } },
-    };
-    static defaultProps = {
-        baseContainer: "DIV",
-    };
+    props = props({
+        insert: t.function(),
+        close: t.function(),
+        sanitize: t.function(),
+        baseContainer: t.string().optional("DIV"),
+        originalText: t.string(),
+        targetLang: t.object({
+            languageCode: t.string(),
+            languageName: t.string(),
+        }),
+    });
 
     setup() {
         const google_translate = new GoogleTranslator("translate_google", "Google Translate");

@@ -1,5 +1,6 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Chatter } from "@mail/chatter/web_portal_project/chatter";
+import { t } from "@odoo/owl";
+import { Chatter, chatterProps } from "@mail/chatter/web_portal_project/chatter";
 
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
@@ -34,10 +35,9 @@ patch(Chatter.prototype, {
         this.state.isFollower = true;
     },
 });
-Chatter.props = [
-    ...Chatter.props,
-    "token",
-    "projectSharingId",
-    "isFollower",
-    "displayFollowButton",
-];
+Object.assign(chatterProps, {
+    token: t.any(),
+    projectSharingId: t.any(),
+    isFollower: t.any(),
+    displayFollowButton: t.any(),
+});

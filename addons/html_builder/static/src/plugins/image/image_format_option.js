@@ -3,18 +3,16 @@ import { useDomState } from "@html_builder/core/utils";
 import { getMimetypeBeforeShape } from "@html_builder/utils/image";
 import { isImageSupportedForProcessing } from "@html_editor/main/media/image_post_process_plugin";
 import { getImageSrc } from "@html_editor/utils/image";
+import { props, t } from "@odoo/owl";
 import { clamp } from "@web/core/utils/numbers";
 
 export class ImageFormatOption extends BaseOptionComponent {
     static template = "html_builder.ImageFormat";
     static dependencies = ["imageFormatOption"];
-    static props = {
-        level: { type: Number, optional: true },
-        computeMaxDisplayWidth: { type: Function, optional: true },
-    };
-    static defaultProps = {
-        level: 0,
-    };
+    props = props({
+        level: t.number().optional(0),
+        computeMaxDisplayWidth: t.function().optional(),
+    });
     MAX_SUGGESTED_WIDTH = 1920;
     setup() {
         super.setup();

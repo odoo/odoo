@@ -1,35 +1,18 @@
-import { Component, onPatched, proxy } from "@odoo/owl";
+import { Component, onPatched, props, proxy, t } from "@odoo/owl";
 
 export const ACCORDION = Symbol("Accordion");
 export class AccordionItem extends Component {
     static template = "web.AccordionItem";
     static components = {};
-    static props = {
-        slots: {
-            type: Object,
-            shape: {
-                default: {},
-            },
-        },
-        description: String,
-        selected: {
-            type: Boolean,
-            optional: true,
-        },
-        class: {
-            type: String,
-            optional: true,
-        },
-        onWillToggle: {
-            type: Function,
-            optional: true,
-        },
-    };
-    static defaultProps = {
-        class: "",
-        selected: false,
-        onWillToggle: () => {},
-    };
+    props = props({
+        slots: t.object({
+            default: t.any(),
+        }),
+        description: t.string(),
+        selected: t.boolean().optional(false),
+        class: t.string().optional(""),
+        onWillToggle: t.function().optional(() => () => {}),
+    });
 
     setup() {
         this.state = proxy({

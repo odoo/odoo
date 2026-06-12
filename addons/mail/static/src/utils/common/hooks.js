@@ -936,7 +936,7 @@ export function useLongPress(ref, { action, predicate = () => true } = {}) {
 }
 
 export const inDiscussCallViewProps = ["isPip?"];
-export const inDiscussCallViewPropsSchema = { "isPip?": types.boolean() };
+export const inDiscussCallViewPropsSchema = { isPip: types.boolean().optional() };
 export function useInDiscussCallView() {
     const component = useComponent();
     useSubEnv({

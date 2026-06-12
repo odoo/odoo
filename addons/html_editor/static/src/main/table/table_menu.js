@@ -1,7 +1,7 @@
 import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { useCrossDocumentListener } from "../../utils/hooks";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, props, t } from "@odoo/owl";
 import { getRowIndex, getSelectedCellsMergeInfo } from "@html_editor/utils/table";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -11,34 +11,33 @@ import { getBaseContainerSelector } from "@html_editor/utils/base_container";
 
 export class TableMenu extends Component {
     static template = "html_editor.TableMenu";
-    static props = {
-        type: String, // column or row
-        moveColumn: Function,
-        addColumn: Function,
-        removeColumn: Function,
-        moveRow: Function,
-        addRow: Function,
-        removeRow: Function,
-        turnIntoHeader: Function,
-        turnIntoRow: Function,
-        resetRowHeight: Function,
-        resetColumnWidth: Function,
-        resetTableSize: Function,
-        clearColumnContent: Function,
-        mergeSelectedCells: Function,
-        unmergeSelectedCell: Function,
-        clearRowContent: Function,
-        toggleAlternatingRows: Function,
-        buildTableGrid: Function,
-        close: Function,
-        tableDragDropOverlay: Object,
-        dropdownState: Object,
-        target: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
-        document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
-        editable: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
-        direction: { type: String, optional: true },
-    };
-    static defaultProps = { direction: "ltr" };
+    props = props({
+        type: t.string(), // column or row
+        moveColumn: t.function(),
+        addColumn: t.function(),
+        removeColumn: t.function(),
+        moveRow: t.function(),
+        addRow: t.function(),
+        removeRow: t.function(),
+        turnIntoHeader: t.function(),
+        turnIntoRow: t.function(),
+        resetRowHeight: t.function(),
+        resetColumnWidth: t.function(),
+        resetTableSize: t.function(),
+        clearColumnContent: t.function(),
+        mergeSelectedCells: t.function(),
+        unmergeSelectedCell: t.function(),
+        clearRowContent: t.function(),
+        toggleAlternatingRows: t.function(),
+        buildTableGrid: t.function(),
+        close: t.function(),
+        tableDragDropOverlay: t.object(),
+        dropdownState: t.object(),
+        target: t.customValidator(t.any(), (el) => el.nodeType === Node.ELEMENT_NODE),
+        document: t.customValidator(t.any(), (p) => p.nodeType === Node.DOCUMENT_NODE),
+        editable: t.customValidator(t.any(), (p) => p.nodeType === Node.ELEMENT_NODE),
+        direction: t.string().optional("ltr"),
+    });
     static components = { Dropdown, DropdownItem };
 
     setup() {

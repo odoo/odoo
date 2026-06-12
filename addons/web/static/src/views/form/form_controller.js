@@ -42,7 +42,9 @@ import {
     onMounted,
     onWillDestroy,
     onWillUnmount,
+    props,
     proxy,
+    t,
 } from "@odoo/owl";
 import { FetchRecordError } from "@web/model/relational_model/errors";
 
@@ -121,6 +123,26 @@ export function useFormViewInDialog() {
 }
 // -----------------------------------------------------------------------------
 
+export const formControllerProps = {
+    ...standardViewProps,
+    discardRecord: t.function().optional(),
+    readonly: t.boolean().optional(false),
+    saveRecord: t.function().optional(),
+    removeRecord: t.function().optional(),
+    Model: t.function(),
+    Renderer: t.function(),
+    Compiler: t.function(),
+    archInfo: t.object(),
+    buttonTemplate: t.string(),
+    buttonDialogTemplate: t.string(),
+    preventCreate: t.boolean().optional(false),
+    preventEdit: t.boolean().optional(false),
+    onDiscard: t.function().optional(),
+    onSave: t.function().optional(() => () => {}),
+    offlineId: t.string().optional(),
+    updateActionState: t.function().optional(() => () => {}),
+};
+
 export class FormController extends Component {
     static template = `web.FormView`;
     static components = {
@@ -133,31 +155,7 @@ export class FormController extends Component {
         Widget,
     };
 
-    static props = {
-        ...standardViewProps,
-        discardRecord: { type: Function, optional: true },
-        readonly: { type: Boolean, optional: true },
-        saveRecord: { type: Function, optional: true },
-        removeRecord: { type: Function, optional: true },
-        Model: Function,
-        Renderer: Function,
-        Compiler: Function,
-        archInfo: Object,
-        buttonTemplate: String,
-        buttonDialogTemplate: String,
-        preventCreate: { type: Boolean, optional: true },
-        preventEdit: { type: Boolean, optional: true },
-        onDiscard: { type: Function, optional: true },
-        onSave: { type: Function, optional: true },
-        offlineId: { type: String, optional: true },
-    };
-    static defaultProps = {
-        onSave: () => {},
-        preventCreate: false,
-        preventEdit: false,
-        readonly: false,
-        updateActionState: () => {},
-    };
+    props = props(formControllerProps);
 
     setup() {
         this.evaluateBooleanExpr = evaluateBooleanExpr;

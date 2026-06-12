@@ -1,10 +1,11 @@
-import { DomainSelector } from "@web/core/domain_selector/domain_selector";
+import { props, t } from "@odoo/owl";
+import { DomainSelector, domainSelectorProps } from "@web/core/domain_selector/domain_selector";
 
 export class MassMailingDomainSelector extends DomainSelector {
     static template = "mass_mailing.MassMailingDomainSelector";
-    static props = {
-        ...DomainSelector.props,
-        updateUseExclusionList: { type: Function },
-        useExclusionList: { type: Boolean },
-    };
+    props = props({
+        ...domainSelectorProps,
+        updateUseExclusionList: t.function(),
+        useExclusionList: t.boolean(),
+    });
 }

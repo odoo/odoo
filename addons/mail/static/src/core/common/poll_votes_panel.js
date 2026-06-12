@@ -2,7 +2,7 @@ import { TabHeader, TabPanel, Tabs } from "@mail/core/common/tabs";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { onExternalClick } from "@mail/utils/common/hooks";
 
-import { Component, props, types } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { useChildRef, useService } from "@web/core/utils/hooks";
@@ -15,8 +15,8 @@ export class PollVotesPanel extends Component {
         super.setup(...arguments);
         this.store = useService("mail.store");
         this.props = props({
-            "close?": types.function([types.instanceOf(MouseEvent)]),
-            poll: types.instanceOf(this.store["mail.poll"].Class),
+            close: t.function([]).optional(),
+            poll: t.instanceOf(this.store["mail.poll"].Class),
         });
         this.ui = useService("ui");
         this.tabsRef = useChildRef();
