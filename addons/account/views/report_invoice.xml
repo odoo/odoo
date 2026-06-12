@@ -190,7 +190,7 @@
                                         <t t-set="is_note" t-value="line.display_type == 'line_note'"/>
                                         <t t-set="is_section" t-value="line.display_type == 'line_section'"/>
                                         <t t-set="is_subsection" t-value="line.display_type == 'line_subsection'"/>
-                                        <t t-set="is_product" t-value="line.display_type == 'product'"/>
+                                        <t t-set="is_product" t-value="line.display_type in ('product', 'downpayment')"/>
 
                                         <t t-if="is_section">
                                             <t t-set="current_section" t-value="line"/>

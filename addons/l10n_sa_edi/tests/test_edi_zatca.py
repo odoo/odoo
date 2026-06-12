@@ -251,7 +251,7 @@ class TestEdiZatca(TestSaEdiCommon):
             # Create final invoice
             final_wizard = self.env['sale.advance.payment.inv'].with_context(context).sudo().create({})
             final = final_wizard._create_invoices(sale_order)
-            final.invoice_line_ids.filtered('is_downpayment').name = 'Down Payment'
+            final.invoice_line_ids.filtered(lambda l: l.display_type == 'downpayment').name = 'Down Payment'
             final.invoice_date_due = '2022-09-22'
 
         # Test invoices

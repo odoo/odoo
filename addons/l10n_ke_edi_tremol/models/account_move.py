@@ -80,7 +80,7 @@ class AccountMove(models.Model):
             if move.move_type == 'out_refund' and not move.reversed_entry_id.l10n_ke_cu_invoice_number:
                 move_errors.append(_("This credit note must reference the previous invoice, and this previous invoice must have already been submitted."))
 
-            for line in self.invoice_line_ids.filtered(lambda l: l.display_type == 'product'):
+            for line in self.invoice_line_ids.filtered(lambda l: l.display_type in ('product', 'downpayment')):
                 vat_taxes = line.tax_ids.filtered(lambda tax: tax.amount in (16, 8, 0))
                 if not vat_taxes or len(vat_taxes) > 1:
                     move_errors.append(_("On line %s, you must select one and only one VAT tax.", line.name))
@@ -161,7 +161,7 @@ class AccountMove(models.Model):
             other_line_taxes = other_line.tax_ids.flatten_taxes_hierarchy()
             return set(discount_taxes.ids) == set(other_line_taxes.ids)
 
-        lines = self.invoice_line_ids.filtered(lambda l: l.display_type == 'product' and l.quantity and l.price_total)
+        lines = self.invoice_line_ids.filtered(lambda l: l.display_type in ('product', 'downpayment') and l.quantity and l.price_total)
         # The device expects all monetary values in Kenyan Shillings
         if self.currency_id == self.company_id.currency_id:
             currency_rate = 1
@@ -191,7 +191,7 @@ class AccountMove(models.Model):
 
         msgs = []
         tax_details = self._prepare_invoice_aggregated_taxes()
-        for line in self.invoice_line_ids.filtered(lambda l: l.display_type == 'product' and l.quantity and l.price_total > 0 and not discount_dict.get(l.id) >= 100):
+        for line in self.invoice_line_ids.filtered(lambda l: l.display_type in ('product', 'downpayment') and l.quantity and l.price_total > 0 and not discount_dict.get(l.id) >= 100):
             # Here we use the original discount of the line, since it the distributed discount has not been applied in the price_total
             price_total = 0
             percentage = 0

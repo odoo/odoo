@@ -8,7 +8,10 @@ from odoo.tools import float_compare, float_is_zero
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    is_downpayment = fields.Boolean()
+    display_type = fields.Selection(
+        selection_add=[('downpayment', 'Downpayment')],
+        ondelete={'downpayment': 'cascade'},
+    )
     sale_line_ids = fields.Many2many(
         comodel_name="sale.order.line",
         relation="sale_order_line_invoice_rel",
@@ -32,7 +35,7 @@ class AccountMoveLine(models.Model):
     def _compute_is_storno(self):
         super()._compute_is_storno()
         for line in self:
-            if line.is_downpayment:
+            if line.display_type == 'downpayment':
                 # Normal downpayments have a negative balance (credit on customer invoice)
                 # Positive balance indicate reversal lines for previous downpayments,
                 # which should be treated as storno line if storno accounting is enabled.
@@ -278,12 +281,6 @@ class AccountMoveLine(models.Model):
                 price_unit, order.currency_id, order.company_id, order.date_order
             )
         return price_unit
-
-    def _get_downpayment_lines(self):
-        # OVERRIDE
-        return self.sale_line_ids.filtered("is_downpayment").invoice_lines.filtered(
-            lambda line: line.move_id._is_downpayment()
-        )
 
     def _get_discount_lines(self):
         lines = super()._get_discount_lines()

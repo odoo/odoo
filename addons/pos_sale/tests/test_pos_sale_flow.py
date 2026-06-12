@@ -674,8 +674,8 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             final_invoice_downpayment_line._get_downpayment_lines(),
             downpayment_invoice.invoice_line_ids,
         )
-        for line in downpayment_invoice.invoice_line_ids.filtered(self.main_pos_config.down_payment_product_id.id == "product_id"):
-            self.assertTrue(line.is_downpayment)
+        for line in downpayment_invoice.invoice_line_ids.filtered(lambda line: line.display_type == 'downpayment'):
+            self.assertEqual(line.display_type, 'downpayment')
 
     def test_draft_pos_order_linked_sale_order(self):
         """This test create an order and settle it in the PoS. It will let the PoS order in draft state.
@@ -1674,10 +1674,10 @@ class TestPoSSalePayment(TestPointOfSaleHttpCommon, PaymentCommon):
             downpayment_invoice.invoice_line_ids,
         )
 
-        downpayment_invoice_lines = downpayment_invoice.invoice_line_ids.filtered(self.main_pos_config.down_payment_product_id.id == "product_id")
-        self.assertTrue(downpayment_invoice_lines.is_downpayment)
+        downpayment_invoice_lines = downpayment_invoice.invoice_line_ids.filtered(lambda line: line.display_type == 'downpayment')
+        self.assertEqual(downpayment_invoice_lines.display_type, 'downpayment')
         self.assertEqual(downpayment_invoice_lines.account_id.id, account.id)
 
-        so_downpayment_lines = invoice.invoice_line_ids.filtered('is_downpayment')
-        self.assertTrue(so_downpayment_lines.is_downpayment)
+        so_downpayment_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type == 'downpayment')
+        self.assertEqual(so_downpayment_lines.display_type, 'downpayment')
         self.assertEqual(so_downpayment_lines.account_id.id, account.id)
