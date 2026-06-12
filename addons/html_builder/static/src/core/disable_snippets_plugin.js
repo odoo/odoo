@@ -145,10 +145,11 @@ export class DisableSnippetsPlugin extends Plugin {
                 exclude = false,
                 dropIn,
                 dropNear,
+                excludeAncestor,
                 excludeNearParent,
             } = dropzoneSelector;
 
-            const dropAreaEls = [];
+            let dropAreaEls = [];
             if (dropNear) {
                 dropAreaEls.push(
                     ...this.dependencies.dropzone.getSelectorSiblings(editableAreaEls, rootEl, {
@@ -163,6 +164,9 @@ export class DisableSnippetsPlugin extends Plugin {
                         selector: dropIn,
                     })
                 );
+            }
+            if (excludeAncestor) {
+                dropAreaEls = dropAreaEls.filter((el) => !el.closest(excludeAncestor));
             }
             if (dropAreaEls.length) {
                 dropAreasBySelector.push({ selector, exclude, dropAreaEls });
