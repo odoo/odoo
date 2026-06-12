@@ -704,7 +704,7 @@ class CalendarEvent(models.Model):
         """
         user = self.env.user
         records = self.filtered(lambda e: not e.user_id or e.user_id == user or user.partner_id in e.partner_ids)
-        records._track_clear_for_template()
+        records._track_clear()
         super(CalendarEvent, records)._cancel_microsoft()
         attendees = (self - records).attendee_ids.filtered(lambda a: a.partner_id == user.partner_id)
         attendees.do_decline()

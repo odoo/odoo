@@ -63,7 +63,7 @@ class TestTrackingAPI(TestTrackingCommon):
                 }
             ])
             self.flush_tracking()
-        self.assertEqual(mock_track_finalize.call_count, 0)
+        self.assertEqual(mock_track_finalize.call_count, 1)
         self.assertFalse(self._new_msgs)
 
         # manual preparation

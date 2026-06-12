@@ -25,8 +25,29 @@ class MailTrackMixin(models.AbstractModel):
     # model / crud helpers
     # ------------------------------------------------------
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        # perform tracking values, allowing to post tracking-based content even
+        # when creating records
+        records = super().create(vals_list)
+        if not self._track_disabled():
+            fnames = self._track_get_fields()
+            if fnames:
+                # set a context, notably to allow custom behavior when being in
+                # create mode (e.g. skip classic tracking post, keep only template)
+                records._track_set_context(track_create=True)
+                records._track_prepare(
+                    fnames,
+                    initial_values={
+                        record.id: {fname: False for fname in fnames}
+                        for record in records
+                    },
+                )
+        return records
+
     def write(self, vals):
         if not self._track_disabled():
+            self._track_set_context(track_create=False)
             self._track_prepare(self._fields)
         return super().write(vals)
 
@@ -75,28 +96,41 @@ class MailTrackMixin(models.AbstractModel):
     def _track_disabled(self):
         return self.env.context.get('tracking_disable') or self.env.context.get('mail_notrack')
 
-    def _track_prepare(self, field_names: Iterable[str]) -> dict[int, ValuesType]:
+    def _track_prepare(self,
+            field_names: Iterable[str],
+            initial_values: dict[int, ValuesType] | None = None,
+        ) -> dict[int, ValuesType]:
         """ Prepare the tracking of `fields_iter` for `self` for tracked
         fields (see `_track_get_fields`). Store initial values for tracked fields
         in precommit data.
 
         :param Iterable[str] field_names: field names to potentially track, to be
             checked against model-based tracked fields
+        :param dict[int, ValuesType] track_init_values: mapping {record_id: initial_values}
+            where initial_values is a dict {field_name: value, ... } containing
+            all initial values. If not given, computed based on self.
         """
         tracked_fnames = self._track_get_fields().intersection(field_names)
         if not self or not tracked_fnames:
             return
+        valid_sudo = self.sudo().filtered(lambda r: r.id)  # be sure to compute initial values whatever current user ACLs
+        if not valid_sudo:
+            return
         self.env.cr.precommit.add(self._track_finalize)
 
-        initial_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.{self._name}', {})
-        for record in self.sudo().filtered(lambda r: r.id):  # be sure to compute initial values whatever current user ACLs
-            record_values = initial_values.setdefault(record.id, {})
-            if record_values is not None:  # None means tracking was disabled for this record
-                for fname in tracked_fnames:
-                    record_values.setdefault(fname, record._track_convert_value(fname, record[fname]))
+        current_iv = self.env.cr.precommit.data.setdefault(f'mail.tracking.{self._name}', {})
+        if not initial_values:
+            # None means tracking was disabled for this record
+            unskipped_sudo = valid_sudo.filtered(lambda r: r.id not in current_iv or current_iv[r.id] is not None)
+            initial_values = {
+                record.id: {
+                    fname: record[fname] for fname in tracked_fnames
+                } for record in unskipped_sudo
+            }
+        valid_sudo._track_add_data_values(current_iv, initial_values)
 
         # ease overrides by returning initial values
-        return initial_values
+        return current_iv
 
     def _track_clear(self):
         """ Clear tracking data, without preventing further other tracking. """
@@ -159,6 +193,7 @@ class MailTrackMixin(models.AbstractModel):
         # record
         # sudo: # be sure to compute end values whatever current user ACLs
         records_su = self.with_context(clean_context(self.env.context)).browse(ids).sudo()._fallback_lang()
+        records_su = records_su.with_context(self._track_get_context())
 
         tracked_fields_get = records_su._track_get_fields_info(fnames)
         trackings = dict()
@@ -239,6 +274,13 @@ class MailTrackMixin(models.AbstractModel):
             tracked_fields_get.update(current_fields_info)
 
         return tracked_fields_get
+
+    def _track_get_context(self):
+        return self.env.cr.precommit.data.get(f'mail.tracking.context.{self._name}', {})
+
+    def _track_set_context(self, **context):
+        track_ctx = self.env.cr.precommit.data.setdefault(f'mail.tracking.context.{self._name}', {})
+        track_ctx.update(**context)
 
     # track API
     # ------------------------------------------------------
