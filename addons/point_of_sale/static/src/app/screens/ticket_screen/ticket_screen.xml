@@ -159,6 +159,7 @@
                         <button class="btn-switchpane load-order-button primary btn btn-primary btn-lg lh-lg w-50 py-3"
                             t-att-disabled="!_selectedSyncedOrder"
                             t-if="!this.isOrderSynced"
+                            t-att-class="{'syncing': _selectedSyncedOrder and this.pos.isOrderSyncing(_selectedSyncedOrder, false)}"
                             t-on-click="() => this.setOrder(_selectedSyncedOrder)">
                             <span class="d-block">Load Order</span>
                         </button>
@@ -219,6 +220,7 @@
                                 </button>
                                 <button class="button validation load-order-button w-100 btn btn-lg btn-primary py-3"
                                     t-att-disabled="!_selectedSyncedOrder"
+                                    t-att-class="{'syncing': _selectedSyncedOrder and this.pos.isOrderSyncing(_selectedSyncedOrder, false)}"
                                     t-on-click="() => this.setOrder(_selectedSyncedOrder)">
                                     <span class="d-block">Load Order</span>
                                 </button>
