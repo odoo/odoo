@@ -42,6 +42,7 @@ export class FollowerSubtypeDialog extends Component {
     }
 
     async onClickApply() {
+        const thread = this.props.follower.thread;
         const selectedSubtypes = this.subtypes().filter((s) =>
             s.in(this.props.follower.subtype_ids)
         );
@@ -64,7 +65,7 @@ export class FollowerSubtypeDialog extends Component {
                 type: "success",
             });
         }
-        this.props.onFollowerChanged();
+        this.props.onFollowerChanged(thread);
         this.props.close();
     }
 
