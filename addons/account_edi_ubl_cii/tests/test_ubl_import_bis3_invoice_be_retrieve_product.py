@@ -47,6 +47,17 @@ class TestUblImportBis3InvoiceBERetrieveProduct(TestUblImportBis3InvoiceBE):
             'product_id': product.id,
         }])
 
+    def test_import_ignored_uom_category_mismatch(self):
+        # If the XML UoM category does not match the matched product's UoM
+        # category, the product is still matched but the UoM is left empty.
+        product = self._create_product(name='XYZ', uom_id=self.env.ref('uom.product_uom_unit').id)
+        invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_product_uom_category_mismatch')
+        self.assertRecordValues(invoice.invoice_line_ids, [{
+            'name': 'XYZ',
+            'product_id': product.id,
+            'product_uom_id': False,
+        }])
+
     @freeze_time('2020-01-01')
     def test_partial_import_product_invoice_predictive(self):
         self.ensure_installed('account_accountant')
