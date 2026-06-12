@@ -50,6 +50,11 @@
         &::-webkit-scrollbar-thumb {
             border-radius: 4px;
             background: #888;
+            cursor: default;
+
+            &:hover {
+                background: #{rgba($body-color, 0.8)};
+            }
         }
     }
 
