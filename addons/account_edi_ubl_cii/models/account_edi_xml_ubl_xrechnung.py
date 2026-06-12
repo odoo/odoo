@@ -61,7 +61,7 @@ class AccountEdiXmlUbl_De(models.AbstractModel):
         super()._ubl_add_buyer_reference_node(vals)
         node = vals['document_node']['cbc:BuyerReference']
 
-        customer = vals['customer']
+        customer = vals['customer'].commercial_partner_id
         if customer.routing_scheme == "0204":
             # For B2G transactions in Germany: set the buyer_reference to the Leitweg-ID
             node['_text'] = customer.routing_endpoint
