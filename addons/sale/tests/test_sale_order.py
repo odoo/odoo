@@ -995,6 +995,19 @@ class TestSalesTeam(SaleCommon):
             "The analytic distribution should be set to Super Account, even for confirmed orders"
         )
 
+    def test_demo_user_creates_sale_order_with_tracked_product(self):
+        """ Ensure the demo user can create a sale order containing a tracked product. """
+        self.product.is_storable = True
+        sale_order = (
+            self
+            .env["sale.order"]
+            .with_user(self.env["res.users"].search([("login", "=", "demo")]))
+            .create({
+                "partner_id": self.partner.id,
+                "order_line": [Command.create({"product_id": self.product.id})],
+            })
+        )
+        self.assertTrue(sale_order.order_line.product_id)
 
     def test_cannot_assign_tax_of_mismatch_company(self):
         """ Test that sol cannot have assigned tax belonging to a different company from that of the sale order. """
