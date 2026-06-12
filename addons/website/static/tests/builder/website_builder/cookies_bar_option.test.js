@@ -6,6 +6,7 @@ import { contains } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
     setupWebsiteBuilder,
+    waitForSnippetDialog,
 } from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
@@ -108,4 +109,20 @@ describe("Cookies bar popup options", () => {
         await contains("[data-class-action=o_cookies_classic]").click();
         expectCookieBarContent();
     });
+});
+
+test("Shouldn't be able to drop a popup in the cookie bar", async () => {
+    await setupWebsiteBuilder(cookiesBarTemplate, {
+        loadIframeBundles: true,
+        loadAssetsFrontendJS: true,
+    });
+
+    await contains(".o_we_invisible_entry i.fa-eye-slash").click();
+
+    await contains("#blocks-tab").click();
+    await contains(".o_snippets_container .o_snippet_thumbnail button").click();
+    await waitForSnippetDialog();
+
+    await contains(".o_add_snippet_dialog_search").edit("s_popup");
+    await waitFor(".o_add_snippet_dialog:contains('No snippets found.')");
 });
