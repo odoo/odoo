@@ -1,6 +1,6 @@
 import odoo
 
-from odoo import tools
+from odoo import fields, tools
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
 
 
@@ -298,3 +298,48 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         res = self.other_currency_config.current_session_id.load_data({})
         product1_data = next(filter(lambda product: product['display_name'] == "Product 1", res['product.product']))
         self.assertEqual(product1_data['standard_price'], 2.5)  # standard price should be converted
+
+    def test_pos_data_shared_product_cost_currency(self):
+        """ A product shared across companies (company_id = False) takes its sale-price
+        currency from the main company but its cost currency from the active company.
+        When the POS runs in a company whose currency differs from the main company, the
+        cost (standard_price) must be converted from cost_currency_id, not currency_id,
+        otherwise it gets wrongly multiplied by the exchange rate even though it is
+        already expressed in the POS currency.
+        """
+        main_company = self.env['res.company']._get_main_company()
+        self.assertNotEqual(main_company.currency_id, self.other_currency)
+
+        other_company = self.env['res.company'].create({
+            'name': 'Other Currency Company',
+            'currency_id': self.other_currency.id,
+        })
+        self.env.user.company_ids |= other_company
+
+        self.env['res.currency.rate'].create({
+            'name': fields.Date.today(),
+            'currency_id': main_company.currency_id.id,
+            'rate': 2.0,
+            'company_id': other_company.id,
+        })
+
+        shared_product = self.env['product.product'].create({
+            'name': 'Shared Product',
+            'available_in_pos': True,
+            'is_storable': True,
+            'taxes_id': [(5, 0, 0)],
+            'lst_price': 100.0,
+            'company_id': False,
+        }).with_company(other_company)
+        # standard_price is company-dependent: set it for the active company, where it
+        # is therefore expressed in that company's currency (the "other" currency).
+        shared_product.standard_price = 100.0
+
+        self.assertEqual(shared_product.currency_id, main_company.currency_id)
+        self.assertEqual(shared_product.cost_currency_id, self.other_currency)
+
+        self.assertEqual(self.other_currency_config.currency_id, self.other_currency)
+        [data] = shared_product._load_pos_data_read(shared_product, self.other_currency_config)
+
+        self.assertAlmostEqual(data['standard_price'], 100.0)
+        self.assertAlmostEqual(data['lst_price'], 50.0)

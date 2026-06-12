@@ -1,4 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from collections import defaultdict
+
 from odoo import api, models
 from odoo.fields import Domain
 from odoo.exceptions import AccessError
@@ -68,3 +70,29 @@ class PosLoadMixin(models.AbstractModel):
     def _load_pos_data_fields(self, config):
         """ Return the list of fields to be loaded """
         return []
+
+    @api.model
+    def _convert_pos_data_currency(self, records, config, price_field, currency_field):
+        """ Convert ``price_field`` of each loaded record to the POS currency.
+
+        ``records`` is the list of dicts returned by ``_load_pos_data_read`` and is
+        updated in place. The source currency of each record is read from
+        ``currency_field`` (an ``id``, as fields are read with ``load=False``); records
+        already expressed in the ``config`` currency are left untouched.
+
+        ``currency_field`` matters because a product stores its sale price and its cost
+        in two potentially different currencies (``currency_id`` and
+        ``cost_currency_id``): each price must be converted from its own currency.
+        """
+        records_by_currency = defaultdict(list)
+        for record in records:
+            currency_id = record[currency_field]
+            if currency_id and currency_id != config.currency_id.id:
+                records_by_currency[currency_id].append(record)
+
+        for currency_id, currency_records in records_by_currency.items():
+            currency = self.env['res.currency'].browse(currency_id)
+            for record in currency_records:
+                record[price_field] = currency._convert(
+                    record[price_field], config.currency_id, self.env.company
+                )
