@@ -10,13 +10,14 @@ import {
     contains,
     focus,
     listenStoreFetch,
+    onRpcBefore,
     setupChatHub,
     start,
     startServer,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
-import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
+import { describe, expect, test } from "@odoo/hoot";
+import { Command, patchWithCleanup, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { queryFirst } from "@odoo/hoot-dom";
 import { rpc } from "@web/core/network/rpc";
@@ -52,6 +53,14 @@ test("new message from operator displays unread counter", async () => {
         "discuss.channel",
         "/discuss/channel/messages",
     ]);
+    patchWithCleanup(document, {
+        set title(value) {
+            const match = value.match(/^\((\d+)\) .*/);
+            if (match) {
+                expect.step(`set_counters:discuss:${match[1]}`);
+            }
+        },
+    });
     await start({
         authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
     });
@@ -70,6 +79,7 @@ test("new message from operator displays unread counter", async () => {
         })
     );
     await contains(".o-mail-ChatWindow-counter", { text: "1" });
+    await expect.waitForSteps(["set_counters:discuss:1"]);
 });
 
 test.tags("focus required");
@@ -108,4 +118,59 @@ test("focus on unread livechat marks it as read", async () => {
     await contains(".o-mail-Message", { text: "Are you there?" });
     await focus(".o-mail-Composer-input");
     await contains(".o-mail-ChatWindow-counter", { count: 0 });
+});
+test("new message from operator is automatically translated", async () => {
+    const pyEnv = await startServer();
+    const livechatChannelId = await loadDefaultEmbedConfig();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
+    const agentUserId = serverState.userId;
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+        channel_type: "livechat",
+        livechat_channel_id: livechatChannelId,
+    });
+    expirableStorage.setItem(
+        "im_livechat.saved_state",
+        JSON.stringify({
+            store: { "discuss.channel": [{ id: channelId }] },
+            persisted: true,
+            livechatUserId: serverState.publicUserId,
+        })
+    );
+    setupChatHub({ opened: [channelId] });
+    listenStoreFetch([
+        "init_messaging",
+        "init_livechat",
+        "discuss.channel",
+        "/discuss/channel/messages",
+    ]);
+    onRpcBefore("/mail/message/translate", () => {
+        expect.step("translate_request");
+        return { body: "How are you?", lang_name: "English", error: null };
+    });
+    await start({
+        authenticateAs: { ...pyEnv["mail.guest"].read(guestId)[0], _name: "mail.guest" },
+    });
+    await waitStoreFetch([
+        "init_messaging",
+        "init_livechat",
+        "discuss.channel",
+        "/discuss/channel/messages",
+    ]);
+    await withUser(agentUserId, () =>
+        rpc("/mail/message/post", {
+            post_data: {
+                body: "¿Cómo estás?",
+                message_type: "comment",
+                subtype_xmlid: "mail.mt_comment",
+            },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await expect.waitForSteps(["translate_request"]);
+    await contains(".o-mail-Message-content:contains('How are you?')");
 });

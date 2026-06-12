@@ -89,4 +89,14 @@ patch(Thread.prototype, {
         }
         this._prevComposerDisabled = this.composerDisabled;
     },
+    get shouldTranslateNewMessages() {
+        if (
+            this.channel?.channel_type === "livechat" &&
+            this.channel.self_member_id?.livechat_member_type === "visitor" &&
+            this.store.hasMessageTranslationFeature
+        ) {
+            return this.autoTranslateEnabled === undefined ? true : this.autoTranslateEnabled;
+        }
+        return super.shouldTranslateNewMessages;
+    },
 });

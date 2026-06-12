@@ -8,15 +8,6 @@ export const mailCorePublicWebService = {
      */
     start(env, services) {
         services["mail.store"].ensureInitialized();
-        env.bus.addEventListener(
-            "discuss.channel/new_message",
-            ({ detail: { channel, message, silent } }) => {
-                if (env.services.ui.isSmall || message.isSelfAuthored || silent) {
-                    return;
-                }
-                channel.notifyMessageToUser(message);
-            }
-        );
         services["mail.store"].messagingMenu.initializeCountersFetcher.fetch();
     },
 };

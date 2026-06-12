@@ -91,4 +91,4 @@ class MailCannedResponse(models.Model):
                 current_stores.add(canned_response, "_store_canned_response_fields")
 
     def _store_canned_response_fields(self, res: Store.FieldList):
-        res.extend(["source", "substitution"])
+        res.extend(["source", "substitution", "last_used"])

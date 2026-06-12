@@ -178,12 +178,18 @@ registerMessageAction("toggle-translation", {
     condition: ({ message }) => message.isTranslatable,
     icon: "translate",
     iconClass: ({ message }) => (message.showTranslation ? "o-mail-Message-translated" : ""),
-    name: ({ message }) => (message.showTranslation ? _t("Revert") : _t("Translate")),
-    onSelected: ({ message }) => message.onClickToggleTranslation(),
+    name: ({ message }) => (message.showTranslation ? _t("Initial Language") : _t("Translate")),
+    onSelected: ({ message }) => {
+        message.toggleTranslation().then(() => {
+            if (message.translationValue) {
+                message.afterToggleTranslation();
+            }
+        });
+    },
     sequence: 100,
 });
 registerMessageAction("copy-message", {
-    condition: ({ message }) => !message.isBodyEmpty,
+    condition: ({ message }) => message.canCopyMessageText,
     onSelected: ({ message }) => message.copyMessageText(),
     name: _t("Copy Text"),
     icon: "content_copy",
