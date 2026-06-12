@@ -24,7 +24,7 @@
                 t-att-placeholder="this.props.placeholder"
                 t-att-aria-label="this.props.placeholder"
                 t-att-aria-describedby="`${this.uniqueId}-icon`"
-                t-custom-model="this.props.search.searchTerm"
+                t-model.proxy="this.props.search.searchTerm"
                 t-att-accesskey="this.props.accesskey"
                 autocomplete="off"
                 t-on-keydown="(ev) => this.props.onKeydown?.(ev)"

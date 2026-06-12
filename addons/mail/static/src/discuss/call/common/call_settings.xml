@@ -58,7 +58,7 @@
                                                         <t t-out="this.microphoneVolume.isActive ? this.stopText : this.testText"/>
                                                     </button>
                                                     <div class="d-flex align-items-center flex-grow-1 gap-2 border rounded px-2 py-1">
-                                                        <input class="o-Discuss-CallSettings-thresholdInput form-range" t-attf-style="--volume: {{this.microphoneVolume.value * 100}}%;" type="range" min="0.001" max="1" step="0.001" t-custom-model="this.store.settings.voiceActivationThreshold" title="Voice detection sensitivity"/>
+                                                        <input class="o-Discuss-CallSettings-thresholdInput form-range" t-attf-style="--volume: {{this.microphoneVolume.value * 100}}%;" type="range" min="0.001" max="1" step="0.001" t-model.proxy="this.store.settings.voiceActivationThreshold" title="Voice detection sensitivity"/>
                                                         <small class="fw-bold"><t t-out="Math.round(this.store.settings.voiceActivationThreshold * 100)"/>%</small>
                                                     </div>
                                                 </div>

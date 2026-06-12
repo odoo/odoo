@@ -11,7 +11,7 @@
                         <i class="fa fa-fw" t-att-class="(this.isLocallyMuted or this.state.rangeVolume === 0) ? 'fa-volume-off' : 'fa-volume-up'"/>
                     </button>
                     <div class="position-relative flex-grow-1">
-                        <input type="range" min="0.0" max="1" step="0.01" class="form-range h-auto" t-att-value="this.volume" t-custom-model="this.state.rangeVolume" t-on-change="this.onChangeVolume"/>
+                        <input type="range" min="0.0" max="1" step="0.01" class="form-range h-auto" t-att-value="this.volume" t-model.proxy="this.state.rangeVolume" t-on-change="this.onChangeVolume"/>
                         <output t-out="`${Math.round(this.state.rangeVolume * 200)}%`" class="o-mail-CallContextMenu-volumeTooltip fw-bold rounded" t-attf-style="--progress:{{this.state.rangeVolume * 100}}%;"/>
                     </div>
                 </div>
