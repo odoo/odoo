@@ -3110,8 +3110,15 @@ class Many2one(_Relational):
         else:
             id_ = None
 
-        if self.delegate and record and not any(record._ids):
-            # if all records are new, then so is the parent
+        if (
+            self.delegate
+            and record
+            and not any(record._ids)
+            and isinstance(value, int)
+            and not isinstance(value, NewId)
+            and value > 0
+        ):
+            # if all records are new and the parent as well, we wrap it as NewId
             id_ = id_ and NewId(id_)
 
         return id_
