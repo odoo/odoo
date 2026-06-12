@@ -259,7 +259,9 @@ export class PaymentAdyen extends PaymentInterface {
 
         if (!response || (response.error && response.error.status_code == 401)) {
             this._show_error(_t("Authentication failed. Please check your Adyen credentials."));
-            line.setPaymentStatus("force_done");
+            if (line) {
+                line.setPaymentStatus("force_done");
+            }
             return false;
         }
 
@@ -281,6 +283,9 @@ export class PaymentAdyen extends PaymentInterface {
             }
             return false;
         } else {
+            if (!line) {
+                return false;
+            }
             line.setPaymentStatus("waitingCard");
             return this.waitForPaymentConfirmation();
         }
@@ -366,6 +371,10 @@ export class PaymentAdyen extends PaymentInterface {
             return;
         }
         const line = this.pendingAdyenline();
+        if (!line) {
+            return;
+        }
+
         const response = notification.SaleToPOIResponse;
         const header = notification.SaleToPOIResponse.MessageHeader;
 
