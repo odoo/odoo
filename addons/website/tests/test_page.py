@@ -3,8 +3,10 @@
 from lxml import html
 from unittest.mock import patch
 
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.website.controllers.main import Website
 from odoo.addons.http_routing.tests.common import MockRequest
+from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.http import root
 from odoo.tests import common, HttpCase, tagged
@@ -687,3 +689,36 @@ class TestNewPage(common.TransactionCase):
                     menu.page_id,
                     f"Menu '{menu.name}' was not linked to the created page."
                 )
+
+
+@tagged('-at_install', 'post_install')
+class TestUrlDependencies(TransactionCaseWithUserDemo):
+    def test_search_url_dependencies_with_restricted_html_field(self):
+        self.page = self.env['website.page'].create({
+            'name': 'Test Page',
+            'url': '/test-page',
+            'type': 'qweb',
+            'arch': '<div>Test</div>',
+        })
+        # Add a website page into robots_txt
+        self.website = self.env['website'].browse(1)
+        self.website.robots_txt = '''
+            User-agent: *
+            Disallow: /test-page
+        '''
+        self.env['ir.model.access'].create({
+            'name': 'read',
+            'model_id': self.env['ir.model']._get('website.page').id,
+            'group_id': self.env.ref("base.group_user").id,
+            'perm_read': True,
+        })
+        with MockRequest(self.env, website=self.website, context={'lang': 'en_US'}):
+            website = self.website.with_user(self.user_demo)
+            with self.assertRaises(AccessError):
+                website.robots_txt
+
+            dependencies = website.search_url_dependencies('website.page', self.page.ids)
+            self.assertEqual(
+                dependencies['Website'][0]['record_name'],
+                self.website.display_name,
+            )
