@@ -44,6 +44,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
             DEFAULT_SPACING_SEQUENCE - 1,
             this.applyTableSpacing.bind(this)
         ),
+        accept_table_strategy_report_overrides: this.acceptTableStrategyReport.bind(this),
     };
 
     setup() {
@@ -131,6 +132,10 @@ export class HybridFluidStrategyPlugin extends Plugin {
         // is no positioning consideration between the 2
         analysis.facts.isHybridFluidContainer = true;
         layout.pluginIds.add(HybridFluidStrategyPlugin.id);
+    }
+
+    acceptTableStrategyReport(emailNode) {
+        return emailNode.analysis.facts.useHybridFluidTableStrategy;
     }
 
     fillHybridFluidContainer(emailNode) {

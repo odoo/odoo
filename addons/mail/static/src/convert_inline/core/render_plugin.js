@@ -258,7 +258,7 @@ export class RenderPlugin extends Plugin {
                 const newConstraint = annotations.constraint ?? constraint;
                 propagatedConstraints.push(newConstraint);
             }
-            this.mergeFacts(emailNode, annotations.facts);
+            this.mergeFacts(emailNode, annotations.facts ?? {});
         }
         return emailNode.analysis.constraintsForAncestors.concat(propagatedConstraints);
     }
@@ -272,9 +272,10 @@ export class RenderPlugin extends Plugin {
         for (const constraint of constraints) {
             const annotations = constraint(emailNode);
             if (annotations.shouldPropagate) {
-                propagatedConstraints.push(constraint);
+                const newConstraint = annotations.constraint ?? constraint;
+                propagatedConstraints.push(newConstraint);
             }
-            this.mergeFacts(emailNode, annotations.facts);
+            this.mergeFacts(emailNode, annotations.facts ?? {});
         }
         for (const child of emailNode.children) {
             this.addTopDownConstraints(
