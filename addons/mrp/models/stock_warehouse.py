@@ -26,7 +26,7 @@ class StockWarehouse(models.Model):
         domain="[('code', '=', 'mrp_operation'), ('company_id', '=', company_id)]", check_company=True, copy=False)
 
     pbm_type_id = fields.Many2one('stock.picking.type', 'Picking Before Manufacturing Operation Type', check_company=True, copy=False)
-    sam_type_id = fields.Many2one('stock.picking.type', 'Stock After Manufacturing Operation Type', check_company=True, copy=False)
+    sam_type_id = fields.Many2one('stock.picking.type', 'Inventory After Manufacturing Operation Type', check_company=True, copy=False)
 
     manufacture_steps = fields.Selection([
         ('mrp_one_step', 'Manufacture (1 step)'),
@@ -40,7 +40,7 @@ class StockWarehouse(models.Model):
     pbm_route_id = fields.Many2one('stock.route', 'Picking Before Manufacturing Route', ondelete='restrict', copy=False)
 
     pbm_loc_id = fields.Many2one('stock.location', 'Picking before Manufacturing Location', check_company=True)
-    sam_loc_id = fields.Many2one('stock.location', 'Stock after Manufacturing Location', check_company=True)
+    sam_loc_id = fields.Many2one('stock.location', 'Inventory after Manufacturing Location', check_company=True)
 
     def _compute_manufacture_to_resupply(self):
         for warehouse in self:

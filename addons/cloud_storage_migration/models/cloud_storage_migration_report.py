@@ -15,10 +15,10 @@ class CloudStorageMigrationReport(models.Model):
     res_model = fields.Char(string='Model', readonly=True)
     res_model_name = fields.Char(string='Model Name', readonly=True, compute='_compute_res_model_name')
 
-    message_sum_size = fields.Integer(string='Message Attachments Size (MB)', help="Total size in megabytes of all attachments linked to mail messages for this model", readonly=True)
-    message_max_size = fields.Integer(string='Message Largest Attachment (MB)', help="Size in megabytes of the largest attachment linked to mail messages for this model", readonly=True)
-    message_count = fields.Integer(string='Message Attachments Count', help="Total number of attachments linked to mail messages for this model", readonly=True)
-    message_to_migrate = fields.Boolean(string='Message Attachments Migration', help="Indicates whether attachments linked to mail messages for this model are scheduled for cloud storage migration", compute='_compute_message_to_migrate')
+    message_sum_size = fields.Integer(string='Message Attachments Size (MB)', help="Total size in megabytes of all attachments linked to email messages for this model", readonly=True)
+    message_max_size = fields.Integer(string='Message Largest Attachment (MB)', help="Size in megabytes of the largest attachment linked to email messages for this model", readonly=True)
+    message_count = fields.Integer(string='Message Attachments Count', help="Total number of attachments linked to email messages for this model", readonly=True)
+    message_to_migrate = fields.Boolean(string='Message Attachments Migration', help="Indicates whether attachments linked to email messages for this model are scheduled for cloud storage migration", compute='_compute_message_to_migrate')
 
     all_sum_size = fields.Integer(string='Total Attachments Size (MB)', help="Total size in megabytes of all attachments associated with records of this model", readonly=True)
     all_max_size = fields.Integer(string='Largest Attachment (MB)', help="Size in megabytes of the largest attachment associated with any record of this model", readonly=True)

@@ -9,7 +9,7 @@ export class NumberPopup extends Component {
     static template = "point_of_sale.NumberPopup";
     static components = { Numpad, Dialog };
     props = props({
-        title: t.string().optional(_t("Amount of guests")),
+        title: t.string().optional(_t("Number of guests")),
         subtitle: t.string().optional(),
         buttons: buttonsType.optional(),
         startingValue: t.or([t.number(), t.string()]).optional(""),

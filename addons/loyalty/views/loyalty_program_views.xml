@@ -24,7 +24,7 @@
                                     <field name="coupon_count"/>
                                 </span>
                                 <span class="o_stat_text" invisible="program_type not in ('coupons', 'next_order_coupons')">Coupons</span>
-                                <span class="o_stat_text" invisible="program_type != 'loyalty'">Loyalty Cards</span>
+                                <span class="o_stat_text" invisible="program_type != 'loyalty'">Reward Cards</span>
                                 <span class="o_stat_text" invisible="program_type not in ('promotion', 'buy_x_get_y')">Promos</span>
                                 <span class="o_stat_text" invisible="program_type != 'promo_code'">Discount</span>
                                 <span class="o_stat_text" invisible="program_type != 'gift_card'">Gift Cards</span>
@@ -232,7 +232,7 @@
     </record>
 
     <record id="loyalty_program_discount_loyalty_action" model="ir.actions.act_window">
-        <field name="name">Discount &amp; Loyalty</field>
+        <field name="name">Discount &amp; Rewards</field>
         <field name="res_model">loyalty.program</field>
         <field name="path">discount-loyalty</field>
         <field name="view_mode">list,form</field>

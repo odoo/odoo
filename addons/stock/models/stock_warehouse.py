@@ -44,7 +44,7 @@ class StockWarehouse(models.Model):
         domain="[('usage', '=', 'view'), ('company_id', '=', company_id)]",
         required=True, check_company=True, index=True)
     lot_stock_id = fields.Many2one(
-        'stock.location', 'Location Stock',
+        'stock.location', 'Inventory Location',
         domain="[('usage', '=', 'internal'), ('company_id', '=', company_id)]",
         required=True, check_company=True)
     code = fields.Char('Short Name', required=True, help="Short name used to identify your warehouse")

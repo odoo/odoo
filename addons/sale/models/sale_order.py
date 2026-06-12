@@ -125,7 +125,7 @@ class SaleOrder(models.Model):
         help="Reference of the document that generated this sales order request",
     )
     reference = fields.Char(
-        string="Payment Ref.", help="The payment communication of this sale order.", copy=False
+        string="Payment Ref.", help="The payment reference of this sale order.", copy=False
     )
     pending_email_template_id = fields.Many2one(
         string="Pending Email Template",

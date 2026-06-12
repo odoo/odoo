@@ -165,7 +165,7 @@ class ResConfigSettings(models.TransientModel):
     # Quick encoding (fiduciary mode)
     quick_edit_mode_enabled = fields.Boolean(string="Quick encoding", readonly=False, related='company_id.quick_edit_mode_enabled')
     quick_edit_mode = fields.Selection(readonly=False, related='company_id.quick_edit_mode')
-    document_sequence_editable = fields.Boolean(string="Document's sequence editable", readonly=False, related='company_id.document_sequence_editable')
+    document_sequence_editable = fields.Boolean(string="Editable Document Sequence", readonly=False, related='company_id.document_sequence_editable')
     set_to_review_documents = fields.Boolean(string="Review data", readonly=False, related='company_id.set_to_review_documents')
 
     account_journal_early_pay_discount_loss_account_id = fields.Many2one(

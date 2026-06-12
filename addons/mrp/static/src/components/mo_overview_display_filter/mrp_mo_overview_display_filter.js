@@ -31,7 +31,7 @@ export class MoOverviewDisplayFilter extends BomOverviewDisplayFilter {
             this.displayOptions = {
                 ...this.displayOptions,
                 replenishments: _t("Replenishments"),
-                availabilities: _t("Availabilities"),
+                availabilities: _t("Availability"),
                 receipts: _t("Receipts"),
             };
         }

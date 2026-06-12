@@ -29,7 +29,7 @@ class ResCompany(models.Model):
     account_production_wip_overhead_account_id = fields.Many2one('account.account', string='Production WIP Overhead Account', check_company=True)
 
     inventory_period = fields.Selection(
-        string='Inventory Period',
+        string='Inventory Frequency',
         selection=[
             ('manual', 'Manual'),
             ('daily', 'Daily'),
@@ -81,7 +81,7 @@ class ResCompany(models.Model):
             'journal_id': self.account_stock_journal_id.id,
             'date': at_date or fields.Date.context_today(self),
             'closing_datetime': datetime.combine(at_date, time.max) if at_date else fields.Datetime.now(),
-            'ref': _('Stock Closing'),
+            'ref': _('Inventory Closing'),
             'inventory_closing': True,
             'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
             'company_id': self.id,
