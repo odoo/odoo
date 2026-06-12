@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from odoo.fields import Command, Domain
 from odoo.tests import TransactionCase, users
-from odoo.tools import SQL, OrderedSet
+from odoo.tools import Query, SQL, OrderedSet
 
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
 
@@ -337,6 +337,24 @@ class TestDomain(TransactionExpressionCase):
 
         res_search = self._search(Child, [('tag_ids', 'not any', [('name', '=', 'Urgent')])])
         self.assertEqual(res_search, child_2 + child_3)
+
+    def test_any_in_search_field(self):
+        Message = self.env.registry['test_orm.message']
+        model = self.env[Message._name]
+        with patch.object(Message, '_search_author_partner', side_effect=Message._search_author_partner, autospec=True) as mock:
+            # using _search_author_partner
+            domain = Domain('author_partner', 'any', [('name', '=', 'demo')]).optimize_full(model)
+            call_args = mock.call_args.args
+            self.assertEqual(call_args[1], 'any')
+            sub_domain = call_args[2]
+            self.assertIsInstance(sub_domain, Domain)
+            self.assertTrue(isinstance(sub_domain.value, Query), "Sub-Domain should be compiled into a Query")
+
+            self.assertEqual(domain.field_expr, 'author')
+            u_domain = domain.value
+            self.assertEqual(u_domain.field_expr, 'partner_id')
+            self.assertEqual(u_domain.operator, 'any!')
+            self.assertIs(u_domain.value, sub_domain.value, "The query should be used as-is")
 
 
 class TestDomainComplement(TransactionExpressionCase):
