@@ -361,7 +361,6 @@ class AccountMove(models.Model):
         'commercial_partner_id.country_id',
         'commercial_partner_id.vat',
         'company_id.account_fiscal_country_id',
-        'is_move_sent',
         'l10n_fr_pdp_flow_10_report_type',
         'line_ids.matched_credit_ids.credit_move_id',
         'line_ids.matched_debit_ids.debit_move_id',
@@ -488,8 +487,6 @@ class AccountMove(models.Model):
             return []
 
         def check():
-            if self.is_sale_document(include_receipts=True) and not self.is_move_sent:
-                yield self.env._("Invoice/credit note has not been sent to the customer.")
             if transaction_type == 'b2bi':
                 try:
                     self.commercial_partner_id.check_vat()
@@ -508,7 +505,7 @@ class AccountMove(models.Model):
                     yield self.env._("Missing address city%s.", ref_move)
                 if not move.partner_shipping_id.zip:
                     yield self.env._("Missing address zip code%s.", ref_move)
-                if not move.partner_shipping_id.zip:
+                if not move.partner_shipping_id.country_id:
                     yield self.env._("Missing address country%s.", ref_move)
 
         transaction_type = self._l10n_fr_pdp_get_transaction_type()
