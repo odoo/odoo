@@ -12,7 +12,7 @@
                         <t t-out="this.props.message"/>
                     </span>
                     <div t-if="this.props.buttons.length" class="o_notification_buttons align-self-start justify-content-end d-flex gap-3 flex-wrap flex-md-nowrap mw-100 w-md-auto ms-auto ms-md-2">
-                        <button t-foreach="this.props.buttons" t-as="button" type="button" t-key="button_index" t-attf-class="btn btn-link text-nowrap p-0 border-0" t-on-click="button.onClick">
+                        <button t-foreach="this.props.buttons" t-as="button" type="button" t-key="button_index" t-attf-class="btn {{ button.primary ? 'btn-primary btn-sm' : 'btn-link p-0 border-0'}} text-nowrap p-0 border-0" t-on-click="button.onClick">
                             <t t-if="button.icon">
                                 <i t-if="button.icon.indexOf('fa-') === 0" role="img" t-att-aria-label="button.name" t-att-title="button.name" t-attf-class="fa fa-fw {{button.icon}} me-1"/>
                                 <img t-else="" t-att-src="button.icon" t-att-alt="button.name"/>

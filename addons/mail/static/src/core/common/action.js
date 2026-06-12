@@ -1,5 +1,5 @@
 import { isRecord, STORE_SYM } from "@mail/model/misc";
-import { Component, proxy, signal, useScope } from "@odoo/owl";
+import { Component, markRaw, proxy, signal, useScope } from "@odoo/owl";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
@@ -41,7 +41,7 @@ export const ACTION_TAGS = Object.freeze({
 /**
  * @template Action_T
  * @template UseActions_T
- * @typedef {ActionRootRefParam & {actions: UseActions_T, action: Action_T, store: import("models").Store, owner: ActionOwner}} ActionParams
+ * @typedef {ActionRootRefParam & {actions: UseActions_T, action: Action_T, renderingContext: import("@mail/core/common/action_list").Action, store: import("models").Store, owner: ActionOwner}} ActionParams
  */
 
 /**
@@ -104,6 +104,13 @@ export class Action {
     popover = null;
     /** @type {string} Unique id of this action. */
     id;
+    /**
+     * This should be set by the component rendering the action so that it can be used
+     * as a parameter of the different functions of the action.
+     *
+     * @type {null|() => import("@mail/core/common/action_list").Action}
+     */
+    renderingContext = markRaw({ fn: null });
     /** @type {import("@odoo/owl").Signal<HTMLElement>} */
     rootRef;
     /** @type {import("models").Store} */
@@ -139,6 +146,7 @@ export class Action {
             store: this.store,
             owner: this.owner,
             rootRef: this.rootRef,
+            renderingContext: this.renderingContext.fn?.(),
         };
     }
 
@@ -582,6 +590,10 @@ export class Action {
         );
     }
 
+    setRenderingContext(renderingContext) {
+        this.renderingContext.fn = () => renderingContext;
+    }
+
     /** @param {Action} action @returns {true|undefined} */
     _setup(action) {}
     /** setup is executed when the owner is being setup. */
@@ -603,6 +615,10 @@ export class Action {
 
     get tagClassNames() {
         return this.tags.map((tag) => `o-tag-${tag}`).join(" ");
+    }
+
+    unsetRenderingContext() {
+        this.renderingContext.fn = null;
     }
 }
 

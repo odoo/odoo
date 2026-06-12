@@ -19,8 +19,7 @@ const messagePatch = {
         return (
             super.isTranslatable ||
             (this.store.hasMessageTranslationFeature &&
-                this.channel_id?.channel_type === "livechat" &&
-                this.store.self_user?.share === false)
+                this.channel_id?.channel_type === "livechat")
         );
     },
 };

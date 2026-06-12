@@ -31,7 +31,12 @@ registerThreadAction("call-settings", {
         store.self_user &&
         (owner.props.chatWindow?.isOpen || store.inPublicPage) &&
         !owner.isDiscussSidebarChannelActions,
-    icon: "fa fa-fw fa-gear",
+    icon: ({ renderingContext }) => {
+        if (!renderingContext?.props.dropdown) {
+            return "fa fa-fw fa-gear";
+        }
+        return undefined;
+    },
     name: _t("Voice & Video Settings"),
     sequence: 5,
     sequenceGroup: 30,

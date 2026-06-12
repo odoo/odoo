@@ -1,5 +1,5 @@
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { Component, onWillUnmount, props, t } from "@odoo/owl";
+import { Component, onWillDestroy, onWillUnmount, props, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { Action as ActionModel } from "@mail/core/common/action";
@@ -21,7 +21,7 @@ const actionListPropsSchema = {
     odooControlPanelSwitchStyle: t.boolean().optional(),
 };
 
-class Action extends Component {
+export class Action extends Component {
     static components = { Action, DropdownItem };
     static template = "mail.Action";
 
@@ -45,11 +45,15 @@ class Action extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.attClassObjectToString = attClassObjectToString;
+        this.props.action.setRenderingContext(this);
         if (this.props.action.definition?.isMoreAction) {
             onWillUnmount(() => {
                 this.props.action.dropdownState.close();
             });
         }
+        onWillDestroy(() => {
+            this.props.action.unsetRenderingContext();
+        });
     }
 
     get action() {

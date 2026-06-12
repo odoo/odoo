@@ -7,7 +7,7 @@ from odoo.http import request, route, Controller
 
 
 class GoogleTranslateController(Controller):
-    @route("/mail/message/translate", type="jsonrpc", auth="user")
+    @route("/mail/message/translate", type="jsonrpc", auth="public")
     def translate(self, message_id):
         # sudo: ir.config_parameter - read keys are hard-coded and values are only used for server requests
         ir_config = request.env["ir.config_parameter"].sudo()
@@ -16,13 +16,21 @@ class GoogleTranslateController(Controller):
         message = request.env["mail.message"].search([("id", "=", message_id)])
         if not message:
             raise request.not_found()
-        domain = [("message_id", "=", message.id), ("target_lang", "=", request.env.user.lang.split("_")[0])]
+        if request.env.user._is_public():
+            request_lang = request.cookies.get("frontend_lang")
+        else:
+            request_lang = request.env.user.lang
+        if not request_lang:
+            return
+        target_lang = request_lang.split("_")[0]
+        domain = [("message_id", "=", message.id), ("target_lang", "=", target_lang)]
         # sudo: mail.message.translation - searching translations of a message that can be read with standard ACL
         translation = request.env["mail.message.translation"].sudo().search(domain)
         if not translation:
             try:
                 source_lang = self._detect_source_lang(message)
-                target_lang = request.env.user.lang.split("_")[0]
+                if source_lang == target_lang:
+                    return
                 # sudo: mail.message.translation - create translation of a message that can be read with standard ACL
                 vals = {
                     "body": self._get_translation(str(message.body), source_lang, target_lang),

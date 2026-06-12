@@ -758,16 +758,41 @@ export class Message extends Record {
         }
     }
 
-    async onClickToggleTranslation() {
+    async toggleTranslation() {
         if (!this.translationValue) {
-            const { error, lang_name, body } = await rpc("/mail/message/translate", {
-                message_id: this.id,
-            });
+            const resp = await rpc("/mail/message/translate", { message_id: this.id });
+            if (!resp) {
+                return;
+            }
+            const { error, lang_name, body } = resp;
             this.translationValue = body && markup(body);
             this.translationSource = lang_name;
             this.translationErrors = error;
         }
         this.showTranslation = !this.showTranslation && Boolean(this.translationValue);
+    }
+    afterToggleTranslation() {
+        if (!this.thread?.channel || this.thread.autoTranslateEnabled === this.showTranslation) {
+            return;
+        }
+        const closeNotification = this.store.env.services.notification.add(
+            this.showTranslation
+                ? _t("Auto-translate newer messages?")
+                : _t("Cancel auto-translate?"),
+            {
+                type: "info",
+                buttons: [
+                    {
+                        name: this.showTranslation ? _t("Enable") : _t("Disable"),
+                        onClick: () => {
+                            this.thread.autoTranslateEnabled = this.showTranslation;
+                            closeNotification();
+                        },
+                        primary: true,
+                    },
+                ],
+            }
+        );
     }
 
     async react(content) {

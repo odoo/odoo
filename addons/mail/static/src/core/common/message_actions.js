@@ -181,7 +181,13 @@ registerMessageAction("toggle-translation", {
     icon: ({ message }) =>
         `fa fa-language ${message.showTranslation ? "o-mail-Message-translated" : ""}`,
     name: ({ message }) => (message.showTranslation ? _t("Revert") : _t("Translate")),
-    onSelected: ({ message }) => message.onClickToggleTranslation(),
+    onSelected: ({ message }) => {
+        message.toggleTranslation().then(() => {
+            if (message.translationValue) {
+                message.afterToggleTranslation();
+            }
+        });
+    },
     sequence: 100,
 });
 registerMessageAction("copy-message", {
