@@ -16,8 +16,5 @@ class IrModuleModule(models.Model):
 
         delivery_type = module_name.removeprefix("delivery_")  # dhl, fedex, etc.
         action = self.env.ref("delivery.action_delivery_carrier_form").read()[0]
-        if delivery_type == "mondialrelay":
-            action["context"] = {"search_default_is_mondialrelay": True}
-        else:
-            action["context"] = {"search_default_delivery_type": delivery_type}
+        action["context"] = {"search_default_delivery_type": delivery_type}
         return action

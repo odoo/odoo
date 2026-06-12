@@ -214,7 +214,6 @@ EXCLUDED_TEMPLATES = (
     'website_payment.s_supported_payment_methods.no_payment_methods_alert',
     'website_sale.s_dynamic_snippet_category.grid',
     'website_sale_autocomplete.AutocompleteDropDown',
-    'website_sale_mondialrelay',
     'website_sale_stock.product_availability',
     'website_sale_stock.product_availability_wishlist',
     'website_sale_subscription.SubscriptionPricingTableSelect',

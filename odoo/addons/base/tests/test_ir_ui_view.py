@@ -4892,7 +4892,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'delivery_easypost',
             'delivery_fedex',
             'delivery_iot',
-            'delivery_mondialrelay',
             'delivery_sendcloud',
             'delivery_shiprocket',
             'delivery_starshipit',
