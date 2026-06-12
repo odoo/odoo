@@ -14,6 +14,8 @@ import { CustomGroupByItem } from "@web/search/custom_group_by_item/custom_group
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { FACET_ICONS, GROUPABLE_TYPES } from "@web/search/utils/misc";
 import { _t } from "@web/core/l10n/translation";
+import { condition } from "@web/core/tree_editor/condition_tree";
+import { domainFromTree } from "@web/core/tree_editor/domain_from_tree";
 
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
@@ -72,8 +74,16 @@ export class SearchBarMenu extends Component {
         );
     }
 
-    async onAddCustomFilterClick() {
+    onAddCustomFilterClick() {
         this.env.searchModel.spawnCustomFilterDialog();
+    }
+
+    /** Opens a domain editor dialog for the given item, default to "is in" "today" option */
+    onAddCustomDateFilterClick({ fieldName, fieldType }) {
+        if (["date", "datetime"].includes(fieldType)) {
+            const domain = domainFromTree(condition(fieldName, "in range", [fieldType, "today"]));
+            this.env.searchModel.spawnCustomFilterDialog(true, domain);
+        }
     }
 
     /**

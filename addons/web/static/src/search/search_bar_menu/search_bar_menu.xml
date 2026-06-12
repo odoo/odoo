@@ -49,6 +49,8 @@
                                         <t t-set="subGroup" t-value="option.groupNumber"/>
                                     </t>
                                     <DropdownItem t-if="item.optionsParams.limit and item.optionsParams.count > item.optionsParams.limit" class="'o_item_option'" closingMode="'none'" onSelected.bind="() => this.onLoadMoreOptions({ itemId: item.id })">More...</DropdownItem>
+                                    <div class="dropdown-divider" role="separator"/>
+                                    <DropdownItem class="'o_menu_item o_add_custom_filter'" onSelected="() => this.onAddCustomDateFilterClick(item)">Custom Date...</DropdownItem>
                                 </AccordionItem>
                             </t>
                             <t t-else="">
