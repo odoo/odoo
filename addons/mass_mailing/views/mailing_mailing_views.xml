@@ -363,6 +363,7 @@
                                     <group string="Tracking">
                                         <field name="campaign_id"
                                             string="Campaign"
+                                            domain="[('is_auto_campaign', '=', False)]"
                                             groups="mass_mailing.group_mass_mailing_campaign"
                                             options="{'create_name_field': 'title'}"
                                             readonly="state in ('sending', 'done')"/>
