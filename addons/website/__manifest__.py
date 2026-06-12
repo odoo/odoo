@@ -412,6 +412,8 @@
             'website/static/src/snippets/s_table_of_content/000.scss',
             'google_recaptcha/static/src/js/recaptcha.js',
             'website/static/src/js/content/generate_video_iframe.js',
+            'website/static/src/components/team_board_contact_dialog/**/*',
+            'website/static/src/components/team_board_contact_dialog_copy_email/**/*',
         ],
         'web._assets_frontend_helpers': [
             ('prepend', 'website/static/src/scss/bootstrap_overridden.scss'),
