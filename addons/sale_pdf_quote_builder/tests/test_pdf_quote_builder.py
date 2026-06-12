@@ -29,6 +29,7 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
 
         cls.sale_order.validity_date = "2020-11-04"
         cls.sale_order.partner_id.tz = "Europe/Brussels"
+        cls.sale_order.prepayment_percent = 1.0
         cls.env["product.document"].search([]).action_archive()
         cls.env["quotation.document"].search([]).action_archive()
 

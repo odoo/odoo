@@ -27,7 +27,7 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
             lambda line: line.payment_provider_id == cls.provider
         ).payment_account_id = cls.inbound_payment_method_line.payment_account_id
 
-        cls.sale_order.require_payment = True
+        cls.sale_order.prepayment_percent = 1.0
 
     @mute_logger("odoo.http", "werkzeug")
     def test_payment_amount_must_not_be_less_than_prepayment_amount(self):

@@ -945,15 +945,21 @@
                             <group name="confirmation_info" string="Confirmation">
                                 <field name="require_signature" widget="boolean_toggle"
                                     readonly="state in ['cancel', 'sale']"/>
-                                <field name="require_payment" widget="boolean_toggle"
-                                    readonly="state in ['cancel', 'sale']"/>
-                                <label for="prepayment_percent" class="text-nowrap" invisible="not require_payment"/>
-                                <field name="prepayment_percent"
-                                    readonly="state in ['cancel', 'sale']"
-                                    nolabel="1"
-                                    invisible="not require_payment"
-                                    widget="percentage"
-                                    class="oe_inline"/>
+                                <label for="prepayment_percent" class="text-nowrap"/>
+                                <span class="d-inline-flex align-items-baseline">
+                                    <field
+                                        name="prepayment_percent"
+                                        readonly="state in ['cancel', 'sale']"
+                                        widget="percentage"
+                                        class="oe_inline"
+                                    />
+                                    <field
+                                        name="prepayment_amount"
+                                        readonly="state in ['cancel', 'sale']"
+                                        widget="monetary"
+                                        class="ms-3 oe_inline text-muted"
+                                    />
+                                </span>
                             </group>
                             <group name="sales_person" string="Sales">
                                 <field name="user_id" widget="many2one_avatar_user"/>

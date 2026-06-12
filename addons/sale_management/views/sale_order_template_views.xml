@@ -167,22 +167,11 @@
                                         <div class="d-inline-block">days</div>
                                     </div>
                                     <field name="require_signature" widget="boolean_toggle"/>
-                                    <label for="require_payment"/>
-                                    <div>
-                                        <field
-                                            name="require_payment"
-                                            class="oe_inline"
-                                            widget="boolean_toggle"
-                                        />
-                                        <span invisible="not require_payment">
-                                            of
-                                            <field
-                                                name="prepayment_percent"
-                                                class="mx-2 w-25"
-                                                widget="percentage"
-                                            />
-                                        </span>
-                                    </div>
+                                    <field
+                                        name="prepayment_percent"
+                                        widget="percentage"
+                                        class="oe_inline"
+                                    />
                                     <field
                                         name="mail_template_id"
                                         class="w-50"

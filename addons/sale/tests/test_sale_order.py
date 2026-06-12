@@ -1169,7 +1169,7 @@ class TestSalesTeam(SaleCommon):
 
     def test_downpayment_amount_constraints(self):
         """Check that down payment amounts should be in the interval ]0, 1]."""
-        self.sale_order.require_payment = True
+        self.sale_order.prepayment_percent = 1.0
         with self.assertRaises(ValidationError):
             self.sale_order.prepayment_percent = -1
         with self.assertRaises(ValidationError):

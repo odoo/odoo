@@ -142,21 +142,21 @@ class SaleOrder(models.Model):
         precompute=True,
         help="Request a online signature from the customer to confirm the order.",
     )
-    require_payment = fields.Boolean(
-        string="Online payment",
-        compute="_compute_require_payment",
-        store=True,
-        readonly=False,
-        precompute=True,
-        help="Request a online payment from the customer to confirm the order.",
-    )
     prepayment_percent = fields.Float(
-        string="Prepayment percentage",
+        string="Prepayment",
         compute="_compute_prepayment_percent",
         store=True,
         readonly=False,
         precompute=True,
         help="The percentage of the amount that must be paid by the customer to confirm the order.",
+    )
+    prepayment_amount = fields.Monetary(
+        string="Prepayment Amount",
+        help="The amount that must be paid by the customer to confirm the order.",
+        currency_field="currency_id",
+        compute="_compute_prepayment_amount",
+        inverse="_inverse_prepayment_amount",
+        readonly=False,
     )
 
     signature = fields.Image(
@@ -521,14 +521,24 @@ class SaleOrder(models.Model):
             order.require_signature = order.company_id.portal_confirmation_sign
 
     @api.depends("company_id")
-    def _compute_require_payment(self):
-        for order in self:
-            order.require_payment = order.company_id.portal_confirmation_pay
-
-    @api.depends("require_payment")
     def _compute_prepayment_percent(self):
         for order in self:
-            order.prepayment_percent = order.company_id.prepayment_percent
+            if order.company_id.portal_confirmation_pay:
+                order.prepayment_percent = order.company_id.prepayment_percent
+            else:
+                order.prepayment_percent = 0.0
+
+    @api.depends("prepayment_percent", "amount_total")
+    def _compute_prepayment_amount(self):
+        for order in self:
+            order.prepayment_amount = order.prepayment_percent * order.amount_total
+
+    def _inverse_prepayment_amount(self):
+        for order in self:
+            if order.amount_total:
+                order.prepayment_percent = order.prepayment_amount / order.amount_total
+            else:
+                order.prepayment_percent = 0.0
 
     @api.depends("company_id")
     def _compute_validity_date(self):
@@ -1226,7 +1236,7 @@ class SaleOrder(models.Model):
     @api.constrains("prepayment_percent")
     def _check_prepayment_percent(self):
         for order in self:
-            if order.require_payment and not (0 < order.prepayment_percent <= 1.0):
+            if not (0 <= order.prepayment_percent <= 1.0):
                 raise ValidationError(
                     order.env._("Prepayment percentage must be a valid percentage.")
                 )
@@ -1303,10 +1313,10 @@ class SaleOrder(models.Model):
             self.order_line and self._origin.pricelist_id != self.pricelist_id
         )
 
-    @api.onchange("prepayment_percent")
-    def _onchange_prepayment_percent(self):
-        if not self.prepayment_percent:
-            self.require_payment = False
+    @api.onchange("prepayment_amount")
+    def _onchange_prepayment_amount(self):
+        if self.amount_total:
+            self.prepayment_percent = self.prepayment_amount / self.amount_total
 
     @api.onchange("order_line")
     def _onchange_order_line(self):
@@ -2306,7 +2316,7 @@ class SaleOrder(models.Model):
 
         prepayment_amount = self._get_prepayment_required_amount()
         remaining_balance = self.amount_total - self.amount_paid
-        if self.state in ("draft", "sent") and self.require_payment:
+        if self.state in ("draft", "sent") and self.prepayment_percent > 0:
             suggested_amount = prepayment_amount  # Suggest the amount needed to confirm the quote.
         else:  # The order is confirmed or doesn't require payment.
             suggested_amount = remaining_balance
@@ -2371,7 +2381,7 @@ class SaleOrder(models.Model):
         A sale order has to be paid when:
         - its state is 'draft' or `sent`;
         - it's not expired;
-        - it requires a payment;
+        - the prepayment percent is strictly positive;
         - the last transaction's state isn't `done`;
         - the total amount is strictly positive.
         - confirmation amount is not reached
@@ -2385,7 +2395,7 @@ class SaleOrder(models.Model):
         return (
             self.state in ["draft", "sent"]
             and not self.is_expired
-            and self.require_payment
+            and self.prepayment_percent > 0
             and self.amount_total > 0
             and not self._is_confirmation_amount_reached()
         )
@@ -2580,7 +2590,7 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
 
-        if not self.require_payment:
+        if self.prepayment_percent == 0:
             return 0
         return self.currency_id.round(self.amount_total * self.prepayment_percent)
 
