@@ -902,7 +902,7 @@ class ProjectProject(models.Model):
             res['stage_id'] = (project.stage_id.mail_template_id, {
                 'auto_delete_keep_log': False,
                 'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
-            })
+            }, {})
         return res
 
     def _track_log_get_default_subtype(self, track_init_values):

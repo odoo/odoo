@@ -748,7 +748,7 @@ class MailThread(models.AbstractModel):
             raise
 
         default_composition_mode = 'mass_mail' if len(self) != 1 else 'comment'
-        for (template, post_kwargs) in templates.values():
+        for (template, post_kwargs, context) in templates.values():
             if not template:
                 continue
 
@@ -757,9 +757,9 @@ class MailThread(models.AbstractModel):
             # by default, allow sending stage updates to author
             post_kwargs.setdefault('notify_author_mention', True)
             if composition_mode == 'mass_mail':
-                self.message_mail_with_source(template, **post_kwargs)
+                self.with_context(context).message_mail_with_source(template, **post_kwargs)
             else:
-                self.message_post_with_source(template, **post_kwargs)
+                self.with_context(context).message_post_with_source(template, **post_kwargs)
         return True
 
     def _track_template_parameters(self, tracked_fields: Iterable[str]) -> dict[str, tuple[BaseModel, ValuesType]]:
