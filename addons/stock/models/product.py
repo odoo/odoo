@@ -377,6 +377,12 @@ class Product(models.Model):
         return self._search_product_quantity(operator, value, 'outgoing_qty')
 
     def _search_free_qty(self, operator, value):
+        if not ({'from_date', 'to_date'} & set(self.env.context.keys())):
+            product_ids = self._search_field_by_quants(
+                operator, value, self.env.context.get('lot_id'), self.env.context.get('owner_id'),
+                self.env.context.get('package_id'), field="free_qty"
+            )
+            return [('id', 'in', product_ids)]
         return self._search_product_quantity(operator, value, 'free_qty')
 
     def _search_product_quantity(self, operator, value, field):
@@ -399,6 +405,9 @@ class Product(models.Model):
         return [('id', 'in', ids)]
 
     def _search_qty_available_new(self, operator, value, lot_id=False, owner_id=False, package_id=False):
+        return self._search_field_by_quants(operator, value, lot_id, owner_id, package_id)
+
+    def _search_field_by_quants(self, operator, value, lot_id=False, owner_id=False, package_id=False, field="qty_available"):
         ''' Optimized method which doesn't search on stock.moves, only on stock.quants. '''
         if operator not in ('<', '>', '=', '!=', '<=', '>='):
             raise UserError(_('Invalid domain operator %s', operator))
@@ -413,21 +422,22 @@ class Product(models.Model):
             domain_quant.append(('owner_id', '=', owner_id))
         if package_id:
             domain_quant.append(('package_id', '=', package_id))
-        quants_groupby = self.env['stock.quant']._read_group(domain_quant, ['product_id'], ['quantity:sum'])
+        quants_groupby = self.env['stock.quant']._read_group(domain_quant, ['product_id'], ['quantity:sum', 'reserved_quantity:sum'])
 
         # check if we need include zero values in result
         include_zero = (
             value < 0.0 and operator in ('>', '>=') or
             value > 0.0 and operator in ('<', '<=') or
-            value == 0.0 and operator in ('>=', '<=', '=')
+            float_is_zero(value, precision_digits=8) and operator in ('>=', '<=', '=')
         )
 
         processed_product_ids = set()
-        for product, quantity_sum in quants_groupby:
+        for product, quantity_sum, reserved_sum in quants_groupby:
             product_id = product.id
+            field_sum = quantity_sum - reserved_sum if field == "free_qty" else quantity_sum
             if include_zero:
                 processed_product_ids.add(product_id)
-            if OPERATORS[operator](quantity_sum, value):
+            if OPERATORS[operator](field_sum, value):
                 product_ids.add(product_id)
 
         if include_zero:
