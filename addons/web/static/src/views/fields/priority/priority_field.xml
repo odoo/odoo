@@ -7,11 +7,11 @@
                 <t t-if="!value_first">
                     <t t-if="this.props.readonly">
                         <span
-                            class="o_priority_star fa o_disabled"
+                            class="o_priority_star fa"
                             role="radio"
                             t-att-class="value_index lte this.index ? 'fa-star' : 'fa-star-o'"
                             tabindex="0"
-                            t-att-data-tooltip="this.getTooltip(value[1])"
+                            t-att-data-tooltip="this.getTooltip(value[0],value[1])"
                             t-att-aria-checked="value_index === this.index ? 'true' : 'false'"
                             t-att-aria-label="value[1]"
                         />
@@ -22,7 +22,7 @@
                             role="radio"
                             t-att-class="value_index lte this.index ? 'fa-star' : 'fa-star-o opacity-25 opacity-100-hover'"
                             tabindex="0"
-                            t-att-data-tooltip="this.getTooltip(value[1])"
+                            t-att-data-tooltip="this.getTooltip(value[0], value[1])"
                             t-att-aria-checked="value_index === this.index ? 'true' : 'false'"
                             t-att-aria-label="value[1]"
                             t-on-click.stop="() => this.onStarClicked(value[0])"

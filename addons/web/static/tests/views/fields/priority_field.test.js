@@ -91,8 +91,8 @@ test("PriorityField tooltip", async () => {
 
     // check data-tooltip attribute (used by the tooltip service)
     const stars = queryAll(".o_field_widget .o_priority button.o_priority_star");
-    expect(stars[0]).toHaveAttribute("data-tooltip", "Selection: Blocked");
-    expect(stars[1]).toHaveAttribute("data-tooltip", "Selection: Done");
+    expect(stars[0]).toHaveAttribute("data-tooltip", "Set Selection: Normal");
+    expect(stars[1]).toHaveAttribute("data-tooltip", "Set Selection: Done");
 });
 
 test("PriorityField in form view", async () => {
@@ -374,7 +374,7 @@ test("PriorityField with readonly attribute", async () => {
         arch: '<form><field name="selection" widget="priority" readonly="1"/></form>',
     });
 
-    expect("span.o_priority_star.fa.fa-star-o.o_disabled").toHaveCount(2, {
+    expect("span.o_priority_star.fa.fa-star-o").toHaveCount(2, {
         message: "stars of priority widget should rendered with span tag if readonly",
     });
     await hover(".o_priority_star.fa-star-o:last");
@@ -386,7 +386,7 @@ test("PriorityField with readonly attribute", async () => {
     await click(".o_priority_star.fa-star-o:last");
     await animationFrame();
     expect.step("click");
-    expect("span.o_priority_star.fa.fa-star-o.o_disabled").toHaveCount(2, {
+    expect("span.o_priority_star.fa.fa-star-o").toHaveCount(2, {
         message: "should still have two stars",
     });
     expect.verifySteps(["hover", "click"]);
@@ -412,4 +412,25 @@ test('PriorityField edited by the smart action "Set priority..."', async () => {
     await click("#o_command_2");
     await animationFrame();
     expect("button.fa-star").toHaveCount(2);
+});
+
+test("PriorityField readonly tooltip", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="selection" widget="priority" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>`,
+    });
+
+    // check data-tooltip attribute on readonly spans
+    const spans = queryAll(".o_field_widget .o_priority span.o_priority_star");
+    expect(spans[0]).toHaveAttribute("data-tooltip", "Blocked");
+    expect(spans[1]).toHaveAttribute("data-tooltip", "Blocked");
 });
