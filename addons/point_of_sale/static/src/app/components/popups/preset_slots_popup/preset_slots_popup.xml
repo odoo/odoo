@@ -4,13 +4,22 @@
         <Dialog size="'xl'" title="this.pos.getOrder().preset_id.name">
             <div>
                 <t t-set="preset" t-value="this.pos.getOrder().preset_id"/>
-                <div class="d-flex w-100 flex-wrap gap-2 mt-2">
-                    <button class="btn flex-grow-1 p-3"
-                        t-foreach="Object.keys(preset.availabilities)" t-as="sqlDate" t-key="sqlDate"
-                        t-attf-class="{{ this.state.selectedDate === sqlDate ? 'btn-primary' : 'btn-secondary' }}"
-                        t-att-class="{'o_colorlist_item_color_transparent_6': Object.values(preset.availabilities[sqlDate]).length === 0}"
-                        t-on-click="() => this.state.selectedDate = sqlDate"
-                        t-out="this.formatedDate(sqlDate)" />
+                <div class="d-flex w-100 gap-1 mt-2 flex-nowrap overflow-x-auto no-scrollbar pb-2">
+                    <t t-foreach="Object.keys(preset.availabilities)" t-as="sqlDate" t-key="sqlDate">
+                        <t t-set="dateInfo" t-value="this.getDateInfo(sqlDate)"/>
+                        <button class="preset_date_buttons btn p-2 text-nowrap flex-shrink-0"
+                            style="min-width: 110px;"
+                            t-attf-class="{{ this.state.selectedDate === sqlDate ? 'btn-primary' : 'btn-secondary' }}"
+                            t-att-class="{
+                                'd-flex flex-column align-items-center': !dateInfo.isTodayOrTomorrow,
+                                'o_colorlist_item_color_transparent_6': Object.values(preset.availabilities[sqlDate]).length === 0
+                            }"
+                            t-on-click="() => this.state.selectedDate = sqlDate"
+                        >
+                            <span t-out="dateInfo.dayLabel"/>
+                            <small t-if="!dateInfo.isTodayOrTomorrow" t-out="dateInfo.monthDayLabel"/>
+                        </button>
+                    </t>
                 </div>
                 <hr/>
                 <div class="w-100 mt-3">
