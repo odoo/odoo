@@ -134,7 +134,11 @@ class StockMove(models.Model):
 
     def _is_purchase_return(self):
         self.ensure_one()
-        return self.location_dest_id.usage == "supplier" or (self.origin_returned_move_id and self.location_dest_id == self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False))
+        return self.location_dest_id.usage == "supplier"\
+            or self.origin_returned_move_id and (
+                self.location_dest_id == self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False) or
+                self.origin_returned_move_id.location_usage == "supplier"
+            )
 
     def _get_all_related_sm(self, product):
         return super()._get_all_related_sm(product) | self.filtered(lambda m: m.purchase_line_id.product_id == product)
