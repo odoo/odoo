@@ -278,6 +278,10 @@ export class CallParticipantCard extends Component {
     }
 
     onFullScreenChange() {
-        this.root.el.style = "left:''; top:''";
+        if (!this.root.el) {
+            return;
+        }
+        this.root.el.style.left = "";
+        this.root.el.style.top = "";
     }
 }
