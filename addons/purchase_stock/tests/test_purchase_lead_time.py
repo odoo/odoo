@@ -288,6 +288,53 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(purchase_order.picking_ids[0].move_ids.filtered(lambda x: x.product_uom_qty == 15).description_picking, t_shirt.display_name + "\n" + "Receive with care", 'wrong description in picking')
         self.assertEqual(purchase_order.picking_ids[0].move_ids.filtered(lambda x: x.product_uom_qty == 10).description_picking, t_shirt.display_name + "\n" + "Receive with care", 'wrong description in picking')
 
+    def test_merge_po_line_4(self):
+        """ test triggerring 2 times an manual orderpoint will use the same PO line"""
+        self._use_route_buy(self.product)
+
+        # Create a demand (outgoing move) which will generate a manual orderpoint
+        self.env['stock.move'].create({
+            'product_id': self.product.id,
+            'uom_id': self.uom.id,
+            'product_uom_qty': 5,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })._action_confirm()
+
+        # Search for the auto-created manual orderpoint
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+        orderpoint = self.env['stock.warehouse.orderpoint'].search([
+            ('product_id', '=', self.product.id),
+            ('trigger', '=', 'manual'),
+        ])
+        self.assertEqual(len(orderpoint), 1)
+
+        # First replenishment trigger
+        orderpoint.action_replenish()
+        po_line = self.env['purchase.order.line'].search([('product_id', '=', self.product.id)])
+        self.assertEqual(len(po_line), 1, 'A purchase order line should be created')
+        self.assertEqual(po_line.product_qty, 5)
+
+        # Create more demand
+        self.env['stock.move'].create({
+            'product_id': self.product.id,
+            'uom_id': self.uom.id,
+            'product_uom_qty': 3,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })._action_confirm()
+
+        # Second replenishment trigger should merge into the same PO line
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+        orderpoint = self.env['stock.warehouse.orderpoint'].search([
+            ('product_id', '=', self.product.id),
+            ('trigger', '=', 'manual'),
+        ])
+        orderpoint.action_replenish()
+        po_line = self.env['purchase.order.line'].search([('product_id', '=', self.product.id)])
+        self.assertEqual(len(po_line), 1, 'The PO line should be reused, not duplicated')
+        self.assertEqual(po_line.product_qty, 8, 'The PO line quantity should be updated')
+
     def test_reordering_days_to_purchase(self):
         self.company.horizon_days = 0
         self.patcher = patch('odoo.addons.stock.models.stock_orderpoint.fields.Date', wraps=fields.Date)
