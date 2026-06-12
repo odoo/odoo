@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="content_text" name="Thumbnails / Preview for text attachments">
+        <html>
+            <body style="background-color: #ffffff; color: #212529;">
+                <div class="wrap">
+                    <pre style="white-space: pre-wrap; word-wrap: break-word; margin: 0; font-family: monospace;" t-out="content"/>
+                </div>
+            </body>
+        </html>
+    </template>
+    <template id="content_markdown" name="Thumbnails / Preview for markdown attachments">
+        <html>
+            <head>
+                <t t-call-assets="web.assets_frontend" t-js="false"/>
+                <t t-call-assets="mail.assets_markdown" t-js="false"/>
+            </head>
+            <body style="background-color: #ffffff; color: #212529;">
+                <div class="wrap" t-out="content"/>
+            </body>
+        </html>
+    </template>
+</odoo>

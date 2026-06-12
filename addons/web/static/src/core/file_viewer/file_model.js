@@ -1,5 +1,17 @@
 import { url } from "@web/core/utils/urls";
 
+export const TEXT_MIMETYPES = [
+    "application/javascript",
+    "application/json",
+    "application/xml",
+    "text/css",
+    "text/csv",
+    "text/html",
+    "text/markdown",
+    "text/plain",
+    "text/xml",
+];
+
 export const FileModelMixin = (T) =>
     class extends T {
         access_token;
@@ -70,14 +82,7 @@ export const FileModelMixin = (T) =>
         }
 
         get isText() {
-            const textMimeType = [
-                "application/javascript",
-                "application/json",
-                "text/css",
-                "text/html",
-                "text/plain",
-            ];
-            return textMimeType.includes(this.mimetype);
+            return TEXT_MIMETYPES.includes(this.mimetype);
         }
 
         get isUrl() {

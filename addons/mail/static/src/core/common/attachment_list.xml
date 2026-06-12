@@ -61,6 +61,9 @@
                                 <img t-att-src="attachment.thumbnailUrl" t-att-alt="attachment.name" class="object-fit-contain position-absolute top-0 start-0 w-100 h-100"/>
                                 <i t-if="attachment.isVideo" class="fa fa-2x fa-play-circle"/>
                             </t>
+                            <div t-elif="attachment.isText" class="position-absolute top-0 start-0 w-100 h-100 overflow-hidden pe-none rounded-top-3">
+                                <iframe scrolling="no" class="w-100 h-100 border-0" t-att-src="attachment.textThumbnailUrl" sandbox=""/>
+                            </div>
                             <div t-else="" class="o_image" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
                         </div>
                          <div class="o-mail-AttachmentCard-info d-flex align-items-center px-2 py-1 bg-200 rounded-bottom-3">

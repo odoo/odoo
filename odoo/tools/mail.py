@@ -40,6 +40,7 @@ __all__ = [
     "encapsulate_email",
     "formataddr",
     "html2plaintext",
+    "html_links_to_footnotes",
     "html_normalize",
     "html_sanitize",
     "is_html_empty",
@@ -705,6 +706,84 @@ def plaintext2html(text: str, container_tag: str | None = None, with_paragraph: 
     if container_tag: # FIXME: validate that container_tag is just a simple tag?
         final = '<%s>%s</%s>' % (container_tag, final, container_tag)
     return markupsafe.Markup(final)
+
+
+def html_links_to_footnotes(html_content):
+    """Neutralize external links in an HTML fragment for transparent display.
+
+    Every external ``<a href>`` is replaced by its visible text followed by a
+    numbered reference (``<sup> [n]</sup>``), and the actual URLs are appended
+    as inert plain text at the end. This surfaces the real destination of a
+    link, defeating deceptive link text such as ``[your bank](http://evil)``,
+    and removes the anchor entirely so nothing remains clickable.
+
+    Intra-document anchors (``href="#..."``, including footnote backrefs emitted
+    by markdown renderers) are left untouched. Identical URLs share one number.
+
+    :param html_content: an HTML fragment (e.g. the output of a markdown render)
+    :returns: the transformed fragment, or the input unchanged if it has no external links
+    """
+    if not html_content or not html_content.strip():
+        return html_content
+    try:
+        root = html.fragment_fromstring(html_content, create_parent='div')
+    except etree.ParserError:
+        return html_content
+
+    footnotes, seen = [], {}
+    for a in list(root.iter('a')):
+        href = (a.get('href') or '').strip()
+        if not href or href.startswith('#'):
+            continue
+        num = seen.get(href)
+        if num is None:
+            num = len(footnotes) + 1
+            seen[href] = num
+            footnotes.append(href)
+        a.tag = 'span'
+        a.attrib.clear()
+        etree.SubElement(a, 'sup').text = f' [{num}]'
+
+    if not footnotes:
+        return html_content
+
+    box = etree.SubElement(root, 'div')
+    box.set('class', 'o_markdown_footnotes')
+    for i, href in enumerate(footnotes, 1):
+        item = etree.SubElement(box, 'div')
+        item.text = f'[{i}] {href}'
+        if real_host := _url_real_host(href):
+            warn = etree.SubElement(item, 'div')
+            warn.set('class', 'o_markdown_footnote_warning')
+            warn.text = (
+                '⚠ This link uses special characters that can hide where it really '
+                f'goes (actual address: {real_host}). Check before trusting it.'
+            )
+
+    return markupsafe.Markup(
+        (root.text or '')
+        + ''.join(html.tostring(c, encoding='unicode') for c in root)
+    )
+
+
+def _url_real_host(url):
+    """Return the punycode (ASCII) form of a URL's host when it contains
+    non-ASCII characters, so confusable/homograph hosts can be surfaced.
+
+    Returns None when there's no host, the host is already ASCII (no homograph
+    risk), or the host can't be IDNA-encoded. Callers should then show the URL
+    unchanged. Only the host is transformed; path/query are never punycode.
+    """
+    try:
+        host = urlparse(url).hostname
+    except ValueError:
+        return None
+    if not host or host.isascii():
+        return None
+    try:
+        return idna.encode(host, uts46=True).decode('ascii')
+    except idna.IDNAError:
+        return None
 
 
 def append_content_to_html(html, content, plaintext=True, preserve=False, container_tag=None, add_line_breaks=True):

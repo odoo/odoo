@@ -178,6 +178,23 @@ export class Attachment extends FileModelMixin(Record) {
             );
         }
     }
+
+    get textThumbnailUrl() {
+        if (this.id < 0) {
+            return ""; 
+        }
+        return url(`/mail/attachment/render_text/${this.id}`, {
+            ...this.urlQueryParams,
+            head: "1",
+        });
+    }
+
+    get defaultSource() {
+        if (this.isText) {
+            return url(`/mail/attachment/render_text/${this.id}`, this.urlQueryParams);
+        }
+        return super.defaultSource;
+    }
 }
 
 Attachment.register();
