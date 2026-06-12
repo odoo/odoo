@@ -26,7 +26,7 @@ import { OfflineActionHelper } from "@web/views/offline_action_helper";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 import { useExportRecords, useDeleteRecords } from "@web/views/view_hook";
 
-import { Component, onWillPatch, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillPatch, onWillStart, props, proxy, t } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 
@@ -44,23 +44,19 @@ export class ListController extends Component {
         DropdownItem,
         SelectionBox,
     };
-    static props = {
+    props = props({
         ...standardViewProps,
-        allowSelectors: { type: Boolean, optional: true },
-        onSelectionChanged: { type: Function, optional: true },
-        readonly: { type: Boolean, optional: true },
-        allowOpenAction: { type: Boolean, optional: true },
-        Model: Function,
-        Renderer: Function,
-        buttonTemplate: String,
-        archInfo: Object,
-    };
-    static defaultProps = {
-        allowSelectors: true,
-        createRecord: () => {},
-        selectRecord: () => {},
-        allowOpenAction: true,
-    };
+        allowSelectors: t.boolean().optional(true),
+        onSelectionChanged: t.function().optional(),
+        readonly: t.boolean().optional(),
+        allowOpenAction: t.boolean().optional(true),
+        Model: t.function(),
+        Renderer: t.function(),
+        buttonTemplate: t.string(),
+        archInfo: t.object(),
+        createRecord: t.function().optional(() => () => {}),
+        selectRecord: t.function().optional(() => () => {}),
+    });
 
     setup() {
         this.actionService = useService("action");

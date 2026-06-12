@@ -14,12 +14,12 @@ export class RecipientTag extends Component {
     setup() {
         this.props = props({
             bus: types.instanceOf(EventBus),
-            "color?": types.string(),
+            color: types.string().optional(),
             email: types.string(),
             id: types.string(),
             name: types.string(),
             onDelete: types.function([]),
-            "resId?": types.number(),
+            resId: types.number().optional(),
             text: types.string(),
             tooltip: types.string(),
             updateRecipient: types.function([types.string(), types.number()]),

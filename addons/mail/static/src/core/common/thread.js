@@ -13,9 +13,10 @@ import {
     onWillPatch,
     onWillUnmount,
     onWillUpdateProps,
+    props,
     proxy,
     signal,
-    types,
+    t,
     untrack,
     useEffect,
     useListener,
@@ -38,26 +39,21 @@ export const PRESENT_VIEWPORT_THRESHOLD = 1;
  * @property {import("@odoo/owl").Signal<HTMLElement>} [scrollRef]
  * @extends {Component<Props, Env>}
  */
+export const threadProps = {
+    autofocus: t.any().optional(),
+    showDates: t.any().optional(true),
+    jumpPresent: t.any().optional(0),
+    jumpToNewMessage: t.any().optional(),
+    thread: t.any(),
+    order: t.any().optional("asc"),
+    scrollRef: t.any().optional(),
+    showEmptyMessage: t.any().optional(true),
+    showJumpPresent: t.any().optional(true),
+};
+
 export class Thread extends Component {
     static components = { Message, NotificationMessage, Transition, DateSection };
-    static props = [
-        "autofocus?",
-        "showDates?",
-        "jumpPresent?",
-        "jumpToNewMessage?",
-        "thread",
-        "order?",
-        "scrollRef?",
-        "showEmptyMessage?",
-        "showJumpPresent?",
-    ];
-    static defaultProps = {
-        jumpPresent: 0,
-        order: "asc",
-        showDates: true,
-        showEmptyMessage: true,
-        showJumpPresent: true,
-    };
+    props = props(threadProps);
     static template = "mail.Thread";
 
     /** @type {Promise|undefined} */
@@ -100,7 +96,7 @@ export class Thread extends Component {
         );
         this.present = useRef("load-newer");
         this.jumpPresentRef = useRef("jump-present");
-        this.rootRef = signal(null, { type: types.instanceOf(HTMLDivElement) });
+        this.rootRef = signal(null, { type: t.instanceOf(HTMLDivElement) });
         this.visibleState = useVisible(this.rootRef, () => {
             this.updateShowJumpPresent();
         });

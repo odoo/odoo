@@ -6,7 +6,7 @@ import { CallPresentationBar } from "@mail/discuss/call/common/call_presentation
 import { CallParticipantCard } from "@mail/discuss/call/common/call_participant_card";
 import { PttAdBanner } from "@mail/discuss/call/common/ptt_ad_banner";
 
-import { Component, onMounted, onPatched, onWillUnmount, props, proxy, types } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillUnmount, props, proxy, t } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -14,7 +14,7 @@ import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useService } from "@web/core/utils/hooks";
 import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { useCallActions } from "@mail/discuss/call/common/call_actions";
-import { inDiscussCallViewPropsSchema, useInDiscussCallView } from "@mail/utils/common/hooks";
+import { useInDiscussCallView } from "@mail/utils/common/hooks";
 
 /** @typedef {import("@mail/discuss/call/common/call_layout").CallLayout} CallLayout */
 
@@ -41,6 +41,13 @@ export class Call extends Component {
         CallParticipantCard,
         PttAdBanner,
     };
+    props = props({
+        channel: t.any().optional(),
+        compact: t.any().optional(),
+        hasOverlay: t.any().optional(true),
+        // from inDiscussCallViewProps
+        isPip: t.any().optional(),
+    });
     static template = "discuss.Call";
 
     overlayTimeout;
@@ -64,15 +71,6 @@ export class Call extends Component {
             insetCard: undefined,
         });
         this.store = useService("mail.store");
-        this.props = props(
-            {
-                "channel?": types.instanceOf(this.store["discuss.channel"].Class),
-                "compact?": types.boolean(),
-                "hasOverlay?": types.boolean(),
-                ...inDiscussCallViewPropsSchema,
-            },
-            { hasOverlay: true }
-        );
         this.callActions = useCallActions({ channel: () => this.channel });
         onMounted(() => {
             this.resizeObserver = new ResizeObserver(() => this.arrangeTiles());

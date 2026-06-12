@@ -2,7 +2,7 @@ import { DateSection } from "@mail/core/common/date_section";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { AttachmentList } from "@mail/core/common/attachment_list";
 
-import { Component, onWillStart, onWillUpdateProps, props, types } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, props, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useSequential, useVisible } from "@mail/utils/common/hooks";
 
@@ -15,8 +15,8 @@ export class AttachmentPanel extends Component {
         this.sequential = useSequential();
         this.store = useService("mail.store");
         this.props = props({
-            channel: types.instanceOf(this.store["discuss.channel"].Class),
-            "close?": types.function([types.instanceOf(MouseEvent)]),
+            channel: t.instanceOf(this.store["discuss.channel"].Class),
+            close: t.function([]).optional(),
         });
         this.ormService = useService("orm");
         this.attachmentUploadService = useService("mail.attachment_upload");

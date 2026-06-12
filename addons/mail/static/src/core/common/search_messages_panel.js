@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps, props, types } from "@odoo/owl";
+import { Component, onWillUpdateProps, props, t } from "@odoo/owl";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -14,8 +14,8 @@ export class SearchMessagesPanel extends Component {
         super.setup(...arguments);
         this.store = useService("mail.store");
         this.props = props({
-            "close?": types.function([types.instanceOf(MouseEvent)]),
-            thread: types.instanceOf(this.store["mail.thread"].Class),
+            close: t.function([]).optional(),
+            thread: t.instanceOf(this.store["mail.thread"].Class),
         });
         this.messageSearch = this.env.messageSearch ?? useMessageSearch(this.props.thread);
         onWillUpdateProps((nextProps) => {

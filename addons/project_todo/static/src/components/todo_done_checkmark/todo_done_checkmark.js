@@ -1,13 +1,16 @@
-import { onMounted, proxy, useEffect } from "@odoo/owl";
+import { onMounted, props, proxy, t, useEffect } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { StateSelectionField, stateSelectionField } from "@web/views/fields/state_selection/state_selection_field";
 
 export class TodoDoneCheckmark extends StateSelectionField {
     static template = "project_todo.TodoDoneCheckmark";
-    static props = {
-        ...stateSelectionField.component.props,
-        viewType: { type: String },
-    };
+    props = props({
+        ...standardFieldProps,
+        showLabel: t.boolean().optional(true),
+        withCommand: t.boolean().optional(),
+        viewType: t.string().optional(),
+    });
     setup() {
         super.setup();
         this.stateDone = proxy({

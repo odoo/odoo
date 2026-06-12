@@ -8,10 +8,16 @@ import {
     cardMany2ManyTagsAvatarUserField,
     listMany2ManyTagsAvatarUserField,
 } from "@mail/views/web/fields/many2many_avatar_user_field/many2many_avatar_user_field";
+import {
+    many2ManyTagsAvatarFieldProps,
+    cardMany2ManyTagsAvatarFieldProps,
+    listMany2ManyTagsAvatarFieldProps,
+} from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
 import { EmployeeFieldRelationMixin } from "@hr/views/fields/employee_field_relation_mixin";
 
 export class Many2ManyTagsAvatarEmployeeField extends EmployeeFieldRelationMixin(
-    Many2ManyTagsAvatarUserField
+    Many2ManyTagsAvatarUserField,
+    many2ManyTagsAvatarFieldProps
 ) {
     displayAvatarCard(record) {
         return (
@@ -38,7 +44,8 @@ export const many2ManyTagsAvatarEmployeeField = {
 registry.category("fields").add("many2many_avatar_employee", many2ManyTagsAvatarEmployeeField);
 
 export class CardMany2ManyTagsAvatarEmployeeField extends EmployeeFieldRelationMixin(
-    CardMany2ManyTagsAvatarUserField
+    CardMany2ManyTagsAvatarUserField,
+    cardMany2ManyTagsAvatarFieldProps
 ) {
     displayAvatarCard(record) {
         return (
@@ -71,7 +78,8 @@ registry
     .add("activity.many2many_avatar_employee", cardMany2ManyTagsAvatarEmployeeField);
 
 export class ListMany2ManyTagsAvatarEmployeeField extends EmployeeFieldRelationMixin(
-    ListMany2ManyTagsAvatarUserField
+    ListMany2ManyTagsAvatarUserField,
+    listMany2ManyTagsAvatarFieldProps
 ) {
     displayAvatarCard(record) {
         return (

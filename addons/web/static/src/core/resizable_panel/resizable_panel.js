@@ -1,5 +1,5 @@
 import { useComponent, useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillUpdateProps, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillUpdateProps, onWillUnmount, props, t } from "@odoo/owl";
 
 function useResizable({
     containerRef,
@@ -112,28 +112,20 @@ function useResizable({
     }
 }
 
+export const resizablePanelProps = {
+    onResize: t.function().optional(() => () => {}),
+    initialWidth: t.number().optional(),
+    minWidth: t.number().optional(400),
+    class: t.string().optional(""),
+    slots: t.object(),
+    handleSide: t.selection(["start", "end"]).optional("end"),
+};
+
 export class ResizablePanel extends Component {
     static template = "web_studio.ResizablePanel";
 
     static components = {};
-    static props = {
-        onResize: { type: Function, optional: true },
-        initialWidth: { type: Number, optional: true },
-        minWidth: { type: Number, optional: true },
-        class: { type: String, optional: true },
-        slots: { type: Object },
-        handleSide: {
-            validate: (val) => ["start", "end"].includes(val),
-            optional: true,
-        },
-    };
-    static defaultProps = {
-        onResize: () => {},
-        width: 400,
-        minWidth: 400,
-        class: "",
-        handleSide: "end",
-    };
+    props = props(resizablePanelProps);
 
     setup() {
         useResizable({

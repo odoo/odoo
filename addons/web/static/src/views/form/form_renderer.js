@@ -16,7 +16,22 @@ import { FormCompiler } from "./form_compiler";
 import { FormLabel } from "./form_label";
 import { StatusBarButtons } from "./status_bar_buttons/status_bar_buttons";
 
-import { Component, onMounted, onWillUnmount, xml, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, props, t, xml, proxy } from "@odoo/owl";
+
+export const formRendererProps = {
+    archInfo: t.object(),
+    Compiler: t.function().optional(),
+    record: t.object(),
+    // Template props : added by the FormCompiler
+    class: t.string().optional(),
+    translateAlert: t.or([t.object(), t.literal(null)]).optional(),
+    onNotebookPageChange: t.function().optional(() => () => {}),
+    activeNotebookPages: t.object().optional({}),
+    readonly: t.boolean().optional(),
+    saveRecord: t.function().optional(),
+    setFieldAsDirty: t.function().optional(),
+    slots: t.object().optional(),
+};
 
 export class FormRenderer extends Component {
     static template = xml`<t t-call="{{ this.templates.FormRenderer }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this: this }) }" />`;
@@ -32,24 +47,7 @@ export class FormRenderer extends Component {
         InnerGroup,
         StatusBarButtons,
     };
-    static props = {
-        archInfo: Object,
-        Compiler: { type: Function, optional: true },
-        record: Object,
-        // Template props : added by the FormCompiler
-        class: { type: String, optional: true },
-        translateAlert: { type: [Object, { value: null }], optional: true },
-        onNotebookPageChange: { type: Function, optional: true },
-        activeNotebookPages: { type: Object, optional: true },
-        readonly: { type: Boolean, optional: true },
-        saveRecord: { type: Function, optional: true },
-        setFieldAsDirty: { type: Function, optional: true },
-        slots: { type: Object, optional: true },
-    };
-    static defaultProps = {
-        activeNotebookPages: {},
-        onNotebookPageChange: () => {},
-    };
+    props = props(formRendererProps);
 
     setup() {
         this.evaluateBooleanExpr = evaluateBooleanExpr;

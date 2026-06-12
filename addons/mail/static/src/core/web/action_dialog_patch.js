@@ -14,7 +14,7 @@ patch(ActionDialog.prototype, {
     },
 
     get canExpand() {
-        const actionProps = this.props.actionProps || {};
+        const actionProps = this.actionProps.actionProps || {};
         return actionProps.resModel === "mail.compose.message" && actionProps.type === "form";
     },
 

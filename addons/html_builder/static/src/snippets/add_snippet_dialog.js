@@ -1,5 +1,5 @@
 import { onWillRender, useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, props, proxy, t } from "@odoo/owl";
 import { loadBundle, loadCSS } from "@web/core/assets";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -19,19 +19,15 @@ import { SnippetViewer } from "./snippet_viewer";
 export class AddSnippetDialog extends Component {
     static template = "html_builder.AddSnippetDialog";
     static components = { Dialog };
-    static props = {
-        title: { type: String, optional: true },
-        selectedSnippet: { type: Object },
-        selectSnippet: { type: Function },
-        snippetModel: { type: Object },
-        close: { type: Function },
-        installSnippetModule: { type: Function },
-        editor: { type: Object },
-    };
-
-    static defaultProps = {
-        title: _t("Insert a block"),
-    };
+    props = props({
+        title: t.string().optional(_t("Insert a block")),
+        selectedSnippet: t.object(),
+        selectSnippet: t.function(),
+        snippetModel: t.object(),
+        close: t.function(),
+        installSnippetModule: t.function(),
+        editor: t.object(),
+    });
 
     setup() {
         useAutofocus();

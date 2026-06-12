@@ -1,10 +1,24 @@
 import { registry } from "@web/core/registry";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { ActionMenus } from "@web/search/action_menus/action_menus";
+import { ActionMenus, actionMenusProps } from "@web/search/action_menus/action_menus";
 import { _t } from "@web/core/l10n/translation";
-import { onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { onWillStart, onWillUpdateProps, t } from "@odoo/owl";
 
 const cogMenuRegistry = registry.category("cogMenu");
+
+export const cogMenuProps = {
+    ...actionMenusProps,
+    getActiveIds: t.function().optional(),
+    context: t.object().optional(),
+    resModel: t.string().optional(),
+    items: t
+        .object({
+            action: t.array().optional(),
+            print: t.array().optional(),
+        })
+        .optional({}),
+    slots: t.object().optional(),
+};
 
 /**
  * Combined Action menus (or Action/Print bar, previously called 'Sidebar')
@@ -24,18 +38,7 @@ export class CogMenu extends ActionMenus {
         ...ActionMenus.components,
         Dropdown,
     };
-    static props = {
-        ...ActionMenus.props,
-        getActiveIds: { type: ActionMenus.props.getActiveIds, optional: true },
-        context: { type: ActionMenus.props.context, optional: true },
-        resModel: { type: ActionMenus.props.resModel, optional: true },
-        items: { ...ActionMenus.props.items, optional: true },
-        slots: { type: Object, optional: true },
-    };
-    static defaultProps = {
-        ...ActionMenus.defaultProps,
-        items: {},
-    };
+    static actionMenusProps = cogMenuProps;
 
     setup() {
         super.setup();

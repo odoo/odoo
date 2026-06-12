@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps, proxy } from "@odoo/owl";
+import { Component, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
 import { MoOverviewLine } from "../mo_overview_line/mrp_mo_overview_line";
 import { MoOverviewOperationsBlock } from "../mo_overview_operations_block/mrp_mo_overview_operations_block";
@@ -12,30 +12,23 @@ export class MoOverviewComponentsBlock extends Component {
         MoOverviewByproductsBlock,
         MoOverviewComponentsBlock,
     };
-    static props = {
-        unfoldAll: { type: Boolean, optional: true },
-        components: { type: Array, optional: true },
-        operations: {
-            type: Object,
-            shape: {
-                summary: Object,
-                details: Array,
-            },
-            optional: true,
-        },
-        byproducts: {
-            type: Object,
-            shape: {
-                summary: Object,
-                details: Array,
-            },
-            optional: true,
-        },
+    props = props({
+        unfoldAll: t.boolean().optional(false),
+        components: t.array().optional(),
+        operations: t
+            .object({
+                summary: t.object(),
+                details: t.array(),
+            })
+            .optional(),
+        byproducts: t
+            .object({
+                summary: t.object(),
+                details: t.array(),
+            })
+            .optional(),
         showOptions: SHOW_OPTIONS,
-    };
-    static defaultProps = {
-        unfoldAll: false,
-    };
+    });
 
     static template = "mrp.MoOverviewComponentsBlock";
 

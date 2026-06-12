@@ -23,12 +23,17 @@ export class CallPreview extends Component {
 
     setup() {
         this.props = props({
-            "activateCamera?": types.number(),
-            "activateMicrophone?": types.number(),
-            "hasSettingsAtBottom?": types.boolean(),
-            "onSettingsChanged?": types.function([
-                types.object({ "camera?": types.boolean(), "microphone?": types.boolean() }),
-            ]),
+            activateCamera: types.number().optional(),
+            activateMicrophone: types.number().optional(),
+            hasSettingsAtBottom: types.boolean().optional(),
+            onSettingsChanged: types
+                .function([
+                    types.object({
+                        camera: types.boolean().optional(),
+                        microphone: types.boolean().optional(),
+                    }),
+                ])
+                .optional(),
         });
         this.dialog = useService("dialog");
         this.notification = useService("notification");

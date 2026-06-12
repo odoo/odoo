@@ -20,8 +20,10 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 import { useTagNavigation } from "@web/core/record_selectors/tag_navigation_hook";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 import { getFieldDomain } from "@web/model/relational_model/utils";
+
+export const DEFAULT_TAG_LIMIT = 8;
 
 class Many2ManyTagsFieldColorListPopover extends Component {
     static template = "web.Many2ManyTagsFieldColorListPopover";
@@ -37,6 +39,23 @@ class Many2ManyTagsFieldColorListPopover extends Component {
     };
 }
 
+export const many2ManyTagsFieldProps = {
+    ...standardFieldProps,
+    canCreate: t.boolean().optional(true),
+    canQuickCreate: t.boolean().optional(true),
+    canCreateEdit: t.boolean().optional(true),
+    onTagClick: t.selection(["open_form", "edit_color"]).optional(),
+    colorField: t.string().optional(),
+    createExpression: t.string().optional(),
+    domain: t.or([t.array(), t.function()]).optional(),
+    context: t.object().optional({}),
+    tagLimit: t.number().optional(DEFAULT_TAG_LIMIT),
+    placeholder: t.string().optional(),
+    nameCreateField: t.string().optional("name"),
+    searchThreshold: t.number().optional(),
+    string: t.string().optional(),
+};
+
 export class Many2ManyTagsField extends Component {
     static template = "web.Many2ManyTagsField";
     static components = {
@@ -45,34 +64,7 @@ export class Many2ManyTagsField extends Component {
         Many2XAutocomplete,
         Popover: Many2ManyTagsFieldColorListPopover,
     };
-    static props = {
-        ...standardFieldProps,
-        canCreate: { type: Boolean, optional: true },
-        canQuickCreate: { type: Boolean, optional: true },
-        canCreateEdit: { type: Boolean, optional: true },
-        onTagClick: {
-            optional: true,
-            validate: (value) => ["open_form", "edit_color"].includes(value),
-        },
-        colorField: { type: String, optional: true },
-        createExpression: { type: String, optional: true },
-        domain: { type: [Array, Function], optional: true },
-        context: { type: Object, optional: true },
-        tagLimit: { type: Number, optional: true },
-        placeholder: { type: String, optional: true },
-        nameCreateField: { type: String, optional: true },
-        searchThreshold: { type: Number, optional: true },
-        string: { type: String, optional: true },
-    };
-
-    static defaultProps = {
-        canCreate: true,
-        canQuickCreate: true,
-        tagLimit: 8,
-        canCreateEdit: true,
-        nameCreateField: "name",
-        context: {},
-    };
+    props = props(many2ManyTagsFieldProps);
 
     setup() {
         this.state = proxy({ expanded: false });
@@ -331,7 +323,7 @@ export const many2ManyTagsField = {
             label: _t("Maximum Visible Tags"),
             name: "tag_limit",
             type: "number",
-            default: Many2ManyTagsField.defaultProps.tagLimit,
+            default: DEFAULT_TAG_LIMIT,
             help: _t(
                 "Maximum number of tags to display before showing a counter. Set to 0 to always show all tags."
             ),

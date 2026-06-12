@@ -1,7 +1,7 @@
 import { MessageCardList } from "@mail/core/common/message_card_list";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
-import { Component, onWillStart, onWillUpdateProps, props, types } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
@@ -16,8 +16,8 @@ export class PinnedMessagesPanel extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.props = props({
-            channel: types.instanceOf(this.store["discuss.channel"].Class),
-            "close?": types.function([types.instanceOf(MouseEvent)]),
+            channel: t.instanceOf(this.store["discuss.channel"].Class),
+            close: t.function([]).optional(),
         });
         onWillStart(() => {
             this.props.channel.fetchPinnedMessages();

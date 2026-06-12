@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, onWillDestroy } from "@odoo/owl";
+import { Component, onMounted, onWillDestroy, props, t } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
@@ -58,69 +58,55 @@ export function getPopoverForTarget(target) {
     return POPOVERS.get(target);
 }
 
+export const popoverProps = {
+    // Main props
+    component: t.function(),
+    componentProps: t.object().optional({}),
+    target: t.customValidator(t.any(), (target) => {
+        // target may be inside an iframe, so get the Element constructor
+        // to test against from its owner document's default view
+        const Element = target?.ownerDocument?.defaultView?.Element;
+        return (
+            (Boolean(Element) && (target instanceof Element || target instanceof window.Element)) ||
+            (typeof target === "object" && target?.constructor?.name?.endsWith("Element"))
+        );
+    }),
+    close: t.function(),
+
+    // Styling and semantical props
+    animation: t.boolean().optional(true),
+    arrow: t.boolean().optional(true),
+    class: t.any().optional(""),
+    role: t.string().optional(),
+
+    // Positioning props
+    fixedPosition: t.boolean().optional(false),
+    shrink: t.boolean().optional(),
+    holdOnHover: t.boolean().optional(),
+    onPositioned: t.function().optional(),
+    position: t
+        .customValidator(t.string(), (p) => {
+            const [d, v = "middle"] = p.split("-");
+            return (
+                ["top", "bottom", "left", "right"].includes(d) &&
+                ["start", "middle", "end", "fit"].includes(v)
+            );
+        })
+        .optional("bottom"),
+
+    // Control props
+    closeOnClickAway: t.function().optional(() => () => true),
+    closeOnEscape: t.boolean().optional(true),
+    setActiveElement: t.boolean().optional(false),
+
+    // Technical props
+    ref: t.function().optional(),
+    slots: t.object().optional(),
+};
+
 export class Popover extends Component {
     static template = "web.Popover";
-    static defaultProps = {
-        animation: true,
-        arrow: true,
-        class: "",
-        closeOnClickAway: () => true,
-        closeOnEscape: true,
-        componentProps: {},
-        fixedPosition: false,
-        position: "bottom",
-        setActiveElement: false,
-    };
-    static props = {
-        // Main props
-        component: { type: Function },
-        componentProps: { optional: true, type: Object },
-        target: {
-            validate: (target) => {
-                // target may be inside an iframe, so get the Element constructor
-                // to test against from its owner document's default view
-                const Element = target?.ownerDocument?.defaultView?.Element;
-                return (
-                    (Boolean(Element) &&
-                        (target instanceof Element || target instanceof window.Element)) ||
-                    (typeof target === "object" && target?.constructor?.name?.endsWith("Element"))
-                );
-            },
-        },
-        close: { type: Function },
-
-        // Styling and semantical props
-        animation: { optional: true, type: Boolean },
-        arrow: { optional: true, type: Boolean },
-        class: { optional: true },
-        role: { optional: true, type: String },
-
-        // Positioning props
-        fixedPosition: { optional: true, type: Boolean },
-        shrink: { optional: true, type: Boolean },
-        holdOnHover: { optional: true, type: Boolean },
-        onPositioned: { optional: true, type: Function },
-        position: {
-            optional: true,
-            type: String,
-            validate: (p) => {
-                const [d, v = "middle"] = p.split("-");
-                return (
-                    ["top", "bottom", "left", "right"].includes(d) &&
-                    ["start", "middle", "end", "fit"].includes(v)
-                );
-            },
-        },
-
-        // Control props
-        closeOnClickAway: { optional: true, type: Function },
-        closeOnEscape: { optional: true, type: Boolean },
-        setActiveElement: { optional: true, type: Boolean },
-
-        // Technical props
-        ref: { optional: true, type: Function },
-        slots: { optional: true, type: Object },
-    };
+    props = props(popoverProps);
     static animationTime = 200;
 
     setup() {

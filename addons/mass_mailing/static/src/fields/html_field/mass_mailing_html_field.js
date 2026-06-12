@@ -1,12 +1,12 @@
 import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { DYNAMIC_FIELD_PLUGINS } from "@html_editor/backend/dynamic_field/dynamic_field_plugin";
-import { htmlField, HtmlField } from "@html_editor/fields/html_field";
+import { htmlField, HtmlField, htmlFieldProps } from "@html_editor/fields/html_field";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { MAIN_PLUGINS as MAIN_EDITOR_PLUGINS } from "@html_editor/plugin_sets";
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { MassMailingIframe } from "@mass_mailing/iframe/mass_mailing_iframe";
 import { ThemeSelectorIframe } from "@mass_mailing/themes/theme_selector/theme_selector_iframe";
-import { onWillUpdateProps, status, toRaw, useEffect } from "@odoo/owl";
+import { onWillUpdateProps, props, status, toRaw, t, useEffect } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
@@ -22,11 +22,11 @@ export class MassMailingHtmlField extends HtmlField {
         MassMailingIframe,
         ThemeSelectorIframe,
     };
-    static props = {
-        ...HtmlField.props,
-        inlineField: { type: String },
-        filterTemplates: { type: Boolean, optional: true },
-    };
+    props = props({
+        ...htmlFieldProps,
+        inlineField: t.string(),
+        filterTemplates: t.boolean().optional(),
+    });
 
     setup() {
         // Keep track of the next props before other `onWillUpdateProps`

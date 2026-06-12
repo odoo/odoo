@@ -3,29 +3,38 @@ import { useService, useChildRef } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Notebook } from "@web/core/notebook/notebook";
 
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, props, proxy, signal, t } from "@odoo/owl";
 import { iconClasses } from "@html_editor/utils/dom_info";
 import { TABS, renderMedia } from "./media_dialog_utils";
 
 const DEFAULT_SEQUENCE = 50;
 const sequence = (tab) => tab.sequence ?? DEFAULT_SEQUENCE;
 
+export const mediaDialogProps = {
+    extraTabs: t.array(t.object()).optional([]),
+    visibleTabs: t.array(t.string()).optional(),
+    activeTab: t.string().optional(),
+    media: t.any().optional(),
+    onlyImages: t.boolean().optional(),
+    noImages: t.boolean().optional(),
+    multiImages: t.boolean().optional(),
+    addFieldImage: t.boolean().optional(),
+    useMediaLibrary: t.boolean().optional(true),
+    resModel: t.any().optional(),
+    resId: t.any().optional(),
+    onAttachmentChange: t.function().optional(),
+    pendingAttachments: t.array().optional([]),
+    save: t.function(),
+    close: t.function(),
+};
+
 export class MediaDialog extends Component {
     static template = "html_editor.MediaDialog";
-    static defaultProps = {
-        useMediaLibrary: true,
-        extraTabs: [],
-    };
     static components = {
         Dialog,
         Notebook,
     };
-    static props = {
-        extraTabs: { type: Array, optional: true, element: Object },
-        visibleTabs: { type: Array, optional: true, element: String },
-        activeTab: { type: String, optional: true },
-        "*": true,
-    };
+    props = props(mediaDialogProps);
 
     setup() {
         this.size = "xl";

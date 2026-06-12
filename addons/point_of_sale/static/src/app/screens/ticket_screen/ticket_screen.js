@@ -13,7 +13,7 @@ import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/centered_icon";
 import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, onMounted, onWillStart, onWillUnmount, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, props, proxy, t } from "@odoo/owl";
 import {
     BACKSPACE,
     Numpad,
@@ -38,6 +38,16 @@ import { PrintPopup } from "@point_of_sale/app/components/popups/print_popup/pri
 const { DateTime } = luxon;
 const NBR_BY_PAGE = 30;
 
+export const ticketScreenProps = {
+    // When passed as true, it will use the saved _state.ui as default
+    // value when this component is reinstantiated.
+    // After setting the default value, the _state.ui will be overridden
+    // by the passed props.ui if there is any.
+    reuseSavedUIState: t.boolean().optional(false),
+    stateOverride: t.object().optional(),
+    ui: t.object().optional({}),
+};
+
 export class TicketScreen extends Component {
     static storeOnOrder = false;
     static template = "point_of_sale.TicketScreen";
@@ -54,18 +64,7 @@ export class TicketScreen extends Component {
         TipCell,
         ProgressBar,
     };
-    static props = {
-        reuseSavedUIState: { type: Boolean, optional: true },
-        stateOverride: { type: Object, optional: true },
-    };
-    static defaultProps = {
-        // When passed as true, it will use the saved _state.ui as default
-        // value when this component is reinstantiated.
-        // After setting the default value, the _state.ui will be overridden
-        // by the passed props.ui if there is any.
-        reuseSavedUIState: false,
-        ui: {},
-    };
+    props = props(ticketScreenProps);
 
     setup() {
         this.pos = usePos();

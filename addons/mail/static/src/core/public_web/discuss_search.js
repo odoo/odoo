@@ -11,7 +11,7 @@ export class DiscussSearch extends Component {
 
     setup() {
         super.setup();
-        this.props = props({ "class?": types.or([types.string(), types.object()]) });
+        this.props = props({ class: types.or([types.string(), types.object()]).optional() });
         this.store = useService("mail.store");
         this.command = useService("command");
         this.ui = useService("ui");

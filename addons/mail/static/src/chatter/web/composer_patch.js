@@ -1,12 +1,15 @@
-import { proxy, useEffect } from "@odoo/owl";
+import { proxy, t, useEffect } from "@odoo/owl";
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
 
 import { patch } from "@web/core/utils/patch";
 
-import { Composer } from "@mail/core/common/composer";
+import { Composer, composerProps } from "@mail/core/common/composer";
 import { RecipientsInput } from "@mail/core/web/recipients_input";
 
-Composer.props.push("thread?", "withMessageFields?");
+Object.assign(composerProps, {
+    thread: t.any().optional(),
+    withMessageFields: t.any().optional(),
+});
 
 Object.assign(Composer.components, {
     RecipientsInput,

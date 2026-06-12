@@ -2,6 +2,7 @@ import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
+import { props, t } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { convertCSSColorToRgba } from "@web/core/utils/colors";
 
@@ -18,13 +19,12 @@ function isBgBlurAvailable(target) {
 export class BgBlurOption extends BaseOptionComponent {
     static template = "website.BgBlurOption";
 
-    static props = {
-        ...BaseOptionComponent.props,
-        level: { type: Number, optional: true },
-    };
-    static defaultProps = {
-        level: 2,
-    };
+    props = props({
+        // BaseOptionComponent.props was an empty object; applyTo is declared
+        // here because this component reads this.props.applyTo.
+        applyTo: t.string().optional(),
+        level: t.number().optional(2),
+    });
 
     setup() {
         super.setup();

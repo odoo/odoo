@@ -9,7 +9,7 @@ import { useThreadActions } from "@mail/core/common/thread_actions";
 import { useHover, useMessageScrolling } from "@mail/utils/common/hooks";
 import { isEventHandled } from "@web/core/utils/misc";
 
-import { Component, computed, props, proxy, signal, types } from "@odoo/owl";
+import { Component, computed, props, proxy, signal, t } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { localization } from "@web/core/l10n/localization";
@@ -36,8 +36,8 @@ export class ChatWindow extends Component {
         super.setup(...arguments);
         this.store = useService("mail.store");
         this.props = props({
-            chatWindow: types.instanceOf(this.store.ChatWindow.Class),
-            "right?": types.number(),
+            chatWindow: t.instanceOf(this.store.ChatWindow.Class),
+            right: t.number().optional(),
         });
         useSubEnv({ inChatWindow: true });
         this.messageHighlight = useMessageScrolling({ thread: () => this.channel?.thread });
@@ -48,7 +48,7 @@ export class ChatWindow extends Component {
             editingName: false,
         });
         this.ui = useService("ui");
-        this.chatWindowContentRef = signal(null, { type: types.instanceOf(HTMLDivElement) });
+        this.chatWindowContentRef = signal(null, { type: t.instanceOf(HTMLDivElement) });
         this.threadActions = useThreadActions({ thread: () => this.channel?.thread });
         this.actionsMenuButtonHover = useHover("actionsMenuButton");
         this.parentChannelHover = useHover("parentChannel");

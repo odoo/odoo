@@ -1,4 +1,4 @@
-import { App, EventBus, types as t } from "@odoo/owl";
+import { App, EventBus, t } from "@odoo/owl";
 import { SERVICES_METADATA } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { getTemplate } from "@web/core/templates";
@@ -54,8 +54,8 @@ const serviceRegistry = registry.category("services");
 serviceRegistry.addValidation(
     t.object({
         start: t.function(),
-        "dependencies?": t.array(t.string()),
-        "async?": t.or([t.literal(true), t.array(t.string())]),
+        dependencies: t.array(t.string()).optional(),
+        async: t.or([t.literal(true), t.array(t.string())]).optional(),
     })
 );
 

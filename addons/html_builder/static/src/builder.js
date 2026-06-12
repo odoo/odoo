@@ -9,6 +9,8 @@ import {
     onWillUnmount,
     status,
     proxy,
+    props,
+    t,
 } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { _t } from "@web/core/l10n/translation";
@@ -42,35 +44,28 @@ const ONLY_ALLOW_INLINE_TAGS = new Set([
 export class Builder extends Component {
     static template = "html_builder.Builder";
     static components = { BlockTab, CustomizeTab };
-    static props = {
-        closeEditor: { type: Function, optional: true },
-        reloadEditor: { type: Function, optional: true },
-        onEditorLoad: { type: Function, optional: true },
-        newInstalledModule: { type: String, optional: true },
-        installSnippetModule: { type: Function, optional: true },
-        snippetsName: { type: String },
-        toggleMobile: { type: Function },
-        overlayRef: { type: Function },
-        iframeLoaded: { type: Object },
-        isMobile: { type: Boolean },
-        Plugins: { type: Array, optional: true },
+    props = props({
+        closeEditor: t.function().optional(),
+        reloadEditor: t.function().optional(() => () => {}),
+        onEditorLoad: t.function().optional(),
+        newInstalledModule: t.string().optional(),
+        installSnippetModule: t.function().optional(),
+        snippetsName: t.string(),
+        toggleMobile: t.function(),
+        overlayRef: t.function(),
+        iframeLoaded: t.object(),
+        isMobile: t.boolean(),
+        Plugins: t.array().optional(),
         // This fragment of config will be passed to the Editor and be
         // available to the plugins in `config`
-        config: { type: Object, optional: true },
-        getThemeTab: { type: Function, optional: true },
-        editableSelector: { type: String },
-        themeTabDisplayName: { type: String, optional: true },
-        slots: { type: Object, optional: true },
-        initialTab: { type: String, optional: true },
-        onlyCustomizeTab: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        reloadEditor: () => {},
-        config: {},
-        themeTabDisplayName: _t("Theme"),
-        initialTab: "blocks",
-        onlyCustomizeTab: false,
-    };
+        config: t.object().optional({}),
+        getThemeTab: t.function().optional(),
+        editableSelector: t.string(),
+        themeTabDisplayName: t.string().optional(_t("Theme")),
+        slots: t.object().optional(),
+        initialTab: t.string().optional("blocks"),
+        onlyCustomizeTab: t.boolean().optional(false),
+    });
 
     setup() {
         this.ThemeTab = this.props.getThemeTab?.();

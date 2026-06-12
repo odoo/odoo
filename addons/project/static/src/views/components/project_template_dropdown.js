@@ -1,4 +1,4 @@
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, props, proxy, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -13,27 +13,14 @@ export class ProjectTemplateDropdown extends Component {
         ProjectTemplateButtons,
     };
 
-    static props = {
-        hotkey: {
-            type: String,
-            optional: true,
-        },
-        newButtonClasses: String,
-        onCreate: Function,
-        context: Object,
-        getAdditionalContext: {
-            type: Function,
-            optional: true,
-        },
-        isDisabled: {
-            type: Boolean,
-            optional: true,
-        },
-    };
-    static defaultProps = {
-        hotkey: "c",
-        isDisabled: false,
-    };
+    props = props({
+        hotkey: t.string().optional("c"),
+        newButtonClasses: t.string(),
+        onCreate: t.function(),
+        context: t.object(),
+        getAdditionalContext: t.function().optional(),
+        isDisabled: t.boolean().optional(false),
+    });
 
     setup() {
         this.action = useService("action");

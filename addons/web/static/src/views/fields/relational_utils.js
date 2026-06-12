@@ -38,7 +38,7 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
  * @typedef {import("services").ServiceFactories} Services
  */
 
-import { Component, onWillUpdateProps, status, proxy } from "@odoo/owl";
+import { Component, onWillUpdateProps, props, status, proxy, t } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { highlightText, odoomark } from "@web/core/utils/html";
 import { deepEqual } from "@web/core/utils/objects";
@@ -187,49 +187,38 @@ export function useSpecialData(loadFn) {
 // Many2X
 //
 
+export const many2XAutocompleteProps = {
+    activeActions: t.object(),
+    autoSelect: t.boolean().optional(),
+    autocomplete_container: t.function().optional(),
+    autofocus: t.boolean().optional(),
+    context: t.object().optional({}),
+    createAction: t.function().optional(),
+    dropdown: t.boolean().optional(true),
+    fieldString: t.string(),
+    getDomain: t.function(),
+    id: t.string().optional(),
+    isToMany: t.boolean().optional(),
+    nameCreateField: t.string().optional("name"),
+    otherSources: t.array().optional([]),
+    placeholder: t.string().optional(),
+    quickCreate: t.or([t.function(), t.literal(null)]).optional(null),
+    resModel: t.string(),
+    searchLimit: t.number().optional(7),
+    searchMoreLabel: t.string().optional(),
+    searchMoreLimit: t.number().optional(1000),
+    searchThreshold: t.number().optional(0),
+    setInputFloats: t.function().optional(() => () => {}),
+    slots: t.any().optional(),
+    specification: t.object().optional({}),
+    update: t.function(),
+    value: t.string().optional(""),
+};
+
 export class Many2XAutocomplete extends Component {
     static template = "web.Many2XAutocomplete";
     static components = { AutoComplete };
-    static props = {
-        activeActions: Object,
-        autoSelect: { type: Boolean, optional: true },
-        autocomplete_container: { type: Function, optional: true },
-        autofocus: { type: Boolean, optional: true },
-        context: { type: Object, optional: true },
-        createAction: { type: Function, optional: true },
-        dropdown: { type: Boolean, optional: true },
-        fieldString: String,
-        getDomain: Function,
-        id: { type: String, optional: true },
-        isToMany: { type: Boolean, optional: true },
-        nameCreateField: { type: String, optional: true },
-        otherSources: { type: Array, optional: true },
-        placeholder: { type: String, optional: true },
-        quickCreate: { type: [Function, { value: null }], optional: true },
-        resModel: String,
-        searchLimit: { type: Number, optional: true },
-        searchMoreLabel: { type: String, optional: true },
-        searchMoreLimit: { type: Number, optional: true },
-        searchThreshold: { type: Number, optional: true },
-        setInputFloats: { type: Function, optional: true },
-        slots: { optional: true },
-        specification: { type: Object, optional: true },
-        update: Function,
-        value: { type: String, optional: true },
-    };
-    static defaultProps = {
-        context: {},
-        dropdown: true,
-        nameCreateField: "name",
-        otherSources: [],
-        quickCreate: null,
-        searchLimit: 7,
-        searchThreshold: 0,
-        searchMoreLimit: 1000,
-        setInputFloats: () => {},
-        specification: {},
-        value: "",
-    };
+    props = props(many2XAutocompleteProps);
     setup() {
         this.orm = useService("orm");
         this.offline = useService("offline");
@@ -689,24 +678,23 @@ export function useOpenMany2XRecord({
 // X2Many
 //
 
+export const x2ManyFieldDialogProps = {
+    archInfo: t.object(),
+    close: t.function(),
+    record: t.object(),
+    addNew: t.function(),
+    save: t.function(),
+    title: t.string(),
+    delete: t.any().optional(),
+    deleteButtonLabel: t.any().optional(),
+    config: t.object(),
+    controls: t.array().optional([]),
+};
+
 export class X2ManyFieldDialog extends Component {
     static template = "web.X2ManyFieldDialog";
     static components = { Dialog, FormRenderer, ViewButton };
-    static props = {
-        archInfo: Object,
-        close: Function,
-        record: Object,
-        addNew: Function,
-        save: Function,
-        title: String,
-        delete: { optional: true },
-        deleteButtonLabel: { optional: true },
-        config: Object,
-        controls: { type: Array, optional: true },
-    };
-    static defaultProps = {
-        controls: [],
-    };
+    props = props(x2ManyFieldDialogProps);
     setup() {
         this.actionService = useService("action");
         this.ui = useService("ui");

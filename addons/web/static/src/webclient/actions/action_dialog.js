@@ -1,4 +1,5 @@
-import { Dialog } from "@web/core/dialog/dialog";
+import { props, t } from "@odoo/owl";
+import { Dialog, dialogProps } from "@web/core/dialog/dialog";
 import { DebugMenu } from "@web/core/debug/debug_menu";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 
@@ -6,18 +7,15 @@ export class ActionDialog extends Dialog {
     static components = { ...Dialog.components, DebugMenu };
     static template = "web.ActionDialog";
     static props = {
-        ...Dialog.props,
-        close: Function,
-        slots: { optional: true },
-        ActionComponent: { optional: true },
-        actionProps: { optional: true },
-        actionType: { optional: true },
-        title: { optional: true },
+        ...dialogProps,
+        slots: t.any().optional(),
+        withBodyPadding: t.boolean().optional(false),
     };
-    static defaultProps = {
-        ...Dialog.defaultProps,
-        withBodyPadding: false,
-    };
+    actionProps = props({
+        ActionComponent: t.any().optional(),
+        actionProps: t.any().optional(),
+        actionType: t.any().optional(),
+    });
 
     setup() {
         super.setup();

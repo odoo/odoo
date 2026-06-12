@@ -1,24 +1,18 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { onMounted, onWillDestroy } from "@odoo/owl";
+import { onMounted, onWillDestroy, props, t } from "@odoo/owl";
 
 export class ProductsDesignPanel extends BaseOptionComponent {
     static template = "website_sale.ProductsDesignPanel";
     static components = {
         ...BaseOptionComponent.components,
     };
-    static props = {
-        label: { type: String, optional: true },
-        recordName: { type: String, optional: true },
-        showLists: { type: Boolean, optional: true },
-        showSecondaryImage: { type: Boolean, optional: true },
-        openByDefault: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        label: "Design",
-        showLists: true,
-        showSecondaryImage: false,
-        openByDefault: false,
-    };
+    props = props({
+        label: t.string().optional("Design"),
+        recordName: t.string().optional(),
+        showLists: t.boolean().optional(true),
+        showSecondaryImage: t.boolean().optional(false),
+        openByDefault: t.boolean().optional(false),
+    });
 
     setup() {
         super.setup();

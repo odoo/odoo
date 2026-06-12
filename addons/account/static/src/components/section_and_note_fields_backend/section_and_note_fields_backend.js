@@ -1,5 +1,5 @@
 import { onWillRender } from "@web/owl2/utils";
-import { Component, onPatched } from "@odoo/owl";
+import { Component, onPatched, props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
@@ -7,7 +7,7 @@ import { CharField } from "@web/views/fields/char/char_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { ListTextField, TextField } from "@web/views/fields/text/text_field";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
-import { ListRenderer } from "@web/views/list/list_renderer";
+import { ListRenderer, listRendererProps } from "@web/views/list/list_renderer";
 
 const SHOW_ALL_ITEMS_TOOLTIP = _t("Some lines can be on the next page, display them to unlock actions on section.");
 const DISABLED_MOVE_DOWN_ITEM_TOOLTIP = _t("Some lines of the next section can be on the next page, display them to unlock the action.");
@@ -71,13 +71,13 @@ function getRecordsUntilSection(list, record, asc, subSection) {
 export class SectionAndNoteListRenderer extends ListRenderer {
     static template = "account.SectionAndNoteListRenderer";
     static recordRowTemplate = "account.SectionAndNoteListRenderer.RecordRow";
-    static props = [
-        ...super.props,
-        "aggregatedFields",
-        "subsections",
-        "hidePrices",
-        "hideComposition",
-    ];
+    props = props({
+        ...listRendererProps,
+        aggregatedFields: t.any(),
+        subsections: t.any(),
+        hidePrices: t.any(),
+        hideComposition: t.any(),
+    });
 
     /**
      * The purpose of this extension is to allow sections and notes in the one2many list

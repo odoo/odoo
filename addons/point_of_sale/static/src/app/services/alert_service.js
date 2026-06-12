@@ -1,4 +1,4 @@
-import { Component, xml } from "@odoo/owl";
+import { Component, props, t, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
@@ -9,25 +9,12 @@ class Alert extends Component {
             <button t-if="this.props.closable" t-on-click="this.props.onClose" class="btn btn-lg btn-close position-absolute end-0 me-2"/>
         </div>
     `;
-    static props = {
-        message: String,
-        type: {
-            type: String,
-            optional: true,
-            validate: (type) => ["info", "warning", "danger", "success"].includes(type),
-        },
-        onClose: {
-            type: Function,
-        },
-        closable: {
-            type: Boolean,
-            optional: true,
-        },
-    };
-    static defaultProps = {
-        type: "info",
-        closable: false,
-    };
+    props = props({
+        message: t.string(),
+        type: t.selection(["info", "warning", "danger", "success"]).optional("info"),
+        onClose: t.function(),
+        closable: t.boolean().optional(false),
+    });
     setup() {
         super.setup(...arguments);
         this.ui = useService("ui");

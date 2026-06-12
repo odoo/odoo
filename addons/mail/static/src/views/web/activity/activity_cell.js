@@ -20,11 +20,13 @@ export class ActivityCell extends Component {
         this.props = props({
             activityIds: types.array(types.number()),
             activityTypeId: types.number(),
-            "attachmentsInfo?": types.object({
-                count: types.number(),
-                most_recent_id: types.number(),
-                most_recent_name: types.string(),
-            }),
+            attachmentsInfo: types
+                .object({
+                    count: types.number(),
+                    most_recent_id: types.number(),
+                    most_recent_name: types.string(),
+                })
+                .optional(),
             countByState: types.record(types.number()),
             reloadFunc: types.function([]),
             reportingDate: types.string(),

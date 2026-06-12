@@ -1,8 +1,7 @@
 import { useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { useChildRef } from "@web/core/utils/hooks";
 import {
-    basicContainerBuilderComponentProps,
     useActionInfo,
     useBuilderComponent,
     useInputBuilderComponent,
@@ -16,39 +15,42 @@ import { pick } from "@web/core/utils/objects";
 
 export class BuilderRange extends Component {
     static template = "html_builder.BuilderRange";
-    static props = {
-        ...basicContainerBuilderComponentProps,
-        min: { type: Number, optional: true },
-        max: { type: Number, optional: true },
-        step: { type: Number, optional: true },
-        default: { type: Number, optional: true },
-        unit: { type: String, optional: true },
-        saveUnit: { type: String, optional: true },
-        applyWithUnit: { type: Boolean, optional: true },
-        withNumberInput: { type: Boolean, optional: true },
+    props = props({
+        // basicContainerBuilderComponentProps (converted inline)
+        id: t.string().optional(),
+        applyTo: t.string().optional(),
+        preview: t.boolean().optional(),
+        inheritedActions: t.array(t.string()).optional(),
+
+        action: t.string().optional(),
+        actionParam: t.any().optional(),
+
+        // Shorthand actions.
+        classAction: t.any().optional(),
+        attributeAction: t.any().optional(),
+        dataAttributeAction: t.any().optional(),
+        styleAction: t.any().optional(),
+
+        min: t.number().optional(0),
+        max: t.number().optional(100),
+        step: t.number().optional(1),
+        default: t.number().optional(0),
+        unit: t.string().optional(),
+        saveUnit: t.string().optional(),
+        applyWithUnit: t.boolean().optional(true),
+        withNumberInput: t.boolean().optional(false),
         // convertorRatio: controls how values are displayed in input.
         // - Not passed: displays original value
         // - Empty object: displays normalized values from 0-100 range
         // - Custom object: uses provided toRatio/toValue functions
-        convertorRatio: {
-            type: Object,
-            optional: true,
-            shape: {
-                toRatio: { type: Function, optional: true },
-                toValue: { type: Function, optional: true },
-                ratioStep: { type: Number, optional: true },
-            },
-        },
-    };
-    static defaultProps = {
-        ...BuilderComponent.defaultProps,
-        min: 0,
-        max: 100,
-        step: 1,
-        default: 0,
-        applyWithUnit: true,
-        withNumberInput: false,
-    };
+        convertorRatio: t
+            .object({
+                toRatio: t.function().optional(),
+                toValue: t.function().optional(),
+                ratioStep: t.number().optional(),
+            })
+            .optional(),
+    });
     static components = { BuilderComponent, BuilderNumberInputBase };
 
     setup() {

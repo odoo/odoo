@@ -1,13 +1,18 @@
+import { props, t } from "@odoo/owl";
+
 import { _t } from "@web/core/l10n/translation";
-import { NotificationAlertDialog } from "@web/core/notification_alert_dialog/notification_alert_dialog";
+import {
+    NotificationAlertDialog,
+    notificationAlertDialogProps,
+} from "@web/core/notification_alert_dialog/notification_alert_dialog";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallPermissionDeniedDialog extends NotificationAlertDialog {
-    static defaultProps = {
-        ...NotificationAlertDialog.defaultProps,
-        animateMouse: false,
-    };
-    static props = [...NotificationAlertDialog.props, "permissionType?"];
+    props = props({
+        ...notificationAlertDialogProps,
+        animateMouse: t.any().optional(false),
+        permissionType: t.any().optional(),
+    });
     static template = "discuss.CallPermissionDeniedDialog";
 
     setup() {

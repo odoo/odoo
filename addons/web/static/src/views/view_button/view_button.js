@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
 import { pick } from "@web/core/utils/objects";
@@ -34,33 +34,29 @@ function iconFromString(iconString) {
     return icon;
 }
 
+export const viewButtonProps = {
+    id: t.any().optional(),
+    tag: t.any().optional("button"),
+    record: t.any().optional(),
+    attrs: t.any().optional({}),
+    className: t.any().optional(""),
+    context: t.any().optional(),
+    clickParams: t.any().optional({}),
+    icon: t.any().optional(),
+    defaultRank: t.any().optional(),
+    disabled: t.any().optional(),
+    size: t.any().optional(),
+    tabindex: t.any().optional(),
+    title: t.any().optional(),
+    style: t.any().optional(),
+    string: t.any().optional(),
+    slots: t.any().optional(),
+    onClick: t.any().optional(),
+};
+
 export class ViewButton extends Component {
     static template = "web.views.ViewButton";
-    static props = [
-        "id?",
-        "tag?",
-        "record?",
-        "attrs?",
-        "className?",
-        "context?",
-        "clickParams?",
-        "icon?",
-        "defaultRank?",
-        "disabled?",
-        "size?",
-        "tabindex?",
-        "title?",
-        "style?",
-        "string?",
-        "slots?",
-        "onClick?",
-    ];
-    static defaultProps = {
-        tag: "button",
-        className: "",
-        clickParams: {},
-        attrs: {},
-    };
+    props = props(viewButtonProps);
 
     setup() {
         if (this.props.icon) {

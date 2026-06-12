@@ -1,23 +1,19 @@
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 
-export const buttonsType = {
-    type: Array,
-    element: [
-        {
-            type: Object,
-            shape: {
-                value: String,
-                text: { type: String, optional: true },
-                class: { type: String, optional: true },
-                disabled: { type: Boolean, optional: true },
-            },
-        },
-        Number,
-        String,
-    ],
-};
+export const buttonsType = t.array(
+    t.or([
+        t.object({
+            value: t.string(),
+            text: t.string().optional(),
+            class: t.string().optional(),
+            disabled: t.boolean().optional(),
+        }),
+        t.number(),
+        t.string(),
+    ])
+);
 
 export const DECIMAL = {
     get value() {
@@ -65,14 +61,11 @@ export function enhancedButtons() {
 
 export class Numpad extends Component {
     static template = "point_of_sale.Numpad";
-    static props = {
-        class: { type: String, optional: true },
-        onClick: { type: Function, optional: true },
-        buttons: { type: buttonsType, optional: true },
-    };
-    static defaultProps = {
-        class: "numpad",
-    };
+    props = props({
+        class: t.string().optional("numpad"),
+        onClick: t.function().optional(),
+        buttons: buttonsType.optional(),
+    });
     get buttons() {
         return this.props.buttons || getButtons([DECIMAL, ZERO, BACKSPACE]);
     }

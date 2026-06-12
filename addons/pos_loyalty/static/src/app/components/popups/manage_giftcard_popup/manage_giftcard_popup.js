@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, proxy } from "@odoo/owl";
+import { Component, onMounted, props, proxy, t } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
@@ -14,19 +14,15 @@ import { roundCurrency } from "@point_of_sale/app/models/utils/currency";
 export class ManageGiftCardPopup extends Component {
     static template = "pos_loyalty.ManageGiftCardPopup";
     static components = { Dialog, DateTimeInput };
-    static props = {
-        title: String,
-        placeholder: { type: String, optional: true },
-        rows: { type: Number, optional: true },
-        line: Object,
-        getPayload: Function,
-        close: Function,
-    };
-    static defaultProps = {
-        startingValue: "",
-        placeholder: "",
-        rows: 1,
-    };
+    props = props({
+        title: t.string(),
+        placeholder: t.string().optional(""),
+        rows: t.number().optional(1),
+        startingValue: t.string().optional(""),
+        line: t.object(),
+        getPayload: t.function(),
+        close: t.function(),
+    });
 
     setup() {
         this.ui = useService("ui");

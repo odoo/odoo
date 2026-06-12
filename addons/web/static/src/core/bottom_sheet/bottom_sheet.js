@@ -4,7 +4,7 @@ import { useRef } from "@web/owl2/utils";
  *
  * @class
  */
-import { Component, onMounted, proxy } from "@odoo/owl";
+import { Component, onMounted, props, proxy, t } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useBackButton, useForwardRefToParent } from "@web/core/utils/hooks";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
@@ -16,23 +16,19 @@ import { browser } from "@web/core/browser/browser";
 export class BottomSheet extends Component {
     static template = "web.BottomSheet";
 
-    static defaultProps = {
-        class: "",
-    };
-
-    static props = {
+    props = props({
         // Main props
-        component: { type: Function },
-        componentProps: { optional: true, type: Object },
-        close: { type: Function },
+        component: t.function(),
+        componentProps: t.object().optional(),
+        close: t.function(),
 
-        class: { optional: true },
-        role: { optional: true, type: String },
+        class: t.any().optional(""),
+        role: t.string().optional(),
 
         // Technical props
-        ref: { optional: true, type: Function },
-        slots: { optional: true, type: Object },
-    };
+        ref: t.function().optional(),
+        slots: t.object().optional(),
+    });
 
     setup() {
         this.maxHeightPercent = 90;

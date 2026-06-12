@@ -1,22 +1,17 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component, proxy } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 
 export class SelectionPopup extends Component {
     static template = "point_of_sale.SelectionPopup";
     static components = { Dialog };
-    static props = {
-        title: { type: String, optional: true },
-        list: { type: Array, optional: true },
-        getPayload: Function,
-        close: Function,
-        size: { type: String, optional: true },
-    };
-    static defaultProps = {
-        title: _t("Select"),
-        list: [],
-        size: "lg",
-    };
+    props = props({
+        title: t.string().optional(_t("Select")),
+        list: t.array().optional([]),
+        getPayload: t.function(),
+        close: t.function(),
+        size: t.string().optional("lg"),
+    });
 
     /**
      * Value of the `item` key of the selected element in the Selection

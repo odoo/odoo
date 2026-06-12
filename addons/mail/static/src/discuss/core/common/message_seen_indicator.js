@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, props, types, useListener } from "@odoo/owl";
+import { Component, props, t, useListener } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useBackButton, useService } from "@web/core/utils/hooks";
@@ -13,8 +13,8 @@ class MessageSeenIndicatorDialog extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.props = props({
-            "close?": types.function([]),
-            message: types.instanceOf(this.store["mail.message"].Class),
+            close: t.function([]).optional(),
+            message: t.instanceOf(this.store["mail.message"].Class),
         });
         this.contentRef = useRef("content");
         useListener(
@@ -38,8 +38,8 @@ export class MessageSeenIndicator extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.props = props({
-            "className?": types.string(),
-            message: types.instanceOf(this.store["mail.message"].Class),
+            className: t.string().optional(),
+            message: t.instanceOf(this.store["mail.message"].Class),
         });
         this.dialog = useService("dialog");
     }

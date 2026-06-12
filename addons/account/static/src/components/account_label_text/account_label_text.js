@@ -1,11 +1,12 @@
-import { onMounted, onPatched } from "@odoo/owl";
+import { onMounted, onPatched, props, t } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { useDebounced } from "@web/core/utils/timing";
 import { useRef } from "@web/owl2/utils";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-import { ListTextField } from "@web/views/fields/text/text_field";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { ListTextField, textFieldProps } from "@web/views/fields/text/text_field";
 import {
     ListSectionAndNoteText,
     listSectionAndNoteText,
@@ -15,10 +16,12 @@ import {
 export class AccountLabelTextField extends ListTextField {
     static template = "account.AccountLabelTextField";
     static components = { Many2XAutocomplete };
-    static props = {
-        ...ListTextField.props,
-        context: { type: Object, optional: true },
-    };
+    props = props({
+        ...textFieldProps,
+        rowCount: t.number().optional(1),
+        context: t.object().optional(),
+        options: t.object().optional({}),
+    });
 
     setup() {
         super.setup();
@@ -191,10 +194,11 @@ export class AccountLabelTextField extends ListTextField {
 
 export class AccountLabelSectionAndNoteText extends ListSectionAndNoteText {
     static template = "account.AccountLabelSectionAndNoteText";
-    static props = {
-        ...ListSectionAndNoteText.props,
-        context: { type: Object, optional: true },
-    };
+    props = props({
+        ...standardFieldProps,
+        context: t.object().optional(),
+        options: t.object().optional({}),
+    });
 
     get componentToUse() {
         const record = this.props.record;

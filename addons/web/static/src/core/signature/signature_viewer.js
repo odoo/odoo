@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps, proxy } from "@odoo/owl";
+import { Component, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { SignatureDialog } from "@web/core/signature/signature_dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -7,19 +7,16 @@ const PLACEHOLDER = "/web/static/img/placeholder.png";
 
 export class SignatureViewer extends Component {
     static template = "web.SignatureViewer";
-    static props = {
-        defaultFont: { type: String, optional: true },
-        defaultName: { type: String, optional: true },
-        height: { type: Number, optional: true },
-        readonly: { type: Boolean, optional: true },
-        type: { validate: (t) => ["initial", "signature"].includes(t), optional: true },
-        update: { type: Function, optional: true },
-        url: { type: String, optional: true },
-        width: { type: Number, optional: true },
-    };
-    static defaultProps = {
-        type: "signature",
-    };
+    props = props({
+        defaultFont: t.string().optional(),
+        defaultName: t.string().optional(),
+        height: t.number().optional(),
+        readonly: t.boolean().optional(),
+        type: t.selection(["initial", "signature"]).optional("signature"),
+        update: t.function().optional(),
+        url: t.string().optional(),
+        width: t.number().optional(),
+    });
 
     static displaySignatureRatio = 3;
 
@@ -37,7 +34,7 @@ export class SignatureViewer extends Component {
     }
 
     get src() {
-        return this.state.isValid && this.props.url || PLACEHOLDER;
+        return (this.state.isValid && this.props.url) || PLACEHOLDER;
     }
 
     get size() {

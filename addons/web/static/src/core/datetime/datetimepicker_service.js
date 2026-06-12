@@ -1,4 +1,12 @@
-import { immediateEffect, markRaw, onMounted, onPatched, onWillDestroy, proxy } from "@odoo/owl";
+import {
+    getDefault,
+    immediateEffect,
+    markRaw,
+    onMounted,
+    onPatched,
+    onWillDestroy,
+    proxy,
+} from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { areDatesEqual, formatDate, formatDateTime, parseDate, parseDateTime } from "../l10n/dates";
@@ -6,7 +14,7 @@ import { makePopover } from "../popover/popover_hook";
 import { registry } from "../registry";
 import { ensureArray, zip, zipWith } from "../utils/arrays";
 import { shallowEqual } from "../utils/objects";
-import { DateTimePicker } from "./datetime_picker";
+import { dateTimePickerProps } from "./datetime_picker";
 import { DateTimePickerPopover } from "./datetime_picker_popover";
 
 /**
@@ -40,6 +48,22 @@ function stringifyProps(props) {
         copy[key] = JSON.stringify(value);
     }
     return copy;
+}
+
+/**
+ * Derives the default values of the date time picker props from its schema.
+ *
+ * @returns {Partial<DateTimePickerProps>}
+ */
+function getPickerDefaults() {
+    const defaults = {};
+    for (const [key, type] of Object.entries(dateTimePickerProps)) {
+        const factory = getDefault(type);
+        if (factory) {
+            defaults[key] = factory();
+        }
+    }
+    return defaults;
 }
 
 const FOCUS_CLASSNAME = "text-primary";
@@ -453,8 +477,8 @@ export const datetimePickerService = {
                 // Hook variables
 
                 /** @type {DateTimePickerProps} */
-                const rawPickerProps = {
-                    ...DateTimePicker.defaultProps,
+                const defaults = {
+                    ...getPickerDefaults(),
                     onReset: () => {
                         updateValue(
                             ensureArray(pickerProps.value).length === 2 ? [false, false] : false,
@@ -470,10 +494,16 @@ export const datetimePickerService = {
                             saveAndClose();
                         }
                     },
-                    ...params.pickerProps,
                 };
-                const pickerProps = proxy(rawPickerProps);
 
+                const rawPickerProps = params.pickerProps;
+                const initialPickerProps = { ...defaults };
+                for (const [key, value] of Object.entries(rawPickerProps)) {
+                    if (value !== undefined) {
+                        initialPickerProps[key] = value;
+                    }
+                }
+                const pickerProps = proxy(initialPickerProps);
                 const popover = createPopover(DateTimePickerPopover, {
                     useBottomSheet: useBottomSheet(),
                     async onClose() {
@@ -531,6 +561,9 @@ export const datetimePickerService = {
                         inputsChanged = ensureArray(nextProps.value).map(() => false);
 
                         for (const [key, value] of Object.entries(nextProps)) {
+                            if (value === undefined) {
+                                continue;
+                            }
                             if (!areDatesEqual(pickerProps[key], value)) {
                                 pickerProps[key] = value;
                             }

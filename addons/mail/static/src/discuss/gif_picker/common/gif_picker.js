@@ -51,9 +51,9 @@ export class GifPicker extends Component {
     setup() {
         super.setup();
         this.props = props({
-            "close?": types.function([]),
+            close: types.function([]).optional(),
             onSelect: types.function([types.object(), types.boolean()]),
-            "state?": types.object(),
+            state: types.object().optional(),
         });
         this.orm = useService("orm");
         this.store = useService("mail.store");
