@@ -59,7 +59,7 @@ class TestExpenses(TestExpenseCommon):
                 'name': 'Company PC 1000 + 15%',  # Taxes are included
                 'employee_id': self.expense_employee.id,
                 'product_id': self.product_c.id,
-                'total_amount_currency': 1000.00,
+                'price_unit_currency': 1000.00,
                 'date': '2021-10-12',
                 'payment_mode': 'company_account',
                 'company_id': self.company_data['company'].id,
@@ -241,6 +241,7 @@ class TestExpenses(TestExpenseCommon):
                 'expense_id': expense.id,
                 'product_id': expense.product_id.id,
                 'tax_ids': expense.tax_ids.ids,
+                'price_unit_currency': expense.total_amount_currency / 2,
                 'total_amount_currency': expense.total_amount_currency / 2,
                 'tax_amount_currency': 65.22,
                 'employee_id': expense.employee_id.id,
@@ -256,7 +257,7 @@ class TestExpenses(TestExpenseCommon):
 
             # Check removing tax_ids and analytic_distribution
             with form.expense_split_line_ids.edit(0) as line:
-                line.total_amount_currency = 200.00
+                line.price_unit_currency = 200.00
                 line.tax_ids.clear()
                 line.analytic_distribution = {}
                 self.assertEqual(line.total_amount_currency, 200.00)
@@ -265,7 +266,7 @@ class TestExpenses(TestExpenseCommon):
 
             # This line should have the same tax_ids and analytic_distribution as original expense
             with form.expense_split_line_ids.new() as line:
-                line.total_amount_currency = 300.00
+                line.price_unit_currency = 300.00
                 self.assertEqual(line.total_amount_currency, 300.00)
                 self.assertEqual(line.tax_amount_currency, 39.13)
                 self.assertDictEqual(line.analytic_distribution, expense.analytic_distribution)
@@ -274,7 +275,7 @@ class TestExpenses(TestExpenseCommon):
 
             # Check adding tax_ids and setting analytic_distribution
             with form.expense_split_line_ids.new() as line:
-                line.total_amount_currency = 500.00
+                line.price_unit_currency = 500.00
                 line.tax_ids.add(self.tax_purchase_b)
                 line.analytic_distribution = {self.analytic_account_2.id: 100}
                 self.assertEqual(line.total_amount_currency, 500.00)
@@ -328,7 +329,7 @@ class TestExpenses(TestExpenseCommon):
 
     def test_expense_multi_currencies(self):
         """
-        Checks that the currency rate is recomputed properly when the total in company currency is set to a new value
+        Checks that amounts are converted with the currency rate, which can be adjusted through the converted unit price.
         """
         foreign_currency_1 = self.other_currency
         foreign_currency_2 = self.setup_other_currency('GBP', rounding=0.01, rates=([('2015-12-31', 1 / 1.52)]))
@@ -340,7 +341,7 @@ class TestExpenses(TestExpenseCommon):
                 'payment_mode': 'company_account',
                 'employee_id': self.expense_employee.id,
                 'product_id': self.product_c.id,
-                'total_amount_currency': 1000.00,
+                'price_unit_currency': 1000.00,
                 'date': self.frozen_today,
                 'company_id': self.company_data['company'].id,
                 'currency_id': foreign_currency_1.id,  # rate is 1:2
@@ -351,7 +352,7 @@ class TestExpenses(TestExpenseCommon):
                 'payment_mode': 'company_account',
                 'employee_id': self.expense_employee.id,
                 'product_id': self.product_c.id,
-                'total_amount_currency': 1000.00,
+                'price_unit_currency': 1000.00,
                 'date': self.frozen_today,
                 'company_id': self.company_data['company'].id,
                 'currency_id': foreign_currency_2.id,  # rate is 1:1.52
@@ -362,8 +363,8 @@ class TestExpenses(TestExpenseCommon):
                 'payment_mode': 'company_account',
                 'employee_id': self.expense_employee.id,
                 'product_id': self.product_c.id,
-                'total_amount_currency': 1000.00,
-                'total_amount': 3000.00,
+                'price_unit_currency': 1000.00,
+                'price_unit': 3000.00,
                 'date': self.frozen_today,
                 'company_id': self.company_data['company'].id,
                 'currency_id': foreign_currency_2.id,  # default rate is 1:1.52, should be overridden to 1:3
@@ -379,14 +380,14 @@ class TestExpenses(TestExpenseCommon):
 
         # Manually changing rate on the two first expenses after creation to check they recompute properly
         # Back-end override
-        foreign_expense_1.total_amount = 1000.00
+        foreign_expense_1.price_unit = 1000.00
         self.assertRecordValues(foreign_expense_1, [
             {'total_amount': 1000.00, 'total_amount_currency': 1000.00, 'currency_rate': 1.0},
         ])
 
         # Front-end override
         with Form(foreign_expense_2) as expense_form:
-            expense_form.total_amount = 2000.00
+            expense_form.price_unit = 2000.00
         self.assertRecordValues(foreign_expense_2, [
             {'total_amount': 2000.00, 'total_amount_currency': 1000.00, 'currency_rate': 2.0},
         ])
@@ -416,7 +417,7 @@ class TestExpenses(TestExpenseCommon):
                 'name': 'Car Travel Expenses',
                 'employee_id': self.expense_employee.id,
                 'product_id': self.product_c.id,
-                'total_amount': 350.00,
+                'price_unit_currency': 350.00,
                 'payment_mode': 'company_account',
                 'date': '2024-01-01',
             },
@@ -424,7 +425,7 @@ class TestExpenses(TestExpenseCommon):
                 'name': 'Lunch expense',
                 'employee_id': self.expense_employee.id,
                 'product_id': self.product_c.id,
-                'total_amount': 90.00,
+                'price_unit_currency': 90.00,
                 'payment_mode': 'company_account',
                 'date': '2024-01-12',
             },
@@ -627,7 +628,7 @@ class TestExpenses(TestExpenseCommon):
         """ Test that some payment fields cannot be modified once linked with an expense """
         expense = self.create_expenses({
             'payment_mode': 'company_account',
-            'total_amount_currency': 1000.00,
+            'price_unit_currency': 1000.00,
         })
         expense.action_submit()
         expense.action_approve()
@@ -644,64 +645,56 @@ class TestExpenses(TestExpenseCommon):
         Test that the expenses are not submitted if the total amount is 0.0 nor able to be edited that way
         unless unlinking it from the expense.
         """
-        expense = self.create_expenses({'total_amount': 0.0, 'total_amount_currency': 0.0})
+        expense = self.create_expenses({'price_unit_currency': 0.0})
 
-        # CASE 1: FORBIDS Trying to submit an expense with a total_amount(_currency) of 0.0
+        # CASE 1: FORBIDS Trying to submit an expense with a total of 0.0
         with self.assertRaises(UserError):
             expense.action_submit()
 
-        # CASE 2: FORBIDS Trying to change the total_amount(_currency) to 0.0 when the expense is submitted to the manager
-        expense.total_amount_currency = 1000
+        # CASE 2: FORBIDS Trying to change the price_unit_currency to 0.0 when the expense is submitted to the manager
+        expense.price_unit_currency = 1000
         expense.action_submit()
         with self.assertRaises(UserError):
-            expense.total_amount_currency = 0.0
-        with self.assertRaises(UserError):
-            expense.total_amount = 0.0
+            expense.price_unit_currency = 0.0
 
-        # CASE 3: FORBIDS Trying to change the total_amount(_currency) to 0.0 when the expense is approved
+        # CASE 3: FORBIDS Trying to change the source amount to 0.0 when the expense is approved
         expense.action_approve()
         with self.assertRaises(UserError):
-            expense.total_amount_currency = 0.0
-        with self.assertRaises(UserError):
-            expense.total_amount = 0.0
+            expense.price_unit_currency = 0.0
 
-        # CASE 4: FORBIDS Trying to change the total_amount(_currency) to 0.0 when the expense is posted and the account move created
+        # CASE 4: FORBIDS Trying to change the source amount to 0.0 when the expense is posted and the account move created
         self.post_expenses_with_wizard(expense)
         with self.assertRaises(UserError):
-            expense.total_amount_currency = 0.0
-        with self.assertRaises(UserError):
-            expense.total_amount = 0.0
+            expense.price_unit_currency = 0.0
 
-        # CASE 5: ALLOWS Changing the total_amount(_currency) to 0.0 when the expense is reset to draft
+        # CASE 5: ALLOWS Changing the source amount to 0.0 when the expense is reset to draft
         expense.account_move_id.button_draft()
         expense.account_move_id.unlink()
         expense.action_reset()
-        expense.write({'total_amount_currency': 0.0, 'total_amount': 0.0})
+        expense.write({'price_unit_currency': 0.0, 'price_unit': 0.0})
 
         # CASE 6: FORBIDS Setting the amounts to 0 while submitting the expense
-        expense.write({'total_amount_currency': 1000.0, 'total_amount': 1000.0})
+        expense.write({'price_unit_currency': 1000.0, 'price_unit': 1000.0})
         with self.assertRaises(UserError):
-            expense.write({'total_amount_currency': 0.0, 'state': 'submitted'})
-        with self.assertRaises(UserError):
-            expense.write({'total_amount': 0.0, 'state': 'submitted'})
+            expense.write({'price_unit_currency': 0.0, 'state': 'submitted'})
 
         # CASE 7: ALLOWS Setting the amounts to 0 while resetting the expense to draft
-        expense.write({'total_amount_currency': 0.0, 'total_amount': 0.0, 'state': 'draft'})
+        expense.write({'price_unit_currency': 0.0, 'price_unit': 0.0, 'state': 'draft'})
 
     def test_foreign_currencies_total(self):
         """ Check that the dashboard computes amount properly in company currency """
         self.create_expenses([{
                 'name': 'Company expense',
                 'payment_mode': 'company_account',
-                'total_amount_currency': 1000.00,
+                'price_unit_currency': 1000.00,
                 'employee_id': self.expense_employee.id,
             },
             {
                 'name': 'Employee expense',
                 'payment_mode': 'own_account',
                 'currency_id': self.other_currency.id,
-                'total_amount_currency': 1000.00,
-                'total_amount': 2000.00,
+                'price_unit_currency': 1000.00,
+                'price_unit': 2000.00,
                 'employee_id': self.expense_employee.id,
             },
         ])
@@ -718,7 +711,7 @@ class TestExpenses(TestExpenseCommon):
             'standard_price': 100.0,
         })
         expenses = expense_no_update, expense_update = self.create_expenses([
-            {'name': name, 'product_id': product.id, 'total_amount': 100.0}
+            {'name': name, 'product_id': product.id}
             for name in ('test no update', 'test update')
         ]).sorted('name')
 
@@ -916,13 +909,30 @@ class TestExpenses(TestExpenseCommon):
         self.assertEqual(move.partner_id, self.expense_employee.user_partner_id)
         self.assertEqual(move.commercial_partner_id, self.expense_employee.user_partner_id)
 
-    def test_expense_set_total_amount_to_0(self):
-        """ Checks that amount fields are correctly updating when setting total_amount to 0 """
+    def test_switch_cost_product_to_no_cost_product_preserves_total(self):
+        expense = self.create_expenses({
+            'product_id': self.product_b.id,
+            'quantity': 5,
+        })
+
+        self.assertTrue(expense.product_has_cost)
+        self.assertEqual(expense.total_amount_currency, 800.0)
+
+        with Form(expense) as expense_form:
+            expense_form.product_id = self.product_c
+            self.assertFalse(expense_form.product_has_cost)
+            self.assertEqual(expense_form.quantity, 1)
+            self.assertEqual(expense_form.price_unit_currency, 800.0)
+
+        self.assertEqual(expense.currency_id.compare_amounts(expense.total_amount_currency, 800.0), 0)
+
+    def test_expense_set_price_unit_currency_to_0(self):
+        """ Checks that amount fields are correctly updating when setting price_unit_currency to 0 """
         expense = self.create_expenses({
             'product_id': self.product_c.id,
-            'total_amount_currency': 100.0,
+            'price_unit_currency': 100.0,
         })
-        expense.total_amount_currency = 0.0
+        expense.price_unit_currency = 0.0
         self.assertTrue(expense.currency_id.is_zero(expense.tax_amount))
         self.assertTrue(expense.company_currency_id.is_zero(expense.total_amount))
 
@@ -972,7 +982,7 @@ class TestExpenses(TestExpenseCommon):
             'name': 'Hotel',
             'payment_mode': 'company_account',
             'payment_method_line_id': sepa_ct_line.id,
-            'total_amount_currency': 100.00,
+            'price_unit_currency': 100.00,
             'currency_id': self.env.ref('base.EUR').id,
             'vendor_id': self.partner_a.id,
         })
@@ -1009,7 +1019,7 @@ class TestExpenses(TestExpenseCommon):
         expense = self.create_expenses({
             'name': 'Expense for John Smith',
             'employee_id': self.expense_employee.id,
-            'total_amount_currency': 100.0,
+            'price_unit_currency': 100.0,
             'product_id': self.product_c.id,
             'payment_mode': 'company_account',
             'company_id': self.company_data['company'].id,
@@ -1029,7 +1039,7 @@ class TestExpenses(TestExpenseCommon):
                 'name': 'Company PC 1000 + 15%',
                 'employee_id': self.expense_employee.id,
                 'product_id': self.product_c.id,
-                'total_amount_currency': 1000.00,
+                'price_unit_currency': 1000.00,
                 'date': '2021-10-12',
                 'payment_mode': 'company_account',
                 'company_id': self.company_data['company'].id,
@@ -1059,7 +1069,7 @@ class TestExpenses(TestExpenseCommon):
             'payment_mode': 'company_account',
             'account_id': self.company_data['default_account_expense'].id,
             'product_id': self.product_c.id,
-            'total_amount_currency': 1000.00,
+            'price_unit_currency': 1000.00,
             'currency_id': self.company_data['currency'].id,
             'company_id': branch_company.id,
         })
@@ -1078,7 +1088,7 @@ class TestExpenses(TestExpenseCommon):
             'payment_mode': 'own_account',
             'account_id': self.company_data['default_account_expense'].id,
             'product_id': self.product_c.id,
-            'total_amount_currency': 2000.00,
+            'price_unit_currency': 2000.00,
             'currency_id': self.company_data['currency'].id,
             'company_id': branch_company.id,
         })
@@ -1150,7 +1160,7 @@ class TestExpenses(TestExpenseCommon):
         expense = self.create_expenses({
             'name': 'Expense matched to bill',
             'payment_mode': 'company_account',
-            'total_amount_currency': 100.0,
+            'price_unit_currency': 100.0,
             'has_existing_bill': True,
             'existing_bill_id': bill.id,
         })
