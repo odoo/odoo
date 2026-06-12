@@ -8,4 +8,4 @@ class ProductCategory(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['id', 'name', 'parent_id']
+        return ['id', 'name', 'parent_id', 'removal_strategy_id']
