@@ -244,9 +244,9 @@ export class TablePlugin extends Plugin {
         this.onMousemove = this.onMousemove.bind(this);
     }
 
-    processTableResizeTargets(item, neighbor, position) {
+    processTableResizeTargets(item, neighbor, position, defaultMinSize) {
         if (!isTableCell(item)) {
-            return [item, neighbor];
+            return [item, neighbor, defaultMinSize, defaultMinSize];
         }
         const table = closestElement(item, "table");
         const tableGrid = this.buildTableGrid(table);
@@ -266,7 +266,37 @@ export class TablePlugin extends Plugin {
             table.insertBefore(colgroup, table.firstChild);
         }
         const columns = colgroup.children;
-        return [columns[columnIndex], columns[adjacentColumnIndex]];
+        const getNestedTableMinSize = (colIndex) => {
+            const visited = new Set();
+            return tableGrid.reduce((minSize, row) => {
+                const cell = row[colIndex];
+                if (!cell || visited.has(cell) || cell.colSpan > 1) {
+                    return minSize;
+                }
+                visited.add(cell);
+                const cellStyle = getComputedStyle(cell);
+                for (const nestedTable of cell.querySelectorAll(":scope > table")) {
+                    if (!nestedTable.style.width) {
+                        continue;
+                    }
+                    const nestedTableStyle = getComputedStyle(nestedTable);
+                    const width =
+                        nestedTable.getBoundingClientRect().width +
+                        parseFloat(cellStyle.paddingLeft) +
+                        parseFloat(cellStyle.paddingRight) +
+                        parseFloat(nestedTableStyle.marginLeft) +
+                        parseFloat(nestedTableStyle.marginRight);
+                    minSize = Math.max(minSize, width);
+                }
+                return minSize;
+            }, defaultMinSize);
+        };
+        return [
+            columns[columnIndex],
+            columns[adjacentColumnIndex],
+            getNestedTableMinSize(columnIndex),
+            adjacentColumnIndex >= 0 ? getNestedTableMinSize(adjacentColumnIndex) : defaultMinSize,
+        ];
     }
 
     handlePasteTableIntoExistingTable(selection, clipboardRoot) {
