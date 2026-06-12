@@ -1782,9 +1782,7 @@ class HrLeave(models.Model):
 
             if not partner_ids:
                 continue
-            leave_msg = self.env.ref('hr_holidays.new_timeoff_request_template').with_context(
-                manager=', '.join(partner_ids.mapped('name'))
-            )._render_field(
+            leave_msg = self.env.ref('hr_holidays.new_timeoff_request_template')._render_field(
                 'body_html',
                 holiday.ids,
                 compute_lang=True

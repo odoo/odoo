@@ -193,7 +193,11 @@ class CalendarAttendee(models.Model):
                 email_from = mail_template._render_field(
                     'email_from',
                     attendee.ids)[attendee.id]
-                mail_messages += attendee.event_id.with_context(no_document=True).sudo().message_notify(
+                ctx = {
+                    "no_document": True,
+                    "email_notification_allow_header": False,
+                }
+                mail_messages += attendee.event_id.with_context(**ctx).sudo().message_notify(
                     email_from=email_from or None,  # use None to trigger fallback sender
                     author_id=attendee.event_id.user_id.partner_id.id or self.env.user.partner_id.id,
                     body=body,

@@ -685,11 +685,11 @@ class SlideChannel(models.Model):
         return self.action_redirect_to_members('invited')
 
     def action_channel_enroll(self):
-        template = self.env.ref('website_slides.mail_template_slide_channel_enroll', raise_if_not_found=False)
+        template = self.env.ref('website_slides.mail_template_slide_channel_invite_enroll', raise_if_not_found=False)
         return self._action_channel_open_invite_wizard(template, enroll_mode=True)
 
     def action_channel_invite(self):
-        template = self.env.ref('website_slides.mail_template_slide_channel_invite', raise_if_not_found=False)
+        template = self.env.ref('website_slides.mail_template_slide_channel_invite_enroll', raise_if_not_found=False)
         return self._action_channel_open_invite_wizard(template)
 
     def _action_channel_open_invite_wizard(self, mail_template, enroll_mode=False):
