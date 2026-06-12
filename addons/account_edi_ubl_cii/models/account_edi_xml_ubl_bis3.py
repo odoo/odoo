@@ -33,9 +33,6 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     def _is_customer_behind_chorus_pro(self, customer):
         return customer.peppol_eas and customer.peppol_endpoint and f"{customer.peppol_eas}:{customer.peppol_endpoint}" == CHORUS_PRO_PEPPOL_ID
 
-    def _import_invoice_ubl_cii(self, invoice, file_data, new=False):
-        return self._ubl_import_invoice(invoice, file_data, new=new)
-
     # -------------------------------------------------------------------------
     # EXPORT
     # -------------------------------------------------------------------------
