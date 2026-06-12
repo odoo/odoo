@@ -31,6 +31,7 @@ class LoyaltyCard(models.Model):
         default=lambda self: self.env.context.get("active_id", None),
     )
     program_type = fields.Selection(related="program_id.program_type")
+    program_type_name = fields.Char(compute="_compute_program_type_name")
     # TODO probably isn't useful to store this company_id anymore
     company_id = fields.Many2one(related="program_id.company_id", store=True, precompute=True)
     currency_id = fields.Many2one(related="program_id.currency_id")
@@ -90,6 +91,21 @@ class LoyaltyCard(models.Model):
                     card.env._("A customer can only have one active loyalty card per program.")
                 )
 
+    @api.depends("program_type")
+    def _compute_program_type_name(self):
+        program_type_name_mapping = {
+            "coupons": self.env._("coupon"),
+            "gift_card": self.env._("gift card"),
+            "loyalty": self.env._("loyalty card"),
+            "promotion": self.env._("promo"),
+            "ewallet": self.env._("eWallet"),
+            "promo_code": self.env._("discount"),
+            "buy_x_get_y": self.env._("promo"),
+            "next_order_coupons": self.env._("next order coupon"),
+        }
+        for record in self:
+            record.program_type_name = program_type_name_mapping[record.program_type]
+
     @api.depends("points", "point_name")
     def _compute_points_display(self):
         for card in self:
@@ -138,6 +154,7 @@ class LoyaltyCard(models.Model):
             default_res_ids=self.ids,
             default_template_id=default_template and default_template.id,
             default_composition_mode="comment",
+            email_notification_allow_header=False,
             force_email=True,
         )
         return {
@@ -168,7 +185,7 @@ class LoyaltyCard(models.Model):
             if not create_comm_per_program[coupon.program_id] or not coupon._mail_get_customer():
                 continue
             for comm in create_comm_per_program[coupon.program_id]:
-                mail_template = comm.mail_template_id
+                mail_template = comm.mail_template_id.with_context(email_notification_allow_header=False)
                 email_values = {}
                 if not mail_template.email_from:
                     # provide author_id & email_from values to ensure the email gets sent
@@ -214,7 +231,7 @@ class LoyaltyCard(models.Model):
                     break
             if not this_milestone:
                 continue
-            this_milestone.mail_template_id.send_mail(
+            this_milestone.mail_template_id.with_context(email_notification_allow_header=False).send_mail(
                 res_id=coupon.id, email_layout_xmlid="mail.mail_notification_light"
             )
 
