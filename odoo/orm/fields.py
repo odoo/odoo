@@ -1281,15 +1281,25 @@ class Field[T]:
             raise ValueError(f"Cannot convert {self} to SQL because it is not stored")
         sql_field = SQL.identifier(table._alias, self.name, to_flush=self)
         if self.company_dependent:
-            fallback = self.get_company_dependent_fallback(model)
-            fallback = self.convert_to_column(self.convert_to_write(fallback, model), model)
+            company_id = model.env.context.get('sql_company_id')
+            if isinstance(company_id, SQL):
+                fallback = model.env['ir.default'].sudo()._search([
+                    ('field_id', '=', model.env['ir.model.fields']._get(self.model_name, self.name).id),
+                    ('user_id', 'in', (False, SUPERUSER_ID)),
+                    Domain.custom(to_sql=lambda table: SQL("(%s IS NULL OR %s = %s)", table.company_id, table.company_id, company_id)),
+                    ('condition', '=', False),
+                ], order="user_id.id, company_id.id, id", limit=1).subselect('json_value')
+            else:
+                company_id = str(model.env.company.id)
+                fallback = self.get_company_dependent_fallback(model)
+                fallback = self.convert_to_column(self.convert_to_write(fallback, model), model)
             # in _read_group_orderby the result of field to sql will be mogrified and split to
             # e.g SQL('COALESCE(%s->%s') and SQL('to_jsonb(%s))::boolean') as 2 orderby values
             # and concatenated by SQL(',') in the final result, which works in an unexpected way
             sql_field = SQL(
-                "COALESCE(%(column)s->%(company_id)s,to_jsonb(%(fallback)s::%(column_type)s))",
+                "COALESCE(%(column)s->(%(company_id)s::VARCHAR),to_jsonb(%(fallback)s::%(column_type)s))",
                 column=sql_field,
-                company_id=str(model.env.company.id),
+                company_id=company_id,
                 fallback=fallback,
                 column_type=self.sql_column_type,
             )

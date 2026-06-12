@@ -1608,8 +1608,8 @@ class TestFormattedReadGroup(common.TransactionCase):
             FROM "test_read_group_order_line"
             LEFT JOIN "test_read_group_order" AS "test_read_group_order_line__order_id"
             ON ("test_read_group_order_line"."order_id" = "test_read_group_order_line__order_id"."id")
-            GROUP BY "test_read_group_order_line"."order_id", (COALESCE("test_read_group_order_line__order_id"."company_dependent_name"->%s,to_jsonb(%s::VARCHAR))->>0)::VARCHAR
-            ORDER BY (COALESCE("test_read_group_order_line__order_id"."company_dependent_name"->%s,to_jsonb(%s::VARCHAR))->>0)::VARCHAR
+            GROUP BY "test_read_group_order_line"."order_id", (COALESCE("test_read_group_order_line__order_id"."company_dependent_name"->(%s::VARCHAR),to_jsonb(%s::VARCHAR))->>0)::VARCHAR
+            ORDER BY (COALESCE("test_read_group_order_line__order_id"."company_dependent_name"->(%s::VARCHAR),to_jsonb(%s::VARCHAR))->>0)::VARCHAR
         '''
         self.env['ir.default'].set('test_read_group.order', 'company_dependent_name', 'name with space')
         OrderLine = OrderLine.with_context(test_read_group_order_company_dependent=True)
