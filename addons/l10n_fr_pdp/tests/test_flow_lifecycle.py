@@ -63,6 +63,13 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'country_id': cls.env.ref('base.be').id,
             'vat': 'BE0477472701',
         })
+        cls.b2bi_invalid_customer = cls.env['res.partner'].create({
+            'name': 'PDP B2BI Customer',
+            'zip': '6870',
+            'city': 'Eghezee',
+            'country_id': cls.env.ref('base.be').id,
+            'vat': 'BE0477472701',
+        })
         cls.b2bi_italian_customer = cls.env['res.partner'].with_context(no_vat_validation=True).create({
             'name': 'PDP Italian B2BI Customer',
             'street': 'Via Francesco Crispi 226',
@@ -237,6 +244,10 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'l10n_fr_pdp_error_message',
         ])
 
+    def _correct_partner(self, invoice):
+        invoice.partner_id.street = 'Mainstreet'
+        self._refresh_pdp_fields(invoice)
+
     def _register_payment(self, invoices, payment_date, amount=None, group_payment=True, currency=None):
         payment_vals = {
             'group_payment': group_payment,
@@ -368,6 +379,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
                         line_form.tax_ids.add(tax)
         move = move_form.save()
         move.action_post()
+        self._refresh_pdp_fields(move)
         if move.is_sale_document(include_receipts=True):
             move.is_move_sent = sent
         return move
@@ -495,24 +507,6 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         }])
         self.assertTrue(invoice.l10n_fr_pdp_last_flow_id)
 
-    def test_b2c_invoice_not_sent_is_in_error(self):
-        invoice = self._create_reporting_invoice(
-            partner=self.b2c_customer,
-            sent=False,
-        )
-
-        self.assertFalse(invoice.is_move_sent)
-        self.assertRecordValues(invoice, [{
-            'l10n_fr_pdp_flow_10_report_type': 'transaction',
-            'l10n_fr_pdp_flow_10_operation_type': 'sale',
-            'l10n_fr_pdp_has_error': True,
-            'l10n_fr_pdp_status': 'error',
-        }])
-        self.assertIn(
-            "Invoice/credit note has not been sent to the customer.",
-            invoice.l10n_fr_pdp_error_message or '',
-        )
-
     def test_b2bi_invoice_creates_transaction_flow_payload(self):
         invoice = self._create_reporting_invoice(partner=self.b2bi_customer)
 
@@ -551,24 +545,6 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         xml = self._build_flow_xml(invoice.l10n_fr_pdp_last_flow_id)
         invoice_node = xml.find('./TransactionsReport/Invoice')
         self.assertEqual(invoice_node.findtext('TaxDueDateTypeCode'), '5')
-
-    def test_b2bi_invoice_not_sent_is_in_error(self):
-        invoice = self._create_reporting_invoice(
-            partner=self.b2bi_customer,
-            sent=False,
-        )
-
-        self.assertFalse(invoice.is_move_sent)
-        self.assertRecordValues(invoice, [{
-            'l10n_fr_pdp_flow_10_report_type': 'transaction',
-            'l10n_fr_pdp_flow_10_operation_type': 'sale',
-            'l10n_fr_pdp_has_error': True,
-            'l10n_fr_pdp_status': 'error',
-        }])
-        self.assertIn(
-            "Invoice/credit note has not been sent to the customer.",
-            invoice.l10n_fr_pdp_error_message or '',
-        )
 
     def test_domestic_b2b_invoice_stays_out_of_scope(self):
         invoice = self._create_reporting_invoice(
@@ -1045,9 +1021,8 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             invoice_date='2025-09-03',
         )
         invalid_invoice = self._create_reporting_invoice(
-            partner=self.b2bi_customer,
+            partner=self.b2bi_invalid_customer,
             invoice_date='2025-09-03',
-            sent=False,
         )
         flow = valid_invoice.l10n_fr_pdp_last_flow_id
         self.assertEqual(flow, invalid_invoice.l10n_fr_pdp_last_flow_id)
@@ -1067,9 +1042,8 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             invoice_date='2025-09-03',
         )
         invalid_invoice = self._create_reporting_invoice(
-            partner=self.b2bi_customer,
+            partner=self.b2bi_invalid_customer,
             invoice_date='2025-09-03',
-            sent=False,
         )
         flow = valid_invoice.l10n_fr_pdp_last_flow_id
         self.assertEqual(flow.error_moves_count, 1)
@@ -1127,9 +1101,8 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             invoice_date='2025-09-03',
         )
         invalid_invoice = self._create_reporting_invoice(
-            partner=self.b2bi_customer,
+            partner=self.b2bi_invalid_customer,
             invoice_date='2025-09-03',
-            sent=False,
         )
         initial_flow = valid_invoice.l10n_fr_pdp_last_flow_id
         self.assertEqual(initial_flow, invalid_invoice.l10n_fr_pdp_last_flow_id)
@@ -1144,6 +1117,8 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'l10n_fr_pdp_status',
         ])
         rectificative_flow = invalid_invoice.l10n_fr_pdp_last_flow_id
+
+        self._correct_partner(invalid_invoice)
 
         self.assertRecordValues(initial_flow, [{
             'state': 'sent',
@@ -1166,9 +1141,8 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             invoice_date='2025-09-03',
         )
         invalid_invoice = self._create_reporting_invoice(
-            partner=self.b2bi_customer,
+            partner=self.b2bi_invalid_customer,
             invoice_date='2025-09-03',
-            sent=False,
         )
         initial_flow = valid_invoice.l10n_fr_pdp_last_flow_id
 
@@ -1177,7 +1151,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         rectificative_flow = invalid_invoice.l10n_fr_pdp_last_flow_id
         self.assertNotEqual(initial_flow, rectificative_flow)
 
-        invalid_invoice.is_move_sent = True
+        self._correct_partner(invalid_invoice)
         self._refresh_pdp_fields(invalid_invoice)
         invalid_invoice.invalidate_recordset([
             'l10n_fr_pdp_has_error',
@@ -1996,13 +1970,12 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             }],
         )
         invalid_invoice = self._create_form_invoice(
-            partner=self.b2bi_customer,
+            partner=self.b2bi_invalid_customer,
             invoice_date='2025-09-03',
             lines=[{
                 'price_unit': 200.0,
                 'tax_ids': self._get_tax_on_payment_20(),
             }],
-            sent=False,
         )
         initial_flow = valid_invoice.l10n_fr_pdp_last_flow_id
 
@@ -2019,7 +1992,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'initial_flow_id': initial_flow.id,
         }])
 
-        invalid_invoice.is_move_sent = True
+        self._correct_partner(invalid_invoice)
         self._run_send_cron('2025-09-21', identifier='FULL-FORM-RE-SENT')
 
         self.assertRecordValues(rectificative_flow, [{'state': 'sent'}])
