@@ -32,7 +32,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         return date_start, date_stop
 
     def _get_domain(self, date_start=False, date_stop=False, config_ids=False, session_ids=False):
-        domain = Domain('state', 'in', ['paid', 'done'])
+        domain = Domain('state', 'in', ['paid', 'done', 'cancel'])
 
         if session_ids:
             domain &= Domain('session_id', 'in', session_ids)
@@ -64,7 +64,9 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             date_start, date_stop = self._get_date_start_and_date_stop(date_start, date_stop)
 
         domain = self._get_domain(date_start, date_stop, config_ids, session_ids, **kwargs)
-        orders = self.env['pos.order'].search(domain)
+        all_orders = self.env['pos.order'].search(domain)
+        orders = all_orders.filtered(lambda o: o.state != 'cancel')
+        cancel_orders = all_orders - orders
 
         if config_ids:
             config_currencies = self.env['pos.config'].search([('id', 'in', config_ids)]).mapped('currency_id')
@@ -79,6 +81,11 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         total = 0.0
         products_sold = {}
         taxes = {
+            'base_amount': 0.0,
+            'taxes': {},
+        }
+        products_cancelled = {}
+        cancelled_taxes = {
             'base_amount': 0.0,
             'taxes': {},
         }
@@ -103,10 +110,17 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                 else:
                     refund_done, refund_taxes = self._get_products_and_taxes_dict(line, refund_done, refund_taxes, currency)
 
+        for order in cancel_orders:
+            currency = order.session_id.currency_id
+            for line in order.lines:
+                products_cancelled, cancelled_taxes = self._get_products_and_taxes_dict(line, products_cancelled, cancelled_taxes, currency)
+
         taxes_info = self._get_taxes_info(taxes)
         refund_taxes_info = self._get_taxes_info(refund_taxes)
+        cancelled_taxes_info = self._get_taxes_info(cancelled_taxes)
         taxes = taxes['taxes']
         refund_taxes = refund_taxes['taxes']
+        cancelled_taxes = cancelled_taxes['taxes']
 
         payment_ids = self.env["pos.payment"].search([('pos_order_id', 'in', orders.ids)]).ids
         if payment_ids:
@@ -159,7 +173,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                 cash_counted = session.cash_register_balance_end_real
             is_cash_method = False
             for payment in payments:
-                account_payments = self.env['account.payment'].search([('pos_session_id', '=', session.id)])
+                account_payments = self.env['account.payment'].sudo().search([('pos_session_id', '=', session.id)])
                 if payment['session'] == session.id:
                     if not payment['cash']:
                         payment_method = self.env['pos.payment.method'].browse(payment['id'])
@@ -259,6 +273,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                 })
         products = []
         refund_products = []
+        cancelled_products = []
         for category_name, product_list in products_sold.items():
             category_dictionnary = {
                 'name': category_name,
@@ -297,8 +312,28 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             refund_products.append(category_dictionnary)
         refund_products = sorted(refund_products, key=lambda l: str(l['name']))
 
+        for category_name, product_list in products_cancelled.items():
+            category_dictionnary = {
+                'name': category_name,
+                'products': sorted([{
+                    'product_id': product.id,
+                    'product_name': product.display_name,
+                    'barcode': product.barcode,
+                    'quantity': qty,
+                    'price_unit': price_unit,
+                    'discount': discount,
+                    'uom': product.uom_id.name,
+                    'total_paid': product_total,
+                    'base_amount': base_amount,
+                    'combo_products_label': combo_products_label,
+                } for (product, price_unit, discount), (qty, product_total, base_amount, combo_products_label) in product_list.items()], key=lambda l: l['product_name']),
+            }
+            cancelled_products.append(category_dictionnary)
+        cancelled_products = sorted(cancelled_products, key=lambda l: str(l['name']))
+
         products, products_info = self.with_context(config_id=configs[0].id if len(configs) > 0 else False)._get_total_and_qty_per_category(products)
         refund_products, refund_info = self.with_context(config_id=configs[0].id if len(configs) > 0 else False)._get_total_and_qty_per_category(refund_products)
+        cancelled_products, cancelled_info = self.with_context(config_id=configs[0].id if len(configs) > 0 else False)._get_total_and_qty_per_category(cancelled_products)
 
         currency = {
             'symbol': user_currency.symbol,
@@ -370,6 +405,10 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             'refund_taxes_info': refund_taxes_info,
             'refund_info': refund_info,
             'refund_products': refund_products,
+            'cancelled_taxes': list(cancelled_taxes.values()),
+            'cancelled_taxes_info': cancelled_taxes_info,
+            'cancelled_info': cancelled_info,
+            'cancelled_products': cancelled_products,
             'discount_number': discount_number,
             'discount_amount': discount_amount,
             'invoiceList': invoiceList,
@@ -378,6 +417,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             'payments_per_method': payments_per_method.values(),
             'show_payment_per_method': not session_ids,
             'cash_rounding_total': cash_rounding_total,
+            'session_state': sessions[0].state if len(sessions) == 1 else 'multiple',
         }
 
     def _get_product_total_amount(self, line):

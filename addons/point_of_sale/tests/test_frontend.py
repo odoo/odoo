@@ -3199,6 +3199,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'iface_print_auto': True,
             'iface_print_skip_screen': True,
             'receipt_printer_ids': [self.printer.id],
+            'other_devices': True,
         })
 
         self.main_pos_config.with_user(self.pos_user).open_ui()

@@ -11,7 +11,6 @@ import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
-import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("FeedbackScreenTour", {
     steps: () =>
@@ -345,10 +344,8 @@ registry.category("web_tour.tours").add("test_automatic_receipt_printing", {
             FeedbackScreen.isShown(),
             FeedbackScreen.isContinueEnabled(),
             FeedbackScreen.isTransitioning(),
-            FeedbackScreen.clickScreen(),
-            FeedbackScreen.isTransitioning().map(negateStep),
-            FeedbackScreen.clickNextOrder(),
             ProductScreen.isShown(),
+            Chrome.closePrintingWarning(),
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
