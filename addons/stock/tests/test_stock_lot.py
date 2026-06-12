@@ -117,7 +117,10 @@ class TestLotSerial(TestStockCommon):
         self.assertFalse(move.move_line_ids.lot_id.company_id)
 
     def test_lot_uniqueness(self):
-        """ Checks that the same lot name cannot be inserted twice for the same company or 'no-company'.
+        """Checks that the same name cannot be reused for serial numbers.
+
+        The uniqueness constraint must still apply for products tracked by
+        unique serial number.
         """
         lot_1 = self.env['stock.lot'].create({
             'name': 'unique',
@@ -160,6 +163,32 @@ class TestLotSerial(TestStockCommon):
                 'product_id': self.productB.id,
                 'company_id': self.env.company.id,
             })
+
+    def test_lot_reuse_for_lot_tracked_product(self):
+        """Lots with the same name are allowed for lot-tracked products.
+
+        For products tracked "by lots", suppliers can reuse the same lot
+        identifier across multiple receipts of the same product. The
+        uniqueness constraint must therefore not block duplicated lot names
+        for such products.
+        """
+        self.assertEqual(self.productA.tracking, 'lot')
+
+        lot_1 = self.env['stock.lot'].create({
+            'name': 'LOT-001',
+            'product_id': self.productA.id,
+            'company_id': False,
+        })
+        self.assertTrue(lot_1)
+
+        # Creating another lot with the same name for the same product and
+        # company (or no company) must not raise a ValidationError.
+        lot_2 = self.env['stock.lot'].create({
+            'name': 'LOT-001',
+            'product_id': self.productA.id,
+            'company_id': False,
+        })
+        self.assertTrue(lot_2)
 
     def test_bypass_reservation(self):
         """
