@@ -12,6 +12,8 @@ import { BLOCKQUOTE_PARENT_HANDLERS } from "@html_builder/core/utils";
 
 export class SaveSnippetPlugin extends Plugin {
     static id = "saveSnippet";
+    static dependencies = ["disableSnippets"];
+
     /** @type {import("plugins").BuilderResources} */
     resources = {
         options_container_top_buttons_providers: withSequence(
@@ -93,6 +95,7 @@ export class SaveSnippetPlugin extends Plugin {
             cleanForSaveProcessors,
             this.wrapWithBeforeAfterSaveHandlers.bind(this)
         );
+        this.dependencies.disableSnippets.disableUndroppableSnippets();
         if (savedName) {
             if (this.delegateTo("custom_snippets_notification_overrides", savedName)) {
                 return;
