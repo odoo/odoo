@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from collections import defaultdict
+from itertools import product
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
@@ -286,14 +288,30 @@ class MailingContact(models.Model):
             Domain(field_name, 'in', {v for v in partners_to_match.mapped(field_name) if v})
             for field_name in match_fields
         ), ['partner_id', *match_fields])
+
+        def _matching_keys(contact_or_partner):
+            """Generate all non-all-false combinations of matching values for contact_or_partner.
+
+            E.g., with "email" and "phone": [(email_1, phone_1), (email_1, False), (False, phone_1)].
+            This is used to match partners and contact efficiently looking up keys in maps after a single iteration.
+            """
+            field_values_or_false = ({contact_or_partner[field_name], False} for field_name in match_fields)
+            return [k for k in product(*field_values_or_false) if any(k)]
+
+        existing_contacts_per_key = defaultdict(self.browse)
+        for contact in existing_contacts:
+            for key in _matching_keys(contact):
+                existing_contacts_per_key[key] |= contact
+
         for key, partners_to_match in partners_per_key.items():
             latest_partner = partners_to_match[0]
-            matching_contacts = existing_contacts.filtered(
-                lambda c: c._is_partner_compatible(latest_partner, match_fields=match_fields))
+            partner_keys = _matching_keys(latest_partner)
+            keys_contacts = self.browse().concat(
+                contact for key in partner_keys for contact in existing_contacts_per_key[key])
+            matching_contacts = keys_contacts.filtered(lambda c: c._is_partner_compatible(latest_partner))
             if not matching_contacts:
                 partners_for_creation |= latest_partner
                 continue
-            existing_contacts -= matching_contacts
             if len(matching_contacts) > 1:
                 best_contact = matching_contacts.sorted(lambda c: c._get_sort_key(list_id=active_list_id))[-1]
             else:
