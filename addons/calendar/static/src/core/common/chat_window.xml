@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
+        <xpath expr="//i[hasclass('fa-caret-down')]" position="replace"/>
+    </t>
+    <t t-inherit="mail.ChatWindow.headerContent" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-ChatWindow-displayName')]" position="replace">
+            <t t-set="user" t-value="this.channel?.correspondent?.persona?.main_user_id"/>
+            <div class="d-flex flex-column o-mx-0_5 my-0">
+                <div class="d-flex align-items-center">
+                    <div class="o-mail-ChatWindow-displayName text-truncate fw-bold border border-transparent"
+                         t-att-title="this.props.chatWindow.channel.displayName"
+                         t-att-class="{ 'fs-4': this.ui.isSmall, 'fs-5': !this.ui.isSmall }">
+                        <t t-out="this.props.chatWindow.channel.displayName"/>
+                    </div>
+                    <i t-if="!this.state.editingName"
+                       class="fa fa-fw fa-caret-down ms-1"/>
+                </div>
+                <div t-if="user and user.meetingStatus"
+                     class="o-mail-DiscussContent-meetingStatus text-muted small text-truncate d-flex align-items-center"
+                     style="margin-top: -2px; font-size: 11px; line-height: 1.2;">
+                    <i class="fa fa-calendar me-1"/>
+                    <span>
+                        In a meeting until <t t-out="user.meetingStatus"/>
+                    </span>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

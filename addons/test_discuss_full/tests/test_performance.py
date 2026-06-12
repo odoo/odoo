@@ -37,6 +37,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #         [enterprise] search ai_agent (_compute_im_status ai override)
     #       - search res_users (_compute_im_status)
     #       - fetch res_users (_compute_im_status)
+    #       - search calendar_attendee (_compute_in_meeting_until)
     #       - search presence (_compute_im_status)
     #       - fetch presence (_compute_im_status)
     #       - search employee (_store_im_status_fields)
@@ -57,19 +58,19 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #   2: _init_messaging (mail)
     #       - _get_needaction_count (inbox counter)
     #       - search mail_message (bookmark counter)
-    #   26: _process_request_for_all (discuss):
+    #   27: _process_request_for_all (discuss):
     #       - search_fetch discuss_channel (channels_domain)
     #       2: check permissions
     #       - fetch discuss_channel (chathub given channel ids, missing search_fetch)
-    #       22: store add channel:
+    #       23: store add channel:
     #           - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #           - read group member (_compute_invited_member_ids)
     #           - search discuss_channel_rtc_session
     #           - fetch discuss_channel_rtc_session
     #           - search member (channel_member_ids)
     #           - fetch discuss_channel_member (manual prefetch)
-    #           9: member:
-    #               9: partner:
+    #           10: member:
+    #               10: partner:
     #                   - search_fetch res_partner (partner)
     #                     [enterprise] search ai_agent (_compute_im_status ai override)
     #                   - fetch res_users (_compute_im_status)
@@ -80,6 +81,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #                   - search hr_employee_location (_store_im_status_fields override)
     #                   - fetch hr_employee (_compute_work_location_type)
     #                   - search hr_leave (_compute_leave_status)
+    #                   - search calendar_attendee (_compute_in_meeting_until)
     #                   - fetch res_users (_read_format)
     #           - search bus_bus (_bus_last_id)
     #           - count discuss_channel_member (member_count)
@@ -88,14 +90,14 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - search discuss_channel_res_groups_rel (group_ids)
     #           - fetch res_groups (group_public_id)
     #           - select the current db snapshot
-    _query_count_init_messaging = 36
+    _query_count_init_messaging = 37
     # Queries for _query_count_discuss_channels (in order):
     #   3: _search_is_member (for current user, first occurence channels_as_member)
     #       - fetch res_users
     #       - search discuss_channel_member
     #       - search_fetch discuss_channel
     #   1: search_count discuss_channel_member (_add_has_unpinned_channels_to_store)
-    #   34: channel _to_store_defaults:
+    #   35: channel _to_store_defaults:
     #       - read group member (prefetch _compute_self_member_id from _compute_is_member)
     #       - read group member (_compute_invited_member_ids)
     #       - search discuss_channel_rtc_session
@@ -103,10 +105,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search_fetch member (channel_member_ids)
     #       - search channel JOIN member (channel_name_member_ids)
     #       - fetch discuss_channel_member (manual prefetch)
-    #       17: member:
+    #       18: member:
     #           - search im_livechat_channel_member_history (livechat member type)
     #           - fetch im_livechat_channel_member_history (livechat member type)
-    #           13: partner:
+    #           14: partner:
     #               - fetch res_partner (partner)
     #                 [enterprise] search ai_agent (_compute_im_status ai override)
     #               - fetch res_users (_compute_im_status)
@@ -118,6 +120,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #               - search hr_employee_location (_store_im_status_fields override)
     #               - fetch hr_employee (_compute_work_location_type)
     #               - search hr_leave (_compute_leave_status)
+    #               - search calendar_attendee (_compute_in_meeting_until)
     #               - search_fetch res_users_settings (livechat username)
     #               - fetch res_users_settings (livechat username)
     #               - fetch res_users (_read_format)
@@ -162,7 +165,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch user (author)
     #       - fetch discuss_call_history
     #       - select the current db snapshot
-    _query_count_discuss_channels = 63
+    _query_count_discuss_channels = 64
 
     def setUp(self):
         super().setUp()

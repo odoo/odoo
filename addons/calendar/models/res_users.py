@@ -19,6 +19,7 @@ class ResUsers(models.Model):
         inverse="_inverse_calendar_res_users_settings",
         user_writeable=True,
     )
+    in_meeting_until = fields.Datetime(compute="_compute_in_meeting_until")
 
     def get_selected_calendars_partner_ids(self, include_user=True):
         """
@@ -197,3 +198,30 @@ class ResUsers(models.Model):
         :return: boolean indicating if any synchronization is active.
         """
         return False
+
+    def _compute_in_meeting_until(self):
+        now = fields.Datetime.now()
+        partner_by_id = {partner.id for partner in self.partner_id}
+        attendees = self.env["calendar.attendee"].search(
+            [
+                ("state", "=", "accepted"),
+                ("event_id.show_as", "=", "busy"),
+                ("event_id.privacy", "not in", ["private", "confidential"]),
+                ("event_id.allday", "=", False),
+                ("event_id.start", "<=", now),
+                ("event_id.stop", ">=", now),
+                ("partner_id", "in", partner_by_id),
+            ]
+        )
+        max_until_by_partner = {}
+        for attendee in attendees:
+            partner = attendee.partner_id
+            current_max = max_until_by_partner.get(partner)
+            if not current_max or attendee.event_id.stop > current_max:
+                max_until_by_partner[partner] = attendee.event_id.stop
+        for user in self:
+            user.in_meeting_until = max_until_by_partner.get(user.partner_id, False)
+
+    def _store_main_user_fields(self, res):
+        super()._store_main_user_fields(res)
+        res.attr("in_meeting_until", predicate=lambda user: user.in_meeting_until)

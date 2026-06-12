@@ -1,9 +1,16 @@
 import { mailModels } from "@mail/../tests/mail_test_helpers";
 import { serverState } from "@web/../tests/web_test_helpers";
 import { serializeDateTime } from "@web/core/l10n/dates";
+import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 const { DateTime } = luxon;
 
 export class ResUsers extends mailModels.ResUsers {
+    _get_store_im_status_fields() {
+        return [
+            ...super._get_store_im_status_fields(),
+            mailDataHelpers.Store.attr("in_meeting_until"),
+        ];
+    }
     /**
      * Simulates `_systray_get_calendar_event_domain` on `res.users`.
      *
