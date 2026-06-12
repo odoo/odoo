@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import werkzeug.exceptions
+
 from odoo import tools, _
 from odoo.exceptions import UserError
 from odoo.http import route, request
@@ -63,20 +65,34 @@ class MassMailController(main.MassMailController):
             name, value = tools.parse_contact_from_email(value)
             if not name:
                 name = address_name
+            fname_normalized = 'email_normalized'
         elif subscription_type == 'mobile':
             name = value
+            fname_normalized = 'phone_sanitized'
+        else:
+            raise werkzeug.exceptions.BadRequest(_('Invalid subscription type'))
+
+        # add field to session
+        request.session[f'mass_mailing_{fname}'] = value
 
         mailing_list = MailingList.browse(int(list_id)).exists()
         subscription = ContactSubscription.search(
             [('list_id', '=', mailing_list.id), (f'contact_id.{fname}', '=', value)], limit=1)
         if not subscription:
-            # inline add_to_list as we've already called half of it
-            contact_id = Contacts.search([(fname, '=', value)], limit=1)
+            if not request.env.user.is_public and request.env.user.partner_id[fname_normalized] == value:
+                partner_id = request.env.user.partner_id.id
+                contacts = mailing_list.sudo()._update_subscription_from_email(value, opt_out=False)
+                contact_id = contacts[:1]
+                if contact_id:
+                    if not contact_id.partner_id:
+                        contact_id.partner_id = partner_id
+                    return
+            else:
+                contact_id = Contacts.search([(fname, '=', value)], limit=1)
+                partner_id = False
             if not contact_id:
-                contact_id = Contacts.create({'name': name, fname: value})
+                contact_id = Contacts.create({'name': name, fname: value, 'partner_id': partner_id})
             if mailing_list:
                 ContactSubscription.create({'contact_id': contact_id.id, 'list_id': mailing_list.id})
         elif subscription.opt_out:
             subscription.opt_out = False
-        # add email to session
-        request.session[f'mass_mailing_{fname}'] = value
