@@ -4,12 +4,34 @@ import { _t } from "@web/core/l10n/translation";
 import { localeCompare } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
+import { TeamBoardOptionHeaderMiddleButtons } from "./team_board_option_header_middle_buttons";
 
 export class TeamBoardOptionPlugin extends Plugin {
     static id = "teamBoardOption";
+    static dependencies = ["dom", "history", "builderOptions"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
+        builder_header_middle_buttons: {
+            Component: TeamBoardOptionHeaderMiddleButtons,
+            selector: ".s_team_board",
+            props: {
+                createNewTeamBoard: () => {
+                    const snippet = this.config.snippetModel.getSnippetByName(
+                        "snippet_structure",
+                        "s_team_board"
+                    );
+
+                    const contentEl = snippet.content.cloneNode(true);
+                    this.editable.querySelector("#wrap").appendChild(contentEl);
+
+                    this.dependencies.builderOptions.setNextTarget(contentEl);
+                    this.dependencies.history.commit();
+
+                    contentEl.scrollIntoView();
+                },
+            },
+        },
         remove_disabled_reason_providers: (el) => {
             if (this.isLastTeamMemberItem(el)) {
                 return _t("You cannot remove this elemant");
