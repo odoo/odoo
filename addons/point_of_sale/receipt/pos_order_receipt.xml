@@ -68,7 +68,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="w-100" t-if="conditions['use_self_invoicing']">
+                    <div class="w-100" t-if="conditions['use_self_invoicing'] and not conditions['basic_receipt']">
                         <table class="w-100">
                             <tbody>
                                 <tr>
