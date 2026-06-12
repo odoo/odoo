@@ -43,7 +43,7 @@ El equipo de trabajo está formado por 5 estudiantes. El rol de **Líder de Equi
 | **Yauli Merma Diego Raul** | Gestión de Documentación | Desarrollo del reporte del Hito 1, consolidación de evidencias y documentación del avance del proyecto Scrum y DevOps. |
 | **Sivincha Machaca Saul Andre** | Cronograma Maestro | Planificación de los Sprints de 15 días alineados a los hitos del curso. |
 
-### Roles y Responsabilidades (Sprint 1)
+### Sprint 1 Roles y Responsabilidades ([ver en github page](sprint1.md)):
 
 | Integrante | Rol | Responsabilidades |
 |------------|-----|-------------------|
@@ -53,7 +53,7 @@ El equipo de trabajo está formado por 5 estudiantes. El rol de **Líder de Equi
 | **Sivincha Machaca Saul Andre** | Gestión de Backlog e Issues | Refinar historias de usuario, crear GitHub Issues, priorizar tareas y organizar el Product Backlog del Sprint. |
 | **Sencia Ale Bryan Daniel** | Integración DevOps y Evidencias | Configurar ramas de trabajo, apoyar en GitHub Actions, registrar commits, recopilar evidencias y colaborar en la documentación técnica del Sprint. |
 
-### Roles y Responsabilidades (Sprint 2)
+### Sprint 2 Roles y Responsabilidades ([ver en github page](sprint2.md)):
 
 | Integrante | Rol Sprint 2 | Responsabilidades |
 |------------|-------------|-------------------|
@@ -63,7 +63,7 @@ El equipo de trabajo está formado por 5 estudiantes. El rol de **Líder de Equi
 | **Sivincha Machaca Saul Andre** | Especialista QA y Documentación | Ejecutar pruebas funcionales, validar resultados, actualizar documentación y consolidar evidencias del Sprint. |
 | **Quiñonez Delgado Aarón Fernando** | Líder de Sprint (Scrum Master) | Coordinar el Sprint, gestionar GitHub Projects, supervisar Issues y consolidar el informe de avance. |
 
-### Roles y Responsabilidades (Sprint 3):
+### Sprint 3 Roles y Responsabilidades :
 
 | Integrante | Rol | Responsabilidades |
 | --- | --- | --- |
@@ -73,7 +73,7 @@ El equipo de trabajo está formado por 5 estudiantes. El rol de **Líder de Equi
 | **Yauli Merma Diego Raul** |  |  |
 | **Sivincha Machaca Saul Andre** |  |  |
 
-### Roles y Responsabilidades (Sprint 4):
+### Sprint 4 Roles y Responsabilidades :
 
 | Integrante | Rol | Responsabilidades |
 | --- | --- | --- |
@@ -100,6 +100,3 @@ El cronograma maestro consolida el Sprint 0, los cuatro Sprints de desarrollo, l
 [Ver cronograma maestro](cronograma.md)
 
 
-# [Sprint 1](sprint1.md)
-
-# [Sprint 2](sprint2.md)
