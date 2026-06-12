@@ -43,25 +43,25 @@ El equipo de trabajo está formado por 5 estudiantes. El rol de **Líder de Equi
 | **Yauli Merma Diego Raul** | Gestión de Documentación | Desarrollo del reporte del Hito 1, consolidación de evidencias y documentación del avance del proyecto Scrum y DevOps. |
 | **Sivincha Machaca Saul Andre** | Cronograma Maestro | Planificación de los Sprints de 15 días alineados a los hitos del curso. |
 
-### Roles y Responsabilidades (Sprint 1):
+### Roles y Responsabilidades (Sprint 1)
 
 | Integrante | Rol | Responsabilidades |
-| --- | --- | --- |
-| **Apaza Anahua Roydan** |  |  |
-| **Quiñonez Delgado Aarón Fernando** |  |  |
-| **Sencia Ale Bryan Daniel** |  |  |
-| **Yauli Merma Diego Raul** |  |  |
-| **Sivincha Machaca Saul Andre** |  |  |
+|------------|-----|-------------------|
+| **Yauli Merma Diego Raul** | Líder Scrum y Coordinación | Organizar reuniones, supervisar el Sprint, revisar avances, coordinar la integración de tareas y administrar GitHub Projects. |
+| **Apaza Anahua Roydan** | Configuración del Entorno | Configurar Odoo, PostgreSQL y Docker Compose; verificar la ejecución local del sistema y resolver problemas de despliegue inicial. |
+| **Quiñonez Delgado Aarón Fernando** | Análisis de Arquitectura | Analizar la estructura del módulo *sale*, revisar modelos, vistas XML, dependencias y el flujo funcional del sistema. |
+| **Sivincha Machaca Saul Andre** | Gestión de Backlog e Issues | Refinar historias de usuario, crear GitHub Issues, priorizar tareas y organizar el Product Backlog del Sprint. |
+| **Sencia Ale Bryan Daniel** | Integración DevOps y Evidencias | Configurar ramas de trabajo, apoyar en GitHub Actions, registrar commits, recopilar evidencias y colaborar en la documentación técnica del Sprint. |
 
-### Roles y Responsabilidades (Sprint 2):
+### Roles y Responsabilidades (Sprint 2)
 
-| Integrante | Rol | Responsabilidades |
-| --- | --- | --- |
-| **Apaza Anahua Roydan** |  |  |
-| **Quiñonez Delgado Aarón Fernando** |  |  |
-| **Sencia Ale Bryan Daniel** |  |  |
-| **Yauli Merma Diego Raul** |  |  |
-| **Sivincha Machaca Saul Andre** |  |  |
+| Integrante | Rol Sprint 2 | Responsabilidades |
+|------------|-------------|-------------------|
+| **Apaza Anahua Roydan** | Desarrollador Backend (Python) | Extender modelos del módulo *sale*, implementar la funcionalidad seleccionada y realizar pruebas básicas de integración. |
+| **Sencia Ale Bryan Daniel** | Ingeniero DevOps (CI/CD) | Configurar GitHub Actions, automatizar el despliegue y validar el entorno Docker Compose. |
+| **Yauli Merma Diego Raul** | Desarrollador Frontend (XML/UI) | Modificar vistas XML del módulo de ventas e integrar la funcionalidad desarrollada en la interfaz. |
+| **Sivincha Machaca Saul Andre** | Especialista QA y Documentación | Ejecutar pruebas funcionales, validar resultados, actualizar documentación y consolidar evidencias del Sprint. |
+| **Quiñonez Delgado Aarón Fernando** | Líder de Sprint (Scrum Master) | Coordinar el Sprint, gestionar GitHub Projects, supervisar Issues y consolidar el informe de avance. |
 
 ### Roles y Responsabilidades (Sprint 3):
 
