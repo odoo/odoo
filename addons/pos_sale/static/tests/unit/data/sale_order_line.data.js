@@ -118,6 +118,24 @@ export class SaleOrderLine extends models.ServerModel {
             tax_ids: [],
             write_date: "2025-07-03 17:04:14",
         },
+        {
+            id: 7,
+            display_name: "Productless Line",
+            product_uom_qty: 3,
+            order_id: 1,
+            price_unit: 55,
+            price_total: 165,
+            discount: 0,
+            qty_delivered: 1,
+            qty_invoiced: 1,
+            qty_to_invoice: 2,
+            display_type: false,
+            name: "Productless Line",
+            tax_ids: [],
+            is_downpayment: false,
+            extra_tax_data: {},
+            write_date: "2025-07-03 17:04:14",
+        },
     ];
 
     async read_converted(ids) {

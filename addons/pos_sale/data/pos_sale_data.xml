@@ -17,5 +17,18 @@
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="purchase_ok">False</field>
         </record>
+
+        <record id="pos_sale.default_sol_product" model="product.product">
+            <field name="name">Default Product (POS)</field>
+            <field name="available_in_pos">False</field>
+            <field name="standard_price">0.00</field>
+            <field name="list_price">0.00</field>
+            <field name="weight">0.00</field>
+            <field name="type">service</field>
+            <field name="taxes_id" eval="[(5,)]"/>
+            <field name="categ_id" eval="ref('product.product_category_services', raise_if_not_found=False)"/>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="purchase_ok">False</field>
+        </record>
     </data>
 </odoo>

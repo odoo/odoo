@@ -82,9 +82,13 @@ patch(PosStore.prototype, {
         return sale_order;
     },
     getConvertedQuantityFromSaleOrderline(convertedLine, soLine) {
-        const type = convertedLine.product_id.type;
+        const type = soLine.product_id.type;
         const sOrder = soLine.order_id;
-        if (type === "service" && !["sent", "draft"].includes(sOrder.state)) {
+        if (
+            soLine.product_id.id !== this.config.default_product_id.id &&
+            type === "service" &&
+            !["sent", "draft"].includes(sOrder.state)
+        ) {
             return convertedLine.qty_to_invoice;
         } else {
             return (
@@ -116,6 +120,8 @@ patch(PosStore.prototype, {
 
             if (line.is_downpayment) {
                 line.product_id = this.config.down_payment_product_id;
+            } else if (!line.display_type && !line.product_id) {
+                line.product_id = this.config.default_product_id;
             }
 
             const taxes = orderFiscalPos?.getTaxesAfterFiscalPosition(line.tax_ids) || line.tax_ids;

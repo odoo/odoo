@@ -154,8 +154,12 @@ class SaleOrderLine(models.Model):
         field_names = self._get_sale_order_fields()
         results = []
         for sale_line in self:
-            if sale_line.product_type or (sale_line.is_downpayment and sale_line.price_unit != 0):
-                product_uom = sale_line.product_id.uom_id
+            if not sale_line.display_type:
+                product_uom = (
+                    sale_line.product_id.uom_id
+                    if sale_line.product_id
+                    else sale_line.product_uom_id
+                )
                 sale_line_uom = sale_line.product_uom_id
                 item = sale_line.read(field_names, load=False)[0]
                 extra_items = self._get_read_converted_extra_items(sale_line)
