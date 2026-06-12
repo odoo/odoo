@@ -4,14 +4,22 @@ import { getElementsWithOption } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
-import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
+import { ClassAction, StyleAction } from "@html_builder/core/core_builder_action_plugin";
+import { SelectTemplateAction } from "../customize_website_plugin";
+import { withSequence } from "@html_editor/utils/resource";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 
 export class CountdownOption extends BaseOptionComponent {
     static id = "countdown_option";
     static template = "website.CountdownOption";
+    static dependencies = ["versionError"];
     static cleanForSave = (editingEl) => {
         editingEl.classList.remove("s_countdown_enable_preview");
     };
+    setup() {
+        super.setup();
+        this.dependencies.versionError.checkNotifyOutdatedSnippet(this.env.getEditingElement());
+    }
 }
 
 registry.category("website-options").add(CountdownOption.id, CountdownOption);
@@ -24,15 +32,33 @@ export class CountdownOptionPlugin extends Plugin {
         builder_actions: {
             SetEndActionAction,
             PreviewEndMessageAction,
-            SetLayoutAction,
-            SelectCountdownInlineTemplateAction,
             SetCountdownTitlePositionAction,
+            SelectCountdownTemplateAction,
+            SetColorInlineCountdownAction,
         },
+        toolbar_namespace_providers: [
+            withSequence(85, (targetedNodes) => {
+                if (
+                    targetedNodes.length > 1 &&
+                    targetedNodes.some((node) =>
+                        closestElement(node, ".s_countdown .countdown_metrics")
+                    )
+                ) {
+                    return "countdown_text";
+                }
+            }),
+        ],
         on_cloned_handlers: ({ cloneEl }) => {
             const countdownEls = getElementsWithOption(cloneEl, ".s_countdown");
             for (const countdownEl of countdownEls) {
                 countdownEl.classList.remove("s_countdown_enable_preview");
             }
+        },
+        before_insert_processors: (container, block) => {
+            if (block.closest(".countdown_metrics")) {
+                container.innerHTML = "";
+            }
+            return container;
         },
     };
 }
@@ -85,33 +111,6 @@ export class BaseCountdownAction extends BuilderAction {
         return editingElement.dataset.endAction === value;
     }
 
-    setLayout({ editingElement, value }) {
-        switch (value) {
-            case "circle":
-                editingElement.dataset.progressBarStyle = "disappear";
-                editingElement.dataset.progressBarWeight = "thin";
-                editingElement.dataset.layoutBackground = "none";
-                break;
-            case "boxes":
-                editingElement.dataset.progressBarStyle = "none";
-                editingElement.dataset.layoutBackground = "plain";
-                break;
-            case "clean":
-                editingElement.dataset.progressBarStyle = "none";
-                editingElement.dataset.layoutBackground = "none";
-                break;
-            case "text":
-                editingElement.dataset.progressBarStyle = "none";
-                editingElement.dataset.layoutBackground = "none";
-                break;
-        }
-        editingElement.dataset.layout = value;
-    }
-
-    isLayoutApplied({ editingElement, value }) {
-        return editingElement.dataset.layout === value;
-    }
-
     isEndMessagePreviewed({ editingElement }) {
         return !!editingElement?.classList.contains("s_countdown_enable_preview");
     }
@@ -148,50 +147,42 @@ export class PreviewEndMessageAction extends BaseCountdownAction {
     }
 }
 
-export class SetLayoutAction extends BaseCountdownAction {
-    static id = "setLayout";
-    apply(context) {
-        return this.setLayout(context);
-    }
-    isApplied(context) {
-        return this.isLayoutApplied(context);
-    }
-}
-
-export class SelectCountdownInlineTemplateAction extends BuilderAction {
-    static id = "selectCountdownInlineTemplate";
-    static dependencies = ["builderActions", "edit_interaction"];
-
-    setup() {
-        this.getAction = this.dependencies.builderActions.getAction;
-    }
-
-    async prepare({ actionParam }) {
-        await this.getAction("selectTemplate").prepare({ actionParam: actionParam });
-    }
-
-    isApplied({ editingElement, params: { templateClass } }) {
-        if (templateClass) {
-            return !!editingElement.querySelector(`.${templateClass}`);
-        }
-        return true;
-    }
+export class SelectCountdownTemplateAction extends SelectTemplateAction {
+    static id = "selectCountdownTemplate";
+    static dependencies = [...super.dependencies, "edit_interaction"];
 
     apply(action) {
         this.dependencies.edit_interaction.restartInteractions(
             action.editingElement.closest(".s_countdown")
         );
-        this.getAction("selectTemplate").apply(action);
+        const countdownEl = action.editingElement.closest(".s_countdown");
+        countdownEl.dataset.layoutBackground = "none";
+        if (action.params.view === "website.s_countdown_circle_template") {
+            countdownEl.dataset.progressBarStyle = "disappear";
+            countdownEl.dataset.progressBarWeight = "thin";
+            countdownEl.dataset.layout = "circle";
+        } else {
+            countdownEl.dataset.progressBarStyle = "none";
+            countdownEl.dataset.layoutBackground = "none";
+            countdownEl.dataset.layout = "text";
+        }
+        super.apply(action);
         // Reset the monospace font option if we select a template that doesn't provide it.
-        if (["o_template_default", "o_template_text"].includes(action.params.templateClass)) {
+        if (["o_template_text_inline", "o_template_text"].includes(action.params.templateClass)) {
             action.editingElement
                 .closest(".o_count_monospace")
                 ?.classList.remove("o_count_monospace");
         }
     }
+}
 
-    clean(action) {
-        return this.getAction("selectTemplate").clean(action);
+export class SetColorInlineCountdownAction extends StyleAction {
+    static id = "setColorInlineCountdown";
+
+    apply(context) {
+        super.apply(context);
+        const countdownWrapperEl = context.editingElement.closest(".s_countdown_wrapper");
+        countdownWrapperEl.classList.toggle("o_countdown_no_bg_color", !context.value);
     }
 }
 

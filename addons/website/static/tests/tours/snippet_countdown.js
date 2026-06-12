@@ -48,7 +48,7 @@ registerWebsitePreviewTour(
         ...changeOptionInPopover("Countdown", "At The End", "Message only"),
         {
             content: "Check that the countdown is not displayed",
-            trigger: ":iframe .s_countdown:has(.s_countdown_canvas_wrapper:not(:visible))",
+            trigger: ":iframe .s_countdown:has(.s_countdown_wrapper:not(:visible))",
         },
         {
             content: "Check that the message is still displayed",

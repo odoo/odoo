@@ -4,7 +4,7 @@ import { switchToEditMode } from "../../helpers";
 import { tick } from "@odoo/hoot-dom";
 
 describe.current.tags("interaction_dev");
-setupInteractionWhiteList("website.countdown");
+setupInteractionWhiteList("website.countdown_001");
 
 const getTemplate = function (options = { endAction: "nothing", endTime: "98765432100" }) {
     return `
@@ -23,13 +23,11 @@ const getTemplate = function (options = { endAction: "nothing", endTime: "987654
             data-text-color="o-color-1"
             data-layout-background-color="400"
             data-progress-bar-color="o-color-1"
-            data-end-time="${options.endTime}">
+            data-end-time="${options.endTime}"
+            data-vxml="001">
                 <div class="container">
-                    <div class="s_countdown_canvas_wrapper"
-                    style="
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;">
+                    <div class="s_countdown_wrapper">
+                        <div class="o_template_circle d-inline-flex gap-1">
                     </div>
                 </div>
                 ${["message", "message_no_countdown"].includes(options.endAction) ? endMessage : ""}

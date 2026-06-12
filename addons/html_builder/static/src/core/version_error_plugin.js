@@ -47,7 +47,7 @@ export class VersionErrorPlugin extends Plugin {
             this.closeExistingNotification?.();
             this.closeExistingNotification = this.services.notification.add(
                 _t(
-                    "It might have caused problem during the editing. Please drag the new version from the snippet panel to update it."
+                    "It might cause/have caused problems during the editing. Please drag the new version from the snippet panel to update it."
                 ),
                 {
                     type: "warning",
