@@ -89,8 +89,8 @@ class SlideChannelInvite(models.TransientModel):
     def _prepare_mail_values(self, slide_channel_partner):
         """ Create mail specific for recipient """
         lang = self._render_lang(slide_channel_partner.ids)[slide_channel_partner.id]
-        subject = self._render_field('subject', slide_channel_partner.ids, set_lang=lang)[slide_channel_partner.id]
-        body = self._render_field('body', slide_channel_partner.ids, set_lang=lang)[slide_channel_partner.id]
+        subject = self.with_context(enroll_mode=self.enroll_mode)._render_field('subject', slide_channel_partner.ids, set_lang=lang)[slide_channel_partner.id]
+        body = self._render_field('body', slide_channel_partner.ids, set_lang=lang, add_context={"enroll_mode": self.enroll_mode})[slide_channel_partner.id]
         # post the message
         mail_values = {
             'attachment_ids': [(4, att.id) for att in self.attachment_ids],
@@ -107,19 +107,13 @@ class SlideChannelInvite(models.TransientModel):
         # optional support of default_email_layout_xmlid in context
         email_layout_xmlid = self.env.context.get('default_email_layout_xmlid', self.env.context.get('notif_layout'))
         if email_layout_xmlid:
-            model_description = self.env['ir.model']._get('slide.channel').display_name
             mail_values['body_html'] = self.with_context(lang=lang)._render_encapsulate(
                 email_layout_xmlid, mail_values['body_html'],
                 context_record=slide_channel_partner,
                 add_context={
-                    'email_notification_force_header': True,
                     'email_notification_force_footer': True,
                     'record_name': self.channel_id.name,
                     'signature': self.channel_id.user_id.signature,
-                    'subtitles': [
-                        _lt('Your %s', model_description) if model_description else _lt('Your document'),
-                        self.channel_id.name.replace('/', '-') if self.channel_id.name else ''],
-                    'subtitles_highlight_index': 1,
                 },
             )
         return mail_values

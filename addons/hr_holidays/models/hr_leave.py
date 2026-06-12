@@ -2147,9 +2147,7 @@ class HrLeave(models.Model):
 
             if not partner_ids:
                 continue
-            leave_msg = self.env.ref('hr_holidays.new_timeoff_request_template').with_context(
-                manager=', '.join(partner_ids.mapped('name'))
-            )._render_field(
+            leave_msg = self.env.ref('hr_holidays.new_timeoff_request_template')._render_field(
                 'body_html',
                 holiday.ids,
                 compute_lang=True
@@ -2412,3 +2410,20 @@ class HrLeave(models.Model):
                 "This time off will be entirely replaced with %(code)s - %(name)s", code=work_entry_type.code, name=work_entry_type.name
             )
         return ""
+
+    def get_formatted_leave_timings(self):
+        """ Get formatted leave timings in 'MMMM dd, YYYY' format for mail template. """
+        self.ensure_one()
+        start = self.request_date_from
+        end = self.request_date_to
+        if start.month != end.month or start.year != end.year:
+            return self.env._('%(start_date)s to %(end_date)s',
+                              start_date=format_date(self.env, start, date_format='MMMM dd, YYYY'),
+                              end_date=format_date(self.env, end, date_format='MMMM dd, YYYY'))
+
+        if start == end:
+            return format_date(self.env, start, date_format='MMMM dd, YYYY')
+
+        return self.env._('%(start_month_day)s to %(end_day_year)s',
+                            start_month_day=format_date(self.env, start, date_format='MMMM dd'),
+                            end_day_year=format_date(self.env, end, date_format='dd, YYYY'))

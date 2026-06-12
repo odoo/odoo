@@ -60,9 +60,7 @@
         from <t t-out="object.company_id.name or ''">YourCompany</t>. 
         <br/><br/>
         <t t-if="object.date_planned">
-            The receipt is expected for <span style="font-weight:bold;" t-out="format_date(object.date_planned) or ''">05/05/2021</span>.
-            <br/><br/>
-            Could you please acknowledge the receipt of this order?
+            Can you please acknowledge this order, expected for <span style="font-weight:bold;" t-out="format_date(object.date_planned) or ''">05/05/2021</span>.
             <br/><br/>
             <a t-att-href="object.get_acknowledge_url()"
                 target="_blank"

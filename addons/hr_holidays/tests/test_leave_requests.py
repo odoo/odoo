@@ -1634,7 +1634,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertTrue(leave_mail_message, "A mail notification should be sent for approval")
         self.assertEqual(
             leave_mail_message.subject,
-            "I'm requesting 1 days of TimeNotLimited from 2022-03-11 to 2022-03-11",
+            "I'm requesting 1 days of TimeNotLimited on March 11, 2022",
             "The email subject should describe the leave request details correctly."
         )
         self.assertIn(
