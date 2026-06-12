@@ -201,7 +201,7 @@
     </record>
 
     <record id="action_delivery_carrier_form" model="ir.actions.act_window">
-        <field name="name">Deliveries</field>
+        <field name="name">Delivery Methods</field>
         <field name="res_model">delivery.carrier</field>
         <field name="path">delivery-methods</field>
         <field name="view_mode">list,form</field>
@@ -222,6 +222,7 @@
     </record>
 
     <menuitem id="sale_menu_action_delivery_carrier_form"
+        name="Deliveries"
         action="action_delivery_carrier_form"
         parent="sale.menu_sale_config"
         sequence="15"/>
