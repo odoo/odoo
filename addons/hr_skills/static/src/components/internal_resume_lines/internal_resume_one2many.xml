@@ -11,7 +11,7 @@
                     </tr>
                 </thead>
                 <tbody class="ui-sortable">
-                    <t t-if="this.internalResumeLines.length">
+                    <t t-if="this.internalResumeLines().length">
                         <tr class="o_group_has_content o_group_header o_resume_group_header">
                             <th tabindex="-1" class="o_group_name" colspan="2">
                                 <div class="d-flex align-items-center">
@@ -20,7 +20,7 @@
                             </th>
                         </tr>
                     </t>
-                    <t t-foreach="this.internalResumeLines" t-as="record" t-key="record.id">
+                    <t t-foreach="this.internalResumeLines()" t-as="record" t-key="record.id">
                         <tr class="o_data_row">
                             <td class="o_resume_timeline_cell position-relative pe-lg-2">
                                 <div class="rounded-circle bg-info position-relative"/>
