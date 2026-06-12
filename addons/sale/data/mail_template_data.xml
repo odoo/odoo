@@ -185,6 +185,13 @@
                             <div style="font-size: 14px; margin: 0 0 16px;"><t t-out="object.user_id.signature or ''">Mitchell Admin</t></div>
                         </t>
                     </p>
+                    <div style="margin: 16px 0;">
+                        <a t-att-href="object._get_share_url(redirect=True)"
+                            target="_blank"
+                            style="background-color: #875A7B; padding: 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 14px; display: inline-block;">
+                            View Order
+                        </a>
+                    </div>
                     <t t-if="hasattr(object, 'website_id') and object.website_id">
                         <div style="margin: 0px; padding: 0px;">
                             <!-- The following loop is also used in the addons > sale > data > mail_template_data.xml file because we want the same layout. -->
@@ -192,8 +199,8 @@
                                 <t t-if="(not hasattr(line, 'is_delivery') or not line.is_delivery) and not line.combo_item_id">
                                     <table width="100%" style="max-width: 590px; font-size: 14px; border-collapse: collapse;" role="presentation">
                                         <tr>
-                                            <td width="24%" style="max-width: 120px; padding: 0 10px 10px 0; vertical-align: top;">
-                                                <img t-if="line.product_id" t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128" t-attf-style="width: 64px; height: {{object.website_id and object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: cover; object-position: center;" alt="Product image"></img>
+                                            <td style="width: 64px; padding: 0 10px 10px 0; vertical-align: top;">
+                                                <img t-if="line.product_id" t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128" t-attf-style="width: 100%; height: {{object.website_id and object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: cover; object-position: center;" alt="Product image"></img>
                                             </td>
                                             <td align="left" style="vertical-align: top; padding-bottom: 22px;">
                                                 <h3 t-attf-style="mso-line-height-rule:exactly; margin:0; font-size: 14px; {{'margin-bottom: 6px;' if line.product_type == 'combo' else ''}}">
