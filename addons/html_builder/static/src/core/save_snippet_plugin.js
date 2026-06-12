@@ -11,6 +11,8 @@ import { _t } from "@web/core/l10n/translation";
 
 export class SaveSnippetPlugin extends Plugin {
     static id = "saveSnippet";
+    static dependencies = ["disableSnippets"];
+
     /** @type {import("plugins").BuilderResources} */
     resources = {
         get_options_container_top_buttons: withSequence(
@@ -84,6 +86,7 @@ export class SaveSnippetPlugin extends Plugin {
             cleanForSaveHandlers,
             this.wrapWithBeforeAfterSaveHandlers.bind(this)
         );
+        this.dependencies.disableSnippets.disableUndroppableSnippets();
         if (savedName) {
             const message = _t(
                 "Saved as %s. Find it in your snippets.",
