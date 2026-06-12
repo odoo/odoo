@@ -42,6 +42,7 @@ class TestRegistry(TransactionCase):
         for cache_name in self.env.transaction.ormcaches__:
             if '.' not in cache_name:
                 self.env.transaction.invalidate_ormcache(cache_name)
+        self.env.cr.transaction._recent_envs.clear()
 
         # Now collect objects
         # This test may fail if your debugger stores references to previous fields.
