@@ -448,34 +448,26 @@ function multiLanguage(mainLanguage, secondLanguage) {
     ];
 }
 
-registerWebsitePreviewTour(
-    "translation_multi_language_fr_user_fr_en_site",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    },
-    () => [ensureFrUser, ensureFrSite, ...multiLanguage("fr", "en")]
-);
+registerWebsitePreviewTour("translation_multi_language_fr_user_fr_en_site", {}, () => [
+    ensureFrUser,
+    ensureFrSite,
+    ...multiLanguage("fr", "en"),
+]);
 
-registerWebsitePreviewTour(
-    "translation_multi_language_fr_user_en_fr_site",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    },
-    () => [ensureFrUser, ensureEnSite, ...multiLanguage("en", "fr")]
-);
+registerWebsitePreviewTour("translation_multi_language_fr_user_en_fr_site", {}, () => [
+    ensureFrUser,
+    ensureEnSite,
+    ...multiLanguage("en", "fr"),
+]);
 
-registerWebsitePreviewTour(
-    "translation_multi_language_en_user_fr_en_site",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    },
-    () => [ensureEnUser, ensureFrSite, ...multiLanguage("fr", "en")]
-);
+registerWebsitePreviewTour("translation_multi_language_en_user_fr_en_site", {}, () => [
+    ensureEnUser,
+    ensureFrSite,
+    ...multiLanguage("fr", "en"),
+]);
 
-registerWebsitePreviewTour(
-    "translation_multi_language_en_user_en_fr_site",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    },
-    () => [ensureEnUser, ensureEnSite, ...multiLanguage("en", "fr")]
-);
+registerWebsitePreviewTour("translation_multi_language_en_user_en_fr_site", {}, () => [
+    ensureEnUser,
+    ensureEnSite,
+    ...multiLanguage("en", "fr"),
+]);
