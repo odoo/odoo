@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import time
 from urllib.parse import quote as url_quote
 
 from odoo import _, api, models
@@ -158,8 +159,28 @@ class PaymentTransaction(models.Model):
 
     def _mercado_pago_get_api_url(self, response_content):
         if self.payment_method_code == "pix":
-            return response_content["transactions"]["payments"][0]["payment_method"]["ticket_url"]
+            if response_content["status"] == "processing":
+                order_id = response_content.get("id")
+                _logger.info(
+                    "Mercado Pago Pix order %s is processing asynchronously. Polling for update...",
+                    order_id,
+                )
+                max_retries = 3
+                for _ in range(max_retries):
+                    time.sleep(1)
+                    response_content = self._send_api_request("GET", f"/v1/orders/{order_id}")
 
+                    if response_content["status"] == "action_required":
+                        return response_content["transactions"]["payments"][0]["payment_method"][
+                            "ticket_url"
+                        ]
+                raise ValidationError(
+                    self.env._(
+                        "Mercado Pago is taking too long to generate the Pix code. Please try "
+                        "again in a moment."
+                    )
+                )
+            return response_content["transactions"]["payments"][0]["payment_method"]["ticket_url"]
         return response_content["init_point" if self.provider_id.is_live else "sandbox_init_point"]
 
     def _send_payment_request(self):
