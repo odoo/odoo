@@ -88,8 +88,8 @@ export class TimeOffCalendarSidePanel extends CalendarSidePanel {
         }
         const filterData = {};
         const [data] = await Promise.all(promises);
-        if (!data) {
-            return [];
+        if (!Array.isArray(data)) {
+            return;
         }
         data.forEach((leave) => {
             filterData[leave[3]] = leave;
