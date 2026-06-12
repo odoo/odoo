@@ -1,11 +1,8 @@
-import re
 import logging
 
 from odoo import api, fields, models
 
 from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
-
-PDP_identifier_re = re.compile(r'^([0-9]{9})(_[0-9]{14})?(_.+)?$')
 
 _logger = logging.getLogger(__name__)
 
@@ -32,11 +29,6 @@ class ResCompany(models.Model):
     l10n_fr_pdp_registered = fields.Boolean(
         string="Approved Platform Registerd",
         compute="_compute_l10n_fr_pdp_registered",
-        groups='base.group_user',
-    )
-    pdp_identifier = fields.Char(
-        compute='_compute_pdp_identifier',
-        inverse='_inverse_pdp_identifier',
         groups='base.group_user',
     )
     l10n_fr_pdp_periodicity = fields.Selection(  # TODO prevent changing if flows exist ?
@@ -81,25 +73,6 @@ class ResCompany(models.Model):
         groups='account.group_account_invoice',
     )
 
-    @api.depends('peppol_eas', 'peppol_endpoint')
-    def _compute_pdp_identifier(self):
-        for record in self:
-            partner = record.partner_id
-            record.pdp_identifier = partner.peppol_endpoint if partner.peppol_eas == '0225' else False
-
-    def _inverse_pdp_identifier(self):
-        for record in self:
-            match = PDP_identifier_re.match(record.pdp_identifier or '')
-            siren = match and match.group(1)
-            if not siren:
-                continue
-            siret = match.group(2)[1:] if match and match.group(2) else False  # Remove `_` at the start
-            record.partner_id.write({
-                'peppol_eas': '0225',
-                'peppol_endpoint': record.pdp_identifier,  # Will be verified by `_check_peppol_fields` constraint
-                'siret': siret or siren,
-            })
-
     @api.depends('l10n_fr_pdp_annuaire_start_date', 'account_peppol_proxy_state')
     def _compute_l10n_fr_pdp_registered(self):
         for company in self:
@@ -108,10 +81,6 @@ class ResCompany(models.Model):
                 and company.l10n_fr_pdp_annuaire_start_date
                 and company.l10n_fr_pdp_annuaire_start_date <= fields.Date.context_today(self)
             )
-
-    @api.model
-    def _check_pdp_identifier(self, pdp_identifier, warning=False):
-        return pdp_identifier and PDP_identifier_re.match(pdp_identifier)
 
     def _reset_peppol_configuration(self):
         # Extend `account_peppol` to reset PDP specific fields

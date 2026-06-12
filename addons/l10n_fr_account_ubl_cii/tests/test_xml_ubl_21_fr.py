@@ -1,11 +1,11 @@
 from odoo import Command
 from odoo.tests import tagged
 
-from .common import TestL10nFrPdpCommon
+from .common import TestL10nFrAccountUblCiiCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestL10nFrPdpXml(TestL10nFrPdpCommon):
+class TestL10nFrAccountUblCiiXml(TestL10nFrAccountUblCiiCommon):
 
     @classmethod
     def subfolders(cls):

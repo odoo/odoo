@@ -32,7 +32,7 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             commercial_partner = partner.commercial_partner_id
             if partner.peppol_eas != '0225' or not partner.peppol_endpoint:
                 constraints[f"ubl_21_fr_{partner_type}_pdp_identifier_required"] = self.env._("The following partner's PDP identifier is missing: %s", partner.display_name)
-            id_type, id_value = commercial_partner._l10n_fr_pdp_get_base_identifier()
+            id_type, id_value = commercial_partner._l10n_fr_get_base_identifier()
             if not id_type or not id_value:
                 constraints[f"ubl_21_fr_{partner_type}_siret_required"] = self.env._("The following partner's SIREN or SIRET is missing: %s", partner.display_name)
             if not commercial_partner.vat or commercial_partner.vat == '/':
@@ -90,7 +90,7 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         if not existing_note or not isinstance(document_node.get('cbc:Note'), list):
             document_node['cbc:Note'] = [existing_note] if existing_note else []
         # Add default notes
-        for code, default_content in invoice._l10n_fr_pdp_get_default_notes().items():
+        for code, default_content in invoice._l10n_fr_get_default_notes().items():
             document_node['cbc:Note'].append({
                 '_text': f"#{code}#{default_content}",
             })
@@ -109,7 +109,7 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
 
-        id_type, party_id = commercial_partner._l10n_fr_pdp_get_base_identifier()
+        id_type, party_id = commercial_partner._l10n_fr_get_base_identifier()
         if id_type == 'siret':
             party_id_scheme = "0009"
         else:  # id_type == 'siren'
@@ -128,7 +128,7 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         vals['party_node']['cac:PartyLegalEntity'] = {
             'cbc:RegistrationName': {'_text': commercial_partner.name},
             'cbc:CompanyID': {
-                '_text': commercial_partner._l10n_fr_pdp_get_siren(),
+                '_text': commercial_partner._l10n_fr_get_siren(),
                 'schemeID': '0002',
             },
         }
