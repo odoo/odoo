@@ -14,7 +14,7 @@ from odoo import _, api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
-from odoo.tools import format_date, format_datetime, format_time, frozendict
+from odoo.tools import Query, format_date, format_datetime, format_time, frozendict
 from odoo.tools.mail import is_html_empty, html_to_inner_content
 from odoo.tools.misc import formatLang
 from odoo.tools.translate import html_translate
@@ -169,6 +169,7 @@ class EventEvent(models.Model):
         check_company=True,
         tracking=True
     )
+    # TODO remove address_search in master
     address_search = fields.Many2one(
         'res.partner', string='Address', compute='_compute_address_search', search='_search_address_search')
     address_inline = fields.Char(
@@ -448,6 +449,8 @@ class EventEvent(models.Model):
         if isinstance(value, Domain):
             domain = value.map_conditions(lambda cond: cond if cond.field_expr != 'display_name' else make_codomain(cond.value))
             return Domain('address_id', operator, domain)
+        if isinstance(value, Query):
+            return Domain('address_id', 'in', value)
         if operator == 'ilike' and isinstance(value, str):
             return Domain('address_id', 'any', make_codomain(value))
         # for the trivial "empty" case, there is no empty address
@@ -649,6 +652,11 @@ class EventEvent(models.Model):
             # reset kanban state when changing stage
             vals['kanban_state'] = 'normal'
         return super().write(vals)
+
+    def _search(self, domain, *a, **kw):
+        domain = Domain(domain).optimize(self).map_conditions(
+            lambda c: self._search_address_search(c.operator, c.value) if c.field_expr == 'address_search' else c)
+        return super()._search(domain, *a, **kw)
 
     @api.depends('event_registrations_sold_out', 'seats_limited', 'seats_max', 'seats_available')
     @api.depends_context('name_with_seats_availability')
