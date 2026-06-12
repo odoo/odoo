@@ -1382,12 +1382,13 @@ class Website(models.CachedModel):
                 ]))
 
             # sudo() to bypass the field level access rights. i.e: robots_txt
-            dependency_records = Model.sudo().search(Domain.OR(domains))
+            model_sudo = Model.sudo()
+            dependency_records = model_sudo.search(Domain.OR(domains))
             if model_name == 'ir.ui.view':
                 dependency_records = _handle_views_and_pages(dependency_records)
             if dependency_records:
                 model_display_name = self.env['ir.model']._display_name_for([model_name])[0]['display_name']
-                field_string = Model.fields_get()[field_name]['string']
+                field_string = model_sudo.fields_get()[field_name]['string']
                 dependencies.setdefault(model_display_name, [])
                 dependencies[model_display_name] += [{
                     'field_name': field_string,
