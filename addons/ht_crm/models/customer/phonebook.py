@@ -309,8 +309,7 @@ class PhoneBook(models.Model):
     # Định danh
     batch_id = fields.Many2one(
         'sale.phonebook.batch',
-        string="Tập dữ liệu",
-        groups="ht_crm.group_manage_phone_data"
+        string="Tập dữ liệu"
     )
 
     # Trường cơ bản
@@ -336,12 +335,11 @@ class PhoneBook(models.Model):
 
     previous_salesperson_ids = fields.Many2many(
         'employee.profile.sales',
-        string="Lịch sử phụ trách",
-        groups="ht_crm.group_ht_executive, ht_crm.group_ht_general_admin"
+        string="Lịch sử phụ trách"
     )
 
     status = fields.Selection([
-        ('new', 'Chưa liên hệ'),
+        ('new', 'Cần xử lý'),
         ('callback', 'Gọi lại'),
         ('contacted', 'Đã liên hệ'),
         ('invalid', 'Không hợp lệ / Hủy')
@@ -371,6 +369,38 @@ class PhoneBook(models.Model):
         return self.env['sale.phonebook'].search_count([
             ('salesperson_id', '=', salesperson.id)
         ])
+
+    def action_convert_to_customer(self):
+        """Hàm chuyển đổi dữ liệu danh bạ thành khách hàng chính thức"""
+        self.ensure_one() # Đảm bảo chỉ xử lý trên 1 bản ghi đơn lẻ
+
+        # 1. Kiểm tra xem số điện thoại này đã tồn tại bên bảng khách hàng chưa (tránh trùng lặp)
+        existing_customer = self.env['sale.customer'].search([('phone', '=', self.phone)], limit=1)
+        if existing_customer:
+            raise exceptions.UserError("Số điện thoại này đã tồn tại trong danh sách Khách hàng với tên: %s" % existing_customer.name)
+
+        # 2. Tạo bản ghi mới bên model sale.customer
+        customer_vals = {
+            'name': self.name, # Nếu danh bạ chưa có tên, đặt tên mặc định
+            'phone': self.phone,
+            'salesperson_id': self.salesperson_id.id if self.salesperson_id else False,
+            'status': 'new', # Trạng thái mặc định bên bảng khách hàng
+        }
+        new_customer = self.env['sale.customer'].create(customer_vals)
+
+        # 3. (Tùy chọn) Đổi trạng thái hoặc ghi log lại bên danh bạ sau khi chuyển đổi thành công
+        if 'status' in self._fields:
+            self.status = 'contacted' # Đánh dấu danh bạ đã liên hệ/xử lý thành công
+            
+        # 4. Trả về một Window Action để tự động mở màn hình Form của Khách hàng mới tạo
+        return {
+            'name': 'Khách hàng mới tạo',
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.customer',
+            'view_mode': 'form',
+            'res_id': new_customer.id,
+            'target': 'current', # Mở đè vào màn hình hiện tại
+        }
 
     @api.depends(
         'given_at',

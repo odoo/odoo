@@ -46,16 +46,25 @@
                     <!-- Stats -->
                     <div class="oe_button_box" name="button_box">
 
-                        <button class="oe_stat_button" type="button">
-                            <field name="total_received" widget="statinfo" string="Tổng nhận"/>
+                        <button class="oe_stat_button" type="object" icon="fa-download">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="total_received"/></span>
+                                <span class="o_stat_text">Tổng nhận</span>
+                            </div>
                         </button>
 
-                        <button class="oe_stat_button" type="button">
-                            <field name="current_received" widget="statinfo" string="Đang giữ"/>
+                        <button class="oe_stat_button" type="object" icon="fa-folder-open">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="current_received"/></span>
+                                <span class="o_stat_text">Đang giữ</span>
+                            </div>
                         </button>
 
-                        <button class="oe_stat_button" type="button">
-                            <field name="total_handled" widget="statinfo" string="Đã xử lý"/>
+                        <button class="oe_stat_button" type="object" icon="fa-phone">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="total_handled"/></span>
+                                <span class="o_stat_text">Đã xử lý</span>
+                            </div>
                         </button>
 
                     </div>
@@ -95,6 +104,58 @@
                         </page>
 
                     </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_employee_profile_sales_form_sales" model="ir.ui.view">
+        <field name="name">employee.profile.sales.form.sales</field>
+        <field name="model">employee.profile.sales</field>
+        <field name="arch" type="xml">
+            <form edit="false" create="false" delete="false">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+
+                        <button class="oe_stat_button" type="object" icon="fa-download">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="total_received"/></span>
+                                <span class="o_stat_text">Tổng nhận</span>
+                            </div>
+                        </button>
+
+                        <button class="oe_stat_button" type="object" icon="fa-folder-open">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="current_received"/></span>
+                                <span class="o_stat_text">Đang giữ</span>
+                            </div>
+                        </button>
+
+                        <button class="oe_stat_button" type="object" icon="fa-phone">
+                            <div class="o_stat_info">
+                                <span class="o_stat_value"><field name="total_handled"/></span>
+                                <span class="o_stat_text">Đã xử lý</span>
+                            </div>
+                        </button>
+
+                    </div>
+
+                    <div class="oe_title">
+                        <label for="name" string="Nhân viên Sales"/>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Thông tin nhân sự">
+                            <field name="manager_id" options="{'no_open': True}"/>
+                        </group>
+                        <group string="Hiệu suất làm việc trong tháng">
+                            <field name="performance" widget="percentage" class="fw-bold text-success"/>
+                        </group>
+                    </group>
 
                 </sheet>
             </form>

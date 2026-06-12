@@ -3,7 +3,25 @@
     <record id="action_phonebook" model="ir.actions.act_window">
         <field name="name">Data</field>
         <field name="res_model">sale.phonebook</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'form_view_ref': 'ht_crm.view_phonebook_form'}</field>
+    </record>
+
+    <!-- Sales -->
+    <record id="action_phonebook_hot" model="ir.actions.act_window">
+        <field name="name">Data Lead</field>
+        <field name="res_model">sale.phonebook</field>
         <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('is_hot', '=', True)]</field>
+        <field name="context">{'form_view_ref': 'ht_crm.view_phonebook_form_sales'}</field>
+    </record>
+
+    <record id="action_phonebook_cold" model="ir.actions.act_window">
+        <field name="name">Data Salesphone</field>
+        <field name="res_model">sale.phonebook</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('is_hot', '=', False)]</field>
+        <field name="context">{'form_view_ref': 'ht_crm.view_phonebook_form_sales'}</field>
     </record>
 
     <record id="action_phonebook_batch" model="ir.actions.act_window">
@@ -126,8 +144,15 @@
         <field name="res_model">employee.sales.log</field>
         <field name="view_mode">list,form,graph,pivot</field>
     </record>
-
-
+    
+    <record id="action_server_my_profile" model="ir.actions.server">
+        <field name="name">Điều hướng thông tin cá nhân</field> 
+        <field name="model_id" ref="model_employee_profile_sales"/>        
+        <field name="state">code</field>       
+        <field name="code">
+            action = model.action_open_my_profile()
+        </field>
+    </record>
 
     <menuitem id="menu_ht_root" name="HTLand CRM" sequence="10">
         <menuitem id="menu_crm_root" name="CRM">
@@ -136,7 +161,9 @@
             ========================== -->
             <menuitem id="menu_crm_lead_root" name="Khách hàng &amp; Lead">
                 <menuitem id="menu_customer" name="Khách hàng" action="action_customer" />
-                <menuitem id="menu_phonebook" name="Danh sách Lead" action="action_phonebook" />
+                <menuitem id="menu_phonebook_lead_user" name="Data Lead" action="action_phonebook_hot" groups="ht_crm.group_ht_user"/>
+                <menuitem id="menu_phonebook_salesphone_user" name="Data Salesphone" action="action_phonebook_cold" groups="ht_crm.group_ht_user"/>
+                <menuitem id="menu_phonebook_data" name="Data" action="action_phonebook" groups="ht_crm.group_ht_executive,ht_crm.group_ht_board_of_directors"/>
                 <menuitem id="menu_phonebook_batch" name="Gom nhóm Data" action="action_phonebook_batch"/>
 
             </menuitem>
@@ -204,7 +231,12 @@
             <menuitem id="menu_stats_transaction" name="Giao dịch" action="action_transaction_graph"/>
             <menuitem id="menu_stats_project" name="Dự án" action="action_estate_project_report"/>
             <menuitem id="menu_stats_project_unit" name="Sản phẩm dự án" action="action_estate_project_unit_report"/>
-        </menuitem> 
+        </menuitem>
      
-    </menuitem> 
+    </menuitem>
+    <menuitem id="menu_my_profile" 
+          name="Xem thông tin cá nhân" 
+          action="action_server_my_profile" 
+          parent="ht_crm.menu_ht_root"
+          sequence="99"/>
 </odoo>

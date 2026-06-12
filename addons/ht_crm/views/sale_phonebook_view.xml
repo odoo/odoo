@@ -40,10 +40,23 @@
 
                 <!-- Trường bổ sung -->
                 <field name="salesperson_id" optional="1" groups="ht_crm.group_ht_executive,ht_crm.group_ht_general_admin,ht_crm.group_ht_leader"/>
-                
             </list>  
         </field>
     </record>
+
+    <!-- <record id="view_phonebook_search" model="ir.ui.view">
+        <field name="name">sale.phonebook.search</field>
+        <field name="model">sale.phonebook</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Tên danh bạ"/>
+                <field name="phone" string="Số điện thoại"/>
+
+                <filter string="Danh bạ HOT" name="filter_phonebook_hot" domain="[('is_hot', '=', True)]"/>
+                <filter string="Danh bạ Thường" name="filter_phonebook_normal" domain="[('is_hot', '=', False)]"/>
+            </search>
+        </field>
+    </record> -->
 
     <record id="view_phonebook_kanban" model="ir.ui.view">
         <field name="name">sale.phonebook.kanban</field>
@@ -56,7 +69,6 @@
                         <div class="oe_kanban_card rounded-4 shadow-sm p-3">
                             <!-- Header -->
                             <div class="d-flex justify-content-between align-items-start mb-2">
-
                             
                                 <div>
 
@@ -92,16 +104,20 @@
 
                             <!-- Action -->
                             <footer>
+                                <div class="d-flex flex-column flex-md-row w-100 gap-2 mt-2">
+                                    <button name="action_open_status_wizard"
+                                            type="object"
+                                            string="Đổi trạng thái"
+                                            icon="fa-history"
+                                            class="btn btn-secondary btn-sm flex-grow-1 w-100"/>
 
-                                <button name="action_open_status_wizard"
-                                        type="object"
-                                        icon="fa-refresh"
-                                        string="Đổi trạng thái"
-                                        class="btn btn-primary btn-sm w-100"
-                                        groups="ht_crm.group_ht_board_of_directors,ht_crm.group_ht_executive"
-
-                                />
-
+                                    <button name="action_convert_to_customer" 
+                                            type="object" 
+                                            string="Chuyển đổi"
+                                            icon="fa-user"
+                                            class="btn btn-primary btn-sm flex-grow-1 w-100"
+                                            invisible="status == 'invalid'"/>
+                                </div>
                             </footer>
 
                         </div>
@@ -116,79 +132,94 @@
         <field name="name">sale.phonebook.form</field>
         <field name="model">sale.phonebook</field>
         <field name="arch" type="xml">
-            <form string="Phonebook">
-
+            <form>
                 <header>
-                    <field name="status"
-                        widget="statusbar"
-                        statusbar_visible="new,contacted,callback,invalid"/>
+                    <field name="status" widget="statusbar"/>
                 </header>
-
                 <sheet>
-
-                    <!-- Ribbon -->
-                    <widget name="web_ribbon"
-                            title="Hủy"
-                            bg_color="bg-danger"
-                            invisible="status != 'invalid'"/>
-
                     <div class="oe_title">
-                        <h1>
-                            <field name="name" placeholder="Tên"/>
-                        </h1>
-
-                        <h2>
-                            <!-- USER -->
-                            <field name="phone"
-                                readonly="1"
-                                groups="ht_crm.group_ht_user"
-                                widget="phone"/>
-
-                            <!-- ADMIN -->
-                            <field name="phone"
-                                groups="base.group_system,ht_crm.group_ht_general_admin,ht_crm.group_ht_executive,ht_crm.group_ht_leader" widget="phone"/>
-                        </h2>
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
                     </div>
-
                     <group>
-                        <group string="Thông Tin Data">
-                            <field name="batch_id" groups="ht_crm.group_ht_board_of_directors,ht_crm.group_ht_executive"/>
-                            <field name="created_on" readonly="1"/>
-
-                            <field name="salesperson_id" options="{'no_create': False}" groups="ht_crm.group_ht_executive,ht_crm.group_ht_general_admin"/>
-                            <field name="project_id"/>
-                            <field name="previous_salesperson_ids" groups="base.group_system,ht_crm.group_ht_general_admin,ht_crm.group_ht_executive,ht_crm.group_ht_leader"/>
-
+                        <group string="Thông tin thuê bao" name="group_general">
+                            <field name="phone"/>
+                            <field name="is_hot"/>
+                            <field name="created_on" readonly="True"/>
                         </group>
-
-                        <group string="Tình Trạng">
-                            <field name="is_hot" widget="boolean" groups="base.group_system,ht_crm.group_ht_general_admin,ht_crm.group_ht_executive,ht_crm.group_ht_leader"/>
-                            <field name="status"/>
-                            <field name="note" placeholder="Ghi chú..."/>
-                            <field name="given_at"/>
+                        <group string="Điều phối &amp; Phân bổ" name="group_assignment">
+                            <field name="batch_id"/>
+                            <field name="project_id"/>
+                            <field name="salesperson_id" placeholder="Chọn Sales phụ trách..."/>
+                        </group>
+                    </group>
+                    
+                    <group string="Thông số hệ thống (KPIs)">
+                        <group>
+                            <field name="given_at" readonly="True"/>
+                            <field name="has_interaction_since_given" readonly="True"/>
+                        </group>
+                        <group>
+                            <field name="last_interaction_at" readonly="True"/>
+                            <field name="last_interaction_by" readonly="True"/>
                         </group>
                     </group>
 
                     <notebook>
-                        <page string="Lịch Sử">
-                            <group>
-                                <field name="create_uid" readonly="1"/>
-                                <field name="write_uid" readonly="1"/>
-                                <field name="write_date" readonly="1"/>
-                            </group>
-
-                            <group>
-                                <field name="has_interaction_since_given" readonly="1"/>
-                                <field name="last_interaction_at" readonly="1"/>
-                                <field name="last_interaction_by" readonly="1"/>
-                            </group>
+                        <page string="Lịch sử dịch chuyển số">
+                            <field name="previous_salesperson_ids" widget="many2many_tags"/>
                         </page>
-
+                        <page string="Ghi chú hệ thống">
+                            <field name="note"/>
+                        </page>
                     </notebook>
-
                 </sheet>
-
             </form>
         </field>
     </record>
+
+    <record id="view_phonebook_form_sales" model="ir.ui.view">
+            <field name="name">sale.phonebook.form.sales</field>
+            <field name="model">sale.phonebook</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="action_convert_to_customer" 
+                            string="Chuyển đổi" 
+                            type="object" 
+                            class="oe_highlight" 
+                            icon="fa-user-plus"
+                            invisible="status == 'invalid'"/>
+                        <field name="status" widget="statusbar" statusbar_visible="new,callback,contacted"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Chủ thuê bao"/>
+                            <h1>
+                                <field name="name" placeholder="Ví dụ: Nguyễn Văn A" readonly="status == 'invalid'"/>
+                            </h1>
+                            <div class="o_row">
+                                <field name="is_hot" readonly="True"/>
+                                <label for="is_hot" string="Số điện thoại NÓNG" class="text-danger fw-bold" invisible="not is_hot"/>
+                            </div>
+                        </div>
+                        <group>
+                            <group string="Thông tin liên hệ">
+                                <field name="phone" widget="phone"/>
+                                <field name="project_id" readonly="True"/>
+                            </group>
+                            <group string="Lịch sử tương tác">
+                                <field name="given_at" readonly="True"/>
+                                <field name="last_interaction_at" readonly="True"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Nhật ký cuộc gọi / Ghi chú">
+                                <field name="note" placeholder="Nhập nội dung cuộc gọi, nhu cầu khách hàng tại đây..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
 </odoo>

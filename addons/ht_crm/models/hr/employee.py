@@ -304,12 +304,52 @@ class EmployeeSales(models.Model):
     group_ids = fields.One2many(
         "employee.project.rel",
         "sales_id",
+        groups="ht_crm.group_ht_executive"
     )
 
     # Actions
     def action_reset_counter(self):
         self.total_received = 0
-        self.total_handled = 0
+        self.total_handled = 0   
+
+    @api.model
+    def get_views(self, views, options=None):
+        """Hàm này chạy mỗi khi trang được load (kể cả khi bấm F5)"""
+        res = super().get_views(views, options=options)
+        
+        # Nếu hệ thống đang gọi giao diện Form
+        if 'form' in res['views']:
+            # Kiểm tra nếu là Admin/Quản lý thì giữ nguyên hoặc ép Form Admin
+            if self.env.user.has_group('ht_crm.group_ht_user'):
+                sales_view = self.env.ref('ht_crm.view_employee_profile_sales_form_sales').sudo()
+                res['views']['form']['id'] = sales_view.id
+                res['views']['form']['arch'] = sales_view.arch
+            else:
+                generic_view = self.env.ref('ht_crm.view_employee_profile_sales_form').sudo()
+                res['views']['form']['id'] = generic_view.id
+                res['views']['form']['arch'] = generic_view.arch
+                # Nếu là Sales thường, F5 kiểu gì cũng phải ra Form Sales tinh gọn
+                    
+        return res
+
+    @api.model
+    def action_open_my_profile(self):
+        """Hàm trả về giao diện Form cá nhân dành riêng cho Sales"""
+        employee = self.search([('user_id', '=', self.env.user.id)], limit=1)
+
+        if not employee:
+            raise exceptions.UserError(("Tài khoản của bạn chưa được liên kết với Hồ sơ Sales nào!"))
+
+        return {
+            'name': 'Thông tin cá nhân',
+            'type': 'ir.actions.act_window',
+            'res_model': 'employee.profile.sales',
+            'view_mode': 'form',
+            'res_id': employee.id, 
+            # ĐÃ CẬP NHẬT: Trỏ đích danh tới ID của Form Sales vừa tạo ở trên
+            'views': [(self.env.ref('ht_crm.view_employee_profile_sales_form_sales').id, 'form')], 
+            'target': 'current',
+        }
 
     # Constraints
     @api.constrains('employee_id')
