@@ -5,9 +5,11 @@ import math
 from collections.abc import Iterable
 from datetime import date
 
+from psycopg2.extras import Json
+
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import frozendict, parse_date, SQL
+from odoo.tools import SQL, frozendict, parse_date
 
 _logger = logging.getLogger(__name__)
 
@@ -25,7 +27,6 @@ class ResCurrency(models.CachedModel):
     _rec_names_search = ['name', 'full_name']
     _order = 'active desc, name'
     # invalidate cache for get_all_currencies
-    _cached_data_domain = [('active', '=', True)]
     _cached_data_fields = ('name', 'symbol', 'position', 'decimal_places', 'active')
 
     # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
@@ -114,33 +115,13 @@ class ResCurrency(models.CachedModel):
         if self.env['res.company'].search_count([('currency_id', 'in', currencies.ids)], limit=1):
             raise UserError(self.env._("This currency is set on a company and therefore cannot be deactivated."))
 
-    def _get_rates_query(self, company, date, currency_ids=None):
-        """ Get the query to fetch all current rate/date by currency for a specific company/date. """
-
-        # _unique_name_per_day and _reversed_unique_name_per_day ensure that this query is optimal.
-        Currency = self.env['res.currency'].sudo()
-        Rate = self.env['res.currency.rate'].sudo()
-
-        currency_query = Currency._search(
-            [] if currency_ids is None else [('id', 'in', currency_ids)],
-            active_test=False,
-        )
-        currency_id_field = currency_query.table.id
-
-        rate_query = Rate._search(
-            [('name', '<', date), ('company_id', 'in', (False, company.root_id.id))],
-            order='company_id.id, name DESC', limit=1)
-        rate_table = rate_query.table
-        rate_query.add_where(
-            SQL("%s = %s", rate_table.currency_id, currency_id_field))
-        rate_query = rate_query.subselect(rate_table.rate, rate_table.name)
-        currency_query.add_join('LEFT JOIN LATERAL', 'before_rate', rate_query, SQL('TRUE'))
-
-        return currency_query.select(
-            SQL.identifier('res_currency', 'id'),
-            SQL('COALESCE("before_rate"."rate", 1.0) AS "rate"'),
-            SQL('"before_rate"."name"'),
-        )
+    @api.model
+    def _current_rate_sql(self, currency_id: SQL) -> SQL:
+        currencies = self.browse(self._cached_data()['id'])
+        all_rates = Json({c.id: r for c in currencies if (r := c.rate) != 1.0})  # noqa: RUF069
+        if not all_rates:
+            return SQL("1.0")  # no rates
+        return SQL("COALESCE((%s::jsonb->(%s::varchar))::numeric, 1.0)", all_rates, currency_id)
 
     @api.model
     def _get_rates(self, company, date) -> dict[int, tuple[float, (date | None)]]:
@@ -150,12 +131,24 @@ class ResCurrency(models.CachedModel):
         key = (company.id, date)
         if rates := currency_rates.get(key):
             return rates
-        query = self._get_rates_query(company, date)
-        rates = frozendict({
+        query = self.env['res.currency.rate'].sudo()._search(
+            [('name', '<', date), ('company_id', 'in', (False, company.id))],
+            order='currency_id.id, company_id, name DESC',
+        )
+        t = query.table
+        rates = {
             currency_id: (rate, rate_date)
-            for currency_id, rate, rate_date in self.env.execute_query(query)
-        })
-        currency_rates[key] = rates
+            for currency_id, rate, rate_date in self.env.execute_query(query.select(SQL(
+                "DISTINCT ON (%s) %s, %s, %s",
+                t.currency_id,
+                t.currency_id,
+                t.rate,
+                t.name,
+            )))
+        }
+        for currency_id in self._cached_data()['id']:
+            rates.setdefault(currency_id, (1.0, None))
+        currency_rates[key] = frozendict(rates)
         return rates
 
     @api.depends_context('company')
@@ -170,7 +163,7 @@ class ResCurrency(models.CachedModel):
         company = self.env['res.company'].browse(self.env.context.get('company_id')) or self.env.company
         to_currency = self.browse(self.env.context.get('to_currency')) or company.currency_id
         # the subquery selects the last rate before 'date' for the given currency/company
-        currency_rates = (self | to_currency)._get_rates(self.env.company, date)
+        currency_rates = self._get_rates(self.env.company, date)
         to_currency_rate, __ = currency_rates[to_currency.id]
         for currency in self:
             currency_rate, rate_date = currency_rates[currency.id]
@@ -281,11 +274,13 @@ class ResCurrency(models.CachedModel):
     @api.model
     @api.ormcache(cache='stable')
     def get_all_currencies(self):
+        """Info for all active currencies."""
         currencies = self.sudo().get_all()
-        return {
+        return frozendict({
             c.id: {'name': c.name, 'symbol': c.symbol, 'position': c.position, 'digits': [69, c.decimal_places]}
             for c in currencies
-        }
+            if c.active
+        })
 
     @api.model
     def _get_conversion_rate(self, from_currency, to_currency, company=None, date=None):
