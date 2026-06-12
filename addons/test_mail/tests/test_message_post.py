@@ -753,6 +753,7 @@ class TestMessageLog(TestMessagePostCommon):
 
     @users('employee')
     def test_message_log_with_view(self):
+        view_data = self.env.ref('test_mail.mail_template_simple_test')
         test_records = self.test_records.with_env(self.env)
         test_records.message_subscribe(self.partner_employee_2.ids)
 
@@ -776,6 +777,8 @@ class TestMessageLog(TestMessagePostCommon):
                         'notified_partner_ids': self.env['res.partner'],
                         'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                         'res_id': test_record.id,
+                        'source_template_id': self.env['mail.template'],
+                        'source_view_id': view_data,
                     },
                     'notif': [],
                     'subtype': 'mail.mt_note',
@@ -1952,22 +1955,40 @@ class TestMessagePostHelpers(TestMessagePostCommon):
         computation. """
         test_records = self.test_records.with_env(self.env)
         template = self.test_template.with_env(self.env)
-        view = self.env.ref('test_mail.mail_template_simple_test')
+        template_data = self.env.ref('test_mail.mail_test_ticket_tracking_tpl')
+        view_data = self.env.ref('test_mail.mail_template_simple_test')
 
-        for source_ref in ('test_mail.mail_test_ticket_tracking_tpl', template,
-                           'test_mail.mail_template_simple_test', view):
+        for source_ref, exp_template, exp_view in [
+            ('test_mail.mail_test_ticket_tracking_tpl', template_data, self.env['ir.ui.view']),
+            (template, template, self.env['ir.ui.view']),
+            ('test_mail.mail_template_simple_test', self.env['mail.template'], view_data),
+            (view_data, self.env['mail.template'], view_data),
+        ]:
             with self.subTest(source_ref=source_ref), self.mock_mail_gateway():
-                _new_mails = test_records.with_user(self.user_employee).message_mail_with_source(
+                new_mails = test_records.with_user(self.user_employee).message_mail_with_source(
                     source_ref,
                     render_values={'partner': self.user_employee.partner_id},
                     subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
                 )
+                for new_mail in new_mails:
+                    self.assertEqual(new_mail.message_type, 'email_outgoing')
+                    self.assertEqual(new_mail.source_template_id, exp_template)
+                    self.assertEqual(new_mail.source_view_id, exp_view)
 
-                _new_messages = test_records.with_user(self.user_employee).message_post_with_source(
+                new_messages = test_records.with_user(self.user_employee).message_post_with_source(
                     source_ref,
                     render_values={'partner': self.user_employee.partner_id},
                     subtype_id=self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
                 )
+                # ensure technical details are audited (see 'mail_tracking' module)
+                for new_message, record in zip(new_messages, test_records, strict=True):
+                    self.assertMessageFields(
+                        new_message, {
+                            'message_type': 'notification',  # should default to 'notification'
+                            'source_template_id': exp_template,
+                            'source_view_id': exp_view,
+                        }
+                    )
 
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -2010,6 +2031,8 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                     'message_type': 'email_outgoing',
                     'model': test_record._name,
                     'notified_partner_ids': all_partners,
+                    'source_template_id': template,
+                    'source_view_id': self.env['ir.ui.view'],
                     'subtype_id': self.env['mail.message.subtype'],
                     'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                     'res_id': test_record.id,
@@ -2020,6 +2043,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_message_mail_with_view(self):
         """ Test sending a mass mailing on documents based on a view """
+        view_data = self.env.ref('test_mail.mail_template_simple_test')
         test_records = self.test_records.with_env(self.env)
         for test_record in test_records:
             test_record.message_subscribe(test_record.customer_id.ids)
@@ -2053,6 +2077,8 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                     'model': test_record._name,
                     'notified_partner_ids': test_record.customer_id,
                     'recipient_ids': test_record.customer_id,
+                    'source_template_id': self.env['mail.template'],
+                    'source_view_id': view_data,
                     'subtype_id': self.env['mail.message.subtype'],
                     'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                     'res_id': test_record.id,
@@ -2104,6 +2130,8 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                     'model': test_record._name,
                     'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                     'res_id': test_record.id,
+                    'source_template_id': test_template,
+                    'source_view_id': self.env['ir.ui.view'],
                 },
                 'notif': [
                     {'partner': self.partner_1, 'type': 'email'},
@@ -2144,6 +2172,8 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                 'model': test_record._name,
                 'reply_to': formataddr((self.partner_employee.name, f'{self.alias_catchall}@{self.alias_domain}')),
                 'res_id': test_record.id,
+                'source_template_id': test_template,
+                'source_view_id': self.env['ir.ui.view'],
              },
             'notif': [
                 {'partner': self.partner_1, 'type': 'email'},

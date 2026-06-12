@@ -12,6 +12,7 @@
                             <field name="type"/>
                             <field name="model_id"/>
                             <field name="priority"/>
+                            <field name="technical_usage"/>
                             <field name="active" widget="boolean_toggle"/>
                         </group>
                         <group groups="base.group_no_one">
@@ -65,6 +66,7 @@
                     <field name="model"/>
                     <field name="xml_id" groups="base.group_no_one"/>
                     <field name="inherit_id"/>
+                    <field name="technical_usage" optional="hide"/>
                 </list>
             </field>
         </record>
@@ -93,6 +95,7 @@
                         <filter string="Model" name="object" domain="[]" context="{'group_by':'model'}"/>
                         <filter string="Type" name="type" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="Inherit" name="inherit" domain="[]" context="{'group_by':'inherit_id'}"/>
+                        <filter string="Technical Usage" name="filter_technical_usage" domain="[]" context="{'group_by': 'technical_usage'}"/>
                     </group>
                 </search>
             </field>

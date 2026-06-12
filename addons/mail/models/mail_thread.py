@@ -2269,7 +2269,7 @@ class MailThread(models.AbstractModel):
         # preliminary value safety check
         self._raise_for_invalid_parameters(
             set(kwargs.keys()),
-            forbidden_names={'model', 'res_id', 'subtype'}
+            forbidden_names={'model', 'res_id', 'subtype'},
         )
         if self._name == 'mail.thread' or not self.id:
             raise ValueError(_("Posting a message should be done on a business document. Use message_notify to send a notification to an user."))
@@ -2613,6 +2613,10 @@ class MailThread(models.AbstractModel):
         :return: created mail.mail records, as sudo
         """
         template, view = self._get_source_from_ref(source_ref)
+        render_values, kwargs = self._get_message_parameters_updated_for_rendering(
+            source_ref, source_template=template, source_view=view,
+            render_values=render_values, **kwargs
+        )
 
         # preliminary value safety check
         self._raise_for_invalid_parameters(
@@ -2696,6 +2700,10 @@ class MailThread(models.AbstractModel):
         :return: posted mail.message records
         """
         template, view = self._get_source_from_ref(source_ref)
+        render_values, kwargs = self._get_message_parameters_updated_for_rendering(
+            source_ref, source_template=template, source_view=view,
+            render_values=render_values, **kwargs
+        )
 
         # preliminary value safety check
         self._raise_for_invalid_parameters(
@@ -2902,10 +2910,15 @@ class MailThread(models.AbstractModel):
                 'body', 'bodies', 'incoming_email_cc', 'incoming_email_to', 'outgoing_email_to',
             }
         )
+        _template, view = self._get_source_from_ref(view_ref)
+        render_values, kwargs = self._get_message_parameters_updated_for_rendering(
+            view_ref, source_template=False, source_view=view,
+            render_values=render_values, **kwargs
+        )
 
         # with a view, render bodies in batch (template is managed by composer)
         bodies = self.env['mail.render.mixin']._render_template_qweb_view(
-            view_ref,
+            view,
             self._name,
             self.ids,
             add_context=render_values,
@@ -2923,7 +2936,8 @@ class MailThread(models.AbstractModel):
                      message_type='notification',
                      partner_ids=False,
                      attachment_ids=False,
-                     tracking_values=False):
+                     tracking_values=False,
+                     **kwargs):
         """ Shortcut allowing to post note on a document. See ``_message_log_batch``
         for more details. """
         self.ensure_one()
@@ -2942,7 +2956,8 @@ class MailThread(models.AbstractModel):
                            message_type='notification',
                            partner_ids=False,
                            attachment_ids=False,
-                           tracking_values=False):
+                           tracking_values=False,
+                           **kwargs):
         """ Shortcut allowing to post notes on a batch of documents. It does not
         perform any notification and pre-computes some values to have a short code
         as optimized as possible. This method is private as it does not check
@@ -2961,6 +2976,10 @@ class MailThread(models.AbstractModel):
             raise ValueError(_('Batch log cannot support attachments or tracking values on more than 1 document'))
         if message_type != 'tracking' and tracking_values:
             raise ValueError(_('Posting with tracking should be done using tracking message type'))
+        # protect against undesired values from kwargs
+        self._raise_for_invalid_parameters(
+            kwargs.keys(), restricting_names=self._get_log_valid_parameters(),
+        )
 
         author_id, email_from = self._message_compute_author(author_id, email_from)
 
@@ -2984,6 +3003,8 @@ class MailThread(models.AbstractModel):
             'message_id': generate_tracking_message_id('message-notify'),  # why? this is all but a notify
             'partner_ids': partner_ids,
             'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from, author_id=author_id)[False],
+            # other parameters
+            **kwargs,
         }
 
         values_list = [dict(base_message_values,
@@ -3192,6 +3213,13 @@ class MailThread(models.AbstractModel):
         _message_post_after_hook, which also receives message values."""
         return {'tracking_values'}
 
+    def _get_message_parameters_updated_for_rendering(
+        self, source_ref, source_template=False, source_view=False,
+        render_values=None, **kwargs,
+    ):
+        """Ease custom behavior when posting from a source by enabling inheritance"""
+        return render_values, kwargs
+
     def _get_source_from_ref(self, source_ref):
         """ From a source_reference, return either a mail template, either
         an ir ui view.
@@ -3233,7 +3261,7 @@ class MailThread(models.AbstractModel):
             if res_model == 'mail.template':
                 template = self.env['mail.template'].browse(res_id)
             elif res_model == 'ir.ui.view':
-                view = self.env['ir.ui.view'].browse(res_id)
+                view = self.env['ir.ui.view'].sudo().browse(res_id)  # sudo: read access on 'model_ir_ui_view' restricted to admins by default
             else:
                 raise ValueError(
                     _('Invalid template or view source reference %(svalue)s, is %(model)s instead',
@@ -3247,6 +3275,12 @@ class MailThread(models.AbstractModel):
                   stype=type(source_ref),
                 ))
         return template, view
+
+    def _get_log_valid_parameters(self):
+        """ Some fields should not be given when creating a mail.message from
+        logging shortcut (in addition to some API specific check). Those fields
+        are generally dedicated to post / notify, not logs. """
+        return set()
 
     def _get_notify_valid_parameters(self):
         """ Several parameters exist for notification methods as business
@@ -3303,6 +3337,7 @@ class MailThread(models.AbstractModel):
         :param set restricting_names: set of parameters restricting given
           parameter_names, parameters not belonging to this list are rejected;
         """
+        conflicting_names = []
         if forbidden_names:
             conflicting_names = parameter_names & forbidden_names
         elif restricting_names:
@@ -5085,6 +5120,7 @@ class MailThread(models.AbstractModel):
 
     def _store_message_update_extra_fields(self, res: Store.FieldList):
         pass
+
     # ------------------------------------------------------
     # STORE
     # ------------------------------------------------------
