@@ -265,15 +265,26 @@
                         <ram:PaymentReference t-out="record.payment_reference"/>
                         <ram:InvoiceCurrencyCode t-out="currency.name"/>
 
+                        <ram:PayeeTradeParty t-if="payee_partner">
+                            <ram:RoleCode t-if="payee_role_code" t-out="payee_role_code"/>
+                            <t t-set="partner" t-value="payee_partner"/>
+                            <t t-set="specified_legal_organization_val" t-value="payee_legal_organization_id"/>
+                            <t t-set="hide_dtc" t-value="True"/>
+                            <t t-call="account_edi_ubl_cii.account_invoice_partner_facturx_export_22"/>
+                        </ram:PayeeTradeParty>
+
                         <!-- Bank account. -->
                         <ram:SpecifiedTradeSettlementPaymentMeans t-if="record.partner_bank_id.sanitized_acc_number">
                             <ram:TypeCode t-out="payment_means_code"/>
                             <ram:PayeePartyCreditorFinancialAccount>
+                                <ram:AccountName
+                                    t-if="record.partner_bank_id._get_edi_payee_account_holder_name()"
+                                    t-out="record.partner_bank_id._get_edi_payee_account_holder_name()"/>
                                 <ram:IBANID
-                                    t-if="record.partner_bank_id.acc_type == 'iban'"
+                                    t-if="record.partner_bank_id.acc_type == 'iban' and not payee_partner"
                                     t-out="record.partner_bank_id.sanitized_acc_number"/>
                                 <ram:ProprietaryID
-                                    t-if="record.partner_bank_id.acc_type != 'iban'"
+                                    t-if="record.partner_bank_id.acc_type != 'iban' or payee_partner"
                                     t-out="record.partner_bank_id.sanitized_acc_number"/>
                             </ram:PayeePartyCreditorFinancialAccount>
                         </ram:SpecifiedTradeSettlementPaymentMeans>
@@ -421,6 +432,22 @@
                     </rdf:Description>
                 </rdf:RDF>
             </x:xmpmeta>
+        </template>
+
+        <template id="account_invoice_partner_facturx_export_22_payee_identifiers"
+                  inherit_id="account_edi_ubl_cii.account_invoice_partner_facturx_export_22">
+            <xpath expr="//*[local-name()='Name']" position="before">
+                <ram:RegisteredID xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
+                                  t-if="payee_siret and partner == payee_partner"
+                                  schemeID="0009"
+                                  t-out="payee_siret"/>
+            </xpath>
+            <xpath expr="//*[local-name()='SpecifiedLegalOrganization']" position="after">
+                <ram:SpecifiedTaxRegistration xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
+                                              t-if="payee_vat and partner == payee_partner">
+                    <ram:ID schemeID="VA" t-out="payee_vat"/>
+                </ram:SpecifiedTaxRegistration>
+            </xpath>
         </template>
 
     </data>
