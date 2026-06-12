@@ -4,7 +4,8 @@ from itertools import combinations
 from odoo.addons.base.tests.test_expression import TransactionExpressionCase
 from odoo.fields import Command, Domain
 from odoo.tests import TransactionCase
-from odoo.tools import SQL, OrderedSet
+from odoo.tools import OrderedSet, Query, SQL
+from unittest.mock import patch
 
 
 class TestDomain(TransactionExpressionCase):
@@ -334,6 +335,16 @@ class TestDomain(TransactionExpressionCase):
 
         res_search = self._search(Child, [('tag_ids', 'not any', [('name', '=', 'Urgent')])])
         self.assertEqual(res_search, child_2 + child_3)
+
+    def test_any_in_search_field(self):
+        Message = self.env.registry['test_new_api.message']
+        with patch.object(Message, '_search_author_partner', side_effect=Message._search_author_partner, autospec=True) as mock:
+            self.env[Message._name].search([('author_partner', 'any', [('name', '=', 'demo')])])
+            call_args = mock.call_args.args
+            self.assertEqual(call_args[1], 'any')
+            sub_domain = call_args[2]
+            self.assertIsInstance(sub_domain, Domain)
+            self.assertTrue(isinstance(sub_domain.value, Query), "Sub-Domain should be compiled into a Query")
 
 
 class TestDomainComplement(TransactionExpressionCase):
