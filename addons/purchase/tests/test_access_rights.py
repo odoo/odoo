@@ -164,3 +164,16 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
             product, 1, product.uom_id, nested_branch, vendor, order,
         )
         self.assertTrue(PurchaseOrder.order_line.create(po_line_vals))
+
+    def test_demo_user_creates_purchase_order_with_tracked_product(self):
+        """Verify user with product view access can confirm purchase order with tracked product."""
+        self.product.write({
+            'type': 'consu',
+            'is_storable': True,
+        })
+        purchase_order = self.env['purchase.order'].with_user(self.purchase_user).create({
+            'partner_id': self.vendor.id,
+            'order_line': [Command.create({'product_id': self.product.id})],
+        })
+        purchase_order.button_confirm()
+        self.assertEqual(purchase_order.state, 'purchase')

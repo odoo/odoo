@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
@@ -160,3 +161,18 @@ class TestAccessRights(SaleCommon, MailCommon):
         # Employee can't delete the SO
         with self.assertRaises(AccessError):
             so_as_internal_user.unlink()
+
+    def test_demo_user_creates_sale_order_with_tracked_product(self):
+        """Verify user with product view access can create sales order with tracked product."""
+        self.product.is_storable = True
+        sale_order = (
+            self
+            .env["sale.order"]
+            .with_user(self.sale_user2)
+            .create({
+                "partner_id": self.partner.id,
+                "order_line": [Command.create({"product_id": self.product.id})],
+            })
+        )
+        sale_order.action_confirm()
+        self.assertTrue(sale_order.state == "sale")

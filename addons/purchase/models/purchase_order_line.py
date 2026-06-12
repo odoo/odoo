@@ -345,7 +345,9 @@ class PurchaseOrderLine(models.Model):
         for line in lines:
             if line.qty_received_method == 'manual' and line.product_id.is_storable:
                 qty_received = line.uom_id._compute_quantity(line.qty_received, line.product_id.uom_id)
-                line.product_id.with_context(skip_qty_available_update=True).qty_available += qty_received
+                line.product_id.sudo().with_company(line.company_id).with_context(
+                    skip_qty_available_update=True
+                ).qty_available += qty_received
             if line.product_id and line.order_id.state == 'purchase':
                 msg = _("Extra line with %s ", line.product_id.display_name)
                 line.order_id.message_post(body=msg)
@@ -384,7 +386,9 @@ class PurchaseOrderLine(models.Model):
                 if line.qty_received_method == 'manual' and line.product_id.is_storable:
                     delta_qty_received = values['qty_received'] - line.qty_received
                     delta_qty_received = line.uom_id._compute_quantity(delta_qty_received, line.product_id.uom_id)
-                    line.product_id.with_context(skip_qty_available_update=True).qty_available += delta_qty_received
+                    line.product_id.sudo().with_company(line.company_id).with_context(
+                        skip_qty_available_update=True
+                    ).qty_available += delta_qty_received
                 line._track_qty_received(values['qty_received'])
         return super().write(values)
 
