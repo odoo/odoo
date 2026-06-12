@@ -320,7 +320,7 @@ class EmployeeSales(models.Model):
         # Nếu hệ thống đang gọi giao diện Form
         if 'form' in res['views']:
             # Kiểm tra nếu là Admin/Quản lý thì giữ nguyên hoặc ép Form Admin
-            if self.env.user.has_group('ht_crm.group_ht_user'):
+            if self.env.user.has_group('ht_crm.group_ht_sales_user'):
                 sales_view = self.env.ref('ht_crm.view_employee_profile_sales_form_sales').sudo()
                 res['views']['form']['id'] = sales_view.id
                 res['views']['form']['arch'] = sales_view.arch
@@ -371,9 +371,16 @@ class EmployeeSales(models.Model):
             if rec.manager_id == rec:
                 raise exceptions.ValidationError("Không thể tự quản lý chính mình.")
 
-    # Computes
+    # =========================================================================
+    # CÁC HÀM TÍNH TOÁN (COMPUTE FIELDS)
+    # =========================================================================
+
     @api.depends('group_ids.phone_received')
     def _compute_received(self):
+        """
+        Tính tổng số lượng số điện thoại đã nhận (phân bổ) cho user/salesperson.
+        Tiêu chí: Cộng dồn tất cả các số lượng nhận ('phone_received') từ các nhóm (groups) thuộc về bản ghi này.
+        """
         for rec in self:
             rec.current_received = sum(
                 rec.group_ids.mapped('phone_received')
@@ -385,13 +392,25 @@ class EmployeeSales(models.Model):
         'group_ids.batch_id.phone_ids.status'
     )
     def _compute_handled(self):
+        """
+        Tính tổng số lượng số điện thoại ĐÃ XỬ LÝ bởi nhân viên kinh doanh (Salesperson).
+        
+        TIÊU CHÍ ĐÁNH GIÁ MỘT SỐ ĐÃ XỬ LÝ (STATUS):
+        - 'contacted': Đã liên hệ trực tiếp với khách hàng.
+        - 'callback' : Khách hẹn gọi lại sau.
+        - 'invalid'  : Số không hợp lệ (Số sai, thuê bao, không có thực...) nhưng sales đã kiểm tra và gắn nhãn.
+        
+        Ghi chú: Các trạng thái khác (ví dụ: 'new' - mới nhận, 'calling' - đang gọi) sẽ KHÔNG được tính là đã xử lý.
+        """
         phone_model = self.env['sale.phonebook']
 
         for rec in self:
-
+            # Đếm số lượng bản ghi trong danh bạ thỏa mãn đồng thời 2 điều kiện:
+            # 1. Thuộc quyền quản lý của nhân viên này (salesperson_id == rec.id)
+            # 2. Trạng thái nằm trong nhóm các trạng thái đã hoàn thành xử lý
             rec.total_handled = phone_model.search_count([
                 ('salesperson_id', '=', rec.id),
-                ('status', 'in', ['contacted', 'callback'])
+                ('status', 'in', ['contacted', 'callback', 'invalid'])
             ])
 
     @api.depends('total_received', 'total_handled')

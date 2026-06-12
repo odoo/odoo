@@ -39,7 +39,7 @@
                 <field name="note_preview" string="Ghi chú" class="col-note"/>
 
                 <!-- Trường bổ sung -->
-                <field name="salesperson_id" optional="1" groups="ht_crm.group_ht_executive,ht_crm.group_ht_general_admin,ht_crm.group_ht_leader"/>
+                <field name="salesperson_id" optional="1" groups="ht_crm.group_ht_executive,ht_crm.group_ht_general_admin,ht_crm.group_ht_sales_leader"/>
             </list>  
         </field>
     </record>
@@ -68,33 +68,29 @@
 
                         <div class="oe_kanban_card rounded-4 shadow-sm p-3">
                             <!-- Header -->
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                            
-                                <div>
-
-                                    <!-- Customer Name -->
+                            <div class="d-flex justify-content-between align-items-start mb-2 w-100">
+    
+                                <div class="flex-grow-1 me-2">
                                     <div class="fw-semibold text-dark fs-6">
                                         <field name="name"/>
                                     </div>
 
-                                    <!-- Phone -->
                                     <div class="fw-bold fs-4 text-primary">
                                         <field name="phone" widget="phone"/>
                                     </div>
-
+                                    <div class="mt-1" t-if="record.source.raw_value and !record.is_hot.raw_value">
+                                        <span class="badge bg-secondary-subtle text-secondary border text-wrap text-start" style="max-width: 100%;">
+                                            <i class="fa fa-folder-open me-1" title="Nguồn Data"/>
+                                            <field name="is_hot" invisible="1"/>
+                                            <field name="source"/>
+                                        </span>
+                                    </div>
                                 </div>
 
-                                <div class="mt-1" t-if="record.source.raw_value">
-                                    <span class="badge bg-secondary-subtle text-secondary border">
-                                        <i class="fa fa-folder-open me-1" title="Nguồn Data"/> 
-                                        <field name="source"/>
-                                    </span>
-                                </div>
-
-                                <!-- Status -->
-                                <div>
+                                <div class="flex-shrink-0">
                                     <field name="status" widget="badge"/>
                                 </div>
+
                             </div>
                             
 
@@ -105,7 +101,7 @@
                                     Ghi chú
                                 </div>
 
-                                <field name="note"/>
+                                <field name="note_preview"/>
 
                             </div>
 
@@ -220,11 +216,11 @@
                             <group string="Lịch sử tương tác">
                                 <field name="given_at" readonly="True"/>
                                 <field name="last_interaction_at" readonly="True"/>
-                                <field name="salesperson_id" readonly="True" groups="ht_crm.group_ht_leader"/>
+                                <field name="salesperson_id" readonly="True" groups="ht_crm.group_ht_sales_leader"/>
                             </group>
                         </group>
                         <notebook>
-                            <page string="Lịch sử Sales" groups="ht_crm.group_ht_leader">
+                            <page string="Lịch sử Sales" groups="ht_crm.group_ht_sales_leader">
                                 <field name="previous_salesperson_ids" widget="many2many_tags"/>
                             </page>
                             <page string="Ghi chú hệ thống">

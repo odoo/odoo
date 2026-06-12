@@ -32,7 +32,7 @@
         <field name="name">User (Phonebook)</field>
         <field name="model_id" ref="model_sale_phonebook"/>
         <field name="domain_force">[('salesperson_id.user_id', '=', user.id)]</field>
-        <field name="groups" eval="[(4, ref('group_ht_user'))]"/>
+        <field name="groups" eval="[(4, ref('group_ht_sales_user'))]"/>
     </record>
 
     <!-- Trưởng phòng nắm Data của Team -->
@@ -45,6 +45,6 @@
             ('salesperson_id.manager_id.user_id', '=', user.id)
         ]
         </field>
-        <field name="groups" eval="[(4, ref('group_ht_leader'))]"/>
+        <field name="groups" eval="[(4, ref('group_ht_sales_leader'))]"/>
     </record>
 </odoo>

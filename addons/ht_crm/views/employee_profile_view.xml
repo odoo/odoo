@@ -58,7 +58,7 @@
                 ('manager_id.user_id', '=', user.id)
             ]
         </field>
-        <field name="groups" eval="[(4, ref('group_ht_leader'))]"/>
+        <field name="groups" eval="[(4, ref('group_ht_sales_leader'))]"/>
     </record>
 
     <record id="rule_kpi_manager" model="ir.rule">
@@ -71,7 +71,7 @@
                 ('employee_id.manager_id.user_id', '=', user.id)
             ]
         </field>
-        <field name="groups" eval="[(4, ref('group_ht_leader'))]"/>
+        <field name="groups" eval="[(4, ref('group_ht_sales_leader'))]"/>
     </record>
 
     <!-- User -->
@@ -85,7 +85,7 @@
             ('project_ids.sales_ids.user_id', '=', user.id)
         ]
         </field>
-        <field name="groups" eval="[(4, ref('group_ht_user'))]"/>
+        <field name="groups" eval="[(4, ref('group_ht_sales_user'))]"/>
     </record> -->
 
     <record id="view_employee_role_tree" model="ir.ui.view">

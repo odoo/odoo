@@ -451,7 +451,7 @@ class PhoneBook(models.Model):
             )
 
     def _check_reclaim(self, vals):
-        if not self.env.user.has_group('ht_crm.group_ht_user'):
+        if not self.env.user.has_group('ht_crm.group_ht_sales_user'):
             return
 
         person = vals.get('salesperson_id')
@@ -521,6 +521,19 @@ class PhoneBook(models.Model):
         self._check_write_permission(vals)
         self._check_reclaim(vals)
 
+
+        # --- Tích hợp kịch bản A ---
+        if 'batch_id' in vals:
+            if vals['batch_id']:
+                # Nếu người dùng chọn hoặc đổi sang một batch_id mới
+                batch = self.env['sale.phonebook.batch'].browse(vals['batch_id'])
+                vals['source'] = batch.name if batch.exists() else False
+            else:
+                # Nếu vals['batch_id'] == False (Xóa batch_id trên giao diện)
+                # Ta KHÔNG nạp trường 'source' vào vals -> Source cũ trong DB sẽ giữ nguyên
+                pass
+        # ---------------------------
+
         old_status = {
             rec.id: rec.status
             for rec in self
@@ -583,6 +596,16 @@ class PhoneBook(models.Model):
                     f"Số điện thoại đã tồn tại "
                     f"trong dự án: {existing.project_id.name}"
                 )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            # Nếu lúc tạo có truyền batch_id nhưng chưa có source
+            if vals.get('batch_id') and not vals.get('source'):
+                batch = self.env['sale.phonebook.batch'].browse(vals['batch_id'])
+                if batch.exists():
+                    vals['source'] = batch.name
+        return super(PhoneBook, self).create(vals_list)
 
 
 class PhonebookStatusWizard(models.TransientModel):
