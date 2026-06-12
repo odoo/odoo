@@ -6385,6 +6385,62 @@ test("one2many with x2many in form view (but not in list view)", async () => {
 });
 
 test.tags("desktop");
+test("one2many with properties in form view but not in list view", async () => {
+    Partner._fields.definitions = fields.PropertiesDefinition();
+    Partner._records[0].definitions = [
+        {
+            name: "property_3",
+            string: "My Char 3",
+            type: "char",
+        },
+    ];
+    Turtle._fields.properties = fields.Properties({
+        string: "Properties",
+        searchable: false,
+        definition_record: "turtle_trululu",
+        definition_record_field: "definitions",
+    });
+    Turtle._records[1].turtle_trululu = 1;
+    Turtle._records[1].properties = {
+        property_3: "some property value",
+    };
+    Turtle._views.form = `
+        <form>
+            <field name="turtle_foo"/>
+            <field name="properties"/>
+            <field name="turtle_trululu"/>
+        </form>`;
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <group>
+                    <field name="turtles">
+                        <list>
+                            <field name="turtle_foo"/>
+                        </list>
+                    </field>
+                </group>
+            </form>`,
+        resId: 1,
+    });
+
+    // Open a record and close once.
+    await contains(".o_data_row td").click();
+    expect(".modal .o_field_widget[name=properties] input").toHaveValue("some property value");
+    await contains(".modal .modal-header .btn-close").click();
+    expect(".modal").toHaveCount(0);
+
+    // Open the same record and close again. This differs from the first time because the record has
+    // already been extended (extendRecord), and fake property fields have already been created.
+    await contains(".o_data_row td").click();
+    expect(".modal .o_field_widget[name=properties] input").toHaveValue("some property value");
+    await contains(".modal .modal-header .btn-close").click();
+    expect(".modal").toHaveCount(0);
+});
+
+test.tags("desktop");
 test("many2many list in a one2many opened by a many2one", async () => {
     expect.assertions(1);
 
