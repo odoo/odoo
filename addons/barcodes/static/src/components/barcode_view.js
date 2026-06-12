@@ -1,5 +1,6 @@
-import { Component, signal, proxy, t, useListener, useProps } from "@odoo/owl";
+import { Component, signal, proxy, t, useListener, usePlugin, useProps } from "@odoo/owl";
 import { BarcodeVideoScanner, isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
+import { BarcodePlugin } from "@barcodes/barcode_plugin";
 import { BarcodeInput } from "./barcode_input";
 
 export class BarcodeView extends Component {
@@ -28,6 +29,7 @@ export class BarcodeView extends Component {
         });
 
         this.barcodeRef = signal(null);
+        this.barcodePlugin = usePlugin(BarcodePlugin);
 
         useListener(window, "click", (ev) => {
             if (this.barcodeRef() && !this.barcodeRef().contains(ev.target)) {
@@ -42,7 +44,7 @@ export class BarcodeView extends Component {
      * @param {string} result found code
      */
     onResult(result) {
-        this.props.onResult(result);
+        this.props.onResult(this.barcodePlugin.cleanBarcode(result));
     }
 
     /**
