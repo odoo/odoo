@@ -839,19 +839,19 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
 # triggers to be allowed
 SETATTR_SOURCES = {
     # model attributes being set from a patcher are fine
-    '__enter__': ('/unittest/mock.py',),
-    '__exit__': ('/unittest/mock.py',),
+    '__enter__': ('/unittest/mock.py', '\\unittest\\mock.py'),
+    '__exit__': ('/unittest/mock.py', '\\unittest\\mock.py'),
     # lazy_classproperty sets an attribute for itself
-    '__get__': ('/odoo/tools/func.py',),
+    '__get__': ('/odoo/tools/func.py', '\\odoo\\tools\\func.py'),
     # mail overrides IrModel._instantiate to inject mail mixins
-    '_instanciate': ('/mail/models/ir_model.py',),
+    '_instanciate': ('/mail/models/ir_model.py', '\\mail\\models\\ir_model.py'),
     # account manipulates _template_register
-    '_template_register': ('/account/models/chart_template.py',),
-    '_setup_complete': ('/account/models/chart_template.py',),
+    '_template_register': ('/account/models/chart_template.py', '\\account\\models\\chart_template.py'),
+    '_setup_complete': ('/account/models/chart_template.py', '\\account\\models\\chart_template.py'),
     # ...
-    'patch': ('/base_automation/models/base_automation.py',),
+    'patch': ('/base_automation/models/base_automation.py', '\\base_automation\\models\\base_automation.py'),
     # .....
-    '_patch': ('/web_studio/models/studio_approval.py',),
+    '_patch': ('/web_studio/models/studio_approval.py', '\\web_studio\\models\\studio_approval.py'),
 }
 
 class Like:
@@ -976,7 +976,7 @@ class TransactionCase(BaseCase):
             filename = inspect.getsourcefile(caller)
 
             # special case / fastpath because this does model alterations everywhere
-            if filename.endswith('odoo/models.py'):
+            if filename.endswith(('odoo/models.py', 'odoo\\models.py')):
                 actual_setattr(model, key, value)
                 return
 
