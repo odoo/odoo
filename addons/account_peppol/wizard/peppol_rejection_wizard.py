@@ -25,7 +25,7 @@ class PeppolRejectionWizard(models.TransientModel):
         relation='account_peppol_rejection_action_rel',
         domain="[('list_identifier', '=', 'OPStatusAction')]",
         string='Rejection actions',
-        help="The actions to be suggested to the document's sender in order for the document to be accepted when sent again (eventually). "
+        help="The actions to be suggested to the document's sender in order for the document to be potentially accepted when sent again. "
         "These will be sent to the document's sender. Not mandatory.",
     )
 

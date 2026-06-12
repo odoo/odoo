@@ -208,7 +208,7 @@ class PosConfig(models.Model):
         help="Display the breakdown of sales lines by product in the automatically generated closing entry.")
     last_data_change = fields.Datetime(string='Last Write Date', readonly=True, compute='_compute_local_data_integrity', store=True)
     fallback_nomenclature_id = fields.Many2one('barcode.nomenclature', string="Fallback Nomenclature")
-    use_custom_receipt_info = fields.Boolean(string="Customise info", default=False, help="Fill in if your shop does not have the same info as your company")
+    use_custom_receipt_info = fields.Boolean(string="Customize info", default=False, help="Fill in if your shop does not have the same info as your company")
     custom_email = fields.Char(string="Email", readonly=False)
     email = fields.Char(string="Receipt email", compute="_compute_custom_info", store=True, readonly=False)
     custom_website = fields.Char(string="Website", readonly=False)
