@@ -4,11 +4,13 @@ from unittest.mock import patch
 
 from lxml import html
 
+from odoo.exceptions import AccessError
 from odoo.fields import Command
 from odoo.http.session import session_store
 from odoo.tests import HttpCase, common, tagged
 from odoo.tools import mute_logger
 
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website.controllers.main import Website
 
@@ -721,3 +723,36 @@ class TestNewPage(common.TransactionCase):
                     menu.page_id,
                     f"Menu '{menu.name}' was not linked to the created page."
                 )
+
+
+class TestUrlDependencies(TransactionCaseWithUserDemo):
+    def test_search_url_dependencies_with_restricted_html_field(self):
+        page = self.env['website.page'].create({
+            'name': 'Test Page',
+            'url': '/test-page',
+            'type': 'qweb',
+            'arch': '<div>Test</div>',
+        })
+        # Add a website page into restricted HTML field (here robots_txt) to
+        # make sure the page dependency is found in case of field level access
+        # rights restriction.
+        website = self.env['website'].search([], limit=1)
+        website.robots_txt = '''
+            <a href="/test-page">Test Page</a>
+        '''
+        self.env['ir.access'].create([{
+            'name': 'read',
+            'model_id': self.env['ir.model']._get_id(model),
+            'group_id': self.env.ref("base.group_user").id,
+            'operation': 'r',
+        } for model in ['ir.ui.view', 'website.page']])
+
+        website = website.with_user(self.user_demo)
+        with self.assertRaises(AccessError):
+            website.robots_txt
+
+        dependencies = website.search_url_dependencies('website.page', page.ids)
+        self.assertEqual(
+            dependencies['Website'][0]['record_name'],
+            website.display_name,
+        )
