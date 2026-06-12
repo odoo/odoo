@@ -1048,6 +1048,23 @@ class HrExpense(models.Model):
             }
         return ""
 
+    def _track_log_get_default_body(self, track_init_values):
+        if (
+            'state' in track_init_values
+            and track_init_values.get('state') != 'paid'
+            and self.state == 'paid'
+            and self.payment_mode != 'company_account'
+        ):
+            reimbursed_amount = self.total_amount - self.amount_residual
+            return Markup(
+                '<div>%(label)s: <strong>%(amount)s</strong></div>'
+            ) % {
+                'label': self.env._('Amount reimbursed'),
+                'amount': format_amount(self.env, reimbursed_amount, self.company_currency_id),
+            }
+
+        return super()._track_log_get_default_body(track_init_values)
+
     def _track_log_get_default_subtype(self, track_init_values):
         self.ensure_one()
         if 'state' not in track_init_values:
