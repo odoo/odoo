@@ -2,7 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ControlPanel">
-        <div class="o_control_panel d-flex flex-column gap-3 px-3 pt-2 pb-3" t-custom-ref="root" data-command-category="actions">
+        <div class="o_control_panel d-flex flex-column gap-3 px-3 pt-2 pb-3" t-custom-ref="root" data-command-category="actions"
+             t-att-class="{'o_mobile_sticky': this.state.isSticky}">
             <Transition t-if="!this.env.isSmall" visible="this.state.embeddedInfos.showEmbedded" name="'o-fade'" t-slot-scope="transition" leaveDuration="500">
                 <div class="o_embedded_actions d-flex flex-wrap w-100 align-items-center justify-content-center gap-2" t-att-class="transition.className">
                     <t t-foreach="this.state.embeddedInfos.embeddedActions" t-as="action" t-key="action.id">
