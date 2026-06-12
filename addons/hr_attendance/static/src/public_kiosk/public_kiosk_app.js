@@ -55,7 +55,7 @@ class kioskAttendanceApp extends Component {
             active_display: "settings",
             displayDemoMessage:
                 browser.localStorage.getItem("hr_attendance.ShowDemoMessage") !== "false",
-            isStreamAvailable: false,
+            streamAvailable: false,
             kioskMode: this.props.kioskMode,
         });
         this.lockScanner = false;
