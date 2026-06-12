@@ -65,11 +65,23 @@ export class AlignPlugin extends Plugin {
         on_selectionchange_handlers: withSequence(READ, this.updateAlignmentParams.bind(this)),
         on_history_commit_undone_handlers: this.updateAlignmentParams.bind(this),
         on_history_commit_redone_handlers: this.updateAlignmentParams.bind(this),
-        on_all_formats_removed_handlers: this.setAlignment.bind(this),
+        on_all_formats_removed_handlers: this.removeTextAlignment.bind(this),
 
         /** Predicates */
-        has_format_predicates: (node) => {
-            if (closestBlock(node)?.style.textAlign) {
+        can_remove_format_predicates: (editableTargetedNodes) => {
+            const formattedBlocks = [
+                ...new Set(
+                    editableTargetedNodes
+                        .map(closestBlock)
+                        .filter((block) => block && block.style.textAlign)
+                ),
+            ];
+            if (
+                formattedBlocks.length &&
+                formattedBlocks.every((block) =>
+                    this.dependencies.selection.areNodeContentsFullySelected(block)
+                )
+            ) {
                 return true;
             }
         },
@@ -166,5 +178,16 @@ export class AlignPlugin extends Plugin {
 
     updateAlignmentParams() {
         this.alignment.displayName = this.alignmentIconMode;
+    }
+
+    removeTextAlignment() {
+        const blocksToAlign = this.getBlocksToAlign();
+        const areAllBlocksFullySelected = blocksToAlign.every(
+            this.dependencies.selection.areNodeContentsFullySelected
+        );
+
+        if (areAllBlocksFullySelected) {
+            this.setAlignment();
+        }
     }
 }

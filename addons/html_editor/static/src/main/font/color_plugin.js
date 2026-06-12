@@ -86,9 +86,13 @@ export class ColorPlugin extends Plugin {
         on_deleted_handlers: this.convertEmptyColorToPendingIntent.bind(this),
 
         /** Predicates */
-        has_format_predicates: (node) => {
-            const el = closestElement(node);
-            if (hasColor(el, "color") || hasColor(el, "backgroundColor")) {
+        can_remove_format_predicates: (editableTargetedNodes) => {
+            if (
+                editableTargetedNodes.some((node) => {
+                    const el = closestElement(node);
+                    return el && (hasColor(el, "color") || hasColor(el, "backgroundColor"));
+                })
+            ) {
                 return true;
             }
         },

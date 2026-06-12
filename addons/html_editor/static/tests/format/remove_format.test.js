@@ -1041,7 +1041,53 @@ describe("Toolbar", () => {
         );
     });
 
-    test("Should remove text-align style from a block", async () => {
+    test("remove format button should be disabled for a partially selected aligned block", async () => {
+        await setupEditor('<p style="text-align: center;">ab[c]</p>');
+        await expandToolbar();
+        expect(".btn[name='remove_format']").toHaveClass("disabled");
+    });
+
+    test("remove format button should be enabled for a fully selected aligned block", async () => {
+        await setupEditor('<p style="text-align: center;">[abc]</p>');
+        await expandToolbar();
+        expect(".btn[name='remove_format']").not.toHaveClass("disabled");
+    });
+
+    test("remove format button should be enabled for a partially selected aligned block containing another format", async () => {
+        await setupEditor('<p style="text-align: center;">ab<b>[c]</b></p>');
+        await expandToolbar();
+        expect(".btn[name='remove_format']").not.toHaveClass("disabled");
+    });
+
+    test("remove format button should be disabled when multiple aligned blocks are only partially selected", async () => {
+        await setupEditor(
+            '<p style="text-align: center;">ab[c</p><p style="text-align: right;">de]f</p>'
+        );
+        await expandToolbar();
+        expect(".btn[name='remove_format']").toHaveClass("disabled");
+    });
+
+    test("remove format button should be enabled when multiple aligned blocks are fully selected", async () => {
+        await setupEditor(
+            '<p style="text-align: center;">[abc</p><p style="text-align: right;">def]</p>'
+        );
+        await expandToolbar();
+        expect(".btn[name='remove_format']").not.toHaveClass("disabled");
+    });
+
+    test("Should remove alignment from a fully selected aligned block", async () => {
+        const { el } = await setupEditor('<p style="text-align: center;">[abc]</p>');
+        await removeFormatClick();
+        expect(getContent(el)).toBe('<p style="">[abc]</p>');
+    });
+
+    test("Should remove other formats but keep alignment on a partially selected aligned block", async () => {
+        const { el } = await setupEditor('<p style="text-align: center;">ab<b>[c]</b></p>');
+        await removeFormatClick();
+        expect(getContent(el)).toBe('<p style="text-align: center;">ab[c]</p>');
+    });
+
+    test("Should remove alignment from multiple aligned blocks when all blocks are fully selected", async () => {
         const { el } = await setupEditor(
             `<p style="text-align: right;">[test</p><p style="text-align: right;"><br>]</p>`
         );
