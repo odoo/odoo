@@ -31,7 +31,7 @@ class TestUi(AccountTestInvoicingCommon, HttpCase):
                 "name": "test SO",
                 "partner_id": self.agrolait.id,
                 "state": "sent",
-                "require_payment": False,
+                "prepayment_percent": 0,
                 "order_line": [Command.create({"product_id": self.product.id})],
             })
         )

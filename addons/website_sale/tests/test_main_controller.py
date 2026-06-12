@@ -32,7 +32,7 @@ class TestPaymentProviderVisibility(PaymentHttpCommon, SaleCommon):
         restricted_provider.website_id = website_shop.id
 
         url_so = self.sale_order.get_portal_url()
-        self.sale_order.require_payment = True
+        self.sale_order.prepayment_percent = 1.0
         portal_url = f"{website_portal.domain}{url_so}"
 
         with patch(

@@ -45,15 +45,8 @@ class SaleOrderTemplate(models.Model):
         readonly=False,
         help="Request a online signature to the customer in order to confirm orders automatically.",
     )
-    require_payment = fields.Boolean(
-        string="Online Payment",
-        compute="_compute_require_payment",
-        store=True,
-        readonly=False,
-        help="Request an online payment to the customer in order to confirm orders automatically.",
-    )
     prepayment_percent = fields.Float(
-        string="Prepayment percentage",
+        string="Prepayment",
         compute="_compute_prepayment_percent",
         store=True,
         readonly=False,
@@ -96,16 +89,14 @@ class SaleOrderTemplate(models.Model):
             ).portal_confirmation_sign
 
     @api.depends("company_id")
-    def _compute_require_payment(self):
-        for order in self:
-            order.require_payment = (order.company_id or order.env.company).portal_confirmation_pay
-
-    @api.depends("company_id", "require_payment")
     def _compute_prepayment_percent(self):
         for template in self:
-            template.prepayment_percent = (
-                template.company_id or template.env.company
-            ).prepayment_percent
+            if (template.company_id or template.env.company).portal_confirmation_pay:
+                template.prepayment_percent = (
+                    template.company_id or template.env.company
+                ).prepayment_percent
+            else:
+                template.prepayment_percent = 0.0
 
     @api.depends_context("uid")
     @api.depends("team_ids", "share_template", "team_ids.member_ids", "team_ids.user_id")
@@ -145,14 +136,6 @@ class SaleOrderTemplate(models.Model):
                 not (line.product_id or line.display_type)
                 for line in self.sale_order_template_line_ids
             )
-
-    # === ONCHANGE METHODS ===#
-
-    @api.onchange("prepayment_percent")
-    def _onchange_prepayment_percent(self):
-        for template in self:
-            if not template.prepayment_percent:
-                template.require_payment = False
 
     # === CONSTRAINT METHODS ===#
 
@@ -207,7 +190,7 @@ class SaleOrderTemplate(models.Model):
     @api.constrains("prepayment_percent")
     def _check_prepayment_percent(self):
         for template in self:
-            if template.require_payment and not (0 < template.prepayment_percent <= 1.0):
+            if not (0 <= template.prepayment_percent <= 1.0):
                 raise ValidationError(
                     self.env._("Prepayment percentage must be a valid percentage.")
                 )

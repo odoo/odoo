@@ -105,13 +105,13 @@
                             <t
                                 t-out="sale_order._get_prepayment_required_amount()"
                                 t-options="{
-                                        'widget': 'monetary',
-                                        'display_currency': sale_order.currency_id,
-                                    }"
+                                    'widget': 'monetary',
+                                    'display_currency': sale_order.currency_id,
+                                }"
                             />
                             (<t
                                 t-out="sale_order.prepayment_percent * 100"
-                                t-options="{'widget': 'float'}"
+                                t-options="{'widget': 'float', 'precision': 2, 'min_precision': 0}"
                             />%)
                         </h2>
                     </t>
@@ -439,7 +439,7 @@
                             <t t-if="sale_order._get_prepayment_required_amount() == amount">
                                 (<b
                                     t-out="sale_order.prepayment_percent * 100"
-                                    t-options="{'widget': 'float'}"
+                                    t-options="{'widget': 'float', 'precision': 2, 'min_precision': 0}"
                                 />%),
                             </t>
                         </span>

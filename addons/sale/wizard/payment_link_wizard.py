@@ -18,7 +18,7 @@ class PaymentLinkWizard(models.TransientModel):
         self.confirmation_message = False
         for wizard in self.filtered(lambda w: w.res_model == "sale.order"):
             sale_order = wizard.env["sale.order"].browse(wizard.res_id)
-            if sale_order.state in ("draft", "sent") and sale_order.require_payment:
+            if sale_order.state in ("draft", "sent") and sale_order.prepayment_percent > 0:
                 wizard.confirmation_message = wizard.env._(
                     "This payment will confirm the quotation."
                 )

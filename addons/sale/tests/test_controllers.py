@@ -103,7 +103,7 @@ class TestSaleSignature(HttpCaseWithUserPortal):
             "name": "test SO",
             "partner_id": portal_user_partner.id,
             "state": "sent",
-            "require_payment": False,
+            "prepayment_percent": 0,
         })
         self.env["sale.order.line"].create({
             "order_id": sales_order.id,

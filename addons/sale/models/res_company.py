@@ -19,7 +19,7 @@ class ResCompany(models.Model):
     portal_confirmation_sign = fields.Boolean(string="Online Signature", default=True)
     portal_confirmation_pay = fields.Boolean(string="Online Payment")
     prepayment_percent = fields.Float(
-        string="Prepayment percentage",
+        string="Prepayment",
         default=1.0,
         help="The percentage of the amount needed to be paid to confirm quotations.",
     )
@@ -76,7 +76,7 @@ class ResCompany(models.Model):
     @api.constrains("prepayment_percent")
     def _check_prepayment_percent(self):
         for company in self:
-            if company.portal_confirmation_pay and not (0 < company.prepayment_percent <= 1.0):
+            if company.portal_confirmation_pay and not (0 <= company.prepayment_percent <= 1.0):
                 raise ValidationError(
                     company.env._("Prepayment percentage must be a valid percentage.")
                 )
