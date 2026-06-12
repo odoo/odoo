@@ -54,11 +54,11 @@ class ResCompany(models.Model):
             ('simplified_monthly', "Simplified VAT Regime (Monthly)"),
             ('simplified_bimonthly', "Franchised VAT Regime (Bimonthly)"),
         ],
-        string="Flow 10 Report Periodicity",
+        string="Flow 10 Report Frequency",
         default='normal_monthly',
         required=True,
         help="""Legal reporting period for transaction and payments flows according to the TVA regime table.
-        Real Monthly Normal Regime : transactions reported by decade, payments reported monthly
+        Real Monthly Normal Regime : transactions reported every 10 days, payments reported monthly
         Real Normal Quarterly Regime : transactions reported monthly, payments reported monthly
         Simplified VAT Regime (Monthly) : transactions reported monthly, payments reported monthly
         Franchised VAT Regime (Bimonthly) : transactions reported bimonthly, payments reported bimonthly

@@ -46,7 +46,7 @@ class EventType(models.Model):
         _tz_get, string='Timezone', default=lambda self: self.env.user.tz or 'UTC')
     # communication
     event_type_mail_ids = fields.One2many(
-        'event.type.mail', 'event_type_id', string='Mail Schedule',
+        'event.type.mail', 'event_type_id', string='Email Schedule',
         default=_default_event_mail_type_ids)
     # ticket reports
     ticket_instructions = fields.Html('Ticket Instructions', translate=True,

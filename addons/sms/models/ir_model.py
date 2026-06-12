@@ -8,7 +8,7 @@ class IrModel(models.Model):
     _inherit = 'ir.model'
 
     is_mail_thread_sms = fields.Boolean(
-        string="Mail Thread SMS", default=False,
+        string="Email Thread SMS", default=False,
         store=False, compute='_compute_is_mail_thread_sms', search='_search_is_mail_thread_sms',
         help="Whether this model supports messages and notifications through SMS",
     )
