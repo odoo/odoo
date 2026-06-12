@@ -397,7 +397,7 @@ class LoyaltyProgram(models.Model):
                             "trigger": "create",
                             "mail_template_id": (
                                 self.env.ref(
-                                    "loyalty.mail_template_gift_card", raise_if_not_found=False
+                                    "loyalty.mail_template_loyalty_card", raise_if_not_found=False
                                 )
                                 or self.env["mail.template"]
                             ).id,
