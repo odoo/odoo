@@ -67,6 +67,15 @@ export class HybridFluidStrategyPlugin extends Plugin {
             return;
         }
         // TODO EGGMAIL NOW: WORKING HERE NOW:
+        // issue: currently multiple cells merge into the row and
+        // multiple rows merge into the table => need filtering to decide
+        // the best spacing strategy
+        // need to implement tableStrategyReport data extraction to be able
+        // to provide the relevant information to all "apply" function below
+        // there is always the issue that the card background color only applies
+        // on part of the cell and we may want to apply it on the whole cell,
+        // not sure about that part since it is not technically correct, but
+        // artistically it matches better what we want to do
         if (emailNode.analysis.facts.acceptTableOuterSpacing) {
             this.addTableOuterSpacingFacts(layout, { emailNode });
         }
