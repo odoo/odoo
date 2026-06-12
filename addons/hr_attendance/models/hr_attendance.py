@@ -341,7 +341,9 @@ class HrAttendance(models.Model):
                 attendances_per_day[check_in_day_start[1]] += attendance
 
             # As _attendance_intervals_batch and _leave_intervals_batch both take localized dates we need to localize those date
-            start = pytz.utc.localize(min(attendance_dates, key=itemgetter(0))[0])
+            employee_tz = timezone(emp.tz) if emp.tz else None
+            start = (pytz.utc.localize(min(attendance_dates, key=itemgetter(0))[0])).astimezone(employee_tz)
+            start = (start - timedelta(days=start.weekday())).astimezone(pytz.utc)
             stop = pytz.utc.localize(max(attendance_dates, key=itemgetter(0))[0] + timedelta(hours=24))
 
             # Retrieve expected attendance intervals
