@@ -394,7 +394,7 @@ class ResourceCalendar(models.Model):
                     max_hours_per_day = calendar.hours_per_day
 
                     intervals = []
-                    current_start_day = start_date
+                    current_start_day = start_date - timedelta(days=start_date.weekday())
 
                     while current_start_day <= end_date:
                         current_end_of_week = current_start_day + timedelta(days=6)
