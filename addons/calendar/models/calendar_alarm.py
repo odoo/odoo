@@ -24,7 +24,7 @@ class CalendarAlarm(models.Model):
         'mail.template', string="Email Template",
         domain=[('model', 'in', ['calendar.attendee'])],
         compute='_compute_mail_template_id', readonly=False, store=True,
-        help="Template used to render mail reminder content.")
+        help="Template used to render email reminder content.")
     body = fields.Text("Additional Message", help="Additional message that would be sent with the notification for the reminder")
     notify_responsible = fields.Boolean("Notify Responsible", help="When activated, the event organizer will also receive this reminder.", default=False)
 

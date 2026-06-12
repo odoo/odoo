@@ -10,13 +10,13 @@ class IrModel(models.Model):
     _order = 'is_mail_thread DESC, name ASC'
 
     is_mail_thread = fields.Boolean(
-        string="Has Mail Thread", default=False,
+        string="Has Email Thread", default=False,
     )
     is_mail_activity = fields.Boolean(
-        string="Has Mail Activity", default=False,
+        string="Has Email Activity", default=False,
     )
     is_mail_blacklist = fields.Boolean(
-        string="Has Mail Blacklist", default=False,
+        string="Has Email Blacklist", default=False,
     )
 
     @api.ondelete(at_uninstall=False)

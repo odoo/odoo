@@ -7,7 +7,7 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     loyalty_card_count = fields.Integer(
-        string="Active loyalty cards",
+        string="Active reward cards",
         compute="_compute_count_active_cards",
         compute_sudo=True,
         groups="base.group_user",
