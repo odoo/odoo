@@ -36,8 +36,9 @@
                            readonly="not is_editable"/>
                     <field name="manager_id" optional="hide" readonly="not is_editable"/>
                     <field name="company_id" optional="show" groups="base.group_multi_company" readonly="True"/>
-                    <field name="price_unit" string="Unit Price" optional="hide" widget="monetary"
-                           options="{'currency_field': 'company_currency_id', 'field_digits': True}" readonly="True"/>
+                    <field name="price_unit_currency" string="Unit Price" optional="hide" widget="monetary"
+                           options="{'currency_field': 'currency_id', 'field_digits': True}"
+                           readonly="not is_editable or product_has_cost"/>
                     <field name="quantity" optional="hide" readonly="not is_editable or not product_has_cost"/>
                     <field name="tax_ids" optional="hide" widget="many2many_tax_tags"
                            groups="account.group_account_invoice,account.group_account_readonly"
@@ -46,10 +47,8 @@
                            optional="hide" groups="account.group_account_invoice,account.group_account_readonly"/>
                     <field name="nb_attachment" widget="nb_attachment" nolabel="1" readonly="True"/>
                     <field name="total_amount" sum="Total Amount" widget='monetary'
-                           readonly="not is_editable or product_has_cost"
                            options="{'currency_field': 'company_currency_id'}" decoration-bf="1"/>
                     <field name="total_amount_currency" widget='monetary'
-                           readonly="not is_editable or not is_multiple_currency or product_has_cost"
                            options="{'currency_field': 'currency_id'}" optional="hide" decoration-bf="1"
                            groups="base.group_multi_currency"/>
                     <field name="currency_id" optional="hide"
@@ -203,7 +202,7 @@
                             </div>
 
                             <!-- CASE: product has a cost defined -> user input qty (always in company currency) -->
-                            <field name="price_unit" required="1" widget="monetary"
+                            <field name="price_unit_currency" string="Unit Price" widget="monetary"
                                    options="{'currency_field': 'currency_id', 'field_digits': True}"
                                    invisible="not product_has_cost" readonly="True"/>
                             <label for="quantity" invisible="not product_has_cost"/>
@@ -217,8 +216,9 @@
                             </div>
 
                             <!-- CASE: product has no cost defined -> user input amount (in other currency if multi-currency) -->
-                            <field name="total_amount_currency" string="Total"  widget='monetary' options="{'currency_field': 'currency_id'}"
-                                invisible="product_has_cost" readonly="not is_editable"/>
+                            <field name="price_unit_currency" string="Total" widget="monetary"
+                                   options="{'currency_field': 'currency_id', 'field_digits': True}"
+                                   invisible="product_has_cost" readonly="not is_editable"/>
                             <field name="currency_id" string="Currency"
                                 options="{'no_create': True, 'no_open': True}"
                                 readonly="not is_editable" groups="base.group_multi_currency"/>
@@ -227,8 +227,7 @@
                             <label name="total_amount_product_cost_label" for="total_amount" string="Total" invisible="is_multiple_currency or not product_has_cost"/>
                             <label name="total_amount_multicurrency_label" for="total_amount" string="Total With Conversion" invisible="not is_multiple_currency"/>
                             <div class="d-flex gap-1" invisible="not is_multiple_currency and not product_has_cost">
-                                <field name="total_amount" widget='monetary' options="{'currency_field': 'company_currency_id'}"
-                                       force_save="1" readonly="not is_editable or product_has_cost"/>
+                                <field name="total_amount" widget='monetary' options="{'currency_field': 'company_currency_id'}"/>
                                 <field name="label_currency_rate"/>
                             </div>
 

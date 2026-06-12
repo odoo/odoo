@@ -8,9 +8,9 @@ class ProductProduct(models.Model):
         self.ensure_one()
         undone_expenses = self.env['hr.expense']._read_group(
             domain=[('state', '=', 'draft'), ('product_id', '=', self.id)],
-            groupby=['price_unit'],
+            groupby=['price_unit_currency'],
             )
-        # The following list is composed of all the price_units of expenses that use this product and should NOT trigger a warning.
+        # The following list is composed of all currency unit prices of expenses that use this product and should NOT trigger a warning.
         # Those are the amounts of any undone expense using this product and 0.0 which is the default unit_amount.
         unit_amounts_no_warning = [self.env.company.currency_id.round(row[0]) for row in undone_expenses]
 
@@ -42,12 +42,12 @@ class ProductProduct(models.Model):
                 }
                 if product_has_cost:
                     expense_vals.update({
-                        'price_unit': expense_product_sudo.standard_price,
+                        'price_unit_currency': expense_product_sudo.standard_price,
                     })
                 else:
                     expense_vals.update({
                         'quantity': 1,
-                        'price_unit': expense_sudo.total_amount
+                        'price_unit_currency': expense_sudo.total_amount_currency
                     })
                 expense_sudo.write(expense_vals)
         return result

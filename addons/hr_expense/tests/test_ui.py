@@ -17,7 +17,7 @@ class TestUi(TestExpenseCommon, HttpCase):
             'name': 'expense_for_tour_0',
             'employee_id': employee_2.id,
             'product_id': self.product_c.id,
-            'total_amount': 1,
+            'price_unit_currency': 1,
         })
         self.start_tour('/odoo', 'create_expense_no_employee_access_tour', login=self.expense_user_manager.login)
         self.assertEqual(expense.employee_id.id, employee_1.id, "Employee should have been changed by tour")

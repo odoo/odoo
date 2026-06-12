@@ -18,7 +18,7 @@ class HrExpenseSplit(models.TransientModel):
         result = super().default_get(fields)
         if 'expense_id' in result:
             expense = self.env['hr.expense'].browse(result['expense_id'])
-            result['total_amount_currency'] = 0.0
+            result['price_unit_currency'] = 0.0
             result['name'] = expense.name
             result['tax_ids'] = expense.tax_ids
             result['product_id'] = expense.product_id
@@ -40,10 +40,17 @@ class HrExpenseSplit(models.TransientModel):
         check_company=True,
         domain="[('type_tax_use', '=', 'purchase')]",
     )
+    price_unit_currency = fields.Float(
+        required=True,
+        compute='_compute_price_unit_currency',
+        store=True,
+        readonly=False,
+        min_display_digits="Product Price",
+    )
     total_amount_currency = fields.Monetary(
         string="Total In Currency",
-        required=True,
-        compute='_compute_from_product_id', store=True, readonly=False,
+        compute='_compute_total_amount_currency',
+        currency_field='currency_id',
     )
     tax_amount_currency = fields.Monetary(string='Tax amount in Currency', compute='_compute_tax_amount_currency')
     employee_id = fields.Many2one(comodel_name='hr.employee', string="Employee", required=True)
@@ -55,7 +62,7 @@ class HrExpenseSplit(models.TransientModel):
     )
     product_has_cost = fields.Boolean(
         string="Is product with non zero cost selected",
-        compute='_compute_from_product_id', store=True,
+        compute='_compute_price_unit_currency', store=True,
     )
     approval_state = fields.Selection(selection=EXPENSE_APPROVAL_STATE, copy=False, readonly=True)
     approval_date = fields.Datetime(string="Approval Date", readonly=True)
@@ -77,12 +84,22 @@ class HrExpenseSplit(models.TransientModel):
             )
             split.tax_amount_currency = taxes['total_included'] - taxes['total_excluded']
 
-    @api.depends('product_id')
-    def _compute_from_product_id(self):
+    @api.depends('product_id', 'currency_id')
+    def _compute_price_unit_currency(self):
         for split in self:
-            split.product_has_cost = split.product_id and (float_compare(split.product_id.standard_price, 0.0, precision_digits=2) != 0)
+            split.product_has_cost = split.product_id and (
+                float_compare(split.product_id.standard_price, 0.0, precision_digits=2) != 0
+            )
             if split.product_has_cost:
-                split.total_amount_currency = split.product_id._price_compute('standard_price', currency=split.currency_id)[split.product_id.id]
+                split.price_unit_currency = split.product_id._price_compute(
+                    'standard_price',
+                    currency=split.currency_id,
+                )[split.product_id.id]
+
+    @api.depends('price_unit_currency', 'currency_id')
+    def _compute_total_amount_currency(self):
+        for split in self:
+            split.total_amount_currency = split.currency_id.round(split.price_unit_currency)
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -105,8 +122,8 @@ class HrExpenseSplit(models.TransientModel):
         vals = {
             'name': self.name,
             'product_id': self.product_id.id,
-            'total_amount_currency': self.total_amount_currency,
-            'total_amount': self.expense_id.currency_id.round(self.expense_id.currency_rate * self.total_amount_currency),
+            'price_unit_currency': self.price_unit_currency,
+            'quantity': 1,
             'tax_ids': [Command.set(self.tax_ids.ids)],
             'analytic_distribution': self.analytic_distribution,
             'employee_id': self.employee_id.id,

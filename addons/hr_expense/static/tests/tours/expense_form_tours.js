@@ -76,7 +76,7 @@ registry.category("web_tour.tours").add("do_not_create_zero_amount_expense", {
         },
         {
             content: "Set total amount to zero",
-            trigger: "div[name=total_amount_currency] input",
+            trigger: "div[name=price_unit_currency] input",
             run: "edit 0.0",
         },
         {
@@ -91,7 +91,7 @@ registry.category("web_tour.tours").add("do_not_create_zero_amount_expense", {
         },
         {
             content: "Set total amount to ten",
-            trigger: "div[name=total_amount_currency] input",
+            trigger: "div[name=price_unit_currency] input",
             run: "edit 10.0",
         },
         {
@@ -102,7 +102,7 @@ registry.category("web_tour.tours").add("do_not_create_zero_amount_expense", {
         // Valid expense was saved on submit
         {
             content: "Set total amount to zero",
-            trigger: "div[name=total_amount_currency] input",
+            trigger: "div[name=price_unit_currency] input",
             run: "edit 0.0",
         },
         // Save should fail
