@@ -147,8 +147,7 @@ export function getMediaQueryLists() {
 }
 
 // window size handling.
-let MEDIAS = getMediaQueryLists();
-let updateSizeHandler = null;
+let MEDIAS = [];
 
 export const utils = {
     getSize() {
@@ -170,6 +169,8 @@ export const uiService = {
     start(env) {
         // block/unblock code
         registry.category("main_components").add("BlockUI", { Component: BlockUI, props: { bus } });
+
+        MEDIAS = getMediaQueryLists();
 
         let blockCount = 0;
         function block(data) {
@@ -215,11 +216,6 @@ export const uiService = {
             }
         }
 
-        if (updateSizeHandler) {
-            MEDIAS.forEach((m) => m.removeEventListener?.("change", updateSizeHandler));
-            MEDIAS = getMediaQueryLists();
-        }
-
         const pointerQuery = window.matchMedia("(pointer: coarse)");
 
         // Update the class on the body element when touch capability changes
@@ -250,7 +246,7 @@ export const uiService = {
         });
 
         // listen to media query status changes
-        updateSizeHandler = (ev) => {
+        const updateSizeHandler = (ev) => {
             if (ev.matches) {
                 ui.size = MEDIAS.indexOf(ev.target);
                 ui.isSmall = utils.isSmall(ui);
