@@ -1634,7 +1634,7 @@ class SaleOrderLine(models.Model):
                 qty_delivered = line.product_uom_id._compute_quantity(
                     line.qty_delivered, line.product_id.uom_id
                 )
-                line.product_id.with_context(
+                line.product_id.sudo().with_company(line.company_id).with_context(
                     skip_qty_available_update=True
                 ).qty_available -= qty_delivered
             if not line.display_type and line.state == "sale":
@@ -1702,7 +1702,7 @@ class SaleOrderLine(models.Model):
                 delta_qty_delivered = line.product_uom_id._compute_quantity(
                     delta_qty_delivered, line.product_id.uom_id
                 )
-                line.product_id.with_context(
+                line.product_id.sudo().with_company(line.company_id).with_context(
                     skip_qty_available_update=True
                 ).qty_available -= delta_qty_delivered
 
