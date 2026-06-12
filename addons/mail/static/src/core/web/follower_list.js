@@ -53,21 +53,23 @@ export class FollowerList extends Component {
     }
 
     async onClickFollow() {
-        this.props.thread.follow();
-        this.props.onFollowerChanged?.();
+        const { thread } = this.props;
+        await thread.follow();
+        this.props.onFollowerChanged?.(thread);
     }
 
     async onClickUnfollow() {
-        if (this.props.thread.selfFollower) {
-            await this.props.thread.selfFollower.remove();
-            this.props.onFollowerChanged?.();
+        const { thread } = this.props;
+        if (thread.selfFollower) {
+            await thread.selfFollower.remove();
+            this.props.onFollowerChanged?.(thread);
         }
     }
 
     async onClickEdit() {
         this.env.services.dialog.add(FollowerSubtypeDialog, {
             follower: this.props.thread.selfFollower,
-            onFollowerChanged: () => this.props.onFollowerChanged?.(),
+            onFollowerChanged: (thread) => this.props.onFollowerChanged?.(thread),
         });
         this.props.dropdown.close();
     }
