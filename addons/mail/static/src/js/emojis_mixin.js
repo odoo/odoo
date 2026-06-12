@@ -1,3 +1,4 @@
+import { EMOJI_REGEX } from "@mail/utils/common/format";
 import { escape } from "@web/core/utils/strings";
 
 /**
@@ -14,10 +15,7 @@ import { escape } from "@web/core/utils/strings";
  */
 export function formatText(message) {
     message = escape(message);
-    message = message.replaceAll(
-        /(\p{Emoji_Presentation}+)/gu,
-        "<span class='o_mail_emoji'>$1</span>"
-    );
+    message = message.replaceAll(EMOJI_REGEX, "<span class='o_mail_emoji'>$&</span>");
     message = message.replace(/(?:\r\n|\r|\n)/g, "<br>");
 
     return message;
