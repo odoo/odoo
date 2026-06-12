@@ -235,35 +235,33 @@ class HrVersion(models.Model):
                     start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
                 real_leaves = (multi_day_leaves & static_attendances) | one_day_leaves
             elif version.has_static_work_entries() or not leaves:
-                real_leaves = expected_attendances & leaves
+                real_leaves = leaves & expected_attendances
             else:
                 # intersect with static calendar, not badge records, so leave duration is schedule-driven
                 resources_per_tz = version._get_resources_per_tz()
                 static_attendances = calendar._attendance_intervals_batch(
                     start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
-                real_leaves = static_attendances & leaves
+                real_leaves = leaves & static_attendances
 
+
+            absence_attendances = Intervals([
+                (s, e, IntervalPayload(rca.work_entry_type_id[:1], rca))
+                for s, e, rca in expected_attendances
+                if rca.work_entry_type_id[:1] and rca.work_entry_type_id[:1].count_as == 'absence'
+            ], keep_distinct=True)
+            real_leaves = real_leaves | absence_attendances
             real_worked_leaves = worked_leaves - real_leaves
-            real_attendances = self._get_real_attendances(expected_attendances, leaves, worked_leaves)
+            work_attendances = Intervals([
+                iv for iv in expected_attendances
+                if not (iv[2].work_entry_type_id[:1] and iv[2].work_entry_type_id[:1].count_as == 'absence')
+            ], keep_distinct=True)
+            real_attendances = version._get_real_attendances(work_attendances, leaves, worked_leaves)
 
-            # A leave period can be linked to several resource.calendar.leave
-            split_leaves = []
-            for leave_interval in leaves:
-                if leave_interval[2] and len(leave_interval[2]) > 1:
-                    split_leaves += [(leave_interval[0], leave_interval[1], l) for l in leave_interval[2]]
-                else:
-                    split_leaves += [(leave_interval[0], leave_interval[1], leave_interval[2])]
-            leaves = split_leaves
+            real_worked_leaves = list(real_worked_leaves)
+            worked_leaves = list(worked_leaves)
+            leaves = list(leaves)
 
-            split_worked_leaves = []
-            for worked_leave_interval in real_worked_leaves:
-                if worked_leave_interval[2] and len(worked_leave_interval[2]) > 1:
-                    split_worked_leaves += [(worked_leave_interval[0], worked_leave_interval[1], l) for l in worked_leave_interval[2]]
-                else:
-                    split_worked_leaves += [(worked_leave_interval[0], worked_leave_interval[1], worked_leave_interval[2])]
-            real_worked_leaves = split_worked_leaves
-
-            # Attendances
+            # generate work entries from calendar expected attendances (working time)
             version_vals += version._get_real_attendance_work_entry_vals(real_attendances)
 
             for interval in real_worked_leaves:
@@ -280,21 +278,18 @@ class HrVersion(models.Model):
             for interval in real_leaves:
                 if interval[0] == interval[1]:  # if start == stop
                     continue
-                leaves_over_interval = [l for l in leaves_over_attendances if l[0] >= interval[0] and l[1] <= interval[1]]
-                for leave_interval in [(l[0], l[1], interval[2]) for l in leaves_over_interval]:
-                    leave_entry_type = version._get_interval_leave_work_entry_type(leave_interval, leaves, bypassing_work_entry_type_codes)
-                    # leaves don't have work_entry_type_id set if you create them before having hr_work_entry_installed
-                    interval_leaves = [leave for leave in leaves if self._get_no_wet_or_wet_match(leave, leave_entry_type)]
-                    interval_start = leave_interval[0].astimezone(UTC).replace(tzinfo=None)
-                    interval_stop = leave_interval[1].astimezone(UTC).replace(tzinfo=None)
-                    version_vals += [dict([
-                        ('date_start', interval_start),
-                        ('date_stop', interval_stop),
-                        ('work_entry_type_id', leave_entry_type),
-                        ('employee_id', employee),
-                        ('company_id', version.company_id),
-                        ('version_id', version),
-                    ] + version._get_more_vals_leave_interval(interval, interval_leaves))]
+                leave_entry_type = version._get_interval_leave_work_entry_type(interval)
+                interval_leaves = [leave for leave in leaves if self._get_no_wet_or_wet_match(leave, leave_entry_type)]
+                interval_start = interval[0].astimezone(UTC).replace(tzinfo=None)
+                interval_stop = interval[1].astimezone(UTC).replace(tzinfo=None)
+                version_vals += [dict([
+                    ('date_start', interval_start),
+                    ('date_stop', interval_stop),
+                    ('work_entry_type_id', leave_entry_type),
+                    ('employee_id', employee),
+                    ('company_id', version.company_id),
+                    ('version_id', version),
+                ] + version._get_more_vals_leave_interval(interval, interval_leaves, leave_entry_type))]
         return version_vals
 
     def _get_real_attendances(self, attendances, leaves, worked_leaves):

@@ -60,7 +60,34 @@
         </record>
 
         <!-- ================================================================
-             SA — Saudi Arabia
+             ID - Indonesia
+             Daily threshold rule: 1.5× for first overtime hour (8h-9h),
+             2× thereafter (>9h). Rule 2 has lower sequence so it takes
+             priority when both overlap in the >9h window.
+             ================================================================ -->
+        <record id="hr_time_rule_l10n_id_beyond_first_hour" model="hr.time.rule">
+            <field name="name">Overtime Beyond First Hour</field>
+            <field name="sequence">10</field>
+            <field name="country_id" ref="base.id"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'ID')]</field>
+            <field name="working_hours_mode">day</field>
+            <field name="expected_hours">9.0</field>
+            <field name="amount_rate">2.0</field>
+            <field name="work_entry_type_id" ref="hr_work_entry.l10n_id_work_entry_type_overtime_2"/>
+        </record>
+        <record id="hr_time_rule_l10n_id_first_hour" model="hr.time.rule">
+            <field name="name">First Overtime Hour</field>
+            <field name="sequence">20</field>
+            <field name="country_id" ref="base.id"/>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'ID')]</field>
+            <field name="working_hours_mode">day</field>
+            <field name="expected_hours">8.0</field>
+            <field name="amount_rate">1.5</field>
+            <field name="work_entry_type_id" ref="hr_work_entry.l10n_id_work_entry_type_overtime_1"/>
+        </record>
+
+        <!-- ================================================================
+             SA - Saudi Arabia
              Work week: Sun-Thu  |  Rest days: Fri-Sat
              ================================================================ -->
         <record id="hr_time_rule_l10n_sa_workdays" model="hr.time.rule">
@@ -82,7 +109,7 @@
         </record>
 
         <!-- ================================================================
-             JO — Jordan
+             JO - Jordan
              Work week: Sun-Thu  |  Rest days: Fri-Sat
              ================================================================ -->
         <record id="hr_time_rule_l10n_jo_public_holidays" model="hr.time.rule">
@@ -143,11 +170,11 @@
         </record>
 
         <!-- ================================================================
-             EG — Egypt
+             EG - Egypt
              Work week: Sun-Thu  |  Rest days: Fri-Sat
              ================================================================ -->
         <record id="hr_time_rule_l10n_eg_work_days_daytime" model="hr.time.rule">
-            <field name="name">Week Days — Daytime</field>
+            <field name="name">Week Days - Daytime</field>
             <field name="sequence">10</field>
             <field name="country_id" ref="base.eg"/>
             <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'EG')]</field>
@@ -166,7 +193,7 @@
             <field name="week_start">6</field>
         </record>
         <record id="hr_time_rule_l10n_eg_work_days_nighttime_evening" model="hr.time.rule">
-            <field name="name">Week Days — Nighttime (Evening)</field>
+            <field name="name">Week Days - Nighttime (Evening)</field>
             <field name="sequence">20</field>
             <field name="country_id" ref="base.eg"/>
             <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'EG')]</field>
@@ -185,7 +212,7 @@
             <field name="week_start">6</field>
         </record>
         <record id="hr_time_rule_l10n_eg_work_days_nighttime_early" model="hr.time.rule">
-            <field name="name">Week Days — Nighttime (Early Morning)</field>
+            <field name="name">Week Days - Nighttime (Early Morning)</field>
             <field name="sequence">30</field>
             <field name="country_id" ref="base.eg"/>
             <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'EG')]</field>
@@ -243,7 +270,7 @@
         </record>
 
         <!-- ================================================================
-             IQ — Iraq
+             IQ - Iraq
              Work week: Sun-Thu  |  Rest days: Fri-Sat
              ================================================================ -->
         <record id="hr_time_rule_l10n_iq_day_time_1" model="hr.time.rule">
@@ -324,7 +351,7 @@
         </record>
 
         <!-- ================================================================
-             AE — United Arab Emirates
+             AE - United Arab Emirates
              Work week: Sun-Thu  |  Rest days: Fri-Sat
              ================================================================ -->
         <record id="hr_time_rule_l10n_ae_day_time" model="hr.time.rule">
@@ -405,7 +432,7 @@
 
 
         <!-- ================================================================
-             OM — Oman
+             OM - Oman
              Work week: Sun-Thu  |  Rest days: Fri-Sat
              Normal rules apply to employees with l10n_om_is_special_overtime = False
              Special rules apply to employees with l10n_om_is_special_overtime = True
