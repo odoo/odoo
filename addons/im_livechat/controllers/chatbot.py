@@ -94,6 +94,13 @@ class LivechatChatbotScriptController(http.Controller):
             return None
         # sudo: discuss.channel - updating current step on the channel is allowed
         discuss_channel.sudo().chatbot_current_step_id = next_step.id
+        # Send the current step on the awaited response store as well: it is otherwise
+        # only broadcast by the channel write() over a separate bus channel that the
+        # client chatbot flow does not await, so it may not have arrived yet when the
+        # next step trigger fails and the client reads it to decide whether to show the
+        # retry banner.
+        # sudo: chatbot.script.step - visitor can access the current step of their channel
+        store.add(discuss_channel.sudo(), ["chatbot_current_step_id"])
         step_data = next_step._process_step(discuss_channel)
         posted_message = step_data["message"]
         store.add(posted_message, "_store_message_fields")
