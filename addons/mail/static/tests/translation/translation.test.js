@@ -33,7 +33,7 @@ test("Toggle display of original/translated version of chatter message", async (
     await openFormView("res.partner", partnerId);
     await click(".o-mail-Message [title='Expand']");
     await contains(".o-dropdown-item:contains('Translate')");
-    await contains(".o-dropdown-item:contains('Revert')", { count: 0 });
+    await contains(".o-dropdown-item:contains('Initial Language')", { count: 0 });
     // Click acts as a toogle affecting its appearence and the actual message content displayed.
     await click(".o-dropdown-item:contains('Translate')");
     await contains(
@@ -41,8 +41,8 @@ test("Toggle display of original/translated version of chatter message", async (
     );
     await click(".o-mail-Message [title='Expand']");
     await contains(".o-dropdown-item:contains('Translate')", { count: 0 });
-    await contains(".o-dropdown-item:contains('Revert')");
-    await click(".o-dropdown-item:contains('Revert')");
+    await contains(".o-dropdown-item:contains('Initial Language')");
+    await click(".o-dropdown-item:contains('Initial Language')");
     await contains(".o-mail-Message:has(:text('Al mal tiempo, buena cara.'))");
     await click(".o-mail-Message [title='Expand']");
     await click(".o-dropdown-item:contains('Translate')");
@@ -78,7 +78,7 @@ test("translation of email message", async () => {
     });
     await contains(".o-mail-Message-body:text('(Translated from: Spanish)')", {});
     await click("button[title='Expand']");
-    await click(".o-dropdown-item:contains('Revert')");
+    await click(".o-dropdown-item:contains('Initial Language')");
     await contains("span:text('Al mal tiempo, buena cara.')", {
         parent: [".o-mail-Message-body > div", { shadowRoot: true }],
     });

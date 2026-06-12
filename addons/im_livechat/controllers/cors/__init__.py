@@ -3,6 +3,7 @@
 from . import attachment
 from . import chatbot
 from . import channel
+from . import google_translate
 from . import link_preview
 from . import main
 from . import message_reaction

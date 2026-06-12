@@ -20,6 +20,7 @@ livechatRoutingMap
     .add("/mail/link_preview/hide", "/im_livechat/cors/link_preview/hide")
     .add("/mail/message/post", "/im_livechat/cors/message/post")
     .add("/mail/message/reaction", "/im_livechat/cors/message/reaction")
+    .add("/mail/message/translate", "/im_livechat/cors/message/translate")
     .add("/mail/message/update_content", "/im_livechat/cors/message/update_content")
     .add("/mail/rtc/channel/join_call", "/im_livechat/cors/rtc/channel/join_call")
     .add("/mail/rtc/channel/leave_call", "/im_livechat/cors/rtc/channel/leave_call")

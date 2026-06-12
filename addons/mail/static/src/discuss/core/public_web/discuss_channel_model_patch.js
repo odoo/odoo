@@ -131,6 +131,19 @@ const discussChannelPatch = {
             this.loadSubChannelsDone = true;
         }
     },
+    shouldNotifyMessageToUser(message) {
+        return (
+            ((!this.self_member_id?.mute_until_dt ||
+                message.partner_ids?.includes(this.store.self)) &&
+                this.store.self_user?.im_status !== "busy" &&
+                (this.channel_type !== "channel" ||
+                    (this.channel_type === "channel" &&
+                        (this.channelNotifications === "all" ||
+                            (this.channelNotifications === "mentions" &&
+                                message.partner_ids?.includes(this.store.self)))))) ||
+            (this.store.self_guest && !this.store.self_user)
+        );
+    },
     /**
      * Handle the notification of a new message based on the notification setting of the user.
      * Thread on mute:
@@ -144,16 +157,7 @@ const discussChannelPatch = {
      * @param {import("models").Message} message
      */
     async notifyMessageToUser(message) {
-        if (
-            (!this.self_member_id?.mute_until_dt ||
-                message.partner_ids?.includes(this.store.self)) &&
-            this.store.self_user?.im_status !== "busy" &&
-            (this.channel_type !== "channel" ||
-                (this.channel_type === "channel" &&
-                    (this.channelNotifications === "all" ||
-                        (this.channelNotifications === "mentions" &&
-                            message.partner_ids?.includes(this.store.self)))))
-        ) {
+        if (this.shouldNotifyMessageToUser(message)) {
             if (this.inChathubOnNewMessage) {
                 await this.store.chatHub.initPromise;
                 if (!this.chatWindow) {
@@ -168,8 +172,8 @@ const discussChannelPatch = {
                     }
                 }
             }
-            this.store.env.services["mail.out_of_focus"].notify(message, this.thread);
         }
+        super.notifyMessageToUser(...arguments);
     },
     onPinStateUpdated() {
         super.onPinStateUpdated();
