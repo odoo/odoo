@@ -124,7 +124,7 @@ class IrUiView(models.Model):
         usage of a custom snippet and copy its translations.
         """
         lang_value = record[html_field]
-        if not lang_value:
+        if not lang_value or not lang_value.strip():
             return
 
         try:
