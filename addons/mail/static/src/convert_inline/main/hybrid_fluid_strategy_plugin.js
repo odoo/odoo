@@ -66,6 +66,7 @@ export class HybridFluidStrategyPlugin extends Plugin {
         if (!emailNode.analysis.facts.useHybridFluidTableStrategy) {
             return;
         }
+        // TODO EGGMAIL NOW: WORKING HERE NOW:
         if (emailNode.analysis.facts.acceptTableOuterSpacing) {
             this.addTableOuterSpacingFacts(layout, { emailNode });
         }

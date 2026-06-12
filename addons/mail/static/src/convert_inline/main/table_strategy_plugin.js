@@ -34,6 +34,7 @@ export class TableStrategyPlugin extends Plugin {
         "measurementSnapshot",
         "responsiveBlock",
         "referenceNode",
+        "rules",
         "spacing",
     ];
     static shared = ["extractRowsFromBands", "fillTableContainer"];
@@ -244,13 +245,25 @@ export class TableStrategyPlugin extends Plugin {
         analysis.constraintsForAncestors.push((emailNode) => {
             const analysis = emailNode.analysis;
             const referenceNode = emailNode.lastReferenceNode;
-            if (analysis.facts.tableStrategyReport || !referenceNode) {
+            const acceptTableStrategyReport = this.delegateTo(
+                "accept_table_strategy_report_overrides",
+                emailNode
+            );
+            if (analysis.facts.tableStrategyReport) {
+                return { shouldPropagate: false };
+            }
+            if (acceptTableStrategyReport) {
+                return {
+                    facts: { tableStrategyReport: { ...tableStrategyReport, marginRect } },
+                    shouldPropagate: !analysis.facts.acceptTableOuterSpacing,
+                };
+            } else if (!referenceNode) {
                 return { shouldPropagate: false };
             }
             const paddingStyleInfo = analysis.facts.desktopPaddingStyleInfo;
+            const referenceRect = this.getBoundingClientRect(referenceNode);
             if (paddingStyleInfo.size > 0) {
-                const referenceRect = this.getBoundingClientRect(referenceNode);
-                const computedStyle = this.computedStyle(referenceNode);
+                const computedStyle = this.getComputedStyle(referenceNode);
                 const top = parseCssValue(computedStyle.getPropertyValue("padding-top"));
                 const right = parseCssValue(computedStyle.getPropertyValue("padding-right"));
                 const bottom = parseCssValue(computedStyle.getPropertyValue("padding-bottom"));
@@ -264,8 +277,10 @@ export class TableStrategyPlugin extends Plugin {
                 if (!this.areRectEqual(subPaddingRect, marginRect)) {
                     return { shouldPropagate: false };
                 }
-                marginRect = referenceRect;
+            } else if (!this.areRectEqual(referenceRect, marginRect)) {
+                return { shouldPropagate: false };
             }
+            marginRect = referenceRect;
             const marginStyleInfo = analysis.facts.desktopMarginStyleInfo;
             if (marginStyleInfo.size > 0) {
                 const computedStyle = this.getComputedStyle(referenceNode);
@@ -280,14 +295,7 @@ export class TableStrategyPlugin extends Plugin {
                     left: -left.number,
                 });
             }
-            const output = { shouldPropagate: !analysis.facts.acceptTableOuterSpacing };
-            if (this.delegateTo("accept_table_strategy_report_overrides", emailNode)) {
-                emailNode.analysis.facts.tableStrategyReport = {
-                    ...tableStrategyReport,
-                    marginRect,
-                };
-            }
-            return output;
+            return { shouldPropagate: true };
         });
 
         // get margin info as ownership, and computed style to get the

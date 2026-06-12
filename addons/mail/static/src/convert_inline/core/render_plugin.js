@@ -246,9 +246,9 @@ export class RenderPlugin extends Plugin {
      * callbacks (reverse DFS propagation)
      */
     addBottomUpConstraints(emailNode) {
-        const childConstraints = [];
+        let childConstraints = [];
         for (const child of emailNode.children) {
-            childConstraints.concat(this.addBottomUpConstraints(child));
+            childConstraints = childConstraints.concat(this.addBottomUpConstraints(child));
         }
         const propagatedConstraints = [];
         for (const constraint of childConstraints) {
