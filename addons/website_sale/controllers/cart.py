@@ -8,7 +8,6 @@ from odoo.http import request, route
 from odoo.tools import consteq
 from odoo.tools.image import image_data_uri
 
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers.portal import PaymentPortal
 from odoo.addons.sale.controllers.portal import CustomerPortal
 from odoo.addons.website_sale.controllers.main import WebsiteSale
@@ -276,7 +275,7 @@ class Cart(PaymentPortal):
         payment_form_values.update({
             "payment_access_token": payment_form_values.pop("access_token"),  # Rename the key.
             # Do not include delivery related lines
-            "minor_amount": payment_utils.to_minor_currency_units(
+            "minor_amount": self.env["payment.provider"]._to_minor_currency_units(
                 order._get_amount_total_excluding_delivery(), order.currency_id
             ),
             "merchant_name": self.env.website.name,
@@ -286,7 +285,7 @@ class Cart(PaymentPortal):
             "payment_method_unknown_id": self.env.ref("payment.payment_method_unknown").id,
             "shipping_info_required": order._has_deliverable_products(),
             # Todo: remove in master
-            "delivery_amount": payment_utils.to_minor_currency_units(
+            "delivery_amount": self.env["payment.provider"]._to_minor_currency_units(
                 order.amount_total - order._compute_amount_total_without_delivery(),
                 order.currency_id,
             ),
@@ -348,7 +347,7 @@ class Cart(PaymentPortal):
             "cart_has_blocking_alerts": order_sudo._has_blocking_alerts(),
             "cart_quantity": order_sudo.cart_quantity,
             "amount": order_sudo.amount_total,
-            "minor_amount": payment_utils.to_minor_currency_units(
+            "minor_amount": self.env["payment.provider"]._to_minor_currency_units(
                 order_sudo.amount_total, order_sudo.currency_id
             ),
             "website_sale.cart_lines": IrUiView._render_template(

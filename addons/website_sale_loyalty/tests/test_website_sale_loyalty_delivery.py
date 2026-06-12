@@ -5,7 +5,6 @@ from odoo.fields import Command
 from odoo.tests import HttpCase, tagged
 
 from odoo.addons.base.tests.common import DISABLED_MAIL_CREATE_CONTEXT
-from odoo.addons.payment import utils as payment_utils
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
 from odoo.addons.website_sale_loyalty.controllers.cart import Cart
 from odoo.addons.website_sale_loyalty.controllers.delivery import WebsiteSaleLoyaltyDelivery
@@ -231,7 +230,7 @@ class TestWebsiteSaleDelivery(HttpCase, WebsiteSaleCommon):
                 ],
             })
         )
-        amount_without_delivery = payment_utils.to_minor_currency_units(
+        amount_without_delivery = self.env["payment.provider"]._to_minor_currency_units(
             self.cart.amount_total, self.cart.currency_id
         )
         self.cart.set_delivery_line(self.normal_delivery, self.normal_delivery.fixed_price)

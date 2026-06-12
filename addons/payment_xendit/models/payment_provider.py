@@ -80,6 +80,20 @@ class PaymentProvider(models.Model):
             return None
         return super()._get_redirect_form_view(is_validation)
 
+    def _get_amount_precision(self, currency, **kwargs):
+        """Override of `payment` to return the amount precision for Xendit.
+
+        :param recordset currency: The currency of the transaction, as a `res.currency` record.
+        :return: The number of decimal places.
+        :rtype: int
+        """
+        if self.code != "xendit":
+            return super()._get_amount_precision(currency, **kwargs)
+
+        return const.CURRENCY_DECIMALS.get(
+            currency.name, super()._get_amount_precision(currency, **kwargs)
+        )
+
     # === REQUEST HELPERS ===#
 
     def _build_request_url(self, endpoint, **kwargs):

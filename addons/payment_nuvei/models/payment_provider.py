@@ -76,3 +76,17 @@ class PaymentProvider(models.Model):
         key = self.nuvei_secret_key
         signing_string = f"{key}{sign_data}"
         return hashlib.sha256(signing_string.encode()).hexdigest()
+
+    def _get_amount_precision(self, currency, payment_method_code=None, **kwargs):
+        """Override of `payment` to return the amount precision for Nuvei.
+
+        :param recordset currency: The currency of the transaction, as a `res.currency` record.
+        :param str payment_method_code: The code of the payment method used for the transaction.
+        :return: The number of decimal places.
+        :rtype: int
+        """
+        if self.code != "nuvei":
+            return super()._get_amount_precision(currency, **kwargs)
+
+        is_mandatory_integer_pm = payment_method_code in const.INTEGER_METHODS
+        return 0 if is_mandatory_integer_pm else currency.decimal_places

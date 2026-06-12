@@ -7,10 +7,10 @@ from werkzeug.exceptions import Forbidden
 
 from odoo import api, fields
 from odoo.http import request
-from odoo.tools import consteq, float_round
+from odoo.tools import consteq
 from odoo.tools.misc import hmac as hmac_tool
 
-from odoo.addons.payment.const import CURRENCY_MINOR_UNITS, SENSITIVE_KEYS
+from odoo.addons.payment.const import SENSITIVE_KEYS
 from odoo.addons.payment.logging import get_payment_logger
 
 # Pass the possibly empty set of sensitive keys to the logger in case a provider module extends it.
@@ -148,54 +148,6 @@ def singularize_reference_prefix(prefix="tx", separator="-", max_length=None):
         assert max_length >= 1 + len(separator) + DATETIME_LENGTH  # 1 char + separator + datetime
         prefix = prefix[: max_length - len(separator) - DATETIME_LENGTH]
     return f"{prefix}{separator}{fields.Datetime.now().strftime('%Y%m%d%H%M%S')}"
-
-
-def to_major_currency_units(minor_amount, currency, arbitrary_decimal_number=None):
-    """Return the amount converted to the major units of its currency.
-
-    The conversion is done by dividing the amount by 10^k where k is the number of decimals of the
-    currency as per the ISO 4217 norm.
-    To force a different number of decimals, set it as the value of the `arbitrary_decimal_number`
-    argument.
-
-    :param float minor_amount: The amount in minor units, to convert in major units
-    :param recordset currency: The currency of the amount, as a `res.currency` record
-    :param int arbitrary_decimal_number: The number of decimals to use instead of that of ISO 4217
-    :return: The amount in major units of its currency
-    :rtype: int
-    """
-    if arbitrary_decimal_number is None:
-        currency.ensure_one()
-        decimal_number = CURRENCY_MINOR_UNITS.get(currency.name, currency.decimal_places)
-    else:
-        decimal_number = arbitrary_decimal_number
-    return float_round(minor_amount, precision_digits=0) / (10**decimal_number)
-
-
-def to_minor_currency_units(major_amount, currency, arbitrary_decimal_number=None):
-    """Return the amount converted to the minor units of its currency.
-
-    The conversion is done by multiplying the amount by 10^k where k is the number of decimals of
-    the currency as per the ISO 4217 norm.
-    To force a different number of decimals, set it as the value of the `arbitrary_decimal_number`
-    argument.
-
-    Note: currency.ensure_one() if arbitrary_decimal_number is not provided
-
-    :param float major_amount: The amount in major units, to convert in minor units
-    :param recordset currency: The currency of the amount, as a `res.currency` record
-    :param int arbitrary_decimal_number: The number of decimals to use instead of that of ISO 4217
-    :return: The amount in minor units of its currency
-    :rtype: int
-    """
-    if arbitrary_decimal_number is None:
-        currency.ensure_one()
-        decimal_number = CURRENCY_MINOR_UNITS.get(currency.name, currency.decimal_places)
-    else:
-        decimal_number = arbitrary_decimal_number
-    return int(
-        float_round(major_amount * (10**decimal_number), precision_digits=0, rounding_method="DOWN")
-    )
 
 
 def get_language_code(lang, mapping, fallback="en"):

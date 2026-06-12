@@ -50,7 +50,7 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "aps":
             return super()._get_specific_rendering_values(processing_values)
 
-        converted_amount = payment_utils.to_minor_currency_units(self.amount, self.currency_id)
+        converted_amount = self.provider_id._to_minor_currency_units(self.amount, self.currency_id)
         base_url = self.provider_id.get_base_url()
         payment_option = aps_utils.get_payment_option(self.payment_method_id.code)
         url_params = {
@@ -119,7 +119,7 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "aps":
             return super()._extract_amount_data(payment_data)
 
-        amount = payment_utils.to_major_currency_units(
+        amount = self.provider_id._to_major_currency_units(
             float(payment_data.get("amount", 0)), self.currency_id
         )
         return {"amount": amount, "currency_code": payment_data.get("currency")}
