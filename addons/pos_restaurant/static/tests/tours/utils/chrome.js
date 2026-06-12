@@ -6,14 +6,3 @@ export function isTabActive(tabText) {
         },
     ];
 }
-
-export function closePrintingWarning() {
-    return [
-        {
-            content: "acknowledge printing error ( because we don't have printer in the test. )",
-            trigger: `.modal:has(.modal-header:contains(printing failed)) .modal-footer .btn-primary:contains(continue)`,
-            run: "click",
-            timeout: 15000,
-        },
-    ];
-}

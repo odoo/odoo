@@ -1,4 +1,5 @@
 import { registry } from "@web/core/registry";
+import { formatDateTime } from "@web/core/l10n/dates";
 import { EpsonPrinter } from "../utils/printer/epson_printer";
 import { GeneratePrinterData } from "../utils/printer/generate_printer_data";
 import { RetryPrintPopup } from "../components/popups/retry_print_popup/retry_print_popup";
@@ -10,6 +11,8 @@ import { waitImages } from "@point_of_sale/utils";
 import { SelectDefaultPrinterPopup } from "@point_of_sale/app/components/popups/select_default_printer_popup/select_default_printer_popup";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { ZebraPrinter } from "@point_of_sale/app/utils/printer/zebra_printer";
+
+const { DateTime } = luxon;
 
 export const posTicketPrinterService = {
     dependencies: ["dialog", "pos_data", "notification"],
@@ -179,21 +182,32 @@ export class PosTicketPrinterService {
         iframe,
         image = null,
         webFallback = true,
+        download = false,
         printer = this.defaultPrinter,
         fallbacks = this.config.receipt_printer_ids,
     } = {}) {
         if (this.hasReceiptPrinters && this.config.other_devices && !printer) {
             printer = await this.selectPrinter();
         }
-        if (!printer) {
+
+        const printersToTry = [];
+        if (printer) {
+            printersToTry.push(printer);
+        }
+        for (const fallbackPrinter of fallbacks) {
+            if (!printer || fallbackPrinter.id !== printer.id) {
+                printersToTry.push(fallbackPrinter);
+            }
+        }
+
+        if (!printersToTry.length && !download) {
             webFallback && this.printWeb(iframe);
             return;
         }
-        const defaultPrinter = printer;
-        const fallbackPrinters = fallbacks.filter((p) => p.id !== defaultPrinter.id);
+
         let status = { successful: false };
 
-        for (const printer of [defaultPrinter, ...fallbackPrinters]) {
+        for (const printer of printersToTry.filter(Boolean)) {
             try {
                 status = await this.print({ printer, iframe, image });
                 if (status.successful) {
@@ -204,7 +218,18 @@ export class PosTicketPrinterService {
             }
         }
 
-        if (!status.successful) {
+        if (download && !status.successful) {
+            const image = await this.generateImage(iframe);
+            const link = document.createElement("a");
+            const currentDate = formatDateTime(DateTime.now(), {
+                format: "MM_dd_yyyy-HH_mm_ss",
+            });
+            const configName = this.config.name.replaceAll(" ", "_");
+            link.download = `${configName}-${this.session.id}-${currentDate}.png`;
+            link.href = image.toDataURL("image/png");
+            link.click();
+            status = { successful: true };
+        } else if (!status.successful) {
             this.showPrinterErrorDialog(
                 status.message,
                 () => this.printWithFallback(...arguments),
@@ -220,7 +245,7 @@ export class PosTicketPrinterService {
      * fallback to another printer if needed.
      * - this.config.receipt_printer_ids
      */
-    async printSaleDetailsReceipt({ webFallback = true } = {}) {
+    async printSaleDetailsReceipt({ webFallback = true, download = false } = {}) {
         const generator = this.getGenerator({ models: this.data.models });
         const saleDetails = await this.data.call(
             "report.point_of_sale.report_saledetails",
@@ -229,7 +254,7 @@ export class PosTicketPrinterService {
         );
         const data = generator.generateSaleDetailsData(saleDetails);
         const iframe = await this.generateIframe("point_of_sale.pos_sale_details_receipt", data);
-        return await this.printWithFallback({ iframe, webFallback });
+        return await this.printWithFallback({ iframe, webFallback, download });
     }
 
     async printTipReceipt({ order, name, webFallback = true }) {
