@@ -170,7 +170,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             state="sale",
             order_line=[Command.create({"product_id": self.pink_case_M.id})],
         )
-        dyn_filter = self.env.ref("website_sale.dynamic_filter_latest_sold_products")
+        dyn_filter = self.env.ref("website_sale.dynamic_filter_latest_sold_products").with_context(website_id=self.website.id)
         with self.mock_request():
             products = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter, website_id=self.website.id
@@ -187,7 +187,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 Command.create({"product_id": self.pink_case_L.id}),
             ],
         )
-        dyn_filter = self.env.ref("website_sale.dynamic_filter_latest_sold_products")
+        dyn_filter = self.env.ref("website_sale.dynamic_filter_latest_sold_products").with_context(website_id=self.website.id)
         with self.mock_request():
             products = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter, website_id=self.website.id, limit=2
@@ -207,7 +207,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 Command.create({"product_id": self.pink_case_L.id}),
             ],
         )
-        dyn_filter = self.env.ref("website_sale.dynamic_filter_latest_sold_products")
+        dyn_filter = self.env.ref("website_sale.dynamic_filter_latest_sold_products").with_context(website_id=self.website.id)
         with self.mock_request():
             products = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter, hide_variants=True, website_id=self.website.id
@@ -231,7 +231,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 Command.create({"product_id": not_sellable_product.id}),
             ],
         )
-        dyn_filter = self.env.ref("website_sale.dynamic_filter_latest_sold_products")
+        dyn_filter = self.env.ref("website_sale.dynamic_filter_latest_sold_products").with_context(website_id=self.website.id)
         with self.mock_request():
             products = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter, website_id=self.website.id
@@ -247,7 +247,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         When hiding variants, the filter should return 2 items.
         """
         viewed_products = self.black_case_M + self.pink_case_L + self.computer.product_variant_id
-        dyn_filter = self.env.ref("website_sale.dynamic_filter_latest_viewed_products")
+        dyn_filter = self.env.ref("website_sale.dynamic_filter_latest_viewed_products").with_context(website_id=self.website.id)
         with self.mock_request(user=self.env.user):
             visitor = self.env["website.visitor"]._upsert_visitor(
                 self.env.user.partner_id.id, website_id=self.website.id
@@ -302,7 +302,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             ]
         ).action_confirm()
 
-        dyn_filter = self.env.ref("website_sale.dynamic_filter_cross_selling_recently_sold_with")
+        dyn_filter = self.env.ref("website_sale.dynamic_filter_cross_selling_recently_sold_with").with_context(website_id=self.website.id)
         with self.mock_request():
             with_variants = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter, hide_variants=False, website_id=self.website.id
@@ -332,7 +332,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         When showing variants, the filter should return 16 (limit) accessory products.
         When hiding variants, the filter should return 2 products: monitor & case.
         """
-        dyn_filter = self.env.ref("website_sale.dynamic_filter_cross_selling_accessories")
+        dyn_filter = self.env.ref("website_sale.dynamic_filter_cross_selling_accessories").with_context(website_id=self.website.id)
         with self.mock_request():
             with_variants = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter, hide_variants=False,
@@ -366,7 +366,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         When showing variants, the filter should return 16 (limit) alternative products.
         When hiding variants, the filter should return 2 products: computer & Windows PC.
         """
-        dyn_filter = self.env.ref("website_sale.dynamic_filter_cross_selling_alternative_products")
+        dyn_filter = self.env.ref("website_sale.dynamic_filter_cross_selling_alternative_products").with_context(website_id=self.website.id)
         with self.mock_request():
             with_variants = self.WebsiteSnippetFilter.with_context(
                 dynamic_filter=dyn_filter, hide_variants=False,
