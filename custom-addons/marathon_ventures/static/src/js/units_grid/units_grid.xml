@@ -99,6 +99,7 @@
 
       <div t-if="!state.loaded" class="mv-units-loading">Loading units grid...</div>
 
+      <div t-if="state.loaded and state.payload" class="mv-units-table-scroll">
       <!-- The grid - rendered as soon as we know the week columns -->
       <table t-if="state.loaded and state.payload" class="mv-units-table">
         <thead>
@@ -217,10 +218,9 @@
                 <div class="mv-bulk-section">
                   <span class="mv-bulk-field">
                     <span class="mv-bulk-field__label">From</span>
-                    <input type="date"
-                           class="mv-bulk-input mv-bulk-input--locked"
-                           readonly="readonly"
-                           t-att-value="state.payload.deal.units_start_date || ''"/>
+                    <input type="date" class="mv-bulk-input mv-bulk-input--date"
+                           t-att-value="(row._bulk and row._bulk.sec1_start) || state.payload.deal.units_start_date || ''"
+                           t-on-input="(ev) => this.onBulkInputChange(row, 'sec1_start', ev)"/>
                   </span>
                   <span class="mv-bulk-field">
                     <span class="mv-bulk-field__label">To</span>
@@ -273,12 +273,6 @@
                 set the rate, choose the run weeks, and enter unit counts
                 per week.
               </span>
-              <span t-if="state.payload.rows.length === 0"
-                    class="mv-add-hint">
-                Click to add your first Day Part. You can pick the daypart,
-                set the rate, choose the run weeks, and enter unit counts
-                per week.
-              </span>
             </td>
           </tr>
 
@@ -298,6 +292,7 @@
           </tr>
         </tbody>
       </table>
+      </div>
     </div>
   </t>
 

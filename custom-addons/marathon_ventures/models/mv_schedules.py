@@ -51,7 +51,7 @@ class MvSchedules(models.Model):
     cable_synd_pp = fields.Char(string='Cable/Synd/PP', compute='_compute_cable_synd_pp', store=True)  # SF: Cable_Synd_PP__c
     campaign_total = fields.Monetary(string='Campaign Total', currency_field='currency_id', compute='_compute_campaign_total', store=True)  # SF: Campaign_Total__c
     cancel_date = fields.Datetime(string='Cancel Date')  # SF: Cancel_Date__c
-    cap = fields.Selection(string='Cap', selection=[('uncapped', 'Uncapped'), ('v_50', '50%'), ('v_80', '80%'), ('ghost', 'Ghost'), ('v_0', '0%'), ('v_1_2_in_pr_and_1_2_in_ov', '1/2 in PR and 1/2 in OV'), ('v_100', '100%'), ('v_50_2', '50% 2'), ('v_80_in_ov', '80% - In OV'), ('change_daypart_to_5a_9a', 'Change Daypart to 5a-9a'), ('move_to_dt', 'Move to DT'), ('move_to_on', 'Move to ON'), ('uncaped', 'Uncaped'), ('uncapped_2', 'Uncapped 2'), ('enter_x1', 'enter X1')])  # SF: Cap__c
+    cap = fields.Selection(string='Cap', selection=[('uncapped', 'Uncapped'), ('v_50', '50%'), ('v_80', '80%'), ('ghost', 'Ghost'), ('v_0', '0%')])  # SF: Cap__c
     capped_30_units = fields.Float(string='Capped :30 Units', digits=(18, 1), compute='_compute_capped_30_units', store=True)  # SF: Capped_30_Units__c
     capped_booked = fields.Integer(string='Capped Booked $$$', compute='_compute_capped_booked', store=True)  # SF: Capped_Booked__c
     capped_dollars = fields.Float(string='Capped Dollars', digits=(18, 2), compute='_compute_capped_dollars', store=True)  # SF: Capped_Dollars__c
@@ -528,13 +528,13 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.capped_dollars = False
 
-    @api.depends()
+    @api.depends('units_available')
     def _compute_capped_units(self):
         # SF formula (verbatim, may need translation):
         #   IF((ispickval( Status__c , "Canceled")), 0, ROUND( IF(1.5 = (CASE( Cap__c , "Uncapped", 1, "Ghost", 0,"0%", 0, "80%", 0.8,"50%", 0.5, 1)* Units_Available__c ), 1.4, CASE( Cap__c , "Uncapped", 1, "Ghost", 0, "0%", 0,"80%", 0.8,"50%", 0.5, 1)* Units_Available__c), 0 ))
         for rec in self:
             # TODO: translate SF formula to Python
-            rec.capped_units = False
+            rec.capped_units = rec.units_available
 
     @api.depends()
     def _compute_clearance(self):

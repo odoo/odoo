@@ -86,6 +86,7 @@ class MvDealCappingRpc(models.Model):
                     cells.append({
                         'week': w_iso, 'units_booked': 0,
                         'units_effective': 0, 'cap_pct': 100,
+                        'cap': 'uncapped',
                         'state': 'dashed', 'sched_id': False,
                     })
                     continue
@@ -93,8 +94,10 @@ class MvDealCappingRpc(models.Model):
                 pct = sched.cap_pct if sched.cap_pct is not None else 100
                 # clamp
                 pct = max(0, min(100, pct))
-                effective = round(booked * pct / 100.0, 2)
-                if pct >= 100:
+                effective = round(booked * pct / 100.0)
+                if sched.status == 'canceled':
+                    state = 'dashed'
+                elif pct >= 100:
                     state = 'green'
                 elif pct == 0:
                     state = 'gray'
@@ -105,6 +108,7 @@ class MvDealCappingRpc(models.Model):
                     'units_booked': booked,
                     'units_effective': effective,
                     'cap_pct': pct,
+                    'cap': sched.cap or 'uncapped',
                     'state': state,
                     'sched_id': sched.id,
                 })
@@ -151,32 +155,84 @@ class MvDealCappingRpc(models.Model):
                 'symbol': self.currency_id.symbol or '$',
                 'position': self.currency_id.position or 'before',
             },
+            # Cap dropdown options for the front-end. Each entry is
+            # {value, label, pct} - pct drives the effective_spots math.
+            'cap_options': [
+                {'value': 'uncapped', 'label': 'Uncapped', 'pct': 100},
+                {'value': 'v_80',     'label': '80%',      'pct': 80},
+                {'value': 'v_50',     'label': '50%',      'pct': 50},
+                {'value': 'v_0',      'label': '0%',       'pct': 0},
+                {'value': 'ghost',    'label': 'Ghost',    'pct': 0},
+            ],
         }
+
+    # Map cap Selection value -> percentage. Mirrors the cap_options
+    # list returned by load_capping_grid so the backend can normalise
+    # whichever shape the front-end sends (cap, cap_pct, or both).
+    _CAP_TO_PCT = {
+        'uncapped': 100,
+        'v_80':     80,
+        'v_50':     50,
+        'v_0':      0,
+        'ghost':    0,
+    }
+
+    @api.model
+    def _cap_pct_to_value(self, pct):
+        """Reverse map: percentage -> cap Selection value. Used by the
+        legacy bulk-action endpoints that still hand us a raw pct."""
+        try:
+            pct = int(pct)
+        except (TypeError, ValueError):
+            pct = 100
+        if pct >= 100:
+            return 'uncapped'
+        if pct == 80:
+            return 'v_80'
+        if pct == 50:
+            return 'v_50'
+        if pct == 0:
+            return 'v_0'
+        # Non-canonical percentages have no matching Selection value;
+        # don't overwrite the existing cap field in that case.
+        return None
 
     def save_capping_grid(self, edits):
-        """Apply cap_pct edits to schedules.
+        """Apply capping edits to schedules.
 
         edits = {
-          'cell_updates':  [{row_id, week, cap_pct}, ...],
+          'cell_updates':  [{row_id, week, sched_id, cap, cap_pct}, ...],
           'row_cap_pct':   [{row_id, cap_pct}, ...]   # mass-set whole row
-          'row_ghost_all': [row_id, ...]              # set cap_pct=0 for the row's in-range schedules
+          'row_ghost_all': [row_id, ...]              # ghost the row's schedules
         }
+
+        For each cell_update we accept either `cap` (Selection value) or
+        `cap_pct` (Integer), and persist BOTH on the schedule so the
+        existing effective_spots compute (which depends on cap_pct)
+        recomputes correctly and the canonical Selection field stays
+        in sync.
         """
         self.ensure_one()
         edits = edits or {}
         Sched = self.env['mv.schedules']
 
-        # --- Individual cell cap_pct updates
-        # Prefer sched_id (sent from the front-end payload) for a direct
-        # browse/write. Fall back to (deal_line_id, week) search if the
-        # front-end didn't have a sched_id for some reason.
         import logging
         _logger = logging.getLogger(__name__)
         for cu in edits.get('cell_updates') or []:
+            cap_value = cu.get('cap')
+            cap_value = cu.get('cap')
             pct = cu.get('cap_pct')
-            if pct is None:
+            # Normalise: if only cap is sent, derive pct; if only pct,
+            # try to derive cap (might be None for off-grid pcts).
+            if cap_value is not None and pct is None:
+                pct = self._CAP_TO_PCT.get(cap_value, 100)
+            elif cap_value is None and pct is not None:
+                cap_value = self._cap_pct_to_value(pct)
+            if pct is None and cap_value is None:
                 continue
-            pct = max(0, min(100, int(pct)))
+            if pct is not None:
+                pct = max(0, min(100, int(pct)))
+
             sched_id = cu.get('sched_id')
             sched = Sched.browse(sched_id) if sched_id else Sched.browse([])
             if not sched_id or not sched.exists():
@@ -188,17 +244,24 @@ class MvDealCappingRpc(models.Model):
                         ('week', '=', week_iso),
                     ], limit=1)
             if sched and sched.exists():
-                sched.write({'cap_pct': pct})
+                vals = {}
+                if pct is not None:
+                    vals['cap_pct'] = pct
+                if cap_value is not None:
+                    vals['cap'] = cap_value
+                sched.write(vals)
                 _logger.info(
-                    "[MV phase11] cap_pct write OK: sched=%s pct=%s",
-                    sched.id, pct,
+                    "[MV phase11] capping write OK: sched=%s vals=%s",
+                    sched.id, vals,
                 )
             else:
                 _logger.warning(
                     "[MV phase11] no schedule found for cap edit: %s", cu,
                 )
 
-        # --- Mass-set the whole row to one cap %
+        # --- Mass-set the whole row to one cap %. We also map the pct
+        # back to a cap Selection value so the schedule's cap field
+        # stays in sync.
         for ru in edits.get('row_cap_pct') or []:
             row_id = ru.get('row_id')
             pct = ru.get('cap_pct')
@@ -207,12 +270,16 @@ class MvDealCappingRpc(models.Model):
             pct = max(0, min(100, int(pct)))
             dl = self.env['mv.deal_line'].browse(row_id)
             if dl.exists() and dl.schedule_ids:
-                dl.schedule_ids.write({'cap_pct': pct})
+                vals = {'cap_pct': pct}
+                cap_value = self._cap_pct_to_value(pct)
+                if cap_value is not None:
+                    vals['cap'] = cap_value
+                dl.schedule_ids.write(vals)
 
-        # --- Ghost-all a row (cap_pct=0)
+        # --- Ghost-all a row (cap_pct=0, cap='ghost')
         for row_id in edits.get('row_ghost_all') or []:
             dl = self.env['mv.deal_line'].browse(row_id)
             if dl.exists() and dl.schedule_ids:
-                dl.schedule_ids.write({'cap_pct': 0})
+                dl.schedule_ids.write({'cap_pct': 0, 'cap': 'ghost'})
 
         return self.load_capping_grid()

@@ -56,28 +56,61 @@ export class MvCappingGrid extends Component {
     }
 
     // ---- Cell-level editing ----------------------------------------
-    onCapPctInput(row, cell, ev) {
+    // Static fallback if the backend payload pre-dates the cap_options
+    // key (e.g., the user is on a cached load_capping_grid response).
+    static FALLBACK_CAP_OPTIONS = [
+        { value: 'uncapped', label: 'Uncapped', pct: 100 },
+        { value: 'v_80',     label: '80%',     pct: 80 },
+        { value: 'v_50',     label: '50%',     pct: 50 },
+        { value: 'v_0',      label: '0%',      pct: 0 },
+        { value: 'ghost',    label: 'Ghost',   pct: 0 },
+    ];
+
+    get capOptions() {
+        const fromPayload = this.state.payload && this.state.payload.cap_options;
+        if (Array.isArray(fromPayload) && fromPayload.length) {
+            return fromPayload;
+        }
+        return MvCappingGrid.FALLBACK_CAP_OPTIONS;
+    }
+
+    // Look up an option by value. Returns {value, label, pct} or a
+    // sane default for unknown values.
+    _capOptionFor(value) {
+        return this.capOptions.find((o) => o.value === value)
+            || { value: 'uncapped', label: 'Uncapped', pct: 100 };
+    }
+
+    onCapSelect(row, cell, ev) {
         if (cell.state === 'hatched' || cell.state === 'dashed') return;
-        let n = parseInt(ev.target.value, 10);
-        if (!Number.isFinite(n)) n = 100;
-        n = Math.max(0, Math.min(100, n));
+        const newCap = ev.target.value;
+        const opt = this._capOptionFor(newCap);
+        const n = opt.pct;
+        cell.cap = newCap;
         cell.cap_pct = n;
-        cell.units_effective = Math.round((cell.units_booked || 0) * n / 100 * 100) / 100;
-        if (n >= 100) cell.state = 'green';
-        else if (n === 0) cell.state = 'gray';
+        cell.units_effective = Math.round((cell.units_booked || 0) * n / 100);
+        // Visual state follows cap percent (and cap value 'ghost' maps
+        // to gray even though pct=0 would also be gray).
+        if (newCap === 'ghost' || n === 0) cell.state = 'gray';
+        else if (n >= 100) cell.state = 'green';
         else cell.state = 'amber';
         cell.dirty = true;
         // Use sched_id as the lookup key on the server. We also send
         // row_id + week as a fallback in case sched_id is missing.
+        // Send BOTH cap (Selection) and cap_pct (Integer) so the
+        // backend writes both fields on the schedule and the existing
+        // effective_spots compute can recompute correctly.
         const list = this.state.edits.cell_updates;
         const found = list.find((e) => e.sched_id === cell.sched_id);
         if (found) {
+            found.cap = newCap;
             found.cap_pct = n;
         } else {
             list.push({
                 sched_id: cell.sched_id,
                 row_id: row.id,
                 week: cell.week,
+                cap: newCap,
                 cap_pct: n,
             });
         }
@@ -119,6 +152,14 @@ export class MvCappingGrid extends Component {
         let pct = parseInt(raw, 10);
         if (!Number.isFinite(pct)) return;
         pct = Math.max(0, Math.min(100, pct));
+        // Resolve a matching cap Selection value for the picked pct
+        // so the local cells render the dropdown with the right option
+        // selected. If the pct doesn't match any option exactly, leave
+        // the existing cap field alone.
+        let pctCap = null;
+        for (const o of this.capOptions) {
+            if (o.pct === pct && o.value !== 'ghost') { pctCap = o.value; break; }
+        }
         for (const rid of ids) {
             this.state.edits.row_cap_pct.push({ row_id: rid, cap_pct: pct });
             // Update local row cells too for instant feedback
@@ -127,6 +168,7 @@ export class MvCappingGrid extends Component {
                 for (const c of row.cells) {
                     if (c.state === 'hatched' || c.state === 'dashed') continue;
                     c.cap_pct = pct;
+                    if (pctCap) c.cap = pctCap;
                     c.units_effective = Math.round((c.units_booked || 0) * pct / 100 * 100) / 100;
                     if (pct >= 100) c.state = 'green';
                     else if (pct === 0) c.state = 'gray';
@@ -149,6 +191,7 @@ export class MvCappingGrid extends Component {
                 for (const c of row.cells) {
                     if (c.state === 'hatched' || c.state === 'dashed') continue;
                     c.cap_pct = 0;
+                    c.cap = 'ghost';
                     c.units_effective = 0;
                     c.state = 'gray';
                     c.dirty = true;

@@ -79,7 +79,7 @@
               </div>
             </td>
 
-            <!-- Week cells: effective/booked + cap% -->
+            <!-- Week cells: effective/booked + cap dropdown -->
             <td t-foreach="row.cells" t-as="cell" t-key="cell.week"
                 t-att-class="cellClasses(cell)">
               <t t-if="cell.state !== 'hatched'">
@@ -89,14 +89,21 @@
                 <div t-elif="cell.state === 'dashed'" class="mv-cap-cell__nums mv-cap-cell__nums--muted">
                   --
                 </div>
-                <input t-if="cell.state !== 'dashed'"
-                       type="number" min="0" max="100"
-                       class="mv-cap-cell__pct"
-                       t-att-value="cell.cap_pct"
-                       t-on-input="(ev) => this.onCapPctInput(row, cell, ev)"/>
-                <span t-if="cell.state === 'gray'" class="mv-cap-cell__pct mv-cap-cell__pct--ghost">
-                  Ghost
-                </span>
+                <!-- Cap dropdown: same options as the mv.schedules
+                     Selection field, with each option's percentage
+                     coming from this.capOptions (a getter that
+                     falls back to a static default if the backend
+                     payload pre-dates the new key). -->
+                <select t-if="cell.state !== 'dashed'"
+                        class="mv-cap-cell__select"
+                        t-on-change="(ev) => this.onCapSelect(row, cell, ev)">
+                  <option t-foreach="capOptions" t-as="opt"
+                          t-key="opt.value"
+                          t-att-value="opt.value"
+                          t-att-selected="opt.value === cell.cap ? 'selected' : null">
+                    <t t-esc="opt.label"/>
+                  </option>
+                </select>
               </t>
             </td>
 

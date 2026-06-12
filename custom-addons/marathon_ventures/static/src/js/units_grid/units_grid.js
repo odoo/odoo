@@ -304,7 +304,10 @@ export class MvUnitsGrid extends Component {
     _ensureBulk(row) {
         if (!row._bulk) {
             row._bulk = {
-                sec1_end: '', sec1_units: '',
+                // Section 1 (From / To / Units / Go). sec1_start defaults
+                // to the deal start date when empty - see XML t-att-value.
+                sec1_start: '', sec1_end: '', sec1_units: '',
+                // Section 2 (To / Go) - cancels weeks after To.
                 sec2_end: '', sec2_units: '',
             };
         }
@@ -383,9 +386,16 @@ export class MvUnitsGrid extends Component {
         }
 
         // -------------------------------------------------------------
-        // Section 1: From-locked + To + Units + Go. Fill every cell in
-        // [dealStart..endIso] with the picked Units value.
+        // Section 1: From + To + Units + Go. From defaults to the deal
+        // start date but is editable; we use the planner's chosen From
+        // if set, else fall back to the deal start. Fill every cell in
+        // [from..endIso] with the picked Units value.
         // -------------------------------------------------------------
+        const sec1Start = bulk.sec1_start || dealStart;
+        if (sec1Start > endIso) {
+            alert("End Date cannot be earlier than From Date.");
+            return;
+        }
         const unitsRaw = bulk[sectionKey + '_units'];
         const units = parseFloat(unitsRaw);
         if (!Number.isFinite(units) || units <= 0) {
@@ -394,7 +404,7 @@ export class MvUnitsGrid extends Component {
         }
         let touchedFill = 0;
         for (const cell of row.cells) {
-            const inRange = (cell.week >= dealStart && cell.week <= endIso);
+            const inRange = (cell.week >= sec1Start && cell.week <= endIso);
             if (inRange) {
                 cell.units = units;
                 cell.dirty = true;
