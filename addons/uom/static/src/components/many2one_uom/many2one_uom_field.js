@@ -1,13 +1,13 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
+import { computeM2OProps, Many2One, many2OneProps } from "@web/views/fields/many2one/many2one";
 import {
     buildM2OFieldDescription,
     extractM2OFieldProps,
     m2oSupportedOptions,
-    Many2OneField,
 } from "@web/views/fields/many2one/many2one_field";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { getProductRelatedModel, Many2XUomTagsAutocomplete } from "../many2x_uom_tags/many2x_uom_tags";
 
 // @todo: this extension will be removed in the future
@@ -17,12 +17,12 @@ class UomMany2One extends Many2One {
         ...super.components,
         Many2XAutocomplete: Many2XUomTagsAutocomplete,
     };
-    static props = {
-        ...super.props,
-        productModel: { type: String, optional: true },
-        productId: { type: Number, optional: true },
-        productQuantity: { type: Number, optional: true },
-    };
+    props = props({
+        ...many2OneProps,
+        productModel: t.string().optional(),
+        productId: t.number().optional(),
+        productQuantity: t.number().optional(),
+    });
 
     get many2XAutocompleteProps() {
         return {
@@ -37,16 +37,28 @@ class UomMany2One extends Many2One {
 export class Many2OneUomField extends Component {
     static template = "uom.Many2OneUomField";
     static components = { UomMany2One };
-    static props = {
-        ...Many2OneField.props,
-        productField: { type: String, optional: true },
-        quantityField: { type: String, optional: true },
-    };
-    static defaultProps = {
-        ...Many2OneField.defaultProps,
-        productField: "product_id",
-        quantityField: "product_uom_qty",
-    };
+    // Inline conversion of Many2OneField.props (still declared old-style in
+    // @web/views/fields/many2one/many2one_field, without an exported schema).
+    props = props({
+        ...standardFieldProps,
+        canCreate: t.boolean().optional(),
+        canCreateEdit: t.boolean().optional(),
+        canOpen: t.boolean().optional(),
+        canQuickCreate: t.boolean().optional(),
+        canScanBarcode: t.boolean().optional(),
+        canWrite: t.boolean().optional(),
+        context: t.object().optional(),
+        decorations: t.object().optional(),
+        domain: t.or([t.array(), t.function()]).optional(),
+        nameCreateField: t.string().optional(),
+        openActionContext: t.string().optional(),
+        placeholder: t.string().optional(),
+        searchLimit: t.number().optional(),
+        searchThreshold: t.number().optional(),
+        string: t.string().optional(),
+        productField: t.string().optional("product_id"),
+        quantityField: t.string().optional("product_uom_qty"),
+    });
 
     get m2oProps() {
         const productModel = getProductRelatedModel.call(this);

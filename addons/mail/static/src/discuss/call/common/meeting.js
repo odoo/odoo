@@ -40,7 +40,7 @@ export class Meeting extends Component {
 
     setup() {
         this.props = props({
-            "autoOpenAction?": types.string(),
+            autoOpenAction: types.string().optional(),
             ...inDiscussCallViewPropsSchema,
         });
         this.store = useService("mail.store");

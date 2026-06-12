@@ -1,7 +1,7 @@
 import { ActionList } from "./action_list";
 import { useMessageActions } from "./message_actions";
 
-import { Component, computed, props, types } from "@odoo/owl";
+import { Component, computed, props, t } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useService } from "@web/core/utils/hooks";
@@ -14,10 +14,10 @@ export class MessageContextMenu extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.props = props({
-            anchorRef: types.signal(types.instanceOf(HTMLElement)),
-            dropdownState: types.object(),
-            message: types.instanceOf(this.store["mail.message"].Class),
-            "thread?": types.instanceOf(this.store["mail.thread"].Class),
+            anchorRef: t.signal(t.instanceOf(HTMLElement)),
+            dropdownState: t.object(),
+            message: t.instanceOf(this.store["mail.message"].Class),
+            thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
         });
         this.messageActions = useMessageActions({
             message: () => this.props.message,

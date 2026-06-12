@@ -1,4 +1,4 @@
-import { Component, xml } from "@odoo/owl";
+import { Component, props, t, xml } from "@odoo/owl";
 
 export class DocLoadingIndicator extends Component {
     static template = xml`
@@ -11,13 +11,9 @@ export class DocLoadingIndicator extends Component {
     `;
 
     static components = {};
-    static props = {
-        isLoaded: { type: Boolean },
-        class: { type: String, optional: true },
-        slots: true,
-    };
-
-    static defaultProps = {
-        class: "",
-    };
+    props = props({
+        isLoaded: t.boolean(),
+        class: t.string().optional(""),
+        slots: t.any(),
+    });
 }

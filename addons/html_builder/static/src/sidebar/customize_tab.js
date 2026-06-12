@@ -1,4 +1,4 @@
-import { Component, onWillUpdateProps, proxy } from "@odoo/owl";
+import { Component, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
 import { OptionsContainer } from "./option_container";
 import { useVisibilityObserver } from "../core/utils";
 import { CustomizeComponent } from "@html_builder/sidebar/customize_component";
@@ -6,12 +6,9 @@ import { CustomizeComponent } from "@html_builder/sidebar/customize_component";
 export class CustomizeTab extends Component {
     static template = "html_builder.CustomizeTab";
     static components = { CustomizeComponent, OptionsContainer };
-    static props = {
-        currentOptionsContainers: { type: Array, optional: true },
-    };
-    static defaultProps = {
-        currentOptionsContainers: [],
-    };
+    props = props({
+        currentOptionsContainers: t.array().optional([]),
+    });
 
     setup() {
         this.state = proxy({

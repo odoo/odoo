@@ -23,7 +23,7 @@ class CreateChannelDialog extends Component {
         super.setup();
         this.props = props({
             close: types.function([types.instanceOf(MouseEvent)]),
-            "name?": types.string(),
+            name: types.string().optional(),
         });
         this.store = useService("mail.store");
         this.orm = useService("orm");
@@ -65,18 +65,22 @@ export class DiscussCommand extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.props = props({
-            "action?": types.object({
-                "icon?": types.string(),
-                "searchValueSuffix?": types.boolean(),
-            }),
-            "channel?": types.instanceOf(this.store["discuss.channel"].Class),
-            "counter?": types.number(),
+            action: types
+                .object({
+                    icon: types.string().optional(),
+                    searchValueSuffix: types.boolean().optional(),
+                })
+                .optional(),
+            channel: types.instanceOf(this.store["discuss.channel"].Class).optional(),
+            counter: types.number().optional(),
             executeCommand: types.function(),
             name: types.string(),
-            "persona?": types.or([
-                types.instanceOf(this.store["res.partner"].Class),
-                types.instanceOf(this.store["mail.guest"].Class),
-            ]),
+            persona: types
+                .or([
+                    types.instanceOf(this.store["res.partner"].Class),
+                    types.instanceOf(this.store["mail.guest"].Class),
+                ])
+                .optional(),
             searchValue: types.string(),
             slots: types.object(),
         });

@@ -1,6 +1,6 @@
 import { SearchState } from "@mail/utils/common/hooks";
 
-import { Component, props, signal, types, useEffect } from "@odoo/owl";
+import { Component, props, signal, t, useEffect } from "@odoo/owl";
 
 import { useAutofocus } from "@web/core/utils/hooks";
 
@@ -22,25 +22,18 @@ export class SearchInput extends Component {
 
     setup() {
         super.setup();
-        this.props = props(
-            {
-                "accesskey?": types.string(),
-                /** @type {boolean | Parameters<typeof useAutofocus>[0]} */
-                "autofocus?": types.or([types.boolean(), types.object()]),
-                "classNames?": types.string(),
-                "inputRef?": types.signal(types.instanceOf(HTMLElement)),
-                "loadingDelay?": types.number(),
-                "onClear?": types.function([types.instanceOf(MouseEvent)]),
-                "onKeydown?": types.function([types.instanceOf(KeyboardEvent)]),
-                "placeholder?": types.string(),
-                search: types.instanceOf(SearchState),
-            },
-            {
-                autofocus: false,
-                inputRef: signal(null, { type: types.instanceOf(HTMLElement) }),
-                loadingDelay: 200,
-            }
-        );
+        this.props = props({
+            accesskey: t.string().optional(),
+            /** @type {boolean | Parameters<typeof useAutofocus>[0]} */
+            autofocus: t.or([t.boolean(), t.object()]).optional(false),
+            classNames: t.string().optional(),
+            inputRef: t.signal(t.instanceOf(HTMLElement)).optional(() => signal.ref()),
+            loadingDelay: t.number().optional(200),
+            onClear: t.function([t.instanceOf(MouseEvent)]).optional(),
+            onKeydown: t.function([t.instanceOf(KeyboardEvent)]).optional(),
+            placeholder: t.string().optional(),
+            search: t.instanceOf(SearchState),
+        });
         this.uniqueId = `mail.SearchInput.${nextId++}`;
         this.spinner = signal(false);
         useEffect(() => {

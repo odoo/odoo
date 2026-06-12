@@ -2,7 +2,7 @@ import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_dialog";
 
-import { Component, onWillStart, props, proxy, types } from "@odoo/owl";
+import { Component, onWillStart, props, proxy, t } from "@odoo/owl";
 
 import { useSequential } from "@mail/utils/common/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -38,10 +38,11 @@ export class ChannelInvitation extends Component {
         this.orm = useService("orm");
         this.store = useService("mail.store");
         this.props = props({
-            "channel?": types.instanceOf(this.store["discuss.channel"].Class),
-            "className?": types.string(),
-            "close?": types.function([types.instanceOf(MouseEvent)]),
-            "state?": types.object(),
+            autofocus: t.or([t.boolean(), t.object()]).optional(),
+            channel: t.instanceOf(this.store["discuss.channel"].Class).optional(),
+            className: t.string().optional(),
+            close: t.function([]).optional(),
+            state: t.object().optional(),
         });
         this.rtc = useService("discuss.rtc");
         this.notification = useService("notification");

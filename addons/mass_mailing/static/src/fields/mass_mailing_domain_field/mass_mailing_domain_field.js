@@ -1,5 +1,6 @@
+import { props } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { DomainField, domainField } from "@web/views/fields/domain/domain_field";
+import { DomainField, domainField, domainFieldProps } from "@web/views/fields/domain/domain_field";
 import { MassMailingDomainSelector } from "./mass_mailing_domain_selector";
 
 /**
@@ -8,9 +9,9 @@ import { MassMailingDomainSelector } from "./mass_mailing_domain_selector";
  */
 export class MassMailingDomainField extends DomainField {
     static template = "mass_mailing.MassMailingDomainField";
-    static props = {
-        ...DomainField.props,
-    };
+    props = props({
+        ...domainFieldProps,
+    });
     static components = {
         DomainSelector: MassMailingDomainSelector,
     };

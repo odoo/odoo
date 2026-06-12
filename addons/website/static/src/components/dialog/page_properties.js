@@ -5,11 +5,11 @@ import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { WebsiteDialog } from "./dialog";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { FormViewDialog, formViewDialogProps } from "@web/views/view_dialogs/form_view_dialog";
 import { formView } from "@web/views/form/form_view";
 import { renderToFragment } from "@web/core/utils/render";
-import { Component, onWillDestroy, xml, proxy } from "@odoo/owl";
-import { FormController } from "@web/views/form/form_controller";
+import { Component, onWillDestroy, props, xml, proxy, t } from "@odoo/owl";
+import { FormController, formControllerProps } from "@web/views/form/form_controller";
 import { registry } from "@web/core/registry";
 import { addLoadingEffect } from "@web/core/utils/ui";
 
@@ -209,11 +209,11 @@ export class DuplicatePageDialog extends Component {
 }
 
 export class PagePropertiesFormController extends FormController {
-    static props = {
-        ...FormController.props,
-        clonePage: { type: Function, optional: true },
-        deletePage: { type: Function, optional: true },
-    };
+    props = props({
+        ...formControllerProps,
+        clonePage: t.function().optional(),
+        deletePage: t.function().optional(),
+    });
 }
 
 registry.category("views").add("page_properties_dialog_form", {
@@ -222,18 +222,13 @@ registry.category("views").add("page_properties_dialog_form", {
 });
 
 export class PagePropertiesDialog extends FormViewDialog {
-    static props = {
-        ...FormViewDialog.props,
-        onClose: { type: Function, optional: true },
-        resModel: { type: String, optional: true },
-    };
-
-    static defaultProps = {
-        ...FormViewDialog.defaultProps,
-        title: _t("Page Properties"),
-        size: "md",
-        onClose: () => {},
-    };
+    props = props({
+        ...formViewDialogProps,
+        onClose: t.function().optional(() => () => {}),
+        resModel: t.string().optional(),
+        title: t.string().optional(_t("Page Properties")),
+        size: t.selection(["sm", "md", "lg", "xl", "fs", "fullscreen"]).optional("md"),
+    });
 
     setup() {
         super.setup();

@@ -1,6 +1,7 @@
+import { props, t } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { CharField, charField } from "@web/views/fields/char/char_field";
+import { CharField, charField, charFieldProps } from "@web/views/fields/char/char_field";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { googlePlacesSession } from "../google_places_session";
 import { useChildRef } from "@web/core/utils/hooks";
@@ -41,17 +42,10 @@ export class AddressAutoComplete extends CharField {
     static template = "google_address_autocomplete.AddressAutoCompleteTemplate";
     static components = { AutoComplete, ...CharField.components };
 
-    static props = {...CharField.props,
-        addressFieldMap: {
-            type: Object,
-            optional: true,
-        }
-    }
-
-    static defaultProps = {
-        ...CharField.defaultProps,
-        addressFieldMap: {},
-    }
+    props = props({
+        ...charFieldProps,
+        addressFieldMap: t.object().optional({}),
+    });
 
     setup() {
         super.setup();

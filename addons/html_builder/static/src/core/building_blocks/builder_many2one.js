@@ -1,6 +1,5 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import {
-    basicContainerBuilderComponentProps,
     getAllActionsAndOperations,
     revertPreview,
     useBuilderComponent,
@@ -16,24 +15,32 @@ import { useCachedModel } from "../cached_model_utils";
 
 export class BuilderMany2One extends Component {
     static template = "html_builder.BuilderMany2One";
-    static props = {
-        ...basicContainerBuilderComponentProps,
-        model: String,
-        fields: { type: Array, element: String, optional: true },
-        domain: { type: Array, optional: true },
-        limit: { type: Number, optional: true },
-        id: { type: String, optional: true },
-        allowUnselect: { type: Boolean, optional: true },
-        unselectBtnTitle: { type: String, optional: true },
-        defaultMessage: { type: String, optional: true },
-        createAction: { type: String, optional: true },
-        nullText: { type: String, optional: true },
-    };
-    static defaultProps = {
-        ...BuilderComponent.defaultProps,
-        allowUnselect: true,
-        unselectBtnTitle: "Unselect",
-    };
+    props = props({
+        // basicContainerBuilderComponentProps (converted inline)
+        applyTo: t.string().optional(),
+        preview: t.boolean().optional(),
+        inheritedActions: t.array(t.string()).optional(),
+
+        action: t.string().optional(),
+        actionParam: t.any().optional(),
+
+        // Shorthand actions.
+        classAction: t.any().optional(),
+        attributeAction: t.any().optional(),
+        dataAttributeAction: t.any().optional(),
+        styleAction: t.any().optional(),
+
+        model: t.string(),
+        fields: t.array(t.string()).optional(),
+        domain: t.array().optional(),
+        limit: t.number().optional(),
+        id: t.string().optional(),
+        allowUnselect: t.boolean().optional(true),
+        unselectBtnTitle: t.string().optional("Unselect"),
+        defaultMessage: t.string().optional(),
+        createAction: t.string().optional(),
+        nullText: t.string().optional(),
+    });
     static components = { BuilderComponent, SelectMany2X };
 
     setup() {

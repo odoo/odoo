@@ -5,13 +5,13 @@ import { ExpenseDocumentUpload, ExpenseDocumentDropZone } from "@hr_expense/mixi
 
 import { kanbanView } from '@web/views/kanban/kanban_view';
 import { KanbanController } from '@web/views/kanban/kanban_controller';
-import { KanbanRenderer } from '@web/views/kanban/kanban_renderer';
+import { KanbanRenderer, kanbanRendererProps } from '@web/views/kanban/kanban_renderer';
 
 export class ExpenseKanbanController extends ExpenseDocumentUpload(KanbanController) {
     static template = "hr_expense.KanbanView";
 }
 
-export class ExpenseKanbanRenderer extends ExpenseDocumentDropZone(KanbanRenderer) {
+export class ExpenseKanbanRenderer extends ExpenseDocumentDropZone(KanbanRenderer, kanbanRendererProps) {
     static template = "hr_expense.KanbanRenderer";
 }
 

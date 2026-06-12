@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onPatched, onWillDestroy, proxy } from "@odoo/owl";
+import { Component, onPatched, onWillDestroy, props, proxy, t } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -37,6 +37,24 @@ function validateColumnQuickCreateExamples(data) {
     }
 }
 
+export const kanbanRendererProps = {
+    archInfo: t.any(),
+    Compiler: t.any(),
+    list: t.any(),
+    deleteRecord: t.any(),
+    openRecord: t.any(),
+    readonly: t.any().optional(),
+    forceGlobalClick: t.any().optional(),
+    noContentHelp: t.any().optional(),
+    scrollTop: t.any().optional(() => () => {}),
+    canQuickCreate: t.any().optional(),
+    quickCreateState: t.any().optional(),
+    progressBarState: t.any().optional(),
+    addLabel: t.any().optional(),
+    onAdd: t.any().optional(),
+    tooltipInfo: t.any().optional({}),
+};
+
 export class KanbanRenderer extends Component {
     static template = "web.KanbanRenderer";
     static components = {
@@ -50,27 +68,7 @@ export class KanbanRenderer extends Component {
         Widget,
         ActionHelper,
     };
-    static props = [
-        "archInfo",
-        "Compiler",
-        "list",
-        "deleteRecord",
-        "openRecord",
-        "readonly?",
-        "forceGlobalClick?",
-        "noContentHelp?",
-        "scrollTop?",
-        "canQuickCreate?",
-        "quickCreateState?",
-        "progressBarState?",
-        "addLabel?",
-        "onAdd?",
-    ];
-
-    static defaultProps = {
-        scrollTop: () => {},
-        tooltipInfo: {},
-    };
+    props = props(kanbanRendererProps);
 
     setup() {
         this.dialogClose = [];

@@ -1,4 +1,4 @@
-import { Component, props, types } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
 export class DateSection extends Component {
@@ -7,8 +7,8 @@ export class DateSection extends Component {
     setup() {
         super.setup(...arguments);
         this.props = props({
-            "className?": types.string(),
-            date: types.string(),
+            className: t.string().optional(),
+            date: t.string(),
         });
     }
 

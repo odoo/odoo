@@ -8,7 +8,7 @@ import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_se
 import { fuzzyTest } from "@web/core/utils/search";
 import { _t } from "@web/core/l10n/translation";
 import { SearchBarMenu } from "../search_bar_menu/search_bar_menu";
-import { Component, status, proxy } from "@odoo/owl";
+import { Component, props, proxy, status, t } from "@odoo/owl";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -50,24 +50,16 @@ export class SearchBar extends Component {
         Dropdown,
         DropdownItem,
     };
-    static props = {
-        autofocus: { type: Boolean, optional: true },
-        slots: {
-            type: Object,
-            optional: true,
-            shape: {
-                default: { optional: true },
-                "search-bar-additional-menu": { optional: true },
-            },
-        },
-        toggler: {
-            type: Object,
-            optional: true,
-        },
-    };
-    static defaultProps = {
-        autofocus: true,
-    };
+    props = props({
+        autofocus: t.boolean().optional(true),
+        slots: t
+            .object({
+                default: t.any().optional(),
+                "search-bar-additional-menu": t.any().optional(),
+            })
+            .optional(),
+        toggler: t.object().optional(),
+    });
 
     setup() {
         this.dialogService = useService("dialog");

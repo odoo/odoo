@@ -3,7 +3,8 @@ import { _t } from "@web/core/l10n/translation";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { HistoryDialog } from "@html_editor/components/history_dialog/history_dialog";
 import { useService } from '@web/core/utils/hooks';
-import { markup } from "@odoo/owl";
+import { markup, props, t } from "@odoo/owl";
+import { formControllerProps } from "@web/views/form/form_controller";
 import { FormControllerWithHTMLExpander } from '@resource/views/form_with_html_expander/form_controller_with_html_expander';
 import { getHtmlFieldMetadata, setHtmlFieldMetadata } from "@html_editor/fields/html_field";
 
@@ -22,17 +23,10 @@ export class ProjectTaskFormController extends FormControllerWithHTMLExpander {
         ProjectTaskTemplateDropdown,
     };
 
-    static props = {
-        ...FormControllerWithHTMLExpander.props,
-        focusTitle: {
-            type: Boolean,
-            optional: true,
-        },
-    };
-    static defaultProps = {
-        ...FormControllerWithHTMLExpander.defaultProps,
-        focusTitle: false,
-    };
+    props = props({
+        ...formControllerProps,
+        focusTitle: t.boolean().optional(false),
+    });
 
     setup() {
         super.setup();

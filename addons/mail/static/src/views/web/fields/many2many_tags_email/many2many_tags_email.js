@@ -2,9 +2,11 @@ import { RecipientTag, useRecipientChecker } from "@mail/core/web/recipient_tag"
 import { parseEmail } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { props, t } from "@odoo/owl";
 import {
     Many2ManyTagsField,
     many2ManyTagsField,
+    many2ManyTagsFieldProps,
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
@@ -31,11 +33,11 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
         Tag: RecipientTag,
         Many2XAutocomplete: FieldMany2ManyTagsEmailMany2xAutocomplete,
     };
-    static props = {
-        ...super.props,
-        context: { type: Object, optional: true },
-        canEditTags: { type: Boolean, optional: true },
-    };
+    props = props({
+        ...many2ManyTagsFieldProps,
+        context: t.object().optional(),
+        canEditTags: t.boolean().optional(),
+    });
 
     setup() {
         super.setup();
@@ -43,7 +45,9 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
             this.quickCreate = this.quickCreateRecipient.bind(this);
         }
 
-        this.recipientCheckerBus = useRecipientChecker(() => this.tags.map((tag) => ({ id: tag.id, email: tag.props.email })));
+        this.recipientCheckerBus = useRecipientChecker(() =>
+            this.tags.map((tag) => ({ id: tag.id, email: tag.props.email }))
+        );
 
         const update = this.update;
         this.update = async (object) => {

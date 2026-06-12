@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { useCommand } from "@web/core/commands/command_hook";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
@@ -13,14 +13,11 @@ export class StateSelectionField extends Component {
         Dropdown,
         CheckboxItem,
     };
-    static props = {
+    props = props({
         ...standardFieldProps,
-        showLabel: { type: Boolean, optional: true },
-        withCommand: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        showLabel: true,
-    };
+        showLabel: t.boolean().optional(true),
+        withCommand: t.boolean().optional(),
+    });
 
     setup() {
         this.colorPrefix = "o_status_";

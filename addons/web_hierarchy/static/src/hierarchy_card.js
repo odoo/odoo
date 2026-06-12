@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Field } from "@web/views/fields/field";
@@ -15,15 +15,12 @@ export class HierarchyCard extends Component {
         Field,
         ViewButton,
     };
-    static props = {
-        node: Object,
-        openRecord: Function,
-        archInfo: Object,
-        classNames: { type: String, optional: true },
-    };
-    static defaultProps = {
-        classNames: "",
-    };
+    props = props({
+        node: t.object(),
+        openRecord: t.function(),
+        archInfo: t.object(),
+        classNames: t.string().optional(""),
+    });
     static template = "web_hierarchy.HierarchyCard";
     static Compiler = HierarchyCompiler;
 

@@ -1,33 +1,41 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onMounted, proxy } from "@odoo/owl";
+import { Component, onMounted, props, proxy, t } from "@odoo/owl";
 import { useTransition } from "@web/core/transition";
 import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
-import {
-    basicContainerBuilderComponentProps,
-    useApplyVisibility,
-    useBuilderComponent,
-    useVisibilityObserver,
-} from "../utils";
+import { useApplyVisibility, useBuilderComponent, useVisibilityObserver } from "../utils";
 import { BuilderComponent } from "./builder_component";
 
 export class BuilderRow extends Component {
     static template = "html_builder.BuilderRow";
     static components = { BuilderComponent };
-    static props = {
-        ...basicContainerBuilderComponentProps,
-        label: { type: String, optional: true },
-        tooltip: { type: String, optional: true },
-        slots: { type: Object, optional: true },
-        level: { type: Number, optional: true },
-        expand: { type: Boolean, optional: true },
-        initialExpandAnim: { type: Boolean, optional: true },
-        extraLabelClass: { type: String, optional: true },
-        observeCollapseContent: { type: Boolean, optional: true },
-        disabled: { type: Boolean, optional: true },
-        fullRowToggler: { type: Boolean, optional: true },
-    };
-    static defaultProps = { expand: false, observeCollapseContent: false, fullRowToggler: false };
+    props = props({
+        // basicContainerBuilderComponentProps (converted inline)
+        id: t.string().optional(),
+        applyTo: t.string().optional(),
+        preview: t.boolean().optional(),
+        inheritedActions: t.array(t.string()).optional(),
+
+        action: t.string().optional(),
+        actionParam: t.any().optional(),
+
+        // Shorthand actions.
+        classAction: t.any().optional(),
+        attributeAction: t.any().optional(),
+        dataAttributeAction: t.any().optional(),
+        styleAction: t.any().optional(),
+
+        label: t.string().optional(),
+        tooltip: t.string().optional(),
+        slots: t.object().optional(),
+        level: t.number().optional(),
+        expand: t.boolean().optional(false),
+        initialExpandAnim: t.boolean().optional(),
+        extraLabelClass: t.string().optional(),
+        observeCollapseContent: t.boolean().optional(false),
+        disabled: t.boolean().optional(),
+        fullRowToggler: t.boolean().optional(false),
+    });
 
     setup() {
         useBuilderComponent();

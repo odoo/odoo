@@ -1,4 +1,4 @@
-import { assertType, Component, markup, types as t, whenReady } from "@odoo/owl";
+import { assertType, Component, markup, t, whenReady } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
@@ -25,39 +25,39 @@ class OnboardingItem extends Component {
 
 const stepSchema = {
     trigger: t.string(),
-    "id?": t.string(),
-    "isActive?": t.array(t.string()),
-    "run?": t.or([t.string(), t.function(), t.boolean()]),
+    id: t.string().optional(),
+    isActive: t.array(t.string()).optional(),
+    run: t.or([t.string(), t.function(), t.boolean()]).optional(),
 };
 
 const stepSchemaAuto = {
     ...stepSchema,
-    "content?": t.string(),
-    "expectUnloadPage?": t.boolean(),
-    "timeout?": t.customValidator(t.number(), (value) => value >= 0 && value <= 60000),
-    "tooltipPosition?": t.customValidator(t.string(), (value) =>
-        ["top", "bottom", "left", "right"].includes(value)
-    ),
+    content: t.string().optional(),
+    expectUnloadPage: t.boolean().optional(),
+    timeout: t.customValidator(t.number(), (value) => value >= 0 && value <= 60000).optional(),
+    tooltipPosition: t
+        .customValidator(t.string(), (value) => ["top", "bottom", "left", "right"].includes(value))
+        .optional(),
 };
 
 const stepSchemaOnboarding = {
     ...stepSchema,
-    "content?": t.or([t.string(), t.object()]), //allow object(_t && markup)
-    "tooltipPosition?": t.customValidator(t.string(), (value) =>
-        ["top", "bottom", "left", "right"].includes(value)
-    ),
+    content: t.or([t.string(), t.object()]).optional(), //allow object(_t && markup)
+    tooltipPosition: t
+        .customValidator(t.string(), (value) => ["top", "bottom", "left", "right"].includes(value))
+        .optional(),
 };
 
 const stepSchemaDebug = {
     ...stepSchemaAuto,
     ...stepSchemaOnboarding,
-    "pause?": t.boolean(),
-    "break?": t.boolean(),
+    pause: t.boolean().optional(),
+    break: t.boolean().optional(),
 };
 
 const tourSchema = {
     steps: t.function(),
-    "undeterministicTour_doNotCopy?": t.boolean(),
+    undeterministicTour_doNotCopy: t.boolean().optional(),
 };
 
 const tourRegistry = registry.category("web_tour.tours");

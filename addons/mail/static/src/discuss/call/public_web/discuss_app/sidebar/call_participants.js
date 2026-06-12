@@ -19,7 +19,7 @@ export class DiscussSidebarCallParticipants extends Component {
         this.store = useService("mail.store");
         this.props = props({
             channel: types.instanceOf(this.store["discuss.channel"].Class),
-            "compact?": types.boolean(),
+            compact: types.boolean().optional(),
         });
         this.rtc = useService("discuss.rtc");
         this.hover = useHover(["root", "floating"], {

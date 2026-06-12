@@ -1,6 +1,6 @@
-import { Component } from "@odoo/owl";
-import { omit } from "../utils/objects";
-import { DateTimePicker } from "./datetime_picker";
+import { Component, props, t } from "@odoo/owl";
+// import { omit } from "../utils/objects";
+import { dateTimePickerProps } from "./datetime_picker";
 import { useDateTimePicker } from "./datetime_picker_hook";
 
 /**
@@ -14,32 +14,31 @@ import { useDateTimePicker } from "./datetime_picker_hook";
  */
 
 const dateTimeInputOwnProps = {
-    format: { type: String, optional: true },
-    id: { type: String, optional: true },
-    class: { type: String, optional: true },
-    onChange: { type: Function, optional: true },
-    onApply: { type: Function, optional: true },
-    placeholder: { type: String, optional: true },
-    disabled: { type: Boolean, optional: true },
+    format: t.string().optional(),
+    id: t.string().optional(),
+    class: t.string().optional(),
+    onChange: t.function().optional(),
+    onApply: t.function().optional(),
+    placeholder: t.string().optional(),
+    disabled: t.boolean().optional(),
 };
 
 /** @extends {Component<DateTimeInputProps>} */
 export class DateTimeInput extends Component {
-    static props = {
-        ...DateTimePicker.props,
+    props = props({
         ...dateTimeInputOwnProps,
-    };
-
+    });
+    pickerProps = props(dateTimePickerProps);
     static template = "web.DateTimeInput";
 
     setup() {
-        const getPickerProps = () => omit(this.props, ...Object.keys(dateTimeInputOwnProps));
-
+        // const getPickerProps = () => omit(this.props, ...Object.keys(dateTimeInputOwnProps));
+        const pickerProps = this.pickerProps;
         useDateTimePicker({
             format: this.props.format,
             showSeconds: this.props.rounding <= 0,
             get pickerProps() {
-                return getPickerProps();
+                return pickerProps;
             },
             onApply: (...args) => this.props.onApply?.(...args),
             onChange: (...args) => this.props.onChange?.(...args),

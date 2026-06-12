@@ -1,6 +1,6 @@
 import { discussComponentRegistry } from "./discuss_component_registry";
 
-import { Component, props, types } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -13,14 +13,11 @@ export class MessagePinDialog extends Component {
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
-        this.props = props(
-            {
-                close: types.function([types.instanceOf(MouseEvent)]),
-                "isUnpin?": types.boolean(),
-                message: types.instanceOf(this.store["mail.message"].Class),
-            },
-            { isUnpin: false }
-        );
+        this.props = props({
+            close: t.function([]),
+            isUnpin: t.boolean().optional(false),
+            message: t.instanceOf(this.store["mail.message"].Class),
+        });
     }
 
     get messageComponent() {

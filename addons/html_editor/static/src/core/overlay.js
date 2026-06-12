@@ -1,6 +1,6 @@
 import { useExternalListener, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { useCrossDocumentListener } from "../utils/hooks";
-import { Component, onWillDestroy, xml, proxy } from "@odoo/owl";
+import { Component, onWillDestroy, props, t, xml, proxy } from "@odoo/owl";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
 import { getIFrame } from "@web/core/position/utils";
@@ -12,30 +12,24 @@ export class EditorOverlay extends Component {
             <t t-component="this.props.Component" t-props="this.props.props"/>
         </div>`;
 
-    static props = {
-        target: { validate: (el) => el.nodeType === Node.ELEMENT_NODE, optional: true },
-        initialSelection: { type: Object, optional: true },
-        Component: Function,
-        props: { type: Object, optional: true },
-        editable: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
-        bus: Object,
-        shared: Object,
-        close: Function,
-        isOverlayOpen: Function,
-        getCustomRect: { type: Function, optional: true },
+    props = props({
+        target: t.customValidator(t.any(), (el) => el.nodeType === Node.ELEMENT_NODE).optional(),
+        initialSelection: t.object().optional(),
+        Component: t.function(),
+        props: t.object().optional(),
+        editable: t.customValidator(t.any(), (el) => el.nodeType === Node.ELEMENT_NODE),
+        bus: t.object(),
+        shared: t.object(),
+        close: t.function(),
+        isOverlayOpen: t.function(),
+        getCustomRect: t.function().optional(),
 
         // Props from createOverlay
-        positionOptions: { type: Object, optional: true },
-        className: { type: String, optional: true },
-        closeOnPointerdown: { type: Boolean, optional: true },
-        hasAutofocus: { type: Boolean, optional: true },
-    };
-
-    static defaultProps = {
-        className: "",
-        closeOnPointerdown: true,
-        hasAutofocus: false,
-    };
+        positionOptions: t.object().optional(),
+        className: t.string().optional(""),
+        closeOnPointerdown: t.boolean().optional(true),
+        hasAutofocus: t.boolean().optional(false),
+    });
 
     setup() {
         this.lastSelection = this.props.initialSelection;

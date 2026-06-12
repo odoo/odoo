@@ -9,26 +9,23 @@ import { parseInteger } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 import { TranslationButton } from "../translation_button";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
+
+export const textFieldProps = {
+    ...standardFieldProps,
+    lineBreaks: t.boolean().optional(true),
+    placeholder: t.string().optional(),
+    dynamicPlaceholder: t.boolean().optional(false),
+    dynamicPlaceholderModelReferenceField: t.string().optional(),
+    rowCount: t.number().optional(2),
+};
 
 export class TextField extends Component {
     static template = "web.TextField";
     static components = {
         TranslationButton,
     };
-    static props = {
-        ...standardFieldProps,
-        lineBreaks: { type: Boolean, optional: true },
-        placeholder: { type: String, optional: true },
-        dynamicPlaceholder: { type: Boolean, optional: true },
-        dynamicPlaceholderModelReferenceField: { type: String, optional: true },
-        rowCount: { type: Number, optional: true },
-    };
-    static defaultProps = {
-        lineBreaks: true,
-        dynamicPlaceholder: false,
-        rowCount: 2,
-    };
+    props = props(textFieldProps);
 
     setup() {
         this.textareaRef = useRef("textarea");
@@ -136,10 +133,10 @@ export const textField = {
 registry.category("fields").add("text", textField);
 
 export class ListTextField extends TextField {
-    static defaultProps = {
-        ...super.defaultProps,
-        rowCount: 1,
-    };
+    props = props({
+        ...textFieldProps,
+        rowCount: t.number().optional(1),
+    });
 
     get minimumHeight() {
         return 0;

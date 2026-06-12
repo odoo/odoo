@@ -123,6 +123,7 @@ class BuilderContainer extends Component {
         Plugins: Array,
         onEditorLoad: Function,
         iframeLangDir: String,
+        builderProps: { type: Object, optional: true },
     };
 
     setup() {
@@ -174,6 +175,7 @@ class BuilderContainer extends Component {
             config: {
                 builderOptionsTemplate: "html_builder.TestBuilderOptions",
             },
+            ...this.props.builderProps,
         };
     }
 }
@@ -215,6 +217,7 @@ export async function setupHTMLBuilder(
         styleContent,
         iframeLangDir = "ltr",
         patchImages = true,
+        builderProps,
     } = {}
 ) {
     defineMailModels();
@@ -336,6 +339,7 @@ export async function setupHTMLBuilder(
                 attachedEditor = editor;
             },
             iframeLangDir,
+            builderProps,
         },
     });
     await comp.iframeLoaded;

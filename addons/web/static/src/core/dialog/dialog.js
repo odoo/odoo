@@ -2,7 +2,7 @@ import { useChildSubEnv, useExternalListener } from "@web/owl2/utils";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { useActiveElement } from "../ui/ui_service";
 import { useBackButton, useForwardRefToParent } from "@web/core/utils/hooks";
-import { Component, onWillDestroy, proxy } from "@odoo/owl";
+import { Component, onWillDestroy, props, proxy, t } from "@odoo/owl";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { makeDraggableHook } from "../utils/draggable_hook_builder_owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
@@ -31,44 +31,31 @@ const useDialogDraggable = makeDraggableHook({
     },
 });
 
+export const dialogProps = {
+    contentClass: t.string().optional(""),
+    bodyClass: t.string().optional(""),
+    fullscreen: t.boolean().optional(false),
+    footer: t.boolean().optional(true),
+    header: t.boolean().optional(true),
+    size: t.selection(["sm", "md", "lg", "xl", "fs", "fullscreen"]).optional("lg"),
+    technical: t.boolean().optional(true),
+    title: t.string().optional("Odoo"),
+    modalRef: t.function().optional(),
+    slots: t.object({
+        default: t.object(), // Content is not optional
+        header: t.object().optional(),
+        footer: t.object().optional(),
+    }),
+    withBodyPadding: t.boolean().optional(true),
+    onExpand: t.function().optional(),
+};
+
 export class Dialog extends Component {
     static template = "web.Dialog";
-    static props = {
-        contentClass: { type: String, optional: true },
-        bodyClass: { type: String, optional: true },
-        fullscreen: { type: Boolean, optional: true },
-        footer: { type: Boolean, optional: true },
-        header: { type: Boolean, optional: true },
-        size: {
-            type: String,
-            optional: true,
-            validate: (s) => ["sm", "md", "lg", "xl", "fs", "fullscreen"].includes(s),
-        },
-        technical: { type: Boolean, optional: true },
-        title: { type: String, optional: true },
-        modalRef: { type: Function, optional: true },
-        slots: {
-            type: Object,
-            shape: {
-                default: Object, // Content is not optional
-                header: { type: Object, optional: true },
-                footer: { type: Object, optional: true },
-            },
-        },
-        withBodyPadding: { type: Boolean, optional: true },
-        onExpand: { type: Function, optional: true },
-    };
-    static defaultProps = {
-        contentClass: "",
-        bodyClass: "",
-        fullscreen: false,
-        footer: true,
-        header: true,
-        size: "lg",
-        technical: true,
-        title: "Odoo",
-        withBodyPadding: true,
-    };
+    // don't do this, it is only temporary to allow the dialog props to be
+    // overridden.
+    static props = dialogProps;
+    props = props(this.constructor.props);
 
     setup() {
         this.modalRef = useForwardRefToParent("modalRef");

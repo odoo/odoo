@@ -10,7 +10,7 @@ import {
     test,
     waitFor,
 } from "@odoo/hoot";
-import { Component, htmlEscape, props, signal, xml } from "@odoo/owl";
+import { assertType, Component, htmlEscape, props, signal, xml } from "@odoo/owl";
 import {
     contains,
     defineStyle,
@@ -18,20 +18,35 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { Popover } from "@web/core/popover/popover";
+import { Popover, popoverProps } from "@web/core/popover/popover";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 class Content extends Component {
     static template = xml`<div id="popover">Popover Content</div>`;
 }
 
-patchWithCleanup(Popover.defaultProps, {
-    animation: false,
-    arrow: false,
-});
+function mountPopover(options, PopoverClass = Popover) {
+    return mountWithCleanup(PopoverClass, {
+        ...options,
+        props: {
+            animation: false,
+            arrow: false,
+            ...options.props,
+        },
+    });
+}
+
+function isValidPopoverTarget(target) {
+    try {
+        assertType(target, popoverProps.target);
+        return true;
+    } catch {
+        return false;
+    }
+}
 
 test("popover can have custom class", async () => {
-    await mountWithCleanup(Popover, {
+    await mountPopover({
         props: {
             close: () => {},
             target: getFixture(),
@@ -44,7 +59,7 @@ test("popover can have custom class", async () => {
 });
 
 test("popover can have more than one custom class", async () => {
-    await mountWithCleanup(Popover, {
+    await mountPopover({
         props: {
             close: () => {},
             target: getFixture(),
@@ -61,7 +76,7 @@ test("popover is rendered nearby target (default)", async () => {
     await mountWithCleanup(
         `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
     );
-    await mountWithCleanup(Popover, {
+    await mountPopover({
         props: {
             close: () => {},
             target: queryOne("#target"),
@@ -81,7 +96,7 @@ test("popover is rendered nearby target (bottom)", async () => {
         `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
     );
 
-    await mountWithCleanup(Popover, {
+    await mountPopover({
         props: {
             close: () => {},
             target: queryOne("#target"),
@@ -102,7 +117,7 @@ test("popover is rendered nearby target (top)", async () => {
         `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
     );
 
-    await mountWithCleanup(Popover, {
+    await mountPopover({
         props: {
             close: () => {},
             target: queryOne("#target"),
@@ -123,7 +138,7 @@ test("popover is rendered nearby target (left)", async () => {
         `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
     );
 
-    await mountWithCleanup(Popover, {
+    await mountPopover({
         props: {
             close: () => {},
             target: queryOne("#target"),
@@ -144,7 +159,7 @@ test("popover is rendered nearby target (right)", async () => {
         `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
     );
 
-    await mountWithCleanup(Popover, {
+    await mountPopover({
         props: {
             close: () => {},
             target: queryOne("#target"),
@@ -165,7 +180,7 @@ test("popover is rendered nearby target (bottom-start)", async () => {
         `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
     );
 
-    await mountWithCleanup(Popover, {
+    await mountPopover({
         props: {
             close: () => {},
             target: queryOne("#target"),
@@ -186,7 +201,7 @@ test("popover is rendered nearby target (bottom-middle)", async () => {
         `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
     );
 
-    await mountWithCleanup(Popover, {
+    await mountPopover({
         props: {
             close: () => {},
             target: queryOne("#target"),
@@ -207,7 +222,7 @@ test("popover is rendered nearby target (bottom-end)", async () => {
         `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
     );
 
-    await mountWithCleanup(Popover, {
+    await mountPopover({
         props: {
             close: () => {},
             target: queryOne("#target"),
@@ -228,7 +243,7 @@ test("popover is rendered nearby target (bottom-fit)", async () => {
         `<div id="target" style="background-color: royalblue; width: 50px; height: 50px; position: absolute; top: 50%; left: 50%;"/>`
     );
 
-    await mountWithCleanup(Popover, {
+    await mountPopover({
         props: {
             close: () => {},
             target: queryOne("#target"),
@@ -253,7 +268,7 @@ test("within iframe", async () => {
     `);
 
     const popoverTarget = await waitFor(":iframe #target");
-    const comp = await mountWithCleanup(Popover, {
+    const comp = await mountPopover({
         props: {
             close: () => {},
             target: popoverTarget,
@@ -294,10 +309,7 @@ test("within iframe -- wrong element class", async () => {
         setup() {
             super.setup();
 
-            expect.step([
-                "validate target props",
-                Popover.props.target.validate(this.props.target),
-            ]);
+            expect.step(["validate target props", isValidPopoverTarget(this.props.target)]);
         }
     }
 
@@ -332,7 +344,7 @@ test("popover fixed position", async () => {
 
     const container = queryOne(".container");
 
-    await mountWithCleanup(Popover, {
+    await mountPopover({
         props: {
             close: () => {},
             target: container,
@@ -364,17 +376,20 @@ test("popover with arrow and onPositioned", async () => {
         }
     }
 
-    await mountWithCleanup(TestPopover, {
-        props: {
-            close: () => {},
-            target: getFixture(),
-            component: Content,
-            arrow: true,
-            onPositioned() {
-                expect.step("onPositioned (from props)");
+    await mountPopover(
+        {
+            props: {
+                close: () => {},
+                target: getFixture(),
+                component: Content,
+                arrow: true,
+                onPositioned() {
+                    expect.step("onPositioned (from props)");
+                },
             },
         },
-    });
+        TestPopover
+    );
 
     expect.verifySteps([
         "onPositioned (from override)",
@@ -391,7 +406,7 @@ test("popover closes when navigating", async () => {
     history.pushState({}, "", "/"); // Need non-null state
     history.pushState(null, "", "/aaa"); // Head to other page
 
-    await mountWithCleanup(Popover, {
+    await mountPopover({
         props: {
             close: () => expect.step("close"),
             closeOnClickAway: (target) => {
@@ -425,7 +440,7 @@ test("popover repositions when content changes", async () => {
         expanded = signal(false);
     }
 
-    await mountWithCleanup(Popover, {
+    await mountPopover({
         props: {
             close: () => {},
             target: getFixture(),
@@ -455,7 +470,6 @@ test("arrow follows target and can get sucked", async () => {
     const containerRef = signal(null);
     const targetRef = signal(null);
 
-    patchWithCleanup(Popover.defaultProps, { arrow: true });
     patchWithCleanup(Popover.prototype, {
         get positioningOptions() {
             return {
@@ -494,7 +508,11 @@ test("arrow follows target and can get sucked", async () => {
         props = props();
 
         setup() {
-            this.popover = usePopover(Content, { popoverClass: "my-popover" });
+            this.popover = usePopover(Content, {
+                animation: false,
+                arrow: true,
+                popoverClass: "my-popover",
+            });
         }
     }
     const parent = await mountWithCleanup(Parent, {
@@ -552,7 +570,7 @@ test("popover can animate", async () => {
         },
     });
 
-    await mountWithCleanup(Popover, {
+    await mountPopover({
         props: {
             close: () => {},
             target: getFixture(),

@@ -12,7 +12,7 @@ import { uniqueId } from "@web/core/utils/functions";
 import { clamp } from "@web/core/utils/numbers";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 
-import { Component, onMounted, onWillUpdateProps } from "@odoo/owl";
+import { Component, onMounted, onWillUpdateProps, props, t } from "@odoo/owl";
 
 const ARROW_KEYS = ["arrowup", "arrowdown", "arrowleft", "arrowright"];
 const SLIDER_KEYS = [...ARROW_KEYS, "pageup", "pagedown", "home", "end"];
@@ -21,29 +21,19 @@ const DEFAULT_COLOR = "#FF0000";
 
 export class CustomColorPicker extends Component {
     static template = "web.CustomColorPicker";
-    static props = {
-        document: { type: true, optional: true },
-        defaultColor: { type: String, optional: true },
-        selectedColor: { type: String, optional: true },
-        noTransparency: { type: Boolean, optional: true },
-        stopClickPropagation: { type: Boolean, optional: true },
-        onColorSelect: { type: Function, optional: true },
-        onColorPreview: { type: Function, optional: true },
-        onInputEnter: { type: Function, optional: true },
-        defaultOpacity: { type: Number, optional: true },
-        setOnCloseCallback: { type: Function, optional: true },
-        setOperationCallbacks: { type: Function, optional: true },
-    };
-    static defaultProps = {
-        document: window.document,
-        defaultColor: DEFAULT_COLOR,
-        defaultOpacity: 100,
-        noTransparency: false,
-        stopClickPropagation: false,
-        onColorSelect: () => {},
-        onColorPreview: () => {},
-        onInputEnter: () => {},
-    };
+    props = props({
+        document: t.any().optional(window.document),
+        defaultColor: t.string().optional(DEFAULT_COLOR),
+        selectedColor: t.string().optional(),
+        noTransparency: t.boolean().optional(false),
+        stopClickPropagation: t.boolean().optional(false),
+        onColorSelect: t.function().optional(() => () => {}),
+        onColorPreview: t.function().optional(() => () => {}),
+        onInputEnter: t.function().optional(() => () => {}),
+        defaultOpacity: t.number().optional(100),
+        setOnCloseCallback: t.function().optional(),
+        setOperationCallbacks: t.function().optional(),
+    });
 
     setup() {
         this.pickerFlag = false;

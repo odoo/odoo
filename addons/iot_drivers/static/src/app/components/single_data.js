@@ -6,18 +6,15 @@ const URL_REGEXP =
     /((([A-Za-z]{3,9}:(?:\/\/)?)(?:[-;:&=+$,\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+$,\w]+@)[A-Za-z0-9.-]+)((?:\/[+~%/.\w-_]*)?\??(?:[-+=&;%@.\w_]*)#?(?:[\w]*))?)/;
 
 export class SingleData extends Component {
-    props = props(
-        {
-            name: t.string(),
-            value: t.string(),
-            "icon?": t.string(),
-            "style?": t.string(),
-            "slots?": t.object(["button"]),
-            "btnName?": t.string(),
-            "btnAction?": t.function(),
-        },
-        { style: "primary" }
-    );
+    props = props({
+        name: t.string(),
+        value: t.string(),
+        icon: t.string().optional(),
+        style: t.string().optional("primary"),
+        slots: t.object(["button"]).optional(),
+        btnName: t.string().optional(),
+        btnAction: t.function().optional(),
+    });
 
     get valueIsURL() {
         if (this.props.value.match(URL_REGEXP)) {

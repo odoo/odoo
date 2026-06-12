@@ -1,5 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import { Component, props, signal, types } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 import { NavigableList } from "@mail/core/common/navigable_list";
@@ -10,22 +10,20 @@ import { useSearch } from "@mail/utils/common/hooks";
 export class MentionList extends Component {
     static template = "mail.MentionList";
     static components = { NavigableList, SearchInput };
+    props = props({
+        onSelect: t.function(),
+        close: t.function().optional(() => () => {}),
+        composerType: t.string(),
+        thread: t.any().optional(),
+        type: t.string(),
+    });
+
     setup() {
         super.setup();
         this.orm = useService("orm");
         this.store = useService("mail.store");
-        this.props = props(
-            {
-                "close?": types.function([]),
-                composerType: types.string(),
-                onSelect: types.function(),
-                "thread?": types.instanceOf(this.store["mail.thread"].Class),
-                type: types.string(),
-            },
-            { close: () => {} }
-        );
         this.suggestionService = useService("mail.suggestion");
-        this.anchorRef = signal(null, { type: types.ref(HTMLElement) });
+        this.anchorRef = signal(null, { type: t.ref(HTMLElement) });
         this.search = useSearch({
             fetch: (term) =>
                 this.suggestionService.fetchSuggestions(

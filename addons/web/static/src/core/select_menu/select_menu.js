@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onWillUpdateProps, proxy } from "@odoo/owl";
+import { Component, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -24,103 +24,68 @@ class SelectMenuTagsList extends Component {
     };
 }
 
+export const selectMenuProps = {
+    choices: t
+        .array(
+            t.object({
+                enabled: t.boolean().optional(),
+                value: t.any(),
+                label: t.string(),
+            })
+        )
+        .optional([]),
+    groups: t
+        .array(
+            t.object({
+                label: t.string().optional(),
+                choices: t.array(
+                    t.object({
+                        value: t.any(),
+                        label: t.string(),
+                    })
+                ),
+                section: t.string().optional(),
+            })
+        )
+        .optional([]),
+    sections: t
+        .array(
+            t.object({
+                label: t.string(),
+                name: t.string(),
+            })
+        )
+        .optional([]),
+    id: t.string().optional(""),
+    name: t.string().optional(""),
+    class: t.string().optional(""),
+    menuClass: t.string().optional(""),
+    togglerClass: t.string().optional(""),
+    required: t.boolean().optional(false),
+    searchable: t.boolean().optional(true),
+    autoSort: t.boolean().optional(true),
+    placeholder: t.string().optional(),
+    searchPlaceholder: t.string().optional(""),
+    searchClass: t.string().optional(),
+    value: t.any().optional(),
+    multiSelect: t.boolean().optional(false),
+    onInput: t.function().optional(),
+    onSelect: t.function().optional(() => () => {}),
+    onNavigated: t.function().optional(() => () => {}),
+    onOpened: t.function().optional(() => () => {}),
+    onClosed: t.function().optional(() => () => {}),
+    slots: t.object().optional(),
+    disabled: t.boolean().optional(false),
+    menuRef: t.function().optional(),
+};
+
 export class SelectMenu extends Component {
     static template = "web.SelectMenu";
     static choiceItemTemplate = "web.SelectMenu.ChoiceItem";
 
     static components = { Dropdown, DropdownItem, TagsList: SelectMenuTagsList };
 
-    static defaultProps = {
-        value: undefined,
-        id: "",
-        name: "",
-        class: "",
-        menuClass: "",
-        togglerClass: "",
-        multiSelect: false,
-        onSelect: () => {},
-        onNavigated: () => {},
-        onOpened: () => {},
-        onClosed: () => {},
-        required: false,
-        searchable: true,
-        autoSort: true,
-        searchPlaceholder: "",
-        choices: [],
-        groups: [],
-        sections: [],
-        disabled: false,
-    };
-
-    static props = {
-        choices: {
-            optional: true,
-            type: Array,
-            element: {
-                type: Object,
-                shape: {
-                    enabled: { type: Boolean, optional: true },
-                    value: true,
-                    label: { type: String },
-                    "*": true,
-                },
-            },
-        },
-        groups: {
-            type: Array,
-            optional: true,
-            element: {
-                type: Object,
-                shape: {
-                    label: { type: String, optional: true },
-                    choices: {
-                        type: Array,
-                        element: {
-                            type: Object,
-                            shape: {
-                                value: true,
-                                label: { type: String },
-                                "*": true,
-                            },
-                        },
-                    },
-                    section: {
-                        type: String,
-                        optional: true,
-                    },
-                },
-            },
-        },
-        sections: {
-            type: Array,
-            optional: true,
-            element: {
-                label: { type: String },
-                name: { type: String },
-            },
-        },
-        id: { type: String, optional: true },
-        name: { type: String, optional: true },
-        class: { type: String, optional: true },
-        menuClass: { type: String, optional: true },
-        togglerClass: { type: String, optional: true },
-        required: { type: Boolean, optional: true },
-        searchable: { type: Boolean, optional: true },
-        autoSort: { type: Boolean, optional: true },
-        placeholder: { type: String, optional: true },
-        searchPlaceholder: { type: String, optional: true },
-        searchClass: { type: String, optional: true },
-        value: { optional: true },
-        multiSelect: { type: Boolean, optional: true },
-        onInput: { type: Function, optional: true },
-        onSelect: { type: Function, optional: true },
-        onNavigated: { type: Function, optional: true },
-        onOpened: { type: Function, optional: true },
-        onClosed: { type: Function, optional: true },
-        slots: { type: Object, optional: true },
-        disabled: { type: Boolean, optional: true },
-        menuRef: { type: Function, optional: true },
-    };
+    props = props(selectMenuProps);
 
     static SCROLL_SETTINGS = {
         defaultCount: 500,

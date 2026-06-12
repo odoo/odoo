@@ -1,18 +1,18 @@
-import { onMounted, props, types as t } from "@odoo/owl";
+import { onMounted, props, t } from "@odoo/owl";
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { useLayoutEffect } from "@web/owl2/utils";
 
 const T_INVALID_LOCATORS = t.object({
     attrib: t.record(t.string()),
-    "broken_hierarchy?": t.boolean(),
+    broken_hierarchy: t.boolean().optional(),
     sourceline: t.number(),
     tag: t.string(),
 });
 
 export class IrUiViewCodeEditor extends CodeEditor {
     irUiViewProps = props({
-        "invalidLocators?": t.array(T_INVALID_LOCATORS),
+        invalidLocators: t.array(T_INVALID_LOCATORS).optional(),
     });
     markers = [];
 

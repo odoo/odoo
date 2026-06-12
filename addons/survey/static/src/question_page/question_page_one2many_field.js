@@ -1,5 +1,7 @@
 import { useSubEnv } from "@web/owl2/utils";
+import { props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { QuestionPageListRenderer } from "./question_page_list_renderer";
 import { registry } from "@web/core/registry";
 import { useOpenX2ManyRecord, useX2ManyCrud } from "@web/views/fields/relational_utils";
@@ -31,10 +33,21 @@ class QuestionPageOneToManyField extends X2ManyField {
         ...X2ManyField.components,
         ListRenderer: QuestionPageListRenderer,
     };
-    static defaultProps = {
-        ...X2ManyField.defaultProps,
-        editable: "bottom",
-    };
+    // Inline conversion of X2ManyField's static props (not yet exported as a
+    // schema const), with the "editable" default applied.
+    props = props({
+        ...standardFieldProps,
+        addLabel: t.string().optional(),
+        editable: t.string().optional("bottom"),
+        viewMode: t.string().optional(),
+        widget: t.string().optional(),
+        crudOptions: t.object().optional(),
+        string: t.string().optional(),
+        relatedFields: t.object().optional(),
+        views: t.object().optional(),
+        domain: t.or([t.array(), t.function()]).optional(),
+        context: t.object(),
+    });
     setup() {
         super.setup();
         useSubEnv({

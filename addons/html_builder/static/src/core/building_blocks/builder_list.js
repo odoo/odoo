@@ -3,7 +3,7 @@ import { BuilderComponent } from "@html_builder/core/building_blocks/builder_com
 import { BuilderListDialog } from "@html_builder/core/building_blocks/builder_list_dialog";
 import { useBuilderComponent, useInputBuilderComponent } from "@html_builder/core/utils";
 import { isSmallInteger } from "@html_builder/utils/utils";
-import { Component, onWillUpdateProps, onPatched, props, types as t, xml, proxy } from "@odoo/owl";
+import { Component, onWillUpdateProps, onPatched, props, t, xml, proxy } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useSortable } from "@web/core/utils/sortable_owl";
@@ -54,53 +54,41 @@ export class BuilderList extends Component {
     static template = "html_builder.BuilderList";
     static components = { BuilderComponent, SortableContainer, SelectMenu };
 
-    props = props(
-        {
-            "applyTo?": t.string(),
-            "preview?": t.boolean(),
-            "inheritedActions?": t.array(t.string()),
+    props = props({
+        applyTo: t.string().optional(),
+        preview: t.boolean().optional(),
+        inheritedActions: t.array(t.string()).optional(),
 
-            "action?": t.string(),
-            "actionParam?": t.any(),
+        action: t.string().optional(),
+        actionParam: t.any().optional(),
 
-            // Shorthand actions.
-            "classAction?": t.any(),
-            "attributeAction?": t.any(),
-            "dataAttributeAction?": t.any(),
-            "styleAction?": t.any(),
+        // Shorthand actions.
+        classAction: t.any().optional(),
+        attributeAction: t.any().optional(),
+        dataAttributeAction: t.any().optional(),
+        styleAction: t.any().optional(),
 
-            "id?": t.string(),
-            "addItemTitle?": t.string(),
-            "itemShape?": t.customValidator(
+        id: t.string().optional(),
+        addItemTitle: t.string().optional(_t("Add")),
+        itemShape: t
+            .customValidator(
                 t.record(t.selection(["number", "text", "boolean", "exclusive_boolean"])),
                 (value) =>
                     // is not empty object and doesn't include reserved fields
                     Object.keys(value).length > 0 && !Object.keys(value).includes("_id")
-            ),
-            "default?": t.any(),
-            "sortable?": t.any(),
-            "hiddenProperties?": t.array(),
-            "records?": t.string(),
-            "defaultNewValue?": t.object(),
-            "columnWidth?": t.any(),
-            "forbidLastItemRemoval?": t.boolean(),
-            "isEditable?": t.boolean(),
-            "limit?": t.number(),
-            "disableLastCheckedCheckbox?": t.boolean(),
-        },
-        {
-            addItemTitle: _t("Add"),
-            itemShape: { value: "text" },
-            sortable: true,
-            hiddenProperties: [],
-            defaultNewValue: {},
-            columnWidth: {},
-            forbidLastItemRemoval: false,
-            isEditable: true,
-            limit: 50,
-            disableLastCheckedCheckbox: false,
-        }
-    );
+            )
+            .optional({ value: "text" }),
+        default: t.any().optional(),
+        sortable: t.any().optional(true),
+        hiddenProperties: t.array().optional([]),
+        records: t.string().optional(),
+        defaultNewValue: t.object().optional({}),
+        columnWidth: t.any().optional({}),
+        forbidLastItemRemoval: t.boolean().optional(false),
+        isEditable: t.boolean().optional(true),
+        limit: t.number().optional(50),
+        disableLastCheckedCheckbox: t.boolean().optional(false),
+    });
 
     setup() {
         if (this.props.default) {

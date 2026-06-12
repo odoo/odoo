@@ -14,11 +14,11 @@ export class ActivityListPopover extends Component {
         this.props = props({
             activityIds: types.array(types.number()),
             close: types.function([]),
-            "defaultActivityTypeId?": types.number(),
+            defaultActivityTypeId: types.number().optional(),
             onActivityChanged: types.function([]),
             resId: types.number(),
             /** Ids of record selection used to schedule activities in batch; it must include resId. */
-            "resIds?": types.array(types.number()),
+            resIds: types.array(types.number()).optional(),
             resModel: types.string(),
         });
         this.store = useService("mail.store");

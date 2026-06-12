@@ -28,20 +28,26 @@ export class CallParticipantCard extends Component {
         this.props = props({
             cardData: types.object({
                 key: types.string(),
-                "member?": types.instanceOf(this.store["discuss.channel.member"].Class),
-                "session?": types.instanceOf(this.store["discuss.channel.rtc.session"].Class),
-                "type?": types.selection(["camera", "screen"]),
-                "videoStream?": types.or([types.instanceOf(MediaStream), types.selection([false])]),
+                member: types.instanceOf(this.store["discuss.channel.member"].Class).optional(),
+                session: types
+                    .instanceOf(this.store["discuss.channel.rtc.session"].Class)
+                    .optional(),
+                type: types.selection(["camera", "screen"]).optional(),
+                videoStream: types
+                    .or([types.instanceOf(MediaStream), types.selection([false])])
+                    .optional(),
             }),
             channel: types.instanceOf(this.store["discuss.channel"].Class),
             className: types.string(),
-            "compact?": types.boolean(),
-            "inset?": types.function([
-                types.instanceOf(this.store["discuss.channel.rtc.session"].Class),
-                types.selection(["camera", "screen"]),
-            ]),
-            "isSidebarItem?": types.boolean(),
-            "minimized?": types.boolean(),
+            compact: types.boolean().optional(),
+            inset: types
+                .function([
+                    types.instanceOf(this.store["discuss.channel.rtc.session"].Class),
+                    types.selection(["camera", "screen"]),
+                ])
+                .optional(),
+            isSidebarItem: types.boolean().optional(),
+            minimized: types.boolean().optional(),
         });
         this.ui = useService("ui");
         this.rootHover = useHover("root");

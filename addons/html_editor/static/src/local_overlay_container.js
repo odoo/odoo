@@ -1,4 +1,4 @@
-import { types as t } from "@odoo/owl";
+import { props, t } from "@odoo/owl";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useForwardRefToParent } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
@@ -9,13 +9,10 @@ import { useRegistry } from "@web/core/registry_hook";
  */
 export class LocalOverlayContainer extends MainComponentsContainer {
     static template = "html_editor.LocalOverlayContainer";
-    static props = {
-        localOverlay: { type: Function, optional: true },
-        identifier: { type: String, optional: true },
-    };
-    static defaultProps = {
-        identifier: "overlay_components",
-    };
+    props = props({
+        localOverlay: t.function().optional(),
+        identifier: t.string().optional("overlay_components"),
+    });
 
     setup() {
         const overlayComponents = registry.category(this.props.identifier);
@@ -24,7 +21,7 @@ export class LocalOverlayContainer extends MainComponentsContainer {
             overlayComponents.addValidation(
                 t.object({
                     Component: t.component(),
-                    "props?": t.object(),
+                    props: t.object().optional(),
                 })
             );
         }

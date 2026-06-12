@@ -15,7 +15,7 @@ export class SubChannelList extends Component {
         this.store = useService("mail.store");
         this.props = props({
             channel: types.instanceOf(this.store["discuss.channel"].Class),
-            "close?": types.function([types.instanceOf(MouseEvent)]),
+            close: types.function([types.instanceOf(MouseEvent)]).optional(),
         });
         this.search = useSearch({
             initialResults: this.props.channel.sub_channel_ids,

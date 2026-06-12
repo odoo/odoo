@@ -1,4 +1,4 @@
-import { Component, props, proxy, types } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
@@ -11,8 +11,8 @@ export class MailFullscreen extends Component {
     setup() {
         super.setup();
         this.props = props({
-            component: types.component(),
-            "props?": types.object(),
+            component: t.component(),
+            props: t.object().optional(),
         });
         this.fullscreen = useService("mail.fullscreen");
     }

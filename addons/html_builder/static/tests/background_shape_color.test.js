@@ -5,6 +5,7 @@ import {
     setupHTMLBuilder,
 } from "@html_builder/../tests/helpers";
 import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
+import { t } from "@odoo/owl";
 import { expect, test, describe, beforeEach } from "@odoo/hoot";
 import { queryOne, setInputRange } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
@@ -110,17 +111,11 @@ beforeEach(async () => {
     addBuilderOption({
         selector: "section",
         Component: class TestBackgroundOption extends BackgroundOption {
-            static props = {
-                ...BackgroundOption.props,
-                withColors: { type: Boolean, optional: true },
-                withImages: { type: Boolean, optional: true },
-                withColorCombinations: { type: Boolean, optional: true },
-            };
-            static defaultProps = {
-                withColors: true,
-                withImages: true,
-                withShapes: true,
-                withColorCombinations: false,
+            static propShape = {
+                withColors: t.boolean().optional(true),
+                withImages: t.boolean().optional(true),
+                withShapes: t.boolean().optional(true),
+                withColorCombinations: t.boolean().optional(false),
             };
         },
     });

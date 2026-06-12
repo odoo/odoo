@@ -1,39 +1,36 @@
 import { useChildEnv, useRef } from "@web/owl2/utils";
 import { isColorGradient } from "@web/core/utils/colors";
-import { Component, useEffect, proxy } from "@odoo/owl";
+import { Component, props, t, useEffect, proxy } from "@odoo/owl";
 import {
     useColorPicker,
     DEFAULT_COLORS,
     DEFAULT_THEME_COLOR_VARS,
 } from "@web/core/color_picker/color_picker";
-import { toolbarButtonProps } from "../toolbar/toolbar";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { useChildRef } from "@web/core/utils/hooks";
 import { useDropdownAutoVisibility } from "@html_editor/toolbar_dropdown_hook";
 
 export class ColorSelector extends Component {
     static template = "html_editor.ColorSelector";
-    static props = {
-        ...toolbarButtonProps,
-        mode: { type: String },
-        type: { type: String },
-        getSelectedColors: Function,
-        applyColor: Function,
-        applyColorPreview: Function,
-        applyColorResetPreview: Function,
-        getUsedCustomColors: Function,
-        getTargetedElements: Function,
-        colorPrefix: { type: String },
-        enabledTabs: { type: Array, optional: true },
-        cssVarColorPrefix: { type: String, optional: true },
-        onClose: Function,
-        useDefaultThemeColors: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        cssVarColorPrefix: "",
-        enabledTabs: ["solid", "gradient", "custom"],
-        useDefaultThemeColors: true,
-    };
+    props = props({
+        // from toolbarButtonProps
+        title: t.or([t.string(), t.function()]),
+        getSelection: t.function(),
+        isDisabled: t.boolean(),
+        mode: t.string(),
+        type: t.string(),
+        getSelectedColors: t.function(),
+        applyColor: t.function(),
+        applyColorPreview: t.function(),
+        applyColorResetPreview: t.function(),
+        getUsedCustomColors: t.function(),
+        getTargetedElements: t.function(),
+        colorPrefix: t.string(),
+        enabledTabs: t.array().optional(["solid", "gradient", "custom"]),
+        cssVarColorPrefix: t.string().optional(""),
+        onClose: t.function(),
+        useDefaultThemeColors: t.boolean().optional(true),
+    });
 
     setup() {
         this.state = proxy({});

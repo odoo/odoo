@@ -1,13 +1,13 @@
-import { Component } from "@odoo/owl";
+import { Component, props } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { CharField } from "@web/views/fields/char/char_field";
+import { CharField, charFieldProps } from "@web/views/fields/char/char_field";
 
 export class ShortcutCharField extends Component {
     static template = "mail.ShortcutCharField";
     static components = { CharField };
-    static props = { ...CharField.props };
+    props = props({ ...charFieldProps });
 
     get charProps() {
         return {

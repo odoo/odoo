@@ -30,7 +30,9 @@ export class DiscussContent extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props({ "thread?": types.instanceOf(this.store["mail.thread"].Class) });
+        this.props = props({
+            thread: types.instanceOf(this.store["mail.thread"].Class).optional(),
+        });
         this.ui = useService("ui");
         this.notification = useService("notification");
         this.rootRef = signal(null, { type: types.instanceOf(HTMLDivElement) });

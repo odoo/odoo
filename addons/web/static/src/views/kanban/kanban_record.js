@@ -1,4 +1,5 @@
 import { browser } from "@web/core/browser/browser";
+import { props, t } from "@odoo/owl";
 import { ColorList } from "@web/core/colorlist/colorlist";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -39,6 +40,27 @@ export function getColorIndex(value) {
     }
 }
 
+export const kanbanRecordProps = {
+    archInfo: t.any(),
+    archiveRecord: t.function().optional(() => () => {}),
+    canOpenRecords: t.any().optional(),
+    canResequence: t.any().optional(),
+    cardColorField: t.any().optional(),
+    colors: t.any().optional(COLORS),
+    Compiler: t.any().optional(),
+    deleteRecord: t.function().optional(() => () => {}),
+    forceGlobalClick: t.any().optional(),
+    getSelection: t.function().optional(() => () => []),
+    groupByField: t.any().optional(),
+    openAction: t.any().optional(),
+    openRecord: t.function().optional(() => () => {}),
+    progressBarState: t.any().optional(),
+    readonly: t.any().optional(),
+    record: t.any(),
+    selectionAvailable: t.any().optional(false),
+    toggleSelection: t.function().optional(() => () => {}),
+};
+
 export class KanbanRecord extends CardRenderer {
     static template = "web.KanbanRecord";
     static menuTemplate = "web.KanbanMenu";
@@ -49,32 +71,7 @@ export class KanbanRecord extends CardRenderer {
         KanbanDropdownMenuWrapper,
         KanbanCoverImageDialog,
     };
-    static props = [
-        ...CardRenderer.props,
-        "archiveRecord?",
-        "canResequence?",
-        "colors?",
-        "deleteRecord?",
-        "forceGlobalClick?",
-        "getSelection?",
-        "groupByField?",
-        "canOpenRecords?",
-        "openAction?",
-        "openRecord?",
-        "progressBarState?",
-        "selectionAvailable?",
-        "toggleSelection?",
-    ];
-    static defaultProps = {
-        ...CardRenderer.defaultProps,
-        colors: COLORS,
-        deleteRecord: () => {},
-        archiveRecord: () => {},
-        openRecord: () => {},
-        getSelection: () => [],
-        selectionAvailable: false,
-        toggleSelection: () => {},
-    };
+    props = props(kanbanRecordProps);
 
     static MENU_ATTRIBUTE = MENU_ATTRIBUTE;
     static CANCEL_GLOBAL_CLICK = CANCEL_GLOBAL_CLICK;

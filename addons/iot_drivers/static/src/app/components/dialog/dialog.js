@@ -3,21 +3,15 @@
 const { Component, xml, useListener, signal, props, types: t } = owl;
 
 export class Dialog extends Component {
-    props = props(
-        {
-            slots: t.object(),
-            name: t.string(),
-            "help?": t.string(),
-            "btnName?": t.string(),
-            "isLarge?": t.boolean(),
-            "onOpen?": t.function(),
-            "onClose?": t.function(),
-        },
-        {
-            onOpen: () => {},
-            onClose: () => {},
-        }
-    );
+    props = props({
+        slots: t.object(),
+        name: t.string(),
+        help: t.string().optional(),
+        btnName: t.string().optional(),
+        isLarge: t.boolean().optional(),
+        onOpen: t.function().optional(() => () => {}),
+        onClose: t.function().optional(() => () => {}),
+    });
 
     dialogRef = signal(null, { type: t.ref() });
 

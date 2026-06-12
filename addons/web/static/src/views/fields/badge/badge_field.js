@@ -3,19 +3,16 @@ import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 const formatters = registry.category("formatters");
 
 export class BadgeField extends Component {
     static template = "web.BadgeField";
-    static props = {
+    props = props({
         ...standardFieldProps,
-        decorations: { type: Object, optional: true },
-        colorField: { type: String, optional: true },
-    };
-    static defaultProps = {
-        decorations: {},
-    };
+        decorations: t.object().optional({}),
+        colorField: t.string().optional(),
+    });
 
     get formattedValue() {
         const formatter = formatters.get(this.props.record.fields[this.props.name].type);
@@ -55,12 +52,10 @@ export const badgeField = {
             help: _t("Set an integer field to use colors with the badge."),
         },
     ],
-    extractProps: ({ decorations, options }) => {
-        return {
-            decorations,
-            colorField: options.color_field,
-        };
-    },
+    extractProps: ({ decorations, options }) => ({
+        decorations,
+        colorField: options.color_field,
+    }),
 };
 
 registry.category("fields").add("badge", badgeField);

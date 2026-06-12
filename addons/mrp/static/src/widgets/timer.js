@@ -4,7 +4,15 @@ import { parseFloatTime } from "@web/views/fields/parsers";
 import { useInputField } from "@web/views/fields/input_field_hook";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { Component, onWillUpdateProps, onWillStart, onWillDestroy, proxy } from "@odoo/owl";
+import {
+    Component,
+    onWillUpdateProps,
+    onWillStart,
+    onWillDestroy,
+    props,
+    proxy,
+    t,
+} from "@odoo/owl";
 
 function formatMinutes(value) {
     if (value === false) {
@@ -28,11 +36,10 @@ function formatMinutes(value) {
 
 export class MrpTimer extends Component {
     static template = "mrp.MrpTimer";
-    static props = {
-        value: { type: Number },
-        ongoing: { type: Boolean, optional: true },
-    };
-    static defaultProps = { ongoing: false };
+    props = props({
+        value: t.number(),
+        ongoing: t.boolean().optional(false),
+    });
 
     setup() {
         this.state = proxy({
@@ -88,7 +95,7 @@ export class MrpTimer extends Component {
 class MrpTimerField extends Component {
     static template = "mrp.MrpTimerField";
     static components = { MrpTimer };
-    static props = standardFieldProps;
+    props = props(standardFieldProps);
 
     setup() {
         this.orm = useService("orm");

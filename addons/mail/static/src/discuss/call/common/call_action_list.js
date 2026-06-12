@@ -20,9 +20,9 @@ export class CallActionList extends Component {
         this.store = useService("mail.store");
         this.props = props({
             channel: types.instanceOf(this.store["discuss.channel"].Class),
-            "className?": types.string(),
-            "compact?": types.boolean(),
-            "pipExtraActions?": types.array(),
+            className: types.string().optional(),
+            compact: types.boolean().optional(),
+            pipExtraActions: types.array().optional(),
         });
         this.rtc = useService("discuss.rtc");
         this.pipService = useService("discuss.pip_service");

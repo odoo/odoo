@@ -6,26 +6,22 @@ import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
+
+export const integerFieldProps = {
+    ...standardFieldProps,
+    formatNumber: t.boolean().optional(true),
+    humanReadable: t.boolean().optional(false),
+    decimals: t.number().optional(0),
+    inputType: t.string().optional("text"),
+    min: t.number().optional(),
+    max: t.number().optional(),
+    step: t.number().optional(),
+};
 
 export class IntegerField extends Component {
     static template = "web.IntegerField";
-    static props = {
-        ...standardFieldProps,
-        formatNumber: { type: Boolean, optional: true },
-        humanReadable: { type: Boolean, optional: true },
-        decimals: { type: Number, optional: true },
-        inputType: { type: String, optional: true },
-        min: { type: Number, optional: true },
-        max: { type: Number, optional: true },
-        step: { type: Number, optional: true },
-    };
-    static defaultProps = {
-        formatNumber: true,
-        humanReadable: false,
-        inputType: "text",
-        decimals: 0,
-    };
+    props = props(integerFieldProps);
 
     setup() {
         this.state = proxy({

@@ -69,6 +69,24 @@ test("reactivity: useState & update getter object", async () => {
     expect(".datetime_hook_input").toHaveValue("06/06/2023");
 });
 
+test("getter-only undefined props do not prevent service defaults", async () => {
+    let pickerProps;
+    const defaultPickerProps = {
+        value: false,
+        type: "date",
+    };
+    Object.defineProperty(defaultPickerProps, "onReset", {
+        enumerable: true,
+        get: () => undefined,
+    });
+
+    await mountInput(() => {
+        pickerProps = useDateTimePicker({ pickerProps: defaultPickerProps }).state;
+    });
+
+    expect(pickerProps.onReset).toBeOfType("function");
+});
+
 test("reactivity: update reactive object returned by the hook", async () => {
     let pickerProps;
     const defaultPickerProps = {

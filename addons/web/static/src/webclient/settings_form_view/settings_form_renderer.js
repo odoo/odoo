@@ -1,5 +1,5 @@
-import { proxy } from "@odoo/owl";
-import { FormRenderer } from "@web/views/form/form_renderer";
+import { props, proxy, t } from "@odoo/owl";
+import { FormRenderer, formRendererProps } from "@web/views/form/form_renderer";
 import { FormLabelHighlightText } from "./highlight_text/form_label_highlight_text";
 import { HighlightText } from "./highlight_text/highlight_text";
 import { SearchableSetting } from "./settings/searchable_setting";
@@ -7,7 +7,6 @@ import { SettingHeader } from "./settings/setting_header";
 import { SettingsBlock } from "./settings/settings_block";
 import { SettingsApp } from "./settings/settings_app";
 import { SettingsPage } from "./settings/settings_page";
-
 
 export class SettingsFormRenderer extends FormRenderer {
     static components = {
@@ -20,11 +19,11 @@ export class SettingsFormRenderer extends FormRenderer {
         HighlightText,
         FormLabel: FormLabelHighlightText,
     };
-    static props = {
-        ...FormRenderer.props,
-        initialApp: String,
-        slots: Object,
-    };
+    props = props({
+        ...formRendererProps,
+        initialApp: t.string(),
+        slots: t.object(),
+    });
 
     setup() {
         super.setup();

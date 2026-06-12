@@ -3,24 +3,18 @@ import { registry } from "@web/core/registry";
 import { formatFloatFactor } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 export class FloatToggleField extends Component {
     static template = "web.FloatToggleField";
-    static props = {
+    props = props({
         ...standardFieldProps,
-        digits: { type: Array, optional: true },
-        range: { type: Array, optional: true },
-        factor: { type: Number, optional: true },
-        disableReadOnly: { type: Boolean, optional: true },
-        trailingZeros: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        range: [0.0, 0.5, 1.0],
-        factor: 1,
-        disableReadOnly: false,
-        trailingZeros: true,
-    };
+        digits: t.array().optional(),
+        range: t.array().optional([0.0, 0.5, 1.0]),
+        factor: t.number().optional(1),
+        disableReadOnly: t.boolean().optional(false),
+        trailingZeros: t.boolean().optional(true),
+    });
 
     // TODO perf issue (because of update round trip)
     // we probably want to have a state and a useEffect or onWillUpateProps

@@ -3,7 +3,7 @@ import { ChannelMember } from "@mail/discuss/core/common/channel_member";
 import { openChannelInvitationDialog } from "@mail/discuss/core/common/channel_invitation";
 import { SearchInput } from "@mail/core/common/search_input";
 
-import { Component, computed, onWillUpdateProps, onWillStart, props, types } from "@odoo/owl";
+import { Component, computed, onWillUpdateProps, onWillStart, props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 import { useService } from "@web/core/utils/hooks";
@@ -34,8 +34,8 @@ export class ChannelMemberList extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.props = props({
-            channel: types.instanceOf(this.store["discuss.channel"].Class),
-            "close?": types.function([types.instanceOf(MouseEvent)]),
+            channel: t.instanceOf(this.store["discuss.channel"].Class),
+            close: t.function([]).optional(),
         });
         this.dialogService = useService("dialog");
         this.openChannelInvitationDialog = openChannelInvitationDialog;
