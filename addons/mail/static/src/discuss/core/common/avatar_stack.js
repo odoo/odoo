@@ -30,7 +30,6 @@ export class AvatarStack extends Component {
                     ])
                 ),
                 "size?": types.number(),
-                "slots?": types.object(),
                 "spacing?": types.number(),
                 "total?": types.number(),
             },

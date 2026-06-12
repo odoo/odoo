@@ -1,33 +1,24 @@
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { PermissionPromptDialog } from "@web/core/permission_prompt_dialog/permission_prompt_dialog";
 import { useService } from "@web/core/utils/hooks";
 
 export class CallPermissionDialog extends Component {
     static components = { PermissionPromptDialog };
-    static props = {
-        close: Function,
-        media: {
-            type: String,
-            validate: (s) => ["camera", "microphone"].includes(s),
-        },
-        permissionPrompt: {
-            type: String,
-            optional: true,
-        },
-        suggestAllMedias: {
-            type: Boolean,
-            optional: true,
-        },
-        useMicrophone: Function,
-        useCamera: Function,
-    };
-    static defaultProps = {
-        suggestAllMedias: true,
-    };
     static template = "discuss.CallPermissionDialog";
 
     setup() {
+        this.props = props(
+            {
+                close: types.function([]),
+                media: types.selection(["camera", "microphone"]),
+                "permissionPrompt?": types.string(),
+                "suggestAllMedias?": types.boolean(),
+                useCamera: types.function([]),
+                useMicrophone: types.function([]),
+            },
+            { suggestAllMedias: true }
+        );
         this.rtc = useService("discuss.rtc");
         this.ui = useService("ui");
     }

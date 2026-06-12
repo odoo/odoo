@@ -8,22 +8,13 @@ import { isEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
-import { Component, onMounted, onWillUnmount, useListener } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, props, types, useListener } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 
 const HIDDEN_CONNECTION_STATES = new Set(["connected", "completed"]);
 
 export class CallParticipantCard extends Component {
-    static props = [
-        "className",
-        "cardData",
-        "channel",
-        "minimized?",
-        "inset?",
-        "isSidebarItem?",
-        "compact?",
-    ];
     static components = { CallParticipantVideo, CallContextMenu, CallDropdown };
     static template = "discuss.CallParticipantCard";
     /** @type {import("models").Rtc} */
@@ -34,6 +25,24 @@ export class CallParticipantCard extends Component {
         this.root = useRef("root");
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
+        this.props = props({
+            cardData: types.object({
+                key: types.string(),
+                "member?": types.instanceOf(this.store["discuss.channel.member"].Class),
+                "session?": types.instanceOf(this.store["discuss.channel.rtc.session"].Class),
+                "type?": types.selection(["camera", "screen"]),
+                "videoStream?": types.or([types.instanceOf(MediaStream), types.selection([false])]),
+            }),
+            channel: types.instanceOf(this.store["discuss.channel"].Class),
+            className: types.string(),
+            "compact?": types.boolean(),
+            "inset?": types.function([
+                types.instanceOf(this.store["discuss.channel.rtc.session"].Class),
+                types.selection(["camera", "screen"]),
+            ]),
+            "isSidebarItem?": types.boolean(),
+            "minimized?": types.boolean(),
+        });
         this.ui = useService("ui");
         this.rootHover = useHover("root");
         this.isMobileOS = isMobileOS();

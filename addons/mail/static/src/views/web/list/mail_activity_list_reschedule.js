@@ -1,11 +1,11 @@
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { serializeDate } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
+import { Record } from "@web/model/relational_model/record";
 const { DateTime } = luxon;
 
 /**
@@ -16,12 +16,10 @@ const { DateTime } = luxon;
 // Version of the widget to use on mail.activity lists
 export class MailActivityListRescheduleDropdown extends Component {
     static components = { Dropdown, DropdownItem, DateTimeInput };
-    static props = {
-        ...standardWidgetProps,
-    };
     static template = "mail.MailActivityListRescheduleDropdown";
 
     setup() {
+        this.props = props({ record: types.instanceOf(Record) });
         this.orm = useService("orm");
         this.action = useService("action");
         const today = DateTime.now().startOf("day");

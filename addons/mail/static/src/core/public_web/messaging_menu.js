@@ -25,7 +25,6 @@ export class MessagingMenu extends Component {
         ImStatus,
         Priority,
     };
-    static props = [];
     static template = "mail.MessagingMenu";
 
     setup() {

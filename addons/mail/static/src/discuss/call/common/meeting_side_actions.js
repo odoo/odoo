@@ -1,24 +1,23 @@
-import { useSubEnv } from "@web/owl2/utils";
 import { ActionList } from "@mail/core/common/action_list";
+import { UseThreadActions } from "@mail/core/common/thread_actions";
 
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
+import { useSubEnv } from "@web/owl2/utils";
 
 /** @typedef {"chat"|"invite"} MeetingPanel */
 
-/**
- * @typedef {Object} Props
- * @property {import("@mail/core/common/thread_actions").UseThreadActions} threadActions
- * @extends {Component<Props, Env>}
- */
 export class MeetingSideActions extends Component {
     static template = "mail.MeetingSideActions";
-    static props = ["threadActions", "isSmall?"];
     static components = { ActionList };
 
     setup() {
         this.store = useService("mail.store");
+        this.props = props({
+            threadActions: types.instanceOf(UseThreadActions),
+        });
+        this.ui = useService("ui");
         useSubEnv({ inMeetingSideActions: true });
     }
 
@@ -34,7 +33,7 @@ export class MeetingSideActions extends Component {
             );
             return;
         }
-        const quickThreadActionIds = this.props.isSmall ? [] : ["invite-people", "meeting-chat"];
+        const quickThreadActionIds = this.ui.isSmall ? [] : ["invite-people", "meeting-chat"];
         const { quick, other, group } = threadActions.partition;
         const partitionedActions = {
             quick: quick.filter((action) => !quickThreadActionIds.includes(action.id)),

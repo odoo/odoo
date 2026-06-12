@@ -1,4 +1,14 @@
-import { Component, onMounted, onPatched, onWillUnmount, proxy, useEffect, xml } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    onWillUnmount,
+    props,
+    proxy,
+    types,
+    useEffect,
+    xml,
+} from "@odoo/owl";
 
 import { useComponent, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { Reactive } from "@web/core/utils/reactive";
@@ -89,7 +99,6 @@ export function onExternalClick(refOrName, cb) {
  * @param {() => Array} [param1.stateObserver] when provided, function that, when called, returns list of
  *   reactive state related to presence of targets' el. This is used to help the hook detect when the targets
  *   are removed from DOM, to properly mark the hovered target as non-hovered.
- * @returns {({ isHover: boolean })}
  */
 export function useHover(refNames, { onHover, onAway, stateObserver, onHovering } = {}) {
     refNames = Array.isArray(refNames) ? refNames : [refNames];
@@ -235,11 +244,18 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
 }
 
 export class UseHoverOverlay extends Component {
-    static props = ["slots", "hover"];
     static template = xml`<div t-custom-ref="root"><t t-call-slot="default"/></div>`;
 
     setup() {
         super.setup();
+        this.props = props({
+            hover: types.object({
+                _contains: types.array(
+                    types.function([types.instanceOf(EventTarget)], types.boolean())
+                ),
+                addTarget: types.function([types.object()], types.function([])),
+            }),
+        });
         this.root = useRef("root");
         const overlayContains = this.env[OVERLAY_SYMBOL].contains;
         let removeTarget;
@@ -920,6 +936,7 @@ export function useLongPress(ref, { action, predicate = () => true } = {}) {
 }
 
 export const inDiscussCallViewProps = ["isPip?"];
+export const inDiscussCallViewPropsSchema = { "isPip?": types.boolean() };
 export function useInDiscussCallView() {
     const component = useComponent();
     useSubEnv({

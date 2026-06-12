@@ -2,7 +2,7 @@ import { useRef } from "@web/owl2/utils";
 import { ActivityListPopover } from "@mail/core/web/activity_list_popover";
 import { Avatar } from "@mail/views/web/fields/avatar/avatar";
 
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 
 import { usePopover } from "@web/core/popover/popover_hook";
 
@@ -10,32 +10,29 @@ import { formatDate } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { formatList } from "@web/core/l10n/utils";
 
-
 export class ActivityCell extends Component {
     static components = {
         Avatar,
     };
-    static props = {
-        activityIds: {
-            type: Array,
-            element: Number,
-        },
-        attachmentsInfo: {
-            optional: true,
-            type: Object,
-        },
-        activityTypeId: Number,
-        reportingDate: String,
-        countByState: Object,
-        reloadFunc: Function,
-        resId: Number,
-        resModel: String,
-        summaries: Array,
-        userAssignedIds: Array,
-    };
     static template = "mail.ActivityCell";
 
     setup() {
+        this.props = props({
+            activityIds: types.array(types.number()),
+            activityTypeId: types.number(),
+            "attachmentsInfo?": types.object({
+                count: types.number(),
+                most_recent_id: types.number(),
+                most_recent_name: types.string(),
+            }),
+            countByState: types.record(types.number()),
+            reloadFunc: types.function([]),
+            reportingDate: types.string(),
+            resId: types.number(),
+            resModel: types.string(),
+            summaries: types.array(),
+            userAssignedIds: types.array(types.number()),
+        });
         this.popover = usePopover(ActivityListPopover, { position: "bottom-start" });
         this.contentRef = useRef("content");
     }
@@ -45,9 +42,9 @@ export class ActivityCell extends Component {
     }
     get displayedSummaries() {
         const summariesWithContent = this.props.summaries.filter((textContent) => !!textContent);
-        const extras = this.props.summaries.length - summariesWithContent.length
+        const extras = this.props.summaries.length - summariesWithContent.length;
         if (summariesWithContent.length > 0 && extras > 0) {
-            summariesWithContent.push(_t("%(extraCount)s more", { extraCount: extras } ));
+            summariesWithContent.push(_t("%(extraCount)s more", { extraCount: extras }));
         }
         return formatList(summariesWithContent);
     }

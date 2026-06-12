@@ -119,7 +119,7 @@ export class ThreadAction extends Action {
 }
 
 /** @typedef {UseActions<ThreadActionParams, ThreadAction>} UseThreadActions_Def */
-class UseThreadActions extends UseActions {
+export class UseThreadActions extends UseActions {
     ActionClass = ThreadAction;
 }
 

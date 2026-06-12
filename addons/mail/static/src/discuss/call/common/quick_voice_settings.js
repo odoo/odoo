@@ -9,7 +9,6 @@ import { useService } from "@web/core/utils/hooks";
 
 export class QuickVoiceSettings extends Component {
     static template = "discuss.QuickVoiceSettings";
-    static props = [];
     static components = { DeviceSelect };
 
     setup() {

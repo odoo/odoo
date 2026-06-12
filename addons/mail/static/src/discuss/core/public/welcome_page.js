@@ -1,4 +1,4 @@
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, props, proxy, signal, types } from "@odoo/owl";
 
 import { CallPreview } from "@mail/discuss/call/common/call_preview";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
@@ -8,7 +8,6 @@ import { useService } from "@web/core/utils/hooks";
 import { useLayoutEffect, useSubEnv } from "@web/owl2/utils";
 
 export class WelcomePage extends Component {
-    static props = ["proceed?"];
     static template = "mail.WelcomePage";
     static components = { AvatarStack, CallPreview };
 
@@ -16,6 +15,7 @@ export class WelcomePage extends Component {
 
     setup() {
         super.setup();
+        this.props = props({ "proceed?": types.function([]) });
         this.description = signal();
         this.store = useService("mail.store");
         this.ui = useService("ui");

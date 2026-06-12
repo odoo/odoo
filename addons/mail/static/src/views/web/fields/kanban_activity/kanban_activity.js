@@ -1,9 +1,9 @@
 import { ActivityButton } from "@mail/core/web/activity_button";
 
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { Record } from "@web/model/relational_model/record";
 
 export class KanbanActivity extends Component {
     static components = { ActivityButton };
@@ -20,8 +20,12 @@ export class KanbanActivity extends Component {
         { name: "activity_type_icon", type: "char" },
         { name: "activity_type_id", type: "many2one", relation: "mail.activity.type" },
     ];
-    static props = standardFieldProps;
     static template = "mail.KanbanActivity";
+
+    setup() {
+        super.setup(...arguments);
+        this.props = props({ record: types.instanceOf(Record) });
+    }
 }
 
 export const kanbanActivity = {

@@ -1,4 +1,4 @@
-import { Component, onWillUnmount, proxy, status } from "@odoo/owl";
+import { Component, onWillUnmount, props, proxy, status, types } from "@odoo/owl";
 
 import { useComponent } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
@@ -10,8 +10,23 @@ import { loadLamejs } from "@mail/discuss/voice_message/common/voice_message_ser
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 
 export class VoiceRecorder extends Component {
-    static props = ["composer", "state"];
     static template = "mail.VoiceRecorder";
+
+    setup() {
+        super.setup(...arguments);
+        this.store = useService("mail.store");
+        this.props = props({
+            composer: types.instanceOf(this.store["Composer"].Class),
+            state: types.object({
+                cancelRecording: types.function([]),
+                elapsed: types.string(),
+                limitWarning: types.boolean(),
+                onClick: types.function([]),
+                volumes: types.array(types.number()),
+            }),
+        });
+    }
+
     get title() {
         return _t("Stop Recording");
     }

@@ -2,22 +2,22 @@ import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { Dialog } from "@web/core/dialog/dialog";
 import { today } from "@web/core/l10n/dates";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, props, proxy, types } from "@odoo/owl";
 
 export class ScheduledDateDialog extends Component {
     static template = "mail.ScheduledDateDialog";
-    static props = {
-        close: Function,
-        isRemovable: { type: Boolean },
-        save: Function,
-        scheduledDate: { type: luxon.DateTime, optional: true },
-    };
     static components = {
         DateTimeInput,
         Dialog,
     };
 
     setup() {
+        this.props = props({
+            close: types.function([types.instanceOf(MouseEvent)]),
+            isRemovable: types.boolean(),
+            save: types.function([types.or([types.boolean(), types.instanceOf(luxon.DateTime)])]),
+            "scheduledDate?": types.instanceOf(luxon.DateTime),
+        });
         const now = luxon.DateTime.now();
         this.tomorrowMorning = today().plus({ days: 1 }).set({ hour: 8 });
         this.tomorrowAfternoon = this.tomorrowMorning.set({ hour: 13 });

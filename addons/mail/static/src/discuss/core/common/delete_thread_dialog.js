@@ -15,7 +15,7 @@ export class DeleteThreadDialog extends Component {
         this.store = useService("mail.store");
         this.props = props({
             channel: types.instanceOf(this.store["discuss.channel"].Class),
-            close: types.function([]),
+            close: types.function([types.instanceOf(MouseEvent)]),
         });
     }
 

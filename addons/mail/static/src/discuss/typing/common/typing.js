@@ -1,25 +1,24 @@
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
-/**
- * @typedef {Object} Props
- * @property {import("models").Thread} channel
- * @property {string} [size]
- * @property {boolean} [displayText]
- * @extends {Component<Props, Env>}
- */
 export class Typing extends Component {
-    static defaultProps = {
-        size: "small",
-        displayText: true,
-    };
-    static props = ["channel?", "size?", "displayText?", "member?"];
     static template = "discuss.Typing";
 
     setup() {
         super.setup(...arguments);
+        this.store = useService("mail.store");
+        this.props = props(
+            {
+                "channel?": types.instanceOf(this.store["discuss.channel"].Class),
+                "displayText?": types.boolean(),
+                "member?": types.instanceOf(this.store["discuss.channel.member"].Class),
+                "size?": types.string(),
+            },
+            { displayText: true, size: "small" }
+        );
         this.isBrowserSafari = isBrowserSafari;
     }
 

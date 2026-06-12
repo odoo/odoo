@@ -381,6 +381,7 @@ const chatterPatch = {
         super.onPostCallback();
     },
 
+    /** @param {import("models").Thread} thread */
     onScheduledMessageChanged(thread) {
         // reload messages as well as a scheduled message could have been sent
         this.load(thread, ["scheduledMessages", "messages"]);

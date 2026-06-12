@@ -1,24 +1,21 @@
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 import { FollowerSubtypeDialog } from "@mail/core/web/follower_subtype_dialog";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { usePopover } from "@web/core/popover/popover_hook";
 
-/**
- * @typedef {Object} Props
- * @property {import("models").Follower} follower
- * @property {Function} [onFollowerChanged]
- * @property {Function} [close]
- * @extends {Component<Props, Env>}
- */
 export class Follower extends Component {
     static template = "mail.Follower";
-    static props = ["follower", "onFollowerChanged?", "close?"];
     static components = { DropdownItem };
 
     setup() {
         this.store = useService("mail.store");
+        this.props = props({
+            "close?": types.function([]),
+            follower: types.instanceOf(this.store["mail.followers"].Class),
+            "onFollowerChanged?": types.function([]),
+        });
         this.avatarCard = usePopover(AvatarCard, { position: "right" });
     }
 

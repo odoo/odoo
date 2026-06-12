@@ -35,7 +35,7 @@ export class ChannelMemberList extends Component {
         this.store = useService("mail.store");
         this.props = props({
             channel: types.instanceOf(this.store["discuss.channel"].Class),
-            "close?": types.function([]),
+            "close?": types.function([types.instanceOf(MouseEvent)]),
         });
         this.dialogService = useService("dialog");
         this.openChannelInvitationDialog = openChannelInvitationDialog;

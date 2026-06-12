@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, computed, toRaw } from "@odoo/owl";
+import { Component, computed, props, toRaw, types } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -13,12 +13,17 @@ import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/discuss_chann
 
 export class CallActionList extends Component {
     static components = { ActionList };
-    static props = ["channel", "className?", "compact?", "pipExtraActions?"];
     static template = "discuss.CallActionList";
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.props = props({
+            channel: types.instanceOf(this.store["discuss.channel"].Class),
+            "className?": types.string(),
+            "compact?": types.boolean(),
+            "pipExtraActions?": types.array(),
+        });
         this.rtc = useService("discuss.rtc");
         this.pipService = useService("discuss.pip_service");
         this.callActions = useCallActions(this.callActionsParams);

@@ -1,4 +1,4 @@
-import { Component, proxy } from "@odoo/owl";
+import { Component, props, proxy, types } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { memoize } from "@web/core/utils/functions";
@@ -6,7 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 import { ModelSelector } from "@web/core/model_selector/model_selector";
 import { registry } from "@web/core/registry";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
-import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { Record } from "@web/model/relational_model/record";
 
 /** largely taken from documents' DocumentsDetailPanel, which selects arbitrary models and records
  * through two interactions:
@@ -22,9 +22,9 @@ const getAvailableResModels = memoize((_null, orm) =>
 class ActivityModelSelector extends Component {
     static components = { ModelSelector };
     static template = "mail.ActivityModelSelector";
-    static props = standardFieldProps;
 
     setup() {
+        this.props = props({ record: types.instanceOf(Record) });
         // Use a state for the model to not write on the record the model without record id
         this.orm = useService("orm");
         this.dialog = useService("dialog");

@@ -1,4 +1,4 @@
-import { Component, onWillDestroy, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillDestroy, onWillStart, props, proxy, types } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -7,27 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { isBrowserChrome } from "@web/core/browser/feature_detection";
 
-const deviceKind = new Set(["audioinput", "videoinput", "audiooutput"]);
-
 export class DeviceSelect extends Component {
-    static props = {
-        menuClass: {
-            type: String,
-            optional: true,
-        },
-        kind: {
-            type: String,
-            validate: (string) => deviceKind.has(string),
-        },
-        icon: {
-            type: String,
-            optional: true,
-        },
-        permissionDialogConfiguration: {
-            type: Object,
-            optional: true,
-        },
-    };
     static components = { Dropdown, DropdownItem };
     static template = "discuss.CallDeviceSelect";
     CLICK_TO_ACTIVATE = _t("Click to Activate");
@@ -35,6 +15,12 @@ export class DeviceSelect extends Component {
 
     setup() {
         super.setup();
+        this.props = props({
+            "icon?": types.string(),
+            kind: types.selection(["audioinput", "videoinput", "audiooutput"]),
+            "menuClass?": types.string(),
+            "permissionDialogConfiguration?": types.object(),
+        });
         this.store = useService("mail.store");
         this.notification = useService("notification");
         this.state = proxy({

@@ -2,12 +2,12 @@ import { useLayoutEffect } from "@web/owl2/utils";
 import { Gif } from "@mail/core/common/gif";
 import { useOnBottomScrolled, useSequential } from "@mail/utils/common/hooks";
 
-import { Component, onWillStart, proxy } from "@odoo/owl";
+import { Component, onWillStart, props, proxy, types } from "@odoo/owl";
 import { user } from "@web/core/user";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
 import { rpc } from "@web/core/network/rpc";
-import { PICKER_PROPS, usePicker } from "@web/core/emoji_picker/emoji_picker";
+import { usePicker } from "@web/core/emoji_picker/emoji_picker";
 
 export function useGifPicker(...args) {
     return usePicker(GifPicker, ...args);
@@ -44,22 +44,17 @@ export function useGifPicker(...args) {
  * @property {{ tinygif: TenorMediaFormat }} media_formats
  */
 
-/**
- * @typedef {Object} Props
- * @property {function} onSelect Callback to use when the gif is selected
- * @property {string} [className]
- * @property {function} [close]
- * @property {Object} [state]
- * @extends {Component<Props, Env>}
- */
-
 export class GifPicker extends Component {
     static template = "discuss.GifPicker";
-    static props = PICKER_PROPS;
     static components = { Gif };
 
     setup() {
         super.setup();
+        this.props = props({
+            "close?": types.function([]),
+            onSelect: types.function([types.object(), types.boolean()]),
+            "state?": types.object(),
+        });
         this.orm = useService("orm");
         this.store = useService("mail.store");
         this.sequential = useSequential();

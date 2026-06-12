@@ -1,6 +1,6 @@
 import { ActivityCompiler } from "@mail/views/web/activity/activity_compiler";
 
-import { Component } from "@odoo/owl";
+import { Component, props, types } from "@odoo/owl";
 
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { user } from "@web/core/user";
@@ -8,19 +8,23 @@ import { isHtmlEmpty } from "@web/core/utils/html";
 import { Field } from "@web/views/fields/field";
 import { getFormattedRecord, getImageSrcFromRecordInfo } from "@web/views/kanban/kanban_record";
 import { useViewCompiler } from "@web/views/view_compiler";
+import { Record } from "@web/model/relational_model/record";
 
 export class ActivityRecord extends Component {
     static components = {
         Field,
     };
-    static props = {
-        archInfo: { type: Object },
-        openRecord: { type: Function },
-        record: { type: Object },
-    };
     static template = "mail.ActivityRecord";
 
     setup() {
+        this.props = props({
+            archInfo: types.object(),
+            openRecord: types.function([
+                types.instanceOf(Record),
+                types.object({ "newWindow?": types.boolean() }),
+            ]),
+            record: types.instanceOf(Record),
+        });
         this.evaluateBooleanExpr = evaluateBooleanExpr;
         this.widget = {
             deletable: false,
