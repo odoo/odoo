@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail_inbox.InboxSidebar">
+        <div class="o-mail-InboxSidebar d-flex flex-column flex-shrink-0 border-end border-dark o-border-opacity-15 h-100 overflow-auto o-scrollbar-thin" style="width: 220px;">
+            <div class="px-3 py-3">
+                <h6 class="text-uppercase text-muted small fw-bold mb-0 px-1">Mail</h6>
+            </div>
+            <div class="d-flex flex-column gap-1 px-2">
+                <t t-foreach="props.folders" t-as="folder" t-key="folder.id">
+                    <button
+                        class="btn btn-sm d-flex align-items-center gap-2 border-0 rounded-2 text-start fw-normal"
+                        t-att-class="{
+                            'bg-primary text-white': props.activeFolder === folder.id,
+                            'btn-light': props.activeFolder !== folder.id,
+                        }"
+                        t-on-click="() => this.onFolderClick(folder.id)"
+                    >
+                        <i t-attf-class="fa #{folder.icon} fa-fw opacity-75"/>
+                        <span class="flex-grow-1 text-truncate" t-out="folder.name"/>
+                        <t t-if="props.counts[folder.id]">
+                            <span
+                                class="badge rounded-pill small"
+                                t-att-class="{
+                                    'bg-white text-primary': props.activeFolder === folder.id,
+                                    'bg-primary text-white': props.activeFolder !== folder.id,
+                                }"
+                                t-out="props.counts[folder.id]"
+                            />
+                        </t>
+                    </button>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

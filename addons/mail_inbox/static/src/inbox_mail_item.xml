@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Link-to-Record dialog -->
+    <t t-name="mail_inbox.LinkToRecordDialog">
+        <Dialog title="'Link to Record'" size="'md'">
+            <div class="d-flex flex-column gap-3">
+                <div>
+                    <label class="form-label fw-semibold">Model</label>
+                    <select class="form-select" t-on-change="this.onModelChange">
+                        <option value="">-- Select a model --</option>
+                        <t t-foreach="this.state.models" t-as="model" t-key="model.model">
+                            <option t-att-value="model.model" t-out="model.name"/>
+                        </t>
+                    </select>
+                </div>
+                <t t-if="this.state.selectedModel">
+                    <div>
+                        <label class="form-label fw-semibold">Search record</label>
+                        <input
+                            type="text"
+                            class="form-control mb-2"
+                            placeholder="Type to search…"
+                            t-on-input="this.onRecordSearch"
+                        />
+                        <t t-if="this.state.loading">
+                            <div class="text-muted small"><i class="fa fa-spinner fa-spin me-1"/>Searching…</div>
+                        </t>
+                        <div class="list-group list-group-flush border rounded">
+                            <t t-foreach="this.state.records" t-as="record" t-key="record.id">
+                                <button
+                                    type="button"
+                                    class="list-group-item list-group-item-action py-2"
+                                    t-att-class="{ 'active': this.state.selectedRecordId === record.id }"
+                                    t-on-click="() => this.selectRecord(record)"
+                                    t-out="record.display_name"
+                                />
+                            </t>
+                            <t t-if="!this.state.loading and !this.state.records.length">
+                                <div class="list-group-item text-muted small py-2">No records found</div>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="this.confirm"
+                    t-att-disabled="!this.state.selectedModel or !this.state.selectedRecordId">
+                    Link
+                </button>
+                <button class="btn btn-secondary" t-on-click="() => props.close()">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+
+    <!-- Add-Tag dialog -->
+    <t t-name="mail_inbox.AddTagDialog">
+        <Dialog title="'Add Tags'" size="'sm'">
+            <t t-if="!this.state.tags.length">
+                <div class="text-muted small py-2">No tags defined yet.</div>
+            </t>
+            <div class="d-flex flex-column gap-1">
+                <t t-foreach="this.state.tags" t-as="tag" t-key="tag.id">
+                    <label class="d-flex align-items-center gap-2 rounded px-2 py-1 o-add-tag-row">
+                        <input type="checkbox"
+                            t-att-checked="this.state.selected[tag.id]"
+                            t-on-change="() => this.toggleTag(tag.id)"
+                        />
+                        <span t-out="tag.name"/>
+                    </label>
+                </t>
+            </div>
+            <t t-set-slot="footer">
+                <button class="btn btn-primary" t-on-click="this.confirm">Apply</button>
+                <button class="btn btn-secondary" t-on-click="() => props.close()">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+
+    <!-- Individual mail row -->
+    <t t-name="mail_inbox.InboxMailItem">
+        <div
+            class="o-mail-InboxMailItem d-flex align-items-center gap-3 px-4 py-2 border-bottom position-relative"
+            t-att-class="{
+                'o-unread fw-semibold': this.isUnread,
+                'text-muted': !this.isUnread,
+            }"
+            t-on-mouseenter="this.onRowMouseEnter"
+            t-on-mouseleave="this.onRowMouseLeave"
+        >
+            <!-- Star -->
+            <button
+                class="btn btn-sm btn-link p-0 border-0 text-reset"
+                t-att-class="{ 'text-warning': this.mail.is_starred, 'text-muted opacity-50': !this.mail.is_starred }"
+                t-on-click.stop="this.toggleStar"
+                title="Star"
+            >
+                <i t-attf-class="fa #{this.mail.is_starred ? 'fa-star' : 'fa-star-o'}"/>
+            </button>
+
+            <!-- Sender -->
+            <div class="o-mail-InboxMailItem-sender text-truncate" style="min-width: 140px; max-width: 180px;">
+                <span t-out="this.senderName"/>
+            </div>
+
+            <!-- Subject + preview -->
+            <div class="o-mail-InboxMailItem-content flex-grow-1 d-flex align-items-baseline gap-2 overflow-hidden">
+                <span class="text-truncate" t-out="this.mail.subject or '(no subject)'"/>
+                <t t-if="this.mail.preview and !this.isUnread">
+                    <span class="text-muted small text-truncate fw-normal opacity-75" t-out="' – ' + this.mail.preview"/>
+                </t>
+            </div>
+
+            <!-- Tags -->
+            <t t-if="this.mail.tag_ids and this.mail.tag_ids.length">
+                <div class="d-flex gap-1 flex-shrink-0">
+                    <t t-foreach="this.mail.tag_ids" t-as="tag" t-key="tag.id">
+                        <span class="badge rounded-pill bg-secondary small" t-out="tag.name"/>
+                    </t>
+                </div>
+            </t>
+
+            <!-- Linked record button -->
+            <t t-if="this.mail.model and this.mail.res_id">
+                <button class="btn btn-sm btn-outline-primary py-0 px-2 flex-shrink-0 small"
+                    t-on-click.stop="this.openLinkedRecord"
+                    title="Open linked record">
+                    <i class="fa fa-external-link me-1"/>Record
+                </button>
+            </t>
+
+            <!-- Date (always visible, never replaced) -->
+            <div class="o-mail-InboxMailItem-date text-muted small flex-shrink-0" style="min-width: 60px; text-align: right;">
+                <span t-out="this.formattedDate"/>
+            </div>
+
+            <!-- Action popover: appears on hover, position locked on first show -->
+            <div class="o-mail-InboxMailItem-actions"
+                t-ref="actions"
+                t-on-mouseenter="this.onActionsMouseEnter"
+                t-on-mouseleave="this.onActionsMouseLeave"
+            >
+                <t t-if="this.isUnread">
+                    <button class="o-mail-InboxMailItem-action-btn" t-on-click.stop="this.markAsRead">
+                        <i class="fa fa-fw fa-envelope-open-o"/>
+                        Mark as Read
+                    </button>
+                </t>
+                <t t-if="this.isRead">
+                    <button class="o-mail-InboxMailItem-action-btn" t-on-click.stop="this.markAsUnread">
+                        <i class="fa fa-fw fa-envelope"/>
+                        Mark as Unread
+                    </button>
+                </t>
+                <button class="o-mail-InboxMailItem-action-btn" t-on-click.stop="this.openAddTag">
+                    <i class="fa fa-fw fa-tag"/>
+                    Add Tag
+                </button>
+                <button class="o-mail-InboxMailItem-action-btn" t-on-click.stop="this.openLinkToRecord">
+                    <i class="fa fa-fw fa-link"/>
+                    Link to Record
+                </button>
+                <div class="o-mail-InboxMailItem-actions-separator"/>
+                <button class="o-mail-InboxMailItem-action-btn o-danger" t-on-click.stop="this.deleteMail">
+                    <i class="fa fa-fw fa-trash"/>
+                    Delete
+                </button>
+            </div>
+        </div>
+    </t>
+
+</templates>

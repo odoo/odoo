@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
-import functools
 import logging
 import poplib
 
@@ -286,13 +285,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
             try:
                 server_connection = server._connect__()
                 message_cr = self.env.registry.cursor()
-                MailThread = server.env['mail.thread'].with_env(self.env(cr=message_cr)).with_context(default_fetchmail_server_id=server.id)
-                thread_process_message = functools.partial(
-                    MailThread.message_process,
-                    model=server.object_id.model,
-                    save_original=server.original,
-                    strip_attachments=(not server.attach),
-                )
+                message_env = self.env(cr=message_cr)
                 unread_message_count = server_connection.check_unread_messages()
                 _logger.debug('%d unread messages on %s server %s.', unread_message_count, *server_type_and_name)
                 total_remaining += unread_message_count
@@ -301,15 +294,15 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                     count += 1
                     total_remaining -= 1
                     try:
-                        thread_process_message(message=message)
-                        remaining_time = MailThread.env['ir.cron']._commit_progress(1)
+                        server._process_fetched_message(message_env, message)
+                        remaining_time = message_env['ir.cron']._commit_progress(1)
                     except Exception:  # noqa: BLE001
-                        MailThread.env.cr.rollback()
+                        message_cr.rollback()
                         self.env['ir.cron']._rollback_progress()
                         failed += 1
                         _logger.info('Failed to process mail from %s server %s.', *server_type_and_name, exc_info=True)
                         # mail failed, but still "seen", so one unit of work
-                        remaining_time = MailThread.env['ir.cron']._commit_progress(1)
+                        remaining_time = message_env['ir.cron']._commit_progress(1)
                     server_connection.handled_message(message_num)
                     if count >= batch_limit or not remaining_time:
                         break
@@ -344,6 +337,23 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
             if not remaining_time:
                 break
         return result_exception
+
+    def _process_fetched_message(self, message_env, message):
+        """Process one fetched message from this server.
+
+        Called per-message in _fetch_mail. Override to change behavior,
+        e.g. to store messages as fetchmail.mail records instead of routing them.
+
+        :param message_env: odoo Environment using the message processing cursor
+        :param message: raw RFC2822 message bytes
+        """
+        MailThread = message_env['mail.thread'].with_context(default_fetchmail_server_id=self.id)
+        MailThread.message_process(
+            message=message,
+            model=self.object_id.model,
+            save_original=self.original,
+            strip_attachments=(not self.attach),
+        )
 
     def _get_connection_type(self):
         """Return which connection must be used for this mail server (IMAP or POP).

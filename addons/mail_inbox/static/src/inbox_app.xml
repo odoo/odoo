@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail_inbox.InboxApp">
+        <div class="o-mail-InboxApp d-flex h-100 overflow-hidden">
+            <InboxSidebar
+                folders="this.folders"
+                activeFolder="this.state.activeFolder"
+                counts="this.state.counts"
+                onSelectFolder.bind="this.onSelectFolder"
+            />
+            <div class="o-mail-InboxMain flex-grow-1 overflow-auto d-flex flex-column">
+                <InboxList
+                    mails="this.state.mails"
+                    loading="this.state.loading"
+                    folder="this.state.activeFolder"
+                    onMailUpdated.bind="this.onMailUpdated"
+                />
+            </div>
+        </div>
+    </t>
+</templates>

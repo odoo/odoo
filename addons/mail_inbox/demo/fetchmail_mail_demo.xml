@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Demo inbox server (local, no real connection) -->
+    <record id="demo_fetchmail_server_inbox" model="fetchmail.server">
+        <field name="name">My Inbox</field>
+        <field name="server_type">local</field>
+        <field name="state">done</field>
+        <field name="is_inbox">True</field>
+        <field name="user_id" ref="base.user_demo"/>
+    </record>
+
+    <!-- Demo tags -->
+    <record id="demo_tag_customer" model="fetchmail.tag">
+        <field name="name">Customer</field>
+        <field name="color">2</field>
+    </record>
+    <record id="demo_tag_newsletter" model="fetchmail.tag">
+        <field name="name">Newsletter</field>
+        <field name="color">5</field>
+    </record>
+    <record id="demo_tag_internal" model="fetchmail.tag">
+        <field name="name">Internal</field>
+        <field name="color">10</field>
+    </record>
+
+    <!-- === Discussion with a customer (3 emails) === -->
+
+    <!-- 1. Customer initial inquiry -->
+    <record id="demo_mail_customer_1" model="fetchmail.mail">
+        <field name="fetchmail_server_id" ref="demo_fetchmail_server_inbox"/>
+        <field name="email_from">Alice Martin &lt;alice.martin@shopwonders.example.com&gt;</field>
+        <field name="email_to">demo@example.com</field>
+        <field name="subject">Question about your services</field>
+        <field name="body" type="html">
+            <p>Hello,</p>
+            <p>I came across your company and I am very interested in your services. Could you tell me more about your pricing and onboarding process? We are a small team of 10 people looking for a CRM solution.</p>
+            <p>Best regards,<br/>Alice Martin<br/>ShopWonders</p>
+        </field>
+        <field name="date" eval="(DateTime.now() - relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="mail_type">incoming</field>
+        <field name="mail_status">read</field>
+        <field name="tag_ids" eval="[(4, ref('demo_tag_customer'))]"/>
+    </record>
+
+    <!-- 2. Our reply (outgoing, sent) -->
+    <record id="demo_mail_customer_2" model="fetchmail.mail">
+        <field name="fetchmail_server_id" ref="demo_fetchmail_server_inbox"/>
+        <field name="email_from">demo@example.com</field>
+        <field name="email_to">Alice Martin &lt;alice.martin@shopwonders.example.com&gt;</field>
+        <field name="subject">Re: Question about your services</field>
+        <field name="body" type="html">
+            <p>Hi Alice,</p>
+            <p>Thank you for reaching out! We would be happy to walk you through our plans. For a team of 10, our Starter plan would be a great fit at €15/user/month.</p>
+            <p>Would you like to schedule a short demo call?</p>
+            <p>Best,<br/>Marc Demo</p>
+        </field>
+        <field name="date" eval="(DateTime.now() - relativedelta(days=2, hours=22)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="mail_type">outgoing</field>
+        <field name="mail_status">sent</field>
+        <field name="parent_id" ref="demo_mail_customer_1"/>
+        <field name="tag_ids" eval="[(4, ref('demo_tag_customer'))]"/>
+    </record>
+
+    <!-- 3. Customer follow-up (new/unread) -->
+    <record id="demo_mail_customer_3" model="fetchmail.mail">
+        <field name="fetchmail_server_id" ref="demo_fetchmail_server_inbox"/>
+        <field name="email_from">Alice Martin &lt;alice.martin@shopwonders.example.com&gt;</field>
+        <field name="email_to">demo@example.com</field>
+        <field name="subject">Re: Question about your services</field>
+        <field name="body" type="html">
+            <p>Hi Marc,</p>
+            <p>Yes, a demo call would be great! I am available Thursday afternoon or Friday morning. Let me know what works for you.</p>
+            <p>Alice</p>
+        </field>
+        <field name="date" eval="(DateTime.now() - relativedelta(hours=18)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="mail_type">incoming</field>
+        <field name="mail_status">new</field>
+        <field name="parent_id" ref="demo_mail_customer_1"/>
+        <field name="tag_ids" eval="[(4, ref('demo_tag_customer'))]"/>
+    </record>
+
+    <!-- === Newsletter from a fake ecommerce === -->
+    <record id="demo_mail_newsletter" model="fetchmail.mail">
+        <field name="fetchmail_server_id" ref="demo_fetchmail_server_inbox"/>
+        <field name="email_from">ShopWonders Deals &lt;deals@newsletter.shopwonders.example.com&gt;</field>
+        <field name="email_to">demo@example.com</field>
+        <field name="subject">🛍 Summer Sale — Up to 50% off everything!</field>
+        <field name="body" type="html">
+            <p>Dear valued customer,</p>
+            <p>Our biggest sale of the year has started! Enjoy <strong>up to 50% off</strong> on thousands of products. Shop now and save big.</p>
+            <ul>
+                <li>Electronics from €49</li>
+                <li>Fashion up to 40% off</li>
+                <li>Free shipping on orders over €50</li>
+            </ul>
+            <p>Offer ends Sunday. <a href="#">Shop now</a></p>
+        </field>
+        <field name="date" eval="(DateTime.now() - relativedelta(days=5, hours=9)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="mail_type">incoming</field>
+        <field name="mail_status">read</field>
+        <field name="tag_ids" eval="[(4, ref('demo_tag_newsletter'))]"/>
+    </record>
+
+    <!-- === Incoming email from a potential customer === -->
+    <record id="demo_mail_prospect" model="fetchmail.mail">
+        <field name="fetchmail_server_id" ref="demo_fetchmail_server_inbox"/>
+        <field name="email_from">Thomas Nguyen &lt;t.nguyen@techvision.example.com&gt;</field>
+        <field name="email_to">demo@example.com</field>
+        <field name="subject">Partnership opportunity</field>
+        <field name="body" type="html">
+            <p>Hello,</p>
+            <p>My name is Thomas Nguyen and I am the Head of Partnerships at TechVision. We are looking for CRM partners for our European expansion. I would love to discuss a potential collaboration.</p>
+            <p>Are you available for a call next week?</p>
+            <p>Regards,<br/>Thomas Nguyen<br/>TechVision</p>
+        </field>
+        <field name="date" eval="(DateTime.now() - relativedelta(minutes=47)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="mail_type">incoming</field>
+        <field name="mail_status">new</field>
+        <field name="is_starred">True</field>
+        <field name="tag_ids" eval="[(4, ref('demo_tag_customer'))]"/>
+    </record>
+
+    <!-- === Discussion with another employee (4 emails) === -->
+
+    <!-- 1. Colleague starts thread -->
+    <record id="demo_mail_colleague_1" model="fetchmail.mail">
+        <field name="fetchmail_server_id" ref="demo_fetchmail_server_inbox"/>
+        <field name="email_from">Sophie Laurent &lt;sophie.laurent@company.example.com&gt;</field>
+        <field name="email_to">demo@example.com</field>
+        <field name="subject">Q4 planning kickoff — agenda</field>
+        <field name="body" type="html">
+            <p>Hi team,</p>
+            <p>I am putting together the agenda for our Q4 planning session on Friday. Could you send me your top 3 priorities by Thursday EOD?</p>
+            <p>Thanks,<br/>Sophie</p>
+        </field>
+        <field name="date" eval="(DateTime.now() - relativedelta(days=4, hours=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="mail_type">incoming</field>
+        <field name="mail_status">read</field>
+        <field name="tag_ids" eval="[(4, ref('demo_tag_internal'))]"/>
+    </record>
+
+    <!-- 2. Our reply -->
+    <record id="demo_mail_colleague_2" model="fetchmail.mail">
+        <field name="fetchmail_server_id" ref="demo_fetchmail_server_inbox"/>
+        <field name="email_from">demo@example.com</field>
+        <field name="email_to">Sophie Laurent &lt;sophie.laurent@company.example.com&gt;</field>
+        <field name="subject">Re: Q4 planning kickoff — agenda</field>
+        <field name="body" type="html">
+            <p>Hi Sophie,</p>
+            <p>Sure! My priorities are: (1) Finalize new customer onboarding flow, (2) Launch email campaign, (3) Close the TechVision deal.</p>
+            <p>Marc</p>
+        </field>
+        <field name="date" eval="(DateTime.now() - relativedelta(days=3, hours=20)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="mail_type">outgoing</field>
+        <field name="mail_status">sent</field>
+        <field name="parent_id" ref="demo_mail_colleague_1"/>
+        <field name="tag_ids" eval="[(4, ref('demo_tag_internal'))]"/>
+    </record>
+
+    <!-- 3. Colleague follow-up -->
+    <record id="demo_mail_colleague_3" model="fetchmail.mail">
+        <field name="fetchmail_server_id" ref="demo_fetchmail_server_inbox"/>
+        <field name="email_from">Sophie Laurent &lt;sophie.laurent@company.example.com&gt;</field>
+        <field name="email_to">demo@example.com</field>
+        <field name="subject">Re: Q4 planning kickoff — agenda</field>
+        <field name="body" type="html">
+            <p>Great, thanks! The TechVision deal looks promising. See you Friday!</p>
+            <p>Sophie</p>
+        </field>
+        <field name="date" eval="(DateTime.now() - relativedelta(days=3, hours=18)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="mail_type">incoming</field>
+        <field name="mail_status">read</field>
+        <field name="parent_id" ref="demo_mail_colleague_1"/>
+        <field name="tag_ids" eval="[(4, ref('demo_tag_internal'))]"/>
+    </record>
+
+    <!-- 4. New message from colleague (unread) -->
+    <record id="demo_mail_colleague_4" model="fetchmail.mail">
+        <field name="fetchmail_server_id" ref="demo_fetchmail_server_inbox"/>
+        <field name="email_from">Sophie Laurent &lt;sophie.laurent@company.example.com&gt;</field>
+        <field name="email_to">demo@example.com</field>
+        <field name="subject">Friday meeting — room change</field>
+        <field name="body" type="html">
+            <p>Hi Marc,</p>
+            <p>Quick heads up — the Friday meeting has moved to Conference Room B (3rd floor) due to a double booking. Same time, 2pm.</p>
+            <p>Sophie</p>
+        </field>
+        <field name="date" eval="(DateTime.now() - relativedelta(hours=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="mail_type">incoming</field>
+        <field name="mail_status">new</field>
+        <field name="tag_ids" eval="[(4, ref('demo_tag_internal'))]"/>
+    </record>
+</odoo>
