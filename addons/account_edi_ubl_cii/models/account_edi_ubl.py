@@ -3362,6 +3362,9 @@ class AccountEdiUBL(models.AbstractModel):
             base_line_kwargs['product_id'] = product
         if uom := collected_values['product_uom_values'].get('uom'):
             base_line_kwargs['product_uom_id'] = uom
+        elif collected_values['product_uom_values'].get('force_empty'):
+            # Override the product_uom_id compute so the saved line keeps no UoM.
+            base_line_kwargs['_create_values']['product_uom_id'] = False
         if account := collected_values['account_values'].get('account'):
             base_line_kwargs['account_id'] = account
 
@@ -3440,6 +3443,7 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _import_ubl_invoice_retrieve_product_uoms(self, collected_values):
         lines_collected_values = collected_values['lines_collected_values']
+        logs = collected_values['logs']
         cache = {}
         for line_collected_values in lines_collected_values:
             product_uom_values = line_collected_values['product_uom_values']
@@ -3455,6 +3459,21 @@ class AccountEdiUBL(models.AbstractModel):
                     else:
                         uom = cache[matched_uom_xmlid] = self.env.ref(matched_uom_xmlid, raise_if_not_found=False)
                     if uom:
+                        product = line_collected_values['product_values'].get('product')
+                        if product and uom.category_id != product.product_tmpl_id.uom_id.category_id:
+                            logs.append(_(
+                                "The Unit of Measure '%(uom)s' (from unit code '%(code)s', "
+                                "category %(xml_category)s) was ignored on the line for product "
+                                "'%(product)s' because it does not match the product's UoM "
+                                "category (%(product_category)s). The UoM was left empty.",
+                                uom=uom.name,
+                                code=uom_code,
+                                product=product.display_name,
+                                xml_category=uom.category_id.name,
+                                product_category=product.product_tmpl_id.uom_id.category_id.name,
+                            ))
+                            product_uom_values['force_empty'] = True
+                            continue
                         to_write['product_uom_id'] = uom.id
                         product_uom_values['uom'] = uom
 
