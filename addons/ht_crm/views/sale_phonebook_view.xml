@@ -84,6 +84,13 @@
 
                                 </div>
 
+                                <div class="mt-1" t-if="record.source.raw_value">
+                                    <span class="badge bg-secondary-subtle text-secondary border">
+                                        <i class="fa fa-folder-open me-1" title="Nguồn Data"/> 
+                                        <field name="source"/>
+                                    </span>
+                                </div>
+
                                 <!-- Status -->
                                 <div>
                                     <field name="status" widget="badge"/>
@@ -113,8 +120,8 @@
 
                                     <button name="action_convert_to_customer" 
                                             type="object" 
-                                            string="Chuyển đổi"
-                                            icon="fa-user"
+                                            string="Khách hàng"
+                                            icon="fa-user-plus"
                                             class="btn btn-primary btn-sm flex-grow-1 w-100"
                                             invisible="status == 'invalid'"/>
                                 </div>
@@ -150,6 +157,7 @@
                         <group string="Điều phối &amp; Phân bổ" name="group_assignment">
                             <field name="batch_id"/>
                             <field name="project_id"/>
+                            <field name="source"/>
                             <field name="salesperson_id" placeholder="Chọn Sales phụ trách..."/>
                         </group>
                     </group>
@@ -185,7 +193,7 @@
                 <form>
                     <header>
                         <button name="action_convert_to_customer" 
-                            string="Chuyển đổi" 
+                            string="Khách hàng" 
                             type="object" 
                             class="oe_highlight" 
                             icon="fa-user-plus"
@@ -207,15 +215,20 @@
                             <group string="Thông tin liên hệ">
                                 <field name="phone" widget="phone"/>
                                 <field name="project_id" readonly="True"/>
+                                <field name="source" readonly="True"/>
                             </group>
                             <group string="Lịch sử tương tác">
                                 <field name="given_at" readonly="True"/>
                                 <field name="last_interaction_at" readonly="True"/>
+                                <field name="salesperson_id" readonly="True" groups="ht_crm.group_ht_leader"/>
                             </group>
                         </group>
                         <notebook>
-                            <page string="Nhật ký cuộc gọi / Ghi chú">
-                                <field name="note" placeholder="Nhập nội dung cuộc gọi, nhu cầu khách hàng tại đây..."/>
+                            <page string="Lịch sử Sales" groups="ht_crm.group_ht_leader">
+                                <field name="previous_salesperson_ids" widget="many2many_tags"/>
+                            </page>
+                            <page string="Ghi chú hệ thống">
+                                <field name="note"/>
                             </page>
                         </notebook>
                     </sheet>

@@ -15,7 +15,7 @@
     'version': '1.9',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'web'],
+    'depends': ['base', 'web', 'mail'],
 
     'assets': {
         'web.assets_backend': [

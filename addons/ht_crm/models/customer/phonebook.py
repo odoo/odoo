@@ -326,6 +326,7 @@ class PhoneBook(models.Model):
     )
     
     # Trường bổ sung
+    source = fields.Char(string="Nguồn Data")
     project_id = fields.Many2one(related='batch_id.project_id', string="Dự án")
 
     salesperson_id = fields.Many2one(
@@ -364,6 +365,11 @@ class PhoneBook(models.Model):
         'employee.profile.sales',
         string="Người xử lý cuối"
     )
+
+    @api.onchange('batch_id')
+    def _onchange_batch_id(self):
+        if self.batch_id:
+            self.source = self.batch_id.name
 
     def get_phone_count_by_salesperson(self, salesperson):
         return self.env['sale.phonebook'].search_count([
@@ -428,6 +434,7 @@ class PhoneBook(models.Model):
             'note',
             'batch_id',
             'status',
+            'source',
             'has_interaction_since_given',
             'last_interaction_at',
             'last_interaction_by'

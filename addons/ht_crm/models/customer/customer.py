@@ -30,6 +30,24 @@ class Customer(models.Model):
         store=False
     )
 
+    def send_mail(self):
+        # Logic của bạn
+        result = "Done"
+
+        mail_values = {
+            'subject': 'Thông báo từ Odoo',
+            'body_html': """
+                <p>Hàm <b>my_function</b> vừa được chạy thành công.</p>
+            """,
+            'email_to': 'hailuomg62@gmail.com',
+            'email_from': 'noreply@example.com',
+        }
+
+        mail = self.env['mail.mail'].create(mail_values)
+        mail.send()
+
+        return result
+
     @api.depends('permanent_address')
     def _compute_permanent_address_preview(self):
         for rec in self:
