@@ -26,7 +26,7 @@ class ProductCatalogController(Controller):
                 }
             }
         """
-        order = request.env[res_model].browse(order_id)
+        order = request.env[res_model].browse(order_id).sudo()
         return order.with_company(order.company_id)._get_product_catalog_order_line_info(
             product_ids, **kwargs,
         )
