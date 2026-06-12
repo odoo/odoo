@@ -4,7 +4,6 @@ from functools import partial
 
 from odoo import api, fields, models
 from odoo.fields import Domain
-from odoo.http import request
 from odoo.tools import BinaryBytes
 
 
@@ -141,14 +140,19 @@ class WebsiteSnippetFilter(models.Model):
 
                     # TODO VFE combination_info is only called to get the price here
                     # factorize and avoid computing the rest
+                    website = self.env.website
+                    info = dict(
+                        pricelist=website._get_and_cache_current_pricelist(),
+                        fiscal_position=website._get_and_cache_current_fiscal_position(),
+                    )
                     if product.is_product_variant:
-                        res_product.update(product._get_combination_info_variant())
+                        res_product.update(product._get_combination_info_variant(**info))
                     elif hide_variants:
-                        res_product.update(product._get_combination_info(only_template=True))
+                        res_product.update(product._get_combination_info(only_template=True, **info))
                         # Re-add product_id since it is set to false and required by some tests
                         res_product["product_id"] = product.product_variant_id.id
                     else:
-                        res_product.update(product._get_combination_info())
+                        res_product.update(product._get_combination_info(**info))
                     res_product["hide_variants"] = hide_variants
 
                     if self.env.website.google_analytics_key:
@@ -240,11 +244,11 @@ class WebsiteSnippetFilter(models.Model):
                 products = sold_products.sudo(False).filtered_domain(domain)[:limit]
         return products.with_context(display_default_code=False)
 
-    def _get_products_latest_viewed(self, _website, limit, domain, **_kwargs):
+    def _get_products_latest_viewed(self, website, limit, domain, **_kwargs):
         products = self.env["product.product"]
         visitor = self.env["ir.http"]._get_visitor_from_request()
         if visitor:
-            excluded_products = request.cart.order_line.product_id.ids
+            excluded_products = website._get_and_cache_current_cart().order_line.product_id.ids
             tracked_products = (
                 self
                 .env["website.track"]
@@ -310,7 +314,7 @@ class WebsiteSnippetFilter(models.Model):
                 )
             )
             if sale_orders:
-                cart_products = request.cart.order_line.product_id
+                cart_products = website._get_and_cache_current_cart().order_line.product_id
                 excluded_products = cart_products.product_tmpl_id.product_variant_ids
                 excluded_products |= current_template.product_variant_ids
                 included_products = sale_orders.order_line.product_id
@@ -327,7 +331,7 @@ class WebsiteSnippetFilter(models.Model):
         return products
 
     def _get_products_accessories(
-        self, _website, limit, domain, product_template_id=None, **_kwargs
+        self, website, limit, domain, product_template_id=None, **_kwargs
     ):
         products = self.env["product.product"]
         current_template = (
@@ -337,7 +341,7 @@ class WebsiteSnippetFilter(models.Model):
             .exists()
         )
         if current_template:
-            cart_products = request.cart.order_line.product_id
+            cart_products = website._get_and_cache_current_cart().order_line.product_id
             excluded_products = cart_products.product_tmpl_id.product_variant_ids
             excluded_products |= current_template.product_variant_ids
             included_products = current_template._get_website_accessory_product()
@@ -354,7 +358,7 @@ class WebsiteSnippetFilter(models.Model):
         return products
 
     def _get_products_alternative_products(
-        self, _website, limit, domain, product_template_id=None, **_kwargs
+        self, website, limit, domain, product_template_id=None, **_kwargs
     ):
         products = self.env["product.product"]
         current_template = (
@@ -364,7 +368,7 @@ class WebsiteSnippetFilter(models.Model):
             .exists()
         )
         if current_template:
-            cart_products = request.cart.order_line.product_id
+            cart_products = website._get_and_cache_current_cart().order_line.product_id
             excluded_products = cart_products.product_tmpl_id.product_variant_ids
             excluded_products |= current_template.product_variant_ids
             alternative_products = current_template._get_website_alternative_product()
