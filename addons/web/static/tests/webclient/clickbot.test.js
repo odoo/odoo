@@ -596,7 +596,7 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
  - Current testing view is list
  - Current testing filter is Date (April)
 The error is :
-Error dialog detected when waiting for filter "Date (April)" : ${expectedModalHtml}
+Error dialog detected when waiting for clicking on filter "Date (April)" : ${expectedModalHtml}
 A RPC in error was detected, maybe it's related to the error dialog : ${expectedRpcData}`,
         "Testing app: App2 (app2)",
         "Testing menu App2 (app2)",
