@@ -75,7 +75,7 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_composer_t
                 const bodyContent = document.querySelector(
                     '.o_field_html[name="body"]'
                 ).textContent;
-                if (!bodyContent.includes("blahblah @Not A Demo User")) {
+                if (!bodyContent.replace(/\uFEFF/g, "").includes("blahblah @Not A Demo User")) {
                     console.error(
                         `Full composer should contain text from small composer ("blahblah @Not A Demo User") in body input (actual: ${bodyContent})`
                     );
