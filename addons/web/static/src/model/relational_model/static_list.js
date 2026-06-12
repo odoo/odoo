@@ -296,6 +296,7 @@ export class StaticList extends DataPoint {
                     ...record.config,
                     ...params,
                     activeFields,
+                    fields: this.fields,
                 };
 
                 // case 1: the record already exists
