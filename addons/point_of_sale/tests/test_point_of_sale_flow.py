@@ -1299,6 +1299,51 @@ class TestPointOfSaleFlow(CommonPosTest):
             ])
         ))
 
+    def test_order_existing_lot_gs1_nomenclature(self):
+        """An existing lot whose name is also a valid GS1 barcode (e.g. "10156":
+        AI "10" -> Batch/Lot) must still be found when the order is validated,
+        instead of being recreated and raising a duplicate lot error.
+        """
+        gs1_nomenclature = self.env.ref('barcodes_gs1_nomenclature.default_gs1_nomenclature', raise_if_not_found=False)
+        if not gs1_nomenclature:
+            self.skipTest("barcodes_gs1_nomenclature is not installed")
+        self.env.company.nomenclature_id = gs1_nomenclature
+        self.pos_config_usd.picking_type_id.write({
+            'use_create_lots': True,
+            'use_existing_lots': True,
+        })
+        product = self.ten_dollars_with_10_incl.product_variant_id
+        product.write({
+            'tracking': 'lot',
+            'is_storable': True,
+        })
+        lot = self.env['stock.lot'].create({
+            'name': '10156',
+            'product_id': product.id,
+        })
+        quant = self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': product.id,
+            'inventory_quantity': 5,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'lot_id': lot.id,
+        })
+        quant.action_apply_inventory()
+
+        order, _ = self.create_backend_pos_order({
+            'line_data': [{
+                'product_id': product.id,
+                'pack_lot_ids': [Command.create({'lot_name': '10156'})],
+            }],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': 10},
+            ],
+        })
+        self.pos_config_usd.current_session_id.action_pos_session_closing_control()
+
+        self.assertEqual(order.state, 'done')
+        self.assertEqual(order.picking_ids.move_line_ids.lot_id, lot)
+        self.assertEqual(self.env['stock.lot'].search_count([('product_id', '=', product.id)]), 1)
+
     def test_pos_creation_in_branch(self):
         branch = self.env['res.company'].create({
             'name': 'Branch 1',
