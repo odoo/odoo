@@ -18,7 +18,8 @@ export class DataServiceOptions {
             "pos.pack.operation.lot": {
                 key: "id",
                 condition: (record) =>
-                    record.pos_order_line_id?.order_id?.canBeRemovedFromIndexedDB,
+                    !record.pos_order_line_id ||
+                    record.pos_order_line_id.order_id?.canBeRemovedFromIndexedDB,
             },
             "product.attribute.custom.value": {
                 key: "id",
