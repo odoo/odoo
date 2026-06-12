@@ -8,7 +8,7 @@ from odoo.exceptions import UserError
 
 class HrWorkEntryType(models.Model):
     _name = 'hr.work.entry.type'
-    _description = 'Work Entry Type'
+    _description = 'Time Type'
     _order = 'sequence'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
