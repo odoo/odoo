@@ -353,6 +353,7 @@ registry.category("web_tour.tours").add("test_automatic_receipt_printing", {
             FeedbackScreen.isShown(),
             FeedbackScreen.isContinueEnabled(),
             FeedbackScreen.isTransitioning(),
+            FeedbackScreen.isSuccess(),
             FeedbackScreen.clickScreen(),
             FeedbackScreen.isTransitioning().map(negateStep),
             FeedbackScreen.clickNextOrder(),
@@ -365,6 +366,7 @@ registry.category("web_tour.tours").add("test_automatic_receipt_printing", {
             FeedbackScreen.isShown(),
             FeedbackScreen.isContinueEnabled(),
             FeedbackScreen.isTransitioning(),
+            FeedbackScreen.isSuccess(),
             ProductScreen.isShown(),
         ].flat(),
 });
