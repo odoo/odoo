@@ -39,6 +39,20 @@ Read this before changing any project-wide convention — it explains the *why*.
 
 ---
 
+## 2026-06-13 — WIP=1 task discipline
+
+**Decision:** Only one task may be `in-progress` in `feature_list.json` at a time. A task is not done until `./verify.sh` output is pasted as `evidence` and status is `done`. The next task cannot be activated until VCR (verified tasks ÷ activated tasks) = 1.0.
+
+**Alternatives considered:**
+- Parallel feature work: faster apparent progress but produces code without passing end-to-end verification — the REST API study showed 20% pass rate vs. 100% with WIP=1
+- Trusting "code looks correct" as done: subjective, unverifiable, and the primary cause of under-finished sessions
+
+**Rationale:** Agents have finite context (C). Activating k tasks simultaneously gives each C/k reasoning capacity — below a threshold, none finish. WIP=1 concentrates full context on one task, producing fewer but completed features per session.
+
+**Consequence:** Session Start must check for `in-progress` tasks with empty `evidence` and resume them before touching anything else. A broad prompt that implies multiple simultaneous tasks must be scoped to one at a time.
+
+---
+
 ## 2026-06-13 — `verify.sh` as single verification command
 
 **Decision:** `./verify.sh <module>` runs ruff lint + Odoo tests as one non-skippable step.

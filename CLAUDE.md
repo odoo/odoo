@@ -13,7 +13,7 @@
 
 1. `conda activate odoo19`
 2. Read `claude-progress.md` → restore state from **Current Verified State** and **Next Steps**
-3. Read `feature_list.json` → identify `in-progress` or `blocked` tasks
+3. Read `feature_list.json` → if any task is `in-progress` with empty `evidence`, resume it — **do not start a new task** (WIP=1)
 4. Read `DECISIONS.md` → understand why conventions exist before changing them
 5. `python odoo-bin --version` → confirm environment is live
 
@@ -35,16 +35,17 @@ Before closing any session, even if the task is incomplete:
 
 Non-negotiable. Any violation must be fixed before proceeding.
 
-1. Never modify `odoo/` or any non-`up5_` module — extend via `_inherit` only
-2. Never use `sudo()` without a comment explaining why
-3. Never hardcode database IDs — use `env.ref('module.xml_id')`
-4. Never declare a task done without pasting `./verify.sh <module>` output
-5. Never commit without `./verify.sh <module>` passing
-6. Every new `_name` model requires an `ir.model.access.csv` entry
-7. All XML IDs must be prefixed with the module name
-8. `__manifest__.py` `data` list: `security/` before `views/`
-9. `@api.depends(...)` is required on every compute method
-10. `Many2one.ondelete` must be explicit — never rely on the `'set null'` default
+1. WIP=1 — only one task may be `in-progress` in `feature_list.json` at a time; do not activate the next task until the current has `evidence` and status `done`
+2. Never modify `odoo/` or any non-`up5_` module — extend via `_inherit` only
+3. Never use `sudo()` without a comment explaining why
+4. Never hardcode database IDs — use `env.ref('module.xml_id')`
+5. Never declare a task done without pasting `./verify.sh <module>` output
+6. Never commit without `./verify.sh <module>` passing
+7. Every new `_name` model requires an `ir.model.access.csv` entry
+8. All XML IDs must be prefixed with the module name
+9. `__manifest__.py` `data` list: `security/` before `views/`
+10. `@api.depends(...)` is required on every compute method
+11. `Many2one.ondelete` must be explicit — never rely on the `'set null'` default
 
 ---
 
