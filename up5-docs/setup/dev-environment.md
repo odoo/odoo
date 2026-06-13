@@ -68,6 +68,37 @@ Open http://localhost:8069 — login `admin` / `admin`.
 ## Running tests
 
 ```bash
-conda activate odoo19
-python odoo-bin -c odoo.conf --test-enable -d odoo_dev --stop-after-init -i <module>
+# Preferred — runs lint + tests via verify.sh
+./verify.sh <module>
+
+# Tests only — all tests in a module
+conda run -n odoo19 python odoo-bin -c odoo.conf \
+  --test-enable -d odoo_dev --stop-after-init -i <module>
+
+# Specific test class or method
+conda run -n odoo19 python odoo-bin -c odoo.conf \
+  --test-enable -d odoo_dev --stop-after-init -i <module> \
+  --test-tags <module>/<ClassName>.<method_name>
+
+# Verbose output
+conda run -n odoo19 python odoo-bin -c odoo.conf \
+  --test-enable -d odoo_dev --stop-after-init -i <module> \
+  --log-level=test
+```
+
+Tests live in `addons/<module>/tests/test_*.py`.
+
+## Lint only
+
+```bash
+conda run -n odoo19 ruff check addons/<module>/
+```
+
+`ruff` is configured in `ruff.toml` at repo root (Odoo's official rule set).
+
+## Updating a module after code changes
+
+```bash
+conda run -n odoo19 python odoo-bin -c odoo.conf \
+  -d odoo_dev --stop-after-init -u <module>
 ```
