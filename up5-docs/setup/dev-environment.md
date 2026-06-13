@@ -102,3 +102,42 @@ conda run -n odoo19 ruff check addons/<module>/
 conda run -n odoo19 python odoo-bin -c odoo.conf \
   -d odoo_dev --stop-after-init -u <module>
 ```
+
+---
+
+## Runtime observability
+
+### Log levels
+
+```bash
+# verify.sh default — test results + errors only
+--log-level=test
+
+# Active debugging — verbose, noisy, use during a specific investigation
+--log-level=debug
+
+# Module-specific debug (quieter than full debug)
+--log-handler=odoo.addons.up5_foo:DEBUG
+```
+
+Set `log_level = debug` in `odoo.conf` to persist across server restarts during a debug session.
+Reset to `log_level = warn` when done — debug output buries test results.
+
+### Reading test output
+
+Search the log stream for:
+
+| Signal | Meaning |
+|---|---|
+| `FAIL` / `ERROR` | Test failure — traceback follows immediately |
+| `WARNING` | Non-fatal — check if it's a missing dependency or config |
+| `Modules loaded.` | Install/update succeeded |
+| `0 failed, 0 error(s)` | All tests passed |
+| `ImportError` / `AttributeError` at startup | Module has a Python error before tests even run |
+
+### Browser debug mode
+
+Append `?debug=1` to any Odoo URL, or:
+**Settings → Technical → Activate developer mode**
+
+Use debug mode to inspect view XML, field technical names, and access rules at runtime.

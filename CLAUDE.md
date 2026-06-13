@@ -24,7 +24,7 @@ If `claude-progress.md` is missing, treat state as unknown and say so before pro
 Before closing any session, even if the task is incomplete:
 
 1. Run `./verify.sh <module>` on anything changed — paste output into `claude-progress.md`
-2. Update `claude-progress.md`: Current Verified State, Next Steps, any new Blockers
+2. Update `claude-progress.md`: Current Verified State, Next Steps, any new Blockers — include WHY for non-obvious decisions (these form the task trace for the next session)
 3. Update `feature_list.json` `state` for any tasks touched
 4. If a significant decision was made, add it to `DECISIONS.md` with rationale
 5. If a pattern violation appeared more than once during the session, convert it to a Hard Constraint or add it to `odoo-conventions.md` — recurring review comments become permanent rules
@@ -48,6 +48,7 @@ Non-negotiable. Any violation must be fixed before proceeding.
 10. `__manifest__.py` `data` list: `security/` before `views/`
 11. `@api.depends(...)` is required on every compute method
 12. `Many2one.ondelete` must be explicit — never rely on the `'set null'` default
+13. Before writing any code on an `active` task, write a sprint contract in `claude-progress.md` — `behavior`, `criteria`, and explicit out-of-scope statement; resolve ambiguities first
 
 ---
 
@@ -120,6 +121,8 @@ Check current readiness: [startup-readiness.md](startup-readiness.md)
 
 **Implementation** — only begins after all four conditions are green. One task from `feature_list.json` at a time. Each task must be scoped to complete in a single session — if it can't, split it before marking `active`.
 
+**Sprint contract (required before writing any code):** Read the task's `behavior` + `criteria` + `verification`. If anything is ambiguous, resolve it. Write an explicit out-of-scope statement in `claude-progress.md`. Then code. See [sprint-contract.md](up5-docs/standards/sprint-contract.md) for the template.
+
 ---
 
 ## Topic Documents
@@ -134,3 +137,4 @@ Check current readiness: [startup-readiness.md](startup-readiness.md)
 | Git workflow, branch naming, commit tags, PR process | [up5-docs/standards/git-workflow.md](up5-docs/standards/git-workflow.md) |
 | Module-level architecture notes | `addons/<module>/NOTES.md` (create when module is complex) |
 | Template for documenting a complex module | [up5-docs/architecture/module-notes-template.md](up5-docs/architecture/module-notes-template.md) |
+| Sprint contract template | [up5-docs/standards/sprint-contract.md](up5-docs/standards/sprint-contract.md) |

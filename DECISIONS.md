@@ -39,6 +39,20 @@ Read this before changing any project-wide convention — it explains the *why*.
 
 ---
 
+## 2026-06-13 — Sprint contracts and runtime observability (lecture 11)
+
+**Decision:** Before writing any code on an `active` task, a sprint contract must be written in `claude-progress.md`: behavior (from feature_list.json), in-scope criteria, explicit out-of-scope list, verification command, and resolved ambiguities. Session End step 2 requires WHY rationale for non-obvious decisions — this is the task trace.
+
+**Alternatives considered:**
+- Start coding immediately from feature_list.json criteria: scope misalignment surfaces at Layer 2/3 verification, the most expensive recovery point
+- Verbal sprint contract (not written): not observable by the next session; 30-50% of handoff time is spent re-diagnosing state
+
+**Rationale:** Observability has two layers: runtime (what did the system do) and process (why should this change be accepted). Without the process layer, evaluators and future sessions cannot reproduce assessments. The sprint contract is the minimum process artifact that prevents scope drift before a line of code is written.
+
+**Consequence:** `up5-docs/standards/sprint-contract.md` documents the template. The `dev-environment.md` now documents Odoo log levels and how to read test output (runtime observability layer).
+
+---
+
 ## 2026-06-13 — E2E test requirement for cross-component changes (lecture 10)
 
 **Decision:** Any change touching two or more Odoo layers (model + controller, controller + view, etc.) requires either an `HttpCase` test or a documented manual smoke test before the task is `passing`. Every test file must include at least one failure scenario. Review feedback promotion: a pattern violation caught more than once in review becomes a Hard Constraint or `odoo-conventions.md` rule — not just a comment.
