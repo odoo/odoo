@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:36+0000\n"
-"PO-Revision-Date: 2026-05-09 13:18+0000\n"
+"POT-Creation-Date: 2026-06-12 17:36+0000\n"
+"PO-Revision-Date: 2026-06-06 15:57+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-1/"
 "pos_self_order/nl/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
@@ -105,16 +105,16 @@ msgstr ""
 "                        <t t-else=\"\">Hallo,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Je bestelling <t t-out=\"object.tracking_number\">"
-"...</t> voor een bedrag van <t t-out=\"format_amount"
-"(object.amount_total,object.currency_id)\">€ xx,xx</t> is bevestigd. <span t-"
-"if=\"object.preset_time or client.street\">De bestelling zal klaar zijn</"
-"span> <span t-if=\"object.preset_time\">om <t t-out=\"format_time"
-"(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00</"
-"t></span> <span t-if=\"client.street\">op deze locatie: <t t-out=\"street\">"
-"straat</t>, <t t-out=\"state\">provincie</t>, <t t-out=\"client.zip or ''\">"
-"postcode</t>, <t t-out=\"city\">stad</t>, <t t-out=\"country\">land</t></"
-"span></div>\n"
+"                    <div>Je bestelling <t t-"
+"out=\"object.tracking_number\">...</t> voor een bedrag van <t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">€ xx,xx</t> is "
+"bevestigd. <span t-if=\"object.preset_time or client.street\">De bestelling "
+"zal klaar zijn</span> <span t-if=\"object.preset_time\">om <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00</t></span> <span t-if=\"client.street\">op deze "
+"locatie: <t t-out=\"street\">straat</t>, <t t-out=\"state\">provincie</t>, "
+"<t t-out=\"client.zip or ''\">postcode</t>, <t t-out=\"city\">stad</t>, <t t-"
+"out=\"country\">land</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Bedankt,</div>\n"
 "                    <br/>\n"
@@ -172,11 +172,11 @@ msgstr ""
 "                        <t t-else=\"\">Hallo,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Je bestelling <t t-out=\"object.tracking_number\">"
-"...</t> voor een bedrag van <t t-out=\"format_amount"
-"(object.amount_total,object.currency_id)\">€ xx,xx</t> is bevestigd. <span t-"
-"if=\"object.preset_time\">De bestelling zal klaar zijn om <t t-"
-"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"                    <div>Je bestelling <t t-"
+"out=\"object.tracking_number\">...</t> voor een bedrag van <t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">€ xx,xx</t> is "
+"bevestigd. <span t-if=\"object.preset_time\">De bestelling zal klaar zijn om "
+"<t t-out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
 "lang_code=lg)\">12:00</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Bedankt,</div>\n"
@@ -352,12 +352,6 @@ msgstr "Kies de zelfbestellingsmodus"
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_pay_after
 msgid "Choose when the customer will pay"
 msgstr "Kies wanneer de klant betaalt"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-msgid "Choose your"
-msgstr "Kies je"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -555,7 +549,7 @@ msgstr "Negeren"
 #: model:ir.model.fields,field_description:pos_self_order.field_restaurant_floor__display_name
 #: model:ir.model.fields,field_description:pos_self_order.field_restaurant_table__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -647,6 +641,12 @@ msgstr "Voer je aangepaste waarde in"
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 msgid "Enter your tracker number"
 msgstr "Voer je tracenummer in"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "Extra:"
+msgstr ""
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1646,12 +1646,6 @@ msgstr "URL:"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
-msgid "Unavailable"
-msgstr "Onbeschikbaar"
-
-#. module: pos_self_order
-#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Uncategorised"
 msgstr "Niet gecategoriseerd"
@@ -1741,14 +1735,6 @@ msgid "You are not authorized to remove this order"
 msgstr "Je bent niet bevoegd om deze bestelling te verwijderen"
 
 #. module: pos_self_order
-#. odoo-python
-#: code:addons/pos_self_order/models/pos_config.py:0
-#: code:addons/pos_self_order/models/res_config_settings.py:0
-msgid "You cannot add cash payment methods in kiosk mode."
-msgstr ""
-"Je kunt geen betaalmethoden met contant geld toevoegen in de kioskmodus."
-
-#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "You're not authorized to perform this action"
@@ -1809,6 +1795,12 @@ msgstr "aan de toog"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+msgid "by cash"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "close"
 msgstr "sluiten"
@@ -1832,8 +1824,8 @@ msgstr "https://odoo.com"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-msgid "included"
-msgstr "inbegrepen"
+msgid "included &"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1854,10 +1846,29 @@ msgstr "odoo"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "per extra unit"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "x"
 msgstr "x"
+
+#~ msgid "You cannot add cash payment methods in kiosk mode."
+#~ msgstr ""
+#~ "Je kunt geen betaalmethoden met contant geld toevoegen in de kioskmodus."
+
+#~ msgid "Choose your"
+#~ msgstr "Kies je"
+
+#~ msgid "Unavailable"
+#~ msgstr "Onbeschikbaar"
+
+#~ msgid "included"
+#~ msgstr "inbegrepen"
 
 #~ msgid "Select your address"
 #~ msgstr "Selecteer je adres"

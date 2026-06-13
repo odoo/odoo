@@ -14,14 +14,14 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Chloe Wang (chwa)" <chwa@odoo.com>, 2025, 2026.
 # 何彬 <vnsoft.he@gmail.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-20 18:36+0000\n"
-"PO-Revision-Date: 2026-01-31 12:30+0000\n"
-"Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
+"PO-Revision-Date: 2026-06-12 05:53+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-1/hr/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr
 #. odoo-python
@@ -337,6 +337,7 @@ msgstr "<small>在线学习</small>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#, fuzzy
 msgid ""
 "<span class=\"d-flex w-50\">\n"
 "                                                    <span "
@@ -345,6 +346,12 @@ msgid ""
 "is_trusted_bank_account\" class=\"text-success\">Trusted</span>\n"
 "                                                </span>"
 msgstr ""
+"<span class=\"d-flex w-50\">\n"
+"                                                    <span "
+"invisible=\"is_trusted_bank_account\" class=\"text-muted\">Untrusted</span>\n"
+"                                                    <span invisible=\"not "
+"is_trusted_bank_account\" class=\"text-success\">Trusted</span>\n"
+"                                                </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -384,8 +391,9 @@ msgstr "<span class=\"o_stat_text\">联系人</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_form_view
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Eligible Employees</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">合格员工</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
@@ -424,33 +432,43 @@ msgstr "<span class=\"text-muted small\">是时候回答了</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#, fuzzy
 msgid ""
 "<span class=\"text-uppercase fw-bolder\" style=\"font-size: "
 "13px\">Organization Chart</span>"
 msgstr ""
+"<span class=\"text-uppercase fw-bolder\" style=\"font-size: 13px\">组织架构"
+"图</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#, fuzzy
 msgid "<span invisible=\"not contract_date_start\">to</span>"
-msgstr ""
+msgstr "<span invisible=\"not contract_date_start\">至</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
+#, fuzzy
 msgid "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
-msgstr ""
+msgstr "<span invisible=\"not employee_salary_amount_is_percentage\">%</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#, fuzzy
 msgid ""
 "<span invisible=\"not user_id or is_user_active\">\n"
 "                                                (User is Inactive)\n"
 "                                            </span>"
 msgstr ""
+"<span invisible=\"not user_id or is_user_active\">\n"
+"                                                (User is Inactive)\n"
+"                                            </span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#, fuzzy
 msgid "<span>Contract Overview</span>"
-msgstr ""
+msgstr "<span>合同概览</span>"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -474,83 +492,98 @@ msgstr ""
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Adaptability</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">适应能力</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_cto
 #: model_terms:hr.job,website_description:hr.job_marketing
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Administrative Work</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">行政工作</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
 #: model_terms:hr.job,website_description:hr.job_marketing
 #: model_terms:hr.job,website_description:hr.job_trainee
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Autonomy</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">自主性</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Be enthusiastic</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">工作热情</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Client Interaction</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">客户互动</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Collaboration</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">协作能力</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Compliance and Regulations</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">合规与法规</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Conflict Resolution</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">冲突解决</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_marketing
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Customer Relationship</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">客户关系</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Cybersecurity</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">网络安全</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Diversity and Inclusion</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">多元化与包容</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Innovation</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">创新能力</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Leadership</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">领导力</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Learning</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">学习能力</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Management</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">管理能力</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -560,35 +593,41 @@ msgstr "<strong class=\"s_rating_title\">个人进化</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Problem-Solving</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">问题解决</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Problem-solving</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">问题解决</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Skill Development</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">技能发展</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Talent Acquisition</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">人才招聘</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
 #: model_terms:hr.job,website_description:hr.job_hrm
 #: model_terms:hr.job,website_description:hr.job_marketing
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Technical Expertise</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">技术专长</strong>"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
+#, fuzzy
 msgid "<strong class=\"s_rating_title\">Technology Strategy</strong>"
-msgstr ""
+msgstr "<strong class=\"s_rating_title\">技术战略</strong>"
 
 #. module: hr
 #: model_terms:hr.job,description:hr.job_hrm
@@ -700,8 +739,9 @@ msgstr "在职员工"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
+#, fuzzy
 msgid "Active Employees"
-msgstr ""
+msgstr "在职员工"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__activity_ids
@@ -731,8 +771,9 @@ msgstr "活动计划"
 #: model:ir.model.fields,field_description:hr.field_hr_department__activity_plans_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_plans_ids
 #: model:ir.model.fields,field_description:hr.field_hr_version__activity_plans_ids
+#, fuzzy
 msgid "Activity Plans"
-msgstr ""
+msgstr "活动计划"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__activity_state
@@ -851,13 +892,15 @@ msgstr "分配"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__allowed_country_state_ids
 #: model:ir.model.fields,field_description:hr.field_hr_version__allowed_country_state_ids
+#, fuzzy
 msgid "Allowed Country State"
-msgstr ""
+msgstr "允许的国家/州"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__allowed_user_ids
+#, fuzzy
 msgid "Allowed User"
-msgstr ""
+msgstr "允许的用户"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__amount
@@ -873,8 +916,9 @@ msgstr "金额类型"
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
+#, fuzzy
 msgid "An element name parent of the radio to observe updates"
-msgstr ""
+msgstr "用于监听更新的单选按钮父元素名称"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_version_check_unique_date_version
@@ -886,8 +930,9 @@ msgstr "一名员工不能拥有多个共享相同生效日期的有效版本。
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/radio_followed_by_element.js:0
+#, fuzzy
 msgid "An object to link select options and element id to move"
-msgstr ""
+msgstr "用于关联选择项和待移动元素ID的对象"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -912,8 +957,9 @@ msgstr "审批人"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__4
+#, fuzzy
 msgid "April"
-msgstr ""
+msgstr "四月"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_department_view_kanban
@@ -1167,8 +1213,9 @@ msgstr "附件数量"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
+#, fuzzy
 msgid "Attendance PIN"
-msgstr ""
+msgstr "考勤 PIN 码"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -1177,8 +1224,9 @@ msgstr "考勤/POS"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__8
+#, fuzzy
 msgid "August"
-msgstr ""
+msgstr "八月"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__mail_alias__alias_contact__employees
@@ -1264,23 +1312,27 @@ msgstr "银行账户"
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
 #: model_terms:ir.ui.view,arch_db:hr.view_bank_account_allocation_wizard
+#, fuzzy
 msgid "Bank Account Allocation"
-msgstr ""
+msgstr "银行账户分配"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_bank_account_allocation_wizard_line
+#, fuzzy
 msgid "Bank Account Allocation Line (Wizard)"
-msgstr ""
+msgstr "银行账户分配明细行（向导）"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_bank_account_allocation_wizard
+#, fuzzy
 msgid "Bank Account Allocation Wizard"
-msgstr ""
+msgstr "银行账户分配向导"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_bank_account_allocation_wizard
+#, fuzzy
 msgid "Bank Account Allocations"
-msgstr ""
+msgstr "银行账户分配"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__bank_account_ids
@@ -1306,9 +1358,10 @@ msgstr "银行名称"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/wizard/hr_bank_account_wizard.py:0
+#, fuzzy
 msgid ""
 "Bank account %s not found within the salary distribution of the employee"
-msgstr ""
+msgstr "在员工的薪资分配方案中未找到银行账户 %s"
 
 #. module: hr
 #: model:ir.model,name:hr.model_base
@@ -1365,8 +1418,9 @@ msgstr ""
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/boolean_radio.js:0
+#, fuzzy
 msgid "Boolean display as radio field with translatable labels"
-msgstr ""
+msgstr "布尔值显示为可翻译标签的单选字段"
 
 #. module: hr
 #. odoo-javascript
@@ -1379,28 +1433,32 @@ msgstr "取消"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
+#, fuzzy
 msgid "Cannot archive all the active versions of an employee."
-msgstr ""
+msgstr "不能归档员工的所有生效版本。"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
+#, fuzzy
 msgid ""
 "Cannot modify multiple versions contract dates with different contracts at "
 "once."
-msgstr ""
+msgstr "不能同时修改不同合同的多个版本的合同日期。"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
+#, fuzzy
 msgid "Cannot search or group by hr_presence state: too many employees (%s)"
-msgstr ""
+msgstr "无法按 hr_presence 状态搜索或分组：员工数量过多 (%s)"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
+#, fuzzy
 msgid "Cannot unassign all the active versions of an employee."
-msgstr ""
+msgstr "不能取消分配员工的所有生效版本。"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__certificate
@@ -1430,13 +1488,15 @@ msgstr "首席技术官"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__child_all_count
+#, fuzzy
 msgid "Child All Count"
-msgstr ""
+msgstr "所有子女数目"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__child_count
+#, fuzzy
 msgid "Child Count"
-msgstr ""
+msgstr "子女数目"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__child_ids
@@ -1755,8 +1815,9 @@ msgstr "新建员工"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_export_mixin__create_uid
+#, fuzzy
 msgid "Create Uid"
-msgstr ""
+msgstr "创建Uid"
 
 #. module: hr
 #. odoo-python
@@ -1801,8 +1862,9 @@ msgstr "创建活动计划"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_employee_org_chart
 #: model_terms:ir.actions.act_window,help:hr.action_hr_employee_public_org_chart
+#, fuzzy
 msgid "Create an employee."
-msgstr ""
+msgstr "创建一名员工。"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -1853,8 +1915,9 @@ msgstr "创建日期"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_export_mixin__creation_date
+#, fuzzy
 msgid "Creation Date"
-msgstr ""
+msgstr "创建时间"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__currency_id
@@ -1907,8 +1970,9 @@ msgstr "调试和解决软件问题"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__12
+#, fuzzy
 msgid "December"
-msgstr ""
+msgstr "十二月"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -1967,8 +2031,9 @@ msgstr "部门可指派"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_color
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__department_color
+#, fuzzy
 msgid "Department Color"
-msgstr ""
+msgstr "部门颜色"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__name
@@ -2060,14 +2125,16 @@ msgstr "开发"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__child_count
+#, fuzzy
 msgid "Direct Subordinates Count"
-msgstr ""
+msgstr "直接下属人数"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__subordinate_ids
 #: model:ir.model.fields,help:hr.field_hr_employee_public__subordinate_ids
+#, fuzzy
 msgid "Direct and indirect subordinates"
-msgstr ""
+msgstr "直接和间接下属"
 
 #. module: hr
 #. odoo-javascript
@@ -2163,8 +2230,9 @@ msgstr "文档"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#, fuzzy
 msgid "Documents"
-msgstr ""
+msgstr "文件"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
@@ -2174,8 +2242,9 @@ msgstr "驾照"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
+#, fuzzy
 msgid "Each amount percentage must be a number between 0 and 100."
-msgstr ""
+msgstr "每个金额百分比必须在 0 到 100 之间。"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -2242,8 +2311,9 @@ msgstr "要观察的元素"
 #: code:addons/hr/models/hr_export_mixin.py:0
 #: model:ir.model.fields,field_description:hr.field_hr_export_mixin__eligible_employee_line_ids
 #: model_terms:ir.ui.view,arch_db:hr.hr_export_employee_mixin_list_view
+#, fuzzy
 msgid "Eligible Employees"
-msgstr ""
+msgstr "合资格员工"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_email
@@ -2256,8 +2326,9 @@ msgstr "电子邮件"
 
 #. module: hr
 #: model:ir.model,name:hr.model_mail_alias
+#, fuzzy
 msgid "Email Alias"
-msgstr ""
+msgstr "电子邮箱别名"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_contact
@@ -2304,8 +2375,9 @@ msgstr "员工"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
+#, fuzzy
 msgid "Employee %s must always have at least one active version."
-msgstr ""
+msgstr "Employee %s must always have at least one active version."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_category
@@ -2344,16 +2416,18 @@ msgstr "员工属性"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__version_id
+#, fuzzy
 msgid "Employee Record"
-msgstr ""
+msgstr "员工档案"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_version
 #: model:ir.model.fields,field_description:hr.field_hr_employee__version_ids
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_graph_view
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_pivot_view
+#, fuzzy
 msgid "Employee Records"
-msgstr ""
+msgstr "员工档案"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__versions_count
@@ -2363,8 +2437,9 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_salary_amount_is_percentage
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_salary_amount_is_percentage
+#, fuzzy
 msgid "Employee Salary Amount Is Percentage"
-msgstr ""
+msgstr "员工薪资金额为百分比"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -2390,8 +2465,9 @@ msgstr "员工类型"
 #: model:ir.model.fields,help:hr.field_hr_employee__bank_account_ids
 #: model:ir.model.fields,help:hr.field_res_users__bank_account_ids
 #: model:ir.model.fields,help:hr.field_res_users__employee_bank_account_ids
+#, fuzzy
 msgid "Employee bank accounts to pay salaries"
-msgstr ""
+msgstr "用于发放薪资的员工银行账户"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2401,13 +2477,15 @@ msgstr "员工发展是核心焦点"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#, fuzzy
 msgid "Employee will be excluded from Pay Runs"
-msgstr ""
+msgstr "该员工将被排除在薪资发放之外"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_bank_account_ids
+#, fuzzy
 msgid "Employee's Bank Accounts"
-msgstr ""
+msgstr "员工银行账户"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -2472,8 +2550,9 @@ msgstr "员工标签"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
+#, fuzzy
 msgid "Employees profile"
-msgstr ""
+msgstr "员工档案"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
@@ -2516,11 +2595,14 @@ msgstr "确保遵守劳工法例"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__identification_id
 #: model:ir.model.fields,help:hr.field_hr_version__identification_id
+#, fuzzy
 msgid ""
 "Enter the employee's National Identification Number issued by the government "
 "(e.g., Aadhaar, SIN, NIN). This is used for official records and statutory "
 "compliance."
 msgstr ""
+"输入政府颁发的员工身份证号码（例如g., Aadhaar, SIN, NIN). This is used for "
+"official records and statutory compliance."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_cto
@@ -2591,8 +2673,9 @@ msgstr "过期"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
+#, fuzzy
 msgid "Expired Contracts"
-msgstr ""
+msgstr "已到期合同"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2611,8 +2694,9 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_export_employee_mixin__export_id
+#, fuzzy
 msgid "Export"
-msgstr ""
+msgstr "导出"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_list_view
@@ -2621,13 +2705,15 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_export_mixin__export_file
+#, fuzzy
 msgid "Export File"
-msgstr ""
+msgstr "导出文件"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_export_mixin__export_filename
+#, fuzzy
 msgid "Export Filename"
-msgstr ""
+msgstr "导出文件名"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__share
@@ -2685,8 +2771,9 @@ msgstr "家庭"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__2
+#, fuzzy
 msgid "February"
-msgstr ""
+msgstr "二月"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__bank_state
@@ -2707,8 +2794,9 @@ msgstr "研究领域"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_employee_org_chart
 #: model_terms:ir.actions.act_window,help:hr.action_hr_employee_public_org_chart
+#, fuzzy
 msgid "Find all the information on employees."
-msgstr ""
+msgstr "寻找员工的所有信息。"
 
 #. module: hr
 #: model:hr.departure.reason,name:hr.departure_fired
@@ -2717,8 +2805,9 @@ msgstr "被解雇"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#, fuzzy
 msgid "Flexible"
-msgstr ""
+msgstr "弹性"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
@@ -2788,8 +2877,9 @@ msgstr "未来活动"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
+#, fuzzy
 msgid "Future Contracts"
-msgstr ""
+msgstr "未来合同"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__sex
@@ -2805,8 +2895,9 @@ msgstr "生成"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_form_view
+#, fuzzy
 msgid "Generate Export File"
-msgstr ""
+msgstr "生成导出文件"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
@@ -2816,8 +2907,9 @@ msgstr "详细说明归档员工的原因。"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_partner.py:0
+#, fuzzy
 msgid "Go to contact"
-msgstr ""
+msgstr "前往联系人"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_marketing
@@ -2846,13 +2938,15 @@ msgstr "HR 部门"
 
 #. module: hr
 #: model:ir.actions.server,name:hr.ir_cron_data_employee_notify_expiring_contract_work_permit_ir_actions_server
+#, fuzzy
 msgid "HR Employee: Notify Expiring Contract or Work Permit"
-msgstr ""
+msgstr "HR 员工：通知即将到期的合同或工作许可"
 
 #. module: hr
 #: model:ir.actions.server,name:hr.ir_cron_data_employee_update_current_version_ir_actions_server
+#, fuzzy
 msgid "HR Employee: Update Current Version"
-msgstr ""
+msgstr "HR 员工：更新当前版本"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_form_view
@@ -2903,8 +2997,9 @@ msgstr "有消息"
 #: model:ir.model.fields,field_description:hr.field_account_setup_bank_manual_config__employee_has_multiple_bank_accounts
 #: model:ir.model.fields,field_description:hr.field_hr_employee__has_multiple_bank_accounts
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_has_multiple_bank_accounts
+#, fuzzy
 msgid "Has Multiple Bank Accounts"
-msgstr ""
+msgstr "拥有多个银行账户"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -2915,13 +3010,15 @@ msgstr "很高的创造力和决策能力"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
+#, fuzzy
 msgid "Hiring"
-msgstr ""
+msgstr "招聘"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+#, fuzzy
 msgid "Hiring Process"
-msgstr ""
+msgstr "招聘流程"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -2955,8 +3052,9 @@ msgstr "通勤距离（单位）"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hourly_cost
+#, fuzzy
 msgid "Hourly Cost"
-msgstr ""
+msgstr "小时成本"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__hr_icon_display
@@ -3081,8 +3179,9 @@ msgstr "如果勾选此项， 某些消息将出现发送错误。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_departure_wizard__remove_related_user
+#, fuzzy
 msgid "If checked, the related user will be removed from the system."
-msgstr ""
+msgstr "勾选后，关联的用户将从系统中移除。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__active
@@ -3136,8 +3235,9 @@ msgstr "导入员工模板"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
+#, fuzzy
 msgid "In Contract"
-msgstr ""
+msgstr "合同中"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -3153,14 +3253,16 @@ msgstr "无限期"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__child_all_count
+#, fuzzy
 msgid "Indirect Subordinates Count"
-msgstr ""
+msgstr "间接下属统计"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
+#, fuzzy
 msgid "Indirect subordinates"
-msgstr ""
+msgstr "非直接下属"
 
 #. module: hr
 #: model:hr.contract.type,name:hr.contract_type_interim
@@ -3175,14 +3277,16 @@ msgstr "实习"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_current
 #: model:ir.model.fields,field_description:hr.field_hr_version__is_current
+#, fuzzy
 msgid "Is Current"
-msgstr ""
+msgstr "是否当前"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_custom_job_title
 #: model:ir.model.fields,field_description:hr.field_hr_version__is_custom_job_title
+#, fuzzy
 msgid "Is Custom Job Title"
-msgstr ""
+msgstr "是否自定义职位名称"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_flexible
@@ -3207,19 +3311,22 @@ msgstr "完全灵活"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_future
 #: model:ir.model.fields,field_description:hr.field_hr_version__is_future
+#, fuzzy
 msgid "Is Future"
-msgstr ""
+msgstr "是否未来"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__is_hr_user
+#, fuzzy
 msgid "Is Hr User"
-msgstr ""
+msgstr "是否 HR 用户"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_in_contract
 #: model:ir.model.fields,field_description:hr.field_hr_version__is_in_contract
+#, fuzzy
 msgid "Is In Contract"
-msgstr ""
+msgstr "是否在合同期内"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_manager
@@ -3229,14 +3336,16 @@ msgstr "是经理"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_past
 #: model:ir.model.fields,field_description:hr.field_hr_version__is_past
+#, fuzzy
 msgid "Is Past"
-msgstr ""
+msgstr "是否过去"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_subordinate
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_subordinate
+#, fuzzy
 msgid "Is Subordinate"
-msgstr ""
+msgstr "是下属"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__is_system
@@ -3245,13 +3354,15 @@ msgstr "是系统"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_trusted_bank_account
+#, fuzzy
 msgid "Is Trusted Bank Account"
-msgstr ""
+msgstr "是否受信银行账户"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__is_user
+#, fuzzy
 msgid "Is User"
-msgstr ""
+msgstr "是否用户"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -3265,8 +3376,9 @@ msgstr "它优先考虑数据驱动的决策"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__1
+#, fuzzy
 msgid "January"
-msgstr ""
+msgstr "一月"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__job_id
@@ -3318,13 +3430,15 @@ msgstr "工作"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__7
+#, fuzzy
 msgid "July"
-msgstr ""
+msgstr "七月"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__6
+#, fuzzy
 msgid "June"
-msgstr ""
+msgstr "六月"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_hrm
@@ -3351,8 +3465,9 @@ msgstr "上个活动时间"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__last_modified_uid
 #: model:ir.model.fields,field_description:hr.field_hr_version__last_modified_uid
+#, fuzzy
 msgid "Last Modified by"
-msgstr ""
+msgstr "最后修改人"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__last_modified_date
@@ -3464,14 +3579,16 @@ msgstr ""
 
 #. module: hr
 #: model:ir.actions.server,name:hr.action_hr_employee_load_demo_data
+#, fuzzy
 msgid "Load Sample Data"
-msgstr ""
+msgstr "加载示例数据"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/xml/contract_template_button.xml:0
+#, fuzzy
 msgid "Load Template"
-msgstr ""
+msgstr "加载模板"
 
 #. module: hr
 #. odoo-javascript
@@ -3481,8 +3598,9 @@ msgstr "加载模板"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
+#, fuzzy
 msgid "Load sample data."
-msgstr ""
+msgstr "加载示例数据。"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
@@ -3508,8 +3626,9 @@ msgstr "主要附件"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
+#, fuzzy
 msgid "Main Work Location"
-msgstr ""
+msgstr "主要工作地点"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_developer
@@ -3554,8 +3673,9 @@ msgstr "未设置%s员工经理。"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__3
+#, fuzzy
 msgid "March"
-msgstr ""
+msgstr "三月"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__marital
@@ -3593,13 +3713,15 @@ msgstr "掌握我们软件的演示"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__5
+#, fuzzy
 msgid "May"
-msgstr ""
+msgstr "五月"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__member_of_department
+#, fuzzy
 msgid "Member Of Department"
-msgstr ""
+msgstr "所属部门"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__member_of_department
@@ -3651,8 +3773,9 @@ msgstr ""
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
+#, fuzzy
 msgid "More managers"
-msgstr ""
+msgstr "更多管理员"
 
 #. module: hr
 #. odoo-javascript
@@ -3703,8 +3826,9 @@ msgstr "名称"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__nationality_country_code
+#, fuzzy
 msgid "Nationality"
-msgstr ""
+msgstr "国籍"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__country_id
@@ -3726,8 +3850,9 @@ msgstr "新合约"
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/versions_timeline/versions_timeline.xml:0
+#, fuzzy
 msgid "New Employee Record"
-msgstr ""
+msgstr "新建员工档案"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_view_graph
@@ -3794,8 +3919,9 @@ msgstr "未找到模板"
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/components/versions_timeline/versions_timeline.js:0
+#, fuzzy
 msgid "No contract"
-msgstr ""
+msgstr "无合同"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -3808,8 +3934,9 @@ msgstr "没有呆板的管理者，没有槽糕的工具，没有硬性的工作
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#, fuzzy
 msgid "No user linked"
-msgstr ""
+msgstr "未关联用户"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -3823,13 +3950,15 @@ msgstr "企业流程中不浪费时间，真正的责任和自主"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#, fuzzy
 msgid "Not Employed"
-msgstr ""
+msgstr "未在职"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__0
+#, fuzzy
 msgid "Not specified"
-msgstr ""
+msgstr "未指定"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__note
@@ -3840,8 +3969,9 @@ msgstr "备注"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__11
+#, fuzzy
 msgid "November"
-msgstr ""
+msgstr "十一月"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction_counter
@@ -3906,8 +4036,9 @@ msgstr "您计划招聘新员工的数量。"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__10
+#, fuzzy
 msgid "October"
-msgstr ""
+msgstr "十月"
 
 #. module: hr
 #. odoo-javascript
@@ -3915,8 +4046,9 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_icon_display__presence_out_of_working_hour
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__hr_presence_state__out_of_working_hour
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__hr_presence_state__out_of_working_hour
+#, fuzzy
 msgid "Off-Hours"
-msgstr ""
+msgstr "非工作时间"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__work_location_type__office
@@ -3931,14 +4063,16 @@ msgstr "主管：管理所有员工"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_config_plan_plan
+#, fuzzy
 msgid "Onboarding / Offboarding"
-msgstr ""
+msgstr "入职 / 离职"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
+#, fuzzy
 msgid "Only HR users can access first version date on an employee."
-msgstr ""
+msgstr "只有 HR 用户才能访问员工的首个版本日期。"
 
 #. module: hr
 #. odoo-python
@@ -3967,13 +4101,15 @@ msgstr "不支援该操作。"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_employee_org_chart
 #: model:ir.actions.act_window,name:hr.action_hr_employee_public_org_chart
+#, fuzzy
 msgid "Org Chart"
-msgstr ""
+msgstr "组织结构"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#, fuzzy
 msgid "Organization Chart"
-msgstr ""
+msgstr "组织图表"
 
 #. module: hr
 #. odoo-python
@@ -4060,8 +4196,9 @@ msgstr "对软件产品充满激情"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__passport_expiration_date
 #: model:ir.model.fields,field_description:hr.field_hr_version__passport_expiration_date
+#, fuzzy
 msgid "Passport Expiration Date"
-msgstr ""
+msgstr "护照到期日期"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__passport_id
@@ -4072,8 +4209,9 @@ msgstr "护照号"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#, fuzzy
 msgid "Pay Category"
-msgstr ""
+msgstr "薪资类别"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -4091,13 +4229,15 @@ msgstr "很好的英文写作能力"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_export_mixin__period_start
+#, fuzzy
 msgid "Period Start"
-msgstr ""
+msgstr "期间开始"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_export_mixin__period_stop
+#, fuzzy
 msgid "Period Stop"
-msgstr ""
+msgstr "期间结束"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4220,8 +4360,9 @@ msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_export_mixin_form_view
+#, fuzzy
 msgid "Populate"
-msgstr ""
+msgstr "填充"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_simple_modif
@@ -4269,8 +4410,9 @@ msgstr "以前的实习或项目经验"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__primary_bank_account_id
+#, fuzzy
 msgid "Primary Bank Account"
-msgstr ""
+msgstr "主银行账户"
 
 #. module: hr
 #: model:ir.actions.report,name:hr.hr_employee_print_badge
@@ -4388,8 +4530,9 @@ msgstr "创新方面有良好的业绩记录"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#, fuzzy
 msgid "Provide additional information about this version..."
-msgstr ""
+msgstr "提供此版本的附加信息..."
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4435,8 +4578,9 @@ msgstr "准备好开始更加高效的招聘工作了吗?"
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.hr_employee_public_action
 #: model_terms:ir.actions.act_window,help:hr.open_view_employee_list_my
+#, fuzzy
 msgid "Ready to start your experience?"
-msgstr ""
+msgstr "准备好开始您的体验了吗？"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_consultant
@@ -4599,8 +4743,9 @@ msgstr "已退休"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
+#, fuzzy
 msgid "Running Contract"
-msgstr ""
+msgstr "执行中合同"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_has_sms_error
@@ -4615,13 +4760,15 @@ msgstr "短信发送错误"
 #: model:ir.model.fields,field_description:hr.field_res_partner_bank__employee_salary_amount
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 #: model_terms:ir.ui.view,arch_db:hr.view_partner_bank_form_inherit_hr
+#, fuzzy
 msgid "Salary Allocation"
-msgstr ""
+msgstr "薪资分配"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__salary_distribution
+#, fuzzy
 msgid "Salary Distribution"
-msgstr ""
+msgstr "薪资分配方案"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_contract_template_form_view
@@ -4667,8 +4814,9 @@ msgstr "季节工"
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
+#, fuzzy
 msgid "See All"
-msgstr ""
+msgstr "查看全部"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_version__contract_template_id
@@ -4690,8 +4838,9 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__birthday_month__9
+#, fuzzy
 msgid "September"
-msgstr ""
+msgstr "九月"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_bank_account_allocation_wizard_line__sequence
@@ -4744,8 +4893,9 @@ msgstr "显示HR图标"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_search_view
+#, fuzzy
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "显示所有逾期未完成活动的记录"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__birthday_public_display
@@ -4801,8 +4951,9 @@ msgstr "配偶生日"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__spouse_complete_name
 #: model:ir.model.fields,field_description:hr.field_hr_version__spouse_complete_name
+#, fuzzy
 msgid "Spouse Legal Name"
-msgstr ""
+msgstr "配偶法定姓名"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_version_list_view
@@ -4818,9 +4969,10 @@ msgstr "开始日期"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_version.py:0
+#, fuzzy
 msgid ""
 "Start date (%(start)s) must be earlier than contract end date (%(end)s)."
-msgstr ""
+msgstr "开始日期 (%(start)s) 必须早于合同结束日期 (%(end)s)。"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
@@ -4905,8 +5057,9 @@ msgstr "学生"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__subordinate_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__subordinate_ids
+#, fuzzy
 msgid "Subordinates"
-msgstr ""
+msgstr "下属"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
@@ -4945,8 +5098,9 @@ msgstr "目标"
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hooks.js:0
+#, fuzzy
 msgid "Team"
-msgstr ""
+msgstr "团队"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_trainee
@@ -4955,8 +5109,9 @@ msgstr "团队导向型思维"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_mail_activity__technical_usage
+#, fuzzy
 msgid "Technical Usage"
-msgstr ""
+msgstr "技术用法"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__create_employee_id
@@ -5046,8 +5201,9 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_version_check_contract_start_date_defined
+#, fuzzy
 msgid "The contract must have a start date."
-msgstr ""
+msgstr "合同必须有开始日期。"
 
 #. module: hr
 #. odoo-python
@@ -5070,10 +5226,11 @@ msgstr "员工%s应链接到用户。"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
+#, fuzzy
 msgid ""
 "The employee is already in contract on %s. Please select a date outside "
 "existing contracts"
-msgstr ""
+msgstr "该员工在 %s 已有生效合同。请选择现有合同期外的日期"
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_job_no_of_recruitment_positive
@@ -5091,8 +5248,9 @@ msgstr "您要读取的字段 “%s” 在员工公共档案中不可用。"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
+#, fuzzy
 msgid "The following employees have the same work email address: %s"
-msgstr ""
+msgstr "以下员工使用相同的工作邮箱地址：%s"
 
 #. module: hr
 #. odoo-python
@@ -5103,16 +5261,18 @@ msgstr "以下字段由 %s修改"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/wizard/hr_departure_wizard.py:0
+#, fuzzy
 msgid "The following users have been archived: %s"
-msgstr ""
+msgstr "以下用户已被归档：%s"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/wizard/hr_departure_wizard.py:0
+#, fuzzy
 msgid ""
 "The following users have not been archived as they are still linked to "
 "another active employees: %s"
-msgstr ""
+msgstr "以下用户未被归档，因为它们仍关联到其他活跃员工：%s"
 
 #. module: hr
 #. odoo-python
@@ -5133,8 +5293,9 @@ msgstr "未设置%s 辅导的用户。"
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_user
+#, fuzzy
 msgid "The user will be able to create and edit employees."
-msgstr ""
+msgstr "该用户将能够创建和编辑员工。"
 
 #. module: hr
 #: model:res.groups,comment:hr.group_hr_manager
@@ -5168,8 +5329,9 @@ msgstr "这个员工已经有绑定用户。"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
+#, fuzzy
 msgid "This field %(field_name)s doesn't exist on this model (hr.version)."
-msgstr ""
+msgstr "此字段 %(field_name)s 在此模型（hr.version）上不存在。"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__tz
@@ -5182,8 +5344,9 @@ msgstr "此字段用于定义资源工作的时区。"
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__sex
 #: model:ir.model.fields,help:hr.field_hr_version__sex
+#, fuzzy
 msgid "This is the legal sex recognized by the state."
-msgstr ""
+msgstr "这是国家法律认可的性别。"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -5233,8 +5396,9 @@ msgstr "今日活动"
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
+#, fuzzy
 msgid "Total"
-msgstr ""
+msgstr "总计"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__expected_employees
@@ -5244,14 +5408,16 @@ msgstr "预计员工数合计"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/wizard/hr_bank_account_wizard.py:0
+#, fuzzy
 msgid "Total percentage allocation must equal 100%."
-msgstr ""
+msgstr "百分比分配总计必须等于 100%。"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
+#, fuzzy
 msgid "Total salary distribution on bank accounts must be exactly 100%."
-msgstr ""
+msgstr "银行账户薪资分配总计必须等于 100%。"
 
 #. module: hr
 #: model:hr.job,name:hr.job_trainee
@@ -5351,8 +5517,9 @@ msgstr "用户"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/wizard/hr_departure_wizard.py:0
+#, fuzzy
 msgid "User Archive Notification"
-msgstr ""
+msgstr "用户归档通知"
 
 #. module: hr
 #. odoo-python
@@ -5362,8 +5529,9 @@ msgstr "用户创建通知"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__is_user_employee
+#, fuzzy
 msgid "User Employee"
-msgstr ""
+msgstr "用户员工"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
@@ -5379,13 +5547,15 @@ msgstr "该些员工已经有用户账户：%s"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
+#, fuzzy
 msgid "User already exists with the same email for Employees %s"
-msgstr ""
+msgstr "员工 %s 已存在使用相同邮箱的用户"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__is_user_active
+#, fuzzy
 msgid "User's active"
-msgstr ""
+msgstr "用户是否激活"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_partner_id
@@ -5423,13 +5593,15 @@ msgstr "有效的工作许可"
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/fields/hr_org_chart.xml:0
+#, fuzzy
 msgid "View employee"
-msgstr ""
+msgstr "查看员工"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#, fuzzy
 msgid "Visa & Work Permit"
-msgstr ""
+msgstr "签证与工作许可"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__visa_expire
@@ -5732,20 +5904,26 @@ msgstr "您只能与拥有专门用户的员工聊天。"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_partner.py:0
+#, fuzzy
 msgid ""
 "You cannot delete contact that are linked to an employee, please archive "
 "them instead."
-msgstr ""
+msgstr "您不能删除已关联员工的联系人，请在 HR 中将其归档。"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_partner.py:0
+#, fuzzy
 msgid ""
 "You cannot delete contact(s) linked to employee(s).\n"
 "Please archive them instead.\n"
 "\n"
 "Affected contact(s): %(names)s"
 msgstr ""
+"您不能删除已关联员工的联系人。\n"
+"请改为归档\n"
+"\n"
+"受影响的合同：%(names)s"
 
 #. module: hr
 #. odoo-python
@@ -5756,14 +5934,16 @@ msgstr "您无权访问此文档。"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_export_mixin.py:0
+#, fuzzy
 msgid "You must be logged in a %(country_code)s company to use this feature"
-msgstr ""
+msgstr "您必须登录%(country_code)s公司才能使用此功能"
 
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
+#, fuzzy
 msgid "You need to set a valid work email address for %s"
-msgstr ""
+msgstr "您需要为 %s 设置有效的工作邮箱地址"
 
 #. module: hr
 #. odoo-python
@@ -5862,8 +6042,9 @@ msgstr "与注册员工相关的地址"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
+#, fuzzy
 msgid "bachelor"
-msgstr ""
+msgstr "学士"
 
 #. module: hr
 #. odoo-python
@@ -5939,13 +6120,15 @@ msgstr "例如：myprivateemail@example.com"
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_renderer.xml:0
+#, fuzzy
 msgid "here"
-msgstr ""
+msgstr "此处"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_mixin
+#, fuzzy
 msgid "hr.mixin"
-msgstr ""
+msgstr "hr.mixin"
 
 #. module: hr
 #. odoo-python
@@ -5967,8 +6150,9 @@ msgstr "已婚"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
+#, fuzzy
 msgid "master"
-msgstr ""
+msgstr "硕士"
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_version__distance_home_work_unit__miles
@@ -5978,14 +6162,16 @@ msgstr "英里"
 #. module: hr
 #. odoo-python
 #: code:addons/hr/models/hr_employee.py:0
+#, fuzzy
 msgid "other"
-msgstr ""
+msgstr "其他"
 
 #. module: hr
 #. odoo-javascript
 #: code:addons/hr/static/src/views/hr_employee_hierarchy/hr_employee_hierarchy_card.xml:0
+#, fuzzy
 msgid "people"
-msgstr ""
+msgstr "人"
 
 #. module: hr
 #. odoo-python
@@ -6008,8 +6194,9 @@ msgstr "丧偶"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#, fuzzy
 msgid "work"
-msgstr ""
+msgstr "工作"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__work_permit_name

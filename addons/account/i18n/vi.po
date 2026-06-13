@@ -11,14 +11,14 @@
 # Thi Huong Nguyen, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Thi Huong Nguyen (thng)" <thng@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-29 17:35+0000\n"
-"PO-Revision-Date: 2026-03-20 08:51+0000\n"
-"Last-Translator: \"Thi Huong Nguyen (thng)\" <thng@odoo.com>\n"
+"PO-Revision-Date: 2026-06-12 05:57+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-s19-1/"
 "account/vi/>\n"
 "Language: vi\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -76,10 +76,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
+#, fuzzy
 msgid ""
 "\n"
 "Please contact your administrator."
 msgstr ""
+"\n"
+"Vui lòng liên hệ với quản trị viên của bạn."
 
 #. module: account
 #. odoo-python
@@ -158,9 +161,12 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid ""
 "%(auto_post_name)s auto-posting enabled. Next accounting date: %(move_date)s."
 msgstr ""
+"Ghi sổ tự động %(auto_post_name)s đã được kích hoạt. Ngày hạch toán tiếp "
+"theo: %(move_date)s."
 
 #. module: account
 #. odoo-python
@@ -200,16 +206,20 @@ msgstr "%(name)s khoản trả góp #%(number)s"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "%(name)s%(ref)s at %(currency_amount)s"
-msgstr ""
+msgstr "%(name)s%(ref)s với số tiền %(currency_amount)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
+#, fuzzy
 msgid ""
 "%(order)s - %(order_line)s; %(qty_invoiced)s invoiced, %(qty_delivered)s "
 "delivered at %(unit_price)s"
 msgstr ""
+"%(order)s - %(order_line)s; %(qty_invoiced)s đã được lập hoá đơn, %"
+"(qty_delivered)s đã được giao với giá %(unit_price)s"
 
 #. module: account
 #. odoo-python
@@ -234,8 +244,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
+#, fuzzy
 msgid "%(order)s - %(order_line)s; price difference for %(product)s"
-msgstr ""
+msgstr "%(order)s - %(order_line)s; chênh lệch giá cho %(product)s"
 
 #. module: account
 #. odoo-python
@@ -354,8 +365,9 @@ msgstr ").<br/>"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/search/search_panel.xml:0
+#, fuzzy
 msgid "+ Add Section"
-msgstr ""
+msgstr "+ Thêm phần"
 
 #. module: account
 #. odoo-python
@@ -392,8 +404,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
+#, fuzzy
 msgid "- Ending"
-msgstr ""
+msgstr "- Cuối kỳ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1104,6 +1117,7 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-trash text-danger\"/>\n"
 "                            <span class=\"text-danger\" "
@@ -1111,6 +1125,12 @@ msgid ""
 "                            <span class=\"text-danger\" "
 "invisible=\"duplicated_ref_ids.length &gt; 1\">Delete duplicate</span>"
 msgstr ""
+"<i class=\"fa fa-trash text-danger\"/>\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length == 1\">Xóa tất cả bản trùng lặp</span>"
+"\n"
+"                            <span class=\"text-danger\" "
+"invisible=\"duplicated_ref_ids.length &gt; 1\">Xóa bản trùng lặp</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
@@ -1148,11 +1168,15 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_kanban
+#, fuzzy
 msgid ""
 "<span class=\"badge rounded-pill text-bg-info\">\n"
 "                                        To Review\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-info\">\n"
+"                                        Cần rà soát\n"
+"                                   </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1392,8 +1416,9 @@ msgstr "<span invisible=\"nb_unmodified_bills &lt; 10\">10+</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
+#, fuzzy
 msgid "<span invisible=\"not account_id\">on</span>"
-msgstr ""
+msgstr "<span invisible=\"not account_id\">trên</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -1419,8 +1444,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_kanban
+#, fuzzy
 msgid "<span invisible=\"repartition_type == 'base'\">%</span>"
-msgstr ""
+msgstr "<span invisible=\"repartition_type == 'base'\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
@@ -1490,8 +1516,9 @@ msgstr "<span><span class=\"oe_currency_value\">19.250,00</span>$</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#, fuzzy
 msgid "<span>1.00</span>"
-msgstr ""
+msgstr "<span>1.00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1611,8 +1638,9 @@ msgstr "<span>Tài khoản ngân hàng này có thể là bản sao của</span>
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+#, fuzzy
 msgid "<span>This document might be a duplicate of</span>"
-msgstr ""
+msgstr "<span>Chứng từ này có thể là bản sao của</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1727,8 +1755,9 @@ msgstr "<strong>Thành tiền</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#, fuzzy
 msgid "<strong>Taxable Supply</strong>"
-msgstr ""
+msgstr "<strong>Nguồn cung chịu thuế</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1744,8 +1773,9 @@ msgstr "<strong>Loại: </strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
+#, fuzzy
 msgid "<strong>WARNING - This change is irreversible</strong>"
-msgstr ""
+msgstr "<strong>CẢNH BÁO - Thay đổi này là không thể đảo ngược</strong>"
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_einvoice_notification
@@ -2775,10 +2805,13 @@ msgstr "Mẫu hệ thống tài khoản"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_code_mapping.py:0
+#, fuzzy
 msgid ""
 "Account Code Mapping cannot be accessed directly. It is designed to be used "
 "only through the Chart of Accounts."
 msgstr ""
+"Không thể truy cập trực tiếp mapping mã tài khoản. Nó được thiết kế để chỉ "
+"sử dụng thông qua Hệ thống tài khoản."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
@@ -2806,8 +2839,9 @@ msgstr "Bút toán kế toán"
 #: model:ir.model.fields,field_description:account.field_account_journal__account_fiscal_country_group_codes
 #: model:ir.model.fields,field_description:account.field_account_move__account_fiscal_country_group_codes
 #: model:ir.model.fields,field_description:account.field_res_company__account_fiscal_country_group_codes
+#, fuzzy
 msgid "Account Fiscal Country Group Codes"
-msgstr ""
+msgstr "Mã nhóm quốc gia tài chính"
 
 #. module: account
 #: model:ir.model,name:account.model_account_group
@@ -2982,8 +3016,9 @@ msgstr "Nhóm tài khoản thuế"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_repartition_line_form
+#, fuzzy
 msgid "Account Tax Repartition Line"
-msgstr ""
+msgstr "Dòng phân bổ thuế"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_ir_module_module__account_templates
@@ -3243,8 +3278,9 @@ msgstr "Mapping tài khoản của vị trí tài chính"
 #. module: account
 #: model:account.account,name:account.1_payable
 #: model:account.account,name:account.2_account_account_us_payable
+#, fuzzy
 msgid "Accounts Payable"
-msgstr ""
+msgstr "Khoản phải trả"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
@@ -3266,8 +3302,9 @@ msgstr "Khoản phải thu"
 #. module: account
 #: model:account.account,name:account.1_pos_receivable
 #: model:account.account,name:account.2_account_account_us_pos_receivable
+#, fuzzy
 msgid "Accounts Receivable (PoS)"
-msgstr ""
+msgstr "Khoản phải thu (PoS)"
 
 #. module: account
 #. odoo-python
@@ -3289,10 +3326,13 @@ msgstr "Bút toán dồn tích"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
+#, fuzzy
 msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
+"Bút toán dồn tích được tạo vào %(date)s: %(accrual_entry)s.                "
+"Và bút toán đảo của nó: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -3318,8 +3358,9 @@ msgstr "Tổng dồn tích"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_acc_depreciation
+#, fuzzy
 msgid "Accumulated Depreciation"
-msgstr ""
+msgstr "Giá trị hao mòn luỹ kế"
 
 #. module: account
 #: model:account.account,name:account.1_retained_earnings
@@ -3416,8 +3457,9 @@ msgstr "Hoạt động ngoại lệ"
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_plans_ids
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__activity_plans_ids
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__activity_plans_ids
+#, fuzzy
 msgid "Activity Plans"
-msgstr ""
+msgstr "Kế hoạch hoạt động"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__activity_state
@@ -3531,8 +3573,9 @@ msgstr "Thêm phần"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
+#, fuzzy
 msgid "Add a subsection"
-msgstr ""
+msgstr "Thêm một phần phụ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3618,8 +3661,9 @@ msgstr ""
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_administration_fees
+#, fuzzy
 msgid "Administration Fees"
-msgstr ""
+msgstr "Phí quản lý"
 
 #. module: account
 #: model:res.groups,name:account.group_account_manager
@@ -3638,8 +3682,9 @@ msgstr "Cài đặt nâng cao"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_marketing
+#, fuzzy
 msgid "Advertising & Marketing"
-msgstr ""
+msgstr "Quảng cáo & marketing"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__include_base_amount
@@ -3715,29 +3760,40 @@ msgstr "Tất cả sổ nhật kí tiền mặt & ngân hàng"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_office_services
+#, fuzzy
 msgid ""
 "All expenses made for your office or workplace that are not material goods"
 msgstr ""
+"Tất cả chi phí phát sinh cho văn phòng hoặc nơi làm việc của bạn mà không "
+"phải là hàng hóa vật chất"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_professional_insurance
+#, fuzzy
 msgid "All fees related to insurance taken in the context of your business"
 msgstr ""
+"Tất cả khoản phí liên quan đến bảo hiểm được áp dụng trong phạm vi hoạt động "
+"kinh doanh của bạn"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_social_security
+#, fuzzy
 msgid "All fees related to social security contributions"
-msgstr ""
+msgstr "Tất cả khoản phí liên quan đến đóng góp bảo hiểm xã hội"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_fuel
+#, fuzzy
 msgid "All fuel and gas expenses for a car/auto"
-msgstr ""
+msgstr "Tất cả chi phí nhiên liệu và khí đốt cho xe ô tô"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_raw_materials
+#, fuzzy
 msgid "All goods purchased as raw materials used by your activity"
 msgstr ""
+"Tất cả hàng hóa được mua làm nguyên liệu thô được sử dụng trong hoạt động "
+"kinh doanh"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__move_to_hash_ids
@@ -3746,8 +3802,9 @@ msgstr "Tất cả bút toán sẽ được hash"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_expense
+#, fuzzy
 msgid "All other uncategorized expenses"
-msgstr ""
+msgstr "Tất cả chi phí khác chưa được phân loại"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -3838,8 +3895,9 @@ msgstr "Đã thanh toán:"
 #. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
+#, fuzzy
 msgid "Already unsubscribed"
-msgstr ""
+msgstr "Đã hủy đăng ký"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__always
@@ -4132,8 +4190,9 @@ msgstr "Phân tích"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__review_state__anomaly
+#, fuzzy
 msgid "Anomaly"
-msgstr ""
+msgstr "Bất thường"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_unique_name
@@ -4379,8 +4438,9 @@ msgstr "Tệp đính kèm"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__attachments_not_supported
+#, fuzzy
 msgid "Attachments Not Supported"
-msgstr ""
+msgstr "Tệp đính kèm không được hỗ trợ"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_audit_trail_report
@@ -4406,8 +4466,9 @@ msgstr "Tháng 8"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_auto_insurance
+#, fuzzy
 msgid "Auto Insurance"
-msgstr ""
+msgstr "Bảo hiểm ô tô"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -4417,8 +4478,9 @@ msgstr "Tự động hoàn thành"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_vendor_bill_id
 #: model:ir.model.fields,help:account.field_account_move__invoice_vendor_bill_id
+#, fuzzy
 msgid "Auto-complete from a previous bill or refund."
-msgstr ""
+msgstr "Tự động hoàn thành từ hóa đơn hoặc khoản hoàn tiền trước đó."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_ids
@@ -4506,8 +4568,9 @@ msgstr "Tự động hoá"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_665
+#, fuzzy
 msgid "Automobile Expenses"
-msgstr ""
+msgstr "Chi phí ô tô"
 
 #. module: account
 #. odoo-python
@@ -4613,8 +4676,9 @@ msgstr "Số dư"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__balance_negate
+#, fuzzy
 msgid "Balance Negate"
-msgstr ""
+msgstr "Đảo dấu số dư"
 
 #. module: account
 #. odoo-javascript
@@ -4762,8 +4826,9 @@ msgstr "Thiết lập sẵn bút toán đối chiếu ngân hàng"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_650
+#, fuzzy
 msgid "Bank Service Charges"
-msgstr ""
+msgstr "Phí dịch vụ ngân hàng"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -4832,8 +4897,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
+#, fuzzy
 msgid "Bank accounts"
-msgstr ""
+msgstr "Tài khoản ngân hàng"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_bank_cash
@@ -4849,8 +4915,9 @@ msgstr "Ngân hàng Odoo"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "Bank settings"
-msgstr ""
+msgstr "Cài đặt ngân hàng"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -4959,10 +5026,13 @@ msgstr "Thanh toán theo lô"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+#, fuzzy
 msgid ""
 "Batch invoice sending is unavailable. Please, activate the cron to enable "
 "batch sending of invoices."
 msgstr ""
+"Chức năng gửi hóa đơn theo lô hiện không khả dụng. Vui lòng kích hoạt cron "
+"để kích hoạt chức năng gửi hóa đơn theo lô."
 
 #. module: account
 #. odoo-python
@@ -5058,13 +5128,15 @@ msgstr "Hoá đơn chậm trễ"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_legal
+#, fuzzy
 msgid "Bills from lawyers, fees paid to the justice system"
-msgstr ""
+msgstr "Hóa đơn từ luật sư, phí trả cho hệ thống tư pháp"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_accounting
+#, fuzzy
 msgid "Bills from your bookkeeper or accounting firm"
-msgstr ""
+msgstr "Hóa đơn từ kế toán viên hoặc công ty kế toán của bạn"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5151,13 +5223,19 @@ msgstr "Mixin nhập chứng từ kinh doanh"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_licenses
+#, fuzzy
 msgid "Business licenses and permits that your company must pay to operate"
 msgstr ""
+"Giấy phép kinh doanh và các loại giấy phép khác mà công ty của bạn phải nộp "
+"để hoạt động"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_local_tax
+#, fuzzy
 msgid "Business or income taxes owed to local or municipal governments"
 msgstr ""
+"Thuế doanh nghiệp hoặc thuế thu nhập phải nộp cho chính quyền địa phương "
+"hoặc chính quyền thành phố"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__foldable
@@ -5876,8 +5954,9 @@ msgstr "Quốc gia của đối tác thương mại"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_common_stock
+#, fuzzy
 msgid "Common Stock"
-msgstr ""
+msgstr "Cổ phiếu phổ thông"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_model
@@ -6013,19 +6092,26 @@ msgstr "Công ty liên quan tới sổ nhật ký này"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_other_employees_benefits
+#, fuzzy
 msgid ""
 "Company's personnel costs excluding compensations, contributions and vouchers"
 msgstr ""
+"Chi phí nhân sự của công ty, không bao gồm tiền lương, các khoản đóng góp và "
+"phiếu thưởng"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_salaries
+#, fuzzy
 msgid "Compensation paid to employees and workers employed by the company"
 msgstr ""
+"Tiền lương và các khoản phụ cấp được trả cho nhân viên và người lao động làm "
+"việc cho công ty"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_general_subcontracting
+#, fuzzy
 msgid "Compensation to external workers and consultants for services"
-msgstr ""
+msgstr "Trả thù lao cho nhân viên bên ngoài và tư vấn viên cho các dịch vụ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__use_sections
@@ -6102,8 +6188,9 @@ msgstr "Xác nhận ngay"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/currency_form/form_controller.js:0
+#, fuzzy
 msgid "Confirmation Warning"
-msgstr ""
+msgstr "Cảnh báo xác nhận"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -6127,15 +6214,19 @@ msgstr "Cân nhắc thanh toán %(btn_start)stoàn bộ số tiền%(btn_end)s."
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
+#, fuzzy
 msgid ""
 "Consider paying the amount with %(btn_start)searly payment discount%"
 "(btn_end)s instead."
 msgstr ""
+"Thay vào đó, hãy cân nhắc thanh toán khoản tiền này với %(btn_start)schiết "
+"khấu thanh toán sớm%(btn_end)s."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_buildings
+#, fuzzy
 msgid "Construction of buildings and costs associated to buildings"
-msgstr ""
+msgstr "Xây dựng công trình và các chi phí liên quan đến công trình"
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner
@@ -6184,8 +6275,9 @@ msgstr "Dữ liệu sai sót trong bút toán có id %(id)s (%(name)s)."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
+#, fuzzy
 msgid "Cost and Revenue"
-msgstr ""
+msgstr "Chi phí và doanh thu"
 
 #. module: account
 #: model:account.account,name:account.1_cost_of_goods_sold
@@ -6208,31 +6300,40 @@ msgstr "Chi phí doanh thu"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_equipment
+#, fuzzy
 msgid "Cost of office furniture, fixtures, and business equipment"
-msgstr ""
+msgstr "Chi phí cho nội thất văn phòng, thiết bị cố định và thiết bị kinh doanh"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
+#, fuzzy
 msgid "Cost of revenue"
-msgstr ""
+msgstr "Chi phí doanh thu"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_postage
+#, fuzzy
 msgid ""
 "Costs for shipping products or materials to customers or receiving inventory."
 msgstr ""
+"Chi phí vận chuyển sản phẩm hoặc vật liệu đến khách hàng hoặc nhận tồn kho."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_disposal_fees
+#, fuzzy
 msgid ""
 "Costs incurred for removal, disposal, or recycling of waste and obsolete "
 "materials"
 msgstr ""
+"Chi phí phát sinh cho việc thu gom, xử lý hoặc tái chế chất thải và phế liệu"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_marketing
+#, fuzzy
 msgid "Costs related to promoting the business, such as ads, campaigns, etc"
 msgstr ""
+"Chi phí liên quan đến việc quảng bá doanh nghiệp, chẳng hạn như quảng cáo, "
+"chiến dịch, v.v"
 
 #. module: account
 #. odoo-python
@@ -7021,8 +7122,9 @@ msgstr "Tuỳ chỉnh bố cục chứng từ của bạn."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_import_fees
+#, fuzzy
 msgid "Customs fees incurred while importing goods from outside of the US"
-msgstr ""
+msgstr "Phí hải quan phát sinh khi nhập khẩu hàng hóa từ bên ngoài Hoa Kỳ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -7304,8 +7406,9 @@ msgstr "Tài khoản phải thu POS mặc định"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_receipt_fiscal_position_id
+#, fuzzy
 msgid "Default Purchase Receipt Fiscal Position"
-msgstr ""
+msgstr "Phiếu thu mua hàng mặc định - Vị trí tài chính"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
@@ -7393,8 +7496,10 @@ msgstr "Thuế mặc định dùng khi bán sản phẩm"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "Default value for 'company_id' for %(record)s is not an integer"
 msgstr ""
+"Giá trị mặc định cho 'company_id' trong %(record)s không phải là số nguyên"
 
 #. module: account
 #: model:account.account,name:account.1_deferred_revenue
@@ -7405,8 +7510,9 @@ msgstr "Doanh thu chưa thực hiện"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "Define a default in the settings"
-msgstr ""
+msgstr "Xác định giá trị mặc định trong cài đặt"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7512,8 +7618,9 @@ msgstr "Ngừng sử dụng"
 #. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
+#, fuzzy
 msgid "Deprecated link"
-msgstr ""
+msgstr "Liên kết đã ngừng sử dụng"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_depreciation
@@ -7602,8 +7709,9 @@ msgstr "Ký trực tiếp"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_disability_insurance
+#, fuzzy
 msgid "Disability Insurance"
-msgstr ""
+msgstr "Bảo hiểm tai nạn lao động"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard__disable_merge_button
@@ -7713,8 +7821,9 @@ msgstr "Hiển thị tiền tố tài khoản"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__display_account_storno
 #: model:ir.model.fields,field_description:account.field_res_config_settings__display_account_storno
+#, fuzzy
 msgid "Display Account Storno"
-msgstr ""
+msgstr "Hiển thị tài khoản Storno"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__display_alias_fields
@@ -7733,8 +7842,9 @@ msgstr "Hiển thị số tiền"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_attachments_widget
+#, fuzzy
 msgid "Display Attachments Widget"
-msgstr ""
+msgstr "Hiển thị widget tệp đính kèm"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
@@ -7743,8 +7853,9 @@ msgstr "Hiển thị ngày vào tháng tiếp theo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_hash
+#, fuzzy
 msgid "Display Force Hash"
-msgstr ""
+msgstr "Hiển thị bắt buộc hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__display_force_post
@@ -7927,8 +8038,9 @@ msgstr "Hiển thị tổng số tiền của hóa đơn bằng chữ cái"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_disposal_fees
+#, fuzzy
 msgid "Disposal Fees"
-msgstr ""
+msgstr "Phí xử lý"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__repartition_line_ids
@@ -8193,8 +8305,9 @@ msgstr "Điều khoản đến hạn"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_subscriptions
+#, fuzzy
 msgid "Dues & Subscriptions"
-msgstr ""
+msgstr "Phí hội viên & phí đăng ký"
 
 #. module: account
 #. odoo-javascript
@@ -8341,8 +8454,9 @@ msgstr "Chỉnh sửa số tiền thuế nếu bạn gặp phải vấn đề l�
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_training
+#, fuzzy
 msgid "Education and training fees not including food and drinks"
-msgstr ""
+msgstr "Phí giáo dục và đào tạo không bao gồm tiền ăn uống"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -8367,15 +8481,19 @@ msgstr "Thông báo email"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_template
+#, fuzzy
 msgid "Email Template"
-msgstr ""
+msgstr "Mẫu email"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__incoming_einvoice_notification_email
+#, fuzzy
 msgid ""
 "Email addresses that will receive copy for sent and received invoices. "
 "Separate entries with ';'."
 msgstr ""
+"Địa chỉ email sẽ nhận bản sao của hóa đơn đã gửi và đã nhận. Tách các mục "
+"bằng dấu ';'."
 
 #. module: account
 #. odoo-javascript
@@ -8401,18 +8519,21 @@ msgstr "Thuế bảng lương nhân viên"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_commissions
+#, fuzzy
 msgid "Employees Commissions"
-msgstr ""
+msgstr "Phí hoa hồng cho nhân viên"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_commissions
+#, fuzzy
 msgid "Employees commissions and bonuses"
-msgstr ""
+msgstr "Phí hoa hồng và tiền thưởng cho nhân viên"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_healthcare
+#, fuzzy
 msgid "Employees medical, dental, and vision benefits"
-msgstr ""
+msgstr "Quyền lợi y tế, nha khoa và thị lực cho nhân viên"
 
 #. module: account
 #: model:account.account,name:account.1_employer_payroll_taxes
@@ -8422,17 +8543,23 @@ msgstr "Thuế bảng lương nhân viên"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_unemployment_insurance
+#, fuzzy
 msgid ""
 "Employer contributions to state (SUI) or federal unemployment insurance "
 "programs"
 msgstr ""
+"Số tiền đóng góp của người sử dụng lao động vào chương trình bảo hiểm thất "
+"nghiệp của nhà nước (SUI) hoặc chương trình bảo hiểm thất nghiệp liên bang"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_payroll_tax
+#, fuzzy
 msgid ""
 "Employer's portion of payroll-related taxes (eg. Social Security, Medicare, "
 "FUTA/SUTA)"
 msgstr ""
+"Phần thuế liên quan đến bảng lương do người sử dụng lao động chịu (VD: Bảo "
+"hiểm xã hội, Bảo hiểm y tế, FUTA/SUTA)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
@@ -8564,13 +8691,17 @@ msgstr "Epd Cần thiết"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_equipment
+#, fuzzy
 msgid "Equipment and Furniture"
-msgstr ""
+msgstr "Thiết bị và nội thất"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_machines
+#, fuzzy
 msgid "Equipment, machinery and tools directly related to your business"
 msgstr ""
+"Thiết bị, máy móc và công cụ trực tiếp liên quan đến hoạt động kinh doanh "
+"của bạn"
 
 #. module: account
 #. odoo-javascript
@@ -8689,13 +8820,15 @@ msgstr "Bút toán chênh lệch tỷ giá:"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__no_followup
 #: model:ir.model.fields,help:account.field_account_move__no_followup
+#, fuzzy
 msgid "Exclude this journal entry from follow-up reports."
-msgstr ""
+msgstr "Loại trừ bút toán này khỏi các báo cáo follow-up."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__no_followup
+#, fuzzy
 msgid "Exclude this journal item from follow-up reports."
-msgstr ""
+msgstr "Loại trừ bút toán này khỏi các báo cáo follow-up."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__excluded_journal_ids
@@ -8747,20 +8880,27 @@ msgstr "Chi phí"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_meals
+#, fuzzy
 msgid "Expenses incurred when eating or drinking at bars or restaurants"
-msgstr ""
+msgstr "Chi phí phát sinh khi ăn uống tại quán bar hoặc nhà hàng"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_vehicles_expense
+#, fuzzy
 msgid "Expenses made for the repair and maintenance of company cars and trucks"
 msgstr ""
+"Chi phí phát sinh cho việc sửa chữa và bảo dưỡng xe ô tô và xe tải của công "
+"ty"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_computers
+#, fuzzy
 msgid ""
 "Expenses made for the repair and maintenance of laptops, peripherals, and "
 "computing equipment"
 msgstr ""
+"Chi phí phát sinh cho việc sửa chữa và bảo dưỡng laptop, thiết bị ngoại vi "
+"và thiết bị công nghệ thông tin"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_lock_exception__state__expired
@@ -8770,8 +8910,9 @@ msgstr "Đã hết hạn"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "Export ZIP"
-msgstr ""
+msgstr "Xuất ZIP"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
@@ -8883,8 +9024,9 @@ msgstr "Tháng 2"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_federal_income_tax
+#, fuzzy
 msgid "Federal Income Tax"
-msgstr ""
+msgstr "Thuế thu nhập liên bang"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__state_ids
@@ -9008,8 +9150,9 @@ msgstr "Mã tài chính quốc gia"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__fiscal_country_group_codes
 #: model:ir.model.fields,field_description:account.field_res_users__fiscal_country_group_codes
+#, fuzzy
 msgid "Fiscal Country Group Codes"
-msgstr ""
+msgstr "Mã nhóm quốc gia tài chính"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_country_group__exclude_state_ids
@@ -9100,8 +9243,9 @@ msgstr "Tài sản cố định"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_airfare
+#, fuzzy
 msgid "Flights or expenses related to air travel by plane"
-msgstr ""
+msgstr "Vé máy bay hoặc chi phí liên quan đến việc di chuyển bằng máy bay"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__float
@@ -9170,15 +9314,19 @@ msgstr "Font biểu tượng, ví dụ: fa-tasks"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_food
+#, fuzzy
 msgid ""
 "Food or drinks incurred outside of bars or restaurants, like receptions, "
 "canteen and food delivery, etc"
 msgstr ""
+"Thực phẩm hoặc đồ uống được tiêu thụ ngoài các quán bar hoặc nhà hàng, như "
+"tiệc chiêu đãi, căng-tin và dịch vụ giao đồ ăn, v.v."
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_food
+#, fuzzy
 msgid "Food: Catering & Delivery"
-msgstr ""
+msgstr "Thực phẩm: Dịch vụ ẩm thực & giao hàng"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
@@ -9220,8 +9368,9 @@ msgstr "Bắt buộc dấu vết kiểm toán"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__force_hash
+#, fuzzy
 msgid "Force Hash"
-msgstr ""
+msgstr "Bắt buộc hash"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__force_restrictive_audit_trail
@@ -9328,8 +9477,9 @@ msgstr "Từ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
+#, fuzzy
 msgid "From Category"
-msgstr ""
+msgstr "Từ danh mục"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_base_document_layout__from_invoice
@@ -9434,13 +9584,15 @@ msgstr "Toàn quyền truy cập, kể cả quyền cấu hình."
 #: code:addons/account/models/chart_template.py:0
 #: model:account.account,name:account.1_transfer_account_id
 #: model:account.account,name:account.2_transfer_account_id
+#, fuzzy
 msgid "Funds in Transit"
-msgstr ""
+msgstr "Tiền đang chuyển"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_furniture
+#, fuzzy
 msgid "Furniture & Fixtures"
-msgstr ""
+msgstr "Nội thất & thiết bị"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -9471,8 +9623,9 @@ msgstr "Chung"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_general_subcontracting
+#, fuzzy
 msgid "General Subcontracting"
-msgstr ""
+msgstr "Thầu phụ tổng hợp"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_send_wizard_form
@@ -9494,8 +9647,9 @@ msgstr "Bút toán đã tạo"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/template_generic_coa.py:0
+#, fuzzy
 msgid "Generic (Minimal) Chart of Accounts"
-msgstr ""
+msgstr "Hệ thống tài khoản tổng quát (tối giản)"
 
 #. module: account
 #: model:account.report,name:account.generic_tax_report
@@ -9522,8 +9676,9 @@ msgstr "Ngày khoá sổ chung"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+#, fuzzy
 msgid "Go to cron configuration"
-msgstr ""
+msgstr "Đi đến cấu hình cron"
 
 #. module: account
 #. odoo-python
@@ -9546,19 +9701,22 @@ msgstr "Hàng hóa"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
+#, fuzzy
 msgid "Goods Delivered not Invoiced (perpetual valuation)"
-msgstr ""
+msgstr "Hàng hóa đã giao chưa lập hóa đơn (định giá liên tục)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
+#, fuzzy
 msgid "Goods Invoiced not Delivered (perpetual valuation)"
-msgstr ""
+msgstr "Hàng hóa đã lập hóa đơn chưa giao (định giá liên tục)"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_ground_transportation
+#, fuzzy
 msgid "Ground Transportation"
-msgstr ""
+msgstr "Vận tải đường bộ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__group_id
@@ -9567,8 +9725,9 @@ msgstr "Nhóm"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#, fuzzy
 msgid "Group 1"
-msgstr ""
+msgstr "Nhóm 1"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__groupby
@@ -9615,10 +9774,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
+#, fuzzy
 msgid ""
 "Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
 "groupby value on '%(report_line)s'"
 msgstr ""
+"Tính năng Groupby không được cơ chế '%(engine)s' hỗ trợ. Vui lòng xóa giá "
+"trị Groupby trên '%(report_line)s'"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__grouping_key
@@ -9664,14 +9826,16 @@ msgstr "Có cảnh báo Iban"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__has_invalid_analytics
+#, fuzzy
 msgid "Has Invalid Analytics"
-msgstr ""
+msgstr "Có dữ liệu phân tích không hợp lệ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__journal_has_invalid_statements
 #: model:ir.model.fields,field_description:account.field_account_journal__has_invalid_statements
+#, fuzzy
 msgid "Has Invalid Statements"
-msgstr ""
+msgstr "Có sao kê không hợp lệ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__has_message
@@ -9731,8 +9895,9 @@ msgstr "Kết quả toàn vẹn dữ liệu hash PDF"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_healthcare
+#, fuzzy
 msgid "Healthcare Benefits"
-msgstr ""
+msgstr "Quyền lợi y tế"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -9756,8 +9921,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__collapse_composition
+#, fuzzy
 msgid "Hide Composition"
-msgstr ""
+msgstr "Ẩn thành phần"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__hide_post_button
@@ -9769,8 +9935,9 @@ msgstr "Ẩn nút vào sổ"
 #. odoo-javascript
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
 #: model:ir.model.fields,field_description:account.field_account_move_line__collapse_prices
+#, fuzzy
 msgid "Hide Prices"
-msgstr ""
+msgstr "Ẩn giá"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__hide_tax_exigibility
@@ -9821,8 +9988,9 @@ msgstr "Mặt chia ngang"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_hotels
+#, fuzzy
 msgid "Hotel or accommodation expenses incurred during business trips"
-msgstr ""
+msgstr "Chi phí khách sạn hoặc chỗ ở phát sinh trong các chuyến công tác"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_hotels
@@ -10033,10 +10201,13 @@ msgstr "Nếu chọn, một số tin nhắn sẽ có lỗi gửi."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__collapse_composition
+#, fuzzy
 msgid ""
 "If checked, the lines below this section will not be displayed in reports "
 "and portal."
 msgstr ""
+"Nếu được chọn, các dòng dưới đây sẽ không hiển thị trong báo cáo và cổng "
+"thông tin."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__collapse_prices
@@ -10227,14 +10398,16 @@ msgstr "Nhập tệp .qif"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_import_fees
+#, fuzzy
 msgid "Import Fees"
-msgstr ""
+msgstr "Phí nhập khẩu"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "Import Template for Bills"
-msgstr ""
+msgstr "Nhập mẫu cho hóa đơn thanh toán"
 
 #. module: account
 #. odoo-python
@@ -10245,14 +10418,16 @@ msgstr "Nhập mẫu hệ thống tài khoản"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "Import Template for Credit Notes"
-msgstr ""
+msgstr "Nhập mẫu cho giấy báo có"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "Import Template for Invoices"
-msgstr ""
+msgstr "Nhập mẫu cho hóa đơn"
 
 #. module: account
 #. odoo-python
@@ -10263,14 +10438,16 @@ msgstr "Nhập mẫu hạng mục bút toán"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "Import Template for Misc. Operations"
-msgstr ""
+msgstr "Nhập mẫu cho các hoạt động khác"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "Import Template for Refunds"
-msgstr ""
+msgstr "Nhập mẫu cho phiếu hoàn tiền"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10290,8 +10467,9 @@ msgstr "Theo tiền tệ"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/webclient/share_target/account_share_target_item.xml:0
+#, fuzzy
 msgid "In Journal"
-msgstr ""
+msgstr "Trong sổ nhật ký"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__in_payment
@@ -10342,6 +10520,7 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
+#, fuzzy
 msgid ""
 "In report '%(report_name)s', on line '%(line_name)s', with label '%"
 "(label)s',\n"
@@ -10349,6 +10528,11 @@ msgid ""
 "Expected: cross_report(<report_id>|<xml_id>[,force_date_sope])Example:  "
 "cross_report(my_module.my_report) or cross_report(123)"
 msgstr ""
+"Trong báo cáo '%(report_name)s', tại dòng '%(line_name)s', với nhãn '%(label)"
+"s',\n"
+"Định dạng của biểu thức báo cáo chéo không hợp lệ. \n"
+"Định dạng mong đợi: cross_report(<report_id>|<xml_id>[,force_date_sope])Ví "
+"dụ: cross_report(my_module.my_report) hoặc cross_report(123)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -10412,13 +10596,15 @@ msgstr "Tài khoản thu nhập"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_state_income_tax
+#, fuzzy
 msgid "Income taxes owed to state taxing authorities"
-msgstr ""
+msgstr "Thuế thu nhập phải nộp cho cơ quan thuế của nhà nước"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_federal_income_tax
+#, fuzzy
 msgid "Income taxes owed to the U.S. federal government"
-msgstr ""
+msgstr "Thuế thu nhập phải nộp cho Chính phủ Liên bang Hoa Kỳ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -10516,20 +10702,25 @@ msgstr "Installments Switch Html"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_655
+#, fuzzy
 msgid "Insurance Expenses"
-msgstr ""
+msgstr "Chi phí bảo hiểm"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_professional_liability_insurance
+#, fuzzy
 msgid "Insurance for damage caused to third parties"
-msgstr ""
+msgstr "Bảo hiểm cho thiệt hại gây ra cho bên thứ ba"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_compensation_insurance
+#, fuzzy
 msgid ""
 "Insurance premiums that cover medical costs and wage replacement for "
 "employees injured on the job"
 msgstr ""
+"Phí bảo hiểm y tế và bồi thường thu nhập cho nhân viên bị thương trong quá "
+"trình làm việc"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_column__figure_type__integer
@@ -10549,8 +10740,9 @@ msgstr "Tài khoản chuyển tiền liên ngân hàng"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_loan_interest_expense
+#, fuzzy
 msgid "Interest paid on loans or lines of credit"
-msgstr ""
+msgstr "Lãi suất phải trả cho các khoản vay hoặc hạn mức thẻ tín dụng"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__transfer_account_id
@@ -10679,8 +10871,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#, fuzzy
 msgid "Invalid Statement(s)"
-msgstr ""
+msgstr "(Các) báo cáo không hợp lệ"
 
 #. module: account
 #. odoo-python
@@ -10691,15 +10884,19 @@ msgstr "Ngày kết thúc năm tài chính không hợp lệ"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_report.py:0
+#, fuzzy
 msgid ""
 "Invalid formula for expression '%(label)s' of line '%(line)s': %(formula)s"
 msgstr ""
+"Công thức không hợp lệ cho biểu thức '%(label)s' ở dòng '%(line)s': %"
+"(formula)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/controllers/portal.py:0
+#, fuzzy
 msgid "Invalid token"
-msgstr ""
+msgstr "Token không hợp lệ"
 
 #. module: account
 #: model:account.account,name:account.1_stock_valuation
@@ -10810,8 +11007,9 @@ msgstr "Invoice Has Outstanding"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_placeholder
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_incoterm_placeholder
+#, fuzzy
 msgid "Invoice Incoterm Placeholder"
-msgstr ""
+msgstr "Phần chữ chỗ Incoterm hoá đơn"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -11140,8 +11338,9 @@ msgstr "Nội địa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_draft_duplicated_ref_ids
 #: model:ir.model.fields,field_description:account.field_account_move__is_draft_duplicated_ref_ids
+#, fuzzy
 msgid "Is Draft Duplicated Ref"
-msgstr ""
+msgstr "Bản nháp có trùng tham chiếu không"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__is_mail_template_editor
@@ -11219,8 +11418,9 @@ msgstr "Ghi nhận thanh toán nháp"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_sale_installed
 #: model:ir.model.fields,field_description:account.field_account_move__is_sale_installed
+#, fuzzy
 msgid "Is Sale Installed"
-msgstr ""
+msgstr "Đã cài đặt Bán hàng"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_same_currency
@@ -11453,8 +11653,9 @@ msgstr "Tên sổ nhật ký"
 
 #. module: account
 #: model:mail.template,name:account.mail_template_invoice_subscriber
+#, fuzzy
 msgid "Journal Notification"
-msgstr ""
+msgstr "Thông báo sổ nhật ký"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_suspense_account_id
@@ -11620,8 +11821,9 @@ msgstr "Nhãn trên Biên lai PoS"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_land
+#, fuzzy
 msgid "Land (not built)"
-msgstr ""
+msgstr "Đất (chưa xây dựng)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__lang
@@ -11886,18 +12088,21 @@ msgstr "Nợ"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_licenses
+#, fuzzy
 msgid "Licenses and Permits"
-msgstr ""
+msgstr "Giấy phép và giấy chứng nhận"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_software
+#, fuzzy
 msgid "Licenses or computer services (like repairs or upgrades)"
-msgstr ""
+msgstr "Giấy phép hoặc dịch vụ máy tính (như sửa chữa hoặc nâng cấp)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__open_on
+#, fuzzy
 msgid "Limit the date for the Residual (at date) fields."
-msgstr ""
+msgstr "Giới hạn ngày áp dụng cho các trường “Số dư còn lại (tại ngày)”."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__line_ids
@@ -11958,23 +12163,27 @@ msgstr "Tải thêm hạn mức"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_loan_interest_expense
+#, fuzzy
 msgid "Loan Interest Expense"
-msgstr ""
+msgstr "Chi phí lãi vay"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_loan_extract
+#, fuzzy
 msgid "Loans Digitization"
-msgstr ""
+msgstr "Số hoá khoản vay"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_property_tax
+#, fuzzy
 msgid "Local taxes that have to be paid due to the ownership of property"
-msgstr ""
+msgstr "Các loại thuế địa phương phải nộp do sở hữu tài sản"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_local_tax
+#, fuzzy
 msgid "Local/City Tax"
-msgstr ""
+msgstr "Thuế địa phương/thuế du lịch"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12281,8 +12490,9 @@ msgstr "Đánh dấu là đã thanh toán đủ"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_67
+#, fuzzy
 msgid "Marketing Expenses"
-msgstr ""
+msgstr "Chi phí marketing"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__match_label__match_regex
@@ -12357,13 +12567,15 @@ msgstr "Tháng 5"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_meals
+#, fuzzy
 msgid "Meals & Entertainment"
-msgstr ""
+msgstr "Ăn uống & giải trí"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_subscriptions
+#, fuzzy
 msgid "Membership fees for industry groups, professional associations, etc"
-msgstr ""
+msgstr "Phí hội viên cho các nhóm ngành, hiệp hội chuyên nghiệp, v.v"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__memo
@@ -12445,8 +12657,9 @@ msgstr "Phương thức"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_ground_transportation
+#, fuzzy
 msgid "Mileage, taxi and parking"
-msgstr ""
+msgstr "Chi phí đi lại, taxi và đậu xe"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -12464,13 +12677,15 @@ msgstr "Thông tin khác"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_expense
+#, fuzzy
 msgid "Miscellaneous Expenses"
-msgstr ""
+msgstr "Chi phí khác"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_misc_fixed_assets
+#, fuzzy
 msgid "Miscellaneous Fixed Assets"
-msgstr ""
+msgstr "Tài sản cố định khác"
 
 #. module: account
 #. odoo-python
@@ -12562,8 +12777,9 @@ msgstr "Hàng tháng"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/currency_form/open_decimal_precision_btn_template.xml:0
+#, fuzzy
 msgid "More precision on Product Prices"
-msgstr ""
+msgstr "Độ chính xác cao hơn về giá sản phẩm"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__move_id
@@ -12692,8 +12908,9 @@ msgstr "Phần giữ chỗ tên"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_bank_fees
+#, fuzzy
 msgid "Nasty charges and interests from your bank"
-msgstr ""
+msgstr "Các khoản phí và lãi suất không hợp lý từ ngân hàng của bạn"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
@@ -12871,8 +13088,9 @@ msgstr "Không có giao dịch ngân hàng"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__no_followup
 #: model:ir.model.fields,field_description:account.field_account_move__no_followup
 #: model:ir.model.fields,field_description:account.field_account_move_line__no_followup
+#, fuzzy
 msgid "No Follow-Up"
-msgstr ""
+msgstr "Không follow-up"
 
 #. module: account
 #. odoo-python
@@ -12883,8 +13101,9 @@ msgstr "Không có phương thức thanh toán"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/product_catalog_mixin.py:0
+#, fuzzy
 msgid "No Section"
-msgstr ""
+msgstr "Không có phần"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__no_template
@@ -13195,8 +13414,9 @@ msgstr "Giá trị kiểu số"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+#, fuzzy
 msgid "OSS Tax mapping"
-msgstr ""
+msgstr "Mapping thuế OSS"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__10
@@ -13242,8 +13462,9 @@ msgstr "Ngoài bảng cân đối"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_651
+#, fuzzy
 msgid "Office Expenses"
-msgstr ""
+msgstr "Chi phí văn phòng"
 
 #. module: account
 #: model:account.account.tag,name:account.demo_office_furniture_account
@@ -13252,18 +13473,21 @@ msgstr "Nội thất văn phòng"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_office_maintenance
+#, fuzzy
 msgid "Office Maintenance"
-msgstr ""
+msgstr "Bảo dưỡng văn phòng"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_office_rent
+#, fuzzy
 msgid "Office Rent"
-msgstr ""
+msgstr "Thuê văn phòng"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_office_services
+#, fuzzy
 msgid "Office Services"
-msgstr ""
+msgstr "Dịch vụ văn phòng"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_office_supplies
@@ -13272,8 +13496,9 @@ msgstr "Văn phòng phẩm"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_furniture
+#, fuzzy
 msgid "Office desks, chairs, shelving, etc"
-msgstr ""
+msgstr "Bàn làm việc, ghế, kệ, v.v."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term__early_pay_discount_computation__included
@@ -13441,8 +13666,9 @@ msgstr "Mở"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__open_on
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
+#, fuzzy
 msgid "Open On"
-msgstr ""
+msgstr "Mở vào"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_balance
@@ -13504,8 +13730,9 @@ msgstr "Hoạt động nghiệp vụ"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_6
+#, fuzzy
 msgid "Operating Expenses"
-msgstr ""
+msgstr "Chi phí hoạt động"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -13607,8 +13834,9 @@ msgstr "Khác"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_other_employees_benefits
+#, fuzzy
 msgid "Other Employees Benefits"
-msgstr ""
+msgstr "Quyền lợi khác dành cho nhân viên"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_7
@@ -13630,13 +13858,16 @@ msgstr "Thông tin khác"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_other_property
+#, fuzzy
 msgid "Other property"
-msgstr ""
+msgstr "Tài sản khác"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_other_property
+#, fuzzy
 msgid "Other type of property, like plants, machinery or various equipment"
 msgstr ""
+"Các loại tài sản khác, như cây trồng, máy móc hoặc các thiết bị khác nhau"
 
 #. module: account
 #: model:portal.entry,name:account.portal_invoice_vendor
@@ -13861,8 +14092,9 @@ msgstr "Báo cáo chính"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__parent_id
+#, fuzzy
 msgid "Parent Section Line"
-msgstr ""
+msgstr "Dòng phần chính"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13871,8 +14103,9 @@ msgstr "Một phần"
 
 #. module: account
 #: model:res.groups,name:account.group_partial_purchase_deductibility
+#, fuzzy
 msgid "Partial Purchase Deductibility"
-msgstr ""
+msgstr "Khấu trừ mua hàng một phần"
 
 #. module: account
 #: model:ir.model,name:account.model_account_partial_reconcile
@@ -13999,8 +14232,11 @@ msgstr "Thanh toán"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+#, fuzzy
 msgid "Pay your bills in one-click using Euro SEPA Service / ISO20022"
 msgstr ""
+"Thanh toán hóa đơn chỉ với một cú nhấp chuột thông qua Dịch vụ Euro SEPA/"
+"ISO20022"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__liability_payable
@@ -14299,18 +14535,21 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,help:account.field_account_move__reconciled_payment_ids
+#, fuzzy
 msgid "Payments that have been reconciled with this invoice."
-msgstr ""
+msgstr "Các khoản thanh toán đã được đối chiếu với hóa đơn này."
 
 #. module: account
 #: model:account.group,name:account.2_us_group_61
+#, fuzzy
 msgid "Payroll Expenses"
-msgstr ""
+msgstr "Chi phí bảng lương"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_payroll_tax
+#, fuzzy
 msgid "Payroll Tax"
-msgstr ""
+msgstr "Thuế bảng lương"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_pension
@@ -14386,9 +14625,12 @@ msgstr "Rủi ro lừa đảo: Trung bình"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_internet
+#, fuzzy
 msgid ""
 "Phone and internet bills from your telco provider for business operations"
 msgstr ""
+"Hóa đơn điện thoại và internet từ nhà cung cấp dịch vụ viễn thông của bạn "
+"cho hoạt động kinh doanh"
 
 #. module: account
 #. odoo-javascript
@@ -14398,8 +14640,9 @@ msgstr "Chọn tỷ giá tại một ngày cụ thể"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__text
+#, fuzzy
 msgid "Plain Text"
-msgstr ""
+msgstr "Văn bản thuần túy"
 
 #. module: account
 #. odoo-python
@@ -14478,8 +14721,9 @@ msgstr "Vào sổ khoản thanh toán"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_postage
+#, fuzzy
 msgid "Postage and Delivery"
-msgstr ""
+msgstr "Phí vận chuyển và giao hàng"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__state__posted
@@ -14555,16 +14799,22 @@ msgstr ""
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_disability_insurance
+#, fuzzy
 msgid ""
 "Premiums for short-term or long-term disability coverage provided to "
 "employees"
 msgstr ""
+"Phí bảo hiểm cho bảo hiểm tai nạn lao động ngắn hạn hoặc dài hạn được cung "
+"cấp cho nhân viên"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_auto_insurance
+#, fuzzy
 msgid ""
 "Premiums paid for insurance coverage on company-owned or leased vehicles"
 msgstr ""
+"Phí bảo hiểm đã thanh toán cho việc bảo hiểm các phương tiện do công ty sở "
+"hữu hoặc thuê"
 
 #. module: account
 #: model:account.account,name:account.1_prepayments
@@ -14656,8 +14906,9 @@ msgstr "In séc để thanh toán cho nhà cung cấp của bạn"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_printing_and_reproduction
+#, fuzzy
 msgid "Printing and Reproduction"
-msgstr ""
+msgstr "In ấn và sao chép"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__non_deductible_account_id
@@ -14730,10 +14981,13 @@ msgstr "Biến thể sản phẩm"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_printing_and_reproduction
+#, fuzzy
 msgid ""
 "Production of printed or digital materials, such as photocopies, brochures, "
 "flyers, manuals."
 msgstr ""
+"Sản xuất các tài liệu in ấn hoặc kỹ thuật số, chẳng hạn như bản sao "
+"photocopy, brochure, tờ rơi, tài liệu hướng dẫn."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.product_product_action_purchasable
@@ -14757,18 +15011,21 @@ msgstr "Chuyên nghiệp %"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_62
+#, fuzzy
 msgid "Professional Fees"
-msgstr ""
+msgstr "Phí dịch vụ chuyên môn"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_professional_insurance
+#, fuzzy
 msgid "Professional Insurance"
-msgstr ""
+msgstr "Bảo hiểm trách nhiệm nghề nghiệp"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_professional_liability_insurance
+#, fuzzy
 msgid "Professional Liability Insurance"
-msgstr ""
+msgstr "Bảo hiểm trách nhiệm nghề nghiệp"
 
 #. module: account
 #. odoo-javascript
@@ -14824,8 +15081,9 @@ msgstr "Tài sản Dòng phương thức thanh toán ra"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_property_tax
+#, fuzzy
 msgid "Property Tax"
-msgstr ""
+msgstr "Thuế tài sản"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14844,8 +15102,9 @@ msgstr "Được bảo vệ bởi nhật ký kiểm toán hạn chế"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_public_transportation
+#, fuzzy
 msgid "Public Transportation"
-msgstr ""
+msgstr "Giao thông công cộng"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_journal__type__purchase
@@ -14898,9 +15157,12 @@ msgstr "Mua sắm thiết bị"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_vehicles
+#, fuzzy
 msgid ""
 "Purchase of a car or truck, including second hand or after-lease contract"
 msgstr ""
+"Mua xe ô tô hoặc xe tải, bao gồm xe đã qua sử dụng hoặc hợp đồng thuê sau "
+"khi hết hạn"
 
 #. module: account
 #. odoo-python
@@ -14917,14 +15179,18 @@ msgstr "Mua hàng"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_improvements
+#, fuzzy
 msgid ""
 "Purchases of installations related to buildings, like solar panels or HVAC"
 msgstr ""
+"Mua sắm thiết bị liên quan đến công trình xây dựng, như tấm pin mặt trời "
+"hoặc hệ thống HVAC"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_land
+#, fuzzy
 msgid "Purchases of land without buildings"
-msgstr ""
+msgstr "Mua đất không có công trình xây dựng"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15001,8 +15267,9 @@ msgstr "Đánh giá"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_raw_materials
+#, fuzzy
 msgid "Raw Materials"
-msgstr ""
+msgstr "Nguyên liệu thô"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
@@ -15117,8 +15384,9 @@ msgstr "Các dòng đã đối chiếu không bao gồm chênh lệch tỷ giá"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__reconciled_payment_ids
+#, fuzzy
 msgid "Reconciled Payments"
-msgstr ""
+msgstr "Thanh toán đã đối chiếu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -15294,8 +15562,9 @@ msgstr "Tạo lại số thứ tự bút toán."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "Remove empty lines"
-msgstr ""
+msgstr "Xóa các dòng trống"
 
 #. module: account
 #. odoo-python
@@ -15315,14 +15584,18 @@ msgstr "Cho thuê"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_office_rent
+#, fuzzy
 msgid "Rent or lease of buildings"
-msgstr ""
+msgstr "Cho thuê hoặc cho thuê dài hạn các tòa nhà"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_vehicle_rent
+#, fuzzy
 msgid ""
 "Rental of cars or trucks, including shared services, but excluding leasing"
 msgstr ""
+"Cho thuê ô tô hoặc xe tải, bao gồm các dịch vụ chia sẻ, nhưng không bao gồm "
+"cho thuê dài hạn"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_resequence_wizard__ordering__date
@@ -15336,8 +15609,9 @@ msgstr "Dòng phân bổ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__replacing_tax_ids
+#, fuzzy
 msgid "Replaced by"
-msgstr ""
+msgstr "Thay thế bằng"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__original_tax_ids
@@ -15362,8 +15636,9 @@ msgstr "Ngày báo cáo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__report_expression_id
+#, fuzzy
 msgid "Report Expression"
-msgstr ""
+msgstr "Báo cáo biểu thức"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__report_line_id
@@ -15411,8 +15686,9 @@ msgstr "Đánh số thứ tự lại"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+#, fuzzy
 msgid "Reset the currency rate to the default accordingly to the invoice date"
-msgstr ""
+msgstr "Đặt lại tỷ giá hối đoái về giá trị mặc định theo ngày lập hóa đơn"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -15429,8 +15705,9 @@ msgstr "Giá trị còn lại"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__residual_at_date
+#, fuzzy
 msgid "Residual (at date)"
-msgstr ""
+msgstr "Số dư còn lại (tại ngày xác định)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_residual
@@ -15457,8 +15734,9 @@ msgstr "Giá trị còn lại theo loại tiền tệ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__residual_currency_at_date
+#, fuzzy
 msgid "Residual in currency (at date)"
-msgstr ""
+msgstr "Số dư còn lại theo đơn vị tiền tệ (tại ngày xác định)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__activity_user_id
@@ -15490,8 +15768,9 @@ msgstr "Dấu vết kiểm toán hạn chế"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_pension
+#, fuzzy
 msgid "Retirement plans costs (401K match)"
-msgstr ""
+msgstr "Chi phí của các kế hoạch hưu trí (phần đóng góp tương ứng của 401K)"
 
 #. module: account
 #. odoo-python
@@ -15608,8 +15887,9 @@ msgstr "Xem lại"
 
 #. module: account
 #: model:onboarding.onboarding.step,button_text:account.onboarding_onboarding_step_chart_of_accounts
+#, fuzzy
 msgid "Review Accounts"
-msgstr ""
+msgstr "Rà soát tài khoản"
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_chart_of_accounts
@@ -15626,8 +15906,9 @@ msgstr "Rà soát bút toán"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
+#, fuzzy
 msgid "Review Statements"
-msgstr ""
+msgstr "Rà soát báo cáo"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__review_state__reviewed
@@ -15667,8 +15948,9 @@ msgstr "Làm tròn từng dòng"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__tax_calculation_rounding_method__round_globally
+#, fuzzy
 msgid "Round per Tax"
-msgstr ""
+msgstr "Làm tròn theo thuế"
 
 #. module: account
 #. odoo-javascript
@@ -15750,8 +16032,9 @@ msgstr "ĐIỀU KHOẢN VÀ ĐIỀU KIỆN BÁN HÀNG TIÊU CHUẨN"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_salaries
+#, fuzzy
 msgid "Salaries & Wages"
-msgstr ""
+msgstr "Lương & tiền công"
 
 #. module: account
 #: model:account.account,name:account.1_expense_salary
@@ -15832,8 +16115,11 @@ msgstr "Thuế bán hàng"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_sales_tax
+#, fuzzy
 msgid "Sales and use tax paid on purchases where not otherwise recoverable"
 msgstr ""
+"Thuế bán hàng và sử dụng đã nộp trên các khoản mua hàng mà không thể thu hồi "
+"lại được"
 
 #. module: account
 #. odoo-python
@@ -16069,8 +16355,9 @@ msgstr "Chọn một loại"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+#, fuzzy
 msgid "Select an old purchase document"
-msgstr ""
+msgstr "Chọn một chứng từ mua hàng cũ"
 
 #. module: account
 #. odoo-javascript
@@ -16109,23 +16396,27 @@ msgstr "Mã phương thức thanh toán đã chọn"
 #: model:ir.model.fields,field_description:account.field_account_journal__is_self_billing
 #: model:ir.model.fields,field_description:account.field_account_move__is_self_billing
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#, fuzzy
 msgid "Self Billing"
-msgstr ""
+msgstr "Tự lập hoá đơn"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#, fuzzy
 msgid "Self Billing Credit Note"
-msgstr ""
+msgstr "Giấy báo có tự lập"
 
 #. module: account
 #: model:mail.template,name:account.email_template_edi_self_billing_credit_note
+#, fuzzy
 msgid "Self-billing credit note: Sending"
-msgstr ""
+msgstr "Giấy báo có tự lập: Gửi"
 
 #. module: account
 #: model:mail.template,name:account.email_template_edi_self_billing_invoice
+#, fuzzy
 msgid "Self-billing invoice: Sending"
-msgstr ""
+msgstr "Hóa đơn tự lập: Gửi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16147,8 +16438,9 @@ msgstr "Gửi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__incoming_einvoice_notification_email
+#, fuzzy
 msgid "Send Copy To"
-msgstr ""
+msgstr "Gửi bản sao đến"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__allow_out_payment
@@ -16281,8 +16573,9 @@ msgstr "Được gửi cho khách hàng cùng giấy báo có trong phần tệp
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_self_billing_credit_note
+#, fuzzy
 msgid "Sent to customers with the self-billing credit note in attachment"
-msgstr ""
+msgstr "Gửi cho khách hàng kèm theo giấy báo có tự lập trong tệp đính kèm"
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_invoice
@@ -16291,8 +16584,9 @@ msgstr "Được gửi cho khách hàng cùng hoá đơn trong phần tệp đí
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_self_billing_invoice
+#, fuzzy
 msgid "Sent to customers with their self-billing invoices in attachment"
-msgstr ""
+msgstr "Gửi cho khách hàng kèm theo hóa đơn tự lập"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_discount_expense_allocation_id
@@ -16364,17 +16658,23 @@ msgstr "Dịch vụ"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_administration_fees
+#, fuzzy
 msgid ""
 "Services incurred for the administration of your business (excluding "
 "supplies)"
 msgstr ""
+"Các dịch vụ phát sinh trong quá trình quản lý doanh nghiệp của bạn (không "
+"bao gồm vật tư)"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_office_maintenance
+#, fuzzy
 msgid ""
 "Services related to the maintenance of your worplace, like repair or "
 "janitorial"
 msgstr ""
+"Các dịch vụ liên quan đến việc bảo dưỡng nơi làm việc của bạn, như sửa chữa "
+"hoặc vệ sinh"
 
 #. module: account
 #: model:onboarding.onboarding.step,title:account.onboarding_onboarding_step_company_data
@@ -16500,8 +16800,9 @@ msgstr "Xem các tính năng kế toán - Chỉ xem"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
+#, fuzzy
 msgid "Show Composition"
-msgstr ""
+msgstr "Hiển thị thành phần"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__show_credit_limit
@@ -16544,8 +16845,9 @@ msgstr "Hiện tính năng không thể thay đổi"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_journal
 #: model:ir.model.fields,field_description:account.field_account_move__show_journal
+#, fuzzy
 msgid "Show Journal"
-msgstr ""
+msgstr "Hiện bút toán"
 
 #. module: account
 #. odoo-javascript
@@ -16579,8 +16881,9 @@ msgstr "Hiển thị chi tiết điều khoản thanh toán"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
+#, fuzzy
 msgid "Show Prices"
-msgstr ""
+msgstr "Hiển thị giá"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_reset_to_draft_button
@@ -16591,8 +16894,9 @@ msgstr "Hiển thị nút đặt lại thành nháp"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_taxable_supply_date
 #: model:ir.model.fields,field_description:account.field_account_move__show_taxable_supply_date
+#, fuzzy
 msgid "Show Taxable Supply Date"
-msgstr ""
+msgstr "Hiển thị ngày cung cấp chịu thuế"
 
 #. module: account
 #. odoo-python
@@ -16608,8 +16912,9 @@ msgstr "Hiển thị thuế đang hoạt động"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.xml:0
+#, fuzzy
 msgid "Show all lines"
-msgstr ""
+msgstr "Hiển thị tất cả dòng"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -16645,8 +16950,9 @@ msgstr "Thư bưu điện"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_social_security
+#, fuzzy
 msgid "Social Security"
-msgstr ""
+msgstr "Bảo hiểm xã hội"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_software
@@ -16667,10 +16973,13 @@ msgstr "Một số chứng từ đang được gửi bởi một quá trình kh�
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/section_and_note_fields_backend/section_and_note_fields_backend.js:0
+#, fuzzy
 msgid ""
 "Some lines can be on the next page, display them to unlock actions on "
 "section."
 msgstr ""
+"Một số dòng có thể nằm trên trang tiếp theo, hiển thị chúng để mở khóa các "
+"tác vụ trong phần."
 
 #. module: account
 #. odoo-javascript
@@ -16753,8 +17062,9 @@ msgstr "Thông tin chuẩn"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_kanban
+#, fuzzy
 msgid "Starting"
-msgstr ""
+msgstr "Đầu kỳ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -16770,8 +17080,9 @@ msgstr "Tỉnh thành"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_state_income_tax
+#, fuzzy
 msgid "State Income Tax"
-msgstr ""
+msgstr "Thuế thu nhập bang"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_statement
@@ -16892,8 +17203,9 @@ msgstr "Hoàn thành!"
 
 #. module: account
 #: model:account.account,name:account.1_stock_variation
+#, fuzzy
 msgid "Stock Variation"
-msgstr ""
+msgstr "Biến động hàng tồn kho"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16956,8 +17268,9 @@ msgstr "Thành tiền"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
+#, fuzzy
 msgid "Successfully unsubscribed"
-msgstr ""
+msgstr "Đã huỷ đăng ký thành công"
 
 #. module: account
 #. odoo-python
@@ -16978,8 +17291,9 @@ msgstr "Dữ liệu tóm tắt"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__review_state__supervised
+#, fuzzy
 msgid "Supervised"
-msgstr ""
+msgstr "Được giám sát"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__partner_supplier_rank
@@ -17082,155 +17396,177 @@ msgstr "Thuế 15%"
 #: model:account.tax.group,name:account.2_account_tax_group_us_2_9
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_2_9
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_2_9
+#, fuzzy
 msgid "Tax 2.9%"
-msgstr ""
+msgstr "Thuế 2,9%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_4
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_4
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_4
+#, fuzzy
 msgid "Tax 4%"
-msgstr ""
+msgstr "Thuế 4%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_4_2
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_4_2
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_4_2
+#, fuzzy
 msgid "Tax 4.2%"
-msgstr ""
+msgstr "Thuế 4,2%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_4_225
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_4_225
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_4_225
+#, fuzzy
 msgid "Tax 4.225%"
-msgstr ""
+msgstr "Thuế 4,225%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_4_5
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_4_5
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_4_5
+#, fuzzy
 msgid "Tax 4.5%"
-msgstr ""
+msgstr "Thuế 4,5%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_4_75
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_4_75
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_4_75
+#, fuzzy
 msgid "Tax 4.75%"
-msgstr ""
+msgstr "Thuế 4,75%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_4_875
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_4_875
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_4_875
+#, fuzzy
 msgid "Tax 4.875%"
-msgstr ""
+msgstr "Thuế 4,875%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_5
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_5
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_5
+#, fuzzy
 msgid "Tax 5%"
-msgstr ""
+msgstr "Thuế 5%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_5_3
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_5_3
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_5_3
+#, fuzzy
 msgid "Tax 5.3%"
-msgstr ""
+msgstr "Thuế 5,3%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_5_5
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_5_5
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_5_5
+#, fuzzy
 msgid "Tax 5.5%"
-msgstr ""
+msgstr "Thuế 5,5%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_5_6
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_5_6
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_5_6
+#, fuzzy
 msgid "Tax 5.6%"
-msgstr ""
+msgstr "Thuế 5,6%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_5_75
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_5_75
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_5_75
+#, fuzzy
 msgid "Tax 5.75%"
-msgstr ""
+msgstr "Thuế 5,75%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_6
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_6
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_6
+#, fuzzy
 msgid "Tax 6%"
-msgstr ""
+msgstr "Thuế 6%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_6_1
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_6_1
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_6_1
+#, fuzzy
 msgid "Tax 6.1%"
-msgstr ""
+msgstr "Thuế 6,1%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_6_25
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_6_25
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_6_25
+#, fuzzy
 msgid "Tax 6.25%"
-msgstr ""
+msgstr "Thuế 6,25%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_6_35
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_6_35
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_6_35
+#, fuzzy
 msgid "Tax 6.35%"
-msgstr ""
+msgstr "Thuế 6,35%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_6_5
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_6_5
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_6_5
+#, fuzzy
 msgid "Tax 6.5%"
-msgstr ""
+msgstr "Thuế 6,5%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_6_625
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_6_625
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_6_625
+#, fuzzy
 msgid "Tax 6.625%"
-msgstr ""
+msgstr "Thuế 6,625%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_6_85
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_6_85
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_6_85
+#, fuzzy
 msgid "Tax 6.85%"
-msgstr ""
+msgstr "Thuế 6,85%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_6_875
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_6_875
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_6_875
+#, fuzzy
 msgid "Tax 6.875%"
-msgstr ""
+msgstr "Thuế 6,875%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_7
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_7
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_7
+#, fuzzy
 msgid "Tax 7%"
-msgstr ""
+msgstr "Thuế 7%"
 
 #. module: account
 #: model:account.tax.group,name:account.2_account_tax_group_us_7_25
 #: model_terms:account.tax,description:account.2_account_tax_us_purchase_7_25
 #: model_terms:account.tax,description:account.2_account_tax_us_sale_7_25
+#, fuzzy
 msgid "Tax 7.25%"
-msgstr ""
+msgstr "Thuế 7,25%"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__advance_tax_payment_account_id
@@ -17476,14 +17812,16 @@ msgstr "Thuế đã sử dụng"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__taxable_supply_date
 #: model:ir.model.fields,field_description:account.field_account_move__taxable_supply_date
+#, fuzzy
 msgid "Taxable Supply Date"
-msgstr ""
+msgstr "Ngày cung cấp chịu thuế"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__taxable_supply_date_placeholder
 #: model:ir.model.fields,field_description:account.field_account_move__taxable_supply_date_placeholder
+#, fuzzy
 msgid "Taxable Supply Date Placeholder"
-msgstr ""
+msgstr "Phần giữ chỗ ngày cung cấp chịu thuế"
 
 #. module: account
 #. odoo-python
@@ -17506,8 +17844,9 @@ msgstr "Thuế"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_taxes_and_fiscal_menu
+#, fuzzy
 msgid "Taxes & Fiscal"
-msgstr ""
+msgstr "Thuế & tài chính"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17629,8 +17968,9 @@ msgstr ""
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_technology
+#, fuzzy
 msgid "Technological products like laptops, desktops, servers, etc."
-msgstr ""
+msgstr "Các sản phẩm công nghệ như laptop, máy tính để bàn, máy chủ, v.v."
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_technology
@@ -17639,8 +17979,9 @@ msgstr "Công nghệ"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_internet
+#, fuzzy
 msgid "Telephone & Internet"
-msgstr ""
+msgstr "Điện thoại & internet"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__template_name
@@ -17957,10 +18298,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid ""
 "The bank account of your company is not trusted. Please ask an admin or "
 "someone with approval rights to check it."
 msgstr ""
+"Tài khoản ngân hàng của công ty bạn không đáng tin cậy. Vui lòng yêu cầu một "
+"quản trị viên hoặc người có quyền phê duyệt kiểm tra tài khoản đó."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -18042,11 +18386,16 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid ""
 "The company bank account (%(account_number)s) linked to this invoice is not "
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
+"Tài khoản ngân hàng của công ty (%(account_number)s) liên kết với hóa đơn "
+"này không đáng tin cậy. Vui lòng truy cập vào Cài đặt ngân hàng, kiểm tra "
+"lại xem đó có phải là tài khoản của bạn hay không hoặc sửa lại số tài khoản, "
+"sau đó nhấp vào Gửi tiền để xác nhận đó là tài khoản đáng tin cậy."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -18212,10 +18561,13 @@ msgstr "Bút toán được bảo mật bằng hash không thể thay đổi."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid ""
 "The entry is using accounts (%(accounts_codes_names)s) from a different "
 "company."
 msgstr ""
+"Bút toán này đang sử dụng các tài khoản (%(accounts_codes_names)s) thuộc một "
+"công ty khác."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -18517,8 +18869,9 @@ msgstr "Mẫu đối chiếu sẽ chỉ hiển thị với các sổ nhật ký 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "The recurrence will end on %s (included)."
-msgstr ""
+msgstr "Thời gian định kỳ sẽ kết thúc vào ngày %s (bao gồm cả ngày đó)."
 
 #. module: account
 #. odoo-python
@@ -18549,16 +18902,22 @@ msgstr "Trang được yêu cầu không hợp lệ, hoặc không còn tồn t�
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__residual_currency_at_date
+#, fuzzy
 msgid ""
 "The residual amount (at date) on a journal item expressed in its currency."
 msgstr ""
+"Số dư còn lại (tại ngày xác định) của một hạng mục bút toán, được thể hiện "
+"theo đơn vị tiền tệ của nó."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__residual_at_date
+#, fuzzy
 msgid ""
 "The residual amount (at date) on a journal item expressed in the company "
 "currency."
 msgstr ""
+"Số dư còn lại (tại ngày xác định) của một bút toán, được thể hiện theo đơn "
+"vị tiền tệ của công ty."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual_currency
@@ -18586,10 +18945,13 @@ msgstr "Số dư hiện tại (%s) không khớp với số dư cuối kỳ đã
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
+#, fuzzy
 msgid ""
 "The scheduled action 'Send Invoices automatically' is archived. You won't be "
 "able to send invoices in batch."
 msgstr ""
+"Tác vụ đã lên lịch 'Gửi hóa đơn tự động' đã được lưu trữ. Bạn sẽ không thể "
+"gửi hóa đơn theo lô."
 
 #. module: account
 #. odoo-python
@@ -18599,8 +18961,9 @@ msgstr "Những phần được xác định trên báo cáo không thể chứa
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
+#, fuzzy
 msgid "The selected"
-msgstr ""
+msgstr " "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__hash_date
@@ -18925,10 +19288,11 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
+#, fuzzy
 msgid ""
 "There was an error while importing the bill, you can find attached the "
 "incoming XML"
-msgstr ""
+msgstr "Đã xảy ra lỗi khi nhập hoá đơn, bạn có thể xem tệp XML được đính kèm"
 
 #. module: account
 #. odoo-python
@@ -19175,10 +19539,13 @@ msgstr "Bút toán này đã được bảo mật."
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_self_billing
 #: model:ir.model.fields,help:account.field_account_journal__is_self_billing
 #: model:ir.model.fields,help:account.field_account_move__is_self_billing
+#, fuzzy
 msgid ""
 "This journal is for self-billing invoices. Invoices will be created using a "
 "different sequence per partner."
 msgstr ""
+"Sổ nhật ký này dành cho hóa đơn tự lập. Hóa đơn sẽ được tạo theo một trình "
+"tự khác nhau cho từng đối tác."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__hide_if_zero
@@ -19207,10 +19574,11 @@ msgstr "Bút toán này được cài đặt để tự động vào sổ vào n
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid ""
 "This move is configured to be posted automatically at the accounting date: "
 "%s."
-msgstr ""
+msgstr "Bút toán này được cấu hình để tự động ghi sổ vào ngày hạch toán: %s."
 
 #. module: account
 #. odoo-python
@@ -19256,8 +19624,9 @@ msgstr "Bút toán định kỳ này sẽ được vào sổ cho đến và bao 
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+#, fuzzy
 msgid "This setting locks once a journal entry is created."
-msgstr ""
+msgstr "Cài đặt này sẽ khóa sau khi một bút toán được tạo."
 
 #. module: account
 #. odoo-python
@@ -19484,8 +19853,9 @@ msgstr "Tổng còn lại"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
+#, fuzzy
 msgid "Total Residual at date"
-msgstr ""
+msgstr "Tổng số dư còn lại tại ngày xác định"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
@@ -19598,8 +19968,9 @@ msgstr "Trang chủ giao dịch"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__transaction_uuid
+#, fuzzy
 msgid "Transaction ID"
-msgstr ""
+msgstr "Mã giao dịch"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__transaction_type
@@ -19654,8 +20025,9 @@ msgstr "Luân chuyển tới %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__translated_product_name
+#, fuzzy
 msgid "Translated Product Name"
-msgstr ""
+msgstr "Tên sản phẩm đã dịch"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_661
@@ -19664,8 +20036,11 @@ msgstr "Chi phí đi lại"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_public_transportation
+#, fuzzy
 msgid "Travel expenses done using public transit (metro, bus, tramways, ...)"
 msgstr ""
+"Chi phí đi lại sử dụng phương tiện giao thông công cộng (tàu điện ngầm, xe "
+"buýt, xe điện,...)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__trigger
@@ -19767,8 +20142,9 @@ msgstr "Chưa xác định"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_unemployment_insurance
+#, fuzzy
 msgid "Unemployment Insurance"
-msgstr ""
+msgstr "Bảo hiểm thất nghiệp"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_unfold_all
@@ -19792,8 +20168,9 @@ msgstr "Định danh duy nhất cho dòng này."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__transaction_uuid
+#, fuzzy
 msgid "Unique transaction identifier assigned by the initiating party"
-msgstr ""
+msgstr "Mã định danh giao dịch duy nhất do bên khởi tạo giao dịch cấp"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
@@ -19814,8 +20191,9 @@ msgstr "Đơn giá:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#, fuzzy
 msgid "Units"
-msgstr ""
+msgstr "Đơn vị"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -20172,8 +20550,9 @@ msgstr "Tiện ích"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_utilities
+#, fuzzy
 msgid "Utility bills for water, gas, electricity, heating, etc"
-msgstr ""
+msgstr "Hóa đơn dịch vụ cho nước, gas, điện, sưởi ấm, v.v"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_accrued_orders_wizard__currency_id
@@ -20240,6 +20619,7 @@ msgstr "Giá trị"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__amount_string
+#, fuzzy
 msgid ""
 "Value for the amount of the writeoff line\n"
 "    * Percentage: Percentage of the balance, between 0 and 100.\n"
@@ -20260,6 +20640,23 @@ msgid ""
 "    • the second group captures the decimal part (last two digits)\n"
 "    "
 msgstr ""
+"Giá trị cho dòng xóa bỏ\n"
+"    * Phần trăm: Phần trăm của số dư, trong khoảng từ 0 đến 100.\n"
+"    * Cố định: Giá trị cố định của khoản xóa bỏ. Số tiền sẽ được tính là "
+"khoản nợ nếu âm, và là khoản có nếu dương.\n"
+"    * Từ nhãn: Không cần dấu phân cách regex, chỉ cần regex. Ví dụ, nếu bạn "
+"muốn trích xuất số tiền từ\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"Bạn có thể nhập\n"
+"BRT: ([\\d,]+)\n"
+"    Nếu nhãn là \"01870912 0009065 00115\" và bạn cần số tiền ở định dạng "
+"thập phân\n"
+"    (Ví dụ: 90.65), bạn có thể sử dụng regex với nhóm capturing, ví dụ:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    Trong trường hợp này:\n"
+"    • nhóm đầu tiên lấy phần số nguyên\n"
+"    • nhóm thứ hai lấy phần thập phân (hai chữ số cuối cùng)\n"
+"    "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
@@ -20273,15 +20670,19 @@ msgstr "Biến thể"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_office_supplies
+#, fuzzy
 msgid ""
 "Various supplies bought for your workplace or office, like pencils, paper, "
 "consumables, etc"
 msgstr ""
+"Văn phòng phẩm được mua cho nơi làm việc hoặc văn phòng của bạn, như bút "
+"chì, giấy, vật tư tiêu hao, v.v"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_vehicle_rent
+#, fuzzy
 msgid "Vehicle Rent"
-msgstr ""
+msgstr "Cho thuê xe"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_vehicles
@@ -20469,8 +20870,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "We've noticed some empty lines on your invoice."
-msgstr ""
+msgstr "Chúng tôi đã phát hiện một số dòng trống trên hóa đơn của quý khách."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
@@ -20584,8 +20986,9 @@ msgstr "Đang tiến hành"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_compensation_insurance
+#, fuzzy
 msgid "Workers Compensation Insurance"
-msgstr ""
+msgstr "Bảo hiểm bồi thường cho người lao động"
 
 #. module: account
 #. odoo-javascript
@@ -20621,8 +21024,9 @@ msgstr "Hàng năm"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
+#, fuzzy
 msgid "Yes, confirm and secure them now."
-msgstr ""
+msgstr "Có, hãy xác nhận và bảo mật chúng ngay."
 
 #. module: account
 #. odoo-javascript
@@ -20632,8 +21036,9 @@ msgstr "Bạn chuẩn bị gửi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
+#, fuzzy
 msgid "You are about to unsubscribe"
-msgstr ""
+msgstr "Bạn sắp hủy đăng ký"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_currency_form_inherit
@@ -20743,10 +21148,11 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
+#, fuzzy
 msgid ""
 "You can unsubscribe from emails received upon invoice sending and reception "
 "here."
-msgstr ""
+msgstr "Bạn có thể hủy đăng ký nhận email khi gửi và nhận hóa đơn tại đây."
 
 #. module: account
 #. odoo-python
@@ -20916,9 +21322,12 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
+#, fuzzy
 msgid ""
 "You cannot change the amount of a payment with multiple liquidity lines."
 msgstr ""
+"Bạn không thể thay đổi số tiền của một khoản thanh toán khi khoản đó có "
+"nhiều dòng thanh khoản."
 
 #. module: account
 #. odoo-python
@@ -21002,10 +21411,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
+#, fuzzy
 msgid ""
 "You cannot delete taxes that are currently in use. Consider archiving them "
 "instead."
 msgstr ""
+"Bạn không thể xóa các thuế hiện đang được sử dụng. Thay vào đó, hãy cân nhắc "
+"lưu trữ chúng."
 
 #. module: account
 #. odoo-python
@@ -21198,8 +21610,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "You cannot post an entry with an archived analytic account: %s"
-msgstr ""
+msgstr "Bạn không thể ghi sổ bút toán bằng tài khoản phân tích đã lưu trữ: %s"
 
 #. module: account
 #. odoo-python
@@ -21314,9 +21727,10 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid ""
 "You cannot switch the type of a document with an existing sequence number."
-msgstr ""
+msgstr "Bạn không thể thay đổi loại chứng từ khi chứng từ đó đã có số thứ tự."
 
 #. module: account
 #. odoo-python
@@ -21431,10 +21845,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
+#, fuzzy
 msgid ""
 "You may only use samples in demo mode, try uploading one of your invoices "
 "instead."
 msgstr ""
+"Bạn chỉ có thể sử dụng mẫu trong chế độ demo. Thay vào đó, hãy thử tải lên "
+"một trong các hóa đơn của bạn."
 
 #. module: account
 #. odoo-python
@@ -21543,8 +21960,9 @@ msgstr "[Không thiết lập]"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "[Partner id]"
-msgstr ""
+msgstr "[ID đối tác]"
 
 #. module: account
 #. odoo-python
@@ -21579,8 +21997,9 @@ msgstr "số tiền cho"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
+#, fuzzy
 msgid "and will not be posted automatically."
-msgstr ""
+msgstr "và sẽ không được ghi sổ tự động."
 
 #. module: account
 #. odoo-javascript
@@ -21721,8 +22140,9 @@ msgstr "VD: My Company"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+#, fuzzy
 msgid "e.g. finance@example.com; accountant@example.com"
-msgstr ""
+msgstr "Ví dụ: finance@example.com; accountant@example.com"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding
@@ -21764,8 +22184,9 @@ msgstr "vị trí tài chính [%s]"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_journal_mail_notifications
+#, fuzzy
 msgid "from invoice notifications."
-msgstr ""
+msgstr "từ thông báo hóa đơn."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -22046,13 +22467,17 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
+#, fuzzy
 msgid "will be posted. Some of them may be future-dated or require hashing,"
 msgstr ""
+"sẽ được ghi sổ. Một số trong số đó có thể được đặt ngày trong tương lai hoặc "
+"yêu cầu hash,"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
+#, fuzzy
 msgid "will be secured with hash."
-msgstr ""
+msgstr "sẽ được mã hóa bằng hash."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -22077,10 +22502,13 @@ msgstr "{amount} ({debit_credit}) từ {link}"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_invoice_subscriber
+#, fuzzy
 msgid ""
 "{{ object.company_id.name }} - New invoice in "
 "{{ object.journal_id.display_name or 'Invoices' }} journal"
 msgstr ""
+"{{ object.company_id.name }} - Hoá đơn mới trong sổ nhật ký {{ "
+"object.journal_id.display_name or 'Invoices' }}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note
@@ -22105,17 +22533,23 @@ msgstr ""
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_self_billing_credit_note
+#, fuzzy
 msgid ""
 "{{ object.company_id.name }} Self-billing credit note (Ref {{ object.name or "
 "'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} Giấy báo có tự lập (Tham chiếu {{ object.name "
+"or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_self_billing_invoice
+#, fuzzy
 msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
+"{{ object.company_id.name }} Hóa đơn tự lập (Tham chiếu {{ object.name or 'n/"
+"a' }})"
 
 #~ msgid "Quick search: %s"
 #~ msgstr "Tìm nhanh: %s"

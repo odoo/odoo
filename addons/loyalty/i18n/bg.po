@@ -1,20 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* loyalty
+# * loyalty
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:36+0000\n"
-"PO-Revision-Date: 2024-09-26 08:55+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2026-06-13 01:13+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-s19-1/"
+"loyalty/bg/>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__trigger
@@ -40,8 +43,9 @@ msgstr ""
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
+#, fuzzy
 msgid " (Max %s)"
-msgstr ""
+msgstr " (Макс. %s)"
 
 #. module: loyalty
 #. odoo-python
@@ -96,8 +100,9 @@ msgstr ""
 #. module: loyalty
 #: model:loyalty.reward,description:loyalty.10_percent_coupon_reward
 #: model:loyalty.reward,description:loyalty.10_percent_with_code_reward
+#, fuzzy
 msgid "10% on your order"
-msgstr ""
+msgstr "10% от вашата поръчка"
 
 #. module: loyalty
 #. odoo-python
@@ -176,9 +181,12 @@ msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-cube fa-fw\" title=\"Products\"/><span>All Products</span>"
 msgstr ""
+"<i class=\"fa fa-cube fa-fw\" title=\"Products\"/><span>Всички продукти</"
+"span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -200,6 +208,7 @@ msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
+#, fuzzy
 msgid ""
 "<span class=\"o_stat_text\" invisible=\"program_type not in ('coupons', "
 "'next_order_coupons')\">Coupons</span>\n"
@@ -215,13 +224,29 @@ msgid ""
 "                                <span class=\"o_stat_text\" "
 "invisible=\"program_type != 'ewallet'\">eWallets</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"program_type not in ('coupons', "
+"'next_order_coupons')\">Купони</span>\n"
+"                                <span class=\"o_stat_text\" "
+"invisible=\"program_type != 'loyalty'\">Лоялни карти</span>\n"
+"                                <span class=\"o_stat_text\" "
+"invisible=\"program_type not in ('promotion', 'buy_x_get_y')\">Промоции</"
+"span>\n"
+"                                <span class=\"o_stat_text\" "
+"invisible=\"program_type != 'promo_code'\">Отстъпка</span>\n"
+"                                <span class=\"o_stat_text\" "
+"invisible=\"program_type != 'gift_card'\">Подаръчни ваучери</span>\n"
+"                                <span class=\"o_stat_text\" "
+"invisible=\"program_type != 'ewallet'\">eПортфейли</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
+#, fuzzy
 msgid ""
 "<span class=\"text-center\">OR</span>\n"
 "                                        <br/>"
 msgstr ""
+"<span class=\"text-center\">ИЛИ</span>\n"
+"                                        <br/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
@@ -253,23 +278,27 @@ msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
+#, fuzzy
 msgid "<span>Minimum purchase of</span>"
-msgstr ""
+msgstr "<span>Минимална покупка от</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
+#, fuzzy
 msgid "<span>Valid for purchase above</span>"
-msgstr ""
+msgstr "<span>Валидно при покупка над</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
+#, fuzzy
 msgid "<span>on</span>"
-msgstr ""
+msgstr "<span>на</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
+#, fuzzy
 msgid "<span>products</span>"
-msgstr ""
+msgstr "<span>продукти</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
@@ -344,8 +373,9 @@ msgstr ""
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
+#, fuzzy
 msgid "A coupon with the same code was found."
-msgstr ""
+msgstr "Намерен е купон със същия код."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_card_card_code_unique
@@ -389,8 +419,9 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_needaction
+#, fuzzy
 msgid "Action Needed"
-msgstr ""
+msgstr "Необходимо действие"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__active
@@ -399,8 +430,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__active
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__active
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_search
+#, fuzzy
 msgid "Active"
-msgstr ""
+msgstr "Активно"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_res_partner__loyalty_card_count
@@ -411,8 +443,9 @@ msgstr ""
 #. module: loyalty
 #. odoo-javascript
 #: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, fuzzy
 msgid "Add"
-msgstr ""
+msgstr "Добави"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -447,8 +480,9 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__mode
+#, fuzzy
 msgid "Application"
-msgstr ""
+msgstr "Кандидатура"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -464,8 +498,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_form
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_search
+#, fuzzy
 msgid "Archived"
-msgstr ""
+msgstr "Архивиран"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_mail__trigger__create
@@ -474,14 +509,16 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_attachment_count
+#, fuzzy
 msgid "Attachment Count"
-msgstr ""
+msgstr "Брой прикачени файлове"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__trigger__auto
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__mode__auto
+#, fuzzy
 msgid "Automatic"
-msgstr ""
+msgstr "Автоматичен"
 
 #. module: loyalty
 #. odoo-python
@@ -498,13 +535,15 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_form
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_tree
+#, fuzzy
 msgid "Balance"
-msgstr ""
+msgstr "Салдо"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
+#, fuzzy
 msgid "Barcode"
-msgstr ""
+msgstr "Баркод"
 
 #. module: loyalty
 #. odoo-python
@@ -539,14 +578,16 @@ msgstr ""
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_update_balance_form
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
+#, fuzzy
 msgid "Cancel"
-msgstr ""
+msgstr "Отказ"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card_update_balance__card_id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_history__card_id
+#, fuzzy
 msgid "Card"
-msgstr ""
+msgstr "Карта"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
@@ -555,8 +596,9 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__product_category_id
+#, fuzzy
 msgid "Categories"
-msgstr ""
+msgstr "Категории"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__cheapest
@@ -575,8 +617,9 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__code
+#, fuzzy
 msgid "Code"
-msgstr ""
+msgstr "Код"
 
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.10_percent_with_code
@@ -599,14 +642,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__company_id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__company_id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__company_id
+#, fuzzy
 msgid "Company"
-msgstr ""
+msgstr "Фирма"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_card.py:0
+#, fuzzy
 msgid "Compose Email"
-msgstr ""
+msgstr "Съставяне на имейл"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__rule_ids
@@ -615,18 +660,21 @@ msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
+#, fuzzy
 msgid "Conditions"
-msgstr ""
+msgstr "Условия"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_update_balance_form
+#, fuzzy
 msgid "Confirm"
-msgstr ""
+msgstr "Потвърждение"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__confirmation_message
+#, fuzzy
 msgid "Confirmation Message"
-msgstr ""
+msgstr "Съобщение при потвърждение"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -635,26 +683,30 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_res_partner
+#, fuzzy
 msgid "Contact"
-msgstr ""
+msgstr "Контакт"
 
 #. module: loyalty
 #. odoo-javascript
 #: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
+#, fuzzy
 msgid "Control panel buttons"
-msgstr ""
+msgstr "Бутони на контролния панел"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__coupon_ids
+#, fuzzy
 msgid "Coupon"
-msgstr ""
+msgstr "Купон"
 
 #. module: loyalty
 #: model:ir.actions.report,name:loyalty.report_loyalty_card
+#, fuzzy
 msgid "Coupon Code"
-msgstr ""
+msgstr "Код на фиша"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__coupon_count
@@ -664,8 +716,9 @@ msgstr ""
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
+#, fuzzy
 msgid "Coupon point(s)"
-msgstr ""
+msgstr "Точка(и) за купон"
 
 #. module: loyalty
 #: model:loyalty.program,portal_point_name:loyalty.10_percent_coupon
@@ -688,13 +741,15 @@ msgstr ""
 #: model:ir.actions.act_window,name:loyalty.loyalty_card_action
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__coupons
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_tree
+#, fuzzy
 msgid "Coupons"
-msgstr ""
+msgstr "Купони"
 
 #. module: loyalty
 #: model:ir.model,website_form_label:loyalty.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Създаване на клиент"
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_gift_ewallet_action
@@ -721,8 +776,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__create_uid
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__create_uid
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__create_uid
+#, fuzzy
 msgid "Created by"
-msgstr ""
+msgstr "Създаден от"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__create_date
@@ -733,28 +789,32 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__create_date
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__create_date
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__create_date
+#, fuzzy
 msgid "Created on"
-msgstr ""
+msgstr "Създадено на"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: model:loyalty.program,portal_point_name:loyalty.3_cabinets_plus_1_free
+#, fuzzy
 msgid "Credit(s)"
-msgstr ""
+msgstr "Кредит(и)"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__currency_id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__currency_id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__currency_id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__currency_id
+#, fuzzy
 msgid "Currency"
-msgstr ""
+msgstr "Валута"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__currency_symbol
+#, fuzzy
 msgid "Currency sign, to be used when printing amounts."
-msgstr ""
+msgstr "Валутен знак, който ще се използва при разпечатване на суми."
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__applies_on__both
@@ -773,8 +833,9 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__customer_ids
+#, fuzzy
 msgid "Customers"
-msgstr ""
+msgstr "Клиенти"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -791,8 +852,9 @@ msgstr ""
 #: code:addons/loyalty/controllers/portal.py:0
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_form
+#, fuzzy
 msgid "Date"
-msgstr ""
+msgstr "Дата"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -810,26 +872,30 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__description
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
+#, fuzzy
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
+#, fuzzy
 msgid "Description on order"
-msgstr ""
+msgstr "Описание на поръчката"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__reward_type__discount
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
+#, fuzzy
 msgid "Discount"
-msgstr ""
+msgstr "Отстъпка"
 
 #. module: loyalty
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_discount_loyalty_action
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
+#, fuzzy
 msgid "Discount & Loyalty"
-msgstr ""
+msgstr "Отстъпка & Лоялност"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_applicability
@@ -838,8 +904,9 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__promo_code
+#, fuzzy
 msgid "Discount Code"
-msgstr ""
+msgstr "Код за отстъпка"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_line_product_id
@@ -853,8 +920,9 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__payment_program_discount_product_id
+#, fuzzy
 msgid "Discount Product"
-msgstr ""
+msgstr "Продукт с отстъпка"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_product_domain
@@ -899,8 +967,9 @@ msgstr ""
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
+#, fuzzy
 msgid "Discounts"
-msgstr ""
+msgstr "Отстъпки"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_base_partner_merge_automatic_wizard__display_name
@@ -916,13 +985,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_product_product__display_name
 #: model:ir.model.fields,field_description:loyalty.field_product_template__display_name
 #: model:ir.model.fields,field_description:loyalty.field_res_partner__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Име за показване"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
+#, fuzzy
 msgid "Displayed as"
-msgstr ""
+msgstr "Показано като"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -940,18 +1011,21 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__mail_template_id
+#, fuzzy
 msgid "Email Template"
-msgstr ""
+msgstr "Шаблон за имейл"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__mail_template_id
+#, fuzzy
 msgid "Email template"
-msgstr ""
+msgstr "Имейл образец"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__date_to
+#, fuzzy
 msgid "End date"
-msgstr ""
+msgstr "Крайна дата"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_update_balance_form
@@ -961,8 +1035,9 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__expiration_date
+#, fuzzy
 msgid "Expiration Date"
-msgstr ""
+msgstr "Дата на изтичане срока на годност"
 
 #. module: loyalty
 #. odoo-python
@@ -984,18 +1059,21 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_follower_ids
+#, fuzzy
 msgid "Followers"
-msgstr ""
+msgstr "Последователи"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_partner_ids
+#, fuzzy
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Последователи (партньори)"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__mode
+#, fuzzy
 msgid "For"
-msgstr ""
+msgstr "за"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
@@ -1041,8 +1119,9 @@ msgstr ""
 #: code:addons/loyalty/static/src/xml/loyalty_templates.xml:0
 #: model:ir.actions.act_window,name:loyalty.loyalty_generate_wizard_action
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
+#, fuzzy
 msgid "Generate"
-msgstr ""
+msgstr "Създайте"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1093,8 +1172,9 @@ msgstr ""
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__gift_card
 #: model:loyalty.reward,description:loyalty.gift_card_program_reward
 #: model:product.template,name:loyalty.gift_card_product_50_product_template
+#, fuzzy
 msgid "Gift Card"
-msgstr ""
+msgstr "Карта за подарък"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1136,8 +1216,9 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_gift_ewallet_action
+#, fuzzy
 msgid "Gift cards & eWallet"
-msgstr ""
+msgstr "Карти за подарък & електронен портфейл."
 
 #. module: loyalty
 #. odoo-python
@@ -1149,8 +1230,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__points_granted
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
+#, fuzzy
 msgid "Grant"
-msgstr ""
+msgstr "Връчете"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1161,8 +1243,9 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__has_message
+#, fuzzy
 msgid "Has Message"
-msgstr ""
+msgstr "има съобщение"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.gift_card_report
@@ -1176,8 +1259,9 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__history_ids
+#, fuzzy
 msgid "History"
-msgstr ""
+msgstr "История"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_form
@@ -1203,19 +1287,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_product_product__id
 #: model:ir.model.fields,field_description:loyalty.field_product_template__id
 #: model:ir.model.fields,field_description:loyalty.field_res_partner__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_needaction
+#, fuzzy
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Ако е отметнато, новите съобщения ще изискват внимание."
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_has_error
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_has_sms_error
+#, fuzzy
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Ако е отметнато, някои съобщения имат грешка при доставката."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
@@ -1230,8 +1317,9 @@ msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_search
+#, fuzzy
 msgid "Inactive"
-msgstr ""
+msgstr "Неактивен"
 
 #. module: loyalty
 #. odoo-python
@@ -1241,8 +1329,9 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_is_follower
+#, fuzzy
 msgid "Is Follower"
-msgstr ""
+msgstr "е последовател"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__is_global_discount
@@ -1270,8 +1359,9 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__coupon_count_display
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_tree
+#, fuzzy
 msgid "Items"
-msgstr ""
+msgstr "Редове"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -1293,8 +1383,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__write_uid
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__write_uid
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__write_uid
+#, fuzzy
 msgid "Last Updated by"
-msgstr ""
+msgstr "Последно актуализирано от"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__write_date
@@ -1305,13 +1396,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__write_date
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__write_date
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__write_date
+#, fuzzy
 msgid "Last Updated on"
-msgstr ""
+msgstr "Последно актуализирано на"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_mail_view_tree
+#, fuzzy
 msgid "Limit"
-msgstr ""
+msgstr "Лимит"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__limit_usage
@@ -1320,8 +1413,9 @@ msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
+#, fuzzy
 msgid "Logo"
-msgstr ""
+msgstr "Емблема"
 
 #. module: loyalty
 #. odoo-python
@@ -1334,8 +1428,9 @@ msgstr ""
 #: code:addons/loyalty/models/loyalty_program.py:0
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__program_type__loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.res_partner_form
+#, fuzzy
 msgid "Loyalty Cards"
-msgstr ""
+msgstr "Карти за лоялност"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_mail
@@ -1344,23 +1439,27 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_card
+#, fuzzy
 msgid "Loyalty Coupon"
-msgstr ""
+msgstr "Купони за лоялност"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_program
+#, fuzzy
 msgid "Loyalty Program"
-msgstr ""
+msgstr "Програма за лоялност"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_reward
+#, fuzzy
 msgid "Loyalty Reward"
-msgstr ""
+msgstr "Награда за лоялност"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_rule
+#, fuzzy
 msgid "Loyalty Rule"
-msgstr ""
+msgstr "Правило за лоялност"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
@@ -1370,8 +1469,9 @@ msgstr ""
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
+#, fuzzy
 msgid "Loyalty point(s)"
-msgstr ""
+msgstr "Точка(и) за лоялност"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__available_on
@@ -1400,13 +1500,15 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_has_error
+#, fuzzy
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Грешка при доставяне на съобщението"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_ids
+#, fuzzy
 msgid "Messages"
-msgstr ""
+msgstr "Съобщения"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_amount_tax_mode
@@ -1420,8 +1522,9 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__minimum_qty
+#, fuzzy
 msgid "Minimum Quantity"
-msgstr ""
+msgstr "Минимално количество"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__multi_product
@@ -1469,35 +1572,41 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_needaction_counter
+#, fuzzy
 msgid "Number of Actions"
-msgstr ""
+msgstr "Брой действия"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_has_error_counter
+#, fuzzy
 msgid "Number of errors"
-msgstr ""
+msgstr "Брой грешки"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_needaction_counter
+#, fuzzy
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Брой съобщения изискващи действие"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__message_has_error_counter
+#, fuzzy
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Брой съобщения с грешка при доставка"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
+#, fuzzy
 msgid "Odoo"
-msgstr ""
+msgstr "Odoo"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_history__order_id
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_reward__discount_applicability__order
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
+#, fuzzy
 msgid "Order"
-msgstr ""
+msgstr "Поръчка"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_history__order_model
@@ -1506,21 +1615,24 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__partner_id
+#, fuzzy
 msgid "Partner"
-msgstr ""
+msgstr "Партньор"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_form
+#, fuzzy
 msgid "Point(s)"
-msgstr ""
+msgstr "Точка(и)"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__points
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card_update_balance__old_balance
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__points
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
+#, fuzzy
 msgid "Points"
-msgstr ""
+msgstr "Точки"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__points_display
@@ -1554,19 +1666,22 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_product_pricelist
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__pricelist_ids
+#, fuzzy
 msgid "Pricelist"
-msgstr ""
+msgstr "Ценова листа"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_product_template
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_id
+#, fuzzy
 msgid "Product"
-msgstr ""
+msgstr "Продукт"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__product_domain
+#, fuzzy
 msgid "Product Domain"
-msgstr ""
+msgstr "Продуктов домейн"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_tag_id
@@ -1576,8 +1691,9 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_product_product
+#, fuzzy
 msgid "Product Variant"
-msgstr ""
+msgstr "Продуктов вариант"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__payment_program_discount_product_id
@@ -1594,8 +1710,9 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger_product_ids
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__product_ids
+#, fuzzy
 msgid "Products"
-msgstr ""
+msgstr "Продукти"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__program_id
@@ -1603,8 +1720,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__program_id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__program_id
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__program_id
+#, fuzzy
 msgid "Program"
-msgstr ""
+msgstr "Програма"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__name
@@ -1629,8 +1747,9 @@ msgstr ""
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
+#, fuzzy
 msgid "Promo Code"
-msgstr ""
+msgstr "Промо код"
 
 #. module: loyalty
 #. odoo-python
@@ -1657,8 +1776,9 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__coupon_qty
+#, fuzzy
 msgid "Quantity"
-msgstr ""
+msgstr "Количество"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
@@ -1672,14 +1792,16 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__rating_ids
+#, fuzzy
 msgid "Ratings"
-msgstr ""
+msgstr "Оценявания"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_amount
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
+#, fuzzy
 msgid "Reward"
-msgstr ""
+msgstr "Награда"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_mode
@@ -1714,8 +1836,9 @@ msgstr ""
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__reward_ids
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
+#, fuzzy
 msgid "Rewards"
-msgstr ""
+msgstr "Награди"
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_rule_reward_point_amount_positive
@@ -1729,8 +1852,9 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_has_sms_error
+#, fuzzy
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "SMS грешка при доставка"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_generate_wizard__mode__selected
@@ -1745,8 +1869,9 @@ msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_tree
+#, fuzzy
 msgid "Send"
-msgstr ""
+msgstr "Изпрати"
 
 #. module: loyalty
 #. odoo-python
@@ -1766,8 +1891,9 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__sequence
+#, fuzzy
 msgid "Sequence"
-msgstr ""
+msgstr "Последователност"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1799,13 +1925,15 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__date_from
+#, fuzzy
 msgid "Start Date"
-msgstr ""
+msgstr "Начална Дата"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__currency_symbol
+#, fuzzy
 msgid "Symbol"
-msgstr ""
+msgstr "Символ"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -1832,8 +1960,9 @@ msgstr ""
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
+#, fuzzy
 msgid "The promo code must be unique."
-msgstr ""
+msgstr "Промокодът трябва да е уникален."
 
 #. module: loyalty
 #: model:ir.model.constraint,message:loyalty.constraint_loyalty_reward_required_points_positive
@@ -1913,8 +2042,9 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger
+#, fuzzy
 msgid "Trigger"
-msgstr ""
+msgstr "Тригер"
 
 #. module: loyalty
 #. odoo-python
@@ -1953,8 +2083,9 @@ msgstr ""
 #: code:addons/loyalty/controllers/portal.py:0
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_history__used
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
+#, fuzzy
 msgid "Used"
-msgstr ""
+msgstr "Използвано"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__user_has_debug
@@ -1964,8 +2095,9 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__valid_until
+#, fuzzy
 msgid "Valid Until"
-msgstr ""
+msgstr "Валиден до"
 
 #. module: loyalty
 #. odoo-javascript
@@ -1980,18 +2112,21 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__website_message_ids
+#, fuzzy
 msgid "Website Messages"
-msgstr ""
+msgstr "Съобщения в уебсайт"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_card__website_message_ids
+#, fuzzy
 msgid "Website communication history"
-msgstr ""
+msgstr "История на комуникацията на уебсайт"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_mail__trigger
+#, fuzzy
 msgid "When"
-msgstr ""
+msgstr "Кога"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_mail__trigger__points_reach
@@ -2075,13 +2210,15 @@ msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
+#, fuzzy
 msgid "all"
-msgstr ""
+msgstr "всички"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
+#, fuzzy
 msgid "discount"
-msgstr ""
+msgstr "отстъпка"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -2109,11 +2246,13 @@ msgstr ""
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_program.py:0
+#, fuzzy
 msgid "eWallets"
-msgstr ""
+msgstr "електронни портфейли"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
+#, fuzzy
 msgid ""
 "eWallets are created manually or automatically when the customer orders a "
 "eWallet product.\n"
@@ -2121,11 +2260,17 @@ msgid ""
 "                                    Then, eWallets are proposed during the "
 "checkout, to pay orders."
 msgstr ""
+"Електронните портфейли се създават ръчно или автоматично, когато клиентът "
+"поръча продукт за електронен портфейл.\n"
+"                                    <br/>\n"
+"                                    След това електронните портфейли се "
+"предлагат по време на плащането, за да се уредят поръчките."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
+#, fuzzy
 msgid "item(s) bought"
-msgstr ""
+msgstr "купени артикули"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -2141,8 +2286,9 @@ msgstr ""
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
+#, fuzzy
 msgid "money"
-msgstr ""
+msgstr "пари"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -2211,8 +2357,9 @@ msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
+#, fuzzy
 msgid "to"
-msgstr ""
+msgstr "до"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form

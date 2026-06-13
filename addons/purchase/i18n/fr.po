@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:36+0000\n"
+"POT-Creation-Date: 2026-06-12 17:35+0000\n"
 "PO-Revision-Date: 2026-05-09 13:15+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/"
@@ -2660,22 +2660,12 @@ msgid "Purchased"
 msgstr "Acheté"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 msgid ""
 "Purchased in the last 365 days. Incoming represents confirmed purchase "
-"orders not received or partially received"
+"orders not received, or partially received"
 msgstr ""
-"Acheté au cours des 365 derniers jours. \"À recevoir\" représente les bons "
-"de commande confirmés non reçus ou partiellement reçus"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
-msgid ""
-"Purchased in the last 365 days. Incoming represents confirmed sales order "
-"not received, or partially received"
-msgstr ""
-"Acheté au cours des 365 derniers jours. \"À recevoir\" représente les "
-"commandes clients confirmées non reçues ou partiellement reçues"
 
 #. module: purchase
 #. odoo-python
@@ -3951,6 +3941,20 @@ msgstr "avec"
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
 msgid "{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} Commande (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "Purchased in the last 365 days. Incoming represents confirmed purchase "
+#~ "orders not received or partially received"
+#~ msgstr ""
+#~ "Acheté au cours des 365 derniers jours. \"À recevoir\" représente les "
+#~ "bons de commande confirmés non reçus ou partiellement reçus"
+
+#~ msgid ""
+#~ "Purchased in the last 365 days. Incoming represents confirmed sales order "
+#~ "not received, or partially received"
+#~ msgstr ""
+#~ "Acheté au cours des 365 derniers jours. \"À recevoir\" représente les "
+#~ "commandes clients confirmées non reçues ou partiellement reçues"
 
 #~ msgid ""
 #~ "The following purchase orders %(invalid_orders) can't be received. "

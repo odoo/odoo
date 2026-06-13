@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-09 15:28+0000\n"
-"PO-Revision-Date: 2026-05-30 13:07+0000\n"
+"PO-Revision-Date: 2026-06-12 15:33+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-1/base/"
 "es/>\n"
@@ -35,7 +35,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -8365,6 +8365,32 @@ msgid ""
 "also possible in order to automatically create a meeting when a time off "
 "request is accepted by setting up a type of meeting in time off Type.\n"
 msgstr ""
+"\n"
+"Gestiona permisos y solicitudes de asignación\n"
+"====================================\n"
+"\n"
+"Esta aplicación controla la planificación de permisos de tu empresa. Los "
+"empleados podrán solicitar vacaciones y sus managers podrán revisar estas "
+"solicitudes para aprobarlas o rechazarlas. De esta manera, puedes controlar "
+"la planificación global de permisos de una empresa o departamento.\n"
+"\n"
+"Puedes configurar distintos tipos de permisos (enfermedad, vacaciones, etc.) "
+"y asignarlos a un empleado o departamento rápidamente mediante las "
+"asignaciones. Un empleado también puede solicitar más días creando una nueva "
+"asignación, lo que incrementará el total de días disponibles para ese tipo "
+"de ausencia (si se acepta la petición).\n"
+"\n"
+"Puedes hacer seguimiento de las ausencias/permisos aprobados con estos "
+"informes: \n"
+"\n"
+"* Resumen de permisos\n"
+"* Permisos por departamento\n"
+"* Análisis de permisos\n"
+"\n"
+"También puede sincronizarse con una agenda interna (reuniones del módulo de "
+"CRM) para que se cree automáticamente una reunión cuando se apruebe una "
+"solicitud de ausencia/permiso, configurando previamente un tipo de reunión "
+"en el tipo de ausencia/permiso.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_group
@@ -12872,26 +12898,24 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Este módulo le permite publicar a sus distribuidores y contactos en su sitio "
-"web y enviarles leads y oportunidades entrantes.\n"
+"Este módulo permite publicar a tus distribuidores/partners en tu sitio web y "
+"enviarles leads y oportunidades entrantes.\n"
 "\n"
 "\n"
-"**Publicar un contacto**\n"
+"**Publicar un partner**\n"
 "\n"
-"Para publicar a un contacto, establezca un *nivel* en su formulario de "
-"contacto (en la sección Asignación de contacto) y haga clic en el botón "
-"*Publicar*.\n"
+"Para publicar un partner, define un *nivel* en su ficha de contacto (en la "
+"sección Partner asignado) y haz clic en el botón *Publicar*.\n"
 "\n"
 "**Reenviar leads**\n"
 "\n"
-"El reenvío de leads se puede realizar para uno o varios leads a la vez. La "
-"acción está disponible en la sección *Contacto asignado* de la vista del "
-"formulario de lead u oportunidad y en el menú *Acción* de la vista de "
-"lista.\n"
+"Los leads pueden enviarse de forma individual o varios a la vez. Esta acción "
+"está disponible en la sección *Partner asignado* de la vista del formulario "
+"del lead u oportunidad, así como en el menú *Acción* de la vista de lista.\n"
 "\n"
-"La asignación automática se calcula a partir de los niveles de socios y la "
-"geolocalización. Los contactos reciben los leads que se encuentran cerca de "
-"ellos.\n"
+"La asignación automática se determina en función del nivel de los partners y "
+"de la ubicación geográfica. Los partners reciben los leads que se encuentran "
+"cerca/ubicados en su zona.\n"
 "\n"
 
 #. module: base
@@ -26887,7 +26911,7 @@ msgstr "Escriba la descripción y el propósito de la clave."
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_users_identitycheck_view_form
 msgid "Enter your password"
-msgstr "Ingrese su contraseña"
+msgstr "Introduce tu contraseña"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_gantt
@@ -33802,7 +33826,7 @@ msgstr "Macao"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_machine_tool_rental
 msgid "Machine & Tools Rental"
-msgstr ""
+msgstr "Alquiler de maquinaria y herramientas"
 
 #. module: base
 #: model:res.country,name:base.mg
@@ -35965,7 +35989,7 @@ msgstr "No (False)"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country
 msgid "No Country Found!"
-msgstr "¡No se encontró el país!"
+msgstr "¡No se ha encontrado el país!"
 
 #. module: base
 #. odoo-python

@@ -13,15 +13,15 @@
 # Abe Manyo, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Abe Manyo (abem)" <abem@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Nurul Aini Akrima Sabila (nuaas)" <nuaas@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-29 17:35+0000\n"
-"PO-Revision-Date: 2026-05-09 13:13+0000\n"
-"Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
+"PO-Revision-Date: 2026-06-12 16:31+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-1/"
 "account/id/>\n"
 "Language: id\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -177,14 +177,16 @@ msgstr "%(exception)s untuk %(user)s%(end_datetime_string)s%(reason)s."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "%(label)s at %(currency_amount)s"
-msgstr ""
+msgstr "%(label)s sejumlah %(currency_amount)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "%(label)s at %(currency_amount)s (Draft)"
-msgstr ""
+msgstr "%(label)s sejumlah %(currency_amount)s (Draf)"
 
 #. module: account
 #. odoo-python
@@ -212,10 +214,13 @@ msgstr "%(name)s%(ref)s pada %(currency_amount)s"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
+#, fuzzy
 msgid ""
 "%(order)s - %(order_line)s; %(qty_invoiced)s invoiced, %(qty_delivered)s "
 "delivered at %(unit_price)s"
 msgstr ""
+"%(order)s - %(order_line)s; %(qty_invoiced)s ditagih, %(qty_delivered)s "
+"dikirim dengan harga %(unit_price)s"
 
 #. module: account
 #. odoo-python
@@ -240,8 +245,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
+#, fuzzy
 msgid "%(order)s - %(order_line)s; price difference for %(product)s"
-msgstr ""
+msgstr "%(order)s - %(order_line)s; selisih harga untuk %(product)s"
 
 #. module: account
 #. odoo-python
@@ -2642,8 +2648,8 @@ msgid ""
 "A payment with an outstanding account cannot be confirmed without having a "
 "journal entry."
 msgstr ""
-"Pembayaran dengan akun hutang tidak dapat dikonfirmasi bila tidak memiliki "
-"entri jurnal."
+"Pembayaran dengan akun belum lunas tidak dapat dikonfirmasi bila tidak "
+"memiliki entri jurnal."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_line_code_uniq
@@ -3345,8 +3351,9 @@ msgstr "Penyusutan Terakumulasi"
 #. module: account
 #: model:account.account,name:account.1_retained_earnings
 #: model:account.account,name:account.2_account_account_us_retained_earnings
+#, fuzzy
 msgid "Accumulated Retained Earnings"
-msgstr ""
+msgstr "Akumulasi Laba Ditahan"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
@@ -4284,12 +4291,13 @@ msgid ""
 "criterias (VAT/Country) are met."
 msgstr ""
 "Terapkan mapping pajak & akun pada faktur secara otomatis bila kriteria "
-"pencocokkan (PPN/Negara) terpenuhi."
+"pencocokan (PPN/Negara) terpenuhi."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
+#, fuzzy
 msgid "Appropriation of the profit or loss"
-msgstr ""
+msgstr "Alokasi laba atau rugi"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
@@ -4869,8 +4877,9 @@ msgstr "Bank of odoo"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "Bank settings"
-msgstr ""
+msgstr "Pengaturan bank"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -5215,8 +5224,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, fuzzy
 msgid "C"
-msgstr ""
+msgstr "C"
 
 #. module: account
 #. odoo-python
@@ -6241,8 +6251,9 @@ msgstr "Biaya untuk perabotan kantor, perlengkapan, dan peralatan bisnis"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
+#, fuzzy
 msgid "Cost of revenue"
-msgstr ""
+msgstr "Biaya pendapatan"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_postage
@@ -6792,8 +6803,9 @@ msgstr ""
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_retained_earnings
+#, fuzzy
 msgid "Cumulative undistributed profits and losses"
-msgstr ""
+msgstr "Laba dan rugi kumulatif belum terdistribusi"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -6883,7 +6895,7 @@ msgstr "Nilai tukar mata uang dari mata uang perusahaan ke mata uang dokumen."
 #: model:account.account,name:account.2_account_account_us_current_assets
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__asset_current
 msgid "Current Assets"
-msgstr "Aktiva Terkini"
+msgstr "Aktiva Lancar"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__current_balance
@@ -7077,8 +7089,9 @@ msgstr "Cut-off {label} {percent}%"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, fuzzy
 msgid "D"
-msgstr ""
+msgstr "D"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -9602,14 +9615,16 @@ msgstr "Barang"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
+#, fuzzy
 msgid "Goods Delivered not Invoiced (perpetual valuation)"
-msgstr ""
+msgstr "Barang Dikirim Belum Difaktur (valuasi perpetual)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
+#, fuzzy
 msgid "Goods Invoiced not Delivered (perpetual valuation)"
-msgstr ""
+msgstr "Barang Difaktur Belum Dikirim (valuasi perpetual)"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_ground_transportation
@@ -11237,8 +11252,9 @@ msgstr "Apakah Entri"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_exact_move_duplicate
 #: model:ir.model.fields,field_description:account.field_account_move__is_exact_move_duplicate
+#, fuzzy
 msgid "Is Exact Move Duplicate"
-msgstr ""
+msgstr "Adalah Duplikat Pergerakan Identik"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
@@ -12400,7 +12416,7 @@ msgstr "Matched Payments"
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "Matched Transactions"
-msgstr "Transaksi-Transaksi Cocok"
+msgstr "Transaksi Cocok"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__full_reconcile_id
@@ -12798,8 +12814,9 @@ msgstr "Membutuhkan Permintaan Pembatalan"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#, fuzzy
 msgid "Need to update"
-msgstr ""
+msgstr "Perlu diperbarui"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -13013,7 +13030,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
 msgid "No outstanding account could be found to make the payment"
-msgstr "Tidak ada akun hutang yang dapat ditemukan untuk melakukan pembayaran"
+msgstr ""
+"Tidak ada akun belum lunas yang dapat ditemukan untuk melakukan pembayaran"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -13757,7 +13775,7 @@ msgstr "Pembayaran Keluar"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__outstanding_account_id
 msgid "Outstanding Account"
-msgstr "Akun Hutang"
+msgstr "Akun Belum Lunas"
 
 #. module: account
 #. odoo-python
@@ -14872,8 +14890,9 @@ msgstr "Akun Laba"
 #: code:addons/account/models/company.py:0
 #: model:account.account,name:account.1_profit_or_loss
 #: model:account.account,name:account.2_account_account_us_profit_or_loss_appropriation
+#, fuzzy
 msgid "Profit or Loss Appropriation"
-msgstr ""
+msgstr "Alokasi Laba atau Rugi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -18063,10 +18082,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid ""
 "The bank account of your company is not trusted. Please ask an admin or "
 "someone with approval rights to check it."
 msgstr ""
+"Rekening bank perusahaan Anda tidak tepercaya. Silakan minta admin atau "
+"seseorang dengan hak persetujuan untuk memeriksanya."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -18147,11 +18169,16 @@ msgstr "Partner komersil telah diupdate untuk semua entri akuntansi terkait."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid ""
 "The company bank account (%(account_number)s) linked to this invoice is not "
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
+"Rekening bank perusahaan (%(account_number)s) yang terhubung dengan faktur "
+"ini tidak tepercaya. Buka Pengaturan Bank, periksa kembali apakah rekening "
+"benar milik Anda atau perbaiki nomornya, lalu klik Kirim Uang untuk "
+"memercayainya."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -19046,10 +19073,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
+#, fuzzy
 msgid ""
 "There was an error while importing the bill, you can find attached the "
 "incoming XML"
 msgstr ""
+"Terjadi kesalahan saat mengimpor tagihan, silakan lihat file XML masuk di "
+"lampiran"
 
 #. module: account
 #. odoo-python
@@ -19197,10 +19227,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid ""
 "This entry has already been supervised. You need the accounting manager role "
 "to change it."
 msgstr ""
+"Entri ini telah diawasi. Anda perlu peran manajer akuntansi untuk "
+"mengubahnya."
 
 #. module: account
 #. odoo-python
@@ -19223,9 +19256,11 @@ msgstr "Entri ini telah diputar balik dari %s"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid ""
 "This entry has been reviewed, You need the bookkeeper role to change it."
 msgstr ""
+"Entri ini telah ditinjau, Anda perlu peran bookkeeper untuk mengubahnya."
 
 #. module: account
 #. odoo-python
@@ -19740,7 +19775,7 @@ msgstr "Transaction Type"
 #: model:ir.ui.menu,name:account.account_transactions_menu
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Transactions"
-msgstr "Transaksi-transaksi"
+msgstr "Transaksi"
 
 #. module: account
 #. odoo-python
@@ -19784,8 +19819,9 @@ msgstr "Transfer ke %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__translated_product_name
+#, fuzzy
 msgid "Translated Product Name"
-msgstr ""
+msgstr "Terjemahan Nama Produk"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_661
@@ -20107,8 +20143,9 @@ msgstr "Update Syarat & Ketentuan"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#, fuzzy
 msgid "Update app"
-msgstr ""
+msgstr "Perbarui aplikasi"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -20374,6 +20411,7 @@ msgstr "Value"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__amount_string
+#, fuzzy
 msgid ""
 "Value for the amount of the writeoff line\n"
 "    * Percentage: Percentage of the balance, between 0 and 100.\n"
@@ -20394,6 +20432,24 @@ msgid ""
 "    • the second group captures the decimal part (last two digits)\n"
 "    "
 msgstr ""
+"Nilai untuk jumlah baris penghapusan\n"
+"    * Persentase: Persentase dari saldo, antara 0 dan 100.\n"
+"    * Tetap: Nilai tetap dari penghapusan. Jumlah tersebut akan dihitung "
+"sebagai debit jika negatif, dan sebagai kredit jika positif.\n"
+"    * Dari Label: Tidak perlu delimiter regex, hanya regex yang diperlukan. "
+"Misalnya, jika Anda ingin mengekstrak jumlah dari\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"Anda dapat memasukkan\n"
+"BRT: ([\\d,]+)\n"
+"    Jika labelnya adalah \"01870912 0009065 00115\" dan Anda membutuhkan "
+"jumlah dalam format desimal\n"
+"    (misalnya 90,65), Anda dapat menggunakan regex dengan capturing group, "
+"misalnya:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    Dalam hal ini:\n"
+"    • grup pertama meng-capture bagian integer\n"
+"    • grup kedua meng-capture bagian desimal (dua digit terakhir)\n"
+"    "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
@@ -21147,10 +21203,11 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
+#, fuzzy
 msgid ""
 "You cannot delete taxes that are currently in use. Consider archiving them "
 "instead."
-msgstr ""
+msgstr "Anda tidak dapat menghapus pajak yang sedang digunakan. Coba arsipkan."
 
 #. module: account
 #. odoo-python
@@ -21348,8 +21405,11 @@ msgstr "Anda tidak post entri di jurnal yang sudah diarsip (%(journal)s)"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "You cannot post an entry with an archived analytic account: %s"
 msgstr ""
+"Anda tidak dapat memposting entri dengan akun analitik yang telah "
+"diarsipkan: %s"
 
 #. module: account
 #. odoo-python

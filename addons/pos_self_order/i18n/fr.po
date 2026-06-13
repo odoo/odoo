@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:36+0000\n"
-"PO-Revision-Date: 2026-05-23 14:34+0000\n"
+"POT-Creation-Date: 2026-06-12 17:36+0000\n"
+"PO-Revision-Date: 2026-06-08 09:14+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-1/"
 "pos_self_order/fr/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
@@ -108,21 +108,22 @@ msgstr ""
 "                        <t t-else=\"\">Bonjour,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Votre commande <t t-out=\"object.tracking_number\">"
-"...</t> d'un montant de <t t-out=\"format_amount"
-"(object.amount_total,object.currency_id)\">xx,xx €</t> a été confirmée. "
-"<span t-if=\"object.preset_time or client.street\">Elle sera prête</span> "
-"<span t-if=\"object.preset_time\">à <t t-out=\"format_time"
-"(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00</"
-"t></span> <span t-if=\"client.street\">at <t t-out=\"street\">rue</t>, <t t-"
-"out=\"state\">état</t>, <t t-out=\"client.zip or ''\">code postal</t>, <t t-"
-"out=\"city\">ville</t>, <t t-out=\"country\">pays</t></span></div>\n"
+"                    <div>Votre commande <t t-"
+"out=\"object.tracking_number\">...</t> d'un montant de <t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">xx,xx €</t> a "
+"été confirmée. <span t-if=\"object.preset_time or client.street\">Elle sera "
+"prête</span> <span t-if=\"object.preset_time\">à <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00</t></span> <span t-if=\"client.street\">at <t t-"
+"out=\"street\">rue</t>, <t t-out=\"state\">état</t>, <t t-out=\"client.zip "
+"or ''\">code postal</t>, <t t-out=\"city\">ville</t>, <t t-"
+"out=\"country\">pays</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Merci,</div>\n"
 "                    <br/>\n"
 "                    <div t-if=\"object.state == 'paid'\">\n"
-"                        <div>Vous trouverez votre reçu en pièce jointe</div>"
-"\n"
+"                        <div>Vous trouverez votre reçu en pièce jointe</"
+"div>\n"
 "                        <br/>\n"
 "                    </div>\n"
 "                    <t t-out=\"store_name\">Nom du magasin</t>\n"
@@ -175,18 +176,18 @@ msgstr ""
 "                        <t t-else=\"\">Bonjour,</t>\n"
 "                    </div>\n"
 "                    <br/>\n"
-"                    <div>Votre commande <t t-out=\"object.tracking_number\">"
-"...</t> d’un montant de <t t-out=\"format_amount"
-"(object.amount_total,object.currency_id)\">xx,xx €</t> a été confirmée. "
-"<span t-if=\"object.preset_time\">Elle sera prête à <t t-out=\"format_time"
-"(time=object.preset_time, tz=tz, time_format='short', lang_code=lg)\">12:00</"
-"t></span></div>\n"
+"                    <div>Votre commande <t t-"
+"out=\"object.tracking_number\">...</t> d’un montant de <t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">xx,xx €</t> a "
+"été confirmée. <span t-if=\"object.preset_time\">Elle sera prête à <t t-"
+"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
+"lang_code=lg)\">12:00</t></span></div>\n"
 "                    <br/>\n"
 "                    <div>Merci,</div>\n"
 "                    <br/>\n"
 "                    <div t-if=\"object.state == 'paid'\">\n"
-"                        <div>Vous trouverez votre reçu en pièce jointe</div>"
-"\n"
+"                        <div>Vous trouverez votre reçu en pièce jointe</"
+"div>\n"
 "                        <br/>\n"
 "                    </div>\n"
 "                    <t t-out=\"store_name\">Nom du magasin</t>\n"
@@ -356,12 +357,6 @@ msgstr "Choisir le mode de commande en libre-service"
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_pay_after
 msgid "Choose when the customer will pay"
 msgstr "Choisir le moment où le client paiera"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-msgid "Choose your"
-msgstr "Choisissez votre"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -652,6 +647,12 @@ msgstr "Saisissez votre valeur personnalisée"
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 msgid "Enter your tracker number"
 msgstr "Saisissez votre numéro de suivi"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "Extra:"
+msgstr "Extra :"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1658,12 +1659,6 @@ msgstr "URL :"
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/product_list_page/product_list_page.xml:0
-msgid "Unavailable"
-msgstr "Non disponible"
-
-#. module: pos_self_order
-#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "Uncategorised"
 msgstr "Sans catégorie"
@@ -1757,14 +1752,6 @@ msgid "You are not authorized to remove this order"
 msgstr "Vous n’êtes pas autorisé à supprimer cette commande"
 
 #. module: pos_self_order
-#. odoo-python
-#: code:addons/pos_self_order/models/pos_config.py:0
-#: code:addons/pos_self_order/models/res_config_settings.py:0
-msgid "You cannot add cash payment methods in kiosk mode."
-msgstr ""
-"Vous ne pouvez pas ajouter de modes de paiement en espèces en mode kiosque."
-
-#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/services/self_order_service.js:0
 msgid "You're not authorized to perform this action"
@@ -1825,6 +1812,12 @@ msgstr "au comptoir"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/confirmation_page/confirmation_page.xml:0
+msgid "by cash"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
 msgid "close"
 msgstr "fermer"
@@ -1848,8 +1841,8 @@ msgstr "https://odoo.com"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-msgid "included"
-msgstr "inclus"
+msgid "included &"
+msgstr "inclus &"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1870,10 +1863,30 @@ msgstr "odoo"
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "per extra unit"
+msgstr "par unité supplémentaire"
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "x"
 msgstr "x"
+
+#~ msgid "You cannot add cash payment methods in kiosk mode."
+#~ msgstr ""
+#~ "Vous ne pouvez pas ajouter de modes de paiement en espèces en mode "
+#~ "kiosque."
+
+#~ msgid "Choose your"
+#~ msgstr "Choisissez votre"
+
+#~ msgid "Unavailable"
+#~ msgstr "Non disponible"
+
+#~ msgid "included"
+#~ msgstr "inclus"
 
 #~ msgid "Select your address"
 #~ msgstr "Sélectionnez votre adresse"

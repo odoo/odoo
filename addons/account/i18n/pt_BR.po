@@ -22,14 +22,14 @@
 # Layna Nascimento, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-29 17:35+0000\n"
-"PO-Revision-Date: 2026-03-10 17:07+0000\n"
-"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
+"PO-Revision-Date: 2026-06-12 05:25+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s19-1/account/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -38,7 +38,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -187,14 +187,16 @@ msgstr "%(exception)s para %(user)s%(end_datetime_string)s%(reason)s."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "%(label)s at %(currency_amount)s"
-msgstr ""
+msgstr "%(label)s em %(currency_amount)s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "%(label)s at %(currency_amount)s (Draft)"
-msgstr ""
+msgstr "%(label)s em %(currency_amount)s (Rascunho)"
 
 #. module: account
 #. odoo-python
@@ -224,10 +226,13 @@ msgstr "%(name)s%(ref)s com %(currency_amount)s"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
+#, fuzzy
 msgid ""
 "%(order)s - %(order_line)s; %(qty_invoiced)s invoiced, %(qty_delivered)s "
 "delivered at %(unit_price)s"
 msgstr ""
+"%(order)s - %(order_line)s; %(qty_invoiced)s faturado, %(qty_delivered)s "
+"entregue em %(unit_price)s"
 
 #. module: account
 #. odoo-python
@@ -1471,8 +1476,9 @@ msgstr "<span>US$ <span class=\"oe_currency_value\">19.250,00</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#, fuzzy
 msgid "<span>1.00</span>"
-msgstr ""
+msgstr "<span>1,00</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3255,8 +3261,9 @@ msgstr "Depreciação acumulada"
 #. module: account
 #: model:account.account,name:account.1_retained_earnings
 #: model:account.account,name:account.2_account_account_us_retained_earnings
+#, fuzzy
 msgid "Accumulated Retained Earnings"
-msgstr ""
+msgstr "Lucros acumulados"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
@@ -4204,8 +4211,9 @@ msgstr ""
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
+#, fuzzy
 msgid "Appropriation of the profit or loss"
-msgstr ""
+msgstr "Apropriação do lucro ou prejuízo"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__4
@@ -4786,8 +4794,9 @@ msgstr "Banco da Odoo"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "Bank settings"
-msgstr ""
+msgstr "Configurações do banco"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -5131,8 +5140,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, fuzzy
 msgid "C"
-msgstr ""
+msgstr "C"
 
 #. module: account
 #. odoo-python
@@ -6161,8 +6171,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
+#, fuzzy
 msgid "Cost of revenue"
-msgstr ""
+msgstr "Custo da receita"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_postage
@@ -6716,8 +6727,9 @@ msgstr ""
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_retained_earnings
+#, fuzzy
 msgid "Cumulative undistributed profits and losses"
-msgstr ""
+msgstr "Lucros e perdas acumulados não distribuídos"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_currency_form
@@ -7000,8 +7012,9 @@ msgstr "Corte {label} {percent}%"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, fuzzy
 msgid "D"
-msgstr ""
+msgstr "D"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -9530,14 +9543,16 @@ msgstr "Mercadorias"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
+#, fuzzy
 msgid "Goods Delivered not Invoiced (perpetual valuation)"
-msgstr ""
+msgstr "Mercadorias entregues não faturadas (avaliação perpétua)"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
+#, fuzzy
 msgid "Goods Invoiced not Delivered (perpetual valuation)"
-msgstr ""
+msgstr "Mercadorias faturadas não entregues (avaliação perpétua)"
 
 #. module: account
 #: model:account.account,name:account.2_account_account_us_ground_transportation
@@ -11170,8 +11185,9 @@ msgstr "É lançamento"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_exact_move_duplicate
 #: model:ir.model.fields,field_description:account.field_account_move__is_exact_move_duplicate
+#, fuzzy
 msgid "Is Exact Move Duplicate"
-msgstr ""
+msgstr "É uma duplicata exata"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
@@ -12733,8 +12749,9 @@ msgstr "Precisa de solicitação de cancelamento"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#, fuzzy
 msgid "Need to update"
-msgstr ""
+msgstr "Necessita de atualização"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -14827,8 +14844,9 @@ msgstr "Conta de lucros"
 #: code:addons/account/models/company.py:0
 #: model:account.account,name:account.1_profit_or_loss
 #: model:account.account,name:account.2_account_account_us_profit_or_loss_appropriation
+#, fuzzy
 msgid "Profit or Loss Appropriation"
-msgstr ""
+msgstr "Apropriação de Lucros ou Perdas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -18030,10 +18048,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid ""
 "The bank account of your company is not trusted. Please ask an admin or "
 "someone with approval rights to check it."
 msgstr ""
+"A conta bancária da sua empresa não é confiável. Peça a um administrador ou "
+"a alguém com direitos de aprovação para verificá-la."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -18118,11 +18139,15 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid ""
 "The company bank account (%(account_number)s) linked to this invoice is not "
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
+"A conta bancária da empresa (%(account_number)s) vinculada a esta fatura não "
+"é confiável. Acesse as Configurações bancárias, verifique se é a sua ou "
+"corrija o número e clique em Enviar dinheiro para torná-la confiável."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -18676,10 +18701,13 @@ msgstr "O saldo atual (%s) não corresponde ao saldo final especificado."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_send.py:0
+#, fuzzy
 msgid ""
 "The scheduled action 'Send Invoices automatically' is archived. You won't be "
 "able to send invoices in batch."
 msgstr ""
+"A ação agendada 'Enviar faturas automaticamente' foi arquivada. Você não "
+"poderá enviar faturas em lote."
 
 #. module: account
 #. odoo-python
@@ -19022,10 +19050,12 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_document_import_mixin.py:0
+#, fuzzy
 msgid ""
 "There was an error while importing the bill, you can find attached the "
 "incoming XML"
 msgstr ""
+"Ocorreu um erro ao importar a conta; você encontra em anexo o XML recebido"
 
 #. module: account
 #. odoo-python
@@ -19172,10 +19202,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid ""
 "This entry has already been supervised. You need the accounting manager role "
 "to change it."
 msgstr ""
+"Esta entrada já foi supervisionada. Você precisa da função de gerente "
+"financeiro para alterá-la."
 
 #. module: account
 #. odoo-python
@@ -19198,9 +19231,12 @@ msgstr "Este lançamento foi revertido de %s"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid ""
 "This entry has been reviewed, You need the bookkeeper role to change it."
 msgstr ""
+"Esta entrada foi revisada. Você precisa ter a função de contador para alterá-"
+"la."
 
 #. module: account
 #. odoo-python
@@ -19757,8 +19793,9 @@ msgstr "Transferir para %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__translated_product_name
+#, fuzzy
 msgid "Translated Product Name"
-msgstr ""
+msgstr "Nome do produto traduzido"
 
 #. module: account
 #: model:account.group,name:account.2_us_group_661
@@ -19920,8 +19957,9 @@ msgstr "Preço unitário:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#, fuzzy
 msgid "Units"
-msgstr ""
+msgstr "Unidades"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -20082,8 +20120,9 @@ msgstr "Atualizar os Termos e Condições"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#, fuzzy
 msgid "Update app"
-msgstr ""
+msgstr "Atualizar aplicativo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -20352,6 +20391,7 @@ msgstr "Valor"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__amount_string
+#, fuzzy
 msgid ""
 "Value for the amount of the writeoff line\n"
 "    * Percentage: Percentage of the balance, between 0 and 100.\n"
@@ -20372,6 +20412,25 @@ msgid ""
 "    • the second group captures the decimal part (last two digits)\n"
 "    "
 msgstr ""
+"Valor da linha de baixa contábil\n"
+"    * Porcentagem: Porcentagem do saldo, entre 0 e 100.\n"
+"    * Fixo: O valor fixo da baixa contábil. O valor será contabilizado como "
+"débito se for negativo, e como crédito se for positivo.\n"
+"    * A partir do rótulo: Não há necessidade de delimitador de expressão "
+"regular, apenas a expressão regular é necessária. Por exemplo, se você "
+"quiser extrair o valor de\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"Você poderia inserir\n"
+"BRT: ([\\d,]+)\n"
+"    Se o rótulo for \"01870912 0009065 00115\" e você precisar do valor no "
+"formato decimal\n"
+"    (por exemplo, 90,65), você pode usar uma expressão regular com grupos de "
+"captura, por exemplo:\n"
+"        \\s+0*(\\d+?)(\\d{2})(?=\\s)\n"
+"    Nesse caso:\n"
+"    • o primeiro grupo captura a parte inteira\n"
+"    • o segundo grupo captura a parte decimal (os dois últimos dígitos)\n"
+"    "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
@@ -21042,9 +21101,11 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment.py:0
+#, fuzzy
 msgid ""
 "You cannot change the amount of a payment with multiple liquidity lines."
 msgstr ""
+"Não é possível alterar o valor de um pagamento com várias linhas de liquidez."
 
 #. module: account
 #. odoo-python
@@ -21131,10 +21192,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
+#, fuzzy
 msgid ""
 "You cannot delete taxes that are currently in use. Consider archiving them "
 "instead."
 msgstr ""
+"Não é possível excluir impostos que estejam atualmente em uso. Considere "
+"arquivá-los em vez disso."
 
 #. module: account
 #. odoo-python
@@ -21331,8 +21395,10 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "You cannot post an entry with an archived analytic account: %s"
 msgstr ""
+"Não é possível publicar um lançamento com uma conta analítica arquivada: %s"
 
 #. module: account
 #. odoo-python
@@ -21452,9 +21518,12 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid ""
 "You cannot switch the type of a document with an existing sequence number."
 msgstr ""
+"Não é possível alterar o tipo de um documento com um número de sequência "
+"existente."
 
 #. module: account
 #. odoo-python

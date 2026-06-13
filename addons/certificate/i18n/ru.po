@@ -4,13 +4,14 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-04-15 14:39+0000\n"
-"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"PO-Revision-Date: 2026-06-11 17:34+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s19-1/"
 "certificate/ru/>\n"
 "Language: ru\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: certificate
 #. odoo-python
@@ -222,8 +223,9 @@ msgstr "Убедитесь, что используется закрытый к�
 #. module: certificate
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
+#, fuzzy
 msgid "Make sure to use a public key to verify the signature of documents."
-msgstr ""
+msgstr "Обязательно используйте открытый ключ для проверки подписи документов."
 
 #. module: certificate
 #: model_terms:ir.ui.view,arch_db:certificate.res_config_settings_view_form
@@ -352,13 +354,15 @@ msgstr "Сертификат и открытый ключ несовместим
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_end
+#, fuzzy
 msgid "The date on which the certificate expires"
-msgstr ""
+msgstr "Дата истечения срока действия сертификата"
 
 #. module: certificate
 #: model:ir.model.fields,help:certificate.field_certificate_certificate__date_start
+#, fuzzy
 msgid "The date on which the certificate starts to be valid"
-msgstr ""
+msgstr "Дата, с которой сертификат начинает действовать"
 
 #. module: certificate
 #. odoo-python
@@ -450,10 +454,13 @@ msgstr ""
 #. module: certificate
 #. odoo-python
 #: code:addons/certificate/models/key.py:0
+#, fuzzy
 msgid ""
 "Unsupported asymmetric cryptography algorithm '%s'. Currently supported for "
 "signature: ED25519, EC and RSA."
 msgstr ""
+"Неподдерживаемый алгоритм асимметричной криптографии «%s ». В настоящее "
+"время поддерживаются следующие алгоритмы подписи: ED25519, EC и RSA."
 
 #. module: certificate
 #. odoo-python

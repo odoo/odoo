@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-22 17:40+0000\n"
-"PO-Revision-Date: 2026-05-30 13:06+0000\n"
+"PO-Revision-Date: 2026-06-12 15:33+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-1/"
 "pos_restaurant/es/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -74,7 +74,7 @@ msgstr "<strong>Punto de venta:</strong>"
 #. module: pos_restaurant
 #: model:ir.model.constraint,message:pos_restaurant.constraint_pos_course_name_unique
 msgid "A course with this name already exists"
-msgstr ""
+msgstr "Ya existe un plato con este nombre"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -148,7 +148,7 @@ msgstr "Permitir dividir la cuenta"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow to print receipt before payment"
-msgstr "Permitir imprimir el recibo antes del pago"
+msgstr "Permite imprimir el ticket antes del pago"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_printbill
@@ -186,12 +186,12 @@ msgstr "Asignar"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Assign categories to default course"
-msgstr ""
+msgstr "Asignar categorías al pase predeterminado"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Automatic course allocation"
-msgstr ""
+msgstr "Asignación automática de pases"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -364,30 +364,30 @@ msgstr "Cosmopolitan"
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_category__course_id
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__course_id
 msgid "Course"
-msgstr "Curso"
+msgstr "Pase"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.js:0
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Course "
-msgstr ""
+msgstr "Pase "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_course__name
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__name
 msgid "Course Name"
-msgstr ""
+msgstr "Nombre del pase"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__course_id
 msgid "Course Ref"
-msgstr "Referencia del plato"
+msgstr "Referencia del servicio/pase"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__index
 msgid "Course index"
-msgstr "Índice del plato"
+msgstr "Número de pase"
 
 #. module: pos_restaurant
 #: model:ir.actions.act_window,name:pos_restaurant.action_pos_course
@@ -395,7 +395,7 @@ msgstr "Índice del plato"
 #: model:ir.ui.menu,name:pos_restaurant.menu_pos_course
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_pos_course_list
 msgid "Courses"
-msgstr "Cursos"
+msgstr "Pases"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_cosmopolitan_product_template
@@ -561,7 +561,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__use_course_allocation
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_use_course_allocation
 msgid "Enable Course Allocation"
-msgstr ""
+msgstr "Activar la asignación de pases"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_splitbill
@@ -977,12 +977,12 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_course
 msgid "POS Course"
-msgstr ""
+msgstr "Pase del TPV"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_order_course
 msgid "POS Restaurant Order Course"
-msgstr "Plato del pedido en el TPV del restaurante"
+msgstr "Pedido en el PdV del restaurante"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__parent_side
@@ -1115,7 +1115,7 @@ msgstr "Papas con tomillo"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/receipt/order_receipt/order_receipt.xml:0
 msgid "Pro forma receipt"
-msgstr "Recibo proforma"
+msgstr "Factura proforma"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1537,7 +1537,7 @@ msgstr "Transferir todos los productos de “%s” a:"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Transfer course"
-msgstr "Transferir plato"
+msgstr "Transferir pase"
 
 #. module: pos_restaurant
 #. odoo-javascript

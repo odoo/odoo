@@ -28,15 +28,15 @@
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:35+0000\n"
-"PO-Revision-Date: 2026-04-14 10:53+0000\n"
-"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"PO-Revision-Date: 2026-06-12 04:17+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-1/"
 "hr_expense/fi/>\n"
 "Language: fi\n"
@@ -44,7 +44,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_expense
 #. odoo-python
@@ -197,8 +197,9 @@ msgstr "Poikkeustoimenpiteen tyyli"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_plans_ids
+#, fuzzy
 msgid "Activity Plans"
-msgstr ""
+msgstr "Toimintasuunnitelmat"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__activity_state
@@ -473,10 +474,14 @@ msgstr "Luo uusia kuluja saadaksesi tilastotietoa."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Create prepaid virtual and physical cards for both one-time and recurring "
 "expenses, integrated into Odoo through Stripe Issuing."
 msgstr ""
+"Luo ennakkoon maksettuja virtuaalisia ja fyysisiä kortteja niin "
+"kertaluonteisia että toistuvia kuluja varten, integroituna Odooseen Stripe "
+"Issuing -palvelun kautta."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
@@ -558,8 +563,9 @@ msgstr "Digitoi kuittisi tekstintunnistuksella ja tekoälyllä"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/components/hr_expense_product_form_view.js:0
+#, fuzzy
 msgid "Discard"
-msgstr ""
+msgstr "Hylkää"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_analytic_account__display_name
@@ -722,8 +728,9 @@ msgstr "Kulujen hyväksyjä"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
+#, fuzzy
 msgid "Expense Card"
-msgstr ""
+msgstr "Kulukortti"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
@@ -860,8 +867,9 @@ msgstr "Kuluraportti"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+#, fuzzy
 msgid "Expenses approval"
-msgstr ""
+msgstr "Kulujen hyväksyminen"
 
 #. module: hr_expense
 #. odoo-python
@@ -957,8 +965,9 @@ msgstr "Lahjat asiakkaille tai toimittajille"
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
+#, fuzzy
 msgid "Go to Account"
-msgstr ""
+msgstr "Siirry tilille"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -967,8 +976,9 @@ msgstr "Ohjeet"
 
 #. module: hr_expense
 #: model:ir.actions.server,name:hr_expense.ir_cron_send_submitted_expenses_mail_ir_actions_server
+#, fuzzy
 msgid "HR Expense: Send Submitted Expenses Mail"
-msgstr ""
+msgstr "HR-kulut: Lähetä kirjatut kulut sähköpostitse"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_message
@@ -1288,10 +1298,13 @@ msgstr "Uudet menokirjaukset"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
+#, fuzzy
 msgid ""
 "New expenses are waiting for your approval. You can Review them by following "
 "this link."
 msgstr ""
+"Uudet kulut odottavat hyväksyntääsi. Voit tarkistaa ne seuraamalla tätä "
+"linkkiä."
 
 #. module: hr_expense
 #. odoo-python
@@ -1501,13 +1514,15 @@ msgstr "Kumppani"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment_register
+#, fuzzy
 msgid "Pay"
-msgstr ""
+msgstr "Maksa"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment
+#, fuzzy
 msgid "Payment"
-msgstr ""
+msgstr "Maksu"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_method_line_id
@@ -1963,16 +1978,20 @@ msgstr "Tiimin hyväksyjä"
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
+#, fuzzy
 msgid "The account %(name)s (%(code)s) is archived. Activate it to continue"
-msgstr ""
+msgstr "Tili %(name)s (%(code)s) on arkistoitu. Aktivoi se jatkaaksesi"
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/ir_actions_report.py:0
+#, fuzzy
 msgid ""
 "The attachment (%(attachment_name)s) has not been added to the report due to "
 "the following error: '%(error)s'"
 msgstr ""
+"Liitettä (%(attachment_name)s) ei lisätty raporttiin seuraavan virheen "
+"takia: '%(error)s'"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
@@ -2012,11 +2031,15 @@ msgstr ""
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
+#, fuzzy
 msgid ""
 "The following expenses payment method leads to several accounts payable and "
 "this isn't supported:\n"
 "%(expenses)s"
 msgstr ""
+"Seuraavien kulujen maksutapa johtaa useisiin ostovelkoihin, eikä sitä "
+"tueta:\n"
+"%(expenses)s"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_post_wizard__employee_journal_id
@@ -2042,11 +2065,14 @@ msgstr "Summa jaon sulkemisen jälkeen pysyy samana"
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
+#, fuzzy
 msgid ""
 "The vendor is required for expenses using SEPA Credit Transfer as the "
 "payment method.\n"
 "Please set a vendor on the following expenses: %s"
 msgstr ""
+"SEPA-tilisiirtoa käyttäville kuluille vaaditaan tavarantoimittaja.\n"
+"Määritä toimittaja seuraaville kuluille: %s"
 
 #. module: hr_expense
 #. odoo-python

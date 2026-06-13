@@ -3,21 +3,22 @@
 # * project_mrp_account
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-16 21:19+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
-"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-06-05 19:29+0000\n"
+"PO-Revision-Date: 2026-06-06 15:34+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
+"Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-1/"
 "project_mrp_account/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: project_mrp_account
 #. odoo-python
@@ -26,17 +27,19 @@ msgid ""
 "'%(missing_plan_names)s' analytic plan(s) required on the project '%"
 "(project_name)s' linked to the manufacturing order."
 msgstr ""
+"'%(missing_plan_names)s' analytiska planer krävs för det projekt '%"
+"(project_name)s' som är kopplat till produktionsordern."
 
 #. module: project_mrp_account
 #. odoo-python
 #: code:addons/project_mrp_account/models/mrp_production.py:0
 msgid "Analytic Accounts"
-msgstr "Objektkonton"
+msgstr "Analytiska konton"
 
 #. module: project_mrp_account
 #: model:product.template,name:project_mrp_account.product_product_dinning_table_product_template
 msgid "Dining Table"
-msgstr ""
+msgstr "Middagsbord"
 
 #. module: project_mrp_account
 #: model:ir.model.fields,field_description:project_mrp_account.field_mrp_production__display_name
@@ -45,12 +48,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_mrp_account.field_stock_move__display_name
 #: model:ir.model.fields,field_description:project_mrp_account.field_stock_rule__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Visningsnamn"
 
 #. module: project_mrp_account
 #: model:ir.model.fields,field_description:project_mrp_account.field_mrp_production__has_analytic_account
 msgid "Has Analytic Account"
-msgstr ""
+msgstr "Har analytiskt konto"
 
 #. module: project_mrp_account
 #: model:ir.model.fields,field_description:project_mrp_account.field_mrp_production__id
@@ -59,18 +62,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:project_mrp_account.field_stock_move__id
 #: model:ir.model.fields,field_description:project_mrp_account.field_stock_rule__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: project_mrp_account
 #: model:ir.model,name:project_mrp_account.model_mrp_production
 msgid "Manufacturing Order"
-msgstr "Tillverkningsorder"
+msgstr "Produktionsorder"
 
 #. module: project_mrp_account
 #. odoo-python
 #: code:addons/project_mrp_account/models/project_project.py:0
 msgid "Manufacturing Orders"
-msgstr "Tillverkningsorder"
+msgstr "Produktionsordrar"
 
 #. module: project_mrp_account
 #: model:ir.model,name:project_mrp_account.model_project_project
@@ -80,12 +83,20 @@ msgstr "Projekt"
 #. module: project_mrp_account
 #: model:ir.model,name:project_mrp_account.model_stock_move
 msgid "Stock Move"
-msgstr "Lagerflytt"
+msgstr "Lagerflyttning"
 
 #. module: project_mrp_account
 #: model:ir.model,name:project_mrp_account.model_stock_rule
 msgid "Stock Rule"
 msgstr "Lagerregel"
+
+#. module: project_mrp_account
+#. odoo-python
+#: code:addons/project_mrp_account/models/mrp_production.py:0
+msgid ""
+"The Project linked to the Manufacturing Order is missing a mandatory "
+"distribution for the analytic plan(s) %(missing_plan_names)s."
+msgstr ""
 
 #. module: project_mrp_account
 #: model:ir.model,name:project_mrp_account.model_mrp_workorder
