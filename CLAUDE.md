@@ -9,12 +9,25 @@
 
 ---
 
-## Startup Checklist (mandatory — do not skip)
+## Session Start (mandatory — do not skip)
 
 1. `conda activate odoo19`
-2. Read `claude-progress.md` — if missing, treat state as unknown and say so
-3. Read `feature_list.json` — identify `in-progress` or `blocked` tasks
-4. `python odoo-bin --version` — confirm environment is live
+2. Read `claude-progress.md` → restore state from **Current Verified State** and **Next Steps**
+3. Read `feature_list.json` → identify `in-progress` or `blocked` tasks
+4. Read `DECISIONS.md` → understand why conventions exist before changing them
+5. `python odoo-bin --version` → confirm environment is live
+
+If `claude-progress.md` is missing, treat state as unknown and say so before proceeding.
+
+## Session End (mandatory — do not skip)
+
+Before closing any session, even if the task is incomplete:
+
+1. Run `./verify.sh <module>` on anything changed — paste output into `claude-progress.md`
+2. Update `claude-progress.md`: Current Verified State, Next Steps, any new Blockers
+3. Update `feature_list.json` status for any tasks touched
+4. If a significant decision was made, add it to `DECISIONS.md` with rationale
+5. Commit all tracked changes with an atomic, descriptive message
 
 ---
 
@@ -84,6 +97,8 @@ Do not blame the model. Failures are in one of these five layers.
 
 | When you need... | Read... |
 |---|---|
+| Current progress, next steps, blockers | [claude-progress.md](claude-progress.md) |
+| Why a convention or decision exists | [DECISIONS.md](DECISIONS.md) |
 | Environment setup, running tests, dev server | [up5-docs/setup/dev-environment.md](up5-docs/setup/dev-environment.md) |
 | Odoo model/field/view/security/test conventions | [up5-docs/standards/odoo-conventions.md](up5-docs/standards/odoo-conventions.md) |
 | Git workflow, branch naming, commit tags, PR process | [up5-docs/standards/git-workflow.md](up5-docs/standards/git-workflow.md) |
