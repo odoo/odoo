@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:37+0000\n"
+"POT-Creation-Date: 2026-06-12 17:37+0000\n"
 "PO-Revision-Date: 2026-05-16 09:02+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-18/"
@@ -63,6 +63,12 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "A"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint_eu.py:0
+msgid "A buyer reference or purchase order reference must be provided."
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -250,6 +256,14 @@ msgstr "संपर्क"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
+msgid ""
+"Could not retrieve a partner corresponding to '%s' with the same VAT. A new "
+"partner was created."
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid ""
@@ -336,12 +350,6 @@ msgstr "छूट"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-msgid "Discount lines must have a negative amount."
-msgstr ""
-
-#. module: account_edi_ubl_cii
-#. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "Draft"
 msgstr "मसौदा"
@@ -368,12 +376,14 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl_cen_en16931.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "Each invoice line shall have one and only one tax."
 msgstr "हर इनवॉइस की लाइन पर बस एक ही टैक्स लगेगा."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl_cen_en16931.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "Each invoice line should have a product or a label."
 msgstr "हर इनवाइस की लाइन में या तो प्रॉडक्ट का नाम हो या उसका लेबल हो."
@@ -408,8 +418,8 @@ msgstr "एस्टोनिया वैट"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl_cen_en16931.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "Exempt from tax"
 msgstr "टैक्स से छूट"
 
@@ -446,6 +456,7 @@ msgstr "फ़िनलैंड वैट"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl_cen_en16931.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid ""
 "For intracommunity supply, the actual delivery date or the invoicing period "
@@ -456,6 +467,7 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl_cen_en16931.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "For intracommunity supply, the delivery address should be included."
 msgstr "यूरोप के अंदर सामान भेजने पर, डिलीवरी का पता ज़रूर लिखें."
@@ -506,6 +518,12 @@ msgstr "GS1 आइडेंटिफ़िकेशन कुंजी"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "General discount"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
+msgid "General upsell"
 msgstr ""
 
 #. module: account_edi_ubl_cii
@@ -576,6 +594,14 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "Intra-Community supply"
 msgstr "इंट्रा-कम्यूनिटी सप्लाई"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+msgid ""
+"Invalid Tax Setup for Co-Contractor. Please apply the standard co-contractor "
+"tax, or ensure your custom tax uses a tax amount of 0"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -921,7 +947,7 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl_cen_en16931.py:0
 msgid ""
 "Taxes of category 'Service outside scope of tax' shall not be mixed with tax "
 "from other categories. You should split your invoice in two"
@@ -960,6 +986,7 @@ msgstr "सप्लायर का वैट नंबर गलत लग र
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl_cen_en16931.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "The VAT of the %s should be prefixed with its country code."
 msgstr "%s के वैट नंबर से पहले उसके देश का कोड ज़रूर लगाएं."
@@ -973,6 +1000,7 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl_cen_en16931.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "The country is required for the %s."
 msgstr "%s के लिए देश का नाम ज़रूरी है."
@@ -1014,7 +1042,7 @@ msgstr "इनवॉइस को क्रेडिट नोट बना द�
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint.py:0
 msgid "The prepaid amount of %s corresponds to the withholding tax applied."
 msgstr ""
 
@@ -1042,6 +1070,21 @@ msgstr "UBL 2.1"
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_bis3
 msgid "UBL BIS Billing 3.0.12"
 msgstr "UBL BIS Billing 3.0.12"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_cen_en16931
+msgid "UBL CEN-EN16931"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint
+msgid "UBL PINT"
+msgstr ""
+
+#. module: account_edi_ubl_cii
+#: model:ir.model,name:account_edi_ubl_cii.model_account_edi_ubl_pint_eu
+msgid "UBL PINT-EU Layer"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0193

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"POT-Creation-Date: 2026-06-05 19:33+0000\n"
 "PO-Revision-Date: 2026-05-26 04:55+0000\n"
 "Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/mrp_account/"
@@ -89,13 +89,7 @@ msgstr "ແຖວການເຄື່ອນໄຫວບັນຊີ"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_account_wip_accounting_line
 msgid "Account move line to be created when posting WIP account move"
-msgstr ""
-"ແຖວການເຄື່ອນໄຫວບັນຊີທີ່ຈະຖືກສ້າງຂຶ້ນເມື່ອລົງບັນຊີສິນຄ້າລະຫວ່າງຜະລິດ (WIP)"
-
-#. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "Acme Corp."
-msgstr "ບໍລິສັດ Acme."
+msgstr "ແຖວການເຄື່ອນໄຫວບັນຊີທີ່ຈະຖືກສ້າງຂຶ້ນເມື່ອລົງບັນຊີສິນຄ້າລະຫວ່າງຜະລິດ (WIP)"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_account
@@ -161,8 +155,8 @@ msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
 msgstr ""
-"ຄິດໄລ່ລາຄາຂອງສິນຄ້າໂດຍໃຊ້ວັດສະດຸ ແລະ ຂັ້ນຕອນການເຮັດວຽກຂອງ BoM ທີ່ກ່ຽວຂ້ອງ, ສຳລັບສິນຄ້າທີ່ຜະລິດເອງ"
-"ເທົ່ານັ້ນ."
+"ຄິດໄລ່ລາຄາຂອງສິນຄ້າໂດຍໃຊ້ວັດສະດຸ ແລະ ຂັ້ນຕອນການເຮັດວຽກຂອງ BoM ທີ່ກ່ຽວຂ້ອງ, "
+"ສຳລັບສິນຄ້າທີ່ຜະລິດເອງເທົ່ານັ້ນ."
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_ids
@@ -259,11 +253,6 @@ msgid "Label"
 msgstr "ຄຳອະທິບາຍ"
 
 #. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "Laptop"
-msgstr "ແລັບທັອບ"
-
-#. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__write_uid
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting_line__write_uid
 msgid "Last Updated by"
@@ -326,8 +315,7 @@ msgstr "ແຖວບັນຊີວິເຄາະຄຳສັ່ງຜະລິ
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/wizard/mrp_wip_accounting.py:0
-msgid ""
-"Please make sure the total credit amount equals the total debit amount."
+msgid "Please make sure the total credit amount equals the total debit amount."
 msgstr "ກະລຸນາກວດສອບໃຫ້ແນ່ໃຈວ່າ ຍອດລວມເງິນມີ ເທົ່າກັບ ຍອດລວມເງິນເປັນ."
 
 #. module: mrp_account
@@ -369,11 +357,6 @@ msgstr "ການຜະລິດ"
 #: model:ir.model.fields,field_description:mrp_account.field_product_category__property_stock_account_production_cost_id
 msgid "Production Account"
 msgstr "ບັນຊີການຜະລິດ"
-
-#. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "REF123"
-msgstr "REF123"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_account_wip_accounting__reference
@@ -419,26 +402,27 @@ msgstr "ການເຄື່ອນຍ້າຍສາງ"
 msgid ""
 "The MOs that this WIP entry was based on. Expected to be set at time of WIP "
 "entry creation."
-msgstr ""
-"ຄຳສັ່ງຜະລິດ (MOs) ທີ່ລາຍການ WIP ນີ້ອີງໃສ່. ຄາດວ່າຈະຖືກກຳນົດໃນເວລາສ້າງລາຍການ WIP."
+msgstr "ຄຳສັ່ງຜະລິດ (MOs) ທີ່ລາຍການ WIP ນີ້ອີງໃສ່. ຄາດວ່າຈະຖືກກຳນົດໃນເວລາສ້າງລາຍການ WIP."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__expense_account_id
 msgid ""
-"The expense is accounted for when the manufacturing order is marked as done."
-" If not set, it is the expense account of the final product that will be "
-"used instead."
+"The expense is accounted for when the manufacturing order is marked as done. "
+"If not set, it is the expense account of the final product that will be used "
+"instead."
 msgstr ""
 "ລາຍຈ່າຍຈະຖືກບັນທຶກເມື່ອຄຳສັ່ງຜະລິດສຳເລັດ. ຖ້າບໍ່ໄດ້ກຳນົດໄວ້, ຈະໃຊ້ບັນຊີລາຍຈ່າຍຂອງສິນຄ້າສຳເລັດຮູບແທນ."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_product_category__property_stock_account_production_cost_id
 msgid ""
-"This account will be used as a valuation counterpart for both components and final products for manufacturing orders.\n"
-"                If there are any workcenter/employee costs, this value will remain on the account once the production is completed."
+"This account will be used as a valuation counterpart for both components and "
+"final products for manufacturing orders.\n"
+"                If there are any workcenter/employee costs, this value will "
+"remain on the account once the production is completed."
 msgstr ""
-"ບັນຊີນີ້ຈະຖືກໃຊ້ເປັນບັນຊີຄູ່ສຳລັບການຕີລາຄາມູນຄ່າທັງສ່ວນປະກອບ ແລະ ສິນຄ້າສຳເລັດຮູບໃນຄຳສັ່ງຜະລິດ. ຖ້າມີຕົ້ນທຶ"
-"ນສູນວຽກ ຫຼື ພະນັກງານ, ມູນຄ່ານີ້ຈະຍັງຄົງຢູ່ໃນບັນຊີຫຼັງຈາກການຜະລິດສຳເລັດ."
+"ບັນຊີນີ້ຈະຖືກໃຊ້ເປັນບັນຊີຄູ່ສຳລັບການຕີລາຄາມູນຄ່າທັງສ່ວນປະກອບ ແລະ ສິນຄ້າສຳເລັດຮູບໃນຄຳສັ່ງຜະລິດ. "
+"ຖ້າມີຕົ້ນທຶນສູນວຽກ ຫຼື ພະນັກງານ, ມູນຄ່ານີ້ຈະຍັງຄົງຢູ່ໃນບັນຊີຫຼັງຈາກການຜະລິດສຳເລັດ."
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
@@ -449,11 +433,6 @@ msgstr "ລວມເງິນມີ"
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_wip_accounting_form
 msgid "Total Debit"
 msgstr "ລວມເງິນເປັນ"
-
-#. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "Units"
-msgstr "ຫົວໜ່ວຍ"
 
 #. module: mrp_account
 #. odoo-python
@@ -545,3 +524,15 @@ msgstr "ບັນທຶກຜະລິດທະພາບຂອງສູນວຽ
 #: code:addons/mrp_account/models/mrp_workorder.py:0
 msgid "[WC] %s"
 msgstr "[ສູນວຽກ] %s"
+
+#~ msgid "Acme Corp."
+#~ msgstr "ບໍລິສັດ Acme."
+
+#~ msgid "Laptop"
+#~ msgstr "ແລັບທັອບ"
+
+#~ msgid "REF123"
+#~ msgstr "REF123"
+
+#~ msgid "Units"
+#~ msgstr "ຫົວໜ່ວຍ"

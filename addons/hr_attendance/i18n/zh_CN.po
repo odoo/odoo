@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:37+0000\n"
-"PO-Revision-Date: 2026-03-21 18:00+0000\n"
+"POT-Creation-Date: 2026-06-05 19:32+0000\n"
+"PO-Revision-Date: 2026-06-10 19:12+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-18/hr_attendance/zh_Hans/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_attendance
 #. odoo-python
@@ -628,7 +628,7 @@ msgstr "连接 RFID 读取器并扫描令牌。"
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.js:0
 msgid "Connection lost. Check in/out could not be recorded."
-msgstr ""
+msgstr "连接中断。无法记录签到/签退操作。"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_country_name
@@ -735,6 +735,8 @@ msgid ""
 "Do not have access, user cannot edit the attendances that are not their own "
 "or if they are not the attendance manager of the employee."
 msgstr ""
+"没有存取权限。用户不可编辑非自己的考勤记录。若用户并非员工的考勤管理者，亦不"
+"能编辑该员工的考勤记录。"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_employee
@@ -781,11 +783,6 @@ msgstr "错误：找不到相应的员工。"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Errors"
 msgstr "错误"
-
-#. module: hr_attendance
-#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__expected_hours
-msgid "Expected Hours"
-msgstr "预期工时"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.hr_attendance_overtime_action
@@ -1373,6 +1370,11 @@ msgid "Refused"
 msgstr "已拒绝"
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__expected_hours
+msgid "Regular Hours"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_reporting
 msgid "Reporting"
 msgstr "报表"
@@ -1720,6 +1722,9 @@ msgstr "或"
 #: code:addons/hr_attendance/static/src/public_kiosk/public_kiosk_app.xml:0
 msgid "with optional PIN code"
 msgstr "- 使用可选用的 PIN 个人密码"
+
+#~ msgid "Expected Hours"
+#~ msgstr "预期工时"
 
 #~ msgid ""
 #~ "Do not have access, user cannot edit the attendances that are not his own."

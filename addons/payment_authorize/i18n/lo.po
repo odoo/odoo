@@ -3,13 +3,14 @@
 # * payment_authorize
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 10.saas~18\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-10-26 21:56+0000\n"
-"PO-Revision-Date: 2026-05-27 15:26+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-06 09:15+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/"
 "payment_authorize/lo/>\n"
 "Language: lo\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -31,31 +32,40 @@ msgid ""
 "Checking</option>\n"
 "                    </select>"
 msgstr ""
+"<select id=\"o_authorize_account_type\" required=\"\" class=\"form-select\">"
+"\n"
+"                        <option value=\"checking\">ບັນຊີກະແສລາຍວັນສ່ວນຕົວ</option>"
+"\n"
+"                        <option value=\"savings\">ບັນຊີເງິນຝາກປະຢັດສ່ວນຕົວ</option>"
+"\n"
+"                        <option value=\"businessChecking\">ບັນຊີກະແສລາຍວັນທຸລະກິ"
+"ດ</option>\n"
+"                    </select>"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "ABA Routing Number"
-msgstr ""
+msgstr "ໝາຍເລກ ABA Routing"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_client_key
 msgid "API Client Key"
-msgstr ""
+msgstr "ຄີລູກຄ້າ API"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_login
 msgid "API Login ID"
-msgstr ""
+msgstr "ໄອດີເຂົ້າລະບົບ API"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_signature_key
 msgid "API Signature Key"
-msgstr ""
+msgstr "ຄີລາຍເຊັນ API"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_provider__authorize_transaction_key
 msgid "API Transaction Key"
-msgstr ""
+msgstr "ຄີທຸລະກຳ API"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -65,17 +75,17 @@ msgstr "ເລກບັນຊີ"
 #. module: payment_authorize
 #: model:ir.model.fields.selection,name:payment_authorize.selection__payment_provider__code__authorize
 msgid "Authorize.Net"
-msgstr ""
+msgstr "Authorize.Net"
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_token__authorize_profile
 msgid "Authorize.Net Profile ID"
-msgstr ""
+msgstr "ໄອດີໂປຣໄຟລ໌ Authorize.Net"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Bank Account Type"
-msgstr ""
+msgstr "ປະເພດບັນຊີທະນາຄານ"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -104,6 +114,8 @@ msgid ""
 "Could not fetch merchant details:\n"
 "%s"
 msgstr ""
+"ບໍ່ສາມາດດຶງຂໍ້ມູນລາຍລະອຽດຮ້ານຄ້າ:\n"
+"%s"
 
 #. module: payment_authorize
 #. odoo-python
@@ -112,6 +124,7 @@ msgid ""
 "Could not retrieve the transaction details. (error code: %s; error_details: "
 "%s)"
 msgstr ""
+"ບໍ່ສາມາດດຶງຂໍ້ມູນລາຍລະອຽດທຸລະກຳໄດ້. (ລະຫັດຂໍ້ຜິດພາດ: %s; ລາຍລະອຽດຂໍ້ຜິດພາດ: %s)"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
@@ -125,26 +138,28 @@ msgid ""
 "Failed to authenticate.\n"
 "%s"
 msgstr ""
+"ການຢືນຢັນຕົວຕົນຫຼົ້ມເຫຼວ.\n"
+"%s"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Generate Client Key"
-msgstr ""
+msgstr "ສ້າງຄີລູກຄ້າ"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "How to get paid with Authorize.Net"
-msgstr ""
+msgstr "ວິທີການຮັບຊຳລະເງິນດ້ວຍ Authorize.Net"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "MM"
-msgstr "MM"
+msgstr "ດດ"
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "Name On Account"
-msgstr ""
+msgstr "ຊື່ເຈົ້າຂອງບັນຊີ"
 
 #. module: payment_authorize
 #. odoo-python
@@ -156,7 +171,7 @@ msgstr "ບໍ່ພົບທຸລະກຳທີ່ກົງກັບການ
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_provider.py:0
 msgid "Only one currency can be selected by Authorize.Net account."
-msgstr ""
+msgstr "ສາມາດເລືອກໄດ້ພຽງສະກຸນເງິນດຽວສຳລັບບັນຊີ Authorize.Net."
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_provider
@@ -185,22 +200,23 @@ msgstr "ການປະມວນຜົນການຊຳລະເງິນຫຼ
 msgid ""
 "Received data with status code \"%(status)s\" and error code \"%(error)s\""
 msgstr ""
+"ໄດ້ຮັບຂໍ້ມູນດ້ວຍລະຫັດສະຖານະ \"%(status)s\" ແລະ ລະຫັດຂໍ້ຜິດພາດ \"%(error)s\""
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/controllers/main.py:0
 msgid "Received tampered payment request data."
-msgstr ""
+msgstr "ໄດ້ຮັບຂໍ້ມູນການຮ້ອງຂໍຊຳລະເງິນທີ່ຖືກດັດແປງ."
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.payment_provider_form
 msgid "Set Account Currency"
-msgstr ""
+msgstr "ກຳນົດສະກຸນເງິນຂອງບັນຊີ"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_login
 msgid "The ID solely used to identify the account with Authorize.Net"
-msgstr ""
+msgstr "ໄອດີທີ່ໃຊ້ເພື່ອລະບຸບັນຊີກັບ Authorize.Net ເທົ່ານັ້ນ"
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__authorize_client_key
@@ -208,6 +224,7 @@ msgid ""
 "The public client key. To generate directly from Odoo or from Authorize.Net "
 "backend."
 msgstr ""
+"ຄີລູກຄ້າສາທາລະນະ. ເພື່ອສ້າງໂດຍກົງຈາກ Odoo ຫຼື ຈາກລະບົບຫຼັງບ້ານຂອງ Authorize.Net."
 
 #. module: payment_authorize
 #: model:ir.model.fields,help:payment_authorize.field_payment_provider__code
@@ -219,7 +236,7 @@ msgstr "ລະຫັດທາງເຕັກນິກຂອງຜູ້ໃຫ້
 #: code:addons/payment_authorize/models/payment_transaction.py:0
 msgid ""
 "The transaction is not in a status to be refunded. (status: %s, details: %s)"
-msgstr ""
+msgstr "ທຸລະກຳບໍ່ຢູ່ໃນສະຖານະທີ່ຈະຄືນເງິນໄດ້. (ສະຖານະ: %s, ລາຍລະອຽດ: %s)"
 
 #. module: payment_authorize
 #. odoo-python
@@ -233,14 +250,15 @@ msgid ""
 "The unique reference for the partner/token combination in the Authorize.net "
 "backend."
 msgstr ""
+"ການອ້າງອີງສະເພາະສຳລັບການລວມກັນຂອງ ຄູ່ຄ້າ/ໂທເຄັນ ໃນລະບົບຫຼັງບ້ານຂອງ Authorize.net."
 
 #. module: payment_authorize
 #. odoo-python
 #: code:addons/payment_authorize/models/payment_provider.py:0
 msgid "This action cannot be performed while the provider is disabled."
-msgstr ""
+msgstr "ການດຳເນີນການນີ້ບໍ່ສາມາດເຮັດໄດ້ໃນຂະນະທີ່ຜູ້ໃຫ້ບໍລິການຖືກປິດໃຊ້ງານ."
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.inline_form
 msgid "YY"
-msgstr ""
+msgstr "ປີປີ"

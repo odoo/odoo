@@ -3,7 +3,7 @@
 # * sale_project
 #
 # Translators:
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2024, 2026.
 # Wil Odoo, 2025
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-04-25 18:00+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-11 07:53+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-18/"
 "sale_project/uk/>\n"
 "Language: uk\n"
@@ -23,7 +23,7 @@ msgstr ""
 "? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
 "14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
 "100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_project
 #. odoo-python
@@ -68,6 +68,11 @@ msgid ""
 "the cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"Замовлення "
+"на продаж, пов'язане з цим проєктом, скасовано. Ми рекомендуємо або оновити "
+"позицію замовлення на продаж, або скасувати цей проєкт відповідно до "
+"скасування замовлення на продаж.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
@@ -78,6 +83,11 @@ msgid ""
 "cancellation of the sales order.\" invisible=\"sale_order_state != "
 "'cancel'\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning\" title=\"Замовлення "
+"на продаж, пов’язане з цим завданням, скасовано. Ми рекомендуємо або оновити "
+"елемент замовлення на продаж, або скасувати це завдання відповідно до "
+"скасування замовлення на продаж.\" invisible=\"sale_order_state != "
+"'cancel'\"/>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -115,6 +125,9 @@ msgid ""
 "<span class=\"o_stat_text\">Customer</span>\n"
 "                        <span class=\"o_stat_text\">Preview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Клієнт</span>\n"
+"                        <span class=\"o_stat_text\">Попередній перегляд</"
+"span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -327,7 +340,7 @@ msgstr "Доставлено"
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_only_product_template
 msgid "Digital Marketing Campaign (project)"
-msgstr ""
+msgstr "Кампанія цифрового маркетингу (проєкт)"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
@@ -354,7 +367,7 @@ msgstr "Пустий проєкт"
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_flooring_product_template
 msgid "Flooring Services"
-msgstr ""
+msgstr "Обслуговування залу"
 
 #. module: sale_project
 #. odoo-python
@@ -474,7 +487,7 @@ msgstr "Комплект офісних меблів (завдання)"
 #: code:addons/sale_project/models/project_project.py:0
 msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
-msgstr ""
+msgstr "Коли пропозиція підтверджена клієнтом, вона стає замовленням на продаж."
 
 #. module: sale_project
 #. odoo-python
@@ -485,7 +498,7 @@ msgstr "Інші послуги"
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_painting_product_template
 msgid "Painting"
-msgstr ""
+msgstr "Малювання"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__quantity_percentage
@@ -542,45 +555,45 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_sale_report__project_id
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__project_only
 msgid "Project"
-msgstr "Проект"
+msgstr "Проєкт"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Project & Task"
-msgstr "Проект та завдання"
+msgstr "Проєкт та завдання"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_account_id
 msgid "Project Account"
-msgstr "Рахунок проекту"
+msgstr "Рахунок проєкту"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_milestone
 msgid "Project Milestone"
-msgstr "Віха проекту"
+msgstr "Віха проєкту"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_type__milestones
 msgid "Project Milestones"
-msgstr "Віхи проекту"
+msgstr "Віхи проєкту"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__project_template_id
 msgid "Project Template"
-msgstr "Шаблон проекту"
+msgstr "Шаблон проєкту"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "Project's sale order"
-msgstr "Замовлення на продаж проекту"
+msgstr "Замовлення на продаж проєкту"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "Projects"
-msgstr "Проекти"
+msgstr "Проєкти"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__product_uom_qty
@@ -702,7 +715,7 @@ msgstr "Замовлення на продаж, із яким пов'язане 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_screw_driver_product_template
 msgid "Screw Driver"
-msgstr ""
+msgstr "Викрутка"
 
 #. module: sale_project
 #. odoo-python
@@ -769,7 +782,7 @@ msgstr "Аналіз завдань"
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 msgid "The Sale Order Item should contain a service product."
-msgstr ""
+msgstr "Елемент замовлення на продаж повинен містити товар послуги."
 
 #. module: sale_project
 #. odoo-python
@@ -778,7 +791,7 @@ msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
 msgstr ""
-"Товар %s не повинен мати загального проекту, оскільки він буде генерувати "
+"Товар %s не повинен мати загального проєкту, оскільки він буде генерувати "
 "проект."
 
 #. module: sale_project
@@ -788,8 +801,8 @@ msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
 msgstr ""
-"Товар %s не повинен мати проект або шаблон проекту, оскільки він не буде "
-"генерувати проект."
+"Товар %s не повинен мати проєкт або шаблон проєкту, оскільки він не буде "
+"генерувати проєкт."
 
 #. module: sale_project
 #. odoo-python
@@ -798,8 +811,8 @@ msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
 msgstr ""
-"Товар %s не повинен мати шаблон проекту, оскільки він створить завдання в "
-"глобальному проекті."
+"Товар %s не повинен мати шаблон проєкту, оскільки він створить завдання в "
+"глобальному проєкті."
 
 #. module: sale_project
 #. odoo-python
@@ -808,6 +821,8 @@ msgid ""
 "The project couldn't be created as the Sales Order must be confirmed, is "
 "already linked to a project, or doesn't involve any services."
 msgstr ""
+"Не вдалося створити проєкт, оскільки замовлення на продаж має бути "
+"підтверджено, воно вже пов’язано з проєктом або не передбачає жодних послуг."
 
 #. module: sale_project
 #. odoo-python
@@ -855,12 +870,12 @@ msgstr "Переглянути замовлення на продаж"
 #. module: sale_project
 #: model:product.template,name:sale_project.product_service_create_project_and_task_product_template
 msgid "Website Redesign Service (project & task)"
-msgstr ""
+msgstr "Послуга редизайну веб-сайту (проєкт та завдання)"
 
 #. module: sale_project
 #: model:product.template,name:sale_project.product_product_wiring_product_template
 msgid "Wiring Services"
-msgstr ""
+msgstr "Послуги з електромонтажу"
 
 #. module: sale_project
 #. odoo-python
@@ -877,4 +892,4 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale_project/models/project_project.py:0
 msgid "You will be able to create an invoice and collect the payment."
-msgstr ""
+msgstr "Ви зможете створити рахунок-фактуру та отримати оплату."

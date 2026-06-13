@@ -44,7 +44,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-05-16 09:03+0000\n"
+"PO-Revision-Date: 2026-06-12 17:13+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-18/mrp/fi/>"
 "\n"
@@ -53,7 +53,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -920,7 +920,7 @@ msgstr "Tulosta automaattisesti tuotetun erän eränumeroetiketti"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_done_mrp_product_labels
 msgid "Auto Print Produced Product Labels"
-msgstr "Tulosta automaattisesti tuote-etiketit"
+msgstr "Tulosta tuote-etiketit automaattisesti"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_generated_mrp_lot
@@ -2769,8 +2769,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the product labels "
 "of a MO when it is done."
 msgstr ""
-"Jos valittu, Odoo tulostaa automaattisesti MO:n tuotteiden etiketit, kun se "
-"on valmis."
+"Jos ruksittu, Odoo tulostaa automaattisesti tuotantotilauksen tuote-"
+"etiketit, kun se on valmis."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_production_order
@@ -3240,7 +3240,7 @@ msgstr "Tuotantotilauksen yleiskatsausraportti"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "MO Pending"
-msgstr "Valmistustilaus on vireillä"
+msgstr "Tuotantotilaus käsiteltävänä"
 
 #. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_progress
@@ -3256,13 +3256,13 @@ msgstr "Tuotantotilauksen valmius"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "MO Ready"
-msgstr "Tuotantotilaus on valmis"
+msgstr "Tuotantotilaus valmis"
 
 #. module: mrp
 #: model:mail.message.subtype,description:mrp.mrp_mo_in_to_close
 #: model:mail.message.subtype,name:mrp.mrp_mo_in_to_close
 msgid "MO To Close"
-msgstr "Valmistustilaus valmiina suljettavaksi"
+msgstr "Suljettava tuotantotilaus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_document__attached_on_mrp
@@ -4511,7 +4511,7 @@ msgstr "Tulostettava tuote-etiketti"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Product Labels"
-msgstr "Tuotetarrat"
+msgstr "Tuote-etiketit"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_plm
@@ -4566,13 +4566,13 @@ msgstr "Tuotteen yksikkö"
 #: model:ir.model,name:mrp.model_product_product
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_id
 msgid "Product Variant"
-msgstr "Tuotevariaatio"
+msgstr "Tuotevariantti"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_product_variant_action
 #: model:ir.ui.menu,name:mrp.product_variant_mrp
 msgid "Product Variants"
-msgstr "Tuotevariaatiot"
+msgstr "Tuotevariantit"
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_capacity_unique_product
@@ -4589,7 +4589,7 @@ msgstr "Rakennettava tuote..."
 #: model:ir.model.fields,field_description:mrp.field_picking_label_type__production_ids
 #: model:ir.model.fields,field_description:mrp.field_stock_picking__production_ids
 msgid "Production"
-msgstr "Valmistus"
+msgstr "Tuotanto"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__production_capacity
@@ -4610,14 +4610,14 @@ msgstr "Tuotannon tiedot"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__production_location_id
 msgid "Production Location"
-msgstr "Valmistuksen paikka"
+msgstr "Tuotannon sijainti"
 
 #. module: mrp
 #: model:ir.actions.report,name:mrp.action_report_production_order
 #: model:ir.model.fields,field_description:mrp.field_stock_move_line__production_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Production Order"
-msgstr "Valmistustilaus"
+msgstr "Tuotantotilaus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__raw_material_production_id
@@ -4637,23 +4637,23 @@ msgstr "Tuotannon tila"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Production Workcenter"
-msgstr "Valmistuksen työpiste"
+msgstr "Tuotannon työpiste"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
 msgid "Production of Draft MO"
-msgstr "Valmistustilauksen (MO) luonnoksen tuottaminen"
+msgstr "Tuotantotilausluonnoksen tuottaminen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Production started late"
-msgstr "Valmistus aloitettu myöhässä"
+msgstr "Tuotanto aloitettu myöhässä"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split_multi__production_ids
 msgid "Productions To Split"
-msgstr "Tuotannot jakaa"
+msgstr "Jaettavat tuotannot"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workcenter_productivity_loss_type__loss_type__productive
@@ -6326,7 +6326,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 msgid "Variant"
-msgstr "Muunnelma"
+msgstr "Variantti"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder

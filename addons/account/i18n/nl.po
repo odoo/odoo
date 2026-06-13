@@ -19,16 +19,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-29 17:37+0000\n"
-"PO-Revision-Date: 2026-05-09 09:03+0000\n"
+"PO-Revision-Date: 2026-06-06 10:28+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
-"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-18/account/nl/"
-">\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-18/account/"
+"nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -1760,8 +1760,8 @@ msgid ""
 "Account %(account)s will be split in %(num_accounts)s, one for each "
 "company:\n"
 msgstr ""
-"Rekening %(account)s wordt opgesplitst in %(num_accounts)s, één voor elk "
-"bedrijf:\n"
+"Rekening %(account)s wordt opgesplitst in %(num_accounts)s rekeningen, één "
+"voor elk bedrijf:\n"
 
 #. module: account
 #. odoo-python
@@ -1770,8 +1770,9 @@ msgid ""
 "Account %s cannot be unmerged as it already belongs to a single company. The "
 "unmerge operation only splits an account based on its companies."
 msgstr ""
-"Rekening %s kan niet worden afgesplitst omdat deze al bij één bedrijf hoort. "
-"De unmerge bewerking splitst een rekening alleen op basis van de bedrijven."
+"Rekening %s kan niet worden gesplitst omdat deze maar bij één bedrijf hoort. "
+"De bewerking 'splitsen' splitst een rekening alleen op basis van de "
+"bedrijven."
 
 #. module: account
 #. odoo-python
@@ -4325,14 +4326,14 @@ msgstr "Kasafronding"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_cash_rounding_id
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_cash_rounding_id
 msgid "Cash Rounding Method"
-msgstr "Kas afrondingsmethode"
+msgstr "Cash afrondingsmethode"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.rounding_list_action
 #: model:ir.ui.menu,name:account.menu_action_rounding_form_view
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Cash Roundings"
-msgstr "Kas afrondingen"
+msgstr "Cash afronding"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -4790,7 +4791,7 @@ msgstr "Bedrijfsvaluta"
 #. module: account
 #: model:ir.model,name:account.model_base_document_layout
 msgid "Company Document Layout"
-msgstr "Bedrijf document lay-out"
+msgstr "Lay-out van bedrijfsdocumenten"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__company_fiscal_country_code
@@ -4978,7 +4979,7 @@ msgstr "Productiekosten"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_direct_cost
 msgid "Cost of Revenue"
-msgstr "Kosten van omzet"
+msgstr "Kostprijs van de omzet"
 
 #. module: account
 #. odoo-python
@@ -8037,7 +8038,7 @@ msgstr "Gegroepeerde betalingen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard__is_group_by_name
 msgid "Group by name?"
-msgstr "Groep op naam?"
+msgstr "Groeperen op naam?"
 
 #. module: account
 #: model:account.report,name:account.generic_tax_report_account_tax
@@ -9126,7 +9127,7 @@ msgstr "Pdf-factuur"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_partner_display_name
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_partner_display_name
 msgid "Invoice Partner Display Name"
-msgstr "Weergavenaam factuur van partner"
+msgstr "Schermnaam factuur van partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_payments_widget
@@ -17563,12 +17564,12 @@ msgstr "Markeer als niet verzonden"
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "Unmerge"
-msgstr "Ontmengen"
+msgstr "Splitsen"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_unmerge_accounts
 msgid "Unmerge account"
-msgstr "Account loskoppelen"
+msgstr "Rekening splitsen"
 
 #. module: account
 #. odoo-javascript

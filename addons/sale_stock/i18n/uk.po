@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-03-30 16:47+0000\n"
-"Last-Translator: Oleksii Lytvynov <oleksii.lytvynov@self-erp.com>\n"
+"PO-Revision-Date: 2026-06-11 11:48+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-18/"
 "sale_stock/uk/>\n"
 "Language: uk\n"
@@ -24,7 +24,7 @@ msgstr ""
 "? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
 "14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
 "100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -74,6 +74,11 @@ msgid ""
 "Shipped\n"
 "                                    </span>"
 msgstr ""
+"<span class=\"small badge rounded-pill text-bg-success "
+"orders_label_text_align\">\n"
+"                                        <i class=\"fa fa-fw fa-truck\"/> "
+"Доставлено\n"
+"                                    </span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
@@ -91,7 +96,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference</strong>"
-msgstr ""
+msgstr "<strong>Референс клієнта</strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -167,6 +172,9 @@ msgid ""
 "            Orange: Partially Delivered\n"
 "            Green: Fully Delivered"
 msgstr ""
+"Синій: Не доставлено/Розпочато\n"
+" Помаранчевий: Частково доставлено\n"
+"Зелений: Повністю доставлено"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -447,6 +455,7 @@ msgstr "Очікувані дати доставки на наступний"
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
 msgid "No delivery yet! Automate them with sales orders."
 msgstr ""
+"Доставка ще не надходить! Автоматизуйте їх за допомогою замовлень на продаж."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -472,7 +481,7 @@ msgid ""
 "products to the customer"
 msgstr ""
 "Кількість днів з моменту підтвердження замовлення та відправки товарів "
-"клієнту."
+"клієнту"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -534,6 +543,10 @@ msgid ""
 "                replenishment propositions, shipping connectors, barcode "
 "scanner, etc."
 msgstr ""
+"Зменшіть кількість замовлень, що залишилися, за допомогою бронювань, "
+"управління локаціями, розумних\n"
+" пропозицій щодо поповнення запасів, конекторів доставки, сканера штрих-"
+"кодів тощо."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -722,6 +735,11 @@ msgid ""
 "                        You should probably update the partner on this "
 "document."
 msgstr ""
+"Адресу доставки в замовленні на продаж було змінено<br/>\n"
+"                        Від <strong>\"%(old_address)s\"</strong> до <strong>"
+"\"%(new_address)s\"</strong>,\n"
+"                        Вам, ймовірно, слід повідомити партнера про цей "
+"документ."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -809,13 +827,14 @@ msgstr "Коли розпочати доставку"
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid ""
 "You must have a warehouse for line using a delivery in different company."
-msgstr ""
+msgstr "Ви повинні мати склад для рядка з доставкою в іншій компанії."
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
 msgid "You must set a warehouse on your sale order to proceed."
 msgstr ""
+"Щоб продовжити, вам потрібно вказати склад у вашому замовленні на продаж."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so

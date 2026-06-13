@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-03-30 16:46+0000\n"
-"Last-Translator: Oleksii Lytvynov <oleksii.lytvynov@self-erp.com>\n"
+"PO-Revision-Date: 2026-06-06 10:15+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-18/"
 "purchase_stock/uk/>\n"
 "Language: uk\n"
@@ -25,7 +25,7 @@ msgstr ""
 "? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
 "14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
 "100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
@@ -42,7 +42,7 @@ msgstr "+ %d дні"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "+ %s day(s)"
-msgstr ""
+msgstr "+ %s днів"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -79,12 +79,12 @@ msgstr "<span>Прогнозовано: </span>"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
 msgid "<strong class=\"d-block mt-3\">Shipping address:</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">Адреса доставки:</strong>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchasequotation_document
 msgid "<strong class=\"d-block mt-3\">Shipping address</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mt-3\">Адреса доставки</strong>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
@@ -185,7 +185,7 @@ msgstr "Кастомний опис"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__days_to_arrive
 msgid "Days To Arrive"
-msgstr ""
+msgstr "Днів до отримання"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -209,7 +209,7 @@ msgstr "Дні для закупівлі"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_picking__delay_pass
 msgid "Delay Pass"
-msgstr ""
+msgstr "Затримка пропуску"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_type_id
@@ -266,7 +266,7 @@ msgstr "Останній рік дати набрання чинності"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__days_to_arrival
 msgid "Effective Days To Arrival"
-msgstr ""
+msgstr "Дні до прибуття"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -354,12 +354,12 @@ msgstr "Остання купівля"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_procurement_group__purchase_line_ids
 msgid "Linked Purchase Order Lines"
-msgstr ""
+msgstr "Зв'язані рядки замовлення на купівлю"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__location_final_id
 msgid "Location from procurement"
-msgstr ""
+msgstr "Розташування з моменту постачання"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -407,7 +407,7 @@ msgstr "Наступні переміщення вплинули на:"
 #. odoo-python
 #: code:addons/purchase_stock/models/stock_rule.py:0
 msgid "No Vendor Found"
-msgstr ""
+msgstr "Не знайдено постачальника"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
@@ -418,6 +418,7 @@ msgstr "Ще немає даних"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_help_message_template
 msgid "No receipt yet! Automate them with purchase orders."
 msgstr ""
+"Ще немає надходжень! Автоматизуйте їх за допомогою замовлень на купівлю."
 
 #. module: purchase_stock
 #: model:ir.model.fields.selection,name:purchase_stock.selection__purchase_order__receipt_status__pending
@@ -513,7 +514,7 @@ msgstr "Група забезпечення"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__group_id
 msgid "Procurement group that generated this line"
-msgstr ""
+msgstr "Група закупівель, яка створила цей рядок"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_product_template
@@ -535,7 +536,7 @@ msgstr "Поповнення товару"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_replenish_mixin
 msgid "Product Replenish Mixin"
-msgstr ""
+msgstr "Mixin Поповнення запасів"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse_orderpoint__product_supplier_id
@@ -647,6 +648,9 @@ msgid ""
 "            Orange: To process today\n"
 "            Green: On time"
 msgstr ""
+"Червоний: Пізно \n"
+"Помаранчевий: Обробити сьогодні \n"
+"Зелений: Вчасно"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -788,6 +792,10 @@ msgid ""
 "location (%(location)s) of reordering rule (%(reordering_rule)s) for product "
 "%(product)s. Change the operation type or cancel the request for quotation."
 msgstr ""
+"Тип операції на складі (%(operation_type)s) не відповідає місцю розташування "
+"(%(location)s) правила повторного замовлення (%(reordering_rule)s) для "
+"товару %(product)s. Змініть тип операції або скасуйте запит на комерційну "
+"пропозицію."
 
 #. module: purchase_stock
 #. odoo-python
@@ -880,6 +888,8 @@ msgid ""
 "Unable to cancel purchase order(s): %s since they have receipts that are "
 "already done."
 msgstr ""
+"Неможливо скасувати замовлення на купівлю: %s, оскільки вони вже має "
+"надходження."
 
 #. module: purchase_stock
 #. odoo-javascript
@@ -931,7 +941,7 @@ msgstr "Склад"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_stock_warehouse__buy_to_resupply
 msgid "When products are bought, they can be delivered to this warehouse"
-msgstr "При купівлі товари можуть бути доставлені на цей склад."
+msgstr "При купівлі товари можуть бути доставлені на цей склад"
 
 #. module: purchase_stock
 #. odoo-python
