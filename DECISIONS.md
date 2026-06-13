@@ -39,6 +39,20 @@ Read this before changing any project-wide convention — it explains the *why*.
 
 ---
 
+## 2026-06-13 — Three-layer verification and Completion Priority Constraint (lecture 09)
+
+**Decision:** `./verify.sh` enforces Layers 1 and 2 automatically. Layer 3 (system confirmation) is a manual smoke test required before marking any `up5_*` task `passing`. No refactoring or optimisation is permitted until Layer 2 passes.
+
+**Alternatives considered:**
+- Trust agent self-assessment of completion: ICML 2017 study shows confidence significantly exceeds accuracy; self-evaluation bias increases with multi-file complexity
+- Unit tests as completion gate: unit tests mock dependencies and mask integration failures — interface mismatches and DB state errors only surface at Layer 2/3
+
+**Rationale:** Agents systematically overestimate completion quality (premature victory declaration). Externalising judgment to the harness removes self-assessment from the loop. Sequential layer enforcement (L1 → L2 → L3) catches failures at the cheapest layer first.
+
+**Consequence:** verify.sh now labels output by layer. Layer 3 is a browser smoke test — the agent must note the result in `claude-progress.md` before setting a task to `passing`. Refactoring before Layer 2 is a Hard Constraint violation.
+
+---
+
 ## 2026-06-13 — feature_list.json schema: state machine + behavior field (lecture 08)
 
 **Decision:** `feature_list.json` uses `state` (not `status`) with four values: `not_started → active → blocked → passing`. Each entry requires a `behavior` field (single-sentence description of the system's observable behavior when done) alongside `criteria`, `verification`, and `evidence` (commit hash + verify output).

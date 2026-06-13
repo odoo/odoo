@@ -39,22 +39,33 @@ Non-negotiable. Any violation must be fixed before proceeding.
 2. Never modify `odoo/` or any non-`up5_` module — extend via `_inherit` only
 3. Never use `sudo()` without a comment explaining why
 4. Never hardcode database IDs — use `env.ref('module.xml_id')`
-5. Never declare a task done without pasting `./verify.sh <module>` output
+5. Never declare a task done without pasting `./verify.sh <module>` output — agent confidence is not evidence
 6. Never commit without `./verify.sh <module>` passing
-7. Every new `_name` model requires an `ir.model.access.csv` entry
-8. All XML IDs must be prefixed with the module name
-9. `__manifest__.py` `data` list: `security/` before `views/`
-10. `@api.depends(...)` is required on every compute method
-11. `Many2one.ondelete` must be explicit — never rely on the `'set null'` default
+7. Never refactor or optimise before Layer 2 (`./verify.sh`) passes — functionality first, then style
+8. Every new `_name` model requires an `ir.model.access.csv` entry
+9. All XML IDs must be prefixed with the module name
+10. `__manifest__.py` `data` list: `security/` before `views/`
+11. `@api.depends(...)` is required on every compute method
+12. `Many2one.ondelete` must be explicit — never rely on the `'set null'` default
 
 ---
 
 ## Definition of Done
 
-- [ ] `./verify.sh <module>` exits clean — **paste the output**
+**Three layers — all required. "Code is written" is not done. Agent confidence is not evidence.**
+
+| Layer | What | How |
+|---|---|---|
+| 1 — Static | ruff lint passes | `./verify.sh <module>` (auto) |
+| 2 — Runtime | Odoo test runner exits 0 | `./verify.sh <module>` (auto) |
+| 3 — System | module installs, critical path runs | manual smoke test at http://localhost:8069 |
+
+- [ ] `./verify.sh <module>` exits 0 — **paste the full output** (Layers 1 + 2)
+- [ ] Layer 3 smoke test confirmed — note result in `claude-progress.md`
 - [ ] `claude-progress.md` updated with what was done and the evidence
 - [ ] `feature_list.json` entry set to `"state": "passing"` with evidence (commit hash + verify output)
 
+**No refactoring until Layer 2 passes.** Functionality first, then style.
 **Verification gap rule:** "looks correct" is not done. No output = not done.
 **Context runs low:** stop, write state to `claude-progress.md`, let next session verify.
 
