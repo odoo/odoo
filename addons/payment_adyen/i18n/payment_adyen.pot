@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0\n"
+"Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:58+0000\n"
-"PO-Revision-Date: 2025-09-11 13:58+0000\n"
+"POT-Creation-Date: 2026-06-12 17:38+0000\n"
+"PO-Revision-Date: 2026-06-12 17:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -29,18 +29,43 @@ msgid "A request was sent to void the transaction %(reference)s."
 msgstr ""
 
 #. module: payment_adyen
-#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_key
+#: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
 msgid "API Key"
 msgstr ""
 
 #. module: payment_adyen
-#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_url_prefix
+#: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
 msgid "API URL Prefix"
 msgstr ""
 
 #. module: payment_adyen
 #: model:ir.model.fields.selection,name:payment_adyen.selection__payment_provider__code__adyen
 msgid "Adyen"
+msgstr ""
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_key
+msgid "Adyen API Key"
+msgstr ""
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_api_url_prefix
+msgid "Adyen API URL Prefix"
+msgstr ""
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_client_key
+msgid "Adyen Client Key"
+msgstr ""
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_hmac_key
+msgid "Adyen HMAC Key"
+msgstr ""
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_merchant_account
+msgid "Adyen Merchant Account"
 msgstr ""
 
 #. module: payment_adyen
@@ -57,7 +82,7 @@ msgid "Cannot display the payment form"
 msgstr ""
 
 #. module: payment_adyen
-#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_client_key
+#: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
 msgid "Client Key"
 msgstr ""
 
@@ -75,7 +100,7 @@ msgid "Display Name"
 msgstr ""
 
 #. module: payment_adyen
-#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_hmac_key
+#: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
 msgid "HMAC Key"
 msgstr ""
 
@@ -104,7 +129,7 @@ msgid "Learn More"
 msgstr ""
 
 #. module: payment_adyen
-#: model:ir.model.fields,field_description:payment_adyen.field_payment_provider__adyen_merchant_account
+#: model_terms:ir.ui.view,arch_db:payment_adyen.payment_provider_form
 msgid "Merchant Account"
 msgstr ""
 
@@ -138,12 +163,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_adyen/models/payment_transaction.py:0
 msgid "Received data with invalid payment state: %s"
-msgstr ""
-
-#. module: payment_adyen
-#. odoo-python
-#: code:addons/payment_adyen/models/payment_transaction.py:0
-msgid "Received data with missing payment state."
 msgstr ""
 
 #. module: payment_adyen
