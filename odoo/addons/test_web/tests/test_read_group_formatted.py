@@ -2146,8 +2146,8 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                 LEFT JOIN (
                     SELECT
                         "res_currency"."id",
-                        COALESCE("before_rate"."rate", "after_rate"."rate", 1.0) AS "rate",
-                        COALESCE("before_rate"."name", "after_rate"."name") AS "name"
+                        COALESCE("before_rate"."rate", 1.0) AS "rate",
+                        "before_rate"."name"
                     FROM
                         "res_currency"
                         LEFT JOIN LATERAL (
@@ -2160,15 +2160,6 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                             ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" DESC
                             LIMIT 1
                         ) AS "before_rate" ON (TRUE)
-                        LEFT JOIN LATERAL (
-                            SELECT "res_currency_rate"."rate", "res_currency_rate"."name"
-                            FROM "res_currency_rate"
-                            WHERE (
-                                "res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL
-                            ) AND "res_currency_rate"."currency_id" = "res_currency"."id"
-                            ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" ASC
-                            LIMIT 1
-                        ) AS "after_rate" ON (TRUE)
                 ) AS "test_read_group_aggregate_monetary__currency_id__rates" ON (
                     "test_read_group_aggregate_monetary"."currency_id" = "test_read_group_aggregate_monetary__currency_id__rates"."id"
                 )
@@ -2255,8 +2246,8 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                 LEFT JOIN (
                     SELECT
                         "res_currency"."id",
-                        COALESCE("before_rate"."rate", "after_rate"."rate", 1.0) AS "rate",
-                        COALESCE("before_rate"."name", "after_rate"."name") AS "name"
+                        COALESCE("before_rate"."rate", 1.0) AS "rate",
+                        "before_rate"."name"
                     FROM
                         "res_currency"
                         LEFT JOIN LATERAL (
@@ -2269,15 +2260,6 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                             ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" DESC
                             LIMIT 1
                         ) AS "before_rate" ON (TRUE)
-                        LEFT JOIN LATERAL (
-                            SELECT "res_currency_rate"."rate", "res_currency_rate"."name"
-                            FROM "res_currency_rate"
-                            WHERE (
-                                "res_currency_rate"."company_id" IN %s OR "res_currency_rate"."company_id" IS NULL
-                            ) AND "res_currency_rate"."currency_id" = "res_currency"."id"
-                            ORDER BY "res_currency_rate"."company_id", "res_currency_rate"."name" ASC
-                            LIMIT 1
-                        ) AS "after_rate" ON (TRUE)
                 ) AS "test_read_group_aggregate_monetary__currency_id__rates" ON (
                     "test_read_group_aggregate_monetary"."currency_id" = "test_read_group_aggregate_monetary__currency_id__rates"."id"
                 )

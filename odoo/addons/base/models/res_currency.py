@@ -135,19 +135,11 @@ class ResCurrency(models.CachedModel):
             SQL("%s = %s", rate_table.currency_id, currency_id_field))
         rate_query = rate_query.subselect(rate_table.rate, rate_table.name)
         currency_query.add_join('LEFT JOIN LATERAL', 'before_rate', rate_query, SQL('TRUE'))
-        rate_query_fallback = Rate._search(
-            [('company_id', 'in', (False, company.root_id.id))],
-            order='company_id.id, name ASC', limit=1)
-        rate_table_fallback = rate_query_fallback.table
-        rate_query_fallback.add_where(
-            SQL("%s = %s", rate_table_fallback.currency_id, currency_id_field))
-        rate_query_fallback = rate_query_fallback.subselect(rate_table_fallback.rate, rate_table_fallback.name)
-        currency_query.add_join('LEFT JOIN LATERAL', 'after_rate', rate_query_fallback, SQL('TRUE'))
 
         return currency_query.select(
             SQL.identifier('res_currency', 'id'),
-            SQL('COALESCE("before_rate"."rate", "after_rate"."rate", 1.0) AS "rate"'),
-            SQL('COALESCE("before_rate"."name", "after_rate"."name") AS "name"'),
+            SQL('COALESCE("before_rate"."rate", 1.0) AS "rate"'),
+            SQL('"before_rate"."name"'),
         )
 
     def _get_rates(self, company, date) -> dict[int, tuple[float, (date | None)]]:
@@ -372,10 +364,6 @@ class ResCurrencyRate(models.Model):
                                  default=lambda self: self.env.company.root_id)
     company_currency_id = fields.Many2one('res.currency', string='Company Currency', compute="_compute_company_currency_id")
 
-    _unique_name_per_day = models.UniqueIndex(
-        '(currency_id, company_id, name) NULLS NOT DISTINCT',
-        "Only one currency rate per day allowed!",
-    )
     _reversed_unique_name_per_day = models.UniqueIndex(
         '(currency_id, company_id, name DESC) NULLS NOT DISTINCT',
         "Only one currency rate per day allowed!",
