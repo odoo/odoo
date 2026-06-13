@@ -93,10 +93,27 @@ Do not blame the model. Failures are in one of these five layers.
 
 ---
 
+## Initialization vs Implementation
+
+These are two distinct phases. Never mix them.
+
+**Initialization** — runs once per environment setup. Done when `startup-readiness.md` shows all four ✅:
+1. Can Start — `conda activate odoo19 && python odoo-bin --version`
+2. Can Test — `./verify.sh <module>` exits 0
+3. Can See Progress — `claude-progress.md` has Current State + Next Steps
+4. Can Pick Up Next Steps — `feature_list.json` has at least one `todo` task with criteria
+
+Check current readiness: [startup-readiness.md](startup-readiness.md)
+
+**Implementation** — only begins after all four conditions are green. One task from `feature_list.json` at a time.
+
+---
+
 ## Topic Documents
 
 | When you need... | Read... |
 |---|---|
+| Environment readiness status | [startup-readiness.md](startup-readiness.md) |
 | Current progress, next steps, blockers | [claude-progress.md](claude-progress.md) |
 | Why a convention or decision exists | [DECISIONS.md](DECISIONS.md) |
 | Environment setup, running tests, dev server | [up5-docs/setup/dev-environment.md](up5-docs/setup/dev-environment.md) |
