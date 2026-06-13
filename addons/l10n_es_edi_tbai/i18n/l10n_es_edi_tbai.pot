@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 18:09+0000\n"
-"PO-Revision-Date: 2026-05-10 18:09+0000\n"
+"POT-Creation-Date: 2026-06-12 18:21+0000\n"
+"PO-Revision-Date: 2026-06-12 18:21+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -329,6 +329,18 @@ msgid ""
 msgstr ""
 
 #. module: l10n_es_edi_tbai
+#: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_account_bank_statement_line__l10n_es_original_invoice_credited
+#: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_account_move__l10n_es_original_invoice_credited
+msgid "Original Invoice Credited"
+msgstr ""
+
+#. module: l10n_es_edi_tbai
+#: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_account_bank_statement_line__l10n_es_tbai_original_invoice_date
+#: model:ir.model.fields,field_description:l10n_es_edi_tbai.field_account_move__l10n_es_tbai_original_invoice_date
+msgid "Original Invoice Date (TicketBAI)"
+msgstr ""
+
+#. module: l10n_es_edi_tbai
 #. odoo-python
 #: code:addons/l10n_es_edi_tbai/models/l10n_es_edi_tbai_document.py:0
 msgid "Please configure the Tax ID on your company for TicketBAI."
@@ -338,6 +350,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_es_edi_tbai/models/l10n_es_edi_tbai_document.py:0
 msgid "Please configure the certificate for TicketBAI."
+msgstr ""
+
+#. module: l10n_es_edi_tbai
+#. odoo-python
+#: code:addons/l10n_es_edi_tbai/models/account_move.py:0
+msgid ""
+"Please create the credit note from the original invoice. If that's not "
+"possible, fill in the 'Original Invoice Credited' field."
 msgstr ""
 
 #. module: l10n_es_edi_tbai
@@ -630,6 +650,14 @@ msgstr ""
 #: code:addons/l10n_es_edi_tbai/models/l10n_es_edi_tbai_document.py:0
 msgid ""
 "TicketBAI: Cannot post invoice while chain head (%s) has not been posted"
+msgstr ""
+
+#. module: l10n_es_edi_tbai
+#. odoo-python
+#: code:addons/l10n_es_edi_tbai/models/l10n_es_edi_tbai_document.py:0
+msgid ""
+"TicketBAI: For reversal documents without a source invoice in Odoo, you must"
+" provide the original invoice number and date"
 msgstr ""
 
 #. module: l10n_es_edi_tbai

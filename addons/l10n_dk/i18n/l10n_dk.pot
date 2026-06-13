@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 18:17+0000\n"
-"PO-Revision-Date: 2026-05-29 18:17+0000\n"
+"POT-Creation-Date: 2026-06-12 18:20+0000\n"
+"PO-Revision-Date: 2026-06-12 18:20+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -48,6 +48,29 @@ msgid ""
 "<span><strong><b>Good job!</b> You're registered on Nemhandel.</strong>\n"
 "            <br>You can now fill in the data for your customers and send them invoices electronically\n"
 "        </span>"
+msgstr ""
+
+#. module: l10n_dk
+#: model_terms:ir.ui.view,arch_db:l10n_dk.nemhandel_rejection_wizard_view_form
+msgid ""
+"<span>The following note will be sent with your rejection response. Enter "
+"any issue you have with this bill/invoice.</span>"
+msgstr ""
+
+#. module: l10n_dk
+#. odoo-python
+#: code:addons/l10n_dk/models/account_edi_proxy_user.py:0
+msgid ""
+"A Nemhandel response was sent to the Nemhandel Access Point declaring you "
+"accepted this document."
+msgstr ""
+
+#. module: l10n_dk
+#. odoo-python
+#: code:addons/l10n_dk/models/account_edi_proxy_user.py:0
+msgid ""
+"A Nemhandel response was sent to the Nemhandel Access Point declaring you "
+"rejected this document."
 msgstr ""
 
 #. module: l10n_dk
@@ -96,8 +119,61 @@ msgid "Activate Nemhandel (Test)"
 msgstr ""
 
 #. module: l10n_dk
+#: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_rejection_wizard__note
+msgid "Additional note"
+msgstr ""
+
+#. module: l10n_dk
 #: model_terms:ir.ui.view,arch_db:l10n_dk.res_config_settings_view_form
 msgid "Allow sending and receiving invoices through the Nemhandel network"
+msgstr ""
+
+#. module: l10n_dk
+#. odoo-python
+#: code:addons/l10n_dk/models/account_edi_proxy_user.py:0
+msgid ""
+"An error occurred with the Nemhandel proxy while responding to this "
+"invoice's expeditor.%(br)sResponse: %(status)s - %(error)s"
+msgstr ""
+
+#. module: l10n_dk
+#. odoo-python
+#: code:addons/l10n_dk/models/account_edi_proxy_user.py:0
+msgid ""
+"An error occurred with the Nemhandel server while responding to this "
+"invoice's expeditor.%(br)sStatus: %(status)s - %(error)s"
+msgstr ""
+
+#. module: l10n_dk
+#. odoo-python
+#: code:addons/l10n_dk/models/account_edi_proxy_user.py:0
+msgid ""
+"An issue arose with your Nemhandel document on the partner's side with the "
+"following information: %(note)s%(br)sPlease contact the support if this "
+"issue persists."
+msgstr ""
+
+#. module: l10n_dk
+#. odoo-python
+#: code:addons/l10n_dk/models/account_edi_proxy_user.py:0
+msgid ""
+"An issue arose with your Nemhandel document on the partner's "
+"side.%(br)sPlease contact the support if this issue persists."
+msgstr ""
+
+#. module: l10n_dk
+#: model:ir.model.fields.selection,name:l10n_dk.selection__nemhandel_response__response_code__businessaccept
+msgid "Approval"
+msgstr ""
+
+#. module: l10n_dk
+#: model:ir.model.fields.selection,name:l10n_dk.selection__account_move__nemhandel_move_state__businessaccept
+msgid "Approved"
+msgstr ""
+
+#. module: l10n_dk
+#: model:ir.model,name:l10n_dk.model_nemhandel_response
+msgid "Business Level Responses for Nemhandel"
 msgstr ""
 
 #. module: l10n_dk
@@ -156,6 +232,7 @@ msgstr ""
 #. module: l10n_dk
 #: model:ir.model,name:l10n_dk.model_res_company
 #: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_registration__company_id
+#: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_response__company_id
 msgid "Company"
 msgstr ""
 
@@ -211,11 +288,15 @@ msgstr ""
 
 #. module: l10n_dk
 #: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_registration__create_uid
+#: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_rejection_wizard__create_uid
+#: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_response__create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: l10n_dk
 #: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_registration__create_date
+#: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_rejection_wizard__create_date
+#: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_response__create_date
 msgid "Created on"
 msgstr ""
 
@@ -240,6 +321,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_dk.field_account_move_send_batch_wizard__display_name
 #: model:ir.model.fields,field_description:l10n_dk.field_account_move_send_wizard__display_name
 #: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_registration__display_name
+#: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_rejection_wizard__display_name
+#: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_response__display_name
 #: model:ir.model.fields,field_description:l10n_dk.field_res_company__display_name
 #: model:ir.model.fields,field_description:l10n_dk.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:l10n_dk.field_res_partner__display_name
@@ -247,7 +330,13 @@ msgid "Display Name"
 msgstr ""
 
 #. module: l10n_dk
+#: model_terms:ir.ui.view,arch_db:l10n_dk.view_partner_form_inherit_l10n_dk
+msgid "Does not support Invoice Responses"
+msgstr ""
+
+#. module: l10n_dk
 #: model:ir.model.fields.selection,name:l10n_dk.selection__account_move__nemhandel_move_state__done
+#: model:ir.model.fields.selection,name:l10n_dk.selection__nemhandel_response__nemhandel_state__done
 msgid "Done"
 msgstr ""
 
@@ -283,7 +372,13 @@ msgid "Endpoint"
 msgstr ""
 
 #. module: l10n_dk
+#: model_terms:ir.ui.view,arch_db:l10n_dk.nemhandel_rejection_wizard_view_form
+msgid "Enter an optional note here..."
+msgstr ""
+
+#. module: l10n_dk
 #: model:ir.model.fields.selection,name:l10n_dk.selection__account_move__nemhandel_move_state__error
+#: model:ir.model.fields.selection,name:l10n_dk.selection__nemhandel_response__nemhandel_state__error
 msgid "Error"
 msgstr ""
 
@@ -314,6 +409,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_dk.field_account_move_send_batch_wizard__id
 #: model:ir.model.fields,field_description:l10n_dk.field_account_move_send_wizard__id
 #: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_registration__id
+#: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_rejection_wizard__id
+#: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_response__id
 #: model:ir.model.fields,field_description:l10n_dk.field_res_company__id
 #: model:ir.model.fields,field_description:l10n_dk.field_res_config_settings__id
 #: model:ir.model.fields,field_description:l10n_dk.field_res_partner__id
@@ -384,17 +481,33 @@ msgstr ""
 
 #. module: l10n_dk
 #: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_registration__write_uid
+#: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_rejection_wizard__write_uid
+#: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_response__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: l10n_dk
 #: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_registration__write_date
+#: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_rejection_wizard__write_date
+#: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_response__write_date
 msgid "Last Updated on"
 msgstr ""
 
 #. module: l10n_dk
 #: model:ir.model.fields.selection,name:l10n_dk.selection__nemhandel_registration__edi_mode__prod
 msgid "Live"
+msgstr ""
+
+#. module: l10n_dk
+#: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_rejection_wizard__move_ids
+#: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_response__move_id
+msgid "Move"
+msgstr ""
+
+#. module: l10n_dk
+#. odoo-python
+#: code:addons/l10n_dk/models/account_edi_proxy_user.py:0
+msgid "N/A"
 msgstr ""
 
 #. module: l10n_dk
@@ -405,6 +518,12 @@ msgstr ""
 #. module: l10n_dk
 #: model_terms:ir.ui.view,arch_db:l10n_dk.view_partner_form_inherit_l10n_dk
 msgid "Nemhandel Address"
+msgstr ""
+
+#. module: l10n_dk
+#: model:ir.model.fields,field_description:l10n_dk.field_account_bank_statement_line__nemhandel_can_send_response
+#: model:ir.model.fields,field_description:l10n_dk.field_account_move__nemhandel_can_send_response
+msgid "Nemhandel Can Send Response"
 msgstr ""
 
 #. module: l10n_dk
@@ -472,9 +591,45 @@ msgid "Nemhandel Registration"
 msgstr ""
 
 #. module: l10n_dk
+#: model:ir.model,name:l10n_dk.model_nemhandel_rejection_wizard
+msgid "Nemhandel Rejection wizard"
+msgstr ""
+
+#. module: l10n_dk
+#: model:ir.model.fields,field_description:l10n_dk.field_account_bank_statement_line__nemhandel_response_ids
+#: model:ir.model.fields,field_description:l10n_dk.field_account_move__nemhandel_response_ids
+#: model_terms:ir.ui.view,arch_db:l10n_dk.nemhandel_response_view_form
+msgid "Nemhandel Response"
+msgstr ""
+
+#. module: l10n_dk
+#: model:ir.model.fields,field_description:l10n_dk.field_res_partner__nemhandel_response_support
+#: model:ir.model.fields,field_description:l10n_dk.field_res_users__nemhandel_response_support
+msgid "Nemhandel Response Service"
+msgstr ""
+
+#. module: l10n_dk
+#. odoo-python
+#: code:addons/l10n_dk/models/account_move.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_dk.nemhandel_response_view_list
+msgid "Nemhandel Responses"
+msgstr ""
+
+#. module: l10n_dk
 #: model:ir.model.fields,field_description:l10n_dk.field_account_edi_proxy_client_user__nemhandel_verification_code
 #: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_registration__verification_code
 msgid "Nemhandel SMS verification code"
+msgstr ""
+
+#. module: l10n_dk
+#: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_response__nemhandel_message_uuid
+msgid "Nemhandel UUID"
+msgstr ""
+
+#. module: l10n_dk
+#. odoo-python
+#: code:addons/l10n_dk/models/account_edi_proxy_user.py:0
+msgid "Nemhandel business response error: %s"
 msgstr ""
 
 #. module: l10n_dk
@@ -501,6 +656,11 @@ msgid "Nemhandel identification"
 msgstr ""
 
 #. module: l10n_dk
+#: model_terms:ir.ui.view,arch_db:l10n_dk.l10n_dk_nemhandel_view_move_form
+msgid "Nemhandel info"
+msgstr ""
+
+#. module: l10n_dk
 #: model:ir.model.fields,field_description:l10n_dk.field_account_bank_statement_line__nemhandel_message_uuid
 #: model:ir.model.fields,field_description:l10n_dk.field_account_move__nemhandel_message_uuid
 msgid "Nemhandel message ID"
@@ -511,6 +671,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_dk.field_account_journal__l10n_dk_nemhandel_proxy_state
 #: model:ir.model.fields,field_description:l10n_dk.field_account_move__nemhandel_move_state
 #: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_registration__l10n_dk_nemhandel_proxy_state
+#: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_response__nemhandel_state
 #: model:ir.model.fields,field_description:l10n_dk.field_res_company__l10n_dk_nemhandel_proxy_state
 #: model:ir.model.fields,field_description:l10n_dk.field_res_config_settings__l10n_dk_nemhandel_proxy_state
 #: model_terms:ir.ui.view,arch_db:l10n_dk.nemhandel_view_account_invoice_filter
@@ -541,6 +702,11 @@ msgstr ""
 #. module: l10n_dk
 #: model:ir.actions.server,name:l10n_dk.ir_cron_nemhandel_webhook_keepalive_ir_actions_server
 msgid "Nemhandel: webhook keep alive"
+msgstr ""
+
+#. module: l10n_dk
+#: model:ir.model.fields.selection,name:l10n_dk.selection__nemhandel_response__nemhandel_state__not_serviced
+msgid "Not Serviced"
 msgstr ""
 
 #. module: l10n_dk
@@ -578,6 +744,7 @@ msgstr ""
 
 #. module: l10n_dk
 #: model:ir.model.fields.selection,name:l10n_dk.selection__account_move__nemhandel_move_state__processing
+#: model:ir.model.fields.selection,name:l10n_dk.selection__nemhandel_response__nemhandel_state__processing
 msgid "Pending Reception"
 msgstr ""
 
@@ -684,8 +851,26 @@ msgid "Registered to receive documents."
 msgstr ""
 
 #. module: l10n_dk
+#. odoo-python
+#: code:addons/l10n_dk/models/account_move.py:0
+#: model_terms:ir.ui.view,arch_db:l10n_dk.nemhandel_rejection_wizard_view_form
+msgid "Reject Nemhandel Document"
+msgstr ""
+
+#. module: l10n_dk
+#: model:ir.model.fields.selection,name:l10n_dk.selection__account_move__nemhandel_move_state__businessreject
 #: model:ir.model.fields.selection,name:l10n_dk.selection__res_company__l10n_dk_nemhandel_proxy_state__rejected
 msgid "Rejected"
+msgstr ""
+
+#. module: l10n_dk
+#: model:ir.model.fields.selection,name:l10n_dk.selection__nemhandel_response__response_code__businessreject
+msgid "Rejection"
+msgstr ""
+
+#. module: l10n_dk
+#: model:ir.model.fields,field_description:l10n_dk.field_nemhandel_response__response_code
+msgid "Response Code"
 msgstr ""
 
 #. module: l10n_dk
@@ -701,6 +886,11 @@ msgstr ""
 #. module: l10n_dk
 #: model:ir.model,name:l10n_dk.model_account_move_send_wizard
 msgid "Send Invoice Wizard"
+msgstr ""
+
+#. module: l10n_dk
+#: model_terms:ir.ui.view,arch_db:l10n_dk.nemhandel_rejection_wizard_view_form
+msgid "Send Rejection"
 msgstr ""
 
 #. module: l10n_dk
@@ -731,6 +921,17 @@ msgid "Start sending via Nemhandel"
 msgstr ""
 
 #. module: l10n_dk
+#: model:ir.model.fields,field_description:l10n_dk.field_res_partner__nemhandel_supported_documents
+#: model:ir.model.fields,field_description:l10n_dk.field_res_users__nemhandel_supported_documents
+msgid "Supported Nemhandel Documents"
+msgstr ""
+
+#. module: l10n_dk
+#: model_terms:ir.ui.view,arch_db:l10n_dk.view_partner_form_inherit_l10n_dk
+msgid "Supports Invoice Responses"
+msgstr ""
+
+#. module: l10n_dk
 #: model:ir.model.fields.selection,name:l10n_dk.selection__nemhandel_registration__edi_mode__test
 msgid "Test"
 msgstr ""
@@ -740,6 +941,34 @@ msgstr ""
 msgid ""
 "Test mode allows sending e-invoices through the test Nemhandel network.\n"
 "                            By clicking the button below I accept that Odoo may process my e-invoices."
+msgstr ""
+
+#. module: l10n_dk
+#. odoo-python
+#: code:addons/l10n_dk/models/account_edi_proxy_user.py:0
+msgid ""
+"The Nemhandel receiver of this document has accepted it with the following "
+"information: %s"
+msgstr ""
+
+#. module: l10n_dk
+#. odoo-python
+#: code:addons/l10n_dk/models/account_edi_proxy_user.py:0
+msgid "The Nemhandel receiver of this document has accepted it."
+msgstr ""
+
+#. module: l10n_dk
+#. odoo-python
+#: code:addons/l10n_dk/models/account_edi_proxy_user.py:0
+msgid ""
+"The Nemhandel receiver of this document has rejected it with the following "
+"information: %s"
+msgstr ""
+
+#. module: l10n_dk
+#. odoo-python
+#: code:addons/l10n_dk/models/account_edi_proxy_user.py:0
+msgid "The Nemhandel receiver of this document has rejected it."
 msgstr ""
 
 #. module: l10n_dk
@@ -890,4 +1119,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_dk.field_res_partner__invoice_edi_format
 #: model:ir.model.fields,field_description:l10n_dk.field_res_users__invoice_edi_format
 msgid "eInvoice format"
+msgstr ""
+
+#. module: l10n_dk
+#. odoo-python
+#: code:addons/l10n_dk/models/account_move.py:0
+msgid "id"
 msgstr ""
