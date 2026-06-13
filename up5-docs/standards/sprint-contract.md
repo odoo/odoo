@@ -40,6 +40,12 @@ Copy this block into `claude-progress.md` at the start of any `active` task:
 **Ambiguities resolved:**
 - <any unclear criterion and how it was resolved before coding started>
   (none if all criteria are unambiguous)
+
+**Layer 3 smoke test result:** *(fill in after manual browser test)*
+- Server started: yes/no
+- Module installed without error: yes/no
+- Critical path exercised: <what was clicked/tested>
+- Result: pass / fail — <one sentence on what was observed>
 ```
 
 ---

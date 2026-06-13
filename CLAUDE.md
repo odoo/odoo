@@ -118,7 +118,7 @@ These are two distinct phases. Never mix them.
 1. Can Start — `conda activate odoo19 && python odoo-bin --version`
 2. Can Test — `./verify.sh <module>` exits 0
 3. Can See Progress — `claude-progress.md` has Current State + Next Steps
-4. Can Pick Up Next Steps — `feature_list.json` has at least one `todo` task with criteria
+4. Can Pick Up Next Steps — `feature_list.json` has at least one `not_started` task with criteria
 
 Check current readiness: [startup-readiness.md](startup-readiness.md)
 
