@@ -9,13 +9,13 @@
 # Paulius Sladkevičius <paulius@versada.eu>, 2025
 # Wil Odoo, 2025
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-29 17:39+0000\n"
-"PO-Revision-Date: 2025-11-22 13:12+0000\n"
+"PO-Revision-Date: 2026-06-12 05:25+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-s18-2/"
 "account/lt/>\n"
@@ -24,9 +24,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < "
-"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? "
-"1 : n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 "
+": n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -42,6 +42,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
+#, fuzzy
 msgid ""
 "\n"
 "    - Group of Taxes: The tax is a set of sub taxes.\n"
@@ -54,6 +55,17 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - Mokesčių grupė: Mokestį sudaro rinkinys kitų mokesčių.\n"
+"    - Pastovus: Mokesčio suma išlieka pastovi nepriklausomai nuo kainos.\n"
+"    - Procentas: Mokesčio suma yra apskaičiuojama kaip % of nuo kainos:\n"
+"        pvz.: 100 * (1 + 10%) = 110 (mokestis neįtrauktas į kainą)\n"
+"        pvz.: 110 / (1 + 10%) = 100 (mokestis įtrauktas į kainą)\n"
+"    - Procentas kai mokestis įskaičiuotas: mokesčio suma yra įtraukta į "
+"kainą:\n"
+"        e.g 180 / (1 - 10%) = 200 (mokestis neįtrauktas į kainą)\n"
+"        e.g 200 * (1 - 10%) = 180 (mokestis įtrauktas į kainą)\n"
+"        "
 
 #. module: account
 #. odoo-python
@@ -1291,8 +1303,9 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
+#, fuzzy
 msgid "A Ledger group name must be unique per company."
-msgstr ""
+msgstr "Žurnalų grupės pavadinimas turi būti unikalus kiekvienai įmonei."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_defaults
@@ -1312,10 +1325,13 @@ msgstr "Banko sąskaita gali priklausyti tik vienam žurnalui."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/res_partner_bank.py:0
+#, fuzzy
 msgid ""
 "A bank account with Account Number %(number)s already exists for Partner %"
 "(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
+"Banko sąskaita su numeriu %(number)s jau yra priskirta partneriui %(partner)"
+"s, bet ji yra suarchyvuota. Prašome ją išarchyvuoti."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1477,25 +1493,29 @@ msgstr "Įspėjimas gali būti nustatytas partneriui (Sąskaitai)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_amount_partner_ids
+#, fuzzy
 msgid "Abnormal Amount Partner"
-msgstr ""
+msgstr "Įspėjimas apie neįprastą sumą Partneriui"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__abnormal_amount_warning
 #: model:ir.model.fields,field_description:account.field_account_move__abnormal_amount_warning
+#, fuzzy
 msgid "Abnormal Amount Warning"
-msgstr ""
+msgstr "Įspėjimas apie neįprastą sumą"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__abnormal_date_partner_ids
+#, fuzzy
 msgid "Abnormal Date Partner"
-msgstr ""
+msgstr "Įspėjimas apie neįprastą datą Kontaktui"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__abnormal_date_warning
 #: model:ir.model.fields,field_description:account.field_account_move__abnormal_date_warning
+#, fuzzy
 msgid "Abnormal Date Warning"
-msgstr ""
+msgstr "Įspėjimas apie neįprastą datą"
 
 #. module: account
 #: model:ir.model,name:account.model_res_groups
@@ -1584,10 +1604,13 @@ msgstr "Sąskaitų plano šablonas"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_code_mapping.py:0
+#, fuzzy
 msgid ""
 "Account Code Mapping cannot be accessed directly. It is designed to be used "
 "only through the Chart of Accounts."
 msgstr ""
+"Sąskaitų kodų susiejimo negalima atlikti tiesiogiai. Jis naudojamas tik "
+"perparametrą Sąskaitų planas."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
@@ -1662,8 +1685,9 @@ msgstr "Apskaitos Žurnalo Grupė"
 #. module: account
 #: model:ir.model,name:account.model_account_lock_exception
 #: model_terms:ir.ui.view,arch_db:account.view_account_lock_exception_form
+#, fuzzy
 msgid "Account Lock Exception"
-msgstr ""
+msgstr "Sąskaitos blokavimo išimtis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__account_map
@@ -1818,10 +1842,12 @@ msgstr "Sąskaitos kodo 2 pirmi skaičiai"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
+#, fuzzy
 msgid ""
 "Account codes must be unique. You can't create accounts with these duplicate "
 "codes: %s"
 msgstr ""
+"Sąskaitos kodas turi būti unikalus. Negalite kurti sąskaitos su šiuo kodu: %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
@@ -1857,8 +1883,9 @@ msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard
+#, fuzzy
 msgid "Account merge wizard"
-msgstr ""
+msgstr "Sąskaitų sujungimo vedlys"
 
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard_line
@@ -2466,8 +2493,9 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__unreconciled_bank_statement_line_ids
+#, fuzzy
 msgid "All unreconciled bank statement lines before the selected date."
-msgstr ""
+msgstr "Visos nesudengtos banko išrašo eilutės iki pasirinktos datos."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -2527,8 +2555,9 @@ msgstr "Leidžia jums naudotis analitine apskaita."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
+#, fuzzy
 msgid "Already Paid:"
-msgstr ""
+msgstr "Jau apmokėta:"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__availability_condition__always
@@ -2711,10 +2740,11 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid ""
 "An error occurred when computing the inalterability. A gap has been detected "
 "in the sequence."
-msgstr ""
+msgstr "Tikrinant nuoseklumą įvyko klaida. Sekoje aptikta spraga."
 
 #. module: account
 #. odoo-python
@@ -15325,8 +15355,9 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
 #: model:ir.model.fields,help:account.field_res_company__account_fiscal_country_id
 #: model:ir.model.fields,help:account.field_res_config_settings__account_fiscal_country_id
+#, fuzzy
 msgid "The country to use the tax reports from for this company"
-msgstr ""
+msgstr "Šalis, iš kurios bus naudojamos šios įmonės mokesčių ataskaitos"
 
 #. module: account
 #. odoo-python
@@ -18612,8 +18643,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "documents"
-msgstr ""
+msgstr "dokumentai"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document

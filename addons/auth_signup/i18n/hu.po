@@ -12,13 +12,13 @@
 # Tamás Dombos, 2024
 # Martin Trigaux, 2024
 # Valics Lehel, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:40+0000\n"
-"PO-Revision-Date: 2025-11-15 10:17+0000\n"
+"PO-Revision-Date: 2026-06-13 10:03+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-s18-2/"
 "auth_signup/hu/>\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -41,16 +41,19 @@ msgstr ""
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
+#, fuzzy
 msgid "--<br/>Mitchell Admin"
-msgstr ""
+msgstr "--<br/>Mitchell Admin"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
+#, fuzzy
 msgid "<span style=\"font-size: 10px;\">Your Account</span><br/>"
-msgstr ""
+msgstr "<span style=\"font-size: 10px;\">Felhasználói fiók</span><br/>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_data_unregistered_users
+#, fuzzy
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-"
 "color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; "
@@ -107,6 +110,60 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-"
+"color: #FFFFFF; font-family:Verdana, Arial,sans-serif; color: #454748; "
+"width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"padding: 16px; background-color: #FFFFFF; color: #454748; border-"
+"collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"min-width: 590px; background-color: white; padding: "
+"0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <t t-set=\"invited_users\" t-value=\"ctx.get"
+"('invited_users', [])\"/>\n"
+"                <td style=\"text-align : left\">\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        Függő meghívók\n"
+"                    </span><br/><br/>\n"
+"                </td>\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Kedves <t t-out=\"object.name or ''\">Mitchell "
+"Admin</t>,<br/> <br/>\n"
+"                        Az alábbi létrehozott felhasználók nem regisztráltak "
+"még az adatbázisba:\n"
+"                        <ul>\n"
+"                            <t t-foreach=\"invited_users\" t-"
+"as=\"invited_user\">\n"
+"                                <li t-out=\"invited_user or ''\">"
+"demo@example.com</li>\n"
+"                            </t>\n"
+"                        </ul>\n"
+"                        Lépjen velük kapcsolatba és segítsen nekik belépni, "
+"hogy elindulhasson a közös munka.\n"
+"                        <br/><br/>\n"
+"                        Szép napot!<br/>\n"
+"                        --<br/>The <t t-out=\"object.company_id.name or ''\">"
+"YourCompany</t> Team\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb"
+"(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-"
+"height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -370,14 +427,16 @@ msgstr ""
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
+#, fuzzy
 msgid "A reset password link was sent by email"
-msgstr ""
+msgstr "Jelszóvisszaállító hivatkozás került kiküldésre emailben"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
+#, fuzzy
 msgid "A signup link was sent by email"
-msgstr ""
+msgstr "Regisztrációs hivatkozás került kiküldésre emailben"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -429,10 +488,13 @@ msgstr "Kapcsolat"
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
+#, fuzzy
 msgid ""
 "Could not contact the mail server, please check your outgoing email server "
 "configuration"
 msgstr ""
+"Nem sikerült kapcsolódni a levelezőszerverhez, kérjük, ellenőrizze a kimenő "
+"email szerver konfigurációt"
 
 #. module: auth_signup
 #. odoo-python
@@ -448,8 +510,9 @@ msgstr "Nem sikerült visszaállítani a jelszót"
 
 #. module: auth_signup
 #: model:ir.model,website_form_label:auth_signup.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Ügyfél létrehozása"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
@@ -505,10 +568,14 @@ msgstr "ID"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
+#, fuzzy
 msgid ""
 "If you do not expect this, you can safely ignore this email.<br/><br/>\n"
 "                                Thanks,"
 msgstr ""
+"Ha nem várta ezt, akkor nyugodtan figyelmen kívűl hagyhatja ezt az "
+"emailt.<br/><br/>\n"
+"                                Köszönjük,"
 
 #. module: auth_signup
 #. odoo-python
@@ -531,8 +598,9 @@ msgstr "Marc Demo"
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
+#, fuzzy
 msgid "Multiple accounts found for this login"
-msgstr ""
+msgstr "Több felhasználói fiók is található ehhez a bejelentkezési névhez"
 
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
@@ -542,14 +610,16 @@ msgstr "Soha nem kapcsolódott"
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
+#, fuzzy
 msgid "No account found for this login"
-msgstr ""
+msgstr "Nem található felhasználói fiók ehhez a bejelentkezési névhez"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
+#, fuzzy
 msgid "No login provided."
-msgstr ""
+msgstr "Nincs megadva bejelentkezési név."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
@@ -596,8 +666,9 @@ msgstr "Működteti: "
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login_successful
+#, fuzzy
 msgid "Registration successful."
-msgstr ""
+msgstr "Sikeres regisztráció."
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users
@@ -623,34 +694,42 @@ msgstr "Meghívó e-mail küldése"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.mail_template_data_unregistered_users
+#, fuzzy
 msgid ""
 "Sent automatically to admin if new user haven't responded to the invitation"
 msgstr ""
+"Automatikusan elküldésre kerül az adminisztrátornak, ha az új felhasználók "
+"nem válaszolnak a meghívóra"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.set_password_email
+#, fuzzy
 msgid "Sent to new user after you invited them"
-msgstr ""
+msgstr "Új felhasználónak kerül elküldésre a meghívás után"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.mail_template_user_signup_account_created
+#, fuzzy
 msgid "Sent to portal user who registered themselves"
-msgstr ""
+msgstr "Önállóan regisztrált portál felhasználóknak kerül elküldésre"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_user_signup_account_created
+#, fuzzy
 msgid "Settings: New Portal Sign Up"
-msgstr ""
+msgstr "Beállítások: Új portál felhasználó regisztráció"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.set_password_email
+#, fuzzy
 msgid "Settings: New User Invite"
-msgstr ""
+msgstr "Beállítások: Új felhasználó meghívás"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.mail_template_data_unregistered_users
+#, fuzzy
 msgid "Settings: Unregistered User Reminder"
-msgstr ""
+msgstr "Beállítások: Nem regisztrált felhasználó emlékeztető"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
@@ -666,32 +745,37 @@ msgstr "Regisztráiós Token típusa"
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
+#, fuzzy
 msgid "Signup is not allowed for uninvited users"
-msgstr ""
+msgstr "Regisztráció nem engedélyezett meghívó nélküli felhasználóknak"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_partner.py:0
+#, fuzzy
 msgid "Signup token '%s' is not valid or expired"
-msgstr ""
+msgstr "Regisztrációs token '%s' már nem érvenyes vagy lejárt"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
+#, fuzzy
 msgid "Signup: invalid template user"
-msgstr ""
+msgstr "Regisztráció: érvénytelen sablon felhasználó"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
+#, fuzzy
 msgid "Signup: no login given for new user"
-msgstr ""
+msgstr "Regisztráció: nincs bejelentkezési név megadva az új felhasználóhoz"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
+#, fuzzy
 msgid "Signup: no name or partner given for new user"
-msgstr ""
+msgstr "Regisztráció: nincs név vagy partner megadva az új felhasználóhoz"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
@@ -708,16 +792,19 @@ msgstr ""
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/controllers/main.py:0
+#, fuzzy
 msgid "The form was not properly filled in."
-msgstr ""
+msgstr "Az űrlap nem került megfelelően kitöltésre."
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
+#, fuzzy
 msgid ""
 "There was an error when trying to deliver your Email, please check your "
 "configuration"
 msgstr ""
+"Hiba történt az email kézbesítése közben, kérjük, ellenőrizze a konfigurációt"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -737,19 +824,22 @@ msgstr "Felhasználó"
 
 #. module: auth_signup
 #: model:ir.actions.server,name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder_ir_actions_server
+#, fuzzy
 msgid "Users: Notify About Unregistered Users"
-msgstr ""
+msgstr "Felhasználók: Értesítés nem regisztrált felhasználókról"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
+#, fuzzy
 msgid "Welcome to {{ object.company_id.name }}!"
-msgstr ""
+msgstr "Üdvözli a(z) {{ object.company_id.name }}!"
 
 #. module: auth_signup
 #. odoo-python
 #: code:addons/auth_signup/models/res_users.py:0
+#, fuzzy
 msgid "You cannot perform this action on an archived user."
-msgstr ""
+msgstr "Ez az akció nem hajtható végre archivált felhasználón."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -764,8 +854,9 @@ msgstr "Az Ön neve"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
+#, fuzzy
 msgid "YourCompany"
-msgstr ""
+msgstr "Vállalatom"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -774,18 +865,21 @@ msgstr "pld: Gipsz Jakab"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
+#, fuzzy
 msgid "hours:<br/>"
-msgstr ""
+msgstr "óra<br/>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
+#, fuzzy
 msgid "http://www.example.com"
-msgstr ""
+msgstr "http://www.example.com"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password_email
+#, fuzzy
 msgid "info@yourcompany.com"
-msgstr ""
+msgstr "info@yourcompany.com"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email

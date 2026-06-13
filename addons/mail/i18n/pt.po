@@ -18,15 +18,15 @@
 # Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
 # J Ponte, 2025
 # Wil Odoo, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Cristina Paniagua Ramiro <crpan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-04-11 10:56+0000\n"
-"Last-Translator: Cristina Paniagua Ramiro <crpan@odoo.com>\n"
+"PO-Revision-Date: 2026-06-12 16:03+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s18-2/"
 "mail/pt/>\n"
 "Language: pt\n"
@@ -35,7 +35,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -278,16 +278,21 @@ msgstr "%(recipientCount)s mais"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
+#, fuzzy
 msgid "%(user)s just connected for the first time. Wish them luck!"
 msgstr ""
+"%(user)s acabaram de se conectar pela primeira vez. Desejem-lhes boa sorte!"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
+#, fuzzy
 msgid ""
 "%(user)s started a thread: %(goto)s%(thread_name)s%(goto_end)s. %"
 "(goto_all)sSee all threads%(goto_all_end)s."
 msgstr ""
+"%(user)s iniciou uma thread: %(goto)s%(thread_name)s%(goto_end)s. %(goto_all)"
+"sVer todas as threads%(goto_all_end)s."
 
 #. module: mail
 #. odoo-javascript
@@ -553,8 +558,9 @@ msgstr "<span class=\"d-block w-75 py-2\">Cor do botão</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
+#, fuzzy
 msgid "<span class=\"d-block w-75 py-2\">Header Color</span>"
-msgstr ""
+msgstr "<span class=\"d-block w-75 py-2\">Cor do Cabeçalho</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
@@ -672,8 +678,9 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_partner_view_form
+#, fuzzy
 msgid "<span>Open Record</span>"
-msgstr ""
+msgstr "<span>Abrir Registo</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -1418,14 +1425,16 @@ msgstr "Todas as mensagens"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/notification_settings.xml:0
+#, fuzzy
 msgid "All conversations have been muted"
-msgstr ""
+msgstr "Todas as conversas foram silenciadas"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_resend_message.py:0
+#, fuzzy
 msgid "All partners must belong to the same message"
-msgstr ""
+msgstr "Todos os parceiros devem pertencer à mesma mensagem"
 
 #. module: mail
 #. odoo-python
@@ -1532,8 +1541,9 @@ msgstr "Tem certeza de que deseja cancelar a mensagem agendada?"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.js:0
 #: code:addons/mail/static/src/core/common/message_actions.js:0
+#, fuzzy
 msgid "Are you sure you want to delete this message?"
-msgstr ""
+msgstr "Tem a certeza que quer apagar esta mensagem?"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_reset_view_form
@@ -2050,8 +2060,9 @@ msgstr "A câmera não está disponível fora da aba de chamada."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_cancel
+#, fuzzy
 msgid "Can Cancel"
-msgstr ""
+msgstr "Pode Cancelar"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__can_edit_body
@@ -2061,8 +2072,9 @@ msgstr "Pode Editar Corpo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_resend
+#, fuzzy
 msgid "Can Resend"
-msgstr ""
+msgstr "Pode Reenviar"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
@@ -2798,10 +2810,14 @@ msgstr "Copiar Ligação"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/fetchmail.py:0
+#, fuzzy
 msgid ""
 "Couldn't get your emails. Check out the error message below for more info:\n"
 "%s"
 msgstr ""
+"Não foi possível obter os seus e-mails. Confira a mensagem de erro abaixo "
+"para mais informações:\n"
+"%s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__message_bounce
@@ -3732,8 +3748,9 @@ msgstr "Editar"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
+#, fuzzy
 msgid "Edit Partners"
-msgstr ""
+msgstr "Editar Parceiros"
 
 #. module: mail
 #. odoo-python
@@ -3849,8 +3866,9 @@ msgstr "Falha de e-mail: %(modelName)s"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_primary_color
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__email_primary_color
+#, fuzzy
 msgid "Email Header Color"
-msgstr ""
+msgstr "Cor do Cabeçalho do E-mail"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_mode__mass_mail
@@ -5237,8 +5255,9 @@ msgstr "Se você deseja usar o Twilio como provedor de servidor TURN/STUN"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
+#, fuzzy
 msgid "Ignore all"
-msgstr ""
+msgstr "Ignorar tudo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__image_128
@@ -5592,8 +5611,9 @@ msgstr "Convidar Pessoas"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
+#, fuzzy
 msgid "Invite to Channel"
-msgstr ""
+msgstr "Convidar para o Canal"
 
 #. module: mail
 #. odoo-javascript
@@ -5798,8 +5818,9 @@ msgstr "Mantenha os anexos"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__keep_done
+#, fuzzy
 msgid "Keep Done"
-msgstr ""
+msgstr "Continuar Feito"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete_keep_log
@@ -5821,8 +5842,10 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__keep_done
+#, fuzzy
 msgid "Keep activities marked as done in the activity view"
 msgstr ""
+"Mantenha as atividades marcadas como concluídas na visualização de atividades"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -6885,14 +6908,16 @@ msgstr "Silenciar conversa"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
+#, fuzzy
 msgid "Mute all conversations"
-msgstr ""
+msgstr "Silenciar todas as conversas"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
+#, fuzzy
 msgid "Mute duration"
-msgstr ""
+msgstr "Duração do mudo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__mute_until_dt
@@ -6903,8 +6928,11 @@ msgstr "Silenciar notificações até"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
+#, fuzzy
 msgid "Muting prevents unread indicators and notifications from appearing."
 msgstr ""
+"O silenciamento impede que indicadores e notificações não lidas sejam "
+"exibidos."
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_activity_action_my
@@ -7154,8 +7182,9 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_resend_message.py:0
+#, fuzzy
 msgid "No message_id found in context"
-msgstr ""
+msgstr "Nenhum message_id encontrado no contexto"
 
 #. module: mail
 #. odoo-javascript
@@ -8034,13 +8063,15 @@ msgstr "IDs de parceiros - Todos têm e-mail"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__partner_readonly
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__partner_readonly
+#, fuzzy
 msgid "Partner Readonly"
-msgstr ""
+msgstr "Parceiro Somente Leitura"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_resend_partner
+#, fuzzy
 msgid "Partner with additional information for mail resend"
-msgstr ""
+msgstr "Parceiro com informações adicionais para reenvio de e-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_partner_ids
@@ -8093,8 +8124,9 @@ msgstr "Escolha um horário específico"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#, fuzzy
 msgid "Pick an Activity Plan to launch"
-msgstr ""
+msgstr "Escolha um Plano de Atividades para iniciar"
 
 #. module: mail
 #. odoo-javascript
@@ -8151,8 +8183,9 @@ msgstr "Resumo do plano"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#, fuzzy
 msgid "Plan summary"
-msgstr ""
+msgstr "Resumo do plano"
 
 #. module: mail
 #. odoo-javascript
@@ -8634,8 +8667,9 @@ msgstr "Seguidores destinatários"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__name
+#, fuzzy
 msgid "Recipient Name"
-msgstr ""
+msgstr "Nome do Destinatário"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__partner_ids
@@ -8932,13 +8966,15 @@ msgstr "Reenviar"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_partner_action
+#, fuzzy
 msgid "Resend Email"
-msgstr ""
+msgstr "Reenviar E-mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend_wizard_id
+#, fuzzy
 msgid "Resend wizard"
-msgstr ""
+msgstr "Assistente de reenvio"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -9110,8 +9146,9 @@ msgstr "Agenda"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
+#, fuzzy
 msgid "Schedule & Mark as Done"
-msgstr ""
+msgstr "Agendar e Marcar como Concluído"
 
 #. module: mail
 #. odoo-javascript
@@ -9345,8 +9382,9 @@ msgstr "Atualização de segurança: senha alterada"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
+#, fuzzy
 msgid "See Error Details"
-msgstr ""
+msgstr "Ver Detalhes do Erro"
 
 #. module: mail
 #. odoo-python
@@ -9417,8 +9455,11 @@ msgstr "Selecione um usuário..."
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
+#, fuzzy
 msgid "Selected user '%(user)s' cannot upload documents on model '%(model)s'"
 msgstr ""
+"O utilizador selecionado '%(user)s' não pode carregar documentos no modelo '%"
+"(model)s'"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__self_member_id
@@ -9440,8 +9481,9 @@ msgstr "Enviar e fechar"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
+#, fuzzy
 msgid "Send & close"
-msgstr ""
+msgstr "Enviar e fechar"
 
 #. module: mail
 #. odoo-javascript
@@ -9549,8 +9591,9 @@ msgstr "Enviar contexto"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_message_action
+#, fuzzy
 msgid "Sending Failures"
-msgstr ""
+msgstr "Falhas no Envio"
 
 #. module: mail
 #. odoo-javascript
@@ -9777,8 +9820,9 @@ msgstr "Nome do site"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
+#, fuzzy
 msgid "Snooze 7d"
-msgstr ""
+msgstr "Suspender 7d"
 
 #. module: mail
 #. odoo-javascript
@@ -9834,8 +9878,9 @@ msgstr "Mensagem favoritada"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
+#, fuzzy
 msgid "Start a Call"
-msgstr ""
+msgstr "Iniciar uma Chamada"
 
 #. module: mail
 #. odoo-javascript
@@ -9846,8 +9891,9 @@ msgstr "Iniciar uma conversa"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
+#, fuzzy
 msgid "Start a Video Call"
-msgstr ""
+msgstr "Iniciar uma Chamada de Vídeo"
 
 #. module: mail
 #. odoo-javascript
@@ -10959,8 +11005,9 @@ msgstr "Acionar a próxima atividade"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend
+#, fuzzy
 msgid "Try Again"
-msgstr ""
+msgstr "Tente Novamente"
 
 #. module: mail
 #. odoo-javascript
@@ -11172,8 +11219,9 @@ msgstr "Sem nome"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_value.py:0
+#, fuzzy
 msgid "Unnamed %(record_model_name)s (%(record_id)s)"
-msgstr ""
+msgstr "Sem nome %(record_model_name)s (%(record_id)s)"
 
 #. module: mail
 #. odoo-python
@@ -11210,8 +11258,9 @@ msgstr "Desafixar mensagem"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_sidebar_categories.js:0
+#, fuzzy
 msgid "Unpin Thread"
-msgstr ""
+msgstr "Desafixar Tópico"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__unpin_dt
@@ -12194,8 +12243,9 @@ msgstr "endereços vinculados a usuários registrados"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__current_date
+#, fuzzy
 msgid "after completion date"
-msgstr ""
+msgstr "após a data de conclusão"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__previous_activity

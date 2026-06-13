@@ -14,15 +14,15 @@
 # Corina Calin, 2025
 # Betty Keresztesi, 2025
 # Wil Odoo, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-04-11 10:56+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"PO-Revision-Date: 2026-06-12 16:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s18-2/mail/"
 "ro/>\n"
 "Language: ro\n"
@@ -31,11 +31,12 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
 #: model:ir.model.fields,help:mail.field_ir_cron__followers_type
+#, fuzzy
 msgid ""
 "\n"
 "            - Specific Followers: select specific contacts to add/remove "
@@ -44,6 +45,12 @@ msgid ""
 "will be added/removed from followers.\n"
 "        "
 msgstr ""
+"\n"
+"            - Următori specifici: selectați contacte specifice pentru a "
+"adauga/șterge din urmăritorii înregistrării.\n"
+"            - Următori dinamici: toate contactele din câmpul înregistrării "
+"vor fi adăugate/șterse din urmăritori.\n"
+"        "
 
 #. module: mail
 #. odoo-python
@@ -122,8 +129,9 @@ msgstr "%(candidateType)s (%(protocol)s)"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_actions_patch.js:0
+#, fuzzy
 msgid "%(date)s at %(time)s"
-msgstr ""
+msgstr "%(date)s la %(time)s"
 
 #. module: mail
 #. odoo-python
@@ -181,8 +189,9 @@ msgstr "%(model_name)s.%(field_path)s nu pare să fie o cale de câmp validă"
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_bcc_list_popover.js:0
 #: code:addons/mail/static/src/core/web/recipient_list.js:0
+#, fuzzy
 msgid "%(name)s <%(email)s>"
-msgstr ""
+msgstr "%(name)s <%(email)s>"
 
 #. module: mail
 #. odoo-javascript
@@ -193,6 +202,7 @@ msgstr "%(name)s: %(message)s)"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
+#, fuzzy
 msgid ""
 "%(new_line)s%(new_line)sType %(bold_start)s@username%(bold_end)s to mention "
 "someone, and grab their attention.%(new_line)sType %(bold_start)s#channel%"
@@ -201,6 +211,13 @@ msgid ""
 "(bold_end)s to insert a canned response in your message.%(new_line)sType %"
 "(bold_start)s:emoji:%(bold_end)s to insert an emoji in your message."
 msgstr ""
+"%(new_line)s%(new_line)sTastați %(bold_start)s@username%(bold_end)s pentru a "
+"menționa pe cineva și a-i atrage atenția.%(new_line)sTastați %(bold_start)"
+"s#channel%(bold_end)s pentru a menționa un canal.%(new_line)sTastați %"
+"(bold_start)s/command%(bold_end)s pentru a executa o comandă.%(new_line)"
+"sTastați %(bold_start)s::shortcut%(bold_end)s pentru a introduce un răspuns "
+"predefinit în mesajul dvs.%(new_line)sTastați %(bold_start)s:emoji:%"
+"(bold_end)s pentru a introduce un emoticon în mesajul dvs."
 
 #. module: mail
 #. odoo-javascript
@@ -237,8 +254,9 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/base_partner_merge_automatic_wizard.py:0
+#, fuzzy
 msgid "%(partner)s <%(email)s> (ID %(id)s)"
-msgstr ""
+msgstr "%(partner)s <%(email)s> (ID %(id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -249,8 +267,9 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
+#, fuzzy
 msgid "%(partner_name)s <%(partner_email)s>"
-msgstr ""
+msgstr "%(partner_name)s <%(partner_email)s>"
 
 #. module: mail
 #. odoo-javascript
@@ -396,8 +415,9 @@ msgstr "(atribuit(ă) inițial "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_multi_invite
+#, fuzzy
 msgid ") added you as a follower of"
-msgstr ""
+msgstr ") v-a adăugat ca urmăritor al"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_invite
@@ -415,14 +435,16 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
+#, fuzzy
 msgid ",<br/><br/>"
-msgstr ""
+msgstr ",<br/><br/>"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_patch.xml:0
+#, fuzzy
 msgid "---------- Forwarded message ----------"
-msgstr ""
+msgstr "---------- Mesaj redirecționat ----------"
 
 #. module: mail
 #. odoo-javascript
@@ -441,11 +463,15 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
+#, fuzzy
 msgid ""
 "<br/><br/>\n"
 "\n"
 "            Here are some details about the connection:<br/>"
 msgstr ""
+"<br/><br/>\n"
+"\n"
+"\"\"            Iată câteva detalii despre conexiune:<br/>"
 
 #. module: mail
 #. odoo-javascript
@@ -609,31 +635,43 @@ msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
+#, fuzzy
 msgid ""
 "<span style=\"font-weight: bold\">\n"
 "                    Date:</span>"
 msgstr ""
+"<span style=\"font-weight: bold\">\n"
+"                    Data:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
+#, fuzzy
 msgid ""
 "<span style=\"font-weight: bold\">\n"
 "                    IP Address:</span>"
 msgstr ""
+"<span style=\"font-weight: bold\">\n"
+"                    Adresa IP:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
+#, fuzzy
 msgid ""
 "<span style=\"font-weight: bold\">\n"
 "                    Location:</span>"
 msgstr ""
+"<span style=\"font-weight: bold\">\n"
+"                    Locație:</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
+#, fuzzy
 msgid ""
 "<span style=\"font-weight: bold\">\n"
 "                    Platform:</span>"
 msgstr ""
+"<span style=\"font-weight: bold\">\n"
+"                    Platformă:</span>"
 
 #. module: mail
 #: model_terms:web_tour.tour,rainbow_man_message:mail.discuss_channel_tour
@@ -698,8 +736,9 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_presence_partner_or_guest_exists
+#, fuzzy
 msgid "A mail presence must have a user or a guest."
-msgstr ""
+msgstr "O prezență de e-mail trebuie să aibă un utilizator sau un oaspete."
 
 #. module: mail
 #. odoo-python
@@ -732,8 +771,9 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_compose_message.py:0
+#, fuzzy
 msgid "A scheduled date is needed to schedule a message"
-msgstr ""
+msgstr "Este necesară o dată programată pentru a programa un mesaj"
 
 #. module: mail
 #. odoo-python
@@ -1029,8 +1069,9 @@ msgstr "Adaugă"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_attachment_selector.xml:0
+#, fuzzy
 msgid "Add Attachment"
-msgstr ""
+msgstr "Adaugă atașament"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -1045,8 +1086,9 @@ msgstr "Adăugați e-mail la Blacklist"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer_actions.js:0
+#, fuzzy
 msgid "Add Emojis"
-msgstr ""
+msgstr "Adaugă emoticoane"
 
 #. module: mail
 #. odoo-javascript
@@ -1059,8 +1101,9 @@ msgstr "Adaugă urmăritori"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/gif_picker/common/composer_actions_patch.js:0
+#, fuzzy
 msgid "Add GIFs"
-msgstr ""
+msgstr "Adaugă GIF-uri"
 
 #. module: mail
 #. odoo-javascript
@@ -1147,8 +1190,9 @@ msgstr "Adăugați sau aderați la un canal"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
+#, fuzzy
 msgid "Add recipients..."
-msgstr ""
+msgstr "Adaugă destinatari..."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_add_signature
@@ -1162,8 +1206,9 @@ msgstr "Adăugați credențialele dvs. twilio pentru serverele ICE"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_followers_edit_form
+#, fuzzy
 msgid "Add/Remove Followers"
-msgstr ""
+msgstr "Adaugă/Elimină urmăritori"
 
 #. module: mail
 #. odoo-python
@@ -1579,8 +1624,9 @@ msgstr "În acest moment, parametrii lang ar trebui să fie setați corect"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer_actions.js:0
+#, fuzzy
 msgid "Attach Files"
-msgstr ""
+msgstr "Atașează fișiere"
 
 #. module: mail
 #. odoo-javascript
@@ -2011,8 +2057,9 @@ msgstr "Camera este oprită"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#, fuzzy
 msgid "Camera is unavailable outside the call tab."
-msgstr ""
+msgstr "Camera nu este disponibilă în afara filei de apel."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_cancel
@@ -2130,8 +2177,9 @@ msgstr "Răspunsuri predefinite"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
+#, fuzzy
 msgid "Cannot change authorized group of sub-channel: %(channels)s."
-msgstr ""
+msgstr "Nu se poate schimba grupul autorizat al sub-canalului: %(channels)s."
 
 #. module: mail
 #. odoo-python
@@ -2158,11 +2206,15 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel.py:0
+#, fuzzy
 msgid ""
 "Cannot create %(channels)s: parent should not be a sub-channel and should be "
 "of type 'channel' or 'group'. The sub-channel should have the same type as "
 "the parent."
 msgstr ""
+"Nu se poate crea %(channels)s: părintele nu trebuie să fie un sub-canal și "
+"trebuie să fie de tip 'canal' sau 'grup'. Sub-canalul ar trebui să aibă "
+"același tip ca părintele."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
@@ -2278,14 +2330,16 @@ msgstr "Membrii canalului nu pot include utilizatori publici."
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.xml:0
+#, fuzzy
 msgid "Channel must have a name."
-msgstr ""
+msgstr "Canalul trebuie să aibă un nume."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.xml:0
+#, fuzzy
 msgid "Channel name"
-msgstr ""
+msgstr "Nume canal"
 
 #. module: mail
 #. odoo-javascript
@@ -2354,8 +2408,9 @@ msgstr "Mesaje secundare"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
+#, fuzzy
 msgid "Choose a contact..."
-msgstr ""
+msgstr "Alegeți un contact..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -2386,8 +2441,9 @@ msgstr "Oraș, regiune, țară"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
+#, fuzzy
 msgid "Clear Time"
-msgstr ""
+msgstr "Șterge ora"
 
 #. module: mail
 #. odoo-javascript
@@ -2470,8 +2526,9 @@ msgstr "Restrânge panoul"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/public_web/discuss_sidebar_call_participants.js:0
+#, fuzzy
 msgid "Collapse participants"
-msgstr ""
+msgstr "Restrânge participanții"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__new
@@ -2524,8 +2581,9 @@ msgstr "Comentariu"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__composition_comment_option
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__composition_comment_option
+#, fuzzy
 msgid "Comment Options"
-msgstr ""
+msgstr "Opțiuni comentariu"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_company
@@ -2570,8 +2628,9 @@ msgstr "Modul de compunere"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
+#, fuzzy
 msgid "Conference: %s"
-msgstr ""
+msgstr "Conferință: %s"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_config_settings
@@ -2803,14 +2862,16 @@ msgstr "Creează activitate"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.xml:0
+#, fuzzy
 msgid "Create Channel"
-msgstr ""
+msgstr "Creează canal"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
+#, fuzzy
 msgid "Create Chat"
-msgstr ""
+msgstr "Creează chat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__create_date
@@ -3271,8 +3332,9 @@ msgstr "Șterge toate previzualizările"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.xml:0
+#, fuzzy
 msgid "Deleted document"
-msgstr ""
+msgstr "Document șters"
 
 #. module: mail
 #. odoo-javascript
@@ -3669,8 +3731,9 @@ msgstr "Durata activității vocale în ms"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__followers_type__generic
+#, fuzzy
 msgid "Dynamic Followers"
-msgstr ""
+msgstr "Urmăritori dinamici"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__report_template_ids
@@ -4150,8 +4213,9 @@ msgstr "Extinde panoul"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/public_web/discuss_sidebar_call_participants.js:0
+#, fuzzy
 msgid "Expand participants"
-msgstr ""
+msgstr "Extinde participanții"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_push_device__expiration_time
@@ -4413,8 +4477,9 @@ msgstr "Urmăritori (Parteneri)"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__followers_partner_field_name
 #: model:ir.model.fields,field_description:mail.field_ir_cron__followers_partner_field_name
+#, fuzzy
 msgid "Followers Field"
-msgstr ""
+msgstr "Câmp urmăritori"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_subscription_form
@@ -4424,19 +4489,22 @@ msgstr "Persoane interesate de la"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__followers_type
 #: model:ir.model.fields,field_description:mail.field_ir_cron__followers_type
+#, fuzzy
 msgid "Followers Type"
-msgstr ""
+msgstr "Tip urmăritori"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
+#, fuzzy
 msgid "Followers added"
-msgstr ""
+msgstr "Urmăritori adăugați"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers_edit
+#, fuzzy
 msgid "Followers edit wizard"
-msgstr ""
+msgstr "Asistent editare urmăritori"
 
 #. module: mail
 #. odoo-javascript
@@ -4449,8 +4517,9 @@ msgstr "Numai cei interesați"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
+#, fuzzy
 msgid "Followers removed"
-msgstr ""
+msgstr "Urmăritori eliminați"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_server_action_form_template
@@ -4465,8 +4534,9 @@ msgstr "Followers de eliminat"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
+#, fuzzy
 msgid "Followers updated"
-msgstr ""
+msgstr "Urmăritori actualizați"
 
 #. module: mail
 #. odoo-javascript
@@ -4550,8 +4620,9 @@ msgstr "Redirecționare"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_actions_patch.js:0
+#, fuzzy
 msgid "Forward Message"
-msgstr ""
+msgstr "Redirecționează mesajul"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_from
@@ -5047,8 +5118,9 @@ msgstr "Inactiv"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_followers_edit__res_ids
+#, fuzzy
 msgid "Ids of the followed resources"
-msgstr ""
+msgstr "Id-urile resurselor urmărite"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
@@ -5316,8 +5388,9 @@ msgstr "Apel video primit..."
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
+#, fuzzy
 msgid "Incoming call"
-msgstr ""
+msgstr "Apel primit"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__automated
@@ -5353,8 +5426,9 @@ msgstr "Dispozitiv Intrare"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer_actions.js:0
+#, fuzzy
 msgid "Insert a Canned response"
-msgstr ""
+msgstr "Inserează un răspuns predefinit"
 
 #. module: mail
 #. odoo-javascript
@@ -5519,8 +5593,9 @@ msgstr "URL Invitație"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
+#, fuzzy
 msgid "Invitation to follow %(document_model)s."
-msgstr ""
+msgstr "Invitație de a urmări %(document_model)s."
 
 #. module: mail
 #. odoo-python
@@ -5567,8 +5642,9 @@ msgstr "Invită la chat în grup"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__invited_member_ids
+#, fuzzy
 msgid "Invited Member"
-msgstr ""
+msgstr "Membru invitat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__is_active
@@ -5641,8 +5717,9 @@ msgstr "Este o notă"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__notified_bcc_contains_share
+#, fuzzy
 msgid "Is an external partner follower of the document?"
-msgstr ""
+msgstr "Este un partener extern urmăritor al documentului?"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__is_discuss_sidebar_category_channel_open
@@ -5735,14 +5812,16 @@ msgstr "Alaturați-vă unui grup"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
+#, fuzzy
 msgid "Join the Call"
-msgstr ""
+msgstr "Alăturați-vă apelului"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/thread_actions.js:0
+#, fuzzy
 msgid "Join the Call with Camera"
-msgstr ""
+msgstr "Alăturați-vă apelului cu cameră"
 
 #. module: mail
 #. odoo-javascript
@@ -6291,8 +6370,11 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
+#, fuzzy
 msgid "Mail template model of $(action_name)s does not match action model."
 msgstr ""
+"Modelul șablonului de e-mail al $(action_name)s nu corespunde modelului "
+"acțiunii."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_mail_server__mail_template_ids
@@ -6355,14 +6437,16 @@ msgstr "Atașament principal"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.xml:0
+#, fuzzy
 msgid "Make Chat"
-msgstr ""
+msgstr "Creează chat"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/mail_composer_template_selector.xml:0
+#, fuzzy
 msgid "Manage Templates"
-msgstr ""
+msgstr "Gestionează șabloane"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_force_new
@@ -6632,8 +6716,9 @@ msgstr "Mesajul trebuie să fie o instanță validă EmailMessage"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/discuss_notification_settings.xml:0
+#, fuzzy
 msgid "Message sound"
-msgstr ""
+msgstr "Sunet mesaj"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__name
@@ -6832,8 +6917,9 @@ msgstr "Mai mult"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer.xml:0
+#, fuzzy
 msgid "More Actions"
-msgstr ""
+msgstr "Mai multe acțiuni"
 
 #. module: mail
 #. odoo-javascript
@@ -7085,8 +7171,9 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
+#, fuzzy
 msgid "No conversation found"
-msgstr ""
+msgstr "Nicio conversație găsită"
 
 #. module: mail
 #. odoo-javascript
@@ -7103,8 +7190,9 @@ msgstr "Nicio conversație încă"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
+#, fuzzy
 msgid "No documents found for the selected records."
-msgstr ""
+msgstr "Nu au fost găsite documente pentru înregistrările selectate."
 
 #. module: mail
 #. odoo-javascript
@@ -7334,8 +7422,9 @@ msgstr ""
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_delete_notification_ir_actions_server
+#, fuzzy
 msgid "Notification: Delete Notifications older than 6 Months"
-msgstr ""
+msgstr "Notificare: Șterge notificările mai vechi de 6 luni"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_send_scheduled_message_ir_actions_server
@@ -7368,8 +7457,9 @@ msgstr "Notificări blocate"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__notify_author
+#, fuzzy
 msgid "Notify Author"
-msgstr ""
+msgstr "Anunță autorul"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__notify_author_mention
@@ -7631,8 +7721,9 @@ msgstr "Deschide canalul"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
+#, fuzzy
 msgid "Open Chat"
-msgstr ""
+msgstr "Deschide chatul"
 
 #. module: mail
 #. odoo-javascript
@@ -7655,8 +7746,9 @@ msgstr "Afișare formular deschis"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/composer_actions.js:0
+#, fuzzy
 msgid "Open Full Composer"
-msgstr ""
+msgstr "Deschide compozitorul complet"
 
 #. module: mail
 #. odoo-javascript
@@ -8207,8 +8299,9 @@ msgstr "Vă rugăm să ne contactați în schimb"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
+#, fuzzy
 msgid "Please provide a valid email"
-msgstr ""
+msgstr "Vă rugăm să furnizați un e-mail valid"
 
 #. module: mail
 #. odoo-javascript
@@ -8685,8 +8778,9 @@ msgstr "ID-uri de documente conexe"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__res_id
+#, fuzzy
 msgid "Related Document Id"
-msgstr ""
+msgstr "Id document asociat"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_model
@@ -8737,8 +8831,9 @@ msgstr "Elimină"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#, fuzzy
 msgid "Remove Blur"
-msgstr ""
+msgstr "Elimină estomparea"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -8752,8 +8847,9 @@ msgstr "Îndepărtare urmăritori"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
+#, fuzzy
 msgid "Remove address from blacklist"
-msgstr ""
+msgstr "Elimină adresa din lista neagră"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist_remove
@@ -8793,8 +8889,9 @@ msgstr "Informații de câmp eliminate"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/common/thread_actions.js:0
+#, fuzzy
 msgid "Rename Thread"
-msgstr ""
+msgstr "Redenumește firul"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__render_model
@@ -8842,8 +8939,9 @@ msgstr "Răspunde"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_actions_patch.js:0
+#, fuzzy
 msgid "Reply All"
-msgstr ""
+msgstr "Răspunde tuturor"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to
@@ -8865,8 +8963,9 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__composition_comment_option__reply_all
 #: model:ir.model.fields.selection,name:mail.selection__mail_scheduled_message__composition_comment_option__reply_all
+#, fuzzy
 msgid "Reply-All"
-msgstr ""
+msgstr "Răspunde-tuturor"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__reply_to
@@ -9163,8 +9262,9 @@ msgstr "Data de trimitere planificată"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_actions.js:0
+#, fuzzy
 msgid "Screen sharing is unavailable outside the call tab."
-msgstr ""
+msgstr "Partajarea ecranului nu este disponibilă în afara filei de apel."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__script
@@ -9227,8 +9327,9 @@ msgstr "Caută subcanale"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.js:0
+#, fuzzy
 msgid "Search a conversation"
-msgstr ""
+msgstr "Caută o conversație"
 
 #. module: mail
 #. odoo-javascript
@@ -9271,8 +9372,9 @@ msgstr "Căutare în curs"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
+#, fuzzy
 msgid "Search people to invite"
-msgstr ""
+msgstr "Caută persoane de invitat"
 
 #. module: mail
 #. odoo-javascript
@@ -9385,8 +9487,9 @@ msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__self_member_id
+#, fuzzy
 msgid "Self Member"
-msgstr ""
+msgstr "Membru propriu"
 
 #. module: mail
 #. odoo-javascript
@@ -9448,8 +9551,9 @@ msgstr "Trimite un mesaj urmăritorilor…"
 
 #. module: mail
 #: model:ir.model,website_form_label:mail.model_mail_mail
+#, fuzzy
 msgid "Send an E-mail"
-msgstr ""
+msgstr "Trimite un e-mail"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -9507,8 +9611,9 @@ msgstr "Trimitere"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_scheduled_message__send_context
+#, fuzzy
 msgid "Sending Context"
-msgstr ""
+msgstr "Context de trimitere"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_message_action
@@ -9597,14 +9702,16 @@ msgstr "Tipul de server POP."
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/recipients_input_tags_list_popover.xml:0
+#, fuzzy
 msgid "Set Email"
-msgstr ""
+msgstr "Setează e-mail"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/scheduled_date_field/scheduled_date_dialog.xml:0
+#, fuzzy
 msgid "Set Scheduled Date"
-msgstr ""
+msgstr "Setează data programată"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_discuss_channel__active
@@ -9703,8 +9810,9 @@ msgstr "Afișați bara laterală"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/html_composer_message_field/content_expandable_plugin.xml:0
+#, fuzzy
 msgid "Show trimmed content"
-msgstr ""
+msgstr "Arată conținutul tăiat"
 
 #. module: mail
 #. odoo-javascript
@@ -9715,10 +9823,13 @@ msgstr "Afișați doar participanții video"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
+#, fuzzy
 msgid ""
 "Showing %(result_count)s results out of %(total_count)s. Narrow your search "
 "to see more choices."
 msgstr ""
+"Afișarea a %(result_count)s rezultate din %(total_count)s. Îngustează "
+"căutarea pentru a vedea mai multe opțiuni."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__ref_ir_act_window
@@ -9762,8 +9873,9 @@ msgstr "Limbă sursă"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__followers_type__specific
+#, fuzzy
 msgid "Specific Followers"
-msgstr ""
+msgstr "Urmăritori specifici"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_user_type__specific
@@ -10317,14 +10429,16 @@ msgstr "Endpoint-ul trebuie să fie unic!"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
+#, fuzzy
 msgid "The field '%(field_chain_str)s' is not a partner field."
-msgstr ""
+msgstr "Câmpul '%(field_chain_str)s' nu este un câmp partener."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/ir_actions_server.py:0
+#, fuzzy
 msgid "The field '%(field_chain_str)s' is not a user field."
-msgstr ""
+msgstr "Câmpul '%(field_chain_str)s' nu este un câmp utilizator."
 
 #. module: mail
 #. odoo-python
@@ -10493,8 +10607,11 @@ msgstr "Poate exista doar o sesiune rtc pe membru de canal"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/controllers/mail.py:0
+#, fuzzy
 msgid "There is no candidate company that has read access to the record."
 msgstr ""
+"Nu există nicio companie candidat care să aibă acces de citire la "
+"înregistrare."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -10504,8 +10621,9 @@ msgstr "Acest(ă)"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
+#, fuzzy
 msgid "This action can only be done in the call tab."
-msgstr ""
+msgstr "Această acțiune poate fi efectuată numai în fila de apel."
 
 #. module: mail
 #. odoo-python

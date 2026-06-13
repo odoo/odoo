@@ -6,13 +6,13 @@
 # Wil Odoo, 2025
 # Kira Petersen, 2025
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2025-11-15 10:21+0000\n"
+"PO-Revision-Date: 2026-06-13 10:36+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-2/"
 "sale_management/da/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -648,6 +648,7 @@ msgstr ""
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
+#, fuzzy
 msgid ""
 "Your template belongs to company %(template_company)s but contains products "
 "from company (%(product_company)s) that are not accessible to %"
@@ -655,10 +656,16 @@ msgid ""
 "Please change the company of your template or remove the products from other "
 "companies."
 msgstr ""
+"Din skabelon tilhører virksomheden %(template_company)s, men indeholder "
+"produkter fra virksomheden %(product_company)s, som %(template_company)s "
+"ikke har adgang til.\n"
+"Skift virksomheden i skabelonen, eller fjern produkterne fra andre "
+"virksomheder."
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
+#, fuzzy
 msgid ""
 "Your template belongs to company %(template_company)s but contains products "
 "from other companies (%(product_company)s) that are not accessible to %"
@@ -666,15 +673,24 @@ msgid ""
 "Please change the company of your template or remove the products from other "
 "companies."
 msgstr ""
+"Din skabelon tilhører virksomheden %(template_company)s, men indeholder "
+"produkter fra andre virksomheder %(product_company)s, som %(template_company)"
+"s ikke har adgang til.\n"
+"Skift virksomheden i skabelonen, eller fjern produkterne fra andre "
+"virksomheder."
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
+#, fuzzy
 msgid ""
 "Your template cannot contain products from specific companies if it's shared "
 "between companies. Please restrict the template access, or remove those "
 "products."
 msgstr ""
+"Din skabelon må ikke indeholde produkter fra specifikke virksomheder, hvis "
+"den deles mellem flere virksomheder. Begræns adgangen til skabelonen, eller "
+"fjern disse produkter."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form

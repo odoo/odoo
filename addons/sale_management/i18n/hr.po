@@ -12,13 +12,13 @@
 # Bole <bole@dajmi5.com>, 2024
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2024
 # Vladimir Vrgoč, 2024
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2025-11-15 10:25+0000\n"
+"PO-Revision-Date: 2026-06-13 11:03+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-s18-2/"
 "sale_management/hr/>\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -37,8 +37,9 @@ msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+#, fuzzy
 msgid "<span invisible=\"not require_payment\">of</span>"
-msgstr ""
+msgstr "<span invisible=\"not require_payment\">od</span>"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -90,8 +91,9 @@ msgstr "Sva prodaja"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__allowed_uom_ids
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__allowed_uom_ids
+#, fuzzy
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Dodaj JM"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -250,10 +252,13 @@ msgstr "ID"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__journal_id
+#, fuzzy
 msgid ""
 "If set, SO with this template will invoice in this journal; otherwise the "
 "sales journal with the lowest sequence is used."
 msgstr ""
+"Ako je postavljeno, prodajni nalozi s ovim predloškom fakturirat će se u "
+"ovom dnevniku; inače se koristi prodajni dnevnik s najnižim redoslijedom."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
@@ -589,8 +594,9 @@ msgstr "Savjet: prodajte ili kupujte proizvode na veliko s matricama"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__uom_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_option__uom_id
+#, fuzzy
 msgid "Unit"
-msgstr ""
+msgstr "Jedinica"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
@@ -621,8 +627,9 @@ msgstr ""
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
+#, fuzzy
 msgid "Visible to all"
-msgstr ""
+msgstr "Vidljivo svima"
 
 #. module: sale_management
 #. odoo-python
@@ -657,6 +664,7 @@ msgstr ""
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
+#, fuzzy
 msgid ""
 "Your template belongs to company %(template_company)s but contains products "
 "from company (%(product_company)s) that are not accessible to %"
@@ -664,10 +672,14 @@ msgid ""
 "Please change the company of your template or remove the products from other "
 "companies."
 msgstr ""
+"Vaš predložak pripada tvrtki %(template_company)s, ali sadrži proizvode iz "
+"tvrtke (%(product_company)s) koji nisu dostupni %(template_company)s.\n"
+"Promijenite tvrtku svog predloška ili uklonite proizvode iz drugih tvrtki."
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
+#, fuzzy
 msgid ""
 "Your template belongs to company %(template_company)s but contains products "
 "from other companies (%(product_company)s) that are not accessible to %"
@@ -675,15 +687,23 @@ msgid ""
 "Please change the company of your template or remove the products from other "
 "companies."
 msgstr ""
+"Vaš predložak pripada tvrtki %(template_company)s, ali sadrži proizvode iz "
+"drugih tvrtki (%(product_company)s) koji nisu dostupni %(template_company)"
+"s.\n"
+"Promijenite tvrtku svog predloška ili uklonite proizvode iz drugih tvrtki."
 
 #. module: sale_management
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template.py:0
+#, fuzzy
 msgid ""
 "Your template cannot contain products from specific companies if it's shared "
 "between companies. Please restrict the template access, or remove those "
 "products."
 msgstr ""
+"Vaš predložak ne može sadržavati proizvode iz određenih tvrtki ako je "
+"dijeljen između tvrtki. Ograničite pristup predlošku ili uklonite te "
+"proizvode."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form

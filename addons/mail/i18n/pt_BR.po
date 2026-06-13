@@ -6,15 +6,15 @@
 # Wil Odoo, 2025
 # Maitê Dietze, 2025
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-04-11 10:56+0000\n"
-"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
+"PO-Revision-Date: 2026-06-12 15:18+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s18-2/mail/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -265,8 +265,9 @@ msgstr "%(recipientCount)s mais"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
+#, fuzzy
 msgid "%(user)s just connected for the first time. Wish them luck!"
-msgstr ""
+msgstr "%(user)s acaba de se conectar pela primeira vez. Mande um alô!"
 
 #. module: mail
 #. odoo-python
@@ -4233,6 +4234,7 @@ msgstr "Falha ao publicar a mensagem. Clique para tentar novamente"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
 msgid ""
 "Failed to render QWeb template for %(template_label)s\n"
 "Target Model: %(model_name)s\n"
@@ -4242,14 +4244,24 @@ msgid ""
 "Template Source Snippet:\n"
 "%(template_src)s"
 msgstr ""
+"Falha ao renderizar o modelo QWeb para %(template_label)s\n"
+"Modelo de destino: %(model_name)s\n"
+"Contexto de idioma: %(lang_context)s\n"
+"Erro: %(error_details)s\n"
+"\n"
+"Snippet da fonte do modelo:\n"
+"%(template_src)s"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
 msgid ""
 "Failed to render inline_template template: %(template_txt)s\n"
 "Error details: %(error)s"
 msgstr ""
+"Falha ao renderizar o modelo inline_template: %(template_txt)s\n"
+"Detalhes do erro: %(error)s"
 
 #. module: mail
 #. odoo-python
@@ -6282,8 +6294,9 @@ msgstr "Redefinição de modelo de e-mail"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
 msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "Modelo de e-mail: '%(name)s' (ID: %(record_id)s)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
@@ -6456,8 +6469,9 @@ msgstr "Marcar como concluído"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
 msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
-msgstr ""
+msgstr "Modelo de envio em massa: '%(name)s' (ID: %(record_id)s)"
 
 #. module: mail
 #. odoo-javascript
@@ -7139,8 +7153,9 @@ msgstr "Nenhum histórico de mensagens"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
 msgid "No language detected in context"
-msgstr ""
+msgstr "Nenhum idioma detectado no contexto"
 
 #. module: mail
 #. odoo-python
@@ -9406,8 +9421,11 @@ msgstr "Selecione um usuário..."
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_activity_schedule.py:0
+#, fuzzy
 msgid "Selected user '%(user)s' cannot upload documents on model '%(model)s'"
 msgstr ""
+"O usuário selecionado '%(user)s' não pode enviar documentos no modelo '%"
+"(model)s'"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__self_member_id
@@ -10148,8 +10166,9 @@ msgstr "A criação de modelo pelo compositor requer um modelo válido."
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
 msgid "Template name not identified"
-msgstr ""
+msgstr "Nome do modelo não identificado"
 
 #. module: mail
 #. odoo-python
@@ -11162,20 +11181,23 @@ msgstr "Sem nome"
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_tracking_value.py:0
+#, fuzzy
 msgid "Unnamed %(record_model_name)s (%(record_id)s)"
-msgstr ""
+msgstr "%(record_model_name)s sem nome (%(record_id)s)"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
 msgid "Unnamed Mail Template"
-msgstr ""
+msgstr "Modelo de e-mail sem nome"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
+#, fuzzy
 msgid "Unnamed Mailing"
-msgstr ""
+msgstr "Lista de distribuição sem nome"
 
 #. module: mail
 #. odoo-javascript
@@ -12796,8 +12818,9 @@ msgstr "\"%(member_name)s\" em \"%(channel_name)s\""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/activity.js:0
+#, fuzzy
 msgid "“%s”"
-msgstr ""
+msgstr "“%s”"
 
 #~ msgid "111.222.333.444"
 #~ msgstr "111.222.333.444"
