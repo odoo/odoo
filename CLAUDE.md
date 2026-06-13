@@ -2,16 +2,14 @@
 
 ## Project Identity
 
-<!-- TEAM: fill this in — it is the answer to "what is this system?" for every new agent session -->
+**Company:** UP5 TECH — "We Build Software That Drives Your Business"
 
-**What:** `odoo-up5` is [describe what UP5 does — e.g. "a customised Odoo 19.0 ERP for [company/client], focused on [domain: accounting, POS, manufacturing…]"]
+**What:** `odoo-up5` is UP5 TECH's Odoo 19.0 platform for delivering custom ERP, CRM, and SaaS solutions to clients. UP5 TECH builds web apps, mobile apps, and enterprise platforms that scale with client ambition. Odoo is their delivery vehicle for enterprise ERP/CRM engagements.
 
-**Custom scope:** The following modules are UP5-specific (not upstream Odoo):
-- *(list custom addons here as they are created, e.g. `addons/up5_account_extension/`)*
+**Custom scope:** Modules prefixed `up5_` are UP5 TECH-specific. All other modules in `addons/` are upstream Odoo — extend them via `_inherit`, never patch them directly.
+- *(add `up5_*` modules here as they are created)*
 
-**Standard modules in active use:** *(list the core Odoo modules this deployment relies on)*
-
-**What NOT to touch:** Upstream Odoo modules inside `addons/` and all of `odoo/`. Extend only — never patch.
+**What NOT to touch:** Any module not prefixed `up5_`, and everything inside `odoo/`. Extend only — never patch.
 
 ---
 

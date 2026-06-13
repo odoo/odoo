@@ -1,6 +1,7 @@
-# UP5 Internal Documentation
+# UP5 TECH — Internal Documentation
 
-Team reference docs for the `odoo-up5` project.
+UP5 TECH builds custom ERP, CRM, and SaaS platforms on Odoo 19.0.
+This folder is the team's reference for working on `odoo-up5`.
 
 | Folder | Contents |
 |---|---|
