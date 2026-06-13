@@ -27,7 +27,8 @@ Before closing any session, even if the task is incomplete:
 2. Update `claude-progress.md`: Current Verified State, Next Steps, any new Blockers
 3. Update `feature_list.json` `state` for any tasks touched
 4. If a significant decision was made, add it to `DECISIONS.md` with rationale
-5. Commit all tracked changes with an atomic, descriptive message
+5. If a pattern violation appeared more than once during the session, convert it to a Hard Constraint or add it to `odoo-conventions.md` — recurring review comments become permanent rules
+6. Commit all tracked changes with an atomic, descriptive message
 
 ---
 

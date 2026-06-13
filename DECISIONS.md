@@ -39,6 +39,20 @@ Read this before changing any project-wide convention — it explains the *why*.
 
 ---
 
+## 2026-06-13 — E2E test requirement for cross-component changes (lecture 10)
+
+**Decision:** Any change touching two or more Odoo layers (model + controller, controller + view, etc.) requires either an `HttpCase` test or a documented manual smoke test before the task is `passing`. Every test file must include at least one failure scenario. Review feedback promotion: a pattern violation caught more than once in review becomes a Hard Constraint or `odoo-conventions.md` rule — not just a comment.
+
+**Alternatives considered:**
+- TransactionCase only: misses interface mismatches, state propagation errors, and environment dependency failures — all five defect categories in the file-export case study were invisible to unit tests
+- Manual-only E2E: inconsistent across sessions, unauditable
+
+**Rationale:** Five defect categories are invisible to unit tests by design: interface mismatch, state propagation errors, resource lifecycle, environment dependency, error propagation. The 2-second → 15-second trade-off for E2E tests is acceptable in agent workflows. Agents copy existing patterns — without layer constraints established early, pattern drift compounds exponentially across sessions.
+
+**Consequence:** `odoo-conventions.md` documents which test class covers which layer, and the ERROR/WHY/FIX error message structure. Module layer architecture (models → wizards → controllers → views) is documented and enforced at code review.
+
+---
+
 ## 2026-06-13 — Three-layer verification and Completion Priority Constraint (lecture 09)
 
 **Decision:** `./verify.sh` enforces Layers 1 and 2 automatically. Layer 3 (system confirmation) is a manual smoke test required before marking any `up5_*` task `passing`. No refactoring or optimisation is permitted until Layer 2 passes.

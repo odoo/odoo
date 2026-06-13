@@ -116,14 +116,88 @@ access_my_model_user,my.model user,model_my_model,base.group_user,1,1,1,0
 
 ## Tests
 
-| Class | Use case |
-|---|---|
-| `TransactionCase` | Unit tests — each method rolls back; standard choice |
-| `SavepointCase` | Faster for large suites — uses savepoints |
-| `HttpCase` | UI/tour tests only — slow, spins up real HTTP server |
+### Layer mapping
+
+| Class | Verification layer | Use when |
+|---|---|---|
+| `TransactionCase` | Layer 2 — Runtime | Model logic, compute fields, constraints — most tests |
+| `SavepointCase` | Layer 2 — Runtime | Large suites — uses DB savepoints for speed |
+| `HttpCase` | Layer 2/3 boundary | HTTP endpoints, JSON-RPC controllers, URL routing |
+| JS `tour` via `HttpCase` | Layer 3 — System | UI features — button clicks, form flows, end-to-end |
+
+For any change that crosses two layers (e.g. model + controller, or controller + view), a
+`HttpCase` test or documented manual smoke test is required before marking the task `passing`.
+
+### Always include a failure scenario
+
+Every feature test file must include at least one test of expected failure, not only happy paths:
+
+```python
+def test_create_ok(self):
+    record = self.env['up5.foo'].create({'name': 'Test'})
+    self.assertTrue(record.id)
+
+def test_create_rejects_empty_name(self):
+    with self.assertRaises(ValidationError):
+        self.env['up5.foo'].create({'name': False})
+```
+
+Unit tests that test only happy paths miss the failure propagation errors that E2E surfaces.
+
+### Test structure
+
+```python
+from odoo.tests import TransactionCase
+from odoo.exceptions import ValidationError
+
+class TestMyModel(TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.partner = cls.env['res.partner'].create({'name': 'Test Partner'})
+
+    def test_something(self):
+        result = self.env['my.model'].method()
+        self.assertEqual(result, expected_value)
+```
 
 - Fixtures go in `setUpClass` with `@classmethod` — shared across all test methods
 - Test files must be in `tests/test_*.py` and imported in `tests/__init__.py`
+- Assert on observable behavior, not implementation details
+
+### Error message structure
+
+When writing validation errors or exceptions in `up5_*` modules, use the ERROR/WHY/FIX pattern:
+
+```python
+raise ValidationError(
+    "ERROR: 'start_date' cannot be after 'end_date' on %s.\n"
+    "WHY: date range is used for availability filtering — inverted range returns zero results.\n"
+    "FIX: set start_date ≤ end_date before saving." % self.name
+)
+```
+
+This gives the agent (and developer) a self-correction path without needing to read source code.
+
+---
+
+## Module Layer Architecture
+
+Dependencies in an `up5_*` module flow strictly forward. Never import backwards.
+
+```
+models/        ← data + business logic (no HTTP, no views)
+    ↓
+wizards/       ← transient operations (depends on models only)
+    ↓
+controllers/   ← HTTP endpoints (depends on models + wizards)
+    ↓
+views/ (XML)   ← presentation (references models by field name only)
+```
+
+A model must never import a controller. A view must never contain business logic.
+Violations here cause circular imports or untestable code — enforce at code review.
 
 ---
 
