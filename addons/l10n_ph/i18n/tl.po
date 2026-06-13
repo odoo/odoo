@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 18:24+0000\n"
+"POT-Creation-Date: 2026-06-12 18:24+0000\n"
 "PO-Revision-Date: 2025-11-13 14:28+0000\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -244,17 +244,46 @@ msgstr ""
 
 #. module: l10n_ph
 #: model_terms:ir.ui.view,arch_db:l10n_ph.report_disbursement_voucher_document
+#: model_terms:ir.ui.view,arch_db:l10n_ph.report_disbursement_voucher_internal_document
 msgid "<span>Account</span>"
 msgstr ""
 
 #. module: l10n_ph
 #: model_terms:ir.ui.view,arch_db:l10n_ph.report_disbursement_voucher_document
+#: model_terms:ir.ui.view,arch_db:l10n_ph.report_disbursement_voucher_internal_document
 msgid "<span>Credit</span>"
 msgstr ""
 
 #. module: l10n_ph
 #: model_terms:ir.ui.view,arch_db:l10n_ph.report_disbursement_voucher_document
+#: model_terms:ir.ui.view,arch_db:l10n_ph.report_disbursement_voucher_internal_document
 msgid "<span>Debit</span>"
+msgstr ""
+
+#. module: l10n_ph
+#: model_terms:ir.ui.view,arch_db:l10n_ph.report_disbursement_voucher_document
+msgid "<span>Label</span>"
+msgstr ""
+
+#. module: l10n_ph
+#: model_terms:ir.ui.view,arch_db:l10n_ph.report_disbursement_voucher_internal_document
+msgid "<span>Number</span>"
+msgstr ""
+
+#. module: l10n_ph
+#: model_terms:ir.ui.view,arch_db:l10n_ph.report_disbursement_voucher_document
+msgid "<strong>Payment</strong>"
+msgstr ""
+
+#. module: l10n_ph
+#: model_terms:ir.ui.view,arch_db:l10n_ph.report_disbursement_voucher_internal_document
+msgid "<strong>Related Vendor Bill</strong>"
+msgstr ""
+
+#. module: l10n_ph
+#: model_terms:ir.ui.view,arch_db:l10n_ph.report_disbursement_voucher_document
+#: model_terms:ir.ui.view,arch_db:l10n_ph.report_disbursement_voucher_internal_document
+msgid "<strong>Totals</strong>"
 msgstr ""
 
 #. module: l10n_ph
@@ -273,6 +302,11 @@ msgid "Amount"
 msgstr ""
 
 #. module: l10n_ph
+#: model_terms:ir.ui.view,arch_db:l10n_ph.report_disbursement_voucher_document
+msgid "Amount in Words:"
+msgstr ""
+
+#. module: l10n_ph
 #: model_terms:ir.ui.view,arch_db:l10n_ph.report_disbursement_voucher_document_footer
 msgid "Approved By:"
 msgstr ""
@@ -281,6 +315,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_ph.field_res_partner__branch_code
 #: model:ir.model.fields,field_description:l10n_ph.field_res_users__branch_code
 msgid "Branch Code"
+msgstr ""
+
+#. module: l10n_ph
+#: model_terms:ir.ui.view,arch_db:l10n_ph.report_disbursement_voucher_document
+msgid "Check Date:"
 msgstr ""
 
 #. module: l10n_ph
@@ -314,12 +353,23 @@ msgid "Create a Customer"
 msgstr ""
 
 #. module: l10n_ph
+#: model:ir.actions.report,name:l10n_ph.action_report_disbursement_voucher_ph
+msgid "Disbursement Voucher"
+msgstr ""
+
+#. module: l10n_ph
 #: model_terms:ir.ui.view,arch_db:l10n_ph.report_disbursement_voucher_document
 msgid "Disbursement Voucher:"
 msgstr ""
 
 #. module: l10n_ph
+#: model_terms:ir.ui.view,arch_db:l10n_ph.report_disbursement_voucher_internal_document
+msgid "Disbursement Voucher: Internal"
+msgstr ""
+
+#. module: l10n_ph
 #: model:ir.model.fields,field_description:l10n_ph.field_account_chart_template__display_name
+#: model:ir.model.fields,field_description:l10n_ph.field_account_payment__display_name
 #: model:ir.model.fields,field_description:l10n_ph.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_ph.field_res_company__display_name
 #: model:ir.model.fields,field_description:l10n_ph.field_res_partner__display_name
@@ -351,6 +401,7 @@ msgstr ""
 
 #. module: l10n_ph
 #: model:ir.model.fields,field_description:l10n_ph.field_account_chart_template__id
+#: model:ir.model.fields,field_description:l10n_ph.field_account_payment__id
 #: model:ir.model.fields,field_description:l10n_ph.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_ph.field_res_company__id
 #: model:ir.model.fields,field_description:l10n_ph.field_res_partner__id
@@ -360,6 +411,16 @@ msgstr ""
 #. module: l10n_ph
 #: model:ir.model.fields.selection,name:l10n_ph.selection__res_partner__l10n_ph_entity_type__individual
 msgid "Individual"
+msgstr ""
+
+#. module: l10n_ph
+#: model:ir.actions.report,name:l10n_ph.action_report_disbursement_voucher_internal_ph
+msgid "Internal Disbursement Voucher"
+msgstr ""
+
+#. module: l10n_ph
+#: model_terms:ir.ui.view,arch_db:l10n_ph.report_disbursement_voucher_document
+msgid "Journal:"
 msgstr ""
 
 #. module: l10n_ph
@@ -400,19 +461,14 @@ msgid "Part IV - Details of VAT Computation"
 msgstr ""
 
 #. module: l10n_ph
-#: model_terms:ir.ui.view,arch_db:l10n_ph.report_disbursement_voucher_document
-msgid "Payment Receipt"
+#: model:ir.model,name:l10n_ph.model_account_payment
+msgid "Payment"
 msgstr ""
 
 #. module: l10n_ph
 #: model:ir.ui.menu,name:l10n_ph.account_reports_ph_statements_menu
 #: model_terms:ir.ui.view,arch_db:l10n_ph.view_tax_form
 msgid "Philippines"
-msgstr ""
-
-#. module: l10n_ph
-#: model:ir.actions.report,name:l10n_ph.action_report_disbursement_voucher_ph
-msgid "Philippines : Disbursement Voucher"
 msgstr ""
 
 #. module: l10n_ph

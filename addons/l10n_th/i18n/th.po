@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-05 20:09+0000\n"
+"POT-Creation-Date: 2026-06-12 18:25+0000\n"
 "PO-Revision-Date: 2026-06-10 03:41+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-master-l10n/"
@@ -18,6 +18,21 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2026.6.1\n"
+
+#. module: l10n_th
+#: model:ir.actions.report,print_report_name:l10n_th.action_report_50_tawi
+msgid "'WHT_%s' % (object.name.replace('/', '-'))"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid ""
+"1. กรณีบุคคลธรรมดาไทย ให้ใช้เลขประจำตัวประชาชนของกรมการปกครอง<br/>\n"
+"                        2. กรณีนิติบุคคล "
+"ให้ใช้เลขทะเบียนนิติบุคคลของกรมพัฒนาธุรกิจการค้า<br/>\n"
+"                        3. กรณีอื่น ๆ นอกเหนือจาก 1. และ 2. "
+"ให้ใช้เลขประจำตัวผู้เสียภาษีอากร (13 หลัก) ของกรมสรรพากร"
+msgstr ""
 
 #. module: l10n_th
 #: model:ir.model.fields.selection,name:l10n_th.selection__account_tax__l10n_th_income_tax_type__commission
@@ -87,6 +102,126 @@ msgstr ""
 #. module: l10n_th
 #: model:ir.model.fields.selection,name:l10n_th.selection__account_tax__l10n_th_income_tax_type__transportation
 msgid "40 (8) - Transportation"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.actions.report,name:l10n_th.action_report_50_tawi
+msgid "50 Tawi"
+msgstr ""
+
+#. module: l10n_th
+#: model:ir.model,name:l10n_th.model_report_l10n_th_report_50_tawi
+msgid "50 Tawi Report"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid "<br/>(วัน เดือน ปี ที่ออกหนังสือรับรองฯ)"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid ""
+"<span class=\"me-3\"><strong>เงินที่จ่ายเข้า</strong> กบข./กสจ./"
+"กองทุนสงเคราะห์ครูโรงเรียนเอกชน​.................​บาท</span>\n"
+"                        <span class=\"me-3\">กองทุนประกันสังคม​.................​"
+"บาท</span>\n"
+"                        <span>กองทุนสำรองเลี้ยงชีพ​.................​บาท</span>"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid "<span class=\"ms-2\">ในแบบ</span>"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid "<span class=\"text-nowrap me-1\">ลำดับที่</span>"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid ""
+"<span style=\"font-size: 9px;\">(ให้ระบุชื่ออาคาร/หมู่บ้าน ห้องเลขที่ ชั้นที่ เลขที่ ตรอก/"
+"ซอย หมู่ที่ ถนน ตำบล/แขวง อำเภอ/เขต จังหวัด)</span>"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid ""
+"<span style=\"font-size: 9px;\">(ให้ระบุว่าเป็น บุคคล นิติบุคคล บริษัท สมาคม "
+"หรือคณะบุคคล)</span>"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid ""
+"<span style=\"font-size: 9px;\">(ให้สามารถอ้างอิงหรือสอบยันกันได้ระหว่างลำดับที่ตาม "
+"หนังสือรับรองฯ กับแบบยื่นรายการภาษีหัก ณ ที่จ่าย)</span>"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid ""
+"<span><strong>ฉบับที่ 1</strong> (สำหรับผู้ถูกหักภาษี ณ ที่จ่าย "
+"ใช้แนบพร้อมกับแบบแสดงรายการภาษี)</span><br/>\n"
+"                <span><strong>ฉบับที่ 2</strong> (สำหรับผู้ถูกหักภาษี ณ ที่จ่าย "
+"เก็บไว้เป็นหลักฐาน)</span>"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid "<span>ชื่อ: </span>"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid "<span>ที่อยู่: </span>"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid "<span>รวมเงินภาษีที่หักนำส่ง (ตัวอักษร): </span>"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid ""
+"<span>เล่มที่​...................................................</span><br/>\n"
+"                                        เลขที่:"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid ""
+"<strong style=\"font-size: 15px;\">หนังสือรับรองการหักภาษี ณ ที่จ่าย</strong><br/>\n"
+"                                        <strong>ตามมาตรา 50 ทวิ "
+"แห่งประมวลรัษฎากร</strong>"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid "<strong>คำเตือน</strong>"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid "<strong>ผู้จ่ายเงิน</strong>"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid "<strong>ผู้ถูกหักภาษี ณ ที่จ่าย</strong>"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid "<strong>ผู้มีหน้าที่หักภาษี ณ ที่จ่าย</strong>"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid "<strong>หมายเหตุ</strong>  เลขประจำตัวผู้เสียภาษีอากร (13 หลัก)* หมายถึง<br/>"
 msgstr ""
 
 #. module: l10n_th
@@ -164,6 +299,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_th.field_account_payment_register__display_name
 #: model:ir.model.fields,field_description:l10n_th.field_account_tax__display_name
 #: model:ir.model.fields,field_description:l10n_th.field_ir_actions_report__display_name
+#: model:ir.model.fields,field_description:l10n_th.field_report_l10n_th_report_50_tawi__display_name
 #: model:ir.model.fields,field_description:l10n_th.field_res_partner__display_name
 #: model:ir.model.fields,field_description:l10n_th.field_res_partner_bank__display_name
 msgid "Display Name"
@@ -202,6 +338,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_th.field_account_payment_register__id
 #: model:ir.model.fields,field_description:l10n_th.field_account_tax__id
 #: model:ir.model.fields,field_description:l10n_th.field_ir_actions_report__id
+#: model:ir.model.fields,field_description:l10n_th.field_report_l10n_th_report_50_tawi__id
 #: model:ir.model.fields,field_description:l10n_th.field_res_partner__id
 #: model:ir.model.fields,field_description:l10n_th.field_res_partner_bank__id
 msgid "ID"
@@ -328,6 +465,11 @@ msgid "Payment"
 msgstr ""
 
 #. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.view_account_payment_form_inherit_l10n_th
+msgid "Print 50 Tawi"
+msgstr ""
+
+#. module: l10n_th
 #: model_terms:ir.ui.view,arch_db:l10n_th.th_partner_address_form
 msgid "Province"
 msgstr ""
@@ -417,8 +559,7 @@ msgstr ""
 #: model:ir.model.fields,help:l10n_th.field_account_tax__l10n_th_income_tax_type
 msgid ""
 "The income type on 50 Tawi. Select 'Not Applicable' to exclude from 50 Tawi."
-msgstr ""
-"ประเภทรายได้ใน 50 ทวิ ให้เลือก 'ไม่เกี่ยวข้อง' เพื่อไม่ให้รวมอยู่ใน 50 ทวิ"
+msgstr "ประเภทรายได้ใน 50 ทวิ ให้เลือก 'ไม่เกี่ยวข้อง' เพื่อไม่ให้รวมอยู่ใน 50 ทวิ"
 
 #. module: l10n_th
 #: model:ir.model.fields,field_description:l10n_th.field_res_partner__l10n_th_title
@@ -446,6 +587,60 @@ msgstr ""
 #. module: l10n_th
 #: model_terms:ir.ui.view,arch_db:l10n_th.view_tax_form_inherit_l10n_th
 msgid "e.g. Services"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid "ขอรับรองว่าข้อความและตัวเลขดังกล่าวข้างต้นถูกต้องตรงกับความจริงทุกประการ"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid "จำนวนเงินที่จ่าย"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid "ถ้วน"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid "ประทับตรา<br/>นิติบุคคล<br/>(ถ้ามี)"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid "ประเภทเงินได้พึงประเมินที่จ่าย"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid ""
+"ผู้มีหน้าที่ออกหนังสือรับรองการหักภาษี ณ ที่จ่าย ฝ่าฝืนไม่ปฏิบัติตามมาตรา 50 ทวิ แห่งประมวลรัษฎากร "
+"ต้องรับโทษทางอาญาตามมาตรา 35 แห่งประมวลรัษฎากร"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid "ภาษีที่หัก<br/>และนำส่งไว้"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid "รวมเงินที่จ่ายและภาษีที่หักนำส่ง"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid ""
+"ลงชื่อ​.........................................................................​"
+"ผู้จ่ายเงิน<br/>"
+msgstr ""
+
+#. module: l10n_th
+#: model_terms:ir.ui.view,arch_db:l10n_th.report_50_tawi_document
+msgid "วัน เดือน<br/>หรือปีภาษีที่จ่าย"
 msgstr ""
 
 #~ msgid "Empty for Head Office"
