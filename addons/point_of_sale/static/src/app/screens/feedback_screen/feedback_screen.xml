@@ -2,7 +2,17 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.FeedbackScreen">
         <div t-ref="feedback-screen" class="feedback-screen bg-100 fixed-top w-100 h-100 d-flex flex-column align-items-center justify-content-center" t-on-click="() => this.onClick()">
-            <div class="amount-paid fw-bolder">Amount Paid</div>
+            <div style="width: 115px; height: 115px;">
+                <t t-if="!this.state.loading">
+                    <t t-call="point_of_sale.ValidationAnimation"/>
+                </t>
+            </div>
+
+            <div class="amount-paid fw-bolder mt-2">
+                <t t-if="this.state.loading">Processing...</t>
+                <t t-else="">Amount Paid</t>
+            </div>
+
             <div class="amount-container">
                 <div t-ref="amount" class="amount lh-sm">
                     <PriceFormatter price="this.env.utils.formatCurrency(this.currentOrder.totalDue, false)"/>
