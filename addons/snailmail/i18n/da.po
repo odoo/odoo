@@ -1,29 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* snailmail
+# * snailmail
 #
 # Translators:
 # Sanne Kristensen <sanne@vkdata.dk>, 2024
 # Martin Trigaux, 2024
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Martin Trigaux, 2024\n"
-"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"PO-Revision-Date: 2026-06-06 19:26+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/snailmail/"
+"da/>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__attachment_error
 msgid "ATTACHMENT_ERROR"
-msgstr ""
+msgstr "ATTACHMENT_ERROR"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_cover
@@ -44,6 +46,8 @@ msgstr "Adresse"
 msgid ""
 "An error occurred when sending a letter with Snailmail on “%(record_name)s”"
 msgstr ""
+"Der opstod en fejl under afsendelsen af et brev med posten \"%(record_name)"
+"s\""
 
 #. module: snailmail
 #. odoo-javascript
@@ -55,7 +59,7 @@ msgstr "Der skete en fejl under afsendelse af et brev via Post."
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "An error occurred when sending the document by post.<br>Error: %s"
-msgstr ""
+msgstr "Der opstod en fejl under afsendelsen af et brev med posten.<br>Fejl: %s"
 
 #. module: snailmail
 #. odoo-python
@@ -280,7 +284,7 @@ msgstr "Information"
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "Invalid recipient name."
-msgstr ""
+msgstr "Ugyldig modtagernavn."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
@@ -344,7 +348,7 @@ msgstr "NO_PRICE_AVAILABLE"
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "Not enough credits for Snail Mail"
-msgstr ""
+msgstr "Ikke tilstrækkelig saldo til at sende med posten"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__notification_type
@@ -388,7 +392,7 @@ msgstr "Kontakt"
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "Please use an A4 Paper format."
-msgstr ""
+msgstr "Brug venligst A4-papirformat."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_duplex
@@ -430,6 +434,7 @@ msgstr "Send nu"
 #: model:iap.service,description:snailmail.iap_service_snailmail
 msgid "Send your customer invoices and follow-up reports by post, worldwide."
 msgstr ""
+"Send dine kundefakturaer og rykkerskrivelser med posten til hele verden."
 
 #. module: snailmail
 #. odoo-javascript
@@ -447,7 +452,7 @@ msgstr "Sent før"
 #. odoo-python
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "Snail Mails are successfully sent"
-msgstr ""
+msgstr "Afsendelse med posten vellykket"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_message__message_type__snailmail
@@ -458,12 +463,12 @@ msgstr "Almindelig post"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
 msgid "Snailmail Color"
-msgstr ""
+msgstr "Farve på postforsendelsen"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_cover_readonly
 msgid "Snailmail Cover Readonly"
-msgstr ""
+msgstr "Konvolutten til postforsendelsen er skrivebeskyttet"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
@@ -474,7 +479,7 @@ msgstr "Post Kreditfejl"
 #. odoo-javascript
 #: code:addons/snailmail/static/src/messaging_menu/messaging_menu_patch.js:0
 msgid "Snailmail Failure: %(modelName)s"
-msgstr ""
+msgstr "Fejl ved afsendelse af post: %(modelName)s"
 
 #. module: snailmail
 #. odoo-javascript
@@ -538,7 +543,7 @@ msgstr "Postbrev: behandling breve kø"
 #. module: snailmail
 #: model:iap.service,unit_name:snailmail.iap_service_snailmail
 msgid "Stamps"
-msgstr ""
+msgstr "Frimærker"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state_id
@@ -623,6 +628,8 @@ msgstr ""
 #: code:addons/snailmail/models/snailmail_letter.py:0
 msgid "The document to be sent exceeds the maximum allowed limit of 8 pages."
 msgstr ""
+"Det dokument, der skal sendes, overskrider den maksimalt tilladte grænse på "
+"8 sider."
 
 #. module: snailmail
 #. odoo-python

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2026-05-28 09:58+0000\n"
+"PO-Revision-Date: 2026-06-06 10:21+0000\n"
 "Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-18/pos_razorpay/"
 "lo/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_razorpay
 #: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__all
@@ -28,19 +28,19 @@ msgstr "ທັງໝົດ"
 #. module: pos_razorpay
 #: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__bharatqr
 msgid "BHARATQR"
-msgstr ""
+msgstr "BHARATQR"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/razorpay_pos_request.py:0
 msgid "Cannot decode Razorpay POS response"
-msgstr ""
+msgstr "ບໍ່ສາມາດຖອດລະຫັດການຕອບກັບຈາກ Razorpay POS ໄດ້"
 
 #. module: pos_razorpay
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
 msgid "Cannot process transactions with negative amount."
-msgstr ""
+msgstr "ບໍ່ສາມາດປະມວນຜົນທຸລະກຳທີ່ມີຈຳນວນເງິນຕິດລົບໄດ້."
 
 #. module: pos_razorpay
 #: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__card
@@ -53,6 +53,8 @@ msgid ""
 "Choose allow payment mode: \n"
 " All/Card/UPI or QR"
 msgstr ""
+"ເລືອກໂໝດການຊຳລະເງິນທີ່ອະນຸຍາດ: \n"
+" ທັງໝົດ/ບັດ/UPI ຫຼື QR"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -61,6 +63,7 @@ msgid ""
 "Could not connect to the Odoo server, please check your internet connection "
 "and try again."
 msgstr ""
+"ບໍ່ສາມາດເຊື່ອມຕໍ່ຫາເຊີບເວີ Odoo ໄດ້, ກະລຸນາກວດສອບການເຊື່ອມຕໍ່ອິນເຕີເນັດຂອງທ່ານ ແລ້ວລອງໃໝ່ອີກຄັ້ງ."
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_tid
@@ -68,6 +71,8 @@ msgid ""
 "Device Serial No \n"
 " ex: 7000012300"
 msgstr ""
+"ເລກລຳດັບອຸປະກອນ \n"
+" ຕົວຢ່າງ: 7000012300"
 
 #. module: pos_razorpay
 #. odoo-javascript
@@ -76,6 +81,8 @@ msgid ""
 "Payment has been queued. You may choose to wait for the payment to initiate "
 "on terminal or proceed to cancel this transaction"
 msgstr ""
+"ການຊຳລະເງິນຖືກຈັດເຂົ້າຄິວແລ້ວ. ທ່ານສາມາດເລືອກລໍຖ້າໃຫ້ການຊຳລະເງິນເລີ່ມຕົ້ນຢູ່ເຄື່ອງຮູດບັດ ຫຼື ດຳເນີນການຍົ"
+"ກເລີກທຸລະກຳນີ້"
 
 #. module: pos_razorpay
 #: model:ir.model,name:pos_razorpay.model_pos_payment_method
@@ -90,23 +97,23 @@ msgstr "ການຊຳລະເງິນຈຸດຂາຍ"
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_api_key
 msgid "Razorpay API Key"
-msgstr ""
+msgstr "ຄີ API ຂອງ Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_allowed_payment_modes
 msgid "Razorpay Allowed Payment Modes"
-msgstr ""
+msgstr "ໂໝດການຊຳລະເງິນທີ່ອະນຸຍາດຂອງ Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_tid
 msgid "Razorpay Device Serial No"
-msgstr ""
+msgstr "ເລກລຳດັບອຸປະກອນ Razorpay"
 
 #. module: pos_razorpay
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
 msgid "Razorpay Error"
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດຈາກ Razorpay"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -115,13 +122,14 @@ msgid ""
 "Razorpay POS payment cancel request expected errorCode not found in the "
 "response"
 msgstr ""
+"ຄຳຂໍຍົກເລີກການຊຳລະເງິນ Razorpay POS ຄາດວ່າຈະມີ errorCode ແຕ່ບໍ່ພົບໃນການຕອບກັບ"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
 msgid ""
 "Razorpay POS payment request expected errorCode not found in the response"
-msgstr ""
+msgstr "ຄຳຂໍການຊຳລະເງິນ Razorpay POS ຄາດວ່າຈະມີ errorCode ແຕ່ບໍ່ພົບໃນການຕອບກັບ"
 
 #. module: pos_razorpay
 #. odoo-python
@@ -130,61 +138,62 @@ msgid ""
 "Razorpay POS payment status request expected errorCode not found in the "
 "response"
 msgstr ""
+"ຄຳຂໍສະຖານະການຊຳລະເງິນ Razorpay POS ຄາດວ່າຈະມີ errorCode ແຕ່ບໍ່ພົບໃນການຕອບກັບ"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
 msgid "Razorpay POS transaction canceled successfully"
-msgstr ""
+msgstr "ຍົກເລີກທຸລະກຳ Razorpay POS ສຳເລັດແລ້ວ"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
 msgid "Razorpay POS transaction failed"
-msgstr ""
+msgstr "ທຸລະກຳ Razorpay POS ຫຼົ້ມເຫຼວ"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment__razorpay_reverse_ref_no
 msgid "Razorpay Reverse Reference No."
-msgstr ""
+msgstr "ເລກອ້າງອີງການຄືນເງິນ Razorpay."
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_test_mode
 msgid "Razorpay Test Mode"
-msgstr ""
+msgstr "ໂໝດທົດລອງ Razorpay"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,field_description:pos_razorpay.field_pos_payment_method__razorpay_username
 msgid "Razorpay Username"
-msgstr ""
+msgstr "ຊື່ຜູ້ໃຊ້ Razorpay"
 
 #. module: pos_razorpay
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
 msgid "Reference number mismatched"
-msgstr ""
+msgstr "ເລກອ້າງອີງບໍ່ກົງກັນ"
 
 #. module: pos_razorpay
 #. odoo-python
 #: code:addons/pos_razorpay/models/pos_payment_method.py:0
 msgid "This Payment Terminal is only valid for INR Currency"
-msgstr ""
+msgstr "ເຄື່ອງຮູດບັດນີ້ໃຊ້ໄດ້ສະເພາະສະກຸນເງິນ INR ເທົັ້ນັ້ນ"
 
 #. module: pos_razorpay
 #. odoo-javascript
 #: code:addons/pos_razorpay/static/src/app/payment_razorpay.js:0
 msgid "Transaction failed due to inactivity"
-msgstr ""
+msgstr "ທຸລະກຳຫຼົ້ມເຫຼວຍ້ອນບໍ່ມີການເຄື່ອນໄຫວ"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_test_mode
 msgid "Turn it on when in Test Mode"
-msgstr ""
+msgstr "ເປີດໃຊ້ງານເມື່ອຢູ່ໃນໂໝດທົດລອງ"
 
 #. module: pos_razorpay
 #: model:ir.model.fields.selection,name:pos_razorpay.selection__pos_payment_method__razorpay_allowed_payment_modes__upi
 msgid "UPI"
-msgstr ""
+msgstr "UPI"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_api_key
@@ -192,6 +201,8 @@ msgid ""
 "Used when connecting to Razorpay: "
 "https://razorpay.com/docs/payments/dashboard/account-settings/api-keys/"
 msgstr ""
+"ໃຊ້ໃນເວລາເຊື່ອມຕໍ່ຫາ Razorpay: https://razorpay.com/docs/payments/dashboard/"
+"account-settings/api-keys/"
 
 #. module: pos_razorpay
 #: model:ir.model.fields,help:pos_razorpay.field_pos_payment_method__razorpay_username
@@ -199,3 +210,5 @@ msgid ""
 "Username(Device Login) \n"
 " ex: 1234500121"
 msgstr ""
+"ຊື່ຜູ້ໃຊ້ (ເຂົ້າລະບົບອຸປະກອນ) \n"
+" ຕົວຢ່າງ: 1234500121"

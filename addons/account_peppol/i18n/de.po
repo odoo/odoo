@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-15 17:38+0000\n"
-"PO-Revision-Date: 2026-05-18 16:14+0000\n"
+"POT-Creation-Date: 2026-06-05 19:33+0000\n"
+"PO-Revision-Date: 2026-06-10 11:27+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-18/"
 "account_peppol/de/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -62,6 +62,13 @@ msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 
 #. module: account_peppol
 #. odoo-python
+#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
+msgid "%(proxy_type)s document (UUID: %(uuid)s) has been received successfully"
+msgstr ""
+"Das Dokument %(proxy_type)s (UUID: %(uuid)s) wurde erfolgreich empfangen"
+
+#. module: account_peppol
+#. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "%s has requested electronic invoices reception on Peppol."
 msgstr ""
@@ -95,6 +102,18 @@ msgstr ""
 "invisible=\"peppol_move_state != 'to_send'\">\n"
 "                        Die Rechnung wird automatisch an PEPPOL gesendet.\n"
 "                    </span>"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "A connection to '%s' already exists."
+msgstr "Es besteht bereits eine Verbindung zu „%s“."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid "A contact email is required."
+msgstr "Eine Kontakt-E-Mail-Adresse ist erforderlich."
 
 #. module: account_peppol
 #. odoo-python
@@ -297,6 +316,12 @@ msgid "Company Name"
 msgstr "Unternehmensname"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
+msgid "Complete your registration"
+msgstr "Registrierung abschließen"
+
+#. module: account_peppol
 #: model:ir.model,name:account_peppol.model_res_config_settings
 msgid "Config Settings"
 msgstr "Konfigurationseinstellungen "
@@ -327,12 +352,6 @@ msgstr "Kontakt"
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 msgid "Contact details were updated."
 msgstr "Kontaktinformationen sind aktuell."
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/res_config_settings.py:0
-msgid "Contact email and mobile number are required."
-msgstr "Kontakt-E-Mail und Handynummer sind erforderlich."
 
 #. module: account_peppol
 #. odoo-python
@@ -445,8 +464,8 @@ msgstr "EDi-Benutzer"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
-msgid "EDI user should be of type Peppol"
-msgstr "EDI-Benutzer sollte den Typ „Peppol“ haben"
+msgid "EDI user should be of one of the following types: %s"
+msgstr "EDI-Benutzer sollten einem der folgenden Typen angehören: %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_identification
@@ -543,10 +562,10 @@ msgstr "Journal für Eingangsrechnungen"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
-msgid "Invoice %s is too big to send via peppol (64MB limit)"
+msgid "Invoice %s exceeds the size limit of 64 MB to be sent via Peppol."
 msgstr ""
-"Die Rechnung %s ist zu groß, um sie über Peppol zu versenden (Limit von 64 "
-"MB)"
+"Die Rechnungsdatei „%s“ überschreitet die Größenbeschränkung von 64 MB für "
+"den Versand über Peppol."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -796,12 +815,6 @@ msgid "Peppol Use Parent Company"
 msgstr "Verwendung des übergeordneten Unternehmens in Peppol"
 
 #. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/models/account_edi_proxy_user.py:0
-msgid "Peppol document (UUID: %(uuid)s) has been received successfully"
-msgstr "Peppol-Dokument (UUID: %(uuid)s) wurde erfolgreich empfangen"
-
-#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.portal_my_details_fields
 msgid "Peppol e-Address (EAS)"
 msgstr "Peppol E-Adresse (EAS)"
@@ -864,6 +877,16 @@ msgstr ""
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
 msgid "Please fill in the EAS code and the Participant ID code."
 msgstr "Bitte geben Sie den EAS-Code und den ID-Code des Teilnehmers ein."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/models/res_config_settings.py:0
+msgid ""
+"Please install the 'France - E-Invoicing (Approved Platform)' module "
+"(l10n_fr_pdp) first"
+msgstr ""
+"Installieren Sie zuerst das Modul „Frankreich – E-Rechnungsstellung "
+"(genehmigte Plattform)“ (l10n_fr_pdp)"
 
 #. module: account_peppol
 #. odoo-python
@@ -955,6 +978,12 @@ msgstr "Registriert für den Empfang von Dokumenten über Peppol."
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__rejected
 msgid "Rejected"
 msgstr "Abgelehnt"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
+msgid "Remove from Approved Platform"
+msgstr "Von der genehmigten Plattform entfernen"
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1163,6 +1192,18 @@ msgstr ""
 "Der Verifizierungscode ist abgelaufen. Bitte fragen Sie einen neuen an."
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
+msgid "This will delete your Approved Platform registration."
+msgstr "Dadurch wird Ihre Registrierung auf der genehmigten Plattform gelöscht."
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
+msgid "This will delete your Peppol registration."
+msgstr "Dadurch wird Ihre Peppol-Registrierung gelöscht."
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_form_account_peppol
 msgid ""
 "To generate complete electronic invoices, also set a country for this "
@@ -1358,11 +1399,21 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
 msgid ""
-"You will not be able to send or receive Peppol documents in Odoo anymore. "
-"Are you sure you want to proceed?"
+"You will no longer be able to send or receive Peppol documents in Odoo. Are "
+"you sure you want to proceed?"
 msgstr ""
-"Sie können keine Peppol-Dokumente mehr in Odoo versenden oder empfangen. "
-"Sind Sie sicher, dass Sie fortfahren möchten?"
+"Sie können in Odoo keine Peppol-Dokumente mehr senden oder empfangen. "
+"Möchten Sie wirklich fortfahren?"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.js:0
+msgid ""
+"You will no longer be able to send or receive documents via the Odoo "
+"Approved Platform. Are you sure you want to proceed?"
+msgstr ""
+"Sie können keine Dokumente mehr über die genehmigte Odoo-Plattform senden "
+"oder empfangen. Möchten Sie wirklich fortfahren?"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1465,6 +1516,27 @@ msgstr ", um Rechnungen zu verwenden, aber diese"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "verwendet"
+
+#~ msgid "Contact email and mobile number are required."
+#~ msgstr "Kontakt-E-Mail und Handynummer sind erforderlich."
+
+#~ msgid "EDI user should be of type Peppol"
+#~ msgstr "EDI-Benutzer sollte den Typ „Peppol“ haben"
+
+#~ msgid "Invoice %s is too big to send via peppol (64MB limit)"
+#~ msgstr ""
+#~ "Die Rechnung %s ist zu groß, um sie über Peppol zu versenden (Limit von "
+#~ "64 MB)"
+
+#~ msgid "Peppol document (UUID: %(uuid)s) has been received successfully"
+#~ msgstr "Peppol-Dokument (UUID: %(uuid)s) wurde erfolgreich empfangen"
+
+#~ msgid ""
+#~ "You will not be able to send or receive Peppol documents in Odoo anymore. "
+#~ "Are you sure you want to proceed?"
+#~ msgstr ""
+#~ "Sie können keine Peppol-Dokumente mehr in Odoo versenden oder empfangen. "
+#~ "Sind Sie sicher, dass Sie fortfahren möchten?"
 
 #~ msgid "Send electronic invoices, and receive bills automatically via Peppol"
 #~ msgstr ""
