@@ -1,7 +1,22 @@
 # Odoo Development Harness
 
+## Project Identity
+
+<!-- TEAM: fill this in — it is the answer to "what is this system?" for every new agent session -->
+
+**What:** `odoo-up5` is [describe what UP5 does — e.g. "a customised Odoo 19.0 ERP for [company/client], focused on [domain: accounting, POS, manufacturing…]"]
+
+**Custom scope:** The following modules are UP5-specific (not upstream Odoo):
+- *(list custom addons here as they are created, e.g. `addons/up5_account_extension/`)*
+
+**Standard modules in active use:** *(list the core Odoo modules this deployment relies on)*
+
+**What NOT to touch:** Upstream Odoo modules inside `addons/` and all of `odoo/`. Extend only — never patch.
+
+---
+
 This file defines the operating rules for Claude Code working in this repository.
-It is a fork of Odoo 19.0. The active branch is `19.0`.
+Branch: `19.0`.
 
 ---
 
@@ -84,14 +99,15 @@ conda run -n odoo19 python odoo-bin -c odoo.conf \
 
 ```
 odoo-bin              # Main entry point (do not modify)
-requirements.txt      # Python dependencies
-.python-version       # Python 3.12 — runtime spec for this project
+requirements.txt      # Python dependencies — Python 3.12 required
 verify.sh             # Single verification command: lint + tests
 odoo.conf             # Local DB config (gitignored — create your own)
+claude-progress.md    # Session state log — read at start, update before close
+feature_list.json     # Task tracker with acceptance criteria
 addons/               # All standard and custom Odoo modules (work here)
+  <module>/
+    NOTES.md          # Module-level context (create when module is complex)
 odoo/                 # Core Odoo framework (DO NOT MODIFY)
-setup/                # Installation scripts (do not modify)
-doc/                  # Documentation (do not modify)
 up5-docs/             # Team internal documentation
 up5-learning/         # Team learning notes
 ```
@@ -253,6 +269,17 @@ A task is complete **only** when all of the following are true:
 - **`data` list out of order** → view references a security group that isn't loaded yet → `ValueError` on install
 - **Missing `@api.depends`** → compute field never recalculates after its dependencies change
 - **`store=False` on a filtered/grouped field** → the field works in form view but breaks in list/search
+
+---
+
+## State Management (ACID)
+
+These rules prevent state corruption across sessions and between agents working on the same repo.
+
+- **Atomicity** — one logical change per commit. If a task requires model + view + security changes, commit them together. Use `git stash` to shelve incomplete work before switching context.
+- **Consistency** — every commit must leave the repo in a verified state: `./verify.sh <module>` passes before committing.
+- **Isolation** — one branch per feature or fix. Never work on two unrelated tasks in the same branch.
+- **Durability** — all decisions, constraints, and progress live in git-tracked files (`CLAUDE.md`, `claude-progress.md`, `feature_list.json`). Never rely on session memory alone.
 
 ---
 
