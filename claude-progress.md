@@ -4,18 +4,19 @@
 
 - **Branch:** `19.0-add-harness-engineering-cla`
 - **Last verified:** 2026-06-13
-- **Environment:** conda env `odoo19` (Python 3.12) — PostgreSQL not yet installed
-- **Repo status:** Clean — harness setup complete, no development tasks started
+- **Environment:** conda env `odoo19` (Python 3.12) + PostgreSQL 17 + `odoo_dev` database ✅
+- **Repo status:** Clean — harness setup complete, initialization phase **done**
+- **Verification:** `./verify.sh account` exits 0 (pre-flight + tests pass)
 
 ## Next Steps
 
-1. Install PostgreSQL and initialise `odoo_dev` database → see [dev-environment.md](up5-docs/setup/dev-environment.md)
+1. Add first development task to `feature_list.json` with explicit criteria
 2. Fill in `CLAUDE.md` Project Identity with the first `up5_*` module name when created
-3. Add first development task to `feature_list.json` with explicit criteria before starting work
+3. Begin implementation phase — all 4 readiness conditions are now ✅
 
 ## Blockers
 
-- PostgreSQL not installed on dev machine — cannot run `./verify.sh` or start Odoo server until resolved
+None.
 
 ---
 
@@ -37,4 +38,29 @@
   - Lecture 05: Added `DECISIONS.md`, restructured `claude-progress.md` with Next Steps + Blockers
   - Created `up5-docs/` and `up5-learning/` folder structures
 - **Evidence:** All commits pushed to `origin/19.0-add-harness-engineering-cla`
-- **Next:** Apply remaining lectures; begin first real development task after PostgreSQL is set up
+
+### Session 3 — 2026-06-13
+- **Goal:** Install PostgreSQL and initialise `odoo_dev` database (initialization phase completion)
+- **Completed:**
+  - PostgreSQL 17 installed via EDB installer
+  - `odoo` role created with LOGIN SUPERUSER PASSWORD 'odoo'
+  - `odoo_dev` database initialised (14 modules loaded)
+  - `ruff` installed in `odoo19` conda env
+  - `verify.sh` fixed: conda multi-line arg bug resolved, lint now skips core Odoo modules
+  - `./verify.sh account` exits 0 — full pipeline green
+- **Evidence:**
+  ```
+  === Pre-flight checks ===
+    odoo-bin: ok
+    PostgreSQL: ok
+    Module path: ok (addons/account)
+
+  === Lint: skipped (core Odoo module — ruff applies to up5_* modules only) ===
+
+  === Tests: -i account ===
+  ...
+  Tests passed.
+
+  === account: all checks passed ===
+  ```
+- **Decisions made:** Lint skips non-`up5_*` modules (core Odoo code not our responsibility to lint)

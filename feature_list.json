@@ -12,5 +12,20 @@
     ],
     "verification": "ls CLAUDE.md claude-progress.md feature_list.json",
     "evidence": "All three files created on 2026-06-13"
+  },
+  {
+    "id": "install-postgresql",
+    "area": "infrastructure",
+    "title": "Install PostgreSQL and initialise odoo_dev database",
+    "status": "done",
+    "priority": "high",
+    "criteria": [
+      "psql --version returns a version string",
+      "psql -U odoo -c \"SELECT 1;\" succeeds",
+      "odoo_dev database exists",
+      "./verify.sh account exits 0 (full pipeline green)"
+    ],
+    "verification": "./verify.sh account",
+    "evidence": "./verify.sh account exited 0 on 2026-06-13: pre-flight (odoo-bin, PostgreSQL, module path) ok, tests passed (0 failed, 0 errors)"
   }
 ]

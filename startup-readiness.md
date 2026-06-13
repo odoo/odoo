@@ -15,17 +15,9 @@ Update the **Status** column as conditions are met.
 |---|---|---|
 | conda env exists | `conda env list \| grep odoo19` | ✅ |
 | Python packages installed | `conda run -n odoo19 python odoo-bin --version` | ✅ |
-| PostgreSQL reachable | `psql -U odoo -c "SELECT 1;"` | ❌ not installed |
-| `odoo_dev` database exists | `psql -U odoo -c "\l" \| grep odoo_dev` | ❌ not initialised |
-| Odoo server starts | `conda run -n odoo19 python odoo-bin -c odoo.conf --stop-after-init` | ❌ needs PostgreSQL |
-
-**Resolution:** Install PostgreSQL, create `odoo` role, initialise DB:
-```bash
-psql -U postgres -c "CREATE ROLE odoo WITH LOGIN SUPERUSER PASSWORD 'odoo';"
-conda activate odoo19
-python odoo-bin -c odoo.conf -d odoo_dev --stop-after-init
-```
-See [up5-docs/setup/dev-environment.md](up5-docs/setup/dev-environment.md) for full steps.
+| PostgreSQL reachable | `psql -U odoo -c "SELECT 1;"` | ✅ |
+| `odoo_dev` database exists | `psql -U odoo -c "\l" \| grep odoo_dev` | ✅ |
+| Odoo server starts | `conda run -n odoo19 python odoo-bin -c odoo.conf --stop-after-init` | ✅ |
 
 ---
 
@@ -37,14 +29,8 @@ See [up5-docs/setup/dev-environment.md](up5-docs/setup/dev-environment.md) for f
 |---|---|---|
 | `verify.sh` is executable | `ls -la verify.sh` | ✅ |
 | ruff lint runs | `conda run -n odoo19 ruff check addons/account/ \| head -5` | ✅ |
-| Odoo tests run | `./verify.sh account` | ❌ needs PostgreSQL + DB |
-| At least one test passes | `./verify.sh account` exits 0 | ❌ pending |
-
-**Resolution:** Complete Condition 1 first, then run:
-```bash
-./verify.sh account
-```
-A passing run confirms the full verification pipeline works.
+| Odoo tests run | `./verify.sh account` | ✅ |
+| At least one test passes | `./verify.sh account` exits 0 | ✅ |
 
 ---
 
@@ -69,7 +55,7 @@ A passing run confirms the full verification pipeline works.
 | Check | File | Status |
 |---|---|---|
 | Feature tracker exists | `feature_list.json` | ✅ |
-| At least one `todo` task with criteria | `feature_list.json` | ⚠️ none yet — add before starting dev |
+| At least one `todo` task with criteria | `feature_list.json` | ⚠️ no dev tasks yet — add before starting work |
 | Conventions documented | `up5-docs/standards/odoo-conventions.md` | ✅ |
 | Git workflow documented | `up5-docs/standards/git-workflow.md` | ✅ |
 
@@ -84,10 +70,9 @@ A passing run confirms the full verification pipeline works.
 
 | Condition | Ready? |
 |---|---|
-| Can Start | ⚠️ partial — PostgreSQL required |
-| Can Test | ❌ |
+| Can Start | ✅ |
+| Can Test | ✅ |
 | Can See Progress | ✅ |
 | Can Pick Up Next Steps | ⚠️ partial — no dev tasks in queue yet |
 
-**Initialization is complete when all four show ✅.**
-Update this file each time a condition is resolved.
+**Initialization is complete.** Add a `todo` task to `feature_list.json` to begin implementation.

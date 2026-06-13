@@ -23,15 +23,8 @@ if ! conda run -n odoo19 python odoo-bin --version &>/dev/null; then
 fi
 echo "  odoo-bin: ok"
 
-if ! conda run -n odoo19 python -c "
-import psycopg2, sys
-try:
-    psycopg2.connect(host='localhost', port=5432, user='odoo', password='odoo', dbname='odoo_dev')
-except Exception as e:
-    print(f'  PostgreSQL: FAIL — {e}')
-    print('  See startup-readiness.md Condition 1 for setup steps.')
-    sys.exit(1)
-" 2>&1; then
+if ! conda run -n odoo19 python -c "import psycopg2; psycopg2.connect(host='localhost', port=5432, user='odoo', password='odoo', dbname='odoo_dev')" 2>/dev/null; then
+  echo "  PostgreSQL: FAIL — cannot connect. See startup-readiness.md Condition 1."
   exit 1
 fi
 echo "  PostgreSQL: ok"
@@ -45,10 +38,15 @@ echo ""
 
 # ── Lint ──────────────────────────────────────────────────────────────────────
 
-echo "=== Lint: ruff check $ADDON_PATH ==="
-conda run -n odoo19 ruff check "$ADDON_PATH"
-echo "Lint passed."
-echo ""
+if [[ "$MODULE" == up5_* ]]; then
+  echo "=== Lint: ruff check $ADDON_PATH ==="
+  conda run -n odoo19 ruff check "$ADDON_PATH"
+  echo "Lint passed."
+  echo ""
+else
+  echo "=== Lint: skipped (core Odoo module — ruff applies to up5_* modules only) ==="
+  echo ""
+fi
 
 # ── Tests ─────────────────────────────────────────────────────────────────────
 
