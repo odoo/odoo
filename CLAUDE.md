@@ -5,15 +5,53 @@ It is a fork of Odoo 19.0. The active branch is `19.0`.
 
 ---
 
+## Environment
+
+**Runtime:** Miniconda — conda env `odoo19` (Python 3.12)
+**Config file:** `odoo.conf` at repo root — used by all `odoo-bin` invocations
+**Database:** PostgreSQL on `localhost:5432`, user `odoo`, db `odoo_dev`
+**Conda env path:** `C:\Users\duong\miniconda3\envs\odoo19`
+
+### Activate the environment (every session)
+
+```bash
+conda activate odoo19
+cd /c/projects/odoo-up5
+```
+
+### First-time database init (run once after PostgreSQL is installed)
+
+```bash
+# Create the Postgres role first (run as postgres superuser)
+psql -U postgres -c "CREATE ROLE odoo WITH LOGIN SUPERUSER PASSWORD 'odoo';"
+
+# Initialise the odoo_dev database
+conda activate odoo19
+python odoo-bin -c odoo.conf -d odoo_dev --stop-after-init
+```
+
+### Daily start / stop
+
+```bash
+conda activate odoo19
+python odoo-bin -c odoo.conf --dev=all   # http://localhost:8069
+# Ctrl+C to stop
+```
+
+`--dev=all` enables auto-reload of Python files and XML views on save.
+
+---
+
 ## Startup Checklist (mandatory — do not skip)
 
 Before doing any work, complete these steps in order:
 
-1. **Read `claude-progress.md`** — restore session context. If it is missing, treat the state as unknown and say so before proceeding.
-2. **Read `feature_list.json`** — identify which tasks are `in-progress` or `blocked`.
-3. Confirm environment: `python odoo-bin --version`
+1. **Activate env:** `conda activate odoo19`
+2. **Read `claude-progress.md`** — restore session context. If it is missing, treat the state as unknown and say so before proceeding.
+3. **Read `feature_list.json`** — identify which tasks are `in-progress` or `blocked`.
+4. Confirm environment: `python odoo-bin --version`
 
-Without step 1, cross-session context is lost and prior work may be duplicated or contradicted.
+Without step 2, cross-session context is lost and prior work may be duplicated or contradicted.
 
 ---
 
@@ -120,15 +158,17 @@ These are **implicit Odoo rules** not derivable from reading code alone. Violati
 ## Running Tests
 
 ```bash
-# Run tests for a single module (replace <db> and <module>)
-python odoo-bin --test-enable -d <db> --stop-after-init -i <module>
+conda activate odoo19
+
+# Run all tests for a module
+python odoo-bin -c odoo.conf --test-enable -d odoo_dev --stop-after-init -i <module>
 
 # Run a specific test class or method
-python odoo-bin --test-enable -d <db> --stop-after-init -i <module> \
+python odoo-bin -c odoo.conf --test-enable -d odoo_dev --stop-after-init -i <module> \
   --test-tags <module>/<ClassName>.<method_name>
 
-# Run with log level for debugging
-python odoo-bin --test-enable -d <db> --stop-after-init -i <module> \
+# Run with verbose test output
+python odoo-bin -c odoo.conf --test-enable -d odoo_dev --stop-after-init -i <module> \
   --log-level=test
 ```
 
@@ -139,10 +179,12 @@ Tests live in `addons/<module>/tests/test_*.py` and inherit from `odoo.tests.com
 ## Running the Dev Server
 
 ```bash
-python odoo-bin -d <db> --dev=all --addons-path=addons
+conda activate odoo19
+python odoo-bin -c odoo.conf --dev=all
 ```
 
-`--dev=all` enables auto-reload of Python files and assets.
+Open http://localhost:8069 — default login `admin` / `admin`.
+`--dev=all` auto-reloads Python files and XML views on save.
 
 ---
 
