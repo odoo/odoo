@@ -55,15 +55,45 @@ Without step 2, cross-session context is lost and prior work may be duplicated o
 
 ---
 
+## Verification Commands
+
+**Use `verify.sh` as the single command before declaring any task done.**
+
+```bash
+# Full check: lint + tests for one module
+./verify.sh <module>
+
+# Lint only (faster — use during development)
+conda run -n odoo19 ruff check addons/<module>/
+
+# Tests only
+conda run -n odoo19 python odoo-bin -c odoo.conf \
+  --test-enable -d odoo_dev --stop-after-init -i <module> --log-level=test
+
+# Specific test method
+conda run -n odoo19 python odoo-bin -c odoo.conf \
+  --test-enable -d odoo_dev --stop-after-init -i <module> \
+  --test-tags <module>/<ClassName>.<method>
+```
+
+`ruff` is configured at repo root in `ruff.toml` (Odoo's official lint rules). Run it on every module you touch.
+
+---
+
 ## Repository Layout
 
 ```
 odoo-bin              # Main entry point (do not modify)
 requirements.txt      # Python dependencies
+.python-version       # Python 3.12 — runtime spec for this project
+verify.sh             # Single verification command: lint + tests
+odoo.conf             # Local DB config (gitignored — create your own)
 addons/               # All standard and custom Odoo modules (work here)
 odoo/                 # Core Odoo framework (DO NOT MODIFY)
 setup/                # Installation scripts (do not modify)
 doc/                  # Documentation (do not modify)
+up5-docs/             # Team internal documentation
+up5-learning/         # Team learning notes
 ```
 
 **Rule: Never edit files inside `odoo/` or `setup/`.** All development happens in `addons/`.
@@ -192,13 +222,12 @@ Open http://localhost:8069 — default login `admin` / `admin`.
 
 A task is complete **only** when all of the following are true:
 
-- [ ] The change runs without Python import or syntax errors
-- [ ] Tests for the affected module pass with `--test-enable` — **show the actual command and output**
+- [ ] `./verify.sh <module>` exits with no errors — **paste the output**
 - [ ] No regressions in directly dependent modules
-- [ ] `claude-progress.md` is updated with session goals, what was completed, the exact test command run, and its result
+- [ ] `claude-progress.md` is updated with session goals, what was completed, the exact command run, and its output
 - [ ] The corresponding entry in `feature_list.json` is updated to `"status": "done"` with evidence
 
-**Verification gap rule:** Saying "this should work" or "the code looks correct" is not verification. Paste the actual test output. If the environment is not set up to run tests, say so explicitly — do not guess at correctness.
+**Verification gap rule:** Saying "this should work" or "the code looks correct" is not verification. Paste the actual `verify.sh` output. If the environment is not set up to run it, say so explicitly — do not guess at correctness.
 
 **When context runs low:** Do not skip verification to finish faster. Stop, write the current state to `claude-progress.md`, and let the next session run the tests.
 
