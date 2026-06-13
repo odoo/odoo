@@ -6,15 +6,15 @@
 # Tugay Hatıl <tugayh@projetgrup.com>, 2025
 # Wil Odoo, 2025
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2026-03-29 01:33+0000\n"
-"Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
+"PO-Revision-Date: 2026-06-13 13:35+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s18-4/"
 "hr_recruitment/tr/>\n"
 "Language: tr\n"
@@ -22,12 +22,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__no_of_talents
+#, fuzzy
 msgid "# Talents"
-msgstr ""
+msgstr "# Yetenekler"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -257,6 +258,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
+#, fuzzy
 msgid ""
 "<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "    Hello,<br/><br/>\n"
@@ -300,9 +302,49 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"    Merhaba,<br/><br/>\n"
+"       <b><t t-out=\"object.company_id.name or ''\">YourCompany</t></b> "
+"ekibine katılma ilginiz için teşekkür ederiz\n"
+"    Özgeçmişiniz rekabetçi\n"
+"    olmasına rağmen,  alım ekibimiz başvurunuzu inceledi\n"
+"    ve <b>daha ileri değerlendirme için seçmedi</b>.\n"
+"   <br/><br/>\n"
+"    Lütfen unutmayın, işe alım zor bir süreçtir ve hata yapabiliriz\n"
+"    Eğer bir hata yapıldığını düşünüyorsanız veya kararımız hakkında\n"
+"    daha fazla bilgi almak isterseniz, bu e-postaya yanıt vermekten "
+"çekinmeyin.\n"
+"   <br/><br/>\n"
+"    Bununla birlikte, özgeçmişinizi kayıtlarımızda tutacağız ve\n"
+"    becerileriniz ve deneyiminiz için daha uygun olabilecek\n"
+"    gelecekteki fırsatlar hakkında sizinle iletişime geçeceğiz.\n"
+"   <br/><br/>\n"
+"    İş arayışınızda başarılar dileriz ve gelecekte başka bir pozisyon\n"
+"    için sizi değerlendirme şansı bulmayı umuyoruz\n"
+"   <br/><br/>\n"
+"    Teşekkürler,\n"
+"   <div style=\"font-size: 11px; color: grey;\">\n"
+"        <t t-if=\"object.user_id\">\n"
+"            -- <br/>\n"
+"            <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</"
+"strong><br/>\n"
+"            E-posta: <t t-out=\"object.user_id.email or ''\">"
+"admin@yourcompany.example.com</t><br/>\n"
+"            Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-"
+"4567</t>\n"
+"        </t>\n"
+"       <t t-else=\"\">\n"
+"            -- <br/>\n"
+"            <t t-out=\"object.company_id.name or ''\">YourCompany</t><br/>\n"
+"            İK Ekibi\n"
+"       </t>\n"
+"    </div>\n"
+"</div>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_not_interested
+#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
@@ -332,9 +374,37 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"        Sayın,<br/><br/>\n"
+"        Gösterdiğiniz ilgi ve ayırdığınız zaman için teşekkür ederiz.<br/>\n"
+"        Gelecekteki çalışmalarınızda size başarılar dileriz.\n"
+"       <br/><br/>\n"
+"        Saygılar<br/>\n"
+"        <div style=\"font-size: 11px; color: grey;\">\n"
+"           <t t-if=\"object.user_id\">\n"
+"                -- <br/>\n"
+"                <strong t-out=\"object.user_id.name or ''\">Marc Demo</"
+"strong><br/>\n"
+"                E-posta: <t t-out=\"object.user_id.email or ''\">"
+"mark.brown23@example.com</t><br/>\n"
+"                Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-"
+"4567</t>\n"
+"            </t>\n"
+"           <t t-else=\"\">\n"
+"                -- <br/>\n"
+"                <t t-out=\"object.company_id.name or ''\">YourCompany</t>"
+"<br/>\n"
+"                İK Ekibi<br/>\n"
+"            </t>\n"
+"       </div>\n"
+"    </div>\n"
+"</div>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
+#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <div style=\"text-align: center\">\n"
@@ -440,6 +510,118 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <div style=\"text-align: center\">\n"
+"       <h2>Tebrikler!</h2>\n"
+"        <div style=\"color:grey;\">Özgeçmişiniz olumlu değerlendirildi.</div>"
+"\n"
+"    </div>\n"
+"   <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"        Özgeçmişinizi inceledik ve dikkatimizi çekti\n"
+"        Pozisyon için uygun olabileceğinizi düşündüğümüzden\n"
+"        başvurunuz çağrı veya görüşme için ön elemeye alındı.\n"
+"       <br/><br/>\n"
+"       <div t-if=\"'website_url' in object.job_id and "
+"object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
+"            <a t-att-href=\"object.job_id.website_url\" t-attf-"
+"style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px "
+"16px; border-radius: 5px;\">{{object.company_id.email_primary_color or "
+"'#FFFFFF'}}; padding: 8px 16px 8px 16px; border-radius: 5px;\">İş Tanımı</a>"
+"\n"
+"        </div>\n"
+"\n"
+"       <t t-if=\"object.user_id\">\n"
+"            Yakında sizinle iletişime geçilecektir:<br/>\n"
+"            <strong t-out=\"object.user_id.name or ''\">Mitchell Admin</"
+"strong><br/>\n"
+"           <span>E-posta: <t t-out=\"object.user_id.email or ''\">"
+"admin@yourcompany.example.com</t></span><br/>\n"
+"            <span> Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-"
+"123-4567</t></span>\n"
+"           <br/><br/>\n"
+"       </t>\n"
+"        Görüşmek üzere,\n"
+"       <div style=\"font-size: 11px; color: grey;\">\n"
+"            -- <br/>\n"
+"            İK Ekibi\n"
+"           <t t-if=\"'website_url' in object.job_id and hasattr"
+"(object.job_id, 'website_url') and object.job_id.website_url\">\n"
+"                <a href=\"/jobs\" style=\"text-"
+"decoration:none;color:#717188;\"> tüm işlerimizi keşfedin</a>.<br/>\n"
+"            </t>\n"
+"       </div>\n"
+"\n"
+"        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); "
+"border: medium none; clear: both; display: block; font-size: 0px; min-"
+"height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"       <h3 style=\"color:#9A6C8E;\"><strong>Tüm açık pozisyonlarımızı "
+"keşfedin</strong></h3>\n"
+"        Genellikle <strong>başvuruları birkaç gün içinde yanıtlıyoruz</"
+"strong>.\n"
+"       <br/><br/>\n"
+"        Bir sonraki adım ya bir telefon görüşmesi ya da ofislerimizde bir "
+"toplantıdır.\n"
+"       <br/>\n"
+"        Daha hızlı bir çözüm istiyorsanız <strong> bizimle iletişime "
+"geçebilirsiniz.\n"
+"        geri bildirim</strong> veya bizden haber alamıyorsanız\n"
+"        yeterince hızlı bir şekilde (sadece bu e-postayı yanıtlayın).\n"
+"       <br/>\n"
+"\n"
+"        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); "
+"border: medium none; clear: both; display: block; font-size: 0px; min-"
+"height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
+"       <t t-set=\"location\" t-value=\"''\"/>\n"
+"        <t t-if=\"object.job_id.address_id.name\">\n"
+"           <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</"
+"strong><br/>\n"
+"       </t>\n"
+"        <t t-if=\"object.job_id.address_id.street\">\n"
+"           <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero "
+"9710</t><br/>\n"
+"           <t t-set=\"location\" t-"
+"value=\"object.job_id.address_id.street\"/>\n"
+"        </t>\n"
+"       <t t-if=\"object.job_id.address_id.street2\">\n"
+"            <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, "
+"Santiago (RM)</t><br/>\n"
+"           <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.street2)\"/>%s' % (konum, "
+"object.job_id.address_id.street2)\"/>\n"
+"       </t>\n"
+"        <t t-if=\"object.job_id.address_id.city\">\n"
+"           <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
+"           <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.city)\"/>%s' % (konum, "
+"object.job_id.address_id.city)\"/>\n"
+"       </t>\n"
+"        <t t-if=\"object.job_id.address_id.state_id.name\">\n"
+"           <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>"
+",\n"
+"           <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.state_id.name)\"/>%s' % (konum, "
+"object.job_id.address_id.state_id.name)\"/>\n"
+"       </t>\n"
+"        <t t-if=\"object.job_id.address_id.zip\">\n"
+"           <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
+"            <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.zip)\"/>%s ' % (konum, nesne.iş_id.adres_id.zip)\"/>"
+"\n"
+"       </t>\n"
+"        <br/>\n"
+"       <t t-if=\"object.job_id.address_id.country_id.name\">\n"
+"            <t t-out=\"object.job_id.address_id.country_id.name or ''\">"
+"Arjantin</t><br/>\n"
+"           <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.country_id.name)\"/>%s' % (konum, "
+"object.job_id.address_id.country_id.name)\"/>\n"
+"       </t>\n"
+"        <br/>\n"
+"   </div>\n"
+"</div>\n"
+"        "
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -526,8 +708,9 @@ msgstr "<span>Raporlama</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_kanban
+#, fuzzy
 msgid "<span>Talents</span>"
-msgstr ""
+msgstr "<span>Yetenekler</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -577,8 +760,9 @@ msgstr "Bugünkü Aktiviteler"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+#, fuzzy
 msgid "Activities of"
-msgstr ""
+msgstr "Faaliyetleri"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_decoration
@@ -637,18 +821,21 @@ msgstr "Aktivite  Türü"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+#, fuzzy
 msgid "Add Applicants"
-msgstr ""
+msgstr "Başvuru Sahipleri Ekleyin"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
+#, fuzzy
 msgid "Add Applicants to Pool"
-msgstr ""
+msgstr "Başvuru Sahiplerini Havuza Ekle"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.talent_pool_add_applicants_view_form
+#, fuzzy
 msgid "Add Applicants to the Pool"
-msgstr ""
+msgstr "Başvuru Sahiplerini Havuza Ekleme"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -664,35 +851,41 @@ msgstr "Yeni bir etiket ekle"
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
+#, fuzzy
 msgid "Add applicant(s) to the pool"
-msgstr ""
+msgstr "Başvuru sahiplerini havuza ekleyin"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_job_add_applicants
+#, fuzzy
 msgid "Add applicants to a job"
-msgstr ""
+msgstr "Bir işe başvuru sahipleri ekleme"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_talent_pool_add_applicants
+#, fuzzy
 msgid "Add applicants to talent pool"
-msgstr ""
+msgstr "Başvuru sahiplerini yetenek havuzuna ekleyin"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#, fuzzy
 msgid "Add private notes about this applicant..."
-msgstr ""
+msgstr "Bu başvuru sahibi hakkında özel notlar ekleyin..."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.talent_pool_add_applicants_view_form
+#, fuzzy
 msgid "Add to Pool"
-msgstr ""
+msgstr "Havuza Ekle"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.mail_followers_edit_action_from_hr_recruitment
+#, fuzzy
 msgid "Add/Remove Followers"
-msgstr ""
+msgstr "Takipçi Ekle/Kaldır"
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
@@ -761,8 +954,9 @@ msgstr "Tüm Başvurular"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__allowed_user_ids
+#, fuzzy
 msgid "Allowed User"
-msgstr ""
+msgstr "İzin Verilen Kullanıcı"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -1185,8 +1379,9 @@ msgstr "Oluştur"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
+#, fuzzy
 msgid "Create Applications"
-msgstr ""
+msgstr "Uygulamalar Oluşturun"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1195,8 +1390,9 @@ msgstr "Personel Oluştur"
 
 #. module: hr_recruitment
 #: model:ir.model,website_form_label:hr_recruitment.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Müşteri Oluşturma"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.create_job_simple
@@ -1225,8 +1421,9 @@ msgstr "İlk İş Pozisyonunuzu oluşturun."
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/wizard/job_add_applicants.py:0
+#, fuzzy
 msgid "Created %(amount)s new applications for: %(names)s"
-msgstr ""
+msgstr "%(amount)s için yeni uygulamalar oluşturuldu: %(names)s"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_uid
@@ -1372,8 +1569,11 @@ msgstr "Departmanlar"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form
+#, fuzzy
 msgid "Describe the talent pool and common traits among talent pool applicants"
 msgstr ""
+"Yetenek havuzunun ve yetenek havuzuna başvuranlar arasındaki ortak "
+"özelliklerin tanımlanması"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__name
@@ -1501,13 +1701,15 @@ msgstr "Kopyala"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicate_applicant_ids_domain
+#, fuzzy
 msgid "Duplicate Applicant Ids Domain"
-msgstr ""
+msgstr "Mükerrer Başvuru Sahibi Kimlikleri Etki Alanı"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicate_applicant_ids
+#, fuzzy
 msgid "Duplicate Applications"
-msgstr ""
+msgstr "Mükerrer Başvurular"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicates_count
@@ -1531,8 +1733,9 @@ msgstr "E-Posta Rumuzu"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+#, fuzzy
 msgid "Email Body..."
-msgstr ""
+msgstr "E-posta Gövdesi..."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__template_id
@@ -1977,8 +2180,9 @@ msgstr "Görüşmeciler"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__is_applicant_in_pool
+#, fuzzy
 msgid "Is Applicant In Pool"
-msgstr ""
+msgstr "Başvuru Sahibi Havuzda mı"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__is_mail_template_editor
@@ -1999,8 +2203,9 @@ msgstr "Takipçi mi"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__is_pool_applicant
+#, fuzzy
 msgid "Is Pool Applicant"
-msgstr ""
+msgstr "Havuz Başvuru Sahibi mi"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__is_warning_visible
@@ -2043,8 +2248,9 @@ msgstr "İş Konumu"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+#, fuzzy
 msgid "Job Page"
-msgstr ""
+msgstr "İş Sayfası"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job_platform
@@ -2089,8 +2295,9 @@ msgstr "İş Özellikleri"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__job_source_ids
+#, fuzzy
 msgid "Job Source"
-msgstr ""
+msgstr "İş Kaynağı"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__job_ids
@@ -2201,8 +2408,9 @@ msgstr "Geciken Aktiviteler"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_config
+#, fuzzy
 msgid "Let's create a job position"
-msgstr ""
+msgstr "Bir iş pozisyonu oluşturalım"
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -2326,8 +2534,9 @@ msgstr "Mesajlar"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
+#, fuzzy
 msgid "Move to..."
-msgstr ""
+msgstr "Şuraya geç."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -2444,14 +2653,16 @@ msgstr "Toplantı Yok"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_talent_pool_applications
+#, fuzzy
 msgid "No Talents in the pool yet"
-msgstr ""
+msgstr "Havuzda henüz Yetenek yok"
 
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
+#, fuzzy
 msgid "No applications found."
-msgstr ""
+msgstr "Başvuru bulunamadı."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -2478,8 +2689,9 @@ msgstr "Herhangi bir kural tanımlanmadı."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_talent_pool
+#, fuzzy
 msgid "No talent pools yet"
-msgstr ""
+msgstr "Henüz yetenek havuzu yok"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__0
@@ -2584,8 +2796,9 @@ msgstr "Açık Başvuru"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+#, fuzzy
 msgid "Open Applications"
-msgstr ""
+msgstr "Açık Başvurular"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -2697,13 +2910,15 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__pool_applicant_id
+#, fuzzy
 msgid "Pool Applicant"
-msgstr ""
+msgstr "Havuz Başvuru Sahibi"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__pool_manager
+#, fuzzy
 msgid "Pool Manager"
-msgstr ""
+msgstr "Havuz Müdürü"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__probability
@@ -2739,8 +2954,9 @@ msgstr "Web sitenizde iş teklifleri yayımlayın"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
+#, fuzzy
 msgid "Qualification"
-msgstr ""
+msgstr "Yeterlilik"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__rating_ids
@@ -2864,8 +3080,9 @@ msgstr "Tarihi Reddedin"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__duplicates
+#, fuzzy
 msgid "Refuse Duplicate Applications"
-msgstr ""
+msgstr "Mükerrer Başvuruları Reddetme"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3062,13 +3279,15 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#, fuzzy
 msgid "Select the way applicant found the offer"
-msgstr ""
+msgstr "Başvuru sahibinin teklifi bulma şeklini seçin"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#, fuzzy
 msgid "Select where the applicant comes from"
-msgstr ""
+msgstr "Başvuru sahibinin nereden geldiğini seçin"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -3107,8 +3326,9 @@ msgstr "İşe alım sürecinde başvuru sahibine Mülakat Anketi gönderin."
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
+#, fuzzy
 msgid "Send applications to"
-msgstr ""
+msgstr "Başvuruları şu adrese gönderin"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_send_mail
@@ -3151,8 +3371,9 @@ msgstr "Ayarlar"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
+#, fuzzy
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "Bir sonraki etkinlik tarihi geçmiş olan tüm kayıtları göster"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -3161,8 +3382,9 @@ msgstr "Slot"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
+#, fuzzy
 msgid "Slots"
-msgstr ""
+msgstr "Slotlar"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3210,8 +3432,9 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
+#, fuzzy
 msgid "Specify Refused Applicants..."
-msgstr ""
+msgstr "Reddedilen Başvuru Sahiplerini Belirtiniz..."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__stage_id
@@ -3312,38 +3535,44 @@ msgstr "Etiketler"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__talent_ids
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#, fuzzy
 msgid "Talent"
-msgstr ""
+msgstr "Yetenek"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_talent_pool
 #: model:ir.model,name:hr_recruitment.model_hr_talent_pool
 #: model:ir.model.fields,field_description:hr_recruitment.field_talent_pool_add_applicants__talent_pool_ids
+#, fuzzy
 msgid "Talent Pool"
-msgstr ""
+msgstr "Yetenek Havuzu"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__talent_pool_count
+#, fuzzy
 msgid "Talent Pool Count"
-msgstr ""
+msgstr "Yetenek Havuzu Sayısı"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__description
+#, fuzzy
 msgid "Talent Pool Description"
-msgstr ""
+msgstr "Yetenek Havuzu Açıklaması"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__talent_pool_ids
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_talent_pools
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#, fuzzy
 msgid "Talent Pools"
-msgstr ""
+msgstr "Yetenek Havuzları"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_talent_pool_applications
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_kanban
+#, fuzzy
 msgid "Talents"
-msgstr ""
+msgstr "Yetenekler"
 
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_job_platform_email_uniq
@@ -3420,8 +3649,9 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_talent_pool__no_of_talents
+#, fuzzy
 msgid "The number of talents in this talent pool."
-msgstr ""
+msgstr "Bu yetenek havuzundaki yeteneklerin sayısı."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_platform__regex
@@ -3529,8 +3759,9 @@ msgstr "UTM İzleyici"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_talent_pool_applications
+#, fuzzy
 msgid "Try adding some to the pool"
-msgstr ""
+msgstr "Havuza biraz eklemeyi deneyin"
 
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
@@ -3638,8 +3869,9 @@ msgstr "Çok İyi"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#, fuzzy
 msgid "Visible to all"
-msgstr ""
+msgstr "Herkes tarafından görülebilir"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
@@ -3672,8 +3904,9 @@ msgstr "Bir başvuruyu reddettiğinizde bu şablonu seçebilirsiniz"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#, fuzzy
 msgid "Who can access applicants"
-msgstr ""
+msgstr "Başvuru sahiplerine kimler erişebilir?"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
@@ -3763,18 +3996,21 @@ msgstr "İş Başvurunuz: {{ object.job_id.name }}"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form
+#, fuzzy
 msgid "e.g French-speaking, Immediately Available, Own a car"
-msgstr ""
+msgstr "örneğin Fransızca konuşan, Hemen müsait, Araba sahibi"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form
+#, fuzzy
 msgid "e.g Reserve, Developers, Sales"
-msgstr ""
+msgstr "örneğin Rezerv, Geliştiriciler, Satış"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
+#, fuzzy
 msgid "e.g. Health, IT Services, Agriculture ..."
-msgstr ""
+msgstr "örneğin Sağlık, BT Hizmetleri, Tarım ..."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.quick_create_applicant_form
@@ -3803,8 +4039,9 @@ msgstr "örn. Satış Müdürü"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#, fuzzy
 msgid "e.g. Trainee"
-msgstr ""
+msgstr "örn. stajyer"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_platform_form
@@ -3860,10 +4097,13 @@ msgstr "veya"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_applicant_get_refuse_reason__scheduled_date
+#, fuzzy
 msgid ""
 "send emails after that date. This date is considered as being in UTC "
 "timezone."
 msgstr ""
+"bu tarihten sonra e-posta gönderemez. Bu tarih UTC zaman diliminde olarak "
+"kabul edilir."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form

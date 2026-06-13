@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* purchase
+# * purchase
 #
 # Translators:
 # Artjoms Ustinovs <artyom.ustinov2010@yandex.ru>, 2022
@@ -12,21 +12,22 @@
 # Martin Trigaux, 2022
 # Arnis Putniņš <arnis@allegro.lv>, 2022
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023\n"
-"Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
+"PO-Revision-Date: 2026-06-12 08:16+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Latvian <https://translate.odoo.com/projects/odoo-s18-4/"
+"purchase/lv/>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
-"2);\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
@@ -50,14 +51,16 @@ msgstr "Rindu #"
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
 msgid "%(product)s from %(original_receipt_date)s to %(new_receipt_date)s"
-msgstr ""
+msgstr "%(product)s no %(original_receipt_date)s līdz %(new_receipt_date)s"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
 msgid "%s modified receipt dates for the following products:"
-msgstr ""
+msgstr "%s mainīti piegādes datumi sekojošiem produktiem:"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -217,8 +220,9 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
 msgid "<i class=\"fa fa-fw fa-check\"/>Paid"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> Apmaksāts"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -254,23 +258,31 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
 msgid "<i class=\"fa fa-print me-1\"/>Download / Print"
-msgstr ""
+msgstr "<i class=\"fa fa-print me-1\"/> Lejupielādēt / Printēt"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+#, fuzzy
 msgid ""
 "<span class=\"d-none d-md-inline\">Confirmation Date</span>\n"
 "                          <span class=\"d-block d-md-none\">Confirmation</"
 "span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">Apstiprināšanas datums</span>\n"
+"                          <span class=\"d-block d-md-none\">Apstiprināšana</"
+"span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
+#, fuzzy
 msgid ""
 "<span class=\"d-none d-md-inline\">Purchase Order #</span>\n"
 "                          <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">Pirkuma pasūtījums #</span>\n"
+"                          <span class=\"d-block d-md-none\">Ref.</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
@@ -318,13 +330,17 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:web_tour.tour,rainbow_man_message:purchase.purchase_tour
+#, fuzzy
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
+"<span><b>Labs darbs!</b> Jūs izgājāt cauri visiem šīs pamācības soļiem.</"
+"span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
 msgid "<span>Amount</span>"
-msgstr ""
+msgstr "<span>Summa</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -343,13 +359,15 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
 msgid "<strong class=\"d-block mb-1\">From:</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">No:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
 msgid "<strong class=\"d-block mb-1\">Invoices</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">Rēķini</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -365,8 +383,9 @@ msgstr "<strong class=\"mr16\">Starpsumma</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#, fuzzy
 msgid "<strong>Amount</strong>"
-msgstr ""
+msgstr "<strong>summa</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -375,8 +394,9 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
 msgid "<strong>Confirmation Date:</strong>"
-msgstr ""
+msgstr "<strong>Apstiprināšanas datums:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -423,8 +443,9 @@ msgstr "<strong>Qty</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
 msgid "<strong>Receipt Date:</strong>"
-msgstr ""
+msgstr "<strong>Saņemts:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -487,17 +508,24 @@ msgstr "Piekļuves brīdinājums"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__qty_received_method
+#, fuzzy
 msgid ""
 "According to product configuration, the received quantity can be "
 "automatically computed by mechanism:\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Atbilstoši produkta konfigurācijai saņemto daudzumu var automātiski "
+"aprēķināt ar mehānisma palīdzību:\n"
+"  - Manuāli: daudzums tiek iestatīts manuāli uz līnijas\n"
+"  - Krājumu pārvietošana: daudzums tiek iegūts no apstiprinātās "
+"komplektācijas\n"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__account_move_id
+#, fuzzy
 msgid "Account Move"
-msgstr ""
+msgstr "Konta kustība"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_accrued_expense_entry
@@ -546,8 +574,9 @@ msgstr "Aktivitātes veida ikona"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
+#, fuzzy
 msgid "Activity type"
-msgstr ""
+msgstr "Aktivitātes veids"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
@@ -556,8 +585,9 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.bill_to_po_wizard_form
+#, fuzzy
 msgid "Add Products"
-msgstr ""
+msgstr "Pievienot produktus"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -566,8 +596,9 @@ msgstr "Pievienot piezīmi"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
 msgid "Add a product"
-msgstr ""
+msgstr "Pievienot produktu"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -624,14 +655,16 @@ msgstr ""
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
 msgid "All Draft RFQs"
-msgstr ""
+msgstr "Visi melnrakstu pieprasījumi"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
 msgid "All Late RFQs"
-msgstr ""
+msgstr "Visi novēlotie pieprasījumi"
 
 #. module: purchase
 #. odoo-javascript
@@ -686,8 +719,9 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay
+#, fuzzy
 msgid "Amount of time between purchase approval and order by date."
-msgstr ""
+msgstr "Laika daudzums starp pirkuma apstiprinājumu un pasūtījuma datumu."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_account
@@ -696,13 +730,15 @@ msgstr "Analītiskais Konts"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_distribution
+#, fuzzy
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Analītiskais sadalījums"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_applicability
+#, fuzzy
 msgid "Analytic Plan's Applicabilities"
-msgstr ""
+msgstr "Analītiskā plāna piemērojamība"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_precision
@@ -736,8 +772,9 @@ msgstr "Pielikumu skaits"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_template_attribute_value_ids
+#, fuzzy
 msgid "Attribute Values"
-msgstr ""
+msgstr "Atribūtu vērtības"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_attribute_action
@@ -816,13 +853,15 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
 msgid "Billed"
-msgstr ""
+msgstr "Piestādīts rēķins"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__billed_amount_untaxed
+#, fuzzy
 msgid "Billed Amount Untaxed"
-msgstr ""
+msgstr "Piestādītā summa bez nodokļa"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_invoiced
@@ -836,8 +875,9 @@ msgstr "Billed Quantity"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
+#, fuzzy
 msgid "Billed Quantity:"
-msgstr ""
+msgstr "Skaits rēķinā"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__invoice_status
@@ -863,8 +903,9 @@ msgstr "Bills Received"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, fuzzy
 msgid "Buyer"
-msgstr ""
+msgstr "Pircējs"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_calendar
@@ -888,8 +929,9 @@ msgstr "Atcelts"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#, fuzzy
 msgid "Cancelled Purchase Order #"
-msgstr ""
+msgstr "Atceltā pirkuma pasūtījuma #"
 
 #. module: purchase
 #. odoo-python
@@ -899,18 +941,21 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
 msgid "Catalog"
-msgstr ""
+msgstr "Katalogs"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
+#, fuzzy
 msgid "Categories"
-msgstr ""
+msgstr "Kategorijas"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
 msgid "Close"
-msgstr ""
+msgstr "Aizvērt"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__commercial_partner_id
@@ -919,8 +964,9 @@ msgstr "Commercial Entity"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
 msgid "Communication history"
-msgstr ""
+msgstr "Komunikācijas vēsture"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
@@ -1022,23 +1068,27 @@ msgstr "Kontroles Politika"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
 msgid "Copy"
-msgstr ""
+msgstr "Kopēt"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__country_code
+#, fuzzy
 msgid "Country code"
-msgstr ""
+msgstr "Valsts kods"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
+#, fuzzy
 msgid "Create Bills"
-msgstr ""
+msgstr "Izveidot rēķinus"
 
 #. module: purchase
 #: model:ir.model,website_form_label:purchase.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Izveidot klientu"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
@@ -1048,8 +1098,9 @@ msgstr "Izveidot jaunu produkta variantu"
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
+#, fuzzy
 msgid "Create a product"
-msgstr ""
+msgstr "Izveidot preci"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__create_uid
@@ -1081,8 +1132,9 @@ msgstr "Valūtas kurss"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__access_url
+#, fuzzy
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "Klienta portāla URL"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__date
@@ -1180,18 +1232,21 @@ msgstr "Apraksts"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
 msgid "Disc.%"
-msgstr ""
+msgstr "Atl.%"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__discount
+#, fuzzy
 msgid "Discount (%)"
-msgstr ""
+msgstr "Atlaide (%)"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
 msgid "Discount:"
-msgstr ""
+msgstr "Atlaide:"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_account__display_name
@@ -1222,8 +1277,9 @@ msgstr "Attēlošanas Tips"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__distribution_analytic_account_ids
+#, fuzzy
 msgid "Distribution Analytic Account"
-msgstr ""
+msgstr "Izplatīšanas analītiskais konts"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__business_domain
@@ -1244,8 +1300,9 @@ msgstr ""
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
 msgid "Down Payments"
-msgstr ""
+msgstr "Avansa maksājumi"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__draft
@@ -1261,8 +1318,9 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__dest_address_id
+#, fuzzy
 msgid "Dropship Address"
-msgstr ""
+msgstr "Dropship adrese"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1299,8 +1357,9 @@ msgstr "Nodokļu Profils"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
+#, fuzzy
 msgid "Follow orders you have to fulfill"
-msgstr ""
+msgstr "Sekojiet pasūtījumiem, kas jums jāizpilda"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
@@ -1475,8 +1534,9 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_view_search_catalog
+#, fuzzy
 msgid "In the Order"
-msgstr ""
+msgstr "Pasūtījumā"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__incoterm_id
@@ -1518,8 +1578,9 @@ msgstr "Rēķini"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_move_line__is_downpayment
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__is_downpayment
+#, fuzzy
 msgid "Is Downpayment"
-msgstr ""
+msgstr "Ir avansa maksājums"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_is_follower
@@ -1627,8 +1688,9 @@ msgstr "Levels of Approvals *"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_amount_untaxed
+#, fuzzy
 msgid "Line Amount Untaxed"
-msgstr ""
+msgstr "Rindas summa bez nodokļa"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__line_qty
@@ -1700,16 +1762,22 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__use_po_lead
+#, fuzzy
 msgid ""
 "Margin of error for vendor lead times. When the system generates Purchase "
 "Orders for reordering products,they will be scheduled that many days earlier "
 "to cope with unexpected vendor delays."
 msgstr ""
+"Kļūdas robeža attiecībā uz piegādātāju izpildes termiņiem. Kad sistēma "
+"ģenerē iepirkuma pasūtījumus produktu atkārtotai pasūtīšanai, tie tiks "
+"plānoti par daudzām dienām agrāk, lai tiktu galā ar neparedzētiem "
+"piegādātāju kavējumiem."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#, fuzzy
 msgid "Match"
-msgstr ""
+msgstr "Pieskaņot"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_merger
@@ -1769,8 +1837,9 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
 msgid "My Activities"
-msgstr ""
+msgstr "Manas aktivitātes"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__my_activity_date_deadline
@@ -1786,14 +1855,16 @@ msgstr ""
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
 msgid "My Draft RFQs"
-msgstr ""
+msgstr "Mani melnrakstu pieprasījumi"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
 msgid "My Late RFQs"
-msgstr ""
+msgstr "Mani novēlotie pieprasījumi"
 
 #. module: purchase
 #. odoo-javascript
@@ -1820,8 +1891,9 @@ msgstr "Mani Pirkumi"
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
+#, fuzzy
 msgid "My Waiting RFQs"
-msgstr ""
+msgstr "Mani gaidāmie pieprasījumi"
 
 #. module: purchase
 #. odoo-python
@@ -1840,8 +1912,9 @@ msgstr ""
 #: code:addons/purchase/models/purchase_order.py:0
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
 msgid "New"
-msgstr ""
+msgstr "Jauns"
 
 #. module: purchase
 #. odoo-python
@@ -1851,8 +1924,9 @@ msgstr "Jaunākais"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_tree
+#, fuzzy
 msgid "Next Activity"
-msgstr ""
+msgstr "Nākošā aktivitāte"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_calendar_event_id
@@ -1888,8 +1962,9 @@ msgstr ""
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
 msgid "No attachment was provided"
-msgstr ""
+msgstr "Pielikums netika iesniegts"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1962,8 +2037,9 @@ msgstr "Kļūdu skaits"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction_counter
+#, fuzzy
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Ziņojumu, kuriem nepieciešama darbība, skaits"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error_counter
@@ -1972,8 +2048,9 @@ msgstr "Ziņojumu, kas satur piegādes kļūdu, skaits"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
 msgid "Odoo"
-msgstr ""
+msgstr "Odoo"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_method__purchase
@@ -2029,14 +2106,16 @@ msgstr "Pasūtījuma Datums"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
+#, fuzzy
 msgid "Order Date: Last 365 Days"
-msgstr ""
+msgstr "Pasūtījuma datums: pēdējās 365 dienas"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_order
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_rfqs
+#, fuzzy
 msgid "Order Deadline"
-msgstr ""
+msgstr "Pasūtījuma termiņš"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__order_line
@@ -2074,8 +2153,9 @@ msgstr "Cita Informācija"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_home_purchase
+#, fuzzy
 msgid "Our Orders"
-msgstr ""
+msgstr "Mūsu pasūtījumi"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_bill_to_po_wizard__partner_id
@@ -2096,8 +2176,9 @@ msgstr "Maksājuma Nosacījumi"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
 msgid "Payment terms"
-msgstr ""
+msgstr "Maksājuma nosacījumi"
 
 #. module: purchase
 #. odoo-python
@@ -2120,8 +2201,9 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_url
+#, fuzzy
 msgid "Portal Access URL"
-msgstr ""
+msgstr "Portāla pieejas URL"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2130,8 +2212,9 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#, fuzzy
 msgid "Price"
-msgstr ""
+msgstr "Cena"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -2168,8 +2251,9 @@ msgstr "Produkta Kategorija"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#, fuzzy
 msgid "Product Description"
-msgstr ""
+msgstr "Produkta apraksts"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_tmpl_id
@@ -2239,8 +2323,9 @@ msgstr "Pirkuma Līgumi"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_amount_untaxed
+#, fuzzy
 msgid "Purchase Amount Untaxed"
-msgstr ""
+msgstr "Iepirkuma summa bez nodokļa"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -2328,8 +2413,9 @@ msgstr "Pirkuma Pasūtījums"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
+#, fuzzy
 msgid "Purchase Order #"
-msgstr ""
+msgstr "Pirkuma pasūtījums #"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
@@ -2404,8 +2490,9 @@ msgstr "Pirkuma Pasūtījumi"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
+#, fuzzy
 msgid "Purchase Report"
-msgstr ""
+msgstr "Iepirkumu ziņojums"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_bank_statement_line__purchase_warning_text
@@ -2441,8 +2528,9 @@ msgstr ""
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase_done
+#, fuzzy
 msgid "Purchase: Purchase Order"
-msgstr ""
+msgstr "Pirkšana: Pirkšanas pasūtījums"
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase
@@ -2451,15 +2539,17 @@ msgstr "Pirkums: Kvotas pieprasījums"
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase_reminder
+#, fuzzy
 msgid "Purchase: Vendor Reminder"
-msgstr ""
+msgstr "Pirkšana: Piegādātāja atgādinājums"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchased_product_qty
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchased_product_qty
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_bill_line_match_tree
+#, fuzzy
 msgid "Purchased"
-msgstr ""
+msgstr "Nopirkts"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -2496,8 +2586,9 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__qty_invoiced
+#, fuzzy
 msgid "Qty Invoiced"
-msgstr ""
+msgstr "Rēķins daudzumam"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_ordered
@@ -2575,8 +2666,9 @@ msgstr "RFQs and Purchases"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__rating_ids
+#, fuzzy
 msgid "Ratings"
-msgstr ""
+msgstr "Reitingi"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -2587,13 +2679,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_send_reminder
 #: model:ir.model.fields,field_description:purchase.field_res_partner__receipt_reminder_email
 #: model:ir.model.fields,field_description:purchase.field_res_users__receipt_reminder_email
+#, fuzzy
 msgid "Receipt Reminder"
-msgstr ""
+msgstr "Piegādes atgādinājums"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__receipt_reminder_email
+#, fuzzy
 msgid "Receipt Reminder Email"
-msgstr ""
+msgstr "Piegādes atgādinājuma epasts"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2607,8 +2701,9 @@ msgstr "Saņemtais Sk."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_method
+#, fuzzy
 msgid "Received Qty Method"
-msgstr ""
+msgstr "Saņemtā daudzuma metode"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2623,8 +2718,9 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
+#, fuzzy
 msgid "Record a new vendor bill"
-msgstr ""
+msgstr "Reģistrēt jaunu izmaksu"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__reference
@@ -2668,8 +2764,9 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_ir_actions_report
+#, fuzzy
 msgid "Report Action"
-msgstr ""
+msgstr "Pārskata darbība"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report_main
@@ -2759,8 +2856,9 @@ msgstr "Sadaļa"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
 msgid "Section Name (eg. Products, Services)"
-msgstr ""
+msgstr "Sadaļas nosaukums (piem., Produkti, Pakalpojumi)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__use_po_lead
@@ -2781,8 +2879,9 @@ msgstr ""
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
+#, fuzzy
 msgid "Select a product, or create a new one on the fly."
-msgstr ""
+msgstr "Izvēlieties vai izvedojiet jaunu produktu uzreiz."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_move_form_inherit_purchase
@@ -2827,8 +2926,9 @@ msgstr "Nosūtīt kvotas pieprasījumu Jūsu piegādātājam."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
+#, fuzzy
 msgid "Sent"
-msgstr ""
+msgstr "Nosūtīts"
 
 #. module: purchase
 #: model:mail.template,description:purchase.email_template_edi_purchase
@@ -2905,8 +3005,9 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__state
+#, fuzzy
 msgid "State"
-msgstr ""
+msgstr "Posmi"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__state
@@ -2952,13 +3053,15 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
+#, fuzzy
 msgid "Sum of Total"
-msgstr ""
+msgstr "Gala summa"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_report_view_tree
+#, fuzzy
 msgid "Sum of Untaxed Total"
-msgstr ""
+msgstr "Summa bez nodokļa"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__property_purchase_currency_id
@@ -2979,24 +3082,28 @@ msgstr "Nodoklis"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_country_id
+#, fuzzy
 msgid "Tax Country"
-msgstr ""
+msgstr "Nodokļa valsts"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_totals
+#, fuzzy
 msgid "Tax Totals"
-msgstr ""
+msgstr "Nodokļi kopā"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_calculation_rounding_method
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__tax_calculation_rounding_method
+#, fuzzy
 msgid "Tax calculation rounding method"
-msgstr ""
+msgstr "Nodokļu aprēķina noapaļošanas metode"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
+#, fuzzy
 msgid "Tax excl.:"
-msgstr ""
+msgstr "Bez PVN:"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3028,8 +3135,9 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
+#, fuzzy
 msgid "Terms &amp; Conditions"
-msgstr ""
+msgstr "Nosacījumi &amp; noteikumi"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__note
@@ -3098,14 +3206,16 @@ msgstr ""
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
+#, fuzzy
 msgid "This vendor bill has been created from: "
-msgstr ""
+msgstr "Šis piegādātāja rēķins tika izveidots no:"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/account_invoice.py:0
+#, fuzzy
 msgid "This vendor bill has been modified from: "
-msgstr ""
+msgstr "Šis piegādātāja rēķins tika modificēts no:"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -3174,8 +3284,9 @@ msgstr "Kopējais Daudzums"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_history_tree
+#, fuzzy
 msgid "Total Untaxed"
-msgstr ""
+msgstr "Kopā bez nodokļiem"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
@@ -3229,8 +3340,9 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__product_uom_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_id
+#, fuzzy
 msgid "Unit"
-msgstr ""
+msgstr "Vienība"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_unit
@@ -3308,13 +3420,15 @@ msgstr "Lietotājs"
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/components/purchase_file_uploader/purchase_file_uploader.js:0
+#, fuzzy
 msgid "Validation Error"
-msgstr ""
+msgstr "Validācijas kļūda"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+#, fuzzy
 msgid "Variant Grid Entry"
-msgstr ""
+msgstr "Izvēle varianta režģim"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__partner_id
@@ -3334,8 +3448,9 @@ msgstr "Pārdevējs"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__vendor_bill_id
+#, fuzzy
 msgid "Vendor Bill"
-msgstr ""
+msgstr "Piegādātāja rēķins"
 
 #. module: purchase
 #. odoo-python
@@ -3391,20 +3506,23 @@ msgstr "Skatīt"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
+#, fuzzy
 msgid "View Details"
-msgstr ""
+msgstr "Skatīt vairāk"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
 msgid "View Order"
-msgstr ""
+msgstr "Skatīt pasūtījumu"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
 msgid "View Quotation"
-msgstr ""
+msgstr "Skatīt piedāvājumu"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__volume
@@ -3504,17 +3622,25 @@ msgstr ""
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_product_action
+#, fuzzy
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
+"Jums ir jādefinē prece visam ko Jūs pārdodat vai iegādājaties,\n"
+"                neatkarīgi no tā, vai tā ir uzglabājama prece, patērējama "
+"prece vai pakalpojums."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
+#, fuzzy
 msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "            whether it's a storable product, a consumable or a service."
 msgstr ""
+"Jums ir jādefinē prece visam ko Jūs pārdodat vai iegādājaties,\n"
+"             neatkarīgi no tā, vai tā ir uzglabājama prece, patērējama prece "
+"vai pakalpojums."
 
 #. module: purchase
 #. odoo-python
@@ -3526,12 +3652,17 @@ msgstr ""
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
+#, fuzzy
 msgid ""
 "Your quotation contains products from company %(product_company)s whereas "
 "your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from "
 "other companies (%(bad_products)s)."
 msgstr ""
+"Jūsu piedāvājumā ir uzņēmuma %(product_company)s produkti, bet jūsu "
+"piedāvājums pieder uzņēmumam %(quote_company)s.\n"
+" Lūdzu, mainiet sava piedāvājuma uzņēmumu vai izņemiet produktus no citiem "
+"uzņēmumiem (%(bad_products)s)."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3592,15 +3723,18 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
+#, fuzzy
 msgid "with"
-msgstr ""
+msgstr "ar"
 
 #. module: purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase
 #: model:mail.template,subject:purchase.email_template_edi_purchase_done
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
+#, fuzzy
 msgid "{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} Pasūtījums (Ref {{ object.name or 'n/a' }})"
 
 #~ msgid "<i class=\"fa fa-download\"/> Download"
 #~ msgstr "<i class=\"fa fa-download\"/>Lejupielādēt"

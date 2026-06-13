@@ -1,27 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_demo
+# * payment_demo
 #
 # Translators:
 # Wil Odoo, 2025
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:40+0000\n"
-"PO-Revision-Date: 2025-07-01 13:06+0000\n"
-"Last-Translator: Deniz Guvener_Odoo <degu@odoo.com>, 2025\n"
-"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
+"PO-Revision-Date: 2026-06-12 09:30+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s18-4/"
+"payment_demo/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+#, fuzzy
 msgid ""
 "<select id=\"simulated_payment_state\" class=\"form-select\">\n"
 "                    <option value=\"done\" title=\"Successful payment\">\n"
@@ -39,56 +42,81 @@ msgid ""
 "                    </option>\n"
 "                </select>"
 msgstr ""
+"<select id=\"simulated_payment_state\" class=\"form-select\">\n"
+"                    <option value=\"done\" title=\"Successful payment\">\n"
+"                        Başarılı\n"
+"                   </option>\n"
+"                    <option value=\"pending\" title=\"Payment processing\">\n"
+"                        Beklemede\n"
+"                   </option>\n"
+"                    <option value=\"cancel\" title=\"Payment cancelled by "
+"customer\">\n"
+"                        İptal Edildi\n"
+"                   </option>\n"
+"                    <option value=\"error\" title=\"Processing error\">\n"
+"                        Hata\n"
+"                   </option>\n"
+"                </select>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+#, fuzzy
 msgid "<small><b>City</b></small>"
-msgstr ""
+msgstr "<small><b>Şehir</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+#, fuzzy
 msgid "<small><b>Country</b></small>"
-msgstr ""
+msgstr "<small><b>Ülke</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+#, fuzzy
 msgid "<small><b>Name</b></small>"
-msgstr ""
+msgstr "<small><b>İsim</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+#, fuzzy
 msgid "<small><b>Street and Number</b></small>"
-msgstr ""
+msgstr "<small><b>Sokak ve Numara</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+#, fuzzy
 msgid "<small><b>Zip Code</b></small>"
-msgstr ""
+msgstr "<small><b>Posta Kodu</b></small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+#, fuzzy
 msgid "<small>Email</small>"
-msgstr ""
+msgstr "<small>E-posta</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+#, fuzzy
 msgid "<small>Payment Details (test data)</small>"
-msgstr ""
+msgstr "<small>Ödeme Ayrıntıları (test verileri)</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+#, fuzzy
 msgid "<small>Payment Status</small>"
-msgstr ""
+msgstr "<small>Ödeme Durumu</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
+#, fuzzy
 msgid "<small>Street 2</small>"
-msgstr ""
+msgstr "<small>Sokak 2</small>"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
+#, fuzzy
 msgid "Authorize"
-msgstr ""
+msgstr "Yetkilendir"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_inline_form
@@ -150,14 +178,16 @@ msgstr "Demo"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
+#, fuzzy
 msgid "Demo Express Checkout"
-msgstr ""
+msgstr "Demo Express Ödeme"
 
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_provider.py:0
+#, fuzzy
 msgid "Demo providers should never be enabled."
-msgstr ""
+msgstr "Demo sağlayıcılar asla etkinleştirilmemelidir."
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_provider__display_name
@@ -181,8 +211,9 @@ msgstr "Kimlik"
 #. module: payment_demo
 #. odoo-javascript
 #: code:addons/payment_demo/static/src/js/express_checkout_form.js:0
+#, fuzzy
 msgid "No delivery method is available."
-msgstr ""
+msgstr "Herhangi bir teslimat yöntemi mevcut değildir."
 
 #. module: payment_demo
 #. odoo-python
@@ -197,8 +228,9 @@ msgstr "Ödeme İşlemi"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
+#, fuzzy
 msgid "Pay with Demo"
-msgstr ""
+msgstr "Demo ile Ödeme"
 
 #. module: payment_demo
 #: model:ir.model,name:payment_demo.model_payment_provider
@@ -223,27 +255,37 @@ msgstr "Ödeme işleme başarısız oldu"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
+#, fuzzy
 msgid "Payments made with this payment method will be <b>successful</b>."
-msgstr ""
+msgstr "Bu ödeme yöntemi ile yapılan ödemeler <b>başarılı</b> olacaktır."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
+#, fuzzy
 msgid ""
 "Payments made with this payment method will be automatically <b>cancelled</"
 "b>."
 msgstr ""
+"Bu ödeme yöntemi ile yapılan ödemeler otomatik olarak <b>iptal</b> "
+"edilecektir."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
+#, fuzzy
 msgid "Payments made with this payment method will remain <b>pending</b>."
 msgstr ""
+"Bu ödeme yöntemiyle yapılan ödemeler <b>adresinde</b> adresinde beklemeye "
+"devam edecektir."
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.token_inline_form
+#, fuzzy
 msgid ""
 "Payments made with this payment method will simulate a processing <b>error</"
 "b>."
 msgstr ""
+"Bu ödeme yöntemiyle yapılan ödemeler, <b>hatasının</b> işlenmesini simüle "
+"edecektir."
 
 #. module: payment_demo
 #: model:ir.model.fields.selection,name:payment_demo.selection__payment_token__demo_simulated_state__pending
@@ -258,13 +300,15 @@ msgstr ""
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_transaction_form
+#, fuzzy
 msgid "Set to Error"
-msgstr ""
+msgstr "Hata olarak ayarla"
 
 #. module: payment_demo
 #: model:ir.model.fields,field_description:payment_demo.field_payment_token__demo_simulated_state
+#, fuzzy
 msgid "Simulated State"
-msgstr ""
+msgstr "Simüle Edilmiş Durum"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.express_checkout_form
@@ -273,8 +317,9 @@ msgstr "Test Modu"
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_token__demo_simulated_state
+#, fuzzy
 msgid "The state in which transactions created from this token should be set."
-msgstr ""
+msgstr "Bu token ile oluşturulan işlemlerin ayarlanması gereken durum."
 
 #. module: payment_demo
 #: model:ir.model.fields,help:payment_demo.field_payment_provider__code
@@ -300,11 +345,13 @@ msgstr "Doğrulama hatası"
 
 #. module: payment_demo
 #: model_terms:ir.ui.view,arch_db:payment_demo.payment_details
+#, fuzzy
 msgid "XXXX XXXX XXXX XXXX"
-msgstr ""
+msgstr "XXXX XXXX XXXX XXXX"
 
 #. module: payment_demo
 #. odoo-python
 #: code:addons/payment_demo/models/payment_transaction.py:0
+#, fuzzy
 msgid "You selected the following demo payment status: %s"
-msgstr ""
+msgstr "Aşağıdaki demo ödeme durumunu seçtiniz: %s"

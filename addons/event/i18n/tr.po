@@ -6,15 +6,15 @@
 # Wil Odoo, 2025
 # Tugay Hatıl <tugayh@projetgrup.com>, 2025
 # Deniz Guvener_Odoo <degu@odoo.com>, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-03-29 01:32+0000\n"
-"Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
+"PO-Revision-Date: 2026-06-13 13:41+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-s18-4/event/"
 "tr/>\n"
 "Language: tr\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
@@ -75,8 +75,9 @@ msgstr "%(slot_name)s (Tükendi)"
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
+#, fuzzy
 msgid "%(slot_name)s: missing %(count)s seat(s)"
-msgstr ""
+msgstr "%(slot_name)s: eksik %(count)s koltuk(lar)"
 
 #. module: event
 #. odoo-python
@@ -147,9 +148,12 @@ msgstr "Sayfa başına 4"
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_3
 #: model_terms:res.partner,website_description:event.res_partner_event_4
+#, fuzzy
 msgid ""
 "<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Discover more</a>"
 msgstr ""
+"<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Daha fazlasını "
+"keşfedin</a>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -273,8 +277,9 @@ msgstr "<i class=\"fa fa-building\" title=\"Attendee Company\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
+#, fuzzy
 msgid "<i class=\"fa fa-calendar\" title=\"Slot\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-calendar\" title=\"Slot\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -2298,26 +2303,35 @@ msgstr "Müşterilerinize iletmek istediğiniz biletin açıklaması."
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
+#, fuzzy
 msgid ""
 "A slot cannot be scheduled outside of its event time range.\n"
 "\n"
 "Event:\t\t%(event_start)s - %(event_end)s\n"
 "Slot:\t\t%(slot_name)s"
 msgstr ""
+"Bir slot, etkinlik zaman aralığı dışında programlanamaz.\n"
+"\n"
+"Etkinlik:%(event_start)s - %(event_end)s\n"
+"Yuva:%(slot_name)s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
+#, fuzzy
 msgid ""
 "A slot end hour must be later than its start hour.\n"
 "%s"
 msgstr ""
+"Bir slotun bitiş saati başlangıç saatinden daha geç olmalıdır.\n"
+"%s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
+#, fuzzy
 msgid "A slot hour must be between 0:00 and 23:59."
-msgstr ""
+msgstr "Bir slot saati 0:00 ile 23:59 arasında olmalıdır."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
@@ -2349,8 +2363,9 @@ msgstr "Aktiviteler"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
+#, fuzzy
 msgid "Activities of"
-msgstr ""
+msgstr "Faaliyetleri"
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_2
@@ -2425,14 +2440,16 @@ msgstr "Her kayıt sonrası"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event
+#, fuzzy
 msgid "After the event ended"
-msgstr ""
+msgstr "Etkinlik sona erdikten sonra"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event_start
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event_start
+#, fuzzy
 msgid "After the event started"
-msgstr ""
+msgstr "Etkinlik başladıktan sonra"
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_1
@@ -2456,11 +2473,15 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_multi_slots
 #: model:ir.model.fields,help:event.field_event_registration__is_multi_slots
+#, fuzzy
 msgid ""
 "Allow multiple time slots. The communications, the maximum number of "
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
 msgstr ""
+"Birden fazla zaman dilimine izin verebilirsiniz. İletişim, maksimum "
+"katılımcı sayısı ve maksimum bilet kaydı sayısı tüm etkinlik yerlerine her "
+"bir zaman aralığı için tanımlanır."
 
 #. module: event
 #: model:event.event,name:event.event_6
@@ -2581,8 +2602,9 @@ msgstr "Katılınan Tarih"
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
+#, fuzzy
 msgid "Attended on %(attended_date)s"
-msgstr ""
+msgstr "Katıldım %(attended_date)s"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__registration_id
@@ -2632,11 +2654,15 @@ msgstr "Katılımcılar"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
+#, fuzzy
 msgid ""
 "Attendees\n"
 "                                    <span invisible=\"not is_multi_slots\"> "
 "per slot</span>"
 msgstr ""
+"Katılımcılar\n"
+"                                    <span invisible=\"not is_multi_slots\"> "
+"slot başına</span>"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
@@ -2704,14 +2730,16 @@ msgstr "Barkod benzersiz olmalıdır"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event_end
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event_end
+#, fuzzy
 msgid "Before the event ends"
-msgstr ""
+msgstr "Etkinlik sona ermeden önce"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event
+#, fuzzy
 msgid "Before the event starts"
-msgstr ""
+msgstr "Etkinlik başlamadan önce"
 
 #. module: event
 #. odoo-python
@@ -2854,9 +2882,12 @@ msgstr "İletişim"
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
+#, fuzzy
 msgid ""
 "Communication for %(event_name)s scheduled on %(scheduled_date)s failed."
 msgstr ""
+"%(scheduled_date)s adresinde planlanan %(event_name)s için iletişim "
+"başarısız oldu."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
@@ -2941,8 +2972,9 @@ msgstr "Standlar oluşturun ve rezervasyonlarını yönetin"
 
 #. module: event
 #: model:ir.model,website_form_label:event.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Müşteri Oluşturma"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
@@ -3108,13 +3140,15 @@ msgstr "Yapıldı"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
+#, fuzzy
 msgid "Download Tickets"
-msgstr ""
+msgstr "Biletleri İndir"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
+#, fuzzy
 msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
-msgstr ""
+msgstr "Biletleri İndir <i class=\"ms-1 fa fa-download\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3308,13 +3342,15 @@ msgstr "Etkinlik Sorumlusu"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_share_url
+#, fuzzy
 msgid "Event Share URL"
-msgstr ""
+msgstr "Etkinlik Paylaşım URL'si"
 
 #. module: event
 #: model:ir.model,name:event.model_event_slot
+#, fuzzy
 msgid "Event Slot"
-msgstr ""
+msgstr "Etkinlik Zamanı"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
@@ -3520,8 +3556,9 @@ msgstr "Canlı müzik, yerel yiyecek ve içecekleri deneyimleyin."
 #. module: event
 #: model:ir.model.fields,help:event.field_event_slot__end_hour
 #: model:ir.model.fields,help:event.field_event_slot__start_hour
+#, fuzzy
 msgid "Expressed in the event timezone."
-msgstr ""
+msgstr "Olay zaman diliminde ifade edilir."
 
 #. module: event
 #: model:event.stage,description:event.event_stage_done
@@ -3557,38 +3594,54 @@ msgstr "Yazı tipi harika simgesi ör. fa-görevler"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
+#, fuzzy
 msgid ""
 "For any additional information, please contact us at <a "
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@odoo.com\">events@odoo.com</a>"
 msgstr ""
+"Daha fazla bilgi için lütfen <a class=\"o_translate_inline\" "
+"href=\"mailto:events@odoo.com\">events@odoo.com adresinden bizimle iletişime "
+"geçin.</a>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
+#, fuzzy
 msgid ""
 "For any additional information, please contact us at <a "
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@openwood.example.com\">events@penwood.example.com</a>."
 msgstr ""
+"Daha fazla bilgi için lütfen <a class=\"o_translate_inline\" "
+"href=\"mailto:events@openwood.example.com\">events@penwood.example.com</a> "
+"adresinden bizimle iletişime geçin."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 #: model_terms:event.event,description:event.event_1
 #: model_terms:event.event,description:event.event_3
 #: model_terms:event.event,description:event.event_5
+#, fuzzy
 msgid ""
 "For any additional information, please contact us at <a "
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@yourcompany.com\">events@yourcompany.com</a>."
 msgstr ""
+"Daha fazla bilgi için lütfen <a class=\"o_translate_inline\" "
+"href=\"mailto:events@yourcompany.com\">events@yourcompany.com</a> adresinden "
+"bizimle iletişime geçin."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
+#, fuzzy
 msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this number the registrations are not accepted. If the "
 "event has multiple slots, this maximum number is applied per slot."
 msgstr ""
+"Her etkinlik için bir maksimum koltuk kaydı (katılımcı sayısı) "
+"tanımlayabilirsiniz, bu sayının üzerindeki kayıtlar kabul edilmez. "
+"Etkinliğin birden fazla slotu varsa, bu maksimum sayı slot başına uygulanır."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_1
@@ -3906,10 +3959,13 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__interval_type
+#, fuzzy
 msgid ""
 "Indicates when the communication is sent. If the event has multiple slots, "
 "the interval is related to each time slot instead of the whole event."
 msgstr ""
+"İletişimin ne zaman gönderildiğini belirtir. Olay birden fazla zaman "
+"aralığına sahipse, aralık tüm olay yerine her bir zaman aralığıyla ilgilidir."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3936,8 +3992,9 @@ msgstr "Genel Bilgilendirme, CRM, Satış Yönetimi"
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
+#, fuzzy
 msgid "Invalid event / slot choice"
-msgstr ""
+msgstr "Geçersiz etkinlik / yuva seçimi"
 
 #. module: event
 #. odoo-python
@@ -3958,8 +4015,9 @@ msgstr "Kullanılabilir"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__is_multi_slots
+#, fuzzy
 msgid "Is Event Multi Slots"
-msgstr ""
+msgstr "Etkinlik Çoklu Slotlar mı"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
@@ -3979,8 +4037,9 @@ msgstr "Takipçi mi"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_multi_slots
+#, fuzzy
 msgid "Is Multi Slots"
-msgstr ""
+msgstr "Çoklu Zamanlama mı"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
@@ -3995,8 +4054,9 @@ msgstr "Devam ediyor"
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
+#, fuzzy
 msgid "It failed with error %(error)s."
-msgstr ""
+msgstr "%(error)s hatası ile başarısız oldu."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__seats_max
@@ -4078,8 +4138,9 @@ msgstr "Son Katılımcı"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__error_datetime
+#, fuzzy
 msgid "Last Error"
-msgstr ""
+msgstr "Son Hata"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_uid
@@ -4153,8 +4214,9 @@ msgstr "Sınırlı Koltuk"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_url
+#, fuzzy
 msgid "Link where the online event will take place."
-msgstr ""
+msgstr "Çevrimiçi etkinliğin gerçekleşeceği bağlantı."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4213,8 +4275,9 @@ msgstr "Mail Gönderildi"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_slot_ids
+#, fuzzy
 msgid "Mail Slot"
-msgstr ""
+msgstr "Posta Yuvası"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4271,8 +4334,9 @@ msgstr "Maksimum Koltuk"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
+#, fuzzy
 msgid "Maximum per slot"
-msgstr ""
+msgstr "Yuva başına maksimum"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
@@ -4300,8 +4364,9 @@ msgstr "Aylar"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
+#, fuzzy
 msgid "Multiple Slots"
-msgstr ""
+msgstr "Çoklu Yuvalar"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_2
@@ -4404,8 +4469,9 @@ msgstr "Notlar"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
+#, fuzzy
 msgid "Notes & Documents"
-msgstr ""
+msgstr "Notlar & Belgeler"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -4501,8 +4567,9 @@ msgstr "Çevrim İçi Etkinlik"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_url
+#, fuzzy
 msgid "Online Event URL"
-msgstr ""
+msgstr "Çevrimiçi Etkinlik URL'si"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4623,8 +4690,9 @@ msgstr "Lütfen geçerli bir base64 gizli anahtarı girin"
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
+#, fuzzy
 msgid "Please enter a valid event URL."
-msgstr ""
+msgstr "Lütfen geçerli bir etkinlik URL'si girin."
 
 #. module: event
 #. odoo-javascript
@@ -4850,8 +4918,9 @@ msgstr "Kayıtlar Başladı"
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
+#, fuzzy
 msgid "Rendering of template failed with error: %(error)s."
-msgstr ""
+msgstr "Şablon oluşturma işlemi hata ile başarısız oldu: %(error)s."
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -5046,8 +5115,9 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
+#, fuzzy
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "Bir sonraki etkinlik tarihi geçmiş olan tüm kayıtları göster"
 
 #. module: event
 #. odoo-javascript
@@ -5059,19 +5129,22 @@ msgstr "Slot"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail_slot
+#, fuzzy
 msgid "Slot Mail Scheduler"
-msgstr ""
+msgstr "Slot Posta Zamanlayıcısı"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
+#, fuzzy
 msgid "Slot choice is mandatory on multi-slots events."
-msgstr ""
+msgstr "Çoklu slot etkinliklerinde slot seçimi zorunludur."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_slot_ids
+#, fuzzy
 msgid "Slot-based communication"
-msgstr ""
+msgstr "Slot tabanlı iletişim"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_slot_from_event
@@ -5079,13 +5152,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_calendar
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_tree
+#, fuzzy
 msgid "Slots"
-msgstr ""
+msgstr "Slotlar"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_slot_count
+#, fuzzy
 msgid "Slots Count"
-msgstr ""
+msgstr "Yuva Sayısı"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_sold_out
@@ -5329,11 +5404,15 @@ msgstr "En iyi OpenWood mobilyaları yepyeni bir koleksiyonla evinize geliyor"
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
+#, fuzzy
 msgid ""
 "The following slots cannot be deleted while they have one or more "
 "registrations linked to them:\n"
 "- %s"
 msgstr ""
+"Aşağıdaki yuvalar, kendilerine bağlı bir veya daha fazla kayıt varken "
+"silinemez:\n"
+"- %s"
 
 #. module: event
 #. odoo-python
@@ -5366,26 +5445,35 @@ msgstr ""
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
+#, fuzzy
 msgid ""
 "There are more registrations than this limit, the event will be sold out and "
 "the extra registrations will remain."
 msgstr ""
+"Bu limitten daha fazla kayıt olması durumunda, etkinliğin biletleri "
+"tükenecek ve fazladan kayıtlar kalacaktır."
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
+#, fuzzy
 msgid ""
 "There are not enough seats available for %(event_name)s:\n"
 "%(sold_out_info)s"
 msgstr ""
+"%(event_name)s için yeterli koltuk bulunmamaktadır:\n"
+"%(sold_out_info)s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
+#, fuzzy
 msgid ""
 "There is an issue with dynamic placeholder. Actual error received is: %"
 "(error)s."
 msgstr ""
+"Dinamik yer tutucu ile ilgili bir sorun var. Alınan gerçek hata şudur: %"
+"(error)s."
 
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_answer_value_check
@@ -5395,10 +5483,13 @@ msgstr "Önerilen bir değer veya metin değeri olmalıdır."
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
+#, fuzzy
 msgid ""
 "These events cannot have slots scheduled outside of their time range:\n"
 "%(event_names)s"
 msgstr ""
+"Bu etkinliklerin zaman aralığı dışında planlanmış yuvaları olamaz:\n"
+"%(event_names)s"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -5433,8 +5524,9 @@ msgstr "Bu bilgiler biletlerinize basılacaktır."
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
+#, fuzzy
 msgid "This is due to an error in template %(template_link)s."
-msgstr ""
+msgstr "Bu durum %(template_link)s şablonundaki bir hatadan kaynaklanmaktadır."
 
 #. module: event
 #. odoo-javascript
@@ -5463,8 +5555,9 @@ msgstr ""
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
+#, fuzzy
 msgid "This may be linked to template %(template_link)s."
-msgstr ""
+msgstr "Bu durum %(template_link)s şablonuyla bağlantılı olabilir."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -5532,8 +5625,9 @@ msgstr ""
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+#, fuzzy
 msgid "Ticket was first scanned on"
-msgstr ""
+msgstr "Bilet ilk olarak"
 
 #. module: event
 #. odoo-python
@@ -5595,8 +5689,9 @@ msgstr "Toplam Katılımcı Sayısı"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
+#, fuzzy
 msgid "Total Registration"
-msgstr ""
+msgstr "Toplam Kayıt"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -5710,8 +5805,9 @@ msgstr "Yaklaşan/Aktif"
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
+#, fuzzy
 msgid "Update the limit of registrations?"
-msgstr ""
+msgstr "Kayıt sınırı güncellendi mi?"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode
@@ -5769,8 +5865,9 @@ msgstr "Mekan (tek satırlık kullanımlar için biçimlendirilmiş)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
+#, fuzzy
 msgid "Visible to all"
-msgstr ""
+msgstr "Herkes tarafından görülebilir"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
@@ -5855,8 +5952,9 @@ msgstr "Bu bilet için yer olup olmadığı."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_slot__is_sold_out
+#, fuzzy
 msgid "Whether seats are sold out for this slot."
-msgstr ""
+msgstr "Bu slot için koltuklar tükenmiş olsun."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
@@ -5941,8 +6039,9 @@ msgstr "örn. \"Tanıtım\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
+#, fuzzy
 msgid "e.g. \"https://www.odoo.com\""
-msgstr ""
+msgstr "örneğin \"https://www.odoo.com\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create

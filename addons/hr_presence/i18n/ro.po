@@ -6,13 +6,13 @@
 # Martin Trigaux, 2022
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2025-11-12 01:46+0000\n"
+"PO-Revision-Date: 2026-06-12 09:29+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s18-4/"
 "hr_presence/ro/>\n"
@@ -22,16 +22,18 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_presence
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
+#, fuzzy
 msgid "%(name)s has been noted as %(state)s today"
-msgstr ""
+msgstr "%(name)s a fost notat(ă) ca %(state)s astăzi"
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
+#, fuzzy
 msgid ""
 "<div>\n"
 "                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,"
@@ -48,6 +50,21 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    Dragă <t t-out=\"object.name or ''\">Abigail Peterson</t>"
+",<br/><br/>\n"
+"Sperăm că acest mesaj vă găsește bine. Am observat că în prezent nu sunteți "
+"prezent(ă) la serviciu și nu există nicio înregistrare a unei cereri de "
+"concediu din partea dumneavoastră. Dacă această absență se datorează unei "
+"omisiuni din partea noastră, ne cerem scuze pentru orice confuzie.\n"
+"Vă rugăm să luați măsurile necesare pentru a remedia această absență "
+"neplanificată. Dacă aveți întrebări sau aveți nevoie de asistență, nu "
+"ezitați să contactați managerul dumneavoastră sau departamentul de resurse "
+"umane cât mai curând posibil.\n"
+"Vă mulțumim pentru atenția acordată acestei situații.\n"
+"                    <br/>Cu stimă,<br/><br/>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
@@ -58,8 +75,9 @@ msgstr "Absent"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_log
+#, fuzzy
 msgid "Add a log note"
-msgstr ""
+msgstr "Adaugă o notă în jurnal"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_company
@@ -68,8 +86,9 @@ msgstr "Companii"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_config_settings
+#, fuzzy
 msgid "Config Settings"
-msgstr ""
+msgstr "Setări de configurare"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__create_uid
@@ -78,8 +97,9 @@ msgstr "Creare Uid"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_time_off
+#, fuzzy
 msgid "Create a Time Off"
-msgstr ""
+msgstr "Creează un concediu"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__display_name
@@ -88,8 +108,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Nume afișat"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
@@ -99,8 +120,9 @@ msgstr "E-mai Trimis"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee
+#, fuzzy
 msgid "Employee"
-msgstr ""
+msgstr "Angajat"
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
@@ -119,11 +141,15 @@ msgstr "HR: email absență angajat"
 
 #. module: hr_presence
 #: model:sms.template,body:hr_presence.sms_template_data_hr_presence
+#, fuzzy
 msgid ""
 "Hi, we noticed you're not at work and no time-off was submitted. If this is "
 "an oversight from us, we apologize. Please contact your manager or HR ASAP. "
 "Thanks"
 msgstr ""
+"Bună, am observat că nu sunteți la serviciu și nu a fost depusă nicio cerere "
+"de concediu. Dacă este o omisiune din partea noastră, ne cerem scuze. Vă "
+"rugăm să contactați managerul sau HR cât mai curând posibil. Mulțumim"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
@@ -143,8 +169,9 @@ msgstr "Afișare stare prezență HR"
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__id
 #: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__id
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
@@ -160,8 +187,9 @@ msgstr "Ip conectat"
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee_public__manually_set_presence
+#, fuzzy
 msgid "Manually Set Presence"
-msgstr ""
+msgstr "Setare manuală prezență"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__manually_set_present
@@ -173,8 +201,9 @@ msgstr "Setați manual Prezent"
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__out_of_working_hour
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__out_of_working_hour
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
+#, fuzzy
 msgid "Out of Working Hours"
-msgstr ""
+msgstr "În afara orelor de lucru"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_tree
@@ -184,13 +213,15 @@ msgstr "Prezență"
 #. module: hr_presence
 #. odoo-javascript
 #: code:addons/hr_presence/static/src/search/hr_presence_cog_menu/hr_presence_cog_menu.xml:0
+#, fuzzy
 msgid "Presence Control"
-msgstr ""
+msgstr "Controlul prezenței"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
+#, fuzzy
 msgid "Presence/Absence"
-msgstr ""
+msgstr "Prezență/Absență"
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__present
@@ -200,19 +231,22 @@ msgstr "Prezent"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee_public
+#, fuzzy
 msgid "Public Employee"
-msgstr ""
+msgstr "Angajați Publici"
 
 #. module: hr_presence
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
+#, fuzzy
 msgid "Send SMS"
-msgstr ""
+msgstr "Trimite SMS"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_sms
+#, fuzzy
 msgid "Send a SMS"
-msgstr ""
+msgstr "Trimite un SMS"
 
 #. module: hr_presence
 #: model:mail.template,description:hr_presence.mail_template_presence
@@ -225,13 +259,15 @@ msgstr ""
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_absent
+#, fuzzy
 msgid "Set Absent"
-msgstr ""
+msgstr "Setează absent"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_present
+#, fuzzy
 msgid "Set Present"
-msgstr ""
+msgstr "Setează prezent"
 
 #. module: hr_presence
 #: model:mail.template,subject:hr_presence.mail_template_presence
@@ -241,8 +277,9 @@ msgstr "Absență neașteptată"
 #. module: hr_presence
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
+#, fuzzy
 msgid "Unplanned Absence"
-msgstr ""
+msgstr "Absență neplanificată"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_users_log
@@ -252,6 +289,7 @@ msgstr "Jurnalul utilizatorilor"
 #. module: hr_presence
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
+#, fuzzy
 msgid ""
 "We hope this message finds you well. It has come to our attention that you "
 "are currently not present at work, and there is no record of a time off "
@@ -262,6 +300,15 @@ msgid ""
 "your manager or the HR department at your earliest convenience.\n"
 "Thank you for your prompt attention to this matter."
 msgstr ""
+"Sperăm că acest mesaj vă găsește bine. Am observat că în prezent nu sunteți "
+"prezent(ă) la serviciu și nu există nicio înregistrare a unei cereri de "
+"concediu din partea dumneavoastră. Dacă această absență se datorează unei "
+"omisiuni din partea noastră, ne cerem scuze pentru orice confuzie.\n"
+"Vă rugăm să luați măsurile necesare pentru a remedia această absență "
+"neplanificată. Dacă aveți întrebări sau aveți nevoie de asistență, nu "
+"ezitați să contactați managerul dumneavoastră sau departamentul de resurse "
+"umane cât mai curând posibil.\n"
+"Vă mulțumim pentru atenția acordată acestei situații."
 
 #. module: hr_presence
 #. odoo-python

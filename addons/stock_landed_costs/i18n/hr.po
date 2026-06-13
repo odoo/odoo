@@ -15,13 +15,13 @@
 # Bole <bole@dajmi5.com>, 2022
 # Martin Trigaux, 2022
 # Vladimir Vrgoč, 2023
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2025-11-12 01:48+0000\n"
+"PO-Revision-Date: 2026-06-12 08:17+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-s18-4/"
 "stock_landed_costs/hr/>\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock_landed_costs
 #. odoo-python
@@ -41,9 +41,12 @@ msgstr ""
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_view_kanban
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-clock-o\" title=\"Date\" role=\"img\" aria-label=\"Date\"/>"
 msgstr ""
+"<i class=\"fa fa-clock-o\" title=\"Datum\" role=\"img\" aria-"
+"label=\"Datum\"/>"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
@@ -87,8 +90,9 @@ msgstr "Ikona tipa aktivnosti"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
+#, fuzzy
 msgid "Additional Costs"
-msgstr ""
+msgstr "Dodatni troškovi"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__additional_landed_cost
@@ -192,8 +196,9 @@ msgstr "Kreiraj zavisne troškove"
 
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
+#, fuzzy
 msgid "Create a new landed cost"
-msgstr ""
+msgstr "Kreirajte novi zavisni trošak"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__create_uid
@@ -225,8 +230,9 @@ msgstr "Datum"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__lc_journal_id
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
+#, fuzzy
 msgid "Default Journal"
-msgstr ""
+msgstr "Zadani dnevnik"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__split_method_landed_cost
@@ -237,8 +243,9 @@ msgstr "Zadana metoda razdiobe"
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__split_method_landed_cost
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__split_method_landed_cost
+#, fuzzy
 msgid "Default Split Method when used for Landed Cost"
-msgstr ""
+msgstr "Zadana metoda podjele kada se koristi za zavisni trošak"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -281,6 +288,7 @@ msgstr "Jednako"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost_lines__split_method
+#, fuzzy
 msgid ""
 "Equal: Cost will be equally divided.\n"
 "By Quantity: Cost will be divided according to product's quantity.\n"
@@ -288,6 +296,12 @@ msgid ""
 "By Weight: Cost will be divided depending on its weight.\n"
 "By Volume: Cost will be divided depending on its volume."
 msgstr ""
+"Jednako: trošak će biti jednako podijeljen.\n"
+"Po količini: trošak će biti podijeljen prema količini proizvoda.\n"
+"Po trenutnom trošku: trošak će biti podijeljen prema trenutnom trošku "
+"proizvoda.\n"
+"Po težini: trošak će biti podijeljen ovisno o težini.\n"
+"Po volumenu: trošak će biti podijeljen ovisno o volumenu."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
@@ -311,10 +325,13 @@ msgstr "Buduće aktivnosti"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_account_move_line__product_type
+#, fuzzy
 msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Roba su opipljivi materijali i roba koju pružate.\n"
+"Usluga je nematerijalni proizvod koji pružate."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -365,10 +382,13 @@ msgstr "Ako je označeno neke poruke mogu imati grešku u dostavi."
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_product_product__landed_cost_ok
 #: model:ir.model.fields,help:stock_landed_costs.field_product_template__landed_cost_ok
+#, fuzzy
 msgid ""
 "Indicates whether the product is a landed cost: when receiving a vendor "
 "bill, you can allocate this cost on preceding receipts."
 msgstr ""
+"Označava je li proizvod zavisni trošak: pri primitku ulaznog računa "
+"dobavljača možete dodijeliti ovaj trošak prethodnim primkama."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_is_follower
@@ -377,8 +397,9 @@ msgstr "Je pratitelj"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__is_landed_costs_line
+#, fuzzy
 msgid "Is Landed Costs Line"
-msgstr ""
+msgstr "Je stavka zavisnih troškova"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_product__landed_cost_ok
@@ -441,10 +462,13 @@ msgstr "Zavisni trošak potvrđen"
 
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.action_stock_landed_cost
+#, fuzzy
 msgid ""
 "Landed costs allow you to include additional costs (shipment, insurance, "
 "customs duties, etc) into the cost of the product."
 msgstr ""
+"Zavisni troškovi omogućuju vam uključivanje dodatnih troškova (pošiljka, "
+"osiguranje, carine itd.) u trošak proizvoda."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__write_uid
@@ -467,8 +491,9 @@ msgstr "Posljednje aktivnosti"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__lc_journal_id
+#, fuzzy
 msgid "Lc Journal"
-msgstr ""
+msgstr "LC dnevnik"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_has_error
@@ -482,8 +507,9 @@ msgstr "Poruke"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#, fuzzy
 msgid "My Activities"
-msgstr ""
+msgstr "Moje aktivnosti"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__my_activity_date_deadline
@@ -504,8 +530,9 @@ msgstr "Novi"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__final_cost
+#, fuzzy
 msgid "New Value"
-msgstr ""
+msgstr "Nova vrijednost"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__activity_calendar_event_id
@@ -539,8 +566,9 @@ msgstr "Broj grešaka"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
+#, fuzzy
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Broj poruka koje zahtijevaju aktivnost"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,help:stock_landed_costs.field_stock_landed_cost__message_has_error_counter
@@ -572,8 +600,9 @@ msgstr "Molimo definirajte kontro troška zalihe za proizvod : %s."
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, fuzzy
 msgid "Please define %s on which those additional costs should apply."
-msgstr ""
+msgstr "Definirajte %s na koje se ti dodatni troškovi trebaju primijeniti."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
@@ -619,8 +648,9 @@ msgstr "Greška u slanju SMSa"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
+#, fuzzy
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "Prikaži sve zapise čiji je sljedeći datum aktivnosti prošao"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__split_method
@@ -657,8 +687,9 @@ msgstr "Zavisni trošak"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_landed_cost_lines
+#, fuzzy
 msgid "Stock Landed Cost Line"
-msgstr ""
+msgstr "Stavka zavisnih troškova"
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_move
@@ -710,8 +741,9 @@ msgstr ""
 
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_adjustment_lines
+#, fuzzy
 msgid "Valuation Adjustment Lines"
-msgstr ""
+msgstr "Stavke usklađivanja vrednovanja"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__valuation_adjustment_lines
@@ -747,18 +779,25 @@ msgstr "Težina"
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/stock_landed_cost.py:0
+#, fuzzy
 msgid ""
 "You cannot apply landed costs on the chosen %s(s). Landed costs can only be "
 "applied for products with FIFO or average costing method."
 msgstr ""
+"Ne možete primijeniti zavisne troškove na odabrane %s. Zavisni troškovi mogu "
+"se primijeniti samo na proizvode s FIFO ili prosječnom metodom obračuna "
+"troška."
 
 #. module: stock_landed_costs
 #. odoo-python
 #: code:addons/stock_landed_costs/models/product.py:0
+#, fuzzy
 msgid ""
 "You cannot change the product type or disable landed cost option because the "
 "product is used in an account move line."
 msgstr ""
+"Ne možete promijeniti vrstu proizvoda ili onemogućiti opciju zavisnog troška "
+"jer se proizvod koristi u stavci temeljnice."
 
 #~ msgid " already out"
 #~ msgstr "već vani"

@@ -9,13 +9,13 @@
 # Cozmin Candea <office@terrabit.ro>, 2023
 # Dorin Hongu <dhongu@gmail.com>, 2023
 # Claudia Baisan, 2023
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2025-11-12 13:10+0000\n"
+"PO-Revision-Date: 2026-06-13 13:36+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s18-4/"
 "event/ro/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__event_count
@@ -66,20 +66,23 @@ msgstr "%(event_name)s - Înregistrare pentru %(attendee_name)s"
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
+#, fuzzy
 msgid "%(slot_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(slot_name)s (%(count)s locuri disponibile)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
+#, fuzzy
 msgid "%(slot_name)s (Sold out)"
-msgstr ""
+msgstr "%(slot_name)s (Epuizat)"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
+#, fuzzy
 msgid "%(slot_name)s: missing %(count)s seat(s)"
-msgstr ""
+msgstr "%(slot_name)s: lipsesc locuri %(count)s"
 
 #. module: event
 #. odoo-python
@@ -150,9 +153,11 @@ msgstr "4 pe coală"
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_3
 #: model_terms:res.partner,website_description:event.res_partner_event_4
+#, fuzzy
 msgid ""
 "<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Discover more</a>"
 msgstr ""
+"<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Află mai multe</a>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1519,26 +1524,37 @@ msgstr "O descriere a biletului pe care doriți să le comunicați clienților."
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
+#, fuzzy
 msgid ""
 "A slot cannot be scheduled outside of its event time range.\n"
 "\n"
 "Event:\t\t%(event_start)s - %(event_end)s\n"
 "Slot:\t\t%(slot_name)s"
 msgstr ""
+"Un slot nu poate fi programat în afara intervalului de timp al "
+"evenimentului.\n"
+"\n"
+"Eveniment:%(event_start)s - %(event_end)s\n"
+"Slot:\t\t%(slot_name)s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
+#, fuzzy
 msgid ""
 "A slot end hour must be later than its start hour.\n"
 "%s"
 msgstr ""
+"Ora de încheiere a unui slot trebuie să fie ulterioară orei de începere a "
+"acestuia.\n"
+"%s"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_slot.py:0
+#, fuzzy
 msgid "A slot hour must be between 0:00 and 23:59."
-msgstr ""
+msgstr "O oră de slot trebuie să fie între 0:00 și 23:59."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__a4_french_fold
@@ -1646,14 +1662,16 @@ msgstr "După fiecare înregistrare"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event
+#, fuzzy
 msgid "After the event ended"
-msgstr ""
+msgstr "După încheierea evenimentului"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event_start
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_event_start
+#, fuzzy
 msgid "After the event started"
-msgstr ""
+msgstr "După începerea evenimentului"
 
 #. module: event
 #: model:event.tag.category,name:event.event_tag_category_1
@@ -1678,11 +1696,15 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_multi_slots
 #: model:ir.model.fields,help:event.field_event_registration__is_multi_slots
+#, fuzzy
 msgid ""
 "Allow multiple time slots. The communications, the maximum number of "
 "attendees and the maximum number of tickets registrations are defined for "
 "each time slot instead of the whole event."
 msgstr ""
+"Permiteți mai multe intervale de timp. Comunicările, numărul maxim de "
+"participanți și numărul maxim de înregistrări de bilete sunt definite pentru "
+"fiecare interval de timp, în loc de întregul eveniment."
 
 #. module: event
 #: model:event.event,name:event.event_6
@@ -1803,8 +1825,9 @@ msgstr "Data Participării"
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
+#, fuzzy
 msgid "Attended on %(attended_date)s"
-msgstr ""
+msgstr "A participat la %(attended_date)s"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__registration_id
@@ -1854,11 +1877,12 @@ msgstr "Participanți"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
+#, fuzzy
 msgid ""
 "Attendees\n"
 "                                    <span invisible=\"not is_multi_slots\"> "
 "per slot</span>"
-msgstr ""
+msgstr "Participanți <span invisible=\"not is_multi_slots\"> e pe slot</span>"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
@@ -1926,14 +1950,16 @@ msgstr "Codul de bare trebuie să fie unic"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event_end
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event_end
+#, fuzzy
 msgid "Before the event ends"
-msgstr ""
+msgstr "Înainte de încheierea evenimentului"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__before_event
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__before_event
+#, fuzzy
 msgid "Before the event starts"
-msgstr ""
+msgstr "Înainte de începerea evenimentului"
 
 #. module: event
 #. odoo-python
@@ -2076,9 +2102,11 @@ msgstr "Comunicare"
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
+#, fuzzy
 msgid ""
 "Communication for %(event_name)s scheduled on %(scheduled_date)s failed."
 msgstr ""
+"Comunicarea pentru %(event_name)s programată pe %(scheduled_date)s a eșuat."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_registration_ids
@@ -2329,8 +2357,9 @@ msgstr "Efectuat"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
+#, fuzzy
 msgid "Download Tickets"
-msgstr ""
+msgstr "Descărcați biletele"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
@@ -2534,13 +2563,15 @@ msgstr "Responsabil Eveniment"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_share_url
+#, fuzzy
 msgid "Event Share URL"
-msgstr ""
+msgstr "URL de partajare eveniment"
 
 #. module: event
 #: model:ir.model,name:event.model_event_slot
+#, fuzzy
 msgid "Event Slot"
-msgstr ""
+msgstr "Slot eveniment"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
@@ -2745,8 +2776,9 @@ msgstr "Experimentați muzică live, mâncare și băuturi locale."
 #. module: event
 #: model:ir.model.fields,help:event.field_event_slot__end_hour
 #: model:ir.model.fields,help:event.field_event_slot__start_hour
+#, fuzzy
 msgid "Expressed in the event timezone."
-msgstr ""
+msgstr "Exprimat în fusul orar al evenimentului."
 
 #. module: event
 #: model:event.stage,description:event.event_stage_done
@@ -2782,38 +2814,55 @@ msgstr "Pictogramă minunată pentru font, de ex. fa-sarcini"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
+#, fuzzy
 msgid ""
 "For any additional information, please contact us at <a "
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@odoo.com\">events@odoo.com</a>"
 msgstr ""
+"Pentru orice informații suplimentare, vă rugăm să ne contactați la <a "
+"class=\"o_translate_inline\" href=\"mailto:events@odoo.com\">"
+"events@odoo.com</a>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_7
+#, fuzzy
 msgid ""
 "For any additional information, please contact us at <a "
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@openwood.example.com\">events@penwood.example.com</a>."
 msgstr ""
+"Pentru orice informații suplimentare, vă rugăm să ne contactați la <a "
+"class=\"o_translate_inline\" href=\"mailto:events@openwood.example.com\">"
+"events@penwood.example.com</a>."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 #: model_terms:event.event,description:event.event_1
 #: model_terms:event.event,description:event.event_3
 #: model_terms:event.event,description:event.event_5
+#, fuzzy
 msgid ""
 "For any additional information, please contact us at <a "
 "class=\"o_translate_inline\" "
 "href=\"mailto:events@yourcompany.com\">events@yourcompany.com</a>."
 msgstr ""
+"Pentru orice informații suplimentare, vă rugăm să ne contactați la <a "
+"class=\"o_translate_inline\" href=\"mailto:events@yourcompany.com\">"
+"events@yourcompany.com</a>."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
+#, fuzzy
 msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this number the registrations are not accepted. If the "
 "event has multiple slots, this maximum number is applied per slot."
 msgstr ""
+"Pentru fiecare eveniment puteți defini un număr maxim de locuri (număr de "
+"participanți), peste acest număr înregistrările nu sunt acceptate. Dacă "
+"evenimentul are mai multe sloturi, acest număr maxim se aplică pentru "
+"fiecare slot."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_1
@@ -3134,10 +3183,14 @@ msgstr ""
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__interval_type
+#, fuzzy
 msgid ""
 "Indicates when the communication is sent. If the event has multiple slots, "
 "the interval is related to each time slot instead of the whole event."
 msgstr ""
+"Indică momentul în care este trimisă comunicarea. Dacă evenimentul are mai "
+"multe intervale, intervalul se referă la fiecare interval de timp în parte, "
+"nu la întregul eveniment."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3164,8 +3217,9 @@ msgstr "Introducere, CRM, Managementul vânzărilor"
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
+#, fuzzy
 msgid "Invalid event / slot choice"
-msgstr ""
+msgstr "Eveniment/slot invalid"
 
 #. module: event
 #. odoo-python
@@ -3186,8 +3240,9 @@ msgstr "Este Valabil"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__is_multi_slots
+#, fuzzy
 msgid "Is Event Multi Slots"
-msgstr ""
+msgstr "Este evenimentul Multi Slots"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__is_expired
@@ -3207,8 +3262,9 @@ msgstr "Este urmăritor"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_multi_slots
+#, fuzzy
 msgid "Is Multi Slots"
-msgstr ""
+msgstr "Este Multi Slots"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__is_one_day
@@ -3223,8 +3279,9 @@ msgstr "Este în Curs de Desfășurare"
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
+#, fuzzy
 msgid "It failed with error %(error)s."
-msgstr ""
+msgstr "A eșuat cu eroarea „ %(error)s ”."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__seats_max
@@ -3308,8 +3365,9 @@ msgstr "Ultimul participant"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__error_datetime
+#, fuzzy
 msgid "Last Error"
-msgstr ""
+msgstr "Ultima eroare"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__write_uid
@@ -3383,8 +3441,9 @@ msgstr "Locuri Limitate"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__event_url
+#, fuzzy
 msgid "Link where the online event will take place."
-msgstr ""
+msgstr "Link către locul unde va avea loc evenimentul online."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3443,8 +3502,9 @@ msgstr "Mail Trimis"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_slot_ids
+#, fuzzy
 msgid "Mail Slot"
-msgstr ""
+msgstr "Fanta pentru corespondență"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3501,8 +3561,9 @@ msgstr "Maximum de Locuri"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
+#, fuzzy
 msgid "Maximum per slot"
-msgstr ""
+msgstr "Maxim pe slot"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__utm_medium_id
@@ -3530,8 +3591,9 @@ msgstr "Luni"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
+#, fuzzy
 msgid "Multiple Slots"
-msgstr ""
+msgstr "Sloturi multiple"
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_2_tag_2
@@ -3634,8 +3696,9 @@ msgstr "Note"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
+#, fuzzy
 msgid "Notes & Documents"
-msgstr ""
+msgstr "Note și documente"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_mail
@@ -3731,8 +3794,9 @@ msgstr "Eveniment online"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_url
+#, fuzzy
 msgid "Online Event URL"
-msgstr ""
+msgstr "URL eveniment online"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -3853,8 +3917,9 @@ msgstr "Vă rugăm să introduceți un secret base64 valid"
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
+#, fuzzy
 msgid "Please enter a valid event URL."
-msgstr ""
+msgstr "Vă rugăm să introduceți o adresă URL validă pentru eveniment."
 
 #. module: event
 #. odoo-javascript
@@ -4083,8 +4148,9 @@ msgstr "Înregistrări începute"
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
+#, fuzzy
 msgid "Rendering of template failed with error: %(error)s."
-msgstr ""
+msgstr "Renderizarea șablonului a eșuat cu eroarea: %(error)s."
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_reporting_events
@@ -4296,19 +4362,23 @@ msgstr "Slot"
 
 #. module: event
 #: model:ir.model,name:event.model_event_mail_slot
+#, fuzzy
 msgid "Slot Mail Scheduler"
-msgstr ""
+msgstr "Planificator de e-mailuri"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_registration.py:0
+#, fuzzy
 msgid "Slot choice is mandatory on multi-slots events."
 msgstr ""
+"Alegerea slotului este obligatorie pentru evenimentele cu mai multe sloturi."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_mail__mail_slot_ids
+#, fuzzy
 msgid "Slot-based communication"
-msgstr ""
+msgstr "Comunicare bazată pe sloturi"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_event_slot_from_event
@@ -4321,8 +4391,9 @@ msgstr "Sloturi"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_slot_count
+#, fuzzy
 msgid "Slots Count"
-msgstr ""
+msgstr "Număr de sloturi"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_registrations_sold_out
@@ -4601,10 +4672,13 @@ msgstr ""
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
+#, fuzzy
 msgid ""
 "There are more registrations than this limit, the event will be sold out and "
 "the extra registrations will remain."
 msgstr ""
+"Există mai multe înregistrări decât această limită, evenimentul va fi "
+"epuizat, iar înregistrările suplimentare vor rămâne."
 
 #. module: event
 #. odoo-python
@@ -4617,10 +4691,13 @@ msgstr ""
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
+#, fuzzy
 msgid ""
 "There is an issue with dynamic placeholder. Actual error received is: %"
 "(error)s."
 msgstr ""
+"Există o problemă cu substituentul dinamic. Eroarea reală primită este: %"
+"(error)s."
 
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_answer_value_check
@@ -4668,8 +4745,9 @@ msgstr "Aceste informații vor fi tipărite pe biletele dvs."
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
+#, fuzzy
 msgid "This is due to an error in template %(template_link)s."
-msgstr ""
+msgstr "Aceasta se datorează unei erori în șablonul %(template_link)s."
 
 #. module: event
 #. odoo-javascript
@@ -4701,8 +4779,9 @@ msgstr ""
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_mail.py:0
+#, fuzzy
 msgid "This may be linked to template %(template_link)s."
-msgstr ""
+msgstr "Aceasta poate fi legată de șablonul %(template_link)s."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -4770,8 +4849,9 @@ msgstr ""
 #. module: event
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
+#, fuzzy
 msgid "Ticket was first scanned on"
-msgstr ""
+msgstr "Biletul a fost scanat pentru prima dată pe"
 
 #. module: event
 #. odoo-python
@@ -4833,8 +4913,9 @@ msgstr "Total participanți"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_tree_from_event
+#, fuzzy
 msgid "Total Registration"
-msgstr ""
+msgstr "Înregistrare totală"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -4948,8 +5029,9 @@ msgstr "Viitoare/În execuție"
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
+#, fuzzy
 msgid "Update the limit of registrations?"
-msgstr ""
+msgstr "Actualizați limita de înregistrări?"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__use_barcode
@@ -5093,8 +5175,9 @@ msgstr "Dacă locurile nu sunt disponibile pentru acest bilet."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_slot__is_sold_out
+#, fuzzy
 msgid "Whether seats are sold out for this slot."
-msgstr ""
+msgstr "Dacă locurile pentru acest slot sunt epuizate."
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
@@ -5180,8 +5263,9 @@ msgstr "ex: \"Promovare\""
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
+#, fuzzy
 msgid "e.g. \"https://www.odoo.com\""
-msgstr ""
+msgstr "De exemplu: „https://www.odoo.com”"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_view_form_quick_create

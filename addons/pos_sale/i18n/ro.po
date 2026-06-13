@@ -8,13 +8,13 @@
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
 # Dorin Hongu <dhongu@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-11-12 01:46+0000\n"
+"PO-Revision-Date: 2026-06-12 08:38+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s18-4/"
 "pos_sale/ro/>\n"
@@ -24,19 +24,21 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/sale_order.py:0
+#, fuzzy
 msgid "%(line_description)s (Cancelled)"
-msgstr ""
+msgstr "%(line_description)s (Anulat)"
 
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/account_move.py:0
+#, fuzzy
 msgid "%(old_name)s (Cancelled)"
-msgstr ""
+msgstr "%(old_name)s (Anulat)"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -57,13 +59,15 @@ msgstr "A fost creată o nouă comandă."
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
+#, fuzzy
 msgid "Amount To Pay In POS"
-msgstr ""
+msgstr "Suma de plată în POS"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
+#, fuzzy
 msgid "Amount left to pay in POS to avoid double payment or double invoicing."
-msgstr ""
+msgstr "Suma rămasă de plată în POS pentru a evita plata sau facturarea dublă."
 
 #. module: pos_sale
 #. odoo-javascript
@@ -84,13 +88,15 @@ msgstr "Setări de configurare"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_res_partner
+#, fuzzy
 msgid "Contact"
-msgstr ""
+msgstr "Contactați"
 
 #. module: pos_sale
 #: model:ir.model,website_form_label:pos_sale.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Creează un client"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
@@ -104,8 +110,9 @@ msgstr "Livrat din"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__qty_delivered
+#, fuzzy
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "Cantitate de livrare"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_account_move__display_name
@@ -122,8 +129,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:pos_sale.field_stock_picking__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Nume afișat"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -157,10 +165,13 @@ msgstr "Produs cu plata în avans"
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "Down payment (ref: %(order_reference)s on \n"
 " %(date)s)"
 msgstr ""
+"Plată în avans (ref: %(order_reference)s din \n"
+" %(date)s)"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -188,8 +199,9 @@ msgstr "De la"
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__id
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__id
 #: model:ir.model.fields,field_description:pos_sale.field_stock_picking__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
@@ -199,20 +211,25 @@ msgstr "Facturat"
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+#, fuzzy
 msgid ""
 "It seems that you didn't configure a down payment product in your point of "
 "sale. You can go to your point of sale configuration to choose one."
 msgstr ""
+"Se pare că nu ați configurat un produs  Avans în punctul de vânzare. Puteți "
+"merge la configurarea punctului de vânzare pentru a crea unul."
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_account_move
+#, fuzzy
 msgid "Journal Entry"
-msgstr ""
+msgstr "Înregistrare jurnal "
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_account_move_line
+#, fuzzy
 msgid "Journal Item"
-msgstr ""
+msgstr "Element jurnal"
 
 #. module: pos_sale
 #. odoo-python
@@ -255,8 +272,9 @@ msgstr "Linii comandă transferata către Punctul de vânzare"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
+#, fuzzy
 msgid "POS Order"
-msgstr ""
+msgstr "Comandă POS"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
@@ -300,8 +318,9 @@ msgstr "Postat"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_product_template
+#, fuzzy
 msgid "Product"
-msgstr ""
+msgstr "Produs"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -416,15 +435,19 @@ msgstr "Acest produs va fi utilizat ca avans pentru comandă de vânzare."
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_stock_picking
+#, fuzzy
 msgid "Transfer"
-msgstr ""
+msgstr "Transfer"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
+#, fuzzy
 msgid ""
 "Transferred<br/>\n"
 "                                from Sale"
 msgstr ""
+"Transferat<br/>\n"
+"                                din Vânzare"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
@@ -436,8 +459,9 @@ msgstr ""
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+#, fuzzy
 msgid "Warning for %s"
-msgstr ""
+msgstr "Avertizare pentru %s"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -449,8 +473,9 @@ msgstr "Ce dorești să faci?"
 #. odoo-python
 #: code:addons/pos_sale/models/pos_order.py:0
 #: code:addons/pos_sale/models/sale_order.py:0
+#, fuzzy
 msgid "id"
-msgstr ""
+msgstr "id"
 
 #. module: pos_sale
 #. odoo-javascript

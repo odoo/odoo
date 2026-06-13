@@ -13,13 +13,13 @@
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
 # NoaFarkash, 2022
 # Ha Ketem <haketem@gmail.com>, 2022
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-11-12 01:46+0000\n"
+"PO-Revision-Date: 2026-06-12 15:15+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-s18-4/"
 "pos_sale/he/>\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_sale
 #. odoo-python
@@ -62,13 +62,15 @@ msgstr "הזמנה חדשה נוצרה."
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
+#, fuzzy
 msgid "Amount To Pay In POS"
-msgstr ""
+msgstr "סכום לתשלום בקופה"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
+#, fuzzy
 msgid "Amount left to pay in POS to avoid double payment or double invoicing."
-msgstr ""
+msgstr "הסכום שנותר לתשלום בקופה כדי למנוע תשלום כפול או הפקת חשבונית כפולה."
 
 #. module: pos_sale
 #. odoo-javascript
@@ -89,13 +91,15 @@ msgstr "הגדר הגדרות"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_res_partner
+#, fuzzy
 msgid "Contact"
-msgstr ""
+msgstr "איש קשר"
 
 #. module: pos_sale
 #: model:ir.model,website_form_label:pos_sale.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "יצירת לקוח"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
@@ -109,8 +113,9 @@ msgstr "נשלח מ-"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__qty_delivered
+#, fuzzy
 msgid "Delivery Quantity"
-msgstr ""
+msgstr "כמות שנשלחה"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_account_move__display_name
@@ -127,8 +132,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:pos_sale.field_stock_picking__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "שם לתצוגה"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -162,10 +168,13 @@ msgstr "מוצר מקדמה"
 #. module: pos_sale
 #. odoo-python
 #: code:addons/pos_sale/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "Down payment (ref: %(order_reference)s on \n"
 " %(date)s)"
 msgstr ""
+"מקדמה (עבור: %(order_reference)s ב\n"
+"%(date)s)"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -193,8 +202,9 @@ msgstr "מ"
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order_line__id
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__id
 #: model:ir.model.fields,field_description:pos_sale.field_stock_picking__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "מזהה"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__invoiced
@@ -204,20 +214,25 @@ msgstr "חויב"
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+#, fuzzy
 msgid ""
 "It seems that you didn't configure a down payment product in your point of "
 "sale. You can go to your point of sale configuration to choose one."
 msgstr ""
+"נראה שלא הוגדר מוצר בתשלום מקדמה בקופה זו. ניתן להגדיר מוצרים מורשים בהגדרות "
+"של הקופה"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_account_move
+#, fuzzy
 msgid "Journal Entry"
-msgstr ""
+msgstr "פקודת יומן"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_account_move_line
+#, fuzzy
 msgid "Journal Item"
-msgstr ""
+msgstr "תנועת יומן"
 
 #. module: pos_sale
 #. odoo-python
@@ -260,8 +275,9 @@ msgstr "שורות הזמנה הועברו לקופה"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__order_reference__pos_order
+#, fuzzy
 msgid "POS Order"
-msgstr ""
+msgstr "הזמנות קופה"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__paid
@@ -305,8 +321,9 @@ msgstr "נרשם"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_product_template
+#, fuzzy
 msgid "Product"
-msgstr ""
+msgstr "מוצר"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -419,15 +436,19 @@ msgstr "מוצר זה יהיה בשימוש כמקדמה עבור הזמנת ל�
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_stock_picking
+#, fuzzy
 msgid "Transfer"
-msgstr ""
+msgstr "העברה"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_pos_order_form_inherit_pos_sale
+#, fuzzy
 msgid ""
 "Transferred<br/>\n"
 "                                from Sale"
 msgstr ""
+"מועבר <br/>\n"
+"ממכירה"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.view_order_form_inherit_pos_sale
@@ -439,8 +460,9 @@ msgstr ""
 #. module: pos_sale
 #. odoo-javascript
 #: code:addons/pos_sale/static/src/app/services/pos_store.js:0
+#, fuzzy
 msgid "Warning for %s"
-msgstr ""
+msgstr "אזהרה עבור %s"
 
 #. module: pos_sale
 #. odoo-javascript
@@ -452,8 +474,9 @@ msgstr "מה אתה רוצה לעשות?"
 #. odoo-python
 #: code:addons/pos_sale/models/pos_order.py:0
 #: code:addons/pos_sale/models/sale_order.py:0
+#, fuzzy
 msgid "id"
-msgstr ""
+msgstr "מספר זיהוי"
 
 #. module: pos_sale
 #. odoo-javascript

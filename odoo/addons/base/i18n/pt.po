@@ -29,15 +29,15 @@
 # Jolien De Paepe, 2023
 # Nuno Silva <nuno.silva@arxi.pt>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Cristina Paniagua Ramiro <crpan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-11 16:34+0000\n"
-"PO-Revision-Date: 2026-04-18 13:50+0000\n"
-"Last-Translator: Cristina Paniagua Ramiro <crpan@odoo.com>\n"
+"PO-Revision-Date: 2026-06-12 21:50+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s18-4/"
 "base/pt/>\n"
 "Language: pt\n"
@@ -46,7 +46,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -3793,6 +3793,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_loyalty
+#, fuzzy
 msgid ""
 "\n"
 "Create coupon, promotion codes, gift cards and loyalty programs to boost "
@@ -3802,6 +3803,13 @@ msgid ""
 "Coupon & promotion programs can be edited in the Catalog menu of the Website "
 "app.\n"
 msgstr ""
+"\n"
+"Crie cupons, códigos promocionais, cartões-presente e programas de "
+"fidelidade para aumentar suas vendas (produtos gratuitos, descontos etc.). "
+"Os compradores podem usá-los no checkout do e-Commerce.\n"
+"\n"
+"Os programas de cupons e promoções podem ser editados no menu Catálogo do "
+"aplicativo de Site.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder_worksheet
@@ -3875,6 +3883,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hr
+#, fuzzy
 msgid ""
 "\n"
 "Croatian Chart of Accounts updated (RRIF ver.2021)\n"
@@ -3884,6 +3893,13 @@ msgid ""
 "https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021.PDF\n"
 "https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021-ENG.PDF\n"
 msgstr ""
+"\n"
+"Plano de COntas Croata atualizado (RRIF ver.2021)\n"
+"\n"
+"Fontes:\n"
+"https://www.rrif.hr/dok/preuzimanje/Bilanca-2016.pdf\n"
+"https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021.PDF\n"
+"https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021-ENG.PDF\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hr_kuna
@@ -4115,10 +4131,13 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it_edi
+#, fuzzy
 msgid ""
 "\n"
 "E-invoice implementation\n"
 msgstr ""
+"\n"
+"Implementação de e-fatura\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gt_edi
@@ -7995,10 +8014,13 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_product_expiry
 #: model:ir.module.module,description:base.module_mrp_workorder_expiry
+#, fuzzy
 msgid ""
 "\n"
 "Technical module.\n"
 msgstr ""
+"\n"
+"Módulo técnico.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_pos
@@ -8410,6 +8432,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_product
+#, fuzzy
 msgid ""
 "\n"
 "This is the base module for managing products and pricelists in Odoo.\n"
@@ -8431,6 +8454,27 @@ msgid ""
 "\n"
 "Print product labels with barcode.\n"
 msgstr ""
+"\n"
+"Este é o módulo de base para o gerenciamento de produtos e listas de preços "
+"em Odoo.\n"
+"========================================================================\n"
+"\n"
+"Variantes de suporte de produtos, diferentes métodos de preços, informações "
+"de fornecedores, gerenciar estoque/pedido, diferentes unidades de medida, "
+"embalagem e propriedades.\n"
+"\n"
+"Suporte a listas de preços:\n"
+"-------------------\n"
+"    * Múltiplos níveis de desconto (por produto, categoria, quantidades)\n"
+"    * Calcular preços com base em diferentes critérios:\n"
+"        * Outra lista de preços\n"
+"        * Preço de custo\n"
+"        * Preço de lista\n"
+"        * Preço do fornecedor\n"
+"\n"
+"Preferências de lista de preços por produto e/ou usuário.\n"
+"\n"
+"Imprima etiquetas de produtos com código de barras.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_rs
@@ -10959,11 +11003,16 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_timesheet_enterprise
+#, fuzzy
 msgid ""
 "\n"
 "When invoicing timesheets, allows invoicing either all timesheets\n"
 "linked to an SO, or only the validated timesheets\n"
 msgstr ""
+"\n"
+"Na faturação de folhas de horas, permite a faturação ou de todas as folhas "
+"de horas\n"
+"ligadas uma Ordem de Venda, ou apenas a folhas de horas validadas\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_documents
@@ -11078,8 +11127,9 @@ msgstr "Nº de regras de registro"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__all_users_count
+#, fuzzy
 msgid "# Users"
-msgstr ""
+msgstr "Nº de usuários"
 
 #. module: base
 #. odoo-python
@@ -11546,9 +11596,10 @@ msgstr "9. %w              ==&gt; 5 ( Sexta-feira é o 6º dia)"
 #: model_terms:res.partner,website_description:base.res_partner_10
 #: model_terms:res.partner,website_description:base.res_partner_12
 #: model_terms:res.partner,website_description:base.res_partner_5
+#, fuzzy
 msgid ""
 "<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Discover more</a>"
-msgstr ""
+msgstr "<a href=\"#\" class=\"btn btn-primary o_translate_inline\">Ver mais</a>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11743,8 +11794,9 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
+#, fuzzy
 msgid "<i class=\"fa fa-warning pe-2\" title=\"Warning\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-warning pe-2\" title=\"Warning\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_kanban
@@ -11908,15 +11960,19 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
+#, fuzzy
 msgid ""
 "<span invisible=\"evaluation_type != 'value' or update_field_type not in "
 "['one2many', 'many2many']\">by</span>"
 msgstr ""
+"<span invisible=\"evaluation_type != 'value' or update_field_type not in "
+"['one2many', 'many2many']\">por</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
+#, fuzzy
 msgid "<span invisible=\"not is_company\">Address</span>"
-msgstr ""
+msgstr "<span invisible=\"not is_company\">Endereço</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -12602,8 +12658,9 @@ msgstr "ABN"
 #. module: base
 #: model:ir.module.category,name:base.module_category_ai
 #: model:ir.module.module,shortdesc:base.module_ai
+#, fuzzy
 msgid "AI"
-msgstr ""
+msgstr "IA"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_ai_calendar
@@ -12679,8 +12736,9 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
+#, fuzzy
 msgid "Abstract"
-msgstr ""
+msgstr "Abstrato"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__abstract
@@ -12711,8 +12769,9 @@ msgstr "Acesso"
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
+#, fuzzy
 msgid "Access Control"
-msgstr ""
+msgstr "Controle de acesso"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__model_access
@@ -12783,8 +12842,9 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/environments.py:0
+#, fuzzy
 msgid "Access to unauthorized or invalid companies."
-msgstr ""
+msgstr "Acesso a empresas não autorizadas ou inválidas."
 
 #. module: base
 #. odoo-python
@@ -13284,8 +13344,9 @@ msgstr "Adicione um bloco de código de site para os grupos de e-mail."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_kanban
+#, fuzzy
 msgid "Add an action"
-msgstr ""
+msgstr "Adicionar uma ação"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports_cash_basis
@@ -13416,8 +13477,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_m2m_operation__add
+#, fuzzy
 msgid "Adding"
-msgstr ""
+msgstr "Adicionando"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_address_31
@@ -13778,8 +13840,9 @@ msgstr "Administrativo/utilitários"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_users__role__group_system
+#, fuzzy
 msgid "Administrator"
-msgstr ""
+msgstr "Administrador"
 
 #. module: base
 #. odoo-python
@@ -13841,8 +13904,9 @@ msgstr "Affero GPL-3"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.AFN
+#, fuzzy
 msgid "Afghani"
-msgstr ""
+msgstr "Afegão"
 
 #. module: base
 #: model:res.country,name:base.af
@@ -13851,268 +13915,321 @@ msgstr "Afeganistão"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/abidjan
+#, fuzzy
 msgid "Africa/Abidjan"
-msgstr ""
+msgstr "África/Abidjã"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/accra
+#, fuzzy
 msgid "Africa/Accra"
-msgstr ""
+msgstr "África/Acra"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/addis_ababa
+#, fuzzy
 msgid "Africa/Addis_Ababa"
-msgstr ""
+msgstr "África/Addis_Ababa"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/algiers
+#, fuzzy
 msgid "Africa/Algiers"
-msgstr ""
+msgstr "África/Argel"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/asmara
+#, fuzzy
 msgid "Africa/Asmara"
-msgstr ""
+msgstr "África/Asmara"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/bamako
+#, fuzzy
 msgid "Africa/Bamako"
-msgstr ""
+msgstr "África/Bamako"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/bangui
+#, fuzzy
 msgid "Africa/Bangui"
-msgstr ""
+msgstr "África/Bangui"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/banjul
+#, fuzzy
 msgid "Africa/Banjul"
-msgstr ""
+msgstr "África/Banjul"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/bissau
+#, fuzzy
 msgid "Africa/Bissau"
-msgstr ""
+msgstr "África/Bissau"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/blantyre
+#, fuzzy
 msgid "Africa/Blantyre"
-msgstr ""
+msgstr "África/Blantire"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/brazzaville
+#, fuzzy
 msgid "Africa/Brazzaville"
-msgstr ""
+msgstr "África/Brazavile"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/bujumbura
+#, fuzzy
 msgid "Africa/Bujumbura"
-msgstr ""
+msgstr "África/Bujumbura"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/cairo
+#, fuzzy
 msgid "Africa/Cairo"
-msgstr ""
+msgstr "África/Cairo"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/casablanca
+#, fuzzy
 msgid "Africa/Casablanca"
-msgstr ""
+msgstr "África/Casablanca"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/ceuta
+#, fuzzy
 msgid "Africa/Ceuta"
-msgstr ""
+msgstr "África/Ceuta"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/conakry
+#, fuzzy
 msgid "Africa/Conakry"
-msgstr ""
+msgstr "África/Conacri"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/dakar
+#, fuzzy
 msgid "Africa/Dakar"
-msgstr ""
+msgstr "África/Dacar"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/dar_es_salaam
+#, fuzzy
 msgid "Africa/Dar_es_Salaam"
-msgstr ""
+msgstr "África/Dar_es_Salaam"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/djibouti
+#, fuzzy
 msgid "Africa/Djibouti"
-msgstr ""
+msgstr "África/Djibuti"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/douala
+#, fuzzy
 msgid "Africa/Douala"
-msgstr ""
+msgstr "África/Duala"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/el_aaiun
+#, fuzzy
 msgid "Africa/El_Aaiun"
-msgstr ""
+msgstr "África/El_Aaiun"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/freetown
+#, fuzzy
 msgid "Africa/Freetown"
-msgstr ""
+msgstr "África/Freetown"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/gaborone
+#, fuzzy
 msgid "Africa/Gaborone"
-msgstr ""
+msgstr "África/Gaborone"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/harare
+#, fuzzy
 msgid "Africa/Harare"
-msgstr ""
+msgstr "África/Harare"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/johannesburg
+#, fuzzy
 msgid "Africa/Johannesburg"
-msgstr ""
+msgstr "África/Joanesburgo"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/juba
+#, fuzzy
 msgid "Africa/Juba"
-msgstr ""
+msgstr "África/Juba"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/kampala
+#, fuzzy
 msgid "Africa/Kampala"
-msgstr ""
+msgstr "África/Kampala"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/khartoum
+#, fuzzy
 msgid "Africa/Khartoum"
-msgstr ""
+msgstr "África/Cartum"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/kigali
+#, fuzzy
 msgid "Africa/Kigali"
-msgstr ""
+msgstr "África/Quigali"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/kinshasa
+#, fuzzy
 msgid "Africa/Kinshasa"
-msgstr ""
+msgstr "África/Kinshasa"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/lagos
+#, fuzzy
 msgid "Africa/Lagos"
-msgstr ""
+msgstr "África/Lagos"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/libreville
+#, fuzzy
 msgid "Africa/Libreville"
-msgstr ""
+msgstr "África/Libreville"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/lome
+#, fuzzy
 msgid "Africa/Lome"
-msgstr ""
+msgstr "África/Lome"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/luanda
+#, fuzzy
 msgid "Africa/Luanda"
-msgstr ""
+msgstr "África/Luanda"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/lubumbashi
+#, fuzzy
 msgid "Africa/Lubumbashi"
-msgstr ""
+msgstr "África/Lubumbashi"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/lusaka
+#, fuzzy
 msgid "Africa/Lusaka"
-msgstr ""
+msgstr "África/Lusaca"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/malabo
+#, fuzzy
 msgid "Africa/Malabo"
-msgstr ""
+msgstr "África/Malabo"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/maputo
+#, fuzzy
 msgid "Africa/Maputo"
-msgstr ""
+msgstr "África/Maputo"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/maseru
+#, fuzzy
 msgid "Africa/Maseru"
-msgstr ""
+msgstr "África/Maseru"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/mbabane
+#, fuzzy
 msgid "Africa/Mbabane"
-msgstr ""
+msgstr "África/Mbabane"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/mogadishu
+#, fuzzy
 msgid "Africa/Mogadishu"
-msgstr ""
+msgstr "África/Mogadíscio"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/monrovia
+#, fuzzy
 msgid "Africa/Monrovia"
-msgstr ""
+msgstr "África/Monróvia"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/nairobi
+#, fuzzy
 msgid "Africa/Nairobi"
-msgstr ""
+msgstr "África/Nairobi"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/ndjamena
+#, fuzzy
 msgid "Africa/Ndjamena"
-msgstr ""
+msgstr "África/Ndjamena"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/niamey
+#, fuzzy
 msgid "Africa/Niamey"
-msgstr ""
+msgstr "África/Niamei"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/nouakchott
+#, fuzzy
 msgid "Africa/Nouakchott"
-msgstr ""
+msgstr "África/Nouakchott"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/ouagadougou
+#, fuzzy
 msgid "Africa/Ouagadougou"
-msgstr ""
+msgstr "África/Ouagadougou"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/porto-novo
+#, fuzzy
 msgid "Africa/Porto-Novo"
-msgstr ""
+msgstr "África/Porto-Novo"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/sao_tome
+#, fuzzy
 msgid "Africa/Sao_Tome"
-msgstr ""
+msgstr "África/São_Tome"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/timbuktu
+#, fuzzy
 msgid "Africa/Timbuktu"
-msgstr ""
+msgstr "África/Tombuctu"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/tripoli
+#, fuzzy
 msgid "Africa/Tripoli"
-msgstr ""
+msgstr "África/Trípoli"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/tunis
+#, fuzzy
 msgid "Africa/Tunis"
-msgstr ""
+msgstr "África/Tunes"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__africa/windhoek
+#, fuzzy
 msgid "Africa/Windhoek"
-msgstr ""
+msgstr "África/Windhoek"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__after
@@ -14131,13 +14248,15 @@ msgstr "Depois do valor"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.ILS
+#, fuzzy
 msgid "Agorot"
-msgstr ""
+msgstr "Agorot"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_agriculture_shop
+#, fuzzy
 msgid "Agricultural Store"
-msgstr ""
+msgstr "Loja agrícola"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_A
@@ -14171,8 +14290,9 @@ msgstr "Tudo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__all_child_ids
+#, fuzzy
 msgid "All Child"
-msgstr ""
+msgstr "Todos os Descendentes"
 
 #. module: base
 #. odoo-python
@@ -14212,8 +14332,9 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_form
+#, fuzzy
 msgid "All users"
-msgstr ""
+msgstr "Todos os utilizadores"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays
@@ -14289,8 +14410,9 @@ msgstr ""
 
 #. module: base
 #: model:res.groups,name:base.group_allow_export
+#, fuzzy
 msgid "Allowed"
-msgstr ""
+msgstr "Permitido"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -14300,8 +14422,9 @@ msgstr "Empresas permitidas"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__group_ids
 #: model:ir.model.fields,field_description:base.field_ir_cron__group_ids
+#, fuzzy
 msgid "Allowed Groups"
-msgstr ""
+msgstr "Grupos Permitidos"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__allowed_states
@@ -14433,383 +14556,459 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/adak
+#, fuzzy
 msgid "America/Adak"
-msgstr ""
+msgstr "América/Adak"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/anchorage
+#, fuzzy
 msgid "America/Anchorage"
-msgstr ""
+msgstr "América/Anchorage"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/anguilla
+#, fuzzy
 msgid "America/Anguilla"
-msgstr ""
+msgstr "América/Anguila"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/antigua
+#, fuzzy
 msgid "America/Antigua"
-msgstr ""
+msgstr "América/Antígua"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/araguaina
+#, fuzzy
 msgid "America/Araguaina"
-msgstr ""
+msgstr "América/Araguaína"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/argentina/buenos_aires
+#, fuzzy
 msgid "America/Argentina/Buenos_Aires"
-msgstr ""
+msgstr "América/Argentina/Buenos_Aires"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/argentina/catamarca
+#, fuzzy
 msgid "America/Argentina/Catamarca"
-msgstr ""
+msgstr "América/Argentina/Catamarca"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/argentina/cordoba
+#, fuzzy
 msgid "America/Argentina/Cordoba"
-msgstr ""
+msgstr "América/Argentina/Córdoba"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/argentina/jujuy
+#, fuzzy
 msgid "America/Argentina/Jujuy"
-msgstr ""
+msgstr "América/Argentina/Jujuy"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/argentina/la_rioja
+#, fuzzy
 msgid "America/Argentina/La_Rioja"
-msgstr ""
+msgstr "América/Argentina/La_Rioja"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/argentina/mendoza
+#, fuzzy
 msgid "America/Argentina/Mendoza"
-msgstr ""
+msgstr "América/Argentina/Mendoza"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/argentina/rio_gallegos
+#, fuzzy
 msgid "America/Argentina/Rio_Gallegos"
-msgstr ""
+msgstr "América/Argentina/Rio_Gallegos"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/argentina/salta
+#, fuzzy
 msgid "America/Argentina/Salta"
-msgstr ""
+msgstr "América/Argentina/Salta"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/argentina/san_juan
+#, fuzzy
 msgid "America/Argentina/San_Juan"
-msgstr ""
+msgstr "América/Argentina/San_Juan"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/argentina/san_luis
+#, fuzzy
 msgid "America/Argentina/San_Luis"
-msgstr ""
+msgstr "América/Argentina/San_Luis"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/argentina/tucuman
+#, fuzzy
 msgid "America/Argentina/Tucuman"
-msgstr ""
+msgstr "América/Argentina/Tucumán"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/argentina/ushuaia
+#, fuzzy
 msgid "America/Argentina/Ushuaia"
-msgstr ""
+msgstr "América/Argentina/Ushuaia"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/aruba
+#, fuzzy
 msgid "America/Aruba"
-msgstr ""
+msgstr "América/Aruba"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/asuncion
+#, fuzzy
 msgid "America/Asuncion"
-msgstr ""
+msgstr "América/Assunção"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/atikokan
+#, fuzzy
 msgid "America/Atikokan"
-msgstr ""
+msgstr "América/Atikokan"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/atka
+#, fuzzy
 msgid "America/Atka"
-msgstr ""
+msgstr "América/Atka"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/bahia
+#, fuzzy
 msgid "America/Bahia"
-msgstr ""
+msgstr "América/Bahia"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/bahia_banderas
+#, fuzzy
 msgid "America/Bahia_Banderas"
-msgstr ""
+msgstr "América/Bahia_Banderas"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/barbados
+#, fuzzy
 msgid "America/Barbados"
-msgstr ""
+msgstr "América/Barbados"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/belem
+#, fuzzy
 msgid "America/Belem"
-msgstr ""
+msgstr "América/Belém"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/belize
+#, fuzzy
 msgid "America/Belize"
-msgstr ""
+msgstr "América/Belize"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/blanc-sablon
+#, fuzzy
 msgid "America/Blanc-Sablon"
-msgstr ""
+msgstr "América/Blanc-Sablon"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/boa_vista
+#, fuzzy
 msgid "America/Boa_Vista"
-msgstr ""
+msgstr "América/Boa_Vista"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/bogota
+#, fuzzy
 msgid "America/Bogota"
-msgstr ""
+msgstr "América/Bogotá"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/boise
+#, fuzzy
 msgid "America/Boise"
-msgstr ""
+msgstr "América/Boise"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/cambridge_bay
+#, fuzzy
 msgid "America/Cambridge_Bay"
-msgstr ""
+msgstr "América/Cambridge_Bay"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/campo_grande
+#, fuzzy
 msgid "America/Campo_Grande"
-msgstr ""
+msgstr "América/Campo_Grande"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/cancun
+#, fuzzy
 msgid "America/Cancun"
-msgstr ""
+msgstr "América/Cancun"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/caracas
+#, fuzzy
 msgid "America/Caracas"
-msgstr ""
+msgstr "América/Caracas"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/cayenne
+#, fuzzy
 msgid "America/Cayenne"
-msgstr ""
+msgstr "América/Caiena"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/cayman
+#, fuzzy
 msgid "America/Cayman"
-msgstr ""
+msgstr "América/Cayman"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/chicago
+#, fuzzy
 msgid "America/Chicago"
-msgstr ""
+msgstr "América/Chicago"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/chihuahua
+#, fuzzy
 msgid "America/Chihuahua"
-msgstr ""
+msgstr "América/Chihuahua"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/ciudad_juarez
+#, fuzzy
 msgid "America/Ciudad_Juarez"
-msgstr ""
+msgstr "América/Ciudad_Juarez"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/coral_harbour
+#, fuzzy
 msgid "America/Coral_Harbour"
-msgstr ""
+msgstr "América/Coral_Harbour"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/costa_rica
+#, fuzzy
 msgid "America/Costa_Rica"
-msgstr ""
+msgstr "América/Costa_Rica"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/coyhaique
+#, fuzzy
 msgid "America/Coyhaique"
-msgstr ""
+msgstr "América/Coyhaique"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/creston
+#, fuzzy
 msgid "America/Creston"
-msgstr ""
+msgstr "América/Creston"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/cuiaba
+#, fuzzy
 msgid "America/Cuiaba"
-msgstr ""
+msgstr "América/Cuiabá"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/curacao
+#, fuzzy
 msgid "America/Curacao"
-msgstr ""
+msgstr "América/Curaçao"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/danmarkshavn
+#, fuzzy
 msgid "America/Danmarkshavn"
-msgstr ""
+msgstr "América/Danmarkshavn"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/dawson
+#, fuzzy
 msgid "America/Dawson"
-msgstr ""
+msgstr "América/Dawson"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/dawson_creek
+#, fuzzy
 msgid "America/Dawson_Creek"
-msgstr ""
+msgstr "América/Dawson_Creek"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/denver
+#, fuzzy
 msgid "America/Denver"
-msgstr ""
+msgstr "América/Denver"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/detroit
+#, fuzzy
 msgid "America/Detroit"
-msgstr ""
+msgstr "América/Detroit"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/dominica
+#, fuzzy
 msgid "America/Dominica"
-msgstr ""
+msgstr "América/Dominica"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/edmonton
+#, fuzzy
 msgid "America/Edmonton"
-msgstr ""
+msgstr "América/Edmonton"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/eirunepe
+#, fuzzy
 msgid "America/Eirunepe"
-msgstr ""
+msgstr "América/Eirunepe"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/el_salvador
+#, fuzzy
 msgid "America/El_Salvador"
-msgstr ""
+msgstr "América/El_Salvador"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/ensenada
+#, fuzzy
 msgid "America/Ensenada"
-msgstr ""
+msgstr "América/Ensenada"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/fort_nelson
+#, fuzzy
 msgid "America/Fort_Nelson"
-msgstr ""
+msgstr "América/Fort_Nelson"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/fortaleza
+#, fuzzy
 msgid "America/Fortaleza"
-msgstr ""
+msgstr "América/Fortaleza"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/glace_bay
+#, fuzzy
 msgid "America/Glace_Bay"
-msgstr ""
+msgstr "América/Glace_Bay"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/goose_bay
+#, fuzzy
 msgid "America/Goose_Bay"
-msgstr ""
+msgstr "América/Goose_Bay"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/grand_turk
+#, fuzzy
 msgid "America/Grand_Turk"
-msgstr ""
+msgstr "América/Grand_Turk"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/grenada
+#, fuzzy
 msgid "America/Grenada"
-msgstr ""
+msgstr "América/Granada"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/guadeloupe
+#, fuzzy
 msgid "America/Guadeloupe"
-msgstr ""
+msgstr "América/Guadalupe"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/guatemala
+#, fuzzy
 msgid "America/Guatemala"
-msgstr ""
+msgstr "América/Guatemala"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/guayaquil
+#, fuzzy
 msgid "America/Guayaquil"
-msgstr ""
+msgstr "América/Guaiaquil"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/guyana
+#, fuzzy
 msgid "America/Guyana"
-msgstr ""
+msgstr "América/Guiana"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/halifax
+#, fuzzy
 msgid "America/Halifax"
-msgstr ""
+msgstr "América/Halifax"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/havana
+#, fuzzy
 msgid "America/Havana"
-msgstr ""
+msgstr "América/Havana"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/hermosillo
+#, fuzzy
 msgid "America/Hermosillo"
-msgstr ""
+msgstr "América/Hermosillo"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/indiana/indianapolis
+#, fuzzy
 msgid "America/Indiana/Indianapolis"
-msgstr ""
+msgstr "América/Indiana/Indianapolis"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/indiana/knox
+#, fuzzy
 msgid "America/Indiana/Knox"
-msgstr ""
+msgstr "América/Indiana/Knox"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/indiana/marengo
+#, fuzzy
 msgid "America/Indiana/Marengo"
-msgstr ""
+msgstr "América/Indiana/Marengo"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/indiana/petersburg
+#, fuzzy
 msgid "America/Indiana/Petersburg"
-msgstr ""
+msgstr "América/Indiana/Petersburg"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/indiana/tell_city
+#, fuzzy
 msgid "America/Indiana/Tell_City"
-msgstr ""
+msgstr "América/Indiana/Tell_City"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/indiana/vevay
+#, fuzzy
 msgid "America/Indiana/Vevay"
-msgstr ""
+msgstr "América/Indiana/Vevay"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/indiana/vincennes
+#, fuzzy
 msgid "America/Indiana/Vincennes"
-msgstr ""
+msgstr "América/Indiana/Vincennes"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/indiana/winamac
+#, fuzzy
 msgid "America/Indiana/Winamac"
-msgstr ""
+msgstr "América/Indiana/Winamac"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__america/inuvik
@@ -15502,8 +15701,9 @@ msgstr "Aplicar Atualizações Agendadas"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_appointment
+#, fuzzy
 msgid "Appointment"
-msgstr ""
+msgstr "Compromisso"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment_google_calendar
@@ -15639,13 +15839,15 @@ msgstr "Diferença de arquitetura"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_architects
+#, fuzzy
 msgid "Architecture Firm"
-msgstr ""
+msgstr "Gabinete de arquitetura"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
+#, fuzzy
 msgid "Archive"
-msgstr ""
+msgstr "Arquivar"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.edit_menu_access_search
@@ -16405,8 +16607,9 @@ msgstr "Atraia visitantes para se inscreverem em listas de envio em massa"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_certification_organism
+#, fuzzy
 msgid "Audit & Certification"
-msgstr ""
+msgstr "Auditoria e certificação"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.ISK
@@ -16550,8 +16753,9 @@ msgstr "Planos e impostos padronizados para a Áustria"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__auth_method
+#, fuzzy
 msgid "Auth Method"
-msgstr ""
+msgstr "Método de autenticação"
 
 #. module: base
 #. odoo-python
@@ -16644,8 +16848,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_appointment_sale_project
+#, fuzzy
 msgid "Automatically set dates on tasks generated by appointments"
-msgstr ""
+msgstr "Definir automaticamente datas nas tarefas geradas por compromissos"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_automation
@@ -16654,8 +16859,9 @@ msgstr "Automação"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
+#, fuzzy
 msgid "Automation Rules"
-msgstr ""
+msgstr "Regras de Automação"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation_hr
@@ -16664,8 +16870,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_automobile
+#, fuzzy
 msgid "Automobile Spare Parts"
-msgstr ""
+msgstr "Peças de reposição para automóveis"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__available_model_ids
@@ -16918,8 +17125,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bakery
+#, fuzzy
 msgid "Bakery"
-msgstr ""
+msgstr "Panificadora"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.PAB
@@ -16928,8 +17136,9 @@ msgstr ""
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.MDL
+#, fuzzy
 msgid "Ban"
-msgstr ""
+msgstr "Banir"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_notes
@@ -17031,8 +17240,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bar_industry
+#, fuzzy
 msgid "Bar & Pub"
-msgstr ""
+msgstr "Bar e pub"
 
 #. module: base
 #: model:res.country,name:base.bb
@@ -17414,8 +17624,9 @@ msgstr "Bermuda"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_beverage_distributor
+#, fuzzy
 msgid "Beverage Distributor"
-msgstr ""
+msgstr "Distribuidor de bebidas"
 
 #. module: base
 #: model:res.country,name:base.bt
@@ -17424,13 +17635,15 @@ msgstr "Butão"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bike_leasing
+#, fuzzy
 msgid "Bike Leasing"
-msgstr ""
+msgstr "Aluguel de bicicletas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bike_shop
+#, fuzzy
 msgid "Bike Shop"
-msgstr ""
+msgstr "Loja de bicicletas"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_ups
@@ -17439,8 +17652,9 @@ msgstr "Faturar no seu número de conta UPS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_billboard_rental
+#, fuzzy
 msgid "Billboard Rental"
-msgstr ""
+msgstr "Aluguer de painéis publicitários"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__binding_model_id
@@ -17504,10 +17718,13 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_rule.py:0
+#, fuzzy
 msgid ""
 "Blame the following rules:\n"
 "%s"
 msgstr ""
+"\"A responsabilidade é das seguintes regras:\\n\"\n"
+"\"%s\""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__layout_background__blank
@@ -17516,8 +17733,9 @@ msgstr "Em branco"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_blog
+#, fuzzy
 msgid "Blog"
-msgstr ""
+msgstr "Blog"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.VEF
@@ -17556,8 +17774,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bookstore
+#, fuzzy
 msgid "Bookstore"
-msgstr ""
+msgstr "Livraria"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_bookstore
@@ -17610,8 +17829,9 @@ msgstr ""
 #: code:addons/base/models/res_company.py:0
 #: model:ir.model.fields,field_description:base.field_res_company__child_ids
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
+#, fuzzy
 msgid "Branches"
-msgstr ""
+msgstr "Filiais"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_15
@@ -17872,8 +18092,9 @@ msgstr "Território Britânico do Oceano Índico"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_device__browser
 #: model:ir.model.fields,field_description:base.field_res_device_log__browser
+#, fuzzy
 msgid "Browser"
-msgstr ""
+msgstr "Navegador"
 
 #. module: base
 #: model:res.country,name:base.bn
@@ -17892,8 +18113,9 @@ msgstr "Criar campanhas de ''mailing'' automatizadas"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_pdf_quote_builder
+#, fuzzy
 msgid "Build nice quotations"
-msgstr ""
+msgstr "Crie orçamentos apelativos"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_iot_box_image
@@ -18008,8 +18230,9 @@ msgstr "Campos CFDI 4.0 para pedidos de venda"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_uk_cis
+#, fuzzy
 msgid "CIS"
-msgstr ""
+msgstr "CIS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ca_payment_cpa005
@@ -18233,8 +18456,9 @@ msgstr "Cancelar Atualização"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_candy_shop
+#, fuzzy
 msgid "Candy Shop"
-msgstr ""
+msgstr "Loja de guloseimas"
 
 #. module: base
 #. odoo-python
@@ -18504,8 +18728,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_certificate
+#, fuzzy
 msgid "Certificate"
-msgstr ""
+msgstr "Certificado"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_mail_server_certificate_requires_tls
@@ -18723,8 +18948,9 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
+#, fuzzy
 msgid "Choose a record..."
-msgstr ""
+msgstr "Selecione um registro…"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_country_form
@@ -18794,13 +19020,15 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_cleaning_services
+#, fuzzy
 msgid "Cleaning Services"
-msgstr ""
+msgstr "Serviços de limpeza"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__clearing_number
+#, fuzzy
 msgid "Clearing Number"
-msgstr ""
+msgstr "Número de compensação"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_m2m_operation__clear
@@ -18809,8 +19037,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_collect
+#, fuzzy
 msgid "Click & Collect"
-msgstr ""
+msgstr "Clicar e recolher"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_logging__type__client
@@ -18837,8 +19066,9 @@ msgstr "Etiqueta de ação de cliente"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_climbing_gym
+#, fuzzy
 msgid "Climbing Gym"
-msgstr ""
+msgstr "Ginásio de escalada"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
@@ -18850,13 +19080,15 @@ msgstr "Fechar"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_clothing_boutique
+#, fuzzy
 msgid "Clothing Store"
-msgstr ""
+msgstr "Loja de roupa"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_cloud_storage
+#, fuzzy
 msgid "Cloud Storage"
-msgstr ""
+msgstr "Armazenamento em nuvem"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_cloud_storage_azure
@@ -18890,8 +19122,9 @@ msgstr "Ilhas Cocos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_codabox
+#, fuzzy
 msgid "CodaBox"
-msgstr ""
+msgstr "CodaBox"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_codaclean
@@ -18984,8 +19217,9 @@ msgstr "Pré-configuração de contabilidade fiscal colombiana"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_co_edi_mandate
+#, fuzzy
 msgid "Colombian EDI Mandate Invoicing extension"
-msgstr ""
+msgstr "Extensão ao Mandato de Faturação EDI Colombiano"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_co_dian
@@ -19088,8 +19322,9 @@ msgstr "Entidade Comercial"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_sales_commission
+#, fuzzy
 msgid "Commission"
-msgstr ""
+msgstr "Comissão"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_sale_commission
@@ -19226,8 +19461,9 @@ msgstr "Moeda da empresa"
 #: model:ir.model.fields,field_description:base.field_res_company__company_registry_placeholder
 #: model:ir.model.fields,field_description:base.field_res_partner__company_registry_placeholder
 #: model:ir.model.fields,field_description:base.field_res_users__company_registry_placeholder
+#, fuzzy
 msgid "Company Registry Placeholder"
-msgstr ""
+msgstr "Placeholder para o Registo da Empresa"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__report_header
@@ -19242,10 +19478,13 @@ msgstr "Tipo de Empresa"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__report_header
+#, fuzzy
 msgid ""
 "Company tagline, which is included in a printed document's header or footer "
 "(depending on the selected layout)."
 msgstr ""
+"Slogan da empresa, que é incluído no cabeçalho ou no rodapé de documentos "
+"impressos, dependendo do layout selecionado."
 
 #. module: base
 #. odoo-python
@@ -19346,13 +19585,15 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_device__device_type__computer
 #: model:ir.model.fields.selection,name:base.selection__res_device_log__device_type__computer
+#, fuzzy
 msgid "Computer"
-msgstr ""
+msgstr "Computador"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_concert_halls
+#, fuzzy
 msgid "Concert Halls"
-msgstr ""
+msgstr "Salas de concerto"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_default__condition
@@ -19694,13 +19935,15 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_corporate
+#, fuzzy
 msgid "Corporate"
-msgstr ""
+msgstr "Corporativo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_corporate_gifts
+#, fuzzy
 msgid "Corporate Gifts"
-msgstr ""
+msgstr "Brindes corporativos"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_buzzy
@@ -19839,15 +20082,17 @@ msgstr "Certificações do curso"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_coworking
+#, fuzzy
 msgid "Coworking"
-msgstr ""
+msgstr "Coworking"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_create
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
+#, fuzzy
 msgid "Create"
-msgstr ""
+msgstr "Criar"
 
 #. module: base
 #. odoo-python
@@ -19895,8 +20140,9 @@ msgstr "Crie relatórios para trabalhadores de serviço de campo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_log__create_uid
+#, fuzzy
 msgid "Create Uid"
-msgstr ""
+msgstr "Criar UID"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_res_bank_form
@@ -19925,8 +20171,9 @@ msgstr "Criar um grupo de países"
 
 #. module: base
 #: model:ir.model,website_form_label:base.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Criar um cliente"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -20253,8 +20500,9 @@ msgstr "Detalhes da criação"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_creative
+#, fuzzy
 msgid "Creative"
-msgstr ""
+msgstr "Criativo"
 
 #. module: base
 #: model:res.country,name:base.hr
@@ -20459,8 +20707,9 @@ msgstr "Campo Personalizado"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_custom_furniture
+#, fuzzy
 msgid "Custom Furniture Production"
-msgstr ""
+msgstr "Produção de mobiliário por medida"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model__state__manual
@@ -20481,8 +20730,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__selection_value
 #: model:ir.model.fields,field_description:base.field_ir_cron__selection_value
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
+#, fuzzy
 msgid "Custom Value"
-msgstr ""
+msgstr "Valor personalizado"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_custom
@@ -20518,8 +20768,9 @@ msgstr "Referências do cliente"
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_2
 #: model_terms:res.partner,website_description:base.res_partner_4
+#, fuzzy
 msgid "Customer Relationship Management"
-msgstr ""
+msgstr "Gestão da relação com os clientes"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_customer_form
@@ -20647,8 +20898,9 @@ msgstr "DIN 5008 - Estoque"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_diy_workshops
+#, fuzzy
 msgid "DIY Workshops"
-msgstr ""
+msgstr "Workshops DIY"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__dle
@@ -20673,8 +20925,9 @@ msgstr "Painel"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_dashboard
+#, fuzzy
 msgid "Dashboard"
-msgstr ""
+msgstr "Painel"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_board
@@ -20797,8 +21050,9 @@ msgstr "Dias"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_progress__deactivate
+#, fuzzy
 msgid "Deactivate"
-msgstr ""
+msgstr "Desativar"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_debit_note
@@ -20948,8 +21202,9 @@ msgstr "Definição"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_unlink
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
+#, fuzzy
 msgid "Delete"
-msgstr ""
+msgstr "Eliminar"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_apikeys
@@ -20964,8 +21219,9 @@ msgstr "Acesso de Eliminação"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_kanban
+#, fuzzy
 msgid "Delete Action"
-msgstr ""
+msgstr "Eliminar Ação"
 
 #. module: base
 #. odoo-python
@@ -21243,8 +21499,9 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_res_device
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
+#, fuzzy
 msgid "Devices"
-msgstr ""
+msgstr "Dispositivos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest_enterprise
@@ -21852,8 +22109,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_url__target__download
+#, fuzzy
 msgid "Download"
-msgstr ""
+msgstr "Transferir"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.AMD
@@ -21862,8 +22120,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_driving_school
+#, fuzzy
 msgid "Driving School"
-msgstr ""
+msgstr "Autoescola"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_dropshipping
@@ -21878,8 +22137,9 @@ msgstr "Gerenciamento de envio direto e subcontratação"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_dropshipping
+#, fuzzy
 msgid "Dropshipping"
-msgstr ""
+msgstr "Envio Direto"
 
 #. module: base
 #. odoo-python
@@ -22020,8 +22280,9 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_esg
 #: model:ir.module.module,shortdesc:base.module_esg
+#, fuzzy
 msgid "ESG"
-msgstr ""
+msgstr "ESG"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_esg_hr
@@ -22196,8 +22457,9 @@ msgstr "El Salvador"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_electrician
+#, fuzzy
 msgid "Electricians"
-msgstr ""
+msgstr "Eletricistas"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_pe_edi_stock
@@ -22221,8 +22483,9 @@ msgstr "Faturamento eletrônico para o Peru (método OSE) e UBL 2.1"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_electronic_store
+#, fuzzy
 msgid "Electronic Store"
-msgstr ""
+msgstr "Loja de eletrônicos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_co_edi
@@ -22282,8 +22545,9 @@ msgstr "Assinatura de Email"
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
+#, fuzzy
 msgid "Email maximum size updated (%(details)s)."
-msgstr ""
+msgstr "Tamanho máximo do e-mail atualizado (%(details)s)."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__embedded_action_ids
@@ -22295,8 +22559,9 @@ msgstr ""
 #: model:ir.actions.act_window,name:base.ir_embedded_action
 #: model:ir.model,name:base.model_ir_embedded_actions
 #: model:ir.ui.menu,name:base.menu_ir_embedded_action
+#, fuzzy
 msgid "Embedded Actions"
-msgstr ""
+msgstr "Ações incorporadas"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_filters__embedded_parent_res_id
@@ -22565,8 +22830,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_environment
+#, fuzzy
 msgid "Environment"
-msgstr ""
+msgstr "Ambiente"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_treehouse
@@ -22577,8 +22843,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_environmental_agency
+#, fuzzy
 msgid "Environmental Agency"
-msgstr ""
+msgstr "Agência Ambiental"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_epson_printer
@@ -22613,8 +22880,9 @@ msgstr "Erro"
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_module.py:0
+#, fuzzy
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "Erro ! Não pode criar categorias recursivas."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
@@ -22670,8 +22938,9 @@ msgstr "Erro! Não pode criar menus recursivos."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_escape_rooms
+#, fuzzy
 msgid "Escape Rooms"
-msgstr ""
+msgstr "Escape rooms"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.CVE
@@ -23250,8 +23519,9 @@ msgstr "Expositores de eventos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_management
+#, fuzzy
 msgid "Event Management"
-msgstr ""
+msgstr "Gerenciamento de eventos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_event_social
@@ -23384,8 +23654,9 @@ msgstr "Exclusivo"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__code
+#, fuzzy
 msgid "Execute Code"
-msgstr ""
+msgstr "Executar código"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_form
@@ -23438,8 +23709,9 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys__expiration_date
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_description__expiration_date
+#, fuzzy
 msgid "Expiration Date"
-msgstr ""
+msgstr "Data de expiração"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_report_paperformat__report_ids
@@ -23595,8 +23867,9 @@ msgstr "Linha de exportações"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
+#, fuzzy
 msgid "Expression"
-msgstr ""
+msgstr "Expressão"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_address_extended
@@ -23789,8 +24062,9 @@ msgstr "Ilhas Faroé"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fast_food
+#, fuzzy
 msgid "Fast Food"
-msgstr ""
+msgstr "Fast food"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__state
@@ -23965,14 +24239,16 @@ msgstr "O marcador de campo deve ter um atributo \"name\" definido"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_field_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__update_field_id
+#, fuzzy
 msgid "Field to Update"
-msgstr ""
+msgstr "Campo a Atualizar"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_path
 #: model:ir.model.fields,field_description:base.field_ir_cron__update_path
+#, fuzzy
 msgid "Field to Update Path"
-msgstr ""
+msgstr "Campo cujo caminho será atualizado"
 
 #. module: base
 #. odoo-python
@@ -24183,8 +24459,9 @@ msgstr "Encontre registros antigos e arquive/delete-os"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_restaurant
+#, fuzzy
 msgid "Fine Dining Restaurant"
-msgstr ""
+msgstr "Restaurante de alta gastronomia"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_partner_merge_automatic_wizard__state__finished
@@ -24234,8 +24511,9 @@ msgstr "Primeiro Dia da Semana"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__first_failure_date
+#, fuzzy
 msgid "First Failure Date"
-msgstr ""
+msgstr "Data da Primeira Falha"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_install__first_lang_id
@@ -24252,8 +24530,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fitness
+#, fuzzy
 msgid "Fitness Center"
-msgstr ""
+msgstr "Centro Fitness"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__icon_flag
@@ -24284,8 +24563,9 @@ msgstr "Frota a partir de documentos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_florist
+#, fuzzy
 msgid "Florist"
-msgstr ""
+msgstr "Florista"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_orchid
@@ -24346,18 +24626,21 @@ msgstr "Fonte"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_food
+#, fuzzy
 msgid "Food"
-msgstr ""
+msgstr "Comida"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_food_distribution
+#, fuzzy
 msgid "Food Distribution"
-msgstr ""
+msgstr "Distribuição de alimentos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_food_trucks
+#, fuzzy
 msgid "Food Trucks"
-msgstr ""
+msgstr "Food trucks"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_I
@@ -24372,6 +24655,7 @@ msgstr "Texto de rodapé mostrado no final de todos os relatórios."
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__value
 #: model:ir.model.fields,help:base.field_ir_cron__value
+#, fuzzy
 msgid ""
 "For Python expressions, this field may hold a Python expression that can use "
 "the same values as for the code field on the server action,e.g. "
@@ -24381,6 +24665,13 @@ msgid ""
 "For Static values, the value will be used directly without evaluation, "
 "e.g.`42` or `My custom name` or the selected record."
 msgstr ""
+"Para expressões Python, esse campo pode conter uma expressão Python que pode "
+"usar os mesmos valores do campo de código na ação do servidor, por exemplo, "
+"`env.user.name` para definir o nome do usuário atual como o valor ou "
+"`record.id` para definir o ID do registro no qual a ação é executada.\n"
+"\n"
+"Para valores estáticos, o valor será usado diretamente sem avaliação, por "
+"exemplo, `42` ou `My custom name` ou o registro selecionado."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -24485,16 +24776,20 @@ msgstr "Fórum em cursos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_coal_petroleum
+#, fuzzy
 msgid "Fossil Fuel Trading"
-msgstr ""
+msgstr "Comércio de combustíveis fósseis"
 
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "Found more than 10 errors and more than one error per 10 records, "
 "interrupted to avoid showing too many errors."
 msgstr ""
+"Encontrados mais de 10 erros e mais do que um erro por cada 10 registos. "
+"Processo interrompido para evitar mostrar demasiados erros."
 
 #. module: base
 #. odoo-python
@@ -24628,8 +24923,9 @@ msgstr "De cotações a faturas"
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_frontdesk
 #: model:ir.module.module,shortdesc:base.module_frontdesk
+#, fuzzy
 msgid "Frontdesk"
-msgstr ""
+msgstr "Balcão de atendimento"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
@@ -24673,8 +24969,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_furniture_store
+#, fuzzy
 msgid "Furniture Store"
-msgstr ""
+msgstr "Loja de mobiliário"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_loftspace
@@ -24776,8 +25073,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_gallery
+#, fuzzy
 msgid "Gallery"
-msgstr ""
+msgstr "Galeria"
 
 #. module: base
 #: model:res.country,name:base.gm
@@ -24801,13 +25099,15 @@ msgstr "Visualização de Gantt para o painel de Folga"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_gardening
+#, fuzzy
 msgid "Gardening"
-msgstr ""
+msgstr "Jardinagem"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_gelato
+#, fuzzy
 msgid "Gelato"
-msgstr ""
+msgstr "Gelato"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_gelato_stock
@@ -25011,8 +25311,9 @@ msgstr "Gibraltar"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
+#, fuzzy
 msgid "Give a duration for the key's validity"
-msgstr ""
+msgstr "Forneça uma duração para a validade da chave"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule__global
@@ -25175,8 +25476,9 @@ msgstr "Visualização em Grelha"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fmcg_store
+#, fuzzy
 msgid "Grocery Store"
-msgstr ""
+msgstr "Mercearia"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.PLN
@@ -25233,8 +25535,9 @@ msgstr "Grupo de Contactos"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
+#, fuzzy
 msgid "Group-based"
-msgstr ""
+msgstr "Baseado em grupo"
 
 #. module: base
 #. odoo-python
@@ -25350,8 +25653,9 @@ msgstr "Guernsey"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_guest_house
+#, fuzzy
 msgid "Guest House"
-msgstr ""
+msgstr "Hospedagem"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_guided_tours
@@ -25432,8 +25736,9 @@ msgstr "H - TRANSPORTE E ARMAZENAMENTO"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_uk_hmrc
+#, fuzzy
 msgid "HMRC"
-msgstr ""
+msgstr "HMRC"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_livechat
@@ -25487,13 +25792,15 @@ msgstr "Rotas HTTP"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hvac_services
+#, fuzzy
 msgid "HVAC Services"
-msgstr ""
+msgstr "Serviços de HVAC"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hair_salon
+#, fuzzy
 msgid "Hair Salon"
-msgstr ""
+msgstr "Cabeleireiro"
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -25532,8 +25839,9 @@ msgstr "Processe pedidos de refeições de seus funcionários"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_handyman
+#, fuzzy
 msgid "Handyman Services"
-msgstr ""
+msgstr "Serviços de manutenção e reparações"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_1
@@ -25550,8 +25858,9 @@ msgstr "Proxy de Hardware"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hardware_shop
+#, fuzzy
 msgid "Hardware Store"
-msgstr ""
+msgstr "Loja de ferragens"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__has_diff
@@ -25743,8 +26052,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_hidden
+#, fuzzy
 msgid "Hidden"
-msgstr ""
+msgstr "Ocultado"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_timesheet
@@ -25825,8 +26135,9 @@ msgstr "Hong Kong - Folha de pagamento com contabilidade"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hospitality
+#, fuzzy
 msgid "Hospitality"
-msgstr ""
+msgstr "Hospitalidade"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_host
@@ -26099,8 +26410,9 @@ msgstr "Estado IM"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_device__ip_address
 #: model:ir.model.fields,field_description:base.field_res_device_log__ip_address
+#, fuzzy
 msgid "IP Address"
-msgstr ""
+msgstr "Endereço IP"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_profile_view_form
@@ -26124,8 +26436,9 @@ msgstr "Código ISO"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_it_hardware
+#, fuzzy
 msgid "IT Hardware & Support"
-msgstr ""
+msgstr "Hardware e suporte de TI"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_J
@@ -26339,10 +26652,13 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_rule.py:0
+#, fuzzy
 msgid ""
 "If you really, really need access, perhaps you can win over your friendly "
 "administrator with a batch of freshly baked cookies."
 msgstr ""
+"Se necessita de acesso, é possível obter solicitando o apoio do seu "
+"administrador."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_access__active
@@ -26421,8 +26737,9 @@ msgstr "Mixin de imagem"
 #. module: base
 #. odoo-python
 #: code:addons/fields_binary.py:0
+#, fuzzy
 msgid "Image is not encoded in base64."
-msgstr ""
+msgstr "A imagem não está codificada em base64."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -26567,8 +26884,9 @@ msgstr "Importar Extrato Bancário QIF"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_shopee
+#, fuzzy
 msgid "Import Shopee orders and sync deliveries"
-msgstr ""
+msgstr "Importar pedidos da Shopee e sincronizar entregas"
 
 #. module: base
 #. odoo-python
@@ -27126,8 +27444,9 @@ msgstr "Integra sua caixa de entrada aos projetos"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_recruitment_integration
+#, fuzzy
 msgid "Integration"
-msgstr ""
+msgstr "Integração"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_payroll_fleet
@@ -27250,8 +27569,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__invalid_locators
+#, fuzzy
 msgid "Invalid Locators"
-msgstr ""
+msgstr "Localizadores inválidos"
 
 #. module: base
 #. odoo-python
@@ -27293,8 +27613,9 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_ui_view.py:0
+#, fuzzy
 msgid "Invalid default period %(default_period)s for date filter"
-msgstr ""
+msgstr "Período padrão inválido %(default_period)s no filtro de data"
 
 #. module: base
 #. odoo-python
@@ -27469,8 +27790,9 @@ msgstr "Taxa inversa"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__invoice
+#, fuzzy
 msgid "Invoice"
-msgstr ""
+msgstr "Fatura"
 
 #. module: base
 #. odoo-python
@@ -27502,8 +27824,9 @@ msgstr "Faturação"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_administration_iot
+#, fuzzy
 msgid "IoT"
-msgstr ""
+msgstr "Internet das Coisas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_iot_base
@@ -27597,8 +27920,9 @@ msgstr "É Empresa"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__is_company_details_empty
+#, fuzzy
 msgid "Is Company Details Empty"
-msgstr ""
+msgstr "Informações da empresa em branco?"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__is_current_company_currency
@@ -28272,8 +28596,9 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_device__last_activity
 #: model:ir.model.fields,field_description:base.field_res_device_log__last_activity
+#, fuzzy
 msgid "Last Activity"
-msgstr ""
+msgstr "Última atividade"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__lastcall
@@ -28515,8 +28840,9 @@ msgstr "Executar Assistente de Configuração"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_lawyer
+#, fuzzy
 msgid "Law Firm"
-msgstr ""
+msgstr "Sociedade de advogados"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__layout_background
@@ -28682,8 +29008,9 @@ msgstr "Libéria"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_library
+#, fuzzy
 msgid "Library"
-msgstr ""
+msgstr "Biblioteca"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_bookstore
@@ -28860,8 +29187,9 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__list
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__list
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
+#, fuzzy
 msgid "List"
-msgstr ""
+msgstr "Lista"
 
 #. module: base
 #. odoo-python
@@ -28975,8 +29303,9 @@ msgstr "Localização"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_sale_localizations
+#, fuzzy
 msgid "Localizations"
-msgstr ""
+msgstr "Localizações "
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_loftspace
@@ -29000,8 +29329,9 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
+#, fuzzy
 msgid "Log out from all devices"
-msgstr ""
+msgstr "Sair de todos os dispositivos"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_logging_all_act
@@ -29248,10 +29578,13 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
+#, fuzzy
 msgid ""
 "Mail delivery failed via SMTP server '%(server)s'.\n"
 "%(exception_name)s: %(message)s"
 msgstr ""
+"Entrega de email falhou através do servidor SMTP '%(server)s'.\n"
+"%(exception_name)s: %(message)s"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_module_tree
@@ -29774,8 +30107,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_co_edi_mandate
+#, fuzzy
 msgid "Mandate invoicing for Colombia"
-msgstr ""
+msgstr "Mandato de Faturação para Colômbia"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_supply_chain_manufacturing
@@ -29804,8 +30138,9 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
+#, fuzzy
 msgid "Many2one %(field)s on model %(model)s does not exist!"
-msgstr ""
+msgstr "Many2one %(field)s on model %(model)s does not exist!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_relation
@@ -29842,8 +30177,9 @@ msgstr "Marketing"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_marketing_agency
+#, fuzzy
 msgid "Marketing Agency"
-msgstr ""
+msgstr "Agência de marketing"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_marketing_automation
@@ -29864,8 +30200,9 @@ msgstr "Testes de Automação de Comercialização"
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_marketing_card
 #: model:ir.module.module,shortdesc:base.module_marketing_card
+#, fuzzy
 msgid "Marketing Card"
-msgstr ""
+msgstr "Cartão de marketing"
 
 #. module: base
 #: model:res.country,name:base.mh
@@ -29945,8 +30282,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_master_data
+#, fuzzy
 msgid "Master Data"
-msgstr ""
+msgstr "Dados Principais"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_mps
@@ -30014,13 +30352,15 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_room
+#, fuzzy
 msgid "Meeting Rooms"
-msgstr ""
+msgstr "Salas de reuniões"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_users__role__group_user
+#, fuzzy
 msgid "Member"
-msgstr ""
+msgstr "Membro"
 
 #. module: base
 #: model:res.company,partnership_label:base.demo_company_be
@@ -30167,8 +30507,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_micro_brewery
+#, fuzzy
 msgid "Microbrewery"
-msgstr ""
+msgstr "Micro-cerverjeira"
 
 #. module: base
 #: model:res.country,name:base.fm
@@ -30787,8 +31128,9 @@ msgstr "Várias Moedas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_museum
+#, fuzzy
 msgid "Museum"
-msgstr ""
+msgstr "Museu"
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -30845,8 +31187,9 @@ msgstr "NPWP"
 
 #. module: base
 #: model:res.country,vat_label:base.pk
+#, fuzzy
 msgid "NTN"
-msgstr ""
+msgstr "NTN"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.NGN
@@ -31288,8 +31631,9 @@ msgstr "Nenhum(a)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_non_profit_organization
+#, fuzzy
 msgid "Nonprofit Organization"
-msgstr ""
+msgstr "Organização sem fins lucrativos"
 
 #. module: base
 #: model:res.country,name:base.nf
@@ -31353,8 +31697,9 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_bank_form
+#, fuzzy
 msgid "Note"
-msgstr ""
+msgstr "Nota"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__comment
@@ -32213,8 +32558,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_partner
+#, fuzzy
 msgid "Odoo Partner"
-msgstr ""
+msgstr "Parceiro da Odoo"
 
 #. module: base
 #: model:ir.module.module,description:base.module_point_of_sale
@@ -32726,6 +33072,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale
+#, fuzzy
 msgid ""
 "Odoo e-Commerce\n"
 "---------------\n"
@@ -32907,6 +33254,181 @@ msgid ""
 "trainings, etc.\n"
 "\n"
 msgstr ""
+"Odoo e-Commerce\n"
+"---------------\n"
+"\n"
+"### Otimize as vendas com uma loja online incrível.\n"
+"\n"
+"Odoo é um <a href=\"https://www.odoo.com/app/ecommerce\">e-Commerce de "
+"código aberto</a>\n"
+"como nada que você já viu antes. Obtenha um incrível catálogo de produtos e "
+"ótimas páginas de descrição de produtos.\n"
+"\n"
+"Com todos os recursos, integrado ao seu software de gerenciamento, "
+"totalmente personalizável e super fácil.\n"
+"\n"
+"Crie páginas de produtos incríveis\n"
+"----------------------------\n"
+"\n"
+"A abordagem exclusiva de *'editar em linha'* e blocos de construção do Odoo "
+"torna a criação de páginas de produtos surpreendentemente fácil. \"Deseja "
+"alterar o preço de um produto ou colocá-lo em negrito? Deseja adicionar um "
+"banner para um produto específico?\", basta clicar e alterar.\n"
+"O que você vê é o que você obtém. Literalmente.\n"
+"\n"
+"Arraste e solte blocos de construção bem projetados para criar páginas de "
+"produtos cativantes que seus clientes vão adorar.\n"
+"\n"
+"Aumente sua receita por pedido\n"
+"-------------------------------\n"
+"\n"
+"O recurso de venda cruzada integrado ajuda você a oferecer produtos extras "
+"relacionados ao que o comprador colocou no carrinho (por exemplo, acessórios)"
+".\n"
+"\n"
+"O algoritmo de upselling do Odoo permite que você mostre aos visitantes "
+"produtos semelhantes, mas mais caros do que o que está em exibição, com "
+"incentivos.\n"
+"\n"
+"O recurso de edição em linha permite que você altere facilmente um preço, "
+"lance uma promoção ou ajuste a descrição de um produto, com apenas um "
+"clique.\n"
+"\n"
+"Integração fácil com o Google Analytics\n"
+"------------------------------------\n"
+"\n"
+"Tenha uma visibilidade clara do seu funil de vendas. Os rastreadores do "
+"Google Analytics do Odoo\n"
+"estão configurados por padrão para rastrear todos os tipos de eventos "
+"relacionados a\n"
+"carrinhos de compras, chamadas-à-ação, etc.\n"
+"\n"
+"Como as ferramentas de marketing do Odoo (envio em massa, campanhas etc) "
+"também estão vinculadas ao\n"
+"Google Analytics, você consegue ter uma visão completa do seu negócio.\n"
+"\n"
+"Conquiste novos mercados\n"
+"------------------\n"
+"\n"
+"Traduza seu site para vários idiomas sem nenhum esforço. O Odoo propõe\n"
+"e propaga traduções automaticamente entre as páginas.\n"
+"\n"
+"Nossos recursos de tradução \"sob demanda\" permitem que você se beneficie "
+"de tradutores profissionais para traduzir todas as suas alterações "
+"automaticamente. Basta alterar qualquer parte\n"
+"do seu site (uma nova postagem no blog, uma modificação de página, "
+"descrições de produtos...)\n"
+"e as versões traduzidas serão atualizadas automaticamente em cerca de 32 "
+"horas.\n"
+"\n"
+"Refine o seu catálogo\n"
+"----------------------\n"
+"\n"
+"Tenha controle total sobre como exibir seus produtos na página do catálogo:\n"
+"fitas promocionais, tamanho relacionado de produtos, descontos, variantes, "
+"visualização em grade/lista, etc.\n"
+"\n"
+"Edite qualquer produto em linha para que seu site evolua de acordo com as "
+"necessidades do cliente.\n"
+"\n"
+"Captação de novos clientes\n"
+"---------------------\n"
+"\n"
+"As ferramentas de SEO estão prontas para uso, sem necessidade de "
+"configuração. O Odoo sugere palavras-chave de acordo com os termos mais "
+"pesquisados no Google, o Google Analytics rastreia os eventos do seu "
+"carrinho de compras, o mapa do site é criado automaticamente para indexação "
+"no Google, etc. \n"
+"\n"
+"Até mesmo fazemos conteúdo estruturado automaticamente para promover seu "
+"produto e eventos de forma eficiente no Google.\n"
+"\n"
+"Aproveite o potencial as redes sociais\n"
+"---------------------\n"
+"\n"
+"Crie novas páginas de destino facilmente com o recurso de edição em linha do "
+"Odoo. Envie os visitantes de suas diferentes campanhas de marketing para "
+"páginas de destino específicas para otimizar as conversões.\n"
+"\n"
+"Gerencie uma rede de revendedores\n"
+"-------------------------\n"
+"\n"
+"Gerencie uma rede de revendedores para atingir novos mercados, ter presenças "
+"locais ou ampliar sua distribuição. Dê a eles acesso ao seu portal de "
+"revendedores para uma colaboração eficiente.\n"
+"\n"
+"Promova seus revendedores online, encaminhe leads para revendedores (com o "
+"recurso integrado de geolocalização), defina listas de preços específicas, "
+"lance um programa de fidelidade (ofereça descontos específicos para seus "
+"melhores clientes ou revendedores) etc.\n"
+"\n"
+"Beneficie-se do poder do Odoo em sua loja online: um poderoso mecanismo de "
+"impostos,\n"
+"estruturas de preços flexíveis, uma solução real de gerenciamento de "
+"inventário, uma interface de revendedor, suporte para produtos com "
+"diferentes comportamentos; bens físicos,\n"
+"eventos, serviços, variantes e opções e muito mais.\n"
+"\n"
+"Você não precisa fazer interface com seu software de armazém, vendas ou "
+"financeiro.\n"
+"Tudo está integrado ao Odoo. Sem estresse, em tempo real.\n"
+"\n"
+"Um processo de checkout limpo\n"
+"------------------------\n"
+"\n"
+"Converta a maioria dos interesses dos visitantes em pedidos reais com um "
+"processo de checkout fácil,\n"
+"com um número mínimo de etapas e uma excelente usabilidade em todas as "
+"páginas.\n"
+"\n"
+"Personalize seu processo de checkout para atender às suas necessidades "
+"comerciais: modos de pagamento,\n"
+"métodos de entrega, vendas cruzadas, condições especiais etc.\n"
+"\n"
+"E muito mais...\n"
+"----------------\n"
+"\n"
+"### Vendas online\n"
+"\n"
+"- Interface móvel\n"
+"- Venda produtos, eventos ou serviços\n"
+"- Listas de preços flexíveis\n"
+"- Várias variantes de produtos\n"
+"- Várias lojas\n"
+"- Ótimo processo de checkout\n"
+"\n"
+"### Atendimento ao cliente\n"
+"\n"
+"- Portal do cliente para rastrear pedidos\n"
+"- Compras assistidas com chats ao vivo no site\n"
+"- Gerenciamento de devoluções\n"
+"- Regras avançadas de envio\n"
+"- Cupons ou certificados de presente\n"
+"\n"
+"### Gerenciamento de pedidos\n"
+"\n"
+"- Recursos avançados de gerenciamento de armazém\n"
+"- Integração de faturamento e financeiro\n"
+"- Envio em massa e segmentações de clientes\n"
+"- Automação de leads e campanhas de marketing\n"
+"- Carrinho de compras persistente\n"
+"\n"
+"Totalmente integrado com outros aplicativos\n"
+"--------------------------------\n"
+"\n"
+"### CMS\n"
+"\n"
+"Crie facilmente sites incríveis sem a necessidade de conhecimento técnico.\n"
+"\n"
+"### Blog\n"
+"\n"
+"Escreva notícias, atraia novos visitantes, fidelize clientes.\n"
+"\n"
+"### Eventos online\n"
+"\n"
+"Programe, organize, promova ou venda eventos online; conferências, webinars, "
+"treinamentos e mais.\n"
+"\n"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_customer_form
@@ -33212,10 +33734,13 @@ msgstr "Abrir uma Janela"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_5
+#, fuzzy
 msgid ""
 "OpenWood brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"OpenWook traz honestidade e seriedade à indústria da madeira enquanto ajuda "
+"os clientes a lidar com árvores, flores e fungos."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_crm
@@ -33590,8 +34115,9 @@ msgstr "Outro"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
+#, fuzzy
 msgid "Other Devices"
-msgstr ""
+msgstr "Outros dispositivos"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_extra
@@ -33668,8 +34194,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_outdoor_activities
+#, fuzzy
 msgid "Outdoor Activities"
-msgstr ""
+msgstr "Atividades ao ar livre"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_ir_mail_server_search
@@ -34285,8 +34812,9 @@ msgstr "Salvaguarda de parâmetros"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_inherit__parent_id
 #: model:ir.model.fields,field_description:base.field_res_company__parent_ids
+#, fuzzy
 msgid "Parent"
-msgstr ""
+msgstr "Grupo Ascendente"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__parent_id
@@ -34403,8 +34931,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_passkey
+#, fuzzy
 msgid "Passkeys"
-msgstr ""
+msgstr "Chaves de acesso"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__smtp_pass
@@ -34483,8 +35012,9 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__update_path
 #: model:ir.model.fields,help:base.field_ir_cron__update_path
+#, fuzzy
 msgid "Path to the field to update, e.g. 'partner_id.name'"
-msgstr ""
+msgstr "Caminho para o campo a ser atualizado, por exemplo, 'partner_id.name'"
 
 #. module: base
 #. odoo-python
@@ -34688,18 +35218,21 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__company_type__person
+#, fuzzy
 msgid "Person"
-msgstr ""
+msgstr "Indivíduo"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_personal
+#, fuzzy
 msgid "Personal"
-msgstr ""
+msgstr "Pessoal"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_personal_trainer
+#, fuzzy
 msgid "Personal Trainer"
-msgstr ""
+msgstr "Personal trainer"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_2
@@ -34778,8 +35311,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pharmacy_retail
+#, fuzzy
 msgid "Pharmacy"
-msgstr ""
+msgstr "Farmácia"
 
 #. module: base
 #: model:res.country,name:base.ph
@@ -34822,8 +35356,9 @@ msgstr "Validação de Números de Telefone"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_photography
+#, fuzzy
 msgid "Photography"
-msgstr ""
+msgstr "Fotografia"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.SSP
@@ -34854,13 +35389,15 @@ msgstr "Pivot"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_gelato
+#, fuzzy
 msgid "Place orders through Gelato's print-on-demand service"
-msgstr ""
+msgstr "Faça pedidos por meio do serviço de impressão sob demanda da Gelato"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups_privilege__placeholder
+#, fuzzy
 msgid "Placeholder"
-msgstr ""
+msgstr "Símbolo"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_forecast
@@ -34901,8 +35438,9 @@ msgstr "Integração do app Planejamento com Folga"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_device__platform
 #: model:ir.model.fields,field_description:base.field_res_device_log__platform
+#, fuzzy
 msgid "Platform"
-msgstr ""
+msgstr "Plataforma"
 
 #. module: base
 #. odoo-python
@@ -35181,8 +35719,9 @@ msgstr ""
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.SSP
+#, fuzzy
 msgid "Pounds"
-msgstr ""
+msgstr "Libras"
 
 #. module: base
 #. odoo-python
@@ -35835,8 +36374,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_condominium
+#, fuzzy
 msgid "Property Owner Association"
-msgstr ""
+msgstr "Associação de Proprietários de Imóveis"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
@@ -36302,8 +36842,9 @@ msgstr "Taxas"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_read
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
+#, fuzzy
 msgid "Read"
-msgstr ""
+msgstr "Leitura"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_read
@@ -36329,8 +36870,9 @@ msgstr "Imobiliária"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_real_estate
+#, fuzzy
 msgid "Real Estate Agency"
-msgstr ""
+msgstr "Agência imobiliária"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_real_estate
@@ -36415,8 +36957,9 @@ msgstr "Registre o tempo"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__crud_model_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__crud_model_id
+#, fuzzy
 msgid "Record to Create"
-msgstr ""
+msgstr "Registros a criar"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_recruitment
@@ -36472,8 +37015,9 @@ msgstr "Monitoração de recrutamento em compromissos"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "Recursion Detected."
-msgstr ""
+msgstr "Recursão Detetada."
 
 #. module: base
 #. odoo-python
@@ -36577,14 +37121,16 @@ msgstr "Recarregar a partir do Anexo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_progress__remaining
+#, fuzzy
 msgid "Remaining"
-msgstr ""
+msgstr "Restante"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_remote_work
 #: model:ir.module.module,shortdesc:base.module_hr_homeworking
+#, fuzzy
 msgid "Remote Work"
-msgstr ""
+msgstr "Trabalho remoto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_homeworking_calendar
@@ -36614,8 +37160,9 @@ msgstr "Remover a ação contextual relacionada a este relatório"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_m2m_operation__remove
+#, fuzzy
 msgid "Removing"
-msgstr ""
+msgstr "Removendo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting
@@ -36880,20 +37427,23 @@ msgstr "Restrito"
 #. module: base
 #: model:ir.module.category,name:base.module_category_retail
 #: model:ir.module.category,name:base.module_category_theme_retail
+#, fuzzy
 msgid "Retail"
-msgstr ""
+msgstr "Varejo"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_device_view_kanban
 #: model_terms:ir.ui.view,arch_db:base.res_device_view_tree
+#, fuzzy
 msgid "Revoke"
-msgstr ""
+msgstr "Revogar"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_device__revoked
 #: model:ir.model.fields,field_description:base.field_res_device_log__revoked
+#, fuzzy
 msgid "Revoked"
-msgstr ""
+msgstr "Revogado"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.OMR
@@ -36934,8 +37484,9 @@ msgstr "Roboto"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__role
+#, fuzzy
 msgid "Role"
-msgstr ""
+msgstr "Função"
 
 #. module: base
 #: model:res.groups,name:base.group_system
@@ -36959,8 +37510,9 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
+#, fuzzy
 msgid "Roles"
-msgstr ""
+msgstr "Funções"
 
 #. module: base
 #: model:res.country,name:base.ro
@@ -37019,13 +37571,15 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_room
+#, fuzzy
 msgid "Room"
-msgstr ""
+msgstr "Sala"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__root_id
+#, fuzzy
 msgid "Root"
-msgstr ""
+msgstr "Raíz"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__rounding
@@ -37156,13 +37710,15 @@ msgstr "S - OUTRAS ATIVIDADES DE SERVIÇO"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_saft_import
+#, fuzzy
 msgid "SAF-T Import"
-msgstr ""
+msgstr "Importação SAF-T"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_sbr
+#, fuzzy
 msgid "SBR"
-msgstr ""
+msgstr "SBR"
 
 #. module: base
 #: model:res.country.group,name:base.sepa_zone
@@ -37171,8 +37727,9 @@ msgstr "Países SEPA"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_iso20022
+#, fuzzy
 msgid "SEPA Credit Transfer / ISO20022"
-msgstr ""
+msgstr "Transferência de crédito SEPA/ISO20022"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_sepa_direct_debit
@@ -37575,8 +38132,9 @@ msgstr "Margem de despesas de vendas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_pdf_quote_builder
+#, fuzzy
 msgid "Sales PDF Quotation Builder"
-msgstr ""
+msgstr "Criador de Orçamento de Vendas em PDF"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sales_team
@@ -38095,8 +38653,9 @@ msgstr "Envie SMS para visitantes com leads"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__webhook
+#, fuzzy
 msgid "Send Webhook Notification"
-msgstr ""
+msgstr "Enviar Notificação de Webhook"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_peppol_selfbilling
@@ -38541,8 +39100,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_shipping_connectors
+#, fuzzy
 msgid "Shipping Connectors"
-msgstr ""
+msgstr "Conetores de Expedição"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_sendcloud
@@ -38566,8 +39126,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_shopee
+#, fuzzy
 msgid "Shopee Connector"
-msgstr ""
+msgstr "Conector do Shopee"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_wishlist
@@ -38884,18 +39445,21 @@ msgstr "Conectores de redes sociais para configurações da empresa."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_software_reseller
+#, fuzzy
 msgid "Software Reseller"
-msgstr ""
+msgstr "Revendedor de software"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_solar_installation
+#, fuzzy
 msgid "Solar Energy Systems"
-msgstr ""
+msgstr "Sistemas de energia solar"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.PEN
+#, fuzzy
 msgid "Soles"
-msgstr ""
+msgstr "Soles"
 
 #. module: base
 #: model:res.country,name:base.sb
@@ -38999,8 +39563,9 @@ msgstr "Espanha - Relatórios de Contabilidade (PGCE 2008)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_reports_2024
+#, fuzzy
 msgid "Spain - Accounting Reports (2024 Update)"
-msgstr ""
+msgstr "Espanha - Relatórios contabilísticos (atualização de 2024)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_sale_amazon
@@ -39060,10 +39625,13 @@ msgstr "Campos esparsos"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__link_field_id
 #: model:ir.model.fields,help:base.field_ir_cron__link_field_id
+#, fuzzy
 msgid ""
 "Specify a field used to link the newly created record on the record used by "
 "the server action."
 msgstr ""
+"Especifique um campo usado para vincular o registro recém-criado ao registro "
+"usado pela ação do servidor."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__new_password
@@ -39085,10 +39653,13 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__crud_model_id
 #: model:ir.model.fields,help:base.field_ir_cron__crud_model_id
+#, fuzzy
 msgid ""
 "Specify which kind of record should be created. Set this field only to "
 "specify a different model than the base model."
 msgstr ""
+"Especifique que tipo de registro deve ser criado. Defina esse campo somente "
+"para especificar um modelo diferente do modelo básico."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__speedscope
@@ -39107,8 +39678,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sports_club
+#, fuzzy
 msgid "Sports Club"
-msgstr ""
+msgstr "Clube esportivo"
 
 #. module: base
 #: model:ir.module.module,description:base.module_spreadsheet
@@ -39400,8 +39972,9 @@ msgstr "Estados"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__application_statistics
 #: model:ir.model.fields,field_description:base.field_res_users__application_statistics
+#, fuzzy
 msgid "Stats"
-msgstr ""
+msgstr "Estatísticas"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_module_update__state
@@ -39680,8 +40253,9 @@ msgstr "Argumentos suplementares"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_supply_chain
+#, fuzzy
 msgid "Supply Chain"
-msgstr ""
+msgstr "Cadeia de abastecimento"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_pl_edi
@@ -39710,8 +40284,9 @@ msgstr "Suriname"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_surveyor
+#, fuzzy
 msgid "Surveying & Mapping"
-msgstr ""
+msgstr "Topografia e cartografia"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_surveys
@@ -39894,8 +40469,9 @@ msgstr "Formato TGZ: pacotes de múltiplos arquivos PO(T) como um arquivo único
 
 #. module: base
 #: model:res.country,vat_label:base.ug
+#, fuzzy
 msgid "TIN"
-msgstr ""
+msgstr "NIF"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_mail_server__smtp_encryption__starttls_strict
@@ -39980,8 +40556,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_takeaway_restaurant
+#, fuzzy
 msgid "Takeaway Restaurant"
-msgstr ""
+msgstr "Restaurante de comida para levar"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.WST
@@ -39990,8 +40567,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_headhunter
+#, fuzzy
 msgid "Talent Acquisition"
-msgstr ""
+msgstr "Aquisição de talentos"
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_2
@@ -40130,8 +40708,9 @@ msgstr "Taxa técnica"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_technical_settings
+#, fuzzy
 msgid "Technical Settings"
-msgstr ""
+msgstr "Configurações técnicas"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__view_group_hierarchy
@@ -40160,8 +40739,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_theme_technology
+#, fuzzy
 msgid "Technology"
-msgstr ""
+msgstr "Tecnologia"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_kea
@@ -40483,8 +41063,9 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
+#, fuzzy
 msgid "The API key must have an expiration date"
-msgstr ""
+msgstr "A chave da API deve ter uma data de expiração"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_at_pos
@@ -40718,10 +41299,13 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
+#, fuzzy
 msgid ""
 "The field '%(field)s' cannot be removed because the field '%(other_field)s' "
 "depends on it."
 msgstr ""
+"O campo '%(field)s' não pode ser removido porque o campo '%(other_field)s' "
+"depende dele."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -40806,8 +41390,9 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "The following languages are not activated: %(missing_names)s"
-msgstr ""
+msgstr "Os seguintes idiomas não estão ativados: %(missing_names)s"
 
 #. module: base
 #. odoo-python
@@ -40850,8 +41435,9 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
+#, fuzzy
 msgid "The key will be deleted once this period has elapsed."
-msgstr ""
+msgstr "A chave será excluída após o término desse período."
 
 #. module: base
 #. odoo-python
@@ -41299,8 +41885,9 @@ msgstr "O valor enviado para o campo monetário não é um número."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theater
+#, fuzzy
 msgid "Theater"
-msgstr ""
+msgstr "Teatro"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.BWP
@@ -42194,8 +42781,9 @@ msgstr "Para retornar uma ação, atribua: <code>action = {...}</code>"
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_to-do
 #: model:ir.module.module,shortdesc:base.module_project_todo
+#, fuzzy
 msgid "To-Do"
-msgstr ""
+msgstr "A fazer"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
@@ -42286,8 +42874,9 @@ msgstr "Tours"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_toy_store
+#, fuzzy
 msgid "Toy Store"
-msgstr ""
+msgstr "Loja de brinquedos"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__traces_async
@@ -42393,9 +42982,12 @@ msgstr "Traduções"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "Translations for model translated fields only accept falsy values and str"
 msgstr ""
+"As traduções para campos traduzidos do modelo aceitam apenas valores falsos "
+"e str"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_fleet
@@ -42529,6 +43121,7 @@ msgstr "Tipo"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__state
 #: model:ir.model.fields,help:base.field_ir_cron__state
+#, fuzzy
 msgid ""
 "Type of server action. The following values are available:\n"
 "- 'Update a Record': update the values of a record\n"
@@ -42543,6 +43136,19 @@ msgid ""
 "- 'Multi Actions': define an action that triggers several other server "
 "actions\n"
 msgstr ""
+"Tipo de ação do servidor. Os seguintes valores estão disponíveis:\n"
+"- 'Atualizar registro': atualizar os valores de um registro\n"
+"- 'Criar atividade': cria uma atividade (Mensagens)\n"
+"- 'Enviar e-mail': publica uma mensagem, uma nota ou envia um e-mail "
+"(Mensagens)\n"
+"- 'Enviar SMS': envia SMS, registra-o em documentos (SMS)\n"
+"- 'Adicionar/remover seguidores': adiciona ou remove seguidores de um "
+"registro (Mensagens)\n"
+"- 'Criar registro': cria um novo registro com novos valores\n"
+"- 'Executar código': um bloco de código Python que será executado\n"
+"- 'Enviar notificação de webhook': envia uma solicitação POST para um "
+"sistema externo, também conhecido como Webhook\n"
+"- 'Multiações': define uma ação que aciona várias outras ações do servidor\n"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__type
@@ -42613,8 +43219,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_uk
+#, fuzzy
 msgid "UK"
-msgstr ""
+msgstr "Reino Unido"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uk_reports
@@ -42679,8 +43286,9 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__webhook_url
 #: model:ir.model.fields,help:base.field_ir_cron__webhook_url
+#, fuzzy
 msgid "URL to send the POST request to."
-msgstr ""
+msgstr "URL para o qual enviar a solicitação POST."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_reports
@@ -42704,8 +43312,9 @@ msgstr "USt"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__utc
+#, fuzzy
 msgid "UTC"
-msgstr ""
+msgstr "UTC"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge_utm
@@ -42755,11 +43364,15 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_rule.py:0
+#, fuzzy
 msgid ""
 "Uh-oh! Looks like you have stumbled upon some top-secret records.\n"
 "\n"
 "Sorry, %(user)s doesn't have '%(operation)s' access to:"
 msgstr ""
+"\"Parece que se deparou com alguns registos secretos.\\n\"\n"
+"\"\\n\"\n"
+"\"Desculpe, %(user)s não tem acesso a '%(operation)s':\""
 
 #. module: base
 #. odoo-python
@@ -42804,10 +43417,13 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_module.py:0
+#, fuzzy
 msgid ""
 "Unable to install module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
 msgstr ""
+"Não é possível instalar módulo \"%(module)s\", porque uma dependência "
+"externa não foi satisfeita: %(dependency)s"
 
 #. module: base
 #. odoo-python
@@ -42822,18 +43438,24 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_module.py:0
+#, fuzzy
 msgid ""
 "Unable to process module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
 msgstr ""
+"Impossível processar o módulo \"%(module)s\" devido a uma dependência "
+"externa não satisfeita: %(dependency)s"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_module.py:0
+#, fuzzy
 msgid ""
 "Unable to upgrade module \"%(module)s\" because an external dependency is "
 "not met: %(dependency)s"
 msgstr ""
+"Não foi possível atualizar o módulo \"%(module)s\" devido a uma dependência "
+"externa não satisfeita: %(dependency)s"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_uncategorized
@@ -42998,8 +43620,9 @@ msgstr "Desconhecido"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "Unknown database error: '%s'"
-msgstr ""
+msgstr "Erro de base de dados desconhecido: '%s'"
 
 #. module: base
 #. odoo-python
@@ -43142,14 +43765,16 @@ msgstr "Atualizar a Lista de Módulos"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__state__object_write
+#, fuzzy
 msgid "Update Record"
-msgstr ""
+msgstr "Atualizar Registo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_related_model_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__update_related_model_id
+#, fuzzy
 msgid "Update Related Model"
-msgstr ""
+msgstr "Atualizar Modelo Relacionado"
 
 #. module: base
 #. odoo-python
@@ -43464,8 +44089,9 @@ msgstr "Início de Sessão do utilizador"
 
 #. module: base
 #: model:ir.model,name:base.model_res_users_settings
+#, fuzzy
 msgid "User Settings"
-msgstr ""
+msgstr "Configurações do Utilizador"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__device_ids
@@ -43667,8 +44293,9 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__evaluation_type
 #: model:ir.model.fields,field_description:base.field_ir_cron__evaluation_type
+#, fuzzy
 msgid "Value Type"
-msgstr ""
+msgstr "Tipo de valor"
 
 #. module: base
 #: model:res.country,name:base.vu
@@ -43682,8 +44309,9 @@ msgstr "Rótulo do IVA/ID fiscal"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.VUV
+#, fuzzy
 msgid "Vatu"
-msgstr ""
+msgstr "Vatu"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_theme_vehicle
@@ -43886,8 +44514,9 @@ msgstr "Visível"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
+#, fuzzy
 msgid "Visible to all"
-msgstr ""
+msgstr "Visível para todos"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_frontdesk
@@ -43896,8 +44525,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_voip
+#, fuzzy
 msgid "VoIP"
-msgstr ""
+msgstr "VoIP"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_voip_hr_recruitment
@@ -43926,8 +44556,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__tz__wet
+#, fuzzy
 msgid "WET"
-msgstr ""
+msgstr "WET"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_account
@@ -43978,8 +44609,9 @@ msgstr "Aviso para %s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__warning_info
+#, fuzzy
 msgid "Warning information"
-msgstr ""
+msgstr "Informações de advertência"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_E
@@ -44106,8 +44738,9 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__webhook_url
 #: model:ir.model.fields,field_description:base.field_ir_cron__webhook_url
+#, fuzzy
 msgid "Webhook URL"
-msgstr ""
+msgstr "URL do webhook"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__website
@@ -44160,8 +44793,9 @@ msgstr "Site – Eventos – CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_generator
+#, fuzzy
 msgid "Website Generator"
-msgstr ""
+msgstr "Gerador de sites"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_generator_sale
@@ -44299,8 +44933,9 @@ msgstr "Semanas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_wellness_practitioner
+#, fuzzy
 msgid "Wellness Practitioner"
-msgstr ""
+msgstr "Terapeuta de bem-estar"
 
 #. module: base
 #: model:res.country,name:base.eh
@@ -44316,8 +44951,9 @@ msgstr "Para que serve esta chave?"
 #: model:ir.module.category,name:base.module_category_marketing_whatsapp
 #: model:ir.module.category,name:base.module_category_productivity_whatsapp
 #: model:ir.module.category,name:base.module_category_whatsapp
+#, fuzzy
 msgid "WhatsApp"
-msgstr ""
+msgstr "WhatsApp"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_hr_referral
@@ -44352,28 +44988,33 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_delivery
+#, fuzzy
 msgid "WhatsApp-Delivery"
-msgstr ""
+msgstr "WhatsApp-Delivery"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_pos
+#, fuzzy
 msgid "WhatsApp-POS"
-msgstr ""
+msgstr "WhatsApp-POS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_sale
+#, fuzzy
 msgid "WhatsApp-Sale"
-msgstr ""
+msgstr "WhatsApp-Vendas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_event
+#, fuzzy
 msgid "WhatsApp-Website-Events"
-msgstr ""
+msgstr "WhatsApp-Website-Eventos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_website_sale
+#, fuzzy
 msgid "WhatsApp-eCommerce"
-msgstr ""
+msgstr "WhatsApp-eCommerce"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_account
@@ -44382,8 +45023,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_payment
+#, fuzzy
 msgid "Whatsapp-Payment"
-msgstr ""
+msgstr "Whatsapp-Pagamento"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_appointment_sale_project
@@ -44463,8 +45105,9 @@ msgstr "Se o valor é guardado na base de dados."
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__employee
 #: model:ir.model.fields,help:base.field_res_users__employee
+#, fuzzy
 msgid "Whether this contact is an Employee."
-msgstr ""
+msgstr "Se esse contato é um funcionário."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_module_module_dependency__auto_install_required
@@ -44473,8 +45116,9 @@ msgstr "Se esta dependência bloqueia a instalação automática do dependente"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__abstract
+#, fuzzy
 msgid "Whether this model is abstract"
-msgstr ""
+msgstr "Se o modelo é abstrato"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_fields__translate
@@ -44569,14 +45213,17 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_actions_report.py:0
+#, fuzzy
 msgid "Wkhtmltopdf failed (error code: %(error_code)s). Message: %(message)s"
 msgstr ""
+"Wkhtmltopdf falhou (erro de código: %(error_code)s). Mensagem: %(message)s"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.KPW
 #: model:res.currency,currency_unit_label:base.KRW
+#, fuzzy
 msgid "Won"
-msgstr ""
+msgstr "Ganho"
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_1
@@ -44641,8 +45288,9 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_write
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
+#, fuzzy
 msgid "Write"
-msgstr ""
+msgstr "Editar"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_write
@@ -44680,8 +45328,9 @@ msgstr ""
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.VND
+#, fuzzy
 msgid "Xu"
-msgstr ""
+msgstr "Xu"
 
 #. module: base
 #: model:res.country,name:base.ye
@@ -44690,8 +45339,9 @@ msgstr "Iémen"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.JPY
+#, fuzzy
 msgid "Yen"
-msgstr ""
+msgstr "Yen"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__update_boolean_value__true
@@ -45068,9 +45718,12 @@ msgstr "Você não possui direitos de acesso para executar esta ação."
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "You don't have the rights to export data. Please contact an Administrator."
 msgstr ""
+"Você não tem o direito de exportar dados. Favor entrar em contato com um "
+"Administrador."
 
 #. module: base
 #. odoo-python
@@ -45106,11 +45759,15 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_module.py:0
+#, fuzzy
 msgid ""
 "You try to upgrade the module %(module)s that depends on the module: %"
 "(dependency)s.\n"
 "But this module is not available in your system."
 msgstr ""
+"Tentou atualizar um módulo %(module)s que depende do módulo: %(dependency)"
+"s.\n"
+"Mas este módulo não está disponível no seu sistema."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
@@ -45132,10 +45789,13 @@ msgstr "Suas condições..."
 #. module: base
 #: model_terms:res.company,lunch_notify_message:base.demo_company_be
 #: model_terms:res.company,lunch_notify_message:base.main_company
+#, fuzzy
 msgid ""
 "Your lunch has been delivered.\n"
 "Enjoy your meal!"
 msgstr ""
+"Seu almoço foi entregue.\n"
+"Aproveite sua refeição!"
 
 #. module: base
 #. odoo-python
@@ -45150,8 +45810,9 @@ msgstr ""
 #. module: base
 #: model:res.currency,currency_unit_label:base.CNH
 #: model:res.currency,currency_unit_label:base.CNY
+#, fuzzy
 msgid "Yuan"
-msgstr ""
+msgstr "Yuan"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_company_form
@@ -45188,8 +45849,9 @@ msgstr ""
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.ZIG
+#, fuzzy
 msgid "ZiGs"
-msgstr ""
+msgstr "ZiGs"
 
 #. module: base
 #: model:res.country,name:base.zw
@@ -45211,8 +45873,9 @@ msgstr "Código Postal obrigatório"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.PLN
+#, fuzzy
 msgid "Zloty"
-msgstr ""
+msgstr "Zloty"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_account
@@ -45243,14 +45906,16 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "allowed for groups %s"
-msgstr ""
+msgstr "permitido para os grupos %s"
 
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "always forbidden"
-msgstr ""
+msgstr "sempre proibido"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -45279,14 +45944,16 @@ msgstr "Envio bpost"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.COU
+#, fuzzy
 msgid "centavo"
-msgstr ""
+msgstr "centavo"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.UYI
 #: model:res.currency,currency_subunit_label:base.UYW
+#, fuzzy
 msgid "centésimo"
-msgstr ""
+msgstr "centésimo"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__char
@@ -45301,8 +45968,9 @@ msgstr "escolher"
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_rule.py:0
+#, fuzzy
 msgid "create"
-msgstr ""
+msgstr "criar"
 
 #. module: base
 #. odoo-python
@@ -45312,8 +45980,9 @@ msgstr ""
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.STN
+#, fuzzy
 msgid "cêntimo"
-msgstr ""
+msgstr "cêntimo"
 
 #. module: base
 #. odoo-python
@@ -45624,8 +46293,9 @@ msgstr "json"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_pos_sale
+#, fuzzy
 msgid "l10n_be_pos_sale"
-msgstr ""
+msgstr "l10n_be_pos_sale"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2many
@@ -45712,8 +46382,9 @@ msgstr "folha de pagamento"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.UYW
+#, fuzzy
 msgid "peso"
-msgstr ""
+msgstr "peso"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_self_order_preparation_display
@@ -45727,8 +46398,9 @@ msgstr "pos_account_reports"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_mrp
+#, fuzzy
 msgid "pos_mrp"
-msgstr ""
+msgstr "pos_mrp"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense_predict_product
@@ -45754,8 +46426,9 @@ msgstr "properties_definition"
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_rule.py:0
+#, fuzzy
 msgid "read"
-msgstr ""
+msgstr "leitura"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__resource_ref
@@ -45781,8 +46454,9 @@ msgstr "seleção"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__selection_value
+#, fuzzy
 msgid "selection_value"
-msgstr ""
+msgstr "selection_value"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__sequence_id
@@ -45894,18 +46568,21 @@ msgstr "verdadeiro"
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_rule.py:0
+#, fuzzy
 msgid "unlink"
-msgstr ""
+msgstr "unlink"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__update_boolean_value
+#, fuzzy
 msgid "update_boolean_value"
-msgstr ""
+msgstr "update_boolean_value"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_server__value_field_to_show__value
+#, fuzzy
 msgid "value"
-msgstr ""
+msgstr "valor"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_studio_ai_fields
@@ -45937,8 +46614,9 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_rule.py:0
+#, fuzzy
 msgid "write"
-msgstr ""
+msgstr "escrever"
 
 #. module: base
 #. odoo-python

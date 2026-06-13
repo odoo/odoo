@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-29 17:36+0000\n"
-"PO-Revision-Date: 2026-05-23 13:31+0000\n"
+"PO-Revision-Date: 2026-06-12 20:33+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/"
 "account/da/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -684,9 +684,8 @@ msgstr ""
 "            (med nummeret: <t t-out=\"object.invoice_origin or ''\">SUB003</"
 "t>)\n"
 "        </t>\n"
-"        på <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or "
-"''\">143.750,00 $</span>\n"
+"        på <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total, object.currency_id) or ''\">143.750,00 $</span>\n"
 "        fra <t t-out=\"object.company_id.name or ''\">DinVirksomhed</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Denne faktura er allerede betalt.\n"
@@ -716,8 +715,8 @@ msgstr ""
 "o-mail-quote-container=\"1\">\n"
 "            <br/><br/>\n"
 "            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
-"out=\"object.invoice_user_id.signature or ''\" data-o-mail-"
-"quote=\"1\">Mitchell Admin</t></div>\n"
+"out=\"object.invoice_user_id.signature or ''\" data-o-mail-quote=\"1\">"
+"Mitchell Admin</t></div>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1354,8 +1353,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<span>This is a preview of your Terms &amp; Conditions.</span>"
-msgstr ""
-"<span>Dette er en forhåndsvisning af dine vilkår og betingelser.</span>"
+msgstr "<span>Dette er en forhåndsvisning af dine vilkår og betingelser.</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -2413,8 +2411,7 @@ msgstr "Konto brugt til at flytte omkostningsperiode"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__non_deductible_account_id
 msgid "Account used to register the private part of mixed expenses."
-msgstr ""
-"Konto brugt til at registrere den private del af blandede omkostninger."
+msgstr "Konto brugt til at registrere den private del af blandede omkostninger."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__cash_basis_transition_account_id
@@ -3190,8 +3187,8 @@ msgstr ""
 "En konto er en del af finansregnskabet og gør det muligt for din virksomhed\n"
 "                at registrere alle typer debet- og kredittransaktioner.\n"
 "                Virksomheder præsenterer deres årsregnskab i to hoveddele:\n"
-"                statusopgørelse og resultatopgørelse (tab- og "
-"vindingskonto).\n"
+"                statusopgørelse og resultatopgørelse (tab- og vindingskonto)"
+".\n"
 "                Det er lovpligtigt for et selskab\n"
 "                at videregive visse oplysninger."
 
@@ -8912,8 +8909,8 @@ msgid ""
 msgstr ""
 "Hvis dette felt er markeret, vil alle bevægelser i sekvensen fra posteringen "
 "tilbage til den senest hashede postering blive retroaktivt hashet, når "
-"posteringen bogføres. Hashen kan også udføres efter behov via ‘Sikr "
-"postering’-assistenten."
+"posteringen bogføres. Hashen kan også udføres efter behov via ‘Sikr postering"
+"’-assistenten."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8947,8 +8944,8 @@ msgid ""
 "based on the delivery address.                                 This rule "
 "applies regardless of where you are located."
 msgstr ""
-"Hvis du sælger varer og tjenesteydelser til kunder i "
-"et                                 EU-land, skal momsen beregnes ud fra "
+"Hvis du sælger varer og tjenesteydelser til kunder i et"
+"                                 EU-land, skal momsen beregnes ud fra "
 "leveringsadressen.                                 Denne regel gælder "
 "uanset, hvor du er bosat."
 
@@ -9080,8 +9077,8 @@ msgstr ""
 "I rapporten '%(report_name)s', i linje '%(line_name)s' med betegnelsen '%"
 "(label)s',\n"
 "er udtrykket i tværrapporten ugyldigt.\n"
-"Forventet format: cross_report(<report_id>|<xml_id>)Eksempel: "
-"cross_report(my_module.my_report) eller cross_report(123)"
+"Forventet format: cross_report(<report_id>|<xml_id>)Eksempel: cross_report"
+"(my_module.my_report) eller cross_report(123)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -9155,8 +9152,8 @@ msgid ""
 "Incorrect fiscal year date: day is out of range for month. Month: %(month)s; "
 "Day: %(day)s"
 msgstr ""
-"Ukorrekt regnskabsårsdato: dagen er udenfor månedens grænse. Måned: %"
-"(month)s. Dag: %(day)s"
+"Ukorrekt regnskabsårsdato: dagen er udenfor månedens grænse. Måned: %(month)"
+"s. Dag: %(day)s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_incoterm_id
@@ -9610,8 +9607,7 @@ msgstr ""
 #: code:addons/account/models/account_tax.py:0
 msgid ""
 "Invoice and credit note distribution should have the same number of lines."
-msgstr ""
-"Distribution af faktura og kreditnota skal have det samme antal linjer."
+msgstr "Distribution af faktura og kreditnota skal have det samme antal linjer."
 
 #. module: account
 #. odoo-python
@@ -15635,8 +15631,8 @@ msgstr ""
 "indfangningsgrupper: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"
 "Prefix*-grupperne er separatorerne mellem året, måneden og den aktuelle "
 "forøgelse af sekvensnummeret (seq).\n"
-"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
-"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
+"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})"
+"(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__template_name
@@ -16703,8 +16699,8 @@ msgid ""
 "The incrementing number in this case is '%(formatted_seq)s'."
 msgstr ""
 "Sekvensen vil blive nulstillet til 1 ved starten af hver måned.\n"
-"Det registrerede år er '%(year)s', og den registrerede måned er '%"
-"(month)s'.\n"
+"Det registrerede år er '%(year)s', og den registrerede måned er '%(month)"
+"s'.\n"
 "Det fortløbende nummer er i dette tilfælde '%(formatted_seq)s'."
 
 #. module: account
@@ -18194,8 +18190,7 @@ msgstr "Validér bankkonto"
 msgid ""
 "Validate the statement line automatically (reconciliation based on your "
 "rule)."
-msgstr ""
-"Validér kontoudtogslinjen automatisk (afstemning baseret på din regel)."
+msgstr "Validér kontoudtogslinjen automatisk (afstemning baseret på din regel)."
 
 #. module: account
 #. odoo-javascript
@@ -18997,8 +18992,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_account.py:0
 msgid "You cannot deprecate an account that is used in a tax distribution."
-msgstr ""
-"Det er ikke muligt at udfase en konto, der bruges i en skattefordeling."
+msgstr "Det er ikke muligt at udfase en konto, der bruges i en skattefordeling."
 
 #. module: account
 #. odoo-python

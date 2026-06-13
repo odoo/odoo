@@ -9,13 +9,13 @@
 # Nuno Silva <nuno.silva@arxi.pt>, 2022
 # Daniel Reis, 2022
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-22 18:35+0000\n"
-"PO-Revision-Date: 2025-11-12 01:46+0000\n"
+"PO-Revision-Date: 2026-06-12 15:13+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s18-4/"
 "hr_presence/pt/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_presence
 #. odoo-python
@@ -35,6 +35,7 @@ msgstr ""
 
 #. module: hr_presence
 #: model:mail.template,body_html:hr_presence.mail_template_presence
+#, fuzzy
 msgid ""
 "<div>\n"
 "                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,"
@@ -51,6 +52,22 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    Estimado/a <t t-out=\"object.name or ''\">Abigail "
+"Peterson</t>,<br/><br/>\n"
+"Esperamos que esta mensagem o/a encontre bem. Chegou ao nosso conhecimento "
+"que não se encontra atualmente presente no trabalho, e não existe qualquer "
+"registo de um pedido de ausência da sua parte. Caso esta ausência se deva a "
+"um lapso da nossa parte, apresentamos as nossas sinceras desculpas por "
+"qualquer confusão causada.\n"
+"Por favor, tome as medidas necessárias para regularizar esta ausência não "
+"planeada. Se tiver alguma questão ou necessitar de assistência, não hesite "
+"em contactar o seu gestor ou o departamento de Recursos Humanos com a maior "
+"brevidade possível.\n"
+"Agradecemos a sua pronta atenção a este assunto.\n"
+"                    <br/>Com os melhores cumprimentos,<br/><br/>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_presence
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__absent
@@ -71,8 +88,9 @@ msgstr "Empresas"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_res_config_settings
+#, fuzzy
 msgid "Config Settings"
-msgstr ""
+msgstr "Definições de Configuração"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__create_uid
@@ -91,8 +109,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__display_name
 #: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Nome a Exibir"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_hr_employee__email_sent
@@ -102,8 +121,9 @@ msgstr "E-mail enviado"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee
+#, fuzzy
 msgid "Employee"
-msgstr ""
+msgstr "Funcionário"
 
 #. module: hr_presence
 #: model:sms.template,name:hr_presence.sms_template_data_hr_presence
@@ -146,8 +166,9 @@ msgstr "Exibição do status de presença"
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__id
 #: model:ir.model.fields,field_description:hr_presence.field_res_config_settings__id
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "Id."
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_users_log__ip
@@ -176,8 +197,9 @@ msgstr "Definir presença manualmente"
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee__hr_presence_state_display__out_of_working_hour
 #: model:ir.model.fields.selection,name:hr_presence.selection__hr_employee_public__hr_presence_state_display__out_of_working_hour
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_search
+#, fuzzy
 msgid "Out of Working Hours"
-msgstr ""
+msgstr "Fora do horário de trabalho"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_tree
@@ -203,14 +225,16 @@ msgstr "Presente"
 
 #. module: hr_presence
 #: model:ir.model,name:hr_presence.model_hr_employee_public
+#, fuzzy
 msgid "Public Employee"
-msgstr ""
+msgstr "Funcionário público"
 
 #. module: hr_presence
 #. odoo-python
 #: code:addons/hr_presence/models/hr_employee.py:0
+#, fuzzy
 msgid "Send SMS"
-msgstr ""
+msgstr "Enviar SMS"
 
 #. module: hr_presence
 #: model:ir.actions.server,name:hr_presence.action_hr_employee_presence_sms

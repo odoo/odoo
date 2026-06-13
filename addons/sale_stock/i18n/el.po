@@ -6,13 +6,13 @@
 # Martin Trigaux, 2018
 # Kostas Goutoudis <goutoudis@gmail.com>, 2018
 # George Tarasidis <george_tarasidis@yahoo.com>, 2018
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-22 18:36+0000\n"
-"PO-Revision-Date: 2025-11-08 22:40+0000\n"
+"PO-Revision-Date: 2026-06-13 13:32+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Greek <https://translate.odoo.com/projects/odoo-s18-4/"
 "sale_stock/el/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -89,6 +89,7 @@ msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
+#, fuzzy
 msgid ""
 "According to product configuration, the delivered quantity can be "
 "automatically computed by mechanism:\n"
@@ -99,6 +100,15 @@ msgid ""
 "this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Σύμφωνα με τη ρύθμιση του προϊόντος, η παραδοθείσα ποσότητα μπορεί να "
+"υπολογίζεται αυτόματα μέσω του μηχανισμού:\n"
+"  - Χειροκίνητα: η ποσότητα ορίζεται χειροκίνητα στη γραμμή\n"
+"  - Αναλυτικά από έξοδα: η ποσότητα είναι το άθροισμα ποσοτήτων από "
+"καταχωρημένα έξοδα\n"
+"  - Χρονοχρέωση: η ποσότητα είναι το άθροισμα των ωρών που έχουν καταγραφεί "
+"σε εργασίες συνδεδεμένες με αυτή τη γραμμή πώλησης\n"
+"  - Κινήσεις Αποθέματος: η ποσότητα προέρχεται από επιβεβαιωμένες παραλαβές/"
+"αποστολές\n"
 
 #. module: sale_stock
 #. odoo-javascript
