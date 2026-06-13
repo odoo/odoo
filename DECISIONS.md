@@ -39,6 +39,20 @@ Read this before changing any project-wide convention — it explains the *why*.
 
 ---
 
+## 2026-06-13 — Clean state as a completion criterion (lecture 12)
+
+**Decision:** Every session must exit across all five clean state dimensions: build passes, tests pass (including pre-existing), progress recorded, no temporary artifacts, startup path functional. These are non-negotiable — a session missing any dimension is incomplete and must stash rather than commit. Artifact hygiene (no debug prints, commented code, untracked TODOs) is Hard Constraint #14.
+
+**Alternatives considered:**
+- Clean up in the next session: Lehman's entropy law confirms systems undergoing continuous change grow more complex without active management — "next session" functionally means never
+- Build-only validation as clean state: code compiling ≠ clean state; tests, documentation, and artifact hygiene are equally non-negotiable
+
+**Rationale:** 12-week Electron app study: without cleanup discipline, week 12 build success 68%, test pass 61%, startup 60+ minutes. With cleanup: 97% / 95% / 9 minutes — 29-34 percentage point improvement and 85% faster startup from 5 minutes per-session overhead.
+
+**Consequence:** `clean-state-checklist.md` is the physical exit checklist (five dimensions with specific checks). `quality-document.md` tracks module health scores (A-F) across verification, understandability, test stability, architectural compliance, and code conventions. Session End step 6 explicitly confirms Dimension 4 before committing.
+
+---
+
 ## 2026-06-13 — Sprint contracts and runtime observability (lecture 11)
 
 **Decision:** Before writing any code on an `active` task, a sprint contract must be written in `claude-progress.md`: behavior (from feature_list.json), in-scope criteria, explicit out-of-scope list, verification command, and resolved ambiguities. Session End step 2 requires WHY rationale for non-obvious decisions — this is the task trace.

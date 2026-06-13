@@ -21,14 +21,16 @@ If `claude-progress.md` is missing, treat state as unknown and say so before pro
 
 ## Session End (mandatory — do not skip)
 
-Before closing any session, even if the task is incomplete:
+Before closing any session, even if the task is incomplete, run the
+[clean-state checklist](up5-docs/standards/clean-state-checklist.md) — all 5 dimensions must be ✅:
 
 1. Run `./verify.sh <module>` on anything changed — paste output into `claude-progress.md`
 2. Update `claude-progress.md`: Current Verified State, Next Steps, any new Blockers — include WHY for non-obvious decisions (these form the task trace for the next session)
 3. Update `feature_list.json` `state` for any tasks touched
 4. If a significant decision was made, add it to `DECISIONS.md` with rationale
 5. If a pattern violation appeared more than once during the session, convert it to a Hard Constraint or add it to `odoo-conventions.md` — recurring review comments become permanent rules
-6. Commit all tracked changes with an atomic, descriptive message
+6. Confirm Dimension 4: no debug prints, commented-out code, or untracked TODO markers remain
+7. Commit all tracked changes with an atomic, descriptive message
 
 ---
 
@@ -49,6 +51,7 @@ Non-negotiable. Any violation must be fixed before proceeding.
 11. `@api.depends(...)` is required on every compute method
 12. `Many2one.ondelete` must be explicit — never rely on the `'set null'` default
 13. Before writing any code on an `active` task, write a sprint contract in `claude-progress.md` — `behavior`, `criteria`, and explicit out-of-scope statement; resolve ambiguities first
+14. Never commit debug `print()`, commented-out code, or untracked `TODO`/`FIXME` markers — clean state is a completion criterion, not optional housekeeping
 
 ---
 
@@ -138,3 +141,5 @@ Check current readiness: [startup-readiness.md](startup-readiness.md)
 | Module-level architecture notes | `addons/<module>/NOTES.md` (create when module is complex) |
 | Template for documenting a complex module | [up5-docs/architecture/module-notes-template.md](up5-docs/architecture/module-notes-template.md) |
 | Sprint contract template | [up5-docs/standards/sprint-contract.md](up5-docs/standards/sprint-contract.md) |
+| End-of-session exit checklist | [up5-docs/standards/clean-state-checklist.md](up5-docs/standards/clean-state-checklist.md) |
+| Module health scores | [up5-docs/standards/quality-document.md](up5-docs/standards/quality-document.md) |

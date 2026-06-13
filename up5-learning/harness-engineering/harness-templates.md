@@ -16,9 +16,9 @@ Source: https://walkinglabs.github.io/learn-harness-engineering/en/resources/tem
 | File | Purpose |
 |---|---|
 | `session-handoff.md` | Compact handoff between sessions: verified state, changes, next priorities |
-| `clean-state-checklist.md` | Pre-session-end checklist: tests pass, progress logged, repo clean |
+| `clean-state-checklist.md` | Pre-session-end checklist: tests pass, progress logged, repo clean | ✅ `up5-docs/standards/clean-state-checklist.md` |
 | `evaluator-rubric.md` | Scoring across correctness, verification, scope, reliability, handoff readiness |
-| `quality-document.md` | Codebase health snapshot graded by domain and architectural layer |
+| `quality-document.md` | Codebase health snapshot graded by domain and architectural layer | ✅ `up5-docs/standards/quality-document.md` |
 
 ## `feature_list.json` schema
 
