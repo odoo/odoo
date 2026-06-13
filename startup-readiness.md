@@ -60,7 +60,7 @@ Update the **Status** column as conditions are met.
 | Git workflow documented | `up5-docs/standards/git-workflow.md` | ✅ |
 
 **Resolution:** Before starting any development task, add an entry to `feature_list.json` with:
-- `"status": "todo"`
+- `"state": "not_started"` (valid states: `not_started / active / blocked / passing`)
 - `"criteria"` array with specific, verifiable acceptance conditions
 - `"verification"` command
 

@@ -27,16 +27,20 @@ Source: https://walkinglabs.github.io/learn-harness-engineering/en/resources/tem
   "id": "unique-kebab-id",
   "area": "module_name",
   "title": "What the task accomplishes",
-  "status": "todo | in-progress | blocked | done",
+  "behavior": "Single sentence: what the system does when this task is passing",
+  "state": "not_started | active | blocked | passing",
   "priority": "high | medium | low",
   "criteria": [
     "Specific, checkable acceptance condition 1",
     "Specific, checkable acceptance condition 2"
   ],
   "verification": "exact command to run",
-  "evidence": "actual output or commit ref when done"
+  "evidence": "commit <hash> — YYYY-MM-DD; <verify output summary>"
 }
 ```
+
+State machine: `not_started → active → blocked → passing` (passing is irreversible).
+Only `./verify.sh` output permits the transition to `passing`.
 
 ## `claude-progress.md` format
 

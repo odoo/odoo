@@ -3,7 +3,8 @@
     "id": "harness-setup",
     "area": "meta",
     "title": "Set up Claude Code harness files",
-    "status": "done",
+    "behavior": "CLAUDE.md, claude-progress.md, and feature_list.json exist at repo root — CLAUDE.md routes to topic docs, claude-progress.md tracks verified state, feature_list.json is the machine-readable task primitive",
+    "state": "passing",
     "priority": "high",
     "criteria": [
       "CLAUDE.md exists at repo root with conventions, test commands, and definition of done",
@@ -11,13 +12,14 @@
       "feature_list.json exists with this schema"
     ],
     "verification": "ls CLAUDE.md claude-progress.md feature_list.json",
-    "evidence": "All three files created on 2026-06-13"
+    "evidence": "commit 54fb9ee1523 — 2026-06-13; ls exits 0"
   },
   {
     "id": "install-postgresql",
     "area": "infrastructure",
     "title": "Install PostgreSQL and initialise odoo_dev database",
-    "status": "done",
+    "behavior": "PostgreSQL 17 is installed and reachable at localhost:5432; odoo role exists; odoo_dev database is initialised; ./verify.sh account exits 0 end-to-end",
+    "state": "passing",
     "priority": "high",
     "criteria": [
       "psql --version returns a version string",
@@ -26,6 +28,6 @@
       "./verify.sh account exits 0 (full pipeline green)"
     ],
     "verification": "./verify.sh account",
-    "evidence": "./verify.sh account exited 0 on 2026-06-13: pre-flight (odoo-bin, PostgreSQL, module path) ok, tests passed (0 failed, 0 errors)"
+    "evidence": "commit 8aa75da87ea — 2026-06-13; ./verify.sh account: pre-flight ok, 0 failed tests"
   }
 ]

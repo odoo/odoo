@@ -50,5 +50,5 @@ WIP=1 produced *less code* but *more completed features*.
 | WIP=1 | Hard Constraint #1 in `CLAUDE.md` — enforced at session start |
 | Completion evidence | `evidence` field in `feature_list.json` — must contain `./verify.sh` output |
 | Scope surface | `feature_list.json` — machine-readable, git-tracked |
-| VCR check | Session Start step 3 — resume `in-progress` task before touching anything else |
-| Completion gate | Status transitions: `todo` → `in-progress` → (evidence pasted) → `done` |
+| VCR check | Session Start step 3 — resume `active` task before touching anything else |
+| Completion gate | State transitions: `not_started` → `active` → (evidence pasted) → `passing` |

@@ -13,7 +13,7 @@
 
 1. `conda activate odoo19`
 2. Read `claude-progress.md` → restore state from **Current Verified State** and **Next Steps**
-3. Read `feature_list.json` → if any task is `in-progress` with empty `evidence`, resume it — **do not start a new task** (WIP=1)
+3. Read `feature_list.json` → if any task is `active` with empty `evidence`, resume it — **do not start a new task** (WIP=1)
 4. Read `DECISIONS.md` → understand why conventions exist before changing them
 5. `python odoo-bin --version` → confirm environment is live
 
@@ -25,7 +25,7 @@ Before closing any session, even if the task is incomplete:
 
 1. Run `./verify.sh <module>` on anything changed — paste output into `claude-progress.md`
 2. Update `claude-progress.md`: Current Verified State, Next Steps, any new Blockers
-3. Update `feature_list.json` status for any tasks touched
+3. Update `feature_list.json` `state` for any tasks touched
 4. If a significant decision was made, add it to `DECISIONS.md` with rationale
 5. Commit all tracked changes with an atomic, descriptive message
 
@@ -35,7 +35,7 @@ Before closing any session, even if the task is incomplete:
 
 Non-negotiable. Any violation must be fixed before proceeding.
 
-1. WIP=1 — only one task may be `in-progress` in `feature_list.json` at a time; do not activate the next task until the current has `evidence` and status `done`
+1. WIP=1 — only one task may be `active` in `feature_list.json` at a time; do not set the next task `active` until the current has `evidence` and `state: "passing"`
 2. Never modify `odoo/` or any non-`up5_` module — extend via `_inherit` only
 3. Never use `sudo()` without a comment explaining why
 4. Never hardcode database IDs — use `env.ref('module.xml_id')`
@@ -53,7 +53,7 @@ Non-negotiable. Any violation must be fixed before proceeding.
 
 - [ ] `./verify.sh <module>` exits clean — **paste the output**
 - [ ] `claude-progress.md` updated with what was done and the evidence
-- [ ] `feature_list.json` entry set to `"status": "done"` with evidence
+- [ ] `feature_list.json` entry set to `"state": "passing"` with evidence (commit hash + verify output)
 
 **Verification gap rule:** "looks correct" is not done. No output = not done.
 **Context runs low:** stop, write state to `claude-progress.md`, let next session verify.
@@ -106,7 +106,7 @@ These are two distinct phases. Never mix them.
 
 Check current readiness: [startup-readiness.md](startup-readiness.md)
 
-**Implementation** — only begins after all four conditions are green. One task from `feature_list.json` at a time.
+**Implementation** — only begins after all four conditions are green. One task from `feature_list.json` at a time. Each task must be scoped to complete in a single session — if it can't, split it before marking `active`.
 
 ---
 
