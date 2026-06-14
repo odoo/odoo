@@ -15,15 +15,15 @@
 # Egon Raamat <egon@avalah.ee>, 2024
 # Siim Raasuke, 2025
 # Leaanika Randmets, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-04-11 12:03+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"PO-Revision-Date: 2026-06-12 10:39+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-s18-3/"
 "stock/et/>\n"
 "Language: et\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock
 #. odoo-python
@@ -50,6 +50,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__serial_prefix_format
 #: model:ir.model.fields,help:stock.field_product_template__serial_prefix_format
+#, fuzzy
 msgid ""
 "\n"
 "    If multiple products share the same prefix, they will share the same "
@@ -68,6 +69,22 @@ msgid ""
 "    - Minute: %(min)s\n"
 "    - Second: %(sec)s\n"
 msgstr ""
+"\n"
+"    Kui mitmel tootel on sama algus, siis neil on sama järjestus. Vastasel "
+"juhul seotakse jada tootega.\n"
+"\n"
+"    * Legend (alguse jaoks):\n"
+"    - Käesolev aasta sajandiga: %(year)s\n"
+"    - Käesolev aasta ilma sajandita: %(y)s\n"
+"    - Kuu: %(month)s\n"
+"    - Päev: %(day)s\n"
+"    - Aasta päevanumber: %(doy)s\n"
+"    - Aasta nädala number: %(woy)s\n"
+"    - Aasta päevanumber: (0:Esmaspäev): %(weekday)s\n"
+"    - Tund 00->24: %(h24)s\n"
+"    - Tund 00->12: %(h12)s\n"
+"    - Minut: %(min)s\n"
+"    - Sekund: %(sec)s\n"
 
 #. module: stock
 #. odoo-python
@@ -90,12 +107,17 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
+#, fuzzy
 msgid ""
 "\n"
 "The quantity done for the product %(product)s doesn't respect the rounding "
 "precision defined on the system.\n"
 "Please change the quantity done or the rounding precision in your settings."
 msgstr ""
+"\n"
+"Toote %(product)s jaoks tehtud kogus ei järgi mõõtühikus määratud "
+"ümardamistäpsust.\n"
+"Palun muutke tehtud kogust või mõõtühiku ümardamise täpsust."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -359,12 +381,14 @@ msgstr "(seeria triipkood)"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
+#, fuzzy
 msgid ")^FS"
-msgstr ""
+msgstr ")^FS"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
 #: model:ir.model.fields,help:stock.field_stock_move_line__state
+#, fuzzy
 msgid ""
 "* New: The stock move is created but not confirmed.\n"
 "* Waiting Another Move: A linked stock move should be done before this one.\n"
@@ -372,6 +396,12 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
+"* Uus: Siire on loodud, kuid pole veel kinnitatud.\n"
+"* Ootab teist tegevust: Seotud siire peab olema tehtud staatuses enne antud "
+"siiret.\n"
+"* Ootab: Siire on kinnitatud, kuid toodet ei ole võimalik reserveerida.\n"
+"* Saadaval: Siirdel olev toode on reserveeritud.\n"
+"* Tehtud: Toode on kohaletoimetatud ning siire on kinnitatud."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -531,6 +561,7 @@ msgstr ""
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
+#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
@@ -575,6 +606,47 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Tere <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
+",<br/><br/>\n"
+"        Meil on hea meel teavitada teid, et teie tellimus on teele pandud.\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
+"            Teie jälgimisviide on:\n"
+"            <strong>\n"
+"            <t t-if=\"object.carrier_tracking_url\">\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
+"out=\"line[0] or ''\"/>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" "
+"target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                </t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"            </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Rohkema info jaoks on manusesse lisatud teie saateleht.<br/><br/>\n"
+"        Aitäh,\n"
+"        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"            <br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -643,8 +715,9 @@ msgstr "<span class=\"o_stat_text\">Partii/seerianumbrid</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Lots/Serial Numbers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Partiid/seerianumbrid</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -709,28 +782,39 @@ msgstr "<span class=\"o_stat_text\">Jälitatavus</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
+#, fuzzy
 msgid ""
 "<span class=\"o_stat_value text-muted\">\n"
 "                                            Forecasted\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_stat_value text-muted\">\n"
+"                                                                                      "
+"Prognoositud\n"
+"                                                                          </"
+"span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
+#, fuzzy
 msgid ""
 "<span class=\"text-muted small\"> Available</span>\n"
 "                            <span> / </span>"
 msgstr ""
+"<span class=\"text-muted small\">Saadaval</span>\n"
+"                                                             <span>/</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
+#, fuzzy
 msgid "<span class=\"text-muted small\"> On Hand</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\"> Laos</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<span><strong>Customer Address:</strong></span>"
-msgstr ""
+msgstr "<span><strong>Kliendi aadress:</strong></span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
@@ -775,14 +859,16 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<strong>Barcode</strong>"
-msgstr ""
+msgstr "<strong>Triipkood</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<strong>Contact</strong>"
-msgstr ""
+msgstr "<strong>Kontakt</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -791,13 +877,15 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+#, fuzzy
 msgid "<strong>Delivered</strong>"
-msgstr ""
+msgstr "<strong>Tarnitud</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<strong>Delivery Address:</strong>"
-msgstr ""
+msgstr "<strong>Kohaletoimetamise aadress</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -811,8 +899,9 @@ msgstr "<strong>Kohaletoimetamise aadress</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<strong>Done Date:</strong>"
-msgstr ""
+msgstr "<strong>Tehtud kuupäev</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -831,8 +920,9 @@ msgstr "<strong>Kust?</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<strong>Instructions:</strong>"
-msgstr ""
+msgstr "<strong>Juhised:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
@@ -847,13 +937,15 @@ msgstr "<strong>Min kogus:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<strong>Operator:</strong>"
-msgstr ""
+msgstr "<strong>Operaator:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<strong>Order:</strong>"
-msgstr ""
+msgstr "<strong>Tellimus:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -862,8 +954,9 @@ msgstr "<strong>Tellimus</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+#, fuzzy
 msgid "<strong>Ordered</strong>"
-msgstr ""
+msgstr "<strong>Tellitud</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -894,8 +987,9 @@ msgstr "<strong>Vastuvõtja aadress</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<strong>Scheduled Date:</strong>"
-msgstr ""
+msgstr "<strong>Planeeritud kuupäev:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -909,8 +1003,9 @@ msgstr "<strong>Allkiri</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<strong>Status:</strong>"
-msgstr ""
+msgstr "<strong>Staatus:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_head
@@ -929,8 +1024,9 @@ msgstr "<strong>Tarnija aadress</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<strong>Vendor:</strong>"
-msgstr ""
+msgstr "<strong>Tarnija:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -939,8 +1035,9 @@ msgstr "<strong>Lao aadress</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<strong>Warehouse:</strong>"
-msgstr ""
+msgstr "<strong>Ladu:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -1018,8 +1115,9 @@ msgstr "Tegevused"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
+#, fuzzy
 msgid "Activities of"
-msgstr ""
+msgstr "Tegevused"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_exception_decoration
@@ -1041,8 +1139,9 @@ msgstr "Tegevustüübi ikoon"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
+#, fuzzy
 msgid "Activity type"
-msgstr ""
+msgstr "Tegevuse tüüp"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_view_activity
@@ -1235,8 +1334,9 @@ msgstr "Lubatud asukoht"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_replenishment_uom_ids
+#, fuzzy
 msgid "Allowed Replenishment Uom"
-msgstr ""
+msgstr "Lubatud varude täiendamise mõõtühik"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__allowed_route_ids
@@ -1249,13 +1349,15 @@ msgstr "Luba marsruut"
 #: model:ir.model.fields,field_description:stock.field_stock_move__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__allowed_uom_ids
+#, fuzzy
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Lubatud mõõtühik"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__alternative
+#, fuzzy
 msgid "Alternative (2.00\" x 1.00\")"
-msgstr ""
+msgstr "Alternatiiv (2.00\" x 1.00\")"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__always
@@ -1316,8 +1418,9 @@ msgstr "Rakendatavus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__package_type_selectable
+#, fuzzy
 msgid "Applicable on Package Type"
-msgstr ""
+msgstr "Rakendatav pakendi tüübil"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__product_selectable
@@ -1383,11 +1486,15 @@ msgstr "Kas olete kindel, et soovite selle siirde tühistada?"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0
+#, fuzzy
 msgid ""
 "As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
+"Kuna teine mõõteühik (ex : %(problem_uom)s) kui %(uom)s on olnud kasutusel "
+"antud tootel, siis mõõtühiku muutmine ei ole võimalik. Kui sa tahad muuta "
+"seda, palun arhiveeri toode ning loo uus."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -1772,8 +1879,9 @@ msgstr "Mahutavus toodete kaupa"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
+#, fuzzy
 msgid "Categories"
-msgstr ""
+msgstr "Kategooriad"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_search_form_view_stock_report
@@ -1995,11 +2103,15 @@ msgstr "Reaalse transpordihinna arvutamine ja saatmine DHL'ga"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Compute shipping costs and ship with DHL<br/>\n"
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"Arvuta saatmiskulud ja saada DHL'ga<br/>\n"
+"                                    <strong>(palun mine "
+"Avalehele&gt;Rakendused allalaadimiseks)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2008,8 +2120,9 @@ msgstr "Reaalse transpordihinna arvutamine ja saatmine Easypostiga"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "Compute shipping costs and ship with Envia.com"
-msgstr ""
+msgstr "Arvuta saatmiskulud ja saada Envia.com-ga"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2018,11 +2131,15 @@ msgstr "Reaalse transpordihinna arvutamine ja saatmine FedEx'iga"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Compute shipping costs and ship with FedEx<br/>\n"
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"Arvuta saatmiskulud ja saada FedExiga<br/>\n"
+"                                    <strong>(palun mine "
+"Avalehele&gt;Rakendused allalaadimiseks)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2046,11 +2163,15 @@ msgstr "Reaalse transpordihinna arvutamine ja saatmine UPS'iga"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Compute shipping costs and ship with UPS<br/>\n"
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"Arvuta saatmiskulud ja saada UPSiga<br/>\n"
+"                                    <strong>(palun mine "
+"Avalehele&gt;Rakendused allalaadimiseks)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2059,11 +2180,15 @@ msgstr "Reaalse transpordihinna arvutamine ja saatmine USPS'iga"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Compute shipping costs and ship with USPS<br/>\n"
 "                                    <strong>(please go to Home&gt;Apps to "
 "install)</strong>"
 msgstr ""
+"Arvuta saatmiskulud ja saada USPSiga<br/>\n"
+"                                    <strong>(palun mine "
+"Avalehele&gt;Rakendused allalaadimiseks)</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2242,8 +2367,9 @@ msgstr "Mahakandmise asukohad"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__partner_country_id
+#, fuzzy
 msgid "Country"
-msgstr ""
+msgstr "Riik"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__create_backorder
@@ -2276,8 +2402,9 @@ msgstr "Loo ladu"
 
 #. module: stock
 #: model:ir.model,website_form_label:stock.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Lisa klient"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -2498,8 +2625,9 @@ msgstr "Kohandatud veebileht"
 #: model:ir.model.fields,field_description:stock.field_product_product__serial_prefix_format
 #: model:ir.model.fields,field_description:stock.field_product_template__serial_prefix_format
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
+#, fuzzy
 msgid "Custom Lot/Serial"
-msgstr ""
+msgstr "Kohandatud partii/seerianumber"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
@@ -2526,8 +2654,9 @@ msgstr "Kliendi asukoht"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
+#, fuzzy
 msgid "Customers"
-msgstr ""
+msgstr "Kliendid"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -2577,8 +2706,9 @@ msgstr "DEMO_UOM"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "DHL Connector"
-msgstr ""
+msgstr "DHL liides"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
@@ -2791,6 +2921,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__removal_strategy_id
+#, fuzzy
 msgid ""
 "Defines the default method used for suggesting the exact location (shelf) "
 "where to take the products from, which lot etc. for this location. This "
@@ -2807,6 +2938,21 @@ msgid ""
 "(the availability of this method depends on the \"Expiration Dates\" "
 "setting)."
 msgstr ""
+"Määrab täpse asukoha (nt riiul) soovitamiseks kasutatud vaikemeetodi, kust "
+"tooteid võtta, millisest asukohast jne. Seda meetodit saab rakendada "
+"tootekategooria tasemel ja kui siin ei ole seatud, kehtivad põhiasukohale "
+"seatud reeglid .\n"
+"\n"
+"FIFO: Esimesena lattu saabuvad tooted/partiid saadetakse laost esimesena ka "
+"välja.\n"
+"LIFO: viimasena lattu saabuvad tooted/partiid saadetakse kõigepealt laost "
+"välja.\n"
+"Lähim asukoht: tooted/partiid, mis on sihtkohale kõige lähemal, saadetakse "
+"kõigepealt välja.\n"
+"Vähim arv pakke: tooted/partiid, mis on laos vähima kogusega pakkides, "
+"liigutatakse esimesena välja.\n"
+"FEFO: välja saadetakse kõige lähedasema eemaldamise kuupäevaga tooted/"
+"partiid (selle meetodi kuvamine sõltub seadistusest \"aegumiskuupäevad\")."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -2877,8 +3023,9 @@ msgstr "Tarneviisid"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
+#, fuzzy
 msgid "Delivery Note"
-msgstr ""
+msgstr "Saateleht"
 
 #. module: stock
 #. odoo-python
@@ -3042,8 +3189,9 @@ msgstr "Sihtkoha aadress "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
+#, fuzzy
 msgid "Destination Country"
-msgstr ""
+msgstr "Sihtriik"
 
 #. module: stock
 #. odoo-python
@@ -3110,8 +3258,9 @@ msgstr "Detailsed tegevused"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+#, fuzzy
 msgid "Details"
-msgstr ""
+msgstr "Detailid"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_details_visible
@@ -3127,8 +3276,9 @@ msgstr "Vahe"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
+#, fuzzy
 msgid "Dimensions"
-msgstr ""
+msgstr "Mõõdud"
 
 #. module: stock
 #. odoo-javascript
@@ -3254,9 +3404,10 @@ msgstr "Näidake seeria- ja partiinumbreid saatelehtedel"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Display instructions tailored to the customer or vendor on stock operations."
-msgstr ""
+msgstr "Laotoimingutel kuvatavad kliendi või tarnija põhised juhised."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.package_level_tree_view_picking
@@ -3418,8 +3569,9 @@ msgstr "Tagage oma lattu ladustava toote jälgitavus."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_envia
+#, fuzzy
 msgid "Envia.com Connector"
-msgstr ""
+msgstr "Envia.com liides"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
@@ -3864,8 +4016,9 @@ msgstr "Liigu lattu"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
+#, fuzzy
 msgid "Goods Receipt Note"
-msgstr ""
+msgstr "Kauba vastuvõtu saateleht"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -4438,8 +4591,9 @@ msgstr "Paigalda triipkood"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
+#, fuzzy
 msgid "Instructions on the Stock Operations"
-msgstr ""
+msgstr "Juhised laooperatsioonide kohta"
 
 #. module: stock
 #. odoo-python
@@ -4474,8 +4628,9 @@ msgstr "Sisemine asukohad"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
+#, fuzzy
 msgid "Internal Move"
-msgstr ""
+msgstr "Sisemine liikumine"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__ref
@@ -4507,10 +4662,13 @@ msgstr "Sisemine laosiire"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__picking_warning_text
+#, fuzzy
 msgid ""
 "Internal instructions for the partner or its parent company as set by the "
 "user."
 msgstr ""
+"Kasutaja poolt määratud sisemised juhised partnerile või selle "
+"emaettevõttele."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__child_internal_location_ids
@@ -4753,8 +4911,9 @@ msgstr "Jaanuar"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__jewelry
+#, fuzzy
 msgid "Jewelry (2.20\" x 0.50\")"
-msgstr ""
+msgstr "Ehted (2.20\" x 0.50\")"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -5425,8 +5584,9 @@ msgstr "Mai"
 
 #. module: stock
 #: model:res.company,partnership_label:stock.res_company_1
+#, fuzzy
 msgid "Members"
-msgstr ""
+msgstr "Osalejad"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_has_error
@@ -5476,8 +5636,9 @@ msgstr "Minimaalse lao reegel"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "Mitchel Admin"
-msgstr ""
+msgstr "Mitchel Admin"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__move_ids
@@ -5578,8 +5739,9 @@ msgstr "Mitu mahutavuse reeglit ühe toote jaoks."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
+#, fuzzy
 msgid "My Activities"
-msgstr ""
+msgstr "Minu tegevused"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__my_activity_date_deadline
@@ -5720,8 +5882,9 @@ msgstr "Järgmine oodatud"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__next_serial
 #: model:ir.model.fields,field_description:stock.field_product_template__next_serial
+#, fuzzy
 msgid "Next Serial"
-msgstr ""
+msgstr "Järgmine seerianumber"
 
 #. module: stock
 #. odoo-python
@@ -5757,10 +5920,12 @@ msgstr "Järelsaatelehte pole"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_quant_action
+#, fuzzy
 msgid ""
 "No Stock On Hand. This analysis gives you an overview of the current stock "
 "level of your products."
 msgstr ""
+"Laoseis puudub. See analüüs annab ülevaate teie toodete laoseisust hetkel."
 
 #. module: stock
 #. odoo-javascript
@@ -5867,8 +6032,9 @@ msgstr "Tavaline"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__normal
+#, fuzzy
 msgid "Normal (2.25\" x 1.25\")"
-msgstr ""
+msgstr "Tavaline (2.25\" x 1.25\")"
 
 #. module: stock
 #. odoo-javascript
@@ -6346,8 +6512,9 @@ msgstr "Paki tüüp"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_aggregated_move_lines
+#, fuzzy
 msgid "Pack of 6"
-msgstr ""
+msgstr "6-pakk"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__package_id
@@ -6521,8 +6688,9 @@ msgstr "Pakend"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_packaging_barcode
+#, fuzzy
 msgid "Packaging Barcodes (ZPL)"
-msgstr ""
+msgstr "Pakendi triipkood (ZPL)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__height
@@ -6536,8 +6704,9 @@ msgstr "Pakendi pikkus"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__packaging_uom_qty
+#, fuzzy
 msgid "Packaging Quantity"
-msgstr ""
+msgstr "Pakendi kogus"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__width
@@ -6546,8 +6715,9 @@ msgstr "Pakendi laius"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_id
+#, fuzzy
 msgid "Packaging unit from sale or purchase orders"
-msgstr ""
+msgstr "Pakendiühik müügi- või ostutellimuselt"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
@@ -6610,8 +6780,9 @@ msgstr "Partneri aadress"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "Partner-Specific Instructions"
-msgstr ""
+msgstr "Juhised partneri kohta"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_action_inventory_tree
@@ -6662,8 +6833,9 @@ msgstr "Laoleht"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_warning_text
+#, fuzzy
 msgid "Picking Instructions"
-msgstr ""
+msgstr "Komplekteerimise juhised"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -6704,8 +6876,9 @@ msgstr "Planeerimisprobleem"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
+#, fuzzy
 msgid "Please contact your administrator to configure your warehouse."
-msgstr ""
+msgstr "Palun võtke ühendust administraatoriga, et seadistada ladu."
 
 #. module: stock
 #. odoo-python
@@ -6913,8 +7086,9 @@ msgstr "Toote mahutavus"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_catalog_mixin
+#, fuzzy
 msgid "Product Catalog Mixin"
-msgstr ""
+msgstr "Tootekataloogi mixin"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__categ_ids
@@ -7368,8 +7542,9 @@ msgstr "Kogus toote vaikimisi UoM ühikus"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_qty
+#, fuzzy
 msgid "Quantity in the packaging unit"
-msgstr ""
+msgstr "Kogus pakendis"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__incoming_qty
@@ -8067,8 +8242,9 @@ msgstr "Sellele tootele saab selekteerida marsruute"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_uom_uom__route_ids
+#, fuzzy
 msgid "Routes propagated from the package type"
-msgstr ""
+msgstr "Pakenditüübist pärit marsruudid"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_wh_ids
@@ -8178,8 +8354,9 @@ msgstr "Näidisandmed"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0
+#, fuzzy
 msgid "Save the product form before updating the Quantity On Hand."
-msgstr ""
+msgstr "Salvestage tootekaart enne kui uuendate laokogust."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__date_planned
@@ -8325,8 +8502,9 @@ msgstr "Valik pole toetatud."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "Sell and purchase products in different units of measure or packagings"
-msgstr ""
+msgstr "Müü või osta tooteid, millel on erinevad mõõteühikud või pakendid"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8441,8 +8619,9 @@ msgstr "Seerianumbrid"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_sequence_id
 #: model:ir.model.fields,field_description:stock.field_product_template__lot_sequence_id
+#, fuzzy
 msgid "Serial/Lot Numbers Sequence"
-msgstr ""
+msgstr "Seerianumbrite/Partii numbrite järjestus"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -8645,8 +8824,9 @@ msgstr "Näite korje tüüpi"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__show_qty_update_button
 #: model:ir.model.fields,field_description:stock.field_product_template__show_qty_update_button
+#, fuzzy
 msgid "Show Qty Update Button"
-msgstr ""
+msgstr "Näita uuenda kogust nuppu"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_quant
@@ -8665,13 +8845,15 @@ msgstr "Näita siirdeid"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
+#, fuzzy
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "Näita kõiki andmeid, mille järgmise tegevuse kuupäev on möödas"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
+#, fuzzy
 msgid "Show details"
-msgstr ""
+msgstr "Näita detaile"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_lots_m2o
@@ -8717,8 +8899,9 @@ msgstr "Suurus: Pikkus x Laius x Laius"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__small
+#, fuzzy
 msgid "Small (1.25\" x 1.00\")"
-msgstr ""
+msgstr "Väike (1.25\" x 1.00\")"
 
 #. module: stock
 #. odoo-javascript
@@ -9172,10 +9355,13 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__lot_sequence_id
 #: model:ir.model.fields,help:stock.field_product_template__lot_sequence_id
+#, fuzzy
 msgid ""
 "Technical Field: The Ir.Sequence record that is used to generate serial/lot "
 "numbers for this product"
 msgstr ""
+"Tehniline väli, Ir.Sequence kirje, mida kasutatakse selle toote "
+"seerianumbrite/partiide numbrite genereerimiseks"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -9410,10 +9596,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
+#, fuzzy
 msgid ""
 "The procurement quantity will be rounded up to a multiple of this unit/"
 "packaging. If it is not set, it is not rounded."
 msgstr ""
+"Hanke kogus ümardatakse üles selle ühiku/pakendi kordseks. Kui see pole "
+"määratud, siis ümardamist ei toimu."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -10228,8 +10417,9 @@ msgstr "Ühik"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__uom
+#, fuzzy
 msgid "Unit Name"
-msgstr ""
+msgstr "Ühiku nimi"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__price_unit
@@ -10245,8 +10435,9 @@ msgstr "tk"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Mõõtühikud ja pakendid"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
@@ -10288,8 +10479,9 @@ msgstr "Tahtmatu täiendamine"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
+#, fuzzy
 msgid "Update"
-msgstr ""
+msgstr "Uuenda"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
@@ -10455,8 +10647,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
+#, fuzzy
 msgid "Visible to all"
-msgstr ""
+msgstr "Nähtav kõigile"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__shipping_volume
@@ -10724,8 +10917,9 @@ msgstr "Kui valitud, siis on marsruut valitav Lao vahelehel tootekaardil. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__package_type_selectable
+#, fuzzy
 msgid "When checked, the route will be selectable on package types"
-msgstr ""
+msgstr "Kui valitud, siis on marsruut on valitav pakenditüüpidel"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__product_categ_selectable
@@ -11151,10 +11345,13 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
+#, fuzzy
 msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types"
 msgstr ""
+"Te ei saa tooteid samasse pakendisse panna, kui need pärinevad erinevatest "
+"siiretest ja neil on erinevad operatsioonitüübid"
 
 #. module: stock
 #. odoo-python
@@ -11388,13 +11585,15 @@ msgstr "ZPL sildid koos hinnaga"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__zpl_preview
+#, fuzzy
 msgid "ZPL Preview"
-msgstr ""
+msgstr "ZPL eelvaade"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__zpl_template
+#, fuzzy
 msgid "ZPL Template"
-msgstr ""
+msgstr "ZPL mall"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -11403,91 +11602,111 @@ msgstr "]<br/>minimaalne:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
+#, fuzzy
 msgid "^FO150,165 ^A0N,25^FH ^FD"
-msgstr ""
+msgstr "^FO150,165 ^A0N,25^FH ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
+#, fuzzy
 msgid "^FO150,210 ^A0N,25^FH ^FD("
-msgstr ""
+msgstr "^FO150,210 ^A0N,25^FH ^FD("
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
+#, fuzzy
 msgid "^FO160,185 ^A0N,18^FH ^FD("
-msgstr ""
+msgstr "^FO160,185 ^A0N,18^FH ^FD("
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
+#, fuzzy
 msgid "^FO290,165 ^A0N,30^FH ^FD"
-msgstr ""
+msgstr "^FO290,165 ^A0N,30^FH ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
+#, fuzzy
 msgid "^FO290,50 ^A0N,30^FH ^FD"
-msgstr ""
+msgstr "^FO290,50 ^A0N,30^FH ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
+#, fuzzy
 msgid "^FO300,200 ^A0N,40^FH ^FD"
-msgstr ""
+msgstr "^FO300,200 ^A0N,40^FH ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
+#, fuzzy
 msgid "^FO35,50^BY1 ^BCN,80,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,50^BY1 ^BCN,80,Y,N,N ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
+#, fuzzy
 msgid "^FO35,55^BY2 ^BCN,100,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,50^BY1 ^BCN,80,Y,N,N ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
+#, fuzzy
 msgid "^FO35,5^BY1 ^BCN,80,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,5^BY1 ^BCN,80,Y,N,N ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
+#, fuzzy
 msgid "^FO35,77^BY2 ^BCN,100,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,77^BY2 ^BCN,100,Y,N,N ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
 #: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
 #: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
+#, fuzzy
 msgid "^FS"
-msgstr ""
+msgstr "^FS"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
+#, fuzzy
 msgid ""
 "^FS\n"
 "^FT35,48^A0N,15^FD"
 msgstr ""
+"^FS\n"
+"^FT35,48^A0N,15^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
+#, fuzzy
 msgid ""
 "^FS\n"
 "^FT35,65^A0N,20^FD"
 msgstr ""
+"^FS\n"
+"^FT35,65^A0N,20^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
+#, fuzzy
 msgid "^FT210,30^A0N,25^FD"
-msgstr ""
+msgstr "^FT210,30^A0N,25^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
 #: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
+#, fuzzy
 msgid "^FT35,30^A0N,20^FD"
-msgstr ""
+msgstr "^FT35,30^A0N,20^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
+#, fuzzy
 msgid "^FT35,40^A0N,25^FD"
-msgstr ""
+msgstr "^FT35,40^A0N,25^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -11587,8 +11806,9 @@ msgstr "nt. varuladu"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
+#, fuzzy
 msgid "e.g. The delivery area is at the back of the building."
-msgstr ""
+msgstr "nt Väljasaatmisala on hoone taga."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -11613,8 +11833,9 @@ msgstr "asukohast"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
+#, fuzzy
 msgid "id"
-msgstr ""
+msgstr "id"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view

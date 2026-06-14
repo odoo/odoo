@@ -12,13 +12,13 @@
 # Tina Milas, 2024
 # Vladimir Vrgoč, 2024
 # Bole <bole@dajmi5.com>, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2025-11-08 14:52+0000\n"
+"PO-Revision-Date: 2026-06-13 02:49+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-s18-3/"
 "stock_account/hr/>\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock_account
 #. odoo-python
@@ -165,8 +165,9 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.actions.server,name:stock_account.action_stock_adjust_valuation
+#, fuzzy
 msgid "Adjust Valuation"
-msgstr ""
+msgstr "Prilagodi vrednovanje"
 
 #. module: stock_account
 #. odoo-python
@@ -177,10 +178,13 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Affect landed costs on reception operations and split them among products to "
 "update their cost price."
 msgstr ""
+"Primijeni uvozne troškove na operacije primitka i raspodijeli ih među "
+"proizvodima radi ažuriranja njihove nabavne cijene."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__lot_ids
@@ -224,13 +228,15 @@ msgstr "Prosječni trošak"
 #: model:ir.model.fields.selection,name:stock_account.selection__product_template__cost_method__average
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__cost_method__average
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_quant__cost_method__average
+#, fuzzy
 msgid "Average Cost (AVCO)"
-msgstr ""
+msgstr "Prosječna cijena (AVCO)"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
+#, fuzzy
 msgid "BC46282798"
-msgstr ""
+msgstr "BC46282798"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -274,8 +280,9 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_move_line__cogs_origin_id
+#, fuzzy
 msgid "Cogs Origin"
-msgstr ""
+msgstr "Porijeklo troška prodane robe"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_company
@@ -318,8 +325,9 @@ msgstr "Trošak"
 #: model:ir.model.fields,field_description:stock_account.field_product_template__cost_method
 #: model:ir.model.fields,field_description:stock_account.field_res_company__cost_method
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__cost_method
+#, fuzzy
 msgid "Cost Method"
-msgstr ""
+msgstr "Metoda troška"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
@@ -392,10 +400,14 @@ msgstr "Datum"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_quant__accounting_date
+#, fuzzy
 msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
 msgstr ""
+"Datum na koji će biti kreirane računovodstvene stavke u slučaju "
+"automatiziranog vrednovanja zaliha. Ako je prazno, koristit će se datum "
+"zaliha."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
@@ -500,8 +512,9 @@ msgstr "ID"
 #: model:ir.model.fields,help:stock_account.field_product_product__lot_valuated
 #: model:ir.model.fields,help:stock_account.field_product_template__lot_valuated
 #: model:ir.model.fields,help:stock_account.field_stock_lot__lot_valuated
+#, fuzzy
 msgid "If checked, the valuation will be specific by Lot/Serial number."
-msgstr ""
+msgstr "Ako je označeno, vrednovanje će biti specifično po broju lota/serije."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
@@ -610,8 +623,9 @@ msgstr ""
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
+#, fuzzy
 msgid "Lots & Serial numbers will appear on the invoice"
-msgstr ""
+msgstr "Brojevi lotova i serijski brojevi pojavit će se na računu"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -737,8 +751,9 @@ msgstr "Proizvodni WIP račun"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__account_production_wip_overhead_account_id
+#, fuzzy
 msgid "Production WIP Overhead Account"
-msgstr ""
+msgstr "Konto režijskih troškova proizvodnje u tijeku"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
@@ -794,8 +809,9 @@ msgstr "Preostala vrijednost"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
+#, fuzzy
 msgid "Return Picking Line"
-msgstr ""
+msgstr "Stavka povratnog skupljanja"
 
 #. module: stock_account
 #. odoo-python
@@ -830,6 +846,7 @@ msgstr "Uobičajena cijena"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_cost_method
+#, fuzzy
 msgid ""
 "Standard Price: The products are valued at their standard cost defined on "
 "the product.\n"
@@ -839,6 +856,13 @@ msgid ""
 "that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
+"Standardna cijena: proizvodi se vrednuju prema svojoj standardnoj cijeni "
+"definiranoj na proizvodu.\n"
+"        Prosječna cijena (AVCO): proizvodi se vrednuju prema ponderiranoj "
+"prosječnoj cijeni.\n"
+"        Prvi ulaz prvi izlaz (FIFO): proizvodi se vrednuju pretpostavljajući "
+"da će oni koji prvi uđu u tvrtku i prvi izaći.\n"
+"        "
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_stock_accounting_automatic
@@ -870,8 +894,9 @@ msgstr "Konto skladišnog izlaza"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quantity_history
+#, fuzzy
 msgid "Stock Quantity History"
-msgstr ""
+msgstr "Povijest skladišne količine"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_forecasted_product_product
@@ -880,8 +905,9 @@ msgstr "Izvještaj o nadopuni skladišta"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_request_count
+#, fuzzy
 msgid "Stock Request an Inventory Count"
-msgstr ""
+msgstr "Zahtjev za prebrojavanjem inventure"
 
 #. module: stock_account
 #. odoo-javascript
@@ -921,10 +947,13 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
+#, fuzzy
 msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
 msgstr ""
+"Tehničko polje za ispravan prikaz valute trenutno odabrane tvrtke koja "
+"odgovara ukupnoj vrijednosti slojeva vrednovanja proizvoda"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
@@ -1020,10 +1049,13 @@ msgstr ""
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/fields/boolean_confirm.js:0
+#, fuzzy
 msgid ""
 "This operation might lead in a loss of data. Valuation will be identical for "
 "all lots/SN. Do you want to proceed ? "
 msgstr ""
+"Ova operacija može dovesti do gubitka podataka. Vrednovanje će biti jednako "
+"za sve lotove/serijske brojeve. Želite li nastaviti? "
 
 #. module: stock_account
 #. odoo-python
@@ -1055,8 +1087,9 @@ msgstr "Ukupno preostala količina"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_report_tree
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+#, fuzzy
 msgid "Total Remaining Value"
-msgstr ""
+msgstr "Ukupna preostala vrijednost"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__total_value
@@ -1076,10 +1109,13 @@ msgstr "Prijenos"
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,help:stock_account.field_stock_return_picking_line__to_refund
+#, fuzzy
 msgid ""
 "Trigger a decrease of the delivered/received quantity in the associated Sale "
 "Order/Purchase Order"
 msgstr ""
+"Pokreni smanjenje isporučene/primljene količine u povezanom prodajnom nalogu/"
+"nabavnom nalogu"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__uom_id
@@ -1111,6 +1147,7 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
+#, fuzzy
 msgid ""
 "Used for real-time inventory valuation. When set on a virtual location (non "
 "internal type), this account will be used to hold the value of products "
@@ -1118,9 +1155,15 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Koristi se za vrednovanje zaliha u stvarnom vremenu. Kada je postavljeno na "
+"virtualnu lokaciju (tipa koji nije interni), ovaj račun će se koristiti za "
+"evidentiranje vrijednosti proizvoda koji se premještaju iz interne lokacije "
+"na ovu lokaciju, umjesto generičkog računa za izlaz zaliha postavljenog na "
+"proizvodu. Ovo nema učinka za interne lokacije."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
+#, fuzzy
 msgid ""
 "Used for real-time inventory valuation. When set on a virtual location (non "
 "internal type), this account will be used to hold the value of products "
@@ -1128,6 +1171,11 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Koristi se za vrednovanje zaliha u stvarnom vremenu. Kada je postavljeno na "
+"virtualnu lokaciju (tipa koji nije interni), ovaj račun će se koristiti za "
+"evidentiranje vrijednosti proizvoda koji se premještaju iz ove lokacije u "
+"internu lokaciju, umjesto generičkog računa za izlaz zaliha postavljenog na "
+"proizvodu. Ovo nema učinka za interne lokacije."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__valuation
@@ -1143,8 +1191,9 @@ msgstr "Vrednovanje"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_lot__company_currency_id
+#, fuzzy
 msgid "Valuation Currency"
-msgstr ""
+msgstr "Valuta vrednovanja"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__adjusted_layer_ids
@@ -1201,12 +1250,17 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_lot__standard_price
+#, fuzzy
 msgid ""
 "Value of the lot (automatically computed in AVCO).\n"
 "        Used to value the product when the purchase cost is not known (e.g. "
 "inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"Vrijednost lota (automatski izračunata u AVCO metodi).\n"
+"        Koristi se za vrednovanje proizvoda kada nabavna cijena nije poznata "
+"(npr. prilagodba zaliha).\n"
+"        Koristi se za izračun marži na prodajnim nalozima."
 
 #. module: stock_account
 #. odoo-python
@@ -1216,10 +1270,13 @@ msgstr "Upozorenje"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
+#, fuzzy
 msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
+"Kada je na proizvodu omogućeno automatizirano vrednovanje zaliha, ovaj konto "
+"će sadržavati trenutnu vrijednost proizvoda."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -1234,10 +1291,13 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
+#, fuzzy
 msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
+"Prilikom automatiziranog vrednovanja zaliha, ovo je računovodstveni dnevnik "
+"u kojem će se automatski knjižiti stavke kada se obrađuju kretanja zaliha."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
@@ -1362,8 +1422,9 @@ msgstr "za"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
+#, fuzzy
 msgid "locations"
-msgstr ""
+msgstr "lokacijama"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document

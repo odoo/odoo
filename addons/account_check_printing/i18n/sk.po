@@ -1,41 +1,47 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* account_check_printing
+# * account_check_printing
 #
 # Translators:
 # Wil Odoo, 2025
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:37+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Slovak (https://app.transifex.com/odoo/teams/41243/sk/)\n"
+"PO-Revision-Date: 2026-06-12 10:04+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Slovak <https://translate.odoo.com/projects/odoo-s18-3/"
+"account_check_printing/sk/>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && n "
-">= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && "
+"n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
+#, fuzzy
 msgid "%(journal)s: Check Number Sequence"
-msgstr ""
+msgstr "%(journal)s: Poradie čísiel šekov"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
+#, fuzzy
 msgid "%(number)s in journal %(journal)s"
-msgstr ""
+msgstr "%(number)s v denníku %(journal)s"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
+#, fuzzy
 msgid "<span>&amp;nbsp;</span>"
-msgstr ""
+msgstr "<span>&amp;nbsp;</span>"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -190,8 +196,9 @@ msgstr "Ísť na panel konfigurácie"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_layout_available
+#, fuzzy
 msgid "Has Check Layout"
-msgstr ""
+msgstr "Má rozloženie šekov"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__id
@@ -235,6 +242,7 @@ msgstr "Manuálne číslovanie"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
+#, fuzzy
 msgid ""
 "Manual: Pay or Get paid by any method outside of Odoo.\n"
 "Payment Providers: Each payment provider has its own Payment Method. Request "
@@ -249,6 +257,19 @@ msgid ""
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your "
 "partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Manuálne: Platba alebo prijatie platby akoukoľvek metódou mimo Odoo.\n"
+"Poskytovatelia platobných služieb: Každý poskytovateľ platobných služieb má "
+"svoju vlastnú platobnú metódu. Požiadajte o platobnú transakciu na/z karty "
+"vďaka platobnému tokenu uloženému partnerom pri online nákupe alebo "
+"predplatnom.\n"
+"Šek: Platba faktúr šekom a jeho tlač z Odoo.\n"
+"Hromadný vklad: Zozbierajte niekoľko šekov od zákazníkov naraz a vytvorte a "
+"odošlite hromadný vklad do vašej banky. Je potrebný modul "
+"account_batch_payment.\n"
+"SEPA prevod: Platba v zóne SEPA odoslaním súboru SEPA prevodu do vašej "
+"banky. Je potrebný modul account_sepa.\n"
+"SEPA inkaso: Získajte platbu v zóne SEPA vďaka splnomocneniu, ktoré vám "
+"udelil váš partner. Je potrebný modul account_sepa.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -371,8 +392,9 @@ msgstr "Sekvenčné číslo nasledujúceho vytlačeného šeku."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__show_check_number
+#, fuzzy
 msgid "Show Check Number"
-msgstr ""
+msgstr "Zobraziť číslo šeku"
 
 #. module: account_check_printing
 #. odoo-python
@@ -387,10 +409,13 @@ msgstr ""
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
+#, fuzzy
 msgid ""
 "The check number you entered (%(num)s) exceeds the maximum allowed value of %"
 "(max)d. Please enter a smaller number."
 msgstr ""
+"Zadané číslo šeku (%(num)s) presahuje maximálnu povolenú hodnotu %(max)d. "
+"Zadajte nižšie číslo."
 
 #. module: account_check_printing
 #. odoo-python
@@ -473,17 +498,20 @@ msgstr ""
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
+#, fuzzy
 msgid "check_number"
-msgstr ""
+msgstr "check_number"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
+#, fuzzy
 msgid "out_refund"
-msgstr ""
+msgstr "out_refund"
 
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
+#, fuzzy
 msgid "sep"
-msgstr ""
+msgstr "sep"

@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-10 12:01+0000\n"
-"PO-Revision-Date: 2026-04-25 11:36+0000\n"
+"PO-Revision-Date: 2026-06-09 06:50+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s18-3/base/"
 "ko/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -11137,6 +11137,13 @@ msgid ""
 "enabling\n"
 "the use of those accounts for non swedish companies.\n"
 msgstr ""
+"\n"
+"이 기능은 스웨덴 계좌 사용 시 BBAN, Plusgiro 및 Bankgiro 기능을 제공하도록 "
+"추가되었습니다.\n"
+"계좌 번호가 BBAN, Plusgiro 또는 Bankgiro 계좌인 경우\n"
+"ISO20022 결제에 맞게 XML 결제 형식을 조정합니다.\n"
+"이 모듈은 스웨덴 현지화 모듈 없이도 설치할 수 있으므로,\n"
+"스웨덴 기업이 아닌 경우에도 계좌를 사용할 수 있습니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_purchase
@@ -12718,6 +12725,15 @@ msgid ""
 "-----------------\n"
 "Three layouts copied from the US check printing module, adjusted for DO\n"
 msgstr ""
+"\n"
+"이 모듈을 통해 미리 인쇄된 수표 용지에 결제 내용을 인쇄할 수 있습니다.\n"
+"회사 설정에서 출력 사항(레이아웃, 스텁 정보 등)에 대한 환경설정을 할 수 "
+"있으며, \n"
+"전표 설정에서 수표 번호 관리(연번 없는 사전 인쇄 수표를 사용하는 경우)를 "
+"관리합니다.지\n"
+"원되는 형식\n"
+"-----------------\n"
+"미국 수표 인쇄 모듈에서 복사한 세 가지 레이아웃을 DO용으로 조정\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ph_check_printing
@@ -45542,6 +45558,9 @@ msgid ""
 "privileges previously modified it, and you are therefore not able to modify "
 "it yourself while preserving the content."
 msgstr ""
+"저장 중인 필드 값 (%(model)s %(field)s)에 보안상의 이유로 제한된 콘텐츠가 "
+"포함되어 있습니다. 더 높은 권한을 가진 사용자가 이전에 수정했을 가능성이 "
+"있으며, 현재 권한으로는 내용을 그대로 유지하면서 변경하는 것은 불가능합니다."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__first_failure_date
@@ -45891,6 +45910,11 @@ msgid ""
 "For example, __import__, resulting in the external id __import__.%"
 "(record_id)s."
 msgstr ""
+"레코드 %(xml_id)s에 모듈 접두사 %(module_name)s가 있습니다. 이는 외부 ID의 "
+"'.' 앞부분 입니다. 접두사가 기존 모듈을 참조하므로 모듈이 업그레이드되면 이 "
+"레코드는 삭제됩니다. 접두사 없이 점만 사용하거나 기존 모듈이 아닌 접두사를 "
+"사용하십시오. 예를 들어, __import__, 를 사용할 경우 외부 ID는 __import__.%"
+"(record_id)s가 됩니다."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__company_registry
@@ -46317,6 +46341,10 @@ msgid ""
 "UBL/CII eInvoices (but not only). The module is intended be merged with "
 "account, later on, in master"
 msgstr ""
+"이 모듈을 통해 파트너에 글로벌 위치 번호(GLN)를 추가합니다. 이 번호는 배송 "
+"주소에 적용되어 재고 위치를 식별하는 데 활용됩니다. UBL/CII 전자 "
+"세금계산서에서 필수인 항목입니다(이외 다른 항목에서도 활용됨). 본 모듈은 "
+"추후 계정에 통합될 예정으로, 마스터"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_bot_hr
@@ -46762,6 +46790,11 @@ msgid ""
 "every\n"
 "    theme on one website."
 msgstr ""
+"이 모듈을 활용하면 웹사이트에서 테마를 전환하지 않더라도  Odoo에 있는\n"
+"    모든 테마를 신속하게 테스트해 볼 수 있습니다.\n"
+"    Odoo에 있는 테마별로 새로운 웹사이트를 생성한 후 모든 테마를 하나의 "
+"웹사이트에\n"
+"    설치하면 됩니다."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade

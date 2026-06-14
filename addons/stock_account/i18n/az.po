@@ -6,13 +6,13 @@
 # Jumshud Sultanov <cumshud@gmail.com>, 2024
 # erpgo translator <jumshud@erpgo.az>, 2024
 # Nurlan Farajov <coolinuxoid@gmail.com>, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2025-11-08 14:57+0000\n"
+"PO-Revision-Date: 2026-06-13 02:56+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-s18-3/"
 "stock_account/az/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock_account
 #. odoo-python
@@ -77,8 +77,9 @@ msgstr ""
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
+#, fuzzy
 msgid "<b>Set other input/output accounts on specific </b>"
-msgstr ""
+msgstr "<b>Fərqli giriş/çıxış hesabları təyin edin müəyyən </b>"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_picking
@@ -113,8 +114,9 @@ msgstr "Hesab Hərəkəti"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
+#, fuzzy
 msgid "Account Stock Properties"
-msgstr ""
+msgstr "Anbar Hesabı Parametrləri"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__accounting_date
@@ -168,10 +170,13 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_res_config_settings__module_stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Affect landed costs on reception operations and split them among products to "
 "update their cost price."
 msgstr ""
+"Qəbul əməliyyatlarında çatdırılma xərclərinə təsir edin və onları məhsullar "
+"arasında bölərək onların maya dəyərini yeniləyin."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__lot_ids
@@ -196,8 +201,9 @@ msgstr "Analitik Planlar"
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
 #: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__real_time
+#, fuzzy
 msgid "Automated"
-msgstr ""
+msgstr "Avtomatlaşdırılmış"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_stock_accounting_automatic
@@ -236,19 +242,25 @@ msgstr "Ləğv edin"
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
+#, fuzzy
 msgid ""
 "Cannot find a stock input account for the product %s. You must define one on "
 "the product category, or on the location, before processing this operation."
 msgstr ""
+"%s məhsulu üçün stok giriş hesabı tapılmadı. Bu əməliyyatı icra etməzdən "
+"əvvəl məhsul kateqoriyasında və ya lokasiyada bir hesab təyin etməlisiniz."
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
+#, fuzzy
 msgid ""
 "Cannot find a stock output account for the product %s. You must define one "
 "on the product category, or on the location, before processing this "
 "operation."
 msgstr ""
+"%s məhsulu üçün stok çıxış hesabı tapılmadı. Bu əməliyyatı icra etməzdən "
+"əvvəl məhsul kateqoriyasında və ya lokasiyada bir hesab təyin etməlisiniz."
 
 #. module: stock_account
 #. odoo-python
@@ -314,16 +326,20 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
+#, fuzzy
 msgid "Costing Method"
-msgstr ""
+msgstr "Maya Dəyəri Metodu"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
+#, fuzzy
 msgid ""
 "Costing method change for product category %(category)s: from %(old_method)s "
 "to %(new_method)s."
 msgstr ""
+"%(category)s məhsul kateqoriyası üçün maya dəyəri metodu %(old_method)s "
+"metodundan %(new_method)s metoduna dəyişdirildi."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__account_id
@@ -437,11 +453,15 @@ msgstr ""
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
+#, fuzzy
 msgid ""
 "Due to a change of product category (from %(old_category)s to %"
 "(new_category)s), the costing method has changed for product %(product)s: "
 "from %(old_method)s to %(new_method)s."
 msgstr ""
+"Məhsul kateoriyasının %(old_category)s kateqoriyasından %(new_category)s "
+"kateqoriyasına dəyişdirilməsi səbəbindən %(product)s məhsulu üçün maya "
+"dəyəri metodu %(old_method)s metodundan %(new_method)s metoduna dəyişdirildi."
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -816,11 +836,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock_account.selection__product_template__cost_method__standard
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__cost_method__standard
 #: model:ir.model.fields.selection,name:stock_account.selection__stock_quant__cost_method__standard
+#, fuzzy
 msgid "Standard Price"
-msgstr ""
+msgstr "Standart Qiymət"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_cost_method
+#, fuzzy
 msgid ""
 "Standard Price: The products are valued at their standard cost defined on "
 "the product.\n"
@@ -830,6 +852,13 @@ msgid ""
 "that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
+"Standart Qiymət: Məhsullar, məhsul üzərində təyin edilmiş standart maya "
+"dəyəri əsasında qiymətləndirilir.\n"
+"        Orta Maya Dəyəri (AVCO): Məhsullar çəkili orta maya dəyəri əsasında "
+"qiymətləndirilir.\n"
+"        İlk Daxil Olan İlk Çıxar (FIFO): Məhsullar, şirkətə ilk daxil olan "
+"məhsulların ilk çıxacağını əsas götürərək qiymətləndirilir.\n"
+"        "
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_stock_accounting_automatic
@@ -838,13 +867,15 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_input_categ_id
+#, fuzzy
 msgid "Stock Input Account"
-msgstr ""
+msgstr "Stok Giriş Hesabı"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_journal
+#, fuzzy
 msgid "Stock Journal"
-msgstr ""
+msgstr "Stok Jurnalı"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move
@@ -856,8 +887,9 @@ msgstr "Stokun Hərəkəti"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_output_categ_id
+#, fuzzy
 msgid "Stock Output Account"
-msgstr ""
+msgstr "Stok Çıxış Hesabı"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quantity_history
@@ -885,8 +917,9 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_id
+#, fuzzy
 msgid "Stock Valuation Account"
-msgstr ""
+msgstr "Stok Qiymətləndirmə Hesabı"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_location__valuation_in_account_id
@@ -993,10 +1026,13 @@ msgstr ""
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, fuzzy
 msgid ""
 "The value of a stock valuation layer cannot be negative. Landed cost could "
 "be use to correct a specific transfer."
 msgstr ""
+"Anbar dəyər qatının (stock valuation layer) dəyəri mənfi ola bilməz. Müəyyən "
+"bir transferi düzəltmək üçün çatdırılma xərci istifadə oluna bilər."
 
 #. module: stock_account
 #: model_terms:ir.actions.act_window,help:stock_account.stock_valuation_layer_action
@@ -1100,6 +1136,7 @@ msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_in_account_id
+#, fuzzy
 msgid ""
 "Used for real-time inventory valuation. When set on a virtual location (non "
 "internal type), this account will be used to hold the value of products "
@@ -1107,9 +1144,16 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Real vaxt rejimində inventar qiymətləndirilməsi üçün istifadə olunur. "
+"Virtual lokasiyada (daxili tip olmayan) təyin edildikdə, bu hesab məhsullar "
+"daxili lokasiyadan bu lokasiyaya köçürüldükdə onların dəyərini saxlamaq üçün "
+"istifadə ediləcək. Bu halda məhsul üzərində təyin edilmiş ümumi Stok Çıxış "
+"Hesabı istifadə olunmayacaq. Bu parametr daxili lokasiyalar üçün təsir "
+"göstərmir."
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_out_account_id
+#, fuzzy
 msgid ""
 "Used for real-time inventory valuation. When set on a virtual location (non "
 "internal type), this account will be used to hold the value of products "
@@ -1117,6 +1161,12 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Real vaxt rejimində inventar qiymətləndirilməsi üçün istifadə olunur. "
+"Virtual lokasiyada (daxili tip olmayan) təyin edildikdə, bu hesab məhsullar "
+"bu lokasiyadan daxili lokasiyaya köçürüldükdə onların dəyərini saxlamaq üçün "
+"istifadə ediləcək. Bu halda məhsul üzərində təyin edilmiş ümumi Stok Çıxış "
+"Hesabı istifadə olunmayacaq. Bu parametr daxili lokasiyalar üçün təsir "
+"göstərmir."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__valuation
@@ -1148,8 +1198,9 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
+#, fuzzy
 msgid "Valuation at Date"
-msgstr ""
+msgstr "Tarixə görə Qiymətləndirmə"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__lot_valuated
@@ -1249,10 +1300,13 @@ msgstr ""
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
+#, fuzzy
 msgid ""
 "You cannot change the costing method of product valuated by lot/serial "
 "number."
 msgstr ""
+"Lot/seriya nömrəsi üzrə qiymətləndirilən məhsulun maya dəyəri metodunu "
+"dəyişdirə bilməzsiniz."
 
 #. module: stock_account
 #. odoo-python
@@ -1310,10 +1364,13 @@ msgstr ""
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
+#, fuzzy
 msgid ""
 "You don't have any stock input account defined on your product category. You "
 "must define one before processing this operation."
 msgstr ""
+"Məhsul kateqoriyanız üçün stok giriş hesabı təyin edilməyib. Bu əməliyyatı "
+"icra etməzdən əvvəl hesab təyin etməlisiniz."
 
 #. module: stock_account
 #. odoo-python
@@ -1351,8 +1408,9 @@ msgstr "üçün"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
+#, fuzzy
 msgid "locations"
-msgstr ""
+msgstr "lokasiyalarda"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document

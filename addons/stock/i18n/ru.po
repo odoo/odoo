@@ -7,15 +7,15 @@
 # Wil Odoo, 2025
 # Anastasiia Koroleva, 2025
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-04-25 11:34+0000\n"
-"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"PO-Revision-Date: 2026-06-12 11:38+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s18-3/stock/"
 "ru/>\n"
 "Language: ru\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock
 #. odoo-python
@@ -44,6 +44,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__serial_prefix_format
 #: model:ir.model.fields,help:stock.field_product_template__serial_prefix_format
+#, fuzzy
 msgid ""
 "\n"
 "    If multiple products share the same prefix, they will share the same "
@@ -62,6 +63,23 @@ msgid ""
 "    - Minute: %(min)s\n"
 "    - Second: %(sec)s\n"
 msgstr ""
+"\n"
+"    Если несколько товаров используют один и тот же префикс, у них будет "
+"единая нумерация. В противном случае нумерация будет индивидуальной для "
+"данного товара.\n"
+"\n"
+"    * Легенда (для префикса):\n"
+"    - Текущий год с веком: %(year)s\n"
+"    - Текущий год без века: %(y)s\n"
+"    - Месяц: %(month)s\n"
+"    - День: %(day)s\n"
+"    - День в году: %(doy)s\n"
+"    - Неделя в году: %(woy)s\n"
+"    - День недели (0:Понедельник): %(weekday)s\n"
+"    - Час 00->24: %(h24)s\n"
+"    - Час 00->12: %(h12)s\n"
+"    - Минута: %(min)s\n"
+"    - Секунда: %(sec)s\n"
 
 #. module: stock
 #. odoo-python
@@ -84,12 +102,18 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
+#, fuzzy
 msgid ""
 "\n"
 "The quantity done for the product %(product)s doesn't respect the rounding "
 "precision defined on the system.\n"
 "Please change the quantity done or the rounding precision in your settings."
 msgstr ""
+"\n"
+"Выполненное количество для товара %(product)s не соответствует точности "
+"округления, установленной в системе.\n"
+"Пожалуйста, измените выполненное количество или настройки точности "
+"округления."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -365,6 +389,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
 #: model:ir.model.fields,help:stock.field_stock_move_line__state
+#, fuzzy
 msgid ""
 "* New: The stock move is created but not confirmed.\n"
 "* Waiting Another Move: A linked stock move should be done before this one.\n"
@@ -372,6 +397,13 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
+"* Новое: перемещение запасов создано, но не подтверждено.\n"
+"* Ожидание другого перемещения: перед этим перемещением должно быть "
+"выполнено связанное перемещение запасов.\n"
+"* Ожидание: перемещение запасов подтверждено, но товар не может быть "
+"зарезервирован.\n"
+"* Доступно: товар перемещения запасов зарезервирован.\n"
+"* Выполнено: товар перемещен, и перемещение подтверждено."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -534,6 +566,7 @@ msgstr ""
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
+#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
@@ -578,6 +611,47 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Здравствуйте, <t t-out=\"object.partner_id.name or ''\">Брэндон "
+"Фримен</t>!<br/><br/>\n"
+"        Мы рады сообщить вам, что ваш заказ отправлен.\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
+"            Номер для отслеживания:\n"
+"            <strong>\n"
+"            <t t-if=\"object.carrier_tracking_url\">\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
+"out=\"line[0] or ''\"/>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" "
+"target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                </t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"            </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Подробности заказа на доставку приложены.<br/><br/>\n"
+"        Спасибо,\n"
+"        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"            <br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Митчелл Админ</t></div>"
+"\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -647,8 +721,9 @@ msgstr "<span class=\"o_stat_text\">Номера лотов/серий</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Lots/Serial Numbers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Партии/серийные номера</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -790,8 +865,9 @@ msgstr "<strong>Контакт</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+#, fuzzy
 msgid "<strong>Customer</strong>"
-msgstr ""
+msgstr "<strong>Клиент</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -1255,8 +1331,9 @@ msgstr "Разрешенный маршрут"
 #: model:ir.model.fields,field_description:stock.field_stock_move__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__allowed_uom_ids
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__allowed_uom_ids
+#, fuzzy
 msgid "Allowed Uom"
-msgstr ""
+msgstr "Допустимая ед. изм."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__alternative
@@ -2030,8 +2107,9 @@ msgstr "Рассчитайте стоимость доставки и отпра
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "Compute shipping costs and ship with Envia.com"
-msgstr ""
+msgstr "Рассчитывайте стоимость доставки и отправляйте товары через Envia.com"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3460,8 +3538,9 @@ msgstr "Обеспечьте отслеживание хранимого про�
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_envia
+#, fuzzy
 msgid "Envia.com Connector"
-msgstr ""
+msgstr "Коннектор Envia.com"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
@@ -6431,8 +6510,9 @@ msgstr "Тип упаковки"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_aggregated_move_lines
+#, fuzzy
 msgid "Pack of 6"
-msgstr ""
+msgstr "Упаковка (6 шт.)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__package_id
@@ -6632,8 +6712,9 @@ msgstr "Ширина упаковки"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_id
+#, fuzzy
 msgid "Packaging unit from sale or purchase orders"
-msgstr ""
+msgstr "Единица упаковки из заказов на продажу или закупку"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
@@ -7460,8 +7541,9 @@ msgstr "Количество в единицах измерения продук
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_qty
+#, fuzzy
 msgid "Quantity in the packaging unit"
-msgstr ""
+msgstr "Количество в единице упаковки"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__incoming_qty
@@ -8421,8 +8503,10 @@ msgstr "Выбор не поддерживается."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "Sell and purchase products in different units of measure or packagings"
 msgstr ""
+"Продавайте и закупайте товары в различных единицах измерения или упаковках"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -10384,8 +10468,9 @@ msgstr "Единицы"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Ед. изм. и упаковки"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id

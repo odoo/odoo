@@ -23,15 +23,15 @@
 # Peter Lawrence Romão <peterromao@yahoo.co.uk>, 2025
 # Tomás Azevedo, 2025
 # Thomas Becquevort, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Cristina Paniagua Ramiro <crpan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-29 17:37+0000\n"
-"PO-Revision-Date: 2026-04-11 12:01+0000\n"
-"Last-Translator: Cristina Paniagua Ramiro <crpan@odoo.com>\n"
+"PO-Revision-Date: 2026-06-11 22:36+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-s18-3/"
 "account/pt/>\n"
 "Language: pt\n"
@@ -40,7 +40,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -889,12 +889,17 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_details
+#, fuzzy
 msgid ""
 "<small class=\"form-text text-muted\">\n"
 "                        You can choose how you want us to send your "
 "invoices, and with which electronic format.\n"
 "                    </small>"
 msgstr ""
+"<small class=\"form-text text-muted\">\n"
+"                        Pode escolher como quer que enviemos as suas faturas "
+"e em que formato eletrónico.\n"
+"                    </small>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -1927,10 +1932,13 @@ msgstr "Modelo de Plano de Contas"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_code_mapping.py:0
+#, fuzzy
 msgid ""
 "Account Code Mapping cannot be accessed directly. It is designed to be used "
 "only through the Chart of Accounts."
 msgstr ""
+"O Mapeamento de Códigos de Contas não pode ser acedido diretamente. Foi "
+"concebido para ser usado apenas através do Plano de Contas."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
@@ -2418,10 +2426,13 @@ msgstr "Movimento de Acréscimo"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
+#, fuzzy
 msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
+"Movimento de acréscimo criado em %(date)s: %(accrual_entry)s.                "
+"E o seu movimento de reversão: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -2744,11 +2755,15 @@ msgstr "Depois"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "After importing three bills for a vendor without making changes, Odoo will "
 "suggest automatically validating future bills. You can toggle this feature "
 "at any time in the vendor's profile."
 msgstr ""
+"Após importar três faturas para um fornecedor sem fazer alterações, o Odoo "
+"irá sugerir validar automaticamente as faturas futuras. Pode alternar esta "
+"funcionalidade a qualquer momento no perfil do fornecedor."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__engine__aggregation
@@ -3436,8 +3451,9 @@ msgstr "Anexos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__attachments_not_supported
+#, fuzzy
 msgid "Attachments Not Supported"
-msgstr ""
+msgstr "Anexos Não Suportados"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_audit_trail_report
@@ -3463,8 +3479,9 @@ msgstr "Agosto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__autocheck_on_post
+#, fuzzy
 msgid "Auto-Check on Post"
-msgstr ""
+msgstr "Verificação Automática na Publicação"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3984,18 +4001,24 @@ msgstr "Pagamentos em Lote"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+#, fuzzy
 msgid ""
 "Batch invoice sending is unavailable. Please, activate the cron to enable "
 "batch sending of invoices."
 msgstr ""
+"O envio de faturas em lote não está disponível. Por favor, ative o cron para "
+"o habilitar o envio em lote de faturas."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+#, fuzzy
 msgid ""
 "Batch invoice sending is unavailable. Please, contact your system "
 "administrator to activate the cron to enable batch sending of invoices."
 msgstr ""
+"O envio de faturas em lote não está disponível. Por favor, contacte o "
+"administrador de sistemas para ativar o respetivo cron."
 
 #. module: account
 #. odoo-javascript
@@ -4174,8 +4197,9 @@ msgstr "Se desmarcar o campo ativo, pode ocultar um INCOTERM que não vai usar."
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, fuzzy
 msgid "C"
-msgstr ""
+msgstr "C"
 
 #. module: account
 #. odoo-python
@@ -6295,8 +6319,9 @@ msgstr "Impostos padrões usados na venda do produto"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "Default value for 'company_id' for %(record)s is not an integer"
-msgstr ""
+msgstr "O valor padrão de 'company_id' para %(record)s não é um número inteiro"
 
 #. module: account
 #: model:account.account,name:account.1_deferred_revenue
@@ -6615,8 +6640,9 @@ msgstr "Exibir Valor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_attachments_widget
+#, fuzzy
 msgid "Display Attachments Widget"
-msgstr ""
+msgstr "Widget de Exibição de Anexos"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
@@ -8241,8 +8267,9 @@ msgstr "Data de Bloqueio Geral"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
+#, fuzzy
 msgid "Go to cron configuration"
-msgstr ""
+msgstr "Ir para a configuração cron"
 
 #. module: account
 #. odoo-python
@@ -8508,8 +8535,9 @@ msgstr "Como o total do imposto é calculado em encomendas e faturas"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+#, fuzzy
 msgid "ICE:"
-msgstr ""
+msgstr "ICE:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -8783,11 +8811,15 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__checked
 #: model:ir.model.fields,help:account.field_account_move__checked
+#, fuzzy
 msgid ""
 "If this checkbox is not ticked, it means that the user was not sure of all "
 "the related information at the time of the creation of the move and that the "
 "move needs to be checked again."
 msgstr ""
+"Se esta caixa de seleção não estiver marcada, significa que o utilizador não "
+"estava seguro de todas as informações relacionadas no momento da criação do "
+"lançamento e que este precisa ser verificado novamente."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__restrict_mode_hash_table
@@ -9721,8 +9753,9 @@ msgstr "Está sendo enviado"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__is_coa_installed
 #: model:ir.model.fields,field_description:account.field_res_users__is_coa_installed
+#, fuzzy
 msgid "Is Coa Installed"
-msgstr ""
+msgstr "Está o PdC Instalado"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
@@ -10120,8 +10153,9 @@ msgstr "Junho"
 
 #. module: account
 #: model:ir.model,name:account.model_kpi_provider
+#, fuzzy
 msgid "KPI Provider"
-msgstr ""
+msgstr "Provedor de KPI"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__kanban_dashboard
@@ -12673,8 +12707,9 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,help:account.field_account_move__reconciled_payment_ids
+#, fuzzy
 msgid "Payments that have been reconciled with this invoice."
-msgstr ""
+msgstr "Pagamentos que foram conciliados com esta fatura."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_term_line__value__percent
@@ -13373,8 +13408,9 @@ msgstr "Linhas reconciliadas, excluindo diferenças cambiais"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__reconciled_payment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__reconciled_payment_ids
+#, fuzzy
 msgid "Reconciled Payments"
-msgstr ""
+msgstr "Pagamentos Conciliados"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_line_ids
@@ -17107,8 +17143,10 @@ msgstr "Esta movimentação recorrente será lançada até e incluindo sua data.
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+#, fuzzy
 msgid "This setting locks once a journal entry is created."
 msgstr ""
+"Esta configuração é trancada assim que um lançamento contabilístico é criado."
 
 #. module: account
 #. odoo-python
@@ -17220,8 +17258,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
+#, fuzzy
 msgid "To check"
-msgstr ""
+msgstr "Para verificar"
 
 #. module: account
 #. odoo-python
@@ -17853,8 +17892,9 @@ msgstr "Usar Débito Direto SEPA"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+#, fuzzy
 msgid "Use Storno accounting"
-msgstr ""
+msgstr "Use a contabilidade Storno"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_multi_company__tax_units
@@ -18499,10 +18539,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_payment_term.py:0
+#, fuzzy
 msgid ""
 "You can not delete payment terms as other records still reference it. "
 "However, you can archive it."
 msgstr ""
+"Não pode apagar os termos de pagamento, porque outros registos ainda o "
+"referenciam. No entanto, pode arquivá-lo."
 
 #. module: account
 #. odoo-python
@@ -18522,15 +18565,20 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, fuzzy
 msgid ""
 "You can only change the period/account for items that are not yet reconciled."
 msgstr ""
+"Você só pode alterar o período/conta para itens que ainda não estão "
+"reconciliados."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, fuzzy
 msgid "You can only change the period/account for posted journal items."
 msgstr ""
+"Você só pode alterar o período/conta para os itens do diário publicados."
 
 #. module: account
 #. odoo-python
@@ -18561,8 +18609,9 @@ msgstr "Você só pode ressequenciar itens a partir de um mesmo diário"
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
+#, fuzzy
 msgid "You can only reverse posted moves."
-msgstr ""
+msgstr "Você só pode reverter lançamentos publicados."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
@@ -18714,10 +18763,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
+#, fuzzy
 msgid ""
 "You can't register a payment because there is nothing left to pay on the "
 "selected journal items."
 msgstr ""
+"Não pode registar um pagamento porque não há mais nada a pagar nos itens de "
+"diário selecionados."
 
 #. module: account
 #. odoo-python
@@ -19060,8 +19112,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "You cannot post an entry with an archived analytic account: %s"
-msgstr ""
+msgstr "Não pode publicar um lançamento com uma conta analítica arquivada: %s"
 
 #. module: account
 #. odoo-python
@@ -19497,8 +19550,9 @@ msgstr "datas para"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid "documents"
-msgstr ""
+msgstr "documentos"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document

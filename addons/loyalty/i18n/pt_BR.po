@@ -1,26 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* loyalty
+# * loyalty
 #
 # Translators:
 # Wil Odoo, 2025
 # Maitê Dietze, 2025
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2025-05-06 12:03+0000\n"
-"Last-Translator: Maitê Dietze, 2025\n"
-"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/"
-"41243/pt_BR/)\n"
+"PO-Revision-Date: 2026-06-11 23:48+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
+"s18-3/loyalty/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % "
-"1000000 == 0 ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
+"1000000 == 0) ? 1 : 2);\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__trigger
@@ -371,6 +373,7 @@ msgstr "<strong>Código do cartão de presente</strong>"
 
 #. module: loyalty
 #: model:mail.template,body_html:loyalty.mail_template_loyalty_card
+#, fuzzy
 msgid ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; "
 "margin:0px auto; background:#ffffff; color:#333333;\"><tbody>\n"
@@ -435,6 +438,62 @@ msgid ""
 "</tbody></table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; "
+"margin:0px auto; background:#ffffff; color:#333333;\"><tbody>\n"
+"<tr>\n"
+"    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"       <t t-if=\"object._mail_get_customer().name\"> \n"
+"            Parabéns <t t-out=\"object._mail_get_customer().name or ''\">"
+"Brandon Freeman</t>,<br/>\n"
+"        </t>\n"
+"\n"
+"        Aqui está sua recompensa de <t t-"
+"out=\"object.program_id.company_id.name or ''\">YourCompany</t>.<br/>\n"
+"\n"
+"        <t t-foreach=\"object.program_id.reward_ids\" t-as=\"reward\">\n"
+"           <t t-if=\"reward.required_points &lt;= object.points\">\n"
+"                <span t-attf-style=\"font-size: 50px; color: {"
+"{object.program_id.company_id.email_secondary_color or '#875A7B'}}; font-"
+"weight: bold;\" t-esc=\"reward.description\"> Descrição da recompensa</span>"
+"\n"
+"                <br/>\n"
+"           </t>\n"
+"        </t> \n"
+"   </td>\n"
+"</tr> \n"
+"<tr style=\"margin-top: 16px\">\n"
+"    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
+"        Use este código promocional\n"
+"       <t t-if=\"object.expiration_date\"> \n"
+"            antes de <t t-out=\"format_date(object.expiration_date) or ''\">"
+"2021-06-16</t>\n"
+"        </t>\n"
+"       <p style=\"margin-top: 16px;\">\n"
+"            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; "
+"background-color: #F1F1F1;\" t-out=\"object.code or ''\"> "
+"15637502648479132902</strong>\n"
+"        </p>\n"
+"       <t t-foreach=\"object.program_id.rule_ids\" t-as=\"rule\">\n"
+"            <t t-if=\"rule.minimum_qty not in [0, 1]\"> \n"
+"               <span style=\"font-size: 14px;\"> \n"
+"                    Compra mínima de <t t-out=\"rule.minimum_qty or ''\">10</"
+"t> produtos </span><br/> </t>\n"
+"            <t t-if=\"rule.minimum_amount != 0.00\"> <span style=\"font-"
+"size: 14px;\"> Válido para compras acima de <t t-"
+"out=\"rule.company_id.currency_id.symbol or ''\">$</t><t t-out=\"'%0.2f' % "
+"float(rule.minimum_amount) or ''\">10,00</t>\n"
+"                </span><br/>\n"
+"            </t> </t>\n"
+"        <br/> Obrigado, <t t-if=\"object._get_signature()\" data-o-mail-"
+"quote-container=\"1\">\n"
+"            <br/> <div data-o-mail-quote=\"1\"> --<br data-o-mail-"
+"quote=\"1\"/><t t-out=\"object._get_signature() or ''\" data-o-mail-"
+"quote=\"1\">Mitchell Admin</t></div>\n"
+"       </t>\n"
+"    </td> \n"
+"</tr>\n"
+"</tbody></table>\n"
+"        "
 
 #. module: loyalty
 #. odoo-python
@@ -2006,10 +2065,13 @@ msgstr ""
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/product_pricelist.py:0
+#, fuzzy
 msgid ""
 "This pricelist may not be archived. It is being used for active promotion "
 "programs: %s"
 msgstr ""
+"Este produto não pode ser arquivado. Ele está sendo usado em um programa de "
+"promoções ativo: %s"
 
 #. module: loyalty
 #. odoo-python
@@ -2367,8 +2429,9 @@ msgstr "utilizado)"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
+#, fuzzy
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #. module: loyalty
 #. odoo-python

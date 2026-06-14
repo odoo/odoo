@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* loyalty
+# * loyalty
 #
 # Translators:
 # Larisa_nexterp, 2024
@@ -8,20 +8,23 @@
 # Wil Odoo, 2024
 # Corina Calin, 2024
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2024-09-25 09:41+0000\n"
-"Last-Translator: Corina Calin, 2024\n"
-"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"PO-Revision-Date: 2026-06-11 23:48+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s18-3/"
+"loyalty/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__trigger
@@ -41,6 +44,7 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__portal_visible
+#, fuzzy
 msgid ""
 "\n"
 "        Show in web portal, PoS customer ticket, eCommerce checkout, the "
@@ -48,6 +52,11 @@ msgid ""
 "         and used by reward.\n"
 "        "
 msgstr ""
+"\n"
+"        Afișează în portalul web, pe bonul clientului POS, la checkout-ul "
+"eCommerce, numărul de puncte disponibile\n"
+"și utilizate pentru recompense.\n"
+"        "
 
 #. module: loyalty
 #. odoo-python
@@ -64,8 +73,9 @@ msgstr "%g%% în "
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
+#, fuzzy
 msgid "%s on "
-msgstr ""
+msgstr "%s la "
 
 #. module: loyalty
 #. odoo-python
@@ -97,8 +107,9 @@ msgstr "(fără taxe)"
 #. module: loyalty
 #. odoo-javascript
 #: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
+#, fuzzy
 msgid "-> View History"
-msgstr ""
+msgstr "-> Vizualizați istoricul"
 
 #. module: loyalty
 #: model:loyalty.program,name:loyalty.10_percent_coupon
@@ -119,6 +130,7 @@ msgstr "2+1 Gratis"
 
 #. module: loyalty
 #: model:mail.template,body_html:loyalty.mail_template_gift_card
+#, fuzzy
 msgid ""
 "<div style=\"background: #ffffff\">\n"
 "                <div style=\"margin:0px; font-size:24px; font-family:arial, "
@@ -174,6 +186,59 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"background: #ffffff\">\n"
+"                <div style=\"margin:0px; font-size:24px; font-family:arial, "
+"'helvetica neue', helvetica, sans-serif; line-height:36px; color:#333333; "
+"text-align: center\">\n"
+"                    Card cadou!\n"
+"                </div>\n"
+"                <div style=\"padding-top:20px; padding-bottom:20px\">\n"
+"                    <img src=\"/loyalty/static/img/gift_card.png\" "
+"style=\"display:block; border:0; outline:none; text-decoration:none; "
+"margin:auto;\" width=\"300\"/>\n"
+"                </div>\n"
+"                <div style=\"padding:0; margin:0px; padding-top:35px; "
+"padding-bottom:35px; text-align:center;\">\n"
+"                    <h3 style=\"margin:0px; line-height:48px; font-"
+"family:arial, 'helvetica neue', helvetica, sans-serif; font-size:40px; font-"
+"style:normal; font-weight:normal; color:#333333; text-align:center\">\n"
+"                        <strong t-out=\"format_amount(object.points, "
+"object.currency_id) or ''\">$ 150.00</strong></h3>\n"
+"                </div>\n"
+"                <div style=\"padding:0; margin:0px; padding-top:35px; "
+"padding-bottom:35px; background-color:#efefef; text-align:center;\">\n"
+"                    <p style=\"margin:0px; font-size:14px;font-family:arial, "
+"'helvetica neue', helvetica, sans-serif; line-height:21px; color:#333333\">\n"
+"                        <strong>Codul cardului cadou:</strong>\n"
+"                    </p>\n"
+"                    <p style=\"margin:0px; font-size:25px;font-family:arial, "
+"'helvetica neue', helvetica, sans-serif; line-height:38px; color:#A9A9A9\" t-"
+"out=\"object.code or ''\">4f10-15d6-41b7-b04c-7b3e</p>\n"
+"                </div>\n"
+"                <div t-if=\"object.expiration_date\" style=\"padding:0; "
+"margin:0px; padding-top:10px; padding-bottom:10px; text-align:center;\">\n"
+"                    <h3 style=\"margin:0px; line-height:17px; font-"
+"family:arial, 'helvetica neue', helvetica, sans-serif; font-size:14px; font-"
+"style:normal; font-weight:normal; color:#A9A9A9; text-align:center\">Cardul "
+"expiră în data de <t t-out=\"format_date(object.expiration_date) or ''\">05/"
+"05/2021</t></h3>\n"
+"                </div>\n"
+"                <div style=\"padding:20px; margin:0px; text-align:center;\">"
+"\n"
+"                    <span style=\"background-color:#999999; display:inline-"
+"block; width:auto; border-radius:5px;\">\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop\" "
+"target=\"_blank\" t-attf-style=\"text-decoration:none; font-family:arial, "
+"'helvetica neue', helvetica, sans-serif; font-size:22px; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; border-style:solid; "
+"border-width:20px 30px; display:inline-block; background-color: {"
+"{object.company_id.email_secondary_color or '#875A7B'}}; border-radius:5px; "
+"font-weight:bold; font-style:normal; line-height:26px; width:auto; text-"
+"align:center\">Folosește cardul acum!</a>\n"
+"                    </span>\n"
+"                </div>\n"
+"            </div>\n"
+"        "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -285,8 +350,9 @@ msgstr ""
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.portal_loyalty_history_breadcrumbs
+#, fuzzy
 msgid "<span>History</span>"
-msgstr ""
+msgstr "<span>Istoric</span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -399,14 +465,16 @@ msgstr "Un program trebuie să aibă cel puțin o recompensă."
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_buttons
+#, fuzzy
 msgid "A reward is waiting for you"
-msgstr ""
+msgstr "O recompensă te așteaptă"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_reward.py:0
+#, fuzzy
 msgid "A reward product can't be of type \"combo\"."
-msgstr ""
+msgstr "Un produs de recompensă nu poate fi de tip \"combo\"."
 
 #. module: loyalty
 #. odoo-python
@@ -471,8 +539,9 @@ msgstr "Printre"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
+#, fuzzy
 msgid "Among:"
-msgstr ""
+msgstr "Printre:"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_generate_wizard__mode__anonymous
@@ -486,8 +555,9 @@ msgstr "Aplicare"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
+#, fuzzy
 msgid "Applied to:"
-msgstr ""
+msgstr "Aplicat la:"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__applies_on
@@ -727,8 +797,9 @@ msgstr "Cupoane"
 
 #. module: loyalty
 #: model:ir.model,website_form_label:loyalty.model_res_partner
+#, fuzzy
 msgid "Create a Customer"
-msgstr ""
+msgstr "Creează un client"
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_gift_ewallet_action
@@ -998,8 +1069,9 @@ msgstr "Dată sfârșit"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_update_balance_form
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
+#, fuzzy
 msgid "Example: Gift for customer"
-msgstr ""
+msgstr "Exemplu: Cadou pentru client"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__expiration_date
@@ -1009,8 +1081,9 @@ msgstr "Data expirării"
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_card.py:0
+#, fuzzy
 msgid "Expiration date cannot be set on a loyalty card."
-msgstr ""
+msgstr "Data expirării nu poate fi setată pe un card de loialitate."
 
 #. module: loyalty
 #. odoo-python
@@ -1048,8 +1121,9 @@ msgstr "Pentru"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
+#, fuzzy
 msgid "For all customers"
-msgstr ""
+msgstr "Pentru toți clienții"
 
 #. module: loyalty
 #. odoo-python
@@ -1189,8 +1263,9 @@ msgstr ""
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/wizard/loyalty_generate_wizard.py:0
+#, fuzzy
 msgid "Gift For Customer"
-msgstr ""
+msgstr "Cadou pentru client"
 
 #. module: loyalty
 #: model:ir.actions.act_window,name:loyalty.loyalty_program_gift_ewallet_action
@@ -1200,8 +1275,9 @@ msgstr "Carduri cadou și portofel electronic"
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/wizard/loyalty_card_update_balance.py:0
+#, fuzzy
 msgid "Gift for customer"
-msgstr ""
+msgstr "Cadou pentru client"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_generate_wizard__points_granted
@@ -1241,13 +1317,15 @@ msgstr "Istoric"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_form
+#, fuzzy
 msgid "History Lines"
-msgstr ""
+msgstr "Linii istoric"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_history
+#, fuzzy
 msgid "History for Loyalty cards and Ewallets"
-msgstr ""
+msgstr "Istoric pentru carduri de fidelitate și portofele electronice"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_base_partner_merge_automatic_wizard__id
@@ -1324,8 +1402,9 @@ msgstr "Este programul de plată"
 #: code:addons/loyalty/controllers/portal.py:0
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_history__issued
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
+#, fuzzy
 msgid "Issued"
-msgstr ""
+msgstr "Emitere"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__coupon_count_display
@@ -1341,8 +1420,9 @@ msgstr "John Doe"
 #. module: loyalty
 #. odoo-javascript
 #: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
+#, fuzzy
 msgid "Last Transactions"
-msgstr ""
+msgstr "Ultimele tranzacții"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__write_uid
@@ -1424,8 +1504,9 @@ msgstr "Regulă Loialitate"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
+#, fuzzy
 msgid "Loyalty Transaction"
-msgstr ""
+msgstr "Tranzacție de loialitate"
 
 #. module: loyalty
 #. odoo-python
@@ -1491,14 +1572,16 @@ msgstr "Produs multiplu"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card_update_balance__new_balance
+#, fuzzy
 msgid "New Balance"
-msgstr ""
+msgstr "Sold nou"
 
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/wizard/loyalty_card_update_balance.py:0
+#, fuzzy
 msgid "New Balance should be positive and different then old balance."
-msgstr ""
+msgstr "Soldul nou trebuie să fie pozitiv și diferit de soldul vechi."
 
 #. module: loyalty
 #. odoo-python
@@ -1562,8 +1645,9 @@ msgstr "Comandă"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_history__order_model
+#, fuzzy
 msgid "Order Model"
-msgstr ""
+msgstr "Model comandă"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__partner_id
@@ -1934,8 +2018,9 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_history_template
+#, fuzzy
 msgid "There are currently no transaction lines for this card."
-msgstr ""
+msgstr "Momentan nu există linii de tranzacție pentru acest card."
 
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_card_action
@@ -1975,8 +2060,9 @@ msgstr ""
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_program__pricelist_ids
+#, fuzzy
 msgid "This program is specific to this pricelist set."
-msgstr ""
+msgstr "Acest program este specific acestui set de liste de prețuri."
 
 #. module: loyalty
 #: model:product.template,name:loyalty.ewallet_product_50_product_template
@@ -1997,13 +2083,15 @@ msgstr "Declanșator"
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_card.py:0
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_update_balance_form
+#, fuzzy
 msgid "Update Balance"
-msgstr ""
+msgstr "Actualizează soldul"
 
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_loyalty_card_update_balance
+#, fuzzy
 msgid "Update Loyalty Card Points"
-msgstr ""
+msgstr "Actualizează punctele cardului de loialitate"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__use_count
@@ -2047,13 +2135,15 @@ msgstr "Valabil până la"
 #. module: loyalty
 #. odoo-javascript
 #: code:addons/loyalty/static/src/js/portal/loyalty_card_dialog/loyalty_card_dialog.xml:0
+#, fuzzy
 msgid "Valid until"
-msgstr ""
+msgstr "Valabil până la"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
+#, fuzzy
 msgid "Visible to all"
-msgstr ""
+msgstr "Vizibil pentru toți"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__website_message_ids
@@ -2118,8 +2208,9 @@ msgstr "Cu un cod promoțional"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_update_balance_form
+#, fuzzy
 msgid "You are about to change the balance of the card"
-msgstr ""
+msgstr "Sunteți pe cale să modificați soldul cardului"
 
 #. module: loyalty
 #. odoo-python
@@ -2141,10 +2232,13 @@ msgstr ""
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/wizard/loyalty_generate_wizard.py:0
+#, fuzzy
 msgid ""
 "You're about to generate %(program_type)s with a value of %(value)s for %"
 "(customer_number)i customers"
 msgstr ""
+"Sunteți pe cale să generați %(program_type)s cu o valoare de %(value)s "
+"pentru %(customer_number)i clienți"
 
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_gift_card
@@ -2230,13 +2324,15 @@ msgstr ""
 #. module: loyalty
 #. odoo-python
 #: code:addons/loyalty/models/loyalty_rule.py:0
+#, fuzzy
 msgid "money"
-msgstr ""
+msgstr "bani"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
+#, fuzzy
 msgid "on the cheapest product"
-msgstr ""
+msgstr "pe produsul cel mai ieftin"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_report
@@ -2245,8 +2341,9 @@ msgstr "la următoarea comandă"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
+#, fuzzy
 msgid "on your order"
-msgstr ""
+msgstr "la comanda ta"
 
 #. module: loyalty
 #. odoo-python
@@ -2279,13 +2376,15 @@ msgstr "cheltuit"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__minimum_amount_tax_mode__excl
+#, fuzzy
 msgid "tax excluded"
-msgstr ""
+msgstr "fără taxe"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__minimum_amount_tax_mode__incl
+#, fuzzy
 msgid "tax included"
-msgstr ""
+msgstr "cu taxe incluse"
 
 #. module: loyalty
 #. odoo-python
@@ -2295,8 +2394,9 @@ msgstr "produsul cel mai ieftin"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
+#, fuzzy
 msgid "the value of the coupon"
-msgstr ""
+msgstr "valoarea cuponului"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -2310,8 +2410,9 @@ msgstr "utilizări"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
+#, fuzzy
 msgid "used)"
-msgstr ""
+msgstr "folosit)"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban

@@ -11,15 +11,15 @@
 # Flavia0320, 2025
 # Dorin Hongu <dhongu@gmail.com>, 2025
 # Foldi Robert <foldirobert@nexterp.ro>, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-04-11 12:00+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
+"PO-Revision-Date: 2026-06-12 09:05+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s18-3/"
 "stock/ro/>\n"
 "Language: ro\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: stock
 #. odoo-python
@@ -47,6 +47,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__serial_prefix_format
 #: model:ir.model.fields,help:stock.field_product_template__serial_prefix_format
+#, fuzzy
 msgid ""
 "\n"
 "    If multiple products share the same prefix, they will share the same "
@@ -65,6 +66,22 @@ msgid ""
 "    - Minute: %(min)s\n"
 "    - Second: %(sec)s\n"
 msgstr ""
+"\n"
+"    Dacă mai multe produse împărtășesc același prefix, acestea vor împărtăși "
+"aceeași secvență, altfel secvența va fi dedicată produsului.\n"
+"\n"
+"    * Legendă (pentru prefix):\n"
+"    - Anul curent cu secol: %(year)s\n"
+"    - Anul curent fără secol: %(y)s\n"
+"    - Luna: %(month)s\n"
+"    - Ziua: %(day)s\n"
+"    - Ziua anului: %(doy)s\n"
+"    - Săptămâna anului: %(woy)s\n"
+"    - Ziua săptămânii (0:Luni): %(weekday)s\n"
+"    - Ora 00->24: %(h24)s\n"
+"    - Ora 00->12: %(h12)s\n"
+"    - Minut: %(min)s\n"
+"    - Secundă: %(sec)s\n"
 
 #. module: stock
 #. odoo-python
@@ -87,12 +104,18 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
+#, fuzzy
 msgid ""
 "\n"
 "The quantity done for the product %(product)s doesn't respect the rounding "
 "precision defined on the system.\n"
 "Please change the quantity done or the rounding precision in your settings."
 msgstr ""
+"\n"
+"Cantitatea efectuată pentru produsul %(product)s nu respectă precizia de "
+"rotunjire definită în sistem.\n"
+" Vă rugăm să schimbați cantitatea efectuată sau precizia de rotunjire în "
+"setările dvs."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -359,12 +382,14 @@ msgstr "(cod de bare serie)"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
+#, fuzzy
 msgid ")^FS"
-msgstr ""
+msgstr ")^FS"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__state
 #: model:ir.model.fields,help:stock.field_stock_move_line__state
+#, fuzzy
 msgid ""
 "* New: The stock move is created but not confirmed.\n"
 "* Waiting Another Move: A linked stock move should be done before this one.\n"
@@ -372,6 +397,13 @@ msgid ""
 "* Available: The product of the stock move is reserved.\n"
 "* Done: The product has been transferred and the transfer has been confirmed."
 msgstr ""
+"* Nou: Mutarea de stoc este creată, dar nu este confirmată.\n"
+"* Așteptarea altei mutări: O mutare de stoc legată ar trebui să fie "
+"efectuată înaintea acesteia.\n"
+"* În așteptare: Mutarea de stoc este confirmată, dar produsul nu poate fi "
+"rezervat.\n"
+"* Disponibil: Produsul mutării de stoc este rezervat.\n"
+"* Efectuat: Produsul a fost transferat și transferul a fost confirmat."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__usage
@@ -537,6 +569,7 @@ msgstr ""
 
 #. module: stock
 #: model:mail.template,body_html:stock.mail_template_data_delivery_confirmation
+#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
@@ -581,6 +614,47 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Bună <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
+",<br/><br/>\n"
+"        Avem plăcerea să vă informăm că comanda dvs. a fost expediată.\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
+"            Referința dvs. de urmărire este\n"
+"            <strong>\n"
+"            <t t-if=\"object.carrier_tracking_url\">\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
+"out=\"line[0] or ''\"/>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" "
+"target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                </t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"            </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Găsiți atașat avizul de livrare pentru mai multe detalii.<br/><br/>\n"
+"        Vă mulțumim,\n"
+"        <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
+"            <br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">Mitchell Admin</t></div>"
+"\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -649,8 +723,9 @@ msgstr "<span class=\"o_stat_text\">Numere lot/serie</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
+#, fuzzy
 msgid "<span class=\"o_stat_text\">Lots/Serial Numbers</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Loturi/Numere de serie</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -715,11 +790,15 @@ msgstr "<span class=\"o_stat_text\">Trasabilitate</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
+#, fuzzy
 msgid ""
 "<span class=\"o_stat_value text-muted\">\n"
 "                                            Forecasted\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_stat_value text-muted\">\n"
+"                                            Previzionat\n"
+"                                        </span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
@@ -732,8 +811,9 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
+#, fuzzy
 msgid "<span class=\"text-muted small\"> On Hand</span>"
-msgstr ""
+msgstr "<span class=\"text-muted small\"> În stoc</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -804,8 +884,9 @@ msgstr "<strong>Livrate</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<strong>Delivery Address:</strong>"
-msgstr ""
+msgstr "<strong>Adresă de livrare:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -819,8 +900,9 @@ msgstr "<strong>Adresă de livrare</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<strong>Done Date:</strong>"
-msgstr ""
+msgstr "<strong>Data efectuării:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -840,8 +922,9 @@ msgstr "<strong>De la</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<strong>Instructions:</strong>"
-msgstr ""
+msgstr "<strong>Instrucțiuni:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_warehouse_orderpoint_kanban
@@ -856,8 +939,9 @@ msgstr "<strong>Cant min:</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<strong>Operator:</strong>"
-msgstr ""
+msgstr "<strong>Operator:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -938,8 +1022,9 @@ msgstr "<strong>Adresă furnizor</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<strong>Vendor:</strong>"
-msgstr ""
+msgstr "<strong>Furnizor:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -948,8 +1033,9 @@ msgstr "<strong>Adresă depozit</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "<strong>Warehouse:</strong>"
-msgstr ""
+msgstr "<strong>Depozit:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -1244,8 +1330,9 @@ msgstr "Locația Permisă"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_replenishment_uom_ids
+#, fuzzy
 msgid "Allowed Replenishment Uom"
-msgstr ""
+msgstr "UM de reînnoire permis"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__allowed_route_ids
@@ -1263,8 +1350,9 @@ msgstr "UM permise"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__alternative
+#, fuzzy
 msgid "Alternative (2.00\" x 1.00\")"
-msgstr ""
+msgstr "Alternativ (2,00\" x 1,00\")"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__always
@@ -1324,8 +1412,9 @@ msgstr "Aplicabil la"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__package_type_selectable
+#, fuzzy
 msgid "Applicable on Package Type"
-msgstr ""
+msgstr "Aplicabil la tip pachet"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_route__product_selectable
@@ -1391,11 +1480,16 @@ msgstr "Sunteți sigur că doriți să anulați acest transfer?"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0
+#, fuzzy
 msgid ""
 "As other units of measure (ex : %(problem_uom)s) than %(uom)s have already "
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
+"Deoarece alte unități de măsură (ex: %(problem_uom)s) decât %(uom)s au fost "
+"deja utilizate pentru acest produs, schimbarea unității de măsură nu poate "
+"fi făcută.Dacă doriți să o schimbați, vă rugăm să arhivați produsul și să "
+"creați unul nou."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -2029,8 +2123,9 @@ msgstr "Calculați costurile de transport și expediați cu Easypost"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "Compute shipping costs and ship with Envia.com"
-msgstr ""
+msgstr "Calculați costurile de transport și expediați cu Envia.com"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -2485,13 +2580,15 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
+#, fuzzy
 msgid "Cross Dock"
-msgstr ""
+msgstr "Cross Dock"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__xdock_type_id
+#, fuzzy
 msgid "Cross Dock Type"
-msgstr ""
+msgstr "Tip Cross Dock"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
@@ -2531,8 +2628,9 @@ msgstr "Personalizat"
 #: model:ir.model.fields,field_description:stock.field_product_product__serial_prefix_format
 #: model:ir.model.fields,field_description:stock.field_product_template__serial_prefix_format
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
+#, fuzzy
 msgid "Custom Lot/Serial"
-msgstr ""
+msgstr "Lot/Serial personalizat"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
@@ -2827,6 +2925,7 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__removal_strategy_id
+#, fuzzy
 msgid ""
 "Defines the default method used for suggesting the exact location (shelf) "
 "where to take the products from, which lot etc. for this location. This "
@@ -2843,6 +2942,22 @@ msgid ""
 "(the availability of this method depends on the \"Expiration Dates\" "
 "setting)."
 msgstr ""
+"Definește metoda implicită utilizată pentru a sugera locația exactă (raftul) "
+"de unde să se ia produsele, care lot etc. pentru această locație. Această "
+"metodă poate fi impusă la nivelul categoriei de produse, iar o revenire la "
+"locațiile părinte este făcută dacă niciuna nu este setată aici.\n"
+"\n"
+"FIFO: produsele / loturile care au fost stocate prima dată vor fi mutate "
+"primele.\n"
+"LIFO: produsele / loturile care au fost stocate ultima dată vor fi mutate "
+"primele.\n"
+"Cea mai apropiată locație: produsele / loturile cele mai apropiate de "
+"locația țintă vor fi mutate primele.\n"
+"Cele mai puține pachete: produsele / loturile care au fost stocate în "
+"pachetul cu cea mai mică cantitate vor fi mutate primele.\n"
+"FEFO: produsele / loturile cu cea mai apropiată dată de eliminare vor fi "
+"mutate primele (disponibilitatea acestei metode depinde de setarea „Date de "
+"expirare”)."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -2913,8 +3028,9 @@ msgstr "Metode de livrare"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
+#, fuzzy
 msgid "Delivery Note"
-msgstr ""
+msgstr "Notă de livrare"
 
 #. module: stock
 #. odoo-python
@@ -3290,9 +3406,12 @@ msgstr "Afișează numărul de serie și lotul la livrare"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Display instructions tailored to the customer or vendor on stock operations."
 msgstr ""
+"Afișați instrucțiuni adaptate clientului sau furnizorului privind "
+"operațiunile de stoc."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.package_level_tree_view_picking
@@ -3456,8 +3575,9 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_envia
+#, fuzzy
 msgid "Envia.com Connector"
-msgstr ""
+msgstr "Conector Envia.com"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
@@ -3905,8 +4025,9 @@ msgstr "Mergi la depozite"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
+#, fuzzy
 msgid "Goods Receipt Note"
-msgstr ""
+msgstr "Notă de recepție mărfuri"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -4494,8 +4615,9 @@ msgstr "Instalează cod de bare"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
+#, fuzzy
 msgid "Instructions on the Stock Operations"
-msgstr ""
+msgstr "Instrucțiuni privind operațiunile de stoc"
 
 #. module: stock
 #. odoo-python
@@ -4530,8 +4652,9 @@ msgstr "Locații Interne"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
+#, fuzzy
 msgid "Internal Move"
-msgstr ""
+msgstr "Mișcare internă"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__ref
@@ -4563,10 +4686,13 @@ msgstr "Tip intern"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__picking_warning_text
+#, fuzzy
 msgid ""
 "Internal instructions for the partner or its parent company as set by the "
 "user."
 msgstr ""
+"Instrucțiuni interne pentru partener sau compania sa mamă, așa cum sunt "
+"stabilite de utilizator."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__child_internal_location_ids
@@ -4813,8 +4939,9 @@ msgstr "Ianuarie"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__jewelry
+#, fuzzy
 msgid "Jewelry (2.20\" x 0.50\")"
-msgstr ""
+msgstr "Bijuterii (2,20\" x 0,50\")"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -5543,8 +5670,9 @@ msgstr "Reguli stoc minim"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
+#, fuzzy
 msgid "Mitchel Admin"
-msgstr ""
+msgstr "Mitchel Admin"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__move_ids
@@ -5788,8 +5916,9 @@ msgstr "Următoarea estimare"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__next_serial
 #: model:ir.model.fields,field_description:stock.field_product_template__next_serial
+#, fuzzy
 msgid "Next Serial"
-msgstr ""
+msgstr "Următorul serial"
 
 #. module: stock
 #. odoo-python
@@ -5825,10 +5954,13 @@ msgstr "Fără restanță"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_quant_action
+#, fuzzy
 msgid ""
 "No Stock On Hand. This analysis gives you an overview of the current stock "
 "level of your products."
 msgstr ""
+"Niciun stoc disponibil. Această analiză vă oferă o imagine de ansamblu a "
+"nivelului actual de stoc al produselor dvs."
 
 #. module: stock
 #. odoo-javascript
@@ -5936,8 +6068,9 @@ msgstr "Normal"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__normal
+#, fuzzy
 msgid "Normal (2.25\" x 1.25\")"
-msgstr ""
+msgstr "Normal (2,25\" x 1,25\")"
 
 #. module: stock
 #. odoo-javascript
@@ -6419,8 +6552,9 @@ msgstr "Tip ambalare"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_aggregated_move_lines
+#, fuzzy
 msgid "Pack of 6"
-msgstr ""
+msgstr "Pachet de 6"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__package_id
@@ -6594,8 +6728,9 @@ msgstr "Ambalare"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_packaging_barcode
+#, fuzzy
 msgid "Packaging Barcodes (ZPL)"
-msgstr ""
+msgstr "Coduri de bare ambalare (ZPL)"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__height
@@ -6619,8 +6754,9 @@ msgstr "Lățime ambalare"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_id
+#, fuzzy
 msgid "Packaging unit from sale or purchase orders"
-msgstr ""
+msgstr "Unitate de ambalaj din comenzile de vânzare sau de cumpărare"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_pack_stock_loc_id
@@ -6683,8 +6819,9 @@ msgstr "Adresă partener"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+#, fuzzy
 msgid "Partner-Specific Instructions"
-msgstr ""
+msgstr "Instrucțiuni specifice partenerului"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_action_inventory_tree
@@ -6710,13 +6847,15 @@ msgstr "Tip ridicare"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_ship
+#, fuzzy
 msgid "Pick then Deliver (2 steps)"
-msgstr ""
+msgstr "Ridică apoi livrează (2 pași)"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_pack_ship
+#, fuzzy
 msgid "Pick, Pack, then Deliver (3 steps)"
-msgstr ""
+msgstr "Ridică, ambalează, apoi livrează (3 pași)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picked
@@ -6735,8 +6874,9 @@ msgstr "Livrare"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__picking_warning_text
+#, fuzzy
 msgid "Picking Instructions"
-msgstr ""
+msgstr "Instrucțiuni de ridicare"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -6777,8 +6917,9 @@ msgstr "Problemă de planificare"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_warehouse.py:0
+#, fuzzy
 msgid "Please contact your administrator to configure your warehouse."
-msgstr ""
+msgstr "Vă rugăm să contactați administratorul pentru a vă configura depozitul."
 
 #. module: stock
 #. odoo-python
@@ -7446,8 +7587,9 @@ msgstr "Cantitatea în unitatea de măsură implicită a produsului"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__packaging_uom_qty
+#, fuzzy
 msgid "Quantity in the packaging unit"
-msgstr ""
+msgstr "Cantitate în unitatea de ambalaj"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__incoming_qty
@@ -8149,8 +8291,9 @@ msgstr "Traseele pot fi selectate pe acest produs"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_uom_uom__route_ids
+#, fuzzy
 msgid "Routes propagated from the package type"
-msgstr ""
+msgstr "Trasee propagate din tipul de ambalaj"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse__resupply_wh_ids
@@ -8260,8 +8403,11 @@ msgstr "Eșantion de date"
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0
+#, fuzzy
 msgid "Save the product form before updating the Quantity On Hand."
 msgstr ""
+"Salvați formularul produsului înainte de a actualiza Cantitatea la "
+"dispoziție."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__date_planned
@@ -8533,8 +8679,9 @@ msgstr "Numere de serie"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__lot_sequence_id
 #: model:ir.model.fields,field_description:stock.field_product_template__lot_sequence_id
+#, fuzzy
 msgid "Serial/Lot Numbers Sequence"
-msgstr ""
+msgstr "Secvență numere de serie/lot"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
@@ -8739,8 +8886,9 @@ msgstr "Arată tipul ridicării"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__show_qty_update_button
 #: model:ir.model.fields,field_description:stock.field_product_template__show_qty_update_button
+#, fuzzy
 msgid "Show Qty Update Button"
-msgstr ""
+msgstr "Afișează butonul de actualizare a cantității"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_quant
@@ -8765,8 +8913,9 @@ msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
+#, fuzzy
 msgid "Show details"
-msgstr ""
+msgstr "Afișați detalii"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_lots_m2o
@@ -8812,8 +8961,9 @@ msgstr "Dimensiune: Lungime × Lățime × Înălțime"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__zpl_template__small
+#, fuzzy
 msgid "Small (1.25\" x 1.00\")"
-msgstr ""
+msgstr "Mic (1,25\" x 1,00\")"
 
 #. module: stock
 #. odoo-javascript
@@ -9269,10 +9419,13 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__lot_sequence_id
 #: model:ir.model.fields,help:stock.field_product_template__lot_sequence_id
+#, fuzzy
 msgid ""
 "Technical Field: The Ir.Sequence record that is used to generate serial/lot "
 "numbers for this product"
 msgstr ""
+"Câmp tehnic: Înregistrarea Ir.Sequence care este utilizată pentru a genera "
+"numere de serie/lot pentru acest produs"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -9515,10 +9668,13 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__replenishment_uom_id
+#, fuzzy
 msgid ""
 "The procurement quantity will be rounded up to a multiple of this unit/"
 "packaging. If it is not set, it is not rounded."
 msgstr ""
+"Cantitatea de aprovizionare va fi rotunjită la un multiplu al acestei "
+"unități/ambalaj. Dacă nu este setat, nu este rotunjit."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -9908,14 +10064,16 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
+#, fuzzy
 msgid "Time Horizon"
-msgstr ""
+msgstr "Orizont de timp"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_1
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_1
+#, fuzzy
 msgid "Tip: Monitor Lot details"
-msgstr ""
+msgstr "Sfat: Monitorizați detaliile lotului"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_0
@@ -9954,8 +10112,9 @@ msgstr "Pentru Numărare"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+#, fuzzy
 msgid "To Deliver"
-msgstr ""
+msgstr "De livrat"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_graph
@@ -9982,13 +10141,15 @@ msgstr "A comanda"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order_computed
+#, fuzzy
 msgid "To Order Computed"
-msgstr ""
+msgstr "De comandat calculat"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_to_order_manual
+#, fuzzy
 msgid "To Order Manual"
-msgstr ""
+msgstr "De comandat manual"
 
 #. module: stock
 #. odoo-javascript
@@ -10012,8 +10173,9 @@ msgstr "Procesare"
 #. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+#, fuzzy
 msgid "To Receive"
-msgstr ""
+msgstr "De primit"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -10045,8 +10207,9 @@ msgstr "Mâine"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
+#, fuzzy
 msgid "Total Available"
-msgstr ""
+msgstr "Total disponibil"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
@@ -10858,8 +11021,9 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__package_type_selectable
+#, fuzzy
 msgid "When checked, the route will be selectable on package types"
-msgstr ""
+msgstr "Când este bifat, ruta va putea fi selectată pe tipurile de pachete"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_route__product_categ_selectable
@@ -11295,10 +11459,13 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move_line.py:0
+#, fuzzy
 msgid ""
 "You cannot pack products into the same package when they are from different "
 "transfers with different operation types"
 msgstr ""
+"Nu puteți ambala produse în același pachet când acestea provin din "
+"transferuri diferite cu tipuri de operațiuni diferite"
 
 #. module: stock
 #. odoo-python
@@ -11536,13 +11703,15 @@ msgstr "Etichete ZPL cu preț"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__zpl_preview
+#, fuzzy
 msgid "ZPL Preview"
-msgstr ""
+msgstr "Previzualizare ZPL"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__zpl_template
+#, fuzzy
 msgid "ZPL Template"
-msgstr ""
+msgstr "Șablon ZPL"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -11551,53 +11720,63 @@ msgstr "]<br/>min:"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
+#, fuzzy
 msgid "^FO150,165 ^A0N,25^FH ^FD"
-msgstr ""
+msgstr "^FO150,165 ^A0N,25^FH ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
+#, fuzzy
 msgid "^FO150,210 ^A0N,25^FH ^FD("
-msgstr ""
+msgstr "^FO150,210 ^A0N,25^FH ^FD("
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
+#, fuzzy
 msgid "^FO160,185 ^A0N,18^FH ^FD("
-msgstr ""
+msgstr "^FO160,185 ^A0N,18^FH ^FD("
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
+#, fuzzy
 msgid "^FO290,165 ^A0N,30^FH ^FD"
-msgstr ""
+msgstr "^FO290,165 ^A0N,30^FH ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
+#, fuzzy
 msgid "^FO290,50 ^A0N,30^FH ^FD"
-msgstr ""
+msgstr "^FO290,50 ^A0N,30^FH ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
+#, fuzzy
 msgid "^FO300,200 ^A0N,40^FH ^FD"
-msgstr ""
+msgstr "^FO300,200 ^A0N,40^FH ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
+#, fuzzy
 msgid "^FO35,50^BY1 ^BCN,80,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,50^BY1 ^BCN,80,Y,N,N ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
+#, fuzzy
 msgid "^FO35,55^BY2 ^BCN,100,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,55^BY2 ^BCN,100,Y,N,N ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
+#, fuzzy
 msgid "^FO35,5^BY1 ^BCN,80,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,5^BY1 ^BCN,80,Y,N,N ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
+#, fuzzy
 msgid "^FO35,77^BY2 ^BCN,100,Y,N,N ^FD"
-msgstr ""
+msgstr "^FO35,77^BY2 ^BCN,100,Y,N,N ^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
@@ -11609,33 +11788,42 @@ msgstr "^FS"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
+#, fuzzy
 msgid ""
 "^FS\n"
 "^FT35,48^A0N,15^FD"
 msgstr ""
+"^FS\n"
+"^FT35,48^A0N,15^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
+#, fuzzy
 msgid ""
 "^FS\n"
 "^FT35,65^A0N,20^FD"
 msgstr ""
+"^FS\n"
+"^FT35,65^A0N,20^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.jewelry_zpl_label
+#, fuzzy
 msgid "^FT210,30^A0N,25^FD"
-msgstr ""
+msgstr "^FT210,30^A0N,25^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.alternative_zpl_label
 #: model_terms:ir.ui.view,arch_db:stock.small_zpl_label
+#, fuzzy
 msgid "^FT35,30^A0N,20^FD"
-msgstr ""
+msgstr "^FT35,30^A0N,20^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.normal_zpl_label
+#, fuzzy
 msgid "^FT35,40^A0N,25^FD"
-msgstr ""
+msgstr "^FT35,40^A0N,25^FD"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -11735,8 +11923,9 @@ msgstr "de exemplu. Stoc de rezervă"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
+#, fuzzy
 msgid "e.g. The delivery area is at the back of the building."
-msgstr ""
+msgstr "ex: Zona de livrare este în spatele clădirii."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view

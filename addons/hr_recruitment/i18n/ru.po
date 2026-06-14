@@ -7,15 +7,15 @@
 # Ilya Rozhkov, 2025
 # Anastasiia Koroleva, 2025
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-13 18:37+0000\n"
-"PO-Revision-Date: 2026-04-18 11:27+0000\n"
-"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
+"PO-Revision-Date: 2026-06-13 02:28+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-s18-3/"
 "hr_recruitment/ru/>\n"
 "Language: ru\n"
@@ -25,12 +25,13 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__no_of_talents
+#, fuzzy
 msgid "# Talents"
-msgstr ""
+msgstr "# специалистов"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -67,6 +68,7 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_congratulations
+#, fuzzy
 msgid ""
 "<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "    Hello,\n"
@@ -159,9 +161,101 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"    Здравствуйте,\n"
+"    <br/><br/>\n"
+"    Мы подтверждаем получение вашего отклика на вакансию\n"
+"    \"<a t-att-href=\"hasattr(object.job_id, 'website_url') and "
+"object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong t-"
+"out=\"object.job_id.name or ''\">Опытный разработчик</strong></a>\" в "
+"компании <strong t-out=\"object.company_id.name or ''\">YourCompany</strong>"
+".\n"
+"    <br/><br/>\n"
+"    Мы свяжемся с вами в ближайшее время.\n"
+"\n"
+"    <div t-if=\"'website_url' in object.job_id and "
+"object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
+"        <a t-att-href=\"object.job_id.website_url\" t-attf-"
+"style=\"background-color: {{object.company_id.email_secondary_color or "
+"'#875A7B'}}; text-decoration: none; color: {"
+"{object.company_id.email_primary_color or '#FFFFFF'}}; padding: 8px 16px 8px "
+"16px; border-radius: 5px;\">Описание вакансии</a>\n"
+"    </div>\n"
+"\n"
+"    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: "
+"medium none; clear: both; display: block; font-size: 0px; min-height: 1px; "
+"line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"    <t t-if=\"object.user_id\">\n"
+"        <h3 style=\"color:#9A6C8E;\"><strong>Контактное лицо:</strong></h3>\n"
+"        <p>\n"
+"            <strong t-out=\"object.user_id.name or ''\">Митчелл Админ</"
+"strong><br/>\n"
+"            <span>E-mail: <t t-out=\"object.user_id.email or ''\">"
+"admin@yourcompany.example.com</t></span><br/>\n"
+"            <span>Телефон: <t t-out=\"object.user_id.phone or ''\">+1 650-"
+"123-4567</t></span>\n"
+"        </p>\n"
+"        <hr width=\"97%\" style=\"background-color: rgb(204,204,204); "
+"border: medium none; clear: both; display: block; font-size: 0px; min-"
+"height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"    </t>\n"
+"\n"
+"    <h3 style=\"color:#9A6C8E;\"><strong>Каким будет следующий шаг?</strong>"
+"</h3>\n"
+"    Обычно мы <strong>рассматриваем отклики в течение нескольких дней.</"
+"strong><br/><br/>\n"
+"    Смело <strong>если хотите быстрее получить\n"
+"    обратную связь</strong> или если мы долго\n"
+"    не выходим на связь (просто ответьте на это письмо).\n"
+"\n"
+"    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: "
+"medium none; clear: both; display: block; font-size: 0px; min-height: 1px; "
+"line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
+"    <t t-set=\"location\" t-value=\"''\"/>\n"
+"    <t t-if=\"object.job_id.address_id.name\">\n"
+"        <strong t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</"
+"strong><br/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.street\">\n"
+"        <t t-out=\"object.job_id.address_id.street or ''\">Puerto Madero "
+"9710</t><br/>\n"
+"        <t t-set=\"location\" t-value=\"object.job_id.address_id.street\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.street2\">\n"
+"        <t t-out=\"object.job_id.address_id.street2 or ''\">Of A15, Santiago "
+"(RM)</t><br/>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.street2)\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.city\">\n"
+"        <t t-out=\"object.job_id.address_id.city or ''\">Pudahuel</t>,\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.city)\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.state_id.name\">\n"
+"        <t t-out=\"object.job_id.address_id.state_id.name or ''\">C1</t>,\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.state_id.name)\"/>\n"
+"    </t>\n"
+"    <t t-if=\"object.job_id.address_id.zip\">\n"
+"        <t t-out=\"object.job_id.address_id.zip or ''\">98450</t>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.zip)\"/>\n"
+"    </t>\n"
+"    <br/>\n"
+"    <t t-if=\"object.job_id.address_id.country_id.name\">\n"
+"        <t t-out=\"object.job_id.address_id.country_id.name or ''\">"
+"Argentina</t><br/>\n"
+"        <t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.country_id.name)\"/>\n"
+"    </t>\n"
+"    <br/>\n"
+"</div>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
+#, fuzzy
 msgid ""
 "<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "    Hello,<br/><br/>\n"
@@ -205,9 +299,51 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"    Здравствуйте,<br/><br/>\n"
+"    Благодарим вас за интерес к команде\n"
+"    <b><t t-out=\"object.company_id.name or ''\">YourCompany</t></b>.  Мы\n"
+"    хотели сообщить вам, что, несмотря на конкурентоспособное\n"
+"    резюме, наша команда по найму изучила ваш отклик\n"
+"    и <b>не готова рассматривать вашу кандидатуру на данном этапе</b>.\n"
+"    <br/><br/>\n"
+"    Пожалуйста, примите во внимание, что подбор персонала – сложный процесс, "
+"и мы тоже можем\n"
+"    ошибаться. Не стесняйтесь ответить на это письмо, если\n"
+"    считаете, что мы допустили ошибку, или если вы хотите получить больше\n"
+"    информации о нашем решении.\n"
+"    <br/><br/>\n"
+"    Тем не менее, мы сохраним ваше резюме в нашей базе и свяжемся\n"
+"    с вами при появлении новых вакансий, которые могут\n"
+"    лучше соответствовать вашим навыкам и опыту.\n"
+"    <br/><br/>\n"
+"    Желаем вам успехов в поиске работы и надеемся, что\n"
+"    в будущем нам еще представится возможность рассмотреть вашу кандидатуру\n"
+"    на другую роль.\n"
+"    <br/><br/>\n"
+"    Спасибо,\n"
+"    <div style=\"font-size: 11px; color: grey;\">\n"
+"        <t t-if=\"object.user_id\">\n"
+"            -- <br/>\n"
+"            <strong t-out=\"object.user_id.name or ''\">Митчелл Админ</"
+"strong><br/>\n"
+"            E-mail: <t t-out=\"object.user_id.email or ''\">"
+"admin@yourcompany.example.com</t><br/>\n"
+"            Телефон: <t t-out=\"object.user_id.phone or ''\">+1 650-123-"
+"4567</t>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            -- <br/>\n"
+"            <t t-out=\"object.company_id.name or ''\">YourCompany</t><br/>\n"
+"            Отдел кадров\n"
+"        </t>\n"
+"    </div>\n"
+"</div>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_not_interested
+#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
@@ -237,6 +373,33 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"        Здравствуйте!<br/><br/>\n"
+"        Благодарим вас за проявленный интерес и уделенное время.<br/>\n"
+"        Желаем вам успехов в ваших дальнейших начинаниях.\n"
+"        <br/><br/>\n"
+"        С уважением,<br/>\n"
+"        <div style=\"font-size: 11px; color: grey;\">\n"
+"            <t t-if=\"object.user_id\">\n"
+"                -- <br/>\n"
+"                <strong t-out=\"object.user_id.name or ''\">Марк Демо</"
+"strong><br/>\n"
+"                E-mail: <t t-out=\"object.user_id.email or ''\">"
+"mark.brown23@example.com</t><br/>\n"
+"                Телефон: <t t-out=\"object.user_id.phone or ''\">+1 650-123-"
+"4567</t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                -- <br/>\n"
+"                <t t-out=\"object.company_id.name or ''\">YourCompany</t>"
+"<br/>\n"
+"                Отдел кадров<br/>\n"
+"            </t>\n"
+"        </div>\n"
+"    </div>\n"
+"</div>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -561,8 +724,9 @@ msgstr "<span>Отчетность</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_kanban
+#, fuzzy
 msgid "<span>Talents</span>"
-msgstr ""
+msgstr "<span>Специалисты</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -672,18 +836,21 @@ msgstr "Тип мероприятия"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
+#, fuzzy
 msgid "Add Applicants"
-msgstr ""
+msgstr "Добавить кандидатов"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
+#, fuzzy
 msgid "Add Applicants to Pool"
-msgstr ""
+msgstr "Добавить кандидатов в резерв"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.talent_pool_add_applicants_view_form
+#, fuzzy
 msgid "Add Applicants to the Pool"
-msgstr ""
+msgstr "Добавить кандидатов в резерв"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -699,25 +866,29 @@ msgstr "Добавить новый тег"
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
+#, fuzzy
 msgid "Add applicant(s) to the pool"
-msgstr ""
+msgstr "Добавить кандидата(ов) в резерв"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_job_add_applicants
+#, fuzzy
 msgid "Add applicants to a job"
-msgstr ""
+msgstr "Назначить кандидатов на вакансию"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_talent_pool_add_applicants
+#, fuzzy
 msgid "Add applicants to talent pool"
-msgstr ""
+msgstr "Добавить кандидатов в кадровый резерв"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.talent_pool_add_applicants_view_form
+#, fuzzy
 msgid "Add to Pool"
-msgstr ""
+msgstr "Добавить в резерв"
 
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
@@ -1206,8 +1377,9 @@ msgstr "Создать"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
+#, fuzzy
 msgid "Create Applications"
-msgstr ""
+msgstr "Создать заявки"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1246,8 +1418,9 @@ msgstr "Создайте свою первую должность."
 #. module: hr_recruitment
 #. odoo-python
 #: code:addons/hr_recruitment/wizard/job_add_applicants.py:0
+#, fuzzy
 msgid "Created %(amount)s new applications for: %(names)s"
-msgstr ""
+msgstr "Создано %(amount)s новых заявок для: %(names)s"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__create_uid
@@ -1402,8 +1575,9 @@ msgstr "Отделения"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form
+#, fuzzy
 msgid "Describe the talent pool and common traits among talent pool applicants"
-msgstr ""
+msgstr "Опишите кадровый резерв и общие черты кандидатов в нем"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_refuse_reason__name
@@ -2031,8 +2205,9 @@ msgstr "Интервьюеры"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__is_applicant_in_pool
+#, fuzzy
 msgid "Is Applicant In Pool"
-msgstr ""
+msgstr "Кандидат в резерве"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__is_mail_template_editor
@@ -2052,8 +2227,9 @@ msgstr "Является подписчиком"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__is_pool_applicant
+#, fuzzy
 msgid "Is Pool Applicant"
-msgstr ""
+msgstr "Является кандидатом из резерва"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__is_warning_visible
@@ -2378,8 +2554,9 @@ msgstr "Сроки проекта"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.job_add_applicants_view_form
+#, fuzzy
 msgid "Move to..."
-msgstr ""
+msgstr "Переместить в..."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -2502,8 +2679,9 @@ msgstr "Нет встреч"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_talent_pool_applications
+#, fuzzy
 msgid "No Talents in the pool yet"
-msgstr ""
+msgstr "В резерве пока нет специалистов"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -2536,8 +2714,9 @@ msgstr "Правила не заданы."
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_talent_pool
+#, fuzzy
 msgid "No talent pools yet"
-msgstr ""
+msgstr "Кадровые резервы еще не созданы"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__0
@@ -2728,13 +2907,15 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__pool_applicant_id
+#, fuzzy
 msgid "Pool Applicant"
-msgstr ""
+msgstr "Кандидат из резерва"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__pool_manager
+#, fuzzy
 msgid "Pool Manager"
-msgstr ""
+msgstr "Менеджер резерва"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__probability
@@ -2775,8 +2956,9 @@ msgstr "Размещайте вакансии на вашем сайте"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job1
+#, fuzzy
 msgid "Qualification"
-msgstr ""
+msgstr "Квалификация"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__rating_ids
@@ -3098,13 +3280,15 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#, fuzzy
 msgid "Select the way applicant found the offer"
-msgstr ""
+msgstr "Выберите источник, из которого кандидат узнал о вакансии"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#, fuzzy
 msgid "Select where the applicant comes from"
-msgstr ""
+msgstr "Укажите источник привлечения кандидата"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
@@ -3324,38 +3508,44 @@ msgstr "Теги"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__talent_ids
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#, fuzzy
 msgid "Talent"
-msgstr ""
+msgstr "Специалист"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_talent_pool
 #: model:ir.model,name:hr_recruitment.model_hr_talent_pool
 #: model:ir.model.fields,field_description:hr_recruitment.field_talent_pool_add_applicants__talent_pool_ids
+#, fuzzy
 msgid "Talent Pool"
-msgstr ""
+msgstr "Кадровый резерв"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__talent_pool_count
+#, fuzzy
 msgid "Talent Pool Count"
-msgstr ""
+msgstr "Количество кадровых резервов"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_talent_pool__description
+#, fuzzy
 msgid "Talent Pool Description"
-msgstr ""
+msgstr "Описание кадрового резерва"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__talent_pool_ids
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_talent_pools
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#, fuzzy
 msgid "Talent Pools"
-msgstr ""
+msgstr "Кадровые резервы"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_talent_pool_applications
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_kanban
+#, fuzzy
 msgid "Talents"
-msgstr ""
+msgstr "Специалисты"
 
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_job_platform_email_uniq
@@ -3438,8 +3628,9 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_talent_pool__no_of_talents
+#, fuzzy
 msgid "The number of talents in this talent pool."
-msgstr ""
+msgstr "Количество специалистов в этом кадровом резерве."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job_platform__regex
@@ -3545,8 +3736,9 @@ msgstr "Трекеры"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_talent_pool_applications
+#, fuzzy
 msgid "Try adding some to the pool"
-msgstr ""
+msgstr "Попробуйте добавить кого-нибудь в резерв"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3685,8 +3877,9 @@ msgstr "При отклонении заявки вы можете выбрат�
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#, fuzzy
 msgid "Who can access applicants"
-msgstr ""
+msgstr "Кто имеет доступ к кандидатам"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_platforms
@@ -3784,13 +3977,15 @@ msgstr ""
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form
+#, fuzzy
 msgid "e.g French-speaking, Immediately Available, Own a car"
-msgstr ""
+msgstr "напр. владеет французским языком, готов приступить сразу, наличие авто"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_talent_pool_view_form
+#, fuzzy
 msgid "e.g Reserve, Developers, Sales"
-msgstr ""
+msgstr "напр. резерв, разработчики, продажи"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
