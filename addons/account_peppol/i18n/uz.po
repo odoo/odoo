@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:36+0000\n"
+"POT-Creation-Date: 2026-06-12 17:36+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -60,13 +60,6 @@ msgstr "(QQSsiz)"
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
-#, fuzzy
-msgid " (no access)"
-msgstr "(kirish ruxsati yo‘q)"
-
-#. module: account_peppol
-#. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid " Expected format: %(expected_format)s."
 msgstr ""
@@ -77,6 +70,13 @@ msgstr ""
 #, fuzzy
 msgid "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid ""
+"%(processed)s Peppol document(s) processed, %(deleted)s document(s) deleted"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -264,6 +264,12 @@ msgid ""
 msgstr ""
 "Ushbu xatoni yuzaga keltirgan MSH tomonidan avval yuborilgan xabar uchun "
 "Kvitansiya olinmadi."
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "A connection to '%s' already exists."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -698,6 +704,8 @@ msgid "Can send, pending registration to receive"
 msgstr "Yuborish mumkin, qabul qilish uchun ro‘yxatdan o‘tish kutilmoqda"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 #, fuzzy
 msgid "Cancel"
@@ -941,6 +949,12 @@ msgid "Display Use Parent Connection Selection"
 msgstr ""
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid "Do you want to proceed?"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__document_identifier
 #, fuzzy
 msgid "Document Identifier"
@@ -951,6 +965,36 @@ msgstr "Hujjat identifikatori"
 #, fuzzy
 msgid "Document Name"
 msgstr "Hujjat nomi"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "Document cancelled successfully"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "Document reset to draft successfully"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid ""
+"Documents sent/received via Peppol cannot be deleted.\n"
+"\n"
+"Would you like to cancel this document instead?"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid ""
+"Documents sent/received via Peppol cannot be deleted.\n"
+"\n"
+"Would you like to reset this document to draft instead?"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__done
@@ -987,9 +1031,8 @@ msgstr "EDI foydalanuvchisi"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
-#, fuzzy
-msgid "EDI user should be of type Peppol"
-msgstr "EDI foydalanuvchisi Peppol turida bo‘lishi kerak"
+msgid "EDI user should be of one of the following types: %s"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_edi_identification
@@ -1145,7 +1188,7 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
-msgid "Invoice %s is too big to send via peppol (64MB limit)"
+msgid "Invoice %s exceeds the size limit of 64 MB to be sent via Peppol."
 msgstr ""
 
 #. module: account_peppol
@@ -1258,6 +1301,12 @@ msgstr "Peppol jo‘natish xizmatiga UBL hujjati taqdim etilmagan."
 #, fuzzy
 msgid "No valid AS4 participant endpoint were found."
 msgstr "Hech qanday yaroqli AS4 ishtirokchi tugatish nuqtasi topilmadi."
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "No, Keep It"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1442,6 +1491,18 @@ msgstr "Peppol sozlash yordamchisi"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Peppol Contact Email"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid "Peppol Documents Cannot Be Deleted"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "Peppol Documents: Cannot Delete Invoice"
 msgstr ""
 
 #. module: account_peppol
@@ -1761,6 +1822,12 @@ msgstr "Rad etildi"
 #, fuzzy
 msgid "Remove from Peppol"
 msgstr "Peppoldan olib tashlash"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "Reset to draft"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -2110,6 +2177,24 @@ msgstr ""
 "to‘g‘ri kiritganingizni tekshirib ko‘ring."
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid ""
+"The following %s Peppol document(s) will be reset to draft:\n"
+"\n"
+"• %s"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid ""
+"The following %s draft Peppol document(s) will be cancelled:\n"
+"\n"
+"• %s"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 #, fuzzy
@@ -2169,6 +2254,12 @@ msgstr ""
 "Protsessor xabarning xavfsizlik usullari, parametrlari, qamrovi yoki "
 "xavfsizlik siyosati darajasidagi boshqa talablar yoki kelishuvlar "
 "bajarilmaganini aniqladi."
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid "The remaining %s document(s) will be deleted."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -2467,6 +2558,18 @@ msgid "Wizard"
 msgstr "Yo‘riqnoma"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "Yes, Cancel It"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid "Yes, Proceed"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid ""
@@ -2474,13 +2577,6 @@ msgid ""
 "your Company Registry (BCE/KBO) first to be compliant with the new "
 "regulation."
 msgstr ""
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
-#, fuzzy
-msgid "You are not allowed to send invoice on behalf of %s."
-msgstr "Sizga %s nomidan hisob-faktura yuborish huquqi berilmagan."
 
 #. module: account_peppol
 #. odoo-python
@@ -2758,6 +2854,18 @@ msgstr "hisob-fakturalarni yuborish uchun, lekin bu"
 #, fuzzy
 msgid "uses"
 msgstr "foydalanadi"
+
+#, fuzzy
+#~ msgid " (no access)"
+#~ msgstr "(kirish ruxsati yo‘q)"
+
+#, fuzzy
+#~ msgid "You are not allowed to send invoice on behalf of %s."
+#~ msgstr "Sizga %s nomidan hisob-faktura yuborish huquqi berilmagan."
+
+#, fuzzy
+#~ msgid "EDI user should be of type Peppol"
+#~ msgstr "EDI foydalanuvchisi Peppol turida bo‘lishi kerak"
 
 #, fuzzy
 #~ msgid "UBL 2.0"

@@ -3,13 +3,14 @@
 # * mail_group
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2025-09-16 18:45+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"PO-Revision-Date: 2026-06-13 05:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese <https://translate.odoo.com/projects/odoo-19/"
 "mail_group/pt/>\n"
 "Language: pt\n"
@@ -17,22 +18,25 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+#, fuzzy
 msgid "#Members"
-msgstr ""
+msgstr "#Membros"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+#, fuzzy
 msgid "#Messages"
-msgstr ""
+msgstr "#Mensagens"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
+#, fuzzy
 msgid "#To Review"
-msgstr ""
+msgstr "#A revisar"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
@@ -41,10 +45,13 @@ msgstr ") <span invisible=\"not send_email\">e enviar um e-mail</span>."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+#, fuzzy
 msgid ""
 "<br/>\n"
 "                    Get the conversation started by sending an email to"
 msgstr ""
+"<br/>\n"
+"                    Para iniciar a conversa, envie um e-mail para"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
@@ -54,6 +61,7 @@ msgstr ""
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_subscribe
+#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Hello,<br/><br/>\n"
@@ -69,9 +77,23 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Olá,<br/><br/>\n"
+"                Você solicitou o cancelamento da inscrição à lista de "
+"distribuição <strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"               Para confirmar, visite o link a seguir: <strong t-if=\"ctx.get"
+"('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                <br/><br/>\n"
+"                Se isto foi um erro ou caso você não tenha solicitado esta "
+"ação, basta ignorar a mensagem.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
+#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Hello,<br/><br/>\n"
@@ -87,9 +109,23 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Olá,<br/><br/>\n"
+"                Você solicitou o cancelamento da inscrição à lista de "
+"distribuição <strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                Para confirmar, visite o link a seguir: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
+"                <br/><br/>\n"
+"                Se isto foi um erro ou caso você não tenha solicitado esta "
+"ação, basta ignorar a mensagem.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
+#, fuzzy
 msgid ""
 "<div>\n"
 "                <p>Hello <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
@@ -100,6 +136,14 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"                <p>Olá <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
+"                <p>Veja abaixo as diretrizes da <t t-"
+"out=\"object.mail_group_id.name\"/> lista de distribuição.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
+"or ''\"/></p>\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
@@ -128,10 +172,13 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
 "title=\"Traffic\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" "
+"title=\"Traffic\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -452,14 +499,18 @@ msgstr "Selecione ou configure um domínio personalizado"
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
 msgid "Closed"
-msgstr ""
+msgstr "Encerrado"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_closed
+#, fuzzy
 msgid ""
 "Closed groups might still be accessed, but emails sent to it will bounce"
 msgstr ""
+"Os grupos fechados ainda podem ser acessados, mas os e-mails enviados para "
+"eles serão devolvidos"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_subscribe
@@ -632,8 +683,9 @@ msgstr ""
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/controllers/portal.py:0
+#, fuzzy
 msgid "Groups"
-msgstr ""
+msgstr "Grupos"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines_msg
@@ -653,6 +705,7 @@ msgstr "Olá"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.email_template_mail_group_closed
+#, fuzzy
 msgid ""
 "Hello there,\n"
 "    <br/><br/>\n"
@@ -661,6 +714,12 @@ msgid ""
 "    <br/><br/>\n"
 "    Kind Regards,"
 msgstr ""
+"Olá,\n"
+"    <br/><br/>\n"
+"    A lista de e-mails que você está tentando acessar foi fechada e não "
+"aceitará novas mensagens.\n"
+"    <br/><br/>\n"
+"    Cordialmente,"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__id
@@ -723,8 +782,9 @@ msgstr "Está banido"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_closed
+#, fuzzy
 msgid "Is Closed"
-msgstr ""
+msgstr "Está Encerrado"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__is_group_moderated
@@ -915,8 +975,9 @@ msgstr "Mensagens que requerem uma ação"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
+#, fuzzy
 msgid "Moderate"
-msgstr ""
+msgstr "Moderado"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1078,8 +1139,9 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+#, fuzzy
 msgid "Oops, there are no messages here."
-msgstr ""
+msgstr "Ops! Não há mensagens aqui."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
@@ -1246,8 +1308,9 @@ msgstr "Remover mensagem com explicação"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "Responsibles"
-msgstr ""
+msgstr "Responsáveis"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
@@ -1271,8 +1334,9 @@ msgstr "Buscar na lista de moderação"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "Select users"
-msgstr ""
+msgstr "Selecionar usuários"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
@@ -1307,13 +1371,15 @@ msgstr "Enviar um e-mail ao autor da mensagem"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_compose_message_action_mail_group
+#, fuzzy
 msgid "Send email"
-msgstr ""
+msgstr "Enviar e-mail"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
+#, fuzzy
 msgid "Send guidelines to new members"
-msgstr ""
+msgstr "Enviar diretrizes para novos membros"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_guidelines
@@ -1520,14 +1586,16 @@ msgstr "Só é possível criar uma regra para um endereço de e-mail em um grupo
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
 msgid "You can not join a closed group."
-msgstr ""
+msgstr "Você não pode participar de um grupo fechado."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
 msgid "You can not send guidelines for a closed group."
-msgstr ""
+msgstr "Não é possível enviar diretrizes para um grupo fechado."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -1561,8 +1629,9 @@ msgstr "ex., “Newsletter”"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "e.g. \"This group is about ...\""
-msgstr ""
+msgstr "ex.: \"O grupo serve para...\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -1571,8 +1640,9 @@ msgstr "ex.: minhaempresa.com"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "e.g.\"Please be polite and ...\""
-msgstr ""
+msgstr "ex.: \"Por favor, seja educado e...\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
@@ -1586,8 +1656,9 @@ msgstr "foi"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
 msgid "members<br/>"
-msgstr ""
+msgstr "membros<br/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -1596,8 +1667,9 @@ msgstr "mensagens por mês"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+#, fuzzy
 msgid "messages to review"
-msgstr ""
+msgstr "mensagens a serem revisadas"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short

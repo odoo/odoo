@@ -6,13 +6,13 @@
 # Martin Trigaux, 2018
 # Boško Stojaković <bluesoft83@gmail.com>, 2018
 # Bole <bole@dajmi5.com>, 2018
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-17 03:11+0000\n"
+"PO-Revision-Date: 2026-06-12 03:08+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bosnian <https://translate.odoo.com/projects/odoo-19/"
 "account_check_printing/bs/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_check_printing
 #. odoo-python
@@ -61,8 +61,9 @@ msgstr ""
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
+#, fuzzy
 msgid "Bills"
-msgstr ""
+msgstr "Računi"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -129,8 +130,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #: model:account.payment.method,name:account_check_printing.account_payment_method_check
+#, fuzzy
 msgid "Checks"
-msgstr ""
+msgstr "Kontrole"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
@@ -156,8 +158,9 @@ msgstr "Kompanije"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_config_settings
+#, fuzzy
 msgid "Config Settings"
-msgstr ""
+msgstr "Postavke"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_uid
@@ -171,8 +174,9 @@ msgstr "Kreirano"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
+#, fuzzy
 msgid "Default"
-msgstr ""
+msgstr "Uobičajeno"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__display_name
@@ -236,6 +240,7 @@ msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
+#, fuzzy
 msgid ""
 "Manual: Pay or Get paid by any method outside of Odoo.\n"
 "Payment Providers: Each payment provider has its own Payment Method. Request "
@@ -252,6 +257,20 @@ msgid ""
 "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
 "Module account_iso20022 is necessary.\n"
 msgstr ""
+"Ručno: Plaćajte ili primajte bilo koji način izvan Odoo-a.\n"
+"Pružaoci plaćanja: Svaki dobavljač plaćanja ima svoj vlastiti način "
+"plaćanja. Zatražite transakciju na kartici zahvaljujući tokenu za plaćanje "
+"koji je sačuvao partner prilikom kupovine ili pretplate na mreži.\n"
+"Ček: Plaćajte račune čekom i odštampajte ga sa Odoo-a.\n"
+"Paketni depozit: Prikupite nekoliko čekova klijenata odjednom generirajući i "
+"predajući paketni depozit vašoj banci. Modul account_batch_payment je "
+"neophodan.\n"
+"SEPA kreditni transfer: Plaćajte u SEPA zoni podnošenjem datoteke SEPA "
+"kreditnog transfera vašoj banci. Modul account_iso20022 je neophodan.\n"
+"SEPA Direktno zaduživanje: Primite uplatu u SEPA zoni zahvaljujući mandatu "
+"koji vam je dodijelio vaš partner. Modul account_iso20022 je neophodan.\n"
+"U.S. ISO20022: Plaćajte u SAD tako što ćete svojoj banci dostaviti ISO20022 "
+"fajl. Modul account_iso20022 je neophodan.\n"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -339,8 +358,9 @@ msgstr ""
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
+#, fuzzy
 msgid "Refunds"
-msgstr ""
+msgstr "Povrati"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right

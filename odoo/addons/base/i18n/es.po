@@ -18,15 +18,15 @@
 # "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025, 2026.
 # Grace Conlon <grco@odoo.com>, 2025.
 # "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 # Mauricio Istúriz <isturizmauricio@gmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-24 14:12+0000\n"
-"PO-Revision-Date: 2026-05-30 09:38+0000\n"
-"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
+"PO-Revision-Date: 2026-06-13 06:25+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/base/es/>"
 "\n"
 "Language: es\n"
@@ -35,7 +35,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -305,11 +305,12 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Localization Module for Denmark\n"
+"Módulo de localización para Dinamarca\n"
 "===============================\n"
 "\n"
-"This is the module to manage the **accounting chart for Denmark**. Cover "
-"both one-man business as well as I/S, IVS, ApS and A/S\n"
+"Este es el módulo para gestionar el **plan contable de Dinamarca**. Cubre "
+"tanto a los empresarios individuales como a las entidades I/S, IVS, ApS y A/"
+"S.\n"
 "\n"
 "**Modulet opsætter:**\n"
 "\n"
@@ -8968,6 +8969,32 @@ msgid ""
 "also possible in order to automatically create a meeting when a time off "
 "request is accepted by setting up a type of meeting in time off Type.\n"
 msgstr ""
+"\n"
+"Gestiona permisos y solicitudes de asignación\n"
+"====================================\n"
+"\n"
+"Esta aplicación controla la planificación de permisos de tu empresa. Los "
+"empleados podrán solicitar vacaciones y sus managers podrán revisar estas "
+"solicitudes para aprobarlas o rechazarlas. De esta manera, puedes controlar "
+"la planificación global de permisos de una empresa o departamento.\n"
+"\n"
+"Puedes configurar distintos tipos de permisos (enfermedad, vacaciones, etc.) "
+"y asignarlos a un empleado o departamento rápidamente mediante las "
+"asignaciones. Un empleado también puede solicitar más días creando una nueva "
+"asignación, lo que incrementará el total de días disponibles para ese tipo "
+"de ausencia (si se acepta la petición).\n"
+"\n"
+"Puedes hacer seguimiento de las ausencias/permisos aprobados con estos "
+"informes: \n"
+"\n"
+"* Resumen de permisos\n"
+"* Permisos por departamento\n"
+"* Análisis de permisos\n"
+"\n"
+"También puede sincronizarse con una agenda interna (reuniones del módulo de "
+"CRM) para que se cree automáticamente una reunión cuando se apruebe una "
+"solicitud de ausencia/permiso, configurando previamente un tipo de reunión "
+"en el tipo de ausencia/permiso.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_group
@@ -13470,26 +13497,24 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Este módulo le permite publicar a sus distribuidores y contactos en su sitio "
-"web y enviarles leads y oportunidades entrantes.\n"
+"Este módulo permite publicar a tus distribuidores/partners en tu sitio web y "
+"enviarles leads y oportunidades entrantes.\n"
 "\n"
 "\n"
-"**Publicar un contacto**\n"
+"**Publicar un partner**\n"
 "\n"
-"Para publicar a un contacto, establezca un *nivel* en su formulario de "
-"contacto (en la sección Asignación de contacto) y haga clic en el botón "
-"*Publicar*.\n"
+"Para publicar un partner, define un *nivel* en su ficha de contacto (en la "
+"sección Partner asignado) y haz clic en el botón *Publicar*.\n"
 "\n"
 "**Reenviar leads**\n"
 "\n"
-"El reenvío de leads se puede realizar para uno o varios leads a la vez. La "
-"acción está disponible en la sección *Contacto asignado* de la vista del "
-"formulario de lead u oportunidad y en el menú *Acción* de la vista de "
-"lista.\n"
+"Los leads pueden enviarse de forma individual o varios a la vez. Esta acción "
+"está disponible en la sección *Partner asignado* de la vista del formulario "
+"del lead u oportunidad, así como en el menú *Acción* de la vista de lista.\n"
 "\n"
-"La asignación automática se calcula a partir de los niveles de socios y la "
-"geolocalización. Los contactos reciben los leads que se encuentran cerca de "
-"ellos.\n"
+"La asignación automática se determina en función del nivel de los partners y "
+"de la ubicación geográfica. Los partners reciben los leads que se encuentran "
+"cerca/ubicados en su zona.\n"
 "\n"
 
 #. module: base
@@ -16043,8 +16068,9 @@ msgstr "'new' está reservado y no se puede usar como ruta."
 #. module: base
 #. odoo-python
 #: code:addons/fields.py:0 code:addons/fields_relational.py:0
+#, fuzzy
 msgid "(Record: %(record)s, User: %(user)s)"
-msgstr ""
+msgstr "(Registro: %(record)s, Usuario: %(user)s)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -16080,10 +16106,13 @@ msgstr "- %(description)s (%(model)s)"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "- Only a root company can be set on “%(record)s”. Currently set to “%"
 "(company)s”"
 msgstr ""
+"- Solo puede establecer una compañía principal en “%(record)s”, por el "
+"momento es “%(company)s”."
 
 #. module: base
 #. odoo-python
@@ -17375,8 +17404,9 @@ msgstr "Duración máxima de claves API en días"
 #. module: base
 #. odoo-python
 #: code:addons/fields_binary.py:0
+#, fuzzy
 msgid "ASCII characters are required for %(value)s in %(field)s"
-msgstr ""
+msgstr "Los caracteres ASCII son necesarios para %(value)s en %(field)s"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
@@ -23482,8 +23512,9 @@ msgstr "Categoría"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_catering
+#, fuzzy
 msgid "Catering"
-msgstr ""
+msgstr "Servicio de catering"
 
 #. module: base
 #: model:res.country,name:base.ky
@@ -24072,8 +24103,9 @@ msgstr "Almacenamiento en la nube de Google"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_cloud_storage_migration
+#, fuzzy
 msgid "Cloud Storage Migration"
-msgstr ""
+msgstr "Migración a almacenamiento en la nube"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_cf_turnstile
@@ -24097,8 +24129,9 @@ msgstr "CodaBox"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_codaclean
+#, fuzzy
 msgid "Codaclean"
-msgstr ""
+msgstr "Codaclean"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server_history__code
@@ -24774,13 +24807,15 @@ msgstr "Construcción"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_construction
+#, fuzzy
 msgid "Construction Builder"
-msgstr ""
+msgstr "Constructor"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_construction_developer
+#, fuzzy
 msgid "Construction Developer"
-msgstr ""
+msgstr "Promotor inmobiliario"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_paptic
@@ -25092,8 +25127,9 @@ msgstr "Certificaciones de curso"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_coworking
+#, fuzzy
 msgid "Coworking"
-msgstr ""
+msgstr "Coworking"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_create
@@ -28733,8 +28769,9 @@ msgstr "Expandir grupos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense_stripe
+#, fuzzy
 msgid "Expense cards"
-msgstr ""
+msgstr "Tarjetas de gastos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense_stripe_demo
@@ -30765,8 +30802,9 @@ msgstr "Casa de huéspedes"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_guided_tours
+#, fuzzy
 msgid "Guided Tours"
-msgstr ""
+msgstr "Visitas guiadas"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.ANG
@@ -31203,8 +31241,9 @@ msgstr "Historial"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_holiday_house
+#, fuzzy
 msgid "Holiday House"
-msgstr ""
+msgstr "Vivienda vacacional"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_homeworking
@@ -31901,8 +31940,9 @@ msgstr "Mixin de imagen"
 #. module: base
 #. odoo-python
 #: code:addons/fields_binary.py:0
+#, fuzzy
 msgid "Image is not encoded in base64."
-msgstr ""
+msgstr "La imagen no está codificada en base64."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -34579,8 +34619,9 @@ msgstr "Localización"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_sale_localizations
+#, fuzzy
 msgid "Localizations"
-msgstr ""
+msgstr "Localizaciones"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_loftspace
@@ -34794,7 +34835,7 @@ msgstr "Macao"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_machine_tool_rental
 msgid "Machine & Tools Rental"
-msgstr ""
+msgstr "Alquiler de maquinaria y herramientas"
 
 #. module: base
 #: model:res.country,name:base.mg
@@ -35661,8 +35702,9 @@ msgstr "Miembros"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_members_club
+#, fuzzy
 msgid "Members Club"
-msgstr ""
+msgstr "Club de socios"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mental_therapy
@@ -35850,8 +35892,9 @@ msgstr "Usuarios de Microsoft"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_cloud_storage_migration
+#, fuzzy
 msgid "Migrate local attachments to cloud storage"
-msgstr ""
+msgstr "Migrar archivos adjuntos locales al almacenamiento en la nube"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.TND
@@ -36971,7 +37014,7 @@ msgstr "No (False)"
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_country
 msgid "No Country Found!"
-msgstr "¡No se encontró el país!"
+msgstr "¡No se ha encontrado el país!"
 
 #. module: base
 #. odoo-python
@@ -41614,8 +41657,9 @@ msgstr "Estudio fotográfico"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_physical_therapy
+#, fuzzy
 msgid "Physical Therapy"
-msgstr ""
+msgstr "Fisioterapia"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.SSP
@@ -42679,8 +42723,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_real_estate
+#, fuzzy
 msgid "Property Management"
-msgstr ""
+msgstr "Gestión inmobiliaria"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_condominium
@@ -44648,8 +44693,9 @@ msgstr "Arabia Saudita - Punto de venta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_withholding_tax
+#, fuzzy
 msgid "Saudi Arabia - Withholding Tax"
-msgstr ""
+msgstr "Arabia Saudita - Retención de impuestos"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_report__attachment
@@ -45707,11 +45753,15 @@ msgstr "Saltar estos contactos"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "Skipping a company check for model %(model_name)s. Its fields %"
 "(field_names)s are set as company-dependent, but the model doesn't have a "
 "`company_id` or `company_ids` field!"
 msgstr ""
+"Omitiendo la verificación de la compañía para el modelo%(model_name)s. Los "
+"campos (%(field_names)s) están configurados como dependientes de la "
+"compañía, pero el modelo no tiene el campo `company_id` ni `company_ids`."
 
 #. module: base
 #. odoo-python
@@ -46716,8 +46766,9 @@ msgstr "Resumen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_summer_camps
+#, fuzzy
 msgid "Summer Camps"
-msgstr ""
+msgstr "Campamentos de verano"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__7
@@ -47031,8 +47082,9 @@ msgstr "Taka"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_takeaway_restaurant
+#, fuzzy
 msgid "Takeaway Restaurant"
-msgstr ""
+msgstr "Restaurante de comida para llevar"
 
 #. module: base
 #: model:res.currency,currency_unit_label:base.WST
@@ -47866,12 +47918,17 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/fields_textual.py:0
+#, fuzzy
 msgid ""
 "The field value you're saving (%(model)s %(field)s) includes content that is "
 "restricted for security reasons. It is possible that someone with higher "
 "privileges previously modified it, and you are therefore not able to modify "
 "it yourself while preserving the content."
 msgstr ""
+"El valor del campo que está guardando (%(model)s %(field)s) incluye "
+"contenido que está restringido por motivos de seguridad. Es posible que "
+"alguien con privilegios superiores lo haya modificado antes, por lo que no "
+"puede modificarlo y conservar el contenido."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__first_failure_date
@@ -47883,8 +47940,9 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "The following languages are not activated: %(missing_names)s"
-msgstr ""
+msgstr "Los siguientes idiomas no están activados: %(missing_names)s"
 
 #. module: base
 #. odoo-python
@@ -48235,6 +48293,7 @@ msgstr "El tipo de la moneda respecto a la moneda del tipo 1"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "The record %(xml_id)s has the module prefix %(module_name)s. This is the "
 "part before the '.' in the external id. Because the prefix refers to an "
@@ -48243,6 +48302,12 @@ msgid ""
 "For example, __import__, resulting in the external id __import__.%"
 "(record_id)s."
 msgstr ""
+"El registro %(xml_id)s tiene el prefijo de módulo %(module_name)s, es la "
+"parte antes del \".\" en el ID externo. Como el prefijo se refiere a un "
+"módulo existente, el registro se debería borrar cuando se actualice el "
+"módulo. Debe ya sea no usar ni prefijo ni punto o un prefijo que no sea de "
+"un módulo existente. Por ejemplo, __import__, lo cual resultará en id "
+"__import__.%(record_id)s."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__company_registry
@@ -49646,9 +49711,12 @@ msgstr "Traducciones"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "Translations for model translated fields only accept falsy values and str"
 msgstr ""
+"Las traducciones para los campos de modelos traducidos solo aceptan valores "
+"falsy y str"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_fleet
@@ -50126,10 +50194,13 @@ msgstr "Ucrania - Contabilidad"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "Unable to delete %(record)s because it is used as the default value of %"
 "(field)s"
 msgstr ""
+"No se ha podido eliminar %(record)s ya que se utiliza como un valor por "
+"defecto para %(field)s"
 
 #. module: base
 #. odoo-python
@@ -50384,8 +50455,11 @@ msgstr "Identificador de base de datos '%s' desconocido"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "Unknown error during import: %(error_type)s: %(error_message)s"
 msgstr ""
+"Ocurrió un error desconocido durante la importación: %(error_type)s: %"
+"(error_message)s"
 
 #. module: base
 #. odoo-python
@@ -51133,8 +51207,9 @@ msgstr "Barra vertical"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_veterinary_clinic
+#, fuzzy
 msgid "Veterinary Clinic"
-msgstr ""
+msgstr "Clínica veterinaria"
 
 #. module: base
 #: model:res.country,name:base.vn
@@ -51270,8 +51345,9 @@ msgstr "Vistas que heredan de ésta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_vineyard
+#, fuzzy
 msgid "Vineyard"
-msgstr ""
+msgstr "Viñedo"
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -52320,10 +52396,12 @@ msgstr "No puede desactivar el usuario que está usando ahora mismo."
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "You cannot delete %(to_delete_record)s, as it is used by %"
 "(on_restrict_record)s"
 msgstr ""
+"No puede eliminar %(to_delete_record)s, %(on_restrict_record)s lo utiliza"
 
 #. module: base
 #. odoo-python
@@ -52432,10 +52510,13 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "You cannot use “%(property_name)s” because the linked “%(model_name)s” model "
 "doesn't exist or is invalid"
 msgstr ""
+"No puede usar “%(property_name)s” porque el modelo vinculado “%(model_name)s"
+"” no existe o no es válido"
 
 #. module: base
 #. odoo-python

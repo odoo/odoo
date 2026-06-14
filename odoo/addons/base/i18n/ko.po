@@ -9,14 +9,14 @@
 # JH CHOI <hwangtog@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-24 14:12+0000\n"
-"PO-Revision-Date: 2026-05-04 02:45+0000\n"
-"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"PO-Revision-Date: 2026-06-13 09:33+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/base/ko/>"
 "\n"
 "Language: ko\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -2431,10 +2431,13 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lk_reports
+#, fuzzy
 msgid ""
 "\n"
 "Accounting reports for Sri Lanka\n"
 msgstr ""
+"\n"
+"스리랑카 회계 보고서\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se_reports
@@ -3096,6 +3099,20 @@ msgid ""
 "Mobile Money (Airtel Money / M-Pesa) at the payment terminal.\n"
 "* Supported cards: Visa, MasterCard, American Express etc.\n"
 msgstr ""
+"\n"
+"DPO POS 결제 기능 활성화\n"
+"==============================\n"
+"\n"
+"해당 기능은 단말기가 지원하는 모든 통화를 지원하며, 주로 **아프리카 지역** "
+"에서 사용됩니다.\n"
+"고객은 DPO POS 단말기를 통해 직불/신용카드 및 모바일 머니로 주문 금액을 "
+"결제할 수 있습니다.\n"
+"결제를 처리하려면 DPO 가맹점 계정이 필요합니다.\n"
+"주요 기능:\n"
+"\n"
+"* POS 단말기에서 카드 스와이프, 스캔, 터치만으로 빠르게 결제 가능(신용/"
+"직불카드 및 모바일 머니: Airtel Money / M-Pesa 등)\n"
+"* 지원되는 카드: Visa, MasterCard, American Express etc.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_pine_labs
@@ -7604,6 +7621,18 @@ msgid ""
 "* FBM: Delivery information is fetched from Lazada, track and synchronize "
 "the stock level to Lazada.\n"
 msgstr ""
+"\n"
+"Odoo에서 Lazada 주문 가져오기 및 배송 동기화\n"
+"============================================================\n"
+"\n"
+"주요 기능\n"
+"------------\n"
+"* 여러 개의 매장에서 주문 가져오기\n"
+"* 주문은 Lazada의 내부 참조 번호(Lazada SKU)를 기준으로 Odoo 품목과 매칭됨\n"
+"* Lazada 풀필먼트(FBL), 판매자 풀필먼트(FBM) 모두 지원::\n"
+"* FBL: 완료된 주문 가져오기\n"
+"* FBM: Lazada에서 배송 정보를 가져오고, 배송 추적 및 재고 수준을 Lazada와 "
+"동기화\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_shopee
@@ -10283,10 +10312,13 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ro_intrastat
+#, fuzzy
 msgid ""
 "\n"
 "Romania - Intrastat Declaration\n"
 msgstr ""
+"\n"
+"루마니아 - 인트라스탯 신고서\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_rw
@@ -10723,10 +10755,13 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_intrastat
+#, fuzzy
 msgid ""
 "\n"
 "Spain - Intrastat Report\n"
 msgstr ""
+"\n"
+"스페인 - 인트라스탯 신고서\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es
@@ -15523,8 +15558,9 @@ msgstr "'new'는 예약되어 있으므로 경로로 사용할 수 없습니다.
 #. module: base
 #. odoo-python
 #: code:addons/fields.py:0 code:addons/fields_relational.py:0
+#, fuzzy
 msgid "(Record: %(record)s, User: %(user)s)"
-msgstr ""
+msgstr "(레코드: %(record)s, 사용자: %(user)s)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -15560,10 +15596,13 @@ msgstr "- %(description)s (%(model)s)"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "- Only a root company can be set on “%(record)s”. Currently set to “%"
 "(company)s”"
 msgstr ""
+"-  “%(record)s”에는 모회사만 설정할 수 있습니다. 현재 “%(company)s”로 "
+"설정되어 있습니다."
 
 #. module: base
 #. odoo-python
@@ -16823,8 +16862,9 @@ msgstr "API 키의 최대 기간 (일)입니다."
 #. module: base
 #. odoo-python
 #: code:addons/fields_binary.py:0
+#, fuzzy
 msgid "ASCII characters are required for %(value)s in %(field)s"
-msgstr ""
+msgstr "%(value)s %(field)s에는 ASCII 문자가 필수입니다."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
@@ -17385,8 +17425,9 @@ msgstr "업무 협의에 OdooBot 추가"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_add_gln
+#, fuzzy
 msgid "Add Partner GLN"
-msgstr ""
+msgstr "파트너 GLN 추가"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_sms
@@ -21660,8 +21701,9 @@ msgstr "벨라루스"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intervat
+#, fuzzy
 msgid "Belgian Intervat & Myminfin Edi"
-msgstr ""
+msgstr "Belgian Intervat & Myminfin EDI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
@@ -22156,8 +22198,9 @@ msgstr "MRP와 회계를 연결"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_accountant
+#, fuzzy
 msgid "Bridge between Purchase and Accounting"
-msgstr ""
+msgstr "매입 앱과 회계 앱을 연결하는 역할"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_account_accountant
@@ -22818,7 +22861,7 @@ msgstr "카테고리"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_catering
 msgid "Catering"
-msgstr ""
+msgstr "케이터링"
 
 #. module: base
 #: model:res.country,name:base.ky
@@ -23401,8 +23444,9 @@ msgstr "클라우드 저장 공간 Google"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_cloud_storage_migration
+#, fuzzy
 msgid "Cloud Storage Migration"
-msgstr ""
+msgstr "클라우드 스토리지 마이그레이션"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_cf_turnstile
@@ -24102,13 +24146,15 @@ msgstr "구축"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_construction
+#, fuzzy
 msgid "Construction Builder"
-msgstr ""
+msgstr "건설 시공사"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_construction_developer
+#, fuzzy
 msgid "Construction Developer"
-msgstr ""
+msgstr "건설 개발사"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_paptic
@@ -25210,8 +25256,9 @@ msgstr "DIN 5008"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008_expense
+#, fuzzy
 msgid "DIN 5008 - Expenses"
-msgstr ""
+msgstr "DIN 5008 - 경비"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_din5008_industry_fsm
@@ -25338,7 +25385,7 @@ msgstr "데이터베이스 구조"
 #: model:ir.module.category,name:base.module_category_services_databases
 #: model:ir.module.module,shortdesc:base.module_databases
 msgid "Databases"
-msgstr ""
+msgstr "데이터베이스"
 
 #. module: base
 #. odoo-python
@@ -25739,8 +25786,9 @@ msgstr "의존성"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_deposit_management
+#, fuzzy
 msgid "Deposit Management"
-msgstr ""
+msgstr "입금 관리"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__description
@@ -26317,8 +26365,9 @@ msgstr "문서 스프레드시트"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_documents_full
 #: model:ir.module.module,summary:base.module_test_documents_full
+#, fuzzy
 msgid "Documents Testing Module"
-msgstr ""
+msgstr "문서 테스트 모듈"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_account_peppol
@@ -30443,8 +30492,9 @@ msgstr "휴가용 별장"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_homeworking
+#, fuzzy
 msgid "Holidays with Remote Work"
-msgstr ""
+msgstr "재택근무와 휴가 병행"
 
 #. module: base
 #: model:res.country,name:base.va
@@ -30493,8 +30543,9 @@ msgstr "홍콩 - 급여"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hk_hr_payroll_empf
+#, fuzzy
 msgid "Hong Kong - Payroll eMPF"
-msgstr ""
+msgstr "홍콩 - 급여 eMPF"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hk_hr_payroll_account
@@ -31120,8 +31171,9 @@ msgstr "이미지 Mixin"
 #. module: base
 #. odoo-python
 #: code:addons/fields_binary.py:0
+#, fuzzy
 msgid "Image is not encoded in base64."
-msgstr ""
+msgstr "이미지가 base64로 인코딩되지 않았습니다."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -33302,8 +33354,9 @@ msgstr "보고서 배치"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_lazada
+#, fuzzy
 msgid "Lazada Connector"
-msgstr ""
+msgstr "Lazada 커넥터"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_enrich
@@ -33762,7 +33815,7 @@ msgstr "현지화"
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_sale_localizations
 msgid "Localizations"
-msgstr ""
+msgstr "현지화"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_loftspace
@@ -33975,8 +34028,9 @@ msgstr "마카오"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_machine_tool_rental
+#, fuzzy
 msgid "Machine & Tools Rental"
-msgstr ""
+msgstr "기계 및 공구 임대"
 
 #. module: base
 #: model:res.country,name:base.mg
@@ -34414,8 +34468,9 @@ msgstr "차량 관리에 대한 재정 카테고리 관리"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays_homeworking
+#, fuzzy
 msgid "Manage holidays with remote work"
-msgstr ""
+msgstr "원격 근무로 휴가 관리하기"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_stock
@@ -34813,8 +34868,9 @@ msgstr "회원용 클럽"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mental_therapy
+#, fuzzy
 msgid "Mental Therapy"
-msgstr ""
+msgstr "정신과 진료"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_menu
@@ -40264,8 +40320,9 @@ msgstr "서식을 지정할 패턴"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_us_direct_deposit
+#, fuzzy
 msgid "Pay Vendors via Wise"
-msgstr ""
+msgstr "Wise를 통해 공급업체 결제하기"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment_account_payment
@@ -40675,8 +40732,9 @@ msgstr "사진관"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_physical_therapy
+#, fuzzy
 msgid "Physical Therapy"
-msgstr ""
+msgstr "물리치료"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.SSP
@@ -41731,8 +41789,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_real_estate
+#, fuzzy
 msgid "Property Management"
-msgstr ""
+msgstr "부동산 관리"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_condominium
@@ -41847,8 +41906,9 @@ msgstr "매입"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_accountant
+#, fuzzy
 msgid "Purchase Accounting"
-msgstr ""
+msgstr "구매 회계"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_requisition
@@ -42151,8 +42211,9 @@ msgstr "Qweb many2many 필드"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_one2many
+#, fuzzy
 msgid "Qweb field one2many"
-msgstr ""
+msgstr "Qweb 필드 일대다"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_R
@@ -42380,8 +42441,9 @@ msgstr "채용 보고서"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_ai
+#, fuzzy
 msgid "Recruitment With AI"
-msgstr ""
+msgstr "채용 업무에 AI 활용하기"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment_hr_recruitment
@@ -42938,8 +43000,9 @@ msgstr "루마니아 - 전자 청구서"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_intrastat
+#, fuzzy
 msgid "Romania - Intrastat Declaration"
-msgstr ""
+msgstr "루마니아 - 인트라스탯 신고서"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ro_hr_payroll
@@ -44731,11 +44794,15 @@ msgstr "이 연락처 생략"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "Skipping a company check for model %(model_name)s. Its fields %"
 "(field_names)s are set as company-dependent, but the model doesn't have a "
 "`company_id` or `company_ids` field!"
 msgstr ""
+"모델 %(model_name)s에 대한 회사 확인을 건너뜁니다. %(field_names)s 필드가 "
+"회사 종속으로 표시되어 있지만 모델에 `company_id` 또는 `company_ids` 필드가 "
+"없습니다!"
 
 #. module: base
 #. odoo-python
@@ -45034,8 +45101,9 @@ msgstr "스페인 - Facturae EDI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_intrastat
+#, fuzzy
 msgid "Spain - Intrastat Declaration"
-msgstr ""
+msgstr "스페인 - 인트라스탯 신고서"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_es_edi_tbai_pos
@@ -45362,13 +45430,15 @@ msgstr "스리랑카"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lk
+#, fuzzy
 msgid "Sri Lanka - Accounting"
-msgstr ""
+msgstr "스리랑카 - 회계"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lk_reports
+#, fuzzy
 msgid "Sri Lanka - Accounting Reports"
-msgstr ""
+msgstr "스리랑카 - 회계 보고서"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_sequence__implementation__standard
@@ -45839,8 +45909,9 @@ msgstr "스위스 - POS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ch_hr_payroll_elm_transmission_5_3
+#, fuzzy
 msgid "Swissdec Certified Payroll ELM 5.3"
-msgstr ""
+msgstr "Swissdec 급여 인증 ELM 5.3"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.language_install_view_form_lang_switch
@@ -46022,8 +46093,9 @@ msgstr "타이완 - 전자 청구서"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_tw_edi_ecpay_website_sale
+#, fuzzy
 msgid "Taiwan - E-invoicing Ecommerce"
-msgstr ""
+msgstr "대만 - 전자 청구서 이커머스"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__tajawal
@@ -46584,10 +46656,13 @@ msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__grouping
+#, fuzzy
 msgid ""
 "The International Grouping will represent 123456789 to be 123,456,789.00; "
 "The Indian Grouping will represent 123456789 to be 12,34,56,789.00"
 msgstr ""
+"국제 표기법에서는 123456789를 123,456,789.00으로 표기합니다; 인도 "
+"표기법에서는 123456789를 12,34,56,789.00으로 표기합니다."
 
 #. module: base
 #: model:res.partner,website_short_description:base.res_partner_10
@@ -46755,10 +46830,11 @@ msgstr "해당 사용자의 회사 기본값입니다."
 #. module: base
 #. odoo-python
 #: code:addons/base/models/properties_base_definition.py:0
+#, fuzzy
 msgid ""
 "The definition needs to be linked to a properties field. Those fields are "
 "not: %s."
-msgstr ""
+msgstr "속성 필드에 정의 항목을 연결해야 합니다. 해당 필드는 다음과 같습니다: %s."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -46854,12 +46930,16 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/fields_textual.py:0
+#, fuzzy
 msgid ""
 "The field value you're saving (%(model)s %(field)s) includes content that is "
 "restricted for security reasons. It is possible that someone with higher "
 "privileges previously modified it, and you are therefore not able to modify "
 "it yourself while preserving the content."
 msgstr ""
+"저장 중인 필드 값 (%(model)s %(field)s)에 보안상의 이유로 제한된 콘텐츠가 "
+"포함되어 있습니다. 더 높은 권한을 가진 사용자가 이전에 수정했을 가능성이 "
+"있으며, 현재 권한으로는 내용을 그대로 유지하면서 변경하는 것은 불가능합니다."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__first_failure_date
@@ -46869,8 +46949,9 @@ msgstr "처음 크론이 실패하면 성공 시 자동으로 재설정됩니다
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "The following languages are not activated: %(missing_names)s"
-msgstr ""
+msgstr "다음 언어는 활성화되지 않습니다: %(missing_names)s"
 
 #. module: base
 #. odoo-python
@@ -47213,6 +47294,7 @@ msgstr "환율 1에 대한 통화 비율"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "The record %(xml_id)s has the module prefix %(module_name)s. This is the "
 "part before the '.' in the external id. Because the prefix refers to an "
@@ -47221,6 +47303,11 @@ msgid ""
 "For example, __import__, resulting in the external id __import__.%"
 "(record_id)s."
 msgstr ""
+"레코드 %(xml_id)s에 모듈 접두사 %(module_name)s가 있습니다. 이는 외부 ID의 "
+"'.' 앞부분 입니다. 접두사가 기존 모듈을 참조하므로 모듈이 업그레이드되면 이 "
+"레코드는 삭제됩니다. 접두사 없이 점만 사용하거나 기존 모듈이 아닌 접두사를 "
+"사용하십시오. 예를 들어, __import__, 를 사용할 경우 외부 ID는 __import__.%"
+"(record_id)s가 됩니다."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__company_registry
@@ -47502,11 +47589,15 @@ msgstr "이 파일은 webp 파일이 아닙니다."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
+#, fuzzy
 msgid ""
 "This file was generated using the universal <strong>Unicode/UTF-8</strong> "
 "file encoding, please be sure to view and edit\n"
 "                               using the same encoding."
 msgstr ""
+"이 파일은 범용 <strong>Unicode/UTF-8</strong> 파일 인코딩을 사용하여 "
+"생성되었습니다. 동일한 인코딩을 사용하여 \n"
+"                           확인 후 편집하세요."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__views
@@ -47651,12 +47742,17 @@ msgstr "이 모듈은 판매 렌탈 앱에 관리 기능을 추가합니다."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_add_gln
+#, fuzzy
 msgid ""
 "This module adds the Global Location Number to the partner. Used on delivery "
 "addresses, it is used to identify stock locations and is mandatory on the "
 "UBL/CII eInvoices (but not only). The module is intended be merged with "
 "account, later on, in master"
 msgstr ""
+"이 모듈을 통해 파트너에 글로벌 위치 번호(GLN)를 추가합니다. 이 번호는 배송 "
+"주소에 적용되어 재고 위치를 식별하는 데 활용됩니다. UBL/CII 전자 "
+"세금계산서에서 필수인 항목입니다(이외 다른 항목에서도 활용됨). 본 모듈은 "
+"추후 계정에 통합될 예정으로, 마스터"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_bot_hr
@@ -47712,10 +47808,13 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_whatsapp_sign
+#, fuzzy
 msgid ""
 "This module allows users to send signature requests via WhatsApp using Odoo "
 "Sign"
 msgstr ""
+"이 모듈을 통해 Odoo 전자 서명을 사용하여 WhatsApp으로 서명 요청을 보낼 수 "
+"있습니다"
 
 #. module: base
 #: model:ir.module.module,description:base.module_iot_box_image
@@ -48006,10 +48105,11 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_whatsapp_sign
+#, fuzzy
 msgid ""
 "This module enables users to send signature requests via WhatsApp in Odoo "
 "Sign"
-msgstr ""
+msgstr "이 모듈을 통해 Odoo 전자 서명에서 WhatsApp으로 서명 요청을 보낼 수 있습니다"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_track_gantt
@@ -48567,9 +48667,10 @@ msgstr "번역"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "Translations for model translated fields only accept falsy values and str"
-msgstr ""
+msgstr "모델 번역 필드에서의 번역은 거짓 값 및 STR 값만 허용됩니다."
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_fleet
@@ -48869,8 +48970,9 @@ msgstr "URL 코드"
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_attachment.py:0
+#, fuzzy
 msgid "URL attachment (%s) shouldn't be migrated to local."
-msgstr ""
+msgstr "URL 첨부 파일(%s)은 로컬로 마이그레이션할 수 없습니다."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__webhook_url
@@ -49039,10 +49141,11 @@ msgstr "우크라이나 - 회계"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "Unable to delete %(record)s because it is used as the default value of %"
 "(field)s"
-msgstr ""
+msgstr "%(record)s가 %(field)s의 기본값으로 사용되었으므로 삭제할 수 없습니다."
 
 #. module: base
 #. odoo-python
@@ -49224,8 +49327,9 @@ msgstr "미국 - 회계"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_direct_deposit
+#, fuzzy
 msgid "United States - Direct Deposit"
-msgstr ""
+msgstr "미국 - 자동 이체"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us
@@ -49296,8 +49400,9 @@ msgstr "알 수 없는 데이터베이스 식별자 : '%s'"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "Unknown error during import: %(error_type)s: %(error_message)s"
-msgstr ""
+msgstr "가져오기 중 알 수 없는 오류: %(error_type)s: %(error_message)s입니다."
 
 #. module: base
 #. odoo-python
@@ -49499,8 +49604,9 @@ msgstr "우루과이 - 회계 보고서"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uy_edi_stock
+#, fuzzy
 msgid "Uruguay - E-Remitos"
-msgstr ""
+msgstr "우루과이 - E-Remitos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_uy_edi
@@ -50163,7 +50269,7 @@ msgstr "이것을 상속한 화면"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_vineyard
 msgid "Vineyard"
-msgstr ""
+msgstr "와이너리"
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -50492,8 +50598,9 @@ msgstr "웹사이트 결제"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_sale
+#, fuzzy
 msgid "Website Sale"
-msgstr ""
+msgstr "웹사이트 판매"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_website_sale_full
@@ -50631,7 +50738,7 @@ msgstr "WhatsApp-판매"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_sign
 msgid "WhatsApp-Sign"
-msgstr ""
+msgstr "WhatsApp-전자 서명"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_whatsapp_event
@@ -51192,10 +51299,13 @@ msgstr "현재 사용중인 사용자를 비활성화 할 수 없습니다."
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "You cannot delete %(to_delete_record)s, as it is used by %"
 "(on_restrict_record)s"
 msgstr ""
+"%(to_delete_record)s는 현재 %(on_restrict_record)s에서 사용 중이므로 삭제할 "
+"수 없습니다."
 
 #. module: base
 #. odoo-python
@@ -51302,10 +51412,13 @@ msgstr "%s 키를 사용하여 구성 매개 변수의 이름을 변경할 수 �
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "You cannot use “%(property_name)s” because the linked “%(model_name)s” model "
 "doesn't exist or is invalid"
 msgstr ""
+"“%(property_name)s”은 연결된 “%(model_name)s” 모델이 없거나 유효하지 "
+"않으므로 사용할 수 없습니다."
 
 #. module: base
 #. odoo-python
