@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-17 18:36+0000\n"
-"PO-Revision-Date: 2026-04-23 22:13+0000\n"
+"PO-Revision-Date: 2026-06-14 21:05+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-17/account/"
 "cs/>\n"
@@ -34,7 +34,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #. odoo-python
@@ -1972,6 +1972,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
+"Akruální záznam vytvořen dne %(date)s: %(accrual_entry)s.                    "
+"A jeho opravný doklad: %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -2847,7 +2849,7 @@ msgstr "Přílohy"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__attachments_not_supported
 msgid "Attachments Not Supported"
-msgstr ""
+msgstr "Přílohy nejsou podporovány"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_expression__auditable
@@ -3200,7 +3202,7 @@ msgstr "Banka Odoo"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Bank settings"
-msgstr ""
+msgstr "Nastavení banky"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -5116,7 +5118,7 @@ msgstr "Do datumu"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "D"
-msgstr ""
+msgstr "D"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -5719,7 +5721,7 @@ msgstr "Zobrazit částku"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send__display_attachments_widget
 msgid "Display Attachments Widget"
-msgstr ""
+msgstr "Widget pro zobrazení příloh"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_inactive_currency_warning
@@ -6452,7 +6454,7 @@ msgstr "Náklady"
 #. module: account
 #: model:ir.actions.server,name:account.action_move_export_zip
 msgid "Export ZIP"
-msgstr ""
+msgstr "Exportovat ZIP"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
@@ -7174,6 +7176,8 @@ msgid ""
 "Groupby feature isn't supported by '%(engine)s' engine. Please remove the "
 "groupby value on '%(report_line)s'"
 msgstr ""
+"Funkce Groupby není podporována modulem „%(engine)s “. Odstraňte prosím "
+"hodnotu groupby z „%(report_line)s “."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_growth_comparison
@@ -8507,7 +8511,7 @@ msgstr "Dříve bylo '%(previous)s' a teď je '%(current)s'."
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Items With Missing Analytic Distribution"
-msgstr ""
+msgstr "Položky s chybějícím analytickým rozdělením"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__1
@@ -10080,7 +10084,7 @@ msgstr "Poznámky"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Nothing to export."
-msgstr ""
+msgstr "Není co exportovat."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__11
@@ -12628,7 +12632,7 @@ msgstr "Zobrazit všechny aktivity"
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "See items"
-msgstr ""
+msgstr "Viz položky"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -14033,6 +14037,8 @@ msgid ""
 "The %s chart template shouldn't be selected directly. Instead, you should "
 "directly select the chart template related to your country."
 msgstr ""
+"Šablonu grafu %s byste neměli vybírat přímo. Místo toho byste měli přímo "
+"vybrat šablonu grafu vztahující se k vaší zemi."
 
 #. module: account
 #. odoo-python
@@ -14233,6 +14239,8 @@ msgid ""
 "The bank account of your company is not trusted. Please ask an admin or "
 "someone with approval rights to check it."
 msgstr ""
+"Bankovní účet vaší společnosti není důvěryhodný. Požádejte správce nebo "
+"někoho s oprávněním ke schvalování, aby to zkontroloval."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -14306,6 +14314,9 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
+"Firemní bankovní účet (%(account_number)s) spojený s touto fakturou není "
+"důvěryhodný. Přejděte do nastavení banky, zkontrolujte, zda je váš, nebo "
+"opravte číslo, a klikněte na „Poslat peníze“, abyste jej ověřili."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -15513,7 +15524,7 @@ msgstr "Tento opakující záznam bude zaúčtován až do a včetně tohoto dat
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "This specific error occurred during the import:"
-msgstr ""
+msgstr "Během importu došlo k této konkrétní chybě:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -17373,7 +17384,7 @@ msgstr "Nemůžete zaúčtovat záznam v archivovaném deníku (%(journal)s)"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot post an entry with an archived analytic account: %s"
-msgstr ""
+msgstr "Z archivního analytického účtu nelze zveřejnit žádný příspěvek: %s"
 
 #. module: account
 #. odoo-python
@@ -17450,7 +17461,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot switch the type of a document with an existing sequence number."
-msgstr ""
+msgstr "Typ dokumentu s existujícím pořadovým číslem nelze změnit."
 
 #. module: account
 #. odoo-python

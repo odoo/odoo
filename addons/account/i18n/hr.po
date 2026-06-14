@@ -49,7 +49,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-17 18:36+0000\n"
-"PO-Revision-Date: 2026-04-18 17:00+0000\n"
+"PO-Revision-Date: 2026-06-14 21:07+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-17/account/"
 "hr/>\n"
@@ -59,7 +59,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #. odoo-python
@@ -3125,8 +3125,9 @@ msgstr "Bankovna transkacija"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
+#, fuzzy
 msgid "Bank Transactions Conditions"
-msgstr ""
+msgstr "Uvjeti bankovnih transakcija"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_suspense_account_id
@@ -5555,8 +5556,9 @@ msgstr "Konto razlika"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__allow_payment_tolerance
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__allow_payment_tolerance
+#, fuzzy
 msgid "Difference accepted in case of underpayment."
-msgstr ""
+msgstr "Prihvaćena razlika u slučaju nedovoljne uplate."
 
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
@@ -8304,17 +8306,17 @@ msgstr "Računi bez plaćanja"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:account.reconcile.model,name:account.1_reconcile_partial_underpaid
-#, python-format
+#, fuzzy, python-format
 msgid "Invoices/Bills Partial Match if Underpaid"
-msgstr ""
+msgstr "Djelomično usklađivanje računa u slučaju nedovoljne uplate"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #: model:account.reconcile.model,name:account.1_reconcile_perfect_match
-#, python-format
+#, fuzzy, python-format
 msgid "Invoices/Bills Perfect Match"
-msgstr ""
+msgstr "Potpuno podudaranje računa"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_invoicing_menu
@@ -9417,13 +9419,15 @@ msgstr "Odgovarajući #"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__matching_order
+#, fuzzy
 msgid "Matching Order"
-msgstr ""
+msgstr "Redoslijed usklađivanja"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
+#, fuzzy
 msgid "Matching categories"
-msgstr ""
+msgstr "Odabrane kategorije"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matching_number
@@ -9436,8 +9440,9 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_ids
+#, fuzzy
 msgid "Matching partners"
-msgstr ""
+msgstr "Partneri za usklađivanje"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
@@ -10115,10 +10120,13 @@ msgstr "Broj poruka sa greškama pri isporuci"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__past_months_limit
+#, fuzzy
 msgid ""
 "Number of months in the past to consider entries from when applying this "
 "model."
 msgstr ""
+"Broj mjeseci unatrag iz kojih će se uzimati stavke u obzir prilikom primjene "
+"ovog modela."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__value
@@ -12066,9 +12074,10 @@ msgstr "Odgovorna osoba"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_same_currency
+#, fuzzy
 msgid ""
 "Restrict to propositions having the same currency as the statement line."
-msgstr ""
+msgstr "Prikaži samo prijedloge s istom valutom kao stavka izvoda."
 
 #. module: account
 #. odoo-python
@@ -12238,13 +12247,15 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__invoice_matching
+#, fuzzy
 msgid "Rule to match invoices/bills"
-msgstr ""
+msgstr "Pravilo za usklađivanje računa"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_suggestion
+#, fuzzy
 msgid "Rule to suggest counterpart entry"
-msgstr ""
+msgstr "Pravilo za predlaganje protustavke"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
@@ -12462,8 +12473,9 @@ msgstr "Traži stavke glavne knjige"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__past_months_limit
+#, fuzzy
 msgid "Search Months Limit"
-msgstr ""
+msgstr "Maksimalno razdoblje pretraživanja (mjeseci)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -12478,19 +12490,28 @@ msgstr "Pretraži poreze"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_label
+#, fuzzy
 msgid "Search in the Statement's Label to find the Invoice/Payment's reference"
 msgstr ""
+"Pretraži oznaku stavke izvoda kako bi se pronašla referenca računa ili "
+"plaćanja."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_note
+#, fuzzy
 msgid "Search in the Statement's Note to find the Invoice/Payment's reference"
 msgstr ""
+"Pretraži napomenu stavke izvoda kako bi se pronašla referenca računa ili "
+"plaćanja"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_text_location_reference
+#, fuzzy
 msgid ""
 "Search in the Statement's Reference to find the Invoice/Payment's reference"
 msgstr ""
+"Pretraži referencu stavke izvoda kako bi se pronašla referenca računa ili "
+"plaćanja"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__line_section
@@ -14553,10 +14574,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
+#, fuzzy
 msgid ""
 "The reconciliation model will only be applied to the selected customer/"
 "vendor categories."
 msgstr ""
+"Model usklađivanja primjenjivat će se samo na odabrane kategorije kupaca/"
+"dobavljača."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_ids
@@ -14567,6 +14591,7 @@ msgstr "Model uparivanja primjenjivat će se samo na odabrane kupce/dobavljače.
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_nature
+#, fuzzy
 msgid ""
 "The reconciliation model will only be applied to the selected transaction "
 "type:\n"
@@ -14574,22 +14599,37 @@ msgid ""
 "        * Amount Paid: Only applied when paying an amount.\n"
 "        * Amount Paid/Received: Applied in both cases."
 msgstr ""
+"**Model usklađivanja primjenjivat će se samo na odabranu vrstu "
+"transakcije:**\n"
+"\n"
+"* **Primljeni iznos:** Primjenjuje se samo kada se prima uplata.\n"
+"\n"
+"* **Plaćeni iznos:** Primjenjuje se samo kada se vrši isplata.\n"
+"\n"
+"* **Plaćeni/primljeni iznos:** Primjenjuje se u oba slučaja."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner
+#, fuzzy
 msgid ""
 "The reconciliation model will only be applied when a customer/vendor is set."
 msgstr ""
+"Model usklađivanja primjenjivat će se samo kada je postavljen kupac ili "
+"dobavljač."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_amount
+#, fuzzy
 msgid ""
 "The reconciliation model will only be applied when the amount being lower "
 "than, greater than or between specified amount(s)."
 msgstr ""
+"Model usklađivanja primjenjivat će se samo ako je iznos manji od, veći od "
+"ili unutar zadanog raspona iznosa."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
+#, fuzzy
 msgid ""
 "The reconciliation model will only be applied when the label:\n"
 "        * Contains: The proposition label must contains this string (case "
@@ -14597,9 +14637,18 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"**Model usklađivanja primjenjivat će se samo kada oznaka:**\n"
+"\n"
+"* **Sadrži:** Oznaka prijedloga mora sadržavati ovaj tekst (neovisno o "
+"velikim i malim slovima).\n"
+"\n"
+"* **Ne sadrži:** Negacija uvjeta **„Sadrži”**.\n"
+"\n"
+"* **Odgovara regularnom izrazu:** Definirajte vlastiti regularni izraz."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_note
+#, fuzzy
 msgid ""
 "The reconciliation model will only be applied when the note:\n"
 "        * Contains: The proposition note must contains this string (case "
@@ -14607,9 +14656,18 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"**Model usklađivanja primjenjivat će se samo kada napomena:**\n"
+"\n"
+"* **Sadrži:** Napomena prijedloga mora sadržavati ovaj tekst (neovisno o "
+"velikim i malim slovima).\n"
+"\n"
+"* **Ne sadrži:** Negacija uvjeta **„Sadrži”**.\n"
+"\n"
+"* **Odgovara regularnom izrazu:** Definirajte vlastiti regularni izraz."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_transaction_type
+#, fuzzy
 msgid ""
 "The reconciliation model will only be applied when the transaction type:\n"
 "        * Contains: The proposition transaction type must contains this "
@@ -14617,6 +14675,14 @@ msgid ""
 "        * Not Contains: Negation of \"Contains\".\n"
 "        * Match Regex: Define your own regular expression."
 msgstr ""
+"**Model usklađivanja primjenjivat će se samo kada vrsta transakcije:**\n"
+"\n"
+"* **Sadrži:** Vrsta transakcije prijedloga mora sadržavati ovaj tekst "
+"(neovisno o velikim i malim slovima).\n"
+"\n"
+"* **Ne sadrži:** Negacija uvjeta **„Sadrži”**.\n"
+"\n"
+"* **Odgovara regularnom izrazu:** Definirajte vlastiti regularni izraz."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_journal_ids
@@ -15149,10 +15215,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__to_check
+#, fuzzy
 msgid ""
 "This matching rule is used when the user is not certain of all the "
 "information of the counterpart."
 msgstr ""
+"Ovo pravilo usklađivanja koristi se kada korisnik nema sve informacije o "
+"protustavci."
 
 #. module: account
 #. odoo-python

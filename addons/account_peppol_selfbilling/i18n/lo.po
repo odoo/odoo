@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-06 18:38+0000\n"
-"PO-Revision-Date: 2026-05-18 16:19+0000\n"
+"PO-Revision-Date: 2026-06-14 21:07+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lao <https://translate.odoo.com/projects/odoo-17/"
 "account_peppol_selfbilling/lo/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,body_html:account_peppol_selfbilling.email_template_edi_self_billing_invoice
@@ -113,7 +113,7 @@ msgstr "ການສົ່ງລາຍການເຄື່ອນໄຫວບັ
 #: model:ir.model.fields,field_description:account_peppol_selfbilling.field_account_move__can_send_as_self_invoice
 #: model:ir.model.fields,field_description:account_peppol_selfbilling.field_account_payment__can_send_as_self_invoice
 msgid "Can Send As Self Invoice"
-msgstr ""
+msgstr "ສາມາດສົ່ງເປັນໃບເກັບເງິນທີ່ອອກດ້ວຍຕົນເອງໄດ້"
 
 #. module: account_peppol_selfbilling
 #: model:ir.model,name:account_peppol_selfbilling.model_account_journal
@@ -129,32 +129,32 @@ msgstr "ການລົງລາຍການບັນຊີ"
 #: model:ir.model.fields,field_description:account_peppol_selfbilling.field_account_journal__is_self_billing
 #: model_terms:ir.ui.view,arch_db:account_peppol_selfbilling.report_invoice_document
 msgid "Self Billing"
-msgstr ""
+msgstr "ການອອກໃບແຈ້ງໜີ້ດ້ວຍຕົນເອງ"
 
 #. module: account_peppol_selfbilling
 #: model_terms:ir.ui.view,arch_db:account_peppol_selfbilling.report_invoice_document
 msgid "Self Billing Credit Note"
-msgstr ""
+msgstr "ໃບຫຼຸດໜີ້ທີ່ອອກດ້ວຍຕົນເອງ"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,name:account_peppol_selfbilling.email_template_edi_self_billing_credit_note
 msgid "Self-billing credit note: Sending"
-msgstr ""
+msgstr "ໃບຫຼຸດໜີ້ທີ່ອອກດ້ວຍຕົນເອງ: ກຳລັງສົ່ງ"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,name:account_peppol_selfbilling.email_template_edi_self_billing_invoice
 msgid "Self-billing invoice: Sending"
-msgstr ""
+msgstr "ໃບແຈ້ງໜີ້ທີ່ອອກດ້ວຍຕົນເອງ: ກຳລັງສົ່ງ"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,description:account_peppol_selfbilling.email_template_edi_self_billing_credit_note
 msgid "Sent to customers with the self-billing credit note in attachment"
-msgstr ""
+msgstr "ສົ່ງໃຫ້ລູກຄ້າພ້ອມກັບໃບຫຼຸດໜີ້ທີ່ອອກດ້ວຍຕົນເອງໃນໄຟລ໌ຄັດຕິດ"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,description:account_peppol_selfbilling.email_template_edi_self_billing_invoice
 msgid "Sent to customers with their self-billing invoices in attachment"
-msgstr ""
+msgstr "ສົ່ງໃຫ້ລູກຄ້າພ້ອມກັບໃບແຈ້ງໜີ້ທີ່ອອກດ້ວຍຕົນເອງໃນໄຟລ໌ຄັດຕິດ"
 
 #. module: account_peppol_selfbilling
 #: model:ir.model.fields,help:account_peppol_selfbilling.field_account_journal__is_self_billing
@@ -163,6 +163,9 @@ msgid ""
 "self-billing sending on Peppol, vendor bills will be available to be sent as"
 " self-billed invoices via Peppol."
 msgstr ""
+"ປຶ້ມບັນຊີປະຈຳວັນນີ້ແມ່ນສຳລັບໃບເກັບເງິນທີ່ອອກດ້ວຍຕົນເອງ (self-billing invoices). ຫາກບໍລິສັດໄດ້ເປີດ"
+"ໃຊ້ງານການສົ່ງແບບອອກດ້ວຍຕົນເອງໃນ Peppol, ໃບເກັບເງິນຈາກຜູ້ສະໜອງຈະສາມາດສົ່ງເປັນໃບເກັບເງິນທີ່ອອກດ້"
+"ວຍຕົນເອງຜ່ານ Peppol ໄດ້."
 
 #. module: account_peppol_selfbilling
 #: model:ir.model,name:account_peppol_selfbilling.model_account_edi_xml_ubl_bis3
@@ -185,6 +188,8 @@ msgid ""
 "{{ object.company_id.name }} Self-billing credit note (Ref {{ object.name or"
 " 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} ໃບຫຼຸດໜີ້ທີ່ອອກໃຫ້ຕົນເອງ (Ref {{ object.name or 'n/"
+"a' }})"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,subject:account_peppol_selfbilling.email_template_edi_self_billing_invoice
@@ -192,3 +197,5 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or "
 "'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} ໃບແແຈ້ງໜີ້ທີ່ອອກໃຫ້ຕົນເອງ (Ref {{ object.name or 'n/"
+"a' }})"

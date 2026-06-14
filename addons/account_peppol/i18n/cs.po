@@ -11,13 +11,14 @@
 # Tereza Mokrá, 2024
 # Wil Odoo, 2024
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-24 17:37+0000\n"
-"PO-Revision-Date: 2026-04-25 17:00+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-06-14 21:00+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-17/"
 "account_peppol/cs/>\n"
 "Language: cs\n"
@@ -26,7 +27,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
@@ -35,6 +36,9 @@ msgid ""
 "                                In Belgium, electronic invoicing is "
 "<u>mandatory as of January 2026</u> - don't wait to register."
 msgstr ""
+"<br/>\n"
+"                                V Belgii je elektronická fakturace <u>"
+"povinná od ledna 2026</u> – nečekejte s registrací."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.account_peppol_view_move_form
@@ -100,6 +104,8 @@ msgid ""
 "A participant with these details has already been registered on the network. "
 "If you continue, Odoo will register this company as sender only."
 msgstr ""
+"Účastník s těmito údaji již byl v síti zaregistrován. Pokud budete "
+"pokračovat, Odoo zaregistruje tuto společnost pouze jako odesílatele."
 
 #. module: account_peppol
 #. odoo-python
@@ -116,6 +122,8 @@ msgid ""
 "A receiver connection is already registered for this participant. Please "
 "deregister that receiver connection first."
 msgstr ""
+"Pro tohoto účastníka je již zaregistrováno připojení přijímače. Nejprve "
+"prosím zrušte registraci tohoto připojení přijímače."
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_proxy_client_user
@@ -125,7 +133,7 @@ msgstr "Proxy uživatel EDI účtu"
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_move_send
 msgid "Account Move Send"
-msgstr "Poslání účetního záznamu"
+msgstr "Odesílání účetního záznamu"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_peppol_edi_mode
@@ -158,7 +166,7 @@ msgstr "Aktivní"
 #: code:addons/account_peppol/static/src/components/res_config_settings_buttons/res_config_settings_buttons.xml:0
 #, python-format
 msgid "Allow reception"
-msgstr ""
+msgstr "Povolit příjem"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -176,7 +184,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__sender
 msgid "Can send but not receive"
-msgstr ""
+msgstr "Může odesílat, ale nemůže přijímat"
 
 #. module: account_peppol
 #. odoo-python
@@ -224,7 +232,7 @@ msgstr "Nelze zrušit záznam, který již byl poslán skrze PEPPOL"
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Cannot register a user with a %s application"
-msgstr "Nelze registrovat uživatele s přihláškou ve stavu %s"
+msgstr "Nelze registrovat uživatele s aplikaci %s"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__account_peppol_validity_last_check
@@ -307,7 +315,7 @@ msgstr "Odregistrovat se z Peppol"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Disable the reception."
-msgstr ""
+msgstr "Vypnout příjem."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__done
@@ -363,13 +371,13 @@ msgstr "Deník příchozích faktur"
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "Invoice %s is too big to send via peppol (64MB limit)"
-msgstr ""
+msgstr "Faktura %s je příliš velká na odeslání přes Peppol (limit 64 MB)"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__is_peppol_edi_format
 #: model:ir.model.fields,field_description:account_peppol.field_res_users__is_peppol_edi_format
 msgid "Is Peppol Edi Format"
-msgstr ""
+msgstr "Je formát Peppol Edi"
 
 #. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_journal
@@ -442,7 +450,7 @@ msgstr "Odoo"
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Only sender-only connections can be reactivated for reception."
-msgstr ""
+msgstr "Pro příjem lze reaktivovat pouze spojení typu „pouze odesílatel“."
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_edi_proxy_client_user__proxy_type__peppol
@@ -501,17 +509,17 @@ msgstr "PEPPOL: aktualizace stavu účastníků"
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid_format
 msgid "Partner cannot receive format"
-msgstr ""
+msgstr "Partner nemůže přijímat formát"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_valid
 msgid "Partner is not on Peppol"
-msgstr ""
+msgstr "Partner není v systému Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__valid
 msgid "Partner is on Peppol"
-msgstr ""
+msgstr "Partner je v systému Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_company__account_peppol_proxy_state__pending
@@ -535,7 +543,7 @@ msgstr "Peppol EAS"
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_view_tree
 msgid "Peppol Endpoint"
-msgstr "Peppol Endpoint"
+msgstr "Koncový bod Peppol"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_bank_statement_line__peppol_is_demo_uuid
@@ -559,7 +567,7 @@ msgstr "Faktury připravené pro Peppol"
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__peppol_use_parent_company
 msgid "Peppol Use Parent Company"
-msgstr ""
+msgstr "Použit nadřazenou společnost Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_partner_view_tree
@@ -634,6 +642,8 @@ msgid ""
 "Please enter the mobile number in the correct international format.\n"
 "For example: +32123456789, where +32 is the country code."
 msgstr ""
+"Zadejte prosím číslo mobilního telefonu ve správném mezinárodním formátu.\n"
+"Například: +32123456789, kde +32 je kód země."
 
 #. module: account_peppol
 #. odoo-python
@@ -647,7 +657,7 @@ msgstr "Prosíme o vyplnění EAS kódu a kódu ID účastníka."
 #: code:addons/account_peppol/models/res_company.py:0
 #, python-format
 msgid "Please install the phonenumbers library."
-msgstr ""
+msgstr "Nainstalujte prosím knihovnu telefonních čísel."
 
 #. module: account_peppol
 #. odoo-python
@@ -700,6 +710,8 @@ msgid ""
 "Route your vendor bills elsewhere while maintaining the ability to send "
 "customer invoices."
 msgstr ""
+"Přesměrujte faktury od dodavatelů jinam, přičemž si zachovejte možnost "
+"zasílat faktury zákazníkům."
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__peppol_verification_code
@@ -734,7 +746,7 @@ msgstr "Přeskočeno"
 #: code:addons/account_peppol/wizard/account_move_send.py:0
 #, python-format
 msgid "Some attachments could not be sent with the XML:"
-msgstr ""
+msgstr "Některé přílohy nebylo možné odeslat s XML:"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -777,14 +789,14 @@ msgstr ""
 #: code:addons/account_peppol/models/res_company.py:0
 #, python-format
 msgid "The Peppol endpoint identification number is not correct."
-msgstr "Identifikační číslo Peppol endpointu není správné."
+msgstr "Identifikační číslo koncového bodu Peppol není správné."
 
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "The Peppol service that is used is likely to be %s."
-msgstr ""
+msgstr "Používanou službou Peppol bude pravděpodobně %s."
 
 #. module: account_peppol
 #. odoo-python
@@ -794,8 +806,8 @@ msgid ""
 "The endpoint number might not be correct. Please check if you entered the "
 "right identification number."
 msgstr ""
-"Číslo endpointu nemusí být správné. Ověřte, zda-li jste vyplnili správné "
-"identifikační číslo."
+"Je možné, že číslo koncového bodu je nesprávné. Ověřte, zda-li jste vyplnili "
+"správné identifikační číslo."
 
 #. module: account_peppol
 #. odoo-python
@@ -817,6 +829,8 @@ msgid ""
 "The invoice has been sent to the Peppol Access Point. The following "
 "attachments were sent with the XML:"
 msgstr ""
+"Faktura byla odeslána do přístupového bodu Peppol. S XML byly odeslány "
+"následující přílohy:"
 
 #. module: account_peppol
 #. odoo-python
@@ -826,6 +840,8 @@ msgid ""
 "The partner has indicated it does not accept this document type, so you "
 "cannot send this invoice via Peppol."
 msgstr ""
+"Partner uvedl, že tento typ dokumentu nepřijímá, proto tuto fakturu nelze "
+"odeslat přes Peppol."
 
 #. module: account_peppol
 #. odoo-python
@@ -881,11 +897,13 @@ msgstr "Ověřovací kód by měl obsahovat šest číslic."
 msgid ""
 "This feature is deprecated. Contact odoo support if you need a migration key."
 msgstr ""
+"Tato funkce je zastaralá. Pokud potřebujete migrační klíč, kontaktujte "
+"podporu Odoo."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "This invoice has also been"
-msgstr ""
+msgstr "Tato faktura byla také"
 
 #. module: account_peppol
 #. odoo-python
@@ -895,6 +913,8 @@ msgid ""
 "This peppol identification is already used by %(parent_name)s. Please use "
 "something else."
 msgstr ""
+"Tato identifikace Peppol je již používána na %(parent_name)s. Použijte "
+"prosím něco jiného."
 
 #. module: account_peppol
 #. odoo-python
@@ -922,7 +942,7 @@ msgstr "Příliš mnoho pokusů o vyžádání kódu SMS. Zkuste to prosím pozd
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__res_partner__account_peppol_verification_label__not_verified
 msgid "Unchecked"
-msgstr ""
+msgstr "Neoznačené"
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_company__peppol_endpoint
@@ -932,7 +952,7 @@ msgid ""
 "known as 'Endpoint ID'."
 msgstr ""
 "Jedinečný identifikátor používaný pro BIS Billing 3.0 a jeho deriváty, známý "
-"také jako 'Endpoint ID'."
+"také jako 'Endpoint ID' (ID koncového bodu)."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1024,6 +1044,10 @@ msgid ""
 "Please change the journal used for Peppol reception before changing the type "
 "of this journal."
 msgstr ""
+"Typ deníku používaného pro příjem faktur Peppol nelze změnit na jiný typ než "
+"„Nákup“.\n"
+"Před změnou typu tohoto deníku prosím změňte deník používaný pro příjem "
+"Peppol."
 
 #. module: account_peppol
 #. odoo-javascript
@@ -1047,7 +1071,7 @@ msgstr "Na toto mobilní číslo obdržíte ověřovací kód."
 #: code:addons/account_peppol/models/res_config_settings.py:0
 #, python-format
 msgid "Your Peppol activation code in Odoo is"
-msgstr ""
+msgstr "Váš aktivační kód Peppol v Odoo je"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
@@ -1067,22 +1091,22 @@ msgstr "Vaše registrace by měla být aktivována během jednoho dne."
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "could not be sent via Peppol"
-msgstr ""
+msgstr "nelze odeslat přes Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "sent via Peppol"
-msgstr ""
+msgstr "odesláno přes Peppol"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "to send invoices, but this one"
-msgstr ""
+msgstr "k zasílání faktur, ale tento"
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
-msgstr ""
+msgstr "využívá"
 
 #, python-format
 #~ msgid "Can't cancel registration with this status: %s"
