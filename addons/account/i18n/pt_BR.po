@@ -22,14 +22,14 @@
 # Layna Nascimento, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-05 19:32+0000\n"
-"PO-Revision-Date: 2026-04-23 11:51+0000\n"
-"Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
+"PO-Revision-Date: 2026-06-13 18:27+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
 "s19-2/account/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -38,7 +38,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -2476,8 +2476,9 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
+#, fuzzy
 msgid "A fiscal position with a foreign Tax ID already exists in this country."
-msgstr ""
+msgstr "Já existe uma posição fiscal com um CNPJ estrangeiro neste país."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -3713,8 +3714,9 @@ msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
+#, fuzzy
 msgid "Allow Foreign Tax ID"
-msgstr ""
+msgstr "Permitir identificação fiscal estrangeira"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -4192,15 +4194,19 @@ msgstr "Aplique apenas se o país de entrega corresponder."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
+#, fuzzy
 msgid "Apply only if partner has a Tax ID."
-msgstr ""
+msgstr "Aplique apenas se o parceiro tiver um CNPJ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
+#, fuzzy
 msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
 "criterias (Tax ID/Country) are met."
 msgstr ""
+"Aplique o mapeamento de conta e imposto em faturas automaticamente se os "
+"critérios de correspondência (imposto/país) forem atendidos."
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_profit_or_loss_appropriation
@@ -5130,11 +5136,15 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_journal__journal_group_id
 #: model:ir.model.fields,help:account.field_account_move__journal_group_id
 #: model:ir.model.fields,help:account.field_account_move_line__journal_group_id
+#, fuzzy
 msgid ""
 "By default, all journals post to the Statutory Ledger (Local GAAP). \n"
 "Specifying a ledger allows you to isolate IFRS, Tax, or Intercompany "
 "adjustments without affecting local statutory accounts."
 msgstr ""
+"Por padrão, todos os diários são lançados no Razão Legal (GAAP local). \n"
+"Especificar um livro contábil permite isolar ajustes de IFRS, fiscais ou "
+"entre empresas sem afetar as contas legais locais."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__foldable
@@ -6192,8 +6202,9 @@ msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
+#, fuzzy
 msgid "Cost of revenue"
-msgstr ""
+msgstr "Custo da receita"
 
 #. module: account
 #: model:account.account,description:account.2_account_account_us_postage
@@ -6249,8 +6260,9 @@ msgstr "Itens de contrapartida"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
+#, fuzzy
 msgid "Countries for which the company has a Tax ID"
-msgstr ""
+msgstr "Países nos quais a empresa possui um CNPJ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -9352,8 +9364,9 @@ msgstr "ID fiscal estrangeira"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
+#, fuzzy
 msgid "Foreign Tax ID countries"
-msgstr ""
+msgstr "Países com identificação fiscal estrangeira"
 
 #. module: account
 #: model:account.fiscal.position,name:account.1_template_generic_export_fiscal_position
@@ -12892,8 +12905,9 @@ msgstr "Precisa de solicitação de cancelamento"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#, fuzzy
 msgid "Need to update"
-msgstr ""
+msgstr "Necessita de atualização"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -16877,8 +16891,9 @@ msgstr "Mostrar recursos de inalterabilidade"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_invoice_vendor_bill
 #: model:ir.model.fields,field_description:account.field_account_move__show_invoice_vendor_bill
+#, fuzzy
 msgid "Show Invoice Vendor Bill"
-msgstr ""
+msgstr "Mostrar conta do fornecedor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_journal
@@ -17675,8 +17690,9 @@ msgstr "CPF/CNPJ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
+#, fuzzy
 msgid "Tax ID required"
-msgstr ""
+msgstr "É necessário o número de identificação fiscal"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
@@ -18451,10 +18467,13 @@ msgstr "O país para o qual este imposto se aplica."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
+#, fuzzy
 msgid ""
 "The country of the foreign Tax ID could not be detected. Please assign a "
 "country to the fiscal position."
 msgstr ""
+"Não foi possível detectar o país do CNPJ estrangeiro. Atribua um país à "
+"posição fiscal."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -19406,10 +19425,13 @@ msgstr "Essa conta será usada ao validar uma fatura de cliente."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
+#, fuzzy
 msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
 "this screen.  -  This action will affect your current company only."
 msgstr ""
+"Esta ação é irreversível: o crédito/débito não pode ser modificado novamente "
+"nesta tela.  -  Esta ação afetará apenas sua empresa atual."
 
 #. module: account
 #. odoo-python
@@ -19501,10 +19523,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid ""
 "This entry has already been supervised. You need the accounting manager role "
 "to change it."
 msgstr ""
+"Esta entrada já foi supervisionada. Você precisa da função de gerente "
+"financeiro para alterá-la."
 
 #. module: account
 #. odoo-python
@@ -19527,9 +19552,12 @@ msgstr "Este lançamento foi revertido de %s"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, fuzzy
 msgid ""
 "This entry has been reviewed, You need the bookkeeper role to change it."
 msgstr ""
+"Esta entrada foi revisada. Você precisa ter a função de contador para alterá-"
+"la."
 
 #. module: account
 #. odoo-python
@@ -20418,8 +20446,9 @@ msgstr "Atualizar os Termos e Condições"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
+#, fuzzy
 msgid "Update app"
-msgstr ""
+msgstr "Atualizar aplicativo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -21427,10 +21456,13 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/partner.py:0
+#, fuzzy
 msgid ""
 "You cannot create a fiscal position with a foreign Tax ID within your fiscal "
 "country without assigning it a state."
 msgstr ""
+"Não é possível criar uma posição fiscal com um CNPJ estrangeiro dentro do "
+"seu país fiscal sem atribuir-lhe um estado."
 
 #. module: account
 #. odoo-python
@@ -22216,8 +22248,9 @@ msgstr "ex.: Taxas bancárias"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_tree
+#, fuzzy
 msgid "e.g. CONSO, IFRS, ..."
-msgstr ""
+msgstr "por ex. CONSO, IFRS, ..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form

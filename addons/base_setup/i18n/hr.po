@@ -14,15 +14,15 @@
 # Matej Mijoč, 2022
 # Martin Trigaux, 2023
 # Bole <bole@dajmi5.com>, 2023
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-04 18:36+0000\n"
-"PO-Revision-Date: 2025-11-15 11:28+0000\n"
+"PO-Revision-Date: 2026-06-13 13:22+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/"
+"Language-Team: Croatian <https://translate.odoo.com/projects/odoo-s19-2/"
 "base_setup/hr/>\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +30,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -60,6 +60,7 @@ msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "<span class=\"o_form_label\" invisible=\"company_count &gt; 1\">\n"
 "                                        Company\n"
@@ -70,9 +71,18 @@ msgid ""
 "                                    </span>\n"
 "                                    <br/>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"company_count &gt; 1\">\n"
+"                                        Tvrtka\n"
+"                                    </span>\n"
+"                                    <span class=\"o_form_label\" "
+"invisible=\"company_count &lt;= 1\">\n"
+"                                        Tvrtke\n"
+"                                    </span>\n"
+"                                    <br/>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "<span class=\"o_form_label\" invisible=\"language_count &gt; 1\">\n"
 "                                            Language\n"
@@ -82,13 +92,23 @@ msgid ""
 "                                            Languages\n"
 "                                        </span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"language_count &gt; 1\">\n"
+"                                            Jezik\n"
+"                                        </span>\n"
+"                                        <span class=\"o_form_label\" "
+"invisible=\"language_count &lt;= 1\">\n"
+"                                            Jezici\n"
+"                                        </span>"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "<strong>Save</strong> this page and come back here to choose your Geo "
 "Provider."
 msgstr ""
+"<strong>Spremite</strong> ovu stranicu i vratite se ovdje da odaberete "
+"pružatelja geolokacije."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -101,15 +121,21 @@ msgstr ""
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "<strong>Save</strong> this page and come back here to set up Google Places "
 "API key"
 msgstr ""
+"<strong>Spremite</strong> ovu stranicu i vratite se ovdje da postavite "
+"Google Places API ključ"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#, fuzzy
 msgid "<strong>Save</strong> this page and come back here to set up reCaptcha."
 msgstr ""
+"<strong>Spremite</strong> ovu stranicu i vratite se ovdje da postavite "
+"reCaptcha."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -161,8 +187,9 @@ msgstr ""
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_microsoft_calendar
+#, fuzzy
 msgid "Allow the users to synchronize their calendar with Outlook Calendar"
-msgstr ""
+msgstr "Dopusti korisnicima sinkronizaciju kalendara s Outlook kalendarom"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_import
@@ -177,8 +204,9 @@ msgstr "Omogućuje rad u multivalutnoj okolini"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#, fuzzy
 msgid "Autocomplete partner addresses with Google Places"
-msgstr ""
+msgstr "Automatski dovrši adrese partnera pomoću Google Placesa"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -187,10 +215,14 @@ msgstr "Automatski obogatite svoju bazu kontakata podacima o tvrtkama."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "By default, new users get highest access rights for all installed apps. If "
 "unchecked, new users will only have basic employee access."
 msgstr ""
+"Prema zadanom, novi korisnici dobivaju najviša prava pristupa za sve "
+"instalirane aplikacije. Ako nije označeno, novi korisnici imat će samo "
+"osnovni pristup zaposlenika."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -199,8 +231,9 @@ msgstr "Odaberite izgled vaših dokumenata"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_website_cf_turnstile
+#, fuzzy
 msgid "Cloudflare Turnstile"
-msgstr ""
+msgstr "Cloudflare Turnstile"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -214,8 +247,9 @@ msgstr "Tvrtka"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_country_code
+#, fuzzy
 msgid "Company Country Code"
-msgstr ""
+msgstr "Šifra države tvrtke"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_informations
@@ -253,15 +287,19 @@ msgstr "Kontakti"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__company_country_group_codes
+#, fuzzy
 msgid "Country Group Codes"
-msgstr ""
+msgstr "Kodovi grupa država"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Create corresponding in/out orders and bills when you sell/buy between your "
 "companies"
 msgstr ""
+"Kreiraj odgovarajuće ulazne/izlazne naloge i račune kada prodajete/kupujete "
+"između svojih tvrtki"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__report_footer
@@ -276,8 +314,9 @@ msgstr "Zadana prava pristupa"
 #. module: base_setup
 #. odoo-python
 #: code:addons/base_setup/models/res_config_settings.py:0
+#, fuzzy
 msgid "Default access for new users"
-msgstr ""
+msgstr "Zadani pristup za nove korisnike"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_ir_http__display_name
@@ -305,8 +344,9 @@ msgstr "Uredi raspored"
 #. module: base_setup
 #. odoo-python
 #: code:addons/base_setup/models/res_config_settings.py:0
+#, fuzzy
 msgid "Edit new user default group"
-msgstr ""
+msgstr "Uredi zadanu grupu novih korisnika"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -335,8 +375,9 @@ msgstr "Opće postavke"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_base_geolocalize
+#, fuzzy
 msgid "GeoLocalize"
-msgstr ""
+msgstr "GeoLokalizacija"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -350,8 +391,9 @@ msgstr "Geolokacija"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_address_autocomplete
+#, fuzzy
 msgid "Google Address Autocomplete"
-msgstr ""
+msgstr "Google automatsko dovršavanje adrese"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_ir_http
@@ -378,18 +420,21 @@ msgstr "Integracije"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#, fuzzy
 msgid "Inter-Company Transactions"
-msgstr ""
+msgstr "Međukompanijske transakcije"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__is_root_company
+#, fuzzy
 msgid "Is Root Company"
-msgstr ""
+msgstr "Je matična tvrtka"
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_kpi_provider
+#, fuzzy
 msgid "KPI Provider"
-msgstr ""
+msgstr "Pružatelj KPI-jeva"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_auth_ldap
@@ -499,8 +544,9 @@ msgstr "Progresivna web aplikacija"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#, fuzzy
 msgid "Protect your forms from spam and abuse."
-msgstr ""
+msgstr "Zaštitite svoje obrasce od spama i zloupotrebe."
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
@@ -510,8 +556,9 @@ msgstr "Zaštitite svoje obrasce CF Turnstileom."
 #. module: base_setup
 #. odoo-javascript
 #: code:addons/base_setup/static/src/views/module_views.xml:0
+#, fuzzy
 msgid "Reset Updating States"
-msgstr ""
+msgstr "Resetiraj stanja ažuriranja"
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_sms
@@ -604,19 +651,24 @@ msgstr "PDV"
 
 #. module: base_setup
 #: model_terms:ir.ui.view,arch_db:base_setup.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "When populating your address book, Odoo provides a list of matching "
 "companies. When selecting one item, the company data and logo are auto-"
 "filled."
 msgstr ""
+"Prilikom popunjavanja adresara, Odoo pruža popis odgovarajućih tvrtki. "
+"Odabirom jedne stavke, podaci o tvrtki i logo se automatski popunjavaju."
 
 #. module: base_setup
 #. odoo-python
 #: code:addons/base_setup/models/res_users.py:0
+#, fuzzy
 msgid "You have to install the Discuss application to use this feature."
-msgstr ""
+msgstr "Morate instalirati aplikaciju Discuss za korištenje ove značajke."
 
 #. module: base_setup
 #: model:ir.model.fields,field_description:base_setup.field_res_config_settings__module_google_recaptcha
+#, fuzzy
 msgid "reCAPTCHA"
-msgstr ""
+msgstr "reCAPTCHA"
