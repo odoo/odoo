@@ -41,13 +41,14 @@ class CrmStage(models.Model):
 
     @api.onchange('is_won')
     def _onchange_is_won(self):
-        return {
-            'warning': {
-                'title': _("Do you really want to update this stage?"),
-                'message': _("Changing the value of 'Is Won Stage' may induce a large number of operations, "
-                            "as the probabilities of opportunities in this stage will be recomputed on saving."),
+        if self._origin.id and self.is_won != self._origin.is_won:
+            return {
+                'warning': {
+                    'title': _("Do you really want to update this stage?"),
+                    'message': _("Changing the value of 'Is Won Stage' may induce a large number of operations, "
+                                 "as the probabilities of opportunities in this stage will be recomputed on saving."),
+                }
             }
-        }
 
     def write(self, vals):
         """ Since leads that are in a won stage must have their
