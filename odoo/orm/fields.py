@@ -270,8 +270,8 @@ class Field[T]:
     _sequence: int                      # absolute ordering of the field
     _base_fields__: tuple[Self, ...] = ()  # the fields defining self, in override order
     _extra_keys__: tuple[str, ...] = ()  # unknown attributes set on the field
-    _direct: bool = False               # whether self may be used directly (shared)
-    _toplevel: bool = False             # whether self is on the model's registry class
+    _shareable: bool = True             # whether self can be shared across registries
+                                        # developers should never override a non shareable field to shareable
 
     inherited: bool = False             # whether the field is inherited (_inherits)
     inherited_field: Field | None = None  # the corresponding inherited field
@@ -400,20 +400,22 @@ class Field[T]:
         self.model_name = owner._name
         self.name = name
         if getattr(owner, 'pool', None) is None:  # models.is_model_definition(owner)
-            # only for fields on definition classes, not registry classes
+            assert '_base_fields__' not in self._args__
             self._module = owner._module
             owner._field_definitions.append(self)
-
-        if not self._args__.get('related'):
-            self._direct = True
-        if self._direct or self._toplevel:
+            if self._shareable and (self._args__.get('related') or not self._args__.get('_shareable', True)):
+                self._shareable = False
+            if self._shareable:
+                # non shareable field objects in model definition classes won't be in a model registry class,
+                # skipping setting attributes for them to save memory
+                self._setup_attrs__(owner, name)
+        else:  # model registry class
             self._setup_attrs__(owner, name)
-            if self._toplevel:
-                # free memory from stuff that is no longer useful
-                self.__dict__.pop('_args__', None)
-                if not self.related:
-                    # keep _base_fields__ on related fields for incremental model setup
-                    self.__dict__.pop('_base_fields__', None)
+            # free memory from stuff that is no longer useful
+            self.__dict__.pop('_args__', None)
+            if not self.related:
+                # keep _base_fields__ on related fields for incremental model setup
+                self.__dict__.pop('_base_fields__', None)
 
     #
     # Setup field parameter attributes

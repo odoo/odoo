@@ -509,7 +509,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
                     field.__dict__.clear()
                     field.__init__(_base_fields__=base_fields)
-                    field._toplevel = True
+                    field._shareable = False
                     field.__set_name__(model_cls, name)
                     field._setup_done = False
 

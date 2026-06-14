@@ -105,7 +105,9 @@ class Properties(Field):
 
     def setup(self, model):
         if not self._setup_done and self.definition_record and self.definition_record_field:
-            definition_record_field = model.env[model._fields[self.definition_record].comodel_name]._fields[self.definition_record_field]
+            definition_record_model = model.env[model._fields[self.definition_record].comodel_name]
+            definition_record_field = definition_record_model._fields[self.definition_record_field]
+            definition_record_field.setup(definition_record_model)
             definition_record_field.properties_fields += (self,)
         return super().setup(model)
 
@@ -982,7 +984,8 @@ class PropertiesDefinition(Field):
     copy = True                         # containers may act like templates, keep definitions to ease usage
     readonly = False
     prefetch = True
-    properties_fields = ()  # List of Properties fields using that definition
+    properties_fields: tuple[Property, ...] = ()  # List of Properties fields using that definition
+    _shareable = False                  # field.properties_fields depends on other fields which is not shareable across registries
 
     REQUIRED_KEYS = ('name', 'type')
     ALLOWED_KEYS = (
@@ -1000,7 +1003,8 @@ class PropertiesDefinition(Field):
     }
 
     def setup(self, model):
-        self.properties_fields = ()  # reset in case of re-setup
+        if not self._setup_done:
+            self.properties_fields = ()  # reset in case of re-setup
         return super().setup(model)
 
     def set_properties_visibility(self, definition, property_names, hidden: bool):

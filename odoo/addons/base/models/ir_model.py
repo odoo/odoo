@@ -2580,7 +2580,7 @@ class IrModelData(models.Model):
             if model is not None:
                 field = model._fields.get(ir_field.name)
                 if field is not None and field.prefetch:
-                    if field._toplevel:
+                    if not field._shareable:
                         # the field is specific to this registry
                         field.prefetch = False
                     else:
