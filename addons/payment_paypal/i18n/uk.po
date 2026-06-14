@@ -5,13 +5,13 @@
 # Translators:
 # Martin Trigaux, 2019
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2025-11-12 13:03+0000\n"
+"PO-Revision-Date: 2026-06-13 05:14+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
 "payment_paypal/uk/>\n"
@@ -19,11 +19,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
+"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
@@ -43,8 +43,9 @@ msgstr "Код"
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_provider.py:0
+#, fuzzy
 msgid "Could not generate a new access token."
-msgstr ""
+msgstr "Не вдалося згенерувати новий токен доступу."
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__display_name
@@ -76,8 +77,9 @@ msgstr "ID"
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/controllers/main.py:0
+#, fuzzy
 msgid "Invalid response format, can't normalize."
-msgstr ""
+msgstr "Недійсний формат відповіді, не вдається нормалізувати."
 
 #. module: payment_paypal
 #. odoo-python
@@ -92,23 +94,27 @@ msgstr "PayPal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_access_token
+#, fuzzy
 msgid "PayPal Access Token"
-msgstr ""
+msgstr "Токен доступу PayPal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_access_token_expiry
+#, fuzzy
 msgid "PayPal Access Token Expiry"
-msgstr ""
+msgstr "Термін дії токена доступу PayPal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_client_id
+#, fuzzy
 msgid "PayPal Client ID"
-msgstr ""
+msgstr "ID клієнта PayPal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_client_secret
+#, fuzzy
 msgid "PayPal Client Secret"
-msgstr ""
+msgstr "Секрет клієнта PayPal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
@@ -117,8 +123,9 @@ msgstr "Тип транзакції PayPal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_provider__paypal_webhook_id
+#, fuzzy
 msgid "PayPal Webhook ID"
-msgstr ""
+msgstr "PayPal Webhook ID"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_provider
@@ -150,8 +157,9 @@ msgstr "Клієнтпокинув сторінку оплати."
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_access_token_expiry
+#, fuzzy
 msgid "The moment at which the access token becomes invalid."
-msgstr ""
+msgstr "Момент, коли токен доступу стає недійсним."
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_email_account
@@ -163,8 +171,9 @@ msgstr ""
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__paypal_access_token
+#, fuzzy
 msgid "The short-lived token used to access Paypal APIs"
-msgstr ""
+msgstr "Короткочасний токен, що використовується для доступу до API Paypal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_provider__code
@@ -179,14 +188,16 @@ msgstr ""
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.payment_provider_form
+#, fuzzy
 msgid "Webhook ID"
-msgstr ""
+msgstr "Webhook ID"
 
 #. module: payment_paypal
 #. odoo-python
 #: code:addons/payment_paypal/models/payment_provider.py:0
+#, fuzzy
 msgid "You must have an HTTPS connection to generate a webhook."
-msgstr ""
+msgstr "Для створення вебхука потрібне HTTPS-з’єднання."
 
 #~ msgid ""
 #~ "<br/><br/>\n"

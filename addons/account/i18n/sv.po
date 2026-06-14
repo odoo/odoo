@@ -41,8 +41,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:35+0000\n"
-"PO-Revision-Date: 2026-05-30 09:38+0000\n"
+"POT-Creation-Date: 2026-06-05 19:27+0000\n"
+"PO-Revision-Date: 2026-06-11 17:48+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/account/"
 "sv/>\n"
@@ -51,7 +51,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -219,7 +219,7 @@ msgid ""
 msgstr ""
 "%(move)s är i ett ogiltigt tillstånd när det kommer till den relaterade "
 "raden i kontoutdraget.\n"
-"För att vara konsekvent måste verifikatet alltid ha exakt en interimrad."
+"För att vara konsekvent måste verifikationen alltid ha exakt en interimrad."
 
 #. module: account
 #. odoo-python
@@ -419,7 +419,7 @@ msgstr "- Dokumentsekvensen blir redigerbar för alla dokument."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr "-> Visa delvis avstämda verifikat"
+msgstr "-> Visa delvis avstämda verifikationer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
@@ -440,8 +440,8 @@ msgid ""
 ". The journal entries need to be computed by Odoo before being posted in "
 "your company's currency."
 msgstr ""
-". Beloppen i verifikaten måste beräknas av Odoo innan de kan bokföras i ditt "
-"företags valuta."
+". Beloppen i verifikationerna måste beräknas av Odoo innan de kan bokföras i "
+"ditt företags valuta."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1313,7 +1313,7 @@ msgstr "<span class=\"o_stat_text\">Första betalning</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span class=\"o_stat_text\">Cash Basis Entries</span>"
-msgstr "<span class=\"o_stat_text\">Verifikat enligt kontantmetoden</span>"
+msgstr "<span class=\"o_stat_text\">Verifikationer enligt kontantmetoden</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -1323,17 +1323,17 @@ msgstr "<span class=\"o_stat_text\">Fakturerad</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "<span class=\"o_stat_text\">Journal Entries</span>"
-msgstr "<span class=\"o_stat_text\">Verifikat</span>"
+msgstr "<span class=\"o_stat_text\">Verifikationer</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
-msgstr "<span class=\"o_stat_text\">Verifikat</span>"
+msgstr "<span class=\"o_stat_text\">Verifikation</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "<span class=\"o_stat_text\">Reconciled Items</span>"
-msgstr "<span class=\"o_stat_text\">Avstämda affärshändelser</span>"
+msgstr "<span class=\"o_stat_text\">Avstämda verifikationsrader</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1365,7 +1365,7 @@ msgid ""
 "                            </span>"
 msgstr ""
 "<span class=\"text-muted\">\n"
-"                                <i>Säkra verifikat fram till</i>\n"
+"                                <i>Säkra verifikationer fram till</i>\n"
 "                            </span>"
 
 #. module: account
@@ -1641,7 +1641,7 @@ msgid ""
 "<span>This entry has been generated through the Invoicing app, before "
 "installing Accounting. Its balance has been imported separately.</span>"
 msgstr ""
-"<span>Verifikatet har skapats genom appen Faktura innan Bokföring "
+"<span>Verifikationen har skapats genom appen Faktura innan Bokföring "
 "installerades. Saldot har importerats separat.</span>"
 
 #. module: account
@@ -2524,7 +2524,7 @@ msgid ""
 "cash\n"
 "                payments on a daily basis."
 msgstr ""
-"Ett kassaregister låter dig hantera kontanta verifikat genom dina\n"
+"Ett kassaregister låter dig hantera kontantverifikationer genom dina\n"
 "                kontantjournaler. Funktionen gör det enkelt att dagligen "
 "hålla uppsikt\n"
 "                över kontanta betalningar."
@@ -2598,8 +2598,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Ett verifikat består av flera affärshändelser där varje \n"
-"                händelse antingen utgör en debet- eller kredittransaktion."
+"En verifikation består av flera verifikationsrader där varje \n"
+"                rad antingen utgör en debet- eller kredittransaktion."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -2623,8 +2623,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "A line of this move is using a archived account, you cannot post it."
 msgstr ""
-"En affärshändelse i detta verifikat använder ett arkiverat konto, och kan "
-"därför inte publiceras."
+"En verifikationsrad i denna verifikation använder ett arkiverat konto, och "
+"kan därför inte publiceras."
 
 #. module: account
 #. odoo-python
@@ -2648,7 +2648,8 @@ msgid ""
 "A payment with an outstanding account cannot be confirmed without having a "
 "journal entry."
 msgstr ""
-"En betalning med ett utestående konto kan inte bekräftas utan ett verifikat."
+"En betalning med ett utestående konto kan inte bekräftas utan en "
+"verifikation."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_line_code_uniq
@@ -2832,7 +2833,7 @@ msgstr "Introduktion till dashboard i Bokföring"
 #: model_terms:ir.ui.view,arch_db:account.account_move_view_activity
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Account Entry"
-msgstr "Verifikat"
+msgstr "Verifikation"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__account_fiscal_country_group_codes
@@ -2863,7 +2864,7 @@ msgstr "Kontogrupper med samma fördelningsnivå får inte överlappa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_merge_wizard_line__account_has_hashed_entries
 msgid "Account Has Hashed Entries"
-msgstr "Konto har hashade verifikat"
+msgstr "Konto har hashade verifikationer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__company_partner_id
@@ -3137,7 +3138,7 @@ msgid ""
 "Account that will be set on lines created in cash basis journal entry and "
 "used to keep track of the tax base amount."
 msgstr ""
-"Konto som kommer att anges på rader i verifikat skapade enligt "
+"Konto som kommer att anges på rader i verifikationer skapade enligt "
 "kontantmetoden och som används för att spåra det grundläggande "
 "skattebeloppet."
 
@@ -3183,7 +3184,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Account with Entries"
-msgstr "Konto med verifikat"
+msgstr "Konto med verifikationer"
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_cron_auto_post_draft_entry_ir_actions_server
@@ -3191,7 +3192,7 @@ msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to "
 "today"
 msgstr ""
-"Konto: Bokför alla utkast till verifikat med auto_post aktiverat och "
+"Konto: Bokför alla utkast till verifikationer med auto_post aktiverat och "
 "bokföringsdatum fram till idag"
 
 #. module: account
@@ -4063,7 +4064,7 @@ msgid ""
 "An error occurred when computing the inalterability. All entries have to be "
 "reconciled."
 msgstr ""
-"Ett fel inträffade vid beräkningen av oföränderligheten. Alla verifikat "
+"Ett fel inträffade vid beräkningen av oföränderligheten. Alla verifikationer "
 "måste stämmas av."
 
 #. module: account
@@ -4164,7 +4165,7 @@ msgstr "Analyser"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_unique_name
 msgid "Another entry with the same name already exists."
-msgstr "Ett annat verifikat med samma namn finns redan."
+msgstr "En annan verifikation med samma namn finns redan."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -4183,8 +4184,8 @@ msgid ""
 "in accordance with its journal sequence. This lock date is irreversible and "
 "does not allow any exception."
 msgstr ""
-"Alla verifikat fram till och inklusive detta datum kommer att skjutas upp "
-"till ett senare tillfälle, i enlighet med den relaterade "
+"Alla verifikationer fram till och inklusive detta datum kommer att skjutas "
+"upp till ett senare tillfälle, i enlighet med den relaterade "
 "verifikationsserien. Låsningsdatumet är oåterkalleligt och tillåter inga "
 "undantag."
 
@@ -4194,7 +4195,7 @@ msgid ""
 "Any entry up to and including that date will be postponed to a later time, "
 "in accordance with its journal's sequence."
 msgstr ""
-"Alla verifikat fram till och inklusive detta datum kommer att skjutas upp "
+"Alla verifikationer fram till och med detta datum kommer att skjutas upp "
 "till ett senare tillfälle, i enlighet med den relaterade verifikationsserien."
 
 #. module: account
@@ -4204,10 +4205,10 @@ msgid ""
 "later time, in accordance with its journal's sequence. The tax lock date is "
 "automatically set when the tax closing entry is posted."
 msgstr ""
-"Alla verifikat med skatter till och med detta datum kommer att skjutas upp "
-"till en senare tidpunkt, i enlighet med den relaterade verifikationsserien. "
-"Låsningsdatumet för skatter bestäms automatiskt när utgående skattesaldo "
-"bokförs."
+"Alla verifikationer med skatter till och med detta datum kommer att skjutas "
+"upp till en senare tidpunkt, i enlighet med den relaterade "
+"verifikationsserien. Låsningsdatumet för skatter bestäms automatiskt när "
+"utgående skattesaldo bokförs."
 
 #. module: account
 #. odoo-python
@@ -4215,7 +4216,7 @@ msgstr ""
 msgid ""
 "Any journal item on a payable account must have a due date and vice versa."
 msgstr ""
-"Alla verifikat på ett konto med leverantörsskulder måste ha ett "
+"Alla verifikationsrader i ett konto med leverantörsskulder måste ha ett "
 "förfallodatum och vice versa."
 
 #. module: account
@@ -4224,8 +4225,8 @@ msgstr ""
 msgid ""
 "Any journal item on a receivable account must have a due date and vice versa."
 msgstr ""
-"Alla verifikat på ett konto med kundfordringar måste ha ett förfallodatum "
-"och vice versa."
+"Alla verifikationsrader i ett konto med kundfordringar måste ha ett "
+"förfallodatum och vice versa."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -4238,7 +4239,7 @@ msgid ""
 "Any purchase entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
-"Alla inköpsverifikat fram till och inklusive detta datum kommer att skjutas "
+"Alla inköpsverifikationer fram till och med detta datum kommer att skjutas "
 "upp till ett senare tillfälle, i enlighet med den relaterade "
 "verifikationsserien."
 
@@ -4248,7 +4249,7 @@ msgid ""
 "Any sales entry prior to and including this date will be postponed to a "
 "later date, in accordance with its journal's sequence."
 msgstr ""
-"Alla försäljningsverifikat fram till och inklusive detta datum kommer att "
+"Alla försäljningsverifikationer fram till och med detta datum kommer att "
 "skjutas upp till ett senare tillfälle, i enlighet med den relaterade "
 "verifikationsserien."
 
@@ -4415,7 +4416,7 @@ msgstr "Bilagor stöds ej"
 #: model:ir.actions.act_window,name:account.action_account_audit_trail_report
 #: model:ir.ui.menu,name:account.account_audit_trail_menu
 msgid "Audit Trail"
-msgstr "Verifieringskedja"
+msgstr "Verifieringskedjor"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__audit_trail_message_ids
@@ -4514,7 +4515,7 @@ msgstr "Automatiska växelkurser"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__automatic_entry_default_journal_id
 msgid "Automatic Entry Default Journal"
-msgstr "Standardjournal för automatiskt bokförda verifikat"
+msgstr "Standardjournal för automatiskt bokförda verifikationer"
 
 #. module: account
 #: model:ir.model,name:account.model_sequence_mixin
@@ -5304,7 +5305,7 @@ msgstr "Avbryt"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Cancel Entry"
-msgstr "Avbryt verifikat"
+msgstr "Avbryt verifikation"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__state__canceled
@@ -5471,7 +5472,7 @@ msgstr "Kontantmetoden"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_cash_basis_created_move_ids
 #: model:ir.model.fields,field_description:account.field_account_move__tax_cash_basis_created_move_ids
 msgid "Cash Basis Entries"
-msgstr "Verifikat enligt kontantmetoden"
+msgstr "Verifikationer enligt kontantmetoden"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_cash_basis_journal_id
@@ -5724,7 +5725,7 @@ msgid ""
 "journal items."
 msgstr ""
 "Markera denna ruta om kontot tillåter matchning av fakturor och betalningar "
-"kopplade till specifika affärshändelser."
+"kopplade till specifika verifikationsrader."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__refund_sequence
@@ -5894,7 +5895,7 @@ msgid ""
 "set, this line will generate sublines grouped by those keys."
 msgstr ""
 "Lista över fält separerade med kommatecken som genererats med "
-"account.move.line (Affärshändelse). När detta är angivet kommer raden att "
+"account.move.line (Verifikationsrad). När detta är angivet kommer raden att "
 "skapa underordnade rader grupperade efter de angivna nycklarna."
 
 #. module: account
@@ -6199,7 +6200,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_merge_wizard.py:0
 msgid "Contains hashed entries, but %s also has hashed entries."
-msgstr "Innehåller hashade verifikat, men %s har också hashade verifikat."
+msgstr ""
+"Innehåller hashade verifikationer, men %s har också hashade verifikationer."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__body
@@ -6209,7 +6211,7 @@ msgstr "Innehåll"
 #. module: account
 #: model:ir.ui.menu,name:account.account_audit_control_menu
 msgid "Control"
-msgstr "Kontroll"
+msgstr "Kontroller"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_amounts_to_settle
@@ -6220,7 +6222,7 @@ msgstr "Fantastiskt, det verkar inte finnas några belopp att betala."
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Corrupted data on journal entry with id %(id)s (%(name)s)."
-msgstr "Skadad data i verifikatet med id-nummer %(id)s (%(name)s)."
+msgstr "Skadad data i verifikationen med id-nummer %(id)s (%(name)s)."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
@@ -6305,7 +6307,7 @@ msgstr "Det gick inte att ladda upp filerna"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Counterpart Items"
-msgstr "Motsvarande affärshändelser"
+msgstr "Motsvarande verifikationsrader"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
@@ -6372,17 +6374,17 @@ msgstr "Skapa"
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_entry_wizard
 msgid "Create Automatic Entries"
-msgstr "Skapa verifikat automatiskt"
+msgstr "Skapa verifikationer automatiskt"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
 msgid "Create Entry"
-msgstr "Skapa verifikat"
+msgstr "Skapa verifikation"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Create Journal Entries"
-msgstr "Skapa verifikat"
+msgstr "Skapa verifikationer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -6426,7 +6428,7 @@ msgstr "Skapa kundfaktura"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
 msgid "Create a journal entry"
-msgstr "Skapa ett verifikat"
+msgstr "Skapa en verifikation"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_supplier_accounts
@@ -6513,7 +6515,7 @@ msgid ""
 msgstr ""
 "Skapa så många huvudboksgrupper som behövs för att upprätthålla separata "
 "huvudböcker för lokala GAAP-, IFRS-\n"
-"                    eller skattejusteringar, vilket säkerställer att man "
+"                    eller skattekorrigeringar, vilket säkerställer att man "
 "följer olika regelverk."
 
 #. module: account
@@ -6783,7 +6785,8 @@ msgstr "Kreditkort"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
 msgid "Credit journal items that are matched with this journal item."
-msgstr "Affärshändelser med kreditbelopp som matchas med denna affärshändelse."
+msgstr ""
+"Verifikationsrader med kreditbelopp som matchas med denna affärshändelse."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__credit_limit
@@ -6878,12 +6881,12 @@ msgstr "Valuta måste alltid anges för att kunna skapa en QR-kod"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_currency_id
 msgid "Currency of the credit journal item."
-msgstr "Valutan som affärshändelsens kreditbelopp är angivet i."
+msgstr "Valutan som verifikationsradens kreditbelopp är angivet i."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_currency_id
 msgid "Currency of the debit journal item."
-msgstr "Valutan som affärshändelsens debetbelopp är angivet i."
+msgstr "Valutan som verifikationsradens debetbelopp är angivet i."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__invoice_currency_rate
@@ -6955,7 +6958,7 @@ msgstr "Kund"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_sale_delivery_address
 msgid "Customer Addresses"
-msgstr "Kundens adresser"
+msgstr "Kundadresser"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -7166,7 +7169,7 @@ msgid ""
 "Journal Entries up to the end of the period are resequenced."
 msgstr ""
 "Datum (till och med) då numren ska omsekvenseras. Om inget datum anges, så "
-"omsekvenseras alla verifikat fram till periodens slut."
+"omsekvenseras alla verifikationer fram till periodens slut."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_date_range
@@ -7266,7 +7269,7 @@ msgstr "Debetrörelse"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_debit_ids
 msgid "Debit journal items that are matched with this journal item."
-msgstr "Debitera affärshändelser som matchar denna affärshändelse."
+msgstr "Debitera verifikationsrader som matchar denna affärshändelse."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__12
@@ -7359,13 +7362,13 @@ msgstr "Standard skatteområde för inköpskvitton"
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__purchase_tax_id
 msgid "Default Purchase Tax"
-msgstr "Standardmoms vid inköp"
+msgstr "Standard moms vid inköp"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_sale_tax_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__sale_tax_id
 msgid "Default Sale Tax"
-msgstr "Standardmoms vid försäljning"
+msgstr "Standard moms vid försäljning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__company_price_include
@@ -7380,7 +7383,7 @@ msgstr "Standard försäljningspris inkluderar"
 #: model:ir.model.fields,field_description:account.field_account_account__tax_ids
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default Taxes"
-msgstr "Standardmoms"
+msgstr "Standard moms"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__use_invoice_terms
@@ -7424,19 +7427,19 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default taxes applied when creating new products."
-msgstr "Standardmoms som tillämpas när du skapar nya produkter."
+msgstr "Standard moms som används när du skapar nya produkter."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,help:account.field_product_template__supplier_taxes_id
 msgid "Default taxes used when buying the product"
-msgstr "Standardmoms som tillämpas när du köper produkten"
+msgstr "Standard moms som används när du köper produkten"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__taxes_id
 #: model:ir.model.fields,help:account.field_product_template__taxes_id
 msgid "Default taxes used when selling the product"
-msgstr "Standardmoms som tillämpas vid försäljning av produkten"
+msgstr "Standard moms som tillämpas vid försäljning av produkten"
 
 #. module: account
 #. odoo-python
@@ -7610,7 +7613,7 @@ msgid ""
 msgstr ""
 "Avgör var skatten är möjlig att välja. Obs: 'Ingen' innebär att en skatt "
 "inte går att använda för sig själv, men den kan fortfarande användas inuti "
-"en grupp. \"Justering\" används för att utföra skattejustering."
+"en grupp. \"Korrigering\" används för att utföra skattekorrigering."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__price_include
@@ -8130,14 +8133,14 @@ msgstr "Utkast till kreditfaktura"
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 #: model:ir.model.fields,field_description:account.field_account_report__filter_show_draft
 msgid "Draft Entries"
-msgstr "Utkast till verifikat"
+msgstr "Utkast till verifikation"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_move_line.py:0
 msgid "Draft Entry"
-msgstr "Utkast till verifikat"
+msgstr "Utkast till verifikation"
 
 #. module: account
 #. odoo-python
@@ -8205,7 +8208,7 @@ msgstr "Släpp för att låta AI automatiskt behandla dina fakturor."
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Drop to create journal entries with attachments."
-msgstr "Släpp för att skapa verifikat med bilagor."
+msgstr "Släpp för att skapa verifikationer med bilagor."
 
 #. module: account
 #. odoo-python
@@ -8533,7 +8536,7 @@ msgstr "Aktivera kreditgränser för partners."
 msgid "Enable this option to prevent deletion of journal item related logs"
 msgstr ""
 "Aktivera detta alternativ för att förhindra att loggar relaterade till "
-"affärshändelser tas bort"
+"verifikationsrader tas bort"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_hide_0_lines__by_default
@@ -8569,36 +8572,36 @@ msgstr "Ange en beskrivning"
 #: model:ir.actions.act_window,name:account.action_move_line_form
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Entries"
-msgstr "Verifikat"
+msgstr "Verifikationer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__entries_count
 msgid "Entries Count"
-msgstr "Antal verifikat"
+msgstr "Antal verifikationer"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Entries are correctly hashed"
-msgstr "Verifikaten är korrekt hashade"
+msgstr "Verifikationerna är korrekt hashade"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Entries are not from the same account: %s"
-msgstr "Verifikat utgår inte från samma konto: %s"
+msgstr "Verifikationerna utgår inte från samma konto: %s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 msgid "Entries can only be created for a single company at a time."
-msgstr "Verifikat kan endast skapas för ett företag åt gången."
+msgstr "Verifikationer kan endast skapas för ett företag åt gången."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Entries don't belong to the same company: %s"
-msgstr "Följande verifikat tillhör inte samma företag: %s"
+msgstr "Följande verifikationer tillhör inte samma företag: %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_validate_account_move__force_post
@@ -8606,24 +8609,24 @@ msgid ""
 "Entries in the future are set to be auto-posted by default. Check this "
 "checkbox to post them now."
 msgstr ""
-"Framtida verifikat som har som standard att bli bokförda automatiskt. "
+"Framtida verifikationer som har som standard att bli bokförda automatiskt. "
 "Markera rutan för att bokföra dem nu."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Entries to Review"
-msgstr "Verifikat att granska"
+msgstr "Verifikationer att granska"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_analytic_line.py:0
 msgid "Entries: %(account)s"
-msgstr "Verifikat: %(account)s"
+msgstr "Verifikationer: %(account)s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_view_activity
 msgid "Entry Name"
-msgstr "Verifikatets namn"
+msgstr "Verifikationens namn"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_dirty
@@ -8763,18 +8766,18 @@ msgstr "Växlingsrörelse"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Exchange difference entries:"
-msgstr "Verifikat som redovisar växelskillnad:"
+msgstr "Verifikationer som redovisar växelskillnad:"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__no_followup
 #: model:ir.model.fields,help:account.field_account_move__no_followup
 msgid "Exclude this journal entry from follow-up reports."
-msgstr "Uteslut verifikatet från uppföljningsrapporter."
+msgstr "Uteslut verifikationen från uppföljningsrapporter."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__no_followup
 msgid "Exclude this journal item from follow-up reports."
-msgstr "Uteslut denna affärshändelse från uppföljningsrapporter."
+msgstr "Uteslut denna verifikationsrad från uppföljningsrapporter."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__excluded_journal_ids
@@ -8932,7 +8935,7 @@ msgid ""
 "Factor to apply on the account move lines generated from this distribution "
 "line"
 msgstr ""
-"Faktor att tillämpa på de affärshändelser som skapas utifrån denna "
+"Faktor att tillämpa på de verifikationsrader som skapas utifrån denna "
 "fördelningsrad"
 
 #. module: account
@@ -8941,7 +8944,7 @@ msgid ""
 "Factor to apply on the account move lines generated from this distribution "
 "line, in percents"
 msgstr ""
-"Faktor att tillämpa på de affärshändelser som skapas utifrån denna "
+"Faktor att tillämpa på de verifikationsrader som skapas utifrån denna "
 "fördelningsrad, i procent"
 
 #. module: account
@@ -9044,7 +9047,7 @@ msgstr "Första datum"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "First Entry"
-msgstr "Första verifikat"
+msgstr "Första verifikation"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -9065,7 +9068,7 @@ msgstr "Första nya sekvensen"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
 #: model:ir.model.fields,field_description:account.field_account_move__auto_post_origin_id
 msgid "First recurring entry"
-msgstr "Första återkommande verifikat"
+msgstr "Första återkommande verifikation"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_fiscal_country_id
@@ -9324,9 +9327,9 @@ msgid ""
 "Forces all journal items in this account to have a specific currency (i.e. "
 "bank journals). If no currency is set, entries can use any currency."
 msgstr ""
-"Tvingar fram att alla affärshändelser inom en viss grupp av konton eller "
-"journaler ska ha en specifik valuta (t.ex. i alla bankjournaler). Om ingen "
-"valuta är angiven kan verifikat använda sig av valfri valuta."
+"Tvingar fram att alla verifikationsrader inom kontot ska ha en specifik "
+"valuta (t.ex. bankjournaler). Om ingen valuta är angiven kan verifikationer "
+"använda sig av valfri valuta."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__foreign_currency_id
@@ -9348,7 +9351,7 @@ msgstr "Förlust på valutaväxling"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat
 msgid "Foreign Tax ID"
-msgstr "Utländskt skatteregistreringsnummer"
+msgstr "Utländskt skattenummer"
 
 #. module: account
 #: model:account.fiscal.position,name:account.1_template_generic_export_fiscal_position
@@ -9577,13 +9580,13 @@ msgstr "Skapta dokument"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Generated Entries"
-msgstr "Skapade verifikat"
+msgstr "Skapade verifikationer"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/template_generic_coa.py:0
 msgid "Generic Chart of Accounts"
-msgstr "Generisk kontoplan"
+msgstr "Allmän kontoplan"
 
 #. module: account
 #: model:account.report,name:account.generic_tax_report
@@ -9733,12 +9736,12 @@ msgstr "Datum för slutgiltigt låsningsdatum"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_accounting_entries
 msgid "Has Accounting Entries"
-msgstr "Har verifikat"
+msgstr "Har verifikationer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_entries
 msgid "Has Entries"
-msgstr "Har verifikat"
+msgstr "Har verifikation"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_update_fpos
@@ -9791,13 +9794,13 @@ msgstr "Har negativ faktor"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_posted_entries
 msgid "Has Posted Entries"
-msgstr "Har bokförda verifikat"
+msgstr "Har bokförda verifikationer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__has_reconciled_entries
 #: model:ir.model.fields,field_description:account.field_account_move__has_reconciled_entries
 msgid "Has Reconciled Entries"
-msgstr "Har avstämda verifikat"
+msgstr "Har avstämda verifikationer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_sequence_holes
@@ -9812,7 +9815,7 @@ msgstr "Har rader ur kontoutdrag"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_secure_entries_wizard__hash_date
 msgid "Hash All Entries"
-msgstr "Hasha alla verifikat"
+msgstr "Hasha alla verifikationer"
 
 #. module: account
 #: model:ir.actions.report,name:account.action_report_account_hash_integrity
@@ -9889,9 +9892,9 @@ msgid ""
 "date are secured. Only journal entries after the hard lock date are "
 "considered."
 msgstr ""
-"Sista datum så att alla bokförda verifikat fram till och med det datumet är "
-"säkrade. Endast verifikat efter det slutgiltiga låsningsdatumet tas med i "
-"beräkningen."
+"Sista datum där alla bokförda verifikationer fram till och med det datumet "
+"säkras. Endast verifikationer efter det slutgiltiga låsningsdatumet tas med "
+"i beräkningen."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__highest_name
@@ -10082,7 +10085,7 @@ msgid ""
 "report"
 msgstr ""
 "Om funktionen är aktiverad kan användardefinierade filter för "
-"affärshändelser användas i denna rapport"
+"verifikationsrader användas i denna rapport"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_needaction
@@ -10155,7 +10158,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
 msgstr ""
-"Om fältet lämnas tomt så används journalen kopplad till det verifikat som "
+"Om fältet lämnas tomt så används journalen kopplad till den verifikation som "
 "ska rättas."
 
 #. module: account
@@ -10191,7 +10194,7 @@ msgstr ""
 msgid "If set, this account is used to automatically balance entries."
 msgstr ""
 "Om så är angivet, så kommer detta konto att användas för att automatiskt "
-"reglera verifikat."
+"reglera verifikationer."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__non_trade
@@ -10235,9 +10238,10 @@ msgid ""
 "sequence from the entry back to the last hashed entry. The hash can also be "
 "performed on demand by the Secure Entries wizard."
 msgstr ""
-"Om rutan är ikryssad så hashar vi retroaktivt alla rörelser i sekvensen från "
-"verifikatet fram till det senast hashade verifikatet. Hashningen kan också "
-"genomföras vid behov genom guiden för Säkra verifikat."
+"Om rutan är ikryssad så hashar vi retroaktivt alla verifikationer i "
+"verifikationsserien till och med den senast hashade verifikationen. "
+"Hashningen kan också genomföras vid behov genom verktygsguiden Säkra "
+"verifikationer."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10284,7 +10288,7 @@ msgid ""
 "journal entry must be of this type"
 msgstr ""
 "Om du vill använda konton som är \"Utanför balansräkningen\", så måste alla "
-"konton kopplade till verifikatet vara av den typen"
+"konton kopplade till verifikationen vara av den typen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__ignore_abnormal_amount
@@ -10356,7 +10360,7 @@ msgstr "Importmall för kundfakturor"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Import Template for Journal Items"
-msgstr "Importmall för affärshändelser"
+msgstr "Importmall för verifikationsrader"
 
 #. module: account
 #. odoo-python
@@ -10582,7 +10586,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_line_id
 msgid "Indicates that this journal item is a tax line"
-msgstr "Indikerar att denna affärshändelse utgörs av en skatterad"
+msgstr "Indikerar att denna verifikationsrad utgörs av en skatterad"
 
 #. module: account
 #. odoo-javascript
@@ -11174,7 +11178,7 @@ msgstr "Fakturor att validera"
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_bill_ids
 #: model:ir.model.fields,help:account.field_account_payment__reconciled_invoice_ids
 msgid "Invoices whose journal items have been reconciled with these payments."
-msgstr "Fakturor vars affärshändelser har stämts av med dessa betalningar."
+msgstr "Fakturor vars verifikationsrader har stämts av med dessa betalningar."
 
 #. module: account
 #: model:res.groups,comment:account.group_account_invoice
@@ -11262,7 +11266,7 @@ msgstr "Är redigerare"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__is_entries
 msgid "Is Entries"
-msgstr "Är verifikat"
+msgstr "Är verifikation"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__is_exact_move_duplicate
@@ -11466,18 +11470,18 @@ msgstr "Journalens valuta"
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_tree
 msgid "Journal Entries"
-msgstr "Verifikat"
+msgstr "Verifikationer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Journal Entries by Date"
-msgstr "Verifikat sorterade efter datum"
+msgstr "Verifikationer sorterade efter datum"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Journal Entries to Hash"
-msgstr "Verifikat att hasha"
+msgstr "Verifikationer att hasha"
 
 #. module: account
 #. odoo-python
@@ -11498,14 +11502,14 @@ msgstr "Verifikat att hasha"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Journal Entry"
-msgstr "Verifikat"
+msgstr "Verifikation"
 
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/components/account_payment_field/account_payment_field.js:0
 msgid "Journal Entry Info"
-msgstr "Information om verifikatet"
+msgstr "Verifikationsinformation"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
@@ -11514,30 +11518,30 @@ msgstr "Information om verifikatet"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Journal Item"
-msgstr "Affärshändelse"
+msgstr "Verifikationsrad"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s created"
-msgstr "Affärshändelse %s skapad"
+msgstr "Verifikationsrad %s skapad"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s deleted"
-msgstr "Affärshändelse %s bottagen"
+msgstr "Verifikationsrad %s bottagen"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "Journal Item %s updated"
-msgstr "Affärshändelse %s uppdaterades"
+msgstr "Verifikationsrad %s uppdaterades"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_label
 msgid "Journal Item Label"
-msgstr "Etikett för affärshändelser"
+msgstr "Etikett för verifikationsrader"
 
 #. module: account
 #. odoo-python
@@ -11555,13 +11559,13 @@ msgstr "Etikett för affärshändelser"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_pivot
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Journal Items"
-msgstr "Affärshändelser"
+msgstr "Verifikationsrader"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_line_ids
 #: model:ir.model.fields,field_description:account.field_account_move__journal_line_ids
 msgid "Journal Items (DEPRECATED)"
-msgstr "Affärshändelser (FÖRÅLDRADE)"
+msgstr "Verifikationsrader (FÖRÅLDRADE)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -11587,12 +11591,12 @@ msgstr "Journalkoder måste vara unika för varje företag."
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__line_ids
 msgid "Journal items"
-msgstr "Affärshändelser"
+msgstr "Verifikationsrader"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Journal items where matching number isn't set"
-msgstr "Affärshändelser utan angivna matchande nummer"
+msgstr "Verifikationsrader utan angivna matchande nummer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
@@ -11600,22 +11604,22 @@ msgid ""
 "Journal items where the account allows reconciliation no matter the residual "
 "amount"
 msgstr ""
-"Affärshändelser där kontot tillåter avstämning oavsett återstående belopp"
+"Verifikationsrader där kontot tillåter avstämning oavsett återstående belopp"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "Journal should be the same type as the reversed entry."
 msgstr ""
-"Journalen bör vara av samma typ som journalen kopplad till det verifikat som "
-"ska återkallas."
+"Journalen bör vara av samma typ som journalen kopplad till den verifikation "
+"som ska återkallas."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__automatic_entry_default_journal_id
 msgid "Journal used by default for moving the period of an entry"
 msgstr ""
 "Den journal som används som standard för att ändra perioden som angetts för "
-"ett verifikat"
+"en verifikation"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_journal_id
@@ -11626,7 +11630,7 @@ msgstr "Journal där företagets ingående balans har bokförts."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__journal_id
 msgid "Journal where to create the entry."
-msgstr "Journal där verifikatet ska skapas."
+msgstr "Journal där verifikationen ska skapas."
 
 #. module: account
 #. odoo-javascript
@@ -11754,7 +11758,7 @@ msgstr "Språk"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "Last Entry"
-msgstr "Senaste verifikat"
+msgstr "Senaste verifikation"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -12129,7 +12133,8 @@ msgstr "Lås tillförlitlighetsfält"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Log changes to posted journal entries immutably"
-msgstr "Registrera ändringar av bokförda verifikat så att de är oföränderliga"
+msgstr ""
+"Registrera ändringar av bokförda verifikationer så att de är oföränderliga"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -12437,7 +12442,7 @@ msgstr "Matchade debiteringar"
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__reconciled_line_ids
 #: model_terms:ir.ui.view,arch_db:account.view_full_reconcile_form
 msgid "Matched Journal Items"
-msgstr "Matchade affärshändelser"
+msgstr "Matchade verifikationsrader"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__matched_payment_ids
@@ -13052,7 +13057,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_moves_email_preview
 msgid "No journal entries selected"
-msgstr "Inget verifikat valt"
+msgstr "Ingen verifikation vald"
 
 #. module: account
 #. odoo-python
@@ -13073,7 +13078,7 @@ msgstr "Inget utestående konto kunde hittas för att genomföra betalningen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "No payment journal entries"
-msgstr "Inga verifikat för betalningar"
+msgstr "Inga betalningsverifikationer"
 
 #. module: account
 #. odoo-python
@@ -13518,7 +13523,7 @@ msgstr "Endast administratörer kan installera kontoplansmallar"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Only draft journal entries can be cancelled."
-msgstr "Endast utkast till verifikat kan avbrytas."
+msgstr "Endast utkast till verifikationer kan avbrytas."
 
 #. module: account
 #. odoo-python
@@ -13538,7 +13543,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Only posted/cancelled journal entries can be reset to draft."
-msgstr "Endast bokförda/avbrutna verifikat kan återställas till utkast."
+msgstr "Endast bokförda/avbrutna verifikationer kan återställas till utkast."
 
 #. module: account
 #. odoo-python
@@ -13559,9 +13564,9 @@ msgid ""
 "Oops! You can only change the period or account for items that are not yet "
 "reconciled! Other ones aren't up for an adventure like that!"
 msgstr ""
-"Ojdå! Det är bara möjligt att ändra period eller konto för affärshändelser "
-"som ännu inte är avstämda! Övriga affärshändelser är inte redo för sådana "
-"åtgärder!"
+"Ojdå! Det är bara möjligt att ändra period eller konto för "
+"verifikationsrader som ännu inte är avstämda! Övriga verifikationsrader är "
+"inte redo för sådana åtgärder!"
 
 #. module: account
 #. odoo-python
@@ -13571,7 +13576,7 @@ msgid ""
 "ones aren't up for an adventure like that!"
 msgstr ""
 "Oops! Det är bara möjligt att ändra period eller konto för bokförda "
-"verifikat! Övriga verifikat är inte redo för ett sådant äventyr!"
+"verifikationer! Övriga verifikationer är inte redo för ett sådant äventyr!"
 
 #. module: account
 #. odoo-python
@@ -14120,7 +14125,7 @@ msgstr "Bankkonto saknas för partner"
 #. odoo-python
 #: code:addons/account/models/partner.py:0
 msgid "Partners that are used in hashed entries cannot be merged."
-msgstr "Partners som används i hashade verifikat kan inte sammanfogas."
+msgstr "Partners som används i hashade verifikationer kan inte sammanfogas."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -14602,7 +14607,7 @@ msgstr "Publicera"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Post All Entries"
-msgstr "Bokför alla verifikat"
+msgstr "Bokför alla verifikationer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -14638,13 +14643,13 @@ msgstr "Bokförd innan"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Posted Journal Entries"
-msgstr "Bokförda verifikat"
+msgstr "Bokförda verifikationer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Posted Journal Items"
-msgstr "Bokförda affärshändelser"
+msgstr "Bokförda verifikationsrader"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__preceding_subtotal
@@ -14729,7 +14734,8 @@ msgstr "Förskottsbetalningar"
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
 msgstr ""
-"Ställ in för att skapa verifikat vid matchning av fakturor och betalningar"
+"Ställ in för att skapa verifikationer vid matchning av fakturor och "
+"betalningar"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -14780,7 +14786,7 @@ msgstr "Pris inklusive"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Prices"
-msgstr "Priser"
+msgstr "Priser anges"
 
 #. module: account
 #. odoo-javascript
@@ -14846,6 +14852,7 @@ msgstr "Produktkategorier"
 #: model:ir.model,name:account.model_product_category
 #: model:ir.model.fields,field_description:account.field_account_analytic_applicability__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__product_categ_id
+#: model:ir.model.fields,field_description:account.field_account_analytic_line__product_category
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_categ_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_category_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -15034,7 +15041,7 @@ msgstr "Inköpsansvarig"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Purchase Tax"
-msgstr "Inköpsmoms"
+msgstr "Moms vid inköp"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
@@ -15114,7 +15121,7 @@ msgstr "Antal:"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__quarterly
 msgid "Quarterly"
-msgstr "Kvartalsvis"
+msgstr "Per kvartal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__quick_edit_mode
@@ -15436,13 +15443,13 @@ msgid ""
 "Reload accounting data (taxes, accounts, ...) if you notice inconsistencies. "
 "This action is irreversible."
 msgstr ""
-"Ladda om bokföringsdata (skatter, konton, ...) om du upptäcker "
-"oegentligheter. Åtgärden är oåterkallelig."
+"Ladda om bokföringsdata (skatter, kontoplan, osv) om du hittar avvikelser. "
+"Detta går inte att ångra."
 
 #. module: account
 #: model:ir.model,name:account.model_account_resequence_wizard
 msgid "Remake the sequence of Journal Entries."
-msgstr "Gör om verifikatens sekvens."
+msgstr "Gör om verifikationssekvensen."
 
 #. module: account
 #. odoo-python
@@ -15714,7 +15721,7 @@ msgstr "Bokföringsorder"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse Journal Entry"
-msgstr "Rätta verifikat"
+msgstr "Återkalla verifikation"
 
 #. module: account
 #. odoo-python
@@ -15764,7 +15771,7 @@ msgstr "Visa kontoplan"
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 #: model:ir.actions.server,name:account.accountant_confirm_entries_action
 msgid "Review Entries"
-msgstr "Granska verifikat"
+msgstr "Granska verifikation"
 
 #. module: account
 #. odoo-python
@@ -15967,7 +15974,7 @@ msgstr "Försäljningskvitto skapat"
 #: model_terms:ir.ui.view,arch_db:account.res_company_form_view_onboarding_sale_tax
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Sales Tax"
-msgstr "Försäljningsmoms"
+msgstr "Moms vid försäljning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_product__taxes_id
@@ -15986,7 +15993,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/onboarding_onboarding_step.py:0
 msgid "Sales tax"
-msgstr "Försäljningsmoms"
+msgstr "Moms vid försäljning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_user_id
@@ -16084,7 +16091,7 @@ msgstr "Sök efter faktura"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_payment_filter
 msgid "Search Journal Items"
-msgstr "Sök efter affärshändelser"
+msgstr "Sök efter verifikationsrader"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -16105,7 +16112,7 @@ msgstr "Sök efter skatter"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Search a name or Tax ID..."
-msgstr "Sök efter namn eller skatteregistreringsnummer..."
+msgstr "Sök efter namn eller skattenummer..."
 
 #. module: account
 #. odoo-javascript
@@ -16137,21 +16144,21 @@ msgstr "Sektioner"
 #: model:ir.ui.menu,name:account.menu_action_secure_entries
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
 msgid "Secure Entries"
-msgstr "Säkra inmatningar"
+msgstr "Säkra verifikationer"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_account_secure_entries_wizard
 #: model:ir.model,name:account.model_account_secure_entries_wizard
 #: model_terms:ir.ui.view,arch_db:account.view_account_secure_entries_wizard
 msgid "Secure Journal Entries"
-msgstr "Säkra verifikat"
+msgstr "Säkra verifikationer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_journal__restrict_mode_hash_table
 #: model:ir.model.fields,field_description:account.field_account_move__restrict_mode_hash_table
 msgid "Secure Posted Entries with Hash"
-msgstr "Säkra verifikat med hashning"
+msgstr "Säkra verifikationer med hashning"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__secured
@@ -16165,15 +16172,15 @@ msgstr "Säkerställd"
 msgid ""
 "Securing these entries will also secure entries after the selected date."
 msgstr ""
-"Genom att säkra dessa verifikat säkras även verifikat efter det valda "
-"datumet."
+"Genom att säkra dessa verifikationer säkras de även efter det valda datumet."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid "Securing these entries will create at least one gap in the sequence."
 msgstr ""
-"Genom att säkra dessa verifikat skapas åtminstone en lucka i nummerföljden."
+"Genom att säkra dessa verifikationer skapas åtminstone en lucka i "
+"nummerföljden."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__access_token
@@ -16638,8 +16645,8 @@ msgid ""
 "Shorter name used for display. The journal entries of this journal will also "
 "be named using this prefix by default."
 msgstr ""
-"Förkortning som används som visningsnamn. Verifikat i journalen får som "
-"standard förkortningen som prefix."
+"Förkortning som används som visningsnamn. Verifikationerna i journalen får "
+"som standard förkortningen som prefix."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__show_aba_routing
@@ -16775,7 +16782,7 @@ msgstr "Visa alla handlingar vars nästkommande aktivitetsdatum har passerat"
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Show draft entries"
-msgstr "Visa utkast till verifikat"
+msgstr "Visa utkast till verifikationer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
@@ -16892,7 +16899,7 @@ msgid ""
 "Specify whether this entry is posted automatically on its accounting date, "
 "and any similar recurring invoices."
 msgstr ""
-"Ange om detta verifikat ska bokföras automatiskt på dess bokföringsdatum, "
+"Ange om denna verifikation ska bokföras automatiskt på dess bokföringsdatum, "
 "samt eventuella liknande återkommande fakturor."
 
 #. module: account
@@ -17031,7 +17038,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_statusbar_secured/account_move_statusbar_secured.js:0
 msgid "Status with secured indicator for Journal Entries"
-msgstr "Status med säkerhetsindikator för verifikat"
+msgstr "Status med säkerhetsindikator för verifikationer"
 
 #. module: account
 #: model:onboarding.onboarding.step,done_text:account.onboarding_onboarding_step_sales_tax
@@ -17181,7 +17188,7 @@ msgstr ""
 msgid ""
 "Tags to be set on the base and tax journal items created for this product."
 msgstr ""
-"Taggar som ska anges på de affärshändelser som skapats för denna produkt."
+"Taggar som ska anges på de verifikationsrader som skapats för denna produkt."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__target_report_expression_id
@@ -17399,7 +17406,7 @@ msgstr "Avrundningsmetod för skatter"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__tax_cash_basis_rec_id
 #: model:ir.model.fields,field_description:account.field_account_move__tax_cash_basis_rec_id
 msgid "Tax Cash Basis Entry of"
-msgstr "Verifikat för beskattning enligt kontantmetoden"
+msgstr "Verifikationer för beskattning enligt kontantmetoden"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_cash_basis_journal_id
@@ -17688,7 +17695,7 @@ msgid ""
 "item if they share some tag."
 msgstr ""
 "Skatter som befriats från en betalning eller en faktura kan inte sammanföras "
-"i samma affärshändelse om de delar samma tag."
+"i samma verifikationsrad om de delar samma tag."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__display_invoice_tax_company_currency
@@ -17702,7 +17709,8 @@ msgid ""
 "Taxes, fiscal positions, chart of accounts & legal statements for your "
 "country"
 msgstr ""
-"Skatter, skatteområden, kontoplaner och juridiska rapporter för ditt land"
+"Skattsatser, skatteområden, kontoplaner och ekonomiska rapporter anpassade "
+"till ditt land"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_enabled_tax_country_ids
@@ -17886,8 +17894,8 @@ msgstr ""
 "befintliga sekvensnumret (%(sequence)s). Rensa sekvensnumret för att gå "
 "vidare.\n"
 "Om du vill behålla datumbaserade sekvenser, vänligen markera relaterade "
-"verifikat och använd alternativet för omordning i åtgärdsmenyn, som finns "
-"tillgängligt genom utvecklarläget."
+"verifikationer och använd alternativet för omordning i åtgärdsmenyn, som "
+"finns tillgängligt genom utvecklarläget."
 
 #. module: account
 #. odoo-python
@@ -17982,8 +17990,8 @@ msgid ""
 "The Journal Entry sequence is not conform to the current format. Only the "
 "Accountant can change it."
 msgstr ""
-"Verifikatsserien följer inte det aktuella formatet. Endast revisorn kan göra "
-"ändringar."
+"Verifikationsserien följer inte det aktuella formatet. Endast revisorn kan "
+"göra ändringar."
 
 #. module: account
 #. odoo-python
@@ -18002,8 +18010,8 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
-"Skatteregistreringsnummer. Värden här bekräftas baserat på landets format. "
-"Du kan använda '/' för att ange att partnern inte är skattepliktig."
+"Skattenummer. Värden här bekräftas baserat på landets format. Du kan använda "
+"'/' för att ange att partnern inte är skattepliktig."
 
 #. module: account
 #. odoo-python
@@ -18034,7 +18042,7 @@ msgid ""
 "The account selected on your journal entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
-"Det konto som angetts för verifikatet kräver användning av en sekundär "
+"Det konto som angetts för verifikationen kräver användning av en sekundär "
 "valuta. Du bör ta bort den sekundära valutan från kontot."
 
 #. module: account
@@ -18057,8 +18065,8 @@ msgid ""
 "The amount expressed in an optional other currency if it is a multi-currency "
 "entry."
 msgstr ""
-"Beloppet uttryckt i valfri sekundär valuta om det är ett verifikat med flera "
-"valutor."
+"Beloppet uttryckt i en alternativ sekundär valuta om det är en verifikation "
+"med flera valutor."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_amount_currency_balance_sign
@@ -18144,8 +18152,8 @@ msgid ""
 "The cash basis entries created from the taxes on this entry, when "
 "reconciling its lines."
 msgstr ""
-"Verifikat som skapats när skatterelaterade rader som skapats enligt "
-"kontantmetoden i detta verifikat stäms av."
+"Verifikationer som skapats när skatterelaterade rader som skapats enligt "
+"kontantmetoden i denna verifikation stäms av."
 
 #. module: account
 #. odoo-python
@@ -18193,7 +18201,7 @@ msgstr ""
 #: code:addons/account/models/partner.py:0
 msgid ""
 "The commercial partner has been updated for all related accounting entries."
-msgstr "Handelspartnern har uppdaterats för alla relaterade verifikat."
+msgstr "Handelspartnern har uppdaterats för alla relaterade verifikationer."
 
 #. module: account
 #. odoo-python
@@ -18274,8 +18282,8 @@ msgid ""
 "The date is being set prior to: %(lock_date_info)s. The Journal Entry will "
 "be accounted on %(invoice_date)s upon posting."
 msgstr ""
-"Datumet anges innan: %(lock_date_info)s. Verifikatet kommer att bokföras den "
-"%(invoice_date)s."
+"Datumet anges innan: %(lock_date_info)s. Verifikationen kommer att bokföras "
+"den %(invoice_date)s."
 
 #. module: account
 #. odoo-python
@@ -18356,19 +18364,19 @@ msgstr "Det eller de dokument som skapade fakturan."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The entry %(name)s (id %(id)s) must be in draft."
-msgstr "Verifikatet %(name)s (med ID-nummer %(id)s) måste vara i utkast."
+msgstr "Verifikationen %(name)s (med ID-nummer %(id)s) måste vara i utkast."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "The entry is not balanced."
-msgstr "Verifikatet är inte balanserat."
+msgstr "Verifikationen är inte balanserat."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__secured
 #: model:ir.model.fields,help:account.field_account_move__secured
 msgid "The entry is secured with an inalterable hash."
-msgstr "Verifikatet är säkrat med hjälp av en oföränderlig hash."
+msgstr "Verifikationen är säkrad med hjälp av en oföränderlig hash."
 
 #. module: account
 #. odoo-python
@@ -18377,8 +18385,8 @@ msgid ""
 "The entry is using accounts (%(accounts_codes_names)s) from a different "
 "company."
 msgstr ""
-"Verifikatet använder sig av konton (%(accounts_codes_names)s) från ett annat "
-"företag."
+"Verifikationen använder sig av konton (%(accounts_codes_names)s) från ett "
+"annat företag."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -18420,7 +18428,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "The following Journal Entries will be generated"
-msgstr "Följande verifikat kommer att skapas"
+msgstr "Följande verifikationer kommer att skapas"
 
 #. module: account
 #. odoo-python
@@ -18439,7 +18447,7 @@ msgid ""
 "The following entries are unbalanced:\n"
 "\n"
 msgstr ""
-"Följande verifikat är inte balanserade:\n"
+"Följande verifikationer är inte balanserade:\n"
 "\n"
 
 #. module: account
@@ -18502,17 +18510,18 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one journal "
 "item involving the bank/cash account."
 msgstr ""
-"Verifikatet %s nådde ett ogiltigt tillstånd vad gäller den relaterade raden "
-"ur ett kontoutdrag.\n"
-"För att vara konsekvent måste verifikatet alltid ha exakt en affärshändelse "
-"kopplad till ett bank-/kassakonto."
+"Verifikationen %s nådde ett ogiltigt tillstånd vad gäller den relaterade "
+"raden ur ett kontoutdrag.\n"
+"För att vara konsekvent måste verifikationen alltid ha exakt en "
+"verifikationsrad kopplad till ett bank-/kassakonto."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
 msgid ""
 "The journal entry containing the initial balance of all this company's "
 "accounts."
-msgstr "Verifikatet som innehåller ingående saldon för alla företagets konton."
+msgstr ""
+"Verifikationen som innehåller ingående saldon för alla företagets konton."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__tax_cash_basis_origin_move_id
@@ -18521,8 +18530,8 @@ msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
 msgstr ""
-"Det verifikat utifrån vilken detta verifikat för skatter enligt "
-"kontantmetoden har skapats."
+"Den verifikation utifrån vilket denna skatteverifikation har skapats enligt "
+"kontantmetoden."
 
 #. module: account
 #. odoo-python
@@ -18534,7 +18543,7 @@ msgstr "Det anges inte i vilken journal fakturan ska laddas upp. "
 #. odoo-python
 #: code:addons/account/models/account_analytic_line.py:0
 msgid "The journal item is not linked to the correct financial account"
-msgstr "Affärshändelsen är inte kopplad till rätt finansiellt konto"
+msgstr "Verifikationsraden är inte kopplad till rätt finansiellt konto"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
@@ -18564,14 +18573,15 @@ msgid ""
 "%(lock_date_info)s."
 msgstr ""
 "Åtgärden nekas eftersom den skulle påverka en redan utfärdad "
-"skattedeklaration. Ändra verifikatets datum eller följande låsningsdatum för "
-"att gå vidare: %(lock_date_info)s."
+"skattedeklaration. Ändra verifikationens datum eller följande låsningsdatum "
+"för att gå vidare: %(lock_date_info)s."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__foreign_currency_id
 msgid "The optional other currency if it is a multi-currency entry."
 msgstr ""
-"Den valfria sekundära valutan om det är ett verifikat med flera valutor."
+"Den alternativa sekundära valutan om det är en verifikation med flera "
+"valutor."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__quantity
@@ -18619,12 +18629,12 @@ msgstr "Betalningsbeloppet får inte vara negativt."
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__payment_reference
 #: model:ir.model.fields,help:account.field_account_move__payment_reference
 msgid "The payment reference to set on journal items."
-msgstr "Betalningsreferensen att angiva för affärshändelser."
+msgstr "Betalningsreferensen att ange på relaterade verifikationsrader."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__payment_id
 msgid "The payment that created this entry"
-msgstr "Betalningen som verifikatet skapades utifrån"
+msgstr "Betalningen som verifikationen skapades utifrån"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__currency_id
@@ -18724,7 +18734,7 @@ msgid ""
 "The residual amount on a journal item expressed in its currency (possibly "
 "not the company currency)."
 msgstr ""
-"Det återstående beloppet för en affärshändelse uttryckt i dess angivna "
+"Det återstående beloppet för en verifikationsrad uttryckt i dess angivna "
 "valuta (inte nödvändigtvis samma som företagets valuta)."
 
 #. module: account
@@ -18732,7 +18742,7 @@ msgstr ""
 msgid ""
 "The residual amount on a journal item expressed in the company currency."
 msgstr ""
-"Det återstående beloppet för en affärshändelse angivet i företagets valuta."
+"Det återstående beloppet för en verifikationsrad angivet i företagets valuta."
 
 #. module: account
 #. odoo-python
@@ -18777,7 +18787,7 @@ msgid ""
 "                        the loss of any pre-existing foreign currency amount."
 msgstr ""
 "Det valda kontot är inställt för att använda en specifik valuta. Beloppet i "
-"varje verifikat som överförs till kontot kommer att omvandlas till denna "
+"varje verifikation som överförs till kontot kommer att omvandlas till denna "
 "valuta, \n"
 "                        vilket gör att man förlorar eventuellt befintligt "
 "belopp i en annan valuta."
@@ -18926,7 +18936,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The statement line that created this entry"
-msgstr "Den rad i ett kontoutdrag som skapade verifikatet"
+msgstr "Den rad i ett kontoutdrag som skapade verifikationen"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__foreign_vat
@@ -18981,15 +18991,15 @@ msgid ""
 "There are entries that cannot be hashed. They can be protected by the Hard "
 "Lock Date."
 msgstr ""
-"Det finns verifikat som inte kan hashas. De kan istället skyddas med ett "
-"slutgiltigt låsningsdatum."
+"Det finns verifikationer som inte kan hashas. De kan istället skyddas med "
+"ett slutgiltigt låsningsdatum."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/wizard/account_validate_account_move.py:0
 msgid "There are no journal items in the draft state to post."
-msgstr "Det finns inga utkast till affärshändelser kvar att bokföra."
+msgstr "Det finns inga utkast till verifikationsrader kvar att bokföra."
 
 #. module: account
 #. odoo-python
@@ -19003,7 +19013,7 @@ msgstr ""
 #: code:addons/account/wizard/account_secure_entries_wizard.py:0
 msgid "There are still draft entries before the selected date."
 msgstr ""
-"Det finns utkast till verifikat som är daterade innan det valda datumet."
+"Det finns utkast till verifikationer som är daterade innan det valda datumet."
 
 #. module: account
 #. odoo-python
@@ -19012,7 +19022,7 @@ msgid ""
 "There are still draft entries in the period you want to hard lock. You "
 "should either post or delete them."
 msgstr ""
-"Det finns fortfarande utkast till verifikat i den period som du vill låsa "
+"Det finns fortfarande verifikationsutkast i den period som du vill låsa "
 "slutgiltigt. Du bör antingen bokföra eller radera dem."
 
 #. module: account
@@ -19024,7 +19034,7 @@ msgid ""
 "(prefix_info)s"
 msgstr ""
 "Det finns fortfarande icke-avstämda rader i kontoutdrag före det valda "
-"datumet. Verifikat från journaler med följande prefix kommer inte att "
+"datumet. Verifikationer från journaler med följande prefix kommer inte att "
 "säkras: %(prefix_info)s"
 
 #. module: account
@@ -19052,7 +19062,7 @@ msgstr ""
 msgid ""
 "There is no journal entry flagged for accounting data inalterability yet."
 msgstr ""
-"Det finns ännu inga verifikat som är flaggade för oföränderlig "
+"Det finns ännu inga verifikationer som är flaggade för oföränderlig "
 "bokföringsdata."
 
 #. module: account
@@ -19113,7 +19123,7 @@ msgid ""
 "registration is necessary. You've got your finances under control like a "
 "boss!"
 msgstr ""
-"Det finns inget kvar att betala för de valda affärshändelserna, så ingen "
+"Det finns inget kvar att betala för de valda verifikationsraderna, så ingen "
 "betalningsregistrering är nödvändig för tillfället. Du har koll på din "
 "ekonomi!"
 
@@ -19208,7 +19218,7 @@ msgstr "Detta kan endast användas för konton."
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "This can only be used on journal items"
-msgstr "Detta kan endast användas för affärshändelser"
+msgstr "Detta kan endast användas för verifikationsrader"
 
 #. module: account
 #. odoo-python
@@ -19234,8 +19244,8 @@ msgid ""
 "country. Check company fiscal country in the settings and tax country in "
 "taxes configuration."
 msgstr ""
-"Det här verifikatet innehåller en eller flera skatter som är oförenliga med "
-"ditt skatteområde. Kontrollera företagets skatterättsliga hemvist i "
+"Den här verifikationen innehåller en eller flera skatter som är oförenliga "
+"med ditt skatteområde. Kontrollera företagets skatterättsliga hemvist i "
 "företagets inställningar samt inställningarna för skatter."
 
 #. module: account
@@ -19245,33 +19255,33 @@ msgid ""
 "This entry contains taxes that are not compatible with your fiscal position. "
 "Check the country set in fiscal position and in your tax configuration."
 msgstr ""
-"Det här verifikatet innehåller en eller flera skatter som är oförenliga med "
-"ditt skatteområde. Kontrollera företagets skatterättsliga hemvist i "
+"Den här verifikationen innehåller en eller flera skatter som är oförenliga "
+"med ditt skatteområde. Kontrollera företagets skatterättsliga hemvist i "
 "företagets inställningar samt inställningarna för skatter."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "This entry has been %s"
-msgstr "Det här verifikatet har blivit %s"
+msgstr "Den här verifikationen har blivit %s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been duplicated from %s"
-msgstr "Verifikatet har kopierats från %s"
+msgstr "Verifikationen har kopierats från %s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This entry has been reversed from %s"
-msgstr "Det här verifikatet har återkallats från %s"
+msgstr "Den här verifikationen har återkallats från %s"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "This entry transfers the following amounts to %(destination)s"
-msgstr "Verifikatet överför följande belopp till %(destination)s"
+msgstr "Verifikationen överför följande belopp till %(destination)s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__date_maturity
@@ -19279,8 +19289,8 @@ msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
 msgstr ""
-"Fältet används för verifikat för leverantörsskulder och kundfordringar. Du "
-"kan ange en sista betalningsdag för denna rad."
+"Fältet används för verifikationer för leverantörsskulder och kundfordringar. "
+"Du kan ange en sista betalningsdag för denna rad."
 
 #. module: account
 #. odoo-python
@@ -19329,7 +19339,7 @@ msgstr "Detta är det förfallna beloppet."
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This journal entry has been secured."
-msgstr "Detta verifikat har säkrats."
+msgstr "Denna verifikation har säkrats."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__is_self_billing
@@ -19394,20 +19404,20 @@ msgid ""
 "If you want to change its Unit of Measure, please archive this product and "
 "create a new one."
 msgstr ""
-"Den här produkten används redan i bokförda verifikat.\n"
+"Den här produkten används redan i bokförda verifikationer.\n"
 "Om du vill ändra dess måttenhet, vänligen arkivera produkten och skapa en ny."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 msgid "This reconciliation model has created no entry so far"
-msgstr "Avstämningsmodellen har ännu inte genererat några verifikat"
+msgstr "Avstämningsmodellen har ännu inte genererat några verifikationer"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "This recurring entry originated from %s"
-msgstr "Detta återkommande verifikat härstammar från %s"
+msgstr "Denna återkommande verifikation härstammar från %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__auto_post_until
@@ -19420,7 +19430,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting locks once a journal entry is created."
-msgstr "Inställningarna låses så snart som ett verifikat skapas."
+msgstr "Inställningarna låses så snart som en verifikation skapas."
 
 #. module: account
 #. odoo-python
@@ -19435,7 +19445,7 @@ msgid ""
 "context,\n"
 "                such as for sending by email or reviewing a batch of records."
 msgstr ""
-"Vyn visar endast de verifikat som valts ur ett annat sammanhang,\n"
+"Vyn visar endast de verifikationer som valts ur ett annat sammanhang,\n"
 "                t.ex. som skickas via e-post eller en batch som behandlats."
 
 #. module: account
@@ -19444,7 +19454,7 @@ msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
 msgstr ""
-"Dessa kan användas för att snabbt skapa affärshändelser vid avstämning\n"
+"Dessa kan användas för att snabbt skapa verifikationsrader vid avstämning\n"
 "                 med ett kontoutdrag eller ett konto."
 
 #. module: account
@@ -19520,8 +19530,8 @@ msgid ""
 "Instead, you can cancel the journal entry."
 msgstr ""
 "För att behålla den restriktiva verifieringskedjan är det inte möjligt att "
-"ta bort verifikat när de redan har bokförts.\n"
-"Istället kan du välja att makulera verifikatet."
+"radera verifikationer när de redan har bokförts.\n"
+"Istället kan du välja att makulera verifikationer."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -19556,7 +19566,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 msgid "To reverse a journal entry, it has to be posted first."
-msgstr "För att ett verifikat ska kunna återkallas måste det först bokföras."
+msgstr "För att en verifikation ska kunna återkallas måste det först bokföras."
 
 #. module: account
 #. odoo-javascript
@@ -19700,7 +19710,7 @@ msgstr "Totalt belopp att betala: %(total_credit)s"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__total_amount
 msgid "Total amount impacted by the automatic entry."
-msgstr "Det totala beloppet som påverkas av det automatiska verifikatet."
+msgstr "Det totala beloppet som påverkas av den automatiska verifikationen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -19793,7 +19803,7 @@ msgstr "Överföringsdatum"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_automatic_entry_wizard_action
 msgid "Transfer Journal Items"
-msgstr "Överför affärshändelser"
+msgstr "Överför verifikationsrader"
 
 #. module: account
 #. odoo-python
@@ -19805,7 +19815,7 @@ msgstr "Överföringens motpart"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "Transfer entry to %s"
-msgstr "Flytta verifikatet till %s"
+msgstr "Flytta verifikation till %s"
 
 #. module: account
 #. odoo-python
@@ -19945,12 +19955,12 @@ msgstr "Visa alla"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_unhashed_entries
 msgid "Unhashed Entries"
-msgstr "Ohashade verifikat"
+msgstr "Ohashade verifikationer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Unhashed entries"
-msgstr "Ohashade verifikat"
+msgstr "Ohashade verifikationer"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__code
@@ -20014,12 +20024,12 @@ msgstr "Ej bokförda"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
-msgstr "Icke-bokförda verifikat"
+msgstr "Icke-bokförda verifikationer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted Journal Items"
-msgstr "Icke-bokförda affärshändelser"
+msgstr "Icke-bokförda verifikationsrader"
 
 #. module: account
 #. odoo-javascript
@@ -20224,7 +20234,7 @@ msgstr "Använd vid skatteberäkning"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use negative numbers to reverse original entries"
-msgstr "Använd negativa siffror för att återkalla ursprungliga verifikat"
+msgstr "Använd negativa siffror för att återkalla ursprungliga verifikationer"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__currency_translation__current
@@ -20269,8 +20279,8 @@ msgid ""
 "should be reset to zero at each new fiscal year (like expenses, revenue..) "
 "should not have this option set."
 msgstr ""
-"Används i rapporter för att avgöra om affärshändelser ska tas med i "
-"beräkningen från den första affärshändelsen eller endast för nuvarande "
+"Används i rapporter för att avgöra om verifikationsrader ska tas med i "
+"beräkningen från den första verifikationsraden eller endast för nuvarande "
 "räkenskapsår. Kontotyper som bör nollställas vid varje nytt räkenskapsår "
 "(som utgifter, intäkter...) ska inte ha detta alternativ angivet."
 
@@ -20363,7 +20373,8 @@ msgid ""
 "Utility field to express whether the journal item is subject to storno "
 "accounting"
 msgstr ""
-"Verktygsfält för att ange om affärshändelsen behandlas med Storno-bokföring"
+"Verktygsfält för att ange om verifikationsraden behandlas med Storno-"
+"bokföring"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
@@ -20412,7 +20423,7 @@ msgstr "Validerad"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Validated entries can only be changed by your accountant."
-msgstr "Validerade verifikat kan endast ändras av din revisor."
+msgstr "Validerade verifikationer kan endast ändras av en revisor."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value
@@ -20463,7 +20474,8 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__draft_caba_move_vals
 msgid "Values that created the draft cash-basis entry"
-msgstr "Värden som skapade ett utkast till ett verifikat enligt kontantmetoden"
+msgstr ""
+"Värden som skapade ett utkast till en verifikation enligt kontantmetoden"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__variant_report_ids
@@ -20806,7 +20818,7 @@ msgstr "Avskrivning är konto för valutaomvandling"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_credit_debit
 msgid "Wrong credit or debit value in accounting entry!"
-msgstr "Fel kredit- eller debetvärde i verifikatet!"
+msgstr "Fel kredit- eller debetvärde i verifikationen!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -20849,7 +20861,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You are trying to reconcile some entries that are already reconciled."
-msgstr "Du försöker stämma av verifikat som redan är avstämda."
+msgstr "Du försöker stämma av verifikationer som redan är avstämda."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_model
@@ -20871,11 +20883,11 @@ msgid ""
 "2/ then filter on 'Draft' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
-"Det är inte möjligt att arkivera en journal som innehåller utkast till "
-"verifikat.\n"
+"Det är inte möjligt att arkivera en journal som innehåller "
+"verifikationsutkast.\n"
 "\n"
 "Fortsätt såhär:\n"
-"1/ klicka på knappen 'Verifikat' längst upp till höger i formuläret\n"
+"1/ klicka på knappen 'Verifikationer' längst upp till höger i formuläret\n"
 "2/ filtrera sedan efter \"Utkast\"\n"
 "3/ markera utkasten och bokför eller radera dem genom åtgärdsmenyn"
 
@@ -20894,7 +20906,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 msgid "You can not reconcile cancelled entries."
-msgstr "Det är inte möjligt att stämma av avbrutna verifikat."
+msgstr "Det är inte möjligt att stämma av avbrutna verifikationer."
 
 #. module: account
 #. odoo-python
@@ -20916,7 +20928,7 @@ msgstr "Det är bara möjligt att skapa försäljningsdokument."
 #: code:addons/account/models/account_move.py:0
 msgid "You can only register payment for posted journal entries."
 msgstr ""
-"Det är endast möjligt att registrera betalningar för bokförda verifikat."
+"Det är endast möjligt att registrera betalningar för bokförda verifikationer."
 
 #. module: account
 #. odoo-python
@@ -20930,7 +20942,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_resequence.py:0
 msgid "You can only resequence items from the same journal"
-msgstr "Det är endast möjligt att återställa affärshändelser från samma journal"
+msgstr ""
+"Det är endast möjligt att återställa verifikationsrader från samma journal"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
@@ -20966,7 +20979,7 @@ msgid ""
 "entries linked to it."
 msgstr ""
 "Det är inte möjligt att byta journalens angivna företag eftersom journalen "
-"redan har aktiva verifikat."
+"redan har aktiva verifikationer."
 
 #. module: account
 #. odoo-python
@@ -20976,7 +20989,7 @@ msgid ""
 "linked to it."
 msgstr ""
 "Det är inte möjligt att byta skattens angivna företag eftersom journalen "
-"redan har aktiva verifikat."
+"redan har aktiva verifikationsrader."
 
 #. module: account
 #. odoo-python
@@ -21007,16 +21020,16 @@ msgid ""
 "You can't create payments for entries belonging to different branches "
 "without access to parent company."
 msgstr ""
-"Det är inte möjligt att skapa betalningar för verifikat som tillhör olika "
-"filialer utan åtkomst till det överordnade företaget."
+"Det är inte möjligt att skapa betalningar för verifikationer som tillhör "
+"olika filialer utan åtkomst till det överordnade företaget."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_payment_register.py:0
 msgid "You can't create payments for entries belonging to different companies."
 msgstr ""
-"Det är inte möjligt att skapa betalningar för verifikat som tillhör olika "
-"företag."
+"Det är inte möjligt att skapa betalningar för verifikationer som tillhör "
+"olika företag."
 
 #. module: account
 #. odoo-python
@@ -21025,9 +21038,9 @@ msgid ""
 "You can't delete a posted journal item. Don’t play games with your "
 "accounting records; reset the journal entry to draft before deleting it."
 msgstr ""
-"Det är inte möjligt att radera en bokförd affärshändelse. Bokföring är inte "
-"att leka med; återställ relaterade verifikat till utkast innan du raderar "
-"affärshändelsen."
+"Det är inte möjligt att radera en bokförd verifikationsrad. Bokföring är "
+"inte att leka med; återställ relaterade verifikationer till utkast innan du "
+"raderar verifikationsraden."
 
 #. module: account
 #. odoo-python
@@ -21049,7 +21062,7 @@ msgid ""
 "(payment_type)s) and with the same name (%(name)s) on a single journal."
 msgstr ""
 "Du kan inte ha två rader med betalningsmetoder av samma betalningstyp (%"
-"(payment_type)s) och med samma namn (%(name)s) på ett och samma verifikat."
+"(payment_type)s) och med samma namn (%(name)s) på en och samma verifikation."
 
 #. module: account
 #. odoo-python
@@ -21098,8 +21111,8 @@ msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
 msgstr ""
-"Det är inte möjligt återställa verifikaten till utkast. Begär istället en "
-"makulering."
+"Det är inte möjligt återställa verifikationerna till utkast. Begär istället "
+"en makulering."
 
 #. module: account
 #. odoo-python
@@ -21109,7 +21122,7 @@ msgid ""
 "items linked to it."
 msgstr ""
 "Det är inte möjligt att koppla bort det här företaget från det här kontot "
-"eftersom det finns några affärshändelser kopplade till det."
+"eftersom det finns några verifikationsrader kopplade till det."
 
 #. module: account
 #. odoo-python
@@ -21117,7 +21130,7 @@ msgstr ""
 msgid ""
 "You cannot add/modify entries prior to and inclusive of: %(lock_date_info)s."
 msgstr ""
-"Det är inte möjligt att lägga till/ändra verifikat fram till och inklusive: %"
+"Det är inte möjligt att lägga till/ändra verifikationer till och med: %"
 "(lock_date_info)s."
 
 #. module: account
@@ -21137,7 +21150,7 @@ msgid ""
 "already exist"
 msgstr ""
 "Det är inte möjligt att ändra företagets valuta eftersom vissa "
-"affärshändelser redan skapats"
+"verifikationsrader redan skapats"
 
 #. module: account
 #. odoo-python
@@ -21208,8 +21221,8 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete journal items belonging to a locked journal entry."
 msgstr ""
-"Det är inte möjligt att radera affärshändelser kopplade till ett låst "
-"verifikat."
+"Det är inte möjligt att radera verifikationsrader kopplade till låsta "
+"verifikationer."
 
 #. module: account
 #. odoo-python
@@ -21238,7 +21251,7 @@ msgid ""
 "You cannot delete this entry, as it has already consumed a sequence number "
 "and is not the last one in the chain. You should probably revert it instead."
 msgstr ""
-"Det är inte möjligt att ta bort verifikatet, eftersom det redan har "
+"Det är inte möjligt att ta bort verifikationen, eftersom det redan har "
 "förbrukat ett sekvensnummer och inte är den sista i kedjan. Vi rekommenderar "
 "att du istället återkallar det."
 
@@ -21288,10 +21301,10 @@ msgid ""
 "change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %(entry)s (%(id)s)"
 msgstr ""
-"Det är inte möjligt att genomföra ändringar på ett verifikat som redan "
+"Det är inte möjligt att genomföra ändringar på en verifikation som redan "
 "stämts av. Du kan bara ändra vissa icke-juridiska fält eller så måste du "
 "först återkalla avstämningen.\n"
-"Verifikat (ID-nummer): %(entry)s (%(id)s)"
+"Verifikation (ID-nummer): %(entry)s (%(id)s)"
 
 #. module: account
 #. odoo-python
@@ -21308,7 +21321,7 @@ msgid ""
 "%(entries)s"
 msgstr ""
 "Det är inte möjligt att redigera följande fält: %(fields)s.\n"
-"Följande verifikat har redan hashats:\n"
+"Följande verifikation har redan hashats:\n"
 "%(entries)s"
 
 #. module: account
@@ -21382,7 +21395,7 @@ msgid ""
 "entries."
 msgstr ""
 "Det är inte möjligt att redigera fältet %s för en journal som redan har "
-"skapade verifikat."
+"skapade verifikationer."
 
 #. module: account
 #. odoo-python
@@ -21400,7 +21413,7 @@ msgid ""
 "reset the journal entry to draft to do so."
 msgstr ""
 "Det är inte möjligt att redigera skatter relaterade till bokförda "
-"affärshändelser, du bör först återställa verifikatet till utkast."
+"verifikationsrader, du bör först återställa verifikationer till utkast."
 
 #. module: account
 #. odoo-python
@@ -21409,14 +21422,14 @@ msgid ""
 "You cannot perform this action on an account that contains journal items."
 msgstr ""
 "Det är inte möjligt att genomföra den här åtgärden på ett konto som "
-"innehåller bokförda affärshändelser."
+"innehåller bokförda verifikationsrader."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry in an archived journal (%(journal)s)"
 msgstr ""
-"Det är inte möjligt att bokföra ett verifikat i en arkiverad journal (%"
+"Det är inte möjligt att bokföra en verifikation i en arkiverad journal (%"
 "(journal)s)"
 
 #. module: account
@@ -21424,7 +21437,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry with an archived analytic account: %s"
 msgstr ""
-"Det är inte möjligt att bokföra ett verifikat kopplat till ett arkiverat "
+"Det är inte möjligt att bokföra en verifikation kopplad till ett arkiverat "
 "analytiskt konto: %s"
 
 #. module: account
@@ -21435,13 +21448,13 @@ msgid ""
 "already been used to make accounting entries."
 msgstr ""
 "Det är inte möjligt att minska antalet decimaler för en valuta som redan har "
-"använts i verifikat."
+"använts i verifikationer."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot register payments for miscellaneous entries."
-msgstr "Det är inte möjligt registrera betalningar för diverse verifikat."
+msgstr "Det är inte möjligt registrera betalningar för diverse verifikationer."
 
 #. module: account
 #. odoo-python
@@ -21484,14 +21497,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft a locked journal entry."
-msgstr "Det är inte möjligt att återställa ett låst verifikat till utkast."
+msgstr "Det är inte möjligt att återställa en låst verifikation till utkast."
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft a tax cash basis journal entry."
 msgstr ""
-"Det är inte möjligt att återställa ett verifikat som bokförts enligt "
+"Det är inte möjligt att återställa en verifikation som bokförts enligt "
 "kontantmetoden till utkast."
 
 #. module: account
@@ -21499,7 +21512,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot reset to draft an exchange difference journal entry."
 msgstr ""
-"Det är inte möjligt att återställa ett verifikat för en växelskillnad till "
+"Det är inte möjligt att återställa en verifikation för en växelskillnad till "
 "utkast."
 
 #. module: account
@@ -21519,7 +21532,7 @@ msgid ""
 "entries having a different foreign currency."
 msgstr ""
 "Det är inte möjligt att ange en valuta för det här kontot eftersom det redan "
-"har några verifikat med en annan utländsk valuta."
+"har några verifikationer med en annan utländsk valuta."
 
 #. module: account
 #. odoo-python
@@ -21587,7 +21600,7 @@ msgid ""
 "You cannot use this wizard on journal entries belonging to different "
 "companies."
 msgstr ""
-"Det är inte möjligt att använda den här guiden med verifikat som tillhör "
+"Det är inte möjligt att använda den här guiden med verifikationersom tillhör "
 "olika företag."
 
 #. module: account
@@ -21661,7 +21674,7 @@ msgid ""
 msgstr ""
 "Du bör ställa in en journal för 'vinst eller förlust vid valutaomvandling' i "
 "företagets inställningar för att automatiskt hantera bokföringen av "
-"verifikat relaterade till växelskillnader."
+"verifikationer relaterade till växelskillnader."
 
 #. module: account
 #. odoo-python
@@ -21694,7 +21707,7 @@ msgid ""
 "to differences between exchange rates."
 msgstr ""
 "Du bör ställa in ett 'konto för vinst vid valutaomvandling' i företagets "
-"inställningar för att automatiskt hantera bokföringen av verifikat "
+"inställningar för att automatiskt hantera bokföringen av verifikationer "
 "relaterade till växelskillnader."
 
 #. module: account
@@ -21706,7 +21719,7 @@ msgid ""
 "to differences between exchange rates."
 msgstr ""
 "Du bör ställa in ett 'konto för förluster vid valutaomvandling' i företagets "
-"inställningar för att automatiskt hantera bokföringen av verifikat "
+"inställningar för att automatiskt hantera bokföringen av verifikationer "
 "relaterade till växelkursskillnader."
 
 #. module: account
@@ -22362,8 +22375,8 @@ msgid ""
 "{{ object.company_id.name }} Self-billing credit note (Ref {{ object.name or "
 "'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Självfakturerad kreditfaktura (Ref {{ "
-"object.name or 'n/a' }})"
+"{{ object.company_id.name }} Självfakturerad kreditfaktura (Ref "
+"{{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_self_billing_invoice
@@ -22371,8 +22384,8 @@ msgid ""
 "{{ object.company_id.name }} Self-billing invoice (Ref {{ object.name or 'n/"
 "a' }})"
 msgstr ""
-"{{ object.company_id.name }} Självfakturerad faktura (Referensnummer {{ "
-"object.name or 'n/a' }})"
+"{{ object.company_id.name }} Självfakturerad faktura (Referensnummer "
+"{{ object.name or 'n/a' }})"
 
 #~ msgid "Quick search: %s"
 #~ msgstr "Snabbsökning: %s"

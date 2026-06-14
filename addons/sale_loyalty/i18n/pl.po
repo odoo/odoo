@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-20 18:36+0000\n"
-"PO-Revision-Date: 2026-04-08 14:24+0000\n"
+"POT-Creation-Date: 2026-06-12 17:37+0000\n"
+"PO-Revision-Date: 2026-06-06 14:14+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "sale_loyalty/pl/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -42,15 +42,7 @@ msgstr "<strong>Karta lojalnościowa</strong>"
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "A better global discount is already applied."
-msgstr "Lepsza globalna zniżka została już zastosowana."
-
-#. module: sale_loyalty
-#. odoo-python
-#: code:addons/sale_loyalty/models/sale_order.py:0
-msgid ""
-"A minimum of %(amount)s %(currency)s should be purchased to get the reward"
-msgstr ""
-"Aby otrzymać nagrodę, należy zakupić co najmniej %(amount)s%(currency)s"
+msgstr "Została już zastosowana lepsza globalna zniżka."
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_coupon_wizard_view_form
@@ -135,7 +127,7 @@ msgstr "Zniżka %(desc)s%(tax_str)s"
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_discount_loyalty_type_config
 msgid "Discount & Loyalty"
-msgstr "Upusty i programy lojalnościowe"
+msgstr "Zniżki i programy lojalnościowe"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_account_move_line__display_name
@@ -174,7 +166,7 @@ msgstr "Kod karty podarunkowej"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__gift_card_count
 msgid "Gift Card Count"
-msgstr ""
+msgstr "Liczba kart podarunkowych"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -243,7 +235,7 @@ msgstr "Wydano:"
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_account_move_line
 msgid "Journal Item"
-msgstr ""
+msgstr "Pozycja dziennika"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_uid
@@ -349,7 +341,7 @@ msgstr "Liczba zamówień"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__order_id
 msgid "Order Reference"
-msgstr "Numer"
+msgstr "Numer referencyjny zamówienia"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -361,7 +353,7 @@ msgstr "Punkty"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__points_cost
 msgid "Points Cost"
-msgstr "Koszt punktowy"
+msgstr "Koszt w punktach"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__reward_ids
@@ -389,7 +381,7 @@ msgstr "Produkty premiowane"
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "Rewards Available"
-msgstr ""
+msgstr "Dostępne nagrody"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_coupon_wizard
@@ -412,7 +404,7 @@ msgstr ""
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__order_id_partner_id
 msgid "Sale Order Customer"
-msgstr ""
+msgstr "Klient zamówienia zakupu"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__sale_ok
@@ -443,7 +435,7 @@ msgstr "Wybrana nagroda"
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "TEMPORARY DISCOUNT LINE"
-msgstr "TYMCZASOWA LINIA RABATOWA"
+msgstr "WIERSZ TYMCZASOWEJ ZNIŻKI"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_sale_order_line__reward_identifier_code
@@ -485,7 +477,7 @@ msgstr "Zamówienie sprzedaży, z którego generowany jest kupon"
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "There are available rewards not added to this order."
-msgstr ""
+msgstr "Dostępne są nagrody niedodane do tego zamówienia."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -563,6 +555,14 @@ msgid "This promo code is already applied."
 msgstr "Ten kod promocyjny został już zastosowany."
 
 #. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+msgid ""
+"To take advantage of this offer, your order must include at least %(amount)s "
+"%(currency)s of the eligible products."
+msgstr ""
+
+#. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
 msgid "Update current promotional lines and select new rewards if applicable."
 msgstr ""
@@ -571,7 +571,7 @@ msgstr ""
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_portal_loyalty_content
 msgid "Used"
-msgstr "Używany"
+msgstr "Wykorzystany"
 
 #. module: sale_loyalty
 #. odoo-javascript
@@ -583,7 +583,7 @@ msgstr "Użyto:"
 #. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "You don't have the required product quantities on your sales order."
-msgstr "Na zamówieniu sprzedaży nie ma wymaganych ilości produktów."
+msgstr "W zamówieniu sprzedaży nie ma wymaganych ilości produktów."
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
@@ -599,6 +599,12 @@ msgstr ""
 #: code:addons/sale_loyalty/models/sale_order.py:0
 msgid "order_id"
 msgstr "order_id"
+
+#~ msgid ""
+#~ "A minimum of %(amount)s %(currency)s should be purchased to get the reward"
+#~ msgstr ""
+#~ "Aby otrzymać nagrodę, należy zrobić zakupy na co najmniej %(amount)s%"
+#~ "(currency)s"
 
 #~ msgid "Free Product - %(product)s"
 #~ msgstr "Darmowy produkt - %(product)s"

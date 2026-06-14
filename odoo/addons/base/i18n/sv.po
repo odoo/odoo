@@ -31,13 +31,14 @@
 # symbiotech <symbiotech3@gmail.com>, 2026.
 # Hanna Kharraziha <hakha@odoo.com>, 2026.
 # Mikael Akerberg <mikael.akerberg@mariaakerberg.com>, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-24 14:12+0000\n"
-"PO-Revision-Date: 2026-05-30 09:43+0000\n"
-"Last-Translator: Mikael Akerberg <mikael.akerberg@mariaakerberg.com>\n"
+"PO-Revision-Date: 2026-06-13 17:27+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/base/sv/>"
 "\n"
 "Language: sv\n"
@@ -45,7 +46,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -707,7 +708,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Kenya eTIMS Enhet EDI Integration av tillverkning\n"
+"        Kenya eTIMS Enhet EDI Integration av produktion\n"
 "    "
 
 #. module: base
@@ -8531,7 +8532,7 @@ msgstr ""
 "Hantera 3-vägsmatchning på leverantörsfakturor\n"
 "=====================================\n"
 "\n"
-"Inom tillverkningsindustrin får människor ofta leverantörsfakturorna innan\n"
+"Inom produktionsindustrin får människor ofta leverantörsfakturorna innan\n"
 "de får sina inköp, men de vill inte betala fakturan förrän varorna har\n"
 "levererats.\n"
 "\n"
@@ -8908,9 +8909,9 @@ msgstr ""
 "Huvudproduktionsschema\n"
 "==========================\n"
 "\n"
-"Ibland behöver du skapa inköpsorder för komponenterna i tillverkningsorder "
+"Ibland behöver du skapa inköpsorder för komponenterna i produktionsorder "
 "som\n"
-"tillverkningsorder som kommer att skapas först senare.  Eller för "
+"produktionsorder som kommer att skapas först senare.  Eller för "
 "produktionsorder\n"
 "där du bara kommer att ha försäljningsorder senare.  Lösningen är att "
 "förutse\n"
@@ -9121,7 +9122,7 @@ msgstr ""
 "\n"
 "En resurs representerar något som kan schemaläggas (en utvecklare på en "
 "uppgift eller ett\n"
-"arbetscenter på tillverkningsorder). Denna modul hanterar en resurskalender\n"
+"arbetscenter på produktionsorder). Denna modul hanterar en resurskalender\n"
 "som är kopplad till varje resurs. Den hanterar också varje resurs blad.\n"
 
 #. module: base
@@ -10355,7 +10356,7 @@ msgstr ""
 "===============\n"
 "* Definiera kvalitetspunkter som kommer att generera kvalitetskontroller av "
 "plockningar,\n"
-"  tillverkningsorder eller arbetsorder (quality_mrp)\n"
+"  produktionsorder eller arbetsorder (quality_mrp)\n"
 "* Kvalitetsvarningar kan skapas oberoende av eller i samband med "
 "kvalitetskontroller\n"
 "* Möjlighet att lägga till ett mått till kvalitetskontrollen med en min/max-"
@@ -10380,7 +10381,7 @@ msgstr ""
 "===============\n"
 "* Definiera kvalitetspunkter som kommer att generera kvalitetskontroller av "
 "plockningar,\n"
-"  tillverkningsorder eller arbetsorder (quality_mrp)\n"
+"  produktionsorder eller arbetsorder (quality_mrp)\n"
 "* Kvalitetsvarningar kan skapas oberoende av eller i samband med "
 "kvalitetskontroller\n"
 "* Möjlighet att lägga till ett mått till kvalitetskontrollen med en min/max-"
@@ -13439,7 +13440,7 @@ msgid ""
 msgstr ""
 "\n"
 "Med denna modul kan du enkelt lägga till extra kostnader på "
-"tillverkningsorder\n"
+"produktionsorder\n"
 "och bestämma fördelningen av dessa kostnader mellan deras lagerrörelser för "
 "att\n"
 "ta hänsyn till dem i din lagervärdering.\n"
@@ -14890,8 +14891,8 @@ msgid ""
 "specifically in the case of renting kits.\n"
 msgstr ""
 "\n"
-"Denna modul fungerar som en brygga mellan uthyrning och tillverkning, "
-"särskilt när det gäller uthyrning av byggsatser.\n"
+"Denna modul fungerar som en brygga mellan uthyrning och produktion, särskilt "
+"när det gäller uthyrning av byggsatser.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_account_edi_ubl_cii_tests
@@ -15917,8 +15918,9 @@ msgstr "'new' är reserverat och kan inte användas som sökväg."
 #. module: base
 #. odoo-python
 #: code:addons/fields.py:0 code:addons/fields_relational.py:0
+#, fuzzy
 msgid "(Record: %(record)s, User: %(user)s)"
-msgstr ""
+msgstr "(Record: %(record)s, User: %(user)s)"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -15954,10 +15956,13 @@ msgstr "- %(description)s (%(model)s)"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "- Only a root company can be set on “%(record)s”. Currently set to “%"
 "(company)s”"
 msgstr ""
+"- Endast ett rotbolag kan ställas in på \"%(record)s\". För närvarande "
+"inställd på \"%(company)s\""
 
 #. module: base
 #. odoo-python
@@ -17256,8 +17261,9 @@ msgstr "API-nycklar maximal varaktighet dagar"
 #. module: base
 #. odoo-python
 #: code:addons/fields_binary.py:0
+#, fuzzy
 msgid "ASCII characters are required for %(value)s in %(field)s"
-msgstr ""
+msgstr "ASCII-tecken krävs för %(value)s i %(field)s"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
@@ -20066,7 +20072,7 @@ msgstr "Objektredovisning Enterprise"
 #: model:ir.module.module,summary:base.module_mrp_account
 #: model:ir.module.module,summary:base.module_mrp_account_enterprise
 msgid "Analytic accounting in Manufacturing"
-msgstr "Objektredovisning inom tillverkning"
+msgstr "Objektredovisning inom produktion"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder_hr_account
@@ -23335,8 +23341,9 @@ msgstr "Kategori"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_catering
+#, fuzzy
 msgid "Catering"
-msgstr ""
+msgstr "Catering"
 
 #. module: base
 #: model:res.country,name:base.ky
@@ -24623,13 +24630,15 @@ msgstr "Bygg"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_construction
+#, fuzzy
 msgid "Construction Builder"
-msgstr ""
+msgstr "Byggföretag"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_construction_developer
+#, fuzzy
 msgid "Construction Developer"
-msgstr ""
+msgstr "Byggutvecklare"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_theme_paptic
@@ -25856,8 +25865,9 @@ msgstr "Databasstruktur"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_databases
 #: model:ir.module.module,shortdesc:base.module_databases
+#, fuzzy
 msgid "Databases"
-msgstr ""
+msgstr "Databaser"
 
 #. module: base
 #. odoo-python
@@ -30045,7 +30055,7 @@ msgstr "Generell information"
 #: model:ir.ui.menu,name:base.menu_config
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "General Settings"
-msgstr "Allmänna inställningar"
+msgstr "Allmänt"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_edi_landing
@@ -31702,8 +31712,9 @@ msgstr "Mixin för bilder"
 #. module: base
 #. odoo-python
 #: code:addons/fields_binary.py:0
+#, fuzzy
 msgid "Image is not encoded in base64."
-msgstr ""
+msgstr "Bilden är inte kodad i base64."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade
@@ -33344,7 +33355,7 @@ msgstr "Kenya - Försäljningsställe"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_edi_oscu_mrp
 msgid "Kenya ETIMS EDI Manufacturing Integration"
-msgstr "Kenya ETIMS EDI Integration av tillverkning"
+msgstr "Kenya ETIMS EDI Integration av produktion"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_edi_oscu_stock
@@ -33583,7 +33594,7 @@ msgstr "Landade kostnader med beställning av underleverantörer"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_landed_costs
 msgid "Landed Costs on Manufacturing Order"
-msgstr "Landade kostnader för tillverkningsorder"
+msgstr "Landade kostnader för produktionsorder"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__orientation__landscape
@@ -33907,8 +33918,9 @@ msgstr "Layout i rapporter"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_lazada
+#, fuzzy
 msgid "Lazada Connector"
-msgstr ""
+msgstr "Anslutning till Lazada"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_enrich
@@ -34373,8 +34385,9 @@ msgstr "Lokalisering"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_website_sale_localizations
+#, fuzzy
 msgid "Localizations"
-msgstr ""
+msgstr "Lokaliseringar"
 
 #. module: base
 #: model:ir.module.module,description:base.module_theme_loftspace
@@ -34587,8 +34600,9 @@ msgstr "Macao"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_machine_tool_rental
+#, fuzzy
 msgid "Machine & Tools Rental"
-msgstr ""
+msgstr "Uthyrning av maskiner och verktyg"
 
 #. module: base
 #: model:res.country,name:base.mg
@@ -35439,8 +35453,9 @@ msgstr "Medlemsklubb"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mental_therapy
+#, fuzzy
 msgid "Mental Therapy"
-msgstr ""
+msgstr "Psykoterapi"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_menu
@@ -37692,24 +37707,23 @@ msgstr ""
 "Odoo Manufacturing Resource Planning\n"
 "------------------------------------\n"
 "\n"
-"Hantera materialförteckningar, planera tillverkningsorder, spåra arbetsorder "
+"Hantera materialförteckningar, planera produktionsorder, spåra arbetsorder "
 "med Odoo-programmet\n"
 "Odoo <a href=\"https://www.odoo.com/app/manufacturing\">Open Source MRP-"
 "appen</a>.\n"
 "\n"
-"Få alla dina monterings- eller tillverkningsaktiviteter hanterade av Odoo. "
+"Få alla dina monterings- eller produktionsaktiviteter hanterade av Odoo. "
 "Planera\n"
-"tillverkningsorder och arbetsorder automatiskt. Granska de föreslagna\n"
+"produktionsorder och arbetsorder automatiskt. Granska de föreslagna\n"
 "planering med de smarta kanban- och gantt-vyerna. Använd den avancerade "
 "analysen\n"
 "funktioner för att upptäcka flaskhalsar i resurskapaciteten och "
 "lagerplatser.\n"
 "\n"
-"Planera tillverkningsbeställningar på ett effektivt sätt\n"
+"Planera produktionsbeställningar på ett effektivt sätt\n"
 "-----------------------------------------\n"
 "\n"
-"Få tillverkningsorder och arbetsorder schemalagda automatiskt baserat på "
-"din\n"
+"Få produktionsorder och arbetsorder schemalagda automatiskt baserat på din\n"
 "inköpsregler, prognostiserade kvantiteter och beroende efterfrågan "
 "(efterfrågan för denna\n"
 "del baserat på att en annan del förbrukar den).\n"
@@ -37721,7 +37735,7 @@ msgstr ""
 "routing,\n"
 "versionsändringar och fantommaterialförteckningar. Du kan använda BoM för "
 "kit eller för\n"
-"tillverkningsbeställningar.\n"
+"produktionsbeställningar.\n"
 "\n"
 "Få flexibilitet i all verksamhet\n"
 "---------------------------------\n"
@@ -37744,29 +37758,29 @@ msgstr ""
 "Ett produktivt användargränssnitt\n"
 "---------------------------\n"
 "\n"
-"Organisera tillverkningsorder och arbetsorder som du vill ha det. Bearbeta "
+"Organisera produktionsorder och arbetsorder som du vill ha det. Bearbeta "
 "nästa\n"
 "beställningar från listvyn, kontrollera i kalendervyn och redigera de "
 "föreslagna\n"
 "schema i Gantt-vyn.\n"
 "\n"
 "\n"
-"Inventering och tillverkningsanalyser\n"
+"Inventering och produktionsanalyser\n"
 "-----------------------------------\n"
 "\n"
-"Spåra utvecklingen av lagervärdet beroende på tillverkningsnivån\n"
+"Spåra utvecklingen av lagervärdet beroende på produktionsnivån\n"
 "aktiviteterna i takt med att de fortskrider i omvandlingsprocessen.\n"
 "\n"
 "Helt integrerad med verksamheten\n"
 "--------------------------------\n"
 "\n"
-"Få en korrekt planering av tillverkningsresurserna tack vare den "
-"fullständiga integrationen\n"
+"Få en korrekt planering av produktionsresurserna tack vare den fullständiga "
+"integrationen\n"
 "med appar för försäljning och inköp. Bokföringsintegrationen gör det möjligt "
 "att i realtid\n"
 "bokföringsvärdering och djupare rapportering om kostnader och intäkter på "
 "din\n"
-"tillverkningsverksamhet.\n"
+"produktionsverksamhet.\n"
 "\n"
 
 #. module: base
@@ -38403,7 +38417,7 @@ msgstr ""
 "förslag vid rätt tidpunkt för att minska lagernivån. Förbättra din\n"
 "köp- och lagerprestanda med inköpsregler som beror på lagret\n"
 "lagernivåer, logistikregler, försäljningsorder, prognostiserade "
-"tillverkningsorder osv.\n"
+"produktionsorder osv.\n"
 "\n"
 "Skicka förfrågningar om offerter eller inköpsorder till din leverantör med "
 "ett enda klick.\n"
@@ -40758,7 +40772,7 @@ msgstr "Partner med samma företagsregister"
 #: model:ir.model.fields,field_description:base.field_res_partner__same_vat_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__same_vat_partner_id
 msgid "Partner with same Tax ID"
-msgstr "Partner med samma skatteregistreringsnummer"
+msgstr "Partner med samma skattenummer"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__partner_id
@@ -41298,8 +41312,9 @@ msgstr "Fotografering"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_physical_therapy
+#, fuzzy
 msgid "Physical Therapy"
-msgstr ""
+msgstr "Fysioterapi"
 
 #. module: base
 #: model:res.currency,currency_subunit_label:base.SSP
@@ -41805,7 +41820,7 @@ msgstr "Problematisk(a) post(er)"
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_mrp
 msgid "Process Manufacturing Orders from the barcode application"
-msgstr "Bearbeta tillverkningsorder från streckkodsapplikationen"
+msgstr "Bearbeta produktionsorder från streckkodsapplikationen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock
@@ -42358,8 +42373,9 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_real_estate
+#, fuzzy
 msgid "Property Management"
-msgstr ""
+msgstr "Fastighetsskötsel"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_condominium
@@ -45386,11 +45402,15 @@ msgstr "Hoppa över dessa kontakter"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "Skipping a company check for model %(model_name)s. Its fields %"
 "(field_names)s are set as company-dependent, but the model doesn't have a "
 "`company_id` or `company_ids` field!"
 msgstr ""
+"Hoppar över en företagskontroll för modellen %(model_name)s. Dess fält %"
+"(field_names)s är inställda som företagsberoende, men modellen har inget "
+"fält `company_id` eller `company_ids`!"
 
 #. module: base
 #. odoo-python
@@ -45952,7 +45972,7 @@ msgstr "Kalkylbladspanel för livechatt"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_mrp_account
 msgid "Spreadsheet dashboard for manufacturing"
-msgstr "Dashboard för kalkylblad för tillverkning"
+msgstr "Dashboard för kalkylblad för produktion"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_spreadsheet_dashboard_marketing_automation
@@ -47164,7 +47184,7 @@ msgstr "Skicka sms till dina kontakter på WhatsApp"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_textile_manufacturing
 msgid "Textile Manufacturing"
-msgstr "Textiltillverkning"
+msgstr "Textilproduktion"
 
 #. module: base
 #: model:res.country,name:base.th
@@ -47543,12 +47563,17 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/fields_textual.py:0
+#, fuzzy
 msgid ""
 "The field value you're saving (%(model)s %(field)s) includes content that is "
 "restricted for security reasons. It is possible that someone with higher "
 "privileges previously modified it, and you are therefore not able to modify "
 "it yourself while preserving the content."
 msgstr ""
+"Det fältvärde som du sparar (%(model)s %(field)s) innehåller innehåll som är "
+"begränsat av säkerhetsskäl. Det är möjligt att någon med högre behörigheter "
+"tidigare har ändrat det och att du därför inte kan ändra det själv utan att "
+"innehållet påverkas."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_cron__first_failure_date
@@ -47559,8 +47584,9 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "The following languages are not activated: %(missing_names)s"
-msgstr ""
+msgstr "Följande språk är inte aktiverade: %(missing_names)s"
 
 #. module: base
 #. odoo-python
@@ -47910,6 +47936,7 @@ msgstr "Kursen för valutan i förhållande till valutan i kurs 1."
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "The record %(xml_id)s has the module prefix %(module_name)s. This is the "
 "part before the '.' in the external id. Because the prefix refers to an "
@@ -47918,6 +47945,12 @@ msgid ""
 "For example, __import__, resulting in the external id __import__.%"
 "(record_id)s."
 msgstr ""
+"Posten %(xml_id)s har modulprefixet %(module_name)s. Detta är delen före "
+"\".\" i det externa id:t. Eftersom prefixet hänvisar till en befintlig modul "
+"skulle posten tas bort när modulen uppgraderas. Använd antingen inget prefix "
+"och ingen punkt eller ett prefix som inte är en befintlig modul. Till "
+"exempel __import__, vilket resulterar i det externa id:t __import__.%"
+"(record_id)s."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__company_registry
@@ -49310,9 +49343,12 @@ msgstr "Översättningar"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "Translations for model translated fields only accept falsy values and str"
 msgstr ""
+"Översättningar för modellöversatta fält accepterar endast falska värden och "
+"str"
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_fleet
@@ -49787,10 +49823,13 @@ msgstr "Ukraina - bokföring"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "Unable to delete %(record)s because it is used as the default value of %"
 "(field)s"
 msgstr ""
+"Det går inte att ta bort %(record)s eftersom det används som standardvärde "
+"för %(field)s"
 
 #. module: base
 #. odoo-python
@@ -50045,8 +50084,9 @@ msgstr "Okänd databasidentifierare %s"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid "Unknown error during import: %(error_type)s: %(error_message)s"
-msgstr ""
+msgstr "Okänt fel under import: %(error_type)s: %(error_message)s"
 
 #. module: base
 #. odoo-python
@@ -50919,8 +50959,9 @@ msgstr "Vyer som ärver från denna"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_vineyard
+#, fuzzy
 msgid "Vineyard"
-msgstr ""
+msgstr "Vingård"
 
 #. module: base
 #: model:res.country,name:base.vg
@@ -51971,10 +52012,13 @@ msgstr ""
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "You cannot delete %(to_delete_record)s, as it is used by %"
 "(on_restrict_record)s"
 msgstr ""
+"Du kan inte radera %(to_delete_record)s, eftersom det används av %"
+"(on_restrict_record)s"
 
 #. module: base
 #. odoo-python
@@ -52082,10 +52126,13 @@ msgstr "Du kan inte byta namn på konfigurationsparametrar med nycklar %s"
 #. module: base
 #. odoo-python
 #: code:addons/models.py:0
+#, fuzzy
 msgid ""
 "You cannot use “%(property_name)s” because the linked “%(model_name)s” model "
 "doesn't exist or is invalid"
 msgstr ""
+"Du kan inte använda \"%(property_name)s\" eftersom den länkade modellen \"%"
+"(model_name)s\" inte finns eller är ogiltig"
 
 #. module: base
 #. odoo-python

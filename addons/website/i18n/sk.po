@@ -28,7 +28,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-29 17:35+0000\n"
-"PO-Revision-Date: 2026-05-30 19:03+0000\n"
+"PO-Revision-Date: 2026-06-06 19:59+0000\n"
 "Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/website/"
 "sk/>\n"
@@ -38,7 +38,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && "
 "n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel_compact
@@ -370,6 +370,35 @@ msgid ""
 "                    }\n"
 "                }"
 msgstr ""
+".headShake {\n"
+"                    animation: headShake 1.3s ease-in-out forwards;\n"
+"                    animation-delay: 0.75s;\n"
+"                }\n"
+"                @keyframes headShake {\n"
+"                    0% {\n"
+"                        transform: translateX(0)\n"
+"                    }\n"
+"\n"
+"                    6.5% {\n"
+"                        transform: translateX(-6px) rotateY(-9deg)\n"
+"                    }\n"
+"\n"
+"                    18.5% {\n"
+"                        transform: translateX(5px) rotateY(7deg)\n"
+"                    }\n"
+"\n"
+"                    31.5% {\n"
+"                        transform: translateX(-3px) rotateY(-5deg)\n"
+"                    }\n"
+"\n"
+"                    43.5% {\n"
+"                        transform: translateX(2px) rotateY(3deg)\n"
+"                    }\n"
+"\n"
+"                    50% {\n"
+"                        transform: translateX(0)\n"
+"                    }\n"
+"                }"
 
 #. module: website
 #: model:website,contact_us_button_url:website.default_website
@@ -789,7 +818,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner_categories
 msgid "<a href=\"#\" class=\"o_translate_inline text-reset\">Shop all →</a>"
-msgstr ""
+msgstr "<a href=\"#\" class=\"o_translate_inline text-reset\">Všetko →</a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_bento_banner
@@ -1293,6 +1322,18 @@ msgid ""
 "role=\"img\"/>\n"
 "                      Brussels, Belgium"
 msgstr ""
+"<i class=\"fa fa-fw fa-envelope o_not-animable\" role=\"img\"/>\n"
+"                      yourcompany@example.com\n"
+"                    <br/>\n"
+"                    <br/>\n"
+"                    <i class=\"fa fa-fw fa-phone o_not-animable\" "
+"role=\"img\"/>\n"
+"                       +32(0)499 123 456\n"
+"                    <br/>\n"
+"                    <br/>\n"
+"                    <i class=\"fa fa-fw fa-map-marker o_not-animable\" "
+"role=\"img\"/>\n"
+"                      Brussels, Belgium"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_contact_info
@@ -2747,7 +2788,7 @@ msgstr "<u>Utorok</u><br/>8.00 –18.00"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_opening_hours
 msgid "<u>Wednesday</u><br/>8.00am-12.00pm"
-msgstr ""
+msgstr "<u>Streda</u><br/>8.00 - 24.00"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_opening_hours
@@ -2758,7 +2799,7 @@ msgstr "<u>info@yourcompany.example.com</u>"
 #. odoo-javascript
 #: code:addons/website/static/src/components/website_loader/website_loader.xml:0
 msgid "A"
-msgstr ""
+msgstr "A"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3379,7 +3420,7 @@ msgstr "Pridajte nové pole na koniec"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/media_list_item_option.xml:0
 msgid "Add an image"
-msgstr ""
+msgstr "Pridať obrázok"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3886,7 +3927,7 @@ msgstr "Animácia"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Announcement Scroll"
-msgstr ""
+msgstr "Oznámenie s posúvaním"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_color_blocks_2
@@ -4137,7 +4178,7 @@ msgstr "Dostupné na webstránke"
 #. odoo-javascript
 #: code:addons/website/static/src/components/website_loader/website_loader.xml:0
 msgid "B"
-msgstr ""
+msgstr "B"
 
 #. module: website
 #. odoo-javascript
@@ -4159,7 +4200,7 @@ msgstr "Kulisa"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_features
 msgid "Backend"
-msgstr ""
+msgstr "Backend"
 
 #. module: website
 #. odoo-javascript
@@ -4245,7 +4286,7 @@ msgstr "Pruhový - vertikálny"
 #: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 msgid "Bars"
-msgstr ""
+msgstr "Panely"
 
 #. module: website
 #: model:ir.model,name:website.model_base
@@ -4424,7 +4465,7 @@ msgstr "Blogy"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/social_media_option_plugin.js:0
 msgid "Bluesky"
-msgstr ""
+msgstr "Bluesky"
 
 #. module: website
 #. odoo-javascript
@@ -4670,7 +4711,7 @@ msgstr "V predvolenom nastavení sú domény nasledujúcich služieb už blokova
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 #: code:addons/website/static/src/components/website_loader/website_loader.xml:0
 msgid "C"
-msgstr ""
+msgstr "C"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__cdn_url
@@ -6256,7 +6297,7 @@ msgstr "Prispôsobte si show"
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 msgid "D"
-msgstr ""
+msgstr "D"
 
 #. module: website
 #. odoo-javascript
@@ -6677,7 +6718,7 @@ msgstr "Smer"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__directive
 msgid "Directive"
-msgstr ""
+msgstr "Pokyn"
 
 #. module: website
 #. odoo-javascript
@@ -6887,32 +6928,32 @@ msgstr "Zobraziť"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Display 1"
-msgstr ""
+msgstr "Zobrazenie 1"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Display 2"
-msgstr ""
+msgstr "Zobrazenie 2"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Display 3"
-msgstr ""
+msgstr "Zobrazenie 3"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Display 4"
-msgstr ""
+msgstr "Zobrazenie 4"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Display 5"
-msgstr ""
+msgstr "Zobrazenie 5"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Display 6"
-msgstr ""
+msgstr "Zobrazenie 6"
 
 #. module: website
 #. odoo-javascript
@@ -8053,7 +8094,7 @@ msgstr "Dodatočná výška"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.layout
 msgid "Extra items button"
-msgstr ""
+msgstr "Tlačidlo ďalších položiek"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -8075,7 +8116,7 @@ msgstr "Extra malé"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
 msgid "F.A.Q."
-msgstr ""
+msgstr "Často kladené otázky"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -8543,7 +8584,7 @@ msgstr "Formulár"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Form Aside"
-msgstr ""
+msgstr "Formulár na strane"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -10070,7 +10111,7 @@ msgstr "Indikátory"
 #: code:addons/website/static/src/builder/plugins/carousel_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/image_gallery_option.xml:0
 msgid "Indicators outside"
-msgstr ""
+msgstr "Indikátory zvonku"
 
 #. module: website
 #. odoo-javascript
@@ -12995,7 +13036,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website/controllers/form.py:0
 msgid "Other Information:"
-msgstr "Ďalšie informácie: "
+msgstr "Ďalšie informácie:"
 
 #. module: website
 #. odoo-javascript
@@ -13372,7 +13413,7 @@ msgstr "Vonku, uprostred"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/website_page_config_option.xml:0
 msgid "Over The Content"
-msgstr ""
+msgstr "Cez obsah"
 
 #. module: website
 #. odoo-javascript
@@ -16382,7 +16423,7 @@ msgstr "Záložky"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Tabs Images"
-msgstr ""
+msgstr "Obrázky záložiek"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_wave
@@ -16457,12 +16498,12 @@ msgstr "Tímové tvary"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Team Spotlight"
-msgstr ""
+msgstr "Tím v plnej paráde"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team_spotlight
 msgid "Team spotlight"
-msgstr ""
+msgstr "Tím v plnej paráde"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_pricelist_cafe
@@ -17802,7 +17843,7 @@ msgstr "URL nesmie začínať znakom „#“."
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_to
 msgid "URL to"
-msgstr "URL na"
+msgstr "Na URL"
 
 #. module: website
 #. odoo-javascript
@@ -18517,6 +18558,11 @@ msgid ""
 "                            <br/><br/>Our products are designed for small to "
 "medium size companies willing to optimize their performance."
 msgstr ""
+"Sme tím nadšených ľudí, ktorých cieľom je zlepšiť život všetkých "
+"prostredníctvom revolučných produktov. Vytvárame skvelé produkty na riešenie "
+"vašich obchodných problémov. \n"
+"                            <br/><br/>Naše produkty sú určené pre malé a "
+"stredné spoločnosti, ktoré chcú optimalizovať svoj výkon."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
@@ -18526,6 +18572,10 @@ msgid ""
 "problems. Our products are designed for small to medium size companies "
 "willing to optimize their performance."
 msgstr ""
+"Sme tím nadšených ľudí, ktorých cieľom je zlepšiť život všetkých "
+"prostredníctvom revolučných produktov. Vytvárame skvelé produkty na riešenie "
+"vašich obchodných problémov. Naše produkty sú určené pre malé a stredné "
+"spoločnosti, ktoré chcú optimalizovať svoj výkon."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
@@ -18533,11 +18583,13 @@ msgid ""
 "We are a team of passionate people whose goal is to improve everyone's life. "
 "Our services are designed for small to medium size companies."
 msgstr ""
+"Sme tím nadšených ľudí, ktorých cieľom je zlepšiť život všetkých. Naše "
+"služby sú určené pre malé a stredné spoločnosti."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar
 msgid "We are almost done!"
-msgstr ""
+msgstr "Už sme takmer hotoví!"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_horizontal
@@ -18545,6 +18597,9 @@ msgid ""
 "We are committed to continuous improvement, regularly releasing updates and "
 "new features based on user feedback and technological advancements."
 msgstr ""
+"Zaviazali sme sa k neustálemu zlepšovaniu a pravidelne vydávame aktualizácie "
+"a nové funkcie na základe spätnej väzby od užívateľov a technologického "
+"pokroku."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_horizontal
@@ -18552,12 +18607,14 @@ msgid ""
 "We are committed to providing exceptional support and resources to help you "
 "succeed with our platform."
 msgstr ""
+"Zaviazali sme sa poskytovať výnimočnú podporu a zdroje, ktoré vám pomôžu "
+"dosiahnuť úspech s našou platformou."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_references_grid
 #: model_terms:ir.ui.view,arch_db:website.s_references_social
 msgid "We are in good company."
-msgstr "Sme v dobrej spoločnosti"
+msgstr "Sme v dobrej spoločnosti."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_text_image
@@ -18566,6 +18623,9 @@ msgid ""
 "understanding your fitness aspirations, your current lifestyle, and any "
 "challenges you face."
 msgstr ""
+"Veríme, že každá cesta za kondíciou je jedinečná. Náš prístup začína "
+"pochopením vašich fitness cieľov, vášho súčasného životného štýlu a všetkých "
+"výziev, ktorým čelíte."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_list
@@ -18573,6 +18633,8 @@ msgid ""
 "We collaborate with trusted, high-quality partners to bring you reliable and "
 "top-notch products and services."
 msgstr ""
+"Spolupracujeme s dôveryhodnými, kvalitnými partnermi, aby sme vám priniesli "
+"spoľahlivé a špičkové produkty a služby."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel_intro
@@ -18581,12 +18643,15 @@ msgid ""
 "success, ensuring sustainable growth and competitive advantage in a dynamic "
 "market."
 msgstr ""
+"Kombinujeme strategické poznatky a inovatívne riešenia na podporu obchodného "
+"úspechu, čím zabezpečujeme udržateľný rast a konkurenčnú výhodu na "
+"dynamickom trhu."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/facebook_option_plugin.js:0
 msgid "We couldn't find the Facebook page"
-msgstr ""
+msgstr "Nenašli sme stránku na Facebooku"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_list
@@ -18594,6 +18659,8 @@ msgid ""
 "We deliver personalized solutions, ensuring that every customer receives top-"
 "tier service tailored to their needs."
 msgstr ""
+"Poskytujeme personalizované riešenia a zabezpečujeme, aby každý zákazník "
+"dostal prvotriedne služby prispôsobené jeho potrebám."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_striped_center_top
@@ -18601,6 +18668,9 @@ msgid ""
 "We deliver seamless, innovative solutions that not only meet your needs but "
 "exceed expectations, driving meaningful results and lasting success."
 msgstr ""
+"Dodávame bezproblémové, inovatívne riešenia, ktoré nielen spĺňajú vaše "
+"potreby, ale aj prekračujú očakávania, prinášajú zmysluplné výsledky a "
+"trvalý úspech."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -18608,17 +18678,19 @@ msgid ""
 "We do not currently support Do Not Track signals, as there is no industry "
 "standard for compliance."
 msgstr ""
+"V súčasnosti nepodporujeme signály „Nesledovať“ (Do Not Track), pretože "
+"neexistuje žiadny priemyselný štandard pre ich dodržiavanie."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 msgid "We found these links:"
-msgstr ""
+msgstr "Našli sme tieto odkazy:"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cards_soft
 msgid "We make every moment count with solutions designed just for you."
-msgstr ""
+msgstr "Využívame každý okamih vďaka riešeniam navrhnutým špeciálne pre vás."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -18626,6 +18698,8 @@ msgid ""
 "We may not be able to provide the best service to you if you reject those "
 "cookies, but the website will work."
 msgstr ""
+"Ak tieto súbory cookie odmietnete, možno vám nebudeme môcť poskytnúť "
+"najlepšie služby, ale webová stránka bude fungovať."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_2_s_three_columns
@@ -18633,6 +18707,8 @@ msgid ""
 "We monitor your progress meticulously, adjusting your plan as needed to "
 "ensure continuous improvement and results."
 msgstr ""
+"Sledujeme váš pokrok veľmi dôsledne a podľa potreby upravujeme váš plán, aby "
+"sme zabezpečili neustále zlepšovanie a výsledky."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_accordion
@@ -18642,6 +18718,10 @@ msgid ""
 "Refunds are processed within 5-7 business days of receiving the returned "
 "item."
 msgstr ""
+"Na všetky produkty sa vzťahuje 30-dňová lehota na vrátenie tovaru. Tovar "
+"musí byť v pôvodnom stave, nepoužitý a musí obsahovať účtenku alebo doklad o "
+"kúpe. Vrátenie peňazí sa spracuje do 5–7 pracovných dní od prijatia "
+"vráteného tovaru."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cards_grid
@@ -18651,16 +18731,18 @@ msgid ""
 "We offer cutting-edge products and services to tackle modern challenges. "
 "Leveraging the latest technology, we help you achieve your goals."
 msgstr ""
+"Ponúkame špičkové produkty a služby na riešenie moderných výziev. Využívaním "
+"najnovších technológií vám pomáhame dosiahnuť vaše ciele."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_cards
 msgid "We offer tailor-made products according to your needs and your budget."
-msgstr ""
+msgstr "Ponúkame produkty šité na mieru podľa vašich potrieb a rozpočtu."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_charts
 msgid "We proudly serves over 25,000 clients."
-msgstr ""
+msgstr "Sme hrdí na to, že obsluhujeme viac ako 25 000 klientov."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_list
@@ -18668,6 +18750,8 @@ msgid ""
 "We provide 24/7 support through various channels, including live chat, "
 "email, and phone, to assist with any queries."
 msgstr ""
+"Poskytujeme podporu 24/7 prostredníctvom rôznych kanálov, vrátane živého "
+"chatu, e-mailu a telefónu, aby sme vám pomohli s akýmikoľvek otázkami."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cards_grid
@@ -18676,6 +18760,9 @@ msgid ""
 "We provide personalized solutions to meet your unique needs. Our team works "
 "with you to ensure optimal results from start to finish."
 msgstr ""
+"Poskytujeme personalizované riešenia, ktoré spĺňajú vaše jedinečné potreby. "
+"Náš tím s vami spolupracuje, aby zabezpečil optimálne výsledky od začiatku "
+"až do konca."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
@@ -18683,6 +18770,8 @@ msgid ""
 "We provide transparent pricing that offers great value, ensuring you always "
 "get the best deal without hidden costs."
 msgstr ""
+"Ponúkame transparentnú cenotvorbu, ktorá poskytuje skvelú hodnotu, čím "
+"zabezpečujeme, že vždy získate najlepšiu ponuku bez skrytých nákladov."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_horizontal
@@ -18691,6 +18780,9 @@ msgid ""
 "new to our platform, so we have designed a step-by-step guide to walk you "
 "through every stage, ensuring that you can hit the ground running.<br/>"
 msgstr ""
+"Chápeme, že počiatočné nastavenie môže byť náročné, najmä ak ste na našej "
+"platforme noví, preto sme pripravili podrobného sprievodcu, ktorý vás "
+"prevedie každou fázou a zabezpečí, že budete môcť ihneď začať pracovať.<br/>"
 
 #. module: website
 #. odoo-javascript
@@ -18699,12 +18791,17 @@ msgid ""
 "We use cookies to provide improved experience on this website. You can learn "
 "more about our cookies and how we use them in our"
 msgstr ""
+"Používame súbory cookie, aby sme vám poskytli lepší zážitok z používania "
+"tejto webovej stránky. Viac informácií o našich súboroch cookie a o tom, ako "
+"ich používame, nájdete v našom"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 msgid "We use cookies to provide you a better user experience on this website."
 msgstr ""
+"Používame súbory cookie, aby sme vám na tejto webovej stránke poskytli lepší "
+"používateľský zážitok."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
@@ -18719,6 +18816,10 @@ msgid ""
 "provided. Our team is here to help and will respond as soon as possible. "
 "Thank you for getting in touch!"
 msgstr ""
+"Tešíme sa na vaše správy! Ak máte akékoľvek otázky, pripomienky alebo "
+"potrebujete pomoc, neváhajte nás kontaktovať prostredníctvom uvedených "
+"kontaktných údajov. Náš tím je tu, aby vám pomohol, a odpovie vám čo "
+"najskôr. Ďakujeme, že ste nás kontaktovali!"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_info
@@ -18728,12 +18829,16 @@ msgid ""
 "aim to respond to all inquiries within 24 hours. Thank you for getting in "
 "touch!"
 msgstr ""
+"Tešíme sa na vaše správy! Či už máte otázky, spätnú väzbu alebo potrebujete "
+"podporu, náš tím je tu, aby vám pomohol. Stačí vyplniť nižšie uvedený "
+"formulár a my sa budeme snažiť odpovedať na všetky otázky do 24 hodín. "
+"Ďakujeme, že ste nás kontaktovali!"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "We'll set you up and running in"
-msgstr ""
+msgstr "Zabezpečíme vám všetko potrebné a môžete začať pracovať v"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_full_s_text_image
@@ -18741,6 +18846,8 @@ msgid ""
 "We're driven by the aspiration to redefine industry standards, to exceed the "
 "expectations of our clients, and to foster a culture of continuous growth."
 msgstr ""
+"Hnacou silou je pre nás túžba redefinovať štandardy v odvetví, prekonať "
+"očakávania našich klientov a podporovať kultúru neustáleho rastu."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_tree
@@ -18790,7 +18897,7 @@ msgstr "Webstránka"
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__website_absolute_url
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__website_absolute_url
 msgid "Website Absolute URL"
-msgstr ""
+msgstr "Absolútna URL adresa webovej stránky"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_company_id
@@ -18800,17 +18907,17 @@ msgstr "Webstránka spoločnosťi"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__website_config_preselection
 msgid "Website Config Preselection"
-msgstr ""
+msgstr "Predvolba konfigurácie webovej stránky"
 
 #. module: website
 #: model:ir.actions.client,name:website.website_configurator
 msgid "Website Configurator"
-msgstr ""
+msgstr "Konfigurátor webových stránok"
 
 #. module: website
 #: model:ir.model,name:website.model_website_configurator_feature
 msgid "Website Configurator Feature"
-msgstr ""
+msgstr "Konfigurátor webových stránok"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_domain
@@ -18821,33 +18928,33 @@ msgstr "Doména webstránky"
 #. module: website
 #: model:ir.model.constraint,message:website.constraint_website_domain_unique
 msgid "Website Domain should be unique."
-msgstr ""
+msgstr "Doména webovej stránky by mala byť jedinečná."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__favicon
 msgid "Website Favicon"
-msgstr "Webstránka Favicon"
+msgstr "Favicon webstránky"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_model__website_form_key
 msgid "Website Form Key"
-msgstr ""
+msgstr "Kľúč formulára webovej stránky"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.ir_model_view
 msgid "Website Forms"
-msgstr ""
+msgstr "Formuláre webstránkok"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Website Identification"
-msgstr ""
+msgstr "Identifikácia webovej stránky"
 
 #. module: website
 #. odoo-python
 #: code:addons/website/controllers/main.py:0
 msgid "Website Information"
-msgstr ""
+msgstr "Informácie o webovej stránke"
 
 #. module: website
 #. odoo-javascript
@@ -18899,7 +19006,7 @@ msgstr "Nastavenia webstránky"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_technical_page__website_url
 msgid "Website Page URL"
-msgstr ""
+msgstr "URL webovej stránky"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_pages_list
@@ -18916,17 +19023,17 @@ msgstr "Trasa webstránky"
 #. module: website
 #: model:ir.actions.client,name:website.website_preview
 msgid "Website Preview"
-msgstr ""
+msgstr "Náhľad webovej stránky"
 
 #. module: website
 #: model:ir.model,name:website.model_website_published_mixin
 msgid "Website Published Mixin"
-msgstr "Webstránka zverejnená Mixin"
+msgstr "Mixin zverejnenie webstránky"
 
 #. module: website
 #: model:ir.model,name:website.model_website_searchable_mixin
 msgid "Website Searchable Mixin"
-msgstr ""
+msgstr "Mixin vyhľadávanie webstránky"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_website_form
@@ -18936,22 +19043,22 @@ msgstr "Nastavenia webstránky"
 #. module: website
 #: model:ir.model,name:website.model_website_snippet_filter
 msgid "Website Snippet Filter"
-msgstr ""
+msgstr "Filter snippetov webstránky"
 
 #. module: website
 #: model:ir.model,name:website.model_website_technical_page
 msgid "Website Technical Page"
-msgstr ""
+msgstr "Webstránka - technická stránka"
 
 #. module: website
 #: model:ir.model,name:website.model_theme_website_menu
 msgid "Website Theme Menu"
-msgstr ""
+msgstr "Ponuka tém webových stránok"
 
 #. module: website
 #: model:ir.model,name:website.model_theme_website_page
 msgid "Website Theme Page"
-msgstr ""
+msgstr "Téma webovej stránky"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_partner__website_url
@@ -18962,7 +19069,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__website_url
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__website_url
 msgid "Website URL"
-msgstr "URL Webstránok"
+msgstr "URL webstránok"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
@@ -18985,7 +19092,7 @@ msgstr "Návštevník webstránky #%s"
 #. module: website
 #: model:ir.actions.server,name:website.website_visitor_cron_ir_actions_server
 msgid "Website Visitor : clean inactive visitors"
-msgstr ""
+msgstr "Návštevník webstránky: odstrániť neaktívnych návštevníkov"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_tree
@@ -19022,32 +19129,32 @@ msgstr "Meta nadpis webstránky"
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_og_img
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_og_img
 msgid "Website opengraph image"
-msgstr "Obrázok otvorenej webstránky"
+msgstr "Obrázok opengraph webstránky"
 
 #. module: website
 #: model:ir.model,name:website.model_website_page_options_mixin
 msgid "Website page/record specific options"
-msgstr ""
+msgstr "Špecifické možnosti pre webovú stránku/záznam"
 
 #. module: website
 #: model:ir.model,name:website.model_website_page_visibility_options_mixin
 msgid "Website page/record specific visibility options"
-msgstr ""
+msgstr "Špecifické možnosti viditeľnosti webovej stránky/záznamu"
 
 #. module: website
 #: model:ir.model,name:website.model_website_rewrite
 msgid "Website rewrite"
-msgstr "Prepísanie webstránky"
+msgstr "Presmerovanie webstránky"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_website_rewrite_form
 msgid "Website rewrite Settings"
-msgstr "Nastavenie prepisovania webstránok"
+msgstr "Nastavenie presmerovania webstránok"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.action_website_rewrite_tree
 msgid "Website rewrites"
-msgstr "Prepisovanie webstránok"
+msgstr "Presmerovania webstránok"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_grid
@@ -19055,11 +19162,13 @@ msgid ""
 "Website visitors<br/>\n"
 "                        <span class=\"h1-fs\">100,000</span>"
 msgstr ""
+"Návštevníci webovej stránky<br/>\n"
+"                        <span class=\"h1-fs\">100 000</span>"
 
 #. module: website
 #: model:ir.actions.server,name:website.ir_actions_server_website_analytics
 msgid "Website: Analytics"
-msgstr ""
+msgstr "Webová stránka: Analytika"
 
 #. module: website
 #: model:ir.actions.server,name:website.ir_actions_server_website_dashboard
@@ -19082,7 +19191,7 @@ msgstr "Webstránky na preloženie"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_0_s_three_columns
 msgid "Weight Loss Transformation"
-msgstr ""
+msgstr "Premena v oblasti chudnutia"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_text_block_2nd
@@ -19092,6 +19201,10 @@ msgid ""
 "support, we're committed to helping you achieve lasting results that align "
 "with your aspirations."
 msgstr ""
+"Vitajte v našej komplexnej ponuke služieb fitness koučingu na mieru. S "
+"personalizovanými tréningami, prispôsobenými výživovými plánmi a neochvejnou "
+"podporou sa zaväzujeme pomôcť vám dosiahnuť trvalé výsledky, ktoré sú v "
+"súlade s vašimi ambíciami."
 
 #. module: website
 #. odoo-javascript
@@ -19102,7 +19215,7 @@ msgstr "Vitajte vo vašom"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_0_s_three_columns
 msgid "Wellness Coaching"
-msgstr ""
+msgstr "Wellness koučing"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_accordion
@@ -19110,58 +19223,60 @@ msgid ""
 "We’re committed to providing prompt and effective solutions to ensure your "
 "satisfaction."
 msgstr ""
+"Zaviazali sme sa poskytovať rýchle a efektívne riešenia, aby sme zaistili "
+"vašu spokojnosť."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_personal_s_text_block_h2
 msgid "What Makes Me Proud"
-msgstr ""
+msgstr "Na čo som hrdý"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_reviews_wall
 msgid "What our customers are saying about us."
-msgstr ""
+msgstr "Čo o nás hovoria naši zákazníci."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "What type of website?"
-msgstr ""
+msgstr "Aký typ webovej stránky?"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_wavy_grid
 msgid "What we offer to our customers"
-msgstr ""
+msgstr "Čo ponúkame našim zákazníkom"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_key_images
 msgid "What we propose to our customers"
-msgstr ""
+msgstr "Čo navrhujeme našim zákazníkom"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid "What you see is what you get"
-msgstr ""
+msgstr "Čo vidíte, to dostanete"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cta_card
 msgid "What you will get"
-msgstr ""
+msgstr "Čo získate"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline_list
 msgid "What's new"
-msgstr ""
+msgstr "Čo je nové"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_share
 msgid "WhatsApp"
-msgstr ""
+msgstr "WhatsApp"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/social_media_option_plugin.js:0
 msgid "Whatsapp"
-msgstr ""
+msgstr "Whatsapp"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_alternation_image_text_template
@@ -19169,23 +19284,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_images_template
 #: model_terms:ir.ui.view,arch_db:website.s_masonry_block_reversed_template
 msgid "Where ideas come to life"
-msgstr ""
+msgstr "Kde nápady ožívajú"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_picture
 msgid "Where innovation meets performance"
-msgstr ""
+msgstr "Kde sa inovácie stretávajú s výkonom"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_card_offset
 msgid "Why Our Product is the Future of Innovation"
-msgstr ""
+msgstr "Prečo je náš produkt budúcnosťou inovácie"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/card_image_option.xml:0
 msgid "Wide - 16/9"
-msgstr ""
+msgstr "Široký - 16/9"
 
 #. module: website
 #. odoo-javascript
@@ -19198,17 +19313,17 @@ msgstr "Šírka"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup
 msgid "Win $20"
-msgstr ""
+msgstr "Vyhrajte 20 $"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_3_s_three_columns
 msgid "Wireless Freedom"
-msgstr ""
+msgstr "Bezdrôtová sloboda"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__ir_ui_view__visibility__password
 msgid "With Password"
-msgstr ""
+msgstr "S heslom"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cards_grid
@@ -19218,6 +19333,8 @@ msgid ""
 "With extensive experience and deep industry knowledge, we provide insights "
 "and solutions that keep you ahead of the curve."
 msgstr ""
+"Vďaka rozsiahlym skúsenostiam a hlbokým znalostiam odvetvia poskytujeme "
+"postrehy a riešenia, vďaka ktorým budete vždy o krok napred."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_0_s_three_columns
@@ -19225,6 +19342,9 @@ msgid ""
 "With personalized fitness plans, tailored nutrition guidance, and consistent "
 "support, you'll shed unwanted pounds while building healthy habits that last."
 msgstr ""
+"Vďaka personalizovaným fitness plánom, výživovým radám na mieru a neustálej "
+"podpore zhodíte nežiaduce kilá a zároveň si vytvoríte zdravé návyky, ktoré "
+"vám vydržia."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -19235,18 +19355,18 @@ msgstr "Ženy"
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/new_content_systray_item.js:0
 msgid "Write a new article"
-msgstr ""
+msgstr "Napísať nový článok"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "Write custom error message"
-msgstr ""
+msgstr "Napísať vlastnú chybovú správu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 msgid "Write one or two paragraphs describing your product or services."
-msgstr ""
+msgstr "Napíšte jeden alebo dva odseky opisujúce váš produkt alebo služby."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_card_offset
@@ -19261,6 +19381,8 @@ msgid ""
 "Write one or two paragraphs describing your product or services. To be "
 "successful your content needs to be useful to your readers."
 msgstr ""
+"Napíšte jeden alebo dva odseky opisujúce váš produkt alebo služby. Aby bol "
+"váš obsah úspešný, musí byť užitočný pre vašich čitateľov."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_freegrid
@@ -19269,6 +19391,9 @@ msgid ""
 "successful your content needs to be useful to your readers. Start with the "
 "customer – find out what they want and give it to them."
 msgstr ""
+"Napíšte jeden alebo dva odseky opisujúce váš produkt alebo služby. Aby bol "
+"váš obsah úspešný, musí byť užitočný pre vašich čitateľov. Začnite od "
+"zákazníka – zistite, čo chce, a dajte mu to."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_closer_look
@@ -19289,18 +19414,21 @@ msgid ""
 "feature.<br/> To be successful your content needs to be useful to your "
 "readers.<br/><br/>"
 msgstr ""
+"Napíšte jeden alebo dva odseky opisujúce váš produkt, služby alebo konkrétnu "
+"funkciu.<br/> Aby bol váš obsah úspešný, musí byť užitočný pre vašich "
+"čitateľov.<br/><br/>"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/layout_option/add_element_option_plugin.js:0
 msgid "Write something..."
-msgstr ""
+msgstr "Napíšte niečo..."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/announcement_scroll_option.xml:0
 msgid "Write your text"
-msgstr ""
+msgstr "Napíšte svoj text"
 
 #. module: website
 #. odoo-javascript
@@ -19317,25 +19445,25 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__social_twitter
 msgid "X Account"
-msgstr ""
+msgstr "X Účet"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/theme/theme_button_option.xml:0
 #: code:addons/website/static/src/builder/plugins/theme/theme_tab.xml:0
 msgid "Y"
-msgstr ""
+msgstr "Y"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
 msgid "You are about to be redirected. Your changes will be saved."
-msgstr ""
+msgstr "Budete presmerovaní. Vaše zmeny budú uložené."
 
 #. module: website
 #. odoo-javascript
@@ -19351,11 +19479,16 @@ msgid ""
 "                            Each browser is a little different, so look at "
 "your browser's Help menu to learn the correct way to modify your cookies."
 msgstr ""
+"Môžete si zvoliť, aby vás počítač upozorňoval pri každom odoslaní súboru "
+"cookie, alebo môžete zvoliť vypnutie všetkých súborov cookie.\n"
+"                            Každý prehliadač je trochu iný, preto si pozrite "
+"ponuku Nápovedi vo vašom prehliadači, aby ste zistili správny spôsob úpravy "
+"súborov cookie."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "You can edit colors and backgrounds to highlight features."
-msgstr ""
+msgstr "Farby a pozadia môžete upravovať, aby ste zvýraznili funkcie."
 
 #. module: website
 #. odoo-python
@@ -19368,7 +19501,7 @@ msgstr "Nemôžete mať dvoch používateľov s rovnakým prihlasovacími údajm
 #. odoo-python
 #: code:addons/website/models/website_snippet_filter.py:0
 msgid "You can only use template prefixed by dynamic_filter_template_ "
-msgstr ""
+msgstr "Môžete používať iba šablóny s predponou dynamic_filter_template_ "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_accordion
@@ -19378,6 +19511,11 @@ msgid ""
 "chat on our website. Our dedicated team is available 24/7 to assist with any "
 "inquiries or issues."
 msgstr ""
+"Náš tím zákazníckej podpory môžete kontaktovať e-mailom na adrese "
+"info@yourcompany.example.com, telefonicky na čísle +1 555 555 5556 alebo "
+"prostredníctvom živého chatu na našej webovej stránke. Náš špecializovaný "
+"tím je k dispozícii 24 hodín denne, 7 dní v týždni, aby vám pomohol s "
+"akýmikoľvek otázkami alebo problémami."
 
 #. module: website
 #. odoo-python
@@ -19385,6 +19523,8 @@ msgstr ""
 msgid ""
 "You cannot delete default website %s. Try to change its settings instead"
 msgstr ""
+"Predvolenú webovú stránku %s nemôžete odstrániť. Skúste namiesto toho zmeniť "
+"jej nastavenia"
 
 #. module: website
 #. odoo-python
@@ -19393,24 +19533,26 @@ msgid ""
 "You cannot delete this website menu as this serves as the default parent "
 "menu for new websites (e.g., /shop, /event, ...)."
 msgstr ""
+"Toto menu webovej stránky nemôžete odstrániť, pretože slúži ako predvolené "
+"nadradené menu pre nové webové stránky (napr. /shop, /event...)."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
 msgid "You cannot duplicate this field."
-msgstr ""
+msgstr "Toto pole nemôžete duplikovať."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/facebook_option_plugin.js:0
 msgid "You didn't provide a valid Facebook link"
-msgstr ""
+msgstr "Neuviedli ste platný odkaz na Facebook"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/new_content_systray_item.xml:0
 msgid "You do not have the necessary permissions to create new content pages."
-msgstr ""
+msgstr "Nemáte potrebné oprávnenia na vytváranie nových stránok s obsahom."
 
 #. module: website
 #. odoo-python
@@ -19422,13 +19564,13 @@ msgstr "Nemáte práva na publikovanie /nepublikovanie"
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
 msgid "You don't have permissions to edit this record."
-msgstr ""
+msgstr "Nemáte oprávnenie na úpravu tohto záznamu."
 
 #. module: website
 #. odoo-python
 #: code:addons/website/models/website.py:0
 msgid "You don't have the necessary access rights to access this dashboard."
-msgstr ""
+msgstr "Nemáte potrebné prístupové práva na prístup k tomuto riadiacemu panelu."
 
 #. module: website
 #. odoo-javascript
@@ -19437,14 +19579,14 @@ msgid ""
 "You have hidden this page from search results. It won't be indexed by search "
 "engines."
 msgstr ""
-"Skryli ste túto stránku pred výsledkami vyhľadávania.Vyhľadávacie nástroje "
-"nebudú indexované."
+"Túto stránku ste skryli pred výsledkami vyhľadávania. Nebude indexovaná "
+"vyhľadávačmi."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_website_form/form.js:0
 msgid "You have uploaded too many files(Maximum %s files)."
-msgstr ""
+msgstr "Nahrali ste príliš veľa súborov (maximálne %s )."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -19455,23 +19597,28 @@ msgid ""
 "                                                The website will still work "
 "if you reject or discard those cookies."
 msgstr ""
+"Môžete sa odhlásiť z používania súborov cookie tretích strán na stránke "
+"Network Advertising Initiative <a class=\"o_translate_inline\" "
+"href=\"https://optout.networkadvertising.org/?c=1\" rel=\"nofollow\"></a> .\n"
+"                                                Webová stránka bude fungovať "
+"aj v prípade, ak tieto súbory cookie odmietnete alebo zrušíte."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_floating_blocks/floating_blocks.edit.xml:0
 msgid "You need at least two cards to perform the effect"
-msgstr ""
+msgstr "Na vykonanie efektu potrebujete aspoň dve karty"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_searchbar
 msgid "You will get results from blog posts, products, etc"
-msgstr ""
+msgstr "Výsledky získate z blogových príspevkov, produktov atď."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "You'll be able to create your pages later on."
-msgstr ""
+msgstr "Svoje stránky budete môcť vytvoriť neskôr."
 
 #. module: website
 #. odoo-javascript
@@ -19479,13 +19626,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 #: model_terms:ir.ui.view,arch_db:website.s_social_media
 msgid "YouTube"
-msgstr ""
+msgstr "YouTube"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/send_mail_form.js:0
 msgid "Your Company"
-msgstr ""
+msgstr "Vaša spoločnosť"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_template
@@ -19493,12 +19640,14 @@ msgid ""
 "Your Dynamic Snippet will be displayed here... This message is displayed "
 "because you did not provide enough options to retrieve its content.<br/>"
 msgstr ""
+"Váš dynamický snippet sa zobrazí tu... Táto správa sa zobrazuje, pretože ste "
+"neposkytli dostatok možností na načítanie jeho obsahu.<br/>"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/send_mail_form.js:0
 msgid "Your Email"
-msgstr ""
+msgstr "Váš e-mail"
 
 #. module: website
 #. odoo-javascript
@@ -19507,12 +19656,14 @@ msgid ""
 "Your Embed Code snippet doesn't have anything to display. Click on Edit to "
 "modify it."
 msgstr ""
+"Váš snippet \"vložený kód\" nemá čo zobraziť. Kliknite na Upraviť, aby ste "
+"ho upravili."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/instagram_option.xml:0
 msgid "Your Instagram account"
-msgstr ""
+msgstr "Váš účet na Instagrame"
 
 #. module: website
 #. odoo-javascript
@@ -19520,22 +19671,24 @@ msgstr ""
 msgid ""
 "Your Instagram page must be public to be integrated into an Odoo website."
 msgstr ""
+"Vaša stránka na Instagrame musí byť verejná, aby mohla byť integrovaná do "
+"webovej stránky Odoo."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cards_soft
 msgid "Your Journey Begins Here"
-msgstr ""
+msgstr "Vaša cesta začína tu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_kickoff
 msgid "Your Journey Starts Here,"
-msgstr ""
+msgstr "Vaša cesta začína tu,"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/send_mail_form.js:0
 msgid "Your Name"
-msgstr ""
+msgstr "Vaše meno"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_floating_blocks
@@ -19543,18 +19696,20 @@ msgid ""
 "Your New <br class=\"d-none d-lg-inline\"/>\n"
 "                                        Workspace"
 msgstr ""
+"Váš nový <br class=\"d-none d-lg-inline\"/>\n"
+"                                        pracovný priestor"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/send_mail_form.js:0
 msgid "Your Question"
-msgstr ""
+msgstr "Vaša otázka"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/carousel_slides_option.xml:0
 msgid "Your URL"
-msgstr ""
+msgstr "Vaša URL adresa"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_features
@@ -19562,12 +19717,14 @@ msgid ""
 "Your brand is your story. We help you tell it through cohesive visual "
 "identity and messaging that resonates with your audience."
 msgstr ""
+"Vaša značka je vaším príbehom. Pomáhame vám ho rozprávať prostredníctvom "
+"ucelenej vizuálnej identity a správ, ktoré rezonujú s vaším publikom."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/resource_editor_warning.xml:0
 msgid "Your changes might be lost during future Odoo upgrade."
-msgstr ""
+msgstr "Vaše zmeny sa môžu stratiť pri budúcej aktualizácii Odoo."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_list
@@ -19575,6 +19732,8 @@ msgid ""
 "Your data is protected by advanced encryption and security protocols, "
 "keeping your personal information safe."
 msgstr ""
+"Vaše údaje sú chránené pokročilými šifrovacími a bezpečnostnými protokolmi, "
+"ktoré zabezpečujú bezpečnosť vašich osobných údajov."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -19582,33 +19741,35 @@ msgid ""
 "Your experience may be degraded if you discard those cookies, but the "
 "website will still work."
 msgstr ""
+"Vaša skúsenosť sa môže zhoršiť, ak tieto súbory cookie zrušíte, ale webová "
+"stránka bude naďalej fungovať."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cover
 msgid "Your journey starts here"
-msgstr ""
+msgstr "Vaša cesta začína tu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus_thanks_ir_ui_view
 msgid "Your message has been sent."
-msgstr ""
+msgstr "Vaša správa bola odoslaná."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 msgid "Your page description should be between 50 and 160 characters long."
-msgstr ""
+msgstr "Popis vašej stránky by mal mať dĺžku medzi 50 a 160 znakmi."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_hybrid
 #: model_terms:ir.ui.view,arch_db:website.list_website_public_pages
 msgid "Your search '"
-msgstr " Vaše hľadanie '"
+msgstr "Vaše hľadanie '"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_title
 msgid "Your section title"
-msgstr ""
+msgstr "Názov vašej sekcie"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__social_youtube
@@ -19620,7 +19781,7 @@ msgstr "Youtube účet"
 #: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/map_option.xml:0
 msgid "Zoom"
-msgstr ""
+msgstr "Zväčšiť"
 
 #. module: website
 #. odoo-javascript
@@ -19634,7 +19795,7 @@ msgstr "Priblížiť"
 #: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 #: code:addons/website/static/src/builder/plugins/options/parallax_option.xml:0
 msgid "Zoom Out"
-msgstr "Vzdialiť"
+msgstr "Zmenšiť"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -19642,6 +19803,8 @@ msgid ""
 "__gads (Google)<br/>\n"
 "                                            __gac (Google)"
 msgstr ""
+"__gads (Google)<br/>\n"
+"                                            __gac (Google)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -19651,48 +19814,52 @@ msgid ""
 "                                            _gid (Google)<br/>\n"
 "                                            _gac_* (Google)"
 msgstr ""
+"_ga (Google)<br/>\n"
+"                                            _gat (Google)<br/>\n"
+"                                            _gid (Google)<br/>\n"
+"                                            _gac_* (Google)"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "a Color Palette"
-msgstr ""
+msgstr "Farebná paleta"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 msgid "a blog"
-msgstr ""
+msgstr "blog"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "a new image"
-msgstr ""
+msgstr "nový obrázok"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 msgid "a website"
-msgstr ""
+msgstr "webová stránka"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 msgid "an elearning platform"
-msgstr ""
+msgstr "e-learningová platforma"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 msgid "an event website"
-msgstr ""
+msgstr "webová stránka podujatia"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 msgid "an online store"
-msgstr ""
+msgstr "internetový obchod"
 
 #. module: website
 #. odoo-javascript
@@ -19706,55 +19873,60 @@ msgid ""
 "banner, announcement, scrolling text, trust indicators, info bar, site-wide "
 "banner, minimal design, trendy, bold, presentation"
 msgstr ""
+"banner, oznámenie, posuvný text, indikátory dôveryhodnosti, informačná "
+"lišta, banner na celej stránke, minimalistický dizajn, trendy, výrazný, "
+"prezentácia"
 
 #. module: website
 #. odoo-python
 #: code:addons/website/models/website_rewrite.py:0
 msgid "base URL of 'URL to' should not be same as 'URL from'."
 msgstr ""
+"základná URL adresa v poli „na URL“ by nemala byť rovnaká ako v poli „z URL“."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "block, blog, post, catalog, feed, items, entries, entry, collection"
 msgstr ""
+"blok, blog, príspevok, katalóg, zdroj, položky, záznamy, záznam, zbierka"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/website_loader/website_loader.js:0
 msgid "blog"
-msgstr ""
+msgstr "blog"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "breadcrumb"
-msgstr "breadcrumb"
+msgstr "navigačná lišta"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "btn-outline-primary"
-msgstr ""
+msgstr "btn-outline-primary"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "btn-outline-secondary"
-msgstr ""
+msgstr "btn-outline-secondary"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "btn-primary"
-msgstr ""
+msgstr "btn-primary"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "btn-secondary"
-msgstr ""
+msgstr "btn-secondary"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "business"
-msgstr ""
+msgstr "biznis"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19764,11 +19936,16 @@ msgid ""
 "coupon, code, description, rounded, card, call to action, cta, marketing, "
 "showcase, mosaic, collage, arrangement, collection, visual-grid"
 msgstr ""
+"karty, obchod, mriežka, stĺpec, košík, produkt, e-commerce, kategórie, "
+"najdôležitejšie informácie, obrázky, fotografie, ilustrácie, médiá, vizuály, "
+"úvod, domovská stránka, Kupón, kód, popis, zaoblené, karta, výzva k akcii, "
+"cta, marketing, vitrína, mozaika, koláž, usporiadanie, kolekcia, vizuálna "
+"mriežka"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "celebration, launch"
-msgstr ""
+msgstr "oslava, spustenie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19776,6 +19953,8 @@ msgid ""
 "cite, slogan, tagline, mantra, catchphrase, statements, sayings, comments, "
 "mission, citations, maxim, quotes, principle, ethos, values"
 msgstr ""
+"citát, slogan, motto, mantra, fráza, výroky, príslovia, komentáre, poslanie, "
+"citácie, maximy, citáty, princípy, étos, hodnoty"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19783,6 +19962,8 @@ msgid ""
 "cite, testimonials, endorsements, reviews, feedback, statements, references, "
 "sayings, comments, appreciations, citations"
 msgstr ""
+"citácie, svedectvá, odporúčania, recenzie, spätná väzba, vyhlásenia, odkazy, "
+"výroky, komentáre, ocenenia, citáty"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19790,23 +19971,25 @@ msgid ""
 "cite, testimonials, endorsements, reviews, feedback, statements, references, "
 "sayings, comments, appreciations, citations, carousel"
 msgstr ""
+"citácie, svedectvá, odporúčania, recenzie, spätná väzba, vyhlásenia, odkazy, "
+"výroky, komentáre, ocenenia, citáty, karusel"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/views/theme_preview.xml:0
 msgid "close"
-msgstr ""
+msgstr "zatvoriť"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/highlight/highlight_configurator.xml:0
 msgid "color"
-msgstr ""
+msgstr "farba"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "columns, containers, layouts, large, panels, modules"
-msgstr ""
+msgstr "stĺpce, kontajnery, rozloženia, veľké, panely, moduly"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19815,11 +19998,14 @@ msgid ""
 "visuals, portfolio, arrangement, collection, visual-grid, split, alignment, "
 "added value"
 msgstr ""
+"stĺpce, galéria, obrázky, fotografie, médiá, text, obsah, album, vitrína, "
+"vizuály, portfólio, usporiadanie, zbierka, vizuálna mriežka, rozdelenie, "
+"zarovnanie, pridaná hodnota"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "common answers, common questions"
-msgstr ""
+msgstr "bežné odpovede, bežné otázky"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19828,6 +20014,8 @@ msgid ""
 "collapsible, hide-show, movement, information, image, picture, photo, "
 "illustration, media, visual"
 msgstr ""
+"bežné odpovede, bežné otázky, faq, QA, zložiť, rozbaliteľné, prepínač, skryť-"
+"zobraziť, pohyb, informácie, obrázok, fotografia, ilustrácia, médiá, vizuálne"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19835,6 +20023,8 @@ msgid ""
 "comparison, price, pricing, engage, call to action, cta, box, shop, table, "
 "cart, product, cost, charges, fees, tariffs, prices, expenses"
 msgstr ""
+"porovnanie, cena, cenotvorba, zapojiť sa, výzva k akcii, cta, rámček, "
+"obchod, tabuľka, košík, produkt, náklady, poplatky, tarify, ceny, výdavky"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19842,6 +20032,8 @@ msgid ""
 "contact, collect, submission, input, fields, questionnaire, survey, "
 "registration, request"
 msgstr ""
+"kontakt, zber, odoslanie, vstup, polia, dotazník, prieskum, registrácia, "
+"žiadosť"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19849,6 +20041,8 @@ msgid ""
 "contact, collect, submission, input, fields, questionnaire, survey, "
 "registration, request, image, picture, photo, illustration, media, visual"
 msgstr ""
+"kontakt, zbieranie, odoslanie, vstup, polia, dotazník, prieskum, "
+"registrácia, žiadosť, obrázok, fotografia, ilustrácia, médiá, vizuál"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19857,6 +20051,9 @@ msgid ""
 "registration, request, image, picture, photo, illustration, media, visual, "
 "company, organization, address, phone, email, location, get-in-touch"
 msgstr ""
+"kontakt, zbieranie, odoslanie, zadávanie, polia, dotazník, prieskum, "
+"registrácia, žiadosť, obrázok, fotografia, ilustrácia, médiá, vizuál, "
+"Spoločnosť, organizácia, adresa, telefón, e-mail, lokalita, kontaktujte nás"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19865,11 +20062,13 @@ msgid ""
 "registration, request, image, picture, photo, illustration, media, visual, "
 "get-in-touch"
 msgstr ""
+"kontakt, zber, odoslanie, vstup, polia, dotazník, prieskum, registrácia, "
+"žiadosť, obrázok, fotografia, ilustrácia, médiá, vizuál, kontaktujte nás"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "content, paragraph, article, body, description, information"
-msgstr ""
+msgstr "obsah, odsek, článok, text, popis, informácie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19877,6 +20076,8 @@ msgid ""
 "content, picture, photo, connection, cover, shape, background, image, "
 "headings, hero, light, experience, parallax"
 msgstr ""
+"obsah, obrázok, fotografia, spojenie, obálka, tvar, pozadie, obraz, nadpisy, "
+"hero, svetlo, skúsenosť, paralaxa"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19884,6 +20085,8 @@ msgid ""
 "content, picture, photo, illustration, media, visual, article, story, "
 "combination"
 msgstr ""
+"obsah, obrázok, fotografia, ilustrácia, médiá, vizuál, článok, príbeh, "
+"kombinácia"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19891,6 +20094,8 @@ msgid ""
 "content, picture, photo, illustration, media, visual, article, story, "
 "combination, engage, call to action, cta, box, showcase"
 msgstr ""
+"obsah, obrázok, fotografia, ilustrácia, médiá, vizuál, článok, príbeh, "
+"kombinácia, zapojiť, výzva k akcii, cta, rámček, prezentácia"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19898,6 +20103,8 @@ msgid ""
 "content, picture, photo, illustration, media, visual, article, story, "
 "combination, heading, headline"
 msgstr ""
+"obsah, obrázok, fotografia, ilustrácia, médiá, vizuál, článok, príbeh, "
+"kombinácia, nadpis, titulok"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19905,6 +20112,8 @@ msgid ""
 "content, picture, photo, illustration, media, visual, article, story, "
 "combination, more, hexagon, geometric"
 msgstr ""
+"obsah, obrázok, fotografia, ilustrácia, médiá, vizuál, článok, príbeh, "
+"kombinácia, viac, šesťuholník, geometrický"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19913,6 +20122,8 @@ msgid ""
 "combination, network, relationships, interactions, connectivity, "
 "collaborations"
 msgstr ""
+"obsah, obrázok, fotografia, ilustrácia, médiá, vizuál, článok, príbeh, "
+"kombinácia, sieť, vzťahy, interakcie, prepojenie, spolupráca"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19920,6 +20131,8 @@ msgid ""
 "content, picture, photo, illustration, media, visual, article, story, "
 "combination, trendy, pattern, design"
 msgstr ""
+"obsah, obrázok, fotografia, ilustrácia, médiá, vizuál, článok, príbeh, "
+"kombinácia, trendy, vzor, dizajn"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19927,6 +20140,8 @@ msgid ""
 "content, picture, photo, illustration, media, visual, article, story, "
 "combination, trendy, pattern, design, shape, geometric, patterned"
 msgstr ""
+"obsah, obrázok, fotografia, ilustrácia, médiá, vizuál, článok, príbeh, "
+"kombinácia, trendy, vzor, dizajn, tvar, geometrický, vzorovaný"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19934,6 +20149,8 @@ msgid ""
 "content, picture, photo, illustration, media, visual, article, story, "
 "combination, trendy, pattern, design, shape, geometric, patterned, contrast"
 msgstr ""
+"obsah, obrázok, fotografia, ilustrácia, médiá, vizuál, článok, príbeh, "
+"kombinácia, trendy, vzor, dizajn, tvar, geometrický, vzorovaný, kontrast"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19942,6 +20159,9 @@ msgid ""
 "combination, trendy, pattern, design, shape, geometric, patterned, contrast, "
 "collage, arrangement, gallery, creative, mosaic"
 msgstr ""
+"obsah, obrázok, fotografia, ilustrácia, médiá, vizuál, článok, príbeh, "
+"kombinácia, trendy, vzor, dizajn, tvar, geometrický, vzorovaný, kontrast, "
+"koláž, usporiadanie, galéria, kreatívny, mozaika"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19949,6 +20169,8 @@ msgid ""
 "content, picture, photo, illustration, media, visual, focus, in-depth, "
 "analysis, more, contact, detailed, mockup, explore, insight"
 msgstr ""
+"obsah, obrázok, fotografia, ilustrácia, médiá, vizuál, zameranie, podrobný, "
+"analýza, viac, kontakt, podrobný, maketa, preskúmať, pohľad"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19956,6 +20178,8 @@ msgid ""
 "customers, clients, sponsors, partners, supporters, case-studies, "
 "collaborators, associations, associates, testimonials, endorsements"
 msgstr ""
+"zákazníci, klienti, sponzori, partneri, podporovatelia, prípadové štúdie, "
+"spolupracovníci, združenia, spolupracovníci, referencie, odporúčania"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19963,6 +20187,9 @@ msgid ""
 "customers, clients, sponsors, partners, supporters, case-studies, "
 "collaborators, associations, associates, testimonials, endorsements, social"
 msgstr ""
+"zákazníci, klienti, sponzori, partneri, podporovatelia, prípadové štúdie, "
+"spolupracovníci, združenia, spolupracovníci, referencie, odporúčania, "
+"sociálne"
 
 #. module: website
 #. odoo-javascript
@@ -19975,6 +20202,7 @@ msgstr "dni"
 msgid ""
 "description, containers, layouts, structures, multi-columns, modules, boxes"
 msgstr ""
+"popis, kontajnery, rozloženia, štruktúry, viaceré stĺpce, moduly, rámčeky"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19983,6 +20211,9 @@ msgid ""
 "content, picture, photo, illustration, media, visual, article, story, "
 "combination, showcase, announcement, reveal"
 msgstr ""
+"popis, kontajnery, rozloženia, štruktúry, viacstĺpcové rozloženia, moduly, "
+"rámčeky, obsah, obrázok, fotografia, ilustrácia, médiá, vizuál, článok, "
+"príbeh, kombinácia, prezentácia, oznámenie, odhalenie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -19992,41 +20223,45 @@ msgid ""
 "combination, showcase, announcement, reveal, trendy, design, shape, "
 "geometric, engage, call to action, cta, button"
 msgstr ""
+"popis, kontajnery, rozloženia, štruktúry, viacstĺpcové rozloženia, moduly, "
+"rámčeky, obsah, obrázok, fotografia, ilustrácia, médiá, vizuál, článok, "
+"príbeh, kombinácia, prezentácia, oznámenie, odhalenie, trendy, dizajn, tvar, "
+"geometrický, zaujať, výzva k akcii, cta, tlačidlo"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 msgid "develop the brand"
-msgstr ""
+msgstr "rozvíjať značku"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/website_loader/website_loader.js:0
 msgid "e-learning platform"
-msgstr ""
+msgstr "e-learningová platforma"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/countdown_option.xml:0
 msgid "e.g. /my-awesome-page"
-msgstr ""
+msgstr "napr. /my-awesome-page"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/carousel_slides_option.xml:0
 msgid "e.g. /your-website-page"
-msgstr ""
+msgstr "napr. /vasa-webova-stranka"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/map_option.xml:0
 msgid "e.g. Grand Place, Brussels"
-msgstr ""
+msgstr "napr. Grand Place, Brusel"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_page_properties_view_form
 msgid "e.g. Home Page"
-msgstr ""
+msgstr "napr. Domovská stránka"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_dashboard
@@ -20042,13 +20277,13 @@ msgstr "eLearning"
 #. odoo-python
 #: code:addons/website/controllers/form.py:0
 msgid "email"
-msgstr "email"
+msgstr "e-mail"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/social_media_links.xml:0
 msgid "example"
-msgstr ""
+msgstr "príklad"
 
 #. module: website
 #. odoo-javascript
@@ -20060,24 +20295,24 @@ msgstr "fonts.google.com"
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "for my"
-msgstr ""
+msgstr "pre môj"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/website_loader/website_loader.js:0
 msgid "forum"
-msgstr ""
+msgstr "fórum"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 msgid "found(s)"
-msgstr "Nájdené"
+msgstr "nájdené"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
 msgid "found)"
-msgstr ""
+msgstr "nájdené)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20087,6 +20322,10 @@ msgid ""
 "mixed, collection, stacking, visual-grid, showcase, visuals, portfolio, "
 "thumbnails, engage, call to action, cta, showcase"
 msgstr ""
+"štyri sekcie, stĺpec, mriežka, rozdelenie, segmenty, obrázky, ilustrácie, "
+"médiá, fotografie, dlaždice, usporiadanie, galéria, mriežka obrázkov, "
+"zmiešané, zbierka, stohovanie, vizuálna mriežka, vitrína, vizuály, "
+"portfólio, miniatúry, zapojiť, výzva k akcii, cta, prezentácia"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.brand_promotion
@@ -20097,12 +20336,12 @@ msgstr "bezplatná webstránka"
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "from Logo"
-msgstr ""
+msgstr "z loga"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "frontend_lang (Odoo)"
-msgstr ""
+msgstr "frontend_lang (Odoo)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20110,6 +20349,8 @@ msgid ""
 "gallery, carousel, pictures, photos, album, showcase, visuals, portfolio, "
 "thumbnails, slideshow"
 msgstr ""
+"galéria, karusel, obrázky, fotografie, album, vitrína, vizuály, portfólio, "
+"miniatúry, prezentácia"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20117,6 +20358,8 @@ msgid ""
 "gallery, carousel, slider, slideshow, picture, photo, image-slider, "
 "rotating, swipe, transition, media-carousel, movement"
 msgstr ""
+"galéria, karusel, posúvač, prezentácia, obrázok, fotografia, posúvač "
+"obrázkov, otáčanie, potiahnutie, prechod, mediálny karusel, pohyb"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20125,17 +20368,20 @@ msgid ""
 "rotating, swipe, transition, media-carousel, movement, cta, engagement, call "
 "to action"
 msgstr ""
+"galéria, karusel, posúvač, prezentácia, obrázok, fotografia, posúvač "
+"obrázkov, otáčanie, potiahnutie, prechod, mediálny karusel, pohyb, cta, "
+"interakcia, výzva k akcii"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 msgid "get leads"
-msgstr ""
+msgstr "získať potenciálnych zákazníkov"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "google1234567890123456.html"
-msgstr ""
+msgstr "google1234567890123456.html"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20143,6 +20389,8 @@ msgid ""
 "graph, table, diagram, pie, plot, bar, metrics, figures, data-visualization, "
 "statistics, stats, analytics, infographic, skills, report"
 msgstr ""
+"graf, tabuľka, diagram, koláčový graf, stĺpcový graf, metriky, čísla, "
+"vizualizácia údajov, štatistiky, analýzy, infografika, zručnosti, prehľad"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20150,6 +20398,8 @@ msgid ""
 "grid, gallery, pictures, photos, album, showcase, visuals, portfolio, "
 "mosaic, collage, arrangement, collection, visual-grid"
 msgstr ""
+"mriežka, galéria, obrázky, fotografie, album, vitrína, vizuály, portfólio, "
+"mozaika, koláž, usporiadanie, zbierka, vizuálna mriežka"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20158,6 +20408,9 @@ msgid ""
 "visuals, portfolio, mosaic, collage, arrangement, collection, visual-grid, "
 "split, alignment"
 msgstr ""
+"mriežka, galéria, obrázky, fotografie, médiá, text, obsah, album, vitrína, "
+"vizuály, portfólio, mozaika, koláž, usporiadanie, zbierka, vizuálna mriežka, "
+"rozdelenie, zarovnanie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20165,6 +20418,8 @@ msgid ""
 "header, introduction, home, content, introduction, overview, spotlight, "
 "presentation, welcome, context, description, primary, highlight, lead"
 msgstr ""
+"hlavička, úvod, domovská stránka, obsah, úvod, prehľad, v centre pozornosti, "
+"prezentácia, vitajte, kontext, popis, primárny, zvýraznenie, záujemca"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20172,6 +20427,7 @@ msgid ""
 "heading, h1, headline, header, main, top, caption, introductory, principal, "
 "key"
 msgstr ""
+"nadpis, h1, titulok, hlavička, hlavný, horný, popis, úvodný, hlavný, kľúčový"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20180,6 +20436,8 @@ msgid ""
 "article, combination, trendy, pattern, design, bold, impactful, vibrant, "
 "standout"
 msgstr ""
+"nadpis, hlavička, obsah, obrázok, fotografia, ilustrácia, médiá, vizuál, "
+"článok, kombinácia, trendy, vzor, dizajn, tučný, pôsobivý, živý, výrazný"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20187,12 +20445,14 @@ msgid ""
 "headline, header, content, picture, photo, illustration, media, visual, "
 "combination"
 msgstr ""
+"nadpis, hlavička, obsah, obrázok, fotografia, ilustrácia, médiá, vizuál, "
+"kombinácia"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
 msgid "hello@mycompany.com"
-msgstr ""
+msgstr "hello@mycompany.com"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20200,6 +20460,8 @@ msgid ""
 "hero, animation, animated, cards, float, stacked, promo, categories, "
 "ecommerce, shop"
 msgstr ""
+"hero, animácia, animovaný, karty, plávajúci, stohovaný, promo, kategórie, e-"
+"commerce, obchod"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20207,6 +20469,8 @@ msgid ""
 "hero, categories, ecommerce, shop, illustration, buy, photos, shop, product, "
 "grid, pictures"
 msgstr ""
+"hero, kategórie, e-commerce, obchod, ilustrácia, kúpiť, fotky, obchod, "
+"produkt, mriežka, obrázky"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20214,6 +20478,9 @@ msgid ""
 "hero, jumbotron, headline, header, branding, intro, home, showcase, "
 "spotlight, lead, welcome, announcement, splash, top, main"
 msgstr ""
+"hrdina, veľkoplošná obrazovka, hlavný nadpis, hlavička, branding, úvod, "
+"domovská stránka, prezentácia, v centre pozornosti, úvodný text, privítanie, "
+"oznámenie, úvodná stránka, vrchol, hlavná stránka"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20221,6 +20488,9 @@ msgid ""
 "hero, jumbotron, headline, header, branding, intro, home, showcase, "
 "spotlight, main, landing, presentation, top, splash, parallax"
 msgstr ""
+"hrdina, veľkoplošná obrazovka, titulok, záhlavie, branding, úvod, domovská "
+"stránka, vitrína, v centre pozornosti, hlavná stránka, vstupná stránka, "
+"prezentácia, vrchol, úvodná stránka, paralaxa"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20228,6 +20498,8 @@ msgid ""
 "hero, jumbotron, headline, header, intro, home, content, description, "
 "primary, highlight, lead"
 msgstr ""
+"hrdina, veľkoplošná obrazovka, nadpis, hlavička, úvod, hlavná stránka, "
+"obsah, popis, primárny, zvýraznenie, úvodný text"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20236,6 +20508,10 @@ msgid ""
 "cta, button, highlight, showcase, spotlight, sober, trendy, design, picture, "
 "photo, illustration, visual, description, containers, layouts, product, buy"
 msgstr ""
+"hlavný prvok, veľkoplošná obrazovka, nadpis, záhlavie, úvod, banner, výzva k "
+"akcii, CTA, tlačidlo, zvýraznenie, prezentácia, v centre pozornosti, strohý, "
+"moderný, dizajn, obrázok, fotografia, ilustrácia, vizuál, popis, kontajnery, "
+"rozloženia, produkt, kúpiť"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20244,6 +20520,9 @@ msgid ""
 "introduction, overview, spotlight, presentation, welcome, context, "
 "description, primary, highlight, lead"
 msgstr ""
+"hrdina, veľkoplošná obrazovka, hlavný nadpis, záhlavie, úvod, domovská "
+"stránka, obsah, úvod, prehľad, v centre pozornosti, prezentácia, privítanie, "
+"kontext, popis, hlavný, zvýraznenie, úvodný text"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20252,6 +20531,10 @@ msgid ""
 "introduction, overview, spotlight, presentation, welcome, context, "
 "description, primary, highlight, lead, CTA, promote, promotion"
 msgstr ""
+"hrdina, veľkoplošná obrazovka, nadpis, hlavička, úvod, domovská stránka, "
+"obsah, úvod, prehľad, v centre pozornosti, prezentácia, privítanie, kontext, "
+"popis, hlavný, zvýraznenie, úvodný text, výzva k akcii, propagovať, "
+"propagácia"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20260,6 +20543,10 @@ msgid ""
 "introduction, overview, spotlight, presentation, welcome, context, "
 "description, primary, highlight, lead, discover, exploration, reveal"
 msgstr ""
+"hrdina, veľkoplošná obrazovka, hlavný nadpis, záhlavie, úvod, domovská "
+"stránka, obsah, úvod, prehľad, v centre pozornosti, prezentácia, vitajte, "
+"kontext, popis, hlavný, najdôležitejšie, úvodný text, objavovať, preskúmať, "
+"odhaliť"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20269,6 +20556,10 @@ msgid ""
 "description, primary, highlight, lead, journey, skills, expertises, experts, "
 "accomplishments, knowledge"
 msgstr ""
+"hrdina, veľkoplošná obrazovka, hlavný nadpis, záhlavie, úvod, domovská "
+"stránka, obsah, úvod, prehľad, v centre pozornosti, prezentácia, privítanie, "
+"kontext, popis, hlavný, zvýraznenie, úvodný text, cesta, zručnosti, odborné "
+"znalosti, odborníci, úspechy, vedomosti"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20277,6 +20568,9 @@ msgid ""
 "photo, illustration, media, visual, article, combination, trendy, pattern, "
 "design"
 msgstr ""
+"hrdina, veľkoplošná obrazovka, nadpis, hlavička, úvod, domovská stránka, "
+"obsah, obrázok, fotografia, ilustrácia, médiá, vizuál, článok, kombinácia, "
+"trendy, vzor, dizajn"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20285,6 +20579,9 @@ msgid ""
 "photo, illustration, media, visual, article, combination, trendy, pattern, "
 "design, centered"
 msgstr ""
+"hrdina, veľkoplošná obrazovka, nadpis, hlavička, úvod, domovská stránka, "
+"obsah, obrázok, fotografia, ilustrácia, médiá, vizuál, článok, kombinácia, "
+"trendy, vzor, dizajn, zarovnané na stred"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20293,6 +20590,9 @@ msgid ""
 "photo, illustration, media, visual, intro, home, content, description, call "
 "to action, cta, minimalist, marketing"
 msgstr ""
+"hrdina, veľkoplošná obrazovka, nadpis, hlavička, obchod, košík, produkt, e-"
+"commerce, obrázok, fotografia, ilustrácia, médiá, vizuál, úvod, domovská "
+"stránka, obsah, popis, výzva k akcii, CTA, minimalistický, marketing"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20301,12 +20601,16 @@ msgid ""
 "photo, illustration, media, visual, intro, home, content, description, "
 "rounded, card, call to action, cta, minimalist, marketing"
 msgstr ""
+"hrdina, veľkoplošná obrazovka, nadpis, hlavička, obchod, košík, produkt, e-"
+"commerce, obrázok, fotografia, ilustrácia, médiá, vizuál, úvod, domovská "
+"stránka, obsah, popis, zaoblený, karta, výzva k akcii, CTA, minimalistický, "
+"marketing"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/highlight/highlight_configurator.xml:0
 msgid "highlightPicker"
-msgstr ""
+msgstr "highlightPicker"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20314,6 +20618,7 @@ msgid ""
 "history, story, events, milestones, chronology, sequence, progression, "
 "achievements"
 msgstr ""
+"história, príbeh, udalosti, míľniky, chronológia, postupnosť, vývoj, výsledky"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20321,6 +20626,8 @@ msgid ""
 "history, story, events, milestones, chronology, sequence, progression, "
 "achievements, changelog, updates, announcements, recent, latest"
 msgstr ""
+"história, príbeh, udalosti, míľniky, chronológia, postupnosť, vývoj, "
+"výsledky, zoznam zmien, aktualizácie, oznámenia, nedávne, najnovšie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20329,16 +20636,19 @@ msgid ""
 "achievements, changelog, updates, announcements, recent, latest, picture, "
 "photo, illustration, media, visual"
 msgstr ""
+"história, príbeh, udalosti, míľniky, chronológia, postupnosť, vývoj, "
+"výsledky, zoznam zmien, aktualizácie, oznámenia, nedávne, najnovšie, "
+"obrázok, fotografia, ilustrácia, médiá, vizuál"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "https://www.odoo.com"
-msgstr ""
+msgstr "https://www.odoo.com"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "iPhone"
-msgstr ""
+msgstr "iPhone"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -20348,6 +20658,10 @@ msgid ""
 "                                            utm_source (Odoo)<br/>\n"
 "                                            utm_medium (Odoo)"
 msgstr ""
+"im_livechat_previous_operator (Odoo)<br/>\n"
+"                                            utm_campaign (Odoo)<br/>\n"
+"                                            utm_source (Odoo)<br/>\n"
+"                                            utm_medium (Odoo)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20355,17 +20669,19 @@ msgid ""
 "images, pictures, photos, illustrations, media, visual, slider, tabs, "
 "switch, tabbed, sections, navigation"
 msgstr ""
+"obrázky, fotografie, ilustrácie, médiá, vizuálne prvky, posuvník, karty, "
+"prepínač, sekcie, navigácia"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/website_builder_action.xml:0
 msgid "in the top right corner to start designing."
-msgstr ""
+msgstr "v pravom hornom rohu, aby ste mohli začať s dizajnom."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "info@yourcompany.com"
-msgstr ""
+msgstr "info@yourcompany.com"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
@@ -20375,13 +20691,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega_cards
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega_columns
 msgid "info@yourcompany.example.com"
-msgstr ""
+msgstr "info@yourcompany.example.com"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 msgid "inform customers"
-msgstr ""
+msgstr "informovať zákazníkov"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -20389,12 +20705,14 @@ msgid ""
 "instance of Odoo, the <a class=\"o_translate_inline\" target=\"_blank\" "
 "href=\"https://www.odoo.com\">Open Source ERP</a>."
 msgstr ""
+"inštancia Odoo, <a class=\"o_translate_inline\" target=\"_blank\" "
+"href=\"https://www.odoo.com\">open source ERP</a> ."
 
 #. module: website
 #. odoo-python
 #: code:addons/website/controllers/form.py:0
 msgid "invalid website_form_signature"
-msgstr ""
+msgstr "neplatný website_form_signature"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_ui_view__inherit_id__ir_ui_view
@@ -20407,6 +20725,8 @@ msgid ""
 "journey, exploration, travel, outdoor, excitement, quest, start, onboarding, "
 "discovery, thrill"
 msgstr ""
+"cesta, prieskum, cestovanie, outdoor, vzrušenie, hľadanie, začiatok, "
+"zapracovanie, objavovanie, napätie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -20419,6 +20739,8 @@ msgid ""
 "masonry, grid, column, pictures, photos, album, showcase, visuals, "
 "portfolio, mosaic, collage, arrangement, collection, visual-grid"
 msgstr ""
+"murivo, mriežka, stĺpec, obrázky, fotografie, album, vitrína, vizuály, "
+"portfólio, mozaika, koláž, usporiadanie, zbierka, vizuálna mriežka"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20426,6 +20748,8 @@ msgid ""
 "menu, pricing, shop, table, cart, product, cost, charges, fees, rates, "
 "prices, expenses"
 msgstr ""
+"menu, ceny, obchod, tabuľka, košík, produkt, náklady, poplatky, sadzby, "
+"výdavky"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20433,39 +20757,41 @@ msgid ""
 "menu, pricing, shop, table, cart, product, cost, charges, fees, rates, "
 "prices, expenses, columns"
 msgstr ""
+"menu, cenotvorba, obchod, tabuľka, košík, produkt, náklady, poplatky, "
+"sadzby, ceny, výdavky, stĺpce"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "navigation, index, outline, chapters, sections, overview, menu, tab"
-msgstr ""
+msgstr "navigácia, index, osnova, kapitoly, sekcie, prehľad, menu, záložka"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "navigation, sections, multi-tab, panel, toggle"
-msgstr ""
+msgstr "navigácia, sekcie, viacero kariet, panel, prepínač"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
 msgid "no value"
-msgstr ""
+msgstr "bez hodnoty"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "o-color-"
-msgstr ""
+msgstr "o-color-"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/website_loader/website_loader.js:0
 msgid "online appointment system"
-msgstr ""
+msgstr "online systém rezervácie termínov"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/website_loader/website_loader.js:0
 msgid "online store"
-msgstr ""
+msgstr "online obchod"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20473,6 +20799,8 @@ msgid ""
 "organization, company, people, column, members, staffs, profiles, bios, "
 "roles, personnel, crew"
 msgstr ""
+"organizácia, spoločnosť, ľudia, stĺpec, členovia, zamestnanci, profily, "
+"životopisy, role, personál, tím"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20480,6 +20808,8 @@ msgid ""
 "organization, company, people, members, staffs, profiles, bios, roles, "
 "personnel, crew, patterned"
 msgstr ""
+"organizácia, spoločnosť, ľudia, členovia, zamestnanci, profily, životopisy, "
+"úlohy, personál, tím, vzorované"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20487,6 +20817,8 @@ msgid ""
 "organization, company, people, members, staffs, profiles, bios, roles, "
 "personnel, crew, patterned, trendy"
 msgstr ""
+"organizácia, spoločnosť, ľudia, členovia, zamestnanci, profily, životopisy, "
+"role, personál, tím, vzorované, trendy"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20494,6 +20826,8 @@ msgid ""
 "organization, company, people, members, staffs, profiles, bios, roles, "
 "personnel, crew, patterned, trendy, social"
 msgstr ""
+"organizácia, spoločnosť, ľudia, členovia, zamestnanci, profily, životopisy, "
+"role, personál, tím, vzorované, trendy, sociálne"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20501,25 +20835,27 @@ msgid ""
 "organization, structure, people, team, name, role, position, image, "
 "portrait, photo, employees, shapes"
 msgstr ""
+"organizácia, štruktúra, ľudia, tím, meno, úloha, pozícia, obrázok, portrét, "
+"fotografia, zamestnanci, tvary"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/edit_website_systray_item.xml:0
 msgid "page"
-msgstr ""
+msgstr "stránka"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "perfect website?"
-msgstr ""
+msgstr "perfektná webová stránka?"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/website_preview/website_builder_action.xml:0
 #: code:addons/website/static/src/components/fields/widget_iframe.xml:0
 msgid "phone"
-msgstr ""
+msgstr "telefón"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20527,17 +20863,19 @@ msgid ""
 "picture, photo, illustration, media, visual, start, launch, commencement, "
 "initiation, opening, kick-off, kickoff, beginning, events, parallax"
 msgstr ""
+"obrázok, fotografia, ilustrácia, médiá, vizuál, štart, spustenie, začiatok, "
+"otvorenie, úvod, udalosti, paralaxa"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 msgid "placeholder"
-msgstr ""
+msgstr "nápoveda pre hodnotu"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/website_loader/website_loader.xml:0
 msgid "pointer to discover features."
-msgstr ""
+msgstr "ukazovateľ na objavovanie funkcií."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20545,6 +20883,8 @@ msgid ""
 "pricing, promotion, price, feature-comparison, side-by-side, evaluation, "
 "competitive, overview"
 msgstr ""
+"cenotvorba, akcia, cena, porovnanie funkcií, vedľa seba, hodnotenie, "
+"konkurenčné, prehľad"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20552,6 +20892,8 @@ msgid ""
 "process, progression, guide, workflow, sequence, instructions, stages, "
 "procedure, roadmap"
 msgstr ""
+"proces, postup, sprievodca, pracovný tok, sekvencia, pokyny, fázy, postup, "
+"plán"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20559,6 +20901,8 @@ msgid ""
 "promotion, characteristic, quality, highlights, specs, advantages, "
 "functionalities, exhibit, details, capabilities, attributes, promotion"
 msgstr ""
+"akcia, charakteristika, kvalita, hlavné rysy, špecifikácie, výhody, funkcie, "
+"ukážka, podrobnosti, schopnosti, atribúty, akcia"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20567,6 +20911,9 @@ msgid ""
 "functionalities, exhibit, details, capabilities, attributes, promotion, "
 "headline, content, overview, spotlight"
 msgstr ""
+"akcia, charakteristika, kvalita, hlavné body, špecifikácie, výhody, funkcie, "
+"prezentácia, podrobnosti, schopnosti, atribúty, akcia, nadpis, obsah, "
+"prehľad, v centre pozornosti"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20575,6 +20922,8 @@ msgid ""
 "functionalities, exhibit, details, capabilities, attributes, promotion, "
 "presentation, demo, feature"
 msgstr ""
+"akcia, charakteristika, kvalita, hlavné body, špecifikácie, výhody, funkcie, "
+"ukážka, podrobnosti, schopnosti, atribúty, akcia, prezentácia, demo, funkcia"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20583,12 +20932,15 @@ msgid ""
 "functionalities, features, exhibit, details, capabilities, attributes, "
 "promotion, headline, content, overview, spotlight"
 msgstr ""
+"akcia, charakteristika, kvalita, hlavné body, špecifikácie, výhody, funkcie, "
+"vlastnosti, prezentácia, podrobnosti, schopnosti, atribúty, akcia, nadpis, "
+"obsah, prehľad, v centre pozornosti"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/highlight/highlight_configurator.xml:0
 msgid "px"
-msgstr ""
+msgstr "px"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20597,6 +20949,9 @@ msgid ""
 "information, knowledge, guide, troubleshooting, assistance, QA, terms of "
 "services"
 msgstr ""
+"otázky, odpovede, bežné odpovede, bežné otázky, faq, pomoc, podpora, "
+"informácie, vedomosti, sprievodca, riešenie problémov, asistencia, QA, "
+"podmienky používania"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20604,18 +20959,20 @@ msgid ""
 "questions, answers, common answers, common questions, faq, help, support, "
 "information, knowledge, guide, troubleshooting, assistance, columns, QA"
 msgstr ""
+"otázky, odpovede, bežné odpovede, bežné otázky, faq, pomoc, podpora, "
+"informácie, vedomosti, sprievodca, riešenie problémov, asistencia, stĺpce, QA"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/website_loader/website_loader.js:0
 msgid "recruitment platform"
-msgstr ""
+msgstr "náborová platforma"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/searchbar_option.xml:0
 msgid "results"
-msgstr ""
+msgstr "výsledky"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20623,6 +20980,8 @@ msgid ""
 "reveal, showcase, launch, presentation, announcement, content, picture, "
 "photo, illustration, media, visual, article, combination"
 msgstr ""
+"odhaliť, predstaviť, spustiť, prezentácia, oznámenie, obsah, obrázok, "
+"fotografia, ilustrácia, médiá, vizuál, článok, kombinácia"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20630,29 +20989,31 @@ msgid ""
 "reveal, showcase, launch, presentation, announcement, content, picture, "
 "photo, illustration, media, visual, combination"
 msgstr ""
+"odhaliť, predstaviť, spustiť, prezentácia, oznámenie, obsah, obrázok, "
+"fotografia, ilustrácia, médiá, vizuál, kombinácia"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option.xml:0
 msgid "rows"
-msgstr ""
+msgstr "riadky"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 msgid "schedule appointments"
-msgstr ""
+msgstr "naplánovať schôdzky"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "scrolling, depth, effect, background, layer, visual, movement, parallax"
-msgstr ""
+msgstr "posúvanie, hĺbka, efekt, pozadie, vrstva, vizuál, pohyb, paralaxa"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.js:0
 msgid "sell more"
-msgstr ""
+msgstr "predať viac"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20661,11 +21022,14 @@ msgid ""
 "functionalities, exhibit, details, capabilities, attributes, promotion, "
 "overview, specifications"
 msgstr ""
+"služby, ikony, funkcie, charakteristika, špecifikácie, výhody, "
+"funkcionality, ukážka, podrobnosti, schopnosti, atribúty, akcia, prehľad, "
+"špecifikácie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "session_id (Odoo)<br/>"
-msgstr ""
+msgstr "session_id (Odoo)<br/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20673,6 +21037,8 @@ msgid ""
 "shop, cart, product, categories, ecommerce, e-commerce, cards, trendy, "
 "column, layouts, picture, photo, illustration, media, visual"
 msgstr ""
+"obchod, košík, produkt, kategórie, e-commerce, karty, trendy, stĺpec, "
+"rozloženie, obrázok, fotografia, ilustrácia, médiá, vizuál"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20680,11 +21046,12 @@ msgid ""
 "shop, group, list, card, cart, products, inventory, catalog, merchandise, "
 "goods"
 msgstr ""
+"obchod, skupina, zoznam, karta, košík, produkty, sklad, katalóg, tovar, tovar"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "social media, ig, feed"
-msgstr ""
+msgstr "sociálne médiá, ig, feed"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20693,6 +21060,9 @@ msgid ""
 "performance, achievements, benchmarks, milestones, indicators, data, "
 "measurements, reports, trends, results"
 msgstr ""
+"štatistiky, KPI, metriky, riadiaci panel, analýzy, hlavné body, čísla, "
+"výkonnosť, výsledky, referenčné hodnoty, Míľniky, ukazovatele, údaje, "
+"merania, správy, trendy, výsledky"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20701,6 +21071,9 @@ msgid ""
 "performance, achievements, benchmarks, milestones, indicators, data, "
 "measurements, reports, trends, results, analytics, summaries, summary"
 msgstr ""
+"štatistiky, KPI, metriky, riadiaci panel, analýzy, hlavné body, čísla, "
+"výkonnosť, Výsledky, referenčné hodnoty, míľniky, ukazovatele, údaje, "
+"merania, správy, trendy, výsledky, analýzy, súhrny, zhrnutie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20709,6 +21082,9 @@ msgid ""
 "skills, achievements, benchmarks, milestones, indicators, data, "
 "measurements, reports, trends, results"
 msgstr ""
+"štatistiky, KPI, metriky, riadiaci panel, analýzy, hlavné body, čísla, "
+"zručnosti, výsledky, referenčné hodnoty, míľniky, ukazovatele, údaje, "
+"merania, správy, trendy, výsledky"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20718,6 +21094,9 @@ msgid ""
 "measurements, reports, trends, results, analytics, cta, call to action, "
 "button"
 msgstr ""
+"štatistiky, KPI, metriky, kontrolné panely, analýzy, hlavné body, čísla, "
+"zručnosti, výsledky, referenčné hodnoty, Míľniky, ukazovatele, údaje, "
+"merania, správy, trendy, výsledky, analýzy, cta, výzva k akcii, tlačidlo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20726,6 +21105,9 @@ msgid ""
 "skills, achievements, benchmarks, milestones, indicators, data, "
 "measurements, reports, trends, results, analytics, summaries, summary"
 msgstr ""
+"štatistiky, KPI, metriky, riadiaci panel, analýzy, hlavné body, čísla, "
+"zručnosti, výsledky, referenčné hodnoty, míľniky, ukazovatele, údaje, "
+"merania, správy, trendy, výsledky, analýzy, súhrny, zhrnutie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20735,6 +21117,10 @@ msgid ""
 "measurements, reports, trends, results, analytics, summaries, summary, large-"
 "figures, prominent, standout"
 msgstr ""
+"štatistiky, KPI, metriky, kontrolné panely, analýzy, hlavné body, čísla, "
+"zručnosti, výsledky, referenčné hodnoty, míľniky, ukazovatele, údaje, "
+"merania, správy, trendy, výsledky, analýzy, súhrny, súhrn, veľké čísla, "
+"prominentné, výnimočné"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -20742,11 +21128,13 @@ msgid ""
 "stores, button, engagement, appeal, mockup, text, content, picture, photo, "
 "illustration, media, visual, article, story"
 msgstr ""
+"obchody, tlačidlo, angažovanosť, príťažlivosť, maketa, text, obsah, obrázok, "
+"fotografia, ilustrácia, médiá, vizuál, článok, príbeh"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_ui_view__inherit_id__theme_ir_ui_view
 msgid "theme.ir.ui.view"
-msgstr ""
+msgstr "theme.ir.ui.view"
 
 #. module: website
 #. odoo-javascript
@@ -20758,12 +21146,12 @@ msgstr "táto strana"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/animate_option.xml:0
 msgid "to"
-msgstr ""
+msgstr "do"
 
 #. module: website
 #: model:ir.model.constraint,message:website.constraint_website_controller_page_unique_name_slugified
 msgid "url should be unique"
-msgstr ""
+msgstr "url by mala byť jedinečná"
 
 #. module: website
 #. odoo-javascript
@@ -20776,7 +21164,7 @@ msgstr "webstránka"
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 msgid "with the main objective to"
-msgstr ""
+msgstr "s hlavným cieľom"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -20787,12 +21175,12 @@ msgstr "áno"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/font/add_font_dialog.xml:0
 msgid "zip, ttf, woff, woff2, otf"
-msgstr ""
+msgstr "zip, ttf, woff, woff2, otf"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_announcement_scroll
 msgid "• Free Shipping • Secure payment • Easy Return"
-msgstr ""
+msgstr "• Doprava zadarmo • Bezpečná platba • Jednoduché vrátenie tovaru"
 
 #. module: website
 #. odoo-javascript
@@ -20803,17 +21191,17 @@ msgstr "⌙ Štýl"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_pricelist_boxed
 msgid "✽  Pastas"
-msgstr ""
+msgstr "✽ Cestoviny"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_pricelist_boxed
 msgid "✽  Pizzas"
-msgstr ""
+msgstr "✽ Pizze"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_key_benefits
 msgid "✽  What We Offer"
-msgstr ""
+msgstr "✽ Čo ponúkame"
 
 #~ msgid "<u>Wednesday</u><br/>8.00am-12.00am"
 #~ msgstr "<u>Streda</u><br/>8.00 –12.00"

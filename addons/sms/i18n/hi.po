@@ -2,13 +2,13 @@
 # This file contains the translation of the following modules:
 # * sms
 #
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2025-11-11 17:17+0000\n"
+"POT-Creation-Date: 2026-06-12 17:37+0000\n"
+"PO-Revision-Date: 2026-06-12 02:20+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Hindi <https://translate.odoo.com/projects/odoo-19/sms/hi/>\n"
 "Language: hi\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
@@ -105,6 +105,7 @@ msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
+#, fuzzy
 msgid ""
 "<span invisible=\"sms_method != 'sms'\">\n"
 "                                    The message will be sent as an SMS to "
@@ -126,6 +127,22 @@ msgid ""
 "                                    in the messaging history.\n"
 "                                </span>"
 msgstr ""
+"<span invisible=\"sms_method != 'sms'\">\n"
+"                                    मैसेज टेम्पलेट के प्राप्तकर्ताओं को एसएमएस के रूप में "
+"भेजा जाएगा \n"
+"                                    और यह मैसेजिंग हिस्ट्री में दिखाई नहीं देगा.\n"
+"                                </span>\n"
+"                                <span invisible=\"sms_method != 'note'\">\n"
+"                                    एसएमएस नहीं भेजा जाएगा, इसे सिर्फ़ मैसेजिंग "
+"हिस्ट्री में एक\n"
+"                                    इंटरनल नोट के रूप में पोस्ट किया जाएगा.\n"
+"                                </span>\n"
+"                                <span invisible=\"sms_method != "
+"'comment'\">\n"
+"                                    टेम्पलेट के प्राप्तकर्ताओं को एसएमएस भेजा जाएगा\n"
+"                                    और इसे मैसेजिंग हिस्ट्री में एक इंटरनल नोट के\n"
+"                                    रूप में भी पोस्ट किया जाएगा.\n"
+"                                </span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -186,8 +203,9 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__model_id
+#, fuzzy
 msgid "Applies to"
-msgstr ""
+msgstr "लागू होता है"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_reset_view_form
@@ -209,8 +227,9 @@ msgstr "बेस"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_blacklist
+#, fuzzy
 msgid "Blacklisted"
-msgstr ""
+msgstr "ब्लैकलिस्टेड"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__body
@@ -246,8 +265,9 @@ msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
+#, fuzzy
 msgid "Choose a template..."
-msgstr ""
+msgstr "कोई टेम्प्लेट चुनें..।"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -287,16 +307,18 @@ msgstr "कॉन्टेंट"
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_country_not_supported
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_country_not_supported
+#, fuzzy
 msgid "Country Not Supported"
-msgstr ""
+msgstr "इस देश में सुविधा नहीं है"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_registration_needed
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_registration_needed
+#, fuzzy
 msgid "Country-specific Registration Required"
-msgstr ""
+msgstr "हर देश के नियमों के हिसाब से अलग रजिस्ट्रेशन करना ज़रूरी है"
 
 #. module: sms
 #. odoo-python
@@ -332,8 +354,9 @@ msgstr "इस तारीख को बनाया गया"
 
 #. module: sms
 #: model:iap.service,unit_name:sms.iap_service_sms
+#, fuzzy
 msgid "Credits"
-msgstr ""
+msgstr "क्रेडिट"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__partner_id
@@ -352,8 +375,9 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__sent
+#, fuzzy
 msgid "Delivered"
-msgstr ""
+msgstr "डिलीवर किया गया"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -384,8 +408,9 @@ msgstr "डिस्प्ले का नाम"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_followers
+#, fuzzy
 msgid "Document Followers"
-msgstr ""
+msgstr "दस्तावेज़ फ़ॉलोअर"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_id
@@ -394,8 +419,9 @@ msgstr "डॉक्यूमेंट आईडी"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids
+#, fuzzy
 msgid "Document IDs"
-msgstr ""
+msgstr "दस्तावेज़ आईडी"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_model_description
@@ -447,13 +473,17 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__failure_type
+#, fuzzy
 msgid "Failure type"
-msgstr ""
+msgstr "एरर का टाइप"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__template_fs
+#, fuzzy
 msgid "File from where the template originates. Used to reset broken template."
 msgstr ""
+"वह फ़ाइल जहाँ से टेम्प्लेट लिया गया है. इसका उपयोग खराब टेम्प्लेट को रीसेट करने के लिए किया "
+"जाता है।"
 
 #. module: sms
 #. odoo-python
@@ -533,8 +563,9 @@ msgstr "अगर बॉक्स पर टिक है, तो कुछ म�
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__outgoing
+#, fuzzy
 msgid "In Queue"
-msgstr ""
+msgstr "लाइन में है"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
@@ -552,15 +583,17 @@ msgstr ""
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_credit
+#, fuzzy
 msgid "Insufficient Credit"
-msgstr ""
+msgstr "क्रेडिट कम है"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_invalid_destination
+#, fuzzy
 msgid "Invalid Destination"
-msgstr ""
+msgstr "गलत पता"
 
 #. module: sms
 #. odoo-python
@@ -620,13 +653,15 @@ msgstr "आखिरी बार अपडेट हुआ"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_tracker
+#, fuzzy
 msgid "Link SMS to mailing/sms tracking models"
-msgstr ""
+msgstr "एसएमएस को मेलिंग/एसएमएस ट्रैकिंग मॉडल से जोड़ें"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__mail_message_id
+#, fuzzy
 msgid "Mail Message"
-msgstr ""
+msgstr "मेल मैसेज"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_tracker__mail_notification_id
@@ -652,16 +687,18 @@ msgstr "मैसेज"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_notification
+#, fuzzy
 msgid "Message Notifications"
-msgstr ""
+msgstr "मैसेज नोटिफ़िकेशन"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_missing
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_number_missing
+#, fuzzy
 msgid "Missing Number"
-msgstr ""
+msgstr "नंबर नहीं है"
 
 #. module: sms
 #: model:ir.model,name:sms.model_ir_model
@@ -675,22 +712,25 @@ msgstr "नाम"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__no_record
+#, fuzzy
 msgid "No Record"
-msgstr ""
+msgstr "कोई रिकॉर्ड नहीं"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_not_allowed
+#, fuzzy
 msgid "Not Allowed"
-msgstr ""
+msgstr "अनुमति नहीं है"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_not_delivered
+#, fuzzy
 msgid "Not Delivered"
-msgstr ""
+msgstr "डिलीवर नहीं हुआ"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
@@ -706,8 +746,9 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__notification_type
+#, fuzzy
 msgid "Notification Type"
-msgstr ""
+msgstr "नोटिफ़िकेशन टाइप"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__number
@@ -728,8 +769,9 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_optout
+#, fuzzy
 msgid "Opted Out"
-msgstr ""
+msgstr "ऑप्ट आउट किया"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__lang
@@ -742,8 +784,9 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
+#, fuzzy
 msgid "Outgoing SMS"
-msgstr ""
+msgstr "आउटगोइंग एसएमएस"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_phone__phone_number
@@ -759,8 +802,9 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
+#, fuzzy
 msgid "Post on a document"
-msgstr ""
+msgstr "दस्तावेज़ पर पोस्ट करें"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__use_exclusion_list
@@ -771,8 +815,9 @@ msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
+#, fuzzy
 msgid "Preview of"
-msgstr ""
+msgstr "का प्रीव्यू"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_reset_view_form
@@ -867,8 +912,9 @@ msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+#, fuzzy
 msgid "Reset Template"
-msgstr ""
+msgstr "टेम्प्लेट रीसेट करें"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_tree
@@ -978,8 +1024,9 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_id_int
+#, fuzzy
 msgid "SMS ID"
-msgstr ""
+msgstr "एसएमएस आईडी"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_number
@@ -1036,8 +1083,9 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_tracker_ids
+#, fuzzy
 msgid "SMS Trackers"
-msgstr ""
+msgstr "एसएमएस ट्रैकर"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -1067,8 +1115,9 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__sanitized_numbers
+#, fuzzy
 msgid "Sanitized Number"
-msgstr ""
+msgstr "डेटाबेस में तेज़ी से खोज के लिए, साफ़ किया गया नंबर"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
@@ -1100,8 +1149,9 @@ msgstr "अभी भेजें"
 #: model:ir.actions.act_window,name:sms.res_partner_act_window_sms_composer_single
 #: model:ir.actions.act_window,name:sms.sms_composer_action_form
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__state__sms
+#, fuzzy
 msgid "Send SMS"
-msgstr ""
+msgstr "एसएमएस भेजें"
 
 #. module: sms
 #. odoo-python
@@ -1117,8 +1167,9 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer
+#, fuzzy
 msgid "Send SMS Wizard"
-msgstr ""
+msgstr "एसएमएस विज़ॉर्ड भेजें"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__mass
@@ -1142,8 +1193,9 @@ msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+#, fuzzy
 msgid "Send now"
-msgstr ""
+msgstr "अभी भेजें"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__numbers
@@ -1192,15 +1244,18 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sidebar_action_id
+#, fuzzy
 msgid "Sidebar action"
-msgstr ""
+msgstr "साइडबार ऐक्शन"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__sidebar_action_id
+#, fuzzy
 msgid ""
 "Sidebar action to make this template available on records of the related "
 "document model"
 msgstr ""
+"इस टेम्पलेट को संबंधित डॉक्यूमेंट मॉडल के रिकॉर्ड पर उपलब्ध कराने के लिए साइडबार ऐक्शन"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__comment_single_recipient
@@ -1235,18 +1290,21 @@ msgstr "टेंप्लेट"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__template_fs
+#, fuzzy
 msgid "Template Filename"
-msgstr ""
+msgstr "टेम्प्लेट फ़ाइलनेम"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_preview_action
+#, fuzzy
 msgid "Template Preview"
-msgstr ""
+msgstr "टेम्प्लेट प्रीव्यू"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__lang
+#, fuzzy
 msgid "Template Preview Language"
-msgstr ""
+msgstr "टेम्प्लेट प्रीव्यू की भाषा"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_action
@@ -1323,9 +1381,12 @@ msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
+#, fuzzy
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
+"यह फ़ोन नंबर एसएमएस मार्केटिंग के लिए ब्लैकलिस्ट किया गया है. ब्लैकलिस्ट से हटाने के लिए "
+"क्लिक करें।"
 
 #. module: sms
 #. odoo-python
@@ -1349,6 +1410,7 @@ msgstr "टाइप"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_ir_actions_server__state
 #: model:ir.model.fields,help:sms.field_ir_cron__state
+#, fuzzy
 msgid ""
 "Type of server action. The following values are available:\n"
 "- 'Update a Record': update the values of a record\n"
@@ -1363,6 +1425,16 @@ msgid ""
 "- 'Multi Actions': define an action that triggers several other server "
 "actions\n"
 msgstr ""
+"सर्वर ऐक्शन का प्रकार. ये विकल्प उपलब्ध हैं:\n"
+"- 'एक रिकॉर्ड अपडेट करें': एक रिकॉर्ड की वैल्यू बदलें\n"
+"- 'गतिविधि बनाएं': एक गतिविधि बनाएं (डिस्कस)\n"
+"- 'ईमेल भेजें': एक मैसेज, एक नोट पोस्ट करें या एक ईमेल भेजें (डिस्कस)\n"
+"- 'एसएमएस भेजें': एसएमएस भेजें, उन्हें दस्तावेज़ों पर लॉग करें (एसएमएस) - 'फ़ॉलोअर्स जोड़ें/"
+"हटाएं': एक रिकॉर्ड में फ़ॉलोअर्स जोड़ें या हटा दें (डिस्कस)\n"
+"- 'रिकॉर्ड बनाएं': नए वैल्यू के साथ एक नया रिकॉर्ड बनाएं\n"
+"- 'कोड एक्ज़ीक्यूट करें': Python कोड का एक ब्लॉक चलाएं\n"
+"- 'वेबहूक सूचना भेजें': एक बाहरी सिस्टम को पोस्ट अनुरोध भेजें, जिसे वेबहूक भी कहते हैं\n"
+"- 'मल्टी ऐक्शन': एक ऐसा ऐक्शन तय करें जो एक साथ कई अन्य सर्वर ऐक्शन को शुरू करता है\n"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__uuid
@@ -1376,16 +1448,18 @@ msgstr ""
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__unknown
+#, fuzzy
 msgid "Unknown error"
-msgstr ""
+msgstr "अनजानी गड़बड़ी"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_acc
+#, fuzzy
 msgid "Unregistered Account"
-msgstr ""
+msgstr "रजिस्टर नहीं किया गया खाता"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__use_exclusion_list
@@ -1400,6 +1474,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,help:sms.field_mail_mail__message_type
 #: model:ir.model.fields,help:sms.field_mail_message__message_type
+#, fuzzy
 msgid ""
 "Used to categorize message generator\n"
 "'email': generated by an incoming email e.g. mailgateway\n"
@@ -1410,6 +1485,14 @@ msgid ""
 "acknowledgment\n"
 "'user_notification': generated for a specific recipient"
 msgstr ""
+"मैसेज जनरेटर की कैटेगरी चुनने के लिए इस्तेमाल किया गया\n"
+"'email': आने वाले ईमेल द्वारा जनरेट किया गया, जैसे कि मेलगेटवे (mailgateway)\n"
+"'comment': यूजर इनपुट द्वारा जनरेट किया गया, जैसे डिस्कस या कंपोज़र के माध्यम से\n"
+"'email_outgoing': मेलिंग के ज़रिए जनरेट किया गया\n"
+"'notification': सिस्टम के ज़रिए जनरेट किया गया, जैसे- ट्रैकिंग मैसेज\n"
+"'auto_comment': ऑटोमैटिक सूचना प्रणाली के ज़रिए जनरेट किया गया, जैसे कि कन्फर्मेशन या "
+"रसीद का मैसेज\n"
+"'user_notification': खास रिसीवर के लिए जनरेट किया गया"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_account_code__verification_code
@@ -1455,16 +1538,18 @@ msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+#, fuzzy
 msgid "Write a message..."
-msgstr ""
+msgstr "मैसेज लिखें..।"
 
 #. module: sms
 #. odoo-javascript
 #: code:addons/sms/static/src/core/notification_model_patch.js:0
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_format
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_number_format
+#, fuzzy
 msgid "Wrong Number Format"
-msgstr ""
+msgstr "नंबर का गलत फ़ॉर्मैट"
 
 #. module: sms
 #. odoo-python
@@ -1495,6 +1580,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms/wizard/sms_account_code.py:0
 msgid "Your SMS account has been successfully registered."
+msgstr ""
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid "Your country is not supported due to sender registration legislation"
+msgstr ""
+
+#. module: sms
+#. odoo-python
+#: code:addons/sms/tools/sms_api.py:0
+msgid "Your database is not activated"
 msgstr ""
 
 #. module: sms
@@ -1533,8 +1630,9 @@ msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+#, fuzzy
 msgid "e.g. Contact"
-msgstr ""
+msgstr "जैसे, संपर्क"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form

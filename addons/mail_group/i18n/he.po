@@ -1,20 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* mail_group
+# * mail_group
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2024-09-26 08:55+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: \n"
+"PO-Revision-Date: 2026-06-13 04:54+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-19/"
+"mail_group/he/>\n"
+"Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
+"n % 10 == 0) ? 2 : 3));\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
@@ -45,11 +49,13 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+#, fuzzy
 msgid "<br/> You'll be notified as soon as some new content is posted."
-msgstr ""
+msgstr "<br/>יישלח לך הודעה כשמישהו יעדכן תוכן חדש."
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_subscribe
+#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Hello,<br/><br/>\n"
@@ -65,9 +71,22 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                אהלן,<br/><br/>\n"
+"                בחרת להצטרף לרשימת תפוצה<strong t-out=\"object.name or ''\"/>"
+".\n"
+"                <br/><br/>\n"
+"                לאישור, נא ללחוץ על הלינק הבא: <strong t-if=\"ctx.get"
+"('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                <br/><br/>\n"
+"                אם זו טעות ולא ביקשת להצטרף, נא להתעלם מהודעה זו.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
+#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Hello,<br/><br/>\n"
@@ -83,6 +102,18 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                אהלן,<br/><br/>\n"
+"                ביקשת הסרה מרשימת התפוצה <strong t-out=\"object.name or "
+"''\"/>.\n"
+"                <br/><br/>\n"
+"                לאישור, נא ללחוץ על הלינק: <strong t-if=\"ctx.get"
+"('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
+"                <br/><br/>\n"
+"                אם זו טעות ולא ביקשת הסרה מהרשימה, אפשר להתעלם מהודעה זו.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
@@ -99,9 +130,11 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
 msgstr ""
+"<i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -112,10 +145,13 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_name
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
 "title=\"Alias\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -126,10 +162,13 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
 msgid ""
 "<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
 "title=\"Recipients\"/>"
 msgstr ""
+"<i class=\"fa fa-fw fa-user\" role=\"img\" aria-label=\"Recipients\" "
+"title=\"Recipients\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
@@ -175,8 +214,9 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+#, fuzzy
 msgid "<span class=\"bg-warning\">Pending</span>"
-msgstr ""
+msgstr "<span class=\"bg-warning\">ממתין</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -189,148 +229,179 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
+#, fuzzy
 msgid "<span class=\"mx-2\">-</span>"
-msgstr ""
+msgstr "<span class=\"mx-2\">-</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
+#, fuzzy
 msgid "<span>By thread</span>"
-msgstr ""
+msgstr "<span>לפי שרשור</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
 msgid ""
 "<span>No Mail Group yet.</span>\n"
 "                    <br/>"
 msgstr ""
+"<span>אין קבוצת מייל עדיין.</span>\n"
+"                    <br/>"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_defaults
+#, fuzzy
 msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
+"מילון פייתון שיוערך כדי לספק ערכי ברירת מחדל בעת יצירת רשומות חדשות לכינוי "
+"זה."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+#, fuzzy
 msgid "Accept"
-msgstr ""
+msgstr "אשר"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__accepted
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#, fuzzy
 msgid "Accepted"
-msgstr ""
+msgstr "אישור"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__action
+#, fuzzy
 msgid "Action"
-msgstr ""
+msgstr "פעולה"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__active
+#, fuzzy
 msgid "Active"
-msgstr ""
+msgstr "פעיל"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+#, fuzzy
 msgid ""
 "Add this email address to white list of people and accept all pending "
 "messages from the same author."
-msgstr ""
+msgstr "הוספת המייל הזה לרשימה הלבנה וקבלת כל ההודעות מאותו יוצר."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_id
+#, fuzzy
 msgid "Alias"
-msgstr ""
+msgstr "כינוי"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_contact
+#, fuzzy
 msgid "Alias Contact Security"
-msgstr ""
+msgstr "כינוי אבטחה של איש קשר"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain_id
+#, fuzzy
 msgid "Alias Domain"
-msgstr ""
+msgstr "שם-מתחם (דומיין)"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain
+#, fuzzy
 msgid "Alias Domain Name"
-msgstr ""
+msgstr "כינוי שם (דומיין)"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_full_name
+#, fuzzy
 msgid "Alias Email"
-msgstr ""
+msgstr "קידומת מייל"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_name
+#, fuzzy
 msgid "Alias Name"
-msgstr ""
+msgstr "שם כינוי"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_status
+#, fuzzy
 msgid "Alias Status"
-msgstr ""
+msgstr "סטטוס"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_status
+#, fuzzy
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "סטטוס כינוי הוערך בהודעה האחרונה שהתקבלה."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_model_id
+#, fuzzy
 msgid "Aliased Model"
-msgstr ""
+msgstr "מודל בעל כינוי"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "All messages of this group"
-msgstr ""
+msgstr "כל ההודעות בקבוצה זו"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+#, fuzzy
 msgid "Allowed Emails"
-msgstr ""
+msgstr "מיילים מאושרים"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
 msgid "Alone we can do so little, together we can do so much"
-msgstr ""
+msgstr "לבד אנחנו יכולים לעשות מעט, יחד אנחנו יכולים לעשות המון"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__allow
+#, fuzzy
 msgid "Always Allow"
-msgstr ""
+msgstr "תמיד לאפשר"
 
 #. module: mail_group
 #. odoo-javascript
 #: code:addons/mail_group/static/src/interactions/mail_group.js:0
+#, fuzzy
 msgid "An email with instructions has been sent."
-msgstr ""
+msgstr "נשלח מייל עם הוראות"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
+#, fuzzy
 msgid "Archived"
-msgstr ""
+msgstr "בארכיון"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
+#, fuzzy
 msgid "Archives"
-msgstr ""
+msgstr "ארכיון"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__attachment_ids
+#, fuzzy
 msgid "Attachments"
-msgstr ""
+msgstr "קבצים מצורפים"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_id
+#, fuzzy
 msgid "Author"
-msgstr ""
+msgstr "מחבר"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__author_moderation
@@ -339,71 +410,86 @@ msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message__author_id
+#, fuzzy
 msgid ""
 "Author of the message. If not set, email_from may hold an email address that "
 "did not match any partner."
 msgstr ""
+"מחבר ההודעה. אם לא מוגדר, email_from עשוי להכיל כתובת דוא\"ל שלא התאימה לשום "
+"לקוח/ספק."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__access_group_id
+#, fuzzy
 msgid "Authorized Group"
-msgstr ""
+msgstr "קבוצה מורשית"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_notify
+#, fuzzy
 msgid "Automatic notification"
-msgstr ""
+msgstr "הודעה אוטומטית"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message_reject__action__ban
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+#, fuzzy
 msgid "Ban"
-msgstr ""
+msgstr "חסימה"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#, fuzzy
 msgid "Ban the author of the message ("
-msgstr ""
+msgstr "חסימת המשתמש של ההודעה ("
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+#, fuzzy
 msgid ""
 "Ban this email address and reject all pending messages from the same author "
 "and send an email to the author"
 msgstr ""
+"חסימת כתובת המייל וסירוב לכל ההודעות הממתינות מהיוצא הזה, ושליחת מייל ליוצר."
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__ban
+#, fuzzy
 msgid "Banned"
-msgstr ""
+msgstr "חסום"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+#, fuzzy
 msgid "Banned Emails"
-msgstr ""
+msgstr "מיילים חסומים"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_archive_menu
+#, fuzzy
 msgid "By date"
-msgstr ""
+msgstr "לפי תאריך"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__can_manage_group
+#, fuzzy
 msgid "Can Manage"
-msgstr ""
+msgstr "יכול לנהל"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__can_manage_group
+#, fuzzy
 msgid "Can manage the members"
-msgstr ""
+msgstr "יכול לנהל משתמשים"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_child_ids
+#, fuzzy
 msgid "Children"
-msgstr ""
+msgstr "ילדים"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -415,8 +501,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
 msgid "Closed"
-msgstr ""
+msgstr "סגור"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_closed
@@ -426,29 +513,34 @@ msgstr ""
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_subscribe
+#, fuzzy
 msgid "Confirm subscription to {{ object.name }}"
-msgstr ""
+msgstr "אישור מנוי ל {{ object.name }}"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_list_unsubscribe
+#, fuzzy
 msgid "Confirm unsubscription to {{ object.name }}"
-msgstr ""
+msgstr "אישור הסרת מנוי ל {{ object.name }}"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__body
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__body
+#, fuzzy
 msgid "Contents"
-msgstr ""
+msgstr "תוכן"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
+#, fuzzy
 msgid "Create a Mail Group"
-msgstr ""
+msgstr "יצירת קבוצת מיילים"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
 msgid "Create a new group"
-msgstr ""
+msgstr "יצירת קבוצה חדשה"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__create_uid
@@ -456,41 +548,48 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_uid
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_uid
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_uid
+#, fuzzy
 msgid "Created by"
-msgstr ""
+msgstr "נוצר על-ידי"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__create_date
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__create_date
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__create_date
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__create_date
+#, fuzzy
 msgid "Created on"
-msgstr ""
+msgstr "נוצר ב-"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__is_moderator
+#, fuzzy
 msgid "Current user is a moderator of the group"
-msgstr ""
+msgstr "המשתמש הנוכחי הוא מנהל הקבוצה"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_bounced_content
+#, fuzzy
 msgid "Custom Bounced Message"
-msgstr ""
+msgstr "הודעה מותאמת אישית להודעות שגויות"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_defaults
+#, fuzzy
 msgid "Default Values"
-msgstr ""
+msgstr "ערכי ברירת מחדל"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__description
+#, fuzzy
 msgid "Description"
-msgstr ""
+msgstr "תיאור"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#, fuzzy
 msgid "Discard"
-msgstr ""
+msgstr "בטל"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__display_name
@@ -498,70 +597,84 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__display_name
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__display_name
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "שם לתצוגה"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__email
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_tree
+#, fuzzy
 msgid "Email"
-msgstr ""
+msgstr "דוא\"ל"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
 msgid "Email %s is invalid"
-msgstr ""
+msgstr "מייל %s אינו תקין"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_email
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "Email Alias"
-msgstr ""
+msgstr "כינוי דוא\"ל"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__email_from_normalized
+#, fuzzy
 msgid "Email From"
-msgstr ""
+msgstr "אימייל מ"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message__email_from
+#, fuzzy
 msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
 msgstr ""
+"כתובת המייל של השולח. שדה זה מוגדר כאשר לא נמצא שותף תואם ומחליף את השדה "
+"author_id בצ'אט."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_domain
+#, fuzzy
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "דומיין דוא\"ל, למשל, 'example.com' ב-'odoo@example.com'"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "Emails"
-msgstr ""
+msgstr "הודעות דוא\"ל"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "Emails waiting an action for this group"
-msgstr ""
+msgstr "מיילים בקבוצה זו שמחכים לפעולה"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__public
+#, fuzzy
 msgid "Everyone"
-msgstr ""
+msgstr "כולם"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
+#, fuzzy
 msgid "Follow-Ups"
-msgstr ""
+msgstr "דורשים מעקב"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#, fuzzy
 msgid "From"
-msgstr ""
+msgstr "מ"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__mail_group_id
@@ -569,46 +682,54 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__mail_group_id
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
 msgid "Group"
-msgstr ""
+msgstr "קבוצה"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#, fuzzy
 msgid "Group Message"
-msgstr ""
+msgstr "הודעה קבוצתית"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "Group Name"
-msgstr ""
+msgstr "שם הקבוצה"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
+#, fuzzy
 msgid "Group message can only be linked to mail group. Current model is %s."
-msgstr ""
+msgstr "הודעה קבוצתית יכולה להתחבר רק לקבוצת מיילים. המודל הנוכחי הוא %s"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/controllers/portal.py:0
+#, fuzzy
 msgid "Groups"
-msgstr ""
+msgstr "קבוצות"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines_msg
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "Guidelines"
-msgstr ""
+msgstr "הנחיות"
 
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_guidelines
+#, fuzzy
 msgid "Guidelines of group {{ object.mail_group_id.name }}"
-msgstr ""
+msgstr "כללי הקבוצה {{ object.mail_group_id.name }}"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+#, fuzzy
 msgid "Hello"
-msgstr ""
+msgstr "שלום"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.email_template_mail_group_closed
@@ -627,59 +748,71 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__id
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__id
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__id
+#, fuzzy
 msgid "ID"
-msgstr ""
+msgstr "מזהה"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_thread_id
+#, fuzzy
 msgid ""
 "ID of the parent record holding the alias (example: project holding the task "
 "creation alias)"
 msgstr ""
+"מזהה של רשומת האב המחזיקה בכינוי (דוגמה: פרויקט המחזיק בכינוי ליצירת המשימות)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_bounced_content
+#, fuzzy
 msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
+"אם מוגדר, תוכן זה יישלח אוטומטית למשתמשים לא מורשים במקום להודעת ברירת המחדל."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__image_128
+#, fuzzy
 msgid "Image"
-msgstr ""
+msgstr "תמונה"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
 msgid "Invalid action for URL generation (%s)"
-msgstr ""
+msgstr "פעולה לא תקינה ליצירת קישור (%s)"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_moderation.py:0
+#, fuzzy
 msgid "Invalid email address “%s”"
-msgstr ""
+msgstr "כתובת מייל לא חוקית “%s”"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.invalid_token_subscription
+#, fuzzy
 msgid "Invalid or expired confirmation link."
-msgstr ""
+msgstr "קישור לא תקין או פג תוקפו."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+#, fuzzy
 msgid "Is Allowed"
-msgstr ""
+msgstr "מורשה"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+#, fuzzy
 msgid "Is Banned"
-msgstr ""
+msgstr "חסום"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_closed
+#, fuzzy
 msgid "Is Closed"
-msgstr ""
+msgstr "סגור"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__is_group_moderated
@@ -688,14 +821,16 @@ msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__is_member
+#, fuzzy
 msgid "Is Member"
-msgstr ""
+msgstr "חבר"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+#, fuzzy
 msgid "Join"
-msgstr ""
+msgstr "הצטרפות"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__write_uid
@@ -703,8 +838,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__write_uid
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__write_uid
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__write_uid
+#, fuzzy
 msgid "Last Updated by"
-msgstr ""
+msgstr "עודכן לאחרונה על-ידי"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__write_date
@@ -712,35 +848,41 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__write_date
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__write_date
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__write_date
+#, fuzzy
 msgid "Last Updated on"
-msgstr ""
+msgstr "עדכון אחרון ב"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+#, fuzzy
 msgid "Leave"
-msgstr ""
+msgstr "עזוב"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
+#, fuzzy
 msgid "Let people subscribe to your list online or manually add them here."
-msgstr ""
+msgstr "לאפשר לאנשים להצטרף לרשימה, או הוספה ידנית שלהם."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_incoming_local
+#, fuzzy
 msgid "Local-part based incoming detection"
-msgstr ""
+msgstr "זיהוי הודעות נכנסות מבוסס על החלק המקומי בכתובת"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "Mail Group"
-msgstr ""
+msgstr "קבוצת שליחה בדואר"
 
 #. module: mail_group
 #: model:res.groups,name:mail_group.group_mail_group_manager
+#, fuzzy
 msgid "Mail Group Administrator"
-msgstr ""
+msgstr "מנהל קבוצת מייל"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_subscribe
@@ -761,8 +903,9 @@ msgstr ""
 #: model:ir.actions.act_window,name:mail_group.mail_group_action
 #: model:ir.ui.menu,name:mail_group.mail_group_menu
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
+#, fuzzy
 msgid "Mail Groups"
-msgstr ""
+msgstr "קבוצות מיילים"
 
 #. module: mail_group
 #: model:ir.actions.server,name:mail_group.ir_cron_mail_notify_group_moderators_ir_actions_server
@@ -771,98 +914,116 @@ msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__mail_message_id
+#, fuzzy
 msgid "Mail Message"
-msgstr ""
+msgstr "הודעת מייל"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_member
+#, fuzzy
 msgid "Mailing List Member"
-msgstr ""
+msgstr "חבר/ת רשימת תפוצה"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_message
+#, fuzzy
 msgid "Mailing List Message"
-msgstr ""
+msgstr "הודעת רשימת תפוצה"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_moderation
+#, fuzzy
 msgid "Mailing List black/white list"
-msgstr ""
+msgstr "רשימות שחורות/לבנות של רשימת התפוצה"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.portal_breadcrumbs_group
+#, fuzzy
 msgid "Mailing Lists"
-msgstr ""
+msgstr "רשימות דיוור"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_action
+#, fuzzy
 msgid ""
 "Mailing groups are communities that like to discuss a specific topic "
 "together."
-msgstr ""
+msgstr "קבוצות מיילים הם קבילות שאוהבות לשוחח יחד על נושא מסוים."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+#, fuzzy
 msgid "Mailing-List:"
-msgstr ""
+msgstr "רשימת תפוצה:"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_member_action
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_ids
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "Members"
-msgstr ""
+msgstr "אנשי צוות"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_count
+#, fuzzy
 msgid "Members Count"
-msgstr ""
+msgstr "מספר חברים"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "Members of this group"
-msgstr ""
+msgstr "חברי הקבוצה הזו"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__members
+#, fuzzy
 msgid "Members only"
-msgstr ""
+msgstr "מנויים בלבד"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__mail_group_message_id
+#, fuzzy
 msgid "Message"
-msgstr ""
+msgstr "הודעה"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_message_reject_action
+#, fuzzy
 msgid "Message Rejection Explanation"
-msgstr ""
+msgstr "הודעת סירוב להודעה"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_message_action
+#, fuzzy
 msgid "Messages"
-msgstr ""
+msgstr "הודעות"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_count
+#, fuzzy
 msgid "Messages Count"
-msgstr ""
+msgstr "מונה הודעות"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__mail_group_message_last_month_count
+#, fuzzy
 msgid "Messages Per Month"
-msgstr ""
+msgstr "הודעות בחודש"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
 msgid "Messages are pending moderation"
-msgstr ""
+msgstr "הודעות שמחכות למיון"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_moderation_count
+#, fuzzy
 msgid "Messages that need an action"
-msgstr ""
+msgstr "הודעות שמחכות לפעולה"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation
@@ -871,8 +1032,9 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+#, fuzzy
 msgid "Moderate Messages"
-msgstr ""
+msgstr "הודעות מיון הודעות"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_search
@@ -945,13 +1107,15 @@ msgstr ""
 
 #. module: mail_group
 #: model:mail.group,name:mail_group.mail_group_1
+#, fuzzy
 msgid "My Company News"
-msgstr ""
+msgstr "חדשות הארגון שלי"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__name
+#, fuzzy
 msgid "Name"
-msgstr ""
+msgstr "שם"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -962,24 +1126,28 @@ msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__moderation_guidelines
+#, fuzzy
 msgid ""
 "Newcomers on this moderated group will automatically receive the guidelines."
-msgstr ""
+msgstr "מצטרפים חדשים לקבוצה זו יקבלו אוטומטית את ההנחיות."
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_member_action
+#, fuzzy
 msgid "No Members in this list yet!"
-msgstr ""
+msgstr "עדיין אין מנויים ברשימה זו!"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
+#, fuzzy
 msgid "No Messages in this list yet!"
-msgstr ""
+msgstr "עדיין אין הודעות ברשימה זו!"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__email_normalized
+#, fuzzy
 msgid "Normalized Email"
-msgstr ""
+msgstr "דוא\"ל מנורמל"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__email_from_normalized
@@ -988,18 +1156,21 @@ msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_notify_msg
+#, fuzzy
 msgid "Notification message"
-msgstr ""
+msgstr "הודעות התראה"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "Notify Members"
-msgstr ""
+msgstr "הודעה למשתמשים"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__mail_group_message_count
+#, fuzzy
 msgid "Number of message in this group"
-msgstr ""
+msgstr "מספר ההודעות בקבוצה זו"
 
 #. module: mail_group
 #. odoo-python
@@ -1011,8 +1182,9 @@ msgstr ""
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
 msgid "Only members can send email to the mailing list."
-msgstr ""
+msgstr "רק חברי הקבוצה יכולים לשלוח מיילים לקבוצה זו."
 
 #. module: mail_group
 #. odoo-python
@@ -1027,39 +1199,49 @@ msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_force_thread_id
+#, fuzzy
 msgid ""
 "Optional ID of a thread (record) to which all incoming messages will be "
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
+"מזהה אפשרי של שרשור (רשומה) שאליו יצורפו כל ההודעות הנכנסות, גם אם לא השיבו "
+"אליו. אם מוגדר, הדבר יבטל את יצירת הרשומות החדשות לחלוטין."
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__group_message_parent_id
+#, fuzzy
 msgid "Parent"
-msgstr ""
+msgstr "אב"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_model_id
+#, fuzzy
 msgid "Parent Model"
-msgstr ""
+msgstr "מודל אב"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_parent_thread_id
+#, fuzzy
 msgid "Parent Record Thread ID"
-msgstr ""
+msgstr "מזהה רשומת שרשור אב"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_parent_model_id
+#, fuzzy
 msgid ""
 "Parent model holding the alias. The model holding the alias reference is not "
 "necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"מודל אב המחזיק בכינוי. המודל המחזיק במזהה לכינוי אינו בהכרח המודל שניתן על "
+"ידי alias_model_id (דוגמה: project (parent_model) ומשימה (model))"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__partner_id
+#, fuzzy
 msgid "Partner"
-msgstr ""
+msgstr "לקוח/ספק"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_partner_ids
@@ -1090,11 +1272,13 @@ msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_moderation__status__ban
+#, fuzzy
 msgid "Permanent Ban"
-msgstr ""
+msgstr "חסימה לצמיתות"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_contact
+#, fuzzy
 msgid ""
 "Policy to post a message on the document using the mailgateway.\n"
 "- everyone: everyone can post\n"
@@ -1102,51 +1286,63 @@ msgid ""
 "- followers: only followers of the related document or members of following "
 "channels\n"
 msgstr ""
+"מדיניות שליחת הודעה במסמך באמצעות שער הדואר.\n"
+"- כולם: כולם יכולים לשלוח\n"
+"- לקוחות/ספקים: רק לקוחות/ספקים מאומתים\n"
+"- עוקבים: רק עוקבים של המסמך הקשור או חברים בערוצים הבאים\n"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+#, fuzzy
 msgid "Post to:"
-msgstr ""
+msgstr "שליחה ל:"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__create_date
+#, fuzzy
 msgid "Posted"
-msgstr ""
+msgstr "נרשם"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__access_mode
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "Privacy"
-msgstr ""
+msgstr "פרטיות"
 
 #. module: mail_group
 #: model:mail.group,name:mail_group.mail_group_2
+#, fuzzy
 msgid "Public Mailing List"
-msgstr ""
+msgstr "רשימת תפוצה פומבית"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/wizard/mail_group_message_reject.py:0
+#, fuzzy
 msgid "Re: %s"
-msgstr ""
+msgstr "בתגובה ל:%s"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_force_thread_id
+#, fuzzy
 msgid "Record Thread ID"
-msgstr ""
+msgstr "מזהה רשומת שרשור"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_message
+#, fuzzy
 msgid "Reference"
-msgstr ""
+msgstr "מזהה"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message_reject__action__reject
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+#, fuzzy
 msgid "Reject"
-msgstr ""
+msgstr "דחה"
 
 #. module: mail_group
 #: model:ir.model,name:mail_group.model_mail_group_message_reject
@@ -1160,20 +1356,23 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#, fuzzy
 msgid "Reject the message"
-msgstr ""
+msgstr "דחיית ההודעה"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__moderation_status__rejected
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
+#, fuzzy
 msgid "Rejected"
-msgstr ""
+msgstr "נדחה"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+#, fuzzy
 msgid "Remove message with explanation"
-msgstr ""
+msgstr "הסרת הודעה עם הסבר"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -1182,8 +1381,9 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
+#, fuzzy
 msgid "Search Group Message"
-msgstr ""
+msgstr "חיפוש בהודעות קבוצה"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_member_view_search
@@ -1207,39 +1407,46 @@ msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
+#, fuzzy
 msgid "Selected group of users"
-msgstr ""
+msgstr "בחירת קבוצת משתמשים"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+#, fuzzy
 msgid "Send"
-msgstr ""
+msgstr "שלח"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#, fuzzy
 msgid "Send & Ban"
-msgstr ""
+msgstr "שליחה וחסימה"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#, fuzzy
 msgid "Send & Reject"
-msgstr ""
+msgstr "שליחה ודחיה"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__send_email
+#, fuzzy
 msgid "Send Email"
-msgstr ""
+msgstr "שלח דוא\"ל"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message_reject__send_email
+#, fuzzy
 msgid "Send an email to the author of the message"
-msgstr ""
+msgstr "שליחת מייל ליוצר ההודעה"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_compose_message_action_mail_group
+#, fuzzy
 msgid "Send email"
-msgstr ""
+msgstr "שלח דוא\"ל"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
@@ -1260,24 +1467,28 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation__status
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
+#, fuzzy
 msgid "Status"
-msgstr ""
+msgstr "סטטוס"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
 msgid "Stay in touch with our Community"
-msgstr ""
+msgstr "השארו בקשר עם הקהילה"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__subject
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__subject
+#, fuzzy
 msgid "Subject"
-msgstr ""
+msgstr "נושא"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
 msgid "Subscribe"
-msgstr ""
+msgstr "הירשם כמנוי"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_subscribe
@@ -1294,8 +1505,9 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
+#, fuzzy
 msgid "Thank you!"
-msgstr ""
+msgstr "תודה!"
 
 #. module: mail_group
 #. odoo-python
@@ -1305,14 +1517,16 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+#, fuzzy
 msgid "The email"
-msgstr ""
+msgstr "המייל"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
+#, fuzzy
 msgid "The email \"%s\" is not valid."
-msgstr ""
+msgstr "המייל \"%s\" לא תקין"
 
 #. module: mail_group
 #. odoo-python
@@ -1323,35 +1537,44 @@ msgstr ""
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
 msgid "The guidelines description is empty."
-msgstr ""
+msgstr "כללי הקבוצה ריקים."
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
 msgid "The guidelines description is missing."
-msgstr ""
+msgstr "חסר תיאור לכללי הקבוצה."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_model_id
+#, fuzzy
 msgid ""
 "The model (Odoo Document Kind) to which this alias corresponds. Any incoming "
 "email that does not reply to an existing record will cause the creation of a "
 "new record of this model (e.g. a Project Task)"
 msgstr ""
+"המודל (סוג מסמך Odoo) שאליו הכינוי הזה תואם. כל דוא\"ל נכנס שלא יענה לרשומה "
+"קיימת יביא ליצירת רשומה חדשה של מודל זה (למשל משימת פרויקט)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_name
+#, fuzzy
 msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"שם כינוי הדוא\"ל, למשל 'עבודות' אם ברצונך לקבל הודעות דוא\"ל ל "
+"<jobs@example.odoo.com>"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
+#, fuzzy
 msgid "The notification message is missing."
-msgstr ""
+msgstr "חסרה הודעת התראה."
 
 #. module: mail_group
 #. odoo-python
@@ -1368,14 +1591,16 @@ msgstr ""
 #. module: mail_group
 #. odoo-javascript
 #: code:addons/mail_group/static/src/interactions/mail_group.js:0
+#, fuzzy
 msgid "This email is already subscribed."
-msgstr ""
+msgstr "המייל הזה כבר מנוי."
 
 #. module: mail_group
 #. odoo-javascript
 #: code:addons/mail_group/static/src/interactions/mail_group.js:0
+#, fuzzy
 msgid "This email is not subscribed."
-msgstr ""
+msgstr "המייל הזה לא מנוי."
 
 #. module: mail_group
 #. odoo-python
@@ -1396,46 +1621,54 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "To Review"
-msgstr ""
+msgstr "לבדיקה"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
 msgid "Unsubscribe"
-msgstr ""
+msgstr "בטל את המנוי"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
+#, fuzzy
 msgid "Unsubscribe:"
-msgstr ""
+msgstr "ביטול המנוי:"
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
+#, fuzzy
 msgid ""
 "When people send an email to the alias of the list, they will appear here."
-msgstr ""
+msgstr "כשאנשים ישלחו מייל לכינוי הרשימה, הם יופיעו כאן."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
+#, fuzzy
 msgid "Whitelist"
-msgstr ""
+msgstr "רשימה לבנה"
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__allow
+#, fuzzy
 msgid "Whitelisted"
-msgstr ""
+msgstr "ברשימה הלבנה"
 
 #. module: mail_group
 #. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
+#, fuzzy
 msgid "Wrong status (%s)"
-msgstr ""
+msgstr "סטטוס שגוי (%s)"
 
 #. module: mail_group
 #: model:ir.model.constraint,message:mail_group.constraint_mail_group_moderation_mail_group_email_uniq
+#, fuzzy
 msgid "You can create only one rule for a given email address in a group."
-msgstr ""
+msgstr "אפשר ליצור רק כלל אחד לכתובת מייל בקבוצה."
 
 #. module: mail_group
 #. odoo-python
@@ -1456,28 +1689,33 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "alias"
-msgstr ""
+msgstr "כינוי"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
+#, fuzzy
 msgid "and send an email to the author ("
-msgstr ""
+msgstr "ושליחת מייל ליוצר ("
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
+#, fuzzy
 msgid "attachments"
-msgstr ""
+msgstr "צרופות"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
+#, fuzzy
 msgid "by"
-msgstr ""
+msgstr "על ידי"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "e.g. \"Newsletter\""
-msgstr ""
+msgstr "לדוג' \"ניוזלטר\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -1486,8 +1724,9 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
+#, fuzzy
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "למשל, e.g. mycompany.com"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
@@ -1496,13 +1735,15 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
+#, fuzzy
 msgid "group"
-msgstr ""
+msgstr "קבוצה"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+#, fuzzy
 msgid "has been"
-msgstr ""
+msgstr "היה"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -1511,8 +1752,9 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
 msgid "messages / month"
-msgstr ""
+msgstr "הודעות בחודש"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
@@ -1521,30 +1763,36 @@ msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+#, fuzzy
 msgid "more replies"
-msgstr ""
+msgstr "עוד תגובות"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
+#, fuzzy
 msgid "replies"
-msgstr ""
+msgstr "תגובות"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+#, fuzzy
 msgid "subscribed to"
-msgstr ""
+msgstr "מנוי ל"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+#, fuzzy
 msgid "the list"
-msgstr ""
+msgstr "הרשימה"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
+#, fuzzy
 msgid "unsubscribed from"
-msgstr ""
+msgstr "הסרת מנוי מ"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
+#, fuzzy
 msgid "your email..."
-msgstr ""
+msgstr "הדוא\"ל שלך..."
