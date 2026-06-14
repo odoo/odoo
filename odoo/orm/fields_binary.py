@@ -231,7 +231,7 @@ class Image(Binary):
 
     def setup(self, model):
         super().setup(model)
-        if not model._abstract and not model._log_access:
+        if not self._setup_done and not model._abstract and not model._log_access:
             warnings.warn(f"Image field {self} requires the model to have _log_access = True", stacklevel=1)
 
     def create(self, record_values):

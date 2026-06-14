@@ -279,6 +279,8 @@ class Many2one(_Relational):
         #    this is considered a programming error.
         if not self.ondelete:
             comodel = model.env[self.comodel_name]
+            # Safe to update shared fields' attributes
+            # because _check_model_extension guarantees model_cls._transient is not overridable.
             if model.is_transient() and not comodel.is_transient():
                 # Many2one relations from TransientModel Model are annoying because
                 # they can block deletion due to foreign keys. So unless stated
@@ -1342,6 +1344,8 @@ class Many2many(_RelationalMulti):
                         "table is not possible when source and destination models " \
                         "are the same" % self
                     self.relation = '%s_%s_rel' % tuple(tables)
+                # Safe to update shared fields' attributes
+                # because _check_model_extension guarantees model_cls._table is not overridable.
                 if not self.column1:
                     self.column1 = '%s_id' % model._table
                 if not self.column2:
