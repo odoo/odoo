@@ -18,15 +18,15 @@
                             </t>
                         </div>
                         <div class="text-end" style="line-height:normal">
+                            <div class="o_label_extra_data">
+                                <t t-out="extra_html"/>
+                            </div>
                             <t t-if="price_included">
                                 <strong t-if="base_unit_price" class="o_label_unit_medium">
                                     (<t t-out="base_unit_price" t-options="{'widget': 'monetary', 'display_currency': currency_id}"/>/<t t-out="product.base_unit_name"/>)
                                 </strong>
                                 <strong class="o_label_price" t-out="price" t-options="{'widget': 'monetary', 'display_currency': currency_id, 'label_price': True}"/>
                             </t>
-                            <div class="o_label_extra_data">
-                                <t t-out="extra_html"/>
-                            </div>
                         </div>
                         <div class="o_label_clear"></div>
                     </div>
@@ -42,12 +42,16 @@
                     <div class="o_label_name">
                         <strong t-field="product.display_name"/>
                     </div>
-                    <div t-if="price_included" class="text-end o_label_price_data_medium" style="padding-top: 0; padding-bottom: 0;">
-                        <strong class="o_label_price_medium" t-att-class="base_unit_price and 'o_label_left_column'" t-out="price" t-options="{'widget': 'monetary', 'display_currency': currency_id, 'label_price': True}"/>
-                        <strong class="o_label_unit_medium" t-if="base_unit_price">
-                            (<t t-out="base_unit_price" t-options="{'widget': 'monetary', 'display_currency': currency_id, 'label_price': True}"/>/<t t-out="product.base_unit_name"/>)
-                        </strong>
-                    </div>
+                    <t t-if="price_included">
+                        <div class="text-end" style="padding-top: 0; padding-bottom: 0;">
+                            <strong class="o_label_price_medium" t-out="price" t-options="{'widget': 'monetary', 'display_currency': currency_id, 'label_price': True}"/>
+                        </div>
+                        <div t-if="base_unit_price" class="text-end" style="padding-top: 0; padding-bottom: 0;">
+                            <strong class="o_label_unit_medium">
+                                (<t t-out="base_unit_price" t-options="{'widget': 'monetary', 'display_currency': currency_id}"/>/<t t-out="product.base_unit_name"/>)
+                            </strong>
+                        </div>
+                    </t>
                     <div class="text-center o_label_small_barcode">
                         <span class="text-nowrap" t-field="product.default_code"/>
                         <t t-if="barcode">
@@ -67,13 +71,20 @@
                     <div class="o_label_name">
                         <strong t-field="product.display_name"/>
                     </div>
-                    <div class="o_label_left_column">
+                    <div class="o_label_left_column o_label_full_with">
                         <span class="text-nowrap" t-field="product.default_code"/>
                     </div>
-                    <div t-if="price_included" class="o_label_price_medium text-end">
-                        <strong t-out="pricelist._get_product_price(product, 1, currency=pricelist.currency_id or product.currency_id)"
-                            t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id or product.currency_id, 'label_price': True}"/>
-                    </div>
+                    <t t-if="price_included">
+                        <div class="text-end">
+                            <strong class="o_label_price_medium"
+                                    t-out="price" t-options="{'widget': 'monetary', 'display_currency': currency_id, 'label_price': True}"/>
+                        </div>
+                        <div t-if="base_unit_price" class="text-end" style="padding-top: 0; padding-bottom: 0;">
+                            <strong class="o_label_unit_medium">
+                                (<t t-out="base_unit_price" t-options="{'widget': 'monetary', 'display_currency': currency_id}"/>/<t t-out="product.base_unit_name"/>)
+                            </strong>
+                        </div>
+                    </t>
                     <div class="text-center o_label_small_barcode">
                         <t t-if="barcode">
                             <div t-out="barcode" style="padding:0" t-options="{'widget': 'barcode', 'symbology': 'auto', 'img_style': barcode_size}"/>

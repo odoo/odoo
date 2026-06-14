@@ -26,8 +26,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:38+0000\n"
-"PO-Revision-Date: 2026-05-30 12:28+0000\n"
+"POT-Creation-Date: 2026-06-05 19:34+0000\n"
+"PO-Revision-Date: 2026-06-08 13:01+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-3/"
 "account/fr/>\n"
@@ -37,7 +37,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -2640,6 +2640,8 @@ msgstr ""
 #: code:addons/account/models/partner.py:0
 msgid "A fiscal position with a foreign Tax ID already exists in this country."
 msgstr ""
+"Une position fiscale avec un numéro d'identification fiscale étranger existe "
+"déjà dans ce pays."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -3897,7 +3899,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__allow_foreign_vat
 msgid "Allow Foreign Tax ID"
-msgstr ""
+msgstr "Autoriser les numéros d'identification fiscale étrangers"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
@@ -4379,6 +4381,8 @@ msgstr "Appliquer uniquement si le pays de livraison correspond."
 #: model:ir.model.fields,help:account.field_account_fiscal_position__vat_required
 msgid "Apply only if partner has a Tax ID."
 msgstr ""
+"S'applique uniquement si le partenaire possède un numéro d'identification "
+"fiscale."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__auto_apply
@@ -4386,6 +4390,8 @@ msgid ""
 "Apply tax & account mappings on invoices automatically if the matching "
 "criterias (Tax ID/Country) are met."
 msgstr ""
+"Applique automatiquement les correspondances de taxes et de comptes sur les "
+"factures si les critères de correspondance (numéro de TVA/pays) sont remplis."
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_profit_or_loss_appropriation
@@ -5395,6 +5401,21 @@ msgid "Business or income taxes owed to local or municipal governments"
 msgstr ""
 "Impôts professionnels ou sur le revenu dus aux autorités locales ou "
 "municipales"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_bank_statement_line__journal_group_id
+#: model:ir.model.fields,help:account.field_account_journal__journal_group_id
+#: model:ir.model.fields,help:account.field_account_move__journal_group_id
+#: model:ir.model.fields,help:account.field_account_move_line__journal_group_id
+msgid ""
+"By default, all journals post to the Statutory Ledger (Local GAAP). \n"
+"Specifying a ledger allows you to isolate IFRS, Tax, or Intercompany "
+"adjustments without affecting local statutory accounts."
+msgstr ""
+"Par défaut, tous les journaux enregistrent leurs écritures dans le grand "
+"livre statutaire (normes comptables locales).\n"
+"L'utilisation d'un grand livre spécifique permet d'isoler les ajustements "
+"IFRS, fiscaux ou intersociétés sans affecter les comptes statutaires locaux."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__active
@@ -6561,6 +6582,7 @@ msgstr "Éléments de contrepartie"
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Countries for which the company has a Tax ID"
 msgstr ""
+"Pays pour lesquels l'entreprise possède un numéro d'identification fiscale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -9789,7 +9811,7 @@ msgstr "Numéro d'identification fiscal étranger"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Foreign Tax ID countries"
-msgstr ""
+msgstr "Pays des numéros d'identification fiscale étrangers"
 
 #. module: account
 #: model:account.fiscal.position,name:account.21_template_generic_export_fiscal_position
@@ -18499,7 +18521,7 @@ msgstr "N° TVA"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__vat_required
 msgid "Tax ID required"
-msgstr ""
+msgstr "Numéro d'identification fiscale requis"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__price_include_override__tax_included
@@ -19327,6 +19349,8 @@ msgid ""
 "The country of the foreign Tax ID could not be detected. Please assign a "
 "country to the fiscal position."
 msgstr ""
+"Le pays du numéro d'identification fiscale étranger n'a pas pu être détecté. "
+"Veuillez attribuer un pays à la position fiscale."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
@@ -20312,6 +20336,8 @@ msgid ""
 "This action is irreversible: the credit/debit cannot be modified again from "
 "this screen.  -  This action will affect your current company only."
 msgstr ""
+"Cette action est irréversible : le crédit/débit ne pourra plus être modifié "
+"depuis cet écran. Cette action affectera uniquement votre société actuelle."
 
 #. module: account
 #. odoo-python
@@ -20409,6 +20435,8 @@ msgid ""
 "This entry has already been supervised. You need the accounting manager role "
 "to change it."
 msgstr ""
+"Cette pièce comptable a déjà été supervisée. Vous devez disposer du rôle de "
+"responsable de la comptabilité pour la modifier."
 
 #. module: account
 #. odoo-python
@@ -20434,6 +20462,8 @@ msgstr "Cette pièce comptable a été extournée depuis %s"
 msgid ""
 "This entry has been reviewed, You need the bookkeeper role to change it."
 msgstr ""
+"Cette pièce comptable a été révisée. Vous devez disposer du rôle de "
+"comptable pour la modifier."
 
 #. module: account
 #. odoo-python
@@ -22363,6 +22393,9 @@ msgid ""
 "You cannot create a fiscal position with a foreign Tax ID within your fiscal "
 "country without assigning it a state."
 msgstr ""
+"Vous ne pouvez pas créer une position fiscale avec un numéro "
+"d'identification fiscale étranger dans votre pays fiscal sans lui attribuer "
+"un État/région."
 
 #. module: account
 #. odoo-python
@@ -23138,15 +23171,15 @@ msgid "e.g. Bank Fees"
 msgstr "par ex. frais bancaires"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_tree
+msgid "e.g. CONSO, IFRS, ..."
+msgstr "p. ex. CONSO, IFRS, ..."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_form
 msgid "e.g. Current Assets"
 msgstr "par ex. Actifs circulants"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_form
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_group_tree
-msgid "e.g. GAAP, IFRS, ..."
-msgstr "par ex. GAAP, IFRS"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -23554,6 +23587,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Facture en autofacturation (Réf. {{ object.name "
 "or 'n/a' }})"
+
+#~ msgid "e.g. GAAP, IFRS, ..."
+#~ msgstr "par ex. GAAP, IFRS"
 
 #~ msgid "A fiscal position with a foreign VAT already exists in this country."
 #~ msgstr ""

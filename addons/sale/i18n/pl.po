@@ -39,15 +39,15 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Dawid Gacek <dawid.gacek@adapt-it.pl>, 2025.
 # "Marta (wacm)" <wacm@odoo.com>, 2025, 2026.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2026-04-13 10:12+0000\n"
-"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-2/sale/"
+"PO-Revision-Date: 2026-06-13 12:12+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-3/sale/"
 "pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -56,7 +56,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: sale
 #. odoo-javascript
@@ -147,6 +147,7 @@ msgstr "<b>Wyślij wycenę</b> do siebie i sprawdź, co otrzyma klient."
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_confirmation
+#, fuzzy
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <t t-set=\"color\" t-"
@@ -593,6 +594,434 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <t t-set=\"color\" t-"
+"value=\"object.company_id.email_secondary_color or '#875A7B'\"/>\n"
+"                   <t t-if=\"'website_id' in object and object.website_id\" "
+"t-set=\"logo_src\" t-value=\"object.website_id.image_url(object.website_id, "
+"'logo')\"/>\n"
+"                    <t t-else=\"\" t-set=\"logo_src\" t-valuef=\"/"
+"logo.png?company=#{object.company_id.id}\"/> \n"
+"                   <img t-att-src=\"logo_src\" style=\"display: block; "
+"height: 50px; margin: 0 0 16px;\" alt=\"Logo\"/>\n"
+"                    <p style=\"margin: 0 0 12px; padding: 0px; line-height: "
+"18px; font-size: 14px;\"> \n"
+"                        Witaj <t t-out=\"object.partner_id.display_name or "
+"''\">Johnny Tester</t>,\n"
+"                       <br/><br/> \n"
+"                       <t t-set=\"tx_sudo\" t-"
+"value=\"object.get_portal_last_transaction()\"/> \n"
+"                        Twoje zamówienie <span style=\"font-weight:bold;\" t-"
+"out=\"object.name or ''\">S00049</span>\n"
+"                        <t t-if=\"object.state == 'sale' or (tx_sudo and "
+"tx_sudo.state in ('done', 'authorized'))\">\n"
+"                           <t t-if=\"hasattr(object, 'carrier_id') and "
+"object.carrier_id.delivery_type == 'in_store'\">\n"
+"                                <t t-if=\"object.commitment_date and "
+"object.commitment_date.date() != object.date_order.date()\"> \n"
+"                                    zostało potwierdzone i będzie gotowe w "
+"dniu\n"
+"                                   <span t-field=\"object.commitment_date\" "
+"t-options=\"{&quot;widget&quot;: &quot;date&quot;}\"/> .<br/>\n"
+"                                </t>\n"
+"                               <t t-else=\"\"> \n"
+"                                    zostało potwierdzone i wkrótce będzie "
+"gotowe.<br/>\n"
+"                                </t>\n"
+"                           </t>\n"
+"                            <t t-else=\"\"> \n"
+"                                zostało potwierdzone.<br/>\n"
+"                            </t>\n"
+"                            Dziękujemy za zaufanie.\n"
+"                       </t>\n"
+"                        <t t-elif=\"tx_sudo and tx_sudo.state == "
+"'pending'\"> \n"
+"                            jest w toku. Zostanie potwierdzone po otrzymaniu "
+"płatności.\n"
+"                           <t t-if=\"object.reference\"> \n"
+"                                Numer referencyjny płatności to <span "
+"style=\"font-weight:bold;\" t-out=\"object.reference or ''\"/>.\n"
+"                           </t>\n"
+"                        </t> \n"
+"                       <br/>\n"
+"                        <t t-set=\"documents\" t-"
+"value=\"object._get_product_documents()\"/> \n"
+"                       <t t-if=\"documents\">\n"
+"                            <br/> \n"
+"                           <t t-if=\"len(documents)&gt;1\"> \n"
+"                                Oto kilka dodatkowych dokumentów, które mogą "
+"Państwa zainteresować:\n"
+"                           </t>\n"
+"                            <t t-else=\"\"> \n"
+"                                Oto dodatkowy dokument, który może Państwa "
+"zainteresować:\n"
+"                           </t>\n"
+"                            <ul style=\"margin-bottom: 0;\"> \n"
+"                               <t t-foreach=\"documents\" t-as=\"document\">"
+"\n"
+"                                    <li style=\"font-size: 14px;\"> \n"
+"                                       <a t-"
+"out=\"document.ir_attachment_id.name\" t-att-href=\"object.get_portal_url('/"
+"document/' + str(document.id))\" t-att-target=\"target\"/>\n"
+"                                    </li> \n"
+"                               </t>\n"
+"                            </ul> \n"
+"                       </t>\n"
+"                        <t t-if=\"not is_html_empty(object.user_id.signature)"
+"\"> \n"
+"                           <div style=\"font-size: 14px; margin: 0 0 16px;\">"
+"<t t-out=\"object.user_id.signature or ''\"> Mitchell Admin</t></div> </t>\n"
+"                    </p> <t t-if=\"hasattr(object, 'website_id') and "
+"object.website_id\">\n"
+"                        <!-- The following loop is also used in the addons > "
+"sale > data > mail_template_data.xml file because we want the same "
+"layout. -->\n"
+"<t t-foreach=\"object.order_line\" t-as=\"line\">\n"
+"                                <t t-if=\"(not hasattr(line, 'is_delivery') "
+"or not line.is_delivery) and not line.combo_item_id\"> <table width=\"100%\" "
+"style=\"max-width: 590px; font-size: 14px; border-collapse: collapse;\" "
+"role=\"presentation\">\n"
+"                                        <tr> <td width=\"24%\" style=\"max-"
+"width: 120px; padding: 0 10px 10px 0; vertical-align: top;\">\n"
+"                                                <img t-attf-src=\"/web/image/"
+"product.product/{{ line.product_id.id }}/image_128\" t-attf-style=\"width: "
+"64px; height: {{object.website_id and "
+"object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: "
+"cover; object-position: center;\" alt=\"Product image\"/> </td>\n"
+"                                            <td align=\"left\" "
+"style=\"vertical-align: top; padding-bottom: 22px;\"> <h3 t-attf-style=\"mso-"
+"line-height-rule:exactly; margin:0; font-size: 14px; {{'margin-bottom: 6px;' "
+"if line.product_type == 'combo' else ''}}\">\n"
+"                                                    <strong t-"
+"out=\"line.product_id.name or ''\" t-attf-style=\"color: #{color};\"> Kurs "
+"opieki nad drzewami</strong>\n"
+"                                                    <span t-"
+"if=\"line.product_id.product_template_attribute_value_ids\" style=\"opacity: "
+"0.5;\">\n"
+"                                                       <t t-out=\"', '.join"
+"(line.product_id.product_template_attribute_value_ids.mapped('name'))\"/>\n"
+"                                                    </span> \n"
+"                                               </h3>\n"
+"                                                <t t-set=\"combo_line_idx\" "
+"t-value=\"0\"/> \n"
+"                                               <t t-set=\"totalComboLines\" "
+"t-value=\"0\"/>\n"
+"                                                <t t-set=\"line_idx\" t-"
+"value=\"line_index\"/> \n"
+"                                               <t t-"
+"foreach=\"object.order_line\" t-as=\"combo_liness\">\n"
+"                                                    <t t-if=\"(not hasattr"
+"(line, 'is_delivery') or not line.is_delivery) and "
+"(combo_liness.linked_line_id.id == line.id) and line_idx == line_index\"> \n"
+"                                                       <t t-"
+"if=\"combo_liness.linked_line_id.id == line.id and combo_liness.id != "
+"line.id\">\n"
+"                                                            <t t-"
+"set=\"totalComboLines\" t-value=\"totalComboLines + 1\"/> \n"
+"                                                       </t>\n"
+"                                                    </t> \n"
+"                                               </t>\n"
+"                                                <t t-"
+"foreach=\"object.order_line\" t-as=\"combo_line\"> \n"
+"                                                   <t t-if=\"(not hasattr"
+"(line, 'is_delivery') or not line.is_delivery) and "
+"(combo_line.linked_line_id.id == line.id) and combo_line.combo_item_id and "
+"line_idx == line_index\">\n"
+"                                                            <t t-"
+"set=\"borderRadiusStyle\" t-value=\"''\"/> \n"
+"                                                           <t t-"
+"set=\"borderTopStyle\" t-value=\"''\"/>\n"
+"                                                            <t t-"
+"set=\"borderBottomStyle\" t-value=\"''\"/> \n"
+"\n"
+"                                                           <t t-"
+"if=\"combo_line.linked_line_id.id == line.id and combo_line.id != line.id\">"
+"\n"
+"                                                                <t t-"
+"set=\"combo_line_idx\" t-value=\"combo_line_idx + 1\"/> \n"
+"                                                           </t>\n"
+"                                                            <t t-"
+"elif=\"combo_line.id == line.id and line_idx != line_index\"> \n"
+"                                                               <t t-"
+"set=\"combo_line_idx\" t-value=\"0\"/>\n"
+"                                                            </t> \n"
+"                                                           <t t-"
+"if=\"combo_line_idx == 1\">\n"
+"                                                                <t t-"
+"if=\"totalComboLines != 1\"> \n"
+"                                                                   <t t-"
+"set=\"borderRadiusStyle\" t-value=\"'border-radius: 6px 6px 0 0;'\"/>\n"
+"                                                                    <t t-"
+"set=\"borderBottomStyle\" t-value=\"'border-bottom: none;'\"/> \n"
+"                                                               </t>\n"
+"                                                                <t t-"
+"else=\"\"> \n"
+"                                                                   <t t-"
+"set=\"borderRadiusStyle\" t-value=\"'border-radius: 6px;'\"/>\n"
+"                                                                </t> \n"
+"                                                           </t>\n"
+"                                                            <t t-"
+"elif=\"totalComboLines == combo_line_idx\"> \n"
+"                                                               <t t-"
+"set=\"borderRadiusStyle\" t-value=\"'border-radius: 0 0 6px 6px;'\"/>\n"
+"                                                                <t t-"
+"if=\"totalComboLines != 2\"> \n"
+"                                                                   <t t-"
+"set=\"borderTopStyle\" t-value=\"'border-top: none;'\"/>\n"
+"                                                                </t> \n"
+"                                                           </t>\n"
+"                                                            <div t-attf-"
+"style=\"width: 100%; border: 1px solid #dee2e6; padding: 5px 8px; {{ "
+"borderRadiusStyle }} {{ borderBottomStyle }} {{ borderTopStyle }}\"> \n"
+"                                                                       <t t-"
+"out=\"combo_line.product_id.name or ''\"> Kurs opieki nad drzewami</t>\n"
+"                                                                        "
+"<span t-if=\"combo_line.product_id.product_template_attribute_value_ids\" "
+"style=\"opacity: 0.5;\">\n"
+"                                                                           "
+"<t t-out=\"', '.join"
+"(combo_line.product_id.product_template_attribute_value_ids.mapped('name'))"
+"\"/>\n"
+"                                                                        </"
+"span> \n"
+"                                                                        -\n"
+"                                                                       <span>"
+"\n"
+"                                                                            "
+"<t t-out=\"int(combo_line.product_uom_qty) or ''\"> 10000</t>\n"
+"                                                                            "
+"<t t-out=\"combo_line.product_uom_id.name or ''\" t-"
+"if=\"combo_line.order_id.create_uid._has_group('uom.group_uom')\"/>\n"
+"                                                                       </"
+"span>\n"
+"                                                                        <p t-"
+"if=\"hasattr(combo_line, 'is_rental') and combo_line.is_rental and "
+"combo_line.id == line.id\" style=\"opacity: 0.7;\"> \n"
+"                                                                           "
+"<t t-out=\"combo_line._get_rental_pricing_description() or ''\"/><br/> \n"
+"                                                                       </p>\n"
+"                                                                        <t t-"
+"if=\"(hasattr(combo_line, 'is_rental') and combo_line.is_rental) or (hasattr"
+"(combo_line, 'event_id') and combo_line.event_id) or (hasattr(combo_line, "
+"'calendar_event_id') and combo_line.calendar_event_id)\"> \n"
+"                                                                           "
+"<t t-set=\"description_lines\" t-"
+"value=\"combo_line.get_description_following_lines()\"/>\n"
+"                                                                            "
+"<div t-if=\"description_lines\" style=\"opacity: 0.7;\"> \n"
+"                                                                               "
+"<t t-foreach=\"description_lines\" t-as=\"description_line\">\n"
+"                                                                                    "
+"<p t-if=\"description_line\" t-out=\"description_line\" style=\"margin: 4px "
+"0 0;\"/> \n"
+"                                                                               "
+"</t>\n"
+"                                                                            "
+"</div> \n"
+"                                                                       </t>\n"
+"                                                            </div> \n"
+"                                                       </t>\n"
+"                                                    <t t-elif=\"not"
+"(combo_line.linked_line_id) and combo_line.id == line.id\"> \n"
+"                                                       <p t-if=\"hasattr"
+"(line, 'is_rental') and line.is_rental\" style=\"margin: 4px 0 0; opacity: "
+"0.7;\">\n"
+"                                                            <t t-"
+"out=\"line._get_rental_pricing_description() or ''\"/> <br/>\n"
+"                                                        </p> \n"
+"                                                       <t t-if=\"(hasattr"
+"(combo_line, 'is_rental') and combo_line.is_rental) or (hasattr(combo_line, "
+"'event_id') and combo_line.event_id) or (hasattr(combo_line, "
+"'calendar_event_id') and combo_line.calendar_event_id)\">\n"
+"                                                            <t t-"
+"set=\"product_description_lines\" t-"
+"value=\"line.get_description_following_lines()\"/> \n"
+"                                                           <div t-"
+"if=\"product_description_lines\" style=\"opacity: 0.7;\">\n"
+"                                                                <t t-"
+"foreach=\"product_description_lines\" t-as=\"product_description_line\"> \n"
+"                                                                   <p t-"
+"if=\"product_description_line\" t-out=\"product_description_line\" "
+"style=\"margin: 4px 0 0;\"/>\n"
+"                                                                </t> \n"
+"                                                           </div>\n"
+"                                                        </t> \n"
+"                                                   </t>\n"
+"                                                </t> \n"
+"                                               <span style=\"display: inline-"
+"block;  margin-top: 4px; padding: 4px 8px; border-radius: 20px; background-"
+"color: #e9ecef; color: #454748; font-size: 12px;\">\n"
+"                                                    <t t-out=\"int"
+"(line.product_uom_qty) or ''\"> 10000</t>\n"
+"                                                    <t t-"
+"out=\"line.product_uom_id.name or ''\" t-"
+"if=\"line.order_id.create_uid._has_group('uom.group_uom')\"/> </span>\n"
+"                                            </td> <td width=\"19%\" "
+"align=\"right\" style=\"max-width: 100px; vertical-align: top;\">\n"
+"                                                <t t-if=\"line.product_type "
+"== 'combo'\"> <span t-out=\"format_amount(line._get_cart_display_price(), "
+"object.currency_id) or ''\"> $ 10,00</span>\n"
+"                                                </t> <t t-else=\"\">\n"
+"                                                    <span style=\"white-"
+"space: nowrap;\"> <t t-if=\"hasattr(object, 'website_id') and "
+"object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'\">\n"
+"                                                            <t t-"
+"out=\"format_amount(line.price_subtotal, object.currency_id) or ''\"> $ "
+"10,00</t>\n"
+"                                                        </t> <t t-else=\"\">"
+"\n"
+"                                                            <t t-"
+"out=\"format_amount(line.price_total, object.currency_id) or ''\"> $ 10,00</"
+"t>\n"
+"                                                        </t>\n"
+"                                                   </span>\n"
+"                                                </t> \n"
+"                                               <t t-if=\"hasattr(line, "
+"'recurring_invoice') and line.recurring_invoice\">\n"
+"                                                    <br/> \n"
+"                                                   <t t-"
+"out=\"line.subscription_plan_id.billing_period_display_sentence or ''\"/>\n"
+"                                                </t> \n"
+"                                           </td>\n"
+"                                        </tr> \n"
+"                                   </table>\n"
+"                                </t> \n"
+"                           </t>\n"
+"                        </div> \n"
+"                       <div style=\"margin: 10px 0 16px; padding: 0px;\">\n"
+"                            <table width=\"100%\" t-if=\"hasattr(object, "
+"'carrier_id') and object.carrier_id\" style=\"max-width: 590px; font-size: "
+"14px; border-spacing: 0px 4px; white-space: nowrap;\" role=\"presentation\"> "
+"\n"
+"                               <tr>\n"
+"                                    <td style=\"padding-top: 8px; width: "
+"50%; border-top: 1px solid #dee2e6;\" align=\"left\"> Dostawa</td>\n"
+"                                    <td style=\"padding-top: 8px; width: "
+"50%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount"
+"(object.amount_delivery, object.currency_id) or ''\">$ 0,00</td>\n"
+"                                </tr>\n"
+"                               <tr>\n"
+"                                    <td style=\"width: 50%;\" "
+"align=\"left\"> Kwota nieopodatkowana</td>\n"
+"                                    <td style=\"width: 50%;\" "
+"align=\"right\" t-out=\"format_amount(object.amount_untaxed, "
+"object.currency_id) or ''\">$ 10,00</td>\n"
+"                                </tr>\n"
+"                           </table>\n"
+"                            <table width=\"100%\" t-else=\"\" style=\"max-"
+"width: 590px; opacity: 0.8; font-size: 14px; border-spacing: 0px 4px; white-"
+"space: nowrap;\" role=\"presentation\"> \n"
+"                               <tr>\n"
+"                                    <td style=\"width: 50%; border-top: 1px "
+"solid #dee2e6;\" align=\"left\"> Kwota nieopodatkowana</td>\n"
+"                                    <td style=\"width: 50%; border-top: 1px "
+"solid #dee2e6;\" align=\"right\" t-out=\"format_amount"
+"(object.amount_untaxed, object.currency_id) or ''\">$ 10,00</td>\n"
+"                                </tr>\n"
+"                           </table>\n"
+"                            <t t-if=\"object.tax_totals and "
+"object.tax_totals['subtotals']\"> \n"
+"                               <t t-set=\"all_tax_lines\" t-value=\"[tax for "
+"line in object.tax_totals['subtotals'] for tax in line['tax_groups']]\"/>\n"
+"                                <table width=\"100%\" t-if=\"all_tax_lines\" "
+"style=\"max-width: 590px; font-size: 14px; border-spacing: 0px; white-space: "
+"nowrap;\" role=\"presentation\"> \n"
+"                                   <tr t-foreach=\"all_tax_lines\" t-"
+"as=\"tax_line\">\n"
+"                                        <td style=\"width: 20%; padding-"
+"bottom: 8px;\" align=\"left\"> <span t-out=\"tax_line['group_name']\"/></td> "
+"\n"
+"                                       <td style=\"width: 80%;\" "
+"align=\"right\" t-out=\"format_amount(tax_line['tax_amount_currency'], "
+"object.currency_id) or ''\"> $ 0,00</td>\n"
+"                                    </tr>\n"
+"                               </table>\n"
+"                            </t> \n"
+"                           <table width=\"100%\" style=\"max-width: 590px; "
+"font-size: 14px; border-spacing: 0px; white-space: nowrap;\" "
+"role=\"presentation\">\n"
+"                                <tr> \n"
+"                                   <td style=\"width: 20%; padding-top: 4px; "
+"border-top: 1px solid #343a40; opacity: 0.9;\" align=\"left\"><strong> "
+"Razem</strong></td>\n"
+"                                   <td style=\"width: 80%; padding-top: 4px; "
+"border-top: 1px solid #343a40; font-weight: bold; \" align=\"right\">\n"
+"                                        <span style=\"display: inline-block; "
+"margin-right: 4px; padding: 4px 8px; border: 1px solid #dee2e6; border-"
+"radius: 4px;\"> \n"
+"                                           <span t-attf-style=\"color: #"
+"{color}; font-weight: bold;\">\n"
+"                                                <t t-"
+"out=\"tx_sudo.provider_id.sudo().name or ''\"/> \n"
+"                                           </span>\n"
+"                                        </span> \n"
+"                                       <span style=\"opacity: 0.9;\"><t t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\"> $ "
+"10,00</t></span>\n"
+"                                   </td>\n"
+"                                </tr> \n"
+"                           </table>\n"
+"                        </div> \n"
+"                       <table t-if=\"object.partner_shipping_id and not "
+"object.only_services\" width=\"295\" style=\"vertical-align: top; font-size: "
+"14px; margin-bottom: 12px;\" align=\"left\" role=\"presentation\">\n"
+"                            <tr> \n"
+"                               <td style=\"padding-bottom: 4px; font-weight: "
+"bold;\">\n"
+"                                    <t t-if=\"not (hasattr(object, "
+"'carrier_id') and object.carrier_id.delivery_type == 'in_store')\"> \n"
+"                                       <span style=\"opacity: 0.9;\"> "
+"Dostawa z</span>\n"
+"                                    </t>\n"
+"                                   <span t-attf-style=\"color: {{color}}; "
+"opacity: 1;\"><t t-out=\"object.carrier_id.name or ''\"/> </span>\n"
+"                                </td> \n"
+"                           </tr>\n"
+"                            <tr> \n"
+"                               <td style=\"opacity: 0.9;\">\n"
+"                                    <t t-"
+"out=\"object.partner_shipping_id.street or ''\"> 1201 S Figueroa St</t><br/>"
+"\n"
+"                                   <t t-"
+"out=\"object.partner_shipping_id.city or ''\"> Los Angeles</t>\n"
+"                                    <t t-"
+"out=\"object.partner_shipping_id.state_id.name or ''\">Kalifornia</t>\n"
+"                                    <t t-"
+"out=\"object.partner_shipping_id.zip or ''\">90015</t><br/>\n"
+"                                   <t t-"
+"out=\"object.partner_shipping_id.country_id.name or ''\"> Stany Zjednoczone</"
+"t>\n"
+"                                </td>\n"
+"                           </tr>\n"
+"                        </table> \n"
+"                       <table t-if=\"object.partner_invoice_id\" "
+"width=\"295\" style=\"vertical-align: top; opacity: 0.8; font-size: 14px;\" "
+"align=\"left\" role=\"presentation\">\n"
+"                            <tr> \n"
+"                               <td style=\"padding-bottom: 4px;\">\n"
+"                                    <span style=\"font-weight:bold;\"> "
+"Rozliczenia</span>\n"
+"                                </td>\n"
+"                           </tr>\n"
+"                            <tr> \n"
+"                               <td>\n"
+"                                    <t t-"
+"out=\"object.partner_invoice_id.street or ''\"> 1201 S Figueroa St</t><br/>\n"
+"                                   <t t-out=\"object.partner_invoice_id.city "
+"or ''\"> Los Angeles</t>\n"
+"                                    <t t-"
+"out=\"object.partner_invoice_id.state_id.name or ''\">Kalifornia</t>\n"
+"                                    <t t-out=\"object.partner_invoice_id.zip "
+"or ''\">90015</t><br/>\n"
+"                                   <t t-"
+"out=\"object.partner_invoice_id.country_id.name or ''\"> Stany Zjednoczone</"
+"t>\n"
+"                                </td>\n"
+"                           </tr>\n"
+"                        </table> \n"
+"                   </t>\n"
+"                </div> \n"
+"            "
 
 #. module: sale
 #: model:mail.template,body_html:sale.mail_template_sale_payment_executed
@@ -663,14 +1092,13 @@ msgstr ""
 "        <span style=\"font-weight:bold;\" t-out=\"transaction_sudo.reference "
 "or ''\">SOOO49</span>\n"
 "        na kwotę\n"
-"        <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(transaction_sudo.amount, object.currency_id) or ''\">$ "
-"10.00</span>\n"
+"        <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
 "        za zamówienie\n"
-"        <span style=\"font-weight:bold;\" t-out=\"object.name or "
-"''\">S00049</span>\n"
-"        <t t-if=\"transaction_sudo and transaction_sudo.state == "
-"'pending'\">\n"
+"        <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">"
+"S00049</span>\n"
+"        <t t-if=\"transaction_sudo and transaction_sudo.state == 'pending'\">"
+"\n"
 "            oczekuje.\n"
 "            <br/>\n"
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid "
@@ -681,9 +1109,9 @@ msgstr ""
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Po potwierdzeniu pozostanie,\n"
-"                <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total - object.amount_paid - "
-"transaction_sudo.amount, object.currency_id) or ''\">$ 10.00</span>\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total - object.amount_paid - transaction_sudo.amount, "
+"object.currency_id) or ''\">$ 10.00</span>\n"
 "                do zapłaty.\n"
 "            </t>\n"
 "        </t>\n"
@@ -692,9 +1120,9 @@ msgstr ""
 "            <t t-if=\"object.currency_id.compare_amounts(object.amount_paid, "
 "object.amount_total) &lt; 0\">\n"
 "                <br/>\n"
-"                <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total - object.amount_paid, "
-"object.currency_id) or ''\">$ 10.00</span>\n"
+"                <span style=\"font-weight:bold;\" t-out=\"format_amount"
+"(object.amount_total - object.amount_paid, object.currency_id) or ''\">$ "
+"10.00</span>\n"
 "                pozostaje do zapłaty.\n"
 "            </t>\n"
 "        </t>\n"
@@ -1050,8 +1478,9 @@ msgstr "<strong class=\"d-block mt-3\">Adres dostawy</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
+#, fuzzy
 msgid "<strong>Contact</strong>"
-msgstr ""
+msgstr "<strong>Kontakt</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1170,6 +1599,7 @@ msgstr "Ostrzeżenie o dostępie"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__qty_delivered_method
+#, fuzzy
 msgid ""
 "According to product configuration, the delivered quantity can be "
 "automatically computed by mechanism:\n"
@@ -1180,6 +1610,12 @@ msgid ""
 "this line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Zgodnie z konfiguracją produktu, dostarczoną ilość można wyliczyć:\n"
+"- Ręcznie: ilość jest ustawiana ręcznie na pozycji\n"
+"- Analitycznie z wydatków: ilość jest sumą ilości z zaksięgowanych wydatków\n"
+"- Z karty pracy: ilość jest sumą godzin zarejestrowanych na zadaniach "
+"powiązanych z tą pozycją\n"
+"- Przesunięcia zasobów: ilość pochodzi z potwierdzonych pobrań\n"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
@@ -1302,8 +1738,9 @@ msgstr "Dodaj kilka wariantów do zamówienia z siatki"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
+#, fuzzy
 msgid "Add to order"
-msgstr ""
+msgstr "Dodaj do zamówienia"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_followers_edit_action_from_sale
@@ -1403,8 +1840,9 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__analytic_account_id
+#, fuzzy
 msgid "Analytic Account"
-msgstr ""
+msgstr "Konto analityczne"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
@@ -1721,8 +2159,9 @@ msgstr "Kategorie"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Category"
-msgstr ""
+msgstr "Kategoria"
 
 #. module: sale
 #: model:product.template,name:sale.product_product_1_product_template
@@ -1756,8 +2195,9 @@ msgstr "Kliknij, aby skonfigurować"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
+#, fuzzy
 msgid "Click to define an invoicing target"
-msgstr ""
+msgstr "Kliknij, aby zdefiniować cel fakturowania"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form_sale_inherit
@@ -1851,15 +2291,19 @@ msgstr "Skonfiguruj"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Configure Delivery Methods"
-msgstr ""
+msgstr "Skonfiguruj metody dostawy"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid ""
 "Configure delivery methods or work with delivery providers using existing "
 "integrations."
 msgstr ""
+"Skonfiguruj metody dostawy lub pracuj z operatorami dostaw z użyciem "
+"istniejących integracji."
 
 #. module: sale
 #. odoo-javascript
@@ -1877,8 +2321,9 @@ msgstr "Potwierdź"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_confirm
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
+#, fuzzy
 msgid "Confirm Orders"
-msgstr ""
+msgstr "Potwierdzanie zamówień"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__confirmation_message
@@ -2257,8 +2702,9 @@ msgstr "Status dostawy"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_delay
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_delay
+#, fuzzy
 msgid "Delivery Time"
-msgstr ""
+msgstr "Czas dostawy"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -2276,10 +2722,13 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_delay
 #: model:ir.model.fields,help:sale.field_product_template__sale_delay
+#, fuzzy
 msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
+"Czas realizacji dostawy, w dniach. Jest to liczba dni obiecana klientowi "
+"pomiędzy potwierdzeniem zamówienia sprzedaży a dostawą."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2619,8 +3068,9 @@ msgstr "Termin ważności:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
+#, fuzzy
 msgid "Expired"
-msgstr ""
+msgstr "Wygasło"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__extra_tax_data
@@ -2640,8 +3090,9 @@ msgstr "Dodatkowa pozycja z %s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Financial Account"
-msgstr ""
+msgstr "Konto księgowe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__fiscal_position_id
@@ -2650,11 +3101,15 @@ msgstr "Obszar podatkowy"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__fiscal_position_id
+#, fuzzy
 msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices. The default value comes from the "
 "customer."
 msgstr ""
+"Pozycje fiskalne służą do dostosowania podatków i rachunków dla "
+"poszczególnych klientów lub zamówień/faktur sprzedaży. Wartość domyślna "
+"pochodzi od klienta."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__amount
@@ -2968,8 +3423,9 @@ msgstr "W zamówieniu"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
+#, fuzzy
 msgid "Included"
-msgstr ""
+msgstr "Dołączone"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__incoterm_id
@@ -3031,8 +3487,9 @@ msgstr "Niewłaściwe dane podpisu."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__reinvoice_move_id
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Invoice"
-msgstr ""
+msgstr "Faktura"
 
 #. module: sale
 #. odoo-python
@@ -3486,8 +3943,9 @@ msgstr "Przesuń w górę"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "My"
-msgstr ""
+msgstr "Moje"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -3617,10 +4075,11 @@ msgstr "Liczba akcji"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__customer_lead
+#, fuzzy
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products"
-msgstr ""
+msgstr "Liczba dni pomiędzy potwierdzeniem zamówienie i wysyłką produktów"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
@@ -3650,8 +4109,9 @@ msgstr "Krzesła biurowe mogą uszkodzić podłogę: chroń ją"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
+#, fuzzy
 msgid "On"
-msgstr ""
+msgstr "Na"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__sol_discount
@@ -3916,8 +4376,9 @@ msgstr "Częściowo dostarczone"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Partner"
-msgstr ""
+msgstr "Kontrahent"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_credit_warning
@@ -4315,8 +4776,9 @@ msgstr "Oferta #"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
+#, fuzzy
 msgid "Quotation / Order"
-msgstr ""
+msgstr "Oferta / Zamówienie"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
@@ -4441,8 +4903,9 @@ msgstr "Oblicz ponownie wszystkie podatki na podstawie tej pozycji fiskalnej"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#, fuzzy
 msgid "Reference"
-msgstr ""
+msgstr "Odnośnik"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__origin
@@ -4462,8 +4925,9 @@ msgstr "Odrzuć tą ofertę"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product/product.xml:0
+#, fuzzy
 msgid "Remove"
-msgstr ""
+msgstr "Usuń"
 
 #. module: sale
 #. odoo-javascript
@@ -4951,8 +5415,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
+#, fuzzy
 msgid "Services"
-msgstr ""
+msgstr "Usługi"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_service_material
@@ -5429,10 +5894,13 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
+#, fuzzy
 msgid ""
 "The following sale orders %(invalid_orders)s can't be delivered. Cancelled "
 "all deliveries."
 msgstr ""
+"Następujące zamówienia sprzedaży %(invalid_orders)s nie mogą zostać "
+"dostarczone. Anulowano wszystkie dostawy."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -5724,8 +6192,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_analytic_lines_service_search
+#, fuzzy
 msgid "Today"
-msgstr ""
+msgstr "Na dzisiaj"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -5979,8 +6448,9 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
 msgid "Values set here are company-specific."
-msgstr ""
+msgstr "Ustawione tu wartości są specyficzne dla danej firmy."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -6197,8 +6667,9 @@ msgstr "Twoja referencja:"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
+#, fuzzy
 msgid "Your browser does not support iframe."
-msgstr ""
+msgstr "Twoja przeglądarka nie obsługuje iframe."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

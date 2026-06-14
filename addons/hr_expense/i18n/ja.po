@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-05-30 12:26+0000\n"
+"PO-Revision-Date: 2026-06-06 15:56+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "hr_expense/ja/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__has_existing_bill
@@ -1633,12 +1633,12 @@ msgstr "プロダクトバリアント"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Product:"
-msgstr ""
+msgstr "プロダクト:"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Product: not found"
-msgstr ""
+msgstr "プロダクトは見つかりませんでした"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee_public
@@ -1725,12 +1725,12 @@ msgstr "給与明細で経費精算"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__payment_mode
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_search
 msgid "Reimbursement"
-msgstr ""
+msgstr "払戻"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Related"
-msgstr ""
+msgstr "関連"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_ir_actions_report
@@ -1792,18 +1792,18 @@ msgstr "このページを保存して、戻って機能を設定してくださ
 #: code:addons/hr_expense/static/src/views/kanban.xml:0
 #: code:addons/hr_expense/static/src/views/list.xml:0
 msgid "Scan"
-msgstr ""
+msgstr "スキャン"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Select Bill..."
-msgstr ""
+msgstr "仕入先請求書を選択..."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Select a product to proceed."
-msgstr ""
+msgstr "続行するにはプロダクトを選択してください。"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_employee__expense_manager_id
@@ -1829,6 +1829,10 @@ msgid ""
 "will automatically be set. Type the expense amount in the mail subject to "
 "set it on the expense too."
 msgstr ""
+"領収書を添付してこのメールエイリアスにメールを送信すると、ワンクリックで費用"
+"が作成されます。メールの件名の最初の単語にプロダクトの内部参照番号または"
+"プロダクト名が含まれている場合、対応するプロダクトが自動的に設定されます。"
+"メールの件名に費用金額を入力すると、費用にもその金額が設定されます。"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -1991,7 +1995,7 @@ msgstr "チーム承認者"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "Thanks,"
-msgstr ""
+msgstr "ありがとうございます"
 
 #. module: hr_expense
 #. odoo-python
@@ -2008,6 +2012,8 @@ msgid ""
 "The attachment (%(attachment_name)s) has not been added to the report due to "
 "the following error: '%(error)s'"
 msgstr ""
+"以下のエラーのため、添付ファイル (%(attachment_name)s) は報告書に追加されませ"
+"んでした: '%(error)s'"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_res_company__expense_journal_id
@@ -2028,6 +2034,8 @@ msgid ""
 "The first word of the email subject did not correspond to any product code. "
 "You'll have to set the product manually on the expense."
 msgstr ""
+"メール件名の最初の単語は、どのプロダクトコードにも一致しませんでした。費用伝"
+"票でプロダクトを手動で管理設定する必要があります。"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -2036,6 +2044,9 @@ msgid ""
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
 msgstr ""
+"次の承認済み経費は、この(経費)報告書内の一部の経費と、従業員・金額・"
+"プロダクト(費目)が似ています。この報告書に重複が含まれていないか確認してくだ"
+"さい。"
 
 #. module: hr_expense
 #. odoo-python
@@ -2078,6 +2089,8 @@ msgid ""
 "payment method.\n"
 "Please set a vendor on the following expenses: %s"
 msgstr ""
+"支払方法にSEPA送金(SCT)を使用する経費には、仕入先の設定が必要です。\n"
+"以下の経費に仕入先を設定してください: %s"
 
 #. module: hr_expense
 #. odoo-python
@@ -2086,6 +2099,8 @@ msgid ""
 "There are draft expenses linked to this product. Updating the product cost "
 "will change expense amounts. Make sure it is what you want to do."
 msgstr ""
+"このプロダクトに関連する費用のドラフトがあります。プロダクトコストを更新する"
+"と、費用の金額が変更されます。本当にその操作を行いたいのか確認してください。"
 
 #. module: hr_expense
 #: model_terms:web_tour.tour,rainbow_man_message:hr_expense.hr_expense_tour
@@ -2161,7 +2176,7 @@ msgstr "取引通貨税抜金額"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Total With Conversion"
-msgstr ""
+msgstr "変換後の合計"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__total_amount_currency_original
@@ -2224,7 +2239,7 @@ msgstr "コストを更新"
 #: code:addons/hr_expense/static/src/views/kanban.xml:0
 #: code:addons/hr_expense/static/src/views/list.xml:0
 msgid "Upload"
-msgstr ""
+msgstr "アップロード"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
@@ -2289,6 +2304,13 @@ msgid ""
 "like allowances for mileage, per diem, "
 "accommodation                                             or meal."
 msgstr ""
+"経費プロダクトの原価が0より大きい場合、そのプロダクトを使用するユーザは"
+"                                             経費の金額を変更することができず"
+"、数量のみを変更することができます。"
+"                                             マイレージ、日当、宿泊費、"
+"                                             食事手当のように、会社から固定費"
+"で支給される経費カテゴリには、0以外の原価を"
+"                                             使用して下さい。"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2304,7 +2326,7 @@ msgstr "ウィザード"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Yes (Match to Bill)"
-msgstr ""
+msgstr "はい（仕入先請求書と一致）"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2393,7 +2415,7 @@ msgstr "記帳済の経費を分割することはできません。"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_submitted_expenses
 msgid "You currently have"
-msgstr ""
+msgstr "現在、以下の内容があります"
 
 #. module: hr_expense
 #. odoo-python

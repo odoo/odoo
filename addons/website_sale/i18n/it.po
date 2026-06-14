@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:41+0000\n"
+"POT-Creation-Date: 2026-06-12 17:36+0000\n"
 "PO-Revision-Date: 2026-05-30 12:27+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -455,8 +455,8 @@ msgstr ""
 "                    <t t-if=\"'website_id' in object and object.website_id\" "
 "t-set=\"logo_src\" t-value=\"object.website_id.image_url(object.website_id, "
 "'logo')\"/>\n"
-"                    <t t-else=\"\" t-set=\"logo_src\" t-valuef=\"/"
-"logo.png?company=#{object.company_id.id}\"/>\n"
+"                    <t t-else=\"\" t-set=\"logo_src\" t-valuef=\"/logo.png?"
+"company=#{object.company_id.id}\"/>\n"
 "                    <img t-att-src=\"logo_src\" style=\"display: block; "
 "height: 50px; margin: 0 0 16px;\" alt=\"Logo\"/>\n"
 "                    <p style=\"margin: 0 0 12px; padding: 0px; line-height: "
@@ -467,17 +467,17 @@ msgstr ""
 "                        <br/>\n"
 "                        <t t-if=\"not is_html_empty(object.user_id.signature)"
 "\">\n"
-"                            <div style=\"font-size: 14px; margin: 0 0 "
-"16px;\"><t t-out=\"object.user_id.signature\"/></div>\n"
+"                            <div style=\"font-size: 14px; margin: 0 0 16px;"
+"\"><t t-out=\"object.user_id.signature\"/></div>\n"
 "                        </t>\n"
 "                        <br/>\n"
 "                        <t t-foreach=\"object.order_line.filtered(lambda l: "
 "l._is_sellable())\" t-as=\"line\">\n"
-"                            <t t-set=\"product\" t-"
-"value=\"line.product_id\"/>\n"
+"                            <t t-set=\"product\" t-value=\"line.product_id\"/"
+">\n"
 "                            <table width=\"100%\" t-attf-style=\"font-size: "
-"14px; border-collapse: collapse; margin-bottom: 10px; max-width: 590px; {"
-"{not line_last and 'border-bottom: 1px solid #dee2e6;'}}\">\n"
+"14px; border-collapse: collapse; margin-bottom: 10px; max-width: 590px; "
+"{{not line_last and 'border-bottom: 1px solid #dee2e6;'}}\">\n"
 "                                <tr>\n"
 "                                    <td style=\"width: 84px; padding: 10px "
 "10px 10px 0; vertical-align: top;\">\n"
@@ -487,8 +487,8 @@ msgstr ""
 "object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: "
 "cover; object-position: center;\" alt=\"Product image\"/>\n"
 "                                    </td>\n"
-"                                    <td style=\"padding: 10px 10px 10px 0;\">"
-"\n"
+"                                    <td style=\"padding: 10px 10px 10px "
+"0;\">\n"
 "                                        <div>\n"
 "                                            <h3 t-attf-style=\"font-size: "
 "14px; margin-bottom: {{line.product_id.product_template_attribute_value_ids "
@@ -501,8 +501,9 @@ msgstr ""
 "                                            <span t-"
 "if=\"line.product_id.product_template_attribute_value_ids\" style=\"color: "
 "#6c757d;\">\n"
-"                                                <t t-out=\"', '.join"
-"(line.product_id.product_template_attribute_value_ids.mapped('name'))\"/>\n"
+"                                                <t t-out=\"', "
+"'.join(line.product_id.product_template_attribute_value_ids.mapped('name'))"
+"\"/>\n"
 "                                            </span>\n"
 "                                        </div>\n"
 "                                    </td>\n"
@@ -3382,7 +3383,6 @@ msgstr "Visualizza"
 #: model:ir.model.fields,field_description:website_sale.field_ir_http__display_name
 #: model:ir.model.fields,field_description:website_sale.field_ir_module_module__display_name
 #: model:ir.model.fields,field_description:website_sale.field_payment_token__display_name
-#: model:ir.model.fields,field_description:website_sale.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_category__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_combo__display_name
@@ -4144,7 +4144,6 @@ msgstr "Accetto"
 #: model:ir.model.fields,field_description:website_sale.field_ir_http__id
 #: model:ir.model.fields,field_description:website_sale.field_ir_module_module__id
 #: model:ir.model.fields,field_description:website_sale.field_payment_token__id
-#: model:ir.model.fields,field_description:website_sale.field_payment_transaction__id
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__id
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute_category__id
 #: model:ir.model.fields,field_description:website_sale.field_product_combo__id
@@ -4344,7 +4343,8 @@ msgstr "Instagram"
 #: model:ir.model.fields,help:website_sale.field_product_attribute__preview_variants
 msgid ""
 "Instantly created variants are available for selection from your /shop page."
-msgstr "Le varianti create all'istante sono disponibili nella tua pagina /shop."
+msgstr ""
+"Le varianti create all'istante sono disponibili nella tua pagina /shop."
 
 #. module: website_sale
 #. odoo-python
@@ -5407,11 +5407,6 @@ msgstr "Token di pagamento"
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
 msgid "Payment Tokens"
 msgstr "Token di pagamento"
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_payment_transaction
-msgid "Payment Transaction"
-msgstr "Transazione di pagamento"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
@@ -8491,6 +8486,9 @@ msgstr "x"
 #: code:addons/website_sale/static/src/xml/website_sale_product_availability.xml:0
 msgid "youremail@gmail.com"
 msgstr "tuaemail@gmail.com"
+
+#~ msgid "Payment Transaction"
+#~ msgstr "Transazione di pagamento"
 
 #~ msgid ""
 #~ "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" "

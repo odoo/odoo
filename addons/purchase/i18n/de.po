@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:41+0000\n"
+"POT-Creation-Date: 2026-06-12 17:36+0000\n"
 "PO-Revision-Date: 2026-05-30 12:32+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -2679,22 +2679,12 @@ msgid "Purchased"
 msgstr "Eingekauft"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 msgid ""
 "Purchased in the last 365 days. Incoming represents confirmed purchase "
-"orders not received or partially received"
+"orders not received, or partially received"
 msgstr ""
-"In den letzten 365 Tagen gekauft. Eingang steht für bestätigte Bestellungen, "
-"die noch nicht oder nur teilweise eingegangen sind."
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
-msgid ""
-"Purchased in the last 365 days. Incoming represents confirmed sales order "
-"not received, or partially received"
-msgstr ""
-"In den letzten 365 Tagen gekauft. Eingang steht für bestätigte "
-"Verkaufsaufträge, die noch nicht oder nur teilweise eingegangen sind."
 
 #. module: purchase
 #. odoo-python
@@ -4003,6 +3993,20 @@ msgstr "mit"
 msgid "{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Auftrag (Ref {{ object.name or 'k. A.' }})"
+
+#~ msgid ""
+#~ "Purchased in the last 365 days. Incoming represents confirmed purchase "
+#~ "orders not received or partially received"
+#~ msgstr ""
+#~ "In den letzten 365 Tagen gekauft. Eingang steht für bestätigte "
+#~ "Bestellungen, die noch nicht oder nur teilweise eingegangen sind."
+
+#~ msgid ""
+#~ "Purchased in the last 365 days. Incoming represents confirmed sales order "
+#~ "not received, or partially received"
+#~ msgstr ""
+#~ "In den letzten 365 Tagen gekauft. Eingang steht für bestätigte "
+#~ "Verkaufsaufträge, die noch nicht oder nur teilweise eingegangen sind."
 
 #~ msgid ""
 #~ "The following purchase orders %(invalid_orders) can't be received. "

@@ -17,8 +17,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:41+0000\n"
-"PO-Revision-Date: 2026-05-06 06:25+0000\n"
+"POT-Creation-Date: 2026-06-12 17:36+0000\n"
+"PO-Revision-Date: 2026-06-06 13:42+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "purchase/ja/>\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
@@ -2406,7 +2406,7 @@ msgstr "購買契約"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_alternative
 msgid "Purchase Alternative"
-msgstr "代替購買"
+msgstr "購買代替案"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_line_match__purchase_amount_untaxed
@@ -2633,22 +2633,12 @@ msgid "Purchased"
 msgstr "購買済"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_template_purchase_buttons_from
 msgid ""
 "Purchased in the last 365 days. Incoming represents confirmed purchase "
-"orders not received or partially received"
+"orders not received, or partially received"
 msgstr ""
-"過去365日以内の購買実績。「入荷予定」は、未入荷または一部のみ入荷された確定済"
-"みの購買オーダを表します"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
-msgid ""
-"Purchased in the last 365 days. Incoming represents confirmed sales order "
-"not received, or partially received"
-msgstr ""
-"過去365日以内の購買実績。「入荷予定」は、未入荷または一部のみ入荷された確定済"
-"みの販売オーダを表します"
 
 #. module: purchase
 #. odoo-python
@@ -3910,6 +3900,20 @@ msgstr "と:"
 #: model:mail.template,subject:purchase.email_template_edi_purchase_reminder
 msgid "{{ object.company_id.name }} Order (Ref {{ object.name or 'n/a' }})"
 msgstr "{{ object.company_id.name }} オーダ (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid ""
+#~ "Purchased in the last 365 days. Incoming represents confirmed purchase "
+#~ "orders not received or partially received"
+#~ msgstr ""
+#~ "過去365日以内の購買実績。「入荷予定」は、未入荷または一部のみ入荷された確"
+#~ "定済みの購買オーダを表します"
+
+#~ msgid ""
+#~ "Purchased in the last 365 days. Incoming represents confirmed sales order "
+#~ "not received, or partially received"
+#~ msgstr ""
+#~ "過去365日以内の購買実績。「入荷予定」は、未入荷または一部のみ入荷された確"
+#~ "定済みの販売オーダを表します"
 
 #~ msgid ""
 #~ "The following purchase orders %(invalid_orders) can't be received. "

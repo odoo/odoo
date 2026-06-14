@@ -20,7 +20,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-24 11:01+0000\n"
-"PO-Revision-Date: 2026-05-30 12:38+0000\n"
+"PO-Revision-Date: 2026-06-08 08:58+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
 "projects/odoo-s19-3/base/zh_Hans/>\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -2060,6 +2060,17 @@ msgid ""
 "        - Operations through electronic interfaces (IED)\n"
 "        - Invoices done with KSef\n"
 msgstr ""
+"\n"
+"波兰会计报表\n"
+"\n"
+"        该模块还支持为波兰生成 JPK_VAT XML 文件。\n"
+"\n"
+"        目前，以下项目不报告具体数值：\n"
+"        - 含进项税的现金制凭证 (MK)\n"
+"        - 基于差价的业务 (MR_T/MR_UZ)\n"
+"        - 农产品发票 (VAT_RR)\n"
+"        - 通过电子接口进行的业务 (IED)\n"
+"        - 使用 KSef 开具的发票\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pt_reports
@@ -2562,6 +2573,10 @@ msgid ""
 "The snippet is linked to specified events and will load a snapshot of their "
 "data to be sent by email.\n"
 msgstr ""
+"\n"
+"为 mass_mailing HTML 构建器添加预填充的活动片段，并附上指向对应网站活动页面的"
+"链接。\n"
+"该片段与指定活动相关联，并将加载其数据的快照以供通过电子邮件发送。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase_stock
@@ -2724,6 +2739,8 @@ msgid ""
 "\n"
 "Adds the ability to set folder templates on products.\n"
 msgstr ""
+"\n"
+"新增了在产品上设置文件夹模板的功能。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp
@@ -2740,6 +2757,8 @@ msgid ""
 "\n"
 "Advanced features for the PoS.\n"
 msgstr ""
+"\n"
+"针对 POS 的高级功能。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_dpopay
@@ -2759,6 +2778,20 @@ msgid ""
 "Mobile Money (Airtel Money / M-Pesa) at the payment terminal.\n"
 "* Supported cards: Visa, MasterCard, American Express etc.\n"
 msgstr ""
+"\n"
+"Allow DPO POS payments\n"
+"==============================\n"
+"\n"
+"It supports all currencies supported by the terminal device — primarily for "
+"use in the **African region**.\n"
+"It enables customers to pay for their orders using debit/credit cards and "
+"Mobile Money through DPO POS terminals.\n"
+"A DPO merchant account is required to process transactions.\n"
+"Features include:\n"
+"\n"
+"* Quick payments by swiping, scanning, or tapping your credit/debit card or "
+"Mobile Money (Airtel Money / M-Pesa) at the payment terminal.\n"
+"* Supported cards: Visa, MasterCard, American Express etc.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_pine_labs
@@ -7003,6 +7036,9 @@ msgid ""
 "files\n"
 "can be attached on payslips emails.\n"
 msgstr ""
+"\n"
+"将墨西哥工资单系统与文件管理应用整合，以便将 CFDI XML 文件\n"
+"作为附件添加到工资单邮件中。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_intrastat
@@ -14619,7 +14655,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "<i class=\"d-none d-md-block fa fa-envelope\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"d-none d-md-block fa fa-envelope\" title=\"电子邮件\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -14651,13 +14687,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
 msgid "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"电子邮件\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid ""
 "<i class=\"d-none d-md-inline-flex fa fa-fw fa-envelope\" title=\"Email\"/>"
 msgstr ""
+"<i class=\"d-none d-md-inline-flex fa fa-fw fa-envelope\" title=\"电子邮"
+"件\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -14693,13 +14731,13 @@ msgstr "<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Login\"/>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 msgid "<i class=\"fa fa-fw me-1 fa-envelope text-muted\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-1 fa-envelope text-muted\" title=\"电子邮件\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
 msgid "<i class=\"fa fa-fw me-1 fa-envelope\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw me-1 fa-envelope\" title=\"电子邮件\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
@@ -19859,6 +19897,8 @@ msgid ""
 "Azure Interior brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
+"Azure Interior 秉持务实严谨的木业经营理念，为客户提供林木、花艺及菌类相关配套"
+"服务。"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_B
@@ -25375,7 +25415,7 @@ msgstr "邮箱"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__email_domain_placeholder
 msgid "Email Domain Placeholder"
-msgstr ""
+msgstr "电子邮件域名占位符"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_email_marketing
@@ -34452,6 +34492,11 @@ msgid ""
 "                from 1 to 55 employees mostly by reselling services on\n"
 "                Odoo."
 msgstr ""
+"Nicole 在 IT 行业<b>工作已有 20 年</b> 。她\n"
+"                开发软件以协助网站建设。  她 30 岁时出售了\n"
+"                第一家公司，并成功将 Azure Interior\n"
+"                从 1 名员工发展到 55 名员工，主要通过转售\n"
+"                Odoo上的服务实现。"
 
 #. module: base
 #: model:res.country,name:base.ne
@@ -35335,6 +35380,99 @@ msgid ""
 "Compare revenues with forecasts and budgets in real time.\n"
 "\n"
 msgstr ""
+"Odoo 人力资源\n"
+"--------------------\n"
+"\n"
+"借助 Odoo<a href=\"https://www.odoo.com/app/employees\">人力资源</a> ，\n"
+"管理您公司最重要的资产：人才\n"
+"\n"
+"轻松管理所有 HR 业务：知识共享、招聘、\n"
+"评估、工时单、合同、出勤、工资单等。\n"
+"\n"
+"每项需求都有对应的专用应用，您可按需激活。\n"
+"\n"
+"管理您的员工\n"
+"---------------------\n"
+"\n"
+"通过公司通讯录全面掌握所有重要信息。部分\n"
+"信息仅限人力资源经理查看，其余信息则对公众开放，便于轻松查找\n"
+"同事。\n"
+"\n"
+"记录员工合同，并在合同到期需续签时收到提醒。\n"
+"\n"
+"优化招聘流程\n"
+"-----------------------------------\n"
+"\n"
+"使用<a href=\"https://www.odoo.com/app/employees\">Odoo HR</a> 对简历进行分类"
+"、追踪应聘者并搜索个人资料。\n"
+"\n"
+"发布职位空缺并跟踪收到的每份申请。通过智能看板视图，在招聘过程中跟踪应聘者"
+"。\n"
+"\n"
+"利用邮件模板自动化部分沟通，节省时间。简历会\n"
+"自动归档，让您轻松查找特定人才。\n"
+"\n"
+"企业社交网络\n"
+"-------------------------\n"
+"\n"
+"打破信息孤岛。在全体\n"
+"员工之间分享知识和最佳实践。关注特定人员或文档，加入兴趣小组以\n"
+"分享专业知识和文件。\n"
+"\n"
+"通过网站在线聊天功能与同事实时互动。\n"
+"\n"
+"工时与出勤管理\n"
+"--------------------------\n"
+"\n"
+"按项目、客户或任务追踪工时。轻松记录\n"
+"工时单或查看每位员工的出勤情况。系统将根据项目工时自动生成\n"
+"分析账户报表。\n"
+"\n"
+"休息时间管理\n"
+"-------------------\n"
+"\n"
+"追踪每位员工累积的休息时间天数。员工提交\n"
+"申请（带薪休息时间、病假等），由经理审批\n"
+"并确认。仅需几步点击即可完成。每位员工的日程表\n"
+"将相应更新。\n"
+"\n"
+"员工费用管理\n"
+"-------------------------------\n"
+"\n"
+"告别纸质文件，直接在 Odoo 中管理员工费用。\n"
+"通过全面管控整个流程——费用核验、\n"
+"员工报销、会计过账及向客户\n"
+"发发票——避免时间和资金的浪费。\n"
+"\n"
+"执行定期评估\n"
+"--------------------------\n"
+"\n"
+"为员工设置评估计划和/或网上调查问卷，并观察其\n"
+"发展变化。设定面试步骤，Odoo将自动通知经理或\n"
+"下属准备评估工作。定期跟踪\n"
+"员工的进展情况。\n"
+"\n"
+"通过游戏化提升参与度\n"
+"----------------------------------\n"
+"\n"
+"### 设定明确目标并提供实时反馈\n"
+"\n"
+"通过挑战、目标和奖励激发成就感。设定明确目标，\n"
+"提供实时反馈和切实成果。向整个渠道展示\n"
+"顶尖表现者，并公开表彰出色工作。\n"
+"\n"
+"### 排行榜\n"
+"\n"
+"通过绩效指标在销售团队中推广领军人物并激发竞争。\n"
+"\n"
+"### 个人目标\n"
+"\n"
+"为用户分配明确目标，使其与公司目标保持一致。\n"
+"\n"
+"### 团队目标\n"
+"\n"
+"实时对比收入与预测及预算。\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp
@@ -40796,7 +40934,7 @@ msgstr "重置模式"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
 msgid "Reset View"
-msgstr "恢复视图  Reset View"
+msgstr "重置视图"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -40873,7 +41011,7 @@ msgstr "恢复修订"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__reset_view_arch_wizard__reset_mode__soft
 msgid "Restore previous version (soft reset)."
-msgstr "恢复以前的版本(软重置)。"
+msgstr "恢复以前的版本（前次版本）。"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__on_delete__restrict
