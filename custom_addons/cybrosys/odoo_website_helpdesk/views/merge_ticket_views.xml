@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    Merge_tickets form view-->
+    <record id="merge_tickets_view_form" model="ir.ui.view">
+        <field name="name">merge.ticket.view.form</field>
+        <field name="model">merge.ticket</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="support_team_id"/>
+                            <field name="customer_id"/>
+                            <field name="support_ticket_id"
+                                   invisible="new_ticket == True"/>
+                        </group>
+                        <group>
+                            <field name="new_ticket"/>
+                            <field name="subject"
+                                   invisible="new_ticket == False"/>
+                            <field name="merge_reason"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Support Tickets">
+                            <field name="support_ticket_ids"
+                                   options="{'no_create': True, 'no_create_edit':True}">
+                                <list editable="bottom" create="False" edit="False">
+                                    <field name="subject"/>
+                                    <field name="display_name"/>
+                                    <field name="description" invisible="1"/>
+                                    <field name="merged_ticket" invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_merge_ticket" type="object" string="Save" class="btn btn-primary"/>
+                    <button special="cancel" class="btn btn-primary">Discard</button>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <!--    Contextual action creation-->
+    <record id="action_merge_ticket" model="ir.actions.act_window">
+        <field name="name">Merge Tickets</field>
+        <field name="res_model">merge.ticket</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="context">{'active_ids': active_ids}</field>
+        <field name="view_mode">form</field>
+        <field name="binding_model_id" ref="model_ticket_helpdesk"/>
+        <field name="target">new</field>
+        <field name="view_id"
+               ref="odoo_website_helpdesk.merge_tickets_view_form"/>
+    </record>
+</odoo>

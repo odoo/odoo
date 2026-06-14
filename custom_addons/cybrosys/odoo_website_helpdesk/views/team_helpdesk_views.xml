@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Define the form view for the team helpdesk model -->
+    <record id="team_helpdesk_view_form" model="ir.ui.view">
+        <field name="name">team.helpdesk.view.form</field>
+        <field name="model">team.helpdesk</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="team_lead_id"/>
+                            <field name="project_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Members">
+                            <field name="member_ids" mode="kanban">
+                                <kanban>
+                                    <field name="image_1920"/>
+                                    <field name="name"/>
+                                    <templates>
+                                        <t t-name="card">
+                                            <div t-attf-class="oe_kanban_global_click">
+                                                <div class="o_kanban_image">
+                                                    <field name="image_1920"
+                                                           widget='image'
+                                                           class="oe_avatar"/>
+                                                </div>
+                                                <div class="oe_kanban_details ml8">
+                                                    <div class="o_kanban_record_headings">
+                                                        <strong>
+                                                            <field name="name"/>
+                                                        </strong>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- Define the list view for the team helpdesk model -->
+    <record id="team_helpdesk_view_list" model="ir.ui.view">
+        <field name="name">team.helpdesk.view.list</field>
+        <field name="model">team.helpdesk</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="team_lead_id"/>
+            </list>
+        </field>
+    </record>
+    <!-- Define the action for the Helpdesk team -->
+    <record id="action_helpdesk_team" model="ir.actions.act_window">
+        <field name="name">Helpdesk Team</field>
+        <field name="res_model">team.helpdesk</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--    Added fields in settings form view.-->
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.odoo.website.helpdesk</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="15"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <div class="app_settings_block" data-string="Helpdesk"
+                     string="Helpdesk" data-key="helpdesk_ticket">
+                    <h2>Helpdesk</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="show_create_task"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="show_create_task"/>
+                                <div class="text-muted">Create tasks from tickets</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div groups="odoo_website_helpdesk.helpdesk_manager">
+                        <h2>Ticket Settings</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="show_category"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="show_category" string="Category"/>
+                                    <div class="text-muted">Categorize the Tickets</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="helpdesk_menu_show"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="helpdesk_menu_show"/>
+                                    <div class="text-muted">Create Ticket From Website</div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="product_website"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="product_website"/>
+                                    <div class="text-muted">Choose Products on Website Form</div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="auto_close_ticket"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="auto_close_ticket"/>
+                                    <div class="text-muted">Automatically Close Ticket</div>
+                                    <br/>
+                                    <label for="no_of_days"
+                                           invisible="auto_close_ticket== False"/>
+                                    <field name="no_of_days"
+                                           invisible="auto_close_ticket == False"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Stages</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="closed_stage_id" string="Close Stage"/>
+                                <div class="text-muted">
+                                    Set The Closing stage
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="closed_stage_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="reply_template_id" string="Reply Template"/>
+                                <div class="text-muted">
+                                    Seat a Default Reply Template
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="reply_template_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    <!--    Action for settings model.-->
+    <record id="action_helpdesk_general_settings"
+            model="ir.actions.act_window">
+        <field name="name">Helpdesk Ticket</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="context">{'module': 'helpdesk_ticket'}</field>
+    </record>
+</odoo>

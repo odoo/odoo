@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<template>
+<!--    Template for the dashboard.-->
+    <t t-name="HelpdeskDashBoard">
+        <section class="dashboard_main_section" id="main_section_manager">
+            <div class="row">
+            <style>
+                .c-dashboardInfo {
+                margin-bottom: 15px;
+                width: 20%;
+                }
+                .c-dashboardInfo .wrap {
+                background: #ffffff;
+                box-shadow: 2px 10px 20px rgba(0, 0, 0, 0.1);
+                border-radius: 7px;
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+                padding: 40px 25px 20px;
+                height: 100%;
+                }
+                .c-dashboardInfo__title,
+                .c-dashboardInfo__subInfo {
+                color: #6c6c6c;
+                font-size: 1.18em;
+                }
+                .c-dashboardInfo span {
+                display: block;
+                }
+                .c-dashboardInfo__count {
+                font-weight: 600;
+                font-size: 2.5em;
+                line-height: 64px;
+                color: #323c43;
+                }
+                .c-dashboardInfo .wrap:after {
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 10px;
+                content: "";
+                }
+
+                .c-dashboardInfo:nth-child(1) .wrap:after {
+                background: linear-gradient(82.59deg, #00c48c 0%, #00a173
+                100%);
+                }
+                .wrap:hover{
+                -webkit-transform: scale(1.2);
+                -ms-transform: scale(1.2);
+                transform: scale(1.2);
+                transition: 1s ease;
+                }
+                .c-dashboardInfo:nth-child(2) .wrap:after {
+                background: linear-gradient(81.67deg, #0084f4 0%, #1a4da2
+                100%);
+                }
+                .c-dashboardInfo:nth-child(3) .wrap:after {
+                background: linear-gradient(69.83deg, #0084f4 0%, #00c48c
+                100%);
+                }
+                .c-dashboardInfo:nth-child(4) .wrap:after {
+                background: linear-gradient(81.67deg, #ff647c 0%, #1f5dc5
+                100%);
+                }
+                .c-dashboardInfo:nth-child(5) .wrap:after {
+                background: linear-gradient(82.59deg, #00c48c 0%, #00a173
+                100%);
+                }
+                .c-dashboardInfo:nth-child(6) .wrap:after {
+                background: linear-gradient(81.67deg, #ff647c 0%, #1f5dc5
+                100%);
+                }
+                .c-dashboardInfo__title svg {
+                color: #d7d7d7;
+                margin-left: 5px;
+                }
+                .MuiSvgIcon-root-19 {
+                fill: currentColor;
+                width: 1em;
+                height: 1em;
+                display: inline-block;
+                font-size: 24px;
+                transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+                user-select: none;
+                flex-shrink: 0;
+                }
+                .dropbtn {
+                background-color: #04AA6D;
+                color: white;
+                padding: 16px;
+                font-size: 16px;
+                border: none;
+                width: 16px;
+                }
+
+                .dropdown {
+                position: relative;
+                display: inline-block;
+                }
+
+                .dropdown-content {
+                display: none;
+                position: absolute;
+                background-color: #f1f1f1;
+                min-width: 160px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
+                }
+
+                .dropdown-content a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+                }
+
+                .dropdown-content a:hover {background-color: #ddd;}
+                .dropdown:hover .dropdown-content {display: block;}
+                .dropdown:hover .dropbtn {background-color: #3e8e41;}
+            </style>
+            <div class="col-sm-12 mb-4">
+                <div class="row">
+                    <div class="col"
+                         style="margin-top: 28px;margin-left: 88px;height: 48px;">
+                        <h2 class="section-header" style="color:#4a5c9a;">
+                            Helpdesk Dashboard
+                        </h2>
+                    </div>
+                    <div class="col-md-4 d-flex justify-content-end bg-light"
+                         style="margin-top: 20px;margin-right: 20px; padding-bottom: 40px">
+                        <b style="white-space: nowrap;padding-right: 8px;padding-top: 8px;">Filter by:</b>
+                        <select id="filter_selection" style="width: 50%;padding:10px;border-radius:10px; background:white;">
+                            <option id="this_year" value="this_year"
+                                    selected="">This Year
+                            </option>
+                            <option id="this_month"
+                                    value="this_month">This Month
+                            </option>
+                            <option id="this_week" value="this_week">This Week
+                            </option>
+                        </select>
+
+                    </div>
+                    <hr/>
+                </div>
+            </div>
+            <div id="root">
+                <div class="container pt-5">
+                    <div class="row align-items-stretch">
+                        <div class="c-dashboardInfo"
+                             id="new_state">
+                            <div class="wrap">
+                                <h4 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title">
+                                    New
+                                    <svg
+                                            class="MuiSvgIcon-root-19"
+                                            focusable="false"
+                                            viewBox="0 0 24 24"
+                                            aria-hidden="true"
+                                            role="presentation">
+                                        <path fill="none"
+                                              d="M0 0h24v24H0z"/>
+                                        <path
+                                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z">
+                                        </path>
+                                    </svg>
+                                </h4>
+                                <span class="hind-font caption-12 c-dashboardInfo__count"
+                                      id="new_state_value">
+
+                                </span>
+                            </div>
+                        </div>
+                        <div class="c-dashboardInfo"
+                             id="in_progress_state">
+                            <div class="wrap">
+                                <h4 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title">
+                                    In Progress
+                                    <svg
+                                            class="MuiSvgIcon-root-19"
+                                            focusable="false"
+                                            viewBox="0 0 24 24"
+                                            aria-hidden="true"
+                                            role="presentation">
+                                        <path fill="none"
+                                              d="M0 0h24v24H0z"/>
+                                        <path
+                                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z">
+                                        </path>
+                                    </svg>
+                                </h4>
+                                <span class="hind-font caption-12 c-dashboardInfo__count"
+                                      id="inprogress_value">
+
+                                </span>
+                            </div>
+                        </div>
+                        <div class="c-dashboardInfo"
+                             id="cancelled_state">
+                            <div class="wrap">
+                                <h4 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title">
+                                    Cancelled
+                                    <svg
+                                            class="MuiSvgIcon-root-19"
+                                            focusable="false"
+                                            viewBox="0 0 24 24"
+                                            aria-hidden="true"
+                                            role="presentation">
+                                        <path fill="none"
+                                              d="M0 0h24v24H0z"/>
+                                        <path
+                                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z">
+                                        </path>
+                                    </svg>
+                                </h4>
+                                <span class="hind-font caption-12 c-dashboardInfo__count"
+                                      id="canceled_value">
+
+                                </span>
+                            </div>
+                        </div>
+                        <div class="c-dashboardInfo"
+                             id="done_state">
+                            <div class="wrap">
+                                <h4 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title">
+                                    Done
+                                    <svg
+                                            class="MuiSvgIcon-root-19"
+                                            focusable="false"
+                                            viewBox="0 0 24 24"
+                                            aria-hidden="true"
+                                            role="presentation">
+                                        <path fill="none"
+                                              d="M0 0h24v24H0z"/>
+                                        <path
+                                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z">
+                                        </path>
+                                    </svg>
+                                </h4>
+                                <span class="hind-font caption-12 c-dashboardInfo__count"
+                                      id="done_value">
+
+                                </span>
+                            </div>
+                        </div>
+                        <div class="c-dashboardInfo"
+                             id="closed_state">
+                            <div class="wrap">
+                                <h4 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title">
+                                    Closed
+                                    <svg
+                                            class="MuiSvgIcon-root-19"
+                                            focusable="false"
+                                            viewBox="0 0 24 24"
+                                            aria-hidden="true"
+                                            role="presentation">
+                                        <path fill="none"
+                                              d="M0 0h24v24H0z"/>
+                                        <path
+                                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z">
+                                        </path>
+                                    </svg>
+                                </h4>
+                                <span class="hind-font caption-12 c-dashboardInfo__count"
+                                      id="closed_value">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </section>
+    </t>
+</template>

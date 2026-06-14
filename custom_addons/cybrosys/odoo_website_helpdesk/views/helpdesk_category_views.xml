@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Helpdesk Category List View -->
+    <record id="helpdesk_category_view_list" model="ir.ui.view">
+        <field name="name">helpdesk.category.view.list</field>
+        <field name="model">helpdesk.category</field>
+        <field name="arch" type="xml">
+            <list string="Categories" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    <!--    Action for helpdesk category model.-->
+    <record id="action_helpdesk_category" model="ir.actions.act_window">
+        <field name="name">Categories</field>
+        <field name="res_model">helpdesk.category</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

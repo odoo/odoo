@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Tree View of hr_loan model-->
+    <record id="hr_loan_view_tree" model="ir.ui.view">
+        <field name="name">hr.loan.view.list</field>
+        <field name="model">hr.loan</field>
+        <field name="arch" type="xml">
+            <list string="Loan Requests">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="loan_amount"/>
+                <field name="date"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+    <!--Form View of hr_loan model-->
+    <record id="hr_loan_view_form" model="ir.ui.view">
+        <field name="name">hr.loan.view.form</field>
+        <field name="model">hr.loan</field>
+        <field name="arch" type="xml">
+            <form string="Loan Request">
+                <header>
+                    <button name="action_compute_installment" type="object"
+                            string="Compute Installment" class="oe_highlight"
+                            invisible="state in ('approve','refuse')"/>
+                    <button name="action_submit" type="object" string="Submit" invisible="state != 'draft'"
+                            class="oe_highlight"/>
+                    <button name="action_approve" type="object"
+                            string="Approve" invisible="state != 'waiting_approval_1'"
+                            class="oe_highlight"
+                            groups="hr.group_hr_manager"/>
+                    <button name="action_refuse" type="object" string="Refuse"
+                            invisible="state not in ['draft','waiting_approval_1']"
+                            class="oe_highlight"
+                            groups="hr.group_hr_manager"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,waiting_approval_1,approve"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group col="4">
+                        <field name="employee_id" readonly="state == 'approve'"/>
+                        <field name="date"/>
+                        <field name="department_id"/>
+                        <field name="job_position_id"/>
+                        <field name="loan_amount" readonly="state == 'approve'"/>
+                        <field name="installment" readonly="state == 'approve'"/>
+                        <field name="payment_date" readonly="state == 'approve'"/>
+                        <field name="company_id" options="{'no_create': True}"
+                               readonly="state != 'draft'"
+                               groups="base.group_multi_company"/>
+                        <field name="currency_id"
+                               options="{'no_create': True}"/>
+                    </group>
+                    <notebook>
+                        <page string="Installments">
+                            <field name="loan_lines">
+                                <list string="Installments" editable="bottom">
+                                    <field name="date"/>
+                                    <field name="amount"/>
+                                    <field name="paid"
+                                           column_invisible="True"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right"
+                                   colspan="2">
+                                <field name="total_amount" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="total_paid_amount"
+                                       widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="balance_amount"
+                                       class="oe_subtotal_footer_separator"
+                                       widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                            <div class="oe_clear"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+    <!--Search View of hr_loan model-->
+    <record id="hr_loan_view_search" model="ir.ui.view">
+        <field name="name">hr.loan.view.search</field>
+        <field name="model">hr.loan</field>
+        <field name="arch" type="xml">
+            <search string="Loan">
+                <filter string="My Requests" name="myrequest"
+                        domain="[('employee_id.user_id.id', '=', uid)]"/>
+                <field name="employee_id" string="Employee"/>
+                <field name="department_id" string="Department"/>
+                <filter string="Employee" name="employee_id"
+                        context="{'group_by':'employee_id'}"/>
+                <filter string="Department" name="department_id"
+                        context="{'group_by':'department_id'}"/>
+                <filter string="Status" name="status"
+                        context="{'group_by':'state'}"/>
+            </search>
+        </field>
+    </record>
+    <!-- Action for loan request-->
+    <record id="hr_loan_action" model="ir.actions.act_window">
+        <field name="name">Request for Loan</field>
+        <field name="res_model">hr.loan</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_myrequest': 1}</field>
+        <field name="search_view_id" ref="hr_loan_view_search"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new Loan request.
+            </p>
+            <p>
+                Use this menu to create loan requests.
+            </p>
+        </field>
+    </record>
+    <!-- Action for hr loan management -->
+    <record id="act_hr_employee_loan_request" model="ir.actions.act_window">
+        <field name="name">Loans</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.loan</field>
+        <field name="binding_model_id" ref="hr.model_hr_employee"/>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_myloan': 1}</field>
+        <field name="view_id" ref="hr_loan_view_tree"/>
+    </record>
+
+    <!--Loan Menus-->
+    <menuitem id="hr_loan_menu_root" name="Loans &amp; Advances"
+              parent="hr.menu_hr_root"
+              sequence="20"/>
+    <menuitem id="hr_loan_menu" name="Loan"
+              parent="hr_loan_menu_root"
+              sequence="1"/>
+    <menuitem id="hr_loan_menu_requests"
+              name="Request for Loan"
+              parent="hr_loan_menu_root"
+              action="hr_loan_action"/>
+</odoo>

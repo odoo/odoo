@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Define a Qweb template for the support ticket report -->
+    <template id="report_helpdesk_ticket">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div style="margin-bottom: 10px;">
+                            <div class="text-center"
+                                 style="font-weight: 400 !important; font-size: 2rem !important;">
+                                <t t-esc="o.name"/>
+                                -
+                                <t t-esc="o.subject"/>
+                            </div>
+                            <br/>
+                            <table class="table table-bordered mt32">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">
+                                            <span>Customer</span>
+                                        </th>
+                                        <th class="text-center">
+                                            <span>Description </span>
+                                        </th>
+                                        <th class="text-center">
+                                            <span>Priority </span>
+                                        </th>
+                                        <th class="text-center">
+                                            <span>Products</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="text-center">
+                                        <td>
+                                            <span t-field="o.customer_id"
+                                                  t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.description"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.priority"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="o.product_ids"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <t t-set="tasks"
+                           t-value="request.env['project.task'].search([('ticket_id', '=', o.id)])"/>
+                        <t t-if="tasks">
+                            <div>
+                                <h3 class="text-center">
+                                    <strong>Tasks</strong>
+                                </h3>
+                            </div>
+                            <table class="table table-bordered mt32">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">
+                                            <span>Task Name</span>
+                                        </th>
+                                        <th class="text-center">
+                                            <span>Analytic Account</span>
+                                        </th>
+                                        <th class="text-center">
+                                            <span>Assigned to</span>
+                                        </th>
+                                        <th class="text-center">
+                                            <span>Total Hours Spend</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <t t-foreach="tasks" t-as="task">
+                                    <tbody>
+                                        <tr class="text-center">
+                                            <td>
+                                                <span t-field="task.name"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="task.analytic_account_id"/>
+                                            </td>
+                                            <td>
+                                                <span t-esc="', '.join(map(lambda x: (x.name), task.user_ids))"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="task.effective_hours"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </t>
+                            </table>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+    <!-- Define an action for the Support Ticket report -->
+    <record id="report_ticket" model="ir.actions.report">
+        <field name="name">Support Ticket</field>
+        <field name="model">ticket.helpdesk</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">odoo_website_helpdesk.report_helpdesk_ticket</field>
+        <field name="report_file">odoo_website_helpdesk.report_helpdesk_ticket</field>
+        <field name="binding_model_id" ref="model_ticket_helpdesk"/>
+        <field name="binding_view_types"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

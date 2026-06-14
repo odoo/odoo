@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        <!--    Mail Template for notifying customers about the creation of a ticket.-->
+        <record id="ticket_created" model="mail.template">
+            <field name="name">Create Ticket</field>
+            <field name="model_id" ref="odoo_website_helpdesk.model_ticket_helpdesk"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="email_to">{{object.customer_id.email}}</field>
+            <field name="subject">Ticket Created</field>
+            <field name="body_html" type="html">
+                <p>
+                    Dear
+                    <t t-out="object.customer_id.name"/>
+                    <br/>
+                    Your Ticket
+                    <t t-out="object.name"/>
+                    is Created and Assigned. Kindly Wait while we're resolving your Query
+                    <br/>
+                    <br/>
+                    Thanks.
+                </p>
+            </field>
+        </record>
+        <!--  Mail Template for notifying customers about the closure of a ticket and prompting them for feedback.-->
+        <record id="helpdesk_rating" model="mail.template">
+            <field name="name">Close Ticket And Feedback</field>
+            <field name="model_id"
+                   ref="odoo_website_helpdesk.model_ticket_helpdesk"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="email_to">{{object.customer_id.email}}</field>
+            <field name="subject">Ticket Closed</field>
+            <field name="body_html" type="html">
+                <p>
+                    Dear
+                    <t t-out="object.customer_id.name"/>
+                    Your Ticket
+                    <t t-out="object.name"/>
+                    Is Closed
+                    <br/>
+                    <button class="btn btn-info" role="button"
+                            style="border:1px solid black;background-color:purple;padding-x:20px;padding-y:15px;border-radius:10px; width:120px;">
+                        <a t-attf-href="/rating/{{object.id}}"
+                           style="text-decoration:none;color:white;font-weight:bold;font-size:18px;">
+                            Rate Now
+                        </a>
+                    </button>
+                    <br/>
+                    <br/>
+                    Thanks.
+                </p>
+
+            </field>
+        </record>
+        <!--        Mail Template for notifying customers about the reopening of a ticket.-->
+        <record id="ticket_reopened" model="mail.template">
+            <field name="name">Reopened Ticket</field>
+            <field name="model_id"
+                   ref="odoo_website_helpdesk.model_ticket_helpdesk"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="email_to">{{object.customer_id.email}}</field>
+            <field name="subject">Ticket Reopened</field>
+            <field name="body_html" type="html">
+                <p>
+                    Dear
+                    <t t-out="object.customer_id.name"/>
+                    <br/>
+                    Your Ticket
+                    <t t-out="object.name"/>
+                    is Reopened
+                    <br/>
+                    <br/>
+                    Thanks.
+                </p>
+            </field>
+        </record>
+        <!-- Mail Template for notifying customers about the approval and resolution of a ticket.-->
+        <record id="ticket_approved" model="mail.template">
+            <field name="name">Approve Ticket</field>
+            <field name="model_id"
+                   ref="odoo_website_helpdesk.model_ticket_helpdesk"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="email_to">{{object.customer_id.email}}</field>
+            <field name="subject">Ticket Solved</field>
+            <field name="body_html" type="html">
+                <p>
+                    Dear
+                    <t t-out="object.customer_id.name"/>
+                    <br/>
+                    i think your Problem is Solved.
+                    Your Ticket
+                    <t t-out="object.name"/>
+                    is Done
+                    <br/>
+                    <br/>
+                    Thanks.
+                </p>
+            </field>
+        </record>
+        <!--    An email template for notifying customers about the cancellation-->
+        <!--    of a ticket.-->
+        <record id="ticket_canceled" model="mail.template">
+            <field name="name">Cancel Ticket</field>
+            <field name="model_id"
+                   ref="odoo_website_helpdesk.model_ticket_helpdesk"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="email_to">{{object.customer_id.email}}</field>
+            <field name="subject">Ticket Canceled</field>
+            <field name="body_html" type="html">
+                <p>
+                    Dear
+                    <t t-out="object.customer_id.name"/>
+                    <br/>
+                    Your Ticket
+                    <t t-out="object.name"/>
+                    is Canceled Due to Some Reasons
+                    <br/>
+                    <br/>
+                    Thanks.
+                </p>
+            </field>
+        </record>
+        <!--            This XML record defines an email template for notifying the team head about the assignment of a ticket.-->
+        <!--    The template is associated with the "mail.template" model and is designed to be triggered when a ticket-->
+        <!--    is assigned to a specific team.-->
+        <record id="odoo_website_helpdesk_assign"
+                model="mail.template">
+            <field name="name">Ticket Assign</field>
+            <field name="email_from"/>
+            <field name="email_to"/>
+            <field name="subject"/>
+            <field name="model_id"
+                   ref="odoo_website_helpdesk.model_ticket_helpdesk"/>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p>Dear,
+                        <t t-esc="object.team_head_id.name"/>
+                    </p>
+                    <p>Your team has been given the ticket [<t t-esc="object.name"/>] kindly complete your work
+                        carefully.
+                    </p>
+                    <br/>
+                    <h2>Details</h2>
+                    <p>Subject :
+                        <t t-esc="object.subject"/>
+                    </p>
+                    <p>Customer :
+                        <t t-esc="object.customer_id.name"/>
+                    </p>
+                    <p>Description :
+                        <t t-esc="object.description"/>
+                    </p>
+                    <br/>
+                    <p>Best regards</p>
+                </div>
+            </field>
+        </record>
+        <!--        An email template for notifying an assigned user about the assignment of a ticket.-->
+        <record id="odoo_website_helpdesk_assign_user"
+                model="mail.template">
+            <field name="name">Ticket Assign to User</field>
+            <field name="email_from"/>
+            <field name="email_to"/>
+            <field name="subject"/>
+            <field name="model_id"
+                   ref="odoo_website_helpdesk.model_ticket_helpdesk"/>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p>Dear,
+                        <t t-esc="object.assigned_user_id.name"/>
+                    </p>
+                    <p>Ticket [<t t-esc="object.name"/>] Assign to you , kindly complete your work carefully.
+                    </p>
+                    <br/>
+                    <h2>Details</h2>
+                    <p>Subject :
+                        <t t-esc="object.subject"/>
+                    </p>
+                    <p>Customer :
+                        <t t-esc="object.customer_id.name"/>
+                    </p>
+                    <p>Description :
+                        <t t-esc="object.description"/>
+                    </p>
+                    <br/>
+                    <p>Best regards</p>
+                </div>
+            </field>
+        </record>
+        <!--            This record defines an email template for notifying a customer about the assignment of a helpdesk ticket to a user.-->
+        <record id="odoo_website_helpdesk_to_customer"
+                model="mail.template">
+            <field name="name">Mail To Customer Assign to User</field>
+            <field name="email_from"/>
+            <field name="email_to"/>
+            <field name="subject"/>
+            <field name="model_id"
+                   ref="odoo_website_helpdesk.model_ticket_helpdesk"/>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p>Dear,
+                        <t t-esc="object.customer_id.name"/>
+                    </p>
+                    <p>Ticket [<t t-esc="object.name"/>] successfully assigned to "<t
+                            t-esc="object.assigned_user_id.name"/>".
+                    </p>
+                    <br/>
+                    <p>Best regards</p>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

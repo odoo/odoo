@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 1. Groups for Employees -->
+    <record id="group_hr_employee_subordinate" model="res.groups">
+        <field name="name">Employee</field>
+        <field name="privilege_id" ref="hr.res_groups_privilege_employees"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="sequence">1</field>
+    </record>
+    <record id="group_hr_employee_supervisor" model="res.groups">
+        <field name="name">Supervisor</field>
+        <field name="privilege_id" ref="hr.res_groups_privilege_employees"/>
+        <field name="implied_ids" eval="[(4, ref('group_hr_employee_subordinate'))]"/>
+        <field name="sequence">2</field>
+    </record>
+    <record id="group_hr_employee_supervisor_cascading" model="res.groups">
+        <field name="name">Supervisor Cascading</field>
+        <field name="privilege_id" ref="hr.res_groups_privilege_employees"/>
+        <field name="implied_ids" eval="[(4, ref('group_hr_employee_supervisor'))]"/>
+        <field name="sequence">3</field>
+    </record>
+
+    <!-- 2. Groups for Attendances -->
+    <record id="group_hr_attendance_employee_subordinate" model="res.groups">
+        <field name="name">Employee</field>
+        <field name="privilege_id" ref="hr_attendance.res_groups_privilege_attendances"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="sequence">1</field>
+    </record>
+    <record id="group_hr_attendance_supervisor" model="res.groups">
+        <field name="name">Supervisor</field>
+        <field name="privilege_id" ref="hr_attendance.res_groups_privilege_attendances"/>
+        <field name="implied_ids" eval="[(4, ref('group_hr_attendance_employee_subordinate'))]"/>
+        <field name="sequence">2</field>
+    </record>
+    <record id="group_hr_attendance_supervisor_cascading" model="res.groups">
+        <field name="name">Supervisor Cascading</field>
+        <field name="privilege_id" ref="hr_attendance.res_groups_privilege_attendances"/>
+        <field name="implied_ids" eval="[(4, ref('group_hr_attendance_supervisor'))]"/>
+        <field name="sequence">3</field>
+    </record>
+
+    <!-- 3. Groups for Time Off -->
+    <record id="group_hr_holidays_self" model="res.groups">
+        <field name="name">Employee</field>
+        <field name="privilege_id" ref="hr_holidays.res_groups_privilege_time_off"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="sequence">1</field>
+    </record>
+    <record id="group_hr_holidays_supervisor" model="res.groups">
+        <field name="name">Supervisor</field>
+        <field name="privilege_id" ref="hr_holidays.res_groups_privilege_time_off"/>
+        <field name="implied_ids" eval="[(4, ref('group_hr_holidays_self'))]"/>
+        <field name="sequence">2</field>
+    </record>
+    <record id="group_hr_holidays_supervisor_cascading" model="res.groups">
+        <field name="name">Supervisor Cascading</field>
+        <field name="privilege_id" ref="hr_holidays.res_groups_privilege_time_off"/>
+        <field name="implied_ids" eval="[(4, ref('group_hr_holidays_supervisor'))]"/>
+        <field name="sequence">3</field>
+    </record>
+
+    <!-- Global Company Rule Modification -->
+    <record id="hr.hr_employee_comp_rule" model="ir.rule">
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+    </record>
+
+    <!-- 4. Rules for Employees -->
+    <record id="rule_hr_employee_officer_all" model="ir.rule">
+        <field name="name">HR Officer: See all employees in company</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+    </record>
+    <record id="rule_hr_employee_self" model="ir.rule">
+        <field name="name">Employee: Own records only</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_hr_employee_subordinate')), (4, ref('base.group_user'))]"/>
+    </record>
+    <record id="rule_hr_employee_supervisor" model="ir.rule">
+        <field name="name">Supervisor: Immediate Subordinates</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[('parent_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_hr_employee_supervisor'))]"/>
+    </record>
+    <record id="rule_hr_employee_supervisor_cascading" model="ir.rule">
+        <field name="name">Supervisor Cascading: All Subordinates</field>
+        <field name="model_id" ref="hr.model_hr_employee"/>
+        <field name="domain_force">[('id', 'child_of', user.employee_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('group_hr_employee_supervisor_cascading'))]"/>
+    </record>
+
+    <!-- 5. Rules for Attendances -->
+    <record id="rule_hr_attendance_self" model="ir.rule">
+        <field name="name">Attendance: Own records only</field>
+        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_hr_attendance_employee_subordinate')), (4, ref('hr_attendance.group_hr_attendance_own_reader'))]"/>
+    </record>
+    <record id="rule_hr_attendance_supervisor" model="ir.rule">
+        <field name="name">Attendance: Immediate Subordinates</field>
+        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field name="domain_force">[('employee_id.parent_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_hr_attendance_supervisor'))]"/>
+    </record>
+    <record id="rule_hr_attendance_supervisor_cascading" model="ir.rule">
+        <field name="name">Attendance: All Subordinates</field>
+        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field name="domain_force">[('employee_id', 'child_of', user.employee_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('group_hr_attendance_supervisor_cascading'))]"/>
+    </record>
+
+    <!-- 6. Rules for Time Off -->
+    <record id="rule_hr_holidays_self" model="ir.rule">
+        <field name="name">Time Off: Own records only</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_hr_holidays_self'))]"/>
+    </record>
+    <record id="rule_hr_holidays_supervisor" model="ir.rule">
+        <field name="name">Time Off: Immediate Subordinates</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave"/>
+        <field name="domain_force">[('employee_id.parent_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_hr_holidays_supervisor'))]"/>
+    </record>
+    <record id="rule_hr_holidays_supervisor_cascading" model="ir.rule">
+        <field name="name">Time Off: All Subordinates</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave"/>
+        <field name="domain_force">[('employee_id', 'child_of', user.employee_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('group_hr_holidays_supervisor_cascading'))]"/>
+    </record>
+
+    <!-- Menu Updates -->
+    <record id="hr.menu_hr_employee_payroll" model="ir.ui.menu">
+        <field name="group_ids" eval="[(4, ref('group_hr_employee_subordinate'))]"/>
+    </record>
+    <record id="hr_attendance.menu_hr_attendance_root" model="ir.ui.menu">
+        <field name="group_ids" eval="[(4, ref('group_hr_attendance_employee_subordinate'))]"/>
+    </record>
+    <record id="hr_attendance.menu_hr_attendance_view_attendances_management" model="ir.ui.menu">
+        <field name="group_ids" eval="[(4, ref('group_hr_attendance_employee_subordinate'))]"/>
+    </record>
+    <record id="hr_holidays.menu_hr_holidays_root" model="ir.ui.menu">
+        <field name="group_ids" eval="[(4, ref('group_hr_holidays_self'))]"/>
+    </record>
+</odoo>

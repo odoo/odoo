@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data noupdate="1">
+        <!-- Demo data: Define a rule input for loans -->
+        <record id="hr_rule_input_loan" model="hr.rule.input">
+            <field name="code">LO</field>
+            <field name="name">Loan</field>
+            <field name="input_id" ref="hr_rule_loan"/>
+        </record>
+	</data>
+</odoo>

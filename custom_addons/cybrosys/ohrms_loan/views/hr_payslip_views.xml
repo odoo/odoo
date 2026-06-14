@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherited the hr_payslip form view to add 'loan_line_id' field within the 'input_line_ids' tree. -->
+    <record id="view_hr_payslip_form" model="ir.ui.view">
+        <field name="name">hr.payslip.view.form.inherit.ohrms.loan</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll_community.hr_payslip_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='input_line_ids']//list//field[@name='sequence']" position="after">
+                <field name="loan_line_id" column_invisible="True"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
