@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-29 17:36+0000\n"
+"POT-Creation-Date: 2026-06-12 17:36+0000\n"
 "PO-Revision-Date: 2026-04-25 14:05+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -57,12 +57,6 @@ msgstr " （無增值稅）"
 
 #. module: account_peppol
 #. odoo-python
-#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
-msgid " (no access)"
-msgstr ""
-
-#. module: account_peppol
-#. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid " Expected format: %(expected_format)s."
 msgstr ""
@@ -72,6 +66,13 @@ msgstr ""
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
 msgstr "%(peppol_label)s%(disable_reason)s%(peppol_proxy_mode)s"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid ""
+"%(processed)s Peppol document(s) processed, %(deleted)s document(s) deleted"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -302,6 +303,12 @@ msgid ""
 "A Receipt has not been received  for a message that was previously sent by "
 "the MSH generating this error."
 msgstr "未收到由產生此錯誤的 MSH 較早前所發送訊息的收據。"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/peppol_registration.py:0
+msgid "A connection to '%s' already exists."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -659,6 +666,8 @@ msgid "Can send, pending registration to receive"
 msgstr "可以發送，需等待註冊接收"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "Cancel"
 msgstr "取消"
@@ -871,6 +880,12 @@ msgid "Display Use Parent Connection Selection"
 msgstr ""
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid "Do you want to proceed?"
+msgstr ""
+
+#. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__document_identifier
 msgid "Document Identifier"
 msgstr "文件識別符"
@@ -879,6 +894,36 @@ msgstr "文件識別符"
 #: model:ir.model.fields,field_description:account_peppol.field_account_peppol_service__document_name
 msgid "Document Name"
 msgstr "文件名稱"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "Document cancelled successfully"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "Document reset to draft successfully"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid ""
+"Documents sent/received via Peppol cannot be deleted.\n"
+"\n"
+"Would you like to cancel this document instead?"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid ""
+"Documents sent/received via Peppol cannot be deleted.\n"
+"\n"
+"Would you like to reset this document to draft instead?"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__account_move__peppol_move_state__done
@@ -909,8 +954,8 @@ msgstr "EDI 使用者"
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_edi_proxy_user.py:0
-msgid "EDI user should be of type Peppol"
-msgstr "EDI 使用者的類型，應為 Peppol"
+msgid "EDI user should be of one of the following types: %s"
+msgstr ""
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_peppol_config_wizard__account_peppol_edi_identification
@@ -1041,7 +1086,7 @@ msgstr ""
 #. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
-msgid "Invoice %s is too big to send via peppol (64MB limit)"
+msgid "Invoice %s exceeds the size limit of 64 MB to be sent via Peppol."
 msgstr ""
 
 #. module: account_peppol
@@ -1136,6 +1181,12 @@ msgstr "未有向 Peppol 對外發送服務提供 UBL 文件。"
 #: code:addons/account_peppol/exceptions.py:0
 msgid "No valid AS4 participant endpoint were found."
 msgstr "找不到有效的 AS4 參與者終端點。"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "No, Keep It"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -1293,6 +1344,18 @@ msgstr "Peppol 配置精靈"
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Peppol Contact Email"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid "Peppol Documents Cannot Be Deleted"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "Peppol Documents: Cannot Delete Invoice"
 msgstr ""
 
 #. module: account_peppol
@@ -1561,6 +1624,12 @@ msgstr "已拒絕"
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
 msgid "Remove from Peppol"
 msgstr "從 Peppol 移除"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "Reset to draft"
+msgstr ""
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_config_wizard_form
@@ -1855,6 +1924,24 @@ msgid ""
 msgstr "終端點號碼可能不正確。 請檢查你輸入的身份證號碼是否正確。"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid ""
+"The following %s Peppol document(s) will be reset to draft:\n"
+"\n"
+"• %s"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid ""
+"The following %s draft Peppol document(s) will be cancelled:\n"
+"\n"
+"• %s"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_config_wizard.py:0
 msgid ""
@@ -1906,6 +1993,12 @@ msgid ""
 msgstr ""
 "處理程式已斷定訊息的安全性方法、參數、範圍或其他安全性政策等級的要求或協議，"
 "未獲滿足或遵守。"
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid "The remaining %s document(s) will be deleted."
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -2151,18 +2244,24 @@ msgid "Wizard"
 msgstr "精靈"
 
 #. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_form_controller.js:0
+msgid "Yes, Cancel It"
+msgstr ""
+
+#. module: account_peppol
+#. odoo-javascript
+#: code:addons/account_peppol/static/src/web/account_move_list_controller.js:0
+msgid "Yes, Proceed"
+msgstr ""
+
+#. module: account_peppol
 #. odoo-python
 #: code:addons/account_peppol/wizard/peppol_registration.py:0
 msgid ""
 "You are about to register with your VAT number. Make sure you register with "
 "your Company Registry (BCE/KBO) first to be compliant with the new "
 "regulation."
-msgstr ""
-
-#. module: account_peppol
-#. odoo-python
-#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
-msgid "You are not allowed to send invoice on behalf of %s."
 msgstr ""
 
 #. module: account_peppol
@@ -2396,6 +2495,9 @@ msgstr "以傳送發票，但這個"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "使用"
+
+#~ msgid "EDI user should be of type Peppol"
+#~ msgstr "EDI 使用者的類型，應為 Peppol"
 
 #~ msgid "UBL 2.0"
 #~ msgstr "UBL 2.0"

@@ -24,7 +24,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:37+0000\n"
-"PO-Revision-Date: 2026-02-25 14:50+0000\n"
+"PO-Revision-Date: 2026-06-06 13:29+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-19/"
 "website_payment/pl/>\n"
@@ -33,9 +33,9 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || "
-"(n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -66,12 +66,12 @@ msgstr "<b>Data darowizny:</b>"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "<b>Donor Email:</b>"
-msgstr "<b>Adres e-mail darczyńcy:</b>"
+msgstr "<b>E-mail darczyńcy:</b>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
 msgid "<b>Donor Name:</b>"
-msgstr "<b>Nazwa darczyńcy:</b>"
+msgstr "<b>Imię darczyńcy:</b>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -94,6 +94,8 @@ msgid ""
 "<small class=\"text-danger d-none\" id=\"warning_message_id\">Please enter "
 "the amount to donate.</small>"
 msgstr ""
+"<small class=\"text-danger d-none\" id=\"warning_message_id\">Wprowadź kwotę "
+"darowizny.</small>"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
@@ -203,7 +205,7 @@ msgstr "Kwota ("
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 msgid "Amount to donate"
-msgstr ""
+msgstr "Kwota darowizny"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
@@ -255,7 +257,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_payment/controllers/portal.py:0
 msgid "Country is required."
-msgstr "Wymagany kraj."
+msgstr "Kraj jest wymagany."
 
 #. module: website_payment
 #. odoo-javascript
@@ -323,13 +325,13 @@ msgstr "Przycisk darowizny"
 #. odoo-python
 #: code:addons/website_payment/controllers/portal.py:0
 msgid "Donation Payment"
-msgstr ""
+msgstr "Płatność darowizny"
 
 #. module: website_payment
 #. odoo-python
 #: code:addons/website_payment/controllers/portal.py:0
 msgid "Donation amount must be at least %.2f."
-msgstr "Kwota darowizny musi wynosić co najmniej %.2f."
+msgstr "Kwota darowizny powinna wynosić co najmniej %.2f."
 
 #. module: website_payment
 #. odoo-python
@@ -366,7 +368,7 @@ msgstr "Wymagany jest e-mail."
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 msgid "Enter a valid number!"
-msgstr ""
+msgstr "Wprowadź prawidłowy numer!"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
@@ -401,12 +403,12 @@ msgstr "Przyjęcia"
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_account_payment__is_donation
 msgid "Is Donation"
-msgstr "Czy darowizna"
+msgstr "Jest darowizną"
 
 #. module: website_payment
 #: model:ir.model.fields,field_description:website_payment.field_payment_transaction__is_donation
 msgid "Is donation"
-msgstr "Czy darowizna"
+msgstr "Jest darowizną"
 
 #. module: website_payment
 #. odoo-javascript
@@ -456,7 +458,7 @@ msgstr "Nazwa jest wymagana."
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_supported_payment_methods/000.edit.xml:0
 msgid "No published payment methods"
-msgstr ""
+msgstr "Brak opublikowanych metod płatności"
 
 #. module: website_payment
 #. odoo-javascript
@@ -509,12 +511,12 @@ msgstr "Wprowadź prawidłowy adres e-mail."
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Please provide a name."
-msgstr ""
+msgstr "Podaj nazwę."
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_information
 msgid "Please select a country."
-msgstr ""
+msgstr "Wybierz kraj."
 
 #. module: website_payment
 #. odoo-javascript
@@ -573,7 +575,7 @@ msgstr "Dziękujemy za darowiznę w wysokości"
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.donation_input
 msgid "The minimum donation amount is"
-msgstr ""
+msgstr "Minimalna kwota darowizny to"
 
 #. module: website_payment
 #. odoo-javascript
@@ -590,7 +592,7 @@ msgstr "Nie trzeba nic płacić."
 #. odoo-javascript
 #: code:addons/website_payment/static/src/snippets/s_supported_payment_methods/000.edit.xml:0
 msgid "View providers"
-msgstr ""
+msgstr "Zobacz operatorów"
 
 #. module: website_payment
 #: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form

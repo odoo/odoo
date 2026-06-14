@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:40+0000\n"
+"POT-Creation-Date: 2026-06-12 17:35+0000\n"
 "PO-Revision-Date: 2026-05-23 09:38+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -442,12 +442,6 @@ msgstr "已有相同名稱的備註"
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_payment_unique_uuid
 msgid "A payment with this uuid already exists"
 msgstr "已有此唯一識別碼（UUID）的付款"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.js:0
-msgid "A request is still being processed in the background. Please wait."
-msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -3493,12 +3487,6 @@ msgstr "錯誤：沒有網路連結。"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
-msgid "Everything is ready to go!"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Existing orderlines"
 msgstr "現有的訂單資料行"
@@ -3913,6 +3901,11 @@ msgstr "有訊息"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__has_refundable_lines
 msgid "Has Refundable Lines"
 msgstr "有可退款項目"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_stock_picking_type__has_stock_reports_to_print
+msgid "Has Stock Reports To Print"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7251,6 +7244,12 @@ msgid "Proceed Anyway"
 msgstr "繼續操作"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
+msgid "Processing..."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__product_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__product_id
@@ -8596,12 +8595,6 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
-msgid "Some process are still running in background, please wait..."
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Some required information is missing."
 msgstr "部份必須提供的資料缺漏。"
@@ -9741,6 +9734,13 @@ msgstr ""
 msgid ""
 "This order has already been paid. You cannot set it back to draft or edit it."
 msgstr "此訂單已經完成付款，不可編輯或還原為草稿。"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid ""
+"This order is currently syncing, please wait a moment before loading it."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript

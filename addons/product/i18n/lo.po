@@ -1,19 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* product
+# * product
 #
+# Bone NI <bounkirdni@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-04-10 18:39+0000\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2026-06-06 21:04+0000\n"
+"Last-Translator: Bone NI <bounkirdni@gmail.com>\n"
+"Language-Team: Lao <https://translate.odoo.com/projects/odoo-19/product/lo/>"
+"\n"
+"Language: lo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: product
 #. odoo-python
@@ -23,18 +27,21 @@ msgid ""
 "\n"
 "Note: products that you don't have access to will not be shown above."
 msgstr ""
+"\n"
+"\n"
+"ໝາຍເຫດ: ຜະລິດຕະພັນທີ່ທ່ານບໍ່ມີສິດເຂົ້າເຖິງຈະບໍ່ຖືກສະແດງໃຫ້ເຫັນຢູ່ຂ້າງເທິງ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
 #: model:ir.model.fields,field_description:product.field_product_template__product_variant_count
 msgid "# Product Variants"
-msgstr ""
+msgstr "# ລຸ້ນຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_count
 msgid "# Products"
-msgstr ""
+msgstr "# ຜະລິດຕະພັນ"
 
 #. module: product
 #. odoo-python
@@ -43,6 +50,10 @@ msgid ""
 "%(base)s with a %(discount)s %% %(discount_type)s and %(surcharge)s extra fee\n"
 "Example: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %(total_amount)s"
 msgstr ""
+"%(base)s ດ້ວຍ %(discount)s %% %(discount_type)s ແລະ %(surcharge)s ຄ່າທຳນຽມເພີ່ມເຕີ"
+"ມ\n"
+"ຕົວຢ່າງ: %(amount)s * %(discount_charge)s + %(price_surcharge)s → %"
+"(total_amount)s"
 
 #. module: product
 #. odoo-python
@@ -51,24 +62,25 @@ msgid ""
 "%(item_name)s: end date (%(end_date)s) should be after start date "
 "(%(start_date)s)"
 msgstr ""
+"%(item_name)s: ວັນທີສິ້ນສຸດ (%(end_date)s) ຄວນຈະເປັນຫຼັງຈາກວັນທີເລີ່ມຕົ້ນ (%(start_date)s)"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% %(discount_type)s on %(base)s %(extra)s"
-msgstr ""
+msgstr "%(percentage)s %% %(discount_type)s ໃນ %(base)s %(extra)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on %(pricelist)s"
-msgstr ""
+msgstr "ສ່ວນຫຼຸດ %(percentage)s %% ໃນ %(pricelist)s"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "%(percentage)s %% discount on sales price"
-msgstr ""
+msgstr "ສ່ວນຫຼຸດ %(percentage)s %% ຈາກລາຄາຂາຍ"
 
 #. module: product
 #. odoo-python
@@ -77,7 +89,7 @@ msgstr ""
 #: code:addons/product/models/product_tag.py:0
 #: code:addons/product/models/product_template.py:0
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (ສຳເນົາ)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_2x7
@@ -86,36 +98,37 @@ msgstr ""
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_4x7
 #: model:ir.actions.report,print_report_name:product.report_product_template_label_dymo
 msgid "'Products Labels - %s' % (object.name)"
-msgstr ""
+msgstr "'ສະຫຼາກຜະລິດຕະພັນ - %s' % (object.name)"
 
 #. module: product
 #: model:ir.actions.report,print_report_name:product.report_product_packaging
 msgid "'Products packaging - %s' % (object.uom_id.name)"
-msgstr ""
+msgstr "'ການຫຸ້ມຫໍ່ຜະລິດຕະພັນ - %s' % (object.uom_id.name)"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "(e.g: product description, ebook, legal notice, ...)."
-msgstr ""
+msgstr "(ຕົວຢ່າງ: ຄຳອະທິບາຍຜະລິດຕະພັນ, ebook, ແຈ້ງການທາງກົດໝາຍ, ...)."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "+ %(amount)s extra fee"
-msgstr ""
+msgstr "+ %(amount)s ຄ່າທຳນຽມເພີ່ມເຕີມ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "- %(amount)s rebate"
-msgstr ""
+msgstr "- %(amount)s ສ່ວນຫຼຸດຄືນ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s"
 msgstr ""
+"- ບາໂຄດ \"%(barcode)s\" ໄດ້ຖືກກຳນົດໃຫ້ກັບຜະລິດຕະພັນແລ້ວ: %(product_list)s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -125,81 +138,86 @@ msgid ""
 "        - Never: Variants are never created for the attribute.\n"
 "        Note: this cannot be changed once the attribute is used on a product."
 msgstr ""
+"- ທັນທີ: ທຸກໆລຸ້ນທີ່ເປັນໄປໄດ້ຈະຖືກສ້າງຂຶ້ນທັນທີທີ່ຄຸນລັກສະນະ ແລະ ຄ່າຂອງມັນຖືກເພີ່ມເຂົ້າໃນຜະລິດຕະພັນ.\n"
+"        - ແບບໄດນາມິກ: ແຕ່ລະລຸ້ນຈະຖືກສ້າງຂຶ້ນເມື່ອຄຸນລັກສະນະ ແລະ ຄ່າທີ່ກ່ຽວຂ້ອງຖືກເພີ່ມເຂົ້າໃນໃບສັ່ງຂາ"
+"ຍ.\n"
+"        - ບໍ່ເຄີຍ: ຈະບໍ່ມີການສ້າງລຸ້ນຜະລິດຕະພັນສຳລັບຄຸນລັກສະນະນີ້.\n"
+"        ໝາຍເຫດ: ສິ່ງນີ້ບໍ່ສາມາດປ່ຽນແປງໄດ້ເມື່ອຄຸນລັກສະນະຖືກນຳໃຊ້ກັບຜະລິດຕະພັນແລ້ວ."
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_duration_month_1
 msgid "1 month"
-msgstr ""
+msgstr "1 ເດືອນ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_duration_year_1
 msgid "1 year"
-msgstr ""
+msgstr "1 ປີ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "10 Units"
-msgstr ""
+msgstr "10 ຫົວໜ່ວຍ"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
 msgid "160x80cm, with large legs"
-msgstr ""
+msgstr "160x80ຊມ, ພ້ອມຂາຕັ້ງຂະໜາດໃຫຍ່"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
 msgid "2 x 7 with price"
-msgstr ""
+msgstr "2 x 7 ພ້ອມລາຄາ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_duration_year_2
 msgid "2 years"
-msgstr ""
+msgstr "2 ປີ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_2xl
 msgid "2XL"
-msgstr ""
+msgstr "2XL"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_duration_year_3
 msgid "3 years"
-msgstr ""
+msgstr "3 ປີ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_3xl
 msgid "3XL"
-msgstr ""
+msgstr "3XL"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12
 msgid "4 x 12"
-msgstr ""
+msgstr "4 x 12"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x12xprice
 msgid "4 x 12 with price"
-msgstr ""
+msgstr "4 x 12 ພ້ອມລາຄາ"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__4x7xprice
 msgid "4 x 7 with price"
-msgstr ""
+msgstr "4 x 7 ພ້ອມລາຄາ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_4xl
 msgid "4XL"
-msgstr ""
+msgstr "4XL"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_5xl
 msgid "5XL"
-msgstr ""
+msgstr "5XL"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_duration_month_6
 msgid "6 months"
-msgstr ""
+msgstr "6 ເດືອນ"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -207,11 +225,13 @@ msgid ""
 "<a href=\"/contactus\" class=\"mb-2 btn btn-primary "
 "o_translate_inline\">Contact Us</a>"
 msgstr ""
+"<a href=\"/contactus\" class=\"mb-2 btn btn-primary o_translate_inline\">ຕິດຕໍ່ພ"
+"ວກເຮົາ</a>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<b>Tip: want to round at 9.99?</b>"
-msgstr ""
+msgstr "<b>ຄຳແນະນຳ: ຕ້ອງການປັດເລກເປັນ 9.99 ບໍ່?</b>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
@@ -219,46 +239,50 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
 "icon\" title=\"Arrow\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow "
+"icon\" title=\"ລູກສອນ\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_kanban
 msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
 msgstr ""
+"<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"ສະກຸນເງິ"
+"ນ\"/>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "<span class=\"o_stat_text\"> Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> ຜະລິດຕະພັນ</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.uom_uom_form_view_inherit
 msgid "<span class=\"o_stat_text\">Packaging Barcodes</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ບາໂຄດການຫຸ້ມຫໍ່</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "<span class=\"o_stat_text\">Products</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">ຜະລິດຕະພັນ</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<span>%</span>"
-msgstr ""
+msgstr "<span>%</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "<span>All general settings about this product are managed on</span>"
-msgstr ""
+msgstr "<span>ການຕັ້ງຄ່າທົ່ວໄປທັງໝົດກ່ຽວກັບຜະລິດຕະພັນນີ້ແມ່ນຖືກຈັດການຢູ່</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "<span>on</span>"
-msgstr ""
+msgstr "<span>ໃນ</span>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "<strong>Qty: </strong>"
-msgstr ""
+msgstr "<strong>ຈຳນວນ: </strong>"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
@@ -267,35 +291,38 @@ msgid ""
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
 msgstr ""
+"<strong>ຄຳເຕືອນ</strong>: ການເພີ່ມ ຫຼື ລຶບຄຸນລັກສະນະ\n"
+"                        ຈະລຶບ ແລະ ສ້າງລຸ້ນທີ່ມີຢູ່ຄືນໃໝ່ ເຊິ່ງອາດເຮັດໃຫ້\n"
+"                        ຂໍ້ມູນການປັບແຕ່ງຕ່າງໆສູນຫາຍ."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_uom_barcode_uniq
 msgid "A barcode can only be assigned to one packaging."
-msgstr ""
+msgstr "ບາໂຄດໜຶ່ງສາມາດກຳນົດໃຫ້ກັບການຫຸ້ມຫໍ່ດຽວເທົ່ານັ້ນ."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice can't contain duplicate products."
-msgstr ""
+msgstr "ຕົວເລືອກຄອມໂບບໍ່ສາມາດມີຜະລິດຕະພັນທີ່ຊ້ຳກັນໄດ້."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo_item.py:0
 msgid "A combo choice can't contain products of type \"combo\"."
-msgstr ""
+msgstr "ຕົວເລືອກຄອມໂບບໍ່ສາມາດມີຜະລິດຕະພັນປະເພດ \"ຄອມໂບ\" ຢູ່ພາຍໃນໄດ້."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_combo.py:0
 msgid "A combo choice must contain at least 1 product."
-msgstr ""
+msgstr "ຕົວເລືອກຄອມໂບຕ້ອງມີຢ່າງໜ້ອຍ 1 ຜະລິດຕະພັນ."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A combo product must contain at least 1 combo choice."
-msgstr ""
+msgstr "ຜະລິດຕະພັນຄອມໂບຕ້ອງມີຢ່າງໜ້ອຍ 1 ຕົວເລືອກຄອມໂບ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -305,12 +332,14 @@ msgid ""
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
+"ຄຳອະທິບາຍຜະລິດຕະພັນທີ່ທ່ານຕ້ອງການສື່ສານກັບລູກຄ້າ. ຄຳອະທິບາຍນີ້ຈະຖືກສຳເນົາໄປຍັງທຸກໆ ໃບສັ່ງຂາຍ, ໃບສົ່ງ"
+"ເຄື່ອງ ແລະ ໃບແຈ້ງໜີ້ລູກຄ້າ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "A packaging already uses the barcode"
-msgstr ""
+msgstr "ມີການຫຸ້ມຫໍ່ທີ່ໃຊ້ບາໂຄດນີ້ແລ້ວ"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -318,6 +347,9 @@ msgid ""
 "A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
 "            This is the perfect tool to handle several pricings, seasonal discounts, etc."
 msgstr ""
+"ລາຄາແມ່ນຊຸດຂອງລາຄາຂາຍ ຫຼື ກົດເກນໃນການຄິດໄລ່ລາຄາຂອງລາຍການສັ່ງຂາຍ ໂດຍອີງຕາມຜະລິດຕະພັນ, ໝວດໝູ່"
+"ຜະລິດຕະພັນ, ວັນທີ ແລະ ຈຳນວນທີ່ສັ່ງ.\n"
+"            ນີ້ແມ່ນເຄື່ອງມືທີ່ດີເລີດໃນການຈັດການລາຄາທີ່ຫຼາກຫຼາຍ, ສ່ວນຫຼຸດຕາມລະດູການ ແລະ ອື່ນໆ."
 
 #. module: product
 #. odoo-python
@@ -326,38 +358,39 @@ msgid ""
 "A pricelist item with \"Other Pricelist\" as base must have a "
 "base_pricelist_id."
 msgstr ""
+"ລາຍການລາຄາທີ່ໃຊ້ \"ລາຍການລາຄາອື່ນ\" ເປັນພື້ນຖານ ຕ້ອງມີ base_pricelist_id."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_uom.py:0
 msgid "A product already uses the barcode"
-msgstr ""
+msgstr "ມີຜະລິດຕະພັນທີ່ໃຊ້ບາໂຄດນີ້ແລ້ວ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "A sellable combo product can only contain sellable products."
-msgstr ""
+msgstr "ຜະລິດຕະພັນຄອມໂບທີ່ຂາຍໄດ້ ສາມາດມີພຽງແຕ່ຜະລິດຕະພັນທີ່ຂາຍໄດ້ເທົ່ານັ້ນ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__access_token
 msgid "Access Token"
-msgstr ""
+msgstr "ໂທເຄັນການເຂົ້າເຖິງ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Acme Widget"
-msgstr ""
+msgstr "Acme Widget"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Acme Widget - Blue"
-msgstr ""
+msgstr "Acme Widget - ສີຟ້າ"
 
 #. module: product
 #: model:product.template,name:product.product_template_acoustic_bloc_screens
 msgid "Acoustic Bloc Screens"
-msgstr ""
+msgstr "ສາກກັ້ນສຽງ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__message_needaction
@@ -365,7 +398,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction
 #: model:ir.model.fields,field_description:product.field_product_template__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "ຕ້ອງດຳເນີນການ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__active
@@ -380,69 +413,69 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
 msgid "Active"
-msgstr ""
+msgstr "ເປີດໃຊ້ງານ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Active Products"
-msgstr ""
+msgstr "ຜະລິດຕະພັນທີ່ເປີດໃຊ້"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_ids
 #: model:ir.model.fields,field_description:product.field_product_product__activity_ids
 #: model:ir.model.fields,field_description:product.field_product_template__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "ກິດຈະກຳ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_exception_decoration
 #: model:ir.model.fields,field_description:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,field_description:product.field_product_template__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "ການຕົບແຕ່ງກິດຈະກຳທີ່ຍົກເວັ້ນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_state
 #: model:ir.model.fields,field_description:product.field_product_product__activity_state
 #: model:ir.model.fields,field_description:product.field_product_template__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "ສະຖານະກິດຈະກຳ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_type_icon
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "ໄອຄອນປະເພດກິດຈະກຳ"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "Add"
-msgstr ""
+msgstr "ເພີ່ມ"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Add Products"
-msgstr ""
+msgstr "ເພີ່ມຜະລິດຕະພັນ"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Add Products to pricelist report"
-msgstr ""
+msgstr "ເພີ່ມຜະລິດຕະພັນເຂົ້າໃນລາຍງານລາຍການລາຄາ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Add a price"
-msgstr ""
+msgstr "ເພີ່ມລາຄາ"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Add a quantity"
-msgstr ""
+msgstr "ເພີ່ມຈຳນວນ"
 
 #. module: product
 #. odoo-javascript
@@ -451,125 +484,127 @@ msgid ""
 "Add products using the \"Add Products\" button at the top right to\n"
 "                                include them in the report."
 msgstr ""
+"ເພີ່ມຜະລິດຕະພັນໂດຍໃຊ້ປຸ່ມ \"ເພີ່ມຜະລິດຕະພັນ\" ຢູ່ມຸມຂວາເທິງເພື່ອ\n"
+"                                ລວມພວກມັນເຂົ້າໃນລາຍງານ."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Add to all products"
-msgstr ""
+msgstr "ເພີ່ມໃສ່ທຸກຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__add
 msgid "Add to existing products"
-msgstr ""
+msgstr "ເພີ່ມໃສ່ຜະລິດຕະພັນທີ່ມີຢູ່"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Add to products"
-msgstr ""
+msgstr "ເພີ່ມໃສ່ຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__uom_ids
 #: model:ir.model.fields,help:product.field_product_template__uom_ids
 msgid "Additional packagings for this product which can be used for sales"
-msgstr ""
+msgstr "ການຫຸ້ມຫໍ່ເພີ່ມເຕີມສຳລັບຜະລິດຕະພັນນີ້ທີ່ສາມາດນຳໃຊ້ໃນການຂາຍ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_adidas
 msgid "Adidas"
-msgstr ""
+msgstr "Adidas"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
 msgid "All"
-msgstr ""
+msgstr "ທັງໝົດ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "All Categories"
-msgstr ""
+msgstr "ທຸກໝວດໝູ່"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
 msgid "All Product Tag"
-msgstr ""
+msgstr "ທຸກແທັກຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_ids
 msgid "All Product Variants using this Tag"
-msgstr ""
+msgstr "ທຸກລຸ້ນຜະລິດຕະພັນທີ່ໃຊ້ແທັກນີ້"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__3_global
 msgid "All Products"
-msgstr ""
+msgstr "ທຸກຜະລິດຕະພັນ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "All categories"
-msgstr ""
+msgstr "ທຸກໝວດໝູ່"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_tree
 msgid "All countries"
-msgstr ""
+msgstr "ທຸກປະເທດ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/controllers/product_document.py:0
 msgid "All files uploaded"
-msgstr ""
+msgstr "ອັບໂຫຼດໄຟລ໌ທັງໝົດສຳເລັດແລ້ວ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "All products"
-msgstr ""
+msgstr "ທຸກຜະລິດຕະພັນ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 msgid "All variants"
-msgstr ""
+msgstr "ທຸກລຸ້ນ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__is_custom
 msgid "Allow customers to set their own value"
-msgstr ""
+msgstr "ອະນຸຍາດໃຫ້ລູກຄ້າກຳນົດຄ່າດ້ວຍຕົນເອງ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_legs_aluminium
 msgid "Aluminium"
-msgstr ""
+msgstr "ອາລູມິນຽມ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_apple
 msgid "Apple"
-msgstr ""
+msgstr "Apple"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Applied On"
-msgstr ""
+msgstr "ນຳໃຊ້ກັບ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__applied_on
 msgid "Apply On"
-msgstr ""
+msgstr "ນຳໃຊ້ກັບ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Apply To"
-msgstr ""
+msgstr "ນຳໃຊ້ກັບ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Apply on"
-msgstr ""
+msgstr "ນຳໃຊ້ກັບ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -582,17 +617,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Archived"
-msgstr ""
+msgstr "ຈັດເກັບແລ້ວ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_ariel
 msgid "Ariel"
-msgstr ""
+msgstr "Ariel"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__sequence
 msgid "Assigns the priority to the list of product vendor."
-msgstr ""
+msgstr "ກຳນົດລຳດັບຄວາມສຳຄັນໃຫ້ກັບລາຍຊື່ຜູ້ສະໜອງຜະລິດຕະພັນ."
 
 #. module: product
 #. odoo-javascript
@@ -601,16 +636,17 @@ msgid ""
 "At most %s quantities can be displayed simultaneously. Remove a selected "
 "quantity to add others."
 msgstr ""
+"ສາມາດສະແດງຈຳນວນໄດ້ສູງສຸດ %s ໃນເວລາດຽວກັນ. ລຶບຈຳນວນທີ່ເລືອກອອກເພື່ອເພີ່ມອັນອື່ນ."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
 msgid "Attached To"
-msgstr ""
+msgstr "ຄັດຕິດມາຍັງ"
 
 #. module: product
 #: model:ir.model,name:product.model_ir_attachment
 msgid "Attachment"
-msgstr ""
+msgstr "ສິ່ງຄັດຕິດ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__message_attachment_count
@@ -618,12 +654,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
 #: model:ir.model.fields,field_description:product.field_product_template__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "ຈຳນວນສິ່ງຄັດຕິດ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__local_url
 msgid "Attachment URL"
-msgstr ""
+msgstr "URL ສິ່ງຄັດຕິດ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__name
@@ -631,18 +667,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__attribute_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_id
 msgid "Attribute"
-msgstr ""
+msgstr "ຄຸນລັກສະນະ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__attribute_line_id
 msgid "Attribute Line"
-msgstr ""
+msgstr "ລາຍການຄຸນລັກສະນະ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
 msgid "Attribute Name"
-msgstr ""
+msgstr "ຊື່ຄຸນລັກສະນະ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_value
@@ -651,7 +687,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__product_attribute_value_id
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__attribute_value_id
 msgid "Attribute Value"
-msgstr ""
+msgstr "ຄ່າຄຸນລັກສະນະ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_attribute_value_ids
@@ -659,38 +695,38 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_value_list
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Values"
-msgstr ""
+msgstr "ຄ່າຄຸນລັກສະນະຕ່າງໆ"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_tree
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Attributes"
-msgstr ""
+msgstr "ຄຸນລັກສະນະ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Attributes & Variants"
-msgstr ""
+msgstr "ຄຸນລັກສະນະ ແລະ ລຸ້ນຕ່າງໆ"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_controller.js:0
 msgid "Back to Order"
-msgstr ""
+msgstr "ກັບໄປທີ່ໃບສັ່ງຊື້"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_controller.js:0
 msgid "Back to Quotation"
-msgstr ""
+msgstr "ກັບໄປທີ່ໃບສະເໜີລາຄາ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__barcode
 #: model:ir.model.fields,field_description:product.field_product_template__barcode
 #: model:ir.model.fields,field_description:product.field_product_uom__barcode
 msgid "Barcode"
-msgstr ""
+msgstr "ບາໂຄດ"
 
 #. module: product
 #. odoo-python
@@ -700,11 +736,14 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"ບາໂຄດຖືກກຳນົດແລ້ວ:\n"
+"\n"
+"%s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_uom_uom__product_uom_ids
 msgid "Barcodes"
-msgstr ""
+msgstr "ບາໂຄດ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -714,94 +753,98 @@ msgid ""
 "Cost Price: The base price will be the cost price.\n"
 "Other Pricelist: Computation of the base price based on another Pricelist."
 msgstr ""
+"ລາຄາພື້ນຖານສຳລັບການຄິດໄລ່.\n"
+"ລາຄາຂາຍ: ລາຄາພື້ນຖານຈະແມ່ນ ລາຄາຂາຍ.\n"
+"ລາຄາຕົ້ນທຶນ: ລາຄາພື້ນຖານຈະແມ່ນ ລາຄາຕົ້ນທຶນ.\n"
+"ລາຍການລາຄາອື່ນ: ການຄິດໄລ່ລາຄາພື້ນຖານໂດຍອີງຕາມ ລາຍການລາຄາອື່ນ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base
 msgid "Based on"
-msgstr ""
+msgstr "ອີງຕາມ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Based price"
-msgstr ""
+msgstr "ລາຄາພື້ນຖານ"
 
 #. module: product
 #: model:res.groups,name:product.group_product_pricelist
 msgid "Basic Pricelists"
-msgstr ""
+msgstr "ລາຍການລາຄາພື້ນຖານ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_beige
 msgid "Beige"
-msgstr ""
+msgstr "ສີເບສ"
 
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid "Big table seats 10–12 for team discussions"
-msgstr ""
+msgstr "ໂຕະໃຫຍ່ 10–12 ບ່ອນນັ່ງ ສຳລັບການສົນທະນາເປັນທີມ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_black
 msgid "Black"
-msgstr ""
+msgstr "ສີດຳ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_blue
 msgid "Blue"
-msgstr ""
+msgstr "ສີຟ້າ"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_7_product_template
 msgid "Blue plastic bin for flexible office storage"
-msgstr ""
+msgstr "ຖັງຢາງສີຟ້າສຳລັບເກັບເຄື່ອງໃນຫ້ອງການ"
 
 #. module: product
 #: model:product.attribute,name:product.pa_brand
 msgid "Brand"
-msgstr ""
+msgstr "ຍີ່ຫໍ້"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_brown
 msgid "Brown"
-msgstr ""
+msgstr "ສີນ້ຳຕານ"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_attribute_value_list.js:0
 msgid "Bye-bye, record!"
-msgstr ""
+msgstr "ລຶບບັນທຶກແລ້ວ!"
 
 #. module: product
 #: model:product.template,name:product.product_product_10_product_template
 msgid "Cabinet with Doors"
-msgstr ""
+msgstr "ຕູ້ມີປະຕູ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
 #: model:ir.model.fields,field_description:product.field_product_template__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr ""
+msgstr "ຮູບ 1024 ສາມາດຊູມໄດ້"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_variant_1024_be_zoomed
 msgid "Can Variant Image 1024 be zoomed"
-msgstr ""
+msgstr "ຮູບລຸ້ນ 1024 ສາມາດຊູມໄດ້"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.update_product_attribute_value_form
 msgid "Cancel"
-msgstr ""
+msgstr "ຍົກເລີກ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_canon
 msgid "Canon"
-msgstr ""
+msgstr "Canon"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action_form
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Categories"
-msgstr ""
+msgstr "ໝວດໝູ່"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__categ_id
@@ -809,13 +852,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Category"
-msgstr ""
+msgstr "ໝວດໝູ່"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "Category: %s"
-msgstr ""
+msgstr "ໝວດໝູ່: %s"
 
 #. module: product
 #. odoo-python
@@ -825,36 +868,39 @@ msgid ""
 "Changing the unit of measure for your product will apply a conversion 1 %(old_uom_name)s = 1 %(new_uom_name)s.\n"
 "All existing records (Sales orders, Purchase orders, etc.) using this product will be updated by replacing the unit name."
 msgstr ""
+"ການປ່ຽນຫົວໜ່ວຍວັດແທກສຳລັບຜະລິດຕະພັນຂອງທ່ານຈະມີການປ່ຽນແປງ 1 %(old_uom_name)s = 1 %"
+"(new_uom_name)s.\n"
+"ທຸກໆບັນທຶກທີ່ມີຢູ່ (ໃບສັ່ງຂາຍ, ໃບສັ່ງຊື້ ແລະ ອື່ນໆ) ທີ່ໃຊ້ຜະລິດຕະພັນນີ້ຈະຖືກອັບເດດໂດຍການປ່ຽນຊື່ຫົວໜ່ວຍ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__checksum
 msgid "Checksum/SHA1"
-msgstr ""
+msgstr "Checksum/SHA1"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__child_id
 msgid "Child Categories"
-msgstr ""
+msgstr "ໝວດໝູ່ຍ່ອຍ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_label_layout
 msgid "Choose the sheet layout to print the labels"
-msgstr ""
+msgstr "ເລືອກຮູບແບບແຜ່ນເພື່ອພິມສະຫຼາກ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_cocacola
 msgid "Coca-Cola"
-msgstr ""
+msgstr "Coca-Cola"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Codes"
-msgstr ""
+msgstr "ລະຫັດ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_colgate
 msgid "Colgate"
-msgstr ""
+msgstr "Colgate"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__html_color
@@ -863,36 +909,36 @@ msgstr ""
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__color
 #: model:product.attribute,name:product.pa_color
 msgid "Color"
-msgstr ""
+msgstr "ສີ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__color
 #: model:ir.model.fields,field_description:product.field_product_product__color
 #: model:ir.model.fields,field_description:product.field_product_template__color
 msgid "Color Index"
-msgstr ""
+msgstr "ດັດຊະນີສີ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__columns
 msgid "Columns"
-msgstr ""
+msgstr "ຖັນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__combination_indices
 msgid "Combination Indices"
-msgstr ""
+msgstr "ດັດຊະນີການລວມ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo_item__combo_id
 #: model:ir.model.fields.selection,name:product.selection__product_template__type__combo
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Combo"
-msgstr ""
+msgstr "ຄອມໂບ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 msgid "Combo Choice"
-msgstr ""
+msgstr "ຕົວເລືອກຄອມໂບ"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_combo_action
@@ -900,23 +946,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template__combo_ids
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_tree
 msgid "Combo Choices"
-msgstr ""
+msgstr "ຕົວເລືອກຄອມໂບຕ່າງໆ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__combo_item_ids
 msgid "Combo Item"
-msgstr ""
+msgstr "ລາຍການຄອມໂບ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__base_price
 msgid "Combo Price"
-msgstr ""
+msgstr "ລາຄາຄອມໂບ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Combo products can't have attributes."
-msgstr ""
+msgstr "ຜະລິດຕະພັນຄອມໂບບໍ່ສາມາດມີຄຸນລັກສະນະໄດ້."
 
 #. module: product
 #. odoo-python
@@ -924,17 +970,17 @@ msgstr ""
 msgid ""
 "Combos allow to choose one product amongst a selection of choices per "
 "category."
-msgstr ""
+msgstr "ຄອມໂບຊ່ວຍໃຫ້ເລືອກໜຶ່ງຜະລິດຕະພັນຈາກຕົວເລືອກຕ່າງໆໃນແຕ່ລະໝວດໝູ່."
 
 #. module: product
 #: model:product.template,description_sale:product.product_delivery_01_product_template
 msgid "Comfortable yellow chair for daily work"
-msgstr ""
+msgstr "ຕັ່ງສີເຫຼືອງນັ່ງສະບາຍສຳລັບການເຮັດວຽກປະຈຳວັນ"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "ບໍລິສັດ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__company_id
@@ -947,125 +993,125 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template__company_id
 #: model:ir.model.fields,field_description:product.field_product_uom__company_id
 msgid "Company"
-msgstr ""
+msgstr "ບໍລິສັດ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Company Settings"
-msgstr ""
+msgstr "ການຕັ້ງຄ່າບໍລິສັດ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__complete_name
 msgid "Complete Name"
-msgstr ""
+msgstr "ຊື່ເຕັມ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__compute_price
 msgid "Compute Price"
-msgstr ""
+msgstr "ຄິດໄລ່ລາຄາ"
 
 #. module: product
 #: model:product.template,name:product.product_product_11_product_template
 msgid "Conference Chair"
-msgstr ""
+msgstr "ຕັ່ງຫ້ອງປະຊຸມ"
 
 #. module: product
 #: model:ir.model,name:product.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "ຕັ້ງຄ່າລະບົບ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Configure"
-msgstr ""
+msgstr "ຕັ້ງຄ່າ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.update_product_attribute_value_form
 msgid "Confirm"
-msgstr ""
+msgstr "ຢືນຢັນ"
 
 #. module: product
 #: model:ir.model,name:product.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "ຜູ້ຕິດຕໍ່"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__custom_quantity
 msgid "Copies"
-msgstr ""
+msgstr "ສຳເນົາ"
 
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
 msgid "Corner Desk Left Sit"
-msgstr ""
+msgstr "ໂຕະເຂົ້າຈຸດ ນັ່ງຊ້າຍ"
 
 #. module: product
 #: model:product.template,name:product.product_product_5_product_template
 msgid "Corner Desk Right Sit"
-msgstr ""
+msgstr "ໂຕະເຂົ້າຈຸດ ນັ່ງຂວາ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__standard_price
 #: model:ir.model.fields,field_description:product.field_product_template__standard_price
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__base__standard_price
 msgid "Cost"
-msgstr ""
+msgstr "ຕົ້ນທຶນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__cost_currency_id
 #: model:ir.model.fields,field_description:product.field_product_template__cost_currency_id
 msgid "Cost Currency"
-msgstr ""
+msgstr "ສະກຸນເງິນຕົ້ນທຶນ"
 
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
 msgid "Country Group"
-msgstr ""
+msgstr "ກຸ່ມປະເທດ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__country_group_ids
 msgid "Country Groups"
-msgstr ""
+msgstr "ກຸ່ມປະເທດຕ່າງໆ"
 
 #. module: product
 #: model:res.groups,name:product.group_product_manager
 msgid "Create"
-msgstr ""
+msgstr "ສ້າງ"
 
 #. module: product
 #: model:ir.model,website_form_label:product.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "ສ້າງລູກຄ້າ"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
 msgid "Create a new pricelist"
-msgstr ""
+msgstr "ສ້າງລາຍການລາຄາໃໝ່"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_template_action
 #: model_terms:ir.actions.act_window,help:product.product_template_action_all
 msgid "Create a new product"
-msgstr ""
+msgstr "ສ້າງຜະລິດຕະພັນໃໝ່"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
 msgid "Create a new product variant"
-msgstr ""
+msgstr "ສ້າງລຸ້ນຜະລິດຕະພັນໃໝ່"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 msgid "Create a product"
-msgstr ""
+msgstr "ສ້າງຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:product.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "ສ້າງເມື່ອມີໃບສັ່ງຊື້"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
@@ -1088,7 +1134,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_uom__create_uid
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "ສ້າງໂດຍ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_date
@@ -1111,22 +1157,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_uom__create_date
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__create_date
 msgid "Created on"
-msgstr ""
+msgstr "ສ້າງເມື່ອ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
 msgid "Creation"
-msgstr ""
+msgstr "ການສ້າງ"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_volume_volume_in_cubic_feet__1
 msgid "Cubic Feet (ft³)"
-msgstr ""
+msgstr "ຟຸດກ້ອນ (ft³)"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_volume_volume_in_cubic_feet__0
 msgid "Cubic Meters (m³)"
-msgstr ""
+msgstr "ແມັດກ້ອນ (m³)"
 
 #. module: product
 #: model:ir.model,name:product.model_res_currency
@@ -1139,162 +1185,162 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template__currency_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__currency_id
 msgid "Currency"
-msgstr ""
+msgstr "ສະກຸນເງິນ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_custom
 #: model:product.attribute.value,name:product.pav_legs_custom
 #: model:product.attribute.value,name:product.pav_length_custom
 msgid "Custom"
-msgstr ""
+msgstr "ກຳນົດເອງ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__custom_value
 msgid "Custom Value"
-msgstr ""
+msgstr "ຄ່າທີ່ກຳນົດເອງ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__partner_ref
 msgid "Customer Ref"
-msgstr ""
+msgstr "ອ້າງອີງລູກຄ້າ"
 
 #. module: product
 #: model:product.template,name:product.product_product_4_product_template
 msgid "Customizable Desk"
-msgstr ""
+msgstr "ໂຕະທີ່ປັບແຕ່ງໄດ້"
 
 #. module: product
 #: model:product.attribute,name:product.pa_customization
 msgid "Customization"
-msgstr ""
+msgstr "ການປັບແຕ່ງ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_cyan
 msgid "Cyan"
-msgstr ""
+msgstr "ສີຟ້າຂຽວ (Cyan)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__db_datas
 msgid "Database Data"
-msgstr ""
+msgstr "ຂໍ້ມູນຖານຂໍ້ມູນ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/res_company.py:0
 msgid "Default"
-msgstr ""
+msgstr "ຄ່າເລີ່ມຕົ້ນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price
 msgid "Default Extra Price"
-msgstr ""
+msgstr "ລາຄາເພີ່ມເຕີມເລີ່ມຕົ້ນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__default_extra_price_changed
 msgid "Default Extra Price Changed"
-msgstr ""
+msgstr "ລາຄາເພີ່ມເຕີມເລີ່ມຕົ້ນຖືກປ່ຽນແລ້ວ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__uom_id
 #: model:ir.model.fields,help:product.field_product_template__uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr ""
+msgstr "ຫົວໜ່ວຍວັດແທກເລີ່ມຕົ້ນສຳລັບການຈັດການສະຕັອກທັງໝົດ."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Define a new tag"
-msgstr ""
+msgstr "ກຳນົດແທັກໃໝ່"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your volume unit of measure"
-msgstr ""
+msgstr "ກຳນົດຫົວໜ່ວຍວັດແທກບໍລິມາດຂອງທ່ານ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your weight unit of measure"
-msgstr ""
+msgstr "ກຳນົດຫົວໜ່ວຍວັດແທກນ້ຳໜັກຂອງທ່ານ"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_attribute_value_list.js:0
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "Delete"
-msgstr ""
+msgstr "ລຶບ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_dell
 msgid "Dell"
-msgstr ""
+msgstr "Dell"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__description
 #: model:ir.model.fields,field_description:product.field_product_product__description
 #: model:ir.model.fields,field_description:product.field_product_template__description
 msgid "Description"
-msgstr ""
+msgstr "ຄຳອະທິບາຍ"
 
 #. module: product
 #: model:product.template,description_sale:product.product_order_01_product_template
 msgid "Design and plan smart offices with ease"
-msgstr ""
+msgstr "ອອກແບບ ແລະ ວາງແຜນຫ້ອງການອັດສະລິຍະໄດ້ຢ່າງງ່າຍດາຍ"
 
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
 msgid "Desk Combination"
-msgstr ""
+msgstr "ຊຸດໂຕະເຮັດວຽກ"
 
 #. module: product
 #: model:product.template,name:product.desk_organizer_product_template
 msgid "Desk Organizer"
-msgstr ""
+msgstr "ອຸປະກອນຈັດລະບຽບໂຕະ"
 
 #. module: product
 #: model:product.template,name:product.desk_pad_product_template
 msgid "Desk Pad"
-msgstr ""
+msgstr "ແຜ່ນຮອງໂຕະ"
 
 #. module: product
 #: model:product.template,name:product.product_product_22_product_template
 msgid "Desk Stand with Screen"
-msgstr ""
+msgstr "ຂາຕັ້ງໂຕະພ້ອມສາກ"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_3_product_template
 msgid "Desk combination, black-brown: chair + desk + drawer"
-msgstr ""
+msgstr "ຊຸດໂຕະເຮັດວຽກ, ສີດຳ-ນ້ຳຕານ: ຕັ່ງ + ໂຕະ + ລີ້ນຊັກ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__sequence
 #: model:ir.model.fields,help:product.field_product_attribute_value__sequence
 msgid "Determine the display order"
-msgstr ""
+msgstr "ກຳນົດລຳດັບການສະແດງຜົນ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
 msgid "Discard"
-msgstr ""
+msgstr "ຖິ້ມ"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__percentage
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Discount"
-msgstr ""
+msgstr "ສ່ວນຫຼຸດ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__discount
 msgid "Discount (%)"
-msgstr ""
+msgstr "ສ່ວນຫຼຸດ (%)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__price_discounted
 msgid "Discounted Price"
-msgstr ""
+msgstr "ລາຄາຫຼັງຫຼຸດ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__display_applied_on
 msgid "Display Applied On"
-msgstr ""
+msgstr "ສະແດງຜົນການນຳໃຊ້ກັບ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_ir_attachment__display_name
@@ -1331,19 +1377,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_uom_uom__display_name
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "ຊື່ສະແດງຜົນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__display_type
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__display_type
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__display_type
 msgid "Display Type"
-msgstr ""
+msgstr "ປະເພດການສະແດງຜົນ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "Document"
-msgstr ""
+msgstr "ເອກະສານ"
 
 #. module: product
 #. odoo-python
@@ -1352,107 +1398,107 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template__product_document_ids
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Documents"
-msgstr ""
+msgstr "ເອກະສານຕ່າງໆ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_document_count
 #: model:ir.model.fields,field_description:product.field_product_template__product_document_count
 msgid "Documents Count"
-msgstr ""
+msgstr "ຈຳນວນເອກະສານ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_search
 msgid "Documents of this variant"
-msgstr ""
+msgstr "ເອກະສານຂອງລຸ້ນນີ້"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_dove
 msgid "Dove"
-msgstr ""
+msgstr "Dove"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "Download"
-msgstr ""
+msgstr "ດາວໂຫຼດ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Download examples"
-msgstr ""
+msgstr "ດາວໂຫຼດຕົວຢ່າງ"
 
 #. module: product
 #: model:product.template,name:product.product_product_27_product_template
 msgid "Drawer"
-msgstr ""
+msgstr "ລີ້ນຊັກ"
 
 #. module: product
 #: model:product.template,name:product.product_product_16_product_template
 msgid "Drawer Black"
-msgstr ""
+msgstr "ລີ້ນຊັກສີດຳ"
 
 #. module: product
 #: model_terms:product.template,description:product.product_product_27_product_template
 msgid "Drawer with two routing possiblities"
-msgstr ""
+msgstr "ລີ້ນຊັກທີ່ມີສອງທາງເລືອກໃນການຈັດວາງ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_options_drawers
 msgid "Drawers"
-msgstr ""
+msgstr "ລີ້ນຊັກຕ່າງໆ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "Duplicate values in attribute values are not allowed: %s"
-msgstr ""
+msgstr "ບໍ່ອະນຸຍາດໃຫ້ມີຄ່າຊ້ຳກັນໃນຄ່າຄຸນລັກສະນະ: %s"
 
 #. module: product
 #: model:product.attribute,name:product.pa_duration
 msgid "Duration"
-msgstr ""
+msgstr "ໄລຍະເວລາ"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__dymo
 msgid "Dymo"
-msgstr ""
+msgstr "Dymo"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
 msgid "Dynamically"
-msgstr ""
+msgstr "ແບບໄດນາມິກ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_dyson
 msgid "Dyson"
-msgstr ""
+msgstr "Dyson"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_template_attribute_value_attribute_value_unique
 msgid "Each value should be defined only once per attribute per product."
-msgstr ""
+msgstr "ແຕ່ລະຄ່າຄວນຖືກກຳນົດພຽງແຕ່ຄັ້ງດຽວຕໍ່ໜຶ່ງຄຸນລັກສະນະຕໍ່ໜຶ່ງຜະລິດຕະພັນ."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "Eco-friendly Wooden Chair"
-msgstr ""
+msgstr "ຕັ່ງໄມ້ເປັນມິດກັບສິ່ງແວດລ້ອມ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 #: model_terms:ir.ui.view,arch_db:product.product_view_kanban_catalog
 msgid "Edit"
-msgstr ""
+msgstr "ແກ້ໄຂ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_end
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__date_end
 msgid "End Date"
-msgstr ""
+msgstr "ວັນທີສິ້ນສຸດ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__date_end
 msgid "End date for this vendor price"
-msgstr ""
+msgstr "ວັນທີສິ້ນສຸດສຳລັບລາຄາຜູ້ສະໜອງນີ້"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__date_end
@@ -1460,49 +1506,51 @@ msgid ""
 "Ending datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"ວັນເວລາສິ້ນສຸດສຳລັບການກວດສອບລາຍການລາຄາ\n"
+"ຄ່າທີ່ສະແດງຜົນແມ່ນຂຶ້ນກັບເຂດເວລາທີ່ຕັ້ງໄວ້ໃນການຕັ້ງຄ່າຂອງທ່ານ."
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Ergonomic"
-msgstr ""
+msgstr "ຖືກຕ້ອງຕາມຫຼັກການຍະສາດ"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Error exporting file. Please try again."
-msgstr ""
+msgstr "ເກີດຂໍ້ຜິດພາດໃນການສົ່ງອອກໄຟລ໌. ກະລຸນາລອງໃໝ່ອີກຄັ້ງ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__exclude_for
 msgid "Exclude for"
-msgstr ""
+msgstr "ຍົກເວັ້ນສຳລັບ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__name
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price
 msgid "Explicit rule name for this pricelist line."
-msgstr ""
+msgstr "ຊື່ກົດເກນທີ່ຊັດເຈນສຳລັບລາຍການລາຄານີ້."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__extra_html
 msgid "Extra Content"
-msgstr ""
+msgstr "ເນື້ອຫາເພີ່ມເຕີມ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_surcharge
 msgid "Extra Fee"
-msgstr ""
+msgstr "ຄ່າທຳນຽມເພີ່ມເຕີມ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Extra Info"
-msgstr ""
+msgstr "ຂໍ້ມູນເພີ່ມເຕີມ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo_item__extra_price
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
 msgid "Extra Price"
-msgstr ""
+msgstr "ລາຄາເພີ່ມເຕີມ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__price_extra
@@ -1510,54 +1558,56 @@ msgid ""
 "Extra price for the variant with this attribute value on sale price. eg. 200"
 " price extra, 1000 + 200 = 1200."
 msgstr ""
+"ລາຄາເພີ່ມເຕີມສຳລັບລຸ້ນທີ່ມີຄ່າຄຸນລັກສະນະນີ້ໃນລາຄາຂາຍ. ຕົວຢ່າງ: ລາຄາເພີ່ມ 200, 1000 + 200 = "
+"1200."
 
 #. module: product
 #: model:product.attribute,name:product.pa_fabric
 msgid "Fabric"
-msgstr ""
+msgstr "ຜ້າ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_favorite
 #: model:ir.model.fields,field_description:product.field_product_template__is_favorite
 msgid "Favorite"
-msgstr ""
+msgstr "ລາຍການທີ່ມັກ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Favorites"
-msgstr ""
+msgstr "ລາຍການທີ່ມັກຕ່າງໆ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__datas
 msgid "File Content (base64)"
-msgstr ""
+msgstr "ເນື້ອຫາໄຟລ໌ (base64)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__raw
 msgid "File Content (raw)"
-msgstr ""
+msgstr "ເນື້ອຫາໄຟລ໌ (raw)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__file_size
 msgid "File Size"
-msgstr ""
+msgstr "ຂະໜາດໄຟລ໌"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_options_file_cabinets
 msgid "File cabinets"
-msgstr ""
+msgstr "ຕູ້ເກັບເອກະສານ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__fixed_price
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__fixed
 msgid "Fixed Price"
-msgstr ""
+msgstr "ລາຄາຄົງທີ່"
 
 #. module: product
 #: model:product.template,name:product.product_product_20_product_template
 msgid "Flipover"
-msgstr ""
+msgstr "ກະດານຟລິບຊາດ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__message_follower_ids
@@ -1565,7 +1615,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__message_follower_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "ຜູ້ຕິດຕາມ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__message_partner_ids
@@ -1573,14 +1623,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "ຜູ້ຕິດຕາມ (ຄູ່ຄ້າ)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__activity_type_icon
 #: model:ir.model.fields,help:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,help:product.field_product_template__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "ໄອຄອນ Font awesome ຕົວຢ່າງ: fa-tasks"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
@@ -1588,75 +1638,77 @@ msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
 "Expressed in the default unit of measure of the product."
 msgstr ""
+"ເພື່ອໃຫ້ກົດເກນມີຜົນນຳໃຊ້, ຈຳນວນທີ່ຊື້/ຂາຍ ຕ້ອງຫຼາຍກວ່າ ຫຼື ເທົ່າກັບຈຳນວນຂັ້ນຕ່ຳທີ່ກຳນົດໄວ້ໃນຊ່ອງນີ້.\n"
+"ໂດຍສະແດງໃນຫົວໜ່ວຍວັດແທກເລີ່ມຕົ້ນຂອງຜະລິດຕະພັນ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__print_format
 msgid "Format"
-msgstr ""
+msgstr "ຮູບແບບ"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__formula
 msgid "Formula"
-msgstr ""
+msgstr "ສູດຄິດໄລ່"
 
 #. module: product
 #: model:product.template,name:product.consu_delivery_03_product_template
 msgid "Four Person Desk"
-msgstr ""
+msgstr "ໂຕະສຳລັບສີ່ຄົນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_custom
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__is_custom
 msgid "Free text"
-msgstr ""
+msgstr "ຂໍ້ຄວາມອິດສະຫຼະ"
 
 #. module: product
 #: model:product.template,name:product.product_product_furniture_product_template
 msgid "Furniture Assembly"
-msgstr ""
+msgstr "ການປະກອບເຟີນີເຈີ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Future Activities"
-msgstr ""
+msgstr "ກິດຈະກຳໃນອະນາຄົດ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "General Information"
-msgstr ""
+msgstr "ຂໍ້ມູນທົ່ວໄປ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_gillette
 msgid "Gillette"
-msgstr ""
+msgstr "Gillette"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__sequence
 #: model:ir.model.fields,help:product.field_product_template__sequence
 msgid "Gives the sequence order when displaying a product list"
-msgstr ""
+msgstr "ກຳນົດລຳດັບເມື່ອສະແດງລາຍການຜະລິດຕະພັນ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_fabric_glass
 msgid "Glass"
-msgstr ""
+msgstr "ແກ້ວ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_gold
 msgid "Gold"
-msgstr ""
+msgstr "ສີທອງ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Gold Member Pricelist"
-msgstr ""
+msgstr "ລາຍການລາຄາສະມາຊິກລະດັບທອງ"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_template__type__consu
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Goods"
-msgstr ""
+msgstr "ສິນຄ້າ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__type
@@ -1665,26 +1717,28 @@ msgid ""
 "Goods are tangible materials and merchandise you provide.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"ສິນຄ້າແມ່ນວັດຖຸທີ່ຈັບຕ້ອງໄດ້ ແລະ ສິ່ງຂອງທີ່ທ່ານສະໜອງ.\n"
+"ການບໍລິການແມ່ນຜະລິດຕະພັນທີ່ບໍ່ແມ່ນວັດຖຸທີ່ທ່ານສະໜອງ."
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_gray
 msgid "Gray"
-msgstr ""
+msgstr "ສີເທົາ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_green
 msgid "Green"
-msgstr ""
+msgstr "ສີຂຽວ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_h_m
 msgid "H&M"
-msgstr ""
+msgstr "H&M"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__html_color
 msgid "HTML Color Index"
-msgstr ""
+msgstr "ດັດຊະນີສີ HTML"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__has_message
@@ -1692,22 +1746,22 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__has_message
 #: model:ir.model.fields,field_description:product.field_product_template__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "ມີຂໍ້ຄວາມ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__has_thumbnail
 msgid "Has Thumbnail"
-msgstr ""
+msgstr "ມີຮູບຕົວຢ່າງ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_head_shoulders
 msgid "Head & Shoulders"
-msgstr ""
+msgstr "Head & Shoulders"
 
 #. module: product
 #: model:product.attribute,name:product.pa_height
 msgid "Height"
-msgstr ""
+msgstr "ຄວາມສູງ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__html_color
@@ -1716,21 +1770,23 @@ msgid ""
 "Here you can set a specific HTML color index (e.g. #ff0000) to display the "
 "color if the attribute type is 'Color'."
 msgstr ""
+"ທີ່ນີ້ທ່ານສາມາດກຳນົດດັດຊະນີສີ HTML ທີ່ຊັດເຈນ (ຕົວຢ່າງ: #ff0000) ເພື່ອສະແດງສີຫາກປະເພດຄຸນລັກສະນະແມ່"
+"ນ 'ສີ'."
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_12_product_template
 msgid "High-back office chair with great support"
-msgstr ""
+msgstr "ຕັ່ງຫ້ອງການພະນັກສູງທີ່ຮອງຮັບໄດ້ດີເລີດ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
 msgid "History"
-msgstr ""
+msgstr "ປະຫວັດ"
 
 #. module: product
 #: model:product.template,name:product.expense_hotel_product_template
 msgid "Hotel Accommodation"
-msgstr ""
+msgstr "ທີ່ພັກໂຮງແຮມ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_ir_attachment__id
@@ -1767,21 +1823,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_uom_uom__id
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__id
 msgid "ID"
-msgstr ""
+msgstr "ລະຫັດ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_exception_icon
 #: model:ir.model.fields,field_description:product.field_product_product__activity_exception_icon
 #: model:ir.model.fields,field_description:product.field_product_template__activity_exception_icon
 msgid "Icon"
-msgstr ""
+msgstr "ໄອຄອນ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__activity_exception_icon
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_icon
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "ໄອຄອນເພື່ອບົ່ງບອກກິດຈະກຳທີ່ຍົກເວັ້ນ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__message_needaction
@@ -1789,7 +1845,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product__message_needaction
 #: model:ir.model.fields,help:product.field_product_template__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "ຖ້າໝາຍໄວ້, ຂໍ້ຄວາມໃໝ່ຈະຕ້ອງການຄວາມສົນໃຈຈາກທ່ານ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__message_has_error
@@ -1797,32 +1853,32 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "ຖ້າໝາຍໄວ້, ບາງຂໍ້ຄວາມອາດມີຂໍ້ຜິດພາດໃນການສົ່ງ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
 msgid ""
 "If not set, the vendor price will apply to all variants of this product."
-msgstr ""
+msgstr "ຖ້າບໍ່ໄດ້ກຳນົດ, ລາຄາຜູ້ສະໜອງຈະຖືກນຳໃຊ້ກັບທຸກລຸ້ນຂອງຜະລິດຕະພັນນີ້."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__active
 msgid ""
 "If unchecked, it will allow you to hide the attribute without removing it."
-msgstr ""
+msgstr "ຖ້າບໍ່ໝາຍໄວ້, ທ່ານຈະສາມາດເຊື່ອງຄຸນລັກສະນະໄດ້ໂດຍບໍ່ຕ້ອງລຶບມັນອອກ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__active
 msgid ""
 "If unchecked, it will allow you to hide the pricelist without removing it."
-msgstr ""
+msgstr "ຖ້າບໍ່ໝາຍໄວ້, ທ່ານຈະສາມາດເຊື່ອງລາຍການລາຄາໄດ້ໂດຍບໍ່ຕ້ອງລຶບມັນອອກ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__active
 #: model:ir.model.fields,help:product.field_product_template__active
 msgid ""
 "If unchecked, it will allow you to hide the product without removing it."
-msgstr ""
+msgstr "ຖ້າບໍ່ໝາຍໄວ້, ທ່ານຈະສາມາດເຊື່ອງຜະລິດຕະພັນໄດ້ໂດຍບໍ່ຕ້ອງລຶບມັນອອກ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__image
@@ -1832,123 +1888,123 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__image
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__image
 msgid "Image"
-msgstr ""
+msgstr "ຮູບພາບ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_1024
 #: model:ir.model.fields,field_description:product.field_product_template__image_1024
 msgid "Image 1024"
-msgstr ""
+msgstr "ຮູບພາບ 1024"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_128
 #: model:ir.model.fields,field_description:product.field_product_template__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "ຮູບພາບ 128"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_256
 #: model:ir.model.fields,field_description:product.field_product_template__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "ຮູບພາບ 256"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_512
 #: model:ir.model.fields,field_description:product.field_product_template__image_512
 msgid "Image 512"
-msgstr ""
+msgstr "ຮູບພາບ 512"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__image_height
 msgid "Image Height"
-msgstr ""
+msgstr "ຄວາມສູງຂອງຮູບ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__image_src
 msgid "Image Src"
-msgstr ""
+msgstr "ທີ່ມາຂອງຮູບ (Src)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__image_width
 msgid "Image Width"
-msgstr ""
+msgstr "ຄວາມກວ້າງຂອງຮູບ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 msgid "Image is a link"
-msgstr ""
+msgstr "ຮູບພາບແມ່ນລິ້ງ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 msgid "Import Template for Pricelists"
-msgstr ""
+msgstr "ນຳເຂົ້າເທັມເພລດສຳລັບລາຍການລາຄາ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Import Template for Products"
-msgstr ""
+msgstr "ນຳເຂົ້າເທັມເພລດສຳລັບຜະລິດຕະພັນ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_supplierinfo.py:0
 msgid "Import Template for Vendor Pricelists"
-msgstr ""
+msgstr "ນຳເຂົ້າເທັມເພລດສຳລັບລາຍການລາຄາຜູ້ສະໜອງ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_search
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
 msgid "Inactive"
-msgstr ""
+msgstr "ປິດໃຊ້ງານ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__index_content
 msgid "Indexed Content"
-msgstr ""
+msgstr "ເນື້ອຫາທີ່ເຮັດດັດຊະນີແລ້ວ"
 
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Individual Workplace"
-msgstr ""
+msgstr "ບ່ອນເຮັດວຽກສ່ວນຕົວ"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__always
 msgid "Instantly"
-msgstr ""
+msgstr "ທັນທີ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Internal Notes"
-msgstr ""
+msgstr "ໝາຍເຫດພາຍໃນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__default_code
 #: model:ir.model.fields,field_description:product.field_product_template__default_code
 msgid "Internal Reference"
-msgstr ""
+msgstr "ລະຫັດອ້າງອີງພາຍໃນ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__barcode
 msgid "International Article Number used for product identification."
-msgstr ""
+msgstr "ໝາຍເລກຜະລິດຕະພັນສາກົນທີ່ໃຊ້ເພື່ອລະບຸຜະລິດຕະພັນ."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_attribute_value_list.js:0
 msgid "Invalid Operation"
-msgstr ""
+msgstr "ການດຳເນີນການບໍ່ຖືກຕ້ອງ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Inventory"
-msgstr ""
+msgstr "ສາງສິນຄ້າ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_dynamically_created
 #: model:ir.model.fields,field_description:product.field_product_template__is_dynamically_created
 msgid "Is Dynamically Created"
-msgstr ""
+msgstr "ຖືກສ້າງຂຶ້ນແບບໄດນາມິກ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__message_is_follower
@@ -1956,87 +2012,87 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__message_is_follower
 #: model:ir.model.fields,field_description:product.field_product_template__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "ແມ່ນຜູ້ຕິດຕາມ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_in_selected_section_of_order
 msgid "Is In Selected Section Of Order"
-msgstr ""
+msgstr "ຢູ່ໃນສ່ວນທີ່ເລືອກຂອງໃບສັ່ງຊື້"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__is_pricelist_required
 msgid "Is Pricelist Required"
-msgstr ""
+msgstr "ຕ້ອງມີລາຍການລາຄາ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_product_variant
 msgid "Is Product Variant"
-msgstr ""
+msgstr "ແມ່ນລຸ້ນຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__has_configurable_attributes
 #: model:ir.model.fields,field_description:product.field_product_template__has_configurable_attributes
 msgid "Is a configurable product"
-msgstr ""
+msgstr "ແມ່ນຜະລິດຕະພັນທີ່ປັບແຕ່ງໄດ້"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template__is_product_variant
 msgid "Is a product variant"
-msgstr ""
+msgstr "ແມ່ນລຸ້ນຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__public
 msgid "Is public document"
-msgstr ""
+msgstr "ແມ່ນເອກະສານສາທາລະນະ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid ""
 "It is not possible to import different values for the same attribute: %s"
-msgstr ""
+msgstr "ບໍ່ສາມາດນຳເຂົ້າຄ່າທີ່ແຕກຕ່າງກັນສຳລັບຄຸນລັກສະນະດຽວກັນ: %s"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__0
 msgid "Kilograms (kg)"
-msgstr ""
+msgstr "ກິໂລກຣາມ (kg)"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_l
 msgid "L"
-msgstr ""
+msgstr "L"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_loreal
 msgid "L'Oréal"
-msgstr ""
+msgstr "L'Oréal"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_LG
 msgid "LG"
-msgstr ""
+msgstr "LG"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 msgid "Labels cannot be printed for products of service type"
-msgstr ""
+msgstr "ບໍ່ສາມາດພິມສະຫຼາກສຳລັບຜະລິດຕະພັນປະເພດການບໍລິການໄດ້"
 
 #. module: product
 #: model:product.template,name:product.product_product_6_product_template
 msgid "Large Cabinet"
-msgstr ""
+msgstr "ຕູ້ຂະໜາດໃຫຍ່"
 
 #. module: product
 #: model:product.template,name:product.product_product_8_product_template
 msgid "Large Desk"
-msgstr ""
+msgstr "ໂຕະໃຫຍ່"
 
 #. module: product
 #: model:product.template,name:product.consu_delivery_02_product_template
 msgid "Large Meeting Table"
-msgstr ""
+msgstr "ໂຕະປະຊຸມຂະໜາດໃຫຍ່"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__write_uid
@@ -2059,7 +2115,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_uom__write_uid
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "ອັບເດດລ້າສຸດໂດຍ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__write_date
@@ -2081,17 +2137,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_uom__write_date
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "ອັບເດດລ້າສຸດເມື່ອ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Late Activities"
-msgstr ""
+msgstr "ກິດຈະກຳທີ່ຊັກຊ້າ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
 msgid "Lead Time"
-msgstr ""
+msgstr "ໄລຍະເວລານຳສົ່ງ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__delay
@@ -2100,68 +2156,70 @@ msgid ""
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
 msgstr ""
+"ໄລຍະເວລາເປັນມື້ ລະຫວ່າງການຢືນຢັນໃບສັ່ງຊື້ ແລະ ການຮັບຜະລິດຕະພັນເຂົ້າສາງຂອງທ່ານ. ໃຊ້ໂດຍລະບົບວາງແຜ"
+"ນເພື່ອຄິດໄລ່ການວາງແຜນໃບສັ່ງຊື້ແບບອັດຕະໂນມັດ."
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_fabric_leather
 msgid "Leather"
-msgstr ""
+msgstr "ໜັງ"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_13_product_template
 msgid "Left-sided workspace with storage"
-msgstr ""
+msgstr "ບ່ອນເຮັດວຽກເບື້ອງຊ້າຍພ້ອມບ່ອນເກັບເຄື່ອງ"
 
 #. module: product
 #: model:product.attribute,name:product.pa_legs
 msgid "Legs"
-msgstr ""
+msgstr "ຂາຕັ້ງ"
 
 #. module: product
 #: model:product.attribute,name:product.pa_length
 msgid "Length"
-msgstr ""
+msgstr "ຄວາມຍາວ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_lenovo
 msgid "Lenovo"
-msgstr ""
+msgstr "Lenovo"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_levis
 msgid "Levi's"
-msgstr ""
+msgstr "Levi's"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_fabric_linen
 msgid "Linen"
-msgstr ""
+msgstr "ຜ້າລິນິນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__pav_attribute_line_ids
 msgid "Lines"
-msgstr ""
+msgstr "ລາຍການ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom
 msgid "Link between products and their UoMs"
-msgstr ""
+msgstr "ການເຊື່ອມຕໍ່ລະຫວ່າງຜະລິດຕະພັນ ແລະ ຫົວໜ່ວຍວັດແທກ"
 
 #. module: product
 #: model:product.template,name:product.product_product_local_delivery_product_template
 msgid "Local Delivery"
-msgstr ""
+msgstr "ການສົ່ງເຄື່ອງພາຍໃນທ້ອງຖິ່ນ"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Locally handmade"
-msgstr ""
+msgstr "ເຮັດດ້ວຍມືພາຍໃນທ້ອງຖິ່ນ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Logistics"
-msgstr ""
+msgstr "ໂລຈິສຕິກ"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -2169,11 +2227,12 @@ msgid ""
 "Looking for a custom bamboo stain to match existing furniture? Contact us "
 "for a quote."
 msgstr ""
+"ກຳລັງຊອກຫາສີຍ້ອມໄມ້ໄຜ່ແບບພິເສດເພື່ອໃຫ້ເຂົ້າກັບເຟີນີເຈີທີ່ມີຢູ່ບໍ່? ຕິດຕໍ່ພວກເຮົາເພື່ອຂໍໃບສະເໜີລາຄາ."
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_m
 msgid "M"
-msgstr ""
+msgstr "M"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
@@ -2181,47 +2240,49 @@ msgid ""
 "Make this attribute value not compatible with other values of the product or"
 " some attribute values of optional and accessory products."
 msgstr ""
+"ເຮັດໃຫ້ຄ່າຄຸນລັກສະນະນີ້ບໍ່ສາມາດໃຊ້ຮ່ວມກັບຄ່າອື່ນໆຂອງຜະລິດຕະພັນ ຫຼື ຄ່າຄຸນລັກສະນະບາງຢ່າງຂອງຜະລິດຕະພັນເສີ"
+"ມ."
 
 #. module: product
 #: model:res.groups,name:product.group_product_variant
 msgid "Manage Product Variants"
-msgstr ""
+msgstr "ຈັດການລຸ້ນຜະລິດຕະພັນ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Margins"
-msgstr ""
+msgstr "ກຳໄລ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_markup
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Markup"
-msgstr ""
+msgstr "ສ່ວນເພີ່ມລາຄາ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_maroon
 msgid "Maroon"
-msgstr ""
+msgstr "ສີແດງເຂັ້ມ (Maroon)"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Max. Margin"
-msgstr ""
+msgstr "ກຳໄລສູງສຸດ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_max_margin
 msgid "Max. Price Margin"
-msgstr ""
+msgstr "ສ່ວນຕ່າງລາຄາສູງສຸດ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_maybelline
 msgid "Maybelline"
-msgstr ""
+msgstr "Maybelline"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__message
 msgid "Message"
-msgstr ""
+msgstr "ຂໍ້ຄວາມ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__message_has_error
@@ -2229,7 +2290,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error
 #: model:ir.model.fields,field_description:product.field_product_template__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "ຂໍ້ຜິດພາດໃນການສົ່ງຂໍ້ຄວາມ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__message_ids
@@ -2237,80 +2298,81 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__message_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "ຂໍ້ຄວາມຕ່າງໆ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_fabric_metal
 msgid "Metal"
-msgstr ""
+msgstr "ໂລຫະ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__mimetype
 msgid "Mime Type"
-msgstr ""
+msgstr "ປະເພດ Mime"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Min Qty"
-msgstr ""
+msgstr "ຈຳນວນຂັ້ນຕ່ຳ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Min. Margin"
-msgstr ""
+msgstr "ກຳໄລຂັ້ນຕ່ຳ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_min_margin
 msgid "Min. Price Margin"
-msgstr ""
+msgstr "ສ່ວນຕ່າງລາຄາຂັ້ນຕ່ຳ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__min_quantity
 msgid "Min. Quantity"
-msgstr ""
+msgstr "ຈຳນວນຂັ້ນຕ່ຳ"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_8_product_template
 msgid "Minimalist wooden desk for executive use"
-msgstr ""
+msgstr "ໂຕະໄມ້ແບບມິນິມໍ ສຳລັບຜູ້ບໍລິຫານ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__mode
 msgid "Mode"
-msgstr ""
+msgstr "ໂໝດ"
 
 #. module: product
 #: model:product.template,name:product.monitor_stand_product_template
 msgid "Monitor Stand"
-msgstr ""
+msgstr "ຂາຕັ້ງຈໍມໍນິເຕີ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_montblanc
 msgid "Montblanc"
-msgstr ""
+msgstr "Montblanc"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__multi
 msgid "Multi-checkbox"
-msgstr ""
+msgstr "ກ່ອງເລືອກຫຼາຍອັນ (Multi-checkbox)"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_attribute_check_multi_checkbox_no_variant
 msgid ""
 "Multi-checkbox display type is not compatible with the creation of variants"
 msgstr ""
+"ປະເພດການສະແດງຜົນແບບ Multi-checkbox ບໍ່ສາມາດໃຊ້ຮ່ວມກັບການສ້າງລຸ້ນຜະລິດຕະພັນໄດ້"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "My Activities"
-msgstr ""
+msgstr "ກິດຈະກຳຂອງຂ້ອຍ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__my_activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_product__my_activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_template__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "ກຳນົດເວລາກິດຈະກຳຂອງຂ້ອຍ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__name
@@ -2322,76 +2384,76 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_tag__name
 #: model:ir.model.fields,field_description:product.field_product_template__name
 msgid "Name"
-msgstr ""
+msgstr "ຊື່"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_navy
 msgid "Navy"
-msgstr ""
+msgstr "ສີນ້ຳເງິນເຂັ້ມ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_nestle
 msgid "Nestlé"
-msgstr ""
+msgstr "Nestlé"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__no_variant
 msgid "Never"
-msgstr ""
+msgstr "ບໍ່ເຄີຍ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 msgid "New"
-msgstr ""
+msgstr "ໃໝ່"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_new_balance
 msgid "New Balance"
-msgstr ""
+msgstr "New Balance"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_calendar_event_id
 #: model:ir.model.fields,field_description:product.field_product_product__activity_calendar_event_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "ເຫດການປະຕິທິນກິດຈະກຳຖັດໄປ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_template__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "ກຳນົດເວລາກິດຈະກຳຖັດໄປ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_summary
 #: model:ir.model.fields,field_description:product.field_product_product__activity_summary
 #: model:ir.model.fields,field_description:product.field_product_template__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "ສະຫຼຸບກິດຈະກຳຖັດໄປ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_type_id
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "ປະເພດກິດຈະກຳຖັດໄປ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_nike
 msgid "Nike"
-msgstr ""
+msgstr "Nike"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_nikon
 msgid "Nikon"
-msgstr ""
+msgstr "Nikon"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_nivea
 msgid "Nivea"
-msgstr ""
+msgstr "Nivea"
 
 #. module: product
 #. odoo-python
@@ -2400,51 +2462,52 @@ msgid ""
 "No product to print, if the product is archived please unarchive it before "
 "printing its label."
 msgstr ""
+"ບໍ່ມີຜະລິດຕະພັນທີ່ຈະພິມ, ຖ້າຜະລິດຕະພັນຖືກຈັດເກັບແລ້ວ ກະລຸນາຍົກເລີກການຈັດເກັບກ່ອນທີ່ຈະພິມສະຫຼາກ."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_renderer.xml:0
 msgid "No products could be found."
-msgstr ""
+msgstr "ບໍ່ພົບຜະລິດຕະພັນ."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "No products found in the report"
-msgstr ""
+msgstr "ບໍ່ພົບຜະລິດຕະພັນໃນລາຍງານ"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
-msgstr ""
+msgstr "ບໍ່ພົບລາຍການລາຄາຂອງຜູ້ສະໜອງ"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_attribute_value_list.js:0
 msgid "No, keep it"
-msgstr ""
+msgstr "ບໍ່, ເກັບມັນໄວ້"
 
 #. module: product
 #: model:product.template,description_sale:product.product_template_acoustic_bloc_screens
 msgid "Noise-reducing panels for open spaces"
-msgstr ""
+msgstr "ແຜ່ນຫຼຸດຜ່ອນສຽງສຳລັບພື້ນທີ່ໂລ່ງ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 msgid "Note:"
-msgstr ""
+msgstr "ໝາຍເຫດ:"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_template__service_tracking__no
 msgid "Nothing"
-msgstr ""
+msgstr "ບໍ່ມີຫຍັງ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__number_related_products
 msgid "Number Related Products"
-msgstr ""
+msgstr "ຈຳນວນຜະລິດຕະພັນທີ່ກ່ຽວຂ້ອງ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__message_needaction_counter
@@ -2452,7 +2515,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,field_description:product.field_product_template__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "ຈຳນວນການດຳເນີນການ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__message_has_error_counter
@@ -2460,7 +2523,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error_counter
 #: model:ir.model.fields,field_description:product.field_product_template__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຜິດພາດ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__message_needaction_counter
@@ -2468,7 +2531,7 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product__message_needaction_counter
 #: model:ir.model.fields,help:product.field_product_template__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຄວາມທີ່ຕ້ອງດຳເນີນການ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__message_has_error_counter
@@ -2476,42 +2539,42 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
 #: model:ir.model.fields,help:product.field_product_template__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "ຈຳນວນຂໍ້ຄວາມທີ່ມີຂໍ້ຜິດພາດໃນການສົ່ງ"
 
 #. module: product
 #: model:product.template,name:product.product_delivery_01_product_template
 msgid "Office Chair"
-msgstr ""
+msgstr "ຕັ່ງຫ້ອງການ"
 
 #. module: product
 #: model:product.template,name:product.product_product_12_product_template
 msgid "Office Chair Black"
-msgstr ""
+msgstr "ຕັ່ງຫ້ອງການສີດຳ"
 
 #. module: product
 #: model:product.template,name:product.office_combo_product_template
 msgid "Office Combo"
-msgstr ""
+msgstr "ຊຸດເຄື່ອງໃຊ້ຫ້ອງການ"
 
 #. module: product
 #: model:product.template,name:product.product_order_01_product_template
 msgid "Office Design Software"
-msgstr ""
+msgstr "ຊອຟແວອອກແບບຫ້ອງການ"
 
 #. module: product
 #: model:product.template,name:product.product_delivery_02_product_template
 msgid "Office Lamp"
-msgstr ""
+msgstr "ໂຄມໄຟຫ້ອງການ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_olay
 msgid "Olay"
-msgstr ""
+msgstr "Olay"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_olive
 msgid "Olive"
-msgstr ""
+msgstr "ສີຂຽວໝາກກອກ"
 
 #. module: product
 #. odoo-python
@@ -2520,6 +2583,8 @@ msgid ""
 "On the product %(product)s you cannot associate the value %(value)s with the"
 " attribute %(attribute)s because they do not match."
 msgstr ""
+"ໃນຜະລິດຕະພັນ %(product)s ທ່ານບໍ່ສາມາດເຊື່ອມໂຍງຄ່າ %(value)s ກັບຄຸນລັກສະນະ %(attribute)s "
+"ເພາະວ່າມັນບໍ່ກົງກັນ."
 
 #. module: product
 #. odoo-python
@@ -2528,134 +2593,137 @@ msgid ""
 "On the product %(product)s you cannot transform the attribute "
 "%(attribute_src)s into the attribute %(attribute_dest)s."
 msgstr ""
+"ໃນຜະລິດຕະພັນ %(product)s ທ່ານບໍ່ສາມາດປ່ຽນຄຸນລັກສະນະ %(attribute_src)s ເປັນຄຸນລັກສະນະ %"
+"(attribute_dest)s."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.js:0
 msgid "Oops! '%(fileName)s' didn’t upload since its format isn’t allowed."
 msgstr ""
+"ຂໍໂທດ! '%(fileName)s' ບໍ່ສາມາດອັບໂຫຼດໄດ້ ເພາະຮູບແບບໄຟລ໌ບໍ່ໄດ້ຮັບອະນຸຍາດ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo_item__product_id
 #: model:product.attribute,name:product.pa_options
 msgid "Options"
-msgstr ""
+msgstr "ທາງເລືອກ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_oral_b
 msgid "Oral-B"
-msgstr ""
+msgstr "Oral-B"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_orange
 msgid "Orange"
-msgstr ""
+msgstr "ສີສົ້ມ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
 msgid "Original (unoptimized, unresized) attachment"
-msgstr ""
+msgstr "ໄຟລ໌ຄັດຕິດເດີມ (ບໍ່ໄດ້ປັບແຕ່ງ, ບໍ່ໄດ້ປັບຂະໜາດ)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo_item__lst_price
 msgid "Original Price"
-msgstr ""
+msgstr "ລາຄາເດີມ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__base_pricelist_id
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__base__pricelist
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Other Pricelist"
-msgstr ""
+msgstr "ລາຍການລາຄາອື່ນ"
 
 #. module: product
 #: model:product.template,name:product.product_template_dining_table
 msgid "Outdoor dining table"
-msgstr ""
+msgstr "ໂຕະກິນເຂົ້າກາງແຈ້ງ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_options_overhead_shelves
 msgid "Overhead shelves"
-msgstr ""
+msgstr "ຊັ້ນວາງເຄື່ອງເທິງຫົວ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "Package Type A"
-msgstr ""
+msgstr "ປະເພດຫຸ້ມຫໍ່ A"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/uom_uom.py:0
 #: model_terms:ir.ui.view,arch_db:product.product_uom_list_view
 msgid "Packaging Barcodes"
-msgstr ""
+msgstr "ບາໂຄດການຫຸ້ມຫໍ່"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_packaging
 msgid "Packaging Barcodes (PDF)"
-msgstr ""
+msgstr "ບາໂຄດການຫຸ້ມຫໍ່ (PDF)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_ids
 #: model:ir.model.fields,field_description:product.field_product_template__uom_ids
 msgid "Packagings"
-msgstr ""
+msgstr "ການຫຸ້ມຫໍ່"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_panasonic
 msgid "Panasonic"
-msgstr ""
+msgstr "Panasonic"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_pantene
 msgid "Pantene"
-msgstr ""
+msgstr "Pantene"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
 msgid "Parent Category"
-msgstr ""
+msgstr "ໝວດໝູ່ຫຼັກ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "ເສັ້ນທາງຫຼັກ"
 
 #. module: product
 #: model:product.template,name:product.product_product_9_product_template
 msgid "Pedal Bin"
-msgstr ""
+msgstr "ຖັງຂີ້ເຫຍື້ອແບບຢຽບ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_pepsi
 msgid "Pepsi"
-msgstr ""
+msgstr "Pepsi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__percent_price
 msgid "Percentage Price"
-msgstr ""
+msgstr "ລາຄາເປັນເປີເຊັນ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_philips
 msgid "Philips"
-msgstr ""
+msgstr "Philips"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__pills
 msgid "Pills"
-msgstr ""
+msgstr "ເມັດ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_pink
 msgid "Pink"
-msgstr ""
+msgstr "ສີບົວ"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Please enter a positive whole number."
-msgstr ""
+msgstr "ກະລຸນາປ້ອນເລກຖ້ວນບວກ."
 
 #. module: product
 #. odoo-python
@@ -2666,36 +2734,40 @@ msgid ""
 "\n"
 "Invalid URL: %s"
 msgstr ""
+"ກະລຸນາປ້ອນ URL ທີ່ຖືກຕ້ອງ.\n"
+"ຕົວຢ່າງ: https://www.odoo.com\n"
+"\n"
+"URL ທີ່ບໍ່ຖືກຕ້ອງ: %s"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Please select some products first."
-msgstr ""
+msgstr "ກະລຸນາເລືອກບາງຜະລິດຕະພັນກ່ອນ."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "Please specify the category for which this rule should be applied"
-msgstr ""
+msgstr "ກະລຸນາລະບຸໝວດໝູ່ທີ່ຈະນຳໃຊ້ກົດເກນນີ້"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "Please specify the product for which this rule should be applied"
-msgstr ""
+msgstr "ກະລຸນາລະບຸຜະລິດຕະພັນທີ່ຈະນຳໃຊ້ກົດເກນນີ້"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid ""
 "Please specify the product variant for which this rule should be applied"
-msgstr ""
+msgstr "ກະລຸນາລະບຸຕົວປ່ຽນຜະລິດຕະພັນທີ່ຈະນຳໃຊ້ກົດເກນນີ້"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__1
 msgid "Pounds (lb)"
-msgstr ""
+msgstr "ປອນ (lb)"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -2703,46 +2775,47 @@ msgid ""
 "Press a button and watch your desk glide effortlessly from sitting to "
 "standing height in seconds."
 msgstr ""
+"ກົດປຸ່ມແລ້ວເບິ່ງໂຕະຂອງທ່ານເລື່ອນຈາກລະດັບນັ່ງເປັນລະດັບຢືນໄດ້ຢ່າງງ່າຍດາຍໃນບໍ່ເທົ່າໃດວິນາທີ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Price"
-msgstr ""
+msgstr "ລາຄາ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_discount
 msgid "Price Discount"
-msgstr ""
+msgstr "ສ່ວນຫຼຸດລາຄາ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__price_round
 msgid "Price Rounding"
-msgstr ""
+msgstr "ການປັດເສດລາຄາ"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_item_action
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
 msgid "Price Rules"
-msgstr ""
+msgstr "ກົດເກນລາຄາ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Price Type"
-msgstr ""
+msgstr "ປະເພດລາຄາ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__list_price
 #: model:ir.model.fields,help:product.field_product_template__list_price
 msgid "Price at which the product is sold to customers."
-msgstr ""
+msgstr "ລາຄາທີ່ຜະລິດຕະພັນຖືກຂາຍໃຫ້ລູກຄ້າ."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_kanban_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
 msgid "Price:"
-msgstr ""
+msgstr "ລາຄາ:"
 
 #. module: product
 #. odoo-javascript
@@ -2757,18 +2830,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Pricelist"
-msgstr ""
+msgstr "ລາຍການລາຄາ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__applied_on
 #: model:ir.model.fields,help:product.field_product_pricelist_item__display_applied_on
 msgid "Pricelist Item applicable on selected option"
-msgstr ""
+msgstr "ລາຍການໃນລາຍການລາຄາທີ່ສາມາດນຳໃຊ້ກັບທາງເລືອກທີ່ເລືອກ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__name
 msgid "Pricelist Name"
-msgstr ""
+msgstr "ຊື່ລາຍການລາຄາ"
 
 #. module: product
 #. odoo-javascript
@@ -2777,19 +2850,19 @@ msgstr ""
 #: model:ir.actions.server,name:product.action_product_template_price_list_report
 #: model:ir.model,name:product.model_report_product_report_pricelist
 msgid "Pricelist Report"
-msgstr ""
+msgstr "ລາຍງານລາຍການລາຄາ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist.py:0
 msgid "Pricelist Report Preview"
-msgstr ""
+msgstr "ຕົວຢ່າງລາຍງານລາຍການລາຄາ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Pricelist Rule"
-msgstr ""
+msgstr "ກົດເກນລາຍການລາຄາ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__item_ids
@@ -2798,24 +2871,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view_from_product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Pricelist Rules"
-msgstr ""
+msgstr "ກົດເກນລາຍການລາຄາ"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action2
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_pricelist
 #: model:ir.model.fields,field_description:product.field_res_country_group__pricelist_ids
 msgid "Pricelists"
-msgstr ""
+msgstr "ລາຍການລາຄາ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Prices"
-msgstr ""
+msgstr "ລາຄາ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Pricing"
-msgstr ""
+msgstr "ການກຳນົດລາຄາ"
 
 #. module: product
 #. odoo-javascript
@@ -2823,19 +2896,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Print"
-msgstr ""
+msgstr "ພິມ"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_open_label_layout
 #: model:ir.actions.server,name:product.action_product_print_labels
 #: model:ir.actions.server,name:product.action_product_template_print_labels
 msgid "Print Labels"
-msgstr ""
+msgstr "ພິມສະຫຼາກ"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_24_product_template
 msgid "Private pod with desk and chair"
-msgstr ""
+msgstr "ຕູ້ສ່ວນຕົວພ້ອມໂຕະ ແລະ ຕັ່ງ"
 
 #. module: product
 #. odoo-python
@@ -2862,46 +2935,46 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_view_kanban_catalog
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Product"
-msgstr ""
+msgstr "ຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_form
 msgid "Product Attribute"
-msgstr ""
+msgstr "ຄຸນລັກສະນະຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr ""
+msgstr "ຄ່າກຳນົດເອງຂອງຄຸນລັກສະນະຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__product_template_value_ids
 msgid "Product Attribute Values"
-msgstr ""
+msgstr "ຄ່າຄຸນລັກສະນະຜະລິດຕະພັນ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
 msgid "Product Attribute and Values"
-msgstr ""
+msgstr "ຄຸນລັກສະນະ ແລະ ຄ່າຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template__attribute_line_ids
 msgid "Product Attributes"
-msgstr ""
+msgstr "ຄຸນລັກສະນະຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_catalog_mixin
 msgid "Product Catalog Mixin"
-msgstr ""
+msgstr "Product Catalog Mixin"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_list_view
 #: model_terms:ir.ui.view,arch_db:product.product_category_search_view
 msgid "Product Categories"
-msgstr ""
+msgstr "ໝວດໝູ່ຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
@@ -2912,103 +2985,103 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Product Category"
-msgstr ""
+msgstr "ໝວດໝູ່ຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_combo
 msgid "Product Combo"
-msgstr ""
+msgstr "ຊຸດຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_combo_item
 msgid "Product Combo Item"
-msgstr ""
+msgstr "ລາຍການໃນຊຸດຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_combo__combo_item_count
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__product_count
 msgid "Product Count"
-msgstr ""
+msgstr "ຈຳນວນຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_document
 msgid "Product Document"
-msgstr ""
+msgstr "ເອກະສານຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_dymo
 msgid "Product Label (PDF)"
-msgstr ""
+msgstr "ສະຫຼາກຜະລິດຕະພັນ (PDF)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_2x7
 msgid "Product Label 2x7 (PDF)"
-msgstr ""
+msgstr "ສະຫຼາກຜະລິດຕະພັນ 2x7 (PDF)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x12
 msgid "Product Label 4x12 (PDF)"
-msgstr ""
+msgstr "ສະຫຼາກຜະລິດຕະພັນ 4x12 (PDF)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x12_noprice
 msgid "Product Label 4x12 No Price (PDF)"
-msgstr ""
+msgstr "ສະຫຼາກຜະລິດຕະພັນ 4x12 ບໍ່ມີລາຄາ (PDF)"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_template_label_4x7
 msgid "Product Label 4x7 (PDF)"
-msgstr ""
+msgstr "ສະຫຼາກຜະລິດຕະພັນ 4x7 (PDF)"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel_dymo
 msgid "Product Label Report"
-msgstr ""
+msgstr "ລາຍງານສະຫຼາກຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel2x7
 msgid "Product Label Report 2x7"
-msgstr ""
+msgstr "ລາຍງານສະຫຼາກຜະລິດຕະພັນ 2x7"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12
 msgid "Product Label Report 4x12"
-msgstr ""
+msgstr "ລາຍງານສະຫຼາກຜະລິດຕະພັນ 4x12"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x12noprice
 msgid "Product Label Report 4x12 No Price"
-msgstr ""
+msgstr "ລາຍງານສະຫຼາກຜະລິດຕະພັນ 4x12 ບໍ່ມີລາຄາ"
 
 #. module: product
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel4x7
 msgid "Product Label Report 4x7"
-msgstr ""
+msgstr "ລາຍງານສະຫຼາກຜະລິດຕະພັນ 4x7"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Product Name"
-msgstr ""
+msgstr "ຊື່ຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__product_properties_definition
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Product Properties"
-msgstr ""
+msgstr "ຄຸນສົມບັດຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_tag
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "Product Tag"
-msgstr ""
+msgstr "ແທັກຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_tag_action
 #: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 msgid "Product Tags"
-msgstr ""
+msgstr "ແທັກຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tmpl_id
@@ -3019,39 +3092,39 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_search_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Product Template"
-msgstr ""
+msgstr "ແມ່ແບບຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_exclusion
 msgid "Product Template Attribute Exclusion"
-msgstr ""
+msgstr "ການຍົກເວັ້ນຄຸນລັກສະນະແມ່ແບບຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr ""
+msgstr "ແຖວຄຸນລັກສະນະແມ່ແບບຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_value
 msgid "Product Template Attribute Value"
-msgstr ""
+msgstr "ຄ່າຄຸນລັກສະນະແມ່ແບບຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_template_ids
 #: model_terms:ir.ui.view,arch_db:product.product_template_view_tree_tag
 msgid "Product Templates"
-msgstr ""
+msgstr "ແມ່ແບບຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
 msgid "Product Tmpl"
-msgstr ""
+msgstr "ແມ່ແບບ ຜລຕພ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tooltip
 #: model:ir.model.fields,field_description:product.field_product_template__product_tooltip
 msgid "Product Tooltip"
-msgstr ""
+msgstr "ຄຳແນະນຳຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__type
@@ -3059,18 +3132,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Product Type"
-msgstr ""
+msgstr "ປະເພດຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model,name:product.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "ຫົວໜ່ວຍວັດແທກຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__import_attribute_values
 #: model:ir.model.fields,field_description:product.field_product_template__import_attribute_values
 msgid "Product Values"
-msgstr ""
+msgstr "ຄ່າຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
@@ -3080,13 +3153,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_normal_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_tag_tree_view
 msgid "Product Variant"
-msgstr ""
+msgstr "ຕົວປ່ຽນຜະລິດຕະພັນ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid "Product Variant Values"
-msgstr ""
+msgstr "ຄ່າຕົວປ່ຽນຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -3097,13 +3170,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_activity
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_tree_tag
 msgid "Product Variants"
-msgstr ""
+msgstr "ຕົວປ່ຽນຜະລິດຕະພັນ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/report/product_label_report.py:0
 msgid "Product model not defined, Please contact your administrator."
-msgstr ""
+msgstr "ບໍ່ໄດ້ກຳນົດໂມເດວຜະລິດຕະພັນ, ກະລຸນາຕິດຕໍ່ຜູ້ເບິ່ງແຍງລະບົບຂອງທ່ານ."
 
 #. module: product
 #. odoo-python
@@ -3117,133 +3190,133 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_view_activity
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Products"
-msgstr ""
+msgstr "ຜະລິດຕະພັນ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
 msgid "Products Price"
-msgstr ""
+msgstr "ລາຄາຜະລິດຕະພັນ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_tree
 msgid "Products Price List"
-msgstr ""
+msgstr "ລາຍການລາຄາຜະລິດຕະພັນ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 msgid "Products Price Rules Search"
-msgstr ""
+msgstr "ຄົ້ນຫາກົດເກນລາຄາຜະລິດຕະພັນ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view_search
 msgid "Products Price Search"
-msgstr ""
+msgstr "ຄົ້ນຫາລາຄາຜະລິດຕະພັນ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "Products: %(category)s"
-msgstr ""
+msgstr "ຜະລິດຕະພັນ: %(category)s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_loyalty
 msgid "Promotions, Coupons, Gift Card & Loyalty Program"
-msgstr ""
+msgstr "ໂປຣໂມຊັ່ນ, ຄູປ໋ອງ, ບັດຂອງຂວັນ ແລະ ໂຄງການສະສົມຄະແນນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_properties
 #: model:ir.model.fields,field_description:product.field_product_template__product_properties
 msgid "Properties"
-msgstr ""
+msgstr "ຄຸນສົມບັດ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_puma
 msgid "Puma"
-msgstr ""
+msgstr "Puma"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__purchase_ok
 #: model:ir.model.fields,field_description:product.field_product_template__purchase_ok
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Purchase"
-msgstr ""
+msgstr "ຈັດຊື້"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__description_purchase
 #: model:ir.model.fields,field_description:product.field_product_template__description_purchase
 msgid "Purchase Description"
-msgstr ""
+msgstr "ຄຳອະທິບາຍການຈັດຊື້"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_purple
 msgid "Purple"
-msgstr ""
+msgstr "ສີມ່ວງ"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Quantities"
-msgstr ""
+msgstr "ຈຳນວນ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Quantities (Price)"
-msgstr ""
+msgstr "ຈຳນວນ (ລາຄາ)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__min_qty
 msgid "Quantity"
-msgstr ""
+msgstr "ຈຳນວນ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/controllers/pricelist_report.py:0
 msgid "Quantity (%s UoM)"
-msgstr ""
+msgstr "ຈຳນວນ (%s ຫົວໜ່ວຍ)"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "Quantity already present (%s)."
-msgstr ""
+msgstr "ຈຳນວນມີຢູ່ແລ້ວ (%s)."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Quotation Description"
-msgstr ""
+msgstr "ຄຳອະທິບາຍໃບສະເໜີລາຄາ"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
 msgid "Radio"
-msgstr ""
+msgstr "ປຸ່ມເລືອກ (Radio)"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_rayban
 msgid "Ray-Ban"
-msgstr ""
+msgstr "Ray-Ban"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "Recursive pricelist rules detected: %s"
-msgstr ""
+msgstr "ພົບກົດເກນລາຍການລາຄາແບບວົນຊ້ຳ: %s"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_red
 msgid "Red"
-msgstr ""
+msgstr "ສີແດງ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_reebok
 msgid "Reebok"
-msgstr ""
+msgstr "Reebok"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__code
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Reference"
-msgstr ""
+msgstr "ເລກອ້າງອີງ"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -3251,95 +3324,96 @@ msgid ""
 "Register the prices requested by your vendors for each product, based on the"
 " quantity and the period."
 msgstr ""
+"ລົງທະບຽນລາຄາທີ່ຜູ້ສະໜອງຂອງທ່ານຮຽກເກັບສຳລັບແຕ່ລະຜະລິດຕະພັນ, ໂດຍອີງຕາມຈຳນວນ ແລະ ໄລຍະເວລາ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__product_tmpl_ids
 msgid "Related Products"
-msgstr ""
+msgstr "ຜະລິດຕະພັນທີ່ກ່ຽວຂ້ອງ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__ptav_product_variant_ids
 msgid "Related Variants"
-msgstr ""
+msgstr "ຕົວປ່ຽນທີ່ກ່ຽວຂ້ອງ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__ir_attachment_id
 msgid "Related attachment"
-msgstr ""
+msgstr "ໄຟລ໌ຄັດຕິດທີ່ກ່ຽວຂ້ອງ"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "Remove"
-msgstr ""
+msgstr "ລຶບອອກ"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Remove quantity"
-msgstr ""
+msgstr "ລຶບຈຳນວນອອກ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__res_field
 msgid "Resource Field"
-msgstr ""
+msgstr "ຟິວຊັບພະຍາກອນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__res_id
 msgid "Resource ID"
-msgstr ""
+msgstr "ໄອດີຊັບພະຍາກອນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__res_model
 msgid "Resource Model"
-msgstr ""
+msgstr "ໂມເດວຊັບພະຍາກອນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__res_name
 msgid "Resource Name"
-msgstr ""
+msgstr "ຊື່ຊັບພະຍາກອນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_user_id
 #: model:ir.model.fields,field_description:product.field_product_product__activity_user_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "ຜູ້ຮັບຜິດຊອບ"
 
 #. module: product
 #: model:product.template,name:product.expense_product_product_template
 msgid "Restaurant Expenses"
-msgstr ""
+msgstr "ຄ່າໃຊ້ຈ່າຍຮ້ານອາຫານ"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_5_product_template
 msgid "Right-aligned desk with storage"
-msgstr ""
+msgstr "ໂຕະແບບຈັດວາງເບື້ອງຂວາພ້ອມບ່ອນເກັບເຄື່ອງ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_rolex
 msgid "Rolex"
-msgstr ""
+msgstr "Rolex"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Round off to"
-msgstr ""
+msgstr "ປັດເສດເປັນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__rows
 msgid "Rows"
-msgstr ""
+msgstr "ແຖວ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
 msgid "Rule Tip"
-msgstr ""
+msgstr "ຄຳແນະນຳກົດເກນ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_s
 msgid "S"
-msgstr ""
+msgstr "S"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__sale_ok
@@ -3348,13 +3422,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Sales"
-msgstr ""
+msgstr "ການຂາຍ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__description_sale
 #: model:ir.model.fields,field_description:product.field_product_template__description_sale
 msgid "Sales Description"
-msgstr ""
+msgstr "ຄຳອະທິບາຍການຂາຍ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__list_price
@@ -3364,33 +3438,33 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_tree_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Sales Price"
-msgstr ""
+msgstr "ລາຄາຂາຍ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "Sales Prices"
-msgstr ""
+msgstr "ລາຄາຂາຍ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__lst_price
 msgid "Sales Price"
-msgstr ""
+msgstr "ລາຄາ ຂາຍ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_samsung
 msgid "Samsung"
-msgstr ""
+msgstr "Samsung"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_name_and_description/product_name_and_description.js:0
 msgid "Search a product"
-msgstr ""
+msgstr "ຄົ້ນຫາຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__select
 msgid "Select"
-msgstr ""
+msgstr "ເລືອກ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__sequence
@@ -3404,18 +3478,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template__sequence
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "ລຳດັບ"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_template__type__service
 msgid "Service"
-msgstr ""
+msgstr "ການບໍລິການ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Services"
-msgstr ""
+msgstr "ການບໍລິການ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_round
@@ -3424,48 +3498,51 @@ msgid ""
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, round off to 10.00 and set an extra at -0.01"
 msgstr ""
+"ຕັ້ງຄ່າລາຄາໃຫ້ເປັນຕົວຄູນຂອງຄ່ານີ້.\n"
+"ການປັດເສດຈະຖືກນຳໃຊ້ຫຼັງຈາກສ່ວນຫຼຸດ ແລະ ກ່ອນການບວກເພີ່ມ.\n"
+"ເພື່ອໃຫ້ໄດ້ລາຄາທີ່ລົງທ້າຍດ້ວຍ 9.99, ໃຫ້ປັດເສດເປັນ 10.00 ແລະ ຕັ້ງຄ່າບວກເພີ່ມເປັນ -0.01"
 
 #. module: product
 #: model:product.attribute,name:product.pa_shoe_size
 msgid "Shoes size"
-msgstr ""
+msgstr "ຂະໜາດເກີບ"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Show Name"
-msgstr ""
+msgstr "ສະແດງຊື່"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "ສະແດງຂໍ້ມູນທັງໝົດທີ່ວັນທີກິດຈະກຳຖັດໄປກາຍກຳນົດແລ້ວ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_silver
 msgid "Silver"
-msgstr ""
+msgstr "ສີເງິນ"
 
 #. module: product
 #: model:product.attribute,name:product.pa_size
 msgid "Size"
-msgstr ""
+msgstr "ຂະໜາດ"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_9_product_template
 msgid "Soft-close pedal bin for office use"
-msgstr ""
+msgstr "ຖັງຂີ້ເຫຍື້ອແບບຢຽບຝາປິດແບບນຸ້ມນວນສຳລັບຫ້ອງການ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_sony
 msgid "Sony"
-msgstr ""
+msgstr "Sony"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_partner__specific_property_product_pricelist
 #: model:ir.model.fields,field_description:product.field_res_users__specific_property_product_pricelist
 msgid "Specific Property Product Pricelist"
-msgstr ""
+msgstr "ລາຍການລາຄາຜະລິດຕະພັນຄຸນສົມບັດສະເພາະ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__categ_id
@@ -3473,6 +3550,7 @@ msgid ""
 "Specify a product category if this rule only applies to products belonging "
 "to this category or its children categories. Keep empty otherwise."
 msgstr ""
+"ລະບຸໝວດໝູ່ຜະລິດຕະພັນຖ້າກົດເກນນີ້ໃຊ້ກັບຜະລິດຕະພັນໃນໝວດໝູ່ນີ້ ຫຼື ໝວດໝູ່ຍ່ອຍເທົ່ານັ້ນ. ຖ້າບໍ່ດັ່ງນັ້ນໃຫ້ປະຫວ່າງໄວ້."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_id
@@ -3480,6 +3558,7 @@ msgid ""
 "Specify a product if this rule only applies to one product. Keep empty "
 "otherwise."
 msgstr ""
+"ລະບຸຜະລິດຕະພັນຖ້າກົດເກນນີ້ໃຊ້ກັບຜະລິດຕະພັນດຽວເທົ່ານັ້ນ. ຖ້າບໍ່ດັ່ງນັ້ນໃຫ້ປະຫວ່າງໄວ້."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__product_tmpl_id
@@ -3487,6 +3566,7 @@ msgid ""
 "Specify a template if this rule only applies to one product template. Keep "
 "empty otherwise."
 msgstr ""
+"ລະບຸແມ່ແບບຖ້າກົດເກນນີ້ໃຊ້ກັບແມ່ແບບຜະລິດຕະພັນດຽວເທົ່ານັ້ນ. ຖ້າບໍ່ດັ່ງນັ້ນໃຫ້ປະຫວ່າງໄວ້."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_surcharge
@@ -3494,27 +3574,28 @@ msgid ""
 "Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
 msgstr ""
+"ລະບຸຈຳນວນຄົງທີ່ທີ່ຈະບວກເພີ່ມ ຫຼື ລົບອອກ (ຖ້າເປັນຄ່າລົບ) ຈາກຈຳນວນທີ່ຄຳນວນດ້ວຍສ່ວນຫຼຸດ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
 msgid "Specify the maximum amount of margin over the base price."
-msgstr ""
+msgstr "ລະບຸຈຳນວນກຳໄລສູງສຸດເທິງລາຄາພື້ນຖານ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_min_margin
 msgid "Specify the minimum amount of margin over the base price."
-msgstr ""
+msgstr "ລະບຸຈຳນວນກຳໄລຕ່ຳສຸດເທິງລາຄາພື້ນຖານ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_start
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__date_start
 msgid "Start Date"
-msgstr ""
+msgstr "ວັນທີເລີ່ມຕົ້ນ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__date_start
 msgid "Start date for this vendor price"
-msgstr ""
+msgstr "ວັນທີເລີ່ມຕົ້ນສຳລັບລາຄາຜູ້ສະໜອງນີ້"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__date_start
@@ -3522,6 +3603,8 @@ msgid ""
 "Starting datetime for the pricelist item validation\n"
 "The displayed value depends on the timezone set in your preferences."
 msgstr ""
+"ວັນເວລາເລີ່ມຕົ້ນສຳລັບການກວດສອບລາຍການລາຄາ\n"
+"ຄ່າທີ່ສະແດງຈະຂຶ້ນກັບເຂດເວລາທີ່ຕັ້ງໄວ້ໃນການຕັ້ງຄ່າສ່ວນຕົວຂອງທ່ານ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__activity_state
@@ -3533,36 +3616,40 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"ສະຖານະຕາມກິດຈະກຳ\n"
+"ກາຍກຳນົດ: ວັນຄົບກຳນົດໄດ້ຜ່ານໄປແລ້ວ\n"
+"ມື້ນີ້: ວັນທີກິດຈະກຳແມ່ນມື້ນີ້\n"
+"ວາງແຜນ: ກິດຈະກຳໃນອະນາຄົດ."
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_legs_steel
 msgid "Steel"
-msgstr ""
+msgstr "ເຫຼັກ"
 
 #. module: product
 #: model:product.template,name:product.product_product_7_product_template
 msgid "Storage Box"
-msgstr ""
+msgstr "ກ່ອງເກັບເຄື່ອງ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__store_fname
 msgid "Stored Filename"
-msgstr ""
+msgstr "ຊື່ໄຟລ໌ທີ່ຈັດເກັບ"
 
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr ""
+msgstr "ລາຍການລາຄາຜູ້ສະໜອງ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "Tag"
-msgstr ""
+msgstr "ແທັກ"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_tag_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "ຊື່ແທັກນີ້ມີຢູ່ແລ້ວ!"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_tag_ids
@@ -3571,39 +3658,39 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Tags"
-msgstr ""
+msgstr "ແທັກ"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Tags are used to search product for a given theme."
-msgstr ""
+msgstr "ແທັກຖືກໃຊ້ເພື່ອຄົ້ນຫາຜະລິດຕະພັນຕາມຫົວຂໍ້ທີ່ກຳນົດ."
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_tan
 msgid "Tan"
-msgstr ""
+msgstr "ສີແທນ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_teal
 msgid "Teal"
-msgstr ""
+msgstr "ສີຟ້າອົມຂຽວ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__template_value_ids
 msgid "Template Values"
-msgstr ""
+msgstr "ຄ່າແມ່ແບບ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "The Internal Reference '%s' already exists."
-msgstr ""
+msgstr "ເລກອ້າງອີງພາຍໃນ '%s' ມີຢູ່ແລ້ວ."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 msgid "The Reference '%s' already exists."
-msgstr ""
+msgstr "ເລກອ້າງອີງ '%s' ມີຢູ່ແລ້ວ."
 
 #. module: product
 #. odoo-python
@@ -3612,20 +3699,21 @@ msgid ""
 "The attribute %(attribute)s must have at least one value for the product "
 "%(product)s."
 msgstr ""
+"ຄຸນລັກສະນະ %(attribute)s ຕ້ອງມີຢ່າງໜ້ອຍໜຶ່ງຄ່າສຳລັບຜະລິດຕະພັນ %(product)s."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__attribute_id
 msgid ""
 "The attribute cannot be changed once the value is used on at least one "
 "product."
-msgstr ""
+msgstr "ຄຸນລັກສະນະບໍ່ສາມາດປ່ຽນແປງໄດ້ເມື່ອຄ່າຖືກໃຊ້ໃນຢ່າງໜ້ອຍໜຶ່ງຜະລິດຕະພັນ."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 msgid "The cost of a product can't be negative."
-msgstr ""
+msgstr "ຕົ້ນທຶນຂອງຜະລິດຕະພັນບໍ່ສາມາດເປັນຄ່າລົບໄດ້."
 
 #. module: product
 #: model:product.template,description_sale:product.desk_organizer_product_template
@@ -3634,13 +3722,15 @@ msgid ""
 "since the 5 boxes are loose, you can move and place them in the way that "
 "suits you and your things best."
 msgstr ""
+"ກ່ອງຈັດລະບຽບໂຕະເຮັດວຽກແມ່ນເໝາະສຳລັບເກັບເຄື່ອງນ້ອຍໆທຸກຊະນິດ ແລະ ເນື່ອງຈາກກ່ອງທັງ 5 ບໍ່ໄດ້ຕິດກັນ, ທ່"
+"ານສາມາດຍ້າຍ ແລະ ວາງພວກມັນໃນແບບທີ່ເໝາະສົມກັບທ່ານ ແລະ ເຄື່ອງຂອງຂອງທ່ານໄດ້ດີທີ່ສຸດ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__display_type
 #: model:ir.model.fields,help:product.field_product_attribute_value__display_type
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__display_type
 msgid "The display type used in the Product Configurator."
-msgstr ""
+msgstr "ປະເພດການສະແດງຜົນທີ່ໃຊ້ໃນຕົວຕັ້ງຄ່າຜະລິດຕະພັນ."
 
 #. module: product
 #. odoo-python
@@ -3650,6 +3740,8 @@ msgid ""
 "is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", "
 "\"%(id)s\""
 msgstr ""
+"ຜະລິດຕະພັນທີ່ມີຢູ່ມີຄ່າຄຸນລັກສະນະທີ່ແຕກຕ່າງກັນ. \"%(imported_values)s\" ບໍ່ເທົ່າກັບ \"%"
+"(existing_values)s\" ສຳລັບ \"%(external_id)s\", \"%(id)s\""
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -3657,12 +3749,13 @@ msgid ""
 "The minimum height is 65 cm, and for standing work the maximum height "
 "position is 125 cm."
 msgstr ""
+"ຄວາມສູງຕ່ຳສຸດແມ່ນ 65 ຊມ, ແລະ ສຳລັບການຢືນເຮັດວຽກ ຄວາມສູງສູງສຸດແມ່ນ 125 ຊມ."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "The minimum margin should be lower than the maximum margin."
-msgstr ""
+msgstr "ກຳໄລຕ່ຳສຸດຄວນຈະຕ່ຳກວ່າກຳໄລສູງສຸດ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_combo__base_price
@@ -3672,13 +3765,15 @@ msgid ""
 "combo product. This heuristic ensures that whatever product the user chooses"
 " in a combo, it will always be the same price."
 msgstr ""
+"ລາຄາຕ່ຳສຸດໃນບັນດາຜະລິດຕະພັນໃນຊຸດນີ້. ຄ່ານີ້ຈະຖືກໃຊ້ເພື່ອສະເລ່ຍລາຄາຂອງຊຸດນີ້ເມື່ອທຽບກັບຊຸດອື່ນໆໃນຜະລິດຕະ"
+"ພັນຊຸດ. ວິທີນີ້ຮັບປະກັນວ່າບໍ່ວ່າລູກຄ້າຈະເລືອກຜະລິດຕະພັນໃດໃນຊຸດ, ລາຄາຈະເທົ່າກັນສະເໝີ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_category__product_count
 msgid ""
 "The number of products under this category (Does not consider the children "
 "categories)"
-msgstr ""
+msgstr "ຈຳນວນຜະລິດຕະພັນພາຍໃຕ້ໝວດໝູ່ນີ້ (ບໍ່ລວມໝວດໝູ່ຍ່ອຍ)"
 
 #. module: product
 #. odoo-python
@@ -3689,17 +3784,20 @@ msgid ""
 "the sales order. To do so, open the form view of attributes and change the "
 "mode of *Create Variants*."
 msgstr ""
+"ຈຳນວນຕົວປ່ຽນທີ່ຈະສ້າງນັ້ນເກີນຂີດຈຳກັດທີ່ອະນຸຍາດ. ທ່ານຄວນເລືອກບໍ່ສ້າງຕົວປ່ຽນສຳລັບທຸກການປະສົມ ຫຼື ສ້າງພວກ"
+"ມັນຕາມຄວາມຕ້ອງການຈາກໃບສັ່ງຂາຍ. ເພື່ອເຮັດສິ່ງນີ້, ໃຫ້ເປີດໜ້າຄຸນລັກສະນະ ແລະ ປ່ຽນຮູບແບບຂອງ *ສ້າງຕົວປ່"
+"ຽນ*."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__price
 msgid "The price to purchase a product"
-msgstr ""
+msgstr "ລາຄາເພື່ອຈັດຊື້ຜະລິດຕະພັນ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "The product template is archived so no combination is possible."
-msgstr ""
+msgstr "ແມ່ແບບຜະລິດຕະພັນຖືກຈັດເກັບແລ້ວ ດັ່ງນັ້ນຈຶ່ງບໍ່ສາມາດປະສົມໄດ້."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
@@ -3708,12 +3806,14 @@ msgid ""
 " a vendor unit is set, quantity should be specified in this unit, otherwise "
 "it should be specified in the default unit of the product."
 msgstr ""
+"ຈຳນວນທີ່ຕ້ອງຊື້ຈາກຜູ້ສະໜອງນີ້ເພື່ອໃຫ້ໄດ້ລາຄາຕໍ່ໜ່ວຍ. ຖ້າຕັ້ງຫົວໜ່ວຍຜູ້ສະໜອງໄວ້, ຈຳນວນຄວນລະບຸໃນຫົວໜ່ວຍນັ້"
+"ນ, ຖ້າບໍ່ດັ່ງນັ້ນຄວນລະບຸໃນຫົວໜ່ວຍເລີ່ມຕົ້ນຂອງຜະລິດຕະພັນ."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "The rounding method must be strictly positive."
-msgstr ""
+msgstr "ວິທີການປັດເສດຕ້ອງເປັນຄ່າບວກເທົ່ານັ້ນ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_combo_item__lst_price
@@ -3722,6 +3822,7 @@ msgid ""
 "The sale price is managed from the product template. Click on the 'Configure"
 " Variants' button to set the extra attribute prices."
 msgstr ""
+"ລາຄາຂາຍຖືກຈັດການຈາກແມ່ແບບຜະລິດຕະພັນ. ຄລິກປຸ່ມ 'ຕັ້ງຄ່າຕົວປ່ຽນ' ເພື່ອຕັ້ງຄ່າລາຄາຄຸນລັກສະນະເພີ່ມເຕີມ."
 
 #. module: product
 #. odoo-python
@@ -3730,24 +3831,25 @@ msgid ""
 "The value %(value)s is not defined for the attribute %(attribute)s on the "
 "product %(product)s."
 msgstr ""
+"ຄ່າ %(value)s ບໍ່ໄດ້ຖືກກຳນົດສຳລັບຄຸນລັກສະນະ %(attribute)s ໃນຜະລິດຕະພັນ %(product)s."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "There are no possible combination."
-msgstr ""
+msgstr "ບໍ່ມີການປະສົມທີ່ເປັນໄປໄດ້."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "There are no remaining closest combination."
-msgstr ""
+msgstr "ບໍ່ມີການປະສົມທີ່ໃກ້ຄຽງທີ່ສຸດເຫຼືອຢູ່."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "There are no remaining possible combination."
-msgstr ""
+msgstr "ບໍ່ມີການປະສົມທີ່ເປັນໄປໄດ້ເຫຼືອຢູ່."
 
 #. module: product
 #. odoo-python
@@ -3757,21 +3859,23 @@ msgid ""
 "to no possible variant. Please archive or delete your product directly if "
 "intended."
 msgstr ""
+"ການຕັ້ງຄ່າຄຸນລັກສະນະ, ຄ່າ ແລະ ການຍົກເວັ້ນເຫຼົ່ານີ້ຈະເຮັດໃຫ້ບໍ່ມີຕົວປ່ຽນທີ່ເປັນໄປໄດ້. ກະລຸນາຈັດເກັບ ຫຼື ລຶບຜະ"
+"ລິດຕະພັນຂອງທ່ານໂດຍກົງຖ້າຕ້ອງການ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
 msgid "This is the sum of the extra price of all attributes"
-msgstr ""
+msgstr "ນີ້ແມ່ນຜົນລວມຂອງລາຄາເພີ່ມເຕີມຂອງທຸກຄຸນລັກສະນະ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is added to sales orders and invoices."
-msgstr ""
+msgstr "ໝາຍເຫດນີ້ຈະຖືກເພີ່ມເຂົ້າໃນໃບສັ່ງຂາຍ ແລະ ໃບແຈ້ງໜີ້."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is only for internal purposes."
-msgstr ""
+msgstr "ໝາຍເຫດນີ້ແມ່ນໃຊ້ເພື່ອຈຸດປະສົງພາຍໃນເທົ່ານັ້ນ."
 
 #. module: product
 #. odoo-python
@@ -3779,6 +3883,7 @@ msgstr ""
 msgid ""
 "This product is part of a combo, so its type can't be changed to \"combo\"."
 msgstr ""
+"ຜະລິດຕະພັນນີ້ເປັນສ່ວນໜຶ່ງຂອງຊຸດ, ດັ່ງນັ້ນປະເພດຂອງມັນຈຶ່ງບໍ່ສາມາດປ່ຽນເປັນ \"ຊຸດ (combo)\" ໄດ້."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
@@ -3786,6 +3891,7 @@ msgid ""
 "This vendor's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
+"ລະຫັດຜະລິດຕະພັນຂອງຜູ້ສະໜອງນີ້ຈະຖືກໃຊ້ເມື່ອພິມໃບຂໍລາຄາ. ປະຫວ່າງໄວ້ເພື່ອໃຊ້ລະຫັດພາຍໃນ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_name
@@ -3793,56 +3899,57 @@ msgid ""
 "This vendor's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
+"ຊື່ຜະລິດຕະພັນຂອງຜູ້ສະໜອງນີ້ຈະຖືກໃຊ້ເມື່ອພິມໃບຂໍລາຄາ. ປະຫວ່າງໄວ້ເພື່ອໃຊ້ຊື່ພາຍໃນ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__thumbnail
 msgid "Thumbnail"
-msgstr ""
+msgstr "ຮູບຫຍໍ້"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_tide
 msgid "Tide"
-msgstr ""
+msgstr "Tide"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Today Activities"
-msgstr ""
+msgstr "ກິດຈະກຳມື້ນີ້"
 
 #. module: product
 #: model:product.template,name:product.consu_delivery_01_product_template
 msgid "Two-Seat Sofa"
-msgstr ""
+msgstr "ໂຊຟາສອງບ່ອນນັ່ງ"
 
 #. module: product
 #: model:product.template,description_sale:product.consu_delivery_01_product_template
 msgid "Two-Seater Sofa with Oak Wood Frame"
-msgstr ""
+msgstr "ໂຊຟາສອງບ່ອນນັ່ງພ້ອມໂຄງໄມ້ໂອກ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__type
 msgid "Type"
-msgstr ""
+msgstr "ປະເພດ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist__activity_exception_decoration
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "ປະເພດຂອງກິດຈະກຳທີ່ຍົກເວັ້ນໃນຂໍ້ມູນ."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/controllers/pricelist_report.py:0
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "UOM"
-msgstr ""
+msgstr "ຫົວໜ່ວຍວັດແທກ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 msgid "Unable to find report template for %s format"
-msgstr ""
+msgstr "ບໍ່ພົບແມ່ແບບລາຍງານສຳລັບຮູບແບບ %s"
 
 #. module: product
 #. odoo-python
@@ -3851,6 +3958,7 @@ msgid ""
 "Unable to import products with attribute value without attribute name "
 "(defined as: attribute:value): %s"
 msgstr ""
+"ບໍ່ສາມາດນຳເຂົ້າຜະລິດຕະພັນທີ່ມີຄ່າຄຸນລັກສະນະແຕ່ບໍ່ມີຊື່ຄຸນລັກສະນະ (ກຳນົດເປັນ: ຄຸນລັກສະນະ:ຄ່າ): %s"
 
 #. module: product
 #. odoo-python
@@ -3858,22 +3966,22 @@ msgstr ""
 msgid ""
 "Unable to import products with attribute values but without name of product "
 "set"
-msgstr ""
+msgstr "ບໍ່ສາມາດນຳເຂົ້າຜະລິດຕະພັນທີ່ມີຄ່າຄຸນລັກສະນະແຕ່ບໍ່ໄດ້ຕັ້ງຊື່ຜະລິດຕະພັນ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_underarmour
 msgid "Under Armour"
-msgstr ""
+msgstr "Under Armour"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_options_under_desk_pedestals
 msgid "Under-desk pedestals"
-msgstr ""
+msgstr "ຕູ້ລິ້ນຊັກກ້ອງໂຕະ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_uniqlo
 msgid "Uniqlo"
-msgstr ""
+msgstr "Uniqlo"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__uom_id
@@ -3881,85 +3989,85 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_template__uom_id
 #: model:ir.model.fields,field_description:product.field_product_uom__uom_id
 msgid "Unit"
-msgstr ""
+msgstr "ໜ່ວຍ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_uom_ids
 msgid "Unit Barcode"
-msgstr ""
+msgstr "ບາໂຄດຕໍ່ໜ່ວຍ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_uom_name
 #: model:ir.model.fields,field_description:product.field_product_product__uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__uom_name
 msgid "Unit Name"
-msgstr ""
+msgstr "ຊື່ຫົວໜ່ວຍ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__price
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Unit Price"
-msgstr ""
+msgstr "ລາຄາຕໍ່ໜ່ວຍ"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/kanban_model.js:0
 #: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
 msgid "Units"
-msgstr ""
+msgstr "ໜ່ວຍ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Units of Measure"
-msgstr ""
+msgstr "ຫົວໜ່ວຍວັດແທກ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
 msgid "Units of Measure & Packagings"
-msgstr ""
+msgstr "ຫົວໜ່ວຍວັດແທກ ແລະ ການຫຸ້ມຫໍ່"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Update extra prices"
-msgstr ""
+msgstr "ອັບເດດລາຄາເພີ່ມເຕີມ"
 
 #. module: product
 #: model:ir.model,name:product.model_update_product_attribute_value
 msgid "Update product attribute value"
-msgstr ""
+msgstr "ອັບເດດຄ່າຄຸນລັກສະນະຜະລິດຕະພັນ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute_value.py:0
 msgid "Update product extra prices"
-msgstr ""
+msgstr "ອັບເດດລາຄາເພີ່ມເຕີມຂອງຜະລິດຕະພັນ"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__update_product_attribute_value__mode__update_extra_price
 msgid "Update the extra price on existing products"
-msgstr ""
+msgstr "ອັບເດດລາຄາເພີ່ມເຕີມໃນຜະລິດຕະພັນທີ່ມີຢູ່"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/product_document_kanban/upload_button/upload_button.xml:0
 msgid "Upload"
-msgstr ""
+msgstr "ອັບໂຫຼດ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template.py:0
 msgid "Upload files to your product"
-msgstr ""
+msgstr "ອັບໂຫຼດໄຟລ໌ໃຫ້ກັບຜະລິດຕະພັນຂອງທ່ານ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Upsell & Cross-Sell"
-msgstr ""
+msgstr "ຂາຍເພີ່ມ & ຂາຍພ່ວງ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__url
 msgid "Url"
-msgstr ""
+msgstr "Url"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__compute_price
@@ -3967,6 +4075,7 @@ msgid ""
 "Use the discount rules and activate the discount settings in order to show "
 "discount to customer."
 msgstr ""
+"ໃຊ້ກົດເກນສ່ວນຫຼຸດ ແລະ ເປີດໃຊ້ການຕັ້ງຄ່າສ່ວນຫຼຸດເພື່ອສະແດງສ່ວນຫຼຸດໃຫ້ລູກຄ້າ."
 
 #. module: product
 #. odoo-python
@@ -3974,51 +4083,51 @@ msgstr ""
 msgid ""
 "Use this feature to store any files you would like to share with your "
 "customers"
-msgstr ""
+msgstr "ໃຊ້ຟີເຈີນີ້ເພື່ອຈັດເກັບໄຟລ໌ຕ່າງໆທີ່ທ່ານຕ້ອງການແບ່ງປັນກັບລູກຄ້າຂອງທ່ານ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_res_partner__property_product_pricelist
 #: model:ir.model.fields,help:product.field_res_users__property_product_pricelist
 msgid "Used for sales to the current partner"
-msgstr ""
+msgstr "ໃຊ້ສຳລັບການຂາຍໃຫ້ກັບຄູ່ຄ້າປັດຈຸບັນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__is_used_on_products
 msgid "Used on Products"
-msgstr ""
+msgstr "ໃຊ້ໃນຜະລິດຕະພັນ"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "Username"
-msgstr ""
+msgstr "ຊື່ຜູ້ໃຊ້"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__valid_product_template_attribute_line_ids
 #: model:ir.model.fields,field_description:product.field_product_template__valid_product_template_attribute_line_ids
 msgid "Valid Product Attribute Lines"
-msgstr ""
+msgstr "ແຖວຄຸນລັກສະນະຜະລິດຕະພັນທີ່ຖືກຕ້ອງ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Validity"
-msgstr ""
+msgstr "ໄລຍະເວລາທີ່ມີຜົນ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Validity Period"
-msgstr ""
+msgstr "ໄລຍະເວລາທີ່ມີຜົນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__name
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__name
 msgid "Value"
-msgstr ""
+msgstr "ຄ່າ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__value_count
 msgid "Value Count"
-msgstr ""
+msgstr "ຈຳນວນຄ່າ"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__standard_price
@@ -4028,6 +4137,9 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"ມູນຄ່າຂອງຜະລິດຕະພັນ (ຄຳນວນອັດຕະໂນມັດໃນ AVCO).\n"
+"        ໃຊ້ເພື່ອຕີມູນຄ່າຜະລິດຕະພັນເມື່ອບໍ່ຮູ້ຕົ້ນທຶນການຊື້ (ເຊັ່ນ: ການປັບປຸງສາງ).\n"
+"        ໃຊ້ເພື່ອຄຳນວນກຳໄລໃນໃບສັ່ງຂາຍ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
@@ -4035,144 +4147,144 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_line_form
 msgid "Values"
-msgstr ""
+msgstr "ຄ່າ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
 #: model_terms:ir.ui.view,arch_db:product.product_document_kanban
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_view_search
 msgid "Variant"
-msgstr ""
+msgstr "ຕົວປ່ຽນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_variant_count
 msgid "Variant Count"
-msgstr ""
+msgstr "ຈຳນວນຕົວປ່ຽນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_variant
 msgid "Variant Creation"
-msgstr ""
+msgstr "ການສ້າງຕົວປ່ຽນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1920
 msgid "Variant Image"
-msgstr ""
+msgstr "ຮູບຕົວປ່ຽນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1024
 msgid "Variant Image 1024"
-msgstr ""
+msgstr "ຮູບຕົວປ່ຽນ 1024"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_128
 msgid "Variant Image 128"
-msgstr ""
+msgstr "ຮູບຕົວປ່ຽນ 128"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_256
 msgid "Variant Image 256"
-msgstr ""
+msgstr "ຮູບຕົວປ່ຽນ 256"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_512
 msgid "Variant Image 512"
-msgstr ""
+msgstr "ຮູບຕົວປ່ຽນ 512"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Variant Information"
-msgstr ""
+msgstr "ຂໍ້ມູນຕົວປ່ຽນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__price_extra
 msgid "Variant Price Extra"
-msgstr ""
+msgstr "ລາຄາເພີ່ມຂອງຕົວປ່ຽນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__variant_seller_ids
 #: model:ir.model.fields,field_description:product.field_product_template__variant_seller_ids
 msgid "Variant Seller"
-msgstr ""
+msgstr "ຜູ້ຂາຍຕົວປ່ຽນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
 msgid "Variant Tags"
-msgstr ""
+msgstr "ແທັກຕົວປ່ຽນ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_template_variant_value_ids
 #: model_terms:ir.ui.view,arch_db:product.attribute_tree_view
 msgid "Variant Values"
-msgstr ""
+msgstr "ຄ່າຕົວປ່ຽນ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "Variant: %s"
-msgstr ""
+msgstr "ຕົວປ່ຽນ: %s"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_variant
 #: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Variants"
-msgstr ""
+msgstr "ຕົວປ່ຽນ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_fabric_velvet
 msgid "Velvet"
-msgstr ""
+msgstr "ຜ້າກຳມະຍີ່"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__partner_id
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Vendor"
-msgstr ""
+msgstr "ຜູ້ສະໜອງ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Vendor Bills"
-msgstr ""
+msgstr "ໃບແຈ້ງໜີ້ຜູ້ສະໜອງ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_tree_view
 msgid "Vendor Information"
-msgstr ""
+msgstr "ຂໍ້ມູນຜູ້ສະໜອງ"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
 msgid "Vendor Pricelists"
-msgstr ""
+msgstr "ລາຍການລາຄາຜູ້ສະໜອງ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_code
 msgid "Vendor Product Code"
-msgstr ""
+msgstr "ລະຫັດຜະລິດຕະພັນຜູ້ສະໜອງ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_name
 msgid "Vendor Product Name"
-msgstr ""
+msgstr "ຊື່ຜະລິດຕະພັນຜູ້ສະໜອງ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__seller_ids
 #: model:ir.model.fields,field_description:product.field_product_template__seller_ids
 msgid "Vendors"
-msgstr ""
+msgstr "ຜູ້ສະໜອງ"
 
 #. module: product
 #: model:product.template,name:product.product_product_2_product_template
 msgid "Virtual Home Staging"
-msgstr ""
+msgstr "ການຈັດແຕ່ງບ້ານແບບສະເໝືອນ"
 
 #. module: product
 #: model:product.template,name:product.product_product_1_product_template
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "Virtual Interior Design"
-msgstr ""
+msgstr "ການອອກແບບພາຍໃນແບບສະເໝືອນ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
@@ -4180,17 +4292,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Visible to all"
-msgstr ""
+msgstr "ທຸກຄົນເບິ່ງເຫັນໄດ້"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__visible_to_customers
 msgid "Visible to customers"
-msgstr ""
+msgstr "ລູກຄ້າເບິ່ງເຫັນໄດ້"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__voice_ids
 msgid "Voice"
-msgstr ""
+msgstr "ສຽງ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__volume
@@ -4198,23 +4310,23 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Volume"
-msgstr ""
+msgstr "ບໍລິມາດ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_volume_volume_in_cubic_feet
 msgid "Volume unit of measure"
-msgstr ""
+msgstr "ຫົວໜ່ວຍວັດແທກບໍລິມາດ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__volume_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__volume_uom_name
 msgid "Volume unit of measure label"
-msgstr ""
+msgstr "ປ້າຍຫົວໜ່ວຍວັດແທກບໍລິມາດ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Warnings"
-msgstr ""
+msgstr "ຄຳເຕືອນ"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -4222,72 +4334,73 @@ msgid ""
 "We pay special attention to detail, which is why our desks are of a superior"
 " quality."
 msgstr ""
+"ພວກເຮົາໃສ່ໃຈໃນລາຍລະອຽດເປັນພິເສດ, ນັ້ນຄືເຫດຜົນທີ່ໂຕະຂອງພວກເຮົາມີຄຸນນະພາບດີເລີດ."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
 #: model:ir.model.fields,field_description:product.field_product_template__weight
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Weight"
-msgstr ""
+msgstr "ນ້ຳໜັກ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_weight_in_lbs
 msgid "Weight unit of measure"
-msgstr ""
+msgstr "ຫົວໜ່ວຍວັດແທກນ້ຳໜັກ"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr ""
+msgstr "ປ້າຍຫົວໜ່ວຍວັດແທກນ້ຳໜັກ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 msgid "What to expect ?"
-msgstr ""
+msgstr "ສິ່ງທີ່ຈະໄດ້ຮັບ?"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_tag__visible_to_customers
 msgid "Whether the tag is displayed to customers."
-msgstr ""
+msgstr "ແທັກຈະຖືກສະແດງໃຫ້ລູກຄ້າເຫັນຫຼືບໍ່."
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_whirlpool
 msgid "Whirlpool"
-msgstr ""
+msgstr "Whirlpool"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_white
 msgid "White"
-msgstr ""
+msgstr "ສີຂາວ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_fabric_wood
 #: model:product.attribute.value,name:product.pav_legs_wood
 msgid "Wood"
-msgstr ""
+msgstr "ໄມ້"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__write_date
 msgid "Write Date"
-msgstr ""
+msgstr "ວັນທີແກ້ໄຂ"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_xl
 msgid "XL"
-msgstr ""
+msgstr "XL"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_xs
 msgid "XS"
-msgstr ""
+msgstr "XS"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_yellow
 msgid "Yellow"
-msgstr ""
+msgstr "ສີເຫຼືອງ"
 
 #. module: product
 #. odoo-python
@@ -4296,12 +4409,13 @@ msgid ""
 "You are about to add the value \"%(attribute_value)s\" to %(product_count)s "
 "products."
 msgstr ""
+"ທ່ານກຳລັງຈະເພີ່ມຄ່າ \"%(attribute_value)s\" ໃຫ້ກັບ %(product_count)s ຜະລິດຕະພັນ."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/wizard/update_product_attribute_value.py:0
 msgid "You are about to update the extra price of %s products."
-msgstr ""
+msgstr "ທ່ານກຳລັງຈະອັບເດດລາຄາເພີ່ມເຕີມຂອງ %s ຜະລິດຕະພັນ."
 
 #. module: product
 #. odoo-python
@@ -4310,17 +4424,18 @@ msgid ""
 "You are deactivating the pricelist feature. Every active pricelist will be "
 "archived."
 msgstr ""
+"ທ່ານກຳລັງປິດໃຊ້ງານຟີເຈີລາຍການລາຄາ. ລາຍການລາຄາທີ່ຍັງໃຊ້ງານຢູ່ທັງໝົດຈະຖືກຈັດເກັບ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__percent_price
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_discount
 msgid "You can apply a mark-up by setting a negative discount."
-msgstr ""
+msgstr "ທ່ານສາມາດນຳໃຊ້ການບວກເພີ່ມລາຄາໄດ້ໂດຍການຕັ້ງຄ່າສ່ວນຫຼຸດເປັນຄ່າລົບ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_markup
 msgid "You can apply a mark-up on the cost"
-msgstr ""
+msgstr "ທ່ານສາມາດນຳໃຊ້ການບວກເພີ່ມລາຄາຈາກຕົ້ນທຶນໄດ້"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -4328,6 +4443,7 @@ msgid ""
 "You can assign pricelists to your customers or select one when creating a "
 "new sales quotation."
 msgstr ""
+"ທ່ານສາມາດກຳນົດລາຍການລາຄາໃຫ້ລູກຄ້າຂອງທ່ານ ຫຼື ເລືອກອັນໃດອັນໜຶ່ງເມື່ອສ້າງໃບສະເໜີລາຄາໃໝ່."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_document__type
@@ -4335,6 +4451,7 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
+"ທ່ານສາມາດອັບໂຫຼດໄຟລ໌ຈາກຄອມພິວເຕີຂອງທ່ານ ຫຼື ສຳເນົາ/ວາງ ລິ້ງຈາກອິນເຕີເນັດໃຫ້ກັບໄຟລ໌ຂອງທ່ານ."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__image
@@ -4342,13 +4459,13 @@ msgstr ""
 msgid ""
 "You can upload an image that will be used as the color of the attribute "
 "value."
-msgstr ""
+msgstr "ທ່ານສາມາດອັບໂຫຼດຮູບພາບທີ່ຈະຖືກໃຊ້ເປັນສີຂອງຄ່າຄຸນລັກສະນະ."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/product_catalog/order_line/order_line.xml:0
 msgid "You can't edit this product in the catalog."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດແກ້ໄຂຜະລິດຕະພັນນີ້ໃນແຄັດຕາລັອກ."
 
 #. module: product
 #. odoo-python
@@ -4356,6 +4473,7 @@ msgstr ""
 msgid ""
 "You cannot archive this attribute as there are still products linked to it"
 msgstr ""
+"ທ່ານບໍ່ສາມາດຈັດເກັບຄຸນລັກສະນະນີ້ໄດ້ ເພາະຍັງມີຜະລິດຕະພັນທີ່ເຊື່ອມໂຍງກັບມັນຢູ່"
 
 #. module: product
 #. odoo-python
@@ -4364,6 +4482,9 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"ທ່ານບໍ່ສາມາດປ່ຽນໂໝດການສ້າງຕົວປ່ຽນຂອງຄຸນລັກສະນະ %(attribute)s ໄດ້ ເພາະມັນຖືກໃຊ້ໃນຜະລິດຕະພັນດັ່ງ"
+"ນີ້:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -4372,6 +4493,7 @@ msgid ""
 "You cannot change the attribute of the value %(value)s because it is used on"
 " the following products: %(products)s"
 msgstr ""
+"ທ່ານບໍ່ສາມາດປ່ຽນຄຸນລັກສະນະຂອງຄ່າ %(value)s ໄດ້ ເພາະມັນຖືກໃຊ້ໃນຜະລິດຕະພັນດັ່ງນີ້: %(products)s"
 
 #. module: product
 #. odoo-python
@@ -4380,6 +4502,7 @@ msgid ""
 "You cannot change the product of the value %(value)s set on product "
 "%(product)s."
 msgstr ""
+"ທ່ານບໍ່ສາມາດປ່ຽນຜະລິດຕະພັນຂອງຄ່າ %(value)s ທີ່ຕັ້ງໄວ້ໃນຜະລິດຕະພັນ %(product)s ໄດ້."
 
 #. module: product
 #. odoo-python
@@ -4388,12 +4511,13 @@ msgid ""
 "You cannot change the value of the value %(value)s set on product "
 "%(product)s."
 msgstr ""
+"ທ່ານບໍ່ສາມາດປ່ຽນແປງຄ່າຂອງຄ່າ %(value)s ທີ່ຕັ້ງໄວ້ໃນຜະລິດຕະພັນ %(product)s ໄດ້."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_category.py:0
 msgid "You cannot create recursive categories."
-msgstr ""
+msgstr "ທ່ານບໍ່ສາມາດສ້າງໝວດໝູ່ແບບວົນຊ້ຳໄດ້."
 
 #. module: product
 #. odoo-python
@@ -4404,6 +4528,10 @@ msgid ""
 "They are used within pricelist(s):\n"
 "%(other_pricelists)s"
 msgstr ""
+"ທ່ານບໍ່ສາມາດລຶບລາຍການລາຄາ:\n"
+"(%(pricelists)s)\n"
+"ພວກມັນຖືກໃຊ້ພາຍໃນລາຍການລາຄາ:\n"
+"%(other_pricelists)s"
 
 #. module: product
 #. odoo-python
@@ -4412,6 +4540,8 @@ msgid ""
 "You cannot delete the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
+"ທ່ານບໍ່ສາມາດລຶບຄຸນລັກສະນະ %(attribute)s ໄດ້ ເພາະມັນຖືກໃຊ້ໃນຜະລິດຕະພັນດັ່ງນີ້:\n"
+"%(products)s"
 
 #. module: product
 #. odoo-python
@@ -4420,6 +4550,8 @@ msgid ""
 "You cannot delete the value %(value)s because it is used on the following products:\n"
 "%(products)s\n"
 msgstr ""
+"ທ່ານບໍ່ສາມາດລຶບຄ່າ %(value)s ໄດ້ ເພາະມັນຖືກໃຊ້ໃນຜະລິດຕະພັນດັ່ງນີ້:\n"
+"%(products)s\n"
 
 #. module: product
 #. odoo-python
@@ -4428,6 +4560,8 @@ msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s"
 " to the product %(product_dest)s."
 msgstr ""
+"ທ່ານບໍ່ສາມາດຍ້າຍຄຸນລັກສະນະ %(attribute)s ຈາກຜະລິດຕະພັນ %(product_src)s ໄປຫາຜະລິດຕະພັນ %"
+"(product_dest)s ໄດ້."
 
 #. module: product
 #. odoo-python
@@ -4436,6 +4570,7 @@ msgid ""
 "You cannot update related variants from the values. Please update related "
 "values from the variants."
 msgstr ""
+"ທ່ານບໍ່ສາມາດອັບເດດຕົວປ່ຽນທີ່ກ່ຽວຂ້ອງຈາກຄ່າໄດ້. ກະລຸນາອັບເດດຄ່າທີ່ກ່ຽວຂ້ອງຈາກຕົວປ່ຽນ."
 
 #. module: product
 #. odoo-javascript
@@ -4444,6 +4579,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                            whether it's a storable product, a consumable or a service."
 msgstr ""
+"ທ່ານຕ້ອງກຳນົດຜະລິດຕະພັນສຳລັບທຸກສິ່ງທີ່ທ່ານຂາຍ ຫຼື ຊື້,\n"
+"                            ບໍ່ວ່າຈະເປັນຜະລິດຕະພັນທີ່ເກັບສາງໄດ້, ເຄື່ອງບໍລິໂພກ ຫຼື ການບໍລິການ."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
@@ -4452,6 +4589,8 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "                whether it's a storable product, a consumable or a service."
 msgstr ""
+"ທ່ານຕ້ອງກຳນົດຜະລິດຕະພັນສຳລັບທຸກສິ່ງທີ່ທ່ານຂາຍ ຫຼື ຊື້,\n"
+"                ບໍ່ວ່າຈະເປັນຜະລິດຕະພັນທີ່ເກັບສາງໄດ້, ເຄື່ອງບໍລິໂພກ ຫຼື ການບໍລິການ."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
@@ -4461,6 +4600,10 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"ທ່ານຕ້ອງກຳນົດຜະລິດຕະພັນສຳລັບທຸກສິ່ງທີ່ທ່ານຂາຍ ຫຼື ຊື້,\n"
+"                ບໍ່ວ່າຈະເປັນຜະລິດຕະພັນທີ່ເກັບສາງໄດ້, ເຄື່ອງບໍລິໂພກ ຫຼື ການບໍລິການ.\n"
+"                ແບບຟອມຜະລິດຕະພັນປະກອບດ້ວຍຂໍ້ມູນເພື່ອເຮັດໃຫ້ຂັ້ນຕອນການຂາຍງ່າຍຂຶ້ນ:\n"
+"                ລາຄາ, ໝາຍເຫດໃນໃບສະເໜີລາຄາ, ຂໍ້ມູນການບັນຊີ, ວິທີການຈັດຊື້ຈັດຈ້າງ ແລະ ອື່ນໆ."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
@@ -4470,150 +4613,154 @@ msgid ""
 "                The product form contains information to simplify the sale process:\n"
 "                price, notes in the quotation, accounting data, procurement methods, etc."
 msgstr ""
+"ທ່ານຕ້ອງກຳນົດຜະລິດຕະພັນສຳລັບທຸກສິ່ງທີ່ທ່ານຂາຍ, ບໍ່ວ່າຈະເປັນຜະລິດຕະພັນທີ່ຈັບຕ້ອງໄດ້,\n"
+"                ເຄື່ອງບໍລິໂພກ ຫຼື ການບໍລິການທີ່ທ່ານມອບໃຫ້ລູກຄ້າ.\n"
+"                ແບບຟອມຜະລິດຕະພັນປະກອບດ້ວຍຂໍ້ມູນເພື່ອເຮັດໃຫ້ຂັ້ນຕອນການຂາຍງ່າຍຂຶ້ນ:\n"
+"                ລາຄາ, ໝາຍເຫດໃນໃບສະເໜີລາຄາ, ຂໍ້ມູນການບັນຊີ, ວິທີການຈັດຊື້ຈັດຈ້າງ ແລະ ອື່ນໆ."
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.js:0
 msgid "You must leave at least one quantity."
-msgstr ""
+msgstr "ທ່ານຕ້ອງປະໄວ້ຢ່າງໜ້ອຍໜຶ່ງຈຳນວນ."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 msgid "You need to set a positive quantity."
-msgstr ""
+msgstr "ທ່ານຕ້ອງກຳນົດຈຳນວນເປັນຄ່າບວກ."
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_zara
 msgid "Zara"
-msgstr ""
+msgstr "Zara"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_attribute.py:0
 msgid "attribute_id"
-msgstr ""
+msgstr "attribute_id"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "csv"
-msgstr ""
+msgstr "csv"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_view_kanban
 msgid "days"
-msgstr ""
+msgstr "ມື້"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "discount"
-msgstr ""
+msgstr "ສ່ວນຫຼຸດ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
 msgid "e.g. 1234567890"
-msgstr ""
+msgstr "ຕົວຢ່າງ: 1234567890"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_combo_view_form
 msgid "e.g. Burger Choice"
-msgstr ""
+msgstr "ຕົວຢ່າງ: ທາງເລືອກເບີເກີ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_view_form_normalized
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "e.g. Cheese Burger"
-msgstr ""
+msgstr "ຕົວຢ່າງ: ຊີດເບີເກີ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
 msgid "e.g. Lamps"
-msgstr ""
+msgstr "ຕົວຢ່າງ: ໂຄມໄຟ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "e.g. Odoo Enterprise Subscription"
-msgstr ""
+msgstr "ຕົວຢ່າງ: ການສະໝັກໃຊ້ Odoo Enterprise"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "e.g. Starter - Meal - Desert"
-msgstr ""
+msgstr "ຕົວຢ່າງ: ອາຫານວ່າງ - ອາຫານຫຼັກ - ຂອງຫວານ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
 msgid "e.g. USD Retailers"
-msgstr ""
+msgstr "ຕົວຢ່າງ: ຜູ້ຂາຍຍ່ອຍ USD"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid "id"
-msgstr ""
+msgstr "id"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "markup"
-msgstr ""
+msgstr "ສ່ວນບວກເພີ່ມ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
 msgid "on"
-msgstr ""
+msgstr "ໃນ"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "pdf"
-msgstr ""
+msgstr "pdf"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "per"
-msgstr ""
+msgstr "ຕໍ່"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_product.py:0
 #: code:addons/product/models/product_template.py:0
 msgid "product"
-msgstr ""
+msgstr "ຜະລິດຕະພັນ"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "product cost"
-msgstr ""
+msgstr "ຕົ້ນທຶນຜະລິດຕະພັນ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "round off to 10.00 and set an extra at -0.01"
-msgstr ""
+msgstr "ປັດເສດເປັນ 10.00 ແລະ ຕັ້ງຄ່າບວກເພີ່ມເປັນ -0.01"
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "sales price"
-msgstr ""
+msgstr "ລາຄາຂາຍ"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "the product template."
-msgstr ""
+msgstr "ແມ່ແບບຜະລິດຕະພັນ."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "to"
-msgstr ""
+msgstr "ຫາ"
 
 #. module: product
 #. odoo-javascript
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
-msgstr ""
+msgstr "xlsx"

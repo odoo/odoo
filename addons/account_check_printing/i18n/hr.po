@@ -8,13 +8,13 @@
 # Tina Milas, 2022
 # Martin Trigaux, 2022
 # Bole <bole@dajmi5.com>, 2022
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-01-25 18:36+0000\n"
-"PO-Revision-Date: 2025-11-08 21:51+0000\n"
+"PO-Revision-Date: 2026-06-12 03:24+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-19/"
 "account_check_printing/hr/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: account_check_printing
 #. odoo-python
@@ -240,6 +240,7 @@ msgstr "Ručno numeriranje"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
+#, fuzzy
 msgid ""
 "Manual: Pay or Get paid by any method outside of Odoo.\n"
 "Payment Providers: Each payment provider has its own Payment Method. Request "
@@ -256,6 +257,20 @@ msgid ""
 "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. "
 "Module account_iso20022 is necessary.\n"
 msgstr ""
+"Priručnik: Platite ili primite plaćanje bilo kojom metodom izvan Odooa.\n"
+"Pružatelji usluga plaćanja: Svaki pružatelj usluga plaćanja ima svoju metodu "
+"plaćanja. Zatražite transakciju na/na karticu zahvaljujući tokenu plaćanja "
+"koji je partner spremio prilikom kupnje ili pretplate online.\n"
+"Ček: Platite račune čekom i ispišite ga s Odooa.\n"
+"Skupni depozit: Prikupite nekoliko čekova kupaca odjednom generirajući i "
+"šaljući skupni depozit svojoj banci. Modul account_batch_payment je "
+"potreban.\n"
+"SEPA kreditni prijenos: Platite u SEPA zoni slanjem SEPA datoteke kreditnog "
+"prijenosa svojoj banci. Modul account_iso20022 je potreban.\n"
+"SEPA izravno terećenje: Primite plaćanje u SEPA zoni zahvaljujući mandatu "
+"koji vam je vaš partner odobrio. Modul account_iso20022 je potreban.\n"
+"US ISO20022: Platite u SAD-u slanjem ISO20022 datoteke svojoj banci. Modul "
+"account_iso20022 je potreban."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub

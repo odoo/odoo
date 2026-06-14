@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:40+0000\n"
-"PO-Revision-Date: 2026-05-23 09:50+0000\n"
+"POT-Creation-Date: 2026-06-12 17:35+0000\n"
+"PO-Revision-Date: 2026-06-08 11:08+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/fr/>\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -486,14 +486,6 @@ msgstr "Une note portant le même nom existe déjà"
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_payment_unique_uuid
 msgid "A payment with this uuid already exists"
 msgstr "Un paiement avec cet UUID existe déjà"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.js:0
-msgid "A request is still being processed in the background. Please wait."
-msgstr ""
-"Une requête est toujours en cours de traitement en arrière-plan. Veuillez "
-"patienter."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -3656,12 +3648,6 @@ msgstr "Erreur : aucune connexion internet."
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
-msgid "Everything is ready to go!"
-msgstr "Tout est prêt !"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid "Existing orderlines"
 msgstr "Lignes de commande existantes"
@@ -4085,6 +4071,11 @@ msgstr "A un message"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__has_refundable_lines
 msgid "Has Refundable Lines"
 msgstr "A des lignes remboursables"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_stock_picking_type__has_stock_reports_to_print
+msgid "Has Stock Reports To Print"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7558,6 +7549,12 @@ msgid "Proceed Anyway"
 msgstr "Poursuivre"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
+msgid "Processing..."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__product_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__product_id
@@ -8922,14 +8919,6 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
-msgid "Some process are still running in background, please wait..."
-msgstr ""
-"Certains processus sont encore en cours d’exécution en arrière-plan, "
-"veuillez patienter..."
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Some required information is missing."
 msgstr "Certaines informations obligatoires sont manquantes."
@@ -10209,6 +10198,15 @@ msgid ""
 msgstr ""
 "Cette commande a déjà été payée. Vous ne pouvez pas la repasser en brouillon "
 "ni la modifier."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid ""
+"This order is currently syncing, please wait a moment before loading it."
+msgstr ""
+"Cette commande est en cours de synchronisation, veuillez patienter un "
+"instant avant de l'ouvrir."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11715,6 +11713,19 @@ msgstr "avec une valeur de"
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "x"
 msgstr "x"
+
+#~ msgid "A request is still being processed in the background. Please wait."
+#~ msgstr ""
+#~ "Une requête est toujours en cours de traitement en arrière-plan. Veuillez "
+#~ "patienter."
+
+#~ msgid "Everything is ready to go!"
+#~ msgstr "Tout est prêt !"
+
+#~ msgid "Some process are still running in background, please wait..."
+#~ msgstr ""
+#~ "Certains processus sont encore en cours d’exécution en arrière-plan, "
+#~ "veuillez patienter..."
 
 #~ msgid "0.00"
 #~ msgstr "0,00"

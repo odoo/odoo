@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-22 17:40+0000\n"
-"PO-Revision-Date: 2026-05-30 09:43+0000\n"
+"POT-Creation-Date: 2026-06-12 17:35+0000\n"
+"PO-Revision-Date: 2026-06-12 21:10+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
 "point_of_sale/es/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -483,13 +483,6 @@ msgstr "Ya existe una nota con este nombre"
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_payment_unique_uuid
 msgid "A payment with this uuid already exists"
 msgstr "Ya existe un pago con este UUID"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.js:0
-msgid "A request is still being processed in the background. Please wait."
-msgstr ""
-"Aún se está procesando una solicitud en segundo plano. Por favor, espera."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -2436,7 +2429,7 @@ msgstr "Conecte dispositivos a su TPV sin una IoT Box."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Connect devices using an IoT Box"
-msgstr "Conecte dispositivos mediante una caja IoT"
+msgstr "Conecta dispositivos mediante una caja IoT"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2472,7 +2465,7 @@ msgstr "Error de conexión"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/printer/base_printer.js:0
 msgid "Connection to IoT Box failed"
-msgstr "Falló la conexión a la caja IoT"
+msgstr "Error al conectarse a la caja IoT"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3477,7 +3470,7 @@ msgstr "Pedido(s) editado(s9 durante la sesión: %s"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Electronic Scale"
-msgstr "Balanza electrónica"
+msgstr "Báscula electrónica"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__email
@@ -3525,9 +3518,9 @@ msgid ""
 "Enable barcode scanning with a remotely connected barcode scanner and card "
 "swiping with a Vantiv card reader."
 msgstr ""
-"Habilita el escaneo de códigos de barras con un escáner de códigos de barras "
-"conectado de forma remota y el deslizamiento de tarjetas con un lector de "
-"tarjetas Vantiv."
+"Habilita el escaneo de códigos de barras con un lector de códigos de barras "
+"conectado de forma remota y lee las tarjetas con un lector de tarjetas "
+"Vantiv."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__use_fast_payment
@@ -3625,12 +3618,6 @@ msgstr "¡Error! No puede crear categorías recursivas."
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Error: no internet connection."
 msgstr "Error: sin conexión a internet."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
-msgid "Everything is ready to go!"
-msgstr "¡Todo está listo para empezar!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3951,7 +3938,7 @@ msgstr "Generar un código en el recibo"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/scale_screen/scale_screen.xml:0
 msgid "Get Weight"
-msgstr "Conseguir peso"
+msgstr "Obtener peso"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -4057,6 +4044,11 @@ msgstr "Tiene un mensaje"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__has_refundable_lines
 msgid "Has Refundable Lines"
 msgstr "Tiene líneas reembolsables"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_stock_picking_type__has_stock_reports_to_print
+msgid "Has Stock Reports To Print"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5005,7 +4997,7 @@ msgstr "Pedidos vinculados"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_preset.py:0
 msgid "Linked POS Configurations"
-msgstr "Configuraciones de TPV vinculadas"
+msgstr "Configuraciones del TPV vinculadas"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__reversed_move_ids
@@ -7502,6 +7494,12 @@ msgid "Proceed Anyway"
 msgstr "Continuar de todos modos"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
+msgid "Processing..."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__product_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__product_id
@@ -8864,13 +8862,6 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
-msgid "Some process are still running in background, please wait..."
-msgstr ""
-"Algunos procesos siguen ejecutándose en segundo plano. Espera por favor..."
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 msgid "Some required information is missing."
 msgstr "Falta alguna información obligatoria."
@@ -10141,6 +10132,15 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
+msgid ""
+"This order is currently syncing, please wait a moment before loading it."
+msgstr ""
+"Este pedido se está sincronizando. Por favor, espera un momento antes de "
+"abrirlo."
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt_screen.js:0
 msgid ""
 "This order is not yet synced to server. Make sure it is synced then try "
@@ -10189,7 +10189,7 @@ msgstr "Estos ajustes son comunes a todos los TPV."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
 msgid "Ticket"
-msgstr "N.º"
+msgstr "Factura"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__ticket_code
@@ -10710,7 +10710,7 @@ msgstr "Uuid"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/receipt_screen/receipt/receipt_header/receipt_header.xml:0
 msgid "VAT"
-msgstr "de ticket"
+msgstr "simplificada"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11624,6 +11624,17 @@ msgstr "con un valor de"
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "x"
 msgstr "x"
+
+#~ msgid "A request is still being processed in the background. Please wait."
+#~ msgstr ""
+#~ "Aún se está procesando una solicitud en segundo plano. Por favor, espera."
+
+#~ msgid "Everything is ready to go!"
+#~ msgstr "¡Todo está listo para empezar!"
+
+#~ msgid "Some process are still running in background, please wait..."
+#~ msgstr ""
+#~ "Algunos procesos siguen ejecutándose en segundo plano. Espera por favor..."
 
 #~ msgid "0.00"
 #~ msgstr "0,00"
