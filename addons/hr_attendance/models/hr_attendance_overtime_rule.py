@@ -2,7 +2,6 @@
 
 from collections import defaultdict
 from datetime import UTC, datetime, timedelta
-from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
 from dateutil.rrule import DAILY, rrule
@@ -166,8 +165,14 @@ class HrAttendanceOvertimeRule(models.Model):
         if company.absence_management and float_compare(overtime_amount, -self.employee_tolerance, 5) == -1:
             if not intervals_attendance_by_attendance:
                 return {}, {}
-            last_attendance = sorted(intervals_attendance_by_attendance.keys(), key=lambda att: att.check_out)[-1]
-            return {}, {last_attendance: [(overtime_amount, self)]}
+            undertime_attendance_intervals = sorted(intervals_attendance_by_attendance.items(),
+                                                    # Sorting the attendance-intervals pair by the date of the last interval
+                                                    key=lambda x: x[1]._items[-1][1] if x[1]._items else datetime.min)
+            if not undertime_attendance_intervals:
+                return {}, {}
+
+            last_attendance, last_interval = undertime_attendance_intervals[-1]
+            return {}, {last_attendance: [(overtime_amount, last_interval._items[0][0].date(), self)]}
 
         if float_compare(overtime_amount, self.employer_tolerance, 5) != 1:
             return {}, {}
@@ -436,18 +441,12 @@ class HrAttendanceOvertimeRule(models.Model):
                 _add_overtime_val(attendance, duration_by_day_by_rules)
 
         for employee, intervals_by_attendance in undertimes.items():
-            tz = ZoneInfo(employee._get_tz())
             for attendance, intervals in intervals_by_attendance.items():
-                date = attendance.check_in.astimezone(tz).date()
                 duration_by_day_by_rules = defaultdict(lambda: defaultdict(float))
-
-                # An attendance accross days can have several undertimes for the same rule
-                total_undertime_by_rule = {}
-                for undertime, rule in intervals:
-                    total_undertime_by_rule[rule] = total_undertime_by_rule.get(rule, 0) + undertime
-                rule, duration = max(total_undertime_by_rule.items(), key=lambda x: x[1])
-
-                duration_by_day_by_rules[date][rule] += duration
+                for undertime, date, rule in intervals:
+                    duration_by_day_by_rules[date][rule] += undertime
+                for date in duration_by_day_by_rules:
+                    duration_by_day_by_rules[date] = dict([max(duration_by_day_by_rules[date].items(), key=lambda x: x[1])])
                 _add_overtime_val(attendance, duration_by_day_by_rules)
         return vals
 
