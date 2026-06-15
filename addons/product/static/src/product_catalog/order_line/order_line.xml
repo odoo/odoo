@@ -6,16 +6,15 @@
         <Portal target="this.portalTarget" t-key="this.rev">
             <div class="d-inline-flex align-items-baseline">
                 <span t-if="this.showPrice" t-out="this.price" class="o_product_catalog_price fw-bold me-4"/>
-                <span t-if="this.props.code" t-out="this.props.code" class="text-muted"/>
             </div>
             <span t-if="this.displayPriceByProductUoM" class="d-flex text-muted small" t-out="`${this.productUnitPrice}/${this.props.productUomDisplayName}`"/>
         </Portal>
-        <div 
+        <div
             t-if="this.props.readOnly and this.props.warning"
             class="text-danger text-truncate my-2 pt-3 border-top">
             <i class="fa fa-warning" t-att-title="this.props.warning"/>
-            <span 
-                class="px-1" 
+            <span
+                class="px-1"
                 t-att-title="this.props.warning"
                 t-out="this.props.warning"/>
         </div>
@@ -68,12 +67,12 @@
             </div>
             <t t-elif="this.props.warning">
                 <i class="fa fa-warning text-warning" t-att-title="this.props.warning"/>
-                <span 
-                    class="text-truncate text-warning px-1" 
+                <span
+                    class="text-truncate text-warning px-1"
                     t-att-title="this.props.warning"
                     t-out="this.props.warning"/>
             </t>
-            <div 
+            <div
                 class="ms-auto o_product_catalog_buttons o_product_catalog_cancel_global_click"
                 style="min-width: max-content;">
                 <button t-if="!this.isInOrder()"
@@ -82,14 +81,6 @@
                     <i class="fa fa-shopping-cart"/>
                     Add
                 </button>
-                <div t-else="" class="o_tooltip_div_remove" t-att-data-tooltip="this.disabledButtonTooltip">
-                    <button t-on-click.stop="this.env.removeProduct"
-                            t-att-disabled="this.disableRemove"
-                            class="btn btn-light border">
-                        <i class="fa fa-trash"/>
-                        Remove
-                    </button>
-                </div>
             </div>
         </div>
     </t>

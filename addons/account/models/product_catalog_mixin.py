@@ -1,48 +1,61 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.fields import Command
 
 
 class ProductCatalogMixin(models.AbstractModel):
     _inherit = 'product.catalog.mixin'
 
-    def _create_section(self, child_field, name, position, **kwargs):
+    def create_section(self, child_field, name, *, parent_id=None):
         """Create a new section in order.
 
         :param str child_field: Field name of the order's lines (e.g., 'order_line').
         :param str name: The name of the section to create.
-        :param str position: The position of the section where it should be created, either 'top'
-                              or 'bottom'.
-        :param dict kwargs: Additional values given for inherited models.
+        :param int parent_id: The id of the parent section.
 
-        :return: A dictionary with newly created section's 'id' and 'sequence'.
+        :return: A dictionary with values of the created section.
         :rtype: dict
         """
-        parent_field = self._get_parent_field_on_child_model()
+        order = self.with_company(self.company_id)
+        parent_field = order._get_parent_field_on_child_model()
 
         if not parent_field:
             return {}
 
-        lines = self[child_field].sorted('sequence')
+        lines = order[child_field].sorted('sequence')
         line_model = lines._name
-        sequence = 10
-        if lines:
-            sequence = (
-                lines[0].sequence - 1 if position == 'top'
-                else lines[-1].sequence + 1
-            )
+        sequence = lines[-1].sequence + 1 if lines else 10
+        if parent_id:
+            # Insert after the last line of the parent section
+            section_found = False
+            for line in lines:
+                if line.display_type != 'line_section':
+                    continue
+                if section_found:
+                    sequence = line.sequence
+                    break
+                if line.id == parent_id:
+                    section_found = True
 
-        section = self.env[line_model].create({
-            parent_field: self.id,
+            order[child_field] = [
+                Command.update(line.id, {'sequence': line.sequence + 1})
+                for line in lines.filtered_domain([('sequence', '>=', sequence)])
+            ]
+
+        section = order.env[line_model].create({
+            parent_field: order.id,
             'name': name,
-            'display_type': 'line_section',
+            'display_type': 'line_subsection' if parent_id else 'line_section',
             'sequence': sequence,
-            **self._get_default_create_section_values(),
+            **order._get_default_create_section_values(),
         })
 
         return {
             'id': section.id,
             'sequence': section.sequence,
+            'display_type': section.display_type,
+            'subtotal': 0.0,
         }
 
     def _get_new_line_sequence(self, child_field, section_id):
@@ -61,7 +74,7 @@ class ProductCatalogMixin(models.AbstractModel):
             # Insert after the last product of the selected section
             section_found = False
             for line in lines:
-                if line.display_type != 'line_section':
+                if line.display_type not in ('line_section', 'line_subsection'):
                     continue
                 if section_found:
                     sequence = line.sequence
@@ -76,45 +89,52 @@ class ProductCatalogMixin(models.AbstractModel):
             # Insert before the first section (top of the order)
             sequence = section_lines[0].sequence
 
-        for line in lines.filtered_domain([('sequence', '>=', sequence)]):
-            line.sequence += 1
+        self[child_field] = [
+            Command.update(line.id, {'sequence': line.sequence + 1})
+            for line in lines.filtered_domain([('sequence', '>=', sequence)])
+        ]
 
         return sequence
 
-    def _get_sections(self, child_field, **kwargs):
+    def get_catalog_data(self, child_field):
+        """Return order information and sections for the product catalog.
+
+        :param str child_field: Field name of the order's lines (e.g., 'order_line').
+        :rtype: dict
+        :return: A dictionary containing order information and sections data.
+        """
+
+        self.ensure_one()
+
+        return {
+            "order_details": {
+                "amount_untaxed": self.amount_untaxed,
+                "currency_id": self.currency_id.id,
+                "name": self.name,
+            },
+            "sections": self.get_sections(child_field),
+        }
+
+    def get_sections(self, child_field):
         """Return section data for the product catalog display.
 
         :param str child_field: Field name of the order's lines (e.g., 'order_line').
-        :param dict kwargs: Additional values given for inherited models.
         :rtype: list
-        :return: List of section dicts with 'id', 'name', 'sequence', and 'line_count'.
+        :return: List of section dicts with 'id', 'name', 'sequence', 'parent_id', 'display_type'
+                 and 'subtotal'
         """
         sections = {}
-        no_section_count = 0
-        lines = self[child_field]
+        lines = self.with_company(self.company_id)[child_field]
         for line in lines.sorted('sequence'):
-            if line.display_type == 'line_section':
+            if line.display_type in ('line_section', 'line_subsection'):
                 sections[line.id] = {
                     'id': line.id,
                     'name': line.name,
                     'sequence': line.sequence,
-                    'line_count': 0,
+                    'parent_id': line.parent_id.id if line.parent_id else False,
+                    'display_type': line.display_type,
+                    'subtotal': line.get_section_subtotal(),
                 }
-            elif self._is_line_valid_for_section_line_count(line):
-                sec_id = line.get_parent_section_line().id
-                if sec_id and sec_id in sections:
-                    sections[sec_id]['line_count'] += 1
-                else:
-                    no_section_count += 1
-
-        if no_section_count > 0 or not sections:
-            # If there are products outside of a section or no section at all
-            sections[False] = {
-                'id': False,
-                'name': self.env._("No Section"),
-                'sequence': lines[0].sequence - 1 if lines else 0,
-                'line_count': no_section_count,
-            }
 
         return sorted(sections.values(), key=lambda x: x['sequence'])
 
@@ -134,59 +154,149 @@ class ProductCatalogMixin(models.AbstractModel):
         """
         return ''
 
-    def _is_line_valid_for_section_line_count(self, line):
-        """Check if a line is valid for inclusion in the section's line count.
+    def resequence_sections(
+        self,
+        child_field,
+        moved_section_id,
+        new_parent_section_id,
+        insert_before_section_sequence,
+    ):
+        """Reorder the sections.
 
-        :param recordset line: A record of an order line.
-        :return: whether this line should be considered in the section lines count.
-        :rtype: bool
-        """
-        return (
-            not line.display_type
-            and line.product_type != 'combo'
-            and line.product_uom_qty > 0
-        )
-
-    def _resequence_sections(self, sections, child_field, **kwargs):
-        """Resequence the order content based on the new sequence order.
-
-        :param list sections: A list of dictionaries containing move and target sections.
         :param str child_field: Field name of the order's lines (e.g., 'order_line').
-        :param dict kwargs: Additional values given for inherited models.
-        :return: A dictonary containing the new sequences of all the sections of order.
-        :rtype: dict
+        :param int moved_section_id: ID of the section to move.
+        :param int new_parent_section_id: ID of the new parent section.
+        :param int insert_before_section_sequence: Sequence of the section to insert before.
+        :rtype: None
+        :return: None
         """
-        lines = self[child_field].sorted('sequence')
-        move_section, target_section = sections
+        order = self.with_company(self.company_id)
+        lines = order[child_field].sorted('sequence')
+        moved_section = lines.browse(moved_section_id)
 
-        move_block = lines.filtered(
-            lambda line: line.id == move_section['id']
-            or line.parent_id.id == move_section['id'],
+        if not moved_section:
+            return
+
+        moved_block = lines.filtered(
+            lambda line: (
+                moved_section.id in {line.id, line.parent_id.id, line.parent_id.parent_id.id}
+            )
         )
 
-        target_block = lines.filtered(
-            lambda line: line.id == target_section['id']
-            or line.parent_id.id == target_section['id'],
+        block_size = len(moved_block)
+
+        # Target position
+        if insert_before_section_sequence is not None:
+            target_sequence = insert_before_section_sequence
+        elif new_parent_section_id:
+            siblings = (
+                lines.filtered(
+                    lambda line:
+                        line.parent_id.id == new_parent_section_id
+                )
+                - moved_block
+            )
+            if siblings:
+                target_sequence = siblings[-1].sequence + 1
+            else:
+                target_sequence = lines.browse(new_parent_section_id).sequence + 1
+        else:
+            target_sequence = lines[-1].sequence + 1
+
+        affected_lines = (
+            lines.filtered(
+                lambda line:
+                    line.sequence >= target_sequence
+                    and line not in moved_block
+            )
         )
 
-        remaining_lines = lines - move_block
-        insert_after = move_section['sequence'] < target_section['sequence']
-        insert_index = len(remaining_lines)
-        for idx, line in enumerate(remaining_lines):
-            if line.id == (target_block[-1].id if insert_after else target_section['id']):
-                insert_index = idx + 1 if insert_after else idx
-                break
+        commands = [
+            Command.update(line.id, {"sequence": line.sequence + block_size})
+            for line in affected_lines
+        ]
+        # Place moved block in new position
+        commands.extend(
+            Command.update(line.id, {"sequence": target_sequence + index})
+            for index, line in enumerate(moved_block)
+        )
+        self[child_field] = commands
 
-        reordered_lines = (
-            remaining_lines[:insert_index] +
-            move_block +
-            remaining_lines[insert_index:]
+        order[child_field].invalidate_recordset(['parent_id'])
+
+    def duplicate_section(self, child_field, section_id, *, parent_id=None):
+        """Duplicate the given section with all its children.
+
+        :param string child_field: The field name of the lines in the order model.
+        :param int section_id: The section id.
+        :param int parent_id: The id of the parent section for the duplicated section.
+        :rtype: dict
+        :return: A dictionary with the list of sections and the id of the duplicated section.
+        """
+        order = self.with_company(self.company_id)
+        lines = order[child_field]
+        section = lines.browse(section_id)
+
+        section_lines = (section | section._get_section_lines()).sorted("sequence")
+
+        # If duplicating a section with children, insert the duplicated block after the last child
+        # to keep them together.
+        anchor = section_lines[-1]
+
+        ordered_lines = lines.sorted(lambda l: (l.sequence, l.id))
+
+        anchor_index = ordered_lines.ids.index(anchor.id)
+
+        # Lines after anchor (including same sequence ones)
+        lines_to_shift = ordered_lines[anchor_index + 1:]
+
+        shift_by = len(section_lines) + 1
+
+        # Shift existing lines
+        commands = [
+            Command.update(line.id, {"sequence": line.sequence + shift_by})
+            for line in lines_to_shift
+        ]
+
+        # Insert duplicated block
+        base_sequence = anchor.sequence + 1
+        commands.extend(
+            Command.create({
+                **line.copy_data()[0],
+                "sequence": base_sequence + i,
+            })
+            for i, line in enumerate(section_lines)
         )
 
-        sections = {}
-        for sequence, line in enumerate(reordered_lines, start=1):
-            line.sequence = sequence
-            if line.display_type == 'line_section':
-                sections[line.id] = sequence
+        order[child_field] = commands
+        new_lines = (order[child_field] - lines).sorted("sequence")
 
-        return sections
+        return {
+            "sections": order.get_sections(child_field),
+            "duplicated_section_id": new_lines[0].id,
+        }
+
+    def delete_section(self, child_field, section_id):
+        """Delete the given section with all its children.
+
+        :param string child_field: The field name of the lines in the order model.
+        :param int section_id: The section id.
+        """
+        lines = self.with_company(self.company_id)[child_field]
+        section = lines.browse(section_id).exists()
+
+        if not section:
+            return
+
+        (section | section._get_section_lines()).unlink()
+
+    def rename_section(self, child_field, section_id, new_name):
+        """Rename the given section.
+
+        :param string child_field: The field name of the lines in the order model.
+        :param int section_id: The section id.
+        :param string new_name: The new name for the section.
+        """
+        section = self.with_company(self.company_id)[child_field].browse(section_id)
+        if section:
+            section.name = new_name

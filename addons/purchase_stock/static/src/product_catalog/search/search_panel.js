@@ -1,6 +1,6 @@
 import { useEnv } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { AccountProductCatalogSearchPanel } from "@account/components/product_catalog/search/search_panel";
+import { AccountProductCatalogSearchPanel } from "@account/components/product_catalog/search/search_panel/search_panel";
 import { TimePeriodSelectionField } from "./time_period_selection_fields";
 import { formatMonetary } from "@web/views/fields/formatters";
 import { clamp } from "@web/core/utils/numbers";

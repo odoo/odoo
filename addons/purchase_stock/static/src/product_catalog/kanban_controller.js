@@ -36,16 +36,16 @@ export class PurchaseSuggestCatalogKanbanController extends ProductCatalogKanban
     async onAddAll() {
         const { searchModel } = this.env;
         const { sectionId } = searchModel.selectedSection;
-        const lineCountChange = await this.model.orm.call(
+        const subtotalDelta = await this.model.orm.call(
             "purchase.order",
             "action_purchase_order_suggest",
             [this.props.context.product_catalog_order_id],
             { context: searchModel.globalContext }
         );
         searchModel.toggleFilters(["suggested", "products_in_purchase_order"], true);
-        searchModel.trigger("section-line-count-change", {
+        searchModel.trigger("section-subtotal-change", {
             sectionId,
-            lineCountChange,
+            subtotalDelta,
         });
     }
 

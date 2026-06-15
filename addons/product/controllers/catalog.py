@@ -25,7 +25,6 @@ class ProductCatalogController(Controller):
                     'quantity': float (optional)
                     'productType': string,
                     'productUomDisplayName': string (optional),
-                    'code': string (optional),
                     'readOnly': bool (optional),
                 }
             }

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="account.SectionDropdown">
+        <Dropdown noClasses="true">
+            <button
+                t-attf-class="o_section_dropdown_button btn border-0 bg-transparent rounded-start-0 px-2 {{this.props.section.id ? '' : 'opacity-0 pe-none'}}"
+                t-att-tabindex="this.props.section.id ? '0' : '-1'"
+            >
+                <i class="fa fa-ellipsis-v text-muted"/>
+            </button>
+            <t t-set-slot="content">
+                <t t-foreach= "this.dropdownItems" t-as="item" t-key="item.label">
+                    <DropdownItem
+                        closingMode="'closest'"
+                        class="item.class"
+                        onSelected="item.action"
+                    >
+                        <i class="me-1" t-att-class="item.iconClass"/><span t-out="item.label"/>
+                    </DropdownItem>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+</templates>
