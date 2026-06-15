@@ -342,7 +342,7 @@ class ResCurrencyRate(models.Model):
     rate = fields.Float(
         digits=0,
         aggregator="avg",
-        help='The rate of the currency to the currency of rate 1',
+        help="Exchange rate expressed as reference-currency units per 1 unit of this currency",
         string='Technical Rate'
     )
     company_rate = fields.Float(
@@ -350,14 +350,14 @@ class ResCurrencyRate(models.Model):
         compute="_compute_company_rate",
         inverse="_inverse_company_rate",
         aggregator="avg",
-        help="The currency of rate 1 to the rate of the currency.",
+        help="Value of 1 unit of this currency in the company currency",
     )
     inverse_company_rate = fields.Float(
         digits=0,
         compute="_compute_inverse_company_rate",
         inverse="_inverse_inverse_company_rate",
         aggregator="avg",
-        help="The rate of the currency to the currency of rate 1 ",
+        help="Exchange rate from the company currency to this currency",
     )
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, required=True, index=True, ondelete="cascade")
     company_id = fields.Many2one('res.company', string='Company',
@@ -403,7 +403,7 @@ class ResCurrencyRate(models.Model):
         return {
             company: company.sudo().currency_id.rate_ids.filtered(lambda x: (
                 x.rate
-                and x.company_id == company or not x.company_id
+                and (x.company_id == company or not x.company_id)
             )).sorted('name')[-1:].rate or 1
             for company in companies
         }
