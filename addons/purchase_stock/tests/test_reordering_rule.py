@@ -25,6 +25,7 @@ class TestReorderingRule(TransactionCase):
         cls.partner = cls.env['res.partner'].create({
             'name': 'Smith'
         })
+        cls.warehouse = cls.env['stock.warehouse'].search([('company_id', '=', cls.env.company.id)], limit=1)
         cls.buy_route = cls.env.ref('purchase_stock.route_warehouse0_buy')
         cls.buy_route.product_selectable = True
         # create product and set the vendor
@@ -50,8 +51,7 @@ class TestReorderingRule(TransactionCase):
             - Increase the quantity on the PO, the extra quantity should follow the push rules
             - There should be one move supplier -> input and two moves input -> stock
         """
-        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        warehouse_1.reception_steps = 'two_steps'
+        self.warehouse.reception_steps = 'two_steps'
         warehouse_2 = self.env['stock.warehouse'].create({'name': 'WH 2', 'code': 'WH2', 'company_id': self.env.company.id, 'partner_id': self.env.company.partner_id.id, 'reception_steps': 'one_step'})
 
         # Create and set specific buyer for partner
@@ -64,8 +64,8 @@ class TestReorderingRule(TransactionCase):
 
         # create reordering rule
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
-        orderpoint_form.warehouse_id = warehouse_1
-        orderpoint_form.location_id = warehouse_1.lot_stock_id
+        orderpoint_form.warehouse_id = self.warehouse
+        orderpoint_form.location_id = self.warehouse.lot_stock_id
         orderpoint_form.product_id = self.product_01
         orderpoint_form.product_min_qty = 0.000
         orderpoint_form.product_max_qty = 0.000
@@ -106,7 +106,7 @@ class TestReorderingRule(TransactionCase):
         purchase_order.picking_type_id = warehouse_2.in_type_id
         with self.assertRaises(UserError):
             purchase_order.button_confirm()
-        purchase_order.picking_type_id = warehouse_1.in_type_id
+        purchase_order.picking_type_id = self.warehouse.in_type_id
 
         # On the po generated, the source document should be the name of the reordering rule
         self.assertEqual(order_point.name, purchase_order.origin, 'Source document on purchase order should be the name of the reordering rule.')
@@ -143,20 +143,19 @@ class TestReorderingRule(TransactionCase):
         """
         # Required for `warehouse_id` to be visible in the view
         self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
-        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        subloc_1 = self.env['stock.location'].create({'name': 'subloc_1', 'location_id': warehouse_1.lot_stock_id.id})
-        subloc_2 = self.env['stock.location'].create({'name': 'subloc_2', 'location_id': warehouse_1.lot_stock_id.id})
+        subloc_1 = self.env['stock.location'].create({'name': 'subloc_1', 'location_id': self.warehouse.lot_stock_id.id})
+        subloc_2 = self.env['stock.location'].create({'name': 'subloc_2', 'location_id': self.warehouse.lot_stock_id.id})
 
         # create reordering rules
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
-        orderpoint_form.warehouse_id = warehouse_1
+        orderpoint_form.warehouse_id = self.warehouse
         orderpoint_form.location_id = subloc_1
         orderpoint_form.product_id = self.product_01
         orderpoint_form.product_min_qty = 0.000
         orderpoint_form.product_max_qty = 0.000
         order_point_1 = orderpoint_form.save()
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
-        orderpoint_form.warehouse_id = warehouse_1
+        orderpoint_form.warehouse_id = self.warehouse
         orderpoint_form.location_id = subloc_2
         orderpoint_form.product_id = self.product_01
         orderpoint_form.product_min_qty = 0.000
@@ -200,14 +199,12 @@ class TestReorderingRule(TransactionCase):
         purchase_order.order_line.filtered(lambda pol: pol.orderpoint_id == order_point_2).product_qty = 15
         self.assertEqual(self.product_01.with_context(location=subloc_1.id).virtual_available, 5)
         self.assertEqual(self.product_01.with_context(location=subloc_2.id).virtual_available, 5)
-        self.assertEqual(self.product_01.with_context(location=warehouse_1.lot_stock_id.id).virtual_available, 10)  # 5 on the subloc_2, 5 on subloc_1
+        self.assertEqual(self.product_01.with_context(location=self.warehouse.lot_stock_id.id).virtual_available, 10)  # 5 on the subloc_2, 5 on subloc_1
 
     def test_reordering_rule_3(self):
         """
             trigger a reordering rule with a route to a location without warehouse
         """
-        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-
         outside_loc = self.env['stock.location'].create({
             'name': 'outside',
             'usage': 'internal',
@@ -217,7 +214,7 @@ class TestReorderingRule(TransactionCase):
             'rule_ids': [
                 (0, False, {
                     'name': 'Buy',
-                    'location_dest_id': warehouse_1.lot_stock_id.id,
+                    'location_dest_id': self.warehouse.lot_stock_id.id,
                     'company_id': self.env.company.id,
                     'action': 'buy',
                     'sequence': 2,
@@ -226,7 +223,7 @@ class TestReorderingRule(TransactionCase):
                 }),
                 (0, False, {
                     'name': 'ressuply from stock',
-                    'location_src_id': warehouse_1.lot_stock_id.id,
+                    'location_src_id': self.warehouse.lot_stock_id.id,
                     'location_dest_id': outside_loc.id,
                     'company_id': self.env.company.id,
                     'action': 'pull',
@@ -252,7 +249,7 @@ class TestReorderingRule(TransactionCase):
         # Required for `warehouse_id` to be visible in the view
         self.env.ref('base.user_admin').group_ids += self.env.ref('stock.group_stock_multi_locations')
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'].with_user(self.ref('base.user_admin')))
-        orderpoint_form.warehouse_id = warehouse_1
+        orderpoint_form.warehouse_id = self.warehouse
         orderpoint_form.location_id = outside_loc
         orderpoint_form.product_id = product
         orderpoint_form.product_min_qty = 0.000
@@ -286,12 +283,10 @@ class TestReorderingRule(TransactionCase):
     def test_reordering_rule_4(self):
         """ Test that a reordering rule where the min qty is larger than
          the max qty cannot be created """
-        warehouse_1 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-
         with self.assertRaises(ValidationError, msg="The minimum quantity must be less than or equal to the maximum quantity."):
             self.env['stock.warehouse.orderpoint'].create({
-                'warehouse_id': warehouse_1.id,
-                'location_id': warehouse_1.lot_stock_id.id,
+                'warehouse_id': self.warehouse.id,
+                'location_id': self.warehouse.lot_stock_id.id,
                 'product_id': self.product_01.id,
                 'product_min_qty': 2,
                 'product_max_qty': 1,
@@ -306,9 +301,8 @@ class TestReorderingRule(TransactionCase):
         - The qty to order of the RR should be zero
         """
         today = Date.context_today(self.env.user)
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        stock_location = warehouse.lot_stock_id
-        out_type = warehouse.out_type_id
+        stock_location = self.warehouse.lot_stock_id
+        out_type = self.warehouse.out_type_id
         customer_location = self.env.ref('stock.stock_location_customers')
 
         self.product_01.seller_ids.delay = 3
@@ -565,8 +559,6 @@ class TestReorderingRule(TransactionCase):
         used."""
         purchase_route = self.env.ref("purchase_stock.route_warehouse0_buy")
         uom_unit = self.env.ref("uom.product_uom_unit")
-        warehouse = self.env['stock.warehouse'].search(
-            [('company_id', '=', self.env.company.id)], limit=1)
         product = self.env["product.product"].create({
             "name": "product TEST",
             "standard_price": 100.0,
@@ -599,12 +591,12 @@ class TestReorderingRule(TransactionCase):
         self.env["stock.rule"].run(
             [self.env["stock.rule"].Procurement(
                 product, 100, uom_unit,
-                warehouse.lot_stock_id, "Test default vendor", "/",
+                self.warehouse.lot_stock_id, "Test default vendor", "/",
                 self.env.company,
                 {
-                    "warehouse_id": warehouse,
+                    "warehouse_id": self.warehouse,
                     "date_planned": dt.today() + td(days=15),
-                    "rule_id": warehouse.buy_pull_id,
+                    "rule_id": self.warehouse.buy_pull_id,
                     "group_id": False,
                     "route_ids": [],
                 }
@@ -623,12 +615,12 @@ class TestReorderingRule(TransactionCase):
         self.env["stock.rule"].run(
             [self.env["stock.rule"].Procurement(
                 product, 100, uom_unit,
-                warehouse.lot_stock_id, "Test default vendor", "/",
+                self.warehouse.lot_stock_id, "Test default vendor", "/",
                 self.env.company,
                 {
-                    "warehouse_id": warehouse,
+                    "warehouse_id": self.warehouse,
                     "date_planned": dt.today() + td(days=15),
-                    "rule_id": warehouse.buy_pull_id,
+                    "rule_id": self.warehouse.buy_pull_id,
                     "group_id": False,
                     "route_ids": [],
                     "procurement_partner": secondary_vendor,
@@ -811,12 +803,11 @@ class TestReorderingRule(TransactionCase):
         """
         # Required for `warehouse_id` to be visible in the view
         self.env.user.group_ids += self.env.ref('stock.group_stock_multi_locations')
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        stock_location = warehouse.lot_stock_id
+        stock_location = self.warehouse.lot_stock_id
         sub_location = self.env['stock.location'].create({'name': 'subloc_1', 'location_id': stock_location.id})
 
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
-        orderpoint_form.warehouse_id = warehouse
+        orderpoint_form.warehouse_id = self.warehouse
         orderpoint_form.location_id = stock_location
         orderpoint_form.product_id = self.product_01
         orderpoint_form.product_min_qty = 1
@@ -824,7 +815,7 @@ class TestReorderingRule(TransactionCase):
         stock_op = orderpoint_form.save()
 
         orderpoint_form = Form(self.env['stock.warehouse.orderpoint'])
-        orderpoint_form.warehouse_id = warehouse
+        orderpoint_form.warehouse_id = self.warehouse
         orderpoint_form.location_id = sub_location
         orderpoint_form.product_id = self.product_01
         orderpoint_form.product_min_qty = 2
@@ -854,15 +845,14 @@ class TestReorderingRule(TransactionCase):
         Suppose a 2-steps receipt
         This test ensures that an orderpoint with its route and supplied defined correctly works
         """
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)])
         route_buy_id = self.ref('purchase_stock.route_warehouse0_buy')
 
-        warehouse.reception_steps = 'two_steps'
+        self.warehouse.reception_steps = 'two_steps'
 
         orderpoint = self.env['stock.warehouse.orderpoint'].create({
             'name': 'RR for %s' % self.product_01.name,
-            'warehouse_id': warehouse.id,
-            'location_id': warehouse.lot_stock_id.id,
+            'warehouse_id': self.warehouse.id,
+            'location_id': self.warehouse.lot_stock_id.id,
             'trigger': 'manual',
             'product_id': self.product_01.id,
             'product_min_qty': 1,
@@ -918,10 +908,9 @@ class TestReorderingRule(TransactionCase):
         SM should be updated and another one should be created (from Vendors to
         Input, for the PO)
         """
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        warehouse.reception_steps = 'two_steps'
-        input_location_id = warehouse.wh_input_stock_loc_id.id
-        stock_location_id = warehouse.lot_stock_id.id
+        self.warehouse.reception_steps = 'two_steps'
+        input_location_id = self.warehouse.wh_input_stock_loc_id.id
+        stock_location_id = self.warehouse.lot_stock_id.id
         customer_location_id = self.ref('stock.stock_location_customers')
         supplier_location_id = self.ref('stock.stock_location_suppliers')
 
@@ -971,10 +960,9 @@ class TestReorderingRule(TransactionCase):
         Then, the user increases and decreases the qty on the PO. The existing
         SMs should be updated.
         """
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        warehouse.reception_steps = 'two_steps'
-        input_location_id = warehouse.wh_input_stock_loc_id.id
-        stock_location_id = warehouse.lot_stock_id.id
+        self.warehouse.reception_steps = 'two_steps'
+        input_location_id = self.warehouse.wh_input_stock_loc_id.id
+        stock_location_id = self.warehouse.lot_stock_id.id
         supplier_location_id = self.ref('stock.stock_location_suppliers')
 
         self.product_01.description = False
@@ -1026,10 +1014,9 @@ class TestReorderingRule(TransactionCase):
         """
         self.env.company.horizon_days = 4
         # create reordering rule
-        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         op = self.env['stock.warehouse.orderpoint'].create({
-            'warehouse_id': wh.id,
-            'location_id': wh.lot_stock_id.id,
+            'warehouse_id': self.warehouse.id,
+            'location_id': self.warehouse.lot_stock_id.id,
             'product_id': self.product_01.id,
             'product_min_qty': 0,
             'product_max_qty': 0,
@@ -1040,7 +1027,7 @@ class TestReorderingRule(TransactionCase):
             'product_id': self.product_01.id,
             'uom_id': self.product_01.uom_id.id,
             'product_uom_qty': 1,
-            'location_id': wh.lot_stock_id.id,
+            'location_id': self.warehouse.lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'date': dt.today() + td(days=6),
         })
@@ -1051,7 +1038,7 @@ class TestReorderingRule(TransactionCase):
             'product_id': self.product_01.id,
             'uom_id': self.product_01.uom_id.id,
             'product_uom_qty': 1,
-            'location_id': wh.lot_stock_id.id,
+            'location_id': self.warehouse.lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
         })
         move._action_confirm()
@@ -1064,10 +1051,9 @@ class TestReorderingRule(TransactionCase):
         """ Checks that the horizon days are properly shown on the info wizard & the orderpoint forecast. """
         self.env.company.horizon_days = 3
         today = dt.today()
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         orderpoint = self.env['stock.warehouse.orderpoint'].create({
-            'warehouse_id': warehouse.id,
-            'location_id': warehouse.lot_stock_id.id,
+            'warehouse_id': self.warehouse.id,
+            'location_id': self.warehouse.lot_stock_id.id,
             'product_id': self.product_01.id,
             'product_min_qty': 0,
             'product_max_qty': 0,
@@ -1077,8 +1063,8 @@ class TestReorderingRule(TransactionCase):
         out_5_days = self.env['stock.move'].create({
             'product_id': self.product_01.id,
             'product_uom_qty': 5,
-            'location_id': warehouse.lot_stock_id.id,
-            'picking_type_id': warehouse.out_type_id.id,
+            'location_id': self.warehouse.lot_stock_id.id,
+            'picking_type_id': self.warehouse.out_type_id.id,
             'date': today + td(days=5),
         })
         out_5_days._action_confirm()
@@ -1097,8 +1083,8 @@ class TestReorderingRule(TransactionCase):
         out_today = self.env['stock.move'].create({
             'product_id': self.product_01.id,
             'product_uom_qty': 3,
-            'location_id': warehouse.lot_stock_id.id,
-            'picking_type_id': warehouse.out_type_id.id,
+            'location_id': self.warehouse.lot_stock_id.id,
+            'picking_type_id': self.warehouse.out_type_id.id,
             'partner_id': self.partner.id,  # Avoids the two moves being merged
             'date': today,
         })
@@ -1126,10 +1112,9 @@ class TestReorderingRule(TransactionCase):
             'is_storable': True,
             'seller_ids': [(0, 0, {'partner_id': self.partner.id})],
         })
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         self.env['stock.warehouse.orderpoint'].create({
-            'warehouse_id': warehouse.id,
-            'location_id': warehouse.lot_stock_id.id,
+            'warehouse_id': self.warehouse.id,
+            'location_id': self.warehouse.lot_stock_id.id,
             'product_id': product.id,
             'product_min_qty': 5,
             'product_max_qty': 5,
@@ -1142,14 +1127,14 @@ class TestReorderingRule(TransactionCase):
         self.assertEqual(po_line.product_qty, 5, 'The PO line quantity should be 5')
         # Update the po line from the picking
         picking = self.env['stock.picking'].with_user(user).create({
-            'location_id': warehouse.lot_stock_id.id,
+            'location_id': self.warehouse.lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-            'picking_type_id': warehouse.out_type_id.id,
+            'picking_type_id': self.warehouse.out_type_id.id,
             'move_ids': [(0, 0, {
                 'product_id': product.id,
                 'uom_id': product.uom_id.id,
                 'product_uom_qty': 1,
-                'location_id': warehouse.lot_stock_id.id,
+                'location_id': self.warehouse.lot_stock_id.id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             })],
             'state': 'draft',
@@ -1172,10 +1157,9 @@ class TestReorderingRule(TransactionCase):
             'uom_id': self.env.ref('uom.product_uom_kgm').id,
             'seller_ids': [(0, 0, {'partner_id': self.partner.id, 'min_qty': 6, 'uom_id': self.env.ref('uom.product_uom_ton').id})],
         })
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         orderpoint = self.env['stock.warehouse.orderpoint'].create({
-            'warehouse_id': warehouse.id,
-            'location_id': warehouse.lot_stock_id.id,
+            'warehouse_id': self.warehouse.id,
+            'location_id': self.warehouse.lot_stock_id.id,
             'product_id': product.id,
             'product_min_qty': 500,
             'product_max_qty': 500,
@@ -1330,20 +1314,18 @@ class TestReorderingRule(TransactionCase):
                 }),
             ],
         })
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-
         po_line = self.env["purchase.order.line"].search(
             [("product_id", "=", self.product_01.id)])
         self.assertFalse(po_line)
         self.env["stock.rule"].run(
             [self.env["stock.rule"].Procurement(
                 self.product_01, 100, self.product_01.uom_id,
-                warehouse.lot_stock_id, "Test default vendor", "/",
+                self.warehouse.lot_stock_id, "Test default vendor", "/",
                 self.env.company,
                 {
-                    "warehouse_id": warehouse,
+                    "warehouse_id": self.warehouse,
                     "date_planned": dt.today() + td(days=1),
-                    "rule_id": warehouse.buy_pull_id,
+                    "rule_id": self.warehouse.buy_pull_id,
                     "group_id": False,
                     "route_ids": [],
                 }
@@ -1475,3 +1457,65 @@ class TestReorderingRule(TransactionCase):
         self.product_01.seller_ids = False
         orderpoint.invalidate_recordset(fnames=['show_supply_warning'])
         self.assertTrue(orderpoint.show_supply_warning)
+
+    def test_orderpoint_reuse_po_ignores_buyer(self):
+        """Replenishment should reuse an existing draft PO even when its user_id
+        differs from the supplier's default buyer (buyer_id).
+
+        Before the fix, the domain used to find an existing PO included
+        ('user_id', '=', partner.buyer_id.id).  A manually-created PO carries
+        the creating user as user_id (not the supplier's buyer), so the lookup
+        would miss it and create a duplicate PO.  After the fix the buyer is
+        excluded from the search domain, so the existing PO is reused.
+        """
+        # Give the partner a dedicated buyer that differs from the current user.
+        buyer = self.env['res.users'].create({
+            'login': 'dedicated_buyer',
+            'name': 'Dedicated Buyer',
+            'email': 'dedicated_buyer@example.com',
+        })
+        self.partner.buyer_id = buyer
+
+        # Create an orderpoint so that a demand of 10 units triggers replenishment.
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'warehouse_id': self.warehouse.id,
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': self.product_01.id,
+            'product_min_qty': 0,
+            'product_max_qty': 0,
+        })
+
+        # Manually create a draft PO.  Its user_id is the current user, NOT the
+        # supplier's buyer_id — this is the typical situation when someone
+        # creates a PO from the Purchase menu.
+        manual_po = self.env['purchase.order'].create({
+            'partner_id': self.partner.id,
+            'picking_type_id': self.warehouse.in_type_id.id,
+            'order_line': [Command.create({
+                'product_id': self.product_01.id,
+                'product_qty': 5,
+            })],
+        })
+        self.assertNotEqual(manual_po.user_id, buyer, "Pre-condition: manual PO user_id should differ from buyer_id.")
+
+        # Trigger a delivery that creates demand, then run the scheduler.
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.partner_id = self.partner
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        with picking_form.move_ids.new() as move:
+            move.product_id = self.product_01
+            move.product_uom_qty = 10.0
+        customer_picking = picking_form.save()
+        customer_picking.action_confirm()
+        self.env['stock.rule'].run_scheduler()
+
+        # The replenishment must reuse the existing draft PO, not create a new one.
+        open_pos = self.env['purchase.order'].search([
+            ('partner_id', '=', self.partner.id),
+            ('state', '=', 'draft'),
+        ])
+        self.assertEqual(len(open_pos), 1, "Replenishment should reuse the existing draft PO, not create a new one.")
+        self.assertEqual(open_pos, manual_po)
+        # The orderpoint line must have been added to the existing PO.
+        orderpoint_lines = open_pos.order_line.filtered(lambda l: l.orderpoint_id == orderpoint)
+        self.assertTrue(orderpoint_lines, "The orderpoint replenishment line should appear on the existing PO.")

@@ -332,7 +332,6 @@ class StockRule(models.Model):
             ('state', '=', 'draft'),
             ('picking_type_id', '=', self.picking_type_id.id),
             ('company_id', '=', company_id.id),
-            ('user_id', '=', partner.buyer_id.id),
             ('currency_id', '=', currency.id),
         )
         if partner.group_rfq == 'default' or self.picking_type_id.code == 'dropship':
