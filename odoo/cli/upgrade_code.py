@@ -57,11 +57,12 @@ except ImportError:
     sys.path.insert(0, str(ROOT / 'tools'))
     import release
     from parse_version import parse_version
+    # Avoid shadowing stdlib modules when running upgrade scripts, e.g. json with odoo/tools/json.py
+    del sys.path[:2]
     class Command:
         """ Simplified version of the one in command.py, for standalone execution """
-        @property
-        def parser(self):
-            return argparse.ArgumentParser(
+        def __init__(self):
+            self.parser = argparse.ArgumentParser(
                 prog=Path(sys.argv[0]).name,
                 description=__doc__.replace('/odoo/upgrade_code', str(UPGRADE)),
                 formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -228,6 +229,7 @@ class UpgradeCode(Command):
     name = 'upgrade_code'
 
     def __init__(self):
+        super().__init__()
         group = self.parser.add_mutually_exclusive_group(required=True)
         group.add_argument(
             '--script',
@@ -260,7 +262,7 @@ class UpgradeCode(Command):
                 functools.partial(config.parse, 'addons_path')
                 if config else
                 # the paths must be resolved already
-                functools.partial(str.split, sep=',')
+                lambda addons_path: [p for p in addons_path.split(',') if p]
             ),
             default=config['addons_path'] if config else [],
             metavar='PATH,...',
@@ -273,8 +275,6 @@ class UpgradeCode(Command):
             config['addons_path'] = options.addons_path
             initialize_sys_path()
             options.addons_path = odoo.addons.__path__
-        else:
-            options.addons_path = [p for p in options.addons_path.split(',') if p]
         if not options.addons_path:
             self.parser.error("--addons-path is required when used standalone")
         is_dirty = migrate(**vars(options))
