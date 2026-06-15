@@ -681,3 +681,21 @@ class TestMrpStockReports(TestReportsCommon):
         overview_values_no_bom = self.env['report.mrp.report_mo_overview'].get_report_values(mo_no_bom.id)
         self.assertEqual(overview_values_no_bom['data']['components'][0]['summary']['bom_cost'], 120)
         self.assertEqual(overview_values_no_bom['data']['components'][0]['summary']['mo_cost'], 120)
+
+    def test_forecast_report_cross_warehouse_mo(self):
+        """
+        Test that when an MO is planned between two warehouses,
+        the forecast header report correctly computes the incoming
+        quantity for correct warehouse.
+        """
+        wh1 = self.env.ref('stock.warehouse0')
+        wh2 = self.wh_2
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product.id,
+            'product_qty': 10,
+            'location_src_id': wh1.lot_stock_id.id,
+            'location_dest_id': wh2.lot_stock_id.id,
+        })
+        mo.action_confirm()
+        self.assertEqual(self.product.with_context(warehouse_id=wh1.id).incoming_qty, 0)
+        self.assertEqual(self.product.with_context(warehouse_id=wh2.id).incoming_qty, 10)
