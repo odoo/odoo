@@ -160,7 +160,7 @@ class TestUi(TestPosHrHttpCommon):
             login="pos_admin",
         )
 
-    def test_cashier_changed_in_receipt(self):
+    def test_cashier_changed_in_receipt_and_mail(self):
         """
         Checks that when the cashier is changed during the order,
         the receipts displays the employee that concluded the order,
@@ -179,6 +179,8 @@ class TestUi(TestPosHrHttpCommon):
         order = self.main_pos_config.current_session_id.order_ids[0]
         self.assertEqual(order.cashier, "Test Employee 3")
         self.assertEqual(order.employee_id.display_name, "Test Employee 3")
+        mail_receipt_data = order.order_receipt_generate_data(False)
+        self.assertEqual(mail_receipt_data['extra_data']['cashier_name'], "Test")
 
     def test_minimal_employee_refund(self):
         minimal_emp = self.env['hr.employee'].create({
