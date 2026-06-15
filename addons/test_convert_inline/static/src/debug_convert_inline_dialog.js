@@ -1,7 +1,6 @@
 import { DIMENSIONS, useEmailHtmlConverter } from "@mail/convert_inline/hooks";
 import { loadIframe, loadIframeBundles } from "@mail/convert_inline/iframe_utils";
-import { useRef } from "@web/owl2/utils";
-import { Component, onMounted, proxy } from "@odoo/owl";
+import { Component, onMounted, proxy, signal, types } from "@odoo/owl";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { Dialog } from "@web/core/dialog/dialog";
 import { registry } from "@web/core/registry";
@@ -20,7 +19,8 @@ export class DebugConvertInlineDialog extends Component {
     };
 
     setup() {
-        this.outputIframeRef = useRef("outputIframe");
+        this.outputIframeRef = signal(null, { type: types.instanceOf(HTMLIFrameElement) });
+        this.referenceIframeRef = signal(null, { type: types.instanceOf(HTMLDivElement) });
         this.state = proxy({
             isMobile: false,
             height: DESKTOP.height,
@@ -35,13 +35,13 @@ export class DebugConvertInlineDialog extends Component {
             ],
             bundles: ["mass_mailing.assets_iframe_style"],
             services: this.env.services,
-            targetRef: useRef("referenceIframe"),
+            targetRef: this.referenceIframeRef,
             isVisible: true,
         });
         this.updateConverterLayoutDimensions = updateLayoutDimensions;
 
         onMounted(() => {
-            const iframe = this.outputIframeRef.el;
+            const iframe = this.outputIframeRef();
             const promises = [
                 loadIframe(iframe, () => {
                     iframe.contentDocument.head.append(
