@@ -31,7 +31,7 @@
             <t t-foreach="this.props.attribute_lines" t-as="ptal" t-key="ptal.id">
                 <PTAL
                     t-if="this.shouldShowPtal(ptal)"
-                    t-props="ptal"
+                    t-props="{ ...ptal, show_extra_price: this.props.show_extra_price }"
                     productTmplId="this.props.product_tmpl_id"
                 />
             </t>
