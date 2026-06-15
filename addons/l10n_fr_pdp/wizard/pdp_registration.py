@@ -168,18 +168,6 @@ class PdpRegistration(models.TransientModel):
             }
         }
 
-    def _check_can_register(self):
-        """ No longer used, need to remove in master """
-        if not self.env.user.totp_enabled and not bool(self.env['ir.config_parameter'].sudo().get_str('auth_totp.policy')) and self.edi_mode != 'demo':
-            raise RedirectWarning(
-                message=self.env._("To be able to register, you need to enable the two-factor authentication."),
-                action=self.env.user._get_records_action(
-                    target='new',
-                    views=[(self.env.ref('base.view_users_form_simple_modif').id, "form")],
-                ),
-                button_text=self.env._("Go to the Preferences panel"),
-            )
-
     def _action_open_pdp_form(self, reopen=True):
         return self._get_records_action(
             name=self.env._("Send via French electronic invoicing"),
