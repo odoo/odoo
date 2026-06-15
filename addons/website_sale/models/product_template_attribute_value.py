@@ -8,10 +8,9 @@ class ProductTemplateAttributeValue(models.Model):
 
     def _get_extra_price(self, combination_info):
         self.ensure_one()
-        if not self.show_price_extra:
-            return 0.0
-
-        if not self.price_extra:
+        if not (
+            self.price_extra and self.show_price_extra and combination_info["show_extra_price"]
+        ):
             return 0.0
 
         price_extra = self.price_extra
