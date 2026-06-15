@@ -8,6 +8,7 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 
 export class TeamBoardOptionPlugin extends Plugin {
     static id = "teamBoardOption";
+    static dependencies = ["builderOptions"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         dropzone_selectors: [
@@ -16,6 +17,7 @@ export class TeamBoardOptionPlugin extends Plugin {
                 excludeAncestor: ".s_team_board, .s_popup, .s_table_of_content",
             },
         ],
+        options_container_top_buttons_providers: this.getButtons.bind(this),
         remove_disabled_reason_providers: (el) => {
             if (el.matches(".s_card:only-child")) {
                 return _t("You cannot remove the last card.");
@@ -42,6 +44,23 @@ export class TeamBoardOptionPlugin extends Plugin {
         on_cloned_handlers: ({ cloneEl }) => this.assignModalId(cloneEl),
     };
 
+    getButtons() {
+        return [
+            {
+                class: "create_new_team_board_option fa fa-plus",
+                title: "Add new",
+                handler: (el) => {
+                    const snippet = this.config.snippetModel.getOriginalSnippet("s_team_board");
+                    const cloned_el = snippet.content.cloneNode(true);
+                    el.parentElement.append(cloned_el);
+
+                    this.dependencies.builderOptions.setNextTarget(cloned_el);
+                    cloned_el.scrollIntoView({ behavior: "smooth" });
+                },
+            },
+        ];
+    }
+
     assignModalId(boardEl) {
         if (!boardEl.matches(".s_team_board")) {
             return;
@@ -61,8 +80,8 @@ export class SortTeamBoardAlphabetically extends BuilderAction {
     apply({ editingElement }) {
         const cardsContainer = editingElement.querySelector(".o_team_board_card_container");
         const sortedCards = [...editingElement.querySelectorAll(".card")].sort((a, b) => {
-            const a_name = a.querySelector(".s_team_board_card_name")?.textContent;
-            const b_name = b.querySelector(".s_team_board_card_name")?.textContent;
+            const a_name = a.querySelector(".o_team_board_card_name")?.textContent;
+            const b_name = b.querySelector(".o_team_board_card_name")?.textContent;
             return localeCompare(a_name, b_name);
         });
 
