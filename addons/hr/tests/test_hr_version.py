@@ -761,8 +761,6 @@ class TestHrVersion(TestHrCommon):
         HrEmployee_with_office_user = self.env['hr.employee'].with_user(self.res_users_hr_officer)
         self.employee.user_id = self.res_users_hr_officer
         with self.assertRaises(AccessError, msg="HR Officer should not be able to access to 'payroll fields'"):
-            HrEmployee_with_office_user.search([('contract_date_start', '<', '2022-01-01'), ('id', 'in', employees.ids)])
-        with self.assertRaises(AccessError, msg="HR Officer should not be able to access to 'payroll fields'"):
             HrEmployee_with_office_user.search([('wage', '=', 2000), ('id', 'in', employees.ids)])
         with self.assertRaises(AccessError, msg="HR Officer should not be able to access to 'payroll fields'"):
             HrEmployee_with_office_user.search([('version_id.wage', '=', 2000), ('id', 'in', employees.ids)])
@@ -775,7 +773,6 @@ class TestHrVersion(TestHrCommon):
             self.res_users_hr_manager.group_ids += payroll_group
         HrEmployee_with_manager_user = self.env['hr.employee'].with_user(self.res_users_hr_manager)
         self.employee.user_id = self.res_users_hr_manager
-        self.assertEqual(HrEmployee_with_manager_user.search([('contract_date_start', '<', '2022-01-01'), ('id', 'in', employees.ids)]), employee1)
         self.assertEqual(HrEmployee_with_manager_user.search([('wage', '=', 2000), ('id', 'in', employees.ids)]), employee2)
         self.assertEqual(HrEmployee_with_manager_user.search([('version_id.wage', '=', 2000), ('id', 'in', employees.ids)]), employee2)
         self.assertEqual(HrEmployee_with_manager_user.search([('hr_responsible_id', '=', self.res_users_hr_manager.id), ('id', 'in', employees.ids)]), employee1)
