@@ -1533,7 +1533,6 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
             'pricelist_id': self.main_pos_config.available_pricelist_ids[0].id,
             'lines': [[0, 0, {
                 'discount': 0,
-                'pack_lot_ids': [],
                 'price_unit': 100.0,
                 'product_id': product.id,
                 'price_subtotal': 100.0,
