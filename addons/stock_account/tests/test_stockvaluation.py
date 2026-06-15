@@ -4083,6 +4083,7 @@ class TestStockValuation(TestStockValuationBase):
             'name': 'Basic 15% tax',
             'amount': 15,
             'tax_group_id': tax_group.id,
+            'country_id': self.env.company.country_id.id or self.ref('base.us'),
         })
         self.env.company.anglo_saxon_accounting = False
         self.product1.property_account_expense_id.tax_ids = basic_tax
