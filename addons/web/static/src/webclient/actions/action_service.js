@@ -525,7 +525,7 @@ export function makeActionManager(env, router = _router) {
                 delete lastAction.context.allowed_company_ids;
             }
             if (state.resId || state.view_type === "form") {
-                if (lastAction.res_model === state.model) {
+                if (!lastAction.id && lastAction.res_model === state.model) {
                     actionRequest = lastAction;
                     options.props = { resId: state.resId === "new" ? undefined : state.resId };
                     if (state.view_id) {
