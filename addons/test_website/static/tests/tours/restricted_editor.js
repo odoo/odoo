@@ -5,7 +5,7 @@ import {
     registerWebsitePreviewTour,
     insertSnippet,
 } from "@website/js/tours/tour_utils";
-import { stepUtils } from "@web_tour/tour_utils";
+import { registry } from "@web/core/registry";
 
 const EDIT_BUTTON_SELECTOR =
     "body .o_menu_systray button.o-website-btn-custo-primary:contains(edit)";
@@ -50,7 +50,6 @@ const switchTo = (lang) => [
         content: `Wait until ${lang} is applied`,
         trigger: `:iframe html[lang*="${lang}"]`,
     },
-    stepUtils.waitIframeIsReady(),
 ];
 const goToMenuItem = [
     clickOnExtraMenuItem({}, true),
@@ -63,15 +62,10 @@ const goToMenuItem = [
         content: "Wait to land on model item page",
         trigger: ':iframe a[href="/test_website/model_item/1"].nav-link.active:not(:visible)',
     },
-    stepUtils.waitIframeIsReady(),
 ];
 
-registerWebsitePreviewTour(
-    "test_restricted_editor_only",
-    {
-        undeterministicTour_doNotCopy: true,
-    },
-    () => [
+registry.category("web_tour.tours").add("test_restricted_editor_only", {
+    steps: () => [
         // Home
         checkNoTranslate,
         ...clickOnEditAndWaitEditMode(),
@@ -113,8 +107,8 @@ registerWebsitePreviewTour(
         ...switchTo("fr"),
         ...translate,
         ...closeErrorDialog,
-    ]
-);
+    ],
+});
 
 registerWebsitePreviewTour(
     "test_restricted_editor_test_admin",
@@ -181,11 +175,13 @@ registerWebsitePreviewTour(
     ]
 );
 
-registerWebsitePreviewTour("test_restricted_editor_tester", {}, () => [
-    ...clickOnEditAndWaitEditMode(),
-    {
-        content: "Footer should not be be editable for restricted user",
-        trigger: ":iframe :has(.o_savable) footer:not(.o_savable):not(:has(.o_savable))",
-    },
-    ...clickOnSave(),
-]);
+registry.category("web_tour.tours").add("test_restricted_editor_tester", {
+    steps: () => [
+        ...clickOnEditAndWaitEditMode(),
+        {
+            content: "Footer should not be be editable for restricted user",
+            trigger: ":iframe :has(.o_savable) footer:not(.o_savable):not(:has(.o_savable))",
+        },
+        ...clickOnSave(),
+    ],
+});
