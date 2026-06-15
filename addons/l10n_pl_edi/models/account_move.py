@@ -1,5 +1,9 @@
+import io
+import json
 import logging
 import re
+import zipfile
+from datetime import datetime, timezone
 from xml.dom.minidom import parseString
 
 from dateutil.relativedelta import relativedelta
@@ -551,7 +555,8 @@ class AccountMove(models.Model):
                     },
                 )
 
-            currency = self.env['res.currency'].search([('name', '=', data['currency_code'])], limit=1)
+            if currency := self.env['res.currency'].search([('name', '=', data['currency_code'])], limit=1):
+                pass
 
             move_vals = {
                 'move_type': 'in_invoice',
@@ -595,93 +600,86 @@ class AccountMove(models.Model):
                 break
 
     @api.model
-    def _l10n_pl_edi_download_bills_from_ksef(self):
+    def _l10n_pl_edi_reschedule_download_bills(self, delay):
+        """Re-triggers the download cron after the given delay (in seconds)."""
+        cron = self.env.ref('l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills')
+        cron._trigger(at=fields.Datetime.now() + relativedelta(seconds=max(delay, 1)))
+        return True
 
-        def handle_download_bills_from_ksef_error(error):
-            if not (delay := error.get('retry_after')):
-                raise UserError(error.get('message'))
+    @api.model
+    def _l10n_pl_edi_parse_ksef_datetime(self, value):
+        """Parses a KSeF ISO-8601 datetime string into a naive UTC datetime."""
+        if not value:
+            return False
+        parsed = datetime.fromisoformat(value)
+        if parsed.tzinfo is not None:
+            parsed = parsed.astimezone(timezone.utc).replace(tzinfo=None)
+        return parsed
 
-            cron = self.env.ref('l10n_pl_edi.cron_l10n_pl_edi_ksef_download_bills')
-            cron._trigger(at=fields.Datetime.now() + relativedelta(seconds=delay))
-            return True
+    @api.model
+    def _l10n_pl_edi_unpack_export_archive(self, archive_bytes):
+        """
+        Unpacks the decrypted export ZIP archive into:
+        - a mapping {ksef_number: xml_bytes} built from the '{ksefNumber}.xml' files
+        - the list of InvoiceMetadata dicts found in '_metadata.json'
+        """
+        invoice_xmls = {}
+        metadata_invoices = []
+        with zipfile.ZipFile(io.BytesIO(archive_bytes)) as archive:
+            for name in archive.namelist():
+                base_name = name.rsplit('/', 1)[-1]
+                content = archive.read(name)
+                if base_name.lower() == '_metadata.json':
+                    try:
+                        metadata_invoices = json.loads(content.decode('utf-8')).get('invoices', [])
+                    except (ValueError, UnicodeDecodeError):
+                        _logger.warning("Failed to parse _metadata.json from the KSeF export package.")
+                elif base_name.lower().endswith('.xml'):
+                    invoice_xmls[base_name[:-4]] = content
+        return invoice_xmls, metadata_invoices
 
-        service = KsefApiService(self.env.company)
-
-        last_processed_move = self.search([
-            ('l10n_pl_edi_number', '!=', False),
-            ('move_type', '=', 'in_invoice'),
-            *self._check_company_domain(self.env.company)
-        ], order='invoice_date DESC', limit=1)
-
-        if last_processed_move:
-            date_from = fields.Datetime.to_datetime(last_processed_move.invoice_date)
-        else:
-            date_from = fields.Datetime.now() - relativedelta(months=1)
-
-        query = {
-            'subjectType': 'Subject2',
-            'dateRange': {
-                'from': date_from.isoformat(),
-                'to': fields.Datetime.now().isoformat(),
-                'dateType': 'Invoicing',
-            },
-        }
-
-        # Rate Limiting of get_invoice_by_ksef_number
-        #
-        #     req/s  |  req/m  |  req/h
-        #   -----------------------------
-        #       8    |    16   |    64
-        #
-        # Page size shouldn't be more than 64.
-
-        page_offset = 0
-        page_size = 64
-
-        has_more = True
-
-        invoice_numbers = []
-        blocking_error = False
-
-        while has_more:
-            response = service.query_invoice_metadata(query, page_size, page_offset)
-            if response.get('error'):
-                blocking_error = handle_download_bills_from_ksef_error(response['error'])
-                break
-            invoice_numbers.extend(invoice['ksefNumber'] for invoice in response['invoices'])
-            has_more = response['hasMore']
-            page_offset += 1
-
+    @api.model
+    def _l10n_pl_edi_create_bills_from_export(self, invoice_xmls, ksef_numbers):
+        """
+        Creates vendor bills from the export package, skipping KSeF numbers that
+        already exist in Odoo (deduplication based on l10n_pl_edi_number).
+        """
         already_processed = set(self.env['account.move'].search([
-            ('l10n_pl_edi_number', 'in', invoice_numbers)
+            ('l10n_pl_edi_number', 'in', ksef_numbers),
+            ('move_type', '=', 'in_invoice'),
+            *self._check_company_domain(self.env.company),
         ]).mapped('l10n_pl_edi_number'))
 
-        to_process = [invoice_nr for invoice_nr in invoice_numbers if invoice_nr not in already_processed]
+        to_process = [ksef_number for ksef_number in ksef_numbers if ksef_number not in already_processed]
 
         bills_to_create = {}
-
-        for invoice_nr in to_process:
-            response = service.get_invoice_by_ksef_number(invoice_nr)
+        for ksef_number in to_process:
+            xml_content = invoice_xmls.get(ksef_number)
             error_msg = False
-            try:
-                if response.get('error'):
-                    blocking_error = handle_download_bills_from_ksef_error(response['error'])
-                    break
-                bill_data = self.l10n_pl_edi_get_ksef_bill_vals_from_xml(response['xml_content'])
-            except UserError as e:
+            if xml_content:
+                try:
+                    bill_data = self.l10n_pl_edi_get_ksef_bill_vals_from_xml(xml_content)
+                except UserError as e:
+                    bill_data = {'move_type': 'in_invoice'}
+                    error_msg = str(e)
+            else:
                 bill_data = {'move_type': 'in_invoice'}
-                error_msg = str(e)
-            bill_data['l10n_pl_edi_number'] = invoice_nr
-            bills_to_create[invoice_nr] = {
+                error_msg = self.env._("No XML content was found in the export package for this invoice.")
+            bill_data['l10n_pl_edi_number'] = ksef_number
+            bills_to_create[ksef_number] = {
                 'vals': bill_data,
-                'xml_content': response.get('xml_content'),
+                'xml_content': xml_content,
                 'error_msg': error_msg,
             }
+
+        if not bills_to_create:
+            return
 
         created_moves = self.create([bill['vals'] for bill in bills_to_create.values()])
 
         for created_move in created_moves:
-            if content := bills_to_create[created_move.l10n_pl_edi_number].get('xml_content'):
+            bill = bills_to_create[created_move.l10n_pl_edi_number]
+            if content := bill.get('xml_content'):
                 self.env['ir.attachment'].sudo().create({
                     'description': self.env._('KSeF Fetched Invoice XML'),
                     'name': f"KSeF-{created_move.l10n_pl_edi_number.replace('/', '_')}.xml",
@@ -692,9 +690,99 @@ class AccountMove(models.Model):
                     'res_model': created_move._name,
                 })
 
-            if error_msg := bills_to_create[created_move.l10n_pl_edi_number].get('error_msg'):
+            if error_msg := bill.get('error_msg'):
                 created_move.message_post(
                     body=self.env._("KSeF XML failed. The bill was created empty. Reason: %s", error_msg)
                 )
 
-        return blocking_error
+    @api.model
+    def _l10n_pl_edi_download_bills_from_ksef(self):
+        """
+        Incrementally downloads vendor bills from KSeF using the asynchronous
+        export-package mechanism (POST /invoices/exports).
+
+        The flow is a state machine spread across cron runs:
+        - no export in flight: initiate a new export from the stored HWM checkpoint;
+        - export in flight: poll its status, and once ready, download/decrypt the
+          package, create the bills, and advance the HWM checkpoint.
+
+        Returns a truthy value when the cron should stop iterating over the
+        remaining companies (e.g. a rate-limit or a rescheduled continuation).
+        """
+        company = self.env.company.sudo()
+        service = KsefApiService(self.env.company)
+
+        export_ref = company.l10n_pl_edi_bills_export_ref
+        if not export_ref:
+            # Initiate a new export window starting at the last known checkpoint.
+            date_from = company.l10n_pl_edi_bills_hwm_date or fields.Datetime.from_string("2026-01-31 00:00:00")
+            # KSeF rejects export windows longer than 3 months, so the range must
+            # be capped; larger backlogs are caught up window by window.
+            date_to = min(date_from + relativedelta(months=3), fields.Datetime.now())
+            response = service.export_invoices(date_from, date_to)
+            if error := response.get('error'):
+                if delay := error.get('retry_after'):
+                    return self._l10n_pl_edi_reschedule_download_bills(delay)
+                raise UserError(error.get('message'))
+            # Give KSeF some time to process before polling on the next run.
+            return self._l10n_pl_edi_reschedule_download_bills(60)
+
+        # An export is in flight: poll its status.
+        status_response = service.get_export_status(export_ref)
+        if error := status_response.get('error'):
+            if delay := error.get('retry_after'):
+                return self._l10n_pl_edi_reschedule_download_bills(delay)
+            raise UserError(error.get('message'))
+
+        status = status_response.get('status', {})
+        status_code = status.get('code')
+
+        if status_code == 100:
+            # Export still being prepared, check again later.
+            return self._l10n_pl_edi_reschedule_download_bills(60)
+
+        if status_code == 420:
+            # Requested range is beyond the available data: we are fully caught up.
+            service.clear_export_state()
+            return False
+
+        if status_code != 200:
+            # 210 (expired), 415 (decryption), 500 (unknown), 550 (cancelled)...
+            _logger.warning(
+                "KSeF bills export %s failed (code %s): %s",
+                export_ref, status_code, status.get('description', ''),
+            )
+            service.clear_export_state()
+            return self._l10n_pl_edi_reschedule_download_bills(60)
+
+        # status 200: the package is ready for download.
+        package = status_response.get('package') or {}
+        parts = package.get('parts') or []
+
+        invoice_xmls, metadata_invoices = {}, []
+        if parts:
+            archive_bytes = service.decrypt_export_package(parts)
+            invoice_xmls, metadata_invoices = self._l10n_pl_edi_unpack_export_archive(archive_bytes)
+
+        ksef_numbers = [inv['ksefNumber'] for inv in metadata_invoices if inv.get('ksefNumber')] or list(invoice_xmls)
+        self._l10n_pl_edi_create_bills_from_export(invoice_xmls, ksef_numbers)
+
+        # Advance the HWM checkpoint for the next window.
+        is_truncated = package.get('isTruncated')
+        if is_truncated and package.get('lastPermanentStorageDate'):
+            new_hwm = package['lastPermanentStorageDate']
+        else:
+            new_hwm = package.get('permanentStorageHwmDate')
+
+        if parsed_hwm := self._l10n_pl_edi_parse_ksef_datetime(new_hwm):
+            company.l10n_pl_edi_bills_hwm_date = parsed_hwm
+
+        service.clear_export_state()
+
+        # Continue when more data is expected: either the package was truncated,
+        # or the window was capped at 3 months and the checkpoint is still behind.
+        if is_truncated or (parsed_hwm and parsed_hwm < fields.Datetime.now() - relativedelta(hours=1)):
+            return self._l10n_pl_edi_reschedule_download_bills(60)
+
+        return False
+

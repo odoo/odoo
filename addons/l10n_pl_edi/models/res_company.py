@@ -15,6 +15,24 @@ class ResCompany(models.Model):
     l10n_pl_edi_session_key = fields.Binary("Session key", readonly=True, groups='base.group_system')
     l10n_pl_edi_session_iv = fields.Binary("Session iv", readonly=True, groups='base.group_system')
 
+    # Incremental vendor bills download (KSeF export packages)
+    l10n_pl_edi_bills_hwm_date = fields.Datetime(
+        "KSeF Bills High Water Mark",
+        help="PermanentStorage checkpoint up to which vendor bills have already been imported from KSeF.",
+        readonly=True,
+        copy=False,
+        groups='base.group_system',
+    )
+    l10n_pl_edi_bills_export_ref = fields.Char(
+        "KSeF Bills Export Reference",
+        help="Reference number of the asynchronous KSeF export currently being processed.",
+        readonly=True,
+        copy=False,
+        groups='base.group_system',
+    )
+    l10n_pl_edi_export_key = fields.Binary("KSeF Export key", readonly=True, copy=False, groups='base.group_system')
+    l10n_pl_edi_export_iv = fields.Binary("KSeF Export iv", readonly=True, copy=False, groups='base.group_system')
+
     @api.depends("l10n_pl_edi_certificate")
     def _compute_l10n_pl_edi_register(self):
         for company in self:

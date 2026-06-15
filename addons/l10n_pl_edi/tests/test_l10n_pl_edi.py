@@ -1,4 +1,7 @@
 import base64
+import io
+import json
+import zipfile
 from datetime import timedelta
 
 from lxml import etree
@@ -122,6 +125,15 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         except AssertionError as ae:
             ae.args = (ae.args[0] + f"\nFile used for comparison: {filename}", )
             raise
+
+    def _build_export_zip(self, xml_by_ksef, metadata_invoices):
+        """Builds a (decrypted) export package ZIP archive as returned by KSeF."""
+        buffer = io.BytesIO()
+        with zipfile.ZipFile(buffer, 'w') as archive:
+            for ksef_number, content in xml_by_ksef.items():
+                archive.writestr(f'{ksef_number}.xml', content)
+            archive.writestr('_metadata.json', json.dumps({'invoices': metadata_invoices}))
+        return buffer.getvalue()
 
     def _assert_import_invoice(self, filename, expected_values):
         path = f'l10n_pl_edi/tests/import_xmls/{filename}'
@@ -568,44 +580,58 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self.assertEqual(invoice.l10n_pl_edi_ref, False)
         self.assertEqual(invoice.l10n_pl_edi_attachment_id.name, False)
 
-    def test_l10n_pl_edi_download_bill_success(self):
+    def test_l10n_pl_edi_download_bill_initiates_export(self):
+        """First cron run with no pending export should initiate one and reschedule."""
+        captured = {}
 
-        def query_invoice_metadata(query_criteria, page_size=100, page_offset=0):
+        def export_invoices(date_from, date_to=None, subject_type='Subject2'):
+            captured['date_from'] = date_from
+            captured['subject_type'] = subject_type
+            self.company.sudo().l10n_pl_edi_bills_export_ref = 'EXPORT-REF-1'
+            return {'reference_number': 'EXPORT-REF-1'}
+
+        start = fields.Datetime.now()
+        with (
+            patch.object(KsefApiService, 'export_invoices', side_effect=export_invoices) as mock_export,
+            patch.object(KsefApiService, 'get_export_status') as mock_status,
+            self.capture_triggers() as capt,
+        ):
+            cron_runs_before = len(capt.records)
+            self.env['account.move'].with_company(self.company)._l10n_pl_edi_download_bills_from_ksef()
+
+        self.assertEqual(mock_export.call_count, 1)
+        self.assertEqual(mock_status.call_count, 0, "Status should not be polled in the same run as initiation")
+        self.assertEqual(captured['subject_type'], 'Subject2', "Vendor bills must be fetched as Subject2 (buyer)")
+        self.assertEqual(self.company.sudo().l10n_pl_edi_bills_export_ref, 'EXPORT-REF-1')
+        # The cron should be rescheduled to poll the export later.
+        self.assertEqual(len(capt.records), cron_runs_before + 1)
+        self.assertGreaterEqual(capt.records[-1].call_at, start)
+
+    def test_l10n_pl_edi_download_bill_success(self):
+        ksef_number = '7492091229-20260210-0700A043714A-5E'
+        with tools.file_open('l10n_pl_edi/tests/export_xmls/fa3_bill.xml', mode='rb') as file:
+            bill_xml = file.read()
+        archive = self._build_export_zip({ksef_number: bill_xml}, [{'ksefNumber': ksef_number}])
+
+        self.company.sudo().l10n_pl_edi_bills_export_ref = 'EXPORT-REF-1'
+
+        def get_export_status(reference_number):
             return {
-                'hasMore': False,
-                'invoices': [
-                    {
-                        'acquisitionDate': '2026-02-10T10:50:29.348439+00:00',
-                        'buyer': {'identifier': {'type': 'Nip', 'value': '5795955811'}, 'name': 'PL Company'},
-                        'currency': 'PLN',
-                        'formCode': {'schemaVersion': '1-0E', 'systemCode': 'FA (3)', 'value': 'FA'},
-                        'hasAttachment': False,
-                        'invoiceHash': 'DOFApZsfUkl3BLgW1nd7frNq4IVHvYoXHEudpyCFbpg=',
-                        'invoiceNumber': 'FV/2026/00001-demo-test-005',
-                        'invoiceType': 'Vat',
-                        'invoicingDate': '2026-02-10T10:50:29.189345+00:00',
-                        'invoicingMode': 'Online',
-                        'isSelfInvoicing': False,
-                        'issueDate': '2026-02-10',
-                        'ksefNumber': '7492091229-20260210-0700A043714A-5E',
-                        'permanentStorageDate': '2026-02-10T10:50:30.40494+00:00',
-                        'seller': {'name': 'HADRON FOR BUSINESS SP Z O O', 'nip': '7492091229'},
-                    },
-                ],
+                'status': {'code': 200},
+                'package': {
+                    'parts': [{'ordinalNumber': 1, 'url': 'https://storage/part-1', 'method': 'GET'}],
+                    'isTruncated': False,
+                    'permanentStorageHwmDate': '2026-02-11T00:00:00+00:00',
+                },
             }
 
-        def get_invoice_by_ksef_number(ksef_number):
-            path = 'l10n_pl_edi/tests/export_xmls/fa3_bill.xml'
-            with tools.file_open(path, mode='rb') as file:
-                return {'xml_content': file.read()}
-
         with (
-            patch.object(KsefApiService, 'query_invoice_metadata', side_effect=query_invoice_metadata),
-            patch.object(KsefApiService, 'get_invoice_by_ksef_number', side_effect=get_invoice_by_ksef_number),
+            patch.object(KsefApiService, 'get_export_status', side_effect=get_export_status),
+            patch.object(KsefApiService, 'decrypt_export_package', return_value=archive),
         ):
             self.env['account.move'].with_company(self.company)._l10n_pl_edi_download_bills_from_ksef()
 
-        created_move = self.env['account.move'].search([('l10n_pl_edi_number', '=', '7492091229-20260210-0700A043714A-5E')])
+        created_move = self.env['account.move'].search([('l10n_pl_edi_number', '=', ksef_number)])
         self.assertTrue(created_move)
         self.assertEqual(created_move.partner_id.vat, 'PL7492091229')
         self.assertEqual(len(created_move), 1)
@@ -657,57 +683,117 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             ('res_id', '=', created_move.id),
         ], limit=1)
         self.assertTrue(created_move_attachment)
+        self.assertEqual(created_move_attachment.raw, bill_xml)
+
+        # The HWM checkpoint must be advanced and the in-flight export cleared.
+        self.assertEqual(
+            self.company.sudo().l10n_pl_edi_bills_hwm_date,
+            fields.Datetime.to_datetime('2026-02-11 00:00:00'),
+        )
+        self.assertFalse(self.company.sudo().l10n_pl_edi_bills_export_ref)
+
+    def test_l10n_pl_edi_download_bill_deduplicates(self):
+        """An invoice already present in Odoo must not be created twice."""
+        ksef_number = '7492091229-20260210-0700A043714A-5E'
         with tools.file_open('l10n_pl_edi/tests/export_xmls/fa3_bill.xml', mode='rb') as file:
-            self.assertEqual(created_move_attachment.raw, file.read())
+            bill_xml = file.read()
+        archive = self._build_export_zip({ksef_number: bill_xml}, [{'ksefNumber': ksef_number}])
 
-    def test_l10n_pl_edi_download_bill_retry_after(self):
-        """Test that when a rate limit error occurs the progress is preserved and the cron is rescheduled."""
+        existing = self.env['account.move'].with_company(self.company).create({
+            'move_type': 'in_invoice',
+            'l10n_pl_edi_number': ksef_number,
+        })
 
-        def query_invoice_metadata(query_criteria, page_size=100, page_offset=0):
+        self.company.sudo().l10n_pl_edi_bills_export_ref = 'EXPORT-REF-1'
+
+        def get_export_status(reference_number):
             return {
-                'hasMore': False,
-                'invoices': [
-                    {
-                        'ksefNumber': 'KSEF-BILL-001',
-                    },
-                    {
-                        'ksefNumber': 'KSEF-BILL-002',
-                    },
-                ],
+                'status': {'code': 200},
+                'package': {
+                    'parts': [{'ordinalNumber': 1, 'url': 'https://storage/part-1'}],
+                    'isTruncated': False,
+                    'permanentStorageHwmDate': '2026-02-11T00:00:00+00:00',
+                },
             }
 
-        call_count = 0
+        with (
+            patch.object(KsefApiService, 'get_export_status', side_effect=get_export_status),
+            patch.object(KsefApiService, 'decrypt_export_package', return_value=archive),
+        ):
+            self.env['account.move'].with_company(self.company)._l10n_pl_edi_download_bills_from_ksef()
 
-        def get_invoice_by_ksef_number(ksef_number):
-            nonlocal call_count
-            call_count += 1
-            if call_count == 1:
-                path = 'l10n_pl_edi/tests/export_xmls/fa3_bill.xml'
-                with tools.file_open(path, mode='rb') as file:
-                    return {'xml_content': file.read()}
-            return {'error': {'retry_after': 120, 'message': 'Too Many Requests'}}
+        moves = self.env['account.move'].search([('l10n_pl_edi_number', '=', ksef_number)])
+        self.assertEqual(moves, existing, "No duplicate bill should be created for an existing KSeF number")
+
+    def test_l10n_pl_edi_download_bill_truncated_continues(self):
+        """A truncated package must advance the HWM using lastPermanentStorageDate and reschedule."""
+        ksef_number = '7492091229-20260210-0700A043714A-5E'
+        with tools.file_open('l10n_pl_edi/tests/export_xmls/fa3_bill.xml', mode='rb') as file:
+            bill_xml = file.read()
+        archive = self._build_export_zip({ksef_number: bill_xml}, [{'ksefNumber': ksef_number}])
+
+        self.company.sudo().l10n_pl_edi_bills_export_ref = 'EXPORT-REF-1'
+
+        def get_export_status(reference_number):
+            return {
+                'status': {'code': 200},
+                'package': {
+                    'parts': [{'ordinalNumber': 1, 'url': 'https://storage/part-1'}],
+                    'isTruncated': True,
+                    'lastPermanentStorageDate': '2026-02-09T08:00:00+00:00',
+                    'permanentStorageHwmDate': '2026-02-11T00:00:00+00:00',
+                },
+            }
 
         start = fields.Datetime.now()
         with (
-            patch.object(KsefApiService, 'query_invoice_metadata', side_effect=query_invoice_metadata),
-            patch.object(KsefApiService, 'get_invoice_by_ksef_number', side_effect=get_invoice_by_ksef_number),
+            patch.object(KsefApiService, 'get_export_status', side_effect=get_export_status),
+            patch.object(KsefApiService, 'decrypt_export_package', return_value=archive),
             self.capture_triggers() as capt,
         ):
             cron_runs_before = len(capt.records)
             self.env['account.move'].with_company(self.company)._l10n_pl_edi_download_bills_from_ksef()
 
-        bill_1 = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'KSEF-BILL-001')])
-        self.assertTrue(bill_1)
-        bill_1_attachment = self.env['ir.attachment'].search([
-            ('res_model', '=', 'account.move'),
-            ('res_id', '=', bill_1.id),
-        ], limit=1)
-        self.assertTrue(bill_1_attachment)
-        with tools.file_open('l10n_pl_edi/tests/export_xmls/fa3_bill.xml', mode='rb') as file:
-            self.assertEqual(bill_1_attachment.raw, file.read())
+        # Truncated packages continue from lastPermanentStorageDate.
+        self.assertEqual(
+            self.company.sudo().l10n_pl_edi_bills_hwm_date,
+            fields.Datetime.to_datetime('2026-02-09 08:00:00'),
+        )
+        self.assertFalse(self.company.sudo().l10n_pl_edi_bills_export_ref)
+        self.assertEqual(len(capt.records), cron_runs_before + 1)
+        self.assertGreaterEqual(capt.records[-1].call_at, start)
 
-        bill_2 = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'KSEF-BILL-002')])
-        self.assertFalse(bill_2)
+    def test_l10n_pl_edi_download_bill_caught_up(self):
+        """Status 420 (range beyond available data) is a clean no-op that clears the export."""
+        self.company.sudo().l10n_pl_edi_bills_export_ref = 'EXPORT-REF-1'
+
+        with patch.object(
+            KsefApiService, 'get_export_status',
+            side_effect=lambda reference_number: {'status': {'code': 420, 'description': 'Out of range'}},
+        ):
+            result = self.env['account.move'].with_company(self.company)._l10n_pl_edi_download_bills_from_ksef()
+
+        self.assertFalse(result)
+        self.assertFalse(self.company.sudo().l10n_pl_edi_bills_export_ref)
+
+    def test_l10n_pl_edi_download_bill_retry_after(self):
+        """When a rate limit error occurs the export is preserved and the cron is rescheduled."""
+        self.company.sudo().l10n_pl_edi_bills_export_ref = 'EXPORT-REF-1'
+
+        def get_export_status(reference_number):
+            return {'error': {'retry_after': 120, 'message': 'Too Many Requests'}}
+
+        start = fields.Datetime.now()
+        with (
+            patch.object(KsefApiService, 'get_export_status', side_effect=get_export_status),
+            self.capture_triggers() as capt,
+        ):
+            cron_runs_before = len(capt.records)
+            self.env['account.move'].with_company(self.company)._l10n_pl_edi_download_bills_from_ksef()
+
+        # No bills created and the in-flight export reference is preserved for the retry.
+        self.assertFalse(self.env['account.move'].search([('move_type', '=', 'in_invoice')]))
+        self.assertEqual(self.company.sudo().l10n_pl_edi_bills_export_ref, 'EXPORT-REF-1')
 
         self.assertEqual(len(capt.records), cron_runs_before + 1)
         self.assertGreaterEqual(capt.records[-1].call_at, start + timedelta(seconds=120))
@@ -782,22 +868,21 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
 
     def test_cron_creates_empty_move_on_parsing_error(self):
         """ Create empty journal entry for malformed XML """
+        archive = self._build_export_zip(
+            {'GOOD': b'<good/>', 'BAD': b'<bad/>'},
+            [{'ksefNumber': 'GOOD'}, {'ksefNumber': 'BAD'}],
+        )
+        self.company.sudo().l10n_pl_edi_bills_export_ref = 'EXPORT-REF-1'
 
-        def query_invoice_metadata(query_criteria, page_size=100, page_offset=0):
+        def get_export_status(reference_number):
             return {
-                'hasMore': False,
-                'invoices': [
-                    {
-                        'ksefNumber': 'GOOD'
-                    },
-                    {
-                        'ksefNumber': 'BAD'
-                    },
-                ],
+                'status': {'code': 200},
+                'package': {
+                    'parts': [{'ordinalNumber': 1, 'url': 'https://storage/part-1'}],
+                    'isTruncated': False,
+                    'permanentStorageHwmDate': '2026-02-11T00:00:00+00:00',
+                },
             }
-
-        def get_invoice_by_ksef_number(ksef_number):
-            return {'xml_content': b'<bad/>' if ksef_number == 'BAD' else b'<good/>'}
 
         def mock_parse(self_obj, xml):
             if xml == b'<bad/>':
@@ -807,8 +892,8 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
                 'invoice_line_ids': [Command.create({'name': 'Test Line', 'price_unit': 100.0})],
             }
         with (
-            patch.object(KsefApiService, 'query_invoice_metadata', side_effect=query_invoice_metadata),
-            patch.object(KsefApiService, 'get_invoice_by_ksef_number', side_effect=get_invoice_by_ksef_number),
+            patch.object(KsefApiService, 'get_export_status', side_effect=get_export_status),
+            patch.object(KsefApiService, 'decrypt_export_package', return_value=archive),
             patch('odoo.addons.l10n_pl_edi.models.account_move.AccountMove.l10n_pl_edi_get_ksef_bill_vals_from_xml', mock_parse)
         ):
             self.env['account.move'].with_company(self.company)._l10n_pl_edi_download_bills_from_ksef()
