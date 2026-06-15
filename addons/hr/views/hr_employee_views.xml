@@ -696,7 +696,7 @@
                                     <span t-if="record.contract_date_end.raw_value"> - </span>
                                     <field t-if="record.contract_date_end.raw_value" name="contract_date_end"/>
                                 </div>
-                                <div invisible="not birthday" groups="hr.group_hr_user">
+                                <div invisible="not birthday or not birthday_public_display" groups="hr.group_hr_user">
                                     <i class="fa fa-fw me-2 fa-birthday-cake text-primary" title="Birthday"/>
                                     <field name="birthday"/>
                                 </div>
