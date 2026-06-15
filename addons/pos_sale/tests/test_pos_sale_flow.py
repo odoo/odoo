@@ -1918,6 +1918,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.env.flush_all()
         refund_payment.with_context(**payment_context).check()
         self.assertEqual(sale_order.order_line.qty_invoiced, 0)
+        self.assertEqual(sale_order.order_line.qty_delivered, 0)
 
     def test_settle_order_with_multiple_uom(self):
         """ Verify that a sale order with multiple UoM can be settled from the PoS."""
