@@ -1,4 +1,5 @@
 import { localization } from "@web/core/l10n/localization";
+import { _t } from "@web/core/l10n/translation";
 import { useOwnedDialogs } from "@web/core/utils/hooks";
 import { user } from "@web/core/user";
 import { Record } from "@web/model/relational_model/record";
@@ -55,11 +56,22 @@ export class TranslationButton extends Component {
     get isMultiLang() {
         return localization.multiLang;
     }
+    get isClickable() {
+        // a new record still edited inside an x2many has no id of its own to translate
+        const { record } = this.props;
+        return !(record.isNew && record.model.root instanceof Record && record.model.root !== record);
+    }
+    get tooltip() {
+        return this.isClickable ? undefined : _t("Save this record and its parent to translate");
+    }
     get lang() {
         return new Intl.Locale(user.lang).language.toUpperCase();
     }
 
     onClick() {
+        if (!this.isClickable) {
+            return;
+        }
         const { fieldName, record } = this.props;
         this.translationDialog({ fieldName, record });
     }
