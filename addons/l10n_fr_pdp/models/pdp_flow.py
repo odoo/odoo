@@ -430,7 +430,7 @@ class PdpFlow(models.Model):
                     due_period_start = due_period_end = date.replace(day=last_month_day)
                 else:
                     period_start, period_end = date.replace(day=21), date.replace(day=last_month_day)
-                    due_period_start = due_period_end = date.replace(day=10, month=(date.month + 1) % 12, year=date.year + (date.month // 12))
+                    due_period_start = due_period_end = date.replace(day=10, month=date.month % 12 + 1, year=date.year + (date.month // 12))
             else:
                 period_start, period_end = get_monthly_period(date)
                 due_period_start = due_period_end = get_next_10th_due(date)
