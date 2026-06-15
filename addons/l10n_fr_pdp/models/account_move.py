@@ -535,7 +535,7 @@ class AccountMove(models.Model):
             return 'b2c'
 
         if not partner_country_code:
-            partner_country_code = self.env['res.country'].search(
+            partner_country_code = move.commercial_partner_id and self.env['res.country'].search(
                 [('code', '=', move.commercial_partner_id._deduce_country_code())],
                 limit=1,
             ).code
