@@ -1777,7 +1777,7 @@ class HrEmployee(models.Model):
             }
             message = Markup('<b>%(title)s</b> %(text)s') % {
                 'title': self.env._('Congratulations!'),
-                'text': self.env._('May I recommend you to setup an %(onboarding_plan_link)s?') % {
+                'text': self.env._('May I recommend setting up an %(onboarding_plan_link)s?') % {
                     'onboarding_plan_link': link,
                 },
             }
