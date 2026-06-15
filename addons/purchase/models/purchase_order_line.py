@@ -11,7 +11,11 @@ from odoo.tools.float_utils import float_compare, float_round
 
 class PurchaseOrderLine(models.Model):
     _name = 'purchase.order.line'
-    _inherit = ['analytic.mixin', 'res.currency.rate.consolidation.mixin']
+    _inherit = [
+        'analytic.mixin',
+        'res.currency.rate.consolidation.mixin',
+        'product.catalog.line.mixin',
+    ]
     _description = 'Purchase Order Line'
     _order = 'order_id, sequence, id'
 
@@ -596,6 +600,32 @@ class PurchaseOrderLine(models.Model):
         order = self.env['purchase.order'].browse(self.env.context.get('order_id'))
         return order.with_context(child_field='order_line').action_add_from_catalog()
 
+    def _get_quantity_field(self) -> str:
+        return "product_qty"
+
+    def _get_product_uom_field(self) -> str:
+        return "uom_id"
+
+    def _get_catalog_unit_price(self, *args, **kwargs) -> float:  # noqa: ARG002
+        return self[0].price_unit_discounted
+
+    def _can_be_unlinked_from_catalog(self):
+        return super()._can_be_unlinked_from_catalog() and self.state in {'draft', 'sent'}
+
+    def _update_catalog_quantity(self, quantity, uom, **kwargs) -> float:
+        if uom and self.uom_id != uom:
+            old_uom = self.uom_id
+            self.uom_id = uom.id
+            # For real records, _origin == self, so the compute method's
+            # _origin check always passes and skips price recomputation
+            # when there's no vendor pricelist. Convert the price manually.
+            if not self.selected_seller_id:
+                self.price_unit = self.technical_price_unit = old_uom._compute_price(
+                    self.price_unit, self.uom_id
+                )
+
+        super()._update_catalog_quantity(quantity, uom, **kwargs)
+
     def action_open_invoices(self):
         self.ensure_one()
         invoice_ids = self.invoice_lines.move_id.ids
@@ -633,52 +663,6 @@ class PurchaseOrderLine(models.Model):
             self.uom_id = seller_min_qty[0].uom_id
         else:
             self.product_qty = 1.0
-
-    def _get_product_catalog_lines_data(self, **kwargs):
-        """ Return information about purchase order lines in `self`.
-
-        If `self` is empty, this method returns only the default value(s) needed for the product
-        catalog. In this case, the quantity that equals 0.
-
-        Otherwise, it returns a quantity and a price based on the product of the POL(s) and whether
-        the product is read-only or not.
-
-        A product is considered read-only if the order is considered read-only (see
-        ``PurchaseOrder._is_readonly`` for more details) or if `self` contains multiple records.
-
-        Note: This method cannot be called with multiple records that have different products linked.
-
-        :raise odoo.exceptions.ValueError: ``len(self.product_id) != 1``
-        :rtype: dict
-        :return: A dict with the following structure:
-            {
-                'quantity': float,
-                'price': float,
-                'readOnly': bool,
-                'uomDisplayName': String,
-                'uomId': int,
-                'productUomFactor': float (optional),
-                'productUomDisplayName': string (optional),
-                'packaging': dict,
-                'warning': String,
-            }
-        """
-        if self:
-            self.product_id.ensure_one()
-            catalog_info = self[0].order_id._get_product_catalog_seller_data(self.product_id)
-            available_uoms = self.product_id._get_available_uoms() | self.product_id.seller_ids.uom_id
-            catalog_info.update(
-                quantity=self[0].product_qty,
-                price=self[0].price_unit_discounted,
-                readOnly=self[0].order_id._is_readonly() or len(self) > 1,
-                availableUoms=[
-                    {'id': uom.id, 'name': uom.display_name, 'factor': uom.factor}
-                    for uom in available_uoms
-                ],
-                **self[0].order_id._get_product_catalog_uom_data(self.product_id, self[0].uom_id),
-            )
-            return catalog_info
-        return {'quantity': 0}
 
     def _get_product_purchase_description(self, product_lang):
         self.ensure_one()

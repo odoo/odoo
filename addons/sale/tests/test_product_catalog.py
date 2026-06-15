@@ -33,6 +33,7 @@ class TestProductCatalog(HttpCase, SaleCommon):
                     "res_model": self.res_model,
                     "order_id": self.res_id,
                     "product_ids": products.ids,
+                    "child_field": "order_line",
                     **kwargs,
                 }
             },
@@ -49,6 +50,7 @@ class TestProductCatalog(HttpCase, SaleCommon):
                     "product_id": product.id,
                     "quantity": quantity,
                     "uom_id": product.uom_id.id,
+                    "child_field": "order_line",
                     **kwargs,
                 }
             },
@@ -74,7 +76,7 @@ class TestProductCatalog(HttpCase, SaleCommon):
             }
             product_data = catalog_data[str(product.id)]
             for key, value in product_expected_data.items():
-                self.assertEqual(product_data[key], value)
+                self.assertEqual(product_data[key], value, f"{key} doesn't match")
 
     def _create_pricelist_discount_rules(self):
         self.pricelist.item_ids = [
@@ -93,7 +95,9 @@ class TestProductCatalog(HttpCase, SaleCommon):
         ]
 
     def test_catalog_context(self):
-        action_data = self.empty_order.action_add_from_catalog()
+        action_data = self.empty_order.with_context(
+            child_field="order_line"
+        ).action_add_from_catalog()
         catalog_context = action_data["context"]
         self.assertEqual(catalog_context["product_catalog_order_id"], self.empty_order.id)
         self.assertEqual(catalog_context["product_catalog_order_model"], self.res_model)
@@ -106,7 +110,6 @@ class TestProductCatalog(HttpCase, SaleCommon):
     def test_empty_order_data(self):
         self.check_catalog_data(self.products)
 
-    # TODO VFE in master, forbid updates when order is readonly
     def test_readonly_order_data(self):
         self.empty_order._action_cancel()
 

@@ -150,6 +150,7 @@ class PurchaseOrder(models.Model):
             'vendor_suggest_based_on': self.partner_id.suggest_based_on,
             'vendor_suggest_percent': self.partner_id.suggest_percent,
             'product_catalog_order_state': self.state,
+            'display_stock': True,
         }
 
     def action_purchase_order_suggest(self):
@@ -428,9 +429,6 @@ class PurchaseOrder(models.Model):
         validated receipts."""
         return super()._get_orders_to_remind().filtered(lambda p: not p.effective_date)
 
-    def _is_display_stock_in_catalog(self):
-        return True
-
     def _get_product_catalog_order_line_info(self, product_ids, child_field=False, **kwargs):
         """ Add suggest_ctx to env in order to trigger product.product suggest compute fields"""
         if kwargs.get('suggest_based_on'):
@@ -441,11 +439,10 @@ class PurchaseOrder(models.Model):
             )
         return super()._get_product_catalog_order_line_info(product_ids, child_field=child_field, **kwargs)
 
-    def _get_product_catalog_seller_data(self, product, **kwargs):
-        """ Fetch the product's data used by the purchase's catalog."""
-        res = super()._get_product_catalog_seller_data(product, **kwargs)
-        res["suggested_qty"] = product.suggested_qty
-        return res
+    def _get_product_catalog_product_data(self, product, **kwargs) -> dict:
+        product_data = super()._get_product_catalog_product_data(product, **kwargs)
+        product_data["suggested_qty"] = product.suggested_qty
+        return product_data
 
     def _add_reference(self, references):
         """ link the given references to the list of references. """
