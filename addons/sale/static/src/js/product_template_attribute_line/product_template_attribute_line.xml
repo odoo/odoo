@@ -56,7 +56,7 @@
                         t-attf-for="ptav-{{ptav.id}}-input">
                         <span class="me-1" t-out="ptav.name"/>
                         <BadgeExtraPrice
-                            t-if="ptav.price_extra"
+                            t-if="ptav.price_extra &amp;&amp; this.props.show_extra_price"
                             price="ptav.price_extra"
                             currencyId="this.env.currency.id"
                         />
