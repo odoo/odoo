@@ -121,10 +121,9 @@ export class FilterValuesList extends Component {
                 value: currentValue,
             });
         }
-        if (!filters.length) {
-            return;
+        if (filters.length) {
+            this.props.model.dispatch("SET_MANY_GLOBAL_FILTER_VALUE", { filters });
         }
-        this.props.model.dispatch("SET_MANY_GLOBAL_FILTER_VALUE", { filters });
         this.props.close();
     }
 
