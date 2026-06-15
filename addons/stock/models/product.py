@@ -881,7 +881,7 @@ class ProductTemplate(models.Model):
     def _compute_show_qty_status_button(self):
         for template in self:
             template.show_on_hand_qty_status_button = template.is_storable
-            template.show_forecasted_qty_status_button = template.is_storable
+            template.show_forecasted_qty_status_button = template.is_storable and template.product_variant_id
 
     @api.depends('is_storable')
     def _compute_has_available_route_ids(self):
