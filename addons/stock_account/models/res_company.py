@@ -135,13 +135,13 @@ class ResCompany(models.Model):
         periods = ['daily']
         if fields.Date.today() == fields.Date.today() + relativedelta(day=31):
             periods.append('monthly')
-        domain = Domain([
-            ('inventory_period', 'in', periods),
-            ('inventory_valuation', '!=', 'real_time'),
-        ])
+        domain = Domain([('inventory_period', 'in', periods)])
         companies = self.env['res.company'].search(domain)
         for company in companies:
-            company.action_close_stock_valuation(auto_post=True)
+            try:
+                company.action_close_stock_valuation(auto_post=True)
+            except UserError:
+                continue
 
     def _get_valuation_product_domain(self):
         return [('is_storable', '=', True)]
