@@ -293,7 +293,16 @@ class SaleOrder(models.Model):
         fpos_before = self.fiscal_position_id
         pricelist_before = self.pricelist_id
 
-        self.write(dict.fromkeys(fnames, partner_id))
+        address_vals = dict.fromkeys(fnames, partner_id)
+        if "partner_id" in fnames:
+            commercial_partner = self.env["res.partner"].browse(partner_id).commercial_partner_id
+            address_vals.update({
+                fname: self[fname].id
+                for fname in ("partner_invoice_id", "partner_shipping_id")
+                if fname not in fnames and self[fname].commercial_partner_id == commercial_partner
+            })
+
+        self.write(address_vals)
 
         fpos_changed = fpos_before != self.fiscal_position_id
         if fpos_changed:
