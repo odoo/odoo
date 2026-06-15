@@ -1693,7 +1693,7 @@ class PosSession(models.Model):
                     'point_of_sale.mail_activity_old_session',
                     user_id=session.user_id.id,
                     note=_(
-                        "Your PoS Session is open since %(date)s, we advise you to close it and to create a new one.",
+                        "Your PoS Session is open since %(date)s, we advise you to close it and create a new one.",
                         date=session.start_at,
                     )
                 )
