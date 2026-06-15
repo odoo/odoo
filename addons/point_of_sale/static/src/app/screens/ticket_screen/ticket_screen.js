@@ -511,6 +511,15 @@ export class TicketScreen extends Component {
             (order.getScreenData().name === "" || this.state.filter === "SYNCED")
         );
     }
+    // Used to override inside `pos_hr`
+    get showSubPads() {
+        return this.isOrderSynced;
+    }
+
+    // Used to override inside `l10n_cl_edi_pos`
+    get showInvoiceButton() {
+        return this.isOrderSynced;
+    }
     getFilteredOrderList() {
         const orderModel = this.pos.models["pos.order"];
         let orders =
