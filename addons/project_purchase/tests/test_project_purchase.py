@@ -87,7 +87,7 @@ class TestProjectPurchase(TestProjectPurchaseProfitability):
         })
         self.assertEqual(
             purchase_order.order_line.analytic_distribution,
-            distribution_model_product.analytic_distribution | distribution_model_partner.analytic_distribution
+            {f"{self.analytic_account_1.id},{self.analytic_account_2.id},{self.analytic_account.id}": 100}
         )
 
         # When we add a project to the PO, it should keep the previous accounts + the project account
