@@ -21,8 +21,8 @@ class StockPicking(models.Model):
             picking.show_subcontracting_details_visible = any(m.show_subcontracting_details_visible for m in picking.move_ids)
 
     @api.depends('picking_type_id', 'partner_id')
-    def _compute_location_id(self):
-        super()._compute_location_id()
+    def _compute_location_dest_id(self):
+        super()._compute_location_dest_id()
 
         for picking in self:
             # If this is a subcontractor resupply transfer, set the destination location
