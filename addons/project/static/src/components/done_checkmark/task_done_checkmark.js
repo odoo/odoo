@@ -13,7 +13,7 @@ export class TaskCheckMark extends BooleanToggleField {
         const value = !record.data[name];
         const recordUpdate = record.update.bind(record);
         if (['kanban', 'list'].includes(this.env.config.viewType)) {
-            await recordUpdate({ [name]: value }, { save: true });
+            await recordUpdate({ [name]: value });
         } else {
             await recordUpdate({ [name]: value });
         }

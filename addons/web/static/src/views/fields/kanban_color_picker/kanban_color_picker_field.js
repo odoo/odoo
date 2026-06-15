@@ -14,7 +14,7 @@ class KanbanColorPickerField extends Component {
     }
 
     selectColor(colorIndex) {
-        return this.props.record.update({ [this.props.name]: colorIndex }, { save: true });
+        return this.props.record.update({ [this.props.name]: colorIndex });
     }
 }
 

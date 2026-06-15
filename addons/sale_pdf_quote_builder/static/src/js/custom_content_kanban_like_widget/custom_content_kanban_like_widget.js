@@ -98,11 +98,9 @@ export class CustomContentKanbanLikeWidget extends Component {
         );
         sol._noUpdateParent = true; // Ensure that no rpc will be made to save the changes
         if (isSelected) {
-            // save is needed to ensure that no onChange call will be made
-            await sol.update({product_document_ids: [x2ManyCommands.link(docId)]}, { save: true });
+            await sol.update({product_document_ids: [x2ManyCommands.link(docId)]});
         } else {
-            // save is needed to ensure that no onChange call will be made
-            await sol.update({product_document_ids: [x2ManyCommands.unlink(docId)]}, { save: true });
+            await sol.update({product_document_ids: [x2ManyCommands.unlink(docId)]});
         }
         await this.props.record.data.order_line._onUpdate({withoutOnchange: true});
         this.updateJson();

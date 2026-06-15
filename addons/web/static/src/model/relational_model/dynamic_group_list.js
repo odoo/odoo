@@ -142,7 +142,7 @@ export class DynamicGroupList extends DynamicList {
         };
         try {
             const changes = { [targetGroup.groupByField.name]: value };
-            const res = await record.update(changes, { save: true });
+            const res = await record.update(changes);
             if (!res) {
                 return revert();
             }

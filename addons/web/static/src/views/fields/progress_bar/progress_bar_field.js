@@ -31,7 +31,6 @@ export class ProgressBarField extends Component {
             parse: (v) => this.parseCurrentValue(v),
             refName: "currentValue",
             fieldName: this.props.name,
-            shouldSave: () => this.props.readonly,
         });
 
         this.state = proxy({

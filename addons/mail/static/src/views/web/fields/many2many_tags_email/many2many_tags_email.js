@@ -98,7 +98,7 @@ export class FieldMany2ManyTagsEmail extends Many2ManyTagsField {
         const list = this.props.record.data[this.props.name];
         const partnerRecord = list.records.find((r) => r.resId === partnerId);
         partnerRecord.canSaveOnUpdate = true;
-        return partnerRecord.update({ email: newEmail }, { save: true });
+        return partnerRecord.update({ email: newEmail });
     }
 }
 
