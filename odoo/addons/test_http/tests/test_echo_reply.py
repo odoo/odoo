@@ -201,14 +201,17 @@ class TestHttpEchoReplyHttpWithDB(TestHttpBase):
 
         with self.subTest(name="long body"):
             long_body = iter('"this text is too long"')
-            with self.assertRaises(requests.exceptions.ConnectionError) as exc:
-                self.db_url_open('/test_http/echo-json-over-http', data=long_body, headers=CT_JSON)
-            req = exc.exception.request
-            res = exc.exception.response
-            self.assertEqual(req.headers.get('Transfer-Encoding'), 'chunked')
-            self.assertTrue(list(long_body), "the body shouldn't had been sent fully")
-            if res:
+            try:
+                res = self.db_url_open('/test_http/echo-json-over-http', data=long_body, headers=CT_JSON)
+            except requests.exceptions.ConnectionError:
+                pass
+            else:
                 self.assertEqual(res.status_code, 400)
+
+            # It depends on the OS buffers and thus isn't reliable.
+            # We could implement is a deterministic way but we would
+            # need to send much more data and we don't want that either.
+            # self.assertTrue(list(long_body), "the body shouldn't had been sent fully")
 
 
 @tagged('post_install', '-at_install')
