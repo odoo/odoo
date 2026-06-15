@@ -881,12 +881,12 @@ export class Composer extends Component {
 
     get postData() {
         return {
-            attachments: this.props.composer.attachments || [],
+            attachments: [...(this.props.composer.attachments || [])],
             emailAddSignature: this.props.composer.emailAddSignature,
             isNote: this.props.type === "note",
-            mentionedChannels: this.props.composer.mentionedChannels || [],
-            mentionedPartners: this.props.composer.mentionedPartners || [],
-            mentionedRoles: this.props.composer.mentionedRoles || [],
+            mentionedChannels: [...(this.props.composer.mentionedChannels || [])],
+            mentionedPartners: [...(this.props.composer.mentionedPartners || [])],
+            mentionedRoles: [...(this.props.composer.mentionedRoles || [])],
             cannedResponseIds: this.props.composer.cannedResponses.map((c) => c.id),
             parentId: this.props.composer.replyToMessage?.id,
         };
