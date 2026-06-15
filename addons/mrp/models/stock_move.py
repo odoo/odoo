@@ -263,7 +263,7 @@ class StockMove(models.Model):
                 if not values.get('location_dest_id'):
                     values['location_dest_id'] = mo.location_dest_id.id
                 if not values.get('forecasted_location_id'):
-                    values['forecasted_location_id'] = mo.warehouse_id.lot_stock_id.id
+                    values['forecasted_location_id'] = mo.location_dest_id.id
         return super().create(vals_list)
 
     def write(self, vals):
