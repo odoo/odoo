@@ -228,6 +228,17 @@ test("Can set a date filter value", async function () {
     });
 });
 
+test("confirm with no filter value changes closes dialog", async function () {
+    await addGlobalFilter(model, {
+        id: "42",
+        type: "text",
+        label: "Text Filter",
+    });
+    await mountDashboardSearchBarMenu({ model, close: () => expect.step("close") });
+    await contains(".btn-primary").click();
+    expect.verifySteps(["close"]);
+});
+
 test("Readonly user can update a filter value", async function () {
     await addGlobalFilter(model, {
         id: "42",
