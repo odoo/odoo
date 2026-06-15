@@ -31,9 +31,9 @@ export function registerMessageAction(id, definition) {
 
 registerMessageAction("reaction", {
     component: QuickReactionMenu,
-    componentProps: ({ message, owner }) => ({
+    componentProps: ({ action, message, owner }) => ({
+        action,
         message,
-        action: messageActionsRegistry.get("reaction"),
         messageActive: owner.isActive,
     }),
     componentCondition: ({ owner }) => !isMobileOS() && !owner.isMessageContextMenu,
