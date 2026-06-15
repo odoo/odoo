@@ -1,5 +1,6 @@
+import { FrequentEmojiPlugin } from "@web/core/emoji_picker/frequent_emoji_plugin";
 import { Action } from "@mail/core/common/action";
-import { Component, signal, t, useListener, useProps } from "@odoo/owl";
+import { Component, signal, t, useListener, usePlugin, useProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
@@ -45,7 +46,7 @@ export class QuickReactionMenu extends Component {
                 }
             },
         });
-        this.frequentEmojiService = useService("frequent_emoji");
+        this.frequentEmojiService = usePlugin(FrequentEmojiPlugin);
         useListener(window, "keydown", async (ev) => {
             if (
                 !this.dropdown.isOpen ||
@@ -121,7 +122,7 @@ export class QuickReactionMenu extends Component {
 
     get mostFrequentEmojis() {
         const numberOfEmojis = 6;
-        const mostFrequent = this.frequentEmojiService.getMostFrequent(numberOfEmojis);
+        const mostFrequent = this.frequentEmojiService.mostFrequent().slice(0, numberOfEmojis);
         return mostFrequent.concat(
             QuickReactionMenu.DEFAULT_EMOJIS.filter((emoji) => !mostFrequent.includes(emoji)).slice(
                 0,
