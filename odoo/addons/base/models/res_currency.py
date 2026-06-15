@@ -395,7 +395,7 @@ class ResCurrencyRate(models.Model):
             raise UserError(self.env._("The name for the current rate is empty.\nPlease set it."))
         return self.currency_id.rate_ids.sudo().filtered(lambda x: (
             x.rate
-            and x.company_id == (self.company_id or self.env.company.root_id)
+            and (x.company_id in (self.company_id or self.env.company.root_id) or not x.company_id)
             and x.name < (self.name or fields.Date.context_today(self))
         )).sorted('name')[-1:]
 
@@ -407,11 +407,6 @@ class ResCurrencyRate(models.Model):
             )).sorted('name')[-1:].rate or 1
             for company in companies
         }
-
-    @api.depends('currency_id', 'company_id', 'name')
-    def _compute_rate(self):
-        for currency_rate in self:
-            currency_rate.rate = currency_rate.rate or currency_rate._get_latest_rate().rate or 1.0
 
     @api.depends('rate', 'name', 'currency_id', 'company_id', 'currency_id.rate_ids.rate')
     @api.depends_context('company')
