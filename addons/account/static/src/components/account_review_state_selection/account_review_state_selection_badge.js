@@ -113,10 +113,7 @@ export class AccountReviewStateSelectionBadge extends Component {
     }
 
     async onChange(value) {
-        await this.props.record.update(
-            { [this.props.name]: value },
-            { save: true }
-        );
+        await this.props.record.update({ [this.props.name]: value });
         this.env.reload?.()
     }
 }

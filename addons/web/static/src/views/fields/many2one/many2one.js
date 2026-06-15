@@ -351,7 +351,7 @@ export class KanbanMany2One extends Component {
             placeholder: this.props.placeholder || _t("Search user..."),
             readonly: false,
             update: async (value) => {
-                await this.props.update(value, { save: true });
+                await this.props.update(value);
                 this.assignPopover.close();
             },
         });

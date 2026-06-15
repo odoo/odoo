@@ -32,7 +32,7 @@ export class BooleanToggleConfirm extends BooleanToggleField {
     onChange(value) {
         const record = this.props.record.data;
         const updateAndSave = () => {
-            this.props.record.update({ [this.props.name]: value }, { save: true });
+            this.props.record.update({ [this.props.name]: value });
         };
 
         if (record.lot_valuated && !value) {

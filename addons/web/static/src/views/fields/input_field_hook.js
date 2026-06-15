@@ -16,13 +16,11 @@ import { useBus } from "@web/core/utils/hooks";
  * @param {string} [params.refName="input"] the ref name of the input/textarea
  * @param {boolean} [params.preventLineBreaks] Prevent line breaks in input when set
  * @param {string} [params.fieldName]
- * @param {() => boolean} [params.shouldSave] if true, save the record with the new value
  */
 export function useInputField(params) {
     const inputRef = params.ref || useRef(params.refName || "input");
     const component = useComponent();
     const fieldName = params.fieldName || component.props.name;
-    const shouldSave = params.shouldSave ?? (() => false);
 
     /*
      * A field is dirty if it is no longer sync with the model
@@ -81,10 +79,7 @@ export function useInputField(params) {
                 if (val !== component.props.record.data[fieldName]) {
                     lastSetValue = inputRef.el.value;
                     pendingUpdate = true;
-                    await component.props.record.update(
-                        { [fieldName]: val },
-                        { save: shouldSave() }
-                    );
+                    await component.props.record.update({ [fieldName]: val });
                     pendingUpdate = false;
                     component.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
                 } else {
@@ -184,7 +179,7 @@ export function useInputField(params) {
 
             if ((val || false) !== (component.props.record.data[fieldName] || false)) {
                 lastSetValue = inputRef.el.value;
-                await component.props.record.update({ [fieldName]: val }, { save: shouldSave() });
+                await component.props.record.update({ [fieldName]: val });
                 component.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
             } else {
                 inputRef.el.value = params.getValue();

@@ -64,7 +64,7 @@ export class KanbanCoverImageDialog extends Component {
 
     async setCover() {
         const value = this.state.selectedAttachmentId ? { id: this.state.selectedAttachmentId } : false;
-        await this.props.record.update({ [this.props.fieldName]: value }, { save: true });
+        await this.props.record.update({ [this.props.fieldName]: value });
         this.props.close();
     }
 
