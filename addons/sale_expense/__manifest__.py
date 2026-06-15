@@ -17,6 +17,7 @@ This module allow to reinvoice employee expense, by setting the SO directly on t
         'views/product_view.xml',
         'views/hr_expense_views.xml',
         'views/sale_order_views.xml',
+        'wizard/hr_expense_post_wizard_views.xml',
     ],
     'auto_install': True,
     'author': 'Odoo S.A.',

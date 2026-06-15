@@ -1797,6 +1797,10 @@ class HrExpense(models.Model):
         self.ensure_one()
         return self.product_has_cost
 
+    def _prepare_post_wizard_vals(self):
+        # Hook to be overridden.
+        return {}
+
     def _post_wizard(self):
         if 'company_account' in set(self.mapped('payment_mode')):
             raise UserError(_("Only expense paid by the employee can be posted with the wizard"))
@@ -1812,7 +1816,7 @@ class HrExpense(models.Model):
             'view_mode': 'form',
             'views': [(False, "form")],
             'res_model': 'hr.expense.post.wizard',
-            'res_id': self.env['hr.expense.post.wizard'].create({}).id,
+            'res_id': self.env['hr.expense.post.wizard'].create(self._prepare_post_wizard_vals()).id,
             'target': 'new',
             'context': self.with_context(active_ids=self.ids, validate_analytic=True).env.context,
         }

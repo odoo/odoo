@@ -27,6 +27,11 @@ class HrExpense(models.Model):
         index='btree_not_null',
     )
     can_be_reinvoiced = fields.Boolean("Can be reinvoiced", compute='_compute_can_be_reinvoiced')
+    attach_receipts_to_invoice = fields.Boolean(
+        string="Attach receipts to future customer invoices",
+        copy=False,
+        help="Attach the expense receipts to customer invoices generated later from the related sales order",
+    )
 
     @api.depends('product_id.reinvoice_policy')
     def _compute_can_be_reinvoiced(self):
@@ -65,6 +70,18 @@ class HrExpense(models.Model):
         vals = super()._get_split_values()
         for split_value in vals:
             split_value['sale_order_id'] = self.sale_order_id.id
+        return vals
+
+    def _prepare_post_wizard_vals(self):
+        vals = super()._prepare_post_wizard_vals()
+        reinvoiced_expenses = self.filtered('sale_order_id')
+        vals.update({
+            'show_attach_receipts_to_invoice': bool(reinvoiced_expenses),
+            'attach_receipts_to_invoice': bool(reinvoiced_expenses) and all(
+                expense.product_id.reinvoice_policy == 'cost'
+                for expense in reinvoiced_expenses
+            ),
+        })
         return vals
 
     def action_post(self):
