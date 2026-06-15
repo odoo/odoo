@@ -7,7 +7,7 @@ from datetime import date
 
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import parse_date, SQL
+from odoo.tools import frozendict, parse_date, SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -142,15 +142,21 @@ class ResCurrency(models.CachedModel):
             SQL('"before_rate"."name"'),
         )
 
+    @api.model
     def _get_rates(self, company, date) -> dict[int, tuple[float, (date | None)]]:
         """ Return a mapping between currency_id and their rate with the date of this rate."""
-        if not self.ids:
-            return {}
-        query = self._get_rates_query(company, date, currency_ids=self.ids)
-        return {
+        company = company.root_id
+        currency_rates = self.env.cr.cache.setdefault('res.currency.rate.values', {})
+        key = (company.id, date)
+        if rates := currency_rates.get(key):
+            return rates
+        query = self._get_rates_query(company, date)
+        rates = frozendict({
             currency_id: (rate, rate_date)
             for currency_id, rate, rate_date in self.env.execute_query(query)
-        }
+        })
+        currency_rates[key] = rates
+        return rates
 
     @api.depends_context('company')
     def _compute_is_current_company_currency(self):
@@ -381,13 +387,18 @@ class ResCurrencyRate(models.Model):
         return vals
 
     def write(self, vals):
-        self.env['res.currency'].invalidate_model(['inverse_rate'])
+        self._invalidate_rates()
         return super().write(self._sanitize_vals(vals))
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.env['res.currency'].invalidate_model(['inverse_rate'])
+        self._invalidate_rates()
         return super().create([self._sanitize_vals(vals) for vals in vals_list])
+
+    @api.ondelete(at_uninstall=False)
+    def _invalidate_rates(self):
+        self.env.cr.cache.pop('res.currency.rate.values', None)
+        self.env['res.currency'].invalidate_model(['inverse_rate'])
 
     def _get_latest_rate(self):
         # Make sure 'name' is defined when creating a new rate.
