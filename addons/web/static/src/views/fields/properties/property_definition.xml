@@ -24,7 +24,7 @@
                         placeholder="Property Name"
                         autocomplete="off"
                         t-model.proxy="this.state.propertyDefinition.string"
-                        t-on-change="this.onPropertyLabelChange"
+                        t-on-change="(ev) => this.onAttributeChange('string', ev.target.value)"
                         t-on-keypress="this.onPropertyLabelKeypress"
                     />
                 </div>
@@ -64,8 +64,8 @@
                         canChangeDefinition="this.props.canChangeDefinition"
                         default="this.state.propertyDefinition.default || ''"
                         options="this.state.propertyDefinition.selection || []"
-                        onOptionsChange.bind="this.onSelectionOptionChange"
-                        onDefaultOptionChange.bind="this.onDefaultChange"
+                        onOptionsChange="(v) => this.onAttributeChange('selection', v)"
+                        onDefaultOptionChange="(v) => this.onAttributeChange('default', v)"
                     />
                 </div>
                 <div t-if="this.state.propertyDefinition.type === 'tags'" class="d-contents mb-3 mb-sm-0">
@@ -77,7 +77,7 @@
                         readonly="this.props.readonly"
                         canChangeTags="this.props.canChangeDefinition"
                         deleteAction="'tags'"
-                        onTagsChange.bind="this.onTagsChange"/>
+                        onTagsChange="(v) => this.onAttributeChange('tags', v)"/>
                 </div>
                 <div t-if="this.state.propertyDefinition.type === 'many2one' || this.state.propertyDefinition.type === 'many2many'" class="o_field_property_definition_model d-contents mb-3 mb-sm-0">
                     <label t-att-for="this.getUniqueDomID('model')" class="o_form_label align-self-center text-900">Model</label>
@@ -115,7 +115,7 @@
                 <div t-if="this.state.propertyDefinition.type === 'monetary'" class="o_field_property_definition_currency_field d-contents mb-3 mb-sm-0">
                     <label t-att-for="this.getUniqueDomID('currency_field')" class="o_form_label text-900">Currency field</label>
                     <div>
-                        <select class="o_input" t-att-value="this.state.propertyDefinition.currency_field" t-on-change="(ev) => this.onCurrencyFieldUpdate(ev.target.value)">
+                        <select class="o_input" t-att-value="this.state.propertyDefinition.currency_field" t-on-change="(ev) => this.onAttributeChange('currency_field', ev.target.value)">
                             <t t-foreach="this.currencyFields" t-as="currencyField" t-key="currencyField.name">
                                 <option t-att-value="currencyField.name" t-out="currencyField.string"/>
                             </t>
@@ -141,7 +141,7 @@
                         currencyField="this.state.propertyDefinition.currency_field || ''"
                         domain="this.state.propertyDefinition.domain || '[]'"
                         context="this.props.context"
-                        onChange.bind="this.onDefaultChange"
+                        onChange="(v) => this.onAttributeChange('default', v)"
                         record="this.props.record"
                     />
                 </div>
@@ -154,7 +154,7 @@
                             placeholder=""
                             autocomplete="off"
                             t-model.proxy="this.state.propertyDefinition.suffix"
-                            t-on-change="this.onSuffixChange"
+                            t-on-change="(ev) => this.onAttributeChange('suffix', ev.target.value)"
                         />
                     </div>
                 </t>
@@ -168,7 +168,7 @@
                         id="this.getUniqueDomID('kanban')"
                         value="this.props.propertyDefinition.view_in_cards"
                         disabled="this.props.readonly"
-                        onChange.bind="this.onViewInKanbanChange"
+                        onChange="(v) => this.onAttributeChange('view_in_cards', v)"
                     />
                 </div>
                 <div t-elif="this.state.propertyDefinition.type === 'separator'" class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
@@ -178,11 +178,11 @@
                     </label>
                     <div class="o_field_property_definition_fold text-nowrap d-inline-flex w-100 align-items-baseline">
                         <label class="form-check o_radio_item p-0">
-                            <input type="radio" class="form-check-input o_radio_input" t-att-checked="!this.state.propertyDefinition.fold_by_default" t-attf-name="{{separatorId}}_separator" t-attf-id="{{separatorId}}_open" t-on-change="() => this.onFoldByDefaultChange(false)"/>
+                            <input type="radio" class="form-check-input o_radio_input" t-att-checked="!this.state.propertyDefinition.fold_by_default" t-attf-name="{{separatorId}}_separator" t-attf-id="{{separatorId}}_open" t-on-change="() => this.onAttributeChange('fold_by_default', false)"/>
                             <label class="form-check-label o_form_label ms-1" t-attf-for="{{separatorId}}_open">Open</label>
                         </label>
                         <label class="form-check o_radio_item">
-                            <input type="radio" class="form-check-input o_radio_input" t-att-checked="!!this.state.propertyDefinition.fold_by_default" t-attf-name="{{separatorId}}_separator" t-attf-id="{{separatorId}}_fold" t-on-change="() => this.onFoldByDefaultChange(true)"/>
+                            <input type="radio" class="form-check-input o_radio_input" t-att-checked="!!this.state.propertyDefinition.fold_by_default" t-attf-name="{{separatorId}}_separator" t-attf-id="{{separatorId}}_fold" t-on-change="() => this.onAttributeChange('fold_by_default', true)"/>
                             <label class="form-check-label o_form_label ms-1" t-attf-for="{{separatorId}}_fold">Fold</label>
                         </label>
                     </div>

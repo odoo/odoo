@@ -225,21 +225,6 @@ export class PropertyDefinition extends Component {
      * -------------------------------------------------------- */
 
     /**
-     * We changed the string of the property.
-     *
-     * @param {event} event
-     */
-    onPropertyLabelChange(event) {
-        const newString = event.target.value;
-        const propertyDefinition = {
-            ...this.state.propertyDefinition,
-            string: newString,
-        };
-        this.props.onChange(propertyDefinition);
-        this.state.propertyDefinition = propertyDefinition;
-    }
-
-    /**
      * Pressed enter on the property label close the definition.
      *
      * @param {event} event
@@ -249,20 +234,6 @@ export class PropertyDefinition extends Component {
             return;
         }
         this.props.close();
-    }
-
-    /**
-     * We changed the default value of the property.
-     *
-     * @param {object} newDefault
-     */
-    onDefaultChange(newDefault) {
-        const propertyDefinition = {
-            ...this.state.propertyDefinition,
-            default: newDefault,
-        };
-        this.props.onChange(propertyDefinition);
-        this.state.propertyDefinition = propertyDefinition;
     }
 
     /**
@@ -366,77 +337,10 @@ export class PropertyDefinition extends Component {
         });
     }
 
-    /**
-     * We renamed / created / removed a selection option.
-     *
-     * @param {array} newOptions
-     */
-    onSelectionOptionChange(newOptions) {
+    onAttributeChange(name, newValue) {
         const propertyDefinition = {
             ...this.state.propertyDefinition,
-            selection: newOptions,
-        };
-        this.props.onChange(propertyDefinition);
-        this.state.propertyDefinition = propertyDefinition;
-    }
-
-    /**
-     * @param {Event & { target: HTMLInputElement }} ev
-     */
-    onSuffixChange(ev) {
-        const propertyDefinition = {
-            ...this.state.propertyDefinition,
-            suffix: ev.target.value,
-        };
-        this.props.onChange(propertyDefinition);
-        this.state.propertyDefinition = propertyDefinition;
-    }
-
-    /**
-     * We renamed / created / removed tags.
-     *
-     * @param {array} newTags
-     */
-    onTagsChange(newTags) {
-        const propertyDefinition = {
-            ...this.state.propertyDefinition,
-            tags: newTags,
-        };
-        this.props.onChange(propertyDefinition);
-        this.state.propertyDefinition = propertyDefinition;
-    }
-
-    /**
-     * We activate / deactivate the property in the kanban view.
-     *
-     * @param {boolean} newValue
-     */
-    onViewInKanbanChange(newValue) {
-        const propertyDefinition = {
-            ...this.state.propertyDefinition,
-            view_in_cards: newValue,
-        };
-        this.props.onChange(propertyDefinition);
-        this.state.propertyDefinition = propertyDefinition;
-    }
-
-    /**
-     * Ensure the section below the separator is folded/unfolded by default
-     * @param {boolean} checked
-     */
-    onFoldByDefaultChange(checked) {
-        const propertyDefinition = {
-            ...this.state.propertyDefinition,
-            fold_by_default: checked,
-        };
-        this.props.onChange(propertyDefinition);
-        this.state.propertyDefinition = propertyDefinition;
-    }
-
-    onCurrencyFieldUpdate(path) {
-        const propertyDefinition = {
-            ...this.state.propertyDefinition,
-            currency_field: path,
+            [name]: newValue,
         };
         this.props.onChange(propertyDefinition);
         this.state.propertyDefinition = propertyDefinition;
