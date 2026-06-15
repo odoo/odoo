@@ -33,47 +33,19 @@ registry.category('web_tour.tours').add('website_sale_collect_widget', {
 registry.category('web_tour.tours').add(
     'website_sale_collect_buy_product_default_location_pick_up_in_store',
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         steps: () => [
             ...tourUtils.searchProduct("Test CAC Product", { select: true }),
             ...tourUtils.addToCartFromProductPage(),
             tourUtils.goToCart(),
             tourUtils.goToCheckout(),
-            {
-                content: "Fill delivery address form",
-                trigger: 'select[name="country_id"]',
-                run: 'selectByLabel Belgium',
-            },
-            {
-                trigger: 'input[name="name"]',
-                run: 'edit Name',
-            },
-            {
-                trigger: 'input[name="phone"]',
-                run: 'edit 99999999',
-            },
-            {
-                trigger: 'input[name="email"]',
-                run: 'edit test@odoo.com',
-            },
-            {
-                trigger: 'input[name="street"]',
-                run: 'edit Test Street',
-            },
-            {
-                trigger: 'input[name="city"]',
-                run: 'edit Test City',
-            },
-            {
-                trigger: 'input[name="zip"]',
-                run: 'edit 10000',
-            },
-            {
-                content: "Click on confirm button",
-                trigger: '[name="website_sale_main_button"]',
-                run: 'click',
-                expectUnloadPage: true,
-            },
+            ...tourUtils.fillAddressForm({
+                name: "Name",
+                phone: "99999999",
+                email: "test@odoo.com",
+                street: "Test Street",
+                city: "Test City",
+                zip: "10000",
+            }),
             {
                 content: "Ensure in store delivery method is selected.",
                 trigger: 'input[name="o_delivery_radio"][data-delivery-type="in_store"]:checked',
