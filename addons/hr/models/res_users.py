@@ -137,29 +137,8 @@ class ResUsers(models.Model):
     employee_count = fields.Integer(compute='_compute_employee_count')
     employee_resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Employee's Working Hours", readonly=True)
     bank_account_ids = fields.Many2many('res.partner.bank', **related_employee_field('bank_account_ids'))
-    marital = fields.Selection(
-        selection=lambda self: self.env["hr.employee"]._fields["marital"]._description_selection(self.env),
-        **related_employee_field('marital'),
-        user_writeable=True,
-    )
-    spouse_complete_name = fields.Char(**related_employee_field('spouse_complete_name'), user_writeable=True)
-    spouse_birthdate = fields.Date(**related_employee_field('spouse_birthdate'), user_writeable=True)
-    children = fields.Integer(**related_employee_field('children'), user_writeable=True)
-    legal_name = fields.Char(
-        help="The employee's official name as per government-issued or legal documents.",
-        **related_employee_field('legal_name'),
-        user_writeable=True,
-    )
     birthday = fields.Date(**related_employee_field('birthday'), user_writeable=True)
     birthday_public_display = fields.Boolean(**related_employee_field('birthday_public_display'), user_writeable=True)
-    place_of_birth = fields.Char(**related_employee_field('place_of_birth'), user_writeable=True)
-    country_of_birth = fields.Many2one('res.country', **related_employee_field('country_of_birth'), user_writeable=True)
-    sex = fields.Selection(
-        selection=lambda self: self.env["hr.employee"]._fields["sex"]._description_selection(self.env),
-        help="This is the legal sex as recognized by the state, used for official and statutory purposes.",
-        **related_employee_field('sex'),
-        user_writeable=True,
-    )
 
     create_employee = fields.Boolean(store=False, default=False, copy=False, string="Technical field, whether to create an employee")
     create_employee_id = fields.Many2one('hr.employee', store=False, copy=False, string="Technical field, bind user to this employee on create")
