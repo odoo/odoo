@@ -274,29 +274,32 @@ export class SelectionPlugin extends Plugin {
             }
         },
         on_savepoint_restored_handlers: (savePoint) => {
-            if (savePoint.data.lastRevertedChanges?.selection && !savePoint.data.mutations.length) {
+            // The live cursor may have been dragged onto a node the revert
+            // removed, so restore it from a serialized snapshot.
+            const serializedSelection =
+                savePoint.data.lastRevertedChanges?.selection ?? savePoint.data.serializedSelection;
+            if (serializedSelection && !savePoint.data.mutations.length) {
                 savePoint.data.selection.setCursor((cursor) => {
-                    const anchorNode = this.dependencies.domReferenceMap.getNodeById(
-                        savePoint.data.lastRevertedChanges.selection.anchorNodeId
+                    cursor.anchor.node = this.dependencies.domReferenceMap.getNodeById(
+                        serializedSelection.anchorNodeId
                     );
-                    const focusNode = this.dependencies.domReferenceMap.getNodeById(
-                        savePoint.data.lastRevertedChanges.selection.focusNodeId
+                    cursor.anchor.offset = serializedSelection.anchorOffset;
+                    cursor.focus.node = this.dependencies.domReferenceMap.getNodeById(
+                        serializedSelection.focusNodeId
                     );
-                    cursor.anchor.node = anchorNode;
-                    cursor.anchor.offset =
-                        savePoint.data.lastRevertedChanges.selection.anchorOffset;
-
-                    cursor.focus.node = focusNode;
-                    cursor.focus.offset = savePoint.data.lastRevertedChanges.selection.focusOffset;
+                    cursor.focus.offset = serializedSelection.focusOffset;
                 });
             }
 
             // TODO ABD TODO @phoenix: evaluate if the selection is not restorable at the desired position
             savePoint.data.selection.restore();
         },
-        save_point_history_commit_data_processors: (data) =>
-            // TODO ABD TODO @phoenix: selection may become obsolete, it should evolve with mutations.
-            ({ ...data, selection: this.preserveSelection() }),
+        save_point_history_commit_data_processors: (data) => ({
+            ...data,
+            // Live cursor, plus a snapshot to fall back on if it gets invalidated.
+            selection: this.preserveSelection(),
+            serializedSelection: this.serializeEditableSelection(),
+        }),
         snapshot_history_commit_data_processors: (data) => ({
             ...data,
             activeElementId: null,
