@@ -138,6 +138,9 @@ class PosOrderReceipt(models.AbstractModel):
         img.save(buffer, format="PNG")
         return image_data_uri(buffer.getvalue())
 
+    def _order_receipt_generate_cashier_name(self):
+        return self.user_id.name.split(' ')[0] if self.user_id else ''
+
     def order_receipt_generate_data(self, basic_receipt=False):
         self.ensure_one()
 
@@ -179,7 +182,7 @@ class PosOrderReceipt(models.AbstractModel):
                 'partner_vat_label': self.partner_id.country_id.vat_label if self.partner_id.country_id else _("Tax ID"),
                 'self_invoicing_url': f"{self.env.company.get_base_url()}/pos/ticket",
                 'prices': self._order_receipt_generate_taxe_data(),
-                'cashier_name': self.user_id.name.split(' ')[0] if self.user_id else '',
+                'cashier_name': self._order_receipt_generate_cashier_name(),
                 'company_state_name': company.state_id.name if company.state_id else False,
                 'company_country_name': company.country_id.name if company.country_id else False,
                 'formated_date_order': format_datetime(self.env, self.date_order),
