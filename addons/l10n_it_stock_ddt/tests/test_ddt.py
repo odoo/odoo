@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.sale.tests.common import TestSaleCommon
-from odoo.tests import Form, tagged
+from odoo.tests import Command, Form, tagged
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -131,3 +131,40 @@ class TestDDT(TestSaleCommon):
         picking_2.invalidate_model()
         self.assertEqual(invoice_1.l10n_it_ddt_ids.ids, picking_1.ids, 'DDT picking_1 should be linked to the invoice_1')
         self.assertEqual(invoice_2.l10n_it_ddt_ids.ids, picking_2.ids, 'DDT picking_2 should be linked to the invoice_2')
+
+    def test_ddt_invoice_links_only_covered_pickings(self):
+        """
+        When a customer is invoiced in multiple batches, each invoice should only
+        be linked to the DDTs whose quantities it actually covers
+
+        Setup: 3 pickings of 1 unit each (3 DDTs total)
+        Invoice covers only 2 units -> should link pick1 and pick2's DDTs only
+        """
+        product = self.company_data['product_delivery_no']
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'product_id': product.id,
+                    'product_uom_qty': 5,
+                }),
+            ],
+        })
+        so.action_confirm()
+
+        for _ in range(3):
+            pick = so.picking_ids.filtered(lambda p: p.state != 'done')
+            pick.move_ids.write({'quantity': 1, 'picked': True})
+            # Validate the picking and create a backorder for the remaining quantity
+            Form.from_action(self.env, pick.button_validate()).save().process()
+            self.assertTrue(pick.l10n_it_ddt_number, 'The outgoing picking should have a DDT number')
+
+        inv = so._create_invoices()
+        inv_product_line = inv.line_ids.filtered(lambda m: m.display_type == 'product')
+        inv_product_line.quantity = 2
+        inv.action_post()
+        self.assertEqual(len(inv.l10n_it_ddt_ids), 2, 'Only 2 DDT should be linked if the invoice only include qty 2')
+        self.assertRecordValues(inv.l10n_it_ddt_ids.sorted('date_done'), [
+            {'l10n_it_ddt_number': so.picking_ids[-1].l10n_it_ddt_number},
+            {'l10n_it_ddt_number': so.picking_ids[-2].l10n_it_ddt_number},
+        ])
