@@ -34,8 +34,11 @@ registerWebsitePreviewTour(
                 this.anchor.scrollIntoView();
             },
         },
-        ...openLinkPopup(":iframe .s_title .s_card .btn.btn-primary", "Button", 1, true),
-        clickOnElement("button link edition", ".o-we-linkpopover .o_we_edit_link"),
+        ...openLinkPopup({
+            trigger: ":iframe .s_title .s_card .btn.btn-primary",
+            url: "/contactus",
+            edit: true,
+        }),
         {
             content: "Enter the URL for the button link",
             trigger: ".o-we-linkpopover .o_we_href_input_link",
