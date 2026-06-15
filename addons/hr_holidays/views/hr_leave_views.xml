@@ -490,6 +490,19 @@
         </field>
     </record>
 
+    <record id="hr_leave_view_form_dashboard_new_time_off_custom" model="ir.ui.view">
+        <field name="name">hr.leave.view.form.dashboard.new.time.off.custom</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form_dashboard_new_time_off"/>
+        <field name="mode">primary</field>
+        <field name="priority">17</field>
+        <field name="arch" type="xml">
+            <field name="work_entry_type_id" position="attributes">
+                <attribute name="domain">[('id', 'in', allowed_work_entry_type_ids or [])]</attribute>
+            </field>
+        </field>
+    </record>
+
     <record id="hr_leave_view_form_dashboard_manager_new_time_off" model="ir.ui.view">
         <field name="name">hr.leave.view.form.dashboard.new.time.off</field>
         <field name="model">hr.leave</field>
@@ -562,6 +575,7 @@
             <xpath expr="//calendar" position="attributes">
                 <attribute name="mode">month</attribute>
                 <attribute name="month_overflow">0</attribute>
+                <attribute name="form_view_id">%(hr_holidays.hr_leave_view_form_dashboard_new_time_off_custom)d</attribute>
             </xpath>
         </field>
 
