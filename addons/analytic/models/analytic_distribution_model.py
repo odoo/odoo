@@ -67,9 +67,12 @@ class AccountAnalyticDistributionModel(models.Model):
         applied_plans = vals.get('related_root_plan_ids', self.env['account.analytic.plan'])
         for model in applicable_models:
             # ignore model if it contains an account having a root plan that was already applied
-            if not applied_plans & model.distribution_analytic_account_ids.root_plan_id:
-                res |= model.analytic_distribution or {}
-                applied_plans += model.distribution_analytic_account_ids.root_plan_id
+            current_plans = model.distribution_analytic_account_ids.root_plan_id
+            if not applied_plans & current_plans:
+                applied_plans += current_plans
+                res = self._merge_distribution(res, model.analytic_distribution | {
+                    '__update__': current_plans.mapped(lambda p: p._column_name()),
+                })
         return res
 
     @api.model
