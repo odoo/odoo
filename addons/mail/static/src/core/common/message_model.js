@@ -648,7 +648,11 @@ export class Message extends Record {
         const updatedBodyEl = createElementWithContent("div", body);
         messageBodyEl.querySelector("span.o-mail-Message-edited")?.remove();
         updatedBodyEl.querySelector("span.o-mail-Message-edited")?.remove();
-        if (updatedBodyEl.innerHTML === messageBodyEl.innerHTML && attachments.length === 0) {
+        if (
+            updatedBodyEl.innerHTML === messageBodyEl.innerHTML &&
+            attachments.length === this.attachment_ids.length &&
+            attachments.every((attachment, index) => attachment.id === this.attachment_ids[index].id)
+        ) {
             return;
         }
         const validMentions = this.store.getMentionsFromText(body, {

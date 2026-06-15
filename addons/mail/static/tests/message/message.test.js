@@ -1600,7 +1600,7 @@ test("Can remove saved attachments while editing a message", async () => {
         res_id: channelId,
         message_type: "comment",
     });
-    onRpcBefore("/mail/attachment/delete", ({ attachment_id }) => expect.step(`${attachment_id}`));
+    onRpcBefore("/mail/message/update_content", () => expect.step("update_content"));
     await start();
     await openDiscuss(channelId);
     await click(".o-mail-Message [title='Expand']");
@@ -1624,7 +1624,7 @@ test("Can remove saved attachments while editing a message", async () => {
         ".o-mail-Message.o-editing .o-inComposer .o-mail-AttachmentContainer:has(:text('morty.txt'))"
     );
     await click(".o-mail-Message button:text('save')");
-    await expect.waitForSteps([`${rickId}`]);
+    await expect.waitForSteps(["update_content"]);
     await contains(".o-mail-Message .o-mail-AttachmentContainer:has(:text('morty.txt'))");
     await contains(".o-mail-Message .o-mail-AttachmentContainer:has(:text('rick.txt'))", {
         count: 0,

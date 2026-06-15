@@ -665,6 +665,12 @@ async function mail_message_update_content(request) {
     if (update_data.attachment_ids.length === 0) {
         IrAttachment.unlink(message.attachment_ids);
     } else {
+        const attachment_ids_to_remove = message.attachment_ids.filter(
+            (id) => !update_data.attachment_ids.includes(id)
+        );
+        if (attachment_ids_to_remove.length) {
+            IrAttachment.unlink(attachment_ids_to_remove);
+        }
         const attachments = IrAttachment.browse(update_data.attachment_ids).filter(
             (attachment) =>
                 attachment.res_model === "mail.compose.message" &&

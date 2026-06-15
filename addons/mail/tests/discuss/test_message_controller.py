@@ -137,8 +137,8 @@ class TestMessageController(HttpCaseWithUserDemo, MailCommon):
                         "message_id": data1["message_id"],
                         "update_data": {
                             "body": "test",
-                            "attachment_ids": [self.attachments[1].id],
-                            "attachment_tokens": ["wrong token"],
+                            "attachment_ids": [self.attachments[0].id, self.attachments[1].id],
+                            "attachment_tokens": [self.attachments[0]._get_ownership_token(), "wrong token"],
                         },
                     },
                 },
@@ -160,8 +160,11 @@ class TestMessageController(HttpCaseWithUserDemo, MailCommon):
                         "message_id": data1["message_id"],
                         "update_data": {
                             "body": "test",
-                            "attachment_ids": [self.attachments[1].id],
-                            "attachment_tokens": [self.attachments[1]._get_ownership_token()],
+                            "attachment_ids": [self.attachments[0].id, self.attachments[1].id],
+                            "attachment_tokens": [
+                                self.attachments[0]._get_ownership_token(),
+                                self.attachments[1]._get_ownership_token(),
+                            ],
                         },
                     },
                 },
