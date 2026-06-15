@@ -150,7 +150,7 @@
                 />
             </t>
             <t t-elif="this.props.type === 'signature'">
-                <SignatureViewer url="this.propertyValue" update.bind="this.onValueChange"/>
+                <SignatureViewer url="this.propertyValue" update.bind="this.onValueChange" readonly="this.props.readonly"/>
             </t>
             <t t-else="">
                 <input

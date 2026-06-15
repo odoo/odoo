@@ -2854,6 +2854,39 @@ test("properties: signature", async () => {
     await closePopover();
     expect(".o_field_property_definition").toHaveCount(0);
     expect(".o_signature").toHaveCount(1);
+    expect(".o_signature.o_signature_editable").toHaveCount(1, {
+        message: "The signature field should be editable",
+    });
+    expect(".o_property_field:eq(0) .o_property_field_value_suffix").toHaveCount(0, {
+        message: "suffix should be removed",
+    });
+});
+
+test("properties: signature in readonly", async () => {
+    ResCompany._records[0].definitions = [
+        { name: "property_1", string: "Signature", type: "signature" },
+    ];
+    onRpc("has_access", () => true);
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `
+            <form>
+                <sheet>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="properties" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>`,
+        actionMenus: {},
+    });
+
+    expect(".o_signature").toHaveCount(1);
+    expect(".o_signature.o_signature_editable").toHaveCount(0, {
+        message: "The signature field should be in readonly",
+    });
     expect(".o_property_field:eq(0) .o_property_field_value_suffix").toHaveCount(0, {
         message: "suffix should be removed",
     });
