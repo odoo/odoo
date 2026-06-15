@@ -465,11 +465,19 @@ class AccountEdiProxyClientUser(models.Model):
         })
 
     def _pdp_import_tax_extract(self, uuid, content, origin_move):
+        """
+        Import the tax extract (flow 1) message sent to the PPF from IAP.
+        It only gives us information whether the message was sent or not.
+        We later receive up to 2 lifecycles on the IAP side for this message giving us more detailed information.
+        The first will say admissible / inadmissible and the second will say accepted / rejected (the second is not
+        sent in case the first already said inadmissible).
+        They will be imported in `_pdp_import_incoming_response`.
+        """
         if not origin_move:
             return self.env['account.move']
 
         # Do not update the transport status if we already received a lifecycle
-        if origin_move.pdp_ppf_move_state:
+        if origin_move.pdp_ppf_move_state and origin_move.pdp_ppf_move_state != 'in_progress':
             return origin_move
 
         if content.get('error'):
