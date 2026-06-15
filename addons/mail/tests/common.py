@@ -2030,6 +2030,7 @@ class MailCommon(MailCase):
             if "hr.leave" not in self.env:
                 data.pop("leave_date_to", None)
                 data.pop("employee_ids", None)
+                data.pop("all_employee_ids", None)
         return list(users_data)
 
     def _filter_threads_fields(self, /, *threads_data):

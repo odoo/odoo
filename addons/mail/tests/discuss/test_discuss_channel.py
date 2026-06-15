@@ -228,6 +228,7 @@ class TestChannelInternals(MailCommon, HttpCase):
                             ),
                             "res.users": self._filter_users_fields(
                                 {
+                                    "all_employee_ids": [],
                                     "id": self.test_user.id,
                                     "employee_ids": [],
                                     "partner_id": self.test_partner.id,
