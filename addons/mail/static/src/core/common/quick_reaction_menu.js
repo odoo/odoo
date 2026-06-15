@@ -120,7 +120,7 @@ export class QuickReactionMenu extends Component {
 
     get mostFrequentEmojis() {
         const numberOfEmojis = 6;
-        const mostFrequent = this.frequentEmojiService.getMostFrequent(numberOfEmojis);
+        const mostFrequent = this.frequentEmojiService.mostFrequent().slice(0, numberOfEmojis);
         return mostFrequent.concat(
             QuickReactionMenu.DEFAULT_EMOJIS.filter((emoji) => !mostFrequent.includes(emoji)).slice(
                 0,
