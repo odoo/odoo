@@ -198,8 +198,8 @@ class HrWorkEntryType(models.Model):
                 public_holiday_to_date = public_holiday.date_to.date()
 
                 if leave_from_date <= public_holiday_to_date and leave_to_date >= public_holiday_from_date:
-                    raise ValidationError(_("You cannot modify the 'Public Holiday Included' setting since one or more leaves for that \
-                        time type are overlapping with public holidays, meaning that the balance of those employees would be affected by this change."))
+                    raise ValidationError(_("You cannot modify the 'Public Holiday Included' setting since one or more leaves for that "
+                        "time type are overlapping with public holidays, meaning that the balance of those employees would be affected by this change."))
 
     @api.constrains('count_days_as')
     def _check_leaves_for_count_days_as(self):
@@ -208,8 +208,8 @@ class HrWorkEntryType(models.Model):
             ('state', 'in', ('validate', 'validate1', 'confirm')),
         ], limit=1)
         if leave_count:
-            raise ValidationError(self.env._("You cannot modify the 'Duration Count' setting because one or more leaves have already \
-                been taken for this time off type. Changing it now would affect existing employee balances."))
+            raise ValidationError(self.env._("You cannot modify the 'Duration Count' setting because one or more leaves have already "
+                "been taken for this time off type. Changing it now would affect existing employee balances."))
 
     def get_work_entry_types_with_valid_allocations(self, date_from, date_to, employee_id):
         allocation_by_work_entry_type = dict(self.env['hr.leave.allocation']._read_group(
@@ -513,7 +513,11 @@ class HrWorkEntryType(models.Model):
         for employee in employees:
             for work_entry_type in self:
                 lt_info = (
-                    work_entry_type.name,
+                    {
+                        'name': work_entry_type.name,
+                        'id': work_entry_type.id,
+                        'color': work_entry_type.color
+                    },
                     {
                         'remaining_leaves': 0,
                         'virtual_remaining_leaves': 0,

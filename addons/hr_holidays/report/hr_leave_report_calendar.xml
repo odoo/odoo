@@ -58,23 +58,41 @@
                     <widget name="web_ribbon" title="Refused" bg_color="bg-danger" invisible="state != 'refuse'"/>
                     <widget name="web_ribbon" title="Approved" bg_color="bg-success" invisible="state != 'validate'"/>
                     <group class="py-0 pe-0 overflow-hidden">
-                        <field name="employee_id" widget="many2one_avatar_employee"/>
-                        <field name="work_entry_type_id"/>
-                        <label for="start_datetime" string="Dates" />
+                        <div class="o_row" id="employee_label">
+                            <i class="fa fa-user fa-lg ms-2" title="Employees" name="employee_id"/>
+                            <label for="employee_id" string=""/>
+                        </div>
+                        <field name="employee_id" widget="many2one_avatar_employee" nolabel="1"/>
+
+                        <div class="o_row" id="work_entry_type_id_label">
+                            <i class="fa fa-tag fa-lg ms-2" title="Work Entry Types" name="work_entry_type_id"/>
+                            <label for="work_entry_type_id" string=""/>
+                        </div>
+                        <field name="work_entry_type_id" nolabel="1"/>
+
+                        <div class="o_row" id="dates_label">
+                            <i class="fa fa-clock-o fa-lg ms-2" title="Dates" name="date"/>
+                            <label for="start_datetime" string=""/>
+                        </div>
                         <div id="full_date" class="o_row">
                             <field
                                 string='dates'
                                 name="start_datetime"
                                 widget="daterange"
                                 readonly='1'
-                                options="{'end_date_field': 'stop_datetime', 'show_time': false}"/>
-                            <field name="start_datetime" invisible="1"/>
+                                options="{'end_date_field': 'stop_datetime', 'show_time': false}"
+                                nolabel="1"/>
                             <div style="margin-left: 4.82rem;">
-                            ( <field name="duration_display" readonly="1" class="w-auto"/> )
+                            ( <field name="duration_display" readonly="1" class="w-auto" nolabel="1"/> )
                             </div>
                         </div>
+
+                        <div class="o_row" id="description_label">
+                            <i class="fa fa-pencil fa-lg ms-2" title="Description" name="description"/>
+                            <label for="description" string=""/>
+                        </div>
+                        <field name="description" nolabel="1"/>
                     </group>
-                    <field name="description"/>
                     <div class="d-flex justify-content-end gap-1">
                         <button name="action_approve" string="Approve" type="object" close="1" invisible="state not in ['confirm', 'refuse'] or not is_manager"/>
                         <button name="action_refuse" string="Refuse" type="object" close="1" invisible="state == 'refuse' or not is_manager"/>
