@@ -409,6 +409,77 @@ class JSTooling:
         return re.sub(rf'\b{old_name}\b', replacer, content)
 
     @staticmethod
+    def replace_usage_with_one_arg(content: str, old_name: str, new_name: str) -> dict:
+        """Replaces usage on lines that aren't comments when the call only has one arg.
+
+        Args:
+            content: The file content.
+            old_name: Original variable name.
+            new_name: New variable name.
+        Returns:
+            The updated content.
+        """
+        pattern = rf'\b{old_name}\b(?=\s*\()'
+        count_unchanged = 0
+        count_changed = 0
+
+        def is_trailing_comma(comma_idx, content):
+            for j in range(comma_idx + 1, len(content)):
+                next_char = content[j]
+                if not next_char.isspace():
+                    if next_char == ')':
+                        break
+                    else:
+                        return False
+            return True
+
+        def replacer(match):
+            nonlocal count_unchanged
+            nonlocal count_changed
+
+            start_idx = match.start()
+            if JSTooling.is_commented(content, start_idx):
+                return match.group(0)
+            open_paren_idx = content.find('(', match.end())
+            if open_paren_idx == -1:
+                return match.group(0)
+
+            depth = 0
+            current_string_delimiter = None
+            for i in range(open_paren_idx, len(content)):
+                char = content[i]
+                # Commas inside strings are not relevant here
+                if current_string_delimiter:
+                    if char == current_string_delimiter:
+                        current_string_delimiter = None
+                    continue
+                if char in ["'", '"', "`"]:
+                    current_string_delimiter = char
+                elif char in ['[', '(', '{']:
+                    depth += 1
+                elif char in [']', ')', '}']:
+                    depth -= 1
+                    # The opening parenthesis is closed
+                    if depth == 0:
+                        break
+                # Comma at first level of depth
+                elif char == ',' and depth == 1:
+                    if is_trailing_comma(i, content):
+                        count_changed += 1
+                        return new_name
+                    else:
+                        count_unchanged += 1
+                        return match.group(0)
+            count_changed += 1
+            return new_name
+
+        return {
+            "content": re.sub(pattern, replacer, content),
+            "count_unchanged": count_unchanged,
+            "count_changed": count_changed,
+        }
+
+    @staticmethod
     def clean_whitespace(content: str) -> str:
         """Removes trailing whitespace and lines containing only spaces.
 
@@ -650,16 +721,49 @@ def upgrade_usestate(file_manager, log_info, log_error):
         file_manager.print_progress(fileno, len(js_files))
 
 
-def upgrade_reactive(file_manager, log_info, log_error):
-    """Sub-task: Migrate reactive, ignoring comments."""
+def upgrade_reactive_from_compatibility(file_manager, log_info, log_error):
+    """
+    Sub-task: Migrate reactive, ignoring comments.
+    This function migrate from owl2 to the owl2 compatibility layer.
+    """
     js_files = JSTooling.get_js_files(file_manager)
 
     for fileno, file in enumerate(js_files, start=1):
         try:
             if not JSTooling.has_active_usage(file.content, 'reactive'):
                 continue
-            file.content = JSTooling.remove_import(file.content, 'reactive', '@odoo/owl')
-            file.content = JSTooling.add_import(file.content, 'reactive', '@web/owl2/utils')
+
+            result = JSTooling.replace_usage_with_one_arg(file.content, 'reactive', 'proxy')
+            file.content = result["content"]
+            if result["count_changed"] > 0:
+                file.content = JSTooling.add_import(file.content, 'proxy', '@odoo/owl')
+            if result["count_unchanged"] == 0:
+                file.content = JSTooling.remove_import(file.content, 'reactive', '@web/owl2/utils')
+
+        except Exception as e:  # noqa: BLE001
+            log_error(file.path, e)
+        file_manager.print_progress(fileno, len(js_files))
+
+
+def upgrade_reactive(file_manager, log_info, log_error):
+    """
+    Sub-task: Migrate reactive, ignoring comments.
+    This function migrate from owl2 to owl3.
+    """
+    js_files = JSTooling.get_js_files(file_manager)
+
+    for fileno, file in enumerate(js_files, start=1):
+        try:
+            if not JSTooling.has_active_usage(file.content, 'reactive'):
+                continue
+
+            result = JSTooling.replace_usage_with_one_arg(file.content, 'reactive', 'proxy')
+            file.content = result["content"]
+            if result["count_changed"] > 0:
+                file.content = JSTooling.add_import(file.content, 'proxy', '@odoo/owl')
+            if result["count_unchanged"] == 0:
+                file.content = JSTooling.remove_import(file.content, 'reactive', '@odoo/owl')
+
         except Exception as e:  # noqa: BLE001
             log_error(file.path, e)
         file_manager.print_progress(fileno, len(js_files))
@@ -1126,9 +1230,10 @@ def upgrade(file_manager) -> str:
     collector.run_sub("Migrating useSubEnv", upgrade_usesubenv)
     collector.run_sub("Migrating useChildSubEnv", upgrade_usechildsubenv)
     collector.run_sub("Migrating useRef", upgrade_useref)
-    collector.run_sub("Migrating useState", upgrade_usestate_from_compatibility)
     collector.run_sub("Migrating useState", upgrade_usestate)
+    collector.run_sub("Migrating useState", upgrade_usestate_from_compatibility)
     collector.run_sub("Migrating reactive", upgrade_reactive)
+    collector.run_sub("Migrating reactive", upgrade_reactive_from_compatibility)
     collector.run_sub("Migrating useExternalListener", upgrade_use_external_listener)
     collector.run_sub("Migrating t-portal", upgrade_tportal)
     collector.run_sub("Migrating t-esc", upgrade_t_esc)

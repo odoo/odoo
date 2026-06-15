@@ -130,20 +130,6 @@ owl.useExternalListener = function useExternalListener(target, eventName, handle
 };
 
 /**
- * @template T
- * @param {T} data
- * @param {() => void} [callback]
- */
-owl.reactive = function reactive(data, callback) {
-    if (callback) {
-        throw new Error(
-            "owl.reactive is used with callback, replace callback by an effect and make sure to dispose the effect!"
-        );
-    }
-    return owl.proxy(data);
-};
-
-/**
  * @param {Function} effect
  * @param {() => any[]} computeDependencies
  */
