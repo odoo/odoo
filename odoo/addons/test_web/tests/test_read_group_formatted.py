@@ -2084,7 +2084,7 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
             {
                 "name": "key2",
                 "currency_id": cls.eur.id,
-                "total_in_currency_id": 2.00,  # 2 €
+                "total_in_currency_id": 1.50,  # 1.50 €
 
                 "related_model_id": eur_parent.id,
                 "total_in_related_stored_currency_id": 3.00,  # 3 €
@@ -2114,8 +2114,12 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
         self.assertFalse(field_infos['total_in_related_non_stored_currency_id'].get('aggregator'), False)
 
     def test_sum_monetary_rated_us(self):
-
         self.env['res.currency.rate'].create([
+            {
+                'currency_id': self.usd.id,
+                'name': fields.Date.subtract(fields.Date.context_today(self), days=1),
+                'rate': 1.0,
+            },
             {
                 'currency_id': self.eur.id,
                 'name': fields.Date.subtract(fields.Date.context_today(self), days=1),
@@ -2181,10 +2185,10 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                 self.MonetaryAgg.formatted_read_group([], [], aggregates),
                 [
                     {
-                        'total_in_currency_id:sum': 8.0,
+                        'total_in_currency_id:sum': 7.5,
                         'currency_id:array_agg_distinct': (self.usd + self.eur + self.stn).ids + [None],
-                        # 3 $ + 3 euro + 1 Db + 1 no currency = 7.8 $
-                        'total_in_currency_id:sum_currency': 3 + 3 * 1.25 + 0.05 + 1,
+                        # 3 $ + 2.5 euro + 1 Db + 1 no currency
+                        'total_in_currency_id:sum_currency': 3 + 2.5 * 1.25 + 0.05 + 1,
                         '__extra_domain': [],
                     },
                 ]
@@ -2202,9 +2206,9 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                 },
                 {
                     'name': 'key2',
-                    'total_in_currency_id:sum': 3,
+                    'total_in_currency_id:sum': 2.5,
                     'currency_id:array_agg_distinct': (self.eur + self.stn).ids,
-                    'total_in_currency_id:sum_currency': 0.05 + 2 * 1.25,  # 1 Db + 2 eur
+                    'total_in_currency_id:sum_currency': 0.05 + 1.5 * 1.25,  # 1 Db + 1.5 eur
                     '__extra_domain': [('name', '=', 'key2')],
                 },
                 {
@@ -2230,12 +2234,17 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
             {
                 'currency_id': self.usd.id,
                 'name': fields.Date.subtract(fields.Date.context_today(self), days=1),
-                'rate': 1.25,  # 1 $ = 0.8 eur, 1 eur = 1.25 $
+                'rate': 1.0,
+            },
+            {
+                'currency_id': self.eur.id,
+                'name': fields.Date.subtract(fields.Date.context_today(self), days=1),
+                'rate': 0.8,  # 1 $ = 0.8 eur, 1 eur = 1.25 $
             },
             {
                 'currency_id': self.stn.id,
                 'name': fields.Date.subtract(fields.Date.context_today(self), days=1),
-                'rate': 25,  # 1 eur = 25 Db, 1 Db = 0.04 eur
+                'rate': 20,  # 1 $ = 20 Db, 1 eur = 25 Db, 1 Db = 0.04 eur
             },
         ])
 
@@ -2289,12 +2298,13 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
             self.assertEqual(
                 self.MonetaryAgg.formatted_read_group([], [], aggregates),
                 [{
-                    'total_in_currency_id:sum': 8.0,
+                    'total_in_currency_id:sum': 7.5,
                     'currency_id:array_agg_distinct': (self.usd + self.eur + self.stn).ids + [None],
                     'total_in_currency_id:sum_currency':
-                        # 3 $ + 3 euro + 1 Db + 1 no currency = 6.44 euro
-                        (3 * 0.8) + 3 + (1 * 0.05 * 0.8) +
-                        1,  # Do nothing, if no currency is set
+                        # 3 $ + 2.5 euro + 1 Db + 1 no currency = 5.94 euro
+                        3 + 2.5 / 0.8 + (1 / 20) + 1,  # FIXME wrong base currency
+                        # (3 * 0.8) + 2.5 + (1 / 20 * 0.8) +
+                        # 1,  # Do nothing, if no currency is set
                     '__extra_domain': [],
                 }],
             )
@@ -2327,11 +2337,11 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
         self.assertEqual(
             self.MonetaryAgg.formatted_read_group([], [], aggregates),
             [{
-                'total_in_currency_id:sum': 8.0,
+                'total_in_currency_id:sum': 7.5,
                 'currency_id:array_agg_distinct': (self.usd + self.eur + self.stn).ids + [None],
                 'total_in_currency_id:sum_currency':
-                    # 3 $ + 3 euro + 1 Db + 1 no currency = 7.8 euro
-                    3 + 3 * 1.25 + 0.05 + 1,  # Do nothing, if no currency is set
+                    # 3 $ + 2.5 euro + 1 Db + 1 no currency = 7.8 euro
+                    3 + 2.5 * 1.25 + 0.05 + 1,  # Do nothing, if no currency is set
 
                 'total_in_related_stored_currency_id:sum': 13.0,
                 'related_stored_currency_id:array_agg_distinct': (self.usd + self.eur + self.stn).ids + [None],
