@@ -11,6 +11,7 @@ class PurchaseReport(models.Model):
     days_to_arrival = fields.Float('Effective Days To Arrival', digits=(16, 2), readonly=True, aggregator='avg')
     qty_total = fields.Float('Total Quantity', readonly=True)
     qty_on_time = fields.Float('On-Time Quantity', readonly=True)
+    qty_received = fields.Float('Quantity Received', readonly=True)
     on_time_rate = fields.Float('On-Time Delivery Rate', readonly=True)
 
     def _select(self) -> SQL:
@@ -64,10 +65,19 @@ class PurchaseReport(models.Model):
                         FROM stock_move m
                         JOIN purchase_order_line pol ON pol.id = m.purchase_line_id
                         WHERE m.state = 'done'
-                        AND m.date::DATE <= pol.date_promised::DATE
                         GROUP BY m.purchase_line_id
                     ) delay_data ON delay_data.purchase_line_id = l.id
             """, super()._from()
+        )
+
+    def _where(self) -> SQL:
+        return SQL(
+            """
+            %s
+            AND t.type != 'service'
+            AND l.qty_received > 0
+            AND l.date_promised IS NOT NULL
+            """, super()._where()
         )
 
     def _group_by(self) -> SQL:
@@ -77,7 +87,7 @@ class PurchaseReport(models.Model):
         if aggregate_spec == 'on_time_rate:sum':
             # Weighted average
             return SQL(
-                'CASE WHEN SUM(%s) !=0 THEN SUM(%s) / SUM(%s) * 100 ELSE 100 END',
+                'CASE WHEN SUM(%s) !=0 THEN SUM(%s) / SUM(%s) ELSE 1 END',
                 table.qty_total, table.qty_on_time, table.qty_total,
             )
         return super()._read_group_select(table, aggregate_spec)

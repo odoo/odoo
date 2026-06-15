@@ -12,4 +12,26 @@
         </field>
     </record>
 
+    <record id="view_purchase_order_pivot_inherit" model="ir.ui.view">
+        <field name="name">purchase.report.pivot.inherit</field>
+        <field name="model">purchase.report</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_pivot"/>
+        <field name="arch" type="xml">
+            <xpath expr="//pivot" position="inside">
+                <field name="on_time_rate" type="measure" widget="percentage"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_purchase_order_graph_inherit" model="ir.ui.view">
+        <field name="name">purchase.report.graph.inherit</field>
+        <field name="model">purchase.report</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_graph"/>
+        <field name="arch" type="xml">
+            <xpath expr="//graph" position="inside">
+                <field name="on_time_rate" type="measure" widget="percentage"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
