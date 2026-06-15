@@ -10,6 +10,7 @@ import werkzeug
 from odoo import api, fields, Command, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools import clean_context, email_normalize, float_repr, float_round, is_html_empty, format_amount, format_date
+from odoo.fields import Domain
 from datetime import timedelta
 
 
@@ -1391,7 +1392,7 @@ class HrExpense(models.Model):
         )
 
     @api.model
-    def get_expense_dashboard(self):
+    def get_expense_dashboard(self, domain=None):
         expense_state = {
             'draft': {
                 'description': _("To Submit"),
@@ -1415,12 +1416,15 @@ class HrExpense(models.Model):
         # - To Submit: contains the expenses paid either by the employee or by the company, and that are draft or reported
         # - Waiting approval: contains expenses paid by the employee or paid by the company, and that have been submitted but still need to be approved/refused
         # - To be reimbursed: contains ONLY expenses paid by the employee that are approved, the payment has not yet been made
-        fetched_expenses = self._read_group(
-            [
-                ('employee_id', 'in', self.env.user.employee_ids.ids),
-                '|', ('state', 'in', ('draft', 'submitted')),
-                     '&', ('payment_mode', '!=', 'company_account'), ('state', '=', 'approved')
-            ], ['state'], ['total_amount:sum'])
+        base_domain = [
+            ('employee_id', 'child_of', self.env.user.employee_ids.ids),
+            '|', ('state', 'in', ('draft', 'submitted')),
+            '&', ('payment_mode', '=', 'own_account'), ('state', '=', 'approved')
+        ]
+        if domain:
+            base_domain = Domain.AND([base_domain, domain])
+
+        fetched_expenses = self._read_group(base_domain, ['state'], ['total_amount:sum'])
         for state, total_amount_sum in fetched_expenses:
             expense_state[state]['amount'] += total_amount_sum
         return expense_state
