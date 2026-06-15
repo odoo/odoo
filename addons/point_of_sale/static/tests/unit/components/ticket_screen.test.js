@@ -1,6 +1,6 @@
 import { test, expect, describe } from "@odoo/hoot";
 import { mountWithCleanup, onRpc } from "@web/../tests/web_test_helpers";
-import { setupPosEnv, makeOrder } from "@point_of_sale/../tests/unit/utils";
+import { setupPosEnv, makeOrder, getFilledOrder } from "@point_of_sale/../tests/unit/utils";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 const { DateTime } = luxon;
@@ -395,4 +395,24 @@ test("refund order should not have preset_id", async () => {
 
     const refundOrder = store.createNewOrder({ is_refund: true });
     expect(refundOrder.preset_id).toBeEmpty();
+});
+
+test("showSubPads", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const ticketScreen = await mountWithCleanup(TicketScreen);
+    ticketScreen.onClickOrder(order);
+    expect(ticketScreen.showSubPads).toBe(false);
+    order.state = "paid";
+    expect(ticketScreen.showSubPads).toBe(true);
+});
+
+test("showInvoiceButton", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const ticketScreen = await mountWithCleanup(TicketScreen);
+    ticketScreen.onClickOrder(order);
+    expect(ticketScreen.showInvoiceButton).toBe(false);
+    order.state = "paid";
+    expect(ticketScreen.showInvoiceButton).toBe(true);
 });
