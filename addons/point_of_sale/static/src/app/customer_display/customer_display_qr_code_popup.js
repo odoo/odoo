@@ -23,13 +23,46 @@ export class QrCodeCustomerDisplay extends Component {
         return generateQRCodeDataUrl(this.props.customerDisplayURL, { useThemeQr: true });
     }
 
-    openOnThisDevice() {
-        window.open(
-            this.props.customerDisplayURL,
-            "newWindow",
-            "width=800,height=600,left=200,top=200"
-        );
-        this.notification.add(_t("PoS Customer Display opened in a new window"));
+    async getScreenFeatures() {
+        let windowFeatures = "width=800,height=600,left=200,top=200";
+        let usedFallback = false;
+
+        if ("getScreenDetails" in window) {
+            // https://developer.mozilla.org/en-US/docs/Web/API/Window/getScreenDetails
+            try {
+                const screenDetails = await window.getScreenDetails();
+                if (screenDetails.screens.length >= 2) {
+                    const secondScreen = screenDetails.screens.find(
+                        (screen) => screen !== screenDetails.currentScreen
+                    );
+
+                    if (secondScreen) {
+                        windowFeatures = [
+                            `left=${secondScreen.availLeft}`,
+                            `top=${secondScreen.availTop}`,
+                            `width=${secondScreen.availWidth}`,
+                            `height=${secondScreen.availHeight}`,
+                        ].join(",");
+                    }
+                }
+            } catch {
+                usedFallback = true;
+            }
+        }
+        return { windowFeatures, usedFallback };
+    }
+
+    async openOnThisDevice() {
+        const { windowFeatures, usedFallback } = await this.getScreenFeatures();
+        window.open(this.props.customerDisplayURL, "customerDisplay", windowFeatures);
+
+        if (usedFallback) {
+            this.notification.add(
+                _t("Customer Display opened in a new window. Allow popups to use a second screen.")
+            );
+        } else {
+            this.notification.add(_t("Customer Display opened in a new window"));
+        }
         this.props.close();
     }
 
