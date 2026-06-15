@@ -56,20 +56,23 @@ class AccountMove(models.Model):
                 total_invoices = done_moves_related.mapped('sale_line_id.invoice_lines').filtered(
                     lambda l: l.move_id.state == 'posted' and l.move_id.move_type == 'out_invoice').sorted(lambda l: (l.move_id.invoice_date, l.move_id.id))
                 total_invs = [(i.product_uom_id._compute_quantity(i.quantity, i.product_id.uom_id), i) for i in total_invoices]
-                inv = total_invs.pop(0)
+                inv_qty, inv_line = total_invs.pop(0)
                 # Match all moves and related invoice lines FIFO looking for when the matched invoice_line matches line
                 for move in done_moves_related.sorted(lambda m: (m.date, m.id)):
                     move_qty = move.product_qty
-                    while (move.uom_id.compare(move_qty, 0) > 0):
-                        if move.uom_id.compare(inv[0], move_qty) > 0:
-                            inv = (inv[0] - move_qty, inv[1])
-                            invoice_line = inv[1]
+                    while (
+                        (move.uom_id.compare(move_qty, 0) > 0)
+                        and (move.uom_id.compare(inv_qty, 0) > 0)
+                    ):
+                        invoice_line = inv_line
+                        if move.uom_id.compare(inv_qty, move_qty) > 0:
+                            inv_qty -= move_qty
                             move_qty = 0
-                        if move.uom_id.compare(inv[0], move_qty) <= 0:
-                            move_qty -= inv[0]
-                            invoice_line = inv[1]
+                        if move.uom_id.compare(inv_qty, move_qty) <= 0:
+                            move_qty -= inv_qty
+                            inv_qty = 0
                             if total_invs:
-                                inv = total_invs.pop(0)
+                                inv_qty, inv_line = total_invs.pop(0)
                             else:
                                 move_qty = 0 #abort when not enough matched invoices
                         # If in our FIFO iteration we stumble upon the line we were checking
