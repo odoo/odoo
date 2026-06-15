@@ -157,12 +157,14 @@ class SaleOrderLine(models.Model):
             return line.order_id.state not in ["cancel", "draft"]
 
         for sale_line in self.filtered(lambda line: line.product_id.type != "service"):
-            pos_line_ids = sale_line.sudo().pos_order_line_ids
-            pos_qty = _get_pos_delivered_qty(sale_line, pos_line_ids.filtered(line_filter))
+            all_pos_line_ids = sale_line.sudo().pos_order_line_ids.filtered(line_filter)
+            refund_line_ids = all_pos_line_ids.refund_orderline_ids
+            order_line_ids = all_pos_line_ids - refund_line_ids
+            pos_qty = _get_pos_delivered_qty(sale_line, order_line_ids)
             if pos_qty != 0:
                 delivered_qties[sale_line] += pos_qty
 
-            refund_qty = _get_pos_delivered_qty(sale_line, pos_line_ids.refund_orderline_ids.filtered(line_filter))
+            refund_qty = _get_pos_delivered_qty(sale_line, refund_line_ids)
             if refund_qty != 0:
                 delivered_qties[sale_line] += refund_qty
         return delivered_qties
