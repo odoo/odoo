@@ -61,8 +61,8 @@
     </xpath>
 </template>
 
-<template id="countries_setting" inherit_id="website_crm_partner_assign.index_content" name="Countries">
-    <xpath expr="//div[@id='top_section_button_middle_pos']" position="after">
+<template id="countries_setting" inherit_id="website_partnership.index" name="Countries" priority="20">
+    <section id="page_top_section" position="inside">
         <div class="dropdown d-none d-lg-block">
             <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by country" aria-label="Filter by country" aria-expanded="false">
                 <t t-foreach="countries" t-as="country">
@@ -79,7 +79,7 @@
                 </t>
             </div>
         </div>
-    </xpath>
+    </section>
 </template>
 
 <template id="categories_setting" inherit_id="website_partnership.categories_setting">
@@ -140,8 +140,8 @@
     </xpath>
 </template>
 
-<template id="ref_country" inherit_id="website_crm_partner_assign.index_content" name="World Map" active="False" priority="20">
-    <xpath expr="//section[@id='page_top_section']" position="inside">
+<template id="ref_country" inherit_id="website_partnership.index" name="World Map" active="False" priority="40">
+    <section id="page_top_section" position="inside">
         <!-- modal for large map -->
         <div role="dialog" class="modal fade partner_map_modal">
             <div class="modal-dialog modal-lg">
@@ -164,7 +164,7 @@
                 <i class="fa fa-map-marker" role="img" aria-label="Open map" title="Open map"/>
             </button>
         </div>
-    </xpath>
+    </section>
 </template>
 
 <template id="partner" inherit_id="website_partner.partner_page">

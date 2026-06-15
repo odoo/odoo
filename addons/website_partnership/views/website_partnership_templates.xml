@@ -22,7 +22,6 @@
         <section id="page_top_section" class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-lg-end flex-wrap gap-2 mt-4 mb-3">
             <h1 id="page_title" class="me-auto mb-0 h4">Find a partner</h1>
             <t t-set='all_categories_label'>All Categories</t>
-            <div id="top_section_button_middle_pos"/>
         </section>
     </div>
     <!-- Off canvas filters on mobile-->
@@ -126,8 +125,8 @@
     </xpath>
 </template>
 
-<template id="search_setting" inherit_id="website_partnership.index" name="Search" priority="10">
-    <xpath expr="//section[@id='page_top_section']" position="inside">
+<template id="search_setting" inherit_id="website_partnership.index" name="Search" priority="30">
+    <section id="page_top_section" position="inside">
         <div class="o_wcrm_search d-flex w-100 w-lg-25">
             <form class="flex-grow-1" action="" method="get">
                 <div id="search_input_group" class="input-group" role="search">
@@ -143,11 +142,11 @@
                 <i class="fa fa-sliders"/>
             </button>
         </div>
-    </xpath>
+    </section>
 </template>
 
-<template id="categories_setting" inherit_id="website_partnership.index" name="Categories">
-    <xpath expr="//div[@id='top_section_button_middle_pos']" position="before">
+<template id="categories_setting" inherit_id="website_partnership.index" name="Categories" priority="10">
+    <section id="page_top_section" position="inside">
         <div id="dropdown_grades_selection" class="dropdown d-none d-lg-block">
             <button type="button" class="dropdown-toggle btn btn-light" data-bs-toggle="dropdown" title="Filter by category" aria-label="Filter by category" aria-expanded="false">
                 <t t-foreach="grades" t-as="grade">
@@ -164,7 +163,7 @@
                 </t>
             </div>
         </div>
-    </xpath>
+    </section>
 </template>
 
 <template id="o_wcrm_partner_address" inherit_id="index" name="Address">
