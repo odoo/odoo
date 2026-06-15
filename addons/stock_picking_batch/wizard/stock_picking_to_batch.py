@@ -21,7 +21,7 @@ class StockPickingToBatch(models.TransientModel):
         if self.mode == 'new':
             company = pickings.company_id
             if len(company) > 1:
-                raise UserError(_("The selected pickings should belong to an unique company."))
+                raise UserError(_("The selected pickings should belong to a unique company."))
             batch = self.env['stock.picking.batch'].create({
                 'user_id': self.user_id.id,
                 'company_id': company.id,

@@ -1219,7 +1219,7 @@ class HrEmployee(models.Model):
     def action_create_user(self):
         self.ensure_one()
         if self.user_id:
-            raise ValidationError(self.env._("This employee already has an user."))
+            raise ValidationError(self.env._("This employee already has a user."))
         return {
             'name': self.env._('Create User'),
             'type': 'ir.actions.act_window',
