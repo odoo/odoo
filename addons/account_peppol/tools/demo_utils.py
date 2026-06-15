@@ -104,6 +104,7 @@ def _mock_call_peppol_proxy(func, self, *args, **kwargs):
         'get_document': _mock_get_document,
         'participant_status': _mock_participant_status,
         'send_document': _mock_send_document,
+        'get_services': lambda _user, _args, _kwargs: {'services': []},
         'add_services': lambda _user, _args, _kwargs: {},
         'remove_services': lambda _user, _args, _kwargs: {},
         'cancel_peppol_registration': lambda _user, _args, _kwargs: {},
