@@ -172,6 +172,34 @@
     margin-left: 8px;
     font-size: 12px;
 }
+
+/* Inline Start/End time picklists under the daypart selector. Two
+   <select>s with a "-" separator, sized to match the daypart pill row. */
+.mv-daypart-times {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+}
+.mv-daypart-time {
+    padding: 1px 4px;
+    font-size: 11px;
+    line-height: 1.4;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    background-color: #ffffff;
+    color: #1a1d22;
+    cursor: pointer;
+}
+.mv-daypart-time:focus {
+    border-color: #3b82f6;
+    outline: none;
+}
+.mv-daypart-times__sep {
+    color: #6b7280;
+    font-size: 11px;
+    font-weight: 600;
+}
 .mv-day-toggles {
     display: flex;
     gap: 3px;
@@ -253,6 +281,30 @@
         45deg, #f3f4f6 0px, #f3f4f6 4px,
         #e4e6eb 4px, #e4e6eb 6px
     );
+}
+
+/* LTC preview row: shown after Section 2 Go / row-menu LTC, before
+   the planner clicks Save. Faded blue-ish background so they can
+   tell the row is an unsaved preview, not a real deal_line yet. */
+.mv-units-table tbody tr.mv-ltc-preview-row > td,
+.mv-units-table tbody tr[class*="ltc-preview"] > td {
+    background-color: #eff6ff;
+    font-style: italic;
+}
+.mv-units-table tbody tr.mv-ltc-preview-row .mv-daypart-cell::before,
+.mv-units-table tbody tr[class*="ltc-preview"] .mv-daypart-cell::before {
+    content: "PREVIEW";
+    display: inline-block;
+    background: #3b82f6;
+    color: #ffffff;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-radius: 3px;
+    padding: 1px 5px;
+    margin-bottom: 4px;
+    font-style: normal;
 }
 
 /* Cancelled-units annotation. The week cell stays editable (input is

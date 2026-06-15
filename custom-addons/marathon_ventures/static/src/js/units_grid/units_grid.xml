@@ -122,7 +122,7 @@
                Wrapped in a <t t-foreach> so the bulk row iterates with
                the data row instead of rendering only once. -->
           <t t-foreach="state.payload.rows" t-as="row" t-key="row.id">
-          <tr>
+          <tr t-att-class="row._is_ltc_preview ? 'mv-ltc-preview-row' : null">
 
             <td class="mv-daypart-cell">
               <!-- Daypart selector (always editable; planners can switch) -->
@@ -134,7 +134,33 @@
                   <t t-esc="opt.label"/>
                 </option>
               </select>
-              <span class="mv-daypart-range" t-esc="row.time_range"/>
+              <!-- Editable Start/End time dropdowns. Picking a pair
+                   that matches a predefined daypart snaps the daypart
+                   selector above; an unrecognised pair auto-switches
+                   the daypart to 'Custom'. -->
+              <div class="mv-daypart-times">
+                <select class="mv-daypart-time mv-daypart-time--start"
+                        t-on-change="(ev) => this.onTimeChange(row, 'start', ev)">
+                  <option value="">Start</option>
+                  <option t-foreach="state.payload.time_options || []" t-as="opt"
+                          t-key="opt.value"
+                          t-att-value="opt.value"
+                          t-att-selected="opt.value === row.start_time ? 'selected' : null">
+                    <t t-esc="opt.label"/>
+                  </option>
+                </select>
+                <span class="mv-daypart-times__sep">-</span>
+                <select class="mv-daypart-time mv-daypart-time--end"
+                        t-on-change="(ev) => this.onTimeChange(row, 'end', ev)">
+                  <option value="">End</option>
+                  <option t-foreach="state.payload.time_options || []" t-as="opt"
+                          t-key="opt.value"
+                          t-att-value="opt.value"
+                          t-att-selected="opt.value === row.end_time ? 'selected' : null">
+                    <t t-esc="opt.label"/>
+                  </option>
+                </select>
+              </div>
 
               <!-- Day toggles -->
               <div class="mv-day-toggles">
@@ -249,8 +275,8 @@
                            t-on-input="(ev) => this.onBulkInputChange(row, 'sec2_end', ev)"/>
                   </span>
                   <button class="btn btn-primary btn-sm mv-bulk-go"
-                          t-on-click.prevent="() => this.applyBulkAllocation(row, 'sec2')"
-                          title="Mark every week after this date as Cancelled">
+                          t-on-click.prevent="() => this.applyLtcFromSection2(row)"
+                          title="Cancel post-week schedules + split the LTC week's days_allowed">
                     Go
                   </button>
                 </div>

@@ -17,6 +17,11 @@ DAYPART_SELECTION = [
     ('prime',         'Prime'),
     ('late_fringe',   'Late Fringe'),
     ('overnight',     'Overnight'),
+    # `custom` is auto-selected when the planner enters a start/end
+    # time pair that doesn't match any of the standard daypart ranges
+    # above. No default range / default times - the planner's chosen
+    # start_time and end_time are the source of truth.
+    ('custom',        'Custom'),
 ]
 
 DAYPART_DEFAULT_RANGE = {
@@ -25,6 +30,7 @@ DAYPART_DEFAULT_RANGE = {
     'prime':         '6p - 12a',
     'late_fringe':   '12a - 2a',
     'overnight':     '2a - 6a',
+    'custom':        '',
 }
 
 # Map daypart -> (start_time picklist key, end_time picklist key) on

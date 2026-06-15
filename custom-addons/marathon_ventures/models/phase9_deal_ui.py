@@ -95,19 +95,19 @@ class MvDealUiPhase9(models.Model):
             # Always update the display name
             rec.advertiser = adv.name or adv.display_name or False
             # Update the editable account Many2one
-            if adv.account:
-                rec.client_account = adv.account
-            else:
-                return {
-                    'warning': {
-                        'title': "Advertiser has no Account",
-                        'message': (
-                            "Advertiser '%s' (linked to Brand '%s') has "
-                            "no Account set. Pick an Account manually or "
-                            "set one on the Advertiser record."
-                        ) % (adv.display_name, rec.brands.display_name),
-                    }
-                }
+            # if adv.account:
+            #     rec.client_account = adv.account
+            # else:
+            #     return {
+            #         'warning': {
+            #             'title': "Advertiser has no Account",
+            #             'message': (
+            #                 "Advertiser '%s' (linked to Brand '%s') has "
+            #                 "no Account set. Pick an Account manually or "
+            #                 "set one on the Advertiser record."
+            #             ) % (adv.display_name, rec.brands.display_name),
+            #         }
+            #     }
 
     @api.onchange('contact')
     def _onchange_contact_autofill(self):

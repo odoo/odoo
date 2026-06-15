@@ -4,6 +4,36 @@
   <t t-name="marathon_ventures.MvCappingGrid">
     <div class="mv-cap-grid-wrap">
 
+      <!-- Discard confirmation dialog. Opens when the planner clicks
+           the Discard button in the Save bar so accidental clicks
+           don't blow away unsaved cap edits. -->
+      <div t-if="state.pendingDiscard"
+           class="mv-confirm-overlay"
+           t-on-click.stop="() => this.cancelDiscard()">
+        <div class="mv-confirm-dialog"
+             t-on-click.stop="() => {}">
+          <div class="mv-confirm-dialog__title">Discard changes?</div>
+          <div class="mv-confirm-dialog__body">
+            Are you sure you want to discard all the changes made?
+            <br/>
+            <small class="text-muted">
+              This action cannot be undone. Any edits you've made since
+              the last save will be lost.
+            </small>
+          </div>
+          <div class="mv-confirm-dialog__footer">
+            <button class="btn btn-light"
+                    t-on-click.stop.prevent="() => this.cancelDiscard()">
+              Cancel
+            </button>
+            <button class="btn btn-danger"
+                    t-on-click.stop.prevent="() => this.confirmDiscard()">
+              Discard
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Save / Discard bar -->
       <div class="mv-units-savebar">
         <span t-if="state.dirty" class="mv-units-savebar__pending">

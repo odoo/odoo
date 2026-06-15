@@ -25,6 +25,9 @@ export class MvCappingGrid extends Component {
             dirty: false,
             justSaved: false,
             selected: {},  // {row_id: true}
+            // True while the Discard-confirmation dialog is open.
+            // Confirm -> reload the grid; Cancel -> close the dialog.
+            pendingDiscard: false,
         });
         onWillStart(this.loadGrid.bind(this));
         onWillUpdateProps((nextProps) => {
@@ -238,7 +241,21 @@ export class MvCappingGrid extends Component {
         }
     }
 
-    onDiscard() { this.loadGrid(); }
+    onDiscard() {
+        // Open the confirmation dialog instead of dropping edits
+        // immediately. If there's nothing to discard, no-op.
+        if (!this.state.dirty) return;
+        this.state.pendingDiscard = true;
+    }
+
+    confirmDiscard() {
+        this.state.pendingDiscard = false;
+        this.loadGrid();   // reloads from server, dumping local edits
+    }
+
+    cancelDiscard() {
+        this.state.pendingDiscard = false;
+    }
 
     cellClasses(cell) {
         const cls = ["mv-cap-cell", "mv-cap-cell--" + (cell.state || "dashed")];

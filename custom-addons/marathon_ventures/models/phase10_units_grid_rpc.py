@@ -15,6 +15,9 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.addons.marathon_ventures.models.phase12_deal_start_date import (
     mondays_for_start_date,
 )
+from odoo.addons.marathon_ventures.models.mv_deal_line import (
+    DAYPART_DEFAULT_TIMES,
+)
 
 
 def _quarter_mondays(today=None):
@@ -138,6 +141,8 @@ class MvDealUnitsGridRpc(models.Model):
                     dl.daypart, dl.daypart or '',
                 ),
                 'time_range': dl.time_range or '',
+                'start_time': dl.start_time or False,
+                'end_time':   dl.end_time   or False,
                 'days_mask': dl.days_mask(),
                 'rate': dl.rate,
                 'run_start': dl.run_start.isoformat() if dl.run_start else None,
@@ -174,6 +179,21 @@ class MvDealUnitsGridRpc(models.Model):
                 'symbol': self.currency_id.symbol or '$',
                 'position': self.currency_id.position or 'before',
             },
+            # ---- Time-picker support for the editable start/end time
+            # dropdowns on each row. `time_options` is the full 30-min
+            # picklist from mv.schedules; `daypart_times` maps each
+            # predefined daypart -> (start, end) so the front-end can
+            # reverse-lookup and auto-select 'custom' when the planner
+            # picks a non-matching pair.
+            'time_options': [
+                {'value': v, 'label': lbl}
+                for v, lbl in self.env['mv.schedules']
+                                 ._fields['start_time'].selection
+            ],
+            'daypart_times': [
+                {'value': k, 'start': v[0], 'end': v[1]}
+                for k, v in DAYPART_DEFAULT_TIMES.items()
+            ],
         }
 
     # ------------------------------------------------------------------
@@ -343,6 +363,7 @@ class MvDealUnitsGridRpc(models.Model):
                 })
 
         # --- Auto-cleanup: any touched Deal Line that no longer has ANY
+        # --- Auto-cleanup: any touched Deal Line that no longer has ANY
         # linked schedule is now empty -> delete it. The cascade ondelete
         # on schedules.deal_line_id makes this safe (no orphan rows).
         if touched_dl_ids:
@@ -352,4 +373,116 @@ class MvDealUnitsGridRpc(models.Model):
             if empty_dls:
                 empty_dls.unlink()
 
+        # --- LTC operations queued by the front-end (Section 2 Go
+        # button or the row-menu LTC dialog). Each op cancels every
+        # active schedule in weeks AFTER the LTC week and splits the
+        # LTC week off into a new Deal Line if days_allowed shrinks.
+        for op in edits.get('ltc_ops') or []:
+            row_id = op.get('row_id')
+            ltc_date = op.get('ltc_date')
+            if isinstance(row_id, str) and row_id.startswith('tmp:'):
+                temp = row_id[len('tmp:'):]
+                row_id = new_ids_by_temp.get(temp)
+            if not row_id or not ltc_date:
+                continue
+            self._do_apply_ltc(row_id, ltc_date)
+
         return self.load_units_grid()
+
+    # ------------------------------------------------------------------
+    # LTC ("Last To Cancel"): mid-week cancellation for one Deal Line
+    # ------------------------------------------------------------------
+    # Semantics:
+    #   - `ltc_date` falls inside one broadcast week (the LTC week,
+    #     i.e. the Monday on or before ltc_date).
+    #   - Every ACTIVE schedule whose week > ltc_week_monday is
+    #     cancelled (status='canceled', units preserved).
+    #   - The LTC week itself stays active but its days_allowed are
+    #     truncated to Mon..weekday(ltc_date) (Mon=0..Sun=6). If those
+    #     truncated days differ from the parent's, the LTC-week
+    #     schedule is moved to a freshly-cloned Deal Line carrying
+    #     the truncated days_allowed.
+    # ------------------------------------------------------------------
+    def apply_ltc(self, row_id, ltc_date):
+        """Public RPC entry point - applies a single LTC and returns
+        the fresh grid. Used when the front-end wants an immediate
+        commit. The save-on-Save flow goes through _do_apply_ltc
+        directly from save_units_grid."""
+        self.ensure_one()
+        self._do_apply_ltc(row_id, ltc_date)
+        return self.load_units_grid()
+
+    def _do_apply_ltc(self, row_id, ltc_date):
+        """Worker: cancels post-LTC-week schedules + (maybe) splits
+        the LTC week into a new Deal Line. Does NOT return / refresh
+        - the caller is responsible for that."""
+        self.ensure_one()
+        if not row_id or not ltc_date:
+            return
+        from datetime import date as _date, timedelta as _td
+        if isinstance(ltc_date, str):
+            ltc_date = _date.fromisoformat(ltc_date)
+
+        # Stage-1 edits in save_units_grid use 'tmp:N' for unsaved
+        # rows. By the time _do_apply_ltc runs, those temp ids have
+        # already been resolved to real ids by save_units_grid's
+        # new_ids_by_temp map - the caller is expected to pass the
+        # resolved id. Defensive guard: if a 'tmp:' string slips
+        # through, skip the operation rather than crashing.
+        if isinstance(row_id, str) and row_id.startswith('tmp:'):
+            return
+        dl = self.env['mv.deal_line'].browse(row_id)
+        if not dl.exists():
+            return
+
+        ltc_weekday = ltc_date.weekday()
+        ltc_week_mon = ltc_date - _td(days=ltc_weekday)
+        Sched = self.env['mv.schedules']
+
+        # 1. Cancel every active schedule in weeks AFTER the LTC week.
+        post_active = Sched.search([
+            ('deal_line_id', '=', dl.id),
+            ('week', '>', ltc_week_mon),
+            ('status', '!=', 'canceled'),
+        ])
+        if post_active:
+            post_active.write({'status': 'canceled'})
+
+        # 2. LTC week: truncate days_allowed and (maybe) split.
+        ltc_sched = Sched.search([
+            ('deal_line_id', '=', dl.id),
+            ('week', '=', ltc_week_mon),
+            ('status', '!=', 'canceled'),
+        ], limit=1)
+        if ltc_sched:
+            day_flags = [
+                dl.day_mon, dl.day_tue, dl.day_wed,
+                dl.day_thu, dl.day_fri, dl.day_sat, dl.day_sun,
+            ]
+            new_day_flags = [
+                bool(day_flags[i]) and i <= ltc_weekday
+                for i in range(7)
+            ]
+            if new_day_flags != day_flags:
+                clone_vals = {
+                    'deal_id':    dl.deal_id.id,
+                    'daypart':    dl.daypart,
+                    'time_range': dl.time_range or '',
+                    'start_time': dl.start_time or False,
+                    'end_time':   dl.end_time   or False,
+                    'rate':       dl.rate,
+                    'run_start':  dl.run_start,
+                    'run_end':    dl.run_end,
+                    'day_mon': new_day_flags[0],
+                    'day_tue': new_day_flags[1],
+                    'day_wed': new_day_flags[2],
+                    'day_thu': new_day_flags[3],
+                    'day_fri': new_day_flags[4],
+                    'day_sat': new_day_flags[5],
+                    'day_sun': new_day_flags[6],
+                }
+                new_dl = self.env['mv.deal_line'].create(clone_vals)
+                ltc_sched.write({'deal_line_id': new_dl.id})
+                ltc_sched.write(new_dl.schedule_inherit_vals())
+        # No return - public apply_ltc / save_units_grid handle the
+        # grid refresh on their own.

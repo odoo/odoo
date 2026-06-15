@@ -6,11 +6,20 @@ import { Component, useState, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 const DAYPART_OPTIONS = [
-    { value: "early_morning", label: "Early Morning", range: "6a - 9a" },
-    { value: "day",           label: "Day",           range: "9a - 6p" },
-    { value: "prime",         label: "Prime",         range: "6p - 12a" },
-    { value: "late_fringe",   label: "Late Fringe",   range: "12a - 2a" },
-    { value: "overnight",     label: "Overnight",     range: "2a - 6a" },
+    { value: "early_morning", label: "Early Morning", range: "6a - 9a",
+      start: "v_06_00a", end: "v_09_00a" },
+    { value: "day",           label: "Day",           range: "9a - 6p",
+      start: "v_09_00a", end: "v_06_00p" },
+    { value: "prime",         label: "Prime",         range: "6p - 12a",
+      start: "v_06_00p", end: "v_12_00a" },
+    { value: "late_fringe",   label: "Late Fringe",   range: "12a - 2a",
+      start: "v_12_00a", end: "v_02_00a" },
+    { value: "overnight",     label: "Overnight",     range: "2a - 6a",
+      start: "v_02_00a", end: "v_06_00a" },
+    // Selected automatically when the planner enters a (start, end) pair
+    // that doesn't match any of the standard dayparts above.
+    { value: "custom",        label: "Custom",        range: "",
+      start: null,        end: null },
 ];
 
 export class MvUnitsGrid extends Component {
@@ -39,6 +48,11 @@ export class MvUnitsGrid extends Component {
             // dialog is open. Confirm -> reload the grid (dropping
             // edits); Cancel -> just close the dialog.
             pendingDiscard: false,
+            // LTC dialog state. pendingLtcRow holds the row object;
+            // pendingLtcDate is the planner-typed date inside the LTC
+            // week. Both clear when the dialog closes.
+            pendingLtcRow: null,
+            pendingLtcDate: "",
         });
         onWillStart(this.loadGrid.bind(this));
         onWillUpdateProps((nextProps) => {
@@ -65,6 +79,7 @@ export class MvUnitsGrid extends Component {
             row_updates: [], row_creates: [], row_deletes: [],
             cell_updates: [],
             deal_update: {},   // Phase 12: holds units_start_date changes
+            ltc_ops: [],       // Staged Last-To-Cancel operations
         };
         this.state.dirty = false;
     }
@@ -230,6 +245,8 @@ export class MvUnitsGrid extends Component {
             rate: 0,
             run_start: weeks[0] || null,
             run_end: weeks[weeks.length - 1] || null,
+            start_time: dp.start,
+            end_time: dp.end,
             cells: weeks.map((w) => ({
                 week: w, units: 0, state: "dashed", sched_id: false,
             })),
@@ -285,6 +302,11 @@ export class MvUnitsGrid extends Component {
     }
 
     requestDelete(row) {
+        if (row._is_ltc_preview) {
+            this.closeMenu();
+            alert("This is a preview row. Save the LTC first or click Discard.");
+            return;
+        }
         // Close the dropdown and open the confirm dialog.
         this.state.openMenuRowId = null;
         this.state.pendingDeleteRow = row;
@@ -319,6 +341,10 @@ export class MvUnitsGrid extends Component {
     }
 
     applyBulkAllocation(row, sectionKey) {
+        if (row._is_ltc_preview) {
+            alert("This is a preview row. Save the LTC first to make further edits.");
+            return;
+        }
         const bulk = this._ensureBulk(row);
         const dealStart = this.state.payload && this.state.payload.deal &&
                          this.state.payload.deal.units_start_date;
@@ -442,6 +468,7 @@ export class MvUnitsGrid extends Component {
     }
 
     onDaypartChange(row, ev) {
+        if (row._is_ltc_preview) { ev.target.value = row.daypart; return; }
         const value = ev.target.value;
         const opt = DAYPART_OPTIONS.find((d) => d.value === value) || DAYPART_OPTIONS[0];
         row.daypart = opt.value;
@@ -450,10 +477,53 @@ export class MvUnitsGrid extends Component {
         const upd = this._findOrPushRowUpdate(row);
         upd.daypart = opt.value;
         upd.time_range = opt.range;
+        // For predefined dayparts, snap start_time / end_time to the
+        // standard range so the time dropdowns stay in sync. For
+        // 'custom', leave whatever the planner already chose.
+        if (opt.start && opt.end) {
+            row.start_time = opt.start;
+            row.end_time   = opt.end;
+            upd.start_time = opt.start;
+            upd.end_time   = opt.end;
+        }
+        this._markDirty();
+    }
+
+    // Triggered by either the Start Time or End Time <select> in a
+    // row. Pushes the new value into the queued row_update and then
+    // checks whether the resulting (start, end) pair still matches a
+    // predefined daypart - if not, the row's daypart switches to
+    // 'custom' automatically.
+    onTimeChange(row, which, ev) {
+        if (row._is_ltc_preview) {
+            ev.target.value = (which === "start" ? row.start_time : row.end_time) || "";
+            return;
+        }
+        const v = ev.target.value || null;
+        if (which === "start") row.start_time = v;
+        else                   row.end_time   = v;
+        const upd = this._findOrPushRowUpdate(row);
+        upd[which === "start" ? "start_time" : "end_time"] = v;
+
+        // Auto-detect daypart from the new (start, end) pair.
+        const match = DAYPART_OPTIONS.find(
+            (d) => d.value !== "custom"
+                && d.start === row.start_time
+                && d.end   === row.end_time,
+        );
+        const newDp = match || DAYPART_OPTIONS.find((d) => d.value === "custom");
+        if (row.daypart !== newDp.value) {
+            row.daypart = newDp.value;
+            row.daypart_label = newDp.label;
+            row.time_range = newDp.range;
+            upd.daypart = newDp.value;
+            upd.time_range = newDp.range;
+        }
         this._markDirty();
     }
 
     onRateChange(row, ev) {
+        if (row._is_ltc_preview) { ev.target.value = row.rate || 0; return; }
         const n = parseFloat(ev.target.value);
         row.rate = Number.isFinite(n) ? n : 0;
         const upd = this._findOrPushRowUpdate(row);
@@ -472,6 +542,7 @@ export class MvUnitsGrid extends Component {
     }
 
     onDayToggle(row, idx) {
+        if (row._is_ltc_preview) return;
         row.days_mask[idx] = !row.days_mask[idx];
         const upd = this._findOrPushRowUpdate(row);
         upd.days_mask = row.days_mask.slice();
@@ -489,6 +560,12 @@ export class MvUnitsGrid extends Component {
     }
 
     onCellInput(row, cell, ev) {
+        if (row._is_ltc_preview) {
+            // Preview rows are pure UI - reject edits; the planner
+            // can adjust the real split row after Save.
+            ev.target.value = cell.units || "";
+            return;
+        }
         const n = parseFloat(ev.target.value);
         const units = Number.isFinite(n) ? n : 0;
         cell.units = units;
@@ -553,6 +630,175 @@ export class MvUnitsGrid extends Component {
         this.state.pendingDiscard = false;
     }
 
+    // ---- LTC (Last To Cancel) ---------------------------------------
+    // Two entry points: the row's ⋯ menu (requestLtc -> confirmLtc) and
+    // Section 2 of the bulk strip (applyLtcFromSection2). Both call
+    // _dispatchApplyLtc which hits the backend apply_ltc RPC.
+    requestLtc(row) {
+        this.closeMenu();
+        this.state.pendingLtcRow = row;
+        const dealStart = this.state.payload
+            && this.state.payload.deal
+            && this.state.payload.deal.units_start_date;
+        this.state.pendingLtcDate = dealStart || "";
+    }
+
+    onLtcDateInput(ev) {
+        this.state.pendingLtcDate = ev.target.value || "";
+    }
+
+    cancelLtc() {
+        this.state.pendingLtcRow = null;
+        this.state.pendingLtcDate = "";
+    }
+
+    confirmLtc() {
+        const row = this.state.pendingLtcRow;
+        const dateIso = this.state.pendingLtcDate;
+        if (!row || !dateIso) {
+            alert("Please pick an LTC date.");
+            return;
+        }
+        this._stageLtc(row, dateIso);
+        this.state.pendingLtcRow = null;
+        this.state.pendingLtcDate = "";
+    }
+
+    applyLtcFromSection2(row) {
+        if (row._is_ltc_preview) {
+            alert("This is a preview row from an unsaved LTC. Save first, then apply another LTC.");
+            return;
+        }
+        const bulk = this._ensureBulk(row);
+        const dateIso = bulk.sec2_end;
+        if (!dateIso) {
+            alert("Please pick a date in Section 2 before clicking Go.");
+            return;
+        }
+        this._stageLtc(row, dateIso);
+        bulk.sec2_end = "";
+    }
+
+    // Stage an LTC operation locally:
+    //  1) Cancel post-LTC-week active cells in the original row
+    //     (move units -> cancelled_units, units -> 0).
+    //  2) If the LTC week's days_allowed truncates (Mon..weekday(LTC)
+    //     differs from row.days_mask), build a PREVIEW row showing
+    //     the split: same daypart/rate/times, new days_mask, and
+    //     the LTC-week unit count moved over. The original row's
+    //     LTC-week cell is cleared.
+    //  3) Queue an ltc_op on state.edits so save_units_grid runs the
+    //     canonical _do_apply_ltc on the backend.
+    // Discard reverts everything via resetEdits + loadGrid.
+    _stageLtc(row, dateIso) {
+        // Skip if this is already a preview row (shouldn't happen via
+        // UI but guard anyway).
+        if (row._is_ltc_preview) return;
+
+        const ltcDate = new Date(dateIso + "T00:00:00");
+        const wMon0 = (ltcDate.getDay() + 6) % 7; // Mon=0..Sun=6
+        const ltcMon = new Date(ltcDate);
+        ltcMon.setDate(ltcMon.getDate() - wMon0);
+        const y = ltcMon.getFullYear();
+        const m = String(ltcMon.getMonth() + 1).padStart(2, "0");
+        const dd = String(ltcMon.getDate()).padStart(2, "0");
+        const ltcMonIso = `${y}-${m}-${dd}`;
+
+        const rowId = row._is_new ? "tmp:" + row._temp : row.id;
+
+        // (1) Cancel post-LTC-week cells with active data.
+        for (const cell of row.cells) {
+            if (cell.week <= ltcMonIso) continue;
+            const activeUnits = Number(cell.units) || 0;
+            const hasActive = !!cell.sched_id || activeUnits > 0;
+            if (!hasActive) continue;
+            cell.cancelled_units = (Number(cell.cancelled_units) || 0)
+                                   + activeUnits;
+            cell.units = 0;
+            cell.state = "dashed";
+            cell.dirty = true;
+            const idx = this.state.edits.cell_updates.findIndex(
+                (e) => e.row_id === rowId && e.week === cell.week
+            );
+            if (idx !== -1) this.state.edits.cell_updates.splice(idx, 1);
+            this.state.edits.cell_updates.push({
+                row_id: rowId, week: cell.week, cancelled: true,
+            });
+        }
+
+        // (2) Build the truncated-days preview row if needed.
+        const ltcWeekday = wMon0;  // weekday-of-LTC, Mon=0..Sun=6
+        const newDaysMask = row.days_mask.map(
+            (on, i) => Boolean(on) && i <= ltcWeekday,
+        );
+        const sameDays = newDaysMask.every(
+            (v, i) => Boolean(v) === Boolean(row.days_mask[i]),
+        );
+        if (!sameDays) {
+            const ltcCell = row.cells.find((c) => c.week === ltcMonIso);
+            const movedUnits = ltcCell ? (Number(ltcCell.units) || 0) : 0;
+
+            // Build cells for the preview row - dashed except the LTC week.
+            const previewCells = (this.state.payload.weeks || []).map(
+                (w) => ({
+                    week: w,
+                    units: w === ltcMonIso ? movedUnits : 0,
+                    state: w === ltcMonIso && movedUnits > 0
+                           ? "green" : "dashed",
+                    sched_id: false,
+                    cancelled_units: 0,
+                    cancelled_sched_ids: [],
+                }),
+            );
+
+            this._ltcPreviewCounter = (this._ltcPreviewCounter || 0) + 1;
+            const previewRow = {
+                id: `ltc-preview:${this._ltcPreviewCounter}`,
+                _is_ltc_preview: true,
+                daypart: row.daypart,
+                daypart_label: row.daypart_label,
+                time_range: row.time_range,
+                start_time: row.start_time,
+                end_time: row.end_time,
+                days_mask: newDaysMask,
+                rate: row.rate,
+                run_start: row.run_start,
+                run_end: row.run_end,
+                cells: previewCells,
+                total_spots: movedUnits,
+                total_revenue: movedUnits * (Number(row.rate) || 0),
+                total_cancelled: 0,
+            };
+
+            // Insert the preview right after the original row.
+            const idx = this.state.payload.rows.findIndex(
+                (r) => r.id === row.id,
+            );
+            if (idx >= 0) {
+                this.state.payload.rows.splice(idx + 1, 0, previewRow);
+            } else {
+                this.state.payload.rows.push(previewRow);
+            }
+
+            // Clear the LTC-week cell on the original row (the units
+            // visually "moved" into the new split row).
+            if (ltcCell) {
+                ltcCell.units = 0;
+                ltcCell.state = "dashed";
+                ltcCell.dirty = true;
+            }
+        }
+
+        // (3) Queue the LTC op for the backend.
+        this.state.edits.ltc_ops = this.state.edits.ltc_ops || [];
+        this.state.edits.ltc_ops.push({
+            row_id: rowId, ltc_date: dateIso,
+        });
+
+        this._markDirty();
+        this._recomputeTotals();
+    }
+
     // ---- Helpers used by the template -------------------------------
     cellClasses(row, cell) {
         const cls = ["mv-cell", "mv-cell--" + (cell.state || "dashed")];
@@ -563,11 +809,11 @@ export class MvUnitsGrid extends Component {
     fmtCurrency(amount) {
         if (!this.state.payload) return amount;
         const cur = this.state.payload.currency;
-        const sym = cur.symbol || "$";
+        const sym = (cur && cur.symbol) || "$";
         const n = Number(amount || 0).toLocaleString(undefined, {
             minimumFractionDigits: 0, maximumFractionDigits: 0,
         });
-        return cur.position === "after" ? n + sym : sym + n;
+        return cur && cur.position === "after" ? n + sym : sym + n;
     }
 
     fmtWeekShort(iso) {
