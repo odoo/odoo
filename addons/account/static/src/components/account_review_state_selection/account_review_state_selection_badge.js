@@ -14,9 +14,12 @@ export class AccountReviewStateSelectionBadge extends Component {
         options: t.object().optional(),
         class: t.string().optional(),
         size: t.string().optional("normal"),
+        onChange: t.function().optional(),
     });
 
     setup() {
+        this.selection_map = new Map(this.props.record.fields[this.props.name].selection);
+
         onWillStart(async () => {
             this.editableOptions = await this.getEditableOptions();
         });
@@ -40,9 +43,9 @@ export class AccountReviewStateSelectionBadge extends Component {
     }
 
     get display() {
-        const result = this.options.filter((val) => val[0] === this.value)[0];
-        if(result) {
-            return result[1];
+        const value = this.value;
+        if (this.selection_map.has(value)) {
+            return this.selection_map.get(value);
         }
         return null;
     }
@@ -115,6 +118,7 @@ export class AccountReviewStateSelectionBadge extends Component {
             { [this.props.name]: value },
             { save: true }
         );
+        await this.props.onChange?.(value);
         this.env.reload?.()
     }
 }
@@ -122,9 +126,7 @@ export class AccountReviewStateSelectionBadge extends Component {
 export const accountReviewStateSelectionBadge = {
     supportedTypes: ["selection"],
     component: AccountReviewStateSelectionBadge,
-    extractProps: ({options}) => {
-        return { options };
-    },
+    extractProps: ({options}) => ({ options }),
 }
 
 registry.category("fields").add("account_review_state_selection_badge", accountReviewStateSelectionBadge)
