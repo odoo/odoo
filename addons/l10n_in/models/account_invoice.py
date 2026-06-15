@@ -30,7 +30,6 @@ class AccountMove(models.Model):
             ('regular', 'Registered Business - Regular'),
             ('composition', 'Registered Business - Composition'),
             ('unregistered', 'Unregistered Business'),
-            ('consumer', 'Consumer'),
             ('overseas', 'Overseas'),
             ('special_economic_zone', 'Special Economic Zone'),
             ('deemed_export', 'Deemed Export'),
@@ -127,7 +126,7 @@ class AccountMove(models.Model):
                 partner.l10n_in_gst_treatment
                 or (
                     'overseas' if partner.country_id and partner.country_id.code != 'IN'
-                    else partner.check_vat_in(partner.vat) and 'regular' or 'consumer'
+                    else partner.check_vat_in(partner.vat) and 'regular' or 'unregistered'
                 )
             )
 
@@ -712,6 +711,6 @@ class AccountMove(models.Model):
                 return 'Bill of Supply'
             elif tax_types.isdisjoint(exempt_types):
                 return 'Tax Invoice'
-            elif gst_treatment in ['unregistered', 'consumer']:
+            elif gst_treatment == 'unregistered':
                 return 'Invoice-cum-Bill of Supply'
         return 'Invoice'
