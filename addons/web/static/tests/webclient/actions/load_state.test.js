@@ -1459,6 +1459,59 @@ describe(`new urls`, () => {
         ]);
     });
 
+    test("don't reload actions from sessionStorage (form view)", async () => {
+        patchWithCleanup(browser.sessionStorage, {
+            setItem(key, value) {
+                expect.step(`set ${key}-${value}`);
+                super.setItem(key, value);
+            },
+            getItem(key) {
+                const res = super.getItem(key);
+                expect.step(`get ${key}-${res}`);
+                return res;
+            },
+        });
+
+        // Prepare a stored action
+        browser.sessionStorage.setItem(
+            "current_action",
+            JSON.stringify({
+                id: 9001,
+                name: "Partners",
+                type: "ir.actions.act_window",
+                res_model: "partner",
+                views: [
+                    [false, "list"],
+                    [666, "form"],
+                ],
+                context: {},
+            })
+        );
+
+        defineActions([
+            {
+                id: 9001,
+                name: "Partners",
+                type: "ir.actions.act_window",
+                res_model: "partner",
+                views: [
+                    [false, "list"],
+                    [666, "form"],
+                ],
+            },
+        ]);
+
+        redirect("/odoo/m-partner/1");
+        await mountWebClient();
+        expect(`.o_form_view`).toHaveCount(1);
+        expect.verifySteps([
+            'set current_action-{"id":9001,"name":"Partners","type":"ir.actions.act_window","res_model":"partner","views":[[false,"list"],[666,"form"]],"context":{}}',
+            "get menu_id-null",
+            'get current_action-{"id":9001,"name":"Partners","type":"ir.actions.act_window","res_model":"partner","views":[[false,"list"],[666,"form"]],"context":{}}',
+            'set current_action-{"res_model":"partner","res_id":1,"type":"ir.actions.act_window","views":[[false,"form"]]}',
+        ]);
+    });
+
     test("menu jumping fix: multiple menus sharing same action", async () => {
         // Test case for menu jumping issue when multiple menus share the same action
         // Scenario: User navigates to Sale->Customers, then F5 reload should stay in Sale, not jump to Account
