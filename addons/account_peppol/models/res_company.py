@@ -196,6 +196,12 @@ class ResCompany(models.Model):
             journals_to_reset.is_peppol_journal = False
             company.peppol_purchase_journal_id.is_peppol_journal = True
 
+        # If the user removed his Import journal in his Peppol settings, we need to tell IAP the user can't support
+        # responses anymore. If a journal is added when it was empty before, we also need to tell IAP the user can support
+        # responses again.
+        if cron := self.env.ref('account_peppol_response.ir_cron_peppol_auto_register_services', raise_if_not_found=False):
+            cron._trigger()
+
     @api.depends('email')
     def _compute_account_peppol_contact_email(self):
         for company in self:
