@@ -437,6 +437,9 @@ class MailMessage(models.Model):
 
         return super()._search(domain, offset, limit, order, bypass_access=bypass_access, **kwargs)
 
+    def get_domain(self, domain):
+        return domain
+
     def _compute_res_access(self, operation: str):
         assert self.env.su
         field_name = f'res_access_{operation}'
@@ -478,6 +481,8 @@ class MailMessage(models.Model):
                 continue
             comodel = env[res_model_name]
             codomain = Domain('model', '=', comodel._name)
+            if res_model_name == 'hr.employee':
+                domain = self.get_domain(domain)
             comodel_res_ids = condition_values(self, 'res_id', domain.map_conditions(
                 lambda cond: codomain & cond if cond.field_expr == 'model' else cond
             ))

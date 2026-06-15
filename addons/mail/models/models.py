@@ -425,7 +425,9 @@ class Base(models.AbstractModel):
         # find last relevant message
         messages = self.env['mail.message']
         if reply_discussion and 'message_ids' in self:
-            messages = self._sort_suggested_messages(self.message_ids)
+            messages = self._sort_suggested_messages(
+                self.message_ids.filtered(lambda m: m.has_access('read')),
+            )
         # fetch answer-based recipients as well as author
         if reply_message or messages:
             for record in self:
