@@ -2,9 +2,11 @@ import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { withSequence } from "@html_editor/utils/resource";
 
 export class TeamBoardOptionPlugin extends Plugin {
     static id = "teamBoardOption";
+    static dependencies = ["builderOptions"];
     resources = {
         dropzone_selectors: [
             {
@@ -21,7 +23,30 @@ export class TeamBoardOptionPlugin extends Plugin {
             AddMemberAction,
             SortMemberAction,
         },
+        options_container_top_buttons_providers: withSequence(
+            1,
+            this.getOptionsContainerTopButtons.bind(this)
+        ),
     };
+
+    getOptionsContainerTopButtons(el) {
+        return [
+            {
+                class: "fa fa-fw fa-plus btn",
+                title: _t("Add a new Team Member Board"),
+                handler: this.addNewTeamBoard.bind(this),
+            },
+        ];
+    }
+
+    addNewTeamBoard(el) {
+        const teamBoardSnippetEl = this.config.snippetModel
+            .getOriginalSnippet("s_team_board")
+            .content.cloneNode(true);
+        el.parentElement.append(teamBoardSnippetEl);
+        this.dependencies.builderOptions.setNextTarget(teamBoardSnippetEl);
+        teamBoardSnippetEl.scrollIntoView({ behavior: "smooth" });
+    }
 }
 
 export class AddMemberAction extends BuilderAction {
