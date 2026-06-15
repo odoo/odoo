@@ -270,6 +270,52 @@ class TestCheckoutAddress(WebsiteSaleCommon):
             # Name cannot be changed if there are issued invoices
             self.assertNotEqual(self.portal_partner.name, self.default_address_values['name'], "Portal User should not be able to change the name if they have invoices under their name.")
 
+    def test_resync_partner_preserves_selected_addresses(self):
+        """Re-syncing the cart customer must not discard the delivery/invoice addresses the
+        customer already selected, when those addresses still belong to the customer's company.
+        """
+        company = self.env["res.partner"].create({
+            "name": "B2B Company", "is_company": True, "type": "contact",
+        })
+        delivery_1, delivery_2 = self.env["res.partner"].create([
+            {"name": "Branch 1", "parent_id": company.id, "type": "delivery"},
+            {"name": "Branch 2", "parent_id": company.id, "type": "delivery"},
+        ])
+        invoice = self.env["res.partner"].create({
+            "name": "Accounting", "parent_id": company.id, "type": "invoice",
+        })
+        user = self.env["res.users"].create({
+            "name": "B2B Company", "login": "b2b_company", "password": "b2b_company_pwd",
+            "partner_id": company.id,
+            "group_ids": [Command.link(self.env.ref("base.group_portal").id)],
+        })
+
+        # The customer selected a branch and a billing contact that differ from the defaults
+        # computed from the company.
+        default_delivery = company.address_get(["delivery"])["delivery"]
+        selected_delivery = (delivery_1 | delivery_2).filtered(lambda p: p.id != default_delivery)
+        so = self._create_so(partner_id=company.id)
+        so.partner_shipping_id = selected_delivery
+        so.partner_invoice_id = invoice
+
+        website = self.website.with_user(user).with_context({})
+        # No cart session key set => the cart is retrieved through the abandoned-cart branch,
+        # which re-runs the customer sync on the order.
+        with MockRequest(website.env, website=website) as request:
+            cart = request.website._get_and_cache_current_cart()
+
+            self.assertEqual(cart, so)
+            self.assertEqual(
+                cart.partner_shipping_id,
+                selected_delivery,
+                "The delivery address selected by the customer must be preserved.",
+            )
+            self.assertEqual(
+                cart.partner_invoice_id,
+                invoice,
+                "The invoice address selected by the customer must be preserved.",
+            )
+
     def test_07_change_fiscal_position(self):
         """
         Check that the sale order is updated when you change fiscal position.
