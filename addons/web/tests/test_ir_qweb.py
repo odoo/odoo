@@ -156,6 +156,32 @@ class TestIrQweb(TransactionCase):
             entry = next((entry for entry in entries if entry.endswith(f"{size}w")), None)
             self.assertTrue(entry, f"Unexpected srcset candidate list: {srcset}")
 
+    def test_image_srcset_uses_rendered_field_limit(self):
+        partner = self.env["res.partner"].create({
+            "name": "srcset rendered field partner",
+            "image_1920": "iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAF0lEQVR4nGP8z/CfARBgYGBgYBAMAAD//w8C4omIwAAAAABJRU5ErkJggg==",
+        })
+        view = self.env["ir.ui.view"].create({
+            "key": "web.test_qweb_srcset_rendered_field",
+            "type": "qweb",
+            "arch": """<t t-name="test_qweb_srcset_rendered_field">
+                <span t-field="record.image_512" t-options-widget="'image'" />
+            </t>""",
+        })
+
+        html = view._render_template(view.id, {"record": partner})
+        tree = etree.fromstring(html)
+        img = tree.find("img")
+
+        srcset = img.get("srcset")
+        self.assertTrue(srcset)
+        entries = srcset.split(', ')
+        expected_sizes = ["128", "256", "512"]
+        self.assertEqual(len(entries), len(expected_sizes))
+        for size in expected_sizes:
+            entry = next((entry for entry in entries if entry.endswith(f"{size}w")), None)
+            self.assertTrue(entry, f"Unexpected srcset candidate list: {srcset}")
+
     def test_image_srcset_not_generated_for_non_image_fields(self):
         partner = self.env["res.partner"].create({
             "name": "srcset avatar partner",
