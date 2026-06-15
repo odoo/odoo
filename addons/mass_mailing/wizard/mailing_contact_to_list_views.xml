@@ -41,4 +41,9 @@
         <field name="group_ids" eval="[Command.link(ref('mass_mailing.group_mass_mailing_user'))]"/>
     </record>
 
+    <record id="res_partner_to_list_results_action" model="ir.actions.client">
+        <field name="name">Add Contacts to Mailing List results</field>
+        <field name="tag">res_partner_to_list_results</field>
+    </record>
+
 </odoo>

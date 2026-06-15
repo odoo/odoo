@@ -37,33 +37,37 @@ class MailingContactToList(models.TransientModel):
         context = {"default_list_ids": self.mailing_list_id.ids}
         contacts, nb_no_details = self.env['mailing.contact'].with_context(context)._from_partners(self.partner_ids)
         nb_added, nb_opt_out = self._add_contacts_to_mailing_list()
-        message_parts = [self.env._("%(count)s added.", count=nb_added)]
+        message_parts = [self.env._("%(count)s added", count=nb_added)]
         notification_type = 'success' if nb_added else 'info'
         if nb_ignored := (len(contacts) - nb_no_details - nb_added):
             if n_subscribed := nb_ignored - nb_opt_out:
-                message_parts.append(self.env._("%(count)s already subscribed.", count=n_subscribed))
+                message_parts.append(self.env._("%(count)s already subscribed", count=n_subscribed))
             if nb_opt_out:
-                message_parts.append(self.env._("%(count)s opted out.", count=nb_opt_out))
+                message_parts.append(self.env._("%(count)s opted out", count=nb_opt_out))
         if nb_no_details:
             message_parts.append(self._get_no_contact_details_message(nb_no_details))
-        message_parts.append('%s.')
-        action = self.env.ref('mass_mailing.action_view_mass_mailing_contacts')
+        action = {
+            'domain': [('id', 'in', contacts.ids)],
+            'name': self.env._("Added to Mailing Lists"),
+            'res_model': 'mailing.contact',
+            'type': 'ir.actions.act_window',
+            'views': [[False, 'list'], [False, 'kanban'], [False, 'form']],
+        }
         return {
             'type': 'ir.actions.client',
-            'tag': 'display_notification',
+            'tag': 'res_partner_to_list_results',
             'params': {
-                'links': [{
-                    'label': self.env._('View results'),
-                    'url': f"/web#action={action.id}&domain=[('id', 'in', {contacts.ids})]",
-                }],
-                'message': " ".join(message_parts),
                 'next': {'type': 'ir.actions.act_window_close'},
-                'type': notification_type,
+                'notification': {
+                    'button': {'action': action, 'name': self.env._("View")},
+                    'message': '%(NOTIF_NEWLINE)s'.join(message_parts),
+                    'type': notification_type,
+                },
             },
         }
 
     def _get_no_contact_details_message(self, count):
-        return self.env._("%(count)s ignored (no email).", count=count)
+        return self.env._("%(count)s ignored (no email)", count=count)
 
     def _add_contacts_to_mailing_list(self):
         self.ensure_one()

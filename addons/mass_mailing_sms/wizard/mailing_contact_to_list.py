@@ -7,4 +7,4 @@ class MailingContactToList(models.TransientModel):
     _inherit = 'mailing.contact.to.list'
 
     def _get_no_contact_details_message(self, count):
-        return self.env._("%(count)s ignored (no email/phone).", count=count)
+        return self.env._("%(count)s ignored (no email/phone)", count=count)
