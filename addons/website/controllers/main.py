@@ -88,6 +88,32 @@ class QueryURL:
         return path
 
 
+class SlugifyTags:
+    def __init__(self, model=None):
+        self.model = model
+
+    def __call__(self, tag_ids=(), toggle_tag_id=None):
+        """
+        Build a comma-separated list of tag slugs.
+
+        Toggles the given tag ID in the active list and returns the
+        corresponding tag slugs for respective model.
+
+        :param list[int] tag_ids: List of tag IDs to process.
+        :param int toggle_tag_id: Optional tag ID to add or remove.
+        :return: Comma-separated tag slugs.
+        :rtype: str
+        """
+        tag_ids = list(tag_ids)
+        if toggle_tag_id:
+            if toggle_tag_id in tag_ids:
+                tag_ids.remove(toggle_tag_id)
+            else:
+                tag_ids.append(toggle_tag_id)
+
+        return ','.join(request.env['ir.http']._slug(tag) for tag in request.env[self.model].browse(tag_ids))
+
+
 class Website(Home):
 
     def sitemap_index(env, rule, qs):
