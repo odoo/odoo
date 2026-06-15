@@ -912,6 +912,16 @@ describe("Filter list behavior in search bar", () => {
         });
     });
 
+    test("confirm with no filter value changes closes dialog", async function () {
+        await setupDashboardWithFilter({
+            id: "42",
+            type: "text",
+            label: "Text Filter",
+        });
+        await contains(".o-filter-values-footer .btn-primary").click();
+        expect(".o-filter-values").toHaveCount(0);
+    });
+
     test("Readonly user can update a filter value", async function () {
         const { model } = await setupDashboardWithFilter({
             id: "42",
