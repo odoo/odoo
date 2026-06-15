@@ -865,6 +865,26 @@ test("Can add a reaction", async () => {
     await contains(".o-mail-MessageReaction:text('😅 1')");
 });
 
+test("Can add a reaction (small but desktop)", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "channel1",
+    });
+    pyEnv["mail.message"].create({
+        body: "Hello world",
+        res_id: channelId,
+        message_type: "comment",
+        model: "discuss.channel",
+    });
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await openDiscuss(channelId);
+    await click("[title='Add a Reaction']");
+    await click(".o-Emoji", { text: "😅" });
+    await contains(".o-mail-MessageReaction", { text: "😅1" });
+});
+
 test("Can remove a reaction", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
