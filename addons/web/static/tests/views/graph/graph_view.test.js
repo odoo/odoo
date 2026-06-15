@@ -3090,7 +3090,7 @@ test("monetary chart rendering with a single foreign currency", async () => {
                 ],
                 __count: 1,
                 "currency_id:array_agg_distinct": [1],
-                "amount:sum_currency": 300,
+                "amount:sum_currency": 300 * 0.8, // in eur
                 "amount:sum": 300,
             },
             {
@@ -3112,7 +3112,7 @@ test("monetary chart rendering with a single foreign currency", async () => {
                 ],
                 __count: 1,
                 "currency_id:array_agg_distinct": [1],
-                "amount:sum_currency": 400,
+                "amount:sum_currency": 400 * 0.8,  // in eur
                 "amount:sum": 400,
             },
         ];
