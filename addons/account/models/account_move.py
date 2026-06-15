@@ -3849,7 +3849,7 @@ class AccountMove(models.Model):
         - 'reviewed', 'no_review' or falsy: requires account.group_account_user or account.group_account_manager
         - 'todo', 'anomaly': no restriction
         """
-        if self.env.su:
+        if self.env.su or self.env.context.get('skip_account_review_check', False):
             return
         is_user_able_to_review, is_user_able_to_supervise = self._get_review_state_access_groups()
         if review_state == 'supervised' and not is_user_able_to_supervise:
