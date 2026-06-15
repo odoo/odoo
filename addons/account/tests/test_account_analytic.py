@@ -479,12 +479,12 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         # Priority: m2 > m1 > m3 : A2, B3, C2
         m1.sequence, m2.sequence, m3.sequence = 2, 1, 3
         distribution = self.env['account.analytic.distribution.model']._get_distribution(criteria)
-        self.assertEqual(distribution, m2.analytic_distribution | m3.analytic_distribution, 'm2 fills A, ignore m1')
+        self.assertEqual(distribution, {f'{aa_A2.id},{aa_C2.id},{aa_B3.id}': 100}, 'm2 fills A, ignore m1')
 
         # Priority: m3 > m1 > m2 : A2, B3, C2
         m1.sequence, m2.sequence, m3.sequence = 2, 3, 1
         distribution = self.env['account.analytic.distribution.model']._get_distribution(criteria)
-        self.assertEqual(distribution, m2.analytic_distribution | m3.analytic_distribution, 'm3 fills B, ignore m1')
+        self.assertEqual(distribution, {f'{aa_B3.id},{aa_A2.id},{aa_C2.id}': 100}, 'm3 fills B, ignore m1')
 
     def test_analytic_distribution_multiple_prefixes(self):
         self.env['account.analytic.distribution.model'].create([{
