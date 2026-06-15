@@ -35,6 +35,11 @@ export class Product extends Component {
             },
             optional: true,
         },
+        show_extra_price: { type: Boolean, optional: true },
+    };
+
+    static defaultProps = {
+        show_extra_price: true,
     };
 
     //--------------------------------------------------------------------------
