@@ -76,10 +76,10 @@ export class ProductCatalogKanbanRecord extends KanbanRecord {
 
     _getUpdateQuantityAndGetPriceParams() {
         return {
+            res_model: this.env.orderResModel,
             order_id: this.env.orderId,
             product_id: this.env.productId,
             quantity: this.productCatalogData.quantity,
-            res_model: this.env.orderResModel,
             child_field: this.env.childField,
             uom_id: this.productCatalogData.uomId || false,
         };

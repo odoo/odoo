@@ -2971,108 +2971,30 @@ class AccountMove(models.Model):
         if self.is_purchase_document() and self.partner_id:
             res['search_default_seller_ids'] = self.partner_id.name
 
-        res['product_catalog_currency_id'] = self.currency_id.id
         res['product_catalog_digits'] = self.line_ids._fields['price_unit'].get_digits(self.env)
-        res['show_sections'] = bool(self.id)
         return res
+
+    def _get_catalog_currency(self):
+        return self.currency_id or super()._get_catalog_currency()
 
     def _get_product_catalog_domain(self):
         domain = super()._get_product_catalog_domain()
         if self.is_sale_document():
             return domain & Domain('sale_ok', '=', True)
-        elif self.is_purchase_document():
+        if self.is_purchase_document():
             return domain & Domain('purchase_ok', '=', True)
-        else:  # In case of an entry
-            return domain
+        # In case of an entry
+        return domain
 
-    def _default_order_line_values(self, child_field=False):
-        default_data = super()._default_order_line_values(child_field)
-        new_default_data = self.env['account.move.line']._get_product_catalog_lines_data()
-        return {**default_data, **new_default_data}
+    def _is_readonly(self) -> bool:
+        return super()._is_readonly() or self.state == 'cancel'
 
-    def _get_product_catalog_product_data(self, product, **kwargs):
-        product_data = super()._get_product_catalog_product_data(product)
-        product_data['price'] = product.standard_price if self.is_purchase_document() else product.lst_price
-        return product_data
-
-    def _get_product_catalog_record_lines(self, product_ids, *, section_id=None, **kwargs):
-        grouped_lines = defaultdict(lambda: self.env['account.move.line'])
-        if section_id is None:
-            section_id = (
-                self.line_ids[:1].id
-                if self.line_ids[:1].display_type == 'line_section'
-                else False
-            )
-        for line in self.line_ids:
-            if (
-                line.get_parent_section_line().id == section_id
-                and line.display_type == 'product'
-                and line.product_id.id in product_ids
-            ):
-                grouped_lines[line.product_id] |= line
-        return grouped_lines
-
-    def _update_order_line_info(
-        self, product, quantity, uom, *, section_id=False, child_field='line_ids', **kwargs
-    ):
-        """ Update account_move_line information for a given product or create a
-        new one if none exists yet.
-        :param object product: Recordset of `product.product`.
-        :param int quantity: The quantity selected in the catalog.
-        :param object uom: Recordset of `uom.uom`.
-        :param int section_id: The id of section selected in the catalog.
-        :return: The unit price of the product, based on the pricelist of the
-                 sale order and the quantity selected.
-        :rtype: float
-        """
-        move_line = self.line_ids.filtered(
-            lambda line: line.product_id.id == product.id
-            and line.get_parent_section_line().id == section_id,
-        )
-        if move_line:
-            if quantity != 0:
-                move_line.quantity = quantity
-            elif self.state in {'draft', 'sent'}:
-                price_unit = move_line.price_unit
-                # The catalog is designed to allow the user to select products quickly.
-                # Therefore, sometimes they may select the wrong product or decide to remove
-                # some of them from the quotation. The unlink is there for that reason.
-                move_line.unlink()
-                return price_unit
-            else:
-                move_line.quantity = 0
-        elif quantity > 0:
-            move_line = self.env['account.move.line'].create({
-                'move_id': self.id,
-                'quantity': quantity,
-                'product_id': product.id,
-                'sequence': self._get_new_line_sequence(child_field, section_id),
-                'product_uom_id': uom.id,
-            })
-        return move_line.price_unit
-
-    def _is_readonly(self):
-        """
-            Check if the move has been canceled
-        """
+    def _get_product_price_type(self) -> str:
         self.ensure_one()
-        return self.state == 'cancel'
+        return 'standard_price' if self.is_purchase_document() else 'list_price'
 
-    def _get_parent_field_on_child_model(self):
-        return 'move_id'
-
-    def _is_line_valid_for_section_line_count(self, line):
-        """Check if a line is valid for inclusion in the section's line count.
-
-        :param recordset line: A record of a move line.
-        :return: True if this line is a valid, else False.
-        :rtype: bool
-        """
-        return (
-            line.product_id
-            and line.product_id.product_tmpl_id.type != 'combo'
-            and line.quantity > 0
-        )
+    def _has_sections(self) -> bool:
+        return True
 
     # -------------------------------------------------------------------------
     # EARLY PAYMENT DISCOUNT

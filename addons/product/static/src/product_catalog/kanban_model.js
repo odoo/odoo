@@ -60,7 +60,7 @@ export class ProductCatalogKanbanModel extends RelationalModel {
 
     _getOrderLinesInfoParams(params, productIds) {
         return {
-            order_id: params.context.order_id,
+            order_id: params.context.product_catalog_order_id,
             product_ids: productIds,
             res_model: params.context.product_catalog_order_model,
             child_field: params.context.child_field,

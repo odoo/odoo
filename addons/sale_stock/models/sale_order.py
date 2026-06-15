@@ -317,8 +317,18 @@ class SaleOrder(models.Model):
 
         self.env['stock.picking']._log_activity(_render_note_exception_quantity_so, documents)
 
-    def _is_display_stock_in_catalog(self):
-        return True
+    def _get_action_add_from_catalog_extra_context(self):
+        return {
+            **super()._get_action_add_from_catalog_extra_context(),
+            "warehouse_id": self.warehouse_id.id,
+            "display_stock": True,
+        }
+
+    def _get_product_catalog_product_data(self, product, **kwargs) -> dict:
+        return {
+            **super()._get_product_catalog_product_data(product, **kwargs),
+            "deliveredQty": 0,  # TODO add defaultProps and remove the default here
+        }
 
     def _add_reference(self, references):
         """ link the given references to the list of references. """
