@@ -2148,7 +2148,7 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                     DISTINCT "test_read_group_aggregate_monetary"."currency_id"
                     ORDER BY "test_read_group_aggregate_monetary"."currency_id"
                 ),
-                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE("test_read_group_aggregate_monetary__currency_id__rates"."rate", 1.0))
+                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE("test_read_group_aggregate_monetary__currency_id__rates"."rate", %s)) * %s
             FROM
                 "test_read_group_aggregate_monetary"
                 LEFT JOIN (
@@ -2262,7 +2262,7 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                     DISTINCT "test_read_group_aggregate_monetary"."currency_id"
                     ORDER BY "test_read_group_aggregate_monetary"."currency_id"
                 ),
-                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE("test_read_group_aggregate_monetary__currency_id__rates"."rate", 1.0))
+                SUM("test_read_group_aggregate_monetary"."total_in_currency_id" / COALESCE("test_read_group_aggregate_monetary__currency_id__rates"."rate", %s)) * %s
             FROM
                 "test_read_group_aggregate_monetary"
                 LEFT JOIN (
@@ -2302,9 +2302,8 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                     'currency_id:array_agg_distinct': (self.usd + self.eur + self.stn).ids + [None],
                     'total_in_currency_id:sum_currency':
                         # 3 $ + 2.5 euro + 1 Db + 1 no currency = 5.94 euro
-                        3 + 2.5 / 0.8 + (1 / 20) + 1,  # FIXME wrong base currency
-                        # (3 * 0.8) + 2.5 + (1 / 20 * 0.8) +
-                        # 1,  # Do nothing, if no currency is set
+                        (3 * 0.8) + 2.5 + (1 / 20 * 0.8) +
+                        1,  # Do nothing, if no currency is set
                     '__extra_domain': [],
                 }],
             )
