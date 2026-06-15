@@ -47,7 +47,7 @@
                 t-on-click="(ev) => ev.stopPropagation()"
             >
                 <button
-                    t-attf-class="btn {{ this.getDropdownButtonDecoration(this.value) }} d-flex justify-content-center align-items-center rounded-pill o_account_review_state_selection_badge_button {{ this.additionalClassName }}"
+                    t-attf-class="btn {{ this.dropdownButtonDecoration }} d-flex justify-content-center align-items-center rounded-pill o_account_review_state_selection_badge_button {{ this.additionalClassName }}"
                     t-att-disabled="true"
                 >
                     <span t-if="this.getIcon(this.value)" class="me-1" t-att-class="this.getIcon(this.value)"/>
