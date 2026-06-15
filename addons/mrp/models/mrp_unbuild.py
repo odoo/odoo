@@ -68,7 +68,7 @@ class MrpUnbuild(models.Model):
         'stock.location', 'Destination Location',
         domain="[('usage','=','internal')]",
         check_company=True,
-        compute='_compute_location_id', store=True, readonly=False, precompute=True,
+        compute='_compute_location_dest_id', store=True, readonly=False, precompute=True,
         required=True, help="Location where you want to send the components resulting from the unbuild order.")
     consume_line_ids = fields.One2many(
         'stock.move', 'consume_unbuild_id', readonly=True,
@@ -96,12 +96,16 @@ class MrpUnbuild(models.Model):
     @api.depends('company_id')
     def _compute_location_id(self):
         for order in self:
-            if order.company_id:
+            if order.company_id and order.location_id.company_id != order.company_id:
                 warehouse = self.env['stock.warehouse'].search([('company_id', '=', order.company_id.id)], limit=1)
-                if order.location_id.company_id != order.company_id:
-                    order.location_id = warehouse.lot_stock_id
-                if order.location_dest_id.company_id != order.company_id:
-                    order.location_dest_id = warehouse.lot_stock_id
+                order.location_id = warehouse.lot_stock_id
+
+    @api.depends('company_id')
+    def _compute_location_dest_id(self):
+        for order in self:
+            if order.company_id and order.location_dest_id.company_id != order.company_id:
+                warehouse = self.env['stock.warehouse'].search([('company_id', '=', order.company_id.id)], limit=1)
+                order.location_dest_id = warehouse.lot_stock_id
 
     @api.depends('mo_id', 'product_id', 'company_id')
     def _compute_bom_id(self):
