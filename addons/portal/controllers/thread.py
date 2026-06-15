@@ -56,6 +56,7 @@ class PortalThreadController(ThreadController):
             return bool(has_access)
 
         res.attr("can_react", can_react)
+        res.attr("display_name")
         res.attr("hasReadAccess", lambda t: t.sudo(False).has_access("read"))
         res.one(
             "portal_partner",
