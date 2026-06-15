@@ -202,6 +202,7 @@
                                         <i class="fa fa-pencil-square-o me-1" /> Details
                                     </button>
                                     <InvoiceButton
+                                        t-if="this.showInvoiceButton"
                                         onInvoiceOrder.bind="this.onInvoiceOrder"
                                         order="_selectedSyncedOrder" />
                                     <button class="control-button btn btn-secondary btn-lg lh-lg flex-grow-1 flex-shrink-1" t-on-click="() => this.doPrint.call(_selectedSyncedOrder)">
@@ -211,7 +212,7 @@
                                         <i class="fa fa-send me-1" />Send
                                     </button>
                                 </div>
-                                <div class="subpads d-flex flex-column">
+                                <div t-if="this.showSubPads" class="subpads d-flex flex-column">
                                     <Numpad class="'pb-2'" buttons="this.getNumpadButtons()"/>
                                         <ActionpadWidget
                                             order="this.getSelectedOrder()"
