@@ -3165,6 +3165,7 @@ class AccountTax(models.Model):
                 'base_lines': [],
                 'amounts': [],
                 'rates': set(),
+                'analytic_distributions': [],
             })
             for base_line in base_lines:
                 # Reuse the grouping key cached by '_add_accounting_data_in_base_lines_tax_details'
@@ -3204,6 +3205,7 @@ class AccountTax(models.Model):
                 values['base_lines'].append(base_line)
                 values['amounts'].append(amounts)
                 values['rates'].add(base_line['rate'])
+                values['analytic_distributions'].append(base_line['analytic_distribution'])
             return base_line_tracked_values
 
         old_base_line_tracked_values = track_base_lines_values(old_base_lines)
@@ -3222,7 +3224,18 @@ class AccountTax(models.Model):
                         tax_rep_grouping_key = frozendict({
                             k: v for k, v in tax_rep_data['grouping_key'].items() if not k.startswith('__')
                         })
-                        if new_values.get('amounts', []) != old_values.get('amounts', []):
+                        new_analytic_distributions = new_values.get('analytic_distributions', [])
+                        old_analytic_distributions = old_values.get('analytic_distributions', [])
+                        if new_analytic_distributions != old_analytic_distributions:
+                            for analytic_distribution in set(
+                                    [frozendict(x) if x else False for x in new_analytic_distributions]
+                                    + [frozendict(x) if x else False for x in old_analytic_distributions]
+                            ):
+                                tax_keys_recompute_amounts.add(frozendict({
+                                    **tax_rep_grouping_key,
+                                    'analytic_distribution': analytic_distribution,
+                                }))
+                        elif new_values.get('amounts', []) != old_values.get('amounts', []):
                             tax_keys_recompute_amounts.add(tax_rep_grouping_key)
                         elif new_values.get('rates', set()).symmetric_difference(old_values.get('rates', set())):
                             tax_keys_recompute_rates.add(tax_rep_grouping_key)
