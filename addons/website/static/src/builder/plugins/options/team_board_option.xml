@@ -15,6 +15,14 @@
                 <BuilderSelectItem classAction="'small'">Compact</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
+
+        <BuilderRow label.translate="Members">
+            <BuilderButton applyto="'.s_team_board_wrapper'" action="'addMember'">Add member</BuilderButton>
+        </BuilderRow>
+
+        <BuilderRow label.translate="Sort">
+            <BuilderButton applyto="'.s_team_board_wrapper'" action="'sortMember'">Sort alphabetically</BuilderButton>
+        </BuilderRow>
     </t>
     <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
         <xpath expr="//t[@id='snippet_specific_options']" position="after">

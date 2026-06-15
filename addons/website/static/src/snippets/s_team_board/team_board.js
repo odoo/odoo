@@ -1,26 +1,49 @@
+import { markup } from "@odoo/owl";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
+import { browser } from "@web/core/browser/browser";
 
 export class TeamBoard extends Interaction {
     static selector = ".s_team_board";
 
     dynamicContent = {
         ".s_team_board_modal": {
-            "t-on-show.bs.modal": this.updateState,
+            "t-on-show.bs.modal": this.onTeamBoardCardClick,
         },
         ".s_team_board_modal_button": {
             "t-on-click": this.locked(this.sendMessage, true),
+        },
+        ".s_team_board_contact_button": {
+            "t-on-click": this.copyContactToClipboard,
+        },
+        ".s_team_board_member_card": {
+            "t-att-data-bs-toggle": () => "modal",
+            "t-att-data-bs-target": () => "#s_team_board_modal",
+        },
+        ".s_team_board_modal_picture": {
+            "t-att-src": () => this.currentTeamCard.imgSrc,
+        },
+        ".s_team_board_modal_body": {
+            "t-out": () => this.currentTeamCard.bodyContent,
         },
     };
 
     setup() {
         this.modal = this.el.querySelector(".s_team_board_modal");
-        document.querySelectorAll(".modal").forEach((modal) => {
-            modal.addEventListener("hide.bs.modal", () => {
-                document.activeElement.blur();
-            });
-        });
+        this.contactRegistry = registry.category("website.team_board.contact_methods");
+        this.currentTeamCard = { imgSrc: "", bodyContent: "" };
+    }
+
+    start() {
+        const contactButtons = this.contactRegistry
+            .getEntries()
+            .map(([contactMethodType, contactMethodData]) =>
+                this.createContactMethodButton(contactMethodType, contactMethodData)
+            );
+        document
+            .querySelector(".s_team_board_modal_contact_buttons")
+            .replaceChildren(...contactButtons);
     }
 
     destroy() {
@@ -32,17 +55,11 @@ export class TeamBoard extends Interaction {
         modalEl.hide();
     }
 
-    updateState(ev) {
+    onTeamBoardCardClick(ev) {
         const cardEl = ev.relatedTarget;
-        const name = cardEl.querySelector(".s_team_board_name")?.textContent.trim() || "";
-        const position = cardEl.querySelector(".s_team_board_position")?.textContent.trim() || "";
-        const summary = cardEl.querySelector(".s_team_board_summary")?.textContent.trim() || "";
-        const pictureSrc = cardEl.querySelector(".s_team_board_picture")?.src || "";
-
-        this.modal.querySelector(".s_team_board_modal_name").textContent = name;
-        this.modal.querySelector(".s_team_board_modal_position").textContent = position;
-        this.modal.querySelector(".s_team_board_modal_summary").textContent = summary;
-        this.modal.querySelector(".s_team_board_modal_picture").src = pictureSrc;
+        this.currentTeamCard.imgSrc = cardEl.querySelector(".o_team_board_picture")?.src || "";
+        this.currentTeamCard.bodyContent =
+            markup(cardEl.querySelector(".card-body")?.innerHTML) || "";
     }
 
     async sendMessage(ev) {
@@ -59,6 +76,26 @@ export class TeamBoard extends Interaction {
                 });
             }
         })();
+    }
+
+    createContactMethodButton(contactMethodType, contactMethodData) {
+        const contactBtnEl = document.createElement("button");
+
+        contactBtnEl.classList.add("btn", "btn-secondary", "m-1", "s_team_board_contact_button");
+        contactBtnEl.dataset.contactMethod = contactMethodType;
+        contactBtnEl.dataset.contactMethodData = contactMethodData;
+        contactBtnEl.innerText = `Copy ${contactMethodType}`;
+
+        return contactBtnEl;
+    }
+
+    copyContactToClipboard(ev) {
+        const contactMethod = ev.target.dataset.contactMethod;
+        const contactMethodData = ev.target.dataset.contactMethodData;
+        browser.navigator.clipboard.writeText(contactMethodData);
+        this.services.notification.add(`${contactMethod} has been copied to your clipboard.`, {
+            type: "success",
+        });
     }
 }
 

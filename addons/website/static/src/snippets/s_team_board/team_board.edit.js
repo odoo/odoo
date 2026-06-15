@@ -4,7 +4,7 @@ import { TeamBoard } from "./team_board";
 const TeamBoardEdit = (I) =>
     class extends I {
         dynamicContent = {
-            ".card": {
+            ".s_team_board_member_card": {
                 "t-att-data-bs-toggle": () => undefined,
                 "t-att-data-bs-target": () => undefined,
             },
