@@ -262,8 +262,8 @@ class PdpFlow(models.Model):
     # Business Methods - Sending
     # -------------------------------------------------------------------------
 
-    def action_send(self, check_totp=True):
-        """Send flow payload to transport gateway. The parameter check totp is no longer useful and will be remove in master """
+    def action_send(self):
+        """Send flow payload to transport gateway."""
         for flow in self:
             if flow.state != 'ready':
                 continue
@@ -580,7 +580,7 @@ class PdpFlow(models.Model):
                     # RE flows: send immediately when ready (no deadline constraint)
                     if flow.state != 'ready' or flow.error_moves_count:
                         continue
-                flow.with_company(flow.company_id).sudo().action_send(check_totp=False)
+                flow.with_company(flow.company_id).sudo().action_send()
                 flow._log_cron_event(
                     self.env._("Flow automatically sent by cron (status: %(status)s). %(extra)s",
                       status=flow.transport_status or flow.state,
