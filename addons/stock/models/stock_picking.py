@@ -606,7 +606,7 @@ class StockPicking(models.Model):
         check_company=True, required=True)
     location_dest_id = fields.Many2one(
         'stock.location', "Destination Location",
-        compute="_compute_location_id", store=True, precompute=True, readonly=False,
+        compute="_compute_location_dest_id", store=True, precompute=True, readonly=False,
         check_company=True, required=True)
     move_ids = fields.One2many('stock.move', 'picking_id', string="Stock Moves", domain=[('is_scrap', '=', False)], copy=True)
     has_scrap_move = fields.Boolean(
@@ -1010,10 +1010,18 @@ class StockPicking(models.Model):
                 location_src = picking.picking_type_id.default_location_src_id
                 if location_src.usage == 'supplier' and picking.partner_id:
                     location_src = picking.partner_id.property_stock_supplier
+                picking.location_id = location_src.id
+
+    @api.depends('picking_type_id', 'partner_id')
+    def _compute_location_dest_id(self):
+        for picking in self:
+            if picking.state in ('cancel', 'done') or picking.return_id:
+                continue
+            picking = picking.with_company(picking.company_id)
+            if picking.picking_type_id:
                 location_dest = picking.picking_type_id.default_location_dest_id
                 if location_dest.usage == 'customer' and picking.partner_id:
                     location_dest = picking.partner_id.property_stock_customer
-                picking.location_id = location_src.id
                 picking.location_dest_id = location_dest.id
 
     @api.depends('return_ids')
