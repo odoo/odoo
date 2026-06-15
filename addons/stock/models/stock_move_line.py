@@ -69,7 +69,7 @@ class StockMoveLine(models.Model):
         'stock.location', 'From', domain="[('usage', '!=', 'view')]", check_company=True, required=True,
         compute="_compute_location_id", store=True, readonly=False, precompute=True, index=True,
     )
-    location_dest_id = fields.Many2one('stock.location', 'To', domain="[('usage', '!=', 'view')]", check_company=True, required=True, compute="_compute_location_id", store=True, index=True, readonly=False, precompute=True)
+    location_dest_id = fields.Many2one('stock.location', 'To', domain="[('usage', '!=', 'view')]", check_company=True, required=True, compute="_compute_location_dest_id", store=True, index=True, readonly=False, precompute=True)
     location_usage = fields.Selection(string="Source Location Type", related='location_id.usage')
     location_dest_usage = fields.Selection(string="Destination Location Type", related='location_dest_id.usage')
     lots_visible = fields.Boolean(compute='_compute_lots_visible')
@@ -133,11 +133,15 @@ class StockMoveLine(models.Model):
             if line.picking_id:
                 line.picking_type_id = line.picking_id.picking_type_id
 
-    @api.depends('move_id', 'move_id.location_id', 'move_id.location_dest_id', 'picking_id')
+    @api.depends('move_id', 'move_id.location_id', 'picking_id')
     def _compute_location_id(self):
         for line in self:
             if not line.location_id or line._origin.picking_id.location_id != line.picking_id.location_id:
                 line.location_id = line.move_id.location_id or line.picking_id.location_id
+
+    @api.depends('move_id', 'move_id.location_dest_id', 'picking_id')
+    def _compute_location_dest_id(self):
+        for line in self:
             if not line.location_dest_id or line._origin.picking_id.location_dest_id != line.picking_id.location_dest_id:
                 line.location_dest_id = line.move_id.location_dest_id or line.picking_id.location_dest_id
 
