@@ -7,6 +7,29 @@ from odoo.tests import tagged
 
 @tagged('post_install', '-at_install')
 class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
+    def _create_confirmed_sale_order(self):
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'name': self.company_data['product_delivery_no'].name,
+                'product_id': self.company_data['product_delivery_no'].id,
+                'product_uom_qty': 2,
+                'price_unit': self.company_data['product_delivery_no'].list_price,
+            })],
+        })
+        sale_order.action_confirm()
+        return sale_order
+
+    def _approve_expense(self, expense):
+        expense.action_submit()
+        expense._do_approve()
+        return expense
+
+    def _get_post_wizard(self, expense):
+        action = expense.action_post()
+        return self.env['hr.expense.post.wizard'].with_context(action['context']).browse(action['res_id'])
 
     def test_sale_expense(self):
         """ Test the behaviour of sales orders when managing expenses """
@@ -121,3 +144,136 @@ class TestSaleExpense(TestExpenseCommon, TestSaleCommon):
         self.post_expenses_with_wizard(expense)
 
         self.assertTrue(self.env['account.move'].search([('expense_ids', '=', expense.id)], limit=1))
+
+    def test_attach_receipts_to_invoice_wizard_defaults(self):
+        sale_order = self._create_confirmed_sale_order()
+
+        cost_expense = self._approve_expense(self.create_expenses({
+            'product_id': self.company_data['product_delivery_cost'].id,
+            'quantity': 1,
+            'sale_order_id': sale_order.id,
+        }))
+        cost_wizard = self._get_post_wizard(cost_expense)
+        self.assertTrue(cost_wizard.show_attach_receipts_to_invoice)
+        self.assertTrue(cost_wizard.attach_receipts_to_invoice)
+
+        sales_price_product = self.env['product.product'].create({
+            'name': 'Sales Price Expense',
+            'reinvoice_policy': 'sales_price',
+            'type': 'service',
+            'can_be_expensed': True,
+            'invoice_policy': 'delivery',
+            'list_price': 50.0,
+            'standard_price': 10.0,
+        })
+        sales_price_expense = self._approve_expense(self.create_expenses({
+            'product_id': sales_price_product.id,
+            'quantity': 1,
+            'total_amount_currency': 100.0,
+            'sale_order_id': sale_order.id,
+        }))
+        sales_price_wizard = self._get_post_wizard(sales_price_expense)
+        self.assertTrue(sales_price_wizard.show_attach_receipts_to_invoice)
+        self.assertFalse(sales_price_wizard.attach_receipts_to_invoice)
+
+        not_reinvoiced_expense = self._approve_expense(self.create_expenses({
+            'product_id': self.product_c.id,
+            'quantity': 1,
+            'total_amount_currency': 100.0,
+        }))
+        not_reinvoiced_wizard = self._get_post_wizard(not_reinvoiced_expense)
+        self.assertFalse(not_reinvoiced_wizard.show_attach_receipts_to_invoice)
+        self.assertFalse(not_reinvoiced_wizard.attach_receipts_to_invoice)
+
+    def test_reinvoiced_expense_receipts_are_copied_to_customer_invoice(self):
+        sale_order = self._create_confirmed_sale_order()
+        expense = self._approve_expense(self.create_expenses({
+            'product_id': self.company_data['product_delivery_cost'].id,
+            'quantity': 1,
+            'sale_order_id': sale_order.id,
+        }))
+
+        self.env['ir.attachment'].create([
+            {
+                'name': 'receipt_1.txt',
+                'raw': b'receipt 1',
+                'res_model': 'hr.expense',
+                'res_id': expense.id,
+            },
+            {
+                'name': 'receipt_2.txt',
+                'raw': b'receipt 2',
+                'res_model': 'hr.expense',
+                'res_id': expense.id,
+            },
+        ])
+
+        wizard = self._get_post_wizard(expense)
+        self.assertTrue(wizard.attach_receipts_to_invoice)
+        wizard.action_post_entry()
+
+        invoice = sale_order._create_invoices()
+        copied_receipts = invoice.attachment_ids.filtered(
+            lambda attachment: attachment.name in {'receipt_1.txt', 'receipt_2.txt'}
+        )
+
+        self.assertEqual(len(copied_receipts), 2)
+        self.assertTrue(any(
+            '2 expense receipts attached from reinvoiced expenses.' in message.body
+            for message in invoice.message_ids
+        ))
+        self.assertTrue(any(
+            copied_receipts <= message.attachment_ids
+            for message in invoice.message_ids
+        ))
+
+    def test_sales_price_receipts_are_copied_only_when_manually_enabled(self):
+        sales_price_product = self.env['product.product'].create({
+            'name': 'Sales Price Expense',
+            'reinvoice_policy': 'sales_price',
+            'type': 'service',
+            'can_be_expensed': True,
+            'invoice_policy': 'delivery',
+            'list_price': 50.0,
+            'standard_price': 10.0,
+        })
+
+        sale_order = self._create_confirmed_sale_order()
+        expense = self._approve_expense(self.create_expenses({
+            'product_id': sales_price_product.id,
+            'quantity': 1,
+            'sale_order_id': sale_order.id,
+        }))
+        self.env['ir.attachment'].create({
+            'name': 'sales_price_receipt.txt',
+            'raw': b'sales price receipt',
+            'res_model': 'hr.expense',
+            'res_id': expense.id,
+        })
+
+        wizard = self._get_post_wizard(expense)
+        self.assertFalse(wizard.attach_receipts_to_invoice)
+        wizard.action_post_entry()
+
+        invoice = sale_order._create_invoices()
+        self.assertFalse(invoice.attachment_ids.filtered(lambda attachment: attachment.name == 'sales_price_receipt.txt'))
+
+        sale_order = self._create_confirmed_sale_order()
+        expense = self._approve_expense(self.create_expenses({
+            'product_id': sales_price_product.id,
+            'quantity': 1,
+            'sale_order_id': sale_order.id,
+        }))
+        self.env['ir.attachment'].create({
+            'name': 'manual_sales_price_receipt.txt',
+            'raw': b'manual sales price receipt',
+            'res_model': 'hr.expense',
+            'res_id': expense.id,
+        })
+
+        wizard = self._get_post_wizard(expense)
+        wizard.attach_receipts_to_invoice = True
+        wizard.action_post_entry()
+
+        invoice = sale_order._create_invoices()
+        self.assertTrue(invoice.attachment_ids.filtered(lambda attachment: attachment.name == 'manual_sales_price_receipt.txt'))

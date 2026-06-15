@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_expense_post_wizard_view_inherit_sale_expense" model="ir.ui.view">
+        <field name="name">hr.expense.post.wizard.form.inherit.sale.expense</field>
+        <field name="model">hr.expense.post.wizard</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_post_wizard_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='accounting_date']" position="after">
+                <field name="show_attach_receipts_to_invoice" invisible="1"/>
+                <field name="attach_receipts_to_invoice"
+                       invisible="not show_attach_receipts_to_invoice"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
