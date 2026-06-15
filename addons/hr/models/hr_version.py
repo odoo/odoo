@@ -183,7 +183,7 @@ class HrVersion(models.Model):
     country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
     employee_type_id = fields.Many2one('hr.employee.type', "Employee Type", tracking=1,
                                        groups="hr.group_hr_manager")
-    additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=1)
+    additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=1, copy=False)
 
     def _get_hr_responsible_domain(self):
         return "[('share', '=', False), ('company_ids', 'in', company_id), ('all_group_ids', 'in', %s)]" % self.env.ref('hr.group_hr_user').id
