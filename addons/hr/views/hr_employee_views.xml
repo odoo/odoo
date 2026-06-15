@@ -13,7 +13,7 @@
                         <field name="department_id" icon="fa-users" enable_counters="1"/>
                     </searchpanel>
                     <field name="parent_id" string="Manager" domain="[('company_id', 'in', allowed_company_ids)]"/>
-                    <field name="contract_date_start" groups="hr.group_hr_manager"/>
+                    <field name="contract_date_start"/>
                     <field name="job_id"/>
                     <field name="category_ids" groups="hr.group_hr_user"/>
                     <separator/>
@@ -33,8 +33,7 @@
                             domain="[
                                 ('contract_date_start', '!=', False),
                                 ('contract_date_end', '=', False)
-                            ]"
-                            groups="hr.group_hr_manager"/>
+                            ]"/>
                     <filter string="Fixed-term Contract" name="fixed_term_contract"
                             domain="[
                                 ('contract_date_start', '!=', False),
@@ -59,11 +58,10 @@
                                         '&amp;',
                                             ('contract_date_end', '!=', False),
                                             ('contract_date_end', '&lt;', 'today')
-                             ]"
-                            groups="hr.group_hr_manager"/>
+                             ]"/>
                     <separator />
-                    <filter string="Contract Start" name="contract_date_start" date="contract_date_start" groups="hr.group_hr_manager"/>
-                    <filter string="Contract End" name="contract_date_end" date="contract_date_end" groups="hr.group_hr_manager"/>
+                    <filter string="Contract Start" name="contract_date_start" date="contract_date_start"/>
+                    <filter string="Contract End" name="contract_date_end" date="contract_date_end"/>
                     <separator />
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group>
@@ -75,7 +73,7 @@
                         <separator name="main_groupby_separator"/>
                         <filter name="_search_today_location" string="Work location" domain="[]" context="{'group_by':'today_location_name'}"/>
                         <filter name="group_birthday" domain="[]" context="{'group_by': 'birthday_month'}" invisible="1"/>
-                        <filter name="group_start" string="Contract Start" domain="[]" context="{'group_by': 'contract_date_start'}" groups="hr.group_hr_manager"/>
+                        <filter name="group_start" string="Contract Start" domain="[]" context="{'group_by': 'contract_date_start'}"/>
                         <filter name="group_departure_date" string="Departure Date" domain="[]" context="{'group_by': 'departure_date'}" groups="hr.group_hr_manager"/>
                         <separator name="secondary_groupby_separator"/>
                         <separator name="managers_groupby_separator"/>
@@ -687,7 +685,7 @@
                                     <i class="fa fa-fw me-2 fa-phone text-primary" title="Phone"/>
                                     <field name="work_phone" widget="phone"/>
                                 </div>
-                                <div t-if="record.first_contract_date.raw_value" groups="hr.group_hr_manager" t-att-class="{'text-danger': record.contract_date_end.raw_value &lt; luxon.DateTime.now().toISO()}">
+                                <div t-if="record.first_contract_date.raw_value" groups="hr.group_hr_user" t-att-class="{'text-danger': record.contract_date_end.raw_value &lt; luxon.DateTime.now().toISO()}">
                                     <i class="fa fa-fw me-2 fa-briefcase text-primary" title="Contract"/>
                                     <field name="first_contract_date"/>
                                     <span t-if="record.contract_date_end.raw_value"> - </span>
