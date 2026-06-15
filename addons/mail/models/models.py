@@ -38,6 +38,9 @@ class Base(models.AbstractModel):
         never be considered as being the guest of the outside env."""
         return super().with_user(user).with_context(guest=None)
 
+    def _additional_allowed_keys_properties_definition(self):
+        return super()._additional_allowed_keys_properties_definition() + ('tracking',)
+
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------

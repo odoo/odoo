@@ -209,10 +209,20 @@ class MailTrackMixin(models.AbstractModel):
             for name, field in self._fields.items()
             if getattr(field, 'tracking', None)
         }
-        # track the properties changes ONLY if the parent changed
+
+        # track properties if any property definition contains a tracking = True
+        for fname, f in self._fields.items():
+            if f.type == "properties":
+                properties = self.sudo()[f.definition_record].mapped(f.definition_record_field)
+                tracking_properties = [any(x.get('tracking') for x in p) for p in properties]
+                if any(tracking_properties):
+                    model_fields.add(fname)
+
+        # track the properties changes if the parent changed
         model_fields |= {
             fname for fname, f in self._fields.items()
             if f.type == "properties"
+            and fname not in model_fields
             and f.definition_record in model_fields
             and getattr(f, "tracking", None) is not False
         }
@@ -376,17 +386,15 @@ class MailTrackMixin(models.AbstractModel):
                 continue
 
             if col_name in self and self._fields[col_name].type == "properties":
-                definition_record_field = self._fields[col_name].definition_record
-                if self[definition_record_field] == initial_values[definition_record_field]:
-                    # track the change only if the parent changed
-                    continue
-
                 updated.add(col_name)
+                properties = {p['name']: p.get('value') for p in self._fields[col_name].convert_to_read(self[col_name], self)}
                 tracking_values.extend(
                     self._create_mail_tracking_values_property(property_, col_name, fields_get_info)
                     # Show the properties in the same order as in the definition
                     for property_ in initial_value[::-1]
-                    if property_['type'] not in ('separator', 'html', 'signature') and property_.get('value')
+                    if property_['type'] not in ('separator', 'html', 'signature', 'many2many', 'tags') and
+                        property_.get('value') != properties.get(property_.get('name')) and
+                        property_.get('tracking')
                 )
                 continue
 
@@ -647,8 +655,9 @@ class MailTrackMixin(models.AbstractModel):
             value = [t for t in initial_value.get('tags', []) if t[0] in value]
 
         tracking_values = self._create_mail_tracking_values(
-            value, False, col_name, col_info,
+            value, self[col_name].get(initial_value.get('name')), col_name, col_info,
         )
+
         field_info = {
             **(tracking_values.get('field_info') or {}),
             'desc': f"{col_info['string']}: {initial_value['string']}",
