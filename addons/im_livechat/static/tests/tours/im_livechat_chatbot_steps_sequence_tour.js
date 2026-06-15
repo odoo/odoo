@@ -14,7 +14,14 @@ function createChatbotSteps(...stepMessages) {
                     run: `editor ${message}`,
                 },
                 {
+<<<<<<< 42d89815730d528481bd5a7e1b2adadbe355cf7f
                     trigger: `.modal .odoo-editor-editable:contains(${message})`,
+||||||| a9e0a5cc8a353c15f4501da4cff0c825f9caafc3
+                    trigger: `.modal textarea#message_0`,
+                    run: () => waitFor(`.modal textarea#message_0:value(${message})`),
+=======
+                    trigger: `.modal textarea#message_0:value(${message})`,
+>>>>>>> 47c931673500d7256cb2a05496de274b6e44f793
                 },
                 {
                     trigger: ".modal button:contains(Save & New)",
@@ -24,7 +31,14 @@ function createChatbotSteps(...stepMessages) {
                     trigger: `tr:contains(${message})`,
                 },
                 {
+<<<<<<< 42d89815730d528481bd5a7e1b2adadbe355cf7f
                     trigger: ".modal .odoo-editor-editable:empty",
+||||||| a9e0a5cc8a353c15f4501da4cff0c825f9caafc3
+                    trigger: ".modal textarea#message_0",
+                    run: () => waitFor(".modal textarea#message_0:empty"),
+=======
+                    trigger: ".modal textarea#message_0:empty",
+>>>>>>> 47c931673500d7256cb2a05496de274b6e44f793
                 },
             ])
             .flat(),
