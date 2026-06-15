@@ -55,14 +55,14 @@
                                 <div class="pos-receipt-title text-center text-huge w-100">
                                     <strong>INTERNAL NOTE</strong>
                                 </div>
-                                <div class="text-center text-large" t-out="extra_data['internal_note']" />
+                                <div class="text-center text-large text-italic" t-esc="extra_data['internal_note']" />
                             </div>
 
                             <div t-if="extra_data['general_customer_note']" class="new-changes w-100">
                                 <div class="pos-receipt-title text-center text-huge w-100">
                                     <strong>CUSTOMER NOTE</strong>
                                 </div>
-                                <div class="text-center text-large" t-out="extra_data['general_customer_note']" />
+                                <div class="text-center text-large text-italic" t-out="extra_data['general_customer_note']" />
                             </div>
                         </div>
                     </div>
