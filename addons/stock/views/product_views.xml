@@ -68,7 +68,11 @@
             <field name="state">code</field>
             <field name="code">
                 for record in records:
-                    if record.type == 'consu':
+                    if record.type != 'consu':
+                        raise UserError(env._("Replenishment is only available for inventory-managed products."))
+                    elif not record.product_variant_id:
+                        raise UserError(env._("Replenishment is only available for product templates with at least one variant."))
+                    else:
                         action = {
                             "name": "Low on stock? Let's replenish.",
                             "type": "ir.actions.act_window",
@@ -77,8 +81,6 @@
                             "views": [[False, "form"]],
                             "target": "new",
                         }
-                    else:
-                        raise UserError(env._("Replenishment is only available for inventory-managed products."))
             </field>
         </record>
 
@@ -188,8 +190,8 @@
                     <field name="is_storable" groups="!stock.group_production_lot" invisible="type != 'consu'"/>
                     <field name="tracking" placeholder="None" invisible="type != 'consu'" groups="stock.group_production_lot"/>
                     <!-- Qty line if storable -->
-                    <label for="qty_available" class="oe_inline" invisible="not is_storable or not tracking" groups="stock.group_stock_user"/>
-                    <div name="qty_available_with_stock" class="o_row" invisible="not is_storable or not tracking" groups="stock.group_stock_user">
+                    <label for="qty_available" class="oe_inline" invisible="not is_storable or not tracking or not product_variant_id" groups="stock.group_stock_user"/>
+                    <div name="qty_available_with_stock" class="o_row" invisible="not is_storable or not tracking or not product_variant_id" groups="stock.group_stock_user">
                         <a type="object" name="action_open_quants"
                            invisible="not show_qty_update_button" groups="stock.group_stock_manager">
                             <field name="qty_available" readonly="True"/>
