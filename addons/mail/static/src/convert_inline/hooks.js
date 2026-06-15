@@ -1,4 +1,4 @@
-import { onMounted, onPatched, onWillDestroy, onWillUnmount, useScope, status } from "@odoo/owl";
+import { onWillDestroy, onWillUnmount, useEffect, useScope } from "@odoo/owl";
 import { isBrowserSafari } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
 import { renderToElement, renderToFragment } from "@web/core/utils/render";
@@ -22,7 +22,7 @@ export const DIMENSIONS = {
 
 /**
  * Hook to handle email HTML conversion in a mail HtmlField.
- * @param {Object} [options.targetRef] ref object with `el` property, container
+ * @param {import("@odoo/owl").Signal} [options.targetRef] ref signal (element) container
  *                 for the iframe where the conversion will happen
  * @param {Array<string>} [options.bundles] bundles to load for the conversion
  * @returns {Object}
@@ -44,24 +44,27 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
     } = Promise.withResolvers();
 
     const setupIframe = async () => {
-        await convertInlineIframeService.readyPromise;
-        if (status(scope.component) === "destroyed") {
-            return;
+        try {
+            await scope.until(convertInlineIframeService.readyPromise);
+            convertInlineIframeService.add(referenceIframe, targetRef);
+            const assetsPromise = loadIframeBundles(referenceIframe, bundles);
+            const contentPromise = loadIframe(referenceIframe, () => {
+                referenceDocument = referenceIframe.contentDocument;
+                referenceDocument.head.append(renderToFragment("mail.EmailHtmlConverterHead"));
+                // The iframe body must exactly have the iframe horizontal dimensions.
+                referenceDocument.body.setAttribute(
+                    "style",
+                    `margin: 0 !important;
+                    padding: 0 !important;`
+                );
+            });
+            await scope.until(Promise.all([contentPromise, assetsPromise]));
+            return true;
+        } catch (e) {
+            if (e?.name === "AbortError") {
+                return false;
+            }
         }
-        convertInlineIframeService.add(referenceIframe, targetRef);
-        const assetsPromise = loadIframeBundles(referenceIframe, bundles);
-        const contentPromise = loadIframe(referenceIframe, () => {
-            referenceDocument = referenceIframe.contentDocument;
-            referenceDocument.head.append(renderToFragment("mail.EmailHtmlConverterHead"));
-            // The iframe body must exactly have the iframe horizontal dimensions.
-            referenceDocument.body.setAttribute(
-                "style",
-                `margin: 0 !important;
-                padding: 0 !important;`
-            );
-        });
-        await Promise.all([contentPromise, assetsPromise]);
-        return true;
     };
     const updateLayoutDimensions = (dimensions = DIMENSIONS.DESKTOP) => {
         const { width, height } = dimensions;
@@ -131,23 +134,22 @@ export function useEmailHtmlConverter({ Plugins, bundles, services, targetRef, i
         return htmlConverted;
     };
 
-    if (!targetRef) {
-        setupIframe().then(resolveIframeSetup, rejectIframeSetup);
-    }
-    onMounted(() => {
-        if (!targetRef || targetRef.el) {
-            isReady = true;
-        }
-        if (targetRef?.el) {
-            setupIframe().then(resolveIframeSetup, rejectIframeSetup);
-        }
-    });
     if (targetRef) {
-        onPatched(() => {
-            if (!targetRef.el) {
+        let trackedRef;
+        useEffect(() => {
+            const ref = targetRef();
+            if (trackedRef && trackedRef !== ref) {
                 unmountConverter();
             }
+            if (!isReady && ref) {
+                setupIframe().then(resolveIframeSetup, rejectIframeSetup);
+                trackedRef = ref;
+                isReady = true;
+            }
         });
+    } else {
+        setupIframe().then(resolveIframeSetup, rejectIframeSetup);
+        isReady = true;
     }
     onWillUnmount(unmountConverter);
     onWillDestroy(() => {
