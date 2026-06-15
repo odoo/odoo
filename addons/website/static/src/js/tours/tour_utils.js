@@ -625,19 +625,26 @@ export function toggleMobilePreview(toggleOn) {
  *                                      the link element.
  * @returns {TourStep[]} The tour steps that opens the link popup.
  */
-export function openLinkPopup(
-    triggerSelector,
-    linkName = "",
-    focusNodeIndex = 0,
-    triggerClick = false
-) {
-    return [
+export function openLinkPopup({
+    trigger,
+    runClick = true,
+    url = "/",
+    label = "",
+    focusNodeIndex = 1,
+    edit = false,
+    remove = false,
+} = {}) {
+    const linkPopoverTrigger = (label, url) =>
+        `.o-we-linkpopover .o_we_link_preview:has(.o_we_url_link${
+            label ? `:contains(${label})` : ""
+        }[href='${url}'])`;
+    const steps = [
         {
-            content: `Open '${linkName}' link popup`,
-            trigger: triggerSelector,
-            async run(actions) {
-                if (triggerClick) {
-                    actions.click();
+            content: `Open '${label}' link popup`,
+            trigger,
+            async run({ click }) {
+                if (runClick) {
+                    await click();
                 }
                 const el = this.anchor;
                 const sel = el.ownerDocument.getSelection();
@@ -646,10 +653,48 @@ export function openLinkPopup(
             },
         },
         {
-            content: "Check if the link popover opened",
-            trigger: ".o-we-linkpopover",
+            content: "Popover should be shown",
+            trigger: linkPopoverTrigger(label, url),
         },
     ];
+    if (edit || remove) {
+        steps.push({
+            content: "Click on Edit Link in Popover",
+            trigger: `${linkPopoverTrigger(label, url)} .o_we_edit_link`,
+            run: "click",
+        });
+    }
+    if (edit && edit.length > 0) {
+        steps.push(
+            {
+                content: `Type the link URL ${edit}`,
+                trigger: ".o-we-linkpopover .o_we_href_input_link, .modal #url_input",
+                run: `edit ${edit}`,
+            },
+            {
+                content: "Save the link by clicking on Apply button",
+                trigger: ".o-we-linkpopover .o_we_apply_link, .modal-footer button:text(Continue)",
+                run: "click",
+            },
+            {
+                trigger: linkPopoverTrigger(null, edit),
+            }
+        );
+    }
+    if (remove) {
+        steps.push(
+            {
+                content: "Click on Remove Link in Popover",
+                trigger: `.o-we-linkpopover .o_link_popover_container:has(.input-group) .o_we_remove_link`,
+                run: "click",
+            },
+            {
+                content: "Ensure popover is closed",
+                trigger: ".o-overlay-container:not(:visible:has(.o-we-linkpopover))",
+            }
+        );
+    }
+    return steps;
 }
 
 /**
