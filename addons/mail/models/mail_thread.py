@@ -5073,16 +5073,18 @@ class MailThread(models.AbstractModel):
                     msg_values["body"] = escape(body) + Markup("<span class='o-mail-Message-edited' data-o-datetime='%s'/>") % fields.Datetime.to_string(fields.Datetime.now())
             else:
                 msg_values["body"] = ""
-        if attachment_ids:
-            msg_values.update(
-                self._process_attachments_for_post([], attachment_ids, {
-                    'body': body,
-                    'model': self._name,
-                    'res_id': self.id,
-                })
-            )
-        elif attachment_ids is not None:  # None means "no update"
-            message.attachment_ids._delete_and_notify()
+        if attachment_ids is not None:  # None means "no update"
+            target_attachments = message.env["ir.attachment"].browse(attachment_ids).exists()
+            if attachments_to_remove := message.attachment_ids - target_attachments:
+                attachments_to_remove._delete_and_notify(message)
+            if attachments_to_add := target_attachments - message.attachment_ids:
+                msg_values.update(
+                    self._process_attachments_for_post([], attachments_to_add.ids, {
+                        'body': body,
+                        'model': self._name,
+                        'res_id': self.id,
+                    })
+                )
         if partner_ids is not None:
             msg_values.update({"partner_ids": [int(pid) for pid in partner_ids] or False})
         if "subject" in kwargs:

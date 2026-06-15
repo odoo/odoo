@@ -1037,14 +1037,14 @@ class TestAPI(ThreadRecipients):
             ticket_record._message_update_content(
                 message,
                 body=Markup("<div>New Body</div>"),
-                attachment_ids=new_attachments.ids,
+                attachment_ids=(attachments + new_attachments).ids,
             )
         self.assertEqual(message.attachment_ids, attachments + new_attachments)
         self.assertEqual(set(message.mapped('attachment_ids.res_id')), set(ticket_record.ids))
         self.assertEqual(set(message.mapped('attachment_ids.res_model')), set([ticket_record._name]))
         self.assertEqual(message.body, Markup('<div>New Body <span class="o-mail-Message-edited" data-o-datetime="2025-04-08 11:00:00"></span></div>'))
 
-        # void attachments
+        # void attachments when attachment_ids is an empty list
         with freeze_time('2025-04-08 12:00:00'):
             ticket_record._message_update_content(
                 message,
@@ -1054,6 +1054,24 @@ class TestAPI(ThreadRecipients):
         self.assertFalse(message.attachment_ids)
         self.assertFalse((attachments + new_attachments).exists())
         self.assertEqual(message.body, Markup('<p>Another Body, void attachments <span class="o-mail-Message-edited" data-o-datetime="2025-04-08 12:00:00"></span></p>'))
+
+        # void attachments when attachment_ids is False (should behave like an empty list)
+        new_attachments_3 = self.env['ir.attachment'].create(
+            self._generate_attachments_data(1, 'mail.compose.message', 0)
+        )
+        with freeze_time('2025-04-08 12:30:00'):
+            ticket_record._message_update_content(
+                message,
+                body=Markup("<p>Another Body, void attachments (False)</p>"),
+                attachment_ids=new_attachments_3.ids,
+            )
+            ticket_record._message_update_content(
+                message,
+                body=Markup("<p>Another Body, void attachments (False)</p>"),
+                attachment_ids=False,
+            )
+        self.assertFalse(message.attachment_ids)
+        self.assertFalse(new_attachments_3.exists())
 
         with freeze_time('2025-04-08 13:00:00'):
             ticket_record._message_update_content(
