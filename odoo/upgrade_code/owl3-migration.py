@@ -1102,6 +1102,7 @@ SERVICES_MAPPING = {
     "currency": ['CurrencyPlugin', '@web/webclient/currency_plugin'],
     "discuss.upgrade": ['DiscussUpgradePlugin', '@mail/core/common/upgrade/upgrade_plugin'],
     "effect": ['EffectPlugin', '@web/core/effects/effect_plugin'],
+    "frequent_emoji": ['FrequentEmojiPlugin', '@web/core/emoji_picker/frequent_emoji_plugin'],
     "notification": ['NotificationPlugin', '@web/core/notifications/notification_plugin'],
     "mobile": ['MobilePlugin', '@web_mobile/js/mobile_plugin'],
     "overlay": ['OverlayPlugin', '@web/core/overlay/overlay_plugin'],
