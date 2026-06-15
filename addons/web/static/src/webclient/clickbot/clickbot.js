@@ -138,6 +138,40 @@ const EXCEPTION_RECORD_ACTIONS = {
             toGoBack: ".o_back_button",
         },
     },
+    "appointment.main_menu_appointments": {
+        kanban: {
+            toCheck: ".o_gantt_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "frontdesk.frontdesk_menu_root": {
+        kanban: {
+            toCheck: ".o_list_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "hr_recruitment.menu_hr_recruitment_root": {
+        kanban: {
+            toCheck: ".o_kanban_view",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "equity.menu_equity": {
+        kanban: {
+            toCheck: ".o_list_renderer",
+            toGoBack: ".o_back_button",
+        },
+    },
+    "lunch.menu_lunch": {
+        kanban: {
+            toCheck: ".o_dialog",
+            toGoBack: ".o_dialog .btn-close",
+        },
+        list: {
+            toCheck: ".o_dialog",
+            toGoBack: ".o_dialog .btn-close",
+        },
+    },
 };
 
 // If you change this selector, adapt Studio test "Studio icon matches the clickbot selector"
