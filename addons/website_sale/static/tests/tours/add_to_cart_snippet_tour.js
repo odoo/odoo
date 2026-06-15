@@ -1,11 +1,12 @@
+import { registry } from "@web/core/registry";
 import {
     clickOnEditAndWaitEditMode,
     clickOnElement,
     clickOnSave,
     clickOnSnippet,
     insertSnippet,
-    registerWebsitePreviewTour,
     changeOptionInPopover,
+    waitForEditMode,
 } from "@website/js/tours/tour_utils";
 import { assertCartContains } from '@website_sale/js/tours/tour_utils';
 
@@ -31,13 +32,9 @@ function checkButtonIsDisabled() {
     };
 }
 
-registerWebsitePreviewTour(
-    'website_sale.add_to_cart_snippet',
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-        edition: true,
-    },
-    () => [
+registry.category("web_tour.tours").add('website_sale.add_to_cart_snippet', {
+    steps: () => [
+        waitForEditMode,
         ...insertSnippet({ name: 'Add to Cart Button' }),
 
         // Basic product with no variants
@@ -61,8 +58,13 @@ registerWebsitePreviewTour(
         ...editAddToCartSnippet(),
         ...changeOptionInPopover("Add to Cart Button", "Product", "Product Yes Variant 2"),
         {
-            content: "Check if variant option is visible",
-            trigger: "[data-container-title='Add to Cart Button'] [data-label='Variant']"
+            content: "Wait for variant choices to load",
+            trigger: "[data-container-title='Add to Cart Button'] [data-label='Variant'] .dropdown-toggle",
+            run: "click",
+        },
+        {
+            trigger: ".o_popover .o-dropdown-item:contains(Pink)",
+            run: "click",
         },
         ...changeOptionInPopover("Add to Cart Button", "Variant", "Product Yes Variant 2 (Pink)"),
         ...clickOnSave(),
@@ -84,6 +86,10 @@ registerWebsitePreviewTour(
         {
             content: "Check if the pink variant is selected",
             trigger: ":iframe .modal li:contains(Pink) input:checked",
+        },
+        {
+            content: "Wait for Pink combination to be confirmed",
+            trigger: ":iframe .modal .h6:contains(Pink)",
         },
         clickOnElement('add to cart', ':iframe .modal button:contains(Add to Cart)'),
         checkQuanityInCart("3"),
@@ -110,4 +116,4 @@ registerWebsitePreviewTour(
         ...assertCartContains({ productName: 'Product Yes Variant 1', combinationName: 'Red', backend: true }),
         ...assertCartContains({ productName: 'Product Yes Variant 2', combinationName: 'Pink', backend: true }),
     ],
-);
+});
