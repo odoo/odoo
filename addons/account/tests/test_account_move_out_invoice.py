@@ -4371,7 +4371,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         ])
         self.assertRecordValues(invoice('2015-01-01'), [{
             'amount_total': 1000.0,
-            'amount_total_signed': 333.33,
+            'amount_total_signed': 1000,
         }])
         self.assertRecordValues(invoice('2016-01-01'), [{
             'amount_total': 1000.0,

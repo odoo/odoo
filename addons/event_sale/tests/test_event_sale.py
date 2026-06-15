@@ -425,12 +425,14 @@ class TestEventSale(TestEventSaleCommon):
                 [('name', '=', currency_name)]
             )
             currency.action_unarchive()
+            currency.rate_ids.unlink()
             return currency
 
         currency_USD = _prepare_currency(self, 'USD')
         currency_VEF = _prepare_currency(self, 'VEF')
         currency_VEF.rate_ids = [Command.create({
             'rate': 5.0,
+            'name': '2010-01-01',
         })]
 
         company_test = self.env['res.company'].create({

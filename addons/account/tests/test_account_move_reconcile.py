@@ -6201,7 +6201,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         Test that when doing a group payment the exchange_moves are correctly assigned to the invoices
         """
         foreign_curr = self.setup_other_currency('EUR', rates=[
-            ('2025-01-01', 0.054493834023),
+            ('2024-01-01', 0.054493834023),
             ('2025-01-02', 0.054363189597),
         ])
 
