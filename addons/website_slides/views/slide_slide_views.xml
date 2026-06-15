@@ -203,9 +203,9 @@
                     sample="1">
                     <templates>
                         <t t-name="card" class="flex-row">
-                            <aside class="o_kanban_aside_full">
+                            <aside class="o_card_aside_full">
                                 <t t-if="record.image_128.raw_value">
-                                    <div class="o_kanban_image_fill position-relative w-100">
+                                    <div class="o_card_image_fill position-relative w-100">
                                         <field name="image_128" class="h-100" widget="image" options="{'img_class': 'object-fit-cover'}"/>
                                         <field name="channel_id" class="o_website_slides_inner_image position-absolute bottom-0 end-0 bg-light" widget="image" options="{'preview_image': 'image_128', 'img_class': 'object-fit-contain'}"/>
                                     </div>
