@@ -951,6 +951,30 @@ export class TablePlugin extends Plugin {
                 adjColWidth + (widthDifference > 0 ? adjustmentWidth : -adjustmentWidth)
             }px`;
         });
+
+        // Reset nested tables in all cells of affected columns so they
+        // naturally adapt to the new outer column widths instead of
+        // overflowing their parent cell.
+        const affectedCols = [...targetCols, ...colsToAdjust];
+        const affectedColIndices = affectedCols.map((col) => colElements.indexOf(col));
+        const visited = new Set();
+        for (const rowGrid of tableGrid) {
+            for (const colIndex of affectedColIndices) {
+                const cell = rowGrid[colIndex];
+                // Skip if cell is null or already visited due to rowspan/colspan.
+                if (!cell || visited.has(cell)) {
+                    continue;
+                }
+                visited.add(cell);
+                const nestedTables = cell.querySelectorAll("table");
+                for (const nestedTable of nestedTables) {
+                    if (nestedTable.style.width) {
+                        this.resetTableSize(nestedTable);
+                    }
+                }
+            }
+        }
+
         this.normalizeColumnWidth(table);
     }
 
