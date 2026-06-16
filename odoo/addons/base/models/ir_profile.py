@@ -63,21 +63,155 @@ class IrProfile(models.Model):
                 return False
         return True
 
+    def _merge_truncated_stacks(self, samples, anchor_frames=5):
+        """
+        With a small nframes limit, stacks sharing a deep common ancestor are both
+        truncated, losing their shared outer context. Two stacks that diverge near
+        their leaves may still share the same outer ancestor frames.
+
+        For each stack, check if its outermost `anchor_frames` frames appear as a
+        contiguous subsequence somewhere in the middle of a longer stack. If found,
+        prepend the extra outer frames from the longer stack.
+
+        Tracebacks are outermost-first: index 0 is the oldest frame, -1 is the
+        allocation site.
+        """
+        all_tbs = [tuple(map(tuple, s.get("traceback", []))) for s in samples]
+
+        def find_best_parent(tb):
+            if len(tb) < anchor_frames:
+                return tb
+            anchor = tb[:anchor_frames]  # outermost N frames — the stable shared part
+            best = tb
+            for candidate in all_tbs:
+                # if len(candidate) <= len(best):
+                #     continue
+                # Slide the anchor window over the candidate to find where it appears
+                cand_len = len(candidate)
+                for start in range(cand_len - anchor_frames + 1):
+                    if candidate[start:start + anchor_frames] == anchor:
+                        # The anchor appears at position `start` in candidate.
+                        # Everything before `start` is the missing outer context.
+                        if start > 0:
+                            extended = candidate[:start] + tb
+                            if len(extended) > len(best):
+                                best = extended
+                        break
+            return best
+
+        merged = []
+        for i, sample in enumerate(samples):
+            tb = all_tbs[i]
+            if not tb:
+                merged.append(sample)
+                continue
+            extended_tb = find_best_parent(tb)
+            merged.append({
+                **sample,
+                'traceback': [list(f) for f in extended_tb],
+            })
+
+        return merged
+
     def _generate_memory_profile(self, params):
-        memory_graph = []
         memory_limit = params.get('memory_limit', 0)
+        line_data = []
+        snapshots_b64 = []
+        cumulative_snapshots_b64 = []
+
         for profile in self:
-            if profile.others:
-                memory = json.loads(profile.others).get("memory", "[{}]")
-                memory_tracebacks = json.loads(memory)[:-1]
-                for entry in memory_tracebacks:
-                    memory_graph.append({
-                        "samples": [
-                            sample for sample in entry["memory_tracebacks"]
-                            if sample.get("size", False) >= memory_limit
-                        ]
-                    , "start": entry["start"]})
-        return memory_graph
+            if not profile.others:
+                continue
+            memory = json.loads(profile.others).get("memory", "[{}]")
+            memory_tracebacks = json.loads(memory)[:-1]
+
+            cumulative_samples = {}  # key: tuple(traceback) -> {'size': int, 'count': int}
+
+            for entry in memory_tracebacks:
+                merged_samples = self._merge_truncated_stacks(entry.get("memory_tracebacks", []))
+                # merged_samples= entry.get("memory_tracebacks", [])
+                samples = [
+                    sample for sample in merged_samples
+                    if sample.get("size", 0) >= memory_limit
+                ]
+                total_size = sum(s.get("size", 0) for s in samples)
+                line_data.append({
+                    'start': entry['start'],
+                    'total_size': total_size,
+                })
+
+                # --- per-snapshot speedscope ---
+                snapshots_b64.append(
+                    self._build_speedscope_b64(samples) if samples else None
+                )
+
+                # --- accumulate into cumulative dict ---
+                for sample in samples:
+                    key = tuple(map(tuple, sample.get("traceback", [])))
+                    if key in cumulative_samples:
+                        cumulative_samples[key]['size'] += sample.get("size", 0)
+                        cumulative_samples[key]['count'] += sample.get("count", 1)
+                    else:
+                        cumulative_samples[key] = {
+                            'size': sample.get("size", 0),
+                            'count': sample.get("count", 1),
+                            'traceback': sample.get("traceback", []),
+                        }
+
+                # --- cumulative speedscope ---
+                cumulative_list = [
+                    {'traceback': v['traceback'], 'size': v['size'], 'count': v['count']}
+                    for v in cumulative_samples.values()
+                ]
+                cumulative_snapshots_b64.append(
+                    self._build_speedscope_b64(cumulative_list) if cumulative_list else None
+                )
+
+        return {
+            'line_data': line_data,
+            'snapshots': snapshots_b64,
+            'cumulative_snapshots': cumulative_snapshots_b64,
+        }
+
+
+    def _build_speedscope_b64(self, samples):
+        sp = Speedscope(name='Memory Snapshot', init_stack_trace=[])
+        samples = sorted(samples, key=lambda s: s.get("traceback", []))
+        speedscope_entries = []
+        cumulative = 0
+        for sample in samples:
+            raw_tb = sample.get("traceback", [])
+            count = sample.get("count", 1)
+            size = sample.get("size", 0)
+            stack = []
+            for i, (filename, lineno) in enumerate(raw_tb):
+                is_innermost = (i == len(raw_tb) - 1)
+                if is_innermost:
+                    name = f"{filename.rsplit('/', 1)[-1]}:{lineno} (×{count} allocs, {size} B)"
+                else:
+                    name = f"{filename.rsplit('/', 1)[-1]}:{lineno}"
+                stack.append([filename, lineno, name, ''])
+            speedscope_entries.append({
+                'stack': stack,
+                'start': cumulative,
+                'exec_context': (),
+            })
+            cumulative += size
+        speedscope_entries.append({'stack': [], 'start': cumulative, 'exec_context': ()})
+        sp.add('memory', speedscope_entries)
+        sp.add_output(
+            ['memory'],
+            complete=False,
+            display_name='Memory',
+            use_context=False,
+            constant_time=False,
+        )
+        result = sp.make()
+        for p in result.get('profiles', []):
+            p['unit'] = 'bytes'
+        snapshot_json = json.dumps(result).encode('utf-8')
+        return base64.b64encode(snapshot_json).decode('utf-8')
+
 
     def _compute_config_url(self):
         for profile in self:

@@ -63,12 +63,18 @@ class Profiling(Controller):
             raise request.not_found()
 
         if action == 'memory_open':
-            memory_profile = profiles._generate_memory_profile(profiles._parse_params(kwargs))
-            encoded_memory_profile = json.dumps(memory_profile).encode('utf_8')
+            parsed_params = profiles._parse_params(kwargs)
+            memory_profile = profiles._generate_memory_profile(parsed_params)
+            encoded_memory_profile = json.dumps(memory_profile).encode('utf-8')
+
+            icp = request.env['ir.config_parameter']
+
             context = {
                 'profile': profiles,
-                'memory_graph': base64.b64encode(encoded_memory_profile).decode('utf-8'),
-                }
+                'memory_data': base64.b64encode(encoded_memory_profile).decode('utf-8'),
+                'cdn': icp.sudo().get_param('speedscope_cdn', "https://cdn.jsdelivr.net/npm/speedscope@1.13.0/dist/release/"),
+                'url_root': request.httprequest.url_root,
+            }
             return request.render('web.view_memory', context)
 
         context = {
