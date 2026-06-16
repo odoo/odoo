@@ -1278,7 +1278,7 @@ export class Configurator extends Component {
         useSubEnv({ store });
 
         onWillStart(async () => {
-            this.websiteId = (await this.orm.call("website", "get_current_website"))[0];
+            this.websiteId = await rpc("/website/get_current_website_id");
 
             await store.start(() => this.getInitialState());
             this.updateStorage(this.getStorageState(store));
