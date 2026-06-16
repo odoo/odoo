@@ -3875,6 +3875,36 @@ describe("Odoo editor own html", () => {
             contentAfter: "<p>a[]b</p>",
         });
     });
+
+    test("should preserve pasted block styles when pasting into an empty block", async () => {
+        await testEditor({
+            contentBefore: "<p>[]<br></p>",
+            stepFunction: async (editor) => {
+                pasteOdooEditorHtml(editor, '<p style="text-align: center;">Hello</p>');
+            },
+            contentAfter: '<p style="text-align: center;">Hello[]</p>',
+        });
+    });
+
+    test("should unwrap a styled root element when pasting into a non-empty block", async () => {
+        await testEditor({
+            contentBefore: "<p>a[]b</p>",
+            stepFunction: async (editor) => {
+                pasteOdooEditorHtml(editor, '<p style="text-align: center;">Hello</p>');
+            },
+            contentAfter: "<p>aHello[]b</p>",
+        });
+    });
+
+    test("should unwrap a styled root element when pasting into a styled non-empty block", async () => {
+        await testEditor({
+            contentBefore: '<p style="text-align: start;">a[]b</p>',
+            stepFunction: async (editor) => {
+                pasteOdooEditorHtml(editor, '<p style="text-align: center;">Hello</p>');
+            },
+            contentAfter: '<p style="text-align: start;">aHello[]b</p>',
+        });
+    });
 });
 
 describe("editable in iframe", () => {

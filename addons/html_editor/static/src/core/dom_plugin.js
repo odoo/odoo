@@ -233,13 +233,20 @@ export class DomPlugin extends Plugin {
             fillEmpty(lastLeafNode);
         }
 
+        // When inserting into an empty block, preserve a styled root element
+        // so its block-level styling is kept. Otherwise single root blocks
+        // are unwrapped and only their contents are inserted.
+        const shouldKeepStyledElement = (node) =>
+            isEmptyBlock(block) && node.nodeType === Node.ELEMENT_NODE && node.style.length;
+
         // In case the html inserted is all contained in a single root <p> or <li>
         // tag, we take the all content of the <p> or <li> and avoid inserting the
         // <p> or <li>.
         if (
             container.childElementCount === 1 &&
             (this.dependencies.baseContainer.isCandidateForBaseContainer(container.firstChild) ||
-                shouldUnwrap(container.firstChild))
+                shouldUnwrap(container.firstChild)) &&
+            !shouldKeepStyledElement(container.firstElementChild)
         ) {
             const nodeToUnwrap = container.firstElementChild;
             container.replaceChildren(...childNodes(nodeToUnwrap));
