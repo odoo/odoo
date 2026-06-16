@@ -6,7 +6,7 @@ import typing
 
 from lxml import etree
 
-from odoo.upgrade_code.tools_etree import get_indentation, update_etree
+from odoo.upgrade_code.tools_etree import _dedent_node, get_indentation, update_etree
 
 if typing.TYPE_CHECKING:
     from odoo.cli.upgrade_code import FileManager
@@ -27,6 +27,24 @@ def detach_node_tail(node):
 
 def move_tset_before_tcall(tset, tcall):
     parent = tcall.getparent()
+
+    if parent is None:
+        # tcall is the root element. Therefore we wrap it in a new, plain <t>
+        # element to allow the tset be its sibling. Otherwise the arch
+        # would have two root elements, which would make it invalid.
+        new_tcall = etree.Element(tcall.tag)
+        for attr_name in list(tcall.attrib):
+            new_tcall.attrib[attr_name] = tcall.attrib[attr_name]
+            del tcall.attrib[attr_name]
+        new_tcall.text = tcall.text
+        for child in list(tcall):
+            new_tcall.append(child)
+        tcall.text = '\n    '
+        new_tcall.tail = '\n'
+        tcall.append(new_tcall)
+        parent = tcall
+        tcall = new_tcall
+
     previous_indent = get_indentation(tset)
     indent = get_indentation(tcall)
 
@@ -36,6 +54,7 @@ def move_tset_before_tcall(tset, tcall):
     tset.set('__need_dedent__', str(len(previous_indent) - len(indent)))
 
     parent.insert(parent.index(tcall), tset)
+    return tcall
 
 
 def remove_tset_add_attribute(tset, tcall):
@@ -188,7 +207,7 @@ def change(root: etree._ElementTree, path: str) -> bool:
                 )):
                 # Move the t-set if the are some content or if it's used
                 # for an other t-set
-                move_tset_before_tcall(tset, tcall)
+                tcall = move_tset_before_tcall(tset, tcall)
                 tcall.set(tset.get('t-set'), tset.get('t-set'))
                 content_updated = True
             else:
@@ -249,6 +268,11 @@ def change(root: etree._ElementTree, path: str) -> bool:
             detach_node_tail(tcall)
             parent.remove(tcall)
             content_updated = True
+
+    if content_updated:
+        _dedent_node(root)
+        for el in root.xpath('//*[@__need_dedent_attributes__]'):
+            del el.attrib['__need_dedent_attributes__']
 
     return content_updated
 
