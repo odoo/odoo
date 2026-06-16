@@ -193,6 +193,7 @@ export class GeneratePrinterData {
                 product_unit_price: line.product_id.displayPriceUnit,
                 price_subtotal_incl: line.currencyDisplayPrice,
                 lot_names: line.packLotLines,
+                no_discount_price: formatCurrency(line.displayPriceNoDiscount, line.currency.id),
             };
         });
     }

@@ -144,6 +144,7 @@ registry.category("web_tour.tours").add("FeedbackScreenTour", {
                     {
                         name: "Desk Pad",
                         price_unit: "19", // use baseprice with discount
+                        no_discount_price: 20,
                     },
                 ],
                 total_amount: "19.00",
