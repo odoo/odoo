@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <div t-name="hr_holidays.AllocationStatsComponent" class="o_leave_stats">
+        <div t-if="this.state.employee and this.state.allocations.length !== 0" id="o_allocation_stats_employee" class="sub_table px-3 py-2 mb-3">
+            <h4 class="d-flex">
+                Summary <t t-out="this.thisYear"/>
+            </h4>
+            <div class="d-flex flex-column mb-1">
+                <div t-foreach="this.state.allocations" t-as="alloc" t-key="alloc.id" class="d-flex gap-2 mb-2 o_employee_leave">
+                    <div t-att-class="'rounded-circle border-0 flex-shrink-0 o_colorlist_toggler o_colorlist_item_color_' + alloc.work_entry_type_id.color"
+                         style="width: 16px; height: 16px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);"></div>
+                    <span class="col-3 fw-bold" t-out="alloc.work_entry_type_id.display_name"/>
+                    <div class="col-5 d-flex gap-2 flex-wrap">
+                        <span t-out="alloc.date_from_display"/>
+                        <t t-if="alloc.date_to_display">
+                            <i class="oi oi-fw o_button_icon" data-icon="east"/>
+                            <span t-out="alloc.date_to_display"/>
+                        </t>
+                        <t t-else="">
+                            <span class="fst-italic">(No Limit)</span>
+                        </t>
+                    </div>
+                    <div class="col-4 flex-wrap">
+                        <t t-if="!alloc.accrual_plan_id">
+                            (<t t-out="alloc.virtual_remaining_leaves_display"/>/<t t-out="alloc.max_leaves_display"/>
+                            <span t-if="alloc.type_request_unit == 'hour'"> hours</span>
+                            <span t-else=""> days</span>
+                            left)
+                        </t>
+                        <span t-if="alloc.accrual_plan_id">
+                            Accrual Plan (<t t-out="alloc.accrual_plan_id.display_name"/>)
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</templates>
