@@ -188,8 +188,11 @@ class TestActivitySchedule(ActivityScheduleCase):
             login='bert',
             name='Bert Tartignole',
         )
-        demo_record = self.env['mail.test.access'].create({'access': 'admin', 'name': 'Record'})
-        form = self._instantiate_activity_schedule_wizard(demo_record)
+        demo_record, demo_record2 = self.env['mail.test.access'].create([
+            {'access': 'admin', 'name': 'Record'},
+            {'access': 'admin', 'name': 'Record'},
+            ])
+        form = self._instantiate_activity_schedule_wizard(demo_record + demo_record2)
         form.activity_type_id = self.env.ref('test_mail.mail_act_test_upload_document')
         with self.assertRaises(UserError):
             form.activity_user_id = user
