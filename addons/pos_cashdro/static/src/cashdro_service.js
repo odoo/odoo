@@ -136,6 +136,7 @@ export class CashdroService {
         try {
             const response = await fetch(url, {
                 targetAddressSpace: this.forceHttp ? "local" : undefined,
+                signal: AbortSignal.timeout(10000),
             });
 
             if (!response.ok) {
