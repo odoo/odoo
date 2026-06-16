@@ -5,6 +5,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { ThemeAdvancedOption } from "./theme_advanced_option";
 import { ThemeShadowOption } from "./theme_shadow_option";
 import { ThemeButtonOption } from "./theme_button_option";
+import { ThemeCardOption } from "./theme_card_option";
 import { ThemeColorsOption } from "./theme_colors_option";
 import { ThemeHeadingsOption } from "./theme_headings_option";
 import { ThemeInputOption } from "./theme_input_option";
@@ -14,6 +15,7 @@ import {
     getParsedWeight,
     ThemeFontWeightOption,
 } from "./theme_font_weight_option";
+import { ThemeRoundnessOption } from "./theme_roundness_option";
 import { setBuilderCSSVariables } from "@html_builder/utils/utils_css";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
@@ -58,8 +60,10 @@ export const OPTION_POSITIONS = {
     BUTTON: 50,
     LINK: 60,
     INPUT: 70,
-    SHADOW: 80,
-    ADVANCED: 90,
+    CARD: 80,
+    ROUNDNESS: 90,
+    SHADOW: 100,
+    ADVANCED: 110,
 };
 
 const FONT_WEIGHT_OPTIONS = [
@@ -171,6 +175,14 @@ export class ThemeTabPlugin extends Plugin {
             withSequence(
                 OPTION_POSITIONS.INPUT,
                 this.getThemeOptionBlock("theme-input", _t("Input Fields"), ThemeInputOption)
+            ),
+            withSequence(
+                OPTION_POSITIONS.CARD,
+                this.getThemeOptionBlock("theme-card", _t("Card"), ThemeCardOption)
+            ),
+            withSequence(
+                OPTION_POSITIONS.ROUNDNESS,
+                this.getThemeOptionBlock("theme-roundness", _t("Roundness"), ThemeRoundnessOption)
             ),
             withSequence(
                 OPTION_POSITIONS.SHADOW,
