@@ -239,8 +239,12 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_selling_multiple_ticket_saved', login="pos_user")
 
         order = self.env['pos.order'].search([], order='id desc', limit=1)
-        self.assertTrue(order.lines[0].event_registration_ids)
+        basic_event_registration = order.lines[0].event_registration_ids
+        self.assertTrue(basic_event_registration)
         self.assertTrue(order.lines[1].event_registration_ids)
+        self.assertTrue(order.lines[2].event_registration_ids)
+        self.assertEqual(basic_event_registration.name, 'DEMO')
+        self.assertEqual(basic_event_registration.email, 'demo@test.com')
 
     def test_orderline_price_remain_same_as_ticket_price(self):
         """ Test that the order line price remains the same as the ticket price when the customer added to the order. """
@@ -259,6 +263,9 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour('test_orderline_price_remain_same_as_ticket_price')
         order = self.main_pos_config.current_session_id.order_ids[0]
+        event_registration = order.lines[0].event_registration_ids
+        event_answer_name = event_registration.registration_answer_ids.value_answer_id.mapped('name')
+        self.assertEqual(event_answer_name, ['Q1-Answer2', 'Q2-Answer2'])
         self.assertEqual(order.amount_total, 200)
         self.assertEqual(order.lines[0].event_ticket_id.event_id.id, self.test_event.id)
 
@@ -284,8 +291,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         # No customer during order, filled registration information
         no_partner_registration = registrations.filtered(lambda r: not r.partner_id)
         self.assertEqual(len(no_partner_registration), 1)
-        self.assertEqual(no_partner_registration.name, "Name 1")
-        self.assertEqual(no_partner_registration.email, "1@test.com")
+        self.assertEqual(no_partner_registration.name, "TEST")
+        self.assertEqual(no_partner_registration.email, "2@test.com")
 
         partner_registrations = registrations.filtered(lambda r: r.partner_id == event_partner)
         self.assertEqual(len(partner_registrations), 3)
