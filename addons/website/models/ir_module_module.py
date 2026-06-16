@@ -702,9 +702,10 @@ class IrModuleModule(models.Model):
             # Another module is being installed after the theme was selected.
             # Only include the theme addon snippets targeting this module.
             theme_manifest = Manifest.for_addon(theme.name)
-            theme_addons = theme_manifest.get('configurator_snippets_addons', {})
-            addons = {self.name: theme_addons.get(self.name, {})}
-            add_addons_snippets(addons)
+            if theme_manifest:
+                theme_addons = theme_manifest.get('configurator_snippets_addons', {})
+                addons = {self.name: theme_addons.get(self.name, {})}
+                add_addons_snippets(addons)
 
         # Generate general configurator snippet templates
         create_values = []
