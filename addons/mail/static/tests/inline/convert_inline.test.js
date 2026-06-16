@@ -1343,6 +1343,21 @@ describe("Convert classes to inline styles", () => {
             { message: "should have removed all specific flex styles" }
         );
         styleSheet.deleteRule(0);
+        styleSheet.insertRule(
+            `
+            .test-inline-flex {
+                display: inline-flex;
+            }
+        `,
+            0
+        );
+        editable.innerHTML = `<div class="test-inline-flex"></div>`;
+        classToStyle(editable, getCSSRules(editable.ownerDocument));
+        expect(editable).toHaveInnerHTML(
+            `<div class="test-inline-flex" style="box-sizing:border-box;display:inline-block;"></div>`,
+            { message: "should have replaced the inline-flex display with inline-block" }
+        );
+        styleSheet.deleteRule(0);
 
         // @todo to adapt when hoot has a better way to remove it
     });
