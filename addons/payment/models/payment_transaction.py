@@ -363,6 +363,9 @@ class PaymentTransaction(models.Model):
                     # Consider also confirmed transactions to calculate the total authorized amount.
                     "active_ids": self.filtered(lambda tx: tx.state in ["authorized", "done"]).ids,
                     "payment_backend_action": True,
+                    "default_capture_reference_amount": self.env.context.get(
+                        "capture_reference_amount"
+                    ),
                 },
             }
         captured_txs_sudo = self.env["payment.transaction"].sudo()
@@ -370,30 +373,6 @@ class PaymentTransaction(models.Model):
             # In sudo mode to read on provider fields.
             captured_txs_sudo |= tx.sudo().with_context(payment_backend_action=True)._capture()
         return captured_txs_sudo._build_action_feedback_notification()
-
-    def action_void(self):
-        """Check the state of the transaction and request to have them voided."""
-        payment_utils.check_rights_on_recordset(self)
-
-        if any(tx.state != "authorized" for tx in self):
-            raise ValidationError(self.env._("Only authorized transactions can be voided."))
-
-        voided_txs_sudo = self.env["payment.transaction"].sudo()
-        for tx in self:
-            # Consider all the confirmed partial capture (same operation as parent) child txs.
-            captured_amount = sum(
-                child_tx.amount
-                for child_tx in tx.child_transaction_ids.filtered(
-                    lambda t: t.state == "done" and t.operation == tx.operation
-                )
-            )
-            voided_txs_sudo |= (
-                tx
-                .sudo()  # In sudo mode to read on provider fields.
-                .with_context(payment_backend_action=True)
-                ._void(amount_to_void=tx.amount - captured_amount)
-            )
-        return voided_txs_sudo._build_action_feedback_notification()
 
     def action_refund(self, amount_to_refund=None):
         """Check the state of the transactions and request their refund.

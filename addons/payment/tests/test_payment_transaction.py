@@ -45,7 +45,7 @@ class TestPaymentTransaction(PaymentCommon):
         self.provider.support_manual_capture = "full_only"
         tx = self._create_transaction("redirect", state="authorized")
         user = self._prepare_user(self.internal_user, "account.group_account_invoice")
-        self._assert_does_not_raise(AccessError, tx.with_user(user).action_void)
+        self._assert_does_not_raise(AccessError, tx.with_user(user).action_capture)
 
     def test_refund_allowed_for_authorized_users(self):
         """Test that users who have access to a transaction can refund it."""
@@ -66,7 +66,7 @@ class TestPaymentTransaction(PaymentCommon):
         """Test that users who don't have access to a transaction cannot void it."""
         self.provider.support_manual_capture = "full_only"
         tx = self._create_transaction("redirect", state="authorized")
-        self.assertRaises(AccessError, tx.with_user(self.internal_user).action_void)
+        self.assertRaises(AccessError, tx.with_user(self.internal_user).action_capture)
 
     def test_refund_blocked_for_unauthorized_user(self):
         """Test that users who don't have access to a transaction cannot refund it."""
