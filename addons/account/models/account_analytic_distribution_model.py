@@ -58,7 +58,7 @@ class AccountAnalyticDistributionModel(models.Model):
         ], limit=1)
         for model in self:
             account_prefixes = "60, 61, 62"
-            if expense_account:
+            if expense_account and expense_account.code:
                 prefix_base = expense_account.code[:2]
                 try:
                     # Convert prefix_base to an integer for numerical manipulation
