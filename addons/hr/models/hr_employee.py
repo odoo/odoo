@@ -834,28 +834,31 @@ class HrEmployee(models.Model):
                 new_version.write(template_vals)
         return new_version
 
-    def create_contract(self, date):
+    def create_contract(self, date_version, contract_date_end=None):
         # Here we can assume that there is no existing contract on the date given
         self.ensure_one()
-        if date and isinstance(date, str):
-            date = fields.Date.to_date(date)
+        if date_version and isinstance(date_version, str):
+            date_version = fields.Date.to_date(date_version)
 
-        contracts = self._get_contract_versions(date)[self.id]
-        future_contract_dates = [d for d in list(contracts.keys()) if d > date]
+        contracts = self._get_contract_versions(date_version)[self.id]
+        future_contract_dates = [d for d in list(contracts.keys()) if d > date_version]
         new_contract_date_end = min(future_contract_dates) + relativedelta(days=-1) if future_contract_dates else False
 
+        if contract_date_end is None:
+            contract_date_end = new_contract_date_end
+
         # There is already a version but with no contract defined on it so we simply write on it the dates
-        if version_same_date := self.version_ids.filtered(lambda v: v.date_version == date):
+        if version_same_date := self.version_ids.filtered(lambda v: v.date_version == date_version):
             version_same_date.write({
-                'contract_date_start': date,
-                'contract_date_end': new_contract_date_end
+                'contract_date_start': date_version,
+                'contract_date_end': contract_date_end
             })
             return version_same_date
 
         return self.create_version({
-            'date_version': date,
-            'contract_date_start': date,
-            'contract_date_end': new_contract_date_end
+            'date_version': date_version,
+            'contract_date_start': date_version,
+            'contract_date_end': contract_date_end
         })
 
     def _is_in_contract(self, date):
