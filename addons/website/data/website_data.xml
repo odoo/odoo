@@ -242,6 +242,24 @@
         </field>
     </record>
 
+    <!-- Template for Team Board -->
+    <template id="website.team_board" name="Team Board">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <section>
+                    <div class="container">
+                        <h1>Team Board</h1>
+                        <h2 class="h5-fs text-muted">Meet the people building the next chapter</h2>
+                    </div>
+                    <div class="m-5"/>
+                    <div class="container">
+                        <t t-snippet-call="website.s_team_board"/>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
     <!-- Template for cookie (optional) -->
     <template id="cookie_policy" name="Cookie Policy">
         <t t-call="website.layout">
@@ -559,6 +577,14 @@
             <field name="track">True</field>
             <field name="website_meta_description">This is the homepage of the website</field>
         </record>
+        <record id="team_board_page" model="website.page">
+            <field name="is_published">True</field>
+            <field name="published_date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="url">/team_board</field>
+            <field name="view_id" ref="team_board"/>
+            <field name="track">True</field>
+            <field name="website_meta_description">This is the team board page of the website</field>
+        </record>
         <record id="contactus_page" model="website.page">
             <field name="url">/contactus</field>
             <field name="is_published">True</field>
@@ -587,6 +613,20 @@
             <field name="page_id" ref="website.homepage_page"/>
             <field name="parent_id" ref="website.main_menu"/>
             <field name="sequence" type="int">10</field>
+        </record>
+        <record id="menu_team_board" model="website.menu">
+            <field name="name">Team Board</field>
+            <field name="url">/team_board</field>
+            <field name="page_id" ref="website.team_board_page"/>
+            <field name="parent_id" ref="website.main_menu"/>
+            <field name="sequence" type="int">20</field>
+        </record>
+
+        <!-- Default Website -->
+        <record id="default_website" model="website">
+            <field name="name">My Website</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="user_id" ref="base.public_user"/>
         </record>
     </data>
 </odoo>
