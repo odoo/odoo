@@ -12,6 +12,7 @@ import {
     deserializeDateTime,
     formatDate,
     formatDateTime,
+    formatLocalWeekRange,
     getLocalYearAndWeek,
     parseDate,
     parseDateTime,
@@ -47,6 +48,17 @@ test("getLocalYearAndWeek", async () => {
         date_actual.startDate = date_actual.startDate.toISODate();
         expect(date_actual).toEqual(dates_expected[key]);
     }
+});
+
+test("formatLocalWeekRange", async () => {
+    mockDate("2026-08-07T13:00:00");
+    patchWithCleanup(localization, { weekStart: 1 });
+    const weekRange = (isoDate) => formatLocalWeekRange(DateTime.fromISO(isoDate).setLocale("en"));
+
+    expect(weekRange("2026-08-07")).toBe("Week 32, Aug 3 - Aug 9");
+    // a week straddling both years belongs to the one holding its 4th day
+    expect(weekRange("2027-01-01")).toBe("Week 53, Dec 28 - Jan 3");
+    expect(weekRange("2027-03-01")).toBe("Week 9, Mar 1 - Mar 7 2027");
 });
 
 test("formatDate/formatDateTime specs", async () => {
