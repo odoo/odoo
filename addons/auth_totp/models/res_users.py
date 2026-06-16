@@ -6,24 +6,24 @@ import logging
 import os
 import re
 
-from datetime import datetime, timedelta
-
 from odoo import _, api, fields, models
 from odoo.addons.base.models.res_users import check_identity
 from odoo.exceptions import AccessDenied, UserError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import sql, SQL
+from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.auth_totp.models.totp import TOTP, TOTP_SECRET_SIZE
 
 _logger = logging.getLogger(__name__)
+_lt = LazyTranslate(__name__)
 
 compress = functools.partial(re.sub, r'\s', '')
 
-TOTP_RATE_LIMITS = {
-    'send_email': (5, 3600),
-    'code_check': (5, 3600),
+TOTP_LIMIT_DESCRIPTIONS = {
+    'send_email': _lt('You reached the limit of authentication mails sent for your account, please try again later.'),
+    'code_check': _lt('You reached the limit of code verifications for your account, please try again later.'),
 }
 
 
@@ -120,36 +120,13 @@ class ResUsers(models.Model):
     def _totp_rate_limit(self, limit_type):
         self.ensure_one()
         assert request, "A request is required to be able to rate limit TOTP related actions"
-        limit, interval = TOTP_RATE_LIMITS[limit_type]
-        RateLimitLog = self.env['auth.totp.rate.limit.log'].sudo()
-        ip = request.httprequest.environ['REMOTE_ADDR']
-        domain = [
-            ('user_id', '=', self.id),
-            ('create_date', '>=', datetime.now() - timedelta(seconds=interval)),
-            ('limit_type', '=', limit_type),
-        ]
-        count = RateLimitLog.search_count(domain)
-        if count >= limit:
-            descriptions = {
-                'send_email': _('You reached the limit of authentication mails sent for your account, please try again later.'),
-                'code_check': _('You reached the limit of code verifications for your account, please try again later.'),
-            }
-            description = descriptions[limit_type]
-            raise AccessDenied(description)
-        RateLimitLog.create({
-            'user_id': self.id,
-            'ip': ip,
-            'limit_type': limit_type,
-        })
+        if not self.env['auth.totp.rate.limit.log'].sudo()._check_rate_limit(user_id=self.id, limit_type=limit_type):
+            raise AccessDenied(TOTP_LIMIT_DESCRIPTIONS[limit_type])
 
     def _totp_rate_limit_purge(self, limit_type):
         self.ensure_one()
         assert request, "A request is required to be able to rate limit TOTP related actions"
-        RateLimitLog = self.env['auth.totp.rate.limit.log'].sudo()
-        RateLimitLog.search([
-            ('user_id', '=', self.id),
-            ('limit_type', '=', limit_type),
-        ]).unlink()
+        self.env['auth.totp.rate.limit.log'].sudo()._purge_rate_limit(user_id=self.id, limit_type=limit_type)
 
     @check_identity
     def action_totp_disable(self):
