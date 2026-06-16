@@ -10,6 +10,7 @@
                     <input t-model="this.state.pin"
                         t-ref="autofocus"
                         type="password"
+                        data-enable-barcode="true"
                         class="form-control form-control-lg rounded flex-grow-1"
                         placeholder="Enter your PIN" />
                     <button class="select-cashier btn btn-secondary px-4" t-on-click="() => this.selectCashier(false, true)">
