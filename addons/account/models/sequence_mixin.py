@@ -211,10 +211,10 @@ class SequenceMixin(models.AbstractModel):
                     groupdict.get('year_end') and groupdict.get('year')
                     and (
                         len(groupdict['year']) < len(groupdict['year_end'])
-                        or self._truncate_year_to_length((int(groupdict['year']) + 1), len(groupdict['year_end'])) != int(groupdict['year_end'])
+                        or not self._validate_fiscalyear_difference(groupdict['year'], groupdict['year_end'])
                     )
                 ):
-                    # year and year_end are not compatible for range (the difference is not 1)
+                    # year and year_end are not compatible for range (the difference does not correspond to the fiscal year)
                     continue
                 if all(groupdict.get(req) is not None for req in requirements):
                     return ret_val
@@ -222,6 +222,9 @@ class SequenceMixin(models.AbstractModel):
             'The sequence regex should at least contain the seq grouping keys. For instance:\n'
             r'^(?P<prefix1>.*?)(?P<seq>\d*)(?P<suffix>\D*?)$'
         ))
+
+    def _validate_fiscalyear_difference(self, start_year, end_year):
+        return self._truncate_year_to_length(int(start_year) + 1, len(start_year)) == int(end_year)
 
     def _make_regex_non_capturing(self, regex):
         r""" Replace the "named capturing group" found in the regex by
