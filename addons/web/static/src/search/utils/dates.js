@@ -1,12 +1,17 @@
 import { _t } from "@web/core/l10n/translation";
 import { Domain } from "@web/core/domain";
-import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
+import {
+    formatLocalWeekRange,
+    serializeDate,
+    serializeDateTime,
+    toLocaleDateString,
+    today,
+} from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { clamp, range } from "@web/core/utils/numbers";
 import { pick } from "@web/core/utils/objects";
-import { constructDomainFromTree } from "@web/core/tree_editor/construct_domain_from_tree";
-import { eliminateVirtualOperators } from "@web/core/tree_editor/virtual_operators";
-import { condition } from "@web/core/tree_editor/condition_tree";
+import { domainFromTree } from "@web/core/tree_editor/domain_from_tree";
+import { makeRelativeRange } from "@web/core/tree_editor/virtual_operators";
 
 export const QUARTERS = {
     1: { description: _t("Q1"), coveredMonths: [1, 2, 3] },
@@ -333,6 +338,13 @@ export function sortPeriodOptions(options) {
     });
 }
 
+/**
+ * Checks if a year id is among the given array of period option ids.
+ */
+export function yearSelected(selectedOptionIds) {
+    return selectedOptionIds.some((optionId) => optionId.startsWith("year"));
+}
+
 /**  ----------------------- RELATIVE DATE FILTERS -----------------------
  * Relative filters are search bar menu filters, created from the xml with
  * the syntax <filter ... date="invoice_date">, that can be toggled in the
@@ -348,22 +360,50 @@ export const RELATIVE_FILTER_OPTIONS = {
     thisYear: { description: _t("This Year"), granularity: "year" },
 };
 
-export function getRelativeFilterOptions(searchItem) {
+export function getRelativeFilterOptions() {
+    return Object.entries(RELATIVE_FILTER_OPTIONS).map(([id, option]) => ({ id, ...option }));
+}
+
+export function constructRelativeDateDomain(searchItem, option, offset) {
     const { fieldName, fieldType } = searchItem;
-    return Object.entries(RELATIVE_FILTER_OPTIONS).map(([id, option]) => ({
-        id,
-        ...option,
-        domain: constructDomainFromTree(
-            eliminateVirtualOperators(condition(fieldName, "in range", [fieldType, id]), {
-                generateSmartDates: false,
-            })
-        ),
-    }));
+    return domainFromTree(makeRelativeRange(fieldName, offset, option.granularity, fieldType));
 }
 
 /**
- * Checks if a year id is among the given array of period option ids.
+ * Describes the period a relative filter option points at once shifted by
+ * `offset` periods, in terms of the dates it covers rather than of its distance
+ * from now (eg. "Aug 2 - Aug 8" instead of "2 weeks ago").
+ *
+ * @param {luxon.DateTime} referenceMoment
+ * @param {Object} option a relative filter option, @see RELATIVE_FILTER_OPTIONS
+ * @param {number} offset number of periods to shift, negative for the past
+ * @returns {string}
  */
-export function yearSelected(selectedOptionIds) {
-    return selectedOptionIds.some((optionId) => optionId.startsWith("year"));
+export function getRelativeDateLabel(referenceMoment, option, offset) {
+    const { granularity } = option;
+    const date = referenceMoment.plus({ [granularity]: offset });
+    const isCurrentYear = (date) => date.year === today().year;
+    switch (granularity) {
+        case "week":
+            return formatLocalWeekRange(date);
+        case "month":
+            return date.toLocaleString(
+                isCurrentYear(date) ? { month: "long" } : { month: "long", year: "numeric" }
+            );
+        case "quarter": {
+            // Intl has no quarter, so the year is appended by hand (@see constructDateRange).
+            const { description } = QUARTERS[date.quarter];
+            if (isCurrentYear(date)) {
+                return description.toString();
+            }
+            return localization.direction === "rtl"
+                ? `${date.year} ${description}`
+                : `${description} ${date.year}`;
+        }
+        case "year":
+            return String(date.year);
+        case "day":
+        default:
+            return toLocaleDateString(date);
+    }
 }

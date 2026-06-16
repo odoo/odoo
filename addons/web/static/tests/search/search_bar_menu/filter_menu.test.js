@@ -562,7 +562,7 @@ test("filter by a date field using relative smart dates works", async () => {
     // Select "This Month" → relative smart-date range anchored on the month start
     await toggleMenuItemOption("Date", "This Month");
     expect(isOptionSelected("Date", "This Month")).toBe(true);
-    expect(getFacetTexts()).toEqual(["Date: This Month"]);
+    expect(getFacetTexts()).toEqual(["Date: March"]);
     expect(searchBar.env.searchModel.domain).toEqual([
         "&",
         ["date_field", ">=", "today =1d"],
@@ -573,7 +573,7 @@ test("filter by a date field using relative smart dates works", async () => {
     await toggleMenuItemOption("Date", "This Week");
     expect(isOptionSelected("Date", "This Month")).toBe(false);
     expect(isOptionSelected("Date", "This Week")).toBe(true);
-    expect(getFacetTexts()).toEqual(["Date: This Week"]);
+    expect(getFacetTexts()).toEqual(["Date: Week 12, Mar 19 - Mar 25"]);
     expect(searchBar.env.searchModel.domain).toEqual([
         "&",
         ["date_field", ">=", "today =week_start"],
@@ -614,7 +614,7 @@ test("period and relative options of a date filter are mutually exclusive", asyn
     expect(isOptionSelected("Date", "This Month")).toBe(true);
     expect(isOptionSelected("Date", "March")).toBe(false);
     expect(isOptionSelected("Date", "2017")).toBe(false);
-    expect(getFacetTexts()).toEqual(["Date: This Month"]);
+    expect(getFacetTexts()).toEqual(["Date: March"]);
     expect(searchBar.env.searchModel.domain).toEqual([
         "&",
         ["date_field", ">=", "today =1d"],
@@ -1492,7 +1492,7 @@ test("an active relative filter keeps its accordion state when reopening the men
     // deactivate the filter (the facet stays).
     await toggleMenuItem("Date"); // collapse
     expect(dateOptions()).toHaveLength(0);
-    expect(getFacetTexts()).toEqual(["Date: This Week"]);
+    expect(getFacetTexts()).toEqual(["Date: Week 12, Mar 19 - Mar 25"]);
 
     // Reopening re-mounts the accordions and forgets that manual collapse, so
     // the still-active relative filter unfolds "Date" again on its own.

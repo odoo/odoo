@@ -627,6 +627,14 @@ export class SearchBar extends Component {
         });
     }
 
+    onPrevDateFacetClick(facet) {
+        this.env.searchModel.shiftRelativeFilter(facet.groupId, -1);
+    }
+
+    onNextDateFacetClick(facet) {
+        this.env.searchModel.shiftRelativeFilter(facet.groupId, 1);
+    }
+
     /**
      * @param {Object} facet
      */
