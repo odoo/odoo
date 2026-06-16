@@ -31,16 +31,6 @@ export class PaymentInterface {
     }
 
     /**
-     * This getter determines if send_payment_request
-     * is called automatically upon selecting the payment method.
-     * Overriding this to false allows manual input of an amount
-     * before sending the request to the terminal.
-     */
-    get fastPayments() {
-        return true;
-    }
-
-    /**
      * This getter is used for cash machines to display the amount
      * of money that has been inserted in real time. If a number is
      * returned, it will be shown as a formatted currency in the
