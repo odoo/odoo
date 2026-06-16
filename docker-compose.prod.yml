@@ -5,7 +5,7 @@ services:
     image: ghcr.io/mohammedj-sadiq/kswco-odoo:latest
     env_file:
       - .env.prod
-    ports:
-      - "127.0.0.1:8069:8069"
-      - "127.0.0.1:8072:8072"
+    network_mode: host
+    volumes:
+      - /home/odoo/.local/share/Odoo:/var/lib/odoo
     restart: unless-stopped

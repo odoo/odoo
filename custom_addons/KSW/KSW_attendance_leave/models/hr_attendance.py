@@ -59,6 +59,7 @@ class HrAttendance(models.Model):
 
     @api.depends(
         'x_late_minutes', 'x_early_leave_minutes', 'x_is_absent', 'worked_hours',
+        'employee_id.x_check_in_only',
         'x_leave_ids.state',
         'x_leave_ids.x_attendance_line_ids.accepted_minutes',
         'x_leave_ids.x_attendance_line_ids.issue_type',
@@ -91,7 +92,10 @@ class HrAttendance(models.Model):
                             accepted_early += line.accepted_minutes
 
             att.x_net_late_minutes = max(0.0, att.x_late_minutes - accepted_late)
-            att.x_net_early_leave_minutes = max(0.0, att.x_early_leave_minutes - accepted_early)
+            if att.employee_id.x_check_in_only:
+                att.x_net_early_leave_minutes = 0.0
+            else:
+                att.x_net_early_leave_minutes = max(0.0, att.x_early_leave_minutes - accepted_early)
             att.x_net_is_absent = att.x_is_absent and not absent_covered
             # Net worked hours = raw worked hours + accepted time-off hours
             total_accepted_hours = (accepted_late + accepted_early) / 60.0

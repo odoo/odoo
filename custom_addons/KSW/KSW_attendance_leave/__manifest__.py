@@ -25,6 +25,7 @@ Connecting attendance records with leave management to be a list to choose from
         'data/attendance_issue_defaults.xml',
 
         # Views
+        'views/hr_employee_views.xml',
         'views/hr_leave_type_views.xml',
         'views/hr_leave_views.xml',
         'views/hr_attendance_views.xml',
