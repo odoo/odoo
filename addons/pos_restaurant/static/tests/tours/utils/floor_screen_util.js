@@ -2,8 +2,11 @@ import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
-export function table({ name, withClass = "", withoutClass, run = () => {}, numOfSeats }) {
+export function table({ name, withClass = "", withoutClass, run = () => {}, waitForSync = true }) {
     let trigger = `.o_fp_canvas .o_fp_table${withClass}`;
+    if (waitForSync) {
+        trigger += `:not(.syncing)`;
+    }
     if (withoutClass) {
         trigger += `:not(${withoutClass})`;
     }

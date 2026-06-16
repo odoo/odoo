@@ -1903,20 +1903,25 @@ export class PosStore extends WithLazyGetterTrap {
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, opts = {}) {
         let isPrinted = false;
-        if (this.config.printerCategories.size && !opts.byPassPrint) {
-            try {
-                isPrinted = await this.ticketPrinter.printOrderChanges({ order, opts });
-            } catch (e) {
-                logPosMessage(
-                    "Store",
-                    "sendOrderInPreparation",
-                    "Failed in printing the changes in the order",
-                    CONSOLE_COLOR,
-                    [e]
-                );
+        try {
+            this.syncingOrders.add(order.uuid);
+            if (this.config.printerCategories.size && !opts.byPassPrint) {
+                try {
+                    isPrinted = await this.ticketPrinter.printOrderChanges({ order, opts });
+                } catch (e) {
+                    logPosMessage(
+                        "Store",
+                        "sendOrderInPreparation",
+                        "Failed in printing the changes in the order",
+                        CONSOLE_COLOR,
+                        [e]
+                    );
+                }
             }
+            order.updateLastOrderChange(opts);
+        } finally {
+            this.syncingOrders.delete(order.uuid);
         }
-        order.updateLastOrderChange(opts);
         // Ensure that other devices are aware of the changes
         // Otherwise several devices can print the same changes
         // We need to check if a preparation display is configured to avoid unnecessary sync
@@ -1929,12 +1934,17 @@ export class PosStore extends WithLazyGetterTrap {
             return this.sendOrderInPreparation(order, opts);
         }
 
-        const [{ write_date }] = await this.data.read("pos.order", [order.id], ["write_date"]);
-        const lastServerDate = DateTime.fromSQL(write_date).toUTC();
-        const lastLocalDate = DateTime.fromSQL(order.raw.write_date).toUTC();
+        try {
+            this.syncingOrders.add(order.uuid);
+            const [{ write_date }] = await this.data.read("pos.order", [order.id], ["write_date"]);
+            const lastServerDate = DateTime.fromSQL(write_date).toUTC();
+            const lastLocalDate = DateTime.fromSQL(order.raw.write_date).toUTC();
 
-        if (lastServerDate.isValid && lastServerDate.ts != lastLocalDate.ts) {
-            await this.syncAllOrders({ orders: [order] });
+            if (lastServerDate.isValid && lastServerDate.ts != lastLocalDate.ts) {
+                await this.syncAllOrders({ orders: [order] });
+            }
+        } finally {
+            this.syncingOrders.delete(order.uuid);
         }
         // Will not sent duplicated changes due to above check, and will
         // ensure the order is in preparation if not already
@@ -1947,6 +1957,16 @@ export class PosStore extends WithLazyGetterTrap {
             throw new ConnectionLostError();
         }
         await this.checkPreparationStateAndSentOrderInPreparation(o, opts);
+    }
+
+    isOrderSyncing(order, notify = true) {
+        const isSyncing = !!order && this.syncingOrders.has(order?.uuid);
+        if (isSyncing && notify) {
+            this.notification.add(
+                _t("This order is currently syncing, please wait a moment before loading it.")
+            );
+        }
+        return isSyncing;
     }
 
     editPartnerContext(partner) {
