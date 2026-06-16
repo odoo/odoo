@@ -1436,3 +1436,24 @@ class TestPurchaseWithoutStock(AccountTestInvoicingCommon):
         po.button_confirm()
         po.action_receive()
         self.assertEqual(po.order_line.qty_received, 1)
+
+    def test_incoming_qty_after_overreceived_po(self):
+        """Test that incoming and forecasted quantities are computed correctly when the
+        received quantity exceeds the ordered quantity.
+        """
+        if self.env['ir.module.module']._get('stock').state == 'installed':
+            self.skipTest("This test won't work if stock is installed, as these "
+                "quantities are computed from stock moves and stock quants.")
+        product = self.product
+        product.is_storable = True
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': product.id, 'product_qty': 10})],
+        })
+        po.button_confirm()
+        self.assertEqual(product.incoming_qty, 10)
+        self.assertEqual(product.virtual_available, 10)
+        po.order_line.qty_received = 20
+        product.invalidate_recordset(['incoming_qty'])
+        self.assertEqual(product.incoming_qty, 0)
+        self.assertEqual(product.virtual_available, 20)
