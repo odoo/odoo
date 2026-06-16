@@ -175,9 +175,9 @@ class AuthorizeAPI:
                     'lastName': split_name[1][:50],  # lastName is always required
                     'company': tx.partner_name[:50] if tx.partner_id.is_company else '',
                     'address': tx.partner_address[:60],
-                    'city': tx.partner_city[:40],
+                    'city': (tx.partner_city or '')[:40],
                     'state': (tx.partner_state_id.name or '')[:40],
-                    'zip': tx.partner_zip[:20],
+                    'zip': (tx.partner_zip or '')[:20],
                     'country': (tx.partner_country_id.name or '')[:60],
                 }
             }
