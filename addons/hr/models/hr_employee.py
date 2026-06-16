@@ -1773,11 +1773,10 @@ class HrEmployee(models.Model):
                 'menu_id': hr_root_menu.id,
                 'text': self.env._('onboarding plan'),
             }
-            message = Markup('<b>%(title)s</b> %(text)s') % {
+            message = Markup('<b>%(title)s</b> %(text)s %(onboarding_plan_link)s?') % {
                 'title': self.env._('Congratulations!'),
-                'text': self.env._('May I recommend you to setup an %(onboarding_plan_link)s?') % {
-                    'onboarding_plan_link': link,
-                },
+                'text': self.env._('May I recommend you to setup an'),
+                'onboarding_plan_link': link,
             }
             onboarding_notes_bodies[employee.id] = message
         employees._message_log_batch(onboarding_notes_bodies)
