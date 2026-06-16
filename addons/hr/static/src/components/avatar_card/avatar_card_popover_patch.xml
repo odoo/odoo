@@ -9,6 +9,15 @@
                 <t t-esc="employee.work_location_id.name"/>
             </span>
         </xpath>
+        <xpath expr="//button[@t-ref='viewProfileBtn']" position="after">
+            <Dropdown t-if="canActivateEmployeeCompany" position="'bottom-start'">
+                <button class="btn btn-secondary btn-sm dropdown-toggle">View Profile<i class="fa fa-fw fa-caret-down ms-1"/></button>
+                <t t-set-slot="content">
+                    <DropdownItem onSelected="() => this.onClickViewEmployeeProfile()">Open Employee Profile (activates company)</DropdownItem>
+                    <DropdownItem onSelected="() => this.onClickViewProfile()">Open Contact Profile</DropdownItem>
+                </t>
+            </Dropdown>
+        </xpath>
     </t>
 
     <t t-name="hr.avatarCardUserInfos">
