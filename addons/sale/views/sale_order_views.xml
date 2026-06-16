@@ -237,10 +237,8 @@
                        widget="monetary"
                        decoration-bf="1"
                        decoration-info="invoice_status == 'to invoice'"
-                       optional="show"/>
-            </field>
-            <field name="amount_total" position="attributes">
-                <attribute name="optional">hide</attribute>
+                       optional="show"
+                       column_invisible="True"/>
             </field>
         </field>
     </record>
