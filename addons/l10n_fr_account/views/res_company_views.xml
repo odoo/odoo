@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_company_form_l10n_fr" model="ir.ui.view">
+        <field name="name">res.company.form.l10n.fr.account</field>
+        <field name="model">res.company</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="account.view_company_form" />
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@widget='additional_identifiers_button']" position="attributes">
+                    <attribute name="options">{'force_display': ['FR_SIREN', 'FR_SIRET']}</attribute>
+                </xpath>
+                <xpath expr="//field[@widget='additional_identifiers_list']" position="attributes">
+                    <attribute name="options">{'force_display': ['FR_SIREN', 'FR_SIRET']}</attribute>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>
