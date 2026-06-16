@@ -75,6 +75,15 @@ export function clickPaymentlineDelButton(name, amount, mobile = false) {
         },
     ];
 }
+export function clickSendButton() {
+    return [
+        {
+            content: "Send the payment request using the payment terminal.",
+            trigger: ".paymentline_status_actions .paymentline_status_actions_button_send",
+            run: "click",
+        },
+    ];
+}
 export function clickCancelButton() {
     return [
         {
