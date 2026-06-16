@@ -156,7 +156,7 @@ class AccountMove(models.Model):
 
         for invoice in posted.filtered(lambda move: move.is_invoice()):
             payments = invoice.mapped("transaction_ids.payment_id").filtered(
-                lambda x: x.state == "paid"
+                lambda x: x.state in ("paid", "reconciled")
             )
             move_lines = payments.move_id.line_ids.filtered(
                 lambda line: (
