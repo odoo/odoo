@@ -918,7 +918,7 @@ class TestSaleService(TestCommonSaleTimesheet):
         })
         sol.invalidate_recordset()
         self.assertAlmostEqual(sol.remaining_hours, -2.0, places=6)
-        self.assertIn('-02:00', sol.with_context(with_remaining_hours=True).display_name)
+        self.assertIn('-2h', sol.with_context(with_remaining_hours=True).display_name)
 
     def test_service_product_uom_default(self):
         """

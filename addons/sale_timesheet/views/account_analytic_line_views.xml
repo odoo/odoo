@@ -54,7 +54,7 @@
                 <field name="sale_order_state" invisible="1"/>
                 <label for="so_line" invisible="not allow_billable" groups="sales_team.group_sale_salesman"/>
                 <div class="o_row" invisible="not allow_billable" groups="sales_team.group_sale_salesman">
-                    <field name="so_line" widget="so_line_field" options='{"no_create": True}' context="{'create': False, 'edit': False, 'delete': False, 'with_price_unit': True}" readonly="readonly_timesheet" placeholder="Non-billable"/>
+                    <field name="so_line" widget="so_line_field" options='{"no_create": True}' context="{'create': False, 'edit': False, 'delete': False, 'with_price_unit': True, 'with_remaining_hours': True}" readonly="readonly_timesheet" placeholder="Non-billable"/>
                     <span
                         class="fa fa-exclamation-triangle text-warning"
                         title="The sales order associated with this timesheet entry has been cancelled."
