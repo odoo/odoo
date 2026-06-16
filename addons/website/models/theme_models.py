@@ -252,6 +252,24 @@ class ThemeUtils(models.AbstractModel):
         'website.header_width_full',
     ]
 
+    # Templates managing header and footer options that are not mutually
+    # exclusive.
+    # Active by default.
+    _header_footer_active_option_templates = [
+        # Header
+        'website.option_header_brand_logo',
+        'website.header_text_element',
+        'website.header_search_box',
+        'website.header_call_to_action',
+    ]
+    # Unactive by default.
+    _header_footer_unactive_option_templates = [
+        # Header
+        'website.header_social_links',
+        # Footer
+        'website.footer_no_copyright',
+    ]
+
     def _post_copy(self, mod):
         # Call specific theme post copy
         theme_post_copy = '_%s_post_copy' % mod.name
@@ -299,6 +317,12 @@ class ThemeUtils(models.AbstractModel):
 
         # Reinitialize the header content width
         for view in self._header_width_templates:
+            self.disable_view(view)
+
+        # Reinitialize some header and footer options.
+        for view in self._header_footer_active_option_templates:
+            self.enable_view(view)
+        for view in self._header_footer_unactive_option_templates:
             self.disable_view(view)
 
         # Reinitialize some page options
