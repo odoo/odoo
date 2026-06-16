@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, Portal, onMounted, signal } from "@odoo/owl";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { SearchPanel } from "@web/search/search_panel/search_panel";
 
@@ -17,6 +17,7 @@ export function extractLayoutComponents(params) {
 
 export class Layout extends Component {
     static template = "web.Layout";
+    static components = { Portal };
     static props = {
         className: { type: String, optional: true },
         display: { type: Object, optional: true },
@@ -25,9 +26,21 @@ export class Layout extends Component {
     static defaultProps = {
         display: {},
     };
+    footerTarget = signal(null);
+    rev = 0;
     setup() {
         this.components = extractLayoutComponents(this.env.config);
         this.contentRef = useRef("content");
+
+        onMounted(() => {
+            const footer = document.querySelector(`#${this.env.dialogId} .modal-footer`);
+            const hasDefaultButton = footer?.querySelector(".o-default-button");
+            if (hasDefaultButton) {
+                footer.replaceChildren();
+            }
+            this.footerTarget.set(footer);
+            this.rev++;
+        });
     }
     get controlPanelSlots() {
         const slots = { ...this.props.slots };
