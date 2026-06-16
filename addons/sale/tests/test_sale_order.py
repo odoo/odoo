@@ -793,6 +793,30 @@ class TestSaleOrder(SaleCommon):
             msg="price_total should be equal to expected_total",
         )
 
+    def test_amount_to_invoice_at_date_with_uom(self):
+        self.env.user.group_ids += self.env.ref('uom.group_uom')
+        uom_dozens = self.env.ref('uom.product_uom_dozen')
+
+        product_data = {
+            'name': 'SuperProduct',
+            'type': 'consu',
+            'list_price': 100,
+        }
+        product = self.env['product.product'].create(product_data)
+
+        so_form = Form(self.env['sale.order'])
+        so_form.partner_id = self.partner
+        with so_form.order_line.new() as so_line:
+            so_line.product_id = product
+            so_line.product_uom_id = uom_dozens
+            so_line.product_uom_qty = 2
+        so = so_form.save()
+
+        so.order_line[0].qty_delivered = 2
+
+        self.assertEqual(so.order_line[0].price_unit, 1200)
+        self.assertEqual(so.order_line[0].amount_to_invoice_at_date, 2400)
+
 
 @tagged('post_install', '-at_install')
 class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
