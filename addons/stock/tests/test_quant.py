@@ -321,6 +321,75 @@ class TestStockQuant(TestStockCommon):
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, -1.0)
         self.assertEqual(len(self.gather_relevant(self.productA, self.stock_location)), 0)
 
+    def test_to_date_consignment(self):
+        """ Check that computing past quantities with 'to_date' correctly ignores
+        consigned stock moves when checking company-owned stock.
+        """
+        self.env.user.group_ids += self.env.ref('stock.group_tracking_owner')
+
+        self.productA = self.env['product.product'].create({
+            'name': 'Test Consignment Product',
+            'type': 'consu',
+            'is_storable': True,
+        })
+        self.partner_1 = self.env['res.partner'].create({'name': 'Abigail Carter'})
+
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.supplier_location = self.env.ref('stock.stock_location_suppliers')
+        self.customer_location = self.env.ref('stock.stock_location_customers')
+
+        today = fields.Datetime.now()
+        yesterday = today - timedelta(days=1)
+
+        # Create Incoming Consignment Move (10 units)
+        move_in = self.env['stock.move'].create({
+            'product_id': self.productA.id,
+            'product_uom_qty': 10.0,
+            'product_uom': self.productA.uom_id.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'restrict_partner_id': self.partner_1.id,
+        })
+        move_in._action_confirm()
+        move_in.move_line_ids.quantity = 10.0
+        move_in.move_line_ids.owner_id = self.partner_1.id
+        move_in.picked = True
+        move_in._action_done()
+
+        # Create Outgoing Move (4 Units)
+        picking_out = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+        move_out = self.env['stock.move'].create({
+            'picking_id': picking_out.id,
+            'product_id': self.productA.id,
+            'product_uom_qty': 4.0,
+            'product_uom': self.productA.uom_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+        })
+
+        picking_out.action_confirm()
+
+        move_out.move_line_ids.write({
+            'quantity': 4.0,
+            'owner_id': self.partner_1.id,
+        })
+        move_out.picked = True
+
+        picking_out._action_done()
+
+        # Mimic _with_valuation_context()
+        product_past = self.productA.with_context(to_date=yesterday, owners=[False, self.env.company.partner_id.id])
+
+        self.assertEqual(
+            product_past.qty_available,
+            0.0,
+            "Company-owned past quantity should be 0.0, it must ignore consigned stock moves."
+        )
+
     def test_increase_reserved_quantity_1(self):
         """ Increase the reserved quantity of quantity x when there's a single quant in a given
         location which has an available quantity of x.
