@@ -1,3 +1,4 @@
+import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { SearchModel } from "@web/search/search_model";
 
@@ -94,9 +95,9 @@ export class PageSearchModel extends SearchModel {
      * @returns {Object} The current website.
      */
     async getCurrentWebsite() {
-        const currentWebsite = await this.orm.call("website", "get_current_website");
-        if (currentWebsite) {
-            return this.website.websites.find((w) => w.id === currentWebsite[0]);
+        const currentWebsiteId = await rpc("/website/get_current_website_id");
+        if (currentWebsiteId) {
+            return this.website.websites.find((w) => w.id === currentWebsiteId);
         }
         return this.website.websites[0];
     }

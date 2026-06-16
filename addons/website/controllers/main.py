@@ -238,6 +238,10 @@ class Website(Home):
         website._force()
         return request.redirect(path)
 
+    @http.route('/website/get_current_website_id', type='jsonrpc', auth="user", readonly=True)
+    def get_current_website(self):
+        return self.env.context.get('host_id')
+
     @http.route(['/@/', '/@/<path:path>'], type='http', auth='public', website=True, sitemap=False, multilang=False, readonly=True)
     def client_action_redirect(self, path='', **kw):
         """ Redirect internal users to the backend preview of the requested path
