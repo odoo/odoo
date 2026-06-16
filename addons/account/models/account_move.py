@@ -6829,6 +6829,8 @@ class AccountMove(models.Model):
             attachments_in_invoices += attachment
         # Unlink the unused attachments (prevents storing marketing images sent with emails)
         if self._context.get('from_alias'):
+            if not attachments_in_invoices:
+                attachments_in_invoices += attachments.filtered(lambda att: att.mimetype in ALLOWED_MIMETYPES)
             (attachments - attachments_in_invoices).unlink()
         return move_per_decodable_attachment
 
