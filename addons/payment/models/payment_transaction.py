@@ -371,57 +371,34 @@ class PaymentTransaction(models.Model):
         }
 
     def action_capture(self):
-        """Open the partial capture wizard if it is supported by the related providers, otherwise
-        capture the transactions immediately.
+        """Open the capture wizard.
 
-        :return: The action to open the partial capture wizard, if supported.
+        :return: The action to open the capture wizard.
         :rtype: action.act_window|None
         """
         payment_utils.check_rights_on_recordset(self)
 
-        if any(tx.provider_id.sudo().support_manual_capture == "partial" for tx in self):
-            return {
-                "name": self.env._("Capture"),
-                "type": "ir.actions.act_window",
-                "view_mode": "form",
-                "res_model": "payment.capture.wizard",
-                "target": "new",
-                "context": {
-                    "active_model": "payment.transaction",
-                    # Consider also confirmed transactions to calculate the total authorized amount.
-                    "active_ids": self.filtered(lambda tx: tx.state in ["authorized", "done"]).ids,
-                    "payment_backend_action": True,
-                },
-            }
-        captured_txs_sudo = self.env["payment.transaction"].sudo()
-        for tx in self.filtered(lambda tx: tx.state == "authorized"):
-            # In sudo mode to read on provider fields.
-            captured_txs_sudo |= tx.sudo().with_context(payment_backend_action=True)._capture()
-        return captured_txs_sudo._build_action_feedback_notification()
-
-    def action_void(self):
-        """Check the state of the transaction and request to have them voided."""
-        payment_utils.check_rights_on_recordset(self)
-
-        if any(tx.state != "authorized" for tx in self):
-            raise ValidationError(self.env._("Only authorized transactions can be voided."))
-
-        voided_txs_sudo = self.env["payment.transaction"].sudo()
-        for tx in self:
-            # Consider all the confirmed partial capture (same operation as parent) child txs.
-            captured_amount = sum(
-                child_tx.amount
-                for child_tx in tx.child_transaction_ids.filtered(
-                    lambda t: t.state == "done" and t.operation == tx.operation
-                )
-            )
-            voided_txs_sudo |= (
-                tx
-                .sudo()  # In sudo mode to read on provider fields.
-                .with_context(payment_backend_action=True)
-                ._void(amount_to_void=tx.amount - captured_amount)
-            )
-        return voided_txs_sudo._build_action_feedback_notification()
+        return {
+            "name": self.env._("Capture"),
+            "type": "ir.actions.act_window",
+            "view_mode": "form",
+            "res_model": "payment.capture.wizard",
+            "target": "new",
+            "context": {
+                "active_model": "payment.transaction",
+                # Consider also confirmed transactions to calculate the total authorized amount.
+                "active_ids": self.filtered(lambda tx: tx.state in ["authorized", "done"]).ids,
+                "payment_backend_action": True,
+                "default_suggested_amount": (
+                    self.env.context.get("suggested_amount", 0.0)
+                    if all(
+                        tx.provider_id.sudo().support_manual_capture == "partial"
+                        for tx in self
+                    )
+                    else 0.0
+                ),
+            },
+        }
 
     def action_refund(self, amount_to_refund=None):
         """Check the state of the transactions and request their refund.
