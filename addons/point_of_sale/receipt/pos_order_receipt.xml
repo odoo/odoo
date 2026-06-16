@@ -173,6 +173,9 @@
             <span class="text-normal price-unit font-monospace" name="standard-unit-price" t-if="not conditions['basic_receipt'] and not len(line['combo_line_ids'])">
                 <t t-out="line['unit_price']" /> / <t t-out="line['product_uom_name']" />
             </span>
+            <div t-if="line['discount'] and not conditions['basic_receipt'] and not line['combo_parent_id']" class="text-small no-discount-price">
+                <t t-out="line['discount']"/>% discount off on <t t-out="line['no_discount_price']"/>
+            </div>
             <div t-if="line['customer_note']" class="text-normal">
                 <strong>Note: </strong>
                 <span class="line-note" t-out="line['customer_note']" />

@@ -321,6 +321,15 @@ export function checkTicketData(data, basic = false) {
                             );
                         }
                     }
+                    if (line.no_discount_price) {
+                        const no_discount_price =
+                            orderline.querySelector(".no-discount-price").textContent;
+                        if (!no_discount_price.includes(line.no_discount_price)) {
+                            throw new Error(
+                                `Order line price without discount mismatch for ${name}: expected ${line.no_discount_price}, got ${no_discount_price}.`
+                            );
+                        }
+                    }
                 }
 
                 if (line.cssRules) {
