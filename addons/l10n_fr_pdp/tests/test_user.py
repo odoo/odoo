@@ -1,7 +1,7 @@
 from contextlib import contextmanager
 from requests import PreparedRequest, Response, Session
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tests.common import tagged
 from odoo.tools import mute_logger
 
@@ -59,19 +59,99 @@ class TestPdpUser(TestL10nFrPdpCommon):
         finally:
             self.env.context = previous_context
 
+    def test_pdp_create_participant_missing_siren(self):
+        self.env.company.partner_id.write({
+            'peppol_eas': '0002',
+            'peppol_endpoint': '123456789',
+            'company_registry': False,
+            'siret': False,
+        })
+        self.assertFalse(self.env.company.partner_id._l10n_fr_pdp_get_siren())
+        wizard = self.env['pdp.registration'].create({'contact_email': "test@pdp.example.com"})
+        # we can not suggest a pdp identifier; we display a warning instead
+        self.assertFalse(wizard.pdp_identifier)
+        self.assertTrue(wizard.warnings['company_siren_warning'])
+        with self.assertRaisesRegex(UserError, "The Identifier is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage"):
+            wizard.button_register_pdp_participant()
+
+    def test_pdp_create_participant_missing_pdp_identifier(self):
+        # When the company does not have a 0225 peppol EAS set we should still suggest
+        # an identifier in the wizard.
+        self.env.company.partner_id.write({
+            'peppol_eas': '0002',
+            'peppol_endpoint': '123456789',
+            'company_registry': '000000000',
+            'siret': '000000000',
+        })
+        self.assertFalse(self.env.company.pdp_identifier)
+        wizard = self.env['pdp.registration'].create({'contact_email': 'yourcompany@test.example.com'})
+        self.assertEqual(wizard.pdp_identifier, '000000000')
+        wizard.button_register_pdp_participant()
+        self.assertRecordValues(self.env.company, [{
+            'pdp_identifier': '000000000',
+            'peppol_eas': '0225',
+            'peppol_endpoint': '000000000',
+        }])
+
+    def test_pdp_create_participant_invalid_identifier(self):
+        # Registering a participant with an invalid identifier should raise an error
+        with self.assertRaisesRegex(UserError, "The identifier abc is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage"):
+            wizard = self.env['pdp.registration'].create({
+                'pdp_identifier': 'abc',
+            })
+        wizard = self.env['pdp.registration'].create({})
+        with self.assertRaisesRegex(UserError, "The identifier abc is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage"):
+            wizard.pdp_identifier = 'abc'
+
     def test_pdp_create_participant_missing_data(self):
         # creating a participant without identifier should not be possible
         wizard = self.env['pdp.registration'].create({
             'pdp_identifier': False,
         })
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaisesRegex(ValidationError, "The contact email is required."):
             wizard.button_register_pdp_participant()
+
+        wizard = self.env['pdp.registration'].create({
+            'pdp_identifier': False,
+            'contact_email': 'yourcompany@test.example.com',
+        })
+        with self.assertRaisesRegex(UserError, "The Identifier is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage"):
+            wizard.button_register_pdp_participant()
+
+    def test_pdp_create_participant_change_identifier(self):
+        # Updating the identifier in the wizard should
+        #  - Update the company `pdp_identifier`
+        #  - Register the company with that value
+        company = self.env.company
+        self.env.company.partner_id.write({
+            'peppol_eas': '0225',
+            'peppol_endpoint': '123456789',
+        })
+        wizard = self.env['pdp.registration'].create({})
+        self.assertEqual(wizard.pdp_identifier, '123456789')
+        wizard.write({
+            'pdp_identifier': '000000000',
+            'contact_email': 'yourcompany@test.example.com',
+        })
+        wizard.button_register_pdp_participant()
+        self.assertRecordValues(company, [{
+            'account_peppol_proxy_state': 'smp_registration',
+            'pdp_identifier': '000000000',
+            'peppol_eas': '0225',
+            'peppol_endpoint': '000000000',
+        }])
 
     def test_pdp_create_participant_receiver(self):
         company = self.env.company
+        self.assertEqual(company.pdp_identifier, '968515759_96851575905899')
         wizard = self.env['pdp.registration'].create(self._get_participant_vals())
         wizard.button_register_pdp_participant()
-        self.assertEqual(company.account_peppol_proxy_state, 'smp_registration')
+        self.assertRecordValues(company, [{
+            'account_peppol_proxy_state': 'smp_registration',
+            'pdp_identifier': '000000000',
+            'peppol_eas': '0225',
+            'peppol_endpoint': '000000000',
+        }])
 
         # The participant should be automatically registered as receiver after some time
         with self._set_context({'participant_state': 'receiver'}):
