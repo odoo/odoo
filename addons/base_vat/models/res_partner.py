@@ -29,7 +29,7 @@ _ref_vat = {
     'au': '83 914 571 673',
     'be': 'BE0477472701',
     'bg': 'BG1234567892',
-    'br': _lt('either 11 digits for CPF or 14 characters for CNPJ'),
+    'br': '16.727.230/0001-97',
     'cr': '3101012009',
     'ch': _lt('CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA'),  # Swiss by Yannick Vaucher @ Camptocamp
     'cl': '76086428-5',
@@ -764,8 +764,7 @@ class ResPartner(models.Model):
                 return vat[-2:] == f'{d1}{d2}'
             return False
 
-        is_cpf_valid = stdnum.get_cc_module('br', 'cpf').is_valid
-        return is_cpf_valid(vat) or is_cnpj_valid(vat)
+        return is_cnpj_valid(vat)
 
     _check_vat_cr_re = re.compile(r'^(?:[1-9]\d{8}|\d{10}|[1-9]\d{10,11})$')
 

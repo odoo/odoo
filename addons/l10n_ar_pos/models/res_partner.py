@@ -17,5 +17,5 @@ class ResPartner(models.Model):
     def _load_pos_data_fields(self, config):
         params = super()._load_pos_data_fields(config)
         if self.env.company.country_id.code == 'AR':
-            params += ['l10n_ar_afip_responsibility_type_id', 'l10n_latam_identification_type_id']
+            params += ['l10n_ar_afip_responsibility_type_id', 'additional_identifiers']
         return params

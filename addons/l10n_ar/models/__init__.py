@@ -2,7 +2,6 @@
 from . import template_ar_ex
 from . import template_ar_ri
 from . import template_ar_base
-from . import l10n_latam_identification_type
 from . import l10n_ar_afip_responsibility_type
 from . import l10n_ar_arca_activity
 from . import account_account

@@ -28,7 +28,6 @@ class TestArCommon(AccountTestInvoicingCommon):
         cls.company_ri.partner_id.write({
             'name': '(AR) Responsable Inscripto (Unit Tests)',
             'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_IVARI").id,
-            'l10n_latam_identification_type_id': cls.env.ref("l10n_ar.it_cuit").id,
             'vat': '30111111118',
             "street": 'Calle Falsa 123',
             "city": 'Rosario',
@@ -51,7 +50,6 @@ class TestArCommon(AccountTestInvoicingCommon):
         cls.company_mono.partner_id.write({
             'name': '(AR) Monotributista (Unit Tests)',
             'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_RM").id,
-            'l10n_latam_identification_type_id': cls.env.ref("l10n_ar.it_cuit").id,
             'vat': '20222222223',
             "street": 'Calle Falsa 123',
             "city": 'Rosario',
@@ -84,13 +82,12 @@ class TestArCommon(AccountTestInvoicingCommon):
             "email": "info@adhoc.com.ar",
             "phone": "(+54) (341) 208 0203",
             "website": "http://www.adhoc.com.ar",
-            'l10n_latam_identification_type_id': cls.env.ref("l10n_ar.it_cuit").id,
             'vat': "30714295698",
             'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_IVARI").id,
         })
         cls.partner_cf = cls.env['res.partner'].create({
             "name": "Consumidor Final Anonimo",
-            "l10n_latam_identification_type_id": cls.env.ref('l10n_ar.it_Sigd').id,
+            "additional_identifiers": {'AR_SIGD': '0'},
             "l10n_ar_afip_responsibility_type_id": cls.env.ref("l10n_ar.res_CF").id,
         })
         cls.res_partner_gritti_mono = cls.env['res.partner'].create({
@@ -103,7 +100,6 @@ class TestArCommon(AccountTestInvoicingCommon):
             "email": "info@example.com.ar",
             "phone": "(+54) (341) 111 2222",
             "website": "http://www.grittiagrimensura.com",
-            'l10n_latam_identification_type_id': cls.env.ref("l10n_ar.it_cuit").id,
             'vat': "27320732811",
             'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_RM").id,
         })
@@ -116,7 +112,6 @@ class TestArCommon(AccountTestInvoicingCommon):
             "email": "contacto@montanasur.com.ar.com",
             "phone": "(+54) (297) 4876 123",
             "website": "http://www.montanasur.com.ar/",
-            'l10n_latam_identification_type_id': cls.env.ref("l10n_ar.it_cuit").id,
             'vat': "27333333339",
             'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_IVA_LIB").id,
         })
@@ -130,7 +125,6 @@ class TestArCommon(AccountTestInvoicingCommon):
             "email": "contacto@serviciosglobales.com.ar",
             "phone": "(+54) (341) 333 4444",
             "website": "http://www.serviciosglobales.com.ar/",
-            'l10n_latam_identification_type_id': cls.env.ref("l10n_ar.it_cuit").id,
             'vat': "30684679372",
             'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_IVAE").id,
         })
@@ -143,8 +137,7 @@ class TestArCommon(AccountTestInvoicingCommon):
             "email": "info@barcelonafoods.com",
             "phone": "(+00) (11) 222 3333",
             "website": "http://www.barcelonafoods.com/",
-            'l10n_latam_identification_type_id': cls.env.ref("l10n_latam_base.it_fid").id,
-            'vat': "2222333344445555",
+            'vat': 'A12345674',
             'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_EXT").id,
         })
         cls.partner_mipyme = cls.env['res.partner'].create({
@@ -157,7 +150,6 @@ class TestArCommon(AccountTestInvoicingCommon):
             "email": "mipyme@example.com",
             "phone": "(123)-456-7890",
             "website": "http://www.mypime-inc.com",
-            'l10n_latam_identification_type_id': cls.env.ref("l10n_ar.it_cuit").id,
             'vat': "30714101443",
             'l10n_ar_afip_responsibility_type_id': cls.env.ref("l10n_ar.res_IVARI").id,
         })

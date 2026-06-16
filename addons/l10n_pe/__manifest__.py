@@ -11,7 +11,6 @@
     'depends': [
         'base_vat',
         'portal_address_extended',
-        'l10n_latam_base',
         'l10n_latam_invoice_document',
         'account_debit_note',
         'account',
@@ -26,7 +25,6 @@
         'data/res.city.csv',
         'data/l10n_pe.res.city.district.csv',
         'data/res_country_data.xml',
-        'data/l10n_latam_identification_type_data.xml',
     ],
     'assets': {
         'web.assets_frontend': [

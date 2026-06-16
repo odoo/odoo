@@ -11,20 +11,17 @@ class TestClLatamDocumentType(AccountTestInvoicingCommon):
         super().setUpClass()
 
         country_cl = cls.env.ref('base.cl')
-        rut_id_type = cls.env.ref('l10n_cl.it_RUT')
 
         cls.cl_partner_a, cls.cl_partner_b = cls.env['res.partner'].create([
             {
                 'name': 'Chilean Partner A',
                 'country_id': country_cl.id,
-                'l10n_latam_identification_type_id': rut_id_type.id,
                 'vat': '76201224-3',
                 'l10n_cl_sii_taxpayer_type': '1',
             },
             {
                 'name': 'Chilean Partner B',
                 'country_id': country_cl.id,
-                'l10n_latam_identification_type_id': rut_id_type.id,
                 'vat': '76201224-3',
                 'l10n_cl_sii_taxpayer_type': '1',
             },

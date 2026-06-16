@@ -71,14 +71,12 @@ Master Data:
     'category': 'Accounting/Localizations/Account Charts',
     'depends': [
         'l10n_latam_invoice_document',
-        'l10n_latam_base',
         'account',
     ],
     'auto_install': ['account'],
     'data': [
         'security/ir.model.access.csv',
         'data/account.account.tag.csv',
-        'data/l10n_latam_identification_type_data.xml',
         'data/l10n_ar_afip_responsibility_type_data.xml',
         'data/l10n_ar.arca.activity.csv',
         'data/account_chart_template_data2.xml',

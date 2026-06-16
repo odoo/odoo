@@ -16,9 +16,13 @@ from odoo.addons.account.models.account_move import BYPASS_LOCK_CHECK
 from odoo.addons.account.tools.partner_identifiers import (
     get_additional_identifiers_metadata_of_country,
     get_deduced_identifiers,
+    get_identifier_label,
     get_identifier_metadata,
     get_tin_metadata_of_country,
+    is_company_identifier,
     is_identifier_void,
+    is_individual_identifier,
+    pick_preferred_identifier,
     validate_identifier,
     validation_error_message,
 )
@@ -655,6 +659,28 @@ class ResPartner(models.Model):
                 if not result['valid']:
                     raise ValidationError(validation_error_message(self.env, key, result['example']))
 
+    @api.constrains('additional_identifiers', 'vat')
+    def _check_identifier_combination(self):
+        """Check to ensure a partner cannot have an individual identifier (a citizen number)
+        together with a company identifier (a tax number or an enterprise number) at the same time.
+        """
+        for partner in self:
+            identifiers = partner.additional_identifiers or {}
+            individual = next((key for key in identifiers if is_individual_identifier(key)), None)
+            if not individual:
+                continue
+            company = next((key for key in identifiers if is_company_identifier(key)), None)
+            if not company and partner.vat and not is_identifier_void(partner.vat):
+                # The country tax number stored on `vat` is itself a company identifier.
+                company = get_tin_metadata_of_country(partner.country_code).get('key', 'TIN')
+            if company:
+                raise ValidationError(_(
+                    "A partner cannot have both an individual identifier (%(individual)s) and a"
+                    " company identifier (%(company)s).",
+                    individual=str(get_identifier_label(individual) or individual),
+                    company=str(get_identifier_label(company) or company),
+                ))
+
     def _compute_bank_count(self):
         bank_data = self.env['res.partner.bank']._read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['__count'])
         mapped_data = {partner.id: count for partner, count in bank_data}
@@ -946,6 +972,52 @@ class ResPartner(models.Model):
         """Convenience getter for an entry of the JSON."""
         self.ensure_one()
         return (self.additional_identifiers or {}).get(identifier_type)
+
+    @api.model
+    def _get_legal_entity_category_priority(self):
+        return {'EN': 0, 'VAT': 1, 'TIN': 1, 'GST': 1, 'CN': 2}
+
+    def _get_preferred_legal_entity_identifier_vals(self):
+        """Return a dict {'scheme': scheme, 'value': value, ...metadata} of the preferred legal entity identifier for the given partner.
+        The selection is based on the following rules:
+        1. It must be a legal entity identifier (e.g. company number, Tax ID, citizen card number).
+        2. Among those, it picks the one with the lowest sequence, THEN the "best" category (see _get_legal_entity_category_priority).
+        3. If no such identifier is found, an empty dict is returned.
+        """
+        if not self:
+            return {}
+        self.ensure_one()
+        partner = self.commercial_partner_id
+        priorities = self._get_legal_entity_category_priority()
+        identifier_vals = pick_preferred_identifier(
+            partner._get_all_identifiers(enrich=True),
+            filter_func=lambda k, v, m: m.get('category') in priorities or k == 'TIN',
+            sort_key=lambda k, v, m: (m.get('sequence', 100), priorities.get(m.get('category'), 100)),
+        )
+        return identifier_vals or {}
+
+    @api.model
+    def _get_tax_category_priority(self):
+        return {'VAT': 0, 'TIN': 0, 'GST': 0}
+
+    def _get_preferred_tax_identifier_vals(self):
+        """Return a dict {'scheme': scheme, 'value': value, ...metadata} of the preferred tax identifier for the given partner.
+        The selection is based on the following rules:
+        1. It must be a valid tax identifier (e.g. company number, Tax ID).
+        2. Among those, it picks the one with the "best" category (see _get_tax_category_priority), THEN ties with the sequence.
+        3. If no such identifier is found, an empty dict is returned.
+        """
+        if not self:
+            return {}
+        self.ensure_one()
+        partner = self.commercial_partner_id
+        priorities = self._get_tax_category_priority()
+        identifier_vals = pick_preferred_identifier(
+            partner._get_all_identifiers(),
+            filter_func=lambda k, v, m: m.get('category') in priorities or k == 'TIN',
+            sort_key=lambda k, v, m: (priorities.get(m.get('category'), 100), m.get('sequence', 100)),
+        )
+        return identifier_vals or {}
 
     def _set_additional_identifier(self, identifier_type, value):
         """ Write helper for adding identifier in the JSON.

@@ -3,7 +3,6 @@
 import enum
 import stdnum
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
 
 
 def verify_final_consumer(vat):
@@ -33,19 +32,17 @@ class PartnerIdTypeEc(enum.Enum):
         if partner.vat and verify_final_consumer(partner.vat):
             return cls.FINAL_CONSUMER
         elif move_type.startswith('in_'):
-            if partner_id_type == 'ruc':  # includes final consumer
-                return cls.IN_RUC
-            elif partner_id_type == 'cedula':
-                return cls.IN_CEDULA
-            elif partner_id_type in ['foreign', 'passport']:
-                return cls.IN_PASSPORT
+            return {  # 'ruc' includes final consumer
+                'ruc': cls.IN_RUC,
+                'cedula': cls.IN_CEDULA,
+                'foreign': cls.IN_PASSPORT,
+            }.get(partner_id_type)
         elif move_type.startswith('out_'):
-            if partner_id_type == 'ruc':  # includes final consumer
-                return cls.OUT_RUC
-            elif partner_id_type == 'cedula':
-                return cls.OUT_CEDULA
-            elif partner_id_type in ['foreign', 'passport']:
-                return cls.OUT_PASSPORT
+            return {  # 'ruc' includes final consumer
+                'ruc': cls.OUT_RUC,
+                'cedula': cls.OUT_CEDULA,
+                'foreign': cls.OUT_PASSPORT,
+            }.get(partner_id_type)
 
 
 class ResPartner(models.Model):
@@ -57,61 +54,36 @@ class ResPartner(models.Model):
         help="Error message when validating the Ecuadorian VAT",
     )
 
-    def _run_check_identification(self, validation='error'):
-        """ Since we validate more documents than the vat for Argentinean partners (CUIT - VAT AR, CUIL, DNI) we
-        extend this method in order to process it. """
-        l10n_ec_partners = self.filtered(lambda p: p.vat and p.country_code == 'EC')
-        if l10n_ec_partners and validation == 'error':
-            it_dni = self.env.ref("l10n_ec.ec_dni", False)
-            for partner in l10n_ec_partners.filtered(lambda p: p.l10n_latam_identification_type_id == it_dni):
-                if len(partner.vat) != 10 or not partner.vat.isdecimal():
-                    raise ValidationError(_('If your identification type is %s, it must be 10 digits',
-                                            it_dni.display_name))
-
-        return super(ResPartner, self - l10n_ec_partners)._run_check_identification(validation=validation)
-
-    @api.depends("vat", "country_id", "l10n_latam_identification_type_id")
+    @api.depends("vat", "country_id", "additional_identifiers")
     def _compute_l10n_ec_vat_validation(self):
-        it_ruc = self.env.ref("l10n_ec.ec_ruc", False)
-        it_dni = self.env.ref("l10n_ec.ec_dni", False)
         ruc = stdnum.util.get_cc_module("ec", "ruc")
-        ci = stdnum.util.get_cc_module("ec", "ci")
         for partner in self:
             partner.l10n_ec_vat_validation = False
-            if partner and partner.l10n_latam_identification_type_id in (it_ruc, it_dni) and partner.vat:
-                final_consumer = verify_final_consumer(partner.vat)
-                if not final_consumer:
-                    if partner.l10n_latam_identification_type_id.id == it_dni.id and not ci.is_valid(partner.vat):
-                        partner.l10n_ec_vat_validation = _("The VAT %s seems to be invalid as the tenth digit doesn't comply with the validation algorithm "
-                                                           "(could be an old VAT number)", partner.vat)
-                    if partner.l10n_latam_identification_type_id.id == it_ruc.id and not ruc.is_valid(partner.vat):
-                        partner.l10n_ec_vat_validation = _("The VAT %s seems to be invalid as the tenth digit doesn't comply with the validation algorithm "
-                                                           "(SRI has stated that this validation is not required anymore for some VAT numbers)", partner.vat)
+            if partner.country_code != 'EC' or not partner.vat or verify_final_consumer(partner.vat):
+                continue
+            # Cédula partners keep their citizen id under additional_identifiers EC_DNI;
+            # in that case the vat field does not hold a RUC, so skip the RUC syntax check.
+            if partner._get_additional_identifier('EC_DNI'):
+                continue
+            if not ruc.is_valid(partner.vat):
+                partner.l10n_ec_vat_validation = _(
+                    "The VAT %s seems to be invalid as the tenth digit doesn't comply with the validation algorithm "
+                    "(SRI has stated that this validation is not required anymore for some VAT numbers)", partner.vat)
 
     def _l10n_ec_get_identification_type(self):
-        """Maps Odoo identification types to Ecuadorian ones.
-        Useful for document type domains, electronic documents, ats, others.
+        """Maps the partner's identification to Ecuadorian ATS codes.
+
+        - ``EC_DNI`` additional identifier → ``cedula``
+        - ``PASSPORT`` additional identifier → ``foreign`` (passport-domiciled
+          individual; the ATS treats them as a foreign-style ID)
+        - EC partners with a ``vat`` (RUC or final consumer) → ``ruc``
+        - any other partner (non-EC, or unidentified) → ``foreign``
         """
         self.ensure_one()
-
-        id_types_by_xmlid = {
-            'l10n_ec.ec_dni': 'cedula',  # DNI
-            'l10n_ec.ec_ruc': 'ruc',  # RUC
-            'l10n_ec.ec_passport': 'ec_passport',  # EC passport
-            'l10n_latam_base.it_pass': 'passport',  # Passport
-            'l10n_latam_base.it_fid': 'foreign',  # Foreign ID
-            'l10n_latam_base.it_vat': 'foreign',
-        }
-
-        # This method is orm-cached, which makes it more efficient in loops than get_external_id()
-        xmlid_by_res_id = {
-            self.env['ir.model.data']._xmlid_to_res_model_res_id(xmlid, raise_if_not_found=True)[1]: xmlid
-            for xmlid in id_types_by_xmlid
-        }
-
-        id_type_xmlid = xmlid_by_res_id.get(self.l10n_latam_identification_type_id.id)
-        if id_type_xmlid in id_types_by_xmlid:
-            return id_types_by_xmlid[id_type_xmlid]
-
-        if self.l10n_latam_identification_type_id.country_id.code != 'EC':
+        if self._get_additional_identifier('EC_DNI'):
+            return 'cedula'
+        if self._get_additional_identifier('PASSPORT'):
             return 'foreign'
+        if self.country_code == 'EC' and self.vat:
+            return 'ruc'
+        return 'foreign'

@@ -250,6 +250,69 @@
         </t>
     </template>
 
+    <!-- Additional identifiers (citizen numbers, passport, ...) entry on the checkout/portal
+         address form. Inherits the base `portal.address_form_fields` so it also applies to the
+         primary `website_sale.address_form_fields` clone used on /shop/address. The rendering
+         values are provided by `_prepare_address_form_values`. -->
+    <template id="address_form_additional_identifiers" inherit_id="portal.address_form_fields"
+              name="Address Form: Additional Identifiers">
+        <div id="div_vat" position="after">
+            <!-- Always rendered on billing forms (even when the current country defines no
+                 identifier) so the public interaction can populate it when the customer
+                 changes the country. -->
+            <div t-if="is_used_as_billing"
+                 id="div_additional_identifiers" class="col-12 mb-2 o_additional_identifiers_portal">
+                <!-- One input per available identifier, hidden until added (or prefilled). -->
+                <t t-foreach="additional_identifiers_metadata.items()" t-as="entry">
+                    <t t-set="identifier_key" t-value="entry[0]"/>
+                    <t t-set="meta" t-value="entry[1]"/>
+                    <t t-set="identifier_value" t-value="partner_additional_identifiers.get(identifier_key)"/>
+                    <div class="o_additional_identifier_field mb-2"
+                         t-att-data-identifier-key="identifier_key"
+                         t-attf-style="#{'' if identifier_value else 'display: none;'}">
+                        <label class="col-form-label fw-normal label-optional" t-attf-for="o_additional_identifier_{{identifier_key}}"
+                               t-out="meta['label']"/>
+                        <div class="input-group">
+                            <input
+                                type="text"
+                                class="form-control"
+                                t-attf-id="o_additional_identifier_{{identifier_key}}"
+                                t-attf-name="additional_identifier_{{identifier_key}}"
+                                t-att-value="identifier_value"
+                                t-att-placeholder="meta.get('placeholder')"
+                            />
+                            <button type="button" class="btn btn-outline-secondary o_remove_identifier"
+                                    title="Remove" aria-label="Remove">
+                                <i class="fa fa-trash-o"/>
+                            </button>
+                        </div>
+                    </div>
+                </t>
+                <!-- Preserve identifiers the partner already has but that are not offered for
+                     the address country (e.g. imported through EDI), so the rebuilt JSON on
+                     submit does not drop them. -->
+                <t t-foreach="partner_additional_identifiers.items()" t-as="extra">
+                    <input t-if="extra[0] not in additional_identifiers_metadata"
+                           type="hidden" t-attf-name="additional_identifier_{{extra[0]}}"
+                           t-att-value="extra[1]"/>
+                </t>
+                <!-- "Add identifier" dropdown listing the identifiers not currently shown.
+                     Omitted when the country defines no identifier (mirrors the JS rebuild). -->
+                <div t-if="additional_identifiers_metadata" class="dropdown o_add_identifier_dropdown">
+                    <button class="btn btn-link p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-plus me-1"/>Add identifier
+                    </button>
+                    <div class="dropdown-menu">
+                        <t t-foreach="additional_identifiers_metadata.items()" t-as="entry">
+                            <a href="#" class="dropdown-item o_add_identifier_item"
+                               t-att-data-identifier-key="entry[0]" t-out="entry[1]['label']"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
     <template id="portal_my_details" inherit_id="portal.portal_my_details">
         <div name="address_details" position="inside">
             <t t-if="len(invoice_sending_methods) > 1 and invoice_edi_format">

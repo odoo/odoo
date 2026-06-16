@@ -8,8 +8,15 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import email_normalize, email_normalize_all
 from odoo.tools.misc import verify_hash_signed
+from odoo.tools.translate import LazyGettext
 
 from odoo.addons.account.controllers.download_docs import _build_zip_from_data, _get_headers
+from odoo.addons.account.tools.partner_identifiers import (
+    get_additional_identifiers_metadata_of_country,
+    is_individual_identifier,
+    validate_identifier,
+    validation_error_message,
+)
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 
@@ -240,3 +247,93 @@ class PortalAccount(CustomerPortal):
             'invoice_edi_formats': dict(request.env['res.partner']._fields['invoice_edi_format'].selection),
         })
         return rendering_values
+
+    # ------------------------------------------------------------
+    # Address form - additional identifiers
+    # ------------------------------------------------------------
+
+    def _get_checkout_additional_identifiers_metadata(self, country_code):
+        """Return the additional identifiers offered on the address form for the given
+        (partner/address) country, keyed by identifier and ordered by sequence. Lazy
+        translations are resolved so the result is JSON-serializable for the
+        ``/my/address/country_info`` route that refreshes the form on a country change.
+        """
+        if not country_code:
+            return {}
+        metadata = get_additional_identifiers_metadata_of_country(country_code, include_international=False)
+
+        def _resolve(value):
+            return str(value) if isinstance(value, LazyGettext) else value
+
+        # Only keep the fields consumed by the address form, dropping the rest (e.g. the
+        # `validation_function` callable) so the result stays JSON-serializable for the route.
+        return {
+            key: {
+                'label': _resolve(entry.get('label')) or key,
+                'placeholder': _resolve(entry.get('placeholder')) or '',
+                'help': _resolve(entry.get('help')) or '',
+                'sequence': entry.get('sequence', 100),
+            }
+            for key, entry in sorted(metadata.items(), key=lambda item: item[1].get('sequence', 100))
+        }
+
+    def _prepare_address_form_values(self, partner_sudo, *args, **kwargs):
+        rendering_values = super()._prepare_address_form_values(partner_sudo, *args, **kwargs)
+        if rendering_values['is_used_as_billing']:
+            # Identifiers offered for the address country (empty for a country that defines
+            # none, or before a country is picked); the form refreshes them on a country change.
+            metadata = self._get_checkout_additional_identifiers_metadata(rendering_values['country'].code)
+            current_partner = partner_sudo or rendering_values['current_partner']
+            rendering_values.update({
+                'additional_identifiers_metadata': metadata,
+                'partner_additional_identifiers': current_partner.additional_identifiers or {},
+            })
+            if metadata:
+                # Show the billing block (which contains the VAT field and the identifiers)
+                # even on B2C stores when the address country defines additional identifiers.
+                rendering_values['display_b2b_fields'] = True
+        return rendering_values
+
+    @http.route()
+    def portal_address_country_info(self, country, address_type, **kw):
+        # Expose the country's additional identifiers so the address form can refresh them
+        # client-side when the customer changes the country (see the additional_identifiers
+        # public interaction).
+        res = super().portal_address_country_info(country, address_type, **kw)
+        res['additional_identifiers_metadata'] = self._get_checkout_additional_identifiers_metadata(country.code)
+        return res
+
+    def _parse_form_data(self, form_data):
+        address_values, extra_form_data = super()._parse_form_data(form_data)
+        # Gather the dynamic identifier inputs (named `additional_identifier_<KEY>`) into the
+        # `additional_identifiers` JSON. Every available input is always submitted (hidden
+        # ones with an empty value), so rebuilding the full dict handles both add and remove.
+        prefix = 'additional_identifier_'
+        if any(key.startswith(prefix) for key in form_data):
+            address_values['additional_identifiers'] = {
+                key[len(prefix):]: value.strip()
+                for key, value in form_data.items()
+                if key.startswith(prefix) and isinstance(value, str) and value.strip()
+            }
+        return address_values, extra_form_data
+
+    def _validate_address_values(self, address_values, *args, **kwargs):
+        invalid_fields, missing_fields, error_messages = super()._validate_address_values(
+            address_values, *args, **kwargs
+        )
+        additional_identifiers = address_values.get('additional_identifiers') or {}
+        for key, value in additional_identifiers.items():
+            result = validate_identifier(key, value)
+            if not result['valid']:
+                invalid_fields.add(f'additional_identifier_{key}')
+                error_messages.append(validation_error_message(request.env, key, result['example']))
+        # A partner is either an individual or a company: a citizen number cannot be combined
+        # with a VAT number (mirrors `res.partner._check_identifier_combination`).
+        if address_values.get('vat'):
+            individual_keys = [key for key in additional_identifiers if is_individual_identifier(key)]
+            if individual_keys:
+                invalid_fields.update(f'additional_identifier_{key}' for key in individual_keys)
+                error_messages.append(request.env._(
+                    "An individual identifier cannot be combined with a VAT number."
+                ))
+        return invalid_fields, missing_fields, error_messages

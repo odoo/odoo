@@ -49,7 +49,6 @@ Master Data:
     'data': [
         'security/ir.model.access.csv',
         'data/account_tax_report_data.xml',
-        'data/l10n_latam_identification_type_data.xml',
         'data/res_partner_data.xml',
         'data/l10n_latam.document.type.csv',
         'data/l10n_ec.sri.payment.csv',

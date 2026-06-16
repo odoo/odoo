@@ -14,7 +14,6 @@ class TestL10nPeLatamDocTypes(AccountTestInvoicingCommon):
 
         cls.company_data['company'].partner_id.write({
             'vat': '20557912879',
-            'l10n_latam_identification_type_id': cls.env.ref('l10n_pe.it_RUC').id,
         })
         cls.company_data['default_journal_sale'].l10n_latam_use_documents = True
         cls.company_data['default_journal_purchase'].l10n_latam_use_documents = True
@@ -22,12 +21,12 @@ class TestL10nPeLatamDocTypes(AccountTestInvoicingCommon):
         cls.partner_pe_dni, cls.partner_pe_ruc = cls.env['res.partner'].create([
             {
                 'name': 'test partner PE DNI',
-                'l10n_latam_identification_type_id': cls.env.ref('l10n_pe.it_DNI').id,
-                'vat': '20121888549',
+                'country_id': cls.env.ref('base.pe').id,
+                'additional_identifiers': {'PE_DNI': '40000004'},
             },
             {
                 'name': 'test partner PE RUC',
-                'l10n_latam_identification_type_id': cls.env.ref('l10n_pe.it_RUC').id,
+                'country_id': cls.env.ref('base.pe').id,
                 'vat': '20462509236',
             },
         ])

@@ -438,7 +438,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'l10n_uy.demo_partner_4': {
                 'name': 'Global Solutions Corp',
-                'l10n_latam_identification_type_id': 'l10n_uy.it_rut',
                 'vat': '218435730016',
                 'street': 'Avenida Central 5678',
                 'city': 'Punta del Este',
@@ -448,7 +447,6 @@ class AccountChartTemplate(models.AbstractModel):
             },
             'l10n_uy.demo_partner_5': {
                 'name': 'Tech Innovations S.A.',
-                'l10n_latam_identification_type_id': 'l10n_uy.it_rut',
                 'vat': '219999830019',
                 'street': 'Avenida de la Libertad 1234',
                 'city': 'Montevideo',
@@ -458,7 +456,6 @@ class AccountChartTemplate(models.AbstractModel):
             },
             'l10n_uy.demo_partner_6': {
                 'name': 'CORREO URUGUAYO',
-                'l10n_latam_identification_type_id': 'l10n_uy.it_rut',
                 'vat': '214130990011',
                 'street': 'Buenos Aires 451',
                 'city': 'Montevideo',
@@ -469,7 +466,6 @@ class AccountChartTemplate(models.AbstractModel):
             # Foreign Company
             'l10n_uy.res_partner_foreign': {
                 'name': 'Foreign Inc',
-                'l10n_latam_identification_type_id': 'l10n_latam_base.it_vat',
                 'vat': '17-2038053',
                 'zip': '95380',
                 'street': '7841 Red Road',
@@ -483,8 +479,7 @@ class AccountChartTemplate(models.AbstractModel):
             # Resident Alien (Foreign living at Uruguay)
             'l10n_uy.res_partner_resident_alien': {
                 'name': 'Resident Alien',
-                'l10n_latam_identification_type_id': 'l10n_uy.it_nie',
-                'vat': '93:402.010-1',
+                'additional_identifiers': {'UY_NIE': '93:402.010-1'},
                 'zip': '2343',
                 'street': 'Calle False 1234',
                 'city': 'Montevideo',
