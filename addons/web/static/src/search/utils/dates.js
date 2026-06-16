@@ -4,6 +4,9 @@ import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { clamp, range } from "@web/core/utils/numbers";
 import { pick } from "@web/core/utils/objects";
+import { constructDomainFromTree } from "@web/core/tree_editor/construct_domain_from_tree";
+import { eliminateVirtualOperators } from "@web/core/tree_editor/virtual_operators";
+import { condition } from "@web/core/tree_editor/condition_tree";
 
 export const QUARTERS = {
     1: { description: _t("Q1"), coveredMonths: [1, 2, 3] },
@@ -328,6 +331,34 @@ export function sortPeriodOptions(options) {
         }
         return granularity1 < granularity2 ? -1 : 1;
     });
+}
+
+/**  ----------------------- RELATIVE DATE FILTERS -----------------------
+ * Relative filters are search bar menu filters, created from the xml with
+ * the syntax <filter ... date="invoice_date">, that can be toggled in the
+ * search bar itself, changing their domain dynamically (eg. with filter
+ * "Today", clicking `>` will change the domain to tomorrow)
+ */
+
+export const RELATIVE_FILTER_OPTIONS = {
+    today: { description: _t("Today"), granularity: "day" },
+    thisWeek: { description: _t("This Week"), granularity: "week" },
+    thisMonth: { description: _t("This Month"), granularity: "month" },
+    thisQuarter: { description: _t("This Quarter"), granularity: "quarter" },
+    thisYear: { description: _t("This Year"), granularity: "year" },
+};
+
+export function getRelativeFilterOptions(searchItem) {
+    const { fieldName, fieldType } = searchItem;
+    return Object.entries(RELATIVE_FILTER_OPTIONS).map(([id, option]) => ({
+        id,
+        ...option,
+        domain: constructDomainFromTree(
+            eliminateVirtualOperators(condition(fieldName, "in range", [fieldType, id]), {
+                generateSmartDates: false,
+            })
+        ),
+    }));
 }
 
 /**
