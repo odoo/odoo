@@ -250,3 +250,13 @@ test("changing font size twice on a collapsed cursor before typing keeps the las
     await insertText(editor, "x");
     expect(getContent(el)).toBe(`<p>ab<span style="font-size: 24px;">x[]</span>cd</p>`);
 });
+
+test("should format inside of content editable boundary (setFontSize)", async () => {
+    await testEditor({
+        contentBefore:
+            '<div contenteditable="false"><p>a<span contenteditable="true">[b]</span>c</p></div>',
+        stepFunction: setFontSize("36px"),
+        contentAfter:
+            '<div contenteditable="false"><p>a<span contenteditable="true"><span style="font-size: 36px;">[b]</span></span>c</p></div>',
+    });
+});
