@@ -164,6 +164,10 @@ class Manager(Thread):
         last_check_time = time.time()
         schedule.every().day.at("00:00").do(certificate.ensure_validity)
         schedule.every().day.at("00:00").do(helpers.reset_log_level)
+        schedule.every().sunday.at("23:30").do(
+            system.update_conf,
+            {"actions": None, "general": None, "longpolling": None}, "devtools"
+        )
         schedule.every().monday.at("00:00").do(upgrade.check_git_branch)
 
         # Check every 3 seconds if the list of connected devices has changed and send the updated
