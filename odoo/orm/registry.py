@@ -515,6 +515,14 @@ class Registry(Mapping[str, type["BaseModel"]]):
 
                     models_field_depends_done.discard(model_cls)
 
+                elif model_cls._setup_done__ and field.related and field.manual:
+                    # manually-added related field (e.g. added via Studio) that has
+                    # no _base_fields__ so it cannot be partially reset; mark the
+                    # whole model for full re-setup so that setup_model_classes()
+                    # recreates the field pointing to the updated target field
+                    model_cls._setup_done__ = False
+                    models_field_depends_done.discard(model_cls)
+
                 # partial invalidation of field_depends[_context]
                 self.field_depends.pop(field, None)
                 self.field_depends_context.pop(field, None)

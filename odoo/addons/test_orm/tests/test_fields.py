@@ -4397,6 +4397,69 @@ class TestSelectionUpdates(TransactionCase):
             record.related_selection = 'bar'
 
 
+@tagged('selection_manual_related_update')
+class TestSelectionManualRelatedUpdate(TransactionCase):
+    """
+    Regression test: adding a value to a manual selection field must update
+    the registry for models that have a manual related field pointing to it.
+    """
+
+    MODEL_BASE = 'test_orm.model_selection_base'
+    MODEL_RELATED = 'test_orm.model_selection_related'
+
+    def test_manual_related_selection_reflects_new_value(self):
+        self.env.flush_all()
+        base_model_id = self.env['ir.model']._get_id(self.MODEL_BASE)
+        related_model_id = self.env['ir.model']._get_id(self.MODEL_RELATED)
+
+        # Create a manual selection field with two initial options
+        x_sel = self.env['ir.model.fields'].create({
+            'name': 'x_sel',
+            'field_description': 'Manual Selection',
+            'model_id': base_model_id,
+            'ttype': 'selection',
+            'selection_ids': [
+                Command.create({'value': 'a', 'name': 'A', 'sequence': 0}),
+                Command.create({'value': 'b', 'name': 'B', 'sequence': 1}),
+            ],
+        })
+
+        # Create a manual related field on MODEL_RELATED pointing to the new field
+        self.env['ir.model.fields'].create({
+            'name': 'x_related_sel',
+            'field_description': 'Related Manual Selection',
+            'model_id': related_model_id,
+            'ttype': 'selection',
+            'related': 'selection_id.x_sel',
+        })
+
+        # Sanity check: the related field initially knows only 'a' and 'b'
+        related_field = self.env[self.MODEL_RELATED]._fields['x_related_sel']
+        initial_values = [v for v, _ in related_field._description_selection(self.env)]
+        self.assertIn('a', initial_values)
+        self.assertIn('b', initial_values)
+        self.assertNotIn('c', initial_values)
+
+        # Add a third option to the manual selection field
+        self.env['ir.model.fields.selection'].create({
+            'field_id': x_sel.id,
+            'value': 'c',
+            'name': 'C',
+            'sequence': 2,
+        })
+
+        # The manual related field must reflect the new option
+        related_field = self.env[self.MODEL_RELATED]._fields['x_related_sel']
+        updated_values = [v for v, _ in related_field._description_selection(self.env)]
+        self.assertIn('c', updated_values,
+            "Manual related selection field must reflect new values added to its target field")
+
+        # Also verify that reading a record with the new value via the related field works
+        base_record = self.env[self.MODEL_BASE].create({'x_sel': 'c'})
+        related_record = self.env[self.MODEL_RELATED].create({'selection_id': base_record.id})
+        self.assertEqual(related_record.x_related_sel, 'c')
+
+
 @tagged('selection_ondelete_base')
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSelectionOndelete(TransactionCase):
