@@ -1,4 +1,7 @@
-from odoo import models, _
+from dateutil.relativedelta import relativedelta
+
+from odoo import _, fields, models
+from odoo.tools.misc import get_lang
 
 
 class StockRule(models.Model):
@@ -29,11 +32,13 @@ class StockRule(models.Model):
 
         delays, delay_description = super(StockRule, self - buy_rule)._get_lead_days(product, **values)
         extra_delays, extra_delay_description = super(StockRule, buy_rule.with_context(ignore_vendor_lead_time=True, global_horizon_days=0))._get_lead_days(product, **values)
+        today = fields.Date.context_today(self)
+        format_date = get_lang(self.env).date_format
         if seller.delay >= bom.produce_delay + bom.days_to_prepare_mo:
             delays['total_delay'] += seller.delay
             delays['purchase_delay'] += seller.delay
             if not bypass_delay_description:
-                delay_description.append((_('Receipt Date'), int(seller.delay)))
+                delay_description.append((_('Receipt Date'), (today + relativedelta(days=seller.delay)).strftime(format_date)))
                 delay_description.append((_('Vendor Lead Time'), _('+ %d day(s)', seller.delay)))
         else:
             manufacture_delay = bom.produce_delay
@@ -41,14 +46,14 @@ class StockRule(models.Model):
             # set manufacture_delay to purchase_delay so that PO can be created with correct date
             delays['purchase_delay'] += manufacture_delay
             if not bypass_delay_description:
-                delay_description.append((_('Receipt Date'), manufacture_delay))
+                delay_description.append((_('Receipt Date'), (today + relativedelta(days=manufacture_delay)).strftime(format_date)))
                 delay_description.append((_('Manufacturing Lead Time'), _('+ %d day(s)', manufacture_delay)))
             days_to_order = bom.days_to_prepare_mo
             delays['total_delay'] += days_to_order
             # add dtpmo to purchase_delay so that PO can be created with correct date
             delays['purchase_delay'] += days_to_order
             if not bypass_delay_description:
-                delay_description.append((_('Production Start Date'), days_to_order))
+                delay_description.append((_('Production Start Date'), (today + relativedelta(days=days_to_order)).strftime(format_date)))
                 delay_description.append((_('Days to Supply Components'), _('+ %d day(s)', days_to_order)))
 
         for key, value in extra_delays.items():

@@ -1,6 +1,7 @@
 import { useService } from "@web/core/utils/hooks";
 import { formatFloat } from "@web/views/fields/formatters";
 import { Component, markup } from "@odoo/owl";
+import { formatDate } from "@web/core/l10n/dates";
 
 export class ForecastedHeader extends Component {
     static template = "stock.ForecastedHeader";
@@ -34,16 +35,35 @@ export class ForecastedHeader extends Component {
         const productsArray = Object.values(this.products || {});
         const product = productsArray.reduce((minProduct, p) => {
             if (
-            !minProduct ||
-            (p.leadtime && p.leadtime.total_delay < (minProduct.leadtime?.total_delay ?? Infinity))
+                !minProduct ||
+                (p.leadtime && p.leadtime.total_delay < (minProduct.leadtime?.total_delay ?? Infinity))
             ) {
-            return p;
+                return p;
             }
             return minProduct;
         }, null);
-        const today = new Date(Date.now());
-        product.leadtime["today"] = today.toLocaleDateString();
-        product.leadtime["earliestPossibleArrival"] = this.addDays(today, product.leadtime.total_delay);
+        const today = new luxon.DateTime.now();
+        product.leadtime["today"] = formatDate(today);
+        product.leadtime["earliestPossibleArrival"] = formatDate(
+            today.plus({ days: product.leadtime.total_delay })
+        );
+        const details = product.leadtime.details;
+        const discard = ["Time Horizon"];
+        const reorder = [
+            "Days to Purchase",
+            "Order Deadline",
+            "Vendor Lead Time",
+            "Days to Supply Components",
+            "Production Start Date",
+            "Manufacturing Lead Time",
+            "Production End Date",
+            "Receipt Date",
+            "Time Horizon",
+        ].reverse();
+        details.sort(
+            (a, b) => reorder.findIndex((k) => k === b[0]) - reorder.findIndex((k) => k === a[0])
+        );
+        product.leadtime.details = details.filter((d) => !discard.includes(d[0]));
         return product.leadtime;
     }
 
@@ -73,12 +93,6 @@ export class ForecastedHeader extends Component {
 
     get uom() {
         return Object.values(this.products)[0].uom;
-    }
-
-    addDays(date, days) {
-        const result = new Date(date);
-        result.setDate(result.getDate() + days);
-        return result.toLocaleDateString();
     }
 
     toJsonString(obj) {
