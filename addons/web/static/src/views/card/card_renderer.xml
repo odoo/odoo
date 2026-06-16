@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CardRenderer">
+        <article
+            role="link"
+            t-att-class="this.getCardClasses()"
+            t-att-data-id="this.props.record.id"
+            t-att-tabindex="this.props.record.model.useSampleModel ? -1 : 0">
+                <t t-call="{{ this.templates[this.constructor.CARD_ATTRIBUTE] }}" t-call-context="this.renderingContext"/>
+        </article>
+    </t>
+
+</templates>

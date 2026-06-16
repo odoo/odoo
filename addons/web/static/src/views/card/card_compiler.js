@@ -8,14 +8,6 @@ import {
 import { toStringExpression } from "@web/views/utils";
 import { toInterpolatedStringExpression, ViewCompiler } from "@web/views/view_compiler";
 
-/**
- * @typedef {Object} DropdownDef
- * @property {Element} el
- * @property {boolean} inserted
- * @property {boolean} shouldInsert
- * @property {("dropdown" | "toggler" | "menu")[]} parts
- */
-
 const ACTION_TYPES = ["action", "object"];
 const SPECIAL_TYPES = [
     ...ACTION_TYPES,
@@ -27,7 +19,10 @@ const SPECIAL_TYPES = [
     "unarchive",
 ];
 
-export class KanbanCompiler extends ViewCompiler {
+export class CardCompiler extends ViewCompiler {
+    // TODO AAB: rename into o_card_action
+    static ACTION_CLASS = "oe_kanban_action";
+
     setup() {
         this.compilers.push(
             { selector: "t[t-call]", fn: this.compileTCall },
@@ -46,15 +41,15 @@ export class KanbanCompiler extends ViewCompiler {
     compileButton(el, params) {
         const type = el.getAttribute("type");
         if (!SPECIAL_TYPES.includes(type)) {
-            // Not a kanban-specific action type.
+            // Not a card-specific action type.
             return super.compileButton(el, params);
         }
 
-        combineAttributes(el, "class", ["oe_kanban_action"]);
+        combineAttributes(el, "class", [this.constructor.ACTION_CLASS]);
 
         if (ACTION_TYPES.includes(type)) {
             if (!el.hasAttribute("debounce")) {
-                // action buttons are debounced in kanban records
+                // action buttons are debounced in card records
                 el.setAttribute("debounce", 300);
             }
             return super.compileButton(el, params);
@@ -86,6 +81,7 @@ export class KanbanCompiler extends ViewCompiler {
 
         return compiled;
     }
+
     /**
      * @returns {Element}
      */
@@ -119,7 +115,7 @@ export class KanbanCompiler extends ViewCompiler {
         const recordExpr = params.recordExpr || "__comp__.props.record";
         const dataPointIdExpr = params.dataPointIdExpr || `${recordExpr}.id`;
         if (!el.hasAttribute("widget")) {
-            // fields without a specified widget are rendered as simple spans in kanban records
+            // fields without a specified widget are rendered as simple spans in card records
             const fieldId = el.getAttribute("field_id");
             compiled = createElement("span", {
                 "t-out": params.formattedValueExpr || `__comp__.getFormattedValue("${fieldId}")`,
@@ -129,8 +125,8 @@ export class KanbanCompiler extends ViewCompiler {
             compiled = super.compileField(el, params);
             const fieldId = el.getAttribute("field_id");
             compiled.setAttribute("id", `'${fieldId}_' + ${dataPointIdExpr}`);
-            // In x2many kanban, records can be edited in a dialog. The same record as the one of
-            // the kanban is used for the form view dialog, so its mode is switched to "edit", but
+            // In x2many card, records can be edited in a dialog. The same record as the one of
+            // the card is used for the form view dialog, so its mode is switched to "edit", but
             // we don't want to see it in edition in the background. For that reason, we force its
             // fields to be readonly when the record is in edition, i.e. when it is opened in a form
             // view dialog.
@@ -188,7 +184,7 @@ export class KanbanCompiler extends ViewCompiler {
         return compiled;
     }
 }
-KanbanCompiler.OWL_DIRECTIVE_WHITELIST = [
+CardCompiler.OWL_DIRECTIVE_WHITELIST = [
     ...ViewCompiler.OWL_DIRECTIVE_WHITELIST,
     "t-name",
     "t-esc",

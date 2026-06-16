@@ -138,10 +138,10 @@
         </field>
     </record>
 
-    <record id="project_project_view_kanban_inherit_sale_project" model="ir.ui.view">
-        <field name="name">project.project.kanban.inherit.sale.project</field>
+    <record id="project_project_view_card_inherit_sale_project" model="ir.ui.view">
+        <field name="name">project.project.card.inherit.sale.project</field>
         <field name="model">project.project</field>
-        <field name="inherit_id" ref="project.view_project_kanban"/>
+        <field name="inherit_id" ref="project.view_project_card"/>
         <field name="arch" type="xml">
             <xpath expr="//templates" position="before">
                 <field name="show_ratings"/>

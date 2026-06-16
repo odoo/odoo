@@ -106,6 +106,7 @@
             'web/static/src/views/*.scss',
             'web/static/src/views/fields/**/*',
             'web/static/src/views/form/**/*',
+            'web/static/src/views/card/**/*',
             'web/static/src/views/kanban/**/*',
             'web/static/src/views/list/**/*',
             'web/static/src/model/**/*',

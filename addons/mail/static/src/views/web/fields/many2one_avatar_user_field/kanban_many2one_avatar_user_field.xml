@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates>
 
-    <t t-name="mail.KanbanMany2OneAvatarUserField">
+    <t t-name="mail.CardMany2OneAvatarUserField">
         <t t-set="relation" t-value="this.props.record.fields[this.props.name].relation"/>
         <KanbanMany2One t-props="this.m2oProps">
             <t t-set-slot="avatar">

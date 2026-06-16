@@ -403,7 +403,15 @@ function getView(model, args, kwargs) {
         }
     }
     const [arch, viewId] = findView(model, viewType, requestViewId);
-    const view = parseView(model, { arch });
+    // Inline the card view if the root element references one via the 'card_id' attribute
+    const doc = domParser.parseFromString(arch, "text/xml").documentElement;
+    const cardId = doc.getAttribute("card_id");
+    if (cardId) {
+        const [cardArch] = findView(model, "card", Number.parseInt(cardId, 10));
+        doc.removeAttribute("card");
+        doc.appendChild(domParser.parseFromString(cardArch, "text/xml").documentElement);
+    }
+    const view = parseView(model, { arch: doc });
     if (kwargs.options?.toolbar) {
         view.toolbar = model._toolbar;
     }

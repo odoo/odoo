@@ -8,8 +8,8 @@ import {
     many2ManyTagsAvatarField,
     ListMany2ManyTagsAvatarField,
     listMany2ManyTagsAvatarField,
-    KanbanMany2ManyTagsAvatarField,
-    kanbanMany2ManyTagsAvatarField,
+    CardMany2ManyTagsAvatarField,
+    cardMany2ManyTagsAvatarField,
 } from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
 import { Many2XAvatarUserAutocomplete } from "../avatar_autocomplete/avatar_many2x_autocomplete";
 
@@ -69,11 +69,11 @@ export const many2ManyTagsAvatarUserField = {
 
 registry.category("fields").add("many2many_avatar_user", many2ManyTagsAvatarUserField);
 
-export class KanbanMany2ManyTagsAvatarUserField extends WithUserChatter(
-    KanbanMany2ManyTagsAvatarField
+export class CardMany2ManyTagsAvatarUserField extends WithUserChatter(
+    CardMany2ManyTagsAvatarField
 ) {
     static components = {
-        ...KanbanMany2ManyTagsAvatarField.components,
+        ...CardMany2ManyTagsAvatarField.components,
     };
     get displayText() {
         return !this.props.readonly;
@@ -87,12 +87,12 @@ export class KanbanMany2ManyTagsAvatarUserField extends WithUserChatter(
         };
     }
 }
-export const kanbanMany2ManyTagsAvatarUserField = {
-    ...kanbanMany2ManyTagsAvatarField,
-    component: KanbanMany2ManyTagsAvatarUserField,
-    additionalClasses: ["o_field_many2many_tags_avatar", "o_field_many2many_tags_avatar_kanban"],
+export const cardMany2ManyTagsAvatarUserField = {
+    ...cardMany2ManyTagsAvatarField,
+    component: CardMany2ManyTagsAvatarUserField,
+    additionalClasses: ["o_field_many2many_tags_avatar"],
 };
-registry.category("fields").add("kanban.many2many_avatar_user", kanbanMany2ManyTagsAvatarUserField);
+registry.category("fields").add("card.many2many_avatar_user", cardMany2ManyTagsAvatarUserField);
 
 export class ListMany2ManyTagsAvatarUserField extends WithUserChatter(
     ListMany2ManyTagsAvatarField
@@ -124,6 +124,4 @@ export const listMany2ManyTagsAvatarUserField = {
 };
 
 registry.category("fields").add("list.many2many_avatar_user", listMany2ManyTagsAvatarUserField);
-registry
-    .category("fields")
-    .add("activity.many2many_avatar_user", kanbanMany2ManyTagsAvatarUserField);
+registry.category("fields").add("activity.many2many_avatar_user", cardMany2ManyTagsAvatarUserField);
