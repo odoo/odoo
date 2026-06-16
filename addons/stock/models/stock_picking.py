@@ -2263,6 +2263,10 @@ class StockPicking(models.Model):
     def _get_report_lang(self):
         return self.move_ids and self.move_ids[0].partner_id.lang or self.partner_id.lang or self.env.lang
 
+    def _get_deliveryslip_report_title(self):
+        self.ensure_one()
+        return self.picking_type_id._get_code_report_name()
+
     def _get_autoprint_report_actions(self):
         report_actions = []
         pickings_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_delivery_slip)
