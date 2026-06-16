@@ -158,6 +158,13 @@
     <span class="o-xsmaller opacity-50" t-att-title="message.editedText"> (edited)</span>
 </t>
 
+<t t-name="mail.Message.forward">
+    <span class="o-mail-ForwardedMessage-label d-flex align-items-center gap-1 pb-1 text-muted o-xsmaller">
+        <i class="fa fa-share" aria-hidden="true"/>
+        <span class="fst-italic fw-semibold">Forwarded</span>
+    </span>
+</t>
+
 <t t-name="mail.Message.actions">
     <div t-if="this.props.hasActions and this.message.hasActions and !this.isEditing" class="o-mail-Message-actions d-print-none d-flex align-items-start"
         t-att-class="{

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.SelectableList">
+        <div class="o-mail-SelectableList d-flex flex-column gap-2">
+            <input class="form-control" type="search" t-att-placeholder="this.props.searchPlaceholder" t-att-value="this.searchStr" t-on-input="ev => this.searchStr = ev.target.value"/>
+            <ul class="o-mail-SelectableList-items list-group list-group-flush overflow-auto o-scrollbar-thin flex-grow-1 mb-0">
+                <t t-foreach="this.selectableOptions" t-as="option" t-key="option.key">
+                    <li class="list-group-item list-group-item-action d-flex align-items-center gap-2 py-2"
+                        t-att-class="{ 'active': this.isSelected(option.key) }"
+                        t-on-click="() => this.toggleSelection(option.key)">
+                        <t t-slot="option" option="option"/>
+                    </li>
+                </t>
+                <li t-if="this.selectableOptions.length === 0" class="list-group-item text-muted smaller border-0">
+                    <t t-out="this.emptyListText"/>
+                </li>
+            </ul>
+        </div>
+    </t>
+
+</templates>

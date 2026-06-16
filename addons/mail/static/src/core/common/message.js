@@ -35,6 +35,8 @@ import { useForwardRefsToParent, useLongPress } from "@mail/utils/common/hooks";
 import { ActionList } from "@mail/core/common/action_list";
 import { loadCssFromBundle } from "@mail/utils/common/misc";
 import { MessageContextMenu } from "@mail/core/common/message_context_menu";
+import { MessageBodyContent } from "@mail/core/common/message_body_content";
+import { ForwardDialog } from "@mail/discuss/core/common/forward_dialog";
 import { Priority } from "@mail/core/common/priority";
 
 /**
@@ -63,6 +65,7 @@ export class Message extends Component {
         Dropdown,
         ImStatus,
         MessageContextMenu,
+        MessageBodyContent,
         MessageInReply,
         MessageLinkPreviewList,
         MessageReactions,
@@ -518,6 +521,8 @@ export class Message extends Component {
         editedEl?.replaceChildren(
             renderToElement("mail.Message.edited", { message: this.message })
         );
+        const forwardEl = bodyEl.querySelector(".o-mail-Message-forward");
+        forwardEl?.replaceWith(renderToElement("mail.Message.forward"));
         const channelLinks = bodyEl.querySelectorAll("a.o_channel_redirect");
         this.store.handleValidChannelMention(Array.from(channelLinks));
         for (const el of bodyEl.querySelectorAll(".o_message_redirect")) {
@@ -610,6 +615,10 @@ export class Message extends Component {
             { message: this.props.message, initialReaction: reaction },
             { rootRef: this.rootRef }
         );
+    }
+
+    openForwardDialog() {
+        this.dialog.add(ForwardDialog, { message: this.props.message });
     }
 
     get showSubject() {
