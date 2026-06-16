@@ -781,6 +781,11 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
 
     def _add_invoice_config_vals(self, vals):
         super()._add_invoice_config_vals(vals)
+
+        # There is no specifications for debit notes in BIS3, we'll concider them as invoices
+        if vals['document_type'] == 'debit_note':
+            vals['document_type'] = 'invoice'
+
         invoice = vals['invoice']
         vals.update(self._init_invoice_export_values(invoice))
 
