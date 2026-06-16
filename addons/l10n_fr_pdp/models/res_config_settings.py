@@ -62,6 +62,18 @@ class ResConfigSettings(models.TransientModel):
         for record in self:
             record.l10n_fr_pdp_pilot_phase = record.company_id.l10n_fr_pdp_pilot_phase
 
+    @api.depends('country_code')
+    def _compute_peppol_purchase_journal_required(self):
+        # EXTENDS account_peppol
+        # If documents_account_peppol is installed, the condition for requirements might be bypassed
+        # if the document import folder is set up. But as responses are mandatory in PDP (French Companies),
+        # and both modules are not dependent on one another, we *explicitely* force the journal for French companies here and
+        # allow further customisation for the others.
+        fr_config = self.filtered(lambda config: config.country_code == 'FR')
+        for config in fr_config:
+            config.peppol_purchase_journal_required = config.account_peppol_proxy_state in ('smp_registration', 'receiver')
+        super(ResConfigSettings, self - fr_config)._compute_peppol_purchase_journal_required()
+
     def _inverse_l10n_fr_pdp_pilot_phase(self):
         for record in self:
             record.company_id._l10n_fr_pdp_update_pilot_phase(record.l10n_fr_pdp_pilot_phase)
