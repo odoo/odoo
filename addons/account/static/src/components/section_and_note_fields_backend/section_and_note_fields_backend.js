@@ -1,5 +1,4 @@
-import { onWillRender } from "@web/owl2/utils";
-import { Component, onPatched, props, t } from "@odoo/owl";
+import { Component, computed, onPatched, props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
@@ -91,14 +90,14 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         this.priceColumns = [...this.props.aggregatedFields, "price_unit"];
         // invisible fields to force copy when duplicating a section
         this.copyFields = ["display_type", "collapse_composition", "collapse_prices"];
-        this.parentSectionMap = new Map();
         onPatched(() => {
             this.focusToName(this.editedRecord());
         });
-        onWillRender(() => {
-            this.buildParentSectionMap();
-        });
     }
+
+    parentSectionMap = computed(() =>
+        this.buildParentSectionMap(this.props.list.records)
+    );
 
     get disabledMoveDownItemTooltip() {
         return DISABLED_MOVE_DOWN_ITEM_TOOLTIP;
@@ -130,23 +129,24 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         return [...this.props.aggregatedFields, 'section_state'];
     }
 
-    buildParentSectionMap() {
-        this.parentSectionMap.clear();
+    buildParentSectionMap(records) {
+        const parentSectionMap = new Map();
         let lastSection = null;
         let lastSubSection = null;
 
-        for (const record of this.props.list.records) {
+        for (const record of records) {
             if (record.data.display_type === DISPLAY_TYPES.SECTION) {
                 lastSection = record;
                 lastSubSection = null;
-                this.parentSectionMap.set(record, null);
+                parentSectionMap.set(record, null);
             } else if (record.data.display_type === DISPLAY_TYPES.SUBSECTION) {
                 lastSubSection = record;
-                this.parentSectionMap.set(record, lastSection);
+                parentSectionMap.set(record, lastSection);
             } else {
-                this.parentSectionMap.set(record, lastSubSection ?? lastSection);
+                parentSectionMap.set(record, lastSubSection ?? lastSection);
             }
         }
+        return parentSectionMap;
     }
 
     async toggleCollapse(record, fieldName) {
@@ -351,7 +351,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
      * @returns {boolean}
      */
     shouldCollapse(record, fieldName, checkSection = false) {
-        const parentSection = this.parentSectionMap.get(record);
+        const parentSection = this.parentSectionMap().get(record);
 
         // --- For sections ---
         if (this.isSection(record) && checkSection) {
@@ -375,7 +375,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
 
         // --- For regular lines ---
         if (this.isSubSection(parentSection)) {
-            const grandParent = this.parentSectionMap.get(parentSection);
+            const grandParent = this.parentSectionMap().get(parentSection);
             return parentSection.data[fieldName] || grandParent?.data[fieldName];
         }
 
@@ -503,7 +503,7 @@ export class SectionAndNoteListRenderer extends ListRenderer {
         await super.sortDrop(dataRowId, dataGroupId, options);
 
         const record = this.props.list.records.find(r => r.id === dataRowId);
-        const parentSection = this.parentSectionMap.get(record);
+        const parentSection = this.parentSectionMap().get(record);
         const commands = [];
 
         if (this.resetOnResequence(record, parentSection)) {

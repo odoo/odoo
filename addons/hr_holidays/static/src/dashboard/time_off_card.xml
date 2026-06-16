@@ -20,9 +20,9 @@
                     </t>
                 </span>
                 <span t-if="this.props.requires_allocation and data.closest_allocation_expire !== false"
-                    t-att-class="'o_timeoff_validity' + (this.warning ? ' text-warning' : '')">
+                    t-att-class="'o_timeoff_validity' + (this.warning() ? ' text-warning' : '')">
                     Validity <t t-out="data.closest_allocation_expire"/>
-                    <i t-if="this.warning" class="fa fa-exclamation-triangle ms-1"/>
+                    <i t-if="this.warning()" class="fa fa-exclamation-triangle ms-1"/>
                 </span>
                 <span t-else="" class="o_timeoff_validity">
                     <t t-if="this.props.requires_allocation" name="duration_type">Available</t>

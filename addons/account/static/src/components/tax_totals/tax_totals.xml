@@ -39,9 +39,10 @@
     </t>
 
     <t t-name="account.TaxTotalsField">
-        <table t-if="this.totals" class="float-end text-end">
+        <t t-set="totals" t-value="this.totals()"/>
+        <table t-if="totals" class="float-end text-end">
             <tbody>
-                <t t-foreach="this.totals.subtotals" t-as="subtotal" t-key="subtotal_index">
+                <t t-foreach="totals.subtotals" t-as="subtotal" t-key="subtotal_index">
                     <tr>
                         <td class="o_td_label">
                             <label class="o_form_label o_tax_total_label" t-out="subtotal.name"/>
@@ -57,7 +58,7 @@
 
                     <t t-foreach="subtotal.tax_groups" t-as="taxGroup" t-key="taxGroup_index">
                         <TaxGroupComponent
-                            totals="this.totals"
+                            totals="totals"
                             subtotal="subtotal"
                             taxGroup="taxGroup"
                             isReadonly="this.readonly"
@@ -67,14 +68,14 @@
                     </t>
                 </t>
 
-                <tr t-if="'cash_rounding_base_amount_currency' in this.totals">
+                <tr t-if="'cash_rounding_base_amount_currency' in totals">
                     <td class="o_td_label">
                         <label class="o_form_label o_tax_total_label">Rounding</label>
                     </td>
                     <td class="o_list_monetary">
                         <span
                             dir="ltr"
-                            t-out="this.formatMonetary(this.totals.cash_rounding_base_amount_currency)"
+                            t-out="this.formatMonetary(totals.cash_rounding_base_amount_currency)"
                         />
                     </td>
                 </tr>
@@ -88,9 +89,9 @@
                     <td class="o_list_monetary">
                         <span
                             name="amount_total"
-                            t-att-class="{'oe_subtotal_footer_separator': this.totals.has_tax_groups}"
+                            t-att-class="{'oe_subtotal_footer_separator': totals.has_tax_groups}"
                             dir="ltr"
-                            t-out="this.formatMonetary(this.totals.total_amount_currency)"
+                            t-out="this.formatMonetary(totals.total_amount_currency)"
                             style="font-size: 1.3em; font-weight: bold; white-space: nowrap;"
                         />
                     </td>
