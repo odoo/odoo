@@ -5,7 +5,7 @@ import { localization } from "@web/core/l10n/localization";
 import { clamp, range } from "@web/core/utils/numbers";
 import { pick } from "@web/core/utils/objects";
 import { domainFromTree } from "@web/core/tree_editor/domain_from_tree";
-import { condition } from "@web/core/tree_editor/condition_tree";
+import { makeRelativeRange } from "@web/core/tree_editor/virtual_operators";
 
 export const QUARTERS = {
     1: { description: _t("Q1"), coveredMonths: [1, 2, 3] },
@@ -332,52 +332,70 @@ export function sortPeriodOptions(options) {
     });
 }
 
-export const RELATIVE_FILTER_OPTIONS = {
-    today: {
-        id: "today",
-        description: _t("Today"),
-        granularity: "day",
-        groupNumber: 1,
-    },
-    thisWeek: {
-        id: "thisWeek",
-        description: _t("This Week"),
-        granularity: "week",
-        groupNumber: 1,
-    },
-    thisMonth: {
-        id: "thisMonth",
-        description: _t("This Month"),
-        granularity: "month",
-        groupNumber: 1,
-    },
-    thisQuarter: {
-        id: "thisQuarter",
-        description: _t("This Quarter"),
-        granularity: "quarter",
-        groupNumber: 1,
-    },
-    thisYear: {
-        id: "thisYear",
-        description: _t("This Year"),
-        granularity: "year",
-        groupNumber: 1,
-    },
-};
-
-export function getRelativeFilterOptions(searchItem) {
-    const { fieldName, fieldType } = searchItem;
-    return Object.values(RELATIVE_FILTER_OPTIONS).map((option) => ({
-        ...option,
-        domain: domainFromTree(condition(fieldName, "in range", [fieldType, option.id]), {
-            generateSmartDates: false,
-        }),
-    }));
-}
-
 /**
  * Checks if a year id is among the given array of period option ids.
  */
 export function yearSelected(selectedOptionIds) {
     return selectedOptionIds.some((optionId) => optionId.startsWith("year"));
+}
+
+/**  ----------------------- RELATIVE DATE FILTERS -----------------------
+ * Relative filters are search bar menu filters, created from the xml with
+ * the syntax <filter ... date="invoice_date">, that can be toggled in the
+ * search bar itself, changing their domain dynamically (eg. with filter
+ * "Today", clicking `>` will change the domain to tomorrow)
+ */
+
+// Keyed by option id; each option only needs its label and granularity.
+export const RELATIVE_FILTER_OPTIONS = {
+    today: { description: _t("Today"), granularity: "day" },
+    thisWeek: { description: _t("This Week"), granularity: "week" },
+    thisMonth: { description: _t("This Month"), granularity: "month" },
+    thisQuarter: { description: _t("This Quarter"), granularity: "quarter" },
+    thisYear: { description: _t("This Year"), granularity: "year" },
+};
+
+const SCALE_LABELS = {
+    day: _t("days"),
+    week: _t("weeks"),
+    month: _t("months"),
+    year: _t("years"),
+};
+const LAST_PERIOD_LABELS = {
+    week: _t("Last week"),
+    month: _t("Last month"),
+    quarter: _t("Last quarter"),
+    year: _t("Last year"),
+};
+const NEXT_PERIOD_LABELS = {
+    week: _t("Next week"),
+    month: _t("Next month"),
+    quarter: _t("Next quarter"),
+    year: _t("Next year"),
+};
+
+export function getRelativeFilterOptions() {
+    // The domain is computed on demand from the granularity and the active offset (see constructRelativeDateDomain)
+    return Object.entries(RELATIVE_FILTER_OPTIONS).map(([id, option]) => ({ id, ...option }));
+}
+
+export function constructRelativeDateDomain(searchItem, option, offset) {
+    const { fieldName, fieldType } = searchItem;
+    return domainFromTree(makeRelativeRange(fieldName, offset, option.granularity, fieldType));
+}
+
+export function getRelativeDateLabel(option, offset) {
+    const isDay = option.granularity === "day";
+    if (offset === 0) {
+        return option.description;
+    } else if (offset === -1) {
+        return isDay ? _t("Yesterday") : LAST_PERIOD_LABELS[option.granularity];
+    } else if (offset === 1) {
+        return isDay ? _t("Tomorrow") : NEXT_PERIOD_LABELS[option.granularity];
+    }
+    const subs = {
+        offset: Math.abs(offset),
+        unit: SCALE_LABELS[option.granularity],
+    };
+    return offset < 0 ? _t("%(offset)s %(unit)s ago", subs) : _t("in %(offset)s %(unit)s", subs);
 }

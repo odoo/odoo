@@ -625,6 +625,14 @@ export class SearchBar extends Component {
         this.env.searchModel.spawnCustomFilterDialog(false, facet.domain, facet.groupId);
     }
 
+    onPrevDateFacetClick(_target, facet) {
+        this.env.searchModel.shiftRelativeFilter(facet.groupId, -1);
+    }
+
+    onNextDateFacetClick(_target, facet) {
+        this.env.searchModel.shiftRelativeFilter(facet.groupId, 1);
+    }
+
     /**
      * @param {Object} facet
      */

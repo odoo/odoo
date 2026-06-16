@@ -1,4 +1,4 @@
-import { Component, onPatched, props, proxy, t } from "@odoo/owl";
+import { Component, onPatched, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
 
 export const ACCORDION = Symbol("Accordion");
 export class AccordionItem extends Component {
@@ -8,19 +8,25 @@ export class AccordionItem extends Component {
         slots: t.object({
             default: t.any(),
         }),
-        description: t.string(),
+        description: t.string().optional,
         selected: t.boolean().optional(false),
         class: t.string().optional(""),
         onWillToggle: t.function().optional(() => () => {}),
+        open: t.boolean().optional()
     });
 
     setup() {
         this.state = proxy({
-            open: false,
+            open: this.props.open,
         });
         this.parentComponent = this.env[ACCORDION];
         onPatched(() => {
             this.parentComponent?.accordionStateChanged?.();
+        });
+        onWillUpdateProps((nextProps) => {
+            if (nextProps.open && !this.state.open) {
+                this.state.open = true;
+            }
         });
     }
 

@@ -10,30 +10,9 @@
                 tabindex="0"
                 >
 
-                <!-- :hover overlay -->
-                <div class="position-absolute start-0 top-0 bottom-0 end-0 bg-view border rounded-2 shadow opacity-0 opacity-100-hover"/>
-
-                <div class="o_searchview_facet_label position-relative rounded-start-2 px-1 rounded-end-0 p-0"
-                    t-on-click="() => this.onFacetLabelClick(facet)"
-                    t-att-role="facet.domain &amp;&amp; facet.type !== 'relative' ? 'button' : 'img'"
-                    t-att-class="{
-                        'text-bg-action': facet.type == 'groupBy',
-                        'btn btn-primary': facet.type == 'field' || facet.type == 'filter',
-                        'btn btn-favourite': facet.type == 'favorite'
-                    }"
-                    >
-                    <i t-if="facet.icon" class="small fa-fw" t-att-class="facet.icon" role="image"/>
-                    <small t-else="" class="px-1" t-out="facet.title"/>
-
-                    <!-- Editable facets' overlay -->
-                    <!-- TMP for 1 commit disable facet click -->
-                    <span t-if="facet.domain &amp;&amp; facet.type !== 'relative'"
-                        class="position-absolute start-0 top-0 bottom-0 end-0 bg-inherit opacity-0 opacity-100-hover"
-                        t-att-class="{'px-2 transition-base': !facet.icon}"
-                        >
-                        <i class="fa fa-fw fa-pencil"/>
-                    </span>
-                </div>
+                <!-- Special navigation facets for filters with date="..." and relative dates (eg Last Week) -->
+                <t t-if="facet.type === 'relative'" t-call="web.SearchBar.NavigationFacetIcon"/>
+                <t t-else="" t-call="web.SearchBar.NormalFacetIcon"/>
 
                 <div class="o_facet_values position-relative d-flex flex-wrap align-items-center ps-2 rounded-end-2 text-wrap overflow-hidden">
                     <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
@@ -49,6 +28,53 @@
                 </div>
             </div>
         </t>
+    </t>
+
+    <t t-name="web.SearchBar.NormalFacetIcon">
+        <!-- :hover overlay -->
+        <div class="position-absolute start-0 top-0 bottom-0 end-0 bg-view border rounded-2 shadow opacity-0 opacity-100-hover"/>
+
+        <div class="o_searchview_facet_label position-relative rounded-start-2 px-1 rounded-end-0 p-0"
+            t-on-click="() => this.onFacetLabelClick(facet)"
+            t-att-role="facet.domain ? 'button' : 'img'"
+            t-att-class="{
+                'text-bg-action': facet.type == 'groupBy',
+                'btn btn-primary': facet.type == 'field' || facet.type == 'filter',
+                'btn btn-favourite': facet.type == 'favorite'
+            }"
+            >
+            <i t-if="facet.icon" class="small fa-fw" t-att-class="facet.icon" role="image"/>
+            <small t-else="" class="px-1" t-out="facet.title"/>
+
+            <!-- Editable facets' overlay -->
+            <span t-if="facet.domain"
+                class="position-absolute start-0 top-0 bottom-0 end-0 bg-inherit opacity-0 opacity-100-hover"
+                t-att-class="{'px-2 transition-base': !facet.icon}"
+                >
+                <i class="fa fa-fw fa-pencil"/>
+            </span>
+        </div>
+    </t>
+   
+
+    <t t-name="web.SearchBar.NavigationFacetIcon">
+        <!-- :hover overlay -->
+        <div class="position-absolute start-0 top-0 bottom-0 end-0 bg-view border rounded-2 shadow opacity-0 opacity-100-hover"/>
+
+        <div class="o_date_nav_btn o_searchview_facet_label btn btn-primary rounded-start-2 rounded-end-0 p-0"
+            role="button"
+            aria-label="Previous period"
+            t-on-click="(ev) => this.onPrevDateFacetClick(ev.currentTarget, facet)"
+        >
+            <i class="fa fa-angle-left fa-fw px-2" role="img"/>
+        </div>
+        <div class="o_date_nav_btn btn btn-primary rounded-0 p-0"
+            role="button"
+            aria-label="Next period"
+            t-on-click="(ev) => this.onNextDateFacetClick(ev.currentTarget, facet)"
+        >
+            <i class="fa fa-angle-right fa-fw px-2" role="img"/>
+        </div>
     </t>
 
     <t t-name="web.SearchBar.QuickSearchItems">

@@ -22,6 +22,8 @@ import {
     rankInterval,
     getRelativeFilterOptions,
     yearSelected,
+    constructRelativeDateDomain,
+    getRelativeDateLabel,
 } from "./utils/dates";
 import { FACET_COLORS, FACET_ICONS } from "./utils/misc";
 import { hashCode } from "@web/core/utils/strings";
@@ -1108,8 +1110,19 @@ export class SearchModel extends EventBus {
         );
         this.query = this.query.filter((q) => this.searchItems[q.searchItemId].groupId !== groupId);
         if (!alreadyActive) {
-            this.query.push({ searchItemId, optionId });
+            this.query.push({ searchItemId, optionId, offset: 0 });
         }
+        this._notify();
+    }
+
+    shiftRelativeFilter(groupId, delta) {
+        const queryElem = this.query.find(
+            (q) => this.searchItems[q.searchItemId].groupId === groupId
+        );
+        if (!queryElem) {
+            return;
+        }
+        queryElem.offset = (queryElem.offset || 0) + delta;
         this._notify();
     }
 
@@ -1625,7 +1638,7 @@ export class SearchModel extends EventBus {
                 fieldName: dateFilterItem.fieldName,
                 fieldType: dateFilterItem.fieldType,
                 description: dateFilterItem.description,
-                options: getRelativeFilterOptions(dateFilterItem),
+                options: getRelativeFilterOptions(),
                 groupNumber: dateFilterItem.groupNumber,
                 groupId: this.nextGroupId,
                 id: this.nextId,
@@ -1999,12 +2012,6 @@ export class SearchModel extends EventBus {
                         values.push(`${searchItem.description}: ${innerFilterDescription}`);
                         break;
                     }
-                    case "relativeFilter": {
-                        type = "relative";
-                        const option = searchItem.options.find((o) => o.id === activeItem.optionId);
-                        values.push(`${searchItem.description}: ${option.description}`);
-                        break;
-                    }
                     case "parentFilter": {
                         type = "filter";
                         const innerFilterDescription = this._getParentFilterDomain(
@@ -2013,6 +2020,17 @@ export class SearchModel extends EventBus {
                             "description"
                         );
                         innerFilterDescription.forEach((filter) => values.push(filter));
+                        break;
+                    }
+                    case "relativeFilter": {
+                        type = "relative";
+                        const option = searchItem.options.find((o) => o.id === activeItem.optionId);
+                        values.push(
+                            `${searchItem.description}: ${getRelativeDateLabel(
+                                option,
+                                activeItem.offset
+                            )}`
+                        );
                         break;
                     }
                     default: {
@@ -2258,7 +2276,11 @@ export class SearchModel extends EventBus {
                     activeItem.autocompleteValues.push(queryElem.autocompleteValue);
                 } else if ("optionId" in queryElem) {
                     if (!activeItem) {
-                        activeItem = { searchItemId, optionId: queryElem.optionId };
+                        activeItem = {
+                            searchItemId,
+                            optionId: queryElem.optionId,
+                            offset: queryElem.offset || 0,
+                        };
                         activeItems.push(activeItem);
                     }
                 } else {
@@ -2427,18 +2449,26 @@ export class SearchModel extends EventBus {
             case "parentFilter": {
                 return this._getParentFilterDomain(searchItem, activeItem.generatorIds);
             }
+            case "relativeFilter": {
+                return this._getRelativeFilterDomain(
+                    searchItem,
+                    activeItem.optionId,
+                    activeItem.offset
+                );
+            }
             case "filter":
             case "favorite": {
                 return searchItem.domain;
-            }
-            case "relativeFilter": {
-                const option = searchItem.options.find((o) => o.id === activeItem.optionId);
-                return option?.domain ?? null;
             }
             default: {
                 return null;
             }
         }
+    }
+
+    _getRelativeFilterDomain(searchItem, optionId, offset) {
+        const option = searchItem.options.find((o) => o.id === optionId);
+        return constructRelativeDateDomain(searchItem, option, offset);
     }
 
     _getSearchItemGroupBys(activeItem) {

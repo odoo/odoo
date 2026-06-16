@@ -268,14 +268,14 @@ function isRelativeBetween(c, fieldType) {
 /**
  * Creates a domain range condition between today and a relative offset.
  * @param {string} path - Field name.
- * @param {number} diff - Magnitude of time shift.
+ * @param {number} diff - Magnitude of time shift (can be negative)
  * @param {string} unit - 'day', 'week', 'month', or 'year'.
  * @param {boolean} isProperty - True if field is a metadata property.
  * @param {boolean} smartDates - Use shorthand keywords instead of expressions.
  * @param {'date'|'datetime'} fieldType - Field type for formatting/offset logic.
  * @returns {Condition} A combined domain condition (AND).
  */
-function makeRelativeBetween(path, diff, unit, isProperty, smartDates, fieldType) {
+export function makeRelativeBetween(path, diff, unit, isProperty, smartDates, fieldType) {
     const isFuture = diff > 0;
     let todayCond, diffCond;
 
@@ -311,6 +311,27 @@ function makeRelativeBetween(path, diff, unit, isProperty, smartDates, fieldType
     return connector("&", [
         condition(path, isFuture ? ">" : ">=", isFuture ? todayCond : diffCond, false, isProperty),
         condition(path, isFuture ? "<=" : "<", isFuture ? diffCond : todayCond, false, isProperty),
+    ]);
+}
+
+/**
+ * Creates a domain range condition for a relative date (eg Last Week / in 2 weeks).
+ * @param {string} path - Field name.
+ * @param {number} diff - Magnitude of time shift (can be negative).
+ * @param {string} smartUnit - 'day', 'week', 'month', or 'year'.
+ * @param {'date'|'datetime'} fieldType - Field type for formatting/offset logic.
+ * @returns {Condition} A combined domain condition (AND).
+ */
+export function makeRelativeRange(path, diff, smartUnit) {
+    const unit = { week: "w", month: "m", year: "y" }[smartUnit] || "d";
+    const anchor = { w: "today =week_start", m: "today =1d", y: "today =1d =1m" }[unit] || "today";
+
+    const shift = (n) => (n === 0 ? anchor : `${anchor} ${n < 0 ? "-" : "+"}${Math.abs(n)}${unit}`);
+
+    // Selects the period `diff` [anchor + diff, anchor + diff + 1).
+    return connector("&", [
+        condition(path, ">=", shift(diff)),
+        condition(path, "<", shift(diff + 1)),
     ]);
 }
 

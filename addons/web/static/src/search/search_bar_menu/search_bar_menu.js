@@ -105,6 +105,15 @@ export class SearchBarMenu extends Component {
         this.env.searchModel.toggleRelativeFilter(itemId, optionId);
     }
 
+    // TODO also for user custom filter and hardcoded month if we keep
+    hasActiveRelativeFilter(item) {
+        if (!item.relativeFilterId) {
+            return false;
+        }
+        const relativeItem = this.filterItems.find((i) => i.id === item.relativeFilterId);
+        return relativeItem?.options?.some((o) => o.isActive) ?? false;
+    }
+
     async onToggle({ itemId, optionsParams }) {
         if (optionsParams.toBeLoaded) {
             await this.env.searchModel.loadLazyParentFilter(itemId);
