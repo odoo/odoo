@@ -7,4 +7,9 @@ class AccountChartTemplate(models.AbstractModel):
 
     @template('sa', 'account.tax')
     def _get_sa_edi_account_tax(self):
-        return self._parse_csv('sa', 'account.tax', module='l10n_sa_edi')
+        tax_data = self._parse_csv('sa', 'account.tax', module='l10n_sa_edi')
+        return {
+            xmlid: vals
+            for xmlid, vals in tax_data.items()
+            if self.env.ref(xmlid, raise_if_not_found=False)
+        }
