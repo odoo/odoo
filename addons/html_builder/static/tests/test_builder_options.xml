@@ -18,6 +18,7 @@
         <many2one_option
             selector="[data-oe-many2one-model]:not([data-oe-readonly])"
             editableOnly="false"/>
+        <date_time_field_option selector="[data-oe-field][data-oe-type=date], [data-oe-field][data-oe-type=datetime]"/>
         <rating_option template="html_builder.RatingOption" selector=".s_rating"/>
         <separator_option template="html_builder.SeparatorOption" selector=".s_hr" applyTo="hr"/>
     </div>
