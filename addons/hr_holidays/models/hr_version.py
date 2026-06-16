@@ -211,14 +211,14 @@ class HrVersion(models.Model):
                 subtype_xmlid='mail.mt_note',
             )
 
-    def _get_more_vals_leave_interval(self, interval, leaves, work_entry_type=None):
-        result = super()._get_more_vals_leave_interval(interval, leaves, work_entry_type)
+    def _get_more_vals_leave_interval(self, interval, leaves):
+        result = super()._get_more_vals_leave_interval(interval, leaves)
         payload = interval[2]
         if not payload:
             return result
         hr_leaves = self.env['hr.leave']
         for record in payload.all_records:
-            if record and record._name == 'resource.calendar.leaves' and record.work_entry_type_id == work_entry_type:
+            if record and record._name == 'resource.calendar.leaves' and record.work_entry_type_id == payload.record.work_entry_type_id:
                 hr_leaves |= record.holiday_id
         if hr_leaves:
             result.append(('leave_ids', hr_leaves))

@@ -5,6 +5,7 @@ from zoneinfo import ZoneInfo
 from odoo import fields, models
 from odoo.fields import Domain
 
+
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
@@ -20,14 +21,13 @@ class HrEmployee(models.Model):
         ])
 
     def _compute_total_overtime(self):
-        overtime_by_employee = dict(self.env['hr.leave']._read_group(
+        overtime_by_employee = dict(self.env['hr.attendance']._read_group(
             domain=[
                 ('employee_id', 'in', self.ids),
-                ('source_leave_id.attendance_id', '!=', False),
-                ('state', 'not in', ['refuse', 'cancel']),
+                ('is_time_rule_output', '=', True),
             ],
             groupby=['employee_id'],
-            aggregates=['number_of_hours:sum'],
+            aggregates=['worked_hours:sum'],
         ))
         for employee in self:
             employee.total_overtime = overtime_by_employee.get(employee, 0.0)
@@ -43,16 +43,15 @@ class HrEmployee(models.Model):
             start_naive = start_tz.astimezone(UTC).replace(tzinfo=None)
             end_naive = now_tz.astimezone(UTC).replace(tzinfo=None)
 
-            overtime_by_employee = dict(self.env['hr.leave']._read_group(
+            overtime_by_employee = dict(self.env['hr.attendance']._read_group(
                 domain=[
-                    ('source_leave_id.attendance_id', '!=', False),
+                    ('is_time_rule_output', '=', True),
                     ('employee_id', 'in', employees.ids),
-                    ('date_from', '<', end_naive),
-                    ('date_to', '>', start_naive),
-                    ('state', 'not in', ['refuse', 'cancel']),
+                    ('check_in', '<', end_naive),
+                    ('check_out', '>', start_naive),
                 ],
                 groupby=['employee_id'],
-                aggregates=['number_of_hours:sum'],
+                aggregates=['worked_hours:sum'],
             ))
             for employee in employees:
                 employee.hours_last_month_overtime = round(
@@ -62,18 +61,17 @@ class HrEmployee(models.Model):
     def get_attendace_data_by_employee(self, date_start, date_stop):
         attendance_data = super().get_attendace_data_by_employee(date_start, date_stop)
 
-        overtime_leaves = self.env['hr.leave']._read_group(
+        overtime_atts = self.env['hr.attendance']._read_group(
             domain=[
-                ('source_leave_id.attendance_id', '!=', False),
+                ('is_time_rule_output', '=', True),
                 ('employee_id', 'in', self.ids),
-                ('date_from', '<', date_stop),
-                ('date_to', '>', date_start),
-                ('state', 'not in', ['refuse', 'cancel']),
+                ('check_in', '<', date_stop),
+                ('check_out', '>', date_start),
             ],
             groupby=['employee_id'],
-            aggregates=['number_of_hours:sum'],
+            aggregates=['worked_hours:sum'],
         )
-        for employee, overtime_hours in overtime_leaves:
+        for employee, overtime_hours in overtime_atts:
             attendance_data[employee.id]['overtime_hours'] = overtime_hours
 
         return attendance_data

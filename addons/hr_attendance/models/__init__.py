@@ -1,5 +1,6 @@
 
 from . import res_config_settings
+from . import hr_time_rule
 from . import hr_attendance
 from . import hr_employee
 from . import hr_employee_public

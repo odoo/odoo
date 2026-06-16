@@ -80,6 +80,20 @@ class HrAttendance(models.Model):
         selection=[('0', "Monday"), ('1', "Tuesday"), ('2', "Wednesday"), ('3', "Thursday"), ('4', "Friday"), ('5', "Saturday"), ('6', "Sunday")],
     )
     resource_calendar_id = fields.Many2one(related='employee_id.resource_calendar_id', string="Working Schedule")
+    work_entry_type_id = fields.Many2one(
+        'hr.work.entry.type', string="Work Entry Type", index=True,
+        default=lambda self: self.env.company.attendance_work_entry_type_id,
+    )
+
+    # time rule engine output fields
+    is_time_rule_output = fields.Boolean(default=False, index=True)
+    time_rule_id = fields.Many2one('hr.time.rule', index=True)
+    source_attendance_id = fields.Many2one('hr.attendance', ondelete='cascade', index=True)
+    overtime_attendance_ids = fields.One2many('hr.attendance', 'source_attendance_id')
+
+    # aliases
+    date_from = fields.Datetime(related='check_in', string="Date From")
+    date_to = fields.Datetime(related='check_out', string="Date To")
 
     @api.depends('date')
     def _compute_day_of_date(self):
@@ -138,10 +152,6 @@ class HrAttendance(models.Model):
         for attendance in self:
             attendance.can_edit = attendance.is_manager or attendance.is_own
 
-    def _get_employee_calendar(self):
-        self.ensure_one()
-        return self.employee_id.resource_calendar_id or self.employee_id.company_id.resource_calendar_id
-
     @api.depends('check_in', 'check_out')
     def _compute_worked_hours(self):
         """ Computes the worked hours of the attendance record.
@@ -182,46 +192,51 @@ class HrAttendance(models.Model):
 
     @api.constrains('check_in', 'check_out', 'employee_id')
     def _check_validity(self):
-        """ Verifies the validity of the attendance record compared to the others from the same employee.
-            For the same employee we must have :
-                * maximum 1 "open" attendance record (without check_out)
-                * no overlapping time slices with previous employee records
-        """
-        for attendance in self:
-            # we take the latest attendance before our check_in time and check it doesn't overlap with ours
-            last_attendance_before_check_in = self.env['hr.attendance'].search([
+        """Verify attendance records don't overlap; skip time rule engine output records."""
+        if self.env.context.get('skip_time_rules'):
+            return
+        for attendance in self.filtered(lambda a: not a.is_time_rule_output):
+            src_domain = [
                 ('employee_id', '=', attendance.employee_id.id),
-                ('check_in', '<=', attendance.check_in),
                 ('id', '!=', attendance.id),
-            ], order='check_in desc', limit=1)
-            if last_attendance_before_check_in and last_attendance_before_check_in.check_out and last_attendance_before_check_in.check_out > attendance.check_in:
-                raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
-                                                   empl_name=attendance.employee_id.name,
-                                                   datetime=format_datetime(self.env, attendance.check_in, dt_format=False)))
-
+                ('is_time_rule_output', '=', False),
+            ]
+            last_before_check_in = self.env['hr.attendance'].search(
+                src_domain + [('check_in', '<=', attendance.check_in)],
+                order='check_in desc', limit=1,
+            )
+            if (last_before_check_in and last_before_check_in.check_out
+                    and last_before_check_in.check_out > attendance.check_in):
+                raise exceptions.ValidationError(_(
+                    "Cannot create new attendance record for %(empl_name)s, "
+                    "the employee was already checked in on %(datetime)s",
+                    empl_name=attendance.employee_id.name,
+                    datetime=format_datetime(self.env, attendance.check_in, dt_format=False),
+                ))
             if not attendance.check_out:
-                # if our attendance is "open" (no check_out), we verify there is no other "open" attendance
-                no_check_out_attendances = self.env['hr.attendance'].search([
-                    ('employee_id', '=', attendance.employee_id.id),
-                    ('check_out', '=', False),
-                    ('id', '!=', attendance.id),
-                ], order='check_in desc', limit=1)
-                if no_check_out_attendances:
-                    raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee hasn't checked out since %(datetime)s",
-                                                       empl_name=attendance.employee_id.name,
-                                                       datetime=format_datetime(self.env, no_check_out_attendances.check_in, dt_format=False)))
+                no_co = self.env['hr.attendance'].search(
+                    src_domain + [('check_out', '=', False)],
+                    order='check_in desc', limit=1,
+                )
+                if no_co:
+                    raise exceptions.ValidationError(_(
+                        "Cannot create new attendance record for %(empl_name)s, "
+                        "the employee hasn't checked out since %(datetime)s",
+                        empl_name=attendance.employee_id.name,
+                        datetime=format_datetime(self.env, no_co.check_in, dt_format=False),
+                    ))
             else:
-                # we verify that the latest attendance with check_in time before our check_out time
-                # is the same as the one before our check_in time computed before, otherwise it overlaps
-                last_attendance_before_check_out = self.env['hr.attendance'].search([
-                    ('employee_id', '=', attendance.employee_id.id),
-                    ('check_in', '<', attendance.check_out),
-                    ('id', '!=', attendance.id),
-                ], order='check_in desc', limit=1)
-                if last_attendance_before_check_out and last_attendance_before_check_in != last_attendance_before_check_out:
-                    raise exceptions.ValidationError(_("Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
-                                                       empl_name=attendance.employee_id.name,
-                                                       datetime=format_datetime(self.env, last_attendance_before_check_out.check_in, dt_format=False)))
+                last_before_check_out = self.env['hr.attendance'].search(
+                    src_domain + [('check_in', '<', attendance.check_out)],
+                    order='check_in desc', limit=1,
+                )
+                if last_before_check_out and last_before_check_in != last_before_check_out:
+                    raise exceptions.ValidationError(_(
+                        "Cannot create new attendance record for %(empl_name)s, "
+                        "the employee was already checked in on %(datetime)s",
+                        empl_name=attendance.employee_id.name,
+                        datetime=format_datetime(self.env, last_before_check_out.check_in, dt_format=False),
+                    ))
 
     @api.model
     def _get_day_start_and_day(self, employee, dt):  # TODO probably no longer need by the end
@@ -243,17 +258,18 @@ class HrAttendance(models.Model):
         date_end = date_end + relativedelta(days=6 - date_end.weekday())
         return date_start, date_end
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        return super().create(vals_list)
-
     def write(self, vals):
         if vals.get('employee_id') and \
             vals['employee_id'] not in self.env.user.employee_ids.ids and \
             not self.env.user.has_group('hr_attendance.group_hr_attendance_manager') and \
             self.env['hr.employee'].sudo().browse(vals['employee_id']).attendance_manager_id.id != self.env.user.id:
             raise AccessError(_("Do not have access, user cannot edit the attendances that are not their own or if they are not the attendance manager of the employee."))
-        return super().write(vals)
+        result = super().write(vals)
+        if not self.env.context.get('skip_time_rules') and any(
+            f in vals for f in ('employee_id', 'check_in', 'check_out', 'work_entry_type_id')
+        ):
+            self._process_time_rules()
+        return result
 
     def unlink(self):
         return super().unlink()
@@ -486,7 +502,7 @@ class HrAttendance(models.Model):
 
                 # Attendances where Last open attendance time + previously worked time on that day + tolerance greater than the attendances hours (including lunch) in his calendar
                 if (current_attendance_duration + previous_attendances_duration - max_tol) > expected_worked_hours:
-                    att.check_out = check_in_datetime.replace(hour=23, minute=59, second=59).astimezone(UTC).replace(tzinfo=None)
+                    att.with_context(skip_time_rules=True).check_out = check_in_datetime.replace(hour=23, minute=59, second=59).astimezone(UTC).replace(tzinfo=None)
                     excess_hours = att.worked_hours - (expected_worked_hours + max_tol - previous_attendances_duration)
                     att.write({
                         "check_out": max(att.check_out - relativedelta(hours=excess_hours), att.check_in + relativedelta(seconds=1)),
@@ -497,8 +513,12 @@ class HrAttendance(models.Model):
                     )
 
     def _cron_absence_detection(self):
-        """
-        Objective is to create technical attendances on absence days to have negative overtime created for that day
+        """Create a 1-second technical attendance for each employee who did not check in yesterday.
+
+        This triggers the time rule pipeline so that undertime rules can generate
+        output attendances for the missed schedule hours.  The attendance type is set
+        to the company's default so condition filters on undertime rules match it.
+        Technical attendances that produce no time rule output are discarded afterwards.
         """
         yesterday = datetime.today().replace(hour=0, minute=0, second=0) - relativedelta(days=1)
         companies = self.env['res.company'].search([('absence_management', '=', True)])
@@ -521,13 +541,14 @@ class HrAttendance(models.Model):
             technical_attendances_vals.append({
                 'check_in': check_in_utc.strftime('%Y-%m-%d %H:%M:%S'),
                 'check_out': (check_in_utc + relativedelta(seconds=1)).strftime('%Y-%m-%d %H:%M:%S'),
+                'work_entry_type_id': emp.company_id.attendance_work_entry_type_id.id,
                 'in_mode': 'technical',
                 'out_mode': 'technical',
                 'employee_id': emp.id
             })
 
         technical_attendances = self.env['hr.attendance'].create(technical_attendances_vals)
-
+        to_unlink = technical_attendances.filtered(lambda a: not a.overtime_attendance_ids)
         body = _('This attendance was automatically created to cover an unjustified absence on that day.')
         for technical_attendance in technical_attendances:
             technical_attendance.message_post(body=body)
@@ -623,3 +644,163 @@ class HrAttendance(models.Model):
             'day': attendance_by_employee_by_day,
             'week': attendance_by_employee_by_week
         }
+
+    def init(self):
+        super().init()
+        self.env.cr.execute("""
+            CREATE INDEX IF NOT EXISTS hr_attendance_check_in_check_out_employee_id
+            ON hr_attendance (check_in, check_out, employee_id);
+        """)
+
+    def _process_time_rules(self):
+        """Recompute time rule output attendances for employees/dates affected by self."""
+        source = self.filtered(lambda a: not a.is_time_rule_output and a.check_in and a.check_out)
+        if not source:
+            return
+        affected = [(a.employee_id, a.check_in, a.check_out) for a in source]
+        self._process_time_rules_for(affected)
+
+    def _process_time_rules_for(self, affected):
+        if not affected:
+            return
+
+        rules = self.env['hr.time.rule'].sudo().search([
+            '|', ('company_id', '=', False),
+            ('company_id', 'in', self.env.companies.ids),
+            ('active', '=', True),
+        ])
+        if not rules:
+            return
+
+        day_rules = rules.filtered(lambda r: r.quantity_period != 'week')
+        week_rules = rules.filtered(lambda r: r.quantity_period == 'week')
+
+        day_rules_ranges = defaultdict(lambda: [None, None])
+        for employee, check_in, check_out in affected:
+            df = check_in.date() if hasattr(check_in, 'date') else check_in
+            dt = check_out.date() if hasattr(check_out, 'date') else check_out
+            r = day_rules_ranges[employee]
+            r[0] = df if r[0] is None else min(r[0], df)
+            r[1] = dt if r[1] is None else max(r[1], dt)
+
+        weekly_starts = {int(r.week_start or '0') for r in week_rules}
+        week_rules_ranges = {}
+        if weekly_starts:
+            for employee, (df, dt) in day_rules_ranges.items():
+                wdf, wdt = df, dt
+                for ws in weekly_starts:
+                    wdf = min(wdf, wdf - timedelta(days=(wdf.weekday() - ws) % 7))
+                    wdt = max(wdt, wdt + timedelta(days=(ws - 1 - wdt.weekday()) % 7))
+                week_rules_ranges[employee] = (wdf, wdt)
+
+        day_excess, day_deficit = self._collect_time_rule_outputs(day_rules, day_rules_ranges)
+        week_excess, week_deficit = self._collect_time_rule_outputs(week_rules, week_rules_ranges)
+
+        merged_excess = self._merge_rule_outputs(day_excess, week_excess)
+        merged_deficit = self._merge_rule_outputs(day_deficit, week_deficit)
+        (day_rules | week_rules)._apply_attendance_output(merged_excess, merged_deficit)
+
+    def _collect_time_rule_outputs(self, rules, ranges_by_employee):
+        all_excess = defaultdict(lambda: defaultdict(list))
+        all_deficit = defaultdict(lambda: defaultdict(list))
+        if not rules:
+            return all_excess, all_deficit
+
+        by_range = defaultdict(list)
+        for employee, (date_from, date_to) in ranges_by_employee.items():
+            start_dt = datetime.combine(date_from, time.min).replace(tzinfo=UTC)
+            end_dt = datetime.combine(date_to, time.max).replace(tzinfo=UTC)
+            by_range[start_dt, end_dt].append(employee)
+
+        for (start_dt, end_dt), employees in by_range.items():
+            employee_rs = self.env['hr.employee'].browse([e.id for e in employees])
+            source_attendances = self._get_source_attendances_for_time_rules(employee_rs, start_dt, end_dt)
+            if not source_attendances:
+                continue
+
+            self._restore_source_attendance_bounds(source_attendances)
+
+            rule_ids = rules.ids
+            self.env['hr.attendance'].sudo().search([
+                ('source_attendance_id', 'in', source_attendances.ids),
+                ('time_rule_id', 'in', rule_ids),
+            ]).with_context(skip_time_rules=True).unlink()
+
+            self.env['hr.attendance'].sudo().search([
+                ('is_time_rule_output', '=', True),
+                ('source_attendance_id', '=', False),
+                ('employee_id', 'in', source_attendances.employee_id.ids),
+                ('check_in', '<', end_dt.replace(tzinfo=None)),
+                ('check_out', '>', start_dt.replace(tzinfo=None)),
+                ('time_rule_id', 'in', rule_ids),
+            ]).with_context(skip_time_rules=True).unlink()
+
+            excess, deficit = rules._evaluate_rules(source_attendances, start_dt, end_dt)
+            for emp, by_att in excess.items():
+                for att, items in by_att.items():
+                    all_excess[emp][att].extend(items)
+            for emp, by_att in deficit.items():
+                for att, items in by_att.items():
+                    all_deficit[emp][att].extend(items)
+
+        return all_excess, all_deficit
+
+    def _merge_rule_outputs(self, a, b):
+        merged = defaultdict(lambda: defaultdict(list))
+        for outputs in (a, b):
+            for emp, by_att in outputs.items():
+                for att, items in by_att.items():
+                    merged[emp][att].extend(items)
+        return merged
+
+    def _get_source_attendances_for_time_rules(self, employees, start_dt, end_dt):
+        return self.env['hr.attendance'].sudo().search([
+            ('is_time_rule_output', '=', False),
+            ('source_attendance_id', '=', False),
+            ('employee_id', 'in', employees.ids),
+            ('check_in', '<=', end_dt.replace(tzinfo=None)),
+            ('check_out', '>=', start_dt.replace(tzinfo=None)),
+            ('check_out', '!=', False),
+        ])
+
+    def _restore_source_attendance_bounds(self, source_attendances):
+        """Expand each source attendance to cover the bounding box of itself + its excess outputs.
+
+        Deficit outputs (undertime) represent absent time outside the source's worked range
+        and must not influence the restored bounds.
+        """
+        children = self.env['hr.attendance'].sudo().search([
+            ('source_attendance_id', 'in', source_attendances.ids),
+            ('time_rule_id.threshold_operator', '!=', 'less_than'),
+        ])
+        if not children:
+            return
+        bounds = defaultdict(lambda: [None, None])
+        for child in children:
+            src_id = child.source_attendance_id.id
+            if bounds[src_id][0] is None or child.check_in < bounds[src_id][0]:
+                bounds[src_id][0] = child.check_in
+            if bounds[src_id][1] is None or child.check_out > bounds[src_id][1]:
+                bounds[src_id][1] = child.check_out
+        auto_ctx = dict(skip_time_rules=True, tracking_disable=True)
+        for src in source_attendances:
+            if src.id not in bounds:
+                continue
+            new_in, new_out = bounds[src.id]
+            restored_in = min(src.check_in, new_in) if new_in else src.check_in
+            restored_out = max(src.check_out, new_out) if new_out else src.check_out
+            if restored_in != src.check_in or restored_out != src.check_out:
+                src.with_context(**auto_ctx).write({
+                    'check_in': restored_in,
+                    'check_out': restored_out,
+                })
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        res.filtered(lambda a: not self.env.context.get('skip_time_rules'))._process_time_rules()
+        return res
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_output_attendances(self):
+        self.sudo().mapped('overtime_attendance_ids').with_context(skip_time_rules=True).unlink()

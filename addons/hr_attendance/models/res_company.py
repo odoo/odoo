@@ -42,6 +42,14 @@ class ResCompany(models.Model):
     auto_check_out_tolerance = fields.Float(default=2, export_string_translation=False)
     auto_check_out_specific_time = fields.Float(default=20.0, export_string_translation=False)
     absence_management = fields.Boolean(string="Absence Management", default=False)
+    attendance_work_entry_type_id = fields.Many2one(
+        'hr.work.entry.type',
+        string="Attendance Work Entry Type",
+        domain=[('requires_allocation', '=', False)],
+        default=lambda self: self._get_default_attendance_work_entry_type(),
+        help="Work entry type assigned to attendances and read by the time rule engine.",
+    )
+
     attendance_device_tracking = fields.Boolean(string="Device & Location Tracking", default=False)
     attendance_capture_check_in = fields.Boolean(string="Take Pictures on Check-In", default=False)
 

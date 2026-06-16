@@ -1262,7 +1262,7 @@ class HrLeave(models.Model):
 
         merged_excess = self._merge_rule_outputs(day_excess, week_excess)
         merged_deficit = self._merge_rule_outputs(day_deficit, week_deficit)
-        (day_rules | week_rules)._apply_output(merged_excess, merged_deficit)
+        (day_rules | week_rules)._apply_leave_output(merged_excess, merged_deficit)
 
     def _collect_time_rule_outputs(self, rules, ranges_by_employee):
         all_excess = defaultdict(lambda: defaultdict(list))
@@ -1274,7 +1274,7 @@ class HrLeave(models.Model):
         for employee, (date_from, date_to) in ranges_by_employee.items():
             start_dt = datetime.combine(date_from, time.min).replace(tzinfo=UTC)
             end_dt = datetime.combine(date_to, time.max).replace(tzinfo=UTC)
-            by_range[(start_dt, end_dt)].append(employee)
+            by_range[start_dt, end_dt].append(employee)
 
         for (start_dt, end_dt), employees in by_range.items():
             employee_rs = self.env['hr.employee'].browse([e.id for e in employees])
@@ -1365,7 +1365,7 @@ class HrLeave(models.Model):
             new_dt = max(source.date_to, bounds[source.id][1])
             if new_df == source.date_from and new_dt == source.date_to:
                 continue
-            writes[(new_df, new_dt)].append(source.id)
+            writes[new_df, new_dt].append(source.id)
         for (new_df, new_dt), ids in writes.items():
             self.env['hr.leave'].sudo().browse(ids).with_context(**auto_ctx).write({
                 'date_from': new_df,

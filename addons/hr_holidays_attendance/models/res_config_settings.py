@@ -7,7 +7,3 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     attendance_based = fields.Boolean(string="Default Tracking", related='company_id.attendance_based', groups="hr.group_hr_user", readonly=False)
-    attendance_work_entry_type_id = fields.Many2one(
-        related='company_id.attendance_work_entry_type_id',
-        readonly=False,
-    )

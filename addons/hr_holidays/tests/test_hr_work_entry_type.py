@@ -65,7 +65,7 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
                 'request_date_to': '2025-09-03',
         })
         with self.assertRaises(ValidationError):
-            leave_2 = self.env['hr.leave'].create({
+            self.env['hr.leave'].create({
                 'name': 'Doctor Appointment',
                 'employee_id': employee.id,
                 'work_entry_type_id': work_entry_type.id,

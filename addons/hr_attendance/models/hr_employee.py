@@ -55,6 +55,12 @@ class HrEmployee(models.Model):
     display_extra_hours = fields.Boolean(related='company_id.hr_attendance_display_overtime')
     display_attendances = fields.Boolean(compute="_compute_display_attendances")
 
+    def _has_attendance_check_in_ability(self):
+        self.ensure_one()
+        has_attendance_check_in_ability = super()._has_attendance_check_in_ability()
+        has_attendance_check_in_ability = has_attendance_check_in_ability and self.attendance_based
+        return has_attendance_check_in_ability
+
     def get_attendace_data_by_employee(self, date_start, date_stop):
         attendance_data = {
             employee_id: {

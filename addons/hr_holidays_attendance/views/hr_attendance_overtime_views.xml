@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Overtime leaves page on the attendance form -->
+    <!-- Overtime attendance entries page on the attendance form -->
     <record id="view_attendance_overtime_leave_form" model="ir.ui.view">
         <field name="name">hr.attendance.overtime.leave.form</field>
         <field name="model">hr.attendance</field>
         <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
         <field name="arch" type="xml">
             <sheet position="inside">
-                <notebook invisible="not overtime_leave_ids"
+                <notebook invisible="not overtime_attendance_ids"
                     groups="hr.group_hr_manager,hr_attendance.group_hr_attendance_own">
-                    <page string="Overtime Leaves">
-                        <field name="overtime_leave_ids" readonly="1">
+                    <page string="Overtime Entries">
+                        <field name="overtime_attendance_ids" readonly="1">
                             <list>
                                 <field name="work_entry_type_id" readonly="1"/>
-                                <field name="number_of_hours" widget="float_time" readonly="1"/>
-                                <field name="state" widget="badge" readonly="1"
-                                    decoration-warning="state == 'confirm'"
-                                    decoration-success="state == 'validate'"
-                                    decoration-danger="state == 'refuse'"/>
+                                <field name="check_in" readonly="1"/>
+                                <field name="check_out" readonly="1"/>
+                                <field name="worked_hours" widget="float_time" readonly="1"/>
                             </list>
                         </field>
                     </page>
@@ -34,7 +32,7 @@
         <field name="arch" type="xml">
             <xpath expr="//block[@name='overtime_settings']" position="inside">
                 <setting string="Attendance Work Entry Type" company_dependent="1"
-                         help="Work entry type assigned to leaves generated from attendance records. Used by the time rule engine.">
+                         help="Default work entry type assigned to attendance records. Used by the time rule engine.">
                     <field name="attendance_work_entry_type_id" options="{'no_create': True}"/>
                 </setting>
             </xpath>

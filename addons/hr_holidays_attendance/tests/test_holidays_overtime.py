@@ -53,18 +53,17 @@ class HrHolidaysOvertimeCommon(TransactionCase):
             'condition_work_entry_type_ids': [Command.set([cls.att_wet.id])],
         })
 
-    def _output_leaves(self, employee, rule=None):
+    def _output_atts(self, employee, rule=None):
         domain = [
             ('employee_id', '=', employee.id),
             ('is_time_rule_output', '=', True),
-            ('source_leave_id.attendance_id', '!=', False),
         ]
         if rule:
             domain.append(('time_rule_id', '=', rule.id))
-        return self.env['hr.leave'].search(domain)
+        return self.env['hr.attendance'].search(domain)
 
-    def _output_hours(self, leaves):
-        return sum((l.date_to - l.date_from).total_seconds() / 3600 for l in leaves)
+    def _output_hours(self, atts):
+        return sum(a.worked_hours for a in atts)
 
     def new_attendance(self, check_in, check_out):
         return self.env['hr.attendance'].create({
@@ -111,23 +110,19 @@ class TestHolidaysOvertimeRules(HrHolidaysOvertimeCommon):
                 'check_out': check_out,
             })
 
-        output_leaves = self.env['hr.leave'].search([
-            ('employee_id', '=', flex_emp.id),
-            ('is_time_rule_output', '=', True),
-            ('time_rule_id', '=', weekly_rule.id),
-        ])
-        total_hours = self._output_hours(output_leaves)
+        output_atts = self._output_atts(flex_emp, weekly_rule)
+        total_hours = self._output_hours(output_atts)
         self.assertAlmostEqual(total_hours, 10.0, places=1,
                                msg="50h worked - 40h scheduled = 10h weekly overtime")
 
     def test_overtime_timing_adjacent_intervals(self):
-        """Adjacent timing rules must not merge into one output leave.
+        """Adjacent timing rules must not merge into one output attendance.
 
         Daytime rule:   17:00-21:00 (4h window)
         Nighttime rule: 21:00-24:00 (3h window)
         Attendance on a Monday 17:00-23:59:59
 
-        Expected: two output leaves of ~4h and ~3h respectively.
+        Expected: two output attendances of ~4h and ~3h respectively.
         """
         self.daily_rule.active = False
 
@@ -160,16 +155,16 @@ class TestHolidaysOvertimeRules(HrHolidaysOvertimeCommon):
             'check_out': datetime(2021, 1, 4, 23, 59, 59),
         })
 
-        daytime_leaves = self._output_leaves(self.employee, rule=daytime_rule)
-        nighttime_leaves = self._output_leaves(self.employee, rule=nighttime_rule)
+        daytime_atts = self._output_atts(self.employee, rule=daytime_rule)
+        nighttime_atts = self._output_atts(self.employee, rule=nighttime_rule)
 
-        self.assertEqual(len(daytime_leaves), 1,
-                         "Exactly one daytime output leave should be created.")
-        self.assertEqual(len(nighttime_leaves), 1,
-                         "Exactly one nighttime output leave should be created.")
-        self.assertAlmostEqual(self._output_hours(daytime_leaves), 4.0, places=2,
+        self.assertEqual(len(daytime_atts), 1,
+                         "Exactly one daytime output attendance should be created.")
+        self.assertEqual(len(nighttime_atts), 1,
+                         "Exactly one nighttime output attendance should be created.")
+        self.assertAlmostEqual(self._output_hours(daytime_atts), 4.0, places=2,
                                msg="Daytime OT window 17:00-21:00 = 4h")
-        self.assertAlmostEqual(self._output_hours(nighttime_leaves), 3.0, places=2,
+        self.assertAlmostEqual(self._output_hours(nighttime_atts), 3.0, places=2,
                                msg="Nighttime OT window 21:00-23:59:59 ≈ 3h")
 
 
@@ -177,7 +172,7 @@ class TestHolidaysOvertimeRules(HrHolidaysOvertimeCommon):
 class TestHolidaysOvertimeKiosk(HrHolidaysOvertimeCommon, HttpCase):
 
     def test_employee_kiosk_total_overtime(self):
-        """Kiosk endpoint reports total_overtime = output leave hours from attendance rules.
+        """Kiosk endpoint reports total_overtime = output attendance hours from time rules.
 
         Two weekend attendances of 9h each = 18h of overtime output (schedule has 0h on Sat/Sun).
         """
@@ -202,5 +197,5 @@ class TestHolidaysOvertimeKiosk(HrHolidaysOvertimeCommon, HttpCase):
             response.get('total_overtime'),
             18.0,
             places=1,
-            msg="Kiosk should show total_overtime matching output leave hours",
+            msg="Kiosk should show total_overtime matching output attendance hours",
         )
