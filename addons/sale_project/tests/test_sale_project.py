@@ -1764,6 +1764,11 @@ class TestSaleProject(TestSaleProjectCommon):
             sale_order_1,
             "Project should be linked to the sale order."
         )
+        self.assertEqual(
+            project_1.name,
+            '%s - %s - %s' % (sale_order_1.name, self.partner.name, self.product_consumable.name),
+            "Project name should be 'SO ref - Customer Name - Product Name'",
+        )
 
         sale_order_2 = self.env['sale.order'].create({
             'partner_id': self.partner.id,
@@ -1780,6 +1785,11 @@ class TestSaleProject(TestSaleProjectCommon):
             project_2.reinvoiced_sale_order_id,
             sale_order_2,
             "Project should be linked to the sale order."
+        )
+        self.assertEqual(
+            project_2.name,
+            '%s - %s - %s' % (sale_order_2.name, self.partner.name, template_project.name),
+            "Project name should be 'SO ref - Customer Name - Template Name'",
         )
 
     def test_task_sol_default_after_removing_so_from_project(self):
