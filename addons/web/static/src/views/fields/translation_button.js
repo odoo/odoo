@@ -19,8 +19,10 @@ export function useTranslationDialog() {
 
     async function openTranslationDialog({ record, fieldName }) {
         // in case of DynamicList list views model.root won't be a Record but a DynamicList itself
-        const saved =
-            record.model.root instanceof Record ? await record.model.root.save() : await record.save();
+        const { root } = record.model;
+        // a record edited in an x2many form dialog keeps its changes local until the dialog is saved
+        const recordToSave = root instanceof Record && !record._noUpdateParent ? root : record;
+        const saved = await recordToSave.save();
         if (!saved) {
             return;
         }
