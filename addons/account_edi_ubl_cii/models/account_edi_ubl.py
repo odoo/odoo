@@ -2451,8 +2451,9 @@ class AccountEdiUBL(models.AbstractModel):
         }
         return vals
 
-    def _init_invoice_export_values(self, invoice):
-        vals = {'invoice': invoice.with_context(lang=invoice.partner_id.lang)}
+    def _ubl_add_values_document_type(self, vals):
+        invoice = vals['invoice']
+
         if invoice.move_type == 'out_invoice':
             document_type = 'invoice'
         elif invoice.move_type == 'out_refund':
@@ -2462,13 +2463,19 @@ class AccountEdiUBL(models.AbstractModel):
         elif invoice.move_type == 'in_refund':
             document_type = 'self_credit_note'
 
+        self._define_document_type(vals, document_type)
+
+    def _init_invoice_export_values(self, invoice):
+        vals = {'invoice': invoice.with_context(lang=invoice.partner_id.lang)}
+
+        self._ubl_add_values_document_type(vals)
         self._ubl_add_values_company(vals, invoice.company_id)
         self._ubl_add_values_currency(vals, invoice.currency_id)
-        if document_type in ('invoice', 'credit_note'):
+        if self._is_document(vals, 'invoice', 'credit_note'):
             customer = invoice.partner_id
             supplier = invoice.company_id.partner_id
             delivery = invoice.partner_shipping_id or customer
-        elif document_type in ('self_invoice', 'self_credit_note'):
+        elif self._is_document(vals, 'self_invoice', 'self_credit_note'):
             customer = invoice.company_id.partner_id
             supplier = invoice.partner_id
             delivery = customer.child_ids.filtered(lambda p: p.type == 'delivery')[:1] or customer
@@ -2478,8 +2485,6 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_values_delivery(vals, delivery)
 
         vals['base_lines'], vals['tax_lines'] = invoice._get_rounded_base_and_tax_lines()
-
-        self._define_document_type(vals, document_type)
         return vals
 
     def _export_invoice(self, invoice, convert_fixed_taxes=True):
