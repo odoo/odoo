@@ -5,7 +5,11 @@ patch(PaymentScreen.prototype, {
     async sendForceDone(line) {
         const paymentInterface = line.payment_method_id.payment_terminal;
         if (paymentInterface && line.payment_method_id.payment_method_type === "cashdro") {
-            paymentInterface.cashdroService.cancelPayment(paymentInterface.operationId);
+            paymentInterface.cashdroService
+                .cancelPayment(paymentInterface.operationId)
+                .catch((error) =>
+                    console.warn(`Cashdro cancellation failed after Force Done: ${error}`)
+                );
         }
         return super.sendForceDone(...arguments);
     },
