@@ -12,6 +12,7 @@ import {
     onRpc,
     patchWithCleanup,
     toggleMenuItem,
+    toggleMenuItemOption,
     toggleSearchBarMenu,
     webModels,
     defineActions,
@@ -464,5 +465,41 @@ test("hotkey sharing copies complex search to clipboard", async () => {
             encodeURIComponent('["partner_id"]') +
             "&orderBy=" +
             encodeURIComponent('[{"name":"__count","asc":true}]'),
+    ]);
+});
+
+test.tags("desktop"); // Shortcut testing only on computer
+test("hotkey sharing keeps a relative date filter relative in the URL", async () => {
+    // A relative (smart-date) filter must be shared as its symbolic expression
+    // (e.g. "today =week_start") rather than a frozen absolute range, so the
+    // recipient re-evaluates it against their own "today", possibly another day.
+    patchWithCleanup(browser.navigator.clipboard, {
+        async writeText(url) {
+            expect.step(decodeURIComponent(url.split("?domain=")[1].split("&")[0]));
+        },
+    });
+
+    await mountView({
+        type: "list",
+        resModel: "mock.purchase.order",
+        arch: `<list><field name="state"/></list>`,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Date" name="date_order" date="date_order"/>
+            </search>
+        `,
+        config: { actionId: 1 },
+    });
+
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Date");
+    await toggleMenuItemOption("Date", "This Week");
+
+    await press(["alt", "shift", "h"]);
+    await animationFrame();
+
+    expect.verifySteps([
+        `["&", ("date_order", ">=", "today =week_start"), ("date_order", "<", "today =week_start +1w")]`,
     ]);
 });

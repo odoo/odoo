@@ -10,9 +10,18 @@ import {
     makeTestApp,
     mockOffline,
     mountWithCleanup,
+    mountWithSearch,
     onRpc,
     patchWithCleanup,
+    toggleMenuItem,
+    toggleMenuItemOption,
+    toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
+
+import { SearchBar } from "@web/search/search_bar/search_bar";
+import { defineSearchBarModels } from "../../search/search_bar_menu/models";
+
+defineSearchBarModels();
 
 test("RPC:RESPONSE: rpc returning a status 502", async () => {
     expect.errors(1);
@@ -285,6 +294,43 @@ test("getAvailableSearches (searches order)", async () => {
         { key: "5" }, // accessed once
         { key: "4" }, // accessed once (less recently)
     ]);
+});
+
+test("relative date filter keeps its smart-date domain through an offline round-trip", async () => {
+    const searchBar = await mountWithSearch(SearchBar, {
+        resModel: "foo",
+        searchViewId: false,
+        searchMenuTypes: ["filter"],
+        searchViewArch: `
+            <search>
+                <filter string="Date" name="date_field" date="date_field"/>
+            </search>
+        `,
+    });
+    await toggleSearchBarMenu();
+    await toggleMenuItem("Date");
+    await toggleMenuItemOption("Date", "This Week");
+
+    const relativeDomain = [
+        "&",
+        ["date_field", ">=", "today =week_start"],
+        ["date_field", "<", "today =week_start +1w"],
+    ];
+    expect(searchBar.env.searchModel.domain).toEqual(relativeDomain);
+
+    // Cache the current search offline exactly as the relational model does when it
+    // loads data, then go offline.
+    const { searchModel } = searchBar.env;
+    const offline = searchModel.offlinePlugin;
+    await offline.setAvailableOffline(1, "list", { search: searchModel.getCurrentSearch() });
+    offline.setOffline(true);
+    await tick();
+
+    // Restore the cached search as the offline search bar does: its smart-date
+    // domain must stay relative, not frozen to an absolute range.
+    const [cachedSearch] = await offline.getAvailableSearches(1, "list");
+    searchModel.applySearch(cachedSearch);
+    expect(searchModel.domain).toEqual(relativeDomain);
 });
 
 test("scheduleORM", async () => {

@@ -32,6 +32,7 @@ function sanitizeSearchItems(model) {
         delete copy.groupId;
         delete copy.groupNumber;
         delete copy.id;
+        delete copy.relativeFilterId;
         return copy;
     });
 }
@@ -202,7 +203,7 @@ test("parsing one filter tag with default_period date attribute", async () => {
             </search>
         `,
     });
-    expect(sanitizeSearchItems(model)).toEqual([
+    expect(sanitizeSearchItems(model).filter((i) => i.type !== "relativeFilter")).toEqual([
         {
             defaultGeneratorIds: ["year", "year-1"],
             description: "Date",
@@ -218,6 +219,7 @@ test("parsing one filter tag with default_period date attribute", async () => {
                 startMonth: -2,
                 startYear: -2,
             },
+            relativeFilterId: 2,
         },
     ]);
 });
@@ -238,7 +240,7 @@ test("parsing date filter with start_month, end_month, start_year, end_year attr
             </search>
         `,
     });
-    expect(sanitizeSearchItems(model)).toEqual([
+    expect(sanitizeSearchItems(model).filter((i) => i.type !== "relativeFilter")).toEqual([
         {
             defaultGeneratorIds: ["month-1"],
             description: "Date",
@@ -269,7 +271,7 @@ test("parsing date filter with custom options", async () => {
             </search>
         `,
     });
-    expect(sanitizeSearchItems(model)).toEqual([
+    expect(sanitizeSearchItems(model).filter((i) => i.type !== "relativeFilter")).toEqual([
         {
             defaultGeneratorIds: ["month"],
             description: "Date",
@@ -310,7 +312,7 @@ test("parsing one filter tag with date attribute ", async () => {
             </search>
         `,
     });
-    expect(sanitizeSearchItems(model)).toEqual([
+    expect(sanitizeSearchItems(model).filter((i) => i.type !== "relativeFilter")).toEqual([
         {
             defaultGeneratorIds: ["month"],
             description: "Date",
@@ -602,7 +604,7 @@ test("parsing a filter and a dateFilter", async () => {
         `,
     });
     const groupNumbers = model.getSearchItems(() => true).map((i) => i.groupNumber);
-    expect(groupNumbers).toEqual([1, 1]);
+    expect(groupNumbers).toEqual([1, 1, 1]);
 });
 
 test("parsing a groupBy and a dateGroupBy", async () => {

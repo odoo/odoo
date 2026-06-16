@@ -63,11 +63,19 @@ export class SearchBarMenu extends Component {
         }
     }
 
-    // Filter Panel
     get filterItems() {
-        return this.env.searchModel.getSearchItems((searchItem) =>
-            ["filter", "dateFilter", "parentFilter", "lazyParentFilter"].includes(searchItem.type)
-        );
+        const show = ["filter", "dateFilter", "parentFilter", "lazyParentFilter", "relativeFilter"];
+        return this.env.searchModel.getSearchItems((item) => show.includes(item.type));
+    }
+
+    /** Filter out top level items that are only shown nested. */
+    get displayedFilterItems() {
+        return this.filterItems.filter((item) => item.type !== "relativeFilter"); // A relative filter is modeled as top-level search item, but shown nested.
+    }
+
+    /** Get associated relative filter, that are modeled as top level items */
+    getRelativeItem(item) {
+        return this.filterItems.find((i) => i.id === item.relativeFilterId) ?? null;
     }
 
     onAddCustomFilterClick() {
@@ -91,6 +99,10 @@ export class SearchBarMenu extends Component {
         } else {
             this.env.searchModel.toggleSearchItem(itemId);
         }
+    }
+
+    onRelativeFilterSelected({ itemId, optionId }) {
+        this.env.searchModel.toggleRelativeFilter(itemId, optionId);
     }
 
     async onToggle({ itemId, optionsParams }) {
