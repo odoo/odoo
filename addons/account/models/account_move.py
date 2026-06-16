@@ -4366,16 +4366,13 @@ class AccountMove(models.Model):
         self.ensure_one()
         move_date = self.date or self.invoice_date or fields.Date.context_today(self)
         year_part = "%04d" % move_date.year
-        last_day = int(self.company_id.fiscalyear_last_day)
-        last_month = int(self.company_id.fiscalyear_last_month)
-        is_staggered_year = last_month != 12 or last_day != 31
+        fiscalyear_dates = self.env.company.compute_fiscalyear_dates(self.date)
+        date_from = fiscalyear_dates['date_from']
+        date_to = fiscalyear_dates['date_to']
+        is_staggered_year = date_from.year != date_to.year
         if is_staggered_year:
-            max_last_day = calendar.monthrange(move_date.year, last_month)[1]
-            last_day = min(last_day, max_last_day)
-            if move_date > date(move_date.year, last_month, last_day):
-                year_part = "%s-%s" % (move_date.strftime('%y'), (move_date + relativedelta(years=1)).strftime('%y'))
-            else:
-                year_part = "%s-%s" % ((move_date + relativedelta(years=-1)).strftime('%y'), move_date.strftime('%y'))
+            year_part = "%s-%s" % (date_from.strftime('%y'), date_to.strftime('%y'))
+
         # Arbitrarily use annual sequence for sales documents, but monthly
         # sequence for other documents
         if self.journal_id.type in ['sale', 'bank', 'cash', 'credit']:
@@ -4405,10 +4402,11 @@ class AccountMove(models.Model):
         if reset not in ('year_range', 'year_range_month'):
             return super()._get_sequence_date_range(reset)
 
-        fiscalyear_last_day = self.company_id.fiscalyear_last_day
-        fiscalyear_last_month = int(self.company_id.fiscalyear_last_month)
-        date_start, date_end = date_utils.get_fiscal_year(self.date, day=fiscalyear_last_day, month=fiscalyear_last_month)
-
+        fiscalyear_dates = self.env.company.compute_fiscalyear_dates(self.date)
+        date_start = fiscalyear_dates['date_from']
+        date_end = fiscalyear_dates['date_to']
+        fiscalyear_last_day = date_end.day
+        fiscalyear_last_month = date_end.month
         if reset == 'year_range':
             return (date_start, date_end) + (None, None)
 
