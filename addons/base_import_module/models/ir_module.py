@@ -14,7 +14,7 @@ from collections import defaultdict
 from io import BytesIO
 from os.path import join as opj
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, modules, _
 from odoo.exceptions import AccessDenied, AccessError, UserError
 from odoo.fields import Domain
 from odoo.http import request
@@ -387,6 +387,11 @@ class IrModuleModule(models.Model):
                             "Error while importing module '%(module)s'.\n\n %(error_message)s \n\n",
                             module=mod_name, error_message=traceback.format_exc(),
                         )) from e
+
+        # Force install modules flagged as 'to install' from the data module.
+        self.env.cr.commit()
+        modules.registry.Registry.new(self.env.cr.dbname, update_module=True)
+
         return "", module_names
 
     def module_uninstall(self):
