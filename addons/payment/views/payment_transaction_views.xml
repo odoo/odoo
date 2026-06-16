@@ -8,19 +8,11 @@
             <form string="Payment Transactions" create="false" edit="false">
                 <header>
                     <button
-                        string="Capture Transaction"
+                        string="Capture"
                         type="object"
                         name="action_capture"
                         invisible="state != 'authorized'"
                         class="oe_highlight"
-                    />
-                    <button
-                        string="Void Transaction"
-                        type="object"
-                        name="action_void"
-                        confirm="Are you sure you want to void the authorized transaction? This
-                                 action can't be undone."
-                        invisible="state != 'authorized'"
                     />
                     <button
                         string="Post-process"
