@@ -183,8 +183,9 @@ class SaleOrderLine(models.Model):
     def _timesheet_create_project_prepare_values(self):
         """Generate project values"""
         # create the project or duplicate one
+        partner_name = self.order_id.partner_id.commercial_company_name
         values = {
-            'name': '%s - %s' % (self.order_id.client_order_ref, self.order_id.name) if self.order_id.client_order_ref else self.order_id.name,
+            'name': '%s - %s - %s' % (self.order_id.client_order_ref, self.order_id.name, partner_name) if self.order_id.client_order_ref else '%s - %s' % (self.order_id.name, partner_name),
             'account_id': self.env.context.get('project_account_id') or self.order_id.project_account_id.id or self.env['account.analytic.account'].create(self.order_id._prepare_analytic_account_data()).id,
             'partner_id': self.order_id.partner_id.id,
             'active': True,
@@ -226,7 +227,15 @@ class SaleOrderLine(models.Model):
                 ('product_id.service_tracking', 'in', ['project_only', 'task_in_project']),
             ])
             if project_only_sol_count == 1:
-                values['name'] = "%s - [%s] %s" % (values['name'], self.product_id.default_code, self.product_id.name) if self.product_id.default_code else "%s - %s" % (values['name'], self.product_id.name)
+                sale_line_name_parts = self.name.split('\n')
+                if sale_line_name_parts and sale_line_name_parts[0] == self.product_id.display_name:
+                    sale_line_name_parts.pop(0)
+                if len(sale_line_name_parts) == 1 and sale_line_name_parts[0]:
+                    name = sale_line_name_parts[0]
+                else:
+                    name = "[%s] %s" % (self.product_id.default_code, self.product_id.name) if self.product_id.default_code else self.product_id.name
+                    values['description'] = '<br/>'.join(sale_line_name_parts)
+                values['name'] = "%s - %s" % (values['name'], name)
             values.update(self._timesheet_create_project_account_vals(self.order_id.project_id))
             project = self.env['project.project'].create(values)
 
@@ -298,7 +307,7 @@ class SaleOrderLine(models.Model):
             )
 
         return {
-            'name': '%s - %s' % (self.order_id.name, template.name),
+            'name': '%s - %s - %s' % (self.order_id.name, project.partner_id.commercial_company_name if project.partner_id else self.order_id.partner_id.commercial_company_name, template.name),
             'allocated_hours': allocated_hours,
             'project_id': project.id,
             'sale_line_id': self.id,

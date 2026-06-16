@@ -45,7 +45,9 @@ class ProjectTemplateCreateWizard(models.TransientModel):
     def action_create_project_from_so(self):
         """Create a project either from template or directly if no template is set."""
         self.ensure_one()
+        so_name = self.env.context.get('default_name')
         if self.template_id:
+            self.name = "%s - %s" % (so_name, self.template_id.name)
             project = self._create_project_from_template()
         else:
             sale_order = self.env['sale.order'].browse(self.env.context.get("default_sale_order_id"))
@@ -56,12 +58,16 @@ class ProjectTemplateCreateWizard(models.TransientModel):
                 'company_id': sale_order.company_id.id,
             }
             if len(sale_order.order_line) == 1:
-                values['name'] = (
-                    f"{sale_order.name} - [{product.default_code}] {product.name}"
-                    if product.default_code
-                    else f"{sale_order.name} - {product.name}"
-                )
+                sale_line_name_parts = so_line.name.split('\n')
+                if sale_line_name_parts and sale_line_name_parts[0] == product.display_name:
+                    sale_line_name_parts.pop(0)
+                if len(sale_line_name_parts) == 1 and sale_line_name_parts[0]:
+                    name = sale_line_name_parts[0]
+                else:
+                    name = "[%s] %s" % (product.default_code, product.name) if product.default_code else product.name
+                    values['description'] = '<br/>'.join(sale_line_name_parts)
+                values['name'] = "%s - %s" % (so_name, product.project_template_id.name or name)
             else:
-                values['name'] = sale_order.name
+                values['name'] = so_name
             project = self.env['project.project'].create(values)
         return project.action_view_tasks()
