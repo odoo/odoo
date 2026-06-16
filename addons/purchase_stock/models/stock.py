@@ -249,6 +249,14 @@ class StockWarehouseOrderpoint(models.Model):
 
         return result
 
+    def action_product_forecast_report(self):
+        self.ensure_one()
+        action = super().action_product_forecast_report()
+        supplier = self.supplier_id
+        if supplier:
+            action['context']['supplier_id'] = supplier.id
+        return action
+
     def _get_default_route(self):
         route_ids = self.env['stock.rule'].search([
             ('action', '=', 'buy')

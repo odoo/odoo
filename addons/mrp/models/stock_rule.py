@@ -223,9 +223,7 @@ class StockRule(models.Model):
         manufacture_delay = bom.produce_delay
         delays['total_delay'] += manufacture_delay
         delays['manufacture_delay'] += manufacture_delay
-        if not bypass_delay_description:
-            delay_description.append((_('Production End Date'), manufacture_delay))
-            delay_description.append((_('Manufacturing Lead Time'), _('+ %d day(s)', manufacture_delay)))
+        wh_delay_description = []
         if bom.type == 'normal':
             # pre-production rules
             warehouse = self.location_dest_id.warehouse_id
@@ -235,7 +233,11 @@ class StockRule(models.Model):
                     extra_delays, extra_delay_description = (wh_manufacture_rules - self).with_context(global_horizon_days=0)._get_lead_days(product, **values)
                     for key, value in extra_delays.items():
                         delays[key] += value
-                    delay_description += extra_delay_description
+                    wh_delay_description += extra_delay_description
+        if not bypass_delay_description:
+            delay_description.append((_('Production End Date'), delays['total_delay'], 'production_end_date'))
+            delay_description.append((_('Manufacturing Lead Time'), _('+ %d day(s)', manufacture_delay)))
+            delay_description += wh_delay_description
         days_to_order = values.get('days_to_order', bom.days_to_prepare_mo)
         delays['total_delay'] += days_to_order
         if not bypass_delay_description:
