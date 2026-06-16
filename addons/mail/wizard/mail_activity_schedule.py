@@ -461,7 +461,9 @@ class MailActivitySchedule(models.TransientModel):
         if model and activity_user:
             try:
                 thread = self.with_user(activity_user).env[model].browse(self._evaluate_res_ids())
-                thread.check_access(thread._mail_get_operation_for_mail_message_operation('create')[thread])
+                operations = thread._mail_group_by_operation_for_mail_message_operation('create')
+                for operation, records in operations.items():
+                    records.check_access(operation)
             except AccessError:
                 raise UserError(_("Selected user '%(user)s' cannot upload documents on model '%(model)s'",
                                     model=model,
