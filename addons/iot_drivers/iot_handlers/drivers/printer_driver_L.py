@@ -30,7 +30,7 @@ class PrinterDriver(PrinterDriverBase):
         self.ip = device.get('ip')
 
         device_id = device.get('device-id', '')
-        self.receipt_protocol = 'star' if 'STR_T' in device_id else 'escpos'
+        self.receipt_protocol = 'star' if 'STR_T' in self.device_name else 'escpos'
 
         if any(cmd in device_id for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']) or "tm-m30" in self.device_name.lower():
             self.device_subtype = "receipt_printer"
