@@ -55,3 +55,7 @@ class ResConfigSettings(models.TransientModel):
         for record in self:
             if record.l10n_fr_pdp_pilot_phase != record.company_id.l10n_fr_pdp_pilot_phase:
                 record.company_id._l10n_fr_pdp_update_pilot_phase(record.l10n_fr_pdp_pilot_phase)
+
+    def _peppol_allows_document_reception(self):
+        self.ensure_one()
+        return super()._peppol_allows_document_reception() and self.country_code != 'FR'
