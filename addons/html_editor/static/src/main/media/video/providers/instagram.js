@@ -5,7 +5,7 @@ export class Instagram extends AbstractThirdPartyVideo {
     static name = "Intagram";
 
     static urlMatcher =
-        /^(?:https?:\/\/)?(?:(.*)instagram\.com|instagr\.am)(?:\/([a-zA-Z0-9\-_\\.]+))?\/(?:p|reel)\/(?<id>[a-zA-Z0-9\-_\\.]+)(?:\/embed)?\/?$/i;
+        /^(?:https?:\/\/)?(?:(.*)instagram\.com|instagr\.am)(?:\/([a-zA-Z0-9\-_\\.]+))?\/(?:p|reels?)\/(?<id>[a-zA-Z0-9\-_\\.]+)(?:\/embed)?\/?$/i;
 
     /**
      * Returns the embed url for a Instagram video.
@@ -41,6 +41,7 @@ export class Instagram extends AbstractThirdPartyVideo {
         minified: "instagr.am/p/B6dXGTxggTG/",
         reel: "https://www.instagram.com/reel/B6dXGTxggTG/",
         reel2: "https://www.instagram.com/odoo.official/reel/B6dXGTxggTG/",
+        reels: "https://www.instagram.com/reels/DPD1qwXDBwy/",
         embed: "https://www.instagram.com/p/B6dXGTxggTG/embed/",
     };
 }
