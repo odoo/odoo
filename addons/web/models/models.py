@@ -132,7 +132,8 @@ class Base(models.AbstractModel):
         offset: int = 0,
         limit: int | None = None,
         order: str | None = None,
-        count_limit: int | None = None
+        count_limit: int | None = None,
+        order_prefix: str | None = None
     ) -> dict[str, int | list[dict]]:
         """
         Perform a search followed by a structured read.
@@ -143,6 +144,12 @@ class Base(models.AbstractModel):
         :param offset: number of results to ignore (default: none)
         :param limit: maximum number of records to return (default: all)
         :param order: sort string
+        :param order_prefix: sort string prepended to ``order`` (or to the model
+            ``_order`` when ``order`` is empty). This lets a view sort records on
+            top of the model's order without restating it, e.g. to float favourite
+            records to the top of the default view. It is a presentation-only sort:
+            it is never applied by :meth:`search`, the API, or reports, only when a
+            view explicitly requests it.
         :param specification: A dictionary defining the fields to read.
             The keys are field names, and the values are configuration dictionaries.
             Passing an empty dictionary as a value simply reads the field's value.
@@ -157,6 +164,8 @@ class Base(models.AbstractModel):
         :return: A dictionary containing a 'length' key containing the number of records
             and a 'records' key containing a list of records.
         """
+        if order_prefix:
+            order = ', '.join(part for part in (order_prefix, order or self._order) if part)
         records = self.search_fetch(domain, list(specification), offset=offset, limit=limit, order=order)
         values_records = records.web_read(specification)
         return self._format_web_search_read_results(domain, values_records, offset, limit, count_limit)
@@ -524,6 +533,7 @@ class Base(models.AbstractModel):
         unfold_read_specification: dict[str, dict] | None = None,
         unfold_read_default_limit: int | None = 80,  # Limit of record by unfolded group by default
         groupby_read_specification: dict[str, dict] | None = None,
+        order_prefix: str | None = None,
     ) -> dict[str, int | list]:
         """
         Serve as the primary method for loading grouped data in list and kanban views.
@@ -543,6 +553,9 @@ class Base(models.AbstractModel):
         :param limit: The maximum number of top-level groups to return. see :meth:`~.formatted_read_group`
         :param offset: The offset for the top-level groups. see :meth:`~.formatted_read_group`
         :param order: A sort string, as used in :meth:`~.search`
+        :param order_prefix: A sort string prepended to the order of the records read
+            inside unfolded groups (it does not affect the order of the groups
+            themselves). See :meth:`~.web_search_read` for the rationale.
         :param auto_unfold: If `True`, automatically unfolds the first 10 groups according to their
             `__fold` key, if present; otherwise, it is unfolded by default.
             This is typically `True` for kanban views and `False` for list views.
@@ -626,7 +639,14 @@ class Base(models.AbstractModel):
         # Open last level of grouping, meaning read records of groups
         if records_opening_info:
 
-            order_specs = [
+            order_specs = []
+            # A presentation-only prefix (e.g. favourites first) is prepended to the
+            # records' order, skipping fields that are constant within the group.
+            for order_part in (order_prefix.split(',') if order_prefix else ()):
+                fname = order_part.strip().split(" ", 1)[0]
+                if fname and fname not in groupby:
+                    order_specs.append(order_part.strip())
+            order_specs += [
                 f"{fname} {direction}"
                 for fname, direction in dict_order.items()
                 # Remove order that are already unique for each group,

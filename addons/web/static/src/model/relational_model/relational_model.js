@@ -71,6 +71,7 @@ import {
  *  countLimit?: number;
  *  groupsLimit?: number;
  *  defaultOrderBy?: string[];
+ *  defaultOrderPrefix?: string;
  *  maxGroupByDepth?: number;
  *  multiEdit?: boolean;
  *  groupByInfo?: Record<string, unknown>;
@@ -157,6 +158,7 @@ export class RelationalModel extends Model {
         this.initialGroupsLimit = params.groupsLimit;
         this.initialCountLimit = params.countLimit || this.constructor.DEFAULT_COUNT_LIMIT;
         this.defaultOrderBy = params.defaultOrderBy;
+        this.defaultOrderPrefix = params.defaultOrderPrefix;
         this.maxGroupByDepth = params.maxGroupByDepth;
         this.groupByInfo = params.groupByInfo || {};
         this.multiEdit = params.multiEdit;
@@ -753,15 +755,21 @@ export class RelationalModel extends Model {
      */
     async _loadUngroupedList(config, cache) {
         const orderBy = config.orderBy.filter((o) => o.name !== "__count");
+        const order = orderByToString(orderBy);
         const kwargs = {
             specification: getFieldsSpec(config.activeFields, config.fields, config.context),
             offset: config.offset,
-            order: orderByToString(orderBy),
+            order,
             limit: config.limit,
             context: { bin_size: true, ...config.context },
             count_limit:
                 config.countLimit !== Number.MAX_SAFE_INTEGER ? config.countLimit + 1 : undefined,
         };
+        // The prefix only layers onto the model order for the default view; once
+        // the user sorts a column (order is set), it is dropped.
+        if (!order && this.defaultOrderPrefix) {
+            kwargs.order_prefix = this.defaultOrderPrefix;
+        }
         const orm = cache ? this.orm.cache(cache) : this.orm;
         return orm.webSearchRead(config.resModel, config.domain, kwargs);
     }
@@ -973,10 +981,11 @@ export class RelationalModel extends Model {
             }
         }
 
+        const order = orderByToString(config.orderBy);
         const params = {
             limit: config.limit !== Number.MAX_SAFE_INTEGER ? config.limit : undefined,
             offset: config.offset,
-            order: orderByToString(config.orderBy),
+            order,
             auto_unfold: config.openGroupsByDefault,
             opening_info: currentGroupInfos,
             unfold_read_specification: unfoldReadSpecification,
@@ -984,6 +993,11 @@ export class RelationalModel extends Model {
             groupby_read_specification: groupByReadSpecification,
             context: { read_group_expand: true, ...config.context },
         };
+        // Float prefix records (e.g. favourites) to the top inside each group for
+        // the default view; dropped once the user sorts a column.
+        if (!order && this.defaultOrderPrefix) {
+            params.order_prefix = this.defaultOrderPrefix;
+        }
         const orm = cache ? this.orm.cache(cache) : this.orm;
         const result = await orm.webReadGroup(
             config.resModel,

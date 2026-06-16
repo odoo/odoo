@@ -307,6 +307,7 @@ export class KanbanController extends Component {
             groupsLimit: Number.MAX_SAFE_INTEGER, // no limit
             countLimit: archInfo.countLimit,
             defaultOrderBy: archInfo.defaultOrder,
+            defaultOrderPrefix: archInfo.defaultOrderPrefix,
             maxGroupByDepth: 1,
             activeIdsLimit: session.active_ids_limit,
             hooks: {

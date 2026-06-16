@@ -222,6 +222,7 @@ export class ListController extends Component {
             limit: this.archInfo.limit || this.props.limit,
             countLimit: this.archInfo.countLimit,
             defaultOrderBy: this.archInfo.defaultOrder,
+            defaultOrderPrefix: this.archInfo.defaultOrderPrefix,
             groupsLimit: this.archInfo.groupsLimit,
             multiEdit: !this.props.readonly && this.archInfo.multiEdit,
             activeIdsLimit: session.active_ids_limit,

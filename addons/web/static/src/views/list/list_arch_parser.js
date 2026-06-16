@@ -266,6 +266,9 @@ export class ListArchParser {
                 treeAttr.defaultOrder = stringToOrderBy(
                     xmlDoc.getAttribute("default_order") || null
                 );
+                // Presentation-only sort prepended to the model order for the
+                // default view (dropped once the user sorts a column).
+                treeAttr.defaultOrderPrefix = xmlDoc.getAttribute("order_prefix") || "";
 
                 // custom open action when clicking on record row
                 const action = xmlDoc.getAttribute("action");

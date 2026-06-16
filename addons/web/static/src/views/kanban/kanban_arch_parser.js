@@ -46,6 +46,9 @@ export class KanbanArchParser {
             const handleFieldSort = `${handleField}, id`;
             defaultOrder = stringToOrderBy(handleFieldSort);
         }
+        // Presentation-only sort prepended to the model order for the default
+        // view (dropped once the user sorts).
+        const defaultOrderPrefix = xmlDoc.getAttribute("order_prefix") || "";
 
         const headerButtons = [];
         const controls = [];
@@ -107,6 +110,7 @@ export class KanbanArchParser {
             handleField,
             headerButtons,
             defaultOrder,
+            defaultOrderPrefix,
             onCreate: xmlDoc.getAttribute("on_create"),
             openAction,
             quickCreateView: xmlDoc.getAttribute("quick_create_view"),
