@@ -427,3 +427,16 @@ class PosOrderLine(models.Model):
 
     def _has_discount(self):
         return self.discount > 0
+
+    def _get_price_no_discount(self, config_id):
+        def get_total(line):
+            data = self.tax_ids_after_fiscal_position.compute_all(line.price_unit, line.currency_id, self.qty, product=line.product_id, partner=line.order_id.partner_id)
+            return (
+                data['total_included']
+                if config_id.iface_tax_included == "total"
+                else data['total_excluded']
+            )
+
+        if not self.combo_line_ids:
+            return get_total(self)
+        return sum(get_total(cl) for cl in self.combo_line_ids)
