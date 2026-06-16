@@ -26,7 +26,7 @@ class PaymentCaptureWizard(models.TransientModel):
         compute="_compute_amount_to_capture", store=True, readonly=False
     )
     is_amount_to_capture_valid = fields.Boolean(compute="_compute_is_amount_to_capture_valid")
-    void_remaining_amount = fields.Boolean()
+    release_remaining = fields.Boolean(string="Release Remaining", default=True)
     currency_id = fields.Many2one(related="transaction_ids.currency_id")
     support_partial_capture = fields.Boolean(
         help="Whether each of the transactions' provider supports the partial capture.",
@@ -35,6 +35,7 @@ class PaymentCaptureWizard(models.TransientModel):
     )
     has_draft_children = fields.Boolean(compute="_compute_has_draft_children")
     has_remaining_amount = fields.Boolean(compute="_compute_has_remaining_amount")
+    reference_amount = fields.Monetary()
 
     # === COMPUTE METHODS === #
 
@@ -71,16 +72,20 @@ class PaymentCaptureWizard(models.TransientModel):
                 wizard.authorized_amount - wizard.captured_amount - wizard.voided_amount
             )
 
-    @api.depends("available_amount")
+    @api.depends("available_amount", "captured_amount", "reference_amount")
     def _compute_amount_to_capture(self):
-        """Set the default amount to capture to the amount available for capture."""
+        """Set the default amount to capture to the source total amount or available amount."""
         for wizard in self:
-            wizard.amount_to_capture = wizard.available_amount
+            if wizard.reference_amount:
+                remaining_amount = wizard.reference_amount - wizard.captured_amount
+                wizard.amount_to_capture = min(remaining_amount, wizard.available_amount)
+            else:
+                wizard.amount_to_capture = wizard.available_amount
 
     @api.depends("amount_to_capture", "available_amount")
     def _compute_is_amount_to_capture_valid(self):
         for wizard in self:
-            is_valid = 0 < wizard.amount_to_capture <= wizard.available_amount
+            is_valid = 0 <= wizard.amount_to_capture <= wizard.available_amount
             wizard.is_amount_to_capture_valid = is_valid
 
     @api.depends("transaction_ids")
@@ -105,8 +110,6 @@ class PaymentCaptureWizard(models.TransientModel):
     def _compute_has_remaining_amount(self):
         for wizard in self:
             wizard.has_remaining_amount = wizard.amount_to_capture < wizard.available_amount
-            if not wizard.has_remaining_amount:
-                wizard.void_remaining_amount = False
 
     # === CONSTRAINT METHODS === #
 
@@ -156,13 +159,13 @@ class PaymentCaptureWizard(models.TransientModel):
                 remaining_amount_to_capture -= amount_to_capture
                 source_tx_remaining_amount -= amount_to_capture
 
-            if source_tx_remaining_amount and self.void_remaining_amount:
+            if source_tx_remaining_amount and self.release_remaining:
                 # The source tx isn't fully captured and the user wants to void the remaining.
                 # In sudo mode because we need to be able to read on provider fields.
                 processed_txs_sudo |= source_tx.sudo()._void(
                     amount_to_void=source_tx_remaining_amount
                 )
-            elif not remaining_amount_to_capture and not self.void_remaining_amount:
+            elif not remaining_amount_to_capture and not self.release_remaining:
                 # The amount to capture has been completely captured.
                 break  # Skip the remaining transactions.
         return processed_txs_sudo._build_action_feedback_notification()
