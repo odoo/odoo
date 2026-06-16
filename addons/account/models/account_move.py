@@ -6754,9 +6754,105 @@ class AccountMove(models.Model):
             if self.env.user.active and self.env.user._is_internal():
                 self._extend_with_attachments(files_data)
 
+<<<<<<< 9b495382671667f794bd8d98a11f28c6f52daddd
             new_message.attachment_ids = [Command.set(attachment_records.ids)]
             message_values['attachment_ids'] = [Command.link(attachment.id) for attachment in attachment_records]
             return super()._message_post_after_hook(new_message, message_values)
+||||||| 4b1705241cd33a11e85cd5b5ccfe89459b2dd4e3
+        for invoice, attachments in attachments_per_invoice.items():
+            if invoice == self:
+                invoice.attachment_ids |= attachments
+                new_message.attachment_ids = attachments.ids
+                message_values.update({'res_id': self.id, 'attachment_ids': [Command.link(attachment.id) for attachment in attachments]})
+                super(AccountMove, invoice)._message_post_after_hook(new_message, message_values)
+            else:
+                sub_new_message = new_message.copy({'attachment_ids': attachments.ids})
+                sub_message_values = {
+                    **message_values,
+                    'res_id': invoice.id,
+                    'attachment_ids': [Command.link(attachment.id) for attachment in attachments],
+                }
+                invoice.attachment_ids |= attachments
+                invoice.message_ids = [Command.set(sub_new_message.id)]
+                super(AccountMove, invoice)._message_post_after_hook(sub_new_message, sub_message_values)
+
+        return res
+
+    def _check_and_decode_attachment(self, attachments):
+        if not attachments or self.env.context.get('no_new_invoice'):
+            return False
+        if self.state != 'draft':
+            self.with_user(SUPERUSER_ID).message_post(
+                body=_('The invoice is not a draft, it was not updated from the attachment.'),
+                message_type='comment',
+            )
+            return False
+
+        # As we are coming from the mail, we assume that ONE of the attachments
+        # will enhance the invoice thanks to EDI / OCR / .. capabilities
+        move_per_decodable_attachment = self._extend_with_attachments(attachments, new=bool(self._context.get('from_alias')))
+        if self.invoice_line_ids and not move_per_decodable_attachment:
+            self.with_user(SUPERUSER_ID).message_post(
+                body=_('The invoice already contains lines, it was not updated from the attachment.'),
+                message_type='comment',
+            )
+            return False
+        attachments_in_invoices = self.env['ir.attachment']
+        for attachment in move_per_decodable_attachment:
+            attachments_in_invoices += attachment
+        # Unlink the unused attachments (prevents storing marketing images sent with emails)
+        if self._context.get('from_alias'):
+            (attachments - attachments_in_invoices).unlink()
+        return move_per_decodable_attachment
+=======
+        for invoice, attachments in attachments_per_invoice.items():
+            if invoice == self:
+                invoice.attachment_ids |= attachments
+                new_message.attachment_ids = attachments.ids
+                message_values.update({'res_id': self.id, 'attachment_ids': [Command.link(attachment.id) for attachment in attachments]})
+                super(AccountMove, invoice)._message_post_after_hook(new_message, message_values)
+            else:
+                sub_new_message = new_message.copy({'attachment_ids': attachments.ids})
+                sub_message_values = {
+                    **message_values,
+                    'res_id': invoice.id,
+                    'attachment_ids': [Command.link(attachment.id) for attachment in attachments],
+                }
+                invoice.attachment_ids |= attachments
+                invoice.message_ids = [Command.set(sub_new_message.id)]
+                super(AccountMove, invoice)._message_post_after_hook(sub_new_message, sub_message_values)
+
+        return res
+
+    def _check_and_decode_attachment(self, attachments):
+        if not attachments or self.env.context.get('no_new_invoice'):
+            return False
+        if self.state != 'draft':
+            self.with_user(SUPERUSER_ID).message_post(
+                body=_('The invoice is not a draft, it was not updated from the attachment.'),
+                message_type='comment',
+            )
+            return False
+
+        # As we are coming from the mail, we assume that ONE of the attachments
+        # will enhance the invoice thanks to EDI / OCR / .. capabilities
+        move_per_decodable_attachment = self._extend_with_attachments(attachments, new=bool(self._context.get('from_alias')))
+        if self.invoice_line_ids and not move_per_decodable_attachment:
+            self.with_user(SUPERUSER_ID).message_post(
+                body=_('The invoice already contains lines, it was not updated from the attachment.'),
+                message_type='comment',
+            )
+            return False
+        attachments_in_invoices = self.env['ir.attachment']
+        for attachment in move_per_decodable_attachment:
+            attachments_in_invoices += attachment
+        # Unlink the unused attachments (prevents storing marketing images sent with emails)
+        if self._context.get('from_alias'):
+            if not attachments_in_invoices:
+                attachments_in_invoices += attachments.filtered(lambda att: att.mimetype in ALLOWED_MIMETYPES)
+            (attachments - attachments_in_invoices).unlink()
+        return move_per_decodable_attachment
+>>>>>>> 479f69dee5990275db140af61ee829effd4f4e97
 
     def _creation_subtype(self):
         # EXTENDS mail mail.thread

@@ -467,6 +467,7 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
             ['oops_another_bill@example.com'],
             subject='New Electronic Invoices Received',
         )
+<<<<<<< 9b495382671667f794bd8d98a11f28c6f52daddd
 
     def test_01_decoder_called(self):
         move = self.env['account.move'].create({'move_type': 'in_invoice'})
@@ -986,3 +987,17 @@ class TestAccountIncomingSupplierInvoice(AccountTestInvoicingCommon, TestAccount
             move_id = self.journal.create_document_from_attachment(attachment.ids).get('res_id')
 
         self.assertEqual(self.env['account.move'].browse(move_id).attachment_ids, attachment)
+||||||| 4b1705241cd33a11e85cd5b5ccfe89459b2dd4e3
+=======
+
+    def test_failed_supplier_invoice_xml_from_mail_keeps_attachment(self):
+        journal = self.company_data['default_journal_purchase']
+        xml = self._create_dummy_xml_attachment()
+        email_raw = self._get_raw_mail_message_str(xml, journal.alias_email)
+        init_vals = {'move_type': 'in_invoice', 'journal_id': journal.id}
+
+        move_id = self.env['mail.thread'].message_process('account.move', email_raw, custom_values=init_vals)
+        bill = self.env['account.move'].browse(move_id)
+
+        self.assertEqual(len(bill.message_ids.mapped('attachment_ids')), 1, "Failing XML should be attached to a chatter message")
+>>>>>>> 479f69dee5990275db140af61ee829effd4f4e97
