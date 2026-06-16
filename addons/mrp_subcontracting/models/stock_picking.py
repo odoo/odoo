@@ -3,7 +3,7 @@
 from collections import defaultdict
 from datetime import timedelta
 
-from odoo import api, fields, models, _
+from odoo import api, Command, fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_compare
 from dateutil.relativedelta import relativedelta
@@ -52,6 +52,7 @@ class StockPicking(models.Model):
             if float_compare(move.product_uom_qty, move.quantity, precision_digits=rounding) > 0 and self._context.get('cancel_backorder'):
                 move._update_subcontract_order_qty(move.quantity)
             if float_compare(recorded_qty, sm_done_qty, precision_digits=rounding) >= 0:
+                self._relink_backorder_mo(move, productions - recorded_productions)
                 continue
             production = productions - recorded_productions
             if not production:
@@ -77,6 +78,7 @@ class StockPicking(models.Model):
                 production.qty_producing = production.product_qty
                 production._set_qty_producing()
             productions[:len_amounts].subcontracting_has_been_recorded = True
+            self._relink_backorder_mo(move, productions[len_amounts:])
 
         for picking in self:
             productions_to_done = picking._get_subcontract_production()._subcontracting_filter_to_done()
@@ -96,6 +98,21 @@ class StockPicking(models.Model):
             production_moves.move_line_ids.write({'date': minimum_date - timedelta(seconds=1)})
 
         return res
+
+    def _relink_backorder_mo(self, move, bo_productions):
+        """Relink backorder MOs to the correct backorder receipt moves.
+
+        _get_backorder_move_vals copies move_dest_ids to the backorder MO finished move,
+        so incoming_picking still points to the original receipt. Fix both sides of the link.
+        """
+        backorder_receipt_moves = move.move_orig_ids.move_dest_ids.filtered(
+            lambda m: m.state not in ('done', 'cancel'))
+        for bo_production, bo_receipt_move in zip(bo_productions, backorder_receipt_moves):
+            bo_finished_move = bo_production.move_finished_ids.filtered(
+                lambda m: m.product_id == move.product_id)
+            if bo_finished_move:
+                bo_finished_move.write({'move_dest_ids': [Command.set([bo_receipt_move.id])]})
+                bo_receipt_move.write({'move_orig_ids': [Command.set([bo_finished_move.id])]})
 
     def action_record_components(self):
         self.ensure_one()
