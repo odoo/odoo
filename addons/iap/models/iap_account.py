@@ -4,6 +4,7 @@ import hashlib
 import logging
 import secrets
 import uuid
+from urllib.parse import urlencode
 import werkzeug.urls
 from requests import RequestException
 
@@ -11,7 +12,6 @@ from odoo import api, fields, models, _
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import UserError
 from odoo.modules import module
-from odoo.tools import get_lang
 from odoo.tools.urls import urljoin as url_join
 
 from odoo import Command
@@ -43,13 +43,6 @@ class IapAccount(models.Model):
     # Dynamic fields, which are received from iap server and set when loading the view
     balance_amount = fields.Float()
     balance = fields.Char(compute='_compute_balance')
-    is_balance_below_warning_threshold = fields.Boolean(compute='_compute_is_balance_below_warning_threshold')
-    warning_threshold = fields.Float(
-        "Email Alert Threshold",
-        default=1.0,
-        help="Once you have this many credits or less, the system will automatically notify the following recipients by email. Set to 0 to disable email warnings.",
-    )
-    warning_user_ids = fields.Many2many('res.users', string="Email Alert Recipients")
     state = fields.Selection([('banned', 'Banned'), ('registered', "Registered"), ('unregistered', "Unregistered")], readonly=True)
 
     @api.depends('balance_amount', 'service_id.integer_balance', 'service_id.unit_name')
@@ -58,50 +51,17 @@ class IapAccount(models.Model):
             balance_amount = round(account.balance_amount, None if account.service_id.integer_balance else 4)
             account.balance = f"{balance_amount} {account.service_id.unit_name or ''}"
 
-    @api.depends("balance_amount", "warning_threshold")
-    def _compute_is_balance_below_warning_threshold(self):
-        for account in self:
-            account.is_balance_below_warning_threshold = account.balance_amount <= account.warning_threshold
-
-    @api.constrains('warning_threshold', 'warning_user_ids')
-    def validate_warning_alerts(self):
-        for account in self:
-            if account.warning_threshold < 0:
-                raise UserError(_("Please set a positive email alert threshold."))
-            users_with_no_email = [user.name for user in self.warning_user_ids if not user.email]
-            if users_with_no_email:
-                raise UserError(_(
-                    "One of the email alert recipients doesn't have an email address set. Users: %s",
-                    ",".join(users_with_no_email),
-                ))
-
     def web_read(self, *args, **kwargs):
         self._get_account_information_from_iap()
         return super().web_read(*args, **kwargs)
 
-    def write(self, vals):
-        res = super().write(vals)
-        if (
-            not self.env.context.get('disable_iap_update')
-            and any(warning_attribute in vals for warning_attribute in ('warning_threshold', 'warning_user_ids'))
-        ):
-            route = '/iap/1/update-warning-email-alerts'
-            endpoint = iap_tools.iap_get_endpoint(self.env)
-            url = url_join(endpoint, route)
-            for account in self:
-                data = {
-                    'account_token': account.sudo().account_token,
-                    'warning_threshold': account.warning_threshold,
-                    'warning_emails': [{
-                        'email': user.email,
-                        'lang_code': user.lang or get_lang(self.env).code,
-                    } for user in account.warning_user_ids],
-                }
-                try:
-                    iap_tools.iap_jsonrpc(url=url, params=data)
-                except RequestException as e:
-                    _logger.warning("Update of the warning email configuration has failed: %s", str(e))
-        return res
+    def action_manage(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': self.get_credits_url(self.service_name, self.account_token),
+            'target': 'new',
+        }
 
     def _get_account_information_from_iap(self):
         # During testing, we don't want to call the iap server
@@ -150,7 +110,6 @@ class IapAccount(models.Model):
     def _get_account_info(self, account_id, information):
         return {
             'balance_amount': information['balance'],
-            'warning_threshold': information['warning_threshold'],
             'state': information['registered'],
             'service_locked': True,  # The account exist on IAP, prevent the edition of the service
         }
@@ -230,7 +189,7 @@ class IapAccount(models.Model):
         """ Called notably by: buy more widget, partner_autocomplete, snailmail, ... """
         dbuuid = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
         endpoint = iap_tools.iap_get_endpoint(self.env)
-        route = '/iap/1/credit'
+        route = '/iap/1/my_account'
         base_url = url_join(endpoint, route)
         account_token = account_token or self.get(service_name).sudo().account_token
         hashed_account_token = self._hash_iap_token(account_token)
@@ -266,6 +225,21 @@ class IapAccount(models.Model):
             'view_mode': 'form',
             'res_id': self.id,
             'target': 'self',
+        }
+
+    @api.model
+    def action_view_my_services(self):
+        endpoint = iap_tools.iap_get_endpoint(self.env)
+        account_tokens = self.env["iap.account"].search([]).mapped("account_token")
+        params = {
+            "db_uuid": self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
+            "account_tokens": ",".join(self.env['iap.account']._hash_iap_token(token) for token in account_tokens),
+            "hashed": 1,
+        }
+        url = endpoint + "/iap/1/all-in-app-services?" + urlencode(params)
+        return {
+            "type": "ir.actions.act_url",
+            "url": url,
         }
 
     @api.model

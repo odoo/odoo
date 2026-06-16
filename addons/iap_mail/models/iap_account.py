@@ -9,8 +9,6 @@ class IapAccount(models.Model):
 
     # Add tracking to the base fields
     company_ids = fields.Many2many('res.company', tracking=True)
-    warning_threshold = fields.Float("Email Alert Threshold", tracking=True)
-    warning_user_ids = fields.Many2many('res.users', string="Email Alert Recipients", tracking=True)
 
     @api.model
     def _send_success_notification(self, message, title=None):
