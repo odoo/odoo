@@ -852,8 +852,8 @@ class TestMultiCompany(TransactionCase):
         self.assertEqual(info.wh_replenishment_option_ids.lead_time, "10.0 days")
         info_lead_days = loads(info.json_lead_days)
         self.assertEqual(len(info_lead_days['lead_days_description']), 3)
-        self.assertRegex(info_lead_days['lead_days_description'][1][0], f".*{self.warehouse_b.code}.*{self.stock_location_b.name}.*{self.interco_location.name}")
-        self.assertRegex(info_lead_days['lead_days_description'][2][0], f".*{self.warehouse_a.code}.*{self.interco_location.name}.*{self.stock_location_a.name}")
+        self.assertRegex(info_lead_days['lead_days_description'][0][0], f".*{self.warehouse_b.code}.*{self.stock_location_b.name}.*{self.interco_location.name}")
+        self.assertRegex(info_lead_days['lead_days_description'][1][0], f".*{self.warehouse_a.code}.*{self.interco_location.name}.*{self.stock_location_a.name}")
 
     def test_resupply_inter_warehouse(self):
         """ Ensure that when resupplying from another warehouse, the partner are correctly set on each side.

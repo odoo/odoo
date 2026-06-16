@@ -142,6 +142,8 @@ class PurchaseOrderLine(models.Model):
             'move_to_match_ids': self.move_ids.filtered(lambda m: m.product_id == self.product_id).ids,
             'purchase_line_to_match_id': self.id,
         }
+        if supplier := self.selected_seller_id:
+            action['context']['forecast_supplier_id'] = supplier.id
         warehouse = self.order_id.picking_type_id.warehouse_id
         if warehouse:
             action['context']['warehouse_id'] = warehouse.id

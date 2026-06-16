@@ -720,7 +720,7 @@ class ProductProduct(models.Model):
 
     def _get_dates_info(self, date, location, route_ids=False):
         rules = self._get_rules_from_location(location, route_ids=route_ids)
-        delays, _ = rules._get_lead_days(self, bypass_delay_description=True)
+        delays, _ = rules._get_lead_days(self, description='none')
         return {
             'date_planned': date,
             'date_order': date - relativedelta(days=delays['purchase_delay']),
