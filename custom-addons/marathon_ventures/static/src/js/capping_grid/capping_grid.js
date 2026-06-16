@@ -28,6 +28,11 @@ export class MvCappingGrid extends Component {
             // True while the Discard-confirmation dialog is open.
             // Confirm -> reload the grid; Cancel -> close the dialog.
             pendingDiscard: false,
+            // Bulk cap picklist dialog state. When `pendingBulkCap`
+            // is true the dialog is open; `pendingBulkCapValue` holds
+            // the cap Selection value the planner has chosen.
+            pendingBulkCap: false,
+            pendingBulkCapValue: "uncapped",
         });
         onWillStart(this.loadGrid.bind(this));
         onWillUpdateProps((nextProps) => {
@@ -147,13 +152,36 @@ export class MvCappingGrid extends Component {
         this.state.selected = {};
     }
 
-    async setBulkCapPct() {
+    // Opens the cap picklist dialog. The actual write happens in
+    // confirmBulkCap() after the planner picks an option.
+    setBulkCapPct() {
+        if (!this.selectedRowIds.length) return;
+        this.state.pendingBulkCap = true;
+        // Default selection: keep the last picked value, else uncapped.
+        if (!this.state.pendingBulkCapValue) {
+            this.state.pendingBulkCapValue = "uncapped";
+        }
+    }
+
+    onBulkCapSelect(ev) {
+        this.state.pendingBulkCapValue = ev.target.value;
+    }
+
+    cancelBulkCap() {
+        this.state.pendingBulkCap = false;
+    }
+
+    // Confirm = apply the picked cap to every selected row. We keep
+    // the same logic the old prompt path used - just sourced from the
+    // dropdown instead of a free-form numeric prompt.
+    async confirmBulkCap() {
         const ids = this.selectedRowIds;
+        this.state.pendingBulkCap = false;
         if (!ids.length) return;
-        const raw = window.prompt("Set cap % for the selected rows (0-100):", "100");
-        if (raw === null) return;
-        let pct = parseInt(raw, 10);
-        if (!Number.isFinite(pct)) return;
+        const capValue = this.state.pendingBulkCapValue || "uncapped";
+        const opt = this._capOptionFor(capValue);
+        let pct = opt.pct;
+        if (!Number.isFinite(pct)) pct = 100;
         pct = Math.max(0, Math.min(100, pct));
         // Resolve a matching cap Selection value for the picked pct
         // so the local cells render the dropdown with the right option

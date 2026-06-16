@@ -283,6 +283,49 @@
     );
 }
 
+/* Bulk LTC bar - shown above the table when at least one row is
+   selected via the checkbox column. Lets the planner cancel
+   post-LTC-week schedules across every selected row at once. */
+.mv-bulk-ltc-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 8px 0;
+    font-size: 13px;
+    color: #1a1d22;
+}
+.mv-bulk-ltc-bar__count {
+    font-weight: 600;
+    color: #1d4ed8;
+}
+.mv-bulk-ltc-bar__field {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.mv-bulk-ltc-bar__label {
+    font-size: 12px;
+    color: #4b5563;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+}
+
+/* Checkbox column for row selection. Narrow column at the very
+   start of the table, with the checkbox centred. */
+.mv-units-table .mv-row-check-col {
+    width: 32px;
+    text-align: center;
+    padding: 4px 6px;
+}
+.mv-units-table .mv-row-check-col input[type="checkbox"] {
+    cursor: pointer;
+}
+
 /* LTC preview row: shown after Section 2 Go / row-menu LTC, before
    the planner clicks Save. Faded blue-ish background so they can
    tell the row is an unsaved preview, not a real deal_line yet. */

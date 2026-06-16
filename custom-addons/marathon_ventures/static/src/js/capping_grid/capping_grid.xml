@@ -4,6 +4,44 @@
   <t t-name="marathon_ventures.MvCappingGrid">
     <div class="mv-cap-grid-wrap">
 
+      <!-- Set Cap % picklist dialog. Opens when the planner clicks
+           "Set cap %" in the bulk action bar. Replaces the old
+           window.prompt with a Selection dropdown sourced from
+           capOptions (Uncapped / 80% / 50% / 0% / Ghost). -->
+      <div t-if="state.pendingBulkCap"
+           class="mv-confirm-overlay"
+           t-on-click.stop="() => this.cancelBulkCap()">
+        <div class="mv-confirm-dialog"
+             t-on-click.stop="() => {}">
+          <div class="mv-confirm-dialog__title">Set cap %</div>
+          <div class="mv-confirm-dialog__body">
+            Pick the cap to apply to every selected row:
+            <div style="margin-top: 8px;">
+              <select class="mv-cap-cell__select"
+                      style="width: 180px;"
+                      t-on-change="(ev) => this.onBulkCapSelect(ev)">
+                <option t-foreach="capOptions" t-as="opt"
+                        t-key="opt.value"
+                        t-att-value="opt.value"
+                        t-att-selected="opt.value === state.pendingBulkCapValue ? 'selected' : null">
+                  <t t-esc="opt.label"/>
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="mv-confirm-dialog__footer">
+            <button class="btn btn-light"
+                    t-on-click.stop.prevent="() => this.cancelBulkCap()">
+              Cancel
+            </button>
+            <button class="btn btn-primary"
+                    t-on-click.stop.prevent="() => this.confirmBulkCap()">
+              Apply
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Discard confirmation dialog. Opens when the planner clicks
            the Discard button in the Save bar so accidental clicks
            don't blow away unsaved cap edits. -->

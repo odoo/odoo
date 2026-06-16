@@ -363,20 +363,14 @@ class MvDealUnitsGridRpc(models.Model):
                 })
 
         # --- Auto-cleanup: any touched Deal Line that no longer has ANY
-        # --- Auto-cleanup: any touched Deal Line that no longer has ANY
-        # linked schedule is now empty -> delete it. The cascade ondelete
-        # on schedules.deal_line_id makes this safe (no orphan rows).
-        if touched_dl_ids:
-            empty_dls = self.env['mv.deal_line'].browse(list(touched_dl_ids)).filtered(
-                lambda d: d.exists() and not d.schedule_ids
-            )
-            if empty_dls:
-                empty_dls.unlink()
-
         # --- LTC operations queued by the front-end (Section 2 Go
         # button or the row-menu LTC dialog). Each op cancels every
         # active schedule in weeks AFTER the LTC week and splits the
         # LTC week off into a new Deal Line if days_allowed shrinks.
+        # NOTE: LTC ops can reparent a schedule away from its source
+        # deal_line; if that was the only schedule on the source, the
+        # deal_line becomes empty. We let the broader cleanup below
+        # catch this rather than tracking it inline.
         for op in edits.get('ltc_ops') or []:
             row_id = op.get('row_id')
             ltc_date = op.get('ltc_date')
@@ -387,7 +381,26 @@ class MvDealUnitsGridRpc(models.Model):
                 continue
             self._do_apply_ltc(row_id, ltc_date)
 
+        # --- Auto-cleanup: ANY Deal Line on this deal that no longer
+        # has any linked schedule (sold OR canceled) is now empty and
+        # should be deleted. Scan all of the deal's deal_lines, not
+        # just touched_dl_ids, so we also catch lines that were left
+        # empty by reparenting in _do_apply_ltc.
+        self._unlink_empty_deal_lines()
+
         return self.load_units_grid()
+
+    def _unlink_empty_deal_lines(self):
+        """Delete every Deal Line on this deal that has zero linked
+        schedules (whether sold or canceled). The cascade ondelete on
+        schedules.deal_line_id makes this safe; we never run this when
+        a schedule is mid-write."""
+        self.ensure_one()
+        empty = self.env['mv.deal_line'].search([
+            ('deal_id', '=', self.id),
+        ]).filtered(lambda d: not d.schedule_ids)
+        if empty:
+            empty.unlink()
 
     # ------------------------------------------------------------------
     # LTC ("Last To Cancel"): mid-week cancellation for one Deal Line
@@ -410,6 +423,9 @@ class MvDealUnitsGridRpc(models.Model):
         directly from save_units_grid."""
         self.ensure_one()
         self._do_apply_ltc(row_id, ltc_date)
+        # Same broad cleanup as save_units_grid - delete any Deal
+        # Line left empty by the LTC reparenting.
+        self._unlink_empty_deal_lines()
         return self.load_units_grid()
 
     def _do_apply_ltc(self, row_id, ltc_date):

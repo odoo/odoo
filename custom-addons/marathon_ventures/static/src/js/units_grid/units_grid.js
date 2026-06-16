@@ -53,6 +53,11 @@ export class MvUnitsGrid extends Component {
             // week. Both clear when the dialog closes.
             pendingLtcRow: null,
             pendingLtcDate: "",
+            // Multi-row selection state. `selected` is keyed by row.id
+            // (only real rows, not LTC previews). `bulkLtcDate` is the
+            // date the planner types into the top-of-table bulk bar.
+            selected: {},
+            bulkLtcDate: "",
         });
         onWillStart(this.loadGrid.bind(this));
         onWillUpdateProps((nextProps) => {
@@ -68,8 +73,6 @@ export class MvUnitsGrid extends Component {
         const id = idOverride || this.dealId;
         if (!id) { this.state.loaded = true; return; }
         this.state.payload = await this.orm.call("mv.deal", "load_units_grid", [[id]], {});
-        console.log(this.state.payload);
-        
         this.state.loaded = true;
         this.resetEdits();
     }
@@ -82,6 +85,10 @@ export class MvUnitsGrid extends Component {
             ltc_ops: [],       // Staged Last-To-Cancel operations
         };
         this.state.dirty = false;
+        // Drop any selection + bulk-bar date too - the rows from the
+        // freshly-loaded payload may have different ids.
+        this.state.selected = {};
+        this.state.bulkLtcDate = "";
     }
 
     // Phase 12: deal-level start date changed -> snap to Monday,
@@ -679,6 +686,63 @@ export class MvUnitsGrid extends Component {
         bulk.sec2_end = "";
     }
 
+    // ---- Multi-row selection + bulk LTC -----------------------------
+    toggleRow(rowId, ev) {
+        const v = !!(ev && ev.target && ev.target.checked);
+        this.state.selected[rowId] = v;
+    }
+
+    toggleAll(ev) {
+        const v = !!(ev && ev.target && ev.target.checked);
+        for (const row of (this.state.payload.rows || [])) {
+            // Don't select preview rows - they're not real Deal Lines.
+            if (row._is_ltc_preview) continue;
+            this.state.selected[row.id] = v;
+        }
+    }
+
+    get selectedRowIds() {
+        return Object.keys(this.state.selected)
+            .filter((k) => this.state.selected[k]);
+    }
+
+    get hasSelection() {
+        return this.selectedRowIds.length > 0;
+    }
+
+    clearSelection() {
+        this.state.selected = {};
+    }
+
+    onBulkLtcDateInput(ev) {
+        this.state.bulkLtcDate = ev.target.value || "";
+    }
+
+    applyBulkLtc() {
+        const dateIso = this.state.bulkLtcDate;
+        if (!dateIso) {
+            alert("Please pick an LTC date in the bulk bar before clicking Go.");
+            return;
+        }
+        const ids = this.selectedRowIds;
+        if (!ids.length) {
+            alert("No rows selected.");
+            return;
+        }
+        // Iterate a snapshot of rows that match the selected ids. We
+        // snapshot first because _stageLtc mutates state.payload.rows
+        // (inserts preview rows) which would shift indexes.
+        const targets = (this.state.payload.rows || []).filter(
+            (r) => !r._is_ltc_preview && this.state.selected[r.id],
+        );
+        for (const row of targets) {
+            this._stageLtc(row, dateIso);
+        }
+        // Clear the bulk bar so the planner sees the action completed.
+        this.state.bulkLtcDate = "";
+        this.clearSelection();
+    }
+
     // Stage an LTC operation locally:
     //  1) Cancel post-LTC-week active cells in the original row
     //     (move units -> cancelled_units, units -> 0).
@@ -693,7 +757,7 @@ export class MvUnitsGrid extends Component {
     _stageLtc(row, dateIso) {
         // Skip if this is already a preview row (shouldn't happen via
         // UI but guard anyway).
-        if (row._is_ltc_preview) return;
+        if (row._is_ltc_preview) return;    
 
         const ltcDate = new Date(dateIso + "T00:00:00");
         const wMon0 = (ltcDate.getDay() + 6) % 7; // Mon=0..Sun=6

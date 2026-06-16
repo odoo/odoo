@@ -19,3 +19,17 @@ class MvScheduleDealLineLink(models.Model):
         ondelete='cascade',
         index=True,
     )
+
+    def unlink(self):
+        # Capture related deal lines BEFORE deletion
+        deal_lines = self.mapped('deal_line_id')
+
+        # Delete schedules
+        res = super().unlink()
+
+        # Cleanup: remove deal lines with no schedules left
+        for dl in deal_lines:
+            if not dl.schedule_ids:
+                dl.unlink()
+
+        return res

@@ -99,11 +99,39 @@
 
       <div t-if="!state.loaded" class="mv-units-loading">Loading units grid...</div>
 
+      <!-- Bulk LTC bar: visible when 1+ data rows are checked. Lets
+           the planner cancel post-week schedules and split the LTC
+           week across every selected row in one shot. Stages locally;
+           commits only on Save (same as the per-row Section 2). -->
+      <div t-if="hasSelection" class="mv-bulk-ltc-bar">
+        <span class="mv-bulk-ltc-bar__count">
+          <t t-esc="selectedRowIds.length"/> row(s) selected
+        </span>
+        <span class="mv-bulk-ltc-bar__field">
+          <span class="mv-bulk-ltc-bar__label">LTC date</span>
+          <input type="date" class="mv-bulk-input mv-bulk-input--date"
+                 t-att-value="state.bulkLtcDate || ''"
+                 t-on-input="(ev) => this.onBulkLtcDateInput(ev)"/>
+        </span>
+        <button class="btn btn-primary btn-sm"
+                t-on-click.prevent="applyBulkLtc"
+                title="Apply LTC to every selected row">
+          Go
+        </button>
+        <button class="btn btn-light btn-sm"
+                t-on-click.prevent="clearSelection">
+          Clear selection
+        </button>
+      </div>
+
       <div t-if="state.loaded and state.payload" class="mv-units-table-scroll">
       <!-- The grid - rendered as soon as we know the week columns -->
       <table t-if="state.loaded and state.payload" class="mv-units-table">
         <thead>
           <tr>
+            <th class="mv-row-check-col">
+              <input type="checkbox" t-on-change="(ev) => this.toggleAll(ev)"/>
+            </th>
             <th class="mv-daypart-col">DAYPART</th>
             <th t-foreach="state.payload.weeks" t-as="w" t-key="w" class="mv-week-col">
               <div class="mv-week-col__date" t-esc="fmtWeekShort(w)"/>
@@ -123,6 +151,16 @@
                the data row instead of rendering only once. -->
           <t t-foreach="state.payload.rows" t-as="row" t-key="row.id">
           <tr t-att-class="row._is_ltc_preview ? 'mv-ltc-preview-row' : null">
+
+            <!-- Row select checkbox - hidden for preview rows since they
+                 aren't real Deal Lines yet (saved only after planner
+                 clicks Save). -->
+            <td class="mv-row-check-col">
+              <input t-if="!row._is_ltc_preview"
+                     type="checkbox"
+                     t-att-checked="state.selected[row.id] ? 'checked' : null"
+                     t-on-change="(ev) => this.toggleRow(row.id, ev)"/>
+            </td>
 
             <td class="mv-daypart-cell">
               <!-- Daypart selector (always editable; planners can switch) -->
@@ -237,7 +275,7 @@
                data and bulk). Empty cells flank the strip so DAYPART /
                TOTAL / ACTIONS columns stay visually clean. -->
           <tr class="mv-bulk-row">
-            <td t-att-colspan="state.payload.weeks.length + 3"
+            <td t-att-colspan="state.payload.weeks.length + 4"
                 class="mv-bulk-row__cell">
               <div class="mv-bulk-wrap">
 
@@ -288,7 +326,7 @@
 
           <!-- Add Day Part row: ALWAYS visible, just under the last row -->
           <tr class="mv-add-row">
-            <td t-att-colspan="state.payload.weeks.length + 3" class="mv-add-cell">
+            <td t-att-colspan="state.payload.weeks.length + 4" class="mv-add-cell">
               <button class="btn btn-link mv-add-daypart"
                       t-on-click.prevent="addRow">
                 + Add Day Part
@@ -304,6 +342,7 @@
 
           <!-- Grand total row -->
           <tr t-if="state.payload.rows.length > 0" class="mv-grand-row">
+            <td class="mv-row-check-col"></td>
             <td class="mv-grand-cell">
               <t t-esc="(state.payload.grand_total_spots || 0).toLocaleString()"/> spots total
               <span t-if="(state.payload.grand_total_cancelled || 0) > 0"
