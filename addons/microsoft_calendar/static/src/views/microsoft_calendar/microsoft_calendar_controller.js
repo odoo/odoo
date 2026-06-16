@@ -14,11 +14,6 @@ patch(AttendeeCalendarController.prototype, {
     },
 
     async onMicrosoftSyncCalendar() {
-        await this.orm.call(
-            "res.users",
-            "restart_microsoft_synchronization",
-            [[user.userId]],
-        );
         const syncResult = await this.model.syncMicrosoftCalendar();
         if (syncResult.status === "need_auth") {
             window.location.assign(syncResult.url);
@@ -44,13 +39,15 @@ patch(AttendeeCalendarController.prototype, {
     },
 
     async onStopMicrosoftSynchronization() {
-        await this.orm.call(
-            "res.users",
-            "stop_microsoft_synchronization",
-            [[user.userId]],
-        );
+        await this.orm.call("res.users", "stop_microsoft_synchronization");
+        this.model._loaded = false;
         await this.model.load();
         render(this, true);
+    },
+
+    async onRetryGoogleSync() {
+        await this.orm.call("res.users", "stop_microsoft_synchronization");
+        await this.onGoogleSyncCalendar();
     },
 
     async onUnpauseMicrosoftSynchronization() {
@@ -59,7 +56,8 @@ patch(AttendeeCalendarController.prototype, {
             "unpause_microsoft_synchronization",
             [[user.userId]],
         );
-        await this.onStopMicrosoftSynchronization();
+        this.model._loaded = false;
+        await this.model.load();
         render(this, true);
     }
 });

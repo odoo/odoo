@@ -167,13 +167,13 @@ class TestAnswerEvents(TestCommon):
             'microsoft_calendar_client_id',
             'test_microsoft_calendar_client_id'
         )
-        self.env.user.sudo().microsoft_calendar_rtoken = 'test_microsoft_calendar_rtoken'
         self.env.user.stop_microsoft_synchronization()
         payload = {
             'params': {
                 'model': 'calendar.event'
             }
         }
+        self.env.user.sudo().microsoft_calendar_rtoken = 'test_microsoft_calendar_rtoken'
         # Sending the request to the sync_data
         response = self.url_open(
             '/microsoft_calendar/sync_data',

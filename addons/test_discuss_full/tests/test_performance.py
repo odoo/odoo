@@ -500,6 +500,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "livechat_expertise_ids": [],
                     "livechat_lang_ids": [],
                     "livechat_username": False,
+                    "microsoft_account_email": False,
                     "user_id": {"id": self.users[0].id},
                     "embedded_actions_config_ids": {},
                 },

@@ -106,11 +106,8 @@ defineModels([
 ]);
 defineMailModels();
 
-onRpc("/calendar/check_credentials", async () => ({}));
-onRpc("check_synchronization_status", async () => ({}));
 onRpc("get_working_hours_for_all_attendees", () => ({}));
 onRpc("get_attendee_detail", () => []);
-onRpc("get_default_duration", () => 1);
 onRpc("get_state_selections", () => [
     ["accepted", "Yes"],
     ["declined", "No"],
@@ -118,6 +115,12 @@ onRpc("get_state_selections", () => [
     ["needsAction", "Needs Action"],
 ]);
 onRpc("res.users", "read", () => [{ user: serverState.userId, employee_id: [{ employee_id: 1 }] }]);
+onRpc("res.users", "get_calendar_model_data", () => ({
+    credential_status: {},
+    sync_status: {},
+    sync_email: false,
+    default_duration: 1,
+}))
 
 beforeEach(() => {
     mockDate("2020-12-10 15:00:00");

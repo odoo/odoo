@@ -16,6 +16,7 @@ _logger = logging.getLogger(__name__)
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
+    google_account_email = fields.Char(related='res_users_settings_id.google_account_email', readonly=False, groups="base.group_system")
     google_calendar_rtoken = fields.Char(related='res_users_settings_id.google_calendar_rtoken', groups="base.group_system")
     google_calendar_token = fields.Char(related='res_users_settings_id.google_calendar_token', groups="base.group_system")
     google_calendar_token_validity = fields.Datetime(related='res_users_settings_id.google_calendar_token_validity', groups="base.group_system")
@@ -161,13 +162,17 @@ class ResUsers(models.Model):
         self.ensure_one()
         return self.sudo().google_calendar_token and self._get_google_sync_status() == 'sync_active'
 
+    @api.model
     def stop_google_synchronization(self):
-        self.ensure_one()
-        self.sudo().google_synchronization_stopped = True
+        self.env.user.google_synchronization_stopped = True
+        self.env.user.res_users_settings_id._set_google_auth_tokens(False, False, 0)
+        self.env.user.res_users_settings_id.write({
+            'google_calendar_sync_token': False,
+        })
 
+    @api.model
     def restart_google_synchronization(self):
-        self.ensure_one()
-        self.sudo().google_synchronization_stopped = False
+        self.env.user.google_synchronization_stopped = False
         self.env['calendar.recurrence']._restart_google_sync()
         self.env['calendar.event']._restart_google_sync()
 
@@ -190,6 +195,10 @@ class ResUsers(models.Model):
         res = super().check_calendar_credentials()
         res['google_calendar'] = self._has_setup_credentials()
         return res
+
+    @api.model
+    def get_calendar_sync_email(self):
+        return self.env.user.google_account_email or super().get_calendar_sync_email()
 
     def check_synchronization_status(self):
         res = super().check_synchronization_status()

@@ -79,11 +79,14 @@ class Users extends models.Model {
 defineModels([CalendarEvent, CalendarFilter, Partner, Users]);
 defineMailModels();
 
-onRpc("/calendar/check_credentials", async () => ({ microsoft_calendar: true }));
 onRpc("/microsoft_calendar/sync_data", () => ({ status: "no_new_event_from_microsoft" }));
-onRpc("check_synchronization_status", async () => ({ microsoft_calendar: "sync_active" }));
 onRpc("get_attendee_detail", () => []);
-onRpc("get_default_duration", () => 3.25);
+onRpc("res.users", "get_calendar_model_data", () => ({
+    credential_status: { microsoft_calendar: true },
+    sync_status: { microsoft_calendar: "sync_active" },
+    sync_email: false,
+    default_duration: 3.25,
+}))
 
 beforeEach(() => {
     mockDate("2016-12-12 08:00:00");

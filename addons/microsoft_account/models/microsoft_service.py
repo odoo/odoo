@@ -46,7 +46,7 @@ class MicrosoftService(models.AbstractModel):
         return ICP.get_str('microsoft_%s_client_id' % service)
 
     def _get_calendar_scope(self):
-        return 'offline_access openid Calendars.ReadWrite'
+        return 'offline_access openid profile email User.Read Calendars.ReadWrite'
 
     @api.model
     def _get_auth_endpoint(self):
@@ -83,7 +83,7 @@ class MicrosoftService(models.AbstractModel):
         return response.get('access_token'), response.get('expires_in')
 
     @api.model
-    def _get_authorize_uri(self, from_url, service, scope, redirect_uri):
+    def _get_authorize_uri(self, from_url, service, scope, redirect_uri, prompt):
         """ This method return the url needed to allow this instance of Odoo to access to the scope
             of gmail specified as parameters
         """
@@ -100,7 +100,8 @@ class MicrosoftService(models.AbstractModel):
             'state': json.dumps(state),
             'scope': scope,
             'redirect_uri': redirect_uri,
-            'access_type': 'offline'
+            'access_type': 'offline',
+            'prompt': prompt,
         })
         return "%s?%s" % (self._get_auth_endpoint(), encoded_params)
 
