@@ -185,15 +185,15 @@ class WebsiteHTMLTextProcessor(models.AbstractModel):
         :rtype: float
         """
         text_must_be_translated_for_openai = self.env.context.get('html_text_must_be_translated_for_openai', False)
-        if text_must_be_translated_for_openai:
-            nb_terms_translated = len([k for k, v in translated_content.items() if k != v])
-            nb_terms_total = len(translated_content)
-        else:
-            nb_terms_translated = len(generated_content)
-            nb_terms_total = len(generated_content)
 
-        translated_ratio = nb_terms_translated / nb_terms_total if nb_terms_total > 0 else 0
-        _logger.debug("Ratio of translated content: %s%% (%s/%s)", translated_ratio * 100, nb_terms_translated, nb_terms_total)
+        if text_must_be_translated_for_openai:
+            weight_terms_translated = sum(len(k) for k, v in translated_content.items() if k != v)
+            weight_terms_total = sum(len(k) for k, v in translated_content.items())
+        else:
+            weight_terms_translated = len(generated_content)
+            weight_terms_total = len(generated_content)
+
+        translated_ratio = weight_terms_translated / weight_terms_total if weight_terms_total > 0 else 0
         return translated_ratio
 
     @api.model
