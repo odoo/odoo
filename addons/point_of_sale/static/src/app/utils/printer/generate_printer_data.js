@@ -193,6 +193,7 @@ export class GeneratePrinterData {
                 price_subtotal_incl: line.currencyDisplayPrice,
                 is_service_fee_line: line.isServiceFeeLine(),
                 service_fee_display_info: line.getServiceFeeDisplayInfo(),
+                no_discount_price: formatCurrency(line.displayPriceNoDiscount, line.currency.id),
             };
         });
     }
