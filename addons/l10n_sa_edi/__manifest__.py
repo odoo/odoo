@@ -17,7 +17,6 @@ E-invoice implementation for Saudi Arabia; Integration with ZATCA
     """,
     'category': 'Accounting/Localizations/EDI',
     'license': 'LGPL-3',
-    'post_init_hook': '_l10n_sa_edi_post_init',
     'data': [
         'security/ir.model.access.csv',
         'data/ubl_21_zatca.xml',
