@@ -165,6 +165,8 @@ class Warehouse(models.Model):
 
     @api.model
     def _warehouse_redirect_warning(self):
+        if not self.env.registry.ready:  # don't raise warning during module installation
+            return
         warehouse_action = self.env.ref('stock.action_warehouse_form')
         msg = _('Please create a warehouse for company %s.', self.env.company.display_name)
         if not self.env.user.has_group('stock.group_stock_manager'):
