@@ -3,3 +3,4 @@
 
 from . import pos_invoice
 from . import pos_order_report
+from . import pos_payment_report
