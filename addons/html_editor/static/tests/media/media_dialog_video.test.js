@@ -135,6 +135,47 @@ describe("media dialod video", () => {
             expect(iframeContainerData.embedUrl).toBe(iframe.src);
             expect(getContent(el)).toBe(`<p>ab</p>${getMediaHtml("dQw4w9WgXcQ")}<p>[]cd</p>`);
         });
+        test("Should insert an instagram video verticaly", async () => {
+            const { editor } = await setupEditor("<p>ab[]cd</p>", {
+                config: NO_EMBEDDED_COMPONENTS_CONFIG,
+            });
+            mockFetch(() => '{"data": "mockFetch api result data"}');
+            // Open the media dialog with the /video command
+            await insertText(editor, "/video");
+            await animationFrame();
+            await expectElementCount(".o-we-powerbox", 1);
+            await press("Enter");
+
+            // Ensure the video tab is selected by default
+            const selectedTab = await waitFor(`div.modal .nav-tabs button.active`);
+            expect(selectedTab.textContent).toBe("Videos");
+            await waitFor(`div.modal #o_video_text`);
+
+            // Insert a valid instagram video URL
+            await click("#o_video_text");
+            await edit("https://www.instagram.com/reel/B6dXGTxggTG/");
+            // We manualy advanceTime for `refreshVideoData()` to be triggered (the call is debounced).
+            await advanceTime(100);
+            await waitForNone(`div.modal .o_video_preview .alert`);
+
+            // Click on save button
+            await click(`div.modal .modal-footer button.btn-primary`);
+            await animationFrame();
+            await waitForNone(`div.modal`);
+
+            const iframeContainer = await waitFor(`div.media_iframe_video`);
+            const iframe = await waitFor(`div.media_iframe_video iframe`);
+            const iframeContainerData = iframeContainer?.dataset || {};
+
+            expect(iframeContainerData.platform).toBe("instagram");
+            expect(iframeContainerData.baseUrl).toBe("https://www.instagram.com/reel/B6dXGTxggTG/");
+            expect(iframeContainerData.embedUrl).toBe(
+                "https://www.instagram.com/p/B6dXGTxggTG/embed/"
+            );
+            expect(iframeContainerData.isVertical).toBe("true");
+            expect(iframeContainerData.videoId).toBe("B6dXGTxggTG");
+            expect(iframeContainerData.embedUrl).toBe(iframe.src);
+        });
     });
 
     describe("with embeded Components", () => {
