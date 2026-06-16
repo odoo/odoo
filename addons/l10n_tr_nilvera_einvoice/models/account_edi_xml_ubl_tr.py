@@ -2,7 +2,7 @@ import math
 
 from num2words import num2words
 
-from odoo import api, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import html2plaintext
 
@@ -116,8 +116,17 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             document_node['cac:Delivery'] = None
 
     def _l10n_tr_get_currency_conversion_rate(self, invoice):
-        """Return the exchange rate from invoice currency to company currency, rounded to 6 decimals."""
-        return round(1 / invoice.invoice_currency_rate, 6)
+        """Return the exchange rate: 1 [invoice currency] = X TRY, rounded to 6 decimals."""
+        try_currency = self.env.ref('base.TRY')
+        if invoice.currency_id == try_currency:
+            return 1
+        rate = self.env['res.currency']._get_conversion_rate(
+            invoice.currency_id,
+            try_currency,
+            invoice.company_id,
+            invoice.invoice_date or fields.Date.context_today(self),
+        )
+        return round(1 / rate, 6) if rate else 1
 
     def _add_invoice_payment_means_nodes(self, document_node, vals):
         # EXTENDS account.edi.xml.ubl_21
@@ -128,10 +137,11 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
     def _add_invoice_exchange_rate_nodes(self, document_node, vals):
         invoice = vals['invoice']
-        if vals['currency_id'] != vals['company_currency_id']:
+        # For Nilvera e-invoices, include pricing exchange rate when the invoice currency is not TRY.
+        if vals['currency_name'] != 'TRY':
             document_node['cac:PricingExchangeRate'] = {
                 'cbc:SourceCurrencyCode': {'_text': vals['currency_name']},
-                'cbc:TargetCurrencyCode': {'_text': vals['company_currency_id'].name},
+                'cbc:TargetCurrencyCode': {'_text': 'TRY'},
                 'cbc:CalculationRate': {'_text': self._l10n_tr_get_currency_conversion_rate(invoice)},
                 'cbc:Date': {'_text': invoice.invoice_date},
             }
