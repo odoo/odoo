@@ -247,3 +247,13 @@ test("should apply font size on non breaking space", async () => {
         contentAfter: `<div><p>a<span style="font-size: 36px;">[&nbsp;]</span>b</p></div>`,
     });
 });
+
+test("should format inside of content editable boundary (setFontSize)", async () => {
+    await testEditor({
+        contentBefore:
+            '<div contenteditable="false"><p>a<span contenteditable="true">[b]</span>c</p></div>',
+        stepFunction: setFontSize("36px"),
+        contentAfter:
+            '<div contenteditable="false"><p>a<span contenteditable="true"><span style="font-size: 36px;">[b]</span></span>c</p></div>',
+    });
+});
