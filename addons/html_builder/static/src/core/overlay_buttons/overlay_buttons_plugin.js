@@ -36,6 +36,10 @@ export class OverlayButtonsPlugin extends Plugin {
         on_committed_to_history_handlers: this.refreshButtons.bind(this),
         on_current_options_containers_changed_handlers: this.addOverlayButtons.bind(this),
         on_mobile_view_switched_handlers: withSequence(20, this.refreshButtons.bind(this)),
+        on_prepare_drag_handlers: () => {
+            this.hideOverlayButtons();
+            return () => {}; // it will be refreshed by the call to `updateContainers` after drop (or cancel)
+        },
     };
 
     setup() {

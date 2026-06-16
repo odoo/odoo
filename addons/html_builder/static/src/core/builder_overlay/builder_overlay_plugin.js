@@ -26,6 +26,10 @@ export class BuilderOverlayPlugin extends Plugin {
         on_committed_to_history_handlers: this.refreshOverlays.bind(this),
         on_current_options_containers_changed_handlers: this.openBuilderOverlays.bind(this),
         has_overlay_options: { hasOption: (el) => isResizable(el) },
+        on_prepare_drag_handlers: () => {
+            this.toggleOverlaysVisibility(false);
+            return () => {}; // it will be refreshed by the call to `updateContainers` after drop (or cancel)
+        },
     };
 
     setup() {
