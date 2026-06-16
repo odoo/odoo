@@ -936,7 +936,7 @@ class SaleOrderLine(models.Model):
             # For other delivery methods, they are expected to add their own quantities to the
             # quantities already provided by the `_prepare_qty_delivered` method, including
             # analytic lines quantities for reinvoiceable products.
-            if line.qty_delivered_method == 'manual' and line.product_id.expense_policy != 'no':
+            if line.qty_delivered_method == 'manual' and line.product_id and line.product_id.expense_policy != 'no':
                 line.qty_delivered_method = 'analytic'
 
     def _get_consu_qty_delivered_method(self):
