@@ -45,10 +45,6 @@ class HrWorkEntryType(models.Model):
         default=1.0,
         tracking=True,
         help="If you want the hours to be paid double, the rate should be set to 200%.")
-    is_extra_hours = fields.Boolean(
-        string="Added to Monthly Pay",
-        tracking=True,
-        help="Check this setting if you want the hours to be considered as extra time and added as a bonus to the basic salary.")
     description = fields.Text(translate=True, tracking=True)
     resource_calendar_attendance_ids = fields.One2many('resource.calendar.attendance', 'work_entry_type_id', readonly=True, copy=False)
     resource_calendar_selectable = fields.Boolean(string="Selectable in Working Schedule", compute='_compute_resource_calendar_selectable', store=True, readonly=False, tracking=True)
