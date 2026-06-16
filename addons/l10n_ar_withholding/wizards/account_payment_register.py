@@ -1,153 +1,105 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import logging
-
-from odoo import models, fields, api, Command, _
-from odoo.exceptions import ValidationError
-from odoo.exceptions import UserError
-from datetime import datetime
-
-_logger = logging.getLogger(__name__)
+from odoo import models, fields, api, Command
 
 
 class AccountPaymentRegister(models.TransientModel):
     _inherit = 'account.payment.register'
 
-    l10n_ar_withholding_ids = fields.One2many(
-        'l10n_ar.payment.register.withholding', 'payment_register_id', string="Withholdings",
-        compute="_compute_l10n_ar_withholding_ids", readonly=False, store=True)
-    l10n_ar_net_amount = fields.Monetary(compute='_compute_l10n_ar_net_amount', readonly=True, help="Net amount after withholdings")
-    l10n_ar_adjustment_warning = fields.Boolean(compute="_compute_l10n_ar_adjustment_warning")
-
     @api.depends('can_edit_wizard', 'source_amount', 'source_amount_currency', 'source_currency_id', 'company_id', 'currency_id', 'payment_date', 'installments_mode', 'l10n_latam_move_check_ids.amount', 'l10n_latam_new_check_ids.amount', 'payment_method_code')
     def _compute_amount(self):
+        # EXTENDS 'l10n_account_withholding_tax'
         super()._compute_amount()
         for wizard in self:
+            if wizard.company_id.country_code != 'AR':
+                continue
             checks = wizard.l10n_latam_new_check_ids if wizard.filtered(lambda x: x._is_latam_check_payment(check_subtype='new_check')) else wizard.l10n_latam_move_check_ids
             checks_amount = sum(checks.mapped('amount'))
-            if not wizard.currency_id.is_zero(checks_amount) and wizard.currency_id.compare_amounts(checks_amount, wizard.l10n_ar_net_amount) != 0:
-                if wizard.partner_type == 'supplier':
-                    original_amount = wizard.amount
-                    f_delta = checks_amount - wizard.l10n_ar_net_amount
-                    if f_delta < 0:
-                        # Removing withholdings can result in an overshoot of the initial amount
-                        wizard.amount = checks_amount
-                        f_delta = checks_amount - wizard.l10n_ar_net_amount
-                    d = f_delta
-                    f_previous = wizard.l10n_ar_net_amount
+            if all([
+                not wizard.currency_id.is_zero(checks_amount),
+                wizard.currency_id.compare_amounts(checks_amount, wizard.withholding_net_amount) != 0,
+                wizard.partner_type == 'supplier',
+            ]):
+                original_amount = wizard.amount
+                f_delta = checks_amount - wizard.withholding_net_amount
+                if f_delta < 0:
+                    wizard.amount = checks_amount
+                    f_delta = checks_amount - wizard.withholding_net_amount
+                d = f_delta
+                f_previous = wizard.withholding_net_amount
+                wizard.amount += d
+                wizard._refresh_l10n_ar_withholding_net_amount()
+                for i in range(201):
+                    f_delta = checks_amount - wizard.withholding_net_amount
+                    if wizard.currency_id.is_zero(f_delta):
+                        break
+                    der = ((wizard.withholding_net_amount - f_previous) / d) if abs(d) >= 0.01 else 1.0
+                    if wizard.currency_id.is_zero(der):
+                        i = 200
+                        break
+                    d = max(f_delta / der, 0.01)
+                    f_previous = wizard.withholding_net_amount
                     wizard.amount += d
-                    wizard.env.add_to_compute(wizard.l10n_ar_withholding_ids._fields['base_amount'], wizard.l10n_ar_withholding_ids)
-                    wizard.env.add_to_compute(wizard.l10n_ar_withholding_ids._fields['amount'], wizard.l10n_ar_withholding_ids)
-                    wizard._compute_l10n_ar_net_amount()
-                    for i in range(201):
-                        f_delta = checks_amount - wizard.l10n_ar_net_amount
-                        if wizard.currency_id.is_zero(f_delta):
-                            break
-                        der = ((wizard.l10n_ar_net_amount - f_previous) / d) if abs(d) >= 0.01 else 1.0
-                        if wizard.currency_id.is_zero(der):
-                            i = 200
-                            break
-                        d = max(f_delta / der, 0.01)
-                        f_previous = wizard.l10n_ar_net_amount
-                        wizard.amount += d
-                        wizard.env.add_to_compute(wizard.l10n_ar_withholding_ids._fields['base_amount'], wizard.l10n_ar_withholding_ids)
-                        wizard.env.add_to_compute(wizard.l10n_ar_withholding_ids._fields['amount'], wizard.l10n_ar_withholding_ids)
-                        wizard._compute_l10n_ar_net_amount()
-                    if i == 200:
-                        # Adjustment failed, resetting
-                        wizard.amount = original_amount
+                    wizard._refresh_l10n_ar_withholding_net_amount()
+                if i == 200:
+                    wizard.amount = original_amount
 
-    @api.depends('amount', 'l10n_latam_move_check_ids', 'l10n_latam_new_check_ids', 'payment_method_code')
-    def _compute_l10n_ar_adjustment_warning(self):
+    @api.depends('country_code', 'can_edit_wizard', 'can_group_payments', 'group_payment',
+                 'amount', 'l10n_latam_move_check_ids.amount', 'l10n_latam_new_check_ids.amount',
+                 'payment_method_code', 'withholding_net_amount')
+    def _compute_alerts(self):
+        # EXTENDS 'l10n_account_withholding_tax'
+        super()._compute_alerts()
         for wizard in self:
-            checks = wizard.l10n_latam_new_check_ids if wizard.filtered(lambda x: x._is_latam_check_payment(check_subtype='new_check')) else wizard.l10n_latam_move_check_ids
+            if wizard.country_code != 'AR':
+                continue
+            alerts = dict(wizard.alerts or {})
+            # AR withholdings can't be used when paying invoices of different partners (or same partner without grouping)
+            if not (wizard.can_edit_wizard and (not wizard.can_group_payments or wizard.group_payment)):
+                alerts['l10n_ar_withholding_grouping'] = {
+                    'message': self.env._("You can't register withholdings when paying invoices of different partners or same partner without grouping."),
+                    'level': 'info',
+                }
+            # Check amount adjustment mismatch warning
+            checks = wizard.l10n_latam_new_check_ids if wizard._is_latam_check_payment(check_subtype='new_check') else wizard.l10n_latam_move_check_ids
             checks_amount = sum(checks.mapped('amount'))
-            wizard.l10n_ar_adjustment_warning = not wizard.currency_id.is_zero(checks_amount) and wizard.currency_id.compare_amounts(checks_amount, wizard.l10n_ar_net_amount) != 0
-
-    @api.depends('amount', 'l10n_ar_withholding_ids.amount')
-    def _compute_l10n_ar_net_amount(self):
-        for rec in self:
-            rec.l10n_ar_net_amount = rec.amount - sum(rec.l10n_ar_withholding_ids.mapped('amount'))
-
-    def _create_payment_vals_from_wizard(self, batch_result):
-        payment_vals = super()._create_payment_vals_from_wizard(batch_result)
-
-        if not self.l10n_ar_withholding_ids:
-            return payment_vals  # Nothing to do if we are not working with withholding taxes.
-
-        payment_vals['amount'] = self.l10n_ar_net_amount
-        conversion_rate = self._get_conversion_rate()
-        sign = 1
-        if self.partner_type == 'supplier':
-            sign = -1
-        for line in self.l10n_ar_withholding_ids:
-            if not line.name:
-                if line.tax_id.l10n_ar_withholding_sequence_id:
-                    line.name = line.tax_id.l10n_ar_withholding_sequence_id.next_by_id()
-                else:
-                    raise UserError(_('Please enter withholding number for tax %s') % line.tax_id.name)
-            dummy, account_id, tax_repartition_line_id = line._tax_compute_all_helper()
-            balance = self.company_currency_id.round(line.amount * conversion_rate)
-            # create withholding amount applied move line only if amount != 0
-            payment_vals['write_off_line_vals'].append({
-                    'currency_id': self.currency_id.id,
-                    'name': line.name,
-                    'account_id': account_id,
-                    'amount_currency': sign * line.amount,
-                    'balance': sign * balance,
-                    'tax_base_amount': sign * line.base_amount,
-                    'tax_repartition_line_id': tax_repartition_line_id,
-            })
-
-        for base_amount in list(set(self.l10n_ar_withholding_ids.mapped('base_amount'))):
-            withholding_lines = self.l10n_ar_withholding_ids.filtered(lambda x: x.base_amount == base_amount)
-            nice_base_label = ','.join(withholding_lines.mapped('name'))
-            account_id = self.company_id.l10n_ar_tax_base_account_id.id
-            base_amount = sign * base_amount
-            cc_base_amount = self.company_currency_id.round(base_amount * conversion_rate)
-            payment_vals['write_off_line_vals'].append({
-                'currency_id': self.currency_id.id,
-                'name': nice_base_label,
-                'tax_ids': [Command.set(withholding_lines.mapped('tax_id').ids)],
-                'account_id': account_id,
-                'balance': cc_base_amount,
-                'amount_currency': base_amount,
-            })
-            payment_vals['write_off_line_vals'].append({
-                'currency_id': self.currency_id.id,  # Counterpart 0 operation
-                'name': nice_base_label,
-                'account_id': account_id,
-                'balance': -cc_base_amount,
-                'amount_currency': -base_amount,
-            })
-
-        return payment_vals
-
-    def _get_conversion_rate(self):
-        self.ensure_one()
-        if self.currency_id != self.company_id.currency_id:
-            return self.env['res.currency']._get_conversion_rate(
-                self.currency_id,
-                self.company_id.currency_id,
-                self.company_id,
-                self.payment_date,
-            )
-        return 1.0
+            if not wizard.currency_id.is_zero(checks_amount) and wizard.currency_id.compare_amounts(checks_amount, wizard.withholding_net_amount) != 0:
+                alerts['l10n_ar_check_adjustment'] = {
+                    'message': self.env._("Adjust total amount or withholdings amount so that the check amount is the correct one."),
+                    'level': 'warning',
+                }
+            wizard.alerts = alerts
 
     @api.depends('partner_id', 'payment_date')
-    def _compute_l10n_ar_withholding_ids(self):
-        for wizard in self:
+    def _compute_withholding_line_ids(self):
+        # EXTENDS 'l10n_account_withholding_tax'
+        ar_wizards = self.filtered(lambda w: w.company_id.country_code == 'AR')
+        super(AccountPaymentRegister, self - ar_wizards)._compute_withholding_line_ids()
+        for wizard in ar_wizards:
+            if not wizard.display_withholding or not wizard.can_edit_wizard:
+                wizard.withholding_line_ids = [Command.clear()]
+                continue
+            if wizard.withholding_line_ids:
+                continue
             date = wizard.payment_date or fields.Date.context_today(self)
+            partner_type_to_tax_use = {'supplier': 'purchase', 'customer': 'sale'}
             partner_taxes = self.env['l10n_ar.partner.tax'].search([
                 *self.env['l10n_ar.partner.tax']._check_company_domain(wizard.company_id),
                 '|', ('from_date', '>=', date), ('from_date', '=', False),
                 '|', ('to_date', '<=', date), ('to_date', '=', False),
                 ('partner_id', '=', wizard.partner_id.commercial_partner_id.id),
-                ('tax_id.l10n_ar_withholding_payment_type', '=', wizard.partner_type),
+                ('tax_id.is_withholding_tax_on_payment', '=', True),
+                ('tax_id.type_tax_use', '=', partner_type_to_tax_use.get(wizard.partner_type, '')),
                 ('tax_id.active', '=', True)
             ])
-            wizard.l10n_ar_withholding_ids = [Command.clear()] + [Command.create({'tax_id': x.tax_id.id}) for x in partner_taxes]
+            wizard.withholding_line_ids = [Command.clear()] + [Command.create({'tax_id': x.tax_id.id}) for x in partner_taxes]
 
-    def action_create_payments(self):
-        if self.l10n_ar_withholding_ids and not self.payment_method_line_id.payment_account_id:
-            raise ValidationError(_("A payment cannot have withholding if the payment method has no outstanding accounts"))
-        return super().action_create_payments()
+    def _refresh_l10n_ar_withholding_net_amount(self):
+        # Newton iteration in `_compute_amount` writes wizard.amount and then needs an up-to-date
+        # withholding_net_amount. The framework's lazy-recompute does not propagate trigger marks
+        # from a write that happens *inside* a compute method, so we explicitly invalidate and
+        # recompute base_amount/amount on the lines and the wizard's net amount.
+        self.ensure_one()
+        self.withholding_line_ids.invalidate_recordset(['base_amount', 'amount'])
+        # Force re-evaluation of base/amount via the recompute trigger graph.
+        self.withholding_line_ids.mapped('amount')
+        self._compute_withholding_net_amount()

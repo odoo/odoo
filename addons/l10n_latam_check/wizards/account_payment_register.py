@@ -26,6 +26,19 @@ class AccountPaymentRegister(models.TransientModel):
             if wizard.l10n_latam_move_check_ids:
                 wizard.currency_id = wizard.l10n_latam_move_check_ids[0].currency_id
 
+    @api.depends('payment_method_code', 'can_edit_wizard', 'can_group_payments', 'group_payment')
+    def _compute_alerts(self):
+        # EXTENDS 'account' - add specific alerts
+        super()._compute_alerts()
+        for wizard in self:
+            if wizard._is_latam_check_payment() and not (wizard.can_edit_wizard and (not wizard.can_group_payments or wizard.group_payment)):
+                alerts = dict(wizard.alerts or {})
+                alerts['l10n_latam_check_grouping'] = {
+                    'message': self.env._("You can't use checks when paying invoices of different partners or same partner without grouping."),
+                    'level': 'info',
+                }
+                wizard.alerts = alerts
+
     def _is_latam_check_payment(self, check_subtype=False):
         if check_subtype == 'move_check':
             codes = ['in_third_party_checks', 'out_third_party_checks', 'return_third_party_checks']

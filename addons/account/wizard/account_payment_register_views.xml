@@ -38,21 +38,8 @@
                     <field name="untrusted_bank_ids" invisible="1"/>
                     <field name="missing_account_partners" invisible="1"/>
 
-                    <div role="alert" class="alert alert-info" invisible="not hide_writeoff_section">
-                        <p class="m-0"><b>Early Payment Discount of <field name="payment_difference"/> has been applied.</b></p>
-                    </div>
-                    <div role="alert" class="alert alert-warning" invisible="untrusted_payments_count == 0">
-                        <span class="fw-bold"><field name="untrusted_payments_count" class="oe_inline"/> out of <field name="total_payments_amount" class="oe_inline"/> payments will be skipped due to <button class="oe_link p-0 align-baseline" type="object" name="action_open_untrusted_bank_accounts">untrusted bank accounts</button>.</span>
-                    </div>
-                    <div role="alert" class="alert alert-warning" invisible="not missing_account_partners">
-                        <span class="fw-bold">Payments related to partners with no bank account specified will be skipped. <button class="oe_link p-0 align-baseline" type="object" name="action_open_missing_account_partners">View Partner(s)</button></span>
-                    </div>
-                    <div role="alert" class="alert alert-warning" invisible="not duplicate_payment_ids">
-                        <span>This payment has the same partner, amount and date as </span>
-                        <field name="duplicate_payment_ids" widget="x2many_buttons" string="Duplicated Payments"/>
-                    </div>
-                    <div role="alert" invisible="not actionable_errors">
-                        <field name="actionable_errors" widget="actionable_errors" class="w-100"/>
+                    <div role="alert" invisible="not alerts">
+                        <field name="alerts" widget="actionable_errors" class="w-100"/>
                     </div>
                     <group>
                         <group name="group1">
@@ -141,6 +128,7 @@
                             <field name="qr_code"/>
                         </div>
                     </group>
+                    <notebook name="payment_register_notebook"/>
                     <footer>
                         <button string="Create Payments" name="action_create_payments" type="object" class="oe_highlight" data-hotkey="q" invisible="total_payments_amount == 1"/>
                         <button string="Create Payment" name="action_create_payments" type="object" class="oe_highlight" data-hotkey="q" invisible="total_payments_amount != 1"/>

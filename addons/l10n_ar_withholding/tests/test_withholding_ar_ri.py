@@ -24,15 +24,16 @@ class TestArWithholdingArRi(TestArCommon):
         cls.tax_wth_test_1.write({
             'amount': 10,
             'amount_type': 'percent',
-            'l10n_ar_withholding_sequence_id': cls.tax_wth_seq.id,
+            'withholding_sequence_id': cls.tax_wth_seq.id,
         })
 
-        # Withholding 2: 1% total_amount
+        # Withholding 2: 10% total_amount
         cls.tax_wth_test_2 = cls.env.ref('account.%i_ex_tax_withholding_iibb_ba_applied' % cls.env.company.id)
         cls.tax_wth_test_2.write({
             'amount': 10,
             'amount_type': 'percent',
-            'l10n_ar_withholding_sequence_id': cls.tax_wth_seq.id,
+            'l10n_ar_tax_type': 'iibb_total',
+            'withholding_sequence_id': cls.tax_wth_seq.id,
         })
 
         cls.tax_21 = cls.env.ref('account.%s_ri_tax_vat_21_ventas' % cls.env.company.id)
@@ -149,9 +150,9 @@ class TestArWithholdingArRi(TestArCommon):
         return in_invoice_wht
 
     def new_payment_register(self, move_ids, taxes):
-        wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=move_ids.ids).create({'payment_date': '2023-01-01'})
-        wizard.l10n_ar_withholding_ids = [Command.clear()] + [Command.create({'tax_id': x['id'], 'base_amount': x['base_amount'], 'amount': 0}) for x in taxes]
-        wizard.l10n_ar_withholding_ids._compute_amount()
+        wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=move_ids.ids).new({'payment_date': '2023-01-01'})
+        if taxes:
+            wizard.withholding_line_ids = [Command.clear()] + [Command.create({'tax_id': x['id'], 'base_amount': x['base_amount']}) for x in taxes]
         return wizard
 
     def test_01_simple_full_payment(self):
@@ -159,7 +160,7 @@ class TestArWithholdingArRi(TestArCommon):
         moves = self.in_invoice_wht('2-1')
         taxes = [{'id': self.tax_wth_test_1.id, 'base_amount': sum(moves.mapped('amount_untaxed'))}]
         wizard = self.new_payment_register(moves, taxes)
-        self.assertEqual(wizard.currency_id.round(sum(wizard.l10n_ar_withholding_ids.mapped('amount'))) + wizard.l10n_ar_net_amount, wizard.amount)
+        self.assertEqual(wizard.currency_id.round(sum(wizard.withholding_line_ids.mapped('amount'))) + wizard.withholding_net_amount, wizard.amount)
         action = wizard.action_create_payments()
         payment = self.env['account.payment'].browse(action['res_id'])
         self.assertRecordValues(payment.move_id.line_ids.sorted('balance'), [
@@ -174,7 +175,7 @@ class TestArWithholdingArRi(TestArCommon):
             # Receivable line:
             {'debit': 1210.0, 'credit': 0.0, 'currency_id': wizard.currency_id.id, 'amount_currency': 1210.0, 'reconciled': True}
         ])
-        self.assertEqual(1210, payment.currency_id.round(sum(payment.l10n_ar_withholding_ids.mapped('amount_currency')) * -1  + payment.amount))
+        self.assertEqual(1210, payment.amount)
 
     def test_02_two_payments_same_invoice(self):
         """Test two payments to same invoice"""
@@ -183,14 +184,14 @@ class TestArWithholdingArRi(TestArCommon):
 
         wizard_1 = self.new_payment_register(moves, taxes)
         wizard_1.amount = 605.00
-        self.assertEqual(wizard_1.currency_id.round(sum(wizard_1.l10n_ar_withholding_ids.mapped('amount'))) + wizard_1.l10n_ar_net_amount, wizard_1.amount)
+        self.assertEqual(wizard_1.currency_id.round(sum(wizard_1.withholding_line_ids.mapped('amount'))) + wizard_1.withholding_net_amount, wizard_1.amount)
         action = wizard_1.action_create_payments()
         payment_1 = self.env['account.payment'].browse(action['res_id'])
 
         # Alf payments in Company currency
         wizard_2 = self.new_payment_register(moves, taxes)
         self.assertEqual(605, wizard_2.source_amount)
-        self.assertEqual(wizard_2.currency_id.round(sum(wizard_2.l10n_ar_withholding_ids.mapped('amount'))) + wizard_2.l10n_ar_net_amount, wizard_2.amount)
+        self.assertEqual(wizard_2.currency_id.round(sum(wizard_2.withholding_line_ids.mapped('amount'))) + wizard_2.withholding_net_amount, wizard_2.amount)
         action = wizard_2.action_create_payments()
         payment_2 = self.env['account.payment'].browse(action['res_id'])
         self.assertRecordValues(payment_1.move_id.line_ids.sorted('balance'), [
@@ -205,7 +206,7 @@ class TestArWithholdingArRi(TestArCommon):
             # Receivable line:
             {'debit': 605.0, 'credit': 0.0, 'currency_id': wizard_1.currency_id.id, 'amount_currency': 605.0, 'reconciled': True}
         ])
-        self.assertEqual(605, payment_1.currency_id.round(sum(payment_1.l10n_ar_withholding_ids.mapped('amount_currency')) * -1  + payment_1.amount))
+        self.assertEqual(605, payment_1.amount)
 
         self.assertRecordValues(payment_2.move_id.line_ids.sorted('balance'), [
             # Liquidity line:
@@ -219,7 +220,7 @@ class TestArWithholdingArRi(TestArCommon):
             # Receivable line:
             {'debit': 605.0, 'credit': 0.0, 'currency_id': wizard_2.currency_id.id, 'amount_currency': 605.0, 'reconciled': True}
         ])
-        self.assertEqual(605, payment_2.currency_id.round(sum(payment_2.l10n_ar_withholding_ids.mapped('amount_currency')) * -1  + payment_2.amount))
+        self.assertEqual(605, payment_2.amount)
 
     def test_03_two_withholdings_one_payment(self):
         """Simple full payment in Company currency and two wht"""
@@ -227,14 +228,14 @@ class TestArWithholdingArRi(TestArCommon):
         taxes = [{'id': self.tax_wth_test_1.id, 'base_amount': sum(moves.mapped('amount_untaxed'))}, {'id': self.tax_wth_test_2.id, 'base_amount': sum(moves.mapped('amount_total'))}]
 
         wizard = self.new_payment_register(moves, taxes)
-        self.assertEqual(wizard.currency_id.round(sum(wizard.l10n_ar_withholding_ids.mapped('amount'))) + wizard.l10n_ar_net_amount, wizard.amount)
+        self.assertEqual(wizard.currency_id.round(sum(wizard.withholding_line_ids.mapped('amount'))) + wizard.withholding_net_amount, wizard.amount)
         action = wizard.action_create_payments()
         payment = self.env['account.payment'].browse(action['res_id'])
-        line_1 = payment.l10n_ar_withholding_ids.filtered(lambda x: x.tax_line_id.id == self.tax_wth_test_1.id)
-        line_2 = payment.l10n_ar_withholding_ids.filtered(lambda x: x.tax_line_id.id == self.tax_wth_test_2.id)
+        line_1 = payment.move_id.line_ids.filtered(lambda x: x.tax_line_id.id == self.tax_wth_test_1.id)
+        line_2 = payment.move_id.line_ids.filtered(lambda x: x.tax_line_id.id == self.tax_wth_test_2.id)
         self.assertEqual(-100, line_1.amount_currency)
         self.assertEqual(-121, line_2.amount_currency)
-        self.assertEqual(1210, payment.currency_id.round(sum(payment.l10n_ar_withholding_ids.mapped('amount_currency')) * -1  + payment.amount))
+        self.assertEqual(1210, payment.amount)
 
     def test_04_two_withholdings_different_currency(self):
         """Payment in other currency and two withholdings"""
@@ -243,24 +244,23 @@ class TestArWithholdingArRi(TestArCommon):
         wizard = self.new_payment_register(moves, [])
         wizard.currency_id = self.other_currency.id
         wizard.amount = 6.05
-        wizard.l10n_ar_withholding_ids = [Command.clear()] + [Command.create({'tax_id': x['id'], 'base_amount': x['base_amount'], 'amount': 0}) for x in taxes]
-        wizard.l10n_ar_withholding_ids._compute_amount()
-        self.assertEqual(wizard.currency_id.round(sum(wizard.l10n_ar_withholding_ids.mapped('amount')) + wizard.l10n_ar_net_amount), wizard.currency_id.round(wizard.amount))
+        wizard.withholding_line_ids = [Command.clear()] + [Command.create({'tax_id': x['id'], 'base_amount': x['base_amount'], 'amount': 0}) for x in taxes]
+        self.assertEqual(wizard.currency_id.round(sum(wizard.withholding_line_ids.mapped('amount')) + wizard.withholding_net_amount), wizard.currency_id.round(wizard.amount))
         action = wizard.action_create_payments()
 
         payment = self.env['account.payment'].browse(action['res_id'])
-        line_1 = payment.l10n_ar_withholding_ids.filtered(lambda x: x.tax_line_id.id == self.tax_wth_test_1.id)
-        line_2 = payment.l10n_ar_withholding_ids.filtered(lambda x: x.tax_line_id.id == self.tax_wth_test_2.id)
+        line_1 = payment.move_id.line_ids.filtered(lambda x: x.tax_line_id.id == self.tax_wth_test_1.id)
+        line_2 = payment.move_id.line_ids.filtered(lambda x: x.tax_line_id.id == self.tax_wth_test_2.id)
         self.assertEqual(-0.50, line_1.amount_currency)
         self.assertEqual(-50, line_1.balance)
         self.assertEqual(-0.605, line_2.amount_currency)
         self.assertEqual(-60.5, line_2.balance)
-        self.assertEqual(6.05, payment.currency_id.round(sum(payment.l10n_ar_withholding_ids.mapped('amount_currency')) * -1  + payment.amount))
+        self.assertEqual(6.05, payment.amount)
 
     def test_05_earnings_withholding_applied_with_scale(self):
         """Two payments with same withholding tax (with tax type 'Earnings Scale'). Verify withholding amount."""
         invoice = self.in_invoice_3_wht()
-        self.tax_wth_earnings_incurred_scale_test_5.l10n_ar_withholding_sequence_id = self.earnings_withholding_sequence
+        self.tax_wth_earnings_incurred_scale_test_5.withholding_sequence_id = self.earnings_withholding_sequence
         self.env['l10n_ar.partner.tax'].create({
             'partner_id': self.res_partner_adhoc.id,
             'company_id': invoice.company_id.id,
@@ -268,18 +268,18 @@ class TestArWithholdingArRi(TestArCommon):
         })
         taxes = [{'id': invoice.partner_id.l10n_ar_partner_tax_ids.tax_id.id, 'base_amount': invoice.amount_untaxed}]
         wizard = self.new_payment_register(invoice, taxes)
-        self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 1600)
+        self.assertEqual(wizard.withholding_line_ids.amount, 1600)
         wizard.action_create_payments()
         invoice2 = self.in_invoice_4_wht()
         taxes = [{'id': invoice2.partner_id.l10n_ar_partner_tax_ids.tax_id.id, 'base_amount': invoice2.amount_untaxed}]
         wizard = self.new_payment_register(invoice2, taxes)
-        self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 7480)
+        self.assertEqual(wizard.withholding_line_ids.amount, 7480)
         wizard.action_create_payments()
 
     def test_06_earnings_withholding_applied(self):
         """Two payments with same withholding tax (with tax type 'Earnings'). Verify withholding amount."""
         invoice = self.in_invoice_3_wht()
-        self.tax_wth_earnings_incurred_test_6.l10n_ar_withholding_sequence_id = self.earnings_withholding_sequence
+        self.tax_wth_earnings_incurred_test_6.withholding_sequence_id = self.earnings_withholding_sequence
         self.env['l10n_ar.partner.tax'].create({
             'partner_id': self.res_partner_adhoc.id,
             'company_id': invoice.company_id.id,
@@ -287,18 +287,18 @@ class TestArWithholdingArRi(TestArCommon):
         })
         taxes = [{'id': invoice.partner_id.l10n_ar_partner_tax_ids.tax_id.id, 'base_amount': invoice.amount_untaxed}]
         wizard = self.new_payment_register(invoice, taxes)
-        self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 1327.8)
+        self.assertEqual(wizard.withholding_line_ids.amount, 1327.8)
         wizard.action_create_payments()
         invoice2 = self.in_invoice_4_wht()
         taxes = [{'id': invoice2.partner_id.l10n_ar_partner_tax_ids.tax_id.id, 'base_amount': invoice2.amount_untaxed}]
         wizard = self.new_payment_register(invoice2, taxes)
-        self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 2400)
+        self.assertEqual(wizard.withholding_line_ids.amount, 2400)
         wizard.action_create_payments()
 
     def test_07_earnings_partial_payment_withholding_applied_with_scale(self):
         """Partial payment with withholding tax (with tax type 'Earnings Scale'). Verify withholding amount."""
         invoice = self.in_invoice_3_wht()
-        self.tax_wth_earnings_incurred_scale_test_5.l10n_ar_withholding_sequence_id = self.earnings_withholding_sequence
+        self.tax_wth_earnings_incurred_scale_test_5.withholding_sequence_id = self.earnings_withholding_sequence
         self.env['l10n_ar.partner.tax'].create({
             'partner_id': self.res_partner_adhoc.id,
             'company_id': invoice.company_id.id,
@@ -307,12 +307,12 @@ class TestArWithholdingArRi(TestArCommon):
         taxes = [{'id': invoice.partner_id.l10n_ar_partner_tax_ids.tax_id.id, 'base_amount': invoice.amount_untaxed}]
         wizard = self.new_payment_register(invoice, taxes)
         wizard.amount -= 2420
-        self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 1360)
+        self.assertEqual(wizard.withholding_line_ids.amount, 1360)
 
     def test_08_earnings_withholding_applied_with_scale_and_minimun_withholdable_amount_set(self):
         """Payment with withholding tax type 'Earnings Scale' and minimun withholdable amount set. Verify withholding amount."""
         invoice = self.in_invoice_3_wht()
-        self.tax_wth_earnings_incurred_scale_test_5.l10n_ar_withholding_sequence_id = self.earnings_withholding_sequence
+        self.tax_wth_earnings_incurred_scale_test_5.withholding_sequence_id = self.earnings_withholding_sequence
         self.tax_wth_earnings_incurred_scale_test_5.l10n_ar_minimum_threshold = 2000
         self.env['l10n_ar.partner.tax'].create({
             'partner_id': self.res_partner_adhoc.id,
@@ -321,7 +321,7 @@ class TestArWithholdingArRi(TestArCommon):
         })
         taxes = [{'id': invoice.partner_id.l10n_ar_partner_tax_ids.tax_id.id, 'base_amount': invoice.amount_untaxed}]
         wizard = self.new_payment_register(invoice, taxes)
-        self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 0.0)
+        self.assertEqual(wizard.withholding_line_ids.amount, 0.0)
 
     def test_09_foreign_invoice(self):
         """ Ensure a correct behavior when the invoice has a foreign currency and the payment not. """
@@ -340,9 +340,8 @@ class TestArWithholdingArRi(TestArCommon):
         wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=in_invoice_wht.ids).create({
             'payment_date': '2023-01-01',
             'currency_id': self.company_data['currency'].id,
-            'l10n_ar_withholding_ids': [Command.create({'tax_id': self.tax_wth_test_1.id, 'base_amount': sum(in_invoice_wht.mapped('amount_untaxed')), 'amount': 0})],
+            'withholding_line_ids': [Command.create({'tax_id': self.tax_wth_test_1.id, 'base_amount': sum(in_invoice_wht.mapped('amount_untaxed'))})],
         })
-        wizard.l10n_ar_withholding_ids._compute_amount()
         action = wizard.action_create_payments()
         payment = self.env['account.payment'].browse(action['res_id'])
         self.assertRecordValues(payment.move_id.line_ids.sorted('balance'), [
@@ -375,9 +374,8 @@ class TestArWithholdingArRi(TestArCommon):
         wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=in_invoice_wht.ids).create({
             'payment_date': '2023-01-01',
             'currency_id': self.other_currency.id,
-            'l10n_ar_withholding_ids': [Command.create({'tax_id': self.tax_wth_test_1.id, 'base_amount': sum(in_invoice_wht.mapped('amount_untaxed')), 'amount': 0})],
+            'withholding_line_ids': [Command.create({'tax_id': self.tax_wth_test_1.id, 'base_amount': sum(in_invoice_wht.mapped('amount_untaxed'))})],
         })
-        wizard.l10n_ar_withholding_ids._compute_amount()
         action = wizard.action_create_payments()
         payment = self.env['account.payment'].browse(action['res_id'])
         self.assertRecordValues(payment.move_id.line_ids.sorted('balance'), [
@@ -398,7 +396,7 @@ class TestArWithholdingArRi(TestArCommon):
         third_party_check_journal = self.third_party_check_journal()
         in_third_party_check = self.in_third_party_check(third_party_check_journal)
         invoice = self.in_invoice_4_wht()
-        self.tax_wth_earnings_incurred_scale_test_5.l10n_ar_withholding_sequence_id = self.earnings_withholding_sequence
+        self.tax_wth_earnings_incurred_scale_test_5.withholding_sequence_id = self.earnings_withholding_sequence
         self.env['l10n_ar.partner.tax'].create({
             'partner_id': self.res_partner_adhoc.id,
             'company_id': invoice.company_id.id,
@@ -409,11 +407,117 @@ class TestArWithholdingArRi(TestArCommon):
         wizard.journal_id = third_party_check_journal.id
         wizard.payment_method_line_id = wizard.journal_id.inbound_payment_method_line_ids[1].id
         wizard.l10n_latam_move_check_ids = in_third_party_check.l10n_latam_new_check_ids
-        wizard._compute_amount()
         self.assertEqual(wizard.amount, 31929.25)
-        self.assertEqual(wizard.l10n_ar_withholding_ids.base_amount, 26387.81)
-        self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 1166.54)
-        self.assertEqual(wizard.l10n_ar_net_amount, 30762.71)
+        self.assertEqual(wizard.withholding_line_ids.base_amount, 26387.81)
+        self.assertEqual(wizard.withholding_line_ids.amount, 1166.54)
+        self.assertEqual(wizard.withholding_net_amount, 30762.71)
+
+    def test_12_usd_payment_wth_minimum_threshold(self):
+        """Foreign-currency payment with a withholding tax whose minimum threshold blocks the WHT.
+
+        The threshold is expressed in ARS (company currency). The computed tax in ARS is
+        compared to the threshold; below it, the WTH is zeroed and stays zero in the payment currency.
+        """
+        self.tax_wth_test_1.write({'amount': 10, 'l10n_ar_minimum_threshold': 1000})
+        in_invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'date': '2023-01-01',
+            'invoice_date': '2023-01-01',
+            'currency_id': self.other_currency.id,
+            'partner_id': self.res_partner_adhoc.id,
+            'invoice_line_ids': [Command.create(
+                {'product_id': self.product_a.id, 'price_unit': 5.0, 'tax_ids': [Command.set(self.tax_21.ids)]}
+            )],
+            'l10n_latam_document_number': '12-1',
+        })
+        in_invoice.action_post()
+        wizard = self.env['account.payment.register'].with_context(
+            active_model='account.move', active_ids=in_invoice.ids,
+        ).create({
+            'payment_date': '2023-01-01',
+            'currency_id': self.other_currency.id,
+            'withholding_line_ids': [Command.create({'tax_id': self.tax_wth_test_1.id, 'base_amount': 5})],
+        })
+        # base 5 USD x rate 100 = 500 ARS, 10% = 50 ARS, threshold 1000 → 0
+        self.assertEqual(wizard.withholding_line_ids.amount, 0.0)
+
+    def test_13_usd_own_check_payment_with_profits_wth(self):
+        """USD own-check payment with a Profits (earnings) withholding.
+
+          - Invoice in USD: 50 untaxed + 21% VAT = 60.5 total.
+          - Earnings WTH at 7% (non-taxable = 0), registered for the partner.
+          - Bank journal with Own Checks method, payment in USD, check of $50.
+
+        Verifies the withholding line stays in the payment currency (USD), with the legal
+        ARS-internal computation rate-converted back to USD: 50 USD x 100 ARS/USD = 5000 ARS;
+        5000 x 7% = 350 ARS; 350 ARS / 100 = $3.50 withholding.
+        """
+        # Configure a Profits (earnings) tax at 7% with no non-taxable amount.
+        profits_tax = self.tax_wth_earnings_incurred_test_6
+        profits_tax.write({
+            'amount': 7,
+            'l10n_ar_non_taxable_amount': 0,
+            'withholding_sequence_id': self.earnings_withholding_sequence.id,
+        })
+        self.env['l10n_ar.partner.tax'].create({
+            'partner_id': self.res_partner_adhoc.id,
+            'company_id': self.env.company.id,
+            'tax_id': profits_tax.id,
+        })
+        # Add the Own Checks outbound method to the company's bank journal (if not already there).
+        bank_journal = self.env['account.journal'].search([
+            *self.env['account.journal']._check_company_domain(self.env.company),
+            ('type', '=', 'bank'),
+        ], limit=1)
+        if not bank_journal.outbound_payment_method_line_ids.filtered(lambda m: m.code == 'own_checks'):
+            bank_journal.outbound_payment_method_line_ids = [Command.create({
+                'payment_method_id': self.env.ref('l10n_latam_check.account_payment_method_own_checks').id,
+                'name': 'Own Checks',
+            })]
+        own_check_pml = bank_journal.outbound_payment_method_line_ids.filtered(lambda m: m.code == 'own_checks')[:1]
+
+        # USD invoice: 50 untaxed + 21% VAT = 60.5.
+        in_invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'date': '2023-01-01',
+            'invoice_date': '2023-01-01',
+            'currency_id': self.other_currency.id,
+            'partner_id': self.res_partner_adhoc.id,
+            'invoice_line_ids': [Command.create(
+                {'product_id': self.product_a.id, 'price_unit': 50.0, 'tax_ids': [Command.set(self.tax_21.ids)]}
+            )],
+            'l10n_latam_document_number': '13-1',
+        })
+        in_invoice.action_post()
+
+        wizard = self.env['account.payment.register'].with_context(
+            active_model='account.move', active_ids=in_invoice.ids,
+        ).new({
+            'payment_date': '2023-01-01',
+            'currency_id': self.other_currency.id,
+            'journal_id': bank_journal.id,
+            'payment_method_line_id': own_check_pml.id,
+            'l10n_latam_new_check_ids': [Command.create({
+                'name': '00000001', 'amount': 50.0, 'payment_date': '2023-01-01',
+            })],
+        })
+        # Trigger the Newton iteration by recomputing _compute_amount after all dependent
+        # fields are set (the cascading per-field recompute does not always converge after
+        # the *.new() initial assignments).
+        wizard._compute_amount()
+
+        # The Newton iteration adjusts wizard.amount so that the check amount matches the
+        # withholding net amount; the WTH is computed in ARS internally and converted back to USD.
+        self.assertEqual(wizard.currency_id, self.other_currency)
+        self.assertAlmostEqual(wizard.withholding_net_amount, 50.0, places=2)
+        self.assertAlmostEqual(wizard.amount, 53.07, places=1)
+        line = wizard.withholding_line_ids
+        self.assertEqual(len(line), 1)
+        self.assertEqual(line.comodel_currency_id, self.other_currency)
+        self.assertAlmostEqual(line.base_amount, 43.86, places=1)
+        self.assertAlmostEqual(line.amount, 3.07, places=1)
+        # No 'l10n_ar_check_adjustment' alert should remain after convergence.
+        self.assertNotIn('l10n_ar_check_adjustment', wizard.alerts or {})
 
     def test_11_withholding_amounts_1(self):
         """Check computation of withholding tax amount."""

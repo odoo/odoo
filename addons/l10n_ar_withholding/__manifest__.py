@@ -7,13 +7,11 @@
     'category': 'Accounting/Localizations',
     'depends': [
         'l10n_ar',
+        'l10n_account_withholding_tax',
         'l10n_latam_check',
     ],
     'data': [
         'views/account_tax_views.xml',
-        'views/account_payment_view.xml',
-        'views/report_payment_receipt_templates.xml',
-        'views/res_config_settings.xml',
         'views/res_partner_view.xml',
         'views/l10n_ar_earnings_scale_view.xml',
         'wizards/account_payment_register_views.xml',
@@ -22,4 +20,5 @@
         'data/earnings_table_data.xml',
     ],
     'license': 'LGPL-3',
+    'post_init_hook': '_post_init_hook',
 }

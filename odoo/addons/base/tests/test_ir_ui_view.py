@@ -4957,7 +4957,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'l10n_ae_hr_payroll',
             'l10n_ar',
             'l10n_ar_edi',
-            'l10n_ar_withholding',
             'l10n_au_hr_payroll',
             'l10n_au_hr_payroll_account',
             'l10n_be_codabox',

@@ -20,6 +20,7 @@ class AccountTax(models.Model):
         comodel_name='ir.sequence',
         copy=False,
         check_company=True,
+        # TODO why not set a default ?
     )
 
     # ----------------------------

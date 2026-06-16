@@ -2,13 +2,24 @@
     <template inherit_id="account.report_payment_receipt_document" id="report_payment_receipt_document">
         <xpath expr="//table" position="before">
             <t t-if="o.withholding_line_ids">
+                <t t-set="show_company_currency" t-value="o.currency_id != o.company_id.currency_id"/>
                 <table id="l10n_account_withholding" class="table table-borderless border-bottom pt-2 mb-5">
                     <thead>
                         <tr>
                             <th><span>Tax</span></th>
                             <th><span>Withholding number</span></th>
-                            <th class="text-end"><span>Base</span></th>
-                            <th class="text-end"><span>Amount</span></th>
+                            <th class="text-end">
+                                <span>Base <t t-if="show_company_currency">(<t t-out="o.currency_id.display_name"/>)</t></span>
+                            </th>
+                            <th class="text-end">
+                                <span>Amount <t t-if="show_company_currency">(<t t-out="o.currency_id.display_name"/>)</t></span>
+                            </th>
+                            <th t-if="show_company_currency" class="text-end">
+                                <span>Base (<t t-out="o.company_id.currency_id.display_name"/>)</span>
+                            </th>
+                            <th t-if="show_company_currency" class="text-end">
+                                <span>Amount (<t t-out="o.company_id.currency_id.display_name"/>)</span>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -21,10 +32,16 @@
                                     <span t-out="line.name"/>
                                 </td>
                                 <td class="text-end">
-                                    <span t-out="abs(line.base_amount)" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                    <span t-out="abs(line.base_amount)" t-options="{'widget': 'monetary', 'display_currency': line.comodel_currency_id}"/>
                                 </td>
                                 <td class="text-end">
-                                    <span t-out="abs(line.amount)" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                    <span t-out="abs(line.amount)" t-options="{'widget': 'monetary', 'display_currency': line.comodel_currency_id}"/>
+                                </td>
+                                <td t-if="show_company_currency" class="text-end">
+                                    <span t-out="abs(line.base_amount_company_currency)" t-options="{'widget': 'monetary', 'display_currency': line.comodel_company_currency_id}"/>
+                                </td>
+                                <td t-if="show_company_currency" class="text-end">
+                                    <span t-out="abs(line.amount_company_currency)" t-options="{'widget': 'monetary', 'display_currency': line.comodel_company_currency_id}"/>
                                 </td>
                             </tr>
                         </t>

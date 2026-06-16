@@ -21,8 +21,8 @@ class AccountChartTemplate(models.AbstractModel):
     @template(template='ar_ri', model='account.tax', demo=True)
     def _get_ar_witholding_account_tax_demo(self):
         return {
-            'ex_tax_withholding_profits_regimen_119_insc': {'l10n_ar_withholding_sequence_id': 'earning_wth_sequence'},
-            'ex_tax_withholding_profits_regimen_78_insc': {'l10n_ar_withholding_sequence_id': 'earning_wth_sequence'},
+            'ex_tax_withholding_profits_regimen_119_insc': {'withholding_sequence_id': 'earning_wth_sequence'},
+            'ex_tax_withholding_profits_regimen_78_insc': {'withholding_sequence_id': 'earning_wth_sequence'},
         }
 
     @template(template='ar_ri', model='l10n_ar.partner.tax', demo=True)

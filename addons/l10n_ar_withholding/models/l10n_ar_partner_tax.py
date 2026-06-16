@@ -1,8 +1,5 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
-import logging
-# from dateutil.relativedelta import relativedelta
-_logger = logging.getLogger(__name__)
 
 
 class L10n_ArPartnerTax(models.Model):

@@ -170,7 +170,7 @@ class AccountPaymentRegister(models.TransientModel):
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
     duplicate_payment_ids = fields.Many2many(comodel_name='account.payment', compute='_compute_duplicate_moves')
     is_register_payment_on_draft = fields.Boolean(compute='_compute_is_register_payment_on_draft')
-    actionable_errors = fields.Json(compute='_compute_actionable_errors')
+    alerts = fields.Json(compute='_compute_alerts')
 
     # == trust check ==
     untrusted_bank_ids = fields.Many2many('res.partner.bank', compute='_compute_trust_values')
@@ -605,21 +605,56 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.show_partner_bank_account = wizard.payment_method_line_id.code in self.env['account.payment']._get_method_codes_using_bank_account()
             wizard.require_partner_bank_account = wizard.payment_method_line_id.code in self.env['account.payment']._get_method_codes_needing_bank_account()
 
-    @api.depends('line_ids', 'unreconciled_paid_amount')
-    def _compute_actionable_errors(self):
+    @api.depends('line_ids', 'unreconciled_paid_amount', 'hide_writeoff_section',
+                 'untrusted_payments_count', 'missing_account_partners', 'duplicate_payment_ids')
+    def _compute_alerts(self):
         for wizard in self:
-            actionable_errors = {}
+            alerts = {}
+            if wizard.hide_writeoff_section:
+                alerts['early_payment_discount'] = {
+                    'message': self.env._(
+                        "Early Payment Discount of %(amount).2f %(currency_symbol)s has been applied.",
+                        amount=wizard.payment_difference,
+                        currency_symbol=wizard.currency_id.symbol,
+                    ),
+                    'level': 'info',
+                }
+            if wizard.untrusted_payments_count:
+                alerts['untrusted_bank_accounts'] = {
+                    'message': self.env._(
+                        "%(count)s out of %(total)s payments will be skipped due to untrusted bank accounts.",
+                        count=wizard.untrusted_payments_count,
+                        total=wizard.total_payments_amount,
+                    ),
+                    'action_text': self.env._("View"),
+                    'action_call': ('account.payment.register', 'action_open_untrusted_bank_accounts', wizard.ids),
+                    'level': 'warning',
+                }
+            if wizard.missing_account_partners:
+                alerts['missing_account_partners'] = {
+                    'message': self.env._("Payments related to partners with no bank account specified will be skipped."),
+                    'action_text': self.env._("View Partner(s)"),
+                    'action_call': ('account.payment.register', 'action_open_missing_account_partners', wizard.ids),
+                    'level': 'warning',
+                }
+            if wizard.duplicate_payment_ids:
+                alerts['duplicate_payments'] = {
+                    'message': self.env._("This payment has the same partner, amount and date as another payment."),
+                    'action_text': self.env._("View Duplicates"),
+                    'action': wizard.duplicate_payment_ids._get_records_action(name=self.env._("Duplicated Payments")),
+                    'level': 'warning',
+                }
             if unreconciled_matched_payments := wizard.line_ids.move_id.reconciled_payment_ids.filtered(lambda p: not p.is_reconciled and not p.is_matched and p.state == 'paid'):
-                actionable_errors['unreconciled_matched_payments'] = {
-                    'message': self.env._("Amount of %(amount).2f %(currency)s is already paid. Make sure you don't pay twice.",
+                alerts['unreconciled_matched_payments'] = {
+                    'message': self.env._("Amount of %(amount).2f %(currency_symbol)s is already paid. Make sure you don't pay twice.",
                         amount=wizard.unreconciled_paid_amount,
-                        currency=wizard.currency_id.symbol,
+                        currency_symbol=wizard.currency_id.symbol,
                     ),
                     'action_text': self.env._("Check payments"),
                     'action': unreconciled_matched_payments._get_records_action(name=self.env._("Payments")),
                     'level': 'warning',
                 }
-            wizard.actionable_errors = actionable_errors
+            wizard.alerts = alerts
 
     def _convert_to_wizard_currency(self, installments):
         self.ensure_one()

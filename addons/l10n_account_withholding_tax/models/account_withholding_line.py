@@ -56,7 +56,7 @@ class AccountWithholdingLine(models.AbstractModel):
     source_base_amount = fields.Monetary(currency_field='comodel_company_currency_id')
     source_tax_amount_currency = fields.Monetary(currency_field='source_currency_id')
     source_tax_amount = fields.Monetary(currency_field='comodel_company_currency_id')
-    source_currency_id = fields.Many2one(comodel_name='res.currency')
+    source_currency_id = fields.Many2one(comodel_name='res.currency')  # currency of the original document (typically invoice)
     source_tax_id = fields.Many2one(comodel_name='account.tax')
     original_base_amount = fields.Monetary(
         currency_field='comodel_currency_id',
@@ -77,6 +77,21 @@ class AccountWithholdingLine(models.AbstractModel):
         currency_field='comodel_currency_id',
         string='Withholding amount',
         compute='_compute_amount',
+        readonly=False,
+        store=True,
+    )
+    # Read-only mirrors of base_amount / amount in the company currency
+    base_amount_company_currency = fields.Monetary(
+        currency_field='comodel_company_currency_id',
+        string='Withholding base (in company currency)',
+        compute='_compute_amounts_company_currency',
+        readonly=False,
+        store=True,
+    )
+    amount_company_currency = fields.Monetary(
+        currency_field='comodel_company_currency_id',
+        string='Withholding amount (in company currency)',
+        compute='_compute_amounts_company_currency',
         readonly=False,
         store=True,
     )
@@ -114,7 +129,7 @@ class AccountWithholdingLine(models.AbstractModel):
     comodel_company_currency_id = fields.Many2one(
         related='company_id.currency_id',
     )
-    comodel_currency_id = fields.Many2one(
+    comodel_currency_id = fields.Many2one(  # currency of the comodel (typically payment, payment wizard, ...)
         comodel_name='res.currency',
         compute='_compute_comodel_currency_id',
         required=True,
@@ -233,6 +248,26 @@ class AccountWithholdingLine(models.AbstractModel):
                 line.amount = line_curr.round(line.original_tax_amount * line.base_amount / line.original_base_amount)
             else:
                 line.amount = 0.0
+
+    @api.depends('base_amount', 'amount', 'comodel_currency_id', 'comodel_company_currency_id',
+                 'comodel_date', 'company_id')
+    def _compute_amounts_company_currency(self):
+        """ Rate-converted mirrors of `base_amount` and `amount` in the company currency,
+        using the rate at `comodel_date` (the payment date). Matches the journal entry's
+        `balance` byte-for-byte, provided the rate table isn't edited retroactively. """
+        for line in self:
+            line_curr = line.comodel_currency_id
+            comp_curr = line.comodel_company_currency_id
+            if line_curr == comp_curr:
+                line.base_amount_company_currency = line.base_amount
+                line.amount_company_currency = line.amount
+            else:
+                line.base_amount_company_currency = line_curr._convert(
+                    line.base_amount, comp_curr, line.company_id, line.comodel_date,
+                )
+                line.amount_company_currency = line_curr._convert(
+                    line.amount, comp_curr, line.company_id, line.comodel_date,
+                )
 
     @api.depends('company_id')
     def _compute_account_id(self):
