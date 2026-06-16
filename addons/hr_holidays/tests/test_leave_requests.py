@@ -2792,3 +2792,14 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.assertEqual(len(request.message_partner_ids), 2)
         self.assertIn(self.employee_emp.user_id.partner_id, message_partner_ids)
         self.assertIn(user_admin.partner_id, message_partner_ids)
+
+    def test_group_time_off_wizard_without_work_entry_type(self):
+        """Test group time off wizard creation when no work entry types exist."""
+        # Archive all existing work entry types to control the test environment
+        self.env["hr.work.entry.type"].search([]).write({'active': False})
+
+        wizard = self.env['hr.leave.generate.multi.wizard'].new({
+            'employee_ids': (self.employee_emp + self.employee_hruser).ids,
+        })
+
+        self.assertFalse(wizard.valid_work_entry_type_ids)
