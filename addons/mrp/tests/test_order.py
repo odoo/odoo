@@ -5478,6 +5478,86 @@ class TestMrpOrder(TestMrpCommon):
             mo_form.bom_id = self.env['mrp.bom']
             self.assertEqual(len(mo_form.workorder_ids), 0)
 
+    def test_workorder_timer_close_split_precision(self):
+        """Test that the workorder timer correctly splits the time into productive and reduced-speed time"""
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_1.id,
+            'product_id': self.product_6.id,
+            'product_qty': 1.0,
+            'workorder_ids': [Command.create({
+                'name': 'Manual WO',
+                'product_uom_id': self.bom_1.product_uom_id.id,
+                'workcenter_id': self.workcenter_1.id,
+                'duration_expected': 0.25,  # 15 seconds = 0.25 minutes
+            })],
+        })
+        mo.action_confirm()
+        wo = mo.workorder_ids[0]
+        start = datetime(2024, 1, 1, 10, 0, 0)
+        with freeze_time(start):
+            wo.button_start()
+        with freeze_time(start + timedelta(seconds=19)):
+            wo.button_pending()
+
+        productive = wo.time_ids.filtered(lambda t: t.loss_type == 'productive')
+        performance = wo.time_ids.filtered(lambda t: t.loss_type == 'performance')
+        self.assertEqual(len(productive), 1, "Should have exactly one productive record")
+        self.assertEqual(len(performance), 1, "Should have exactly one reduced-speed record")
+        self.assertEqual(productive.duration, 0.25)
+        self.assertEqual(performance.duration, 0.07)  # 4 seconds = 0.066666... minutes, rounded to 0.07
+
+    def test_workorder_timer_close_split_precision_multi_timer(self):
+        """
+        Test that the productive/reduced-speed split is correct across multiple
+        timer sessions (start → pause → resume → pause).
+        Expected duration = 15s.
+          Session 1: runs 10s  → fully productive (10s ≤ 15s budget, no split)
+          Session 2: runs  9s  → only 5s remain in budget, so:
+                                  5s productive  +  4s reduced-speed
+        """
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_1.id,
+            'product_id': self.product_6.id,
+            'product_qty': 1.0,
+            'workorder_ids': [Command.create({
+                'name': 'Manual WO',
+                'product_uom_id': self.bom_1.product_uom_id.id,
+                'workcenter_id': self.workcenter_1.id,
+                'duration_expected': 0.25,  # 15 seconds
+            })],
+        })
+        mo.action_confirm()
+        wo = mo.workorder_ids[0]
+        start = datetime(2024, 1, 1, 10, 0, 0)
+        # --- Session 1: run 10s (within budget → no split, stays fully productive) ---
+        with freeze_time(start):
+            wo.button_start()
+        with freeze_time(start + timedelta(seconds=10)):
+            wo.button_pending()
+
+        # --- Session 2: run 9s more (cumulative 19s > 15s → split is required) ---
+        with freeze_time(start + timedelta(seconds=10)):
+            wo.button_start()
+        with freeze_time(start + timedelta(seconds=19)):
+            wo.button_pending()
+
+        productive = wo.time_ids.filtered(lambda t: t.loss_type == 'productive')
+        performance = wo.time_ids.filtered(lambda t: t.loss_type == 'performance')
+
+        self.assertEqual(len(productive), 2, "Should have two productive records (one per session)")
+        self.assertEqual(len(performance), 1, "Should have exactly one reduced-speed record")
+
+        # Session 1 is fully within budget: 10s = round(10/60, 2) = 0.17 min
+        session1 = productive.filtered(lambda t: t.date_start == start)
+        self.assertEqual(session1.duration, 0.17, "Session 1 should be fully productive (10s ≈ 0.17 min)")
+
+        # Session 2 productive portion: remaining budget = 15 - 10 = 5s = round(5/60, 2) = 0.08 min
+        session2_prod = productive.filtered(lambda t: t.date_start != start)
+        self.assertEqual(session2_prod.duration, 0.08, "Session 2 productive portion should be 5s ≈ 0.08 min")
+        # Reduced-speed portion: excess = 19 - 15 = 4s = round(4/60, 2) = 0.07 min
+        self.assertEqual(performance.duration, 0.07)
+        self.assertEqual(sum(productive.mapped('duration')), wo.duration_expected)
+
 
 @tagged('-at_install', 'post_install')
 class TestTourMrpOrder(HttpCase):

@@ -591,7 +591,9 @@ class MrpWorkcenterProductivity(models.Model):
             wo = timer.workorder_id
             timer.write({'date_end': fields.Datetime.now()})
             if wo.duration > wo.duration_expected:
-                productive_date_end = timer.date_end - relativedelta.relativedelta(minutes=wo.duration - wo.duration_expected)
+                total_elapsed_seconds = sum((t.date_end - t.date_start).total_seconds() for t in wo.time_ids if t.date_end)
+                excess_seconds = total_elapsed_seconds - (wo.duration_expected * 60)
+                productive_date_end = timer.date_end - relativedelta.relativedelta(seconds=excess_seconds)
                 if productive_date_end <= timer.date_start:
                     underperformance_timers |= timer
                 else:
