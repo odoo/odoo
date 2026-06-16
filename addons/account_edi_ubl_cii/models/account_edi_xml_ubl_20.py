@@ -636,7 +636,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         return fixed_taxes_charge_list, emptying_taxes_lines_list
 
     def _enumerate_invoice_lines(self, invoice, start=0):
-        invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section') and line._check_edi_line_tax_required())
+        invoice_lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section'))
         return enumerate(invoice_lines, start=start)
 
     def _add_invoice_extra_vals(self, invoice, vals):
