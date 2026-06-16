@@ -4,6 +4,8 @@ import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { clamp, range } from "@web/core/utils/numbers";
 import { pick } from "@web/core/utils/objects";
+import { domainFromTree } from "@web/core/tree_editor/domain_from_tree";
+import { condition } from "@web/core/tree_editor/condition_tree";
 
 export const QUARTERS = {
     1: { description: _t("Q1"), coveredMonths: [1, 2, 3] },
@@ -328,6 +330,49 @@ export function sortPeriodOptions(options) {
         }
         return granularity1 < granularity2 ? -1 : 1;
     });
+}
+
+export const RELATIVE_FILTER_OPTIONS = {
+    today: {
+        id: "today",
+        description: _t("Today"),
+        granularity: "day",
+        groupNumber: 1,
+    },
+    thisWeek: {
+        id: "thisWeek",
+        description: _t("This Week"),
+        granularity: "week",
+        groupNumber: 1,
+    },
+    thisMonth: {
+        id: "thisMonth",
+        description: _t("This Month"),
+        granularity: "month",
+        groupNumber: 1,
+    },
+    thisQuarter: {
+        id: "thisQuarter",
+        description: _t("This Quarter"),
+        granularity: "quarter",
+        groupNumber: 1,
+    },
+    thisYear: {
+        id: "thisYear",
+        description: _t("This Year"),
+        granularity: "year",
+        groupNumber: 1,
+    },
+};
+
+export function getRelativeFilterOptions(searchItem) {
+    const { fieldName, fieldType } = searchItem;
+    return Object.values(RELATIVE_FILTER_OPTIONS).map((option) => ({
+        ...option,
+        domain: domainFromTree(condition(fieldName, "in range", [fieldType, option.id]), {
+            generateSmartDates: false,
+        }),
+    }));
 }
 
 /**

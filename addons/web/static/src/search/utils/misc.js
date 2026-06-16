@@ -1,5 +1,6 @@
 export const FACET_ICONS = {
     filter: "fa fa-filter",
+    relative: "fa fa-filter",
     groupBy: "oi oi-group",
     favorite: "fa fa-star",
 };

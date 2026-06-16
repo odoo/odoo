@@ -14,8 +14,8 @@
                 <div class="position-absolute start-0 top-0 bottom-0 end-0 bg-view border rounded-2 shadow opacity-0 opacity-100-hover"/>
 
                 <div class="o_searchview_facet_label position-relative rounded-start-2 px-1 rounded-end-0 p-0"
-                    t-on-click="(ev) => this.onFacetLabelClick(ev.target, facet)"
-                    t-att-role="facet.domain ? 'button' : 'img'"
+                    t-on-click="() => this.onFacetLabelClick(facet)"
+                    t-att-role="facet.domain &amp;&amp; facet.type !== 'relative' ? 'button' : 'img'"
                     t-att-class="{
                         'text-bg-action': facet.type == 'groupBy',
                         'btn btn-primary': facet.type == 'field' || facet.type == 'filter',
@@ -26,7 +26,8 @@
                     <small t-else="" class="px-1" t-out="facet.title"/>
 
                     <!-- Editable facets' overlay -->
-                    <span t-if="facet.domain"
+                    <!-- TMP for 1 commit disable facet click -->
+                    <span t-if="facet.domain &amp;&amp; facet.type !== 'relative'"
                         class="position-absolute start-0 top-0 bottom-0 end-0 bg-inherit opacity-0 opacity-100-hover"
                         t-att-class="{'px-2 transition-base': !facet.icon}"
                         >

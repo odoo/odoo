@@ -20,6 +20,7 @@ import {
     getPeriodOptions,
     INTERVAL_OPTIONS,
     rankInterval,
+    getRelativeFilterOptions,
     yearSelected,
 } from "./utils/dates";
 import { FACET_COLORS, FACET_ICONS } from "./utils/misc";
@@ -1100,6 +1101,18 @@ export class SearchModel extends EventBus {
         this._notify();
     }
 
+    toggleRelativeFilter(searchItemId, optionId) {
+        const { groupId } = this.searchItems[searchItemId];
+        const alreadyActive = this.query.some(
+            (q) => q.searchItemId === searchItemId && q.optionId === optionId
+        );
+        this.query = this.query.filter((q) => this.searchItems[q.searchItemId].groupId !== groupId);
+        if (!alreadyActive) {
+            this.query.push({ searchItemId, optionId });
+        }
+        this._notify();
+    }
+
     /**
      * Opens the filter domain editor in a Dialog popover
      * @param {boolean} [create=true] If creating a new filter.
@@ -1433,6 +1446,8 @@ export class SearchModel extends EventBus {
                 .forEach((f) => {
                     if (f.type === "dateFilter" || f.type === "parentFilter") {
                         this.toggleParentFilter(f.id);
+                    } else if (f.type === "relative") {
+                        this.toggleRelativeFilter(f.id);
                     } else if (f.type === "dateGroupBy") {
                         this.toggleDateGroupBy(f.id);
                     } else if (f.type === "field") {
@@ -1602,6 +1617,24 @@ export class SearchModel extends EventBus {
             this.nextId++;
         });
         this.nextGroupId++;
+
+        const dateFilterItem = pregroup.find((item) => item.type === "dateFilter");
+        if (dateFilterItem) {
+            const relativeFilterItem = {
+                type: "relativeFilter",
+                fieldName: dateFilterItem.fieldName,
+                fieldType: dateFilterItem.fieldType,
+                description: dateFilterItem.description,
+                options: getRelativeFilterOptions(dateFilterItem),
+                groupNumber: dateFilterItem.groupNumber,
+                groupId: this.nextGroupId,
+                id: this.nextId,
+            };
+            dateFilterItem.relativeFilterId = this.nextId;
+            this.searchItems[this.nextId] = relativeFilterItem;
+            this.nextId++;
+            this.nextGroupId++;
+        }
     }
 
     /**
@@ -1627,12 +1660,14 @@ export class SearchModel extends EventBus {
             });
         }
         switch (searchItem.type) {
-            case "dateFilter":
+            case "dateFilter": {
                 enrichSearchItem.options = _enrichOptions(
                     getPeriodOptions(this.referenceMoment, searchItem.optionsParams),
                     queryElements.map((queryElem) => queryElem.generatorId)
                 );
+                enrichSearchItem.relativeFilterId = searchItem.relativeFilterId;
                 break;
+            }
             case "dateGroupBy":
                 enrichSearchItem.options = _enrichOptions(
                     this._getIntervalOptions(searchItem),
@@ -1644,6 +1679,12 @@ export class SearchModel extends EventBus {
                 enrichSearchItem.options = _enrichOptions(
                     searchItem.optionsParams.customOptions,
                     queryElements.map((queryElem) => queryElem.generatorId)
+                );
+                break;
+            case "relativeFilter":
+                enrichSearchItem.options = _enrichOptions(
+                    searchItem.options,
+                    queryElements.map((queryElem) => queryElem.optionId)
                 );
                 break;
             case "field":
@@ -1958,6 +1999,12 @@ export class SearchModel extends EventBus {
                         values.push(`${searchItem.description}: ${innerFilterDescription}`);
                         break;
                     }
+                    case "relativeFilter": {
+                        type = "relative";
+                        const option = searchItem.options.find((o) => o.id === activeItem.optionId);
+                        values.push(`${searchItem.description}: ${option.description}`);
+                        break;
+                    }
                     case "parentFilter": {
                         type = "filter";
                         const innerFilterDescription = this._getParentFilterDomain(
@@ -2209,6 +2256,11 @@ export class SearchModel extends EventBus {
                         activeItems.push(activeItem);
                     }
                     activeItem.autocompleteValues.push(queryElem.autocompleteValue);
+                } else if ("optionId" in queryElem) {
+                    if (!activeItem) {
+                        activeItem = { searchItemId, optionId: queryElem.optionId };
+                        activeItems.push(activeItem);
+                    }
                 } else {
                     if (!activeItem) {
                         activeItem = { searchItemId };
@@ -2378,6 +2430,10 @@ export class SearchModel extends EventBus {
             case "filter":
             case "favorite": {
                 return searchItem.domain;
+            }
+            case "relativeFilter": {
+                const option = searchItem.options.find((o) => o.id === activeItem.optionId);
+                return option?.domain ?? null;
             }
             default: {
                 return null;

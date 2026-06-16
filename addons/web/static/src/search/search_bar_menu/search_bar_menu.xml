@@ -24,17 +24,31 @@
                             <h5 class="o_dropdown_title d-inline">Filters</h5>
                         </div>
                         <t t-set="currentGroup" t-value="null"/>
-                        <t t-foreach="this.filterItems" t-as="item" t-key="item.id">
+                        <t t-foreach="this.filterItems" t-as="item" t-key="item.id" t-if="item.type !== 'relativeFilter'">
                             <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
                                 <div class="dropdown-divider" role="separator"/>
                             </t>
                             <t t-if="item.options">
-                                <AccordionItem 
-                                    class="'text-truncate'" 
-                                    description="item.description" 
-                                    selected="item.isActive" 
+                                <AccordionItem
+                                    class="'text-truncate'"
+                                    description="item.description"
+                                    selected="item.isActive"
                                     onWillToggle="() => this.onToggle({ itemId: item.id, optionsParams: item.optionsParams })"
                                 >
+                                    <!-- TODO cleanup -->
+                                    <t t-set="relativeItem" t-value="this.filterItems.find(i => i.id === item.relativeFilterId)"/>
+                                    <t t-if="relativeItem">
+                                        <t t-foreach="relativeItem.options" t-as="option" t-key="option.id">
+                                            <CheckboxItem
+                                                class="{ o_item_option: true, selected: option.isActive, 'text-truncate': true }"
+                                                t-out="option.description"
+                                                checked="option.isActive"
+                                                closingMode="'none'"
+                                                onSelected="() => this.onRelativeFilterSelected({ itemId: relativeItem.id, optionId: option.id })"
+                                            />
+                                        </t>
+                                        <div class="dropdown-divider" role="separator"/>
+                                    </t>
                                     <t t-set="subGroup" t-value="null"/>
                                     <t t-foreach="item.options" t-as="option" t-key="option.id">
                                         <t t-if="subGroup !== null and subGroup !== option.groupNumber">
@@ -50,7 +64,7 @@
                                     </t>
                                     <DropdownItem t-if="item.optionsParams.limit and item.optionsParams.count > item.optionsParams.limit" class="'o_item_option'" closingMode="'none'" onSelected.bind="() => this.onLoadMoreOptions({ itemId: item.id })">More...</DropdownItem>
                                     <div class="dropdown-divider" role="separator"/>
-                                    <DropdownItem class="'o_menu_item o_add_custom_filter'" onSelected="() => this.onAddCustomDateFilterClick(item)">Custom Date...</DropdownItem>
+                                    <DropdownItem t-if="item.type === 'dateFilter'" class="'o_menu_item o_add_custom_filter'" onSelected="() => this.onAddCustomDateFilterClick(item)">Custom Date...</DropdownItem>
                                 </AccordionItem>
                             </t>
                             <t t-else="">

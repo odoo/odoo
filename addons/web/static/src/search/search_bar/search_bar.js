@@ -615,7 +615,11 @@ export class SearchBar extends Component {
     //---------------------------------------------------------------------
 
     onFacetLabelClick(facet) {
-        if ((this.env.searchModel.canOrderByCount && facet.type === "groupBy") || !facet.domain) {
+        if (
+            (this.env.searchModel.canOrderByCount && facet.type === "groupBy") ||
+            !facet.domain ||
+            facet.type === "relative"
+        ) {
             return;
         }
         this.env.searchModel.spawnCustomFilterDialog(false, facet.domain, facet.groupId);

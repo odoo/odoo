@@ -70,7 +70,9 @@ export class SearchBarMenu extends Component {
     // Filter Panel
     get filterItems() {
         return this.env.searchModel.getSearchItems((searchItem) =>
-            ["filter", "dateFilter", "parentFilter", "lazyParentFilter"].includes(searchItem.type)
+            ["filter", "dateFilter", "parentFilter", "lazyParentFilter", "relativeFilter"].includes(
+                searchItem.type
+            )
         );
     }
 
@@ -97,6 +99,10 @@ export class SearchBarMenu extends Component {
         } else {
             this.env.searchModel.toggleSearchItem(itemId);
         }
+    }
+
+    onRelativeFilterSelected({ itemId, optionId }) {
+        this.env.searchModel.toggleRelativeFilter(itemId, optionId);
     }
 
     async onToggle({ itemId, optionsParams }) {
