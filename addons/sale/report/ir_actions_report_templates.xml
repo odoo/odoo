@@ -117,12 +117,24 @@
                         <t t-set="is_combo" t-value="line.product_type == 'combo'"/>
 
                         <t t-if="is_section">
+                            <t t-if="current_section">
+                                <t
+                                    t-set="collapsed_section_class"
+                                    t-value="'fw-bolder' if not current_section.collapse_composition else ''"
+                                />
+                            </t>
                             <t t-set="current_section" t-value="line"/>
                             <t t-set="current_subsection" t-value="None"/>
                             <t t-set="line_padding" t-value="0"/>
                             <t t-set="collapse_prices" t-value="line.collapse_prices"/>
                         </t>
                         <t t-elif="is_subsection">
+                            <t t-if="current_subsection">
+                                <t
+                                    t-set="collapsed_subsection_class"
+                                    t-value="'fw-bold' if not current_subsection.collapse_composition else ''"
+                                />
+                            </t>
                             <t t-set="current_subsection" t-value="line"/>
                             <t t-set="line_padding" t-value="2"/>
                             <t t-set="collapse_prices" t-value="collapse_prices or line.collapse_prices"/>
@@ -272,6 +284,7 @@
                                 t-as="section_line"
                                 name="tr_section_group"
                                 class="o_line_section"
+                                t-att-class="collapsed_section_class if is_section else collapsed_subsection_class"
                             >
                                 <td name="td_section_group_name" t-att-class="padding_class">
                                     <span t-field="line.name">
