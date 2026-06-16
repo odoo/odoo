@@ -8,6 +8,7 @@ import { cleanTextNode, fillEmpty, splitTextNode, unwrapContents } from "../util
 import {
     areSimilarElements,
     isContentEditable,
+    isContentEditableAncestor,
     isElement,
     isEmptyBlock,
     isEmptyTextNode,
@@ -377,7 +378,8 @@ export class FormatPlugin extends Plugin {
                 parentNode &&
                 !isBlock(parentNode) &&
                 this.dependencies.split.isUnsplittable(parentNode) &&
-                this.dependencies.selection.areNodeContentsFullySelected(parentNode)
+                this.dependencies.selection.areNodeContentsFullySelected(parentNode) &&
+                !isContentEditableAncestor(parentNode)
             ) {
                 inlineAncestors.push(parentNode);
             }

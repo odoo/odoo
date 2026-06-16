@@ -231,3 +231,13 @@ test("should update the font class if the parent already has one", async () => {
         contentAfter: '<h2 class="h4-fs"><span class="h3-fs">[abcdefg]</span></h2>',
     });
 });
+
+test("should format inside of content editable boundary (setFontSize)", async () => {
+    await testEditor({
+        contentBefore:
+            '<div contenteditable="false"><p>a<span contenteditable="true">[b]</span>c</p></div>',
+        stepFunction: setFontSize("36px"),
+        contentAfter:
+            '<div contenteditable="false"><p>a<span contenteditable="true"><span style="font-size: 36px;">[b]</span></span>c</p></div>',
+    });
+});
