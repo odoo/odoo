@@ -80,6 +80,46 @@ class TestSaleFlow(TestSaleCommon):
 
         sale_order.action_confirm()
 
-        self.assertRecordValues(
-            sale_order.order_line, [{"qty_delivered": 1.0}, {"qty_delivered": 1.0}]
-        )
+        self.assertRecordValues(sale_order.order_line, [
+            {'qty_delivered': 1.0},
+            {'qty_delivered': 1.0},
+        ])
+
+    def test_qty_delivered_non_analytic_lines(self):
+
+        sale_order = self.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.company_data['product_delivery_no'].name,
+                    'product_id': self.company_data['product_delivery_no'].id,
+                    'product_uom_qty': 2,
+                    'qty_delivered': 1,
+                    'price_unit': self.company_data['product_delivery_no'].list_price,
+                }),
+                (0, 0, {
+                    'name': "Note Line",
+                    'display_type': "line_note",
+                }),
+            ],
+        })
+
+        sale_order.action_confirm()
+
+        self.assertRecordValues(sale_order.order_line, [
+            {'qty_delivered': 1.0},
+            {'qty_delivered': 0.0},
+        ])
+
+        self.assertTrue(sale_order.show_deliver_button)
+
+        sale_order.deliver_sold_quantity()
+
+        self.assertRecordValues(sale_order.order_line, [
+            {'qty_delivered': 2.0},
+            {'qty_delivered': 0.0},
+        ])
+
+        self.assertFalse(sale_order.show_deliver_button)
