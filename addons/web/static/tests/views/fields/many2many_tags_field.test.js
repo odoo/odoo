@@ -2089,6 +2089,39 @@ test("Many2ManyTagsField with on_tag_click option", async () => {
     await clickSave();
 });
 
+test("Many2ManyTagsField with form_dialog_size option", async () => {
+    expect.assertions(4);
+
+    PartnerType._views = {
+        form: `<form><field name="name"/><field name="color"/></form>`,
+    };
+    Partner._records[0].timmy = [12];
+
+    onRpc("get_formview_id", ({ args }) => {
+        expect(args[0]).toEqual([12], {
+            message: "should call get_formview_id with correct id",
+        });
+        return false;
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="timmy" widget="many2many_tags" options="{'on_tag_click': 'open_form', 'form_dialog_size': 'sm'}"/>
+            </form>`,
+        resId: 1,
+    });
+
+    // Click to try to open form view dialog
+    expect(".o_dialog").toHaveCount(0);
+    await contains(".o_tag.badge").click();
+    expect(".o_dialog").toHaveCount(1);
+    // Dialog should be of the expected size
+    expect(".o_dialog .modal-dialog").toHaveClass("modal-sm");
+});
+
 test("Many2ManyTagsField with on_tag_click option overrides color edition", async () => {
     expect.assertions(9);
 

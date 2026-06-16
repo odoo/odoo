@@ -524,6 +524,12 @@ class CalendarEvent(models.Model):
                         'stop_date': enddate.replace(tzinfo=None)
                     })
 
+    @api.constrains('alarm_ids')
+    def _check_alarm_ids(self):
+        for meeting in self:
+            if len(meeting.alarm_ids) > 5:
+                raise ValidationError(_("The event %s cannot have more than 5 reminders.", meeting.name))
+
     @api.constrains('start', 'stop', 'start_date', 'stop_date')
     def _check_closing_date(self):
         for meeting in self:

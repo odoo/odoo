@@ -54,6 +54,11 @@ export class Many2ManyTagsField extends Component {
             optional: true,
             validate: (value) => ["open_form", "edit_color"].includes(value),
         },
+        formDialogSize: {
+            type: String,
+            optional: true,
+            validate: (value) => ["sm", "md", "lg", "xl", "fs", "fullscreen"].includes(value),
+        },
         colorField: { type: String, optional: true },
         createExpression: { type: String, optional: true },
         domain: { type: [Array, Function], optional: true },
@@ -115,6 +120,7 @@ export class Many2ManyTagsField extends Component {
                 create: false,
                 write: true,
             },
+            ...(this.props.formDialogSize && { size: this.props.formDialogSize } || {}),
             onRecordSaved: (record) => {
                 const records = this.props.record.data[this.props.name].records;
                 return records.find((r) => r.resId === record.resId).load();
@@ -349,6 +355,14 @@ export const many2ManyTagsField = {
                 "Defines the behavior when a tag is clicked. 'Edit color' requires a color field"
             ),
         },
+        {
+            label: _t("Form dialog size"),
+            name: "form_dialog_size",
+            type: "string",
+            help: _t(
+                "Defines the size of the dialog when a tag click opens the form."
+            ),
+        },
     ],
     relatedFields: ({ options }) => {
         const relatedFields = [{ name: "display_name", type: "char" }];
@@ -381,6 +395,7 @@ export const many2ManyTagsField = {
         let onTagClick = false;
         if (options.on_tag_click === "open_form" && hasEditPermission) {
             onTagClick = "open_form";
+            props.formDialogSize = options.form_dialog_size;
         } else if (
             options.on_tag_click === "edit_color" &&
             hasEditPermission &&
