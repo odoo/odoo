@@ -23,6 +23,7 @@ import {
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
 import { createSpreadsheetWithList } from "@spreadsheet/../tests/helpers/list";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
+import { TEST_LOCALES } from "@spreadsheet/../tests/helpers/locale";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
 
@@ -1571,6 +1572,56 @@ test("Chaining fields are fetched with the same web_search_read", async function
     initialLoad = false;
     await animationFrame();
     expect.verifySteps(["web_search_read"]);
+});
+
+test("chained field in x2many with a single value", async function () {
+    Partner._fields.product_ids = fields.Many2many({
+        string: "Products",
+        relation: "product",
+        store: true,
+        searchable: true,
+    });
+    Partner._records = [
+        {
+            id: 1,
+            product_ids: [7],
+        },
+    ];
+    Product._records = [{ id: 7, pognon: 699.99, currency_id: 1 }];
+    const { model } = await createSpreadsheetWithList();
+    model.dispatch("UPDATE_LOCALE", { locale: TEST_LOCALES.fr_FR });
+    const listId = model.getters.getListIds()[0];
+    setCellContent(model, "A1", `=ODOO.LIST.VALUE(${listId}, 1, "product_ids.pognon")`);
+    await animationFrame();
+    expect(getCellValue(model, "A1")).toBe(699.99);
+    expect(getEvaluatedCell(model, "A1").formattedValue).toBe("699,99€");
+});
+
+test("chained field in x2many with multiple values", async function () {
+    Partner._fields.product_ids = fields.Many2many({
+        string: "Products",
+        relation: "product",
+        store: true,
+        searchable: true,
+    });
+    Partner._records = [
+        {
+            id: 1,
+            product_ids: [7, 8],
+        },
+    ];
+    Product._records = [
+        { id: 7, pognon: 699.99, currency_id: 1 },
+        { id: 8, pognon: 499.99, currency_id: 1 },
+    ];
+    const { model } = await createSpreadsheetWithList();
+    model.dispatch("UPDATE_LOCALE", { locale: TEST_LOCALES.fr_FR });
+    const listId = model.getters.getListIds()[0];
+    setCellContent(model, "A1", `=ODOO.LIST.VALUE(${listId}, 1, "product_ids.pognon")`);
+    await animationFrame();
+    // known limitation: the values are not localized.
+    expect(getCellValue(model, "A1")).toBe("699.99, 499.99");
+    expect(getEvaluatedCell(model, "A1").formattedValue).toBe("699.99, 499.99");
 });
 
 test("Chaining monetary fields includes the currency field", async function () {
