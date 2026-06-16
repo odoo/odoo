@@ -67,6 +67,7 @@ from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
 _logger = logging.getLogger(__name__)
 
 SLEEP_INTERVAL = 60     # 1 min
+GEVENT_STOP_TIMEOUT = 60
 
 def memory_info(process):
     """
@@ -696,6 +697,10 @@ class GeventServer(CommonServer):
         self.port = config['gevent_port']
         self.httpd = None
 
+    def sigint_handler(self, sig, frame):
+        if self.httpd:
+            self.httpd._stop_event.set()
+
     def process_limits(self):
         restart = False
         if self.ppid != os.getppid():
@@ -718,6 +723,7 @@ class GeventServer(CommonServer):
 
     def start(self):
         import gevent
+        import gevent.pool
         try:
             from gevent.pywsgi import WSGIServer, WSGIHandler
         except ImportError:
@@ -770,35 +776,58 @@ class GeventServer(CommonServer):
                     environ['wsgi.input_terminated'] = False
                 return environ
 
+        # Set process memory limit as an extra safeguard
         set_limit_memory_hard()
         if os.name == 'posix':
-            # Set process memory limit as an extra safeguard
+            signal.signal(signal.SIGINT, self.sigint_handler)
             signal.signal(signal.SIGQUIT, dumpstacks)
             signal.signal(signal.SIGUSR1, log_ormcache_stats)
             gevent.spawn(self.watchdog)
 
+        sock = None
+        if os.environ.get('LISTEN_FDS') == '1' and os.environ.get('LISTEN_PID') == str(os.getpid()):
+            SD_LISTEN_FDS_START = 3
+            sock = socket.fromfd(SD_LISTEN_FDS_START, socket.AF_INET, socket.SOCK_STREAM)
+            self.interface, self.port = sock.getsockname()
+
         self.httpd = WSGIServer(
-            (self.interface, self.port), self.app,
+            sock or (self.interface, self.port), self.app,
             log=logging.getLogger('longpolling'),
             error_log=logging.getLogger('longpolling'),
             handler_class=ProxyHandler,
+            spawn=gevent.pool.Pool(),
         )
+        self.httpd.stop_timeout = 15  # websocket timeout
+
+        # override gevent.WSGIServer's `close` to end websocket connections
+        # before we wait for all greenlets to finish & kill remaining.
+        original_httpd_close = self.httpd.close
+        super_stop = super().stop
+
+        def httpd_close_override():
+            original_httpd_close()
+            super_stop()
+
+        self.httpd.close = httpd_close_override
+
         _logger.info('Evented Service (longpolling) running on %s:%s', self.interface, self.port)
         try:
-            self.httpd.serve_forever()
+            self.httpd.serve_forever(stop_timeout=GEVENT_STOP_TIMEOUT)
         except:
             _logger.exception("Evented Service (longpolling): uncaught error during main loop")
             raise
 
     def stop(self):
-        import gevent
-        self.httpd.stop()
-        super().stop()
-        gevent.shutdown()
+        if self.httpd:
+            self.httpd._stop_event.set()
+            # will call super().stop() in WSGIServer.close
+        else:
+            super().stop()
 
     def run(self, preload, stop):
         self.start()
         self.stop()
+        _logger.info('Gevent server stopped')
 
 class PreforkServer(CommonServer):
     """ Multiprocessing inspired by (g)unicorn.
