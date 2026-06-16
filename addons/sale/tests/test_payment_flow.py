@@ -390,6 +390,42 @@ class TestSalePayment(AccountPaymentCommon, MailCase, PaymentHttpCommon, SaleCom
         self.assertEqual(len(second_invoice.transaction_ids), 1, msg=msg)
         self.assertEqual(second_invoice.transaction_ids.state, 'pending', msg=msg)
 
+    def test_invoice_reconciled_when_payment_matched_before_invoicing(self):
+        """Test that a payment matched with the bank before the invoice exists is still reconciled
+        with the invoice at posting (the matched payment is 'paid', not 'in_process').
+        """
+        self.amount = self.sale_order.amount_total
+        tx = self._create_transaction(
+            flow="redirect", sale_order_ids=[self.sale_order.id], state="done",
+        )
+        with mute_logger("odoo.addons.sale.models.payment_transaction"):
+            tx._post_process()
+        payment = tx.payment_id
+
+        bank_journal = self.company_data["default_journal_bank"]
+        liquidity_line = payment.move_id.line_ids.filtered(
+            lambda line: line.account_id == payment.outstanding_account_id
+        )
+        statement_line = self.env["account.bank.statement.line"].create({
+            "payment_ref": payment.memo,
+            "journal_id": bank_journal.id,
+            "amount": payment.amount,
+            "date": payment.date,
+        })
+        suspense_line = statement_line.move_id.line_ids.filtered(
+            lambda line: line.account_id != bank_journal.default_account_id
+        )
+        suspense_line.account_id = liquidity_line.account_id
+        (suspense_line + liquidity_line).reconcile()
+
+        self.assertRecordValues(payment, [{"state": "paid", "is_reconciled": False}])
+
+        invoice = self.sale_order._create_invoices()
+        invoice.action_post()
+
+        self.assertEqual(invoice.payment_state, "paid")
+        self.assertTrue(payment.is_reconciled)
+
     def test_downpayment_confirm_sale_order_sufficient_amount(self):
         """Paying down payments can confirm an order if amount is enough."""
         self.sale_order.prepayment_percent = 0.1
