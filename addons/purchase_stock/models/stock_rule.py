@@ -373,8 +373,8 @@ class StockRule(models.Model):
         supplier = False
         if procurement.values.get('supplierinfo_id'):
             supplier = procurement.values['supplierinfo_id']
-        elif procurement.values.get('orderpoint_id') and procurement.values['orderpoint_id'].supplier_id:
-            supplier = procurement.values['orderpoint_id'].supplier_id
+        elif procurement.values.get('orderpoint_id') and procurement.values['orderpoint_id'].effective_supplier_id:
+            supplier = procurement.values['orderpoint_id'].effective_supplier_id
         else:
             procurement_date_planned = fields.Datetime.from_string(procurement.values['date_planned'])
             supplier = self._pick_supplier(

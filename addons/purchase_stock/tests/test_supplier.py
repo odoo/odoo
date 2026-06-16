@@ -45,7 +45,7 @@ class TestSupplier(TestStockCommon):
         # The route is set, but there is no supplier -> no effective vendor
         self.assertFalse(orderpoint.effective_vendor_id)
 
-        self.env['product.supplierinfo'].create({
+        supplier_1 = self.env['product.supplierinfo'].create({
             'product_id': self.productA.id,
             'partner_id': self.partner_1.id,
             'min_qty': 10,
@@ -55,9 +55,9 @@ class TestSupplier(TestStockCommon):
         self.env.invalidate_all()
         # The route is set and there is a supplier -> effective vendor is available
         self.assertEqual(orderpoint.effective_vendor_id, self.partner_1)
-        self.assertEqual(orderpoint.supplier_id_placeholder, 'Julia Agrolait (10.0 Units - $\xa050.00)')
+        self.assertEqual(orderpoint.effective_supplier_id, supplier_1)
         # The actual vendor remains empty
-        self.assertFalse(orderpoint.supplier_id)
+        self.assertFalse(orderpoint.partner_id)
 
     def test_missing_seller_does_not_crash_po_confirmation(self):
         """

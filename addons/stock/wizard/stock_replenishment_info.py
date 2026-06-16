@@ -55,12 +55,6 @@ class StockReplenishmentInfo(models.TransientModel):
                 for route_id in replenishment_info.warehouseinfo_ids
             ]).sorted(lambda o: o.free_qty, reverse=True)
 
-    def _get_lead_days_and_description(self):
-        self.ensure_one()
-        orderpoint = self.orderpoint_id
-        orderpoints_values = orderpoint._get_lead_days_values()
-        return orderpoint.rule_ids._get_lead_days(orderpoint.product_id, **orderpoints_values)
-
     @api.depends('orderpoint_id')
     def _compute_json_lead_days(self):
         def _format_description(description):
@@ -94,6 +88,15 @@ class StockReplenishmentInfo(models.TransientModel):
                 'product_uom_name': orderpoint.product_uom_name,
                 'virtual': orderpoint.trigger == 'manual' and orderpoint.create_uid.id == SUPERUSER_ID,
             })
+
+    def _get_lead_days_and_description(self):
+        self.ensure_one()
+        orderpoint = self.orderpoint_id
+        return orderpoint.rule_ids._get_lead_days(orderpoint.product_id, **self._get_lead_days_values())
+
+    def _get_lead_days_values(self):
+        self.ensure_one()
+        return self.orderpoint_id._get_lead_days_values()
 
     def _get_period_of_time(self):
         self.ensure_one()

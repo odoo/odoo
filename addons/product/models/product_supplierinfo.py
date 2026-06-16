@@ -13,7 +13,7 @@ class ProductSupplierinfo(models.Model):
     partner_id = fields.Many2one(
         'res.partner', 'Vendor',
         ondelete='cascade', required=True,
-        check_company=True)
+        check_company=True, index=True)
     product_name = fields.Char(
         'Vendor Product Name',
         help="This vendor's product name will be used when printing a request for quotation. Keep empty to use the internal one.")
