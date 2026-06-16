@@ -113,9 +113,7 @@ class PaymentTransaction(models.Model):
         elif success_code in const.SUCCESS_CODE_MAPPING["error"]:
             self._set_error(
                 self.env._(
-                    "An error occurred during the processing of your payment (success code"
-                    " %(success_code)s; primary response code %(response_code)s). Please try"
-                    " again.",
+                    "Success code: %(success_code)s. Primary response code: %(response_code)s.",
                     success_code=success_code,
                     response_code=primary_response_code,
                 )

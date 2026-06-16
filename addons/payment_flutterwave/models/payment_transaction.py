@@ -165,13 +165,7 @@ class PaymentTransaction(models.Model):
         elif payment_status in const.PAYMENT_STATUS_MAPPING["cancel"]:
             self._set_canceled()
         elif payment_status in const.PAYMENT_STATUS_MAPPING["error"]:
-            self._set_error(
-                self.env._(
-                    "An error occurred during the processing of your payment (status %s). Please"
-                    " try again.",
-                    payment_status,
-                )
-            )
+            self._set_error("")
         else:
             _logger.warning(
                 "Received data with invalid payment status (%s) for transaction %s.",

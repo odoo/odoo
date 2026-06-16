@@ -189,14 +189,8 @@ class PaymentTransaction(models.Model):
         elif payment_status in const.PAYMENT_STATUS_MAPPING["cancel"]:
             self._set_canceled()
         elif payment_status in const.PAYMENT_STATUS_MAPPING["error"]:
-            failure_reason = payment_data.get("failure_reason")
-            self._set_error(
-                self.env._(
-                    "An error occurred during the processing of your payment (%s). Please try"
-                    " again.",
-                    failure_reason,
-                )
-            )
+            failure_reason = payment_data.get("failure_reason", "")
+            self._set_error(self.env._("Reason: %s", failure_reason))
 
     def _extract_amount_data(self, payment_data):
         """Override of payment to extract the amount and currency from the payment data."""

@@ -137,13 +137,7 @@ class PaymentTransaction(models.Model):
             self._set_done()
         elif status in const.PAYMENT_STATUS_MAPPING["error"]:
             failure_reason = payment_data.get("Reason") or payment_data.get("message")
-            self._set_error(
-                self.env._(
-                    "An error occurred during the processing of your payment (%(reason)s). Please"
-                    " try again.",
-                    reason=failure_reason,
-                )
-            )
+            self._set_error(self.env._("Reason: %s", failure_reason))
         else:  # Classify unsupported payment states as the `error` tx state.
             status_description = payment_data.get("Reason")
             _logger.info(
