@@ -3,6 +3,16 @@
     width: 100%;
     z-index: 2000;
     bottom: 0;
+
+    .o-toolbar-fade-right {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 20px;
+        height: 100%;
+        pointer-events: none;
+        background: linear-gradient(to right, transparent, #fff);
+    }
 }
 :has(.o_app_menu_sidebar, .o_bottom_sheet, .popover:not(.o_font_type_selector_menu, .o_font_size_selector_menu)) .o-toolbar-above-keyboard {
     display: none;

@@ -14,6 +14,7 @@ import { getContent, setContent, setSelection } from "./_helpers/selection";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { processThroughCleanForSave } from "./_helpers/dispatch";
+import { expandToolbar } from "./_helpers/toolbar";
 import { expectElementCount } from "./_helpers/ui_expectations";
 
 const config = { Plugins: [...MAIN_PLUGINS, QWebPlugin] };
@@ -383,8 +384,7 @@ test("formatting toolbar items are disabled on t-att-class and t-att-style (and 
         config,
     });
 
-    await waitFor(".o-we-toolbar button[name=expand_toolbar]");
-    await click(".o-we-toolbar button[name=expand_toolbar]");
+    await expandToolbar();
     await waitFor("button[name=remove_format]");
 
     expect(`button[name="bold"]`).not.toHaveAttribute("disabled");

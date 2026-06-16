@@ -2,6 +2,12 @@ import { markRaw } from "@odoo/owl";
 import { BottomSheet } from "@web/core/bottom_sheet/bottom_sheet";
 import { registry } from "@web/core/registry";
 
+export const extra = {
+    getBottomSheetOptions(props, options) {
+        return {};
+    },
+};
+
 /**
  * @typedef {{
  *   env?: object;
@@ -47,6 +53,7 @@ export const popoverService = {
                     ref: options.ref,
                     class: options.class,
                     role: options.role,
+                    ...extra.getBottomSheetOptions(props, options),
                 },
                 {
                     env: options.env,

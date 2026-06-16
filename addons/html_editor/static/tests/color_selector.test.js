@@ -14,8 +14,10 @@ import {
     setInputRange,
     test,
     waitFor,
+    waitForNone,
     waitUntil,
 } from "@odoo/hoot";
+import { mockUserAgent } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
@@ -231,6 +233,7 @@ test("applied custom color should be shown in colorpicker after switching tab", 
     expect(".o_hex_input").toHaveValue(newColor);
 });
 
+test.tags("desktop");
 test("select hex color and apply it", async () => {
     const { el } = await setupEditor(`<p>[test]</p>`);
     await expandToolbar();
@@ -253,11 +256,40 @@ test("select hex color and apply it", async () => {
     expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">test</font></p>`);
 
     await click(".odoo-editor-editable");
-    await animationFrame();
-    expect(".o_font_color_selector").toHaveCount(0);
+    await waitForNone(".o_font_color_selector", { timeout: 500 }); // slide out transition
     expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">[test]</font></p>`);
 });
 
+test.tags("mobile");
+test("select hex color and apply it (mobile)", async () => {
+    mockUserAgent("android");
+    const { el } = await setupEditor(`<p>[test]</p>`);
+    await expandToolbar();
+    expect(".o_font_color_selector").toHaveCount(0);
+
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+
+    await click(".o_font_color_selector .dropdown-toggle");
+    await waitFor(".o_bottom_sheet_body .o-dropdown-item");
+    await click(".o-dropdown-item:contains('Custom')");
+    await animationFrame();
+    await click(".o_hex_input");
+    await waitFor(".o_font_color_selector");
+
+    await edit("#017E84"); // === rgb(1, 126, 132)
+    await animationFrame();
+    expect("button[data-color='#017E84']").toHaveCount(1);
+    expect("button[data-color='#017E84']").toHaveStyle({ backgroundColor: "rgb(1, 126, 132)" });
+    expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">test</font></p>`);
+
+    await click("[data-color='#017E84']");
+    await waitForNone(".o_font_color_selector", { timeout: 500 }); // slide out transition
+    expect(getContent(el)).toBe(`<p><font style="color: rgb(1, 126, 132);">[test]</font></p>`);
+});
+
+test.tags("desktop");
 test("should be able to apply hex color with opacity component", async () => {
     const { el } = await setupEditor(`<p>[test]</p>`);
     await expandToolbar();
@@ -282,8 +314,40 @@ test("should be able to apply hex color with opacity component", async () => {
     expect(getContent(el)).toBe(`<p><font style="color: rgba(1, 126, 132, 0.5);">test</font></p>`);
 
     await click(".odoo-editor-editable");
-    await animationFrame();
+    await waitForNone(".o_font_color_selector", { timeout: 500 }); // slide out transition
+    expect(getContent(el)).toBe(
+        `<p><font style="color: rgba(1, 126, 132, 0.5);">[test]</font></p>`
+    );
+});
+
+test.tags("mobile");
+test("should be able to apply hex color with opacity component (mobile)", async () => {
+    mockUserAgent("android");
+    const { el } = await setupEditor(`<p>[test]</p>`);
+    await expandToolbar();
     expect(".o_font_color_selector").toHaveCount(0);
+
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await animationFrame();
+    expect(".o_font_color_selector").toHaveCount(1);
+
+    await click(".o_font_color_selector .dropdown-toggle");
+    await waitFor(".o_bottom_sheet_body .o-dropdown-item");
+    await click(".o-dropdown-item:contains('Custom')");
+    await animationFrame();
+    await click(".o_hex_input");
+    await waitFor(".o_font_color_selector");
+
+    await edit("#017E8480"); // === rgba(1, 126, 132, 0.5)
+    await animationFrame();
+    expect("button[data-color='#017E8480']").toHaveCount(1);
+    expect("button[data-color='#017E8480']").toHaveStyle({
+        backgroundColor: "rgba(1, 126, 132, 0.5)",
+    });
+    expect(getContent(el)).toBe(`<p><font style="color: rgba(1, 126, 132, 0.5);">test</font></p>`);
+
+    await click("[data-color='#017E8480']");
+    await waitForNone(".o_font_color_selector", { timeout: 500 }); // slide out transition
     expect(getContent(el)).toBe(
         `<p><font style="color: rgba(1, 126, 132, 0.5);">[test]</font></p>`
     );
@@ -806,6 +870,7 @@ test("should be able to show preview when hovering radial type button", async ()
     expect("button[title='Extend to the farthest side']").toHaveClass("active");
 });
 
+test.tags("desktop");
 test("solid tab color navigation using keys", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await expandToolbar();
@@ -833,6 +898,7 @@ test("solid tab color navigation using keys", async () => {
     expect(getContent(el)).toBe(`<p><font style="color: rgb(0, 0, 0);">[test]</font></p>`);
 });
 
+test.tags("desktop");
 test("custom tab color navigation using keys", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
     await expandToolbar();

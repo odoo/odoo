@@ -77,6 +77,7 @@ export class ColorUIPlugin extends Plugin {
             applyColorPreview: (color) => this.applyColorPreview({ color, mode }),
             applyColorResetPreview: this.applyColorResetPreview.bind(this),
             colorPrefix: mode === "color" ? "text-" : "bg-",
+            onOpen: () => this.document.activeElement?.blur(),
             onClose: (res) => {
                 // onClose receives "escape" when closed via Escape,
                 // otherwise undefined. Focus editable only for non-escape closes.
