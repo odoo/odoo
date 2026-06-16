@@ -5,6 +5,7 @@ from odoo import api, fields, models
 
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
+from odoo.exceptions import UserError
 
 PDP_identifier_re = re.compile(r'^([0-9]{9})(_[0-9]{14})?(_.+)?$')
 
@@ -93,10 +94,12 @@ class ResCompany(models.Model):
 
     def _inverse_pdp_identifier(self):
         for record in self:
+            if not record.pdp_identifier:
+                continue
             match = PDP_identifier_re.match(record.pdp_identifier or '')
             siren = match and match.group(1)
             if not siren:
-                continue
+                raise UserError(self.env._("The identifier %s is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage", record.pdp_identifier))
             siret = match.group(2)[1:] if match and match.group(2) else False  # Remove `_` at the start
             record.partner_id.write({
                 'peppol_eas': '0225',
