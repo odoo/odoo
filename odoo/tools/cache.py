@@ -114,10 +114,11 @@ class ormcache:
 
         tx_lookups = model.env.cr.cache.setdefault('_ormcache_lookups', set())
         # tx: is it the first call in the transation for that key
-        tx_first_lookup = key not in tx_lookups
+        tx_key = tuple(map(hash, key))
+        tx_first_lookup = tx_key not in tx_lookups
         if tx_first_lookup:
             counter.cache_name = self.cache_name
-            tx_lookups.add(key)
+            tx_lookups.add(tx_key)
 
         try:
             r = d[key]
