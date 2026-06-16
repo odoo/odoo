@@ -8,6 +8,7 @@ from urllib.parse import urlencode, urlparse
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.modules.db import FunctionStatus
 from odoo.tools import float_round, is_html_empty, lazy
 from odoo.tools.sql import SQL, column_exists, create_column
 from odoo.tools.translate import adapt_translated_field_value, html_translate
@@ -24,7 +25,7 @@ _logger = logging.getLogger(__name__)
 def get_translated_field_gist_index(registry, column_name):
     if not registry.has_trigram:
         return ""
-    if registry.has_unaccent:
+    if registry.has_unaccent == FunctionStatus.INDEXABLE:
         return f"USING GIST(unaccent((JSONB_PATH_QUERY_ARRAY({column_name}, '$.*'::jsonpath))::text) gist_trgm_ops)"  # noqa: E501
     return (
         f"USING GIST((JSONB_PATH_QUERY_ARRAY({column_name}, '$.*'::jsonpath)::text) gist_trgm_ops)"
@@ -190,7 +191,7 @@ class ProductTemplate(models.Model):
     _default_code_gist_idx = models.Index(
         lambda registry: (
             "USING GIST(unaccent(default_code) gist_trgm_ops)"
-            if registry.has_trigram and registry.has_unaccent
+            if registry.has_trigram and registry.has_unaccent == FunctionStatus.INDEXABLE
             else ("USING GIST(default_code gist_trgm_ops)" if registry.has_trigram else "")
         )
     )
