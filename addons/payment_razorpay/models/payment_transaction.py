@@ -426,11 +426,7 @@ class PaymentTransaction(models.Model):
                 self.reference,
                 entity_data.get("error_description"),
             )
-            self._set_error(
-                self.env._(
-                    "An error occurred during the processing of your payment. Please try again."
-                )
-            )
+            self._set_error("")
         else:  # Classify unsupported payment status as the `error` tx state.
             _logger.warning(
                 "Received data for transaction %s with invalid payment status: %s.",

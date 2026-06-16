@@ -86,13 +86,7 @@ class PaymentTransaction(models.Model):
                 self.env._("Your payment was refused (code %s). Please try again.", status_code)
             )
         elif status_code in const.STATUS_CODES_MAPPING["error"]:
-            self._set_error(
-                self.env._(
-                    "An error occurred during processing of your payment (code %s). Please try"
-                    " again.",
-                    status_code,
-                )
-            )
+            self._set_error(self.env._("Code: %s", status_code))
         else:
             _logger.warning(
                 "Received data with invalid payment status (%s) for transaction %s.",

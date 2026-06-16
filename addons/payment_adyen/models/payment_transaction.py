@@ -368,11 +368,7 @@ class PaymentTransaction(models.Model):
                     self.reference,
                     refusal_reason,
                 )
-                self._set_error(
-                    self.env._(
-                        "An error occurred during the processing of your payment. Please try again."
-                    )
-                )
+                self._set_error("")
             elif event_code == "CANCELLATION":
                 _logger.warning(
                     "The void of the transaction %s failed. reason: %s.",

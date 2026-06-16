@@ -137,13 +137,7 @@ class PaymentTransaction(models.Model):
                 "Received data with unsuccessful payment status for transaction %s.", self.reference
             )
             message = payment_data.get("data.message")
-            self._set_error(
-                self.env._(
-                    "An error occurred during the processing of your payment (%(msg)s). Please try"
-                    " again.",
-                    msg=message,
-                )
-            )
+            self._set_error(self.env._("Reason: %s", message))
 
     def _extract_amount_data(self, payment_data):
         """Override of payment to extract the amount and currency from the payment data."""
