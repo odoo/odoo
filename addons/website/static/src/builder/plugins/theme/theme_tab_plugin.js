@@ -28,7 +28,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { CustomizeWebsiteVariableAction } from "../customize_website_plugin";
 import { EditHeadBodyDialog } from "@website/components/edit_head_body_dialog/edit_head_body_dialog";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { ImageSize } from "@html_builder/plugins/image/image_size";
+import { ThemeWebsiteSettingsOption } from "./theme_website_settings_option";
 
 /**
  * @typedef { Object } ThemeTabShared
@@ -127,13 +127,7 @@ export class ThemeTabPlugin extends Plugin {
                 this.getThemeOptionBlock(
                     "website-settings",
                     "",
-                    [
-                        ThemeColorsOption,
-                        class ThemeWebsiteSettingsOption extends BaseOptionComponent {
-                            static template = "website.ThemeWebsiteSettingsOption";
-                            static components = { ImageSize };
-                        },
-                    ],
+                    [ThemeColorsOption, ThemeWebsiteSettingsOption],
                     this.document.querySelector("#wrapwrap"),
                     true
                 )
