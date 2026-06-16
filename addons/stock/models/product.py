@@ -371,6 +371,7 @@ class ProductProduct(models.Model):
                     loc.id
                     for loc in Location.browse(l_ids)
                     if any(loc.parent_path.startswith(parent) for parent in parents)
+                    or not loc.warehouse_id
                 }
             else:
                 location_ids = w_ids

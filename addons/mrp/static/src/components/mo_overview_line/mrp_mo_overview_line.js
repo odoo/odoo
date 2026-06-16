@@ -21,7 +21,7 @@ export class MoOverviewLine extends Component {
                 state: { type: String, optional: true },
                 formatted_state: { type: String, optional: true },
                 has_bom: { type: Boolean, optional: true },
-                quantity: Number,
+                quantity: { type: Number, optional: true },
                 replenish_quantity: { type: Number, optional: true },
                 uom: { type: String, optional: true },
                 uom_name: { type: String, optional: true },
@@ -45,9 +45,9 @@ export class MoOverviewLine extends Component {
                 bom_cost: { type: [Number, Boolean], optional: true },
                 real_cost: { type: [Number, Boolean], optional: true },
                 real_cost_decorator: { type: [String, Boolean], optional: true },
-                currency_id: Number,
                 currency: { type: String, optional: true },
                 production_id: { type: Number, optional: true },
+                subcontracted: { type: Boolean, optional: true },
             },
         },
         showOptions: SHOW_OPTIONS,
@@ -63,7 +63,7 @@ export class MoOverviewLine extends Component {
         this.ormService = useService("orm");
         this.formatFloat = (val) => formatFloat(val, { digits: [false, this.data.uom_precision || undefined] });
         this.formatFloatTime = formatFloatTime;
-        this.formatMonetary = (val) => formatMonetary(val, { currencyId: this.data.currency_id });
+        this.formatMonetary = (val) => formatMonetary(val, { currencyId: this.data.currency.id });
     }
 
     //---- Handlers ----
@@ -146,6 +146,9 @@ export class MoOverviewLine extends Component {
     }
 
     get formattedQuantity() {
+        if(!this.data.quantity) {
+            return "";
+        }
         if (this.data.model === "mrp.workorder" || !this.data.model) {
             return this.formatFloatTime(this.data.quantity, { unit: this.data.state ? "minutes" : "hours", showSeconds: true });
         }
