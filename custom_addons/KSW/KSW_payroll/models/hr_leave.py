@@ -16,6 +16,7 @@ class HrLeave(models.Model):
 
     x_vacation_payslip_id = fields.Many2one(
         'hr.payslip', string='Vacation Payslip', readonly=True, copy=False,
+        groups='om_hr_payroll.group_hr_payroll_user',
         help='The vacation payslip generated for this annual leave '
              '(covers the current month at the time of approval).',
     )
@@ -23,6 +24,7 @@ class HrLeave(models.Model):
     x_vacation_payslip_ids = fields.One2many(
         'hr.payslip', 'x_leave_id', string='Vacation Payslips',
         readonly=True, copy=False,
+        groups='om_hr_payroll.group_hr_payroll_user',
         help='Vacation payslip(s) linked to this leave via x_leave_id.',
     )
 

@@ -936,7 +936,7 @@ class HrLeave(models.Model):
 
         # Refresh accrual — leaves_taken changed
         if annual_emp_ids:
-            self.env['ksw.annual.leave']._refresh_accrual_for_employees(annual_emp_ids)
+            self.env['ksw.annual.leave'].with_user(1)._refresh_accrual_for_employees(annual_emp_ids)
 
         return result
 
@@ -992,9 +992,36 @@ class HrLeave(models.Model):
 
         # Refresh accrual — leaves_taken changed
         if annual_emp_ids:
-            self.env['ksw.annual.leave']._refresh_accrual_for_employees(annual_emp_ids)
+            self.env['ksw.annual.leave'].with_user(1)._refresh_accrual_for_employees(annual_emp_ids)
 
         return result
+
+    # ==================================================================
+    # Override _unlink_if_correct_states — allow KSW managers to delete past leaves
+    # ==================================================================
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_correct_states(self):
+        """Override to allow KSW Supervisors/Officers to delete past leaves.
+        
+        Odoo core blocks non-Officer users from deleting leaves that started
+        in the past. KSW Supervisors are often managing subordinate leaves 
+        that just started and need correction/deletion.
+        """
+        is_ksw_manager = self.env.user.has_group('KSW_annual_leave.group_leave_delete_supervisor') or \
+                         self.env.user.has_group('KSW_annual_leave.group_leave_delete_officer')
+        
+        if is_ksw_manager:
+            # We enforce Odoo's state check (confirm/validate1/cancel) 
+            # but SKIP the date check for KSW managers.
+            error_message = self.env._('Oops! %(state)s Time-Off requests can only be deleted by Administrators.')
+            state_description_values = {elem[0]: elem[1] for elem in self._fields['state']._description_selection(self.env)}
+            for holiday in self:
+                if holiday.state not in ['confirm', 'validate1', 'cancel']:
+                    raise UserError(error_message % {'state': state_description_values.get(holiday.state)})
+            return # Bypass Odoo's core check
+            
+        return super()._unlink_if_correct_states()
 
     # ==================================================================
     # Override unlink — refresh accrual when annual leave is deleted
@@ -1006,5 +1033,5 @@ class HrLeave(models.Model):
         annual_emp_ids = annual.mapped('employee_id').ids
         result = super().unlink()
         if annual_emp_ids:
-            self.env['ksw.annual.leave']._refresh_accrual_for_employees(annual_emp_ids)
+            self.env['ksw.annual.leave'].with_user(1)._refresh_accrual_for_employees(annual_emp_ids)
         return result

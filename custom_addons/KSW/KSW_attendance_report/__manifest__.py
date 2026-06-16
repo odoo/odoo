@@ -1,6 +1,7 @@
 {
     'name': 'KSW Attendance Report',
     'version': '19.0.1.0.0',
+    'author': 'Mohammed Albadr',
     'category': 'Human Resources/Attendances',
     'summary': 'Monthly employee attendance PDF report',
     'depends': [

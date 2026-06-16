@@ -13,13 +13,15 @@
             <!-- Hidden field so x_vacation_payslip_id is always loaded
                  (used in invisible expressions below). -->
             <xpath expr="//field[@name='x_is_annual_leave_type']" position="after">
-                <field name="x_vacation_payslip_id" invisible="1"/>
+                <field name="x_vacation_payslip_id" invisible="1"
+                       groups="om_hr_payroll.group_hr_payroll_user"/>
             </xpath>
 
             <!-- Smart-button box injected before the leave content div. -->
             <xpath expr="//div[hasclass('o_hr_leave_content')]" position="before">
                 <div class="oe_button_box" name="button_box"
-                     invisible="not x_vacation_payslip_id">
+                     invisible="not x_vacation_payslip_id"
+                     groups="om_hr_payroll.group_hr_payroll_user">
                     <button class="oe_stat_button"
                             name="action_open_vacation_payslips"
                             type="object"

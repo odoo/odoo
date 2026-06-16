@@ -294,7 +294,8 @@ class KswAnnualLeave(models.Model):
         """Convenience: refresh accrual for specific employees by id."""
         if not employee_ids:
             return
-        records = self.sudo().search([
+        # Use with_user(1) to ensure we bypass has_group checks on env.user
+        records = self.with_user(1).search([
             ('employee_id', 'in', list(employee_ids)),
         ])
         records._refresh_accrual()
@@ -310,8 +311,8 @@ class KswAnnualLeave(models.Model):
         to an allocation when the leave date_from >= allocation.date_from, so
         pre-reset leaves are automatically excluded from leaves_taken.
         """
-        LeaveType = self.env['hr.leave.type'].sudo()
-        Allocation = self.env['hr.leave.allocation'].sudo()
+        LeaveType = self.env['hr.leave.type'].with_user(1)
+        Allocation = self.env['hr.leave.allocation'].with_user(1)
 
         # Find the annual-leave type once
         annual_type = LeaveType.search([('is_annual_leave', '=', True)], limit=1)
@@ -336,7 +337,7 @@ class KswAnnualLeave(models.Model):
                 vals = {'number_of_days': rec.total_accrued_days}
                 if effective_start and rec.allocation_id.date_from != effective_start:
                     vals['date_from'] = effective_start
-                rec.allocation_id.sudo().write(vals)
+                rec.allocation_id.with_user(1).write(vals)
             else:
                 # Create new allocation (or replace missing one)
                 alloc = Allocation.with_context(

@@ -87,11 +87,20 @@
         <field name="comment">Create leave requests for oneself and for direct subordinates. Implies "Time Off Responsible" so the Approvals menu is visible without granting full Officer scope.</field>
     </record>
 
+    <record id="group_leave_create_supervisor_cascading" model="res.groups">
+        <field name="name">Supervisor Cascading</field>
+        <field name="privilege_id" ref="privilege_leave_creation"/>
+        <field name="implied_ids" eval="[
+            (4, ref('group_leave_create_supervisor')),
+        ]"/>
+        <field name="comment">Create leave requests for oneself and for all subordinates (recursive).</field>
+    </record>
+
     <record id="group_leave_create_officer" model="res.groups">
         <field name="name">Officer</field>
         <field name="privilege_id" ref="privilege_leave_creation"/>
         <field name="implied_ids" eval="[
-            (4, ref('group_leave_create_supervisor')),
+            (4, ref('group_leave_create_supervisor_cascading')),
             (4, ref('hr_holidays.group_hr_holidays_user')),
         ]"/>
         <field name="comment">Create leave requests on behalf of any employee. Implies "Time Off Officer" for full menu/record access.</field>
@@ -116,11 +125,20 @@
         <field name="comment">See own leave requests and those of direct subordinates. Implies "Time Off Responsible" so the Approvals menu is visible.</field>
     </record>
 
+    <record id="group_leave_view_supervisor_cascading" model="res.groups">
+        <field name="name">Supervisor Cascading</field>
+        <field name="privilege_id" ref="privilege_leave_viewing"/>
+        <field name="implied_ids" eval="[
+            (4, ref('group_leave_view_supervisor')),
+        ]"/>
+        <field name="comment">See own leave requests and those of all subordinates (recursive).</field>
+    </record>
+
     <record id="group_leave_view_officer" model="res.groups">
         <field name="name">Officer</field>
         <field name="privilege_id" ref="privilege_leave_viewing"/>
         <field name="implied_ids" eval="[
-            (4, ref('group_leave_view_supervisor')),
+            (4, ref('group_leave_view_supervisor_cascading')),
             (4, ref('hr_holidays.group_hr_holidays_user')),
         ]"/>
         <field name="comment">See every leave request company-wide. Implies "Time Off Officer" for full menu access.</field>
@@ -145,11 +163,20 @@
         <field name="comment">Edit own leave requests and those of direct subordinates.</field>
     </record>
 
+    <record id="group_leave_modify_supervisor_cascading" model="res.groups">
+        <field name="name">Supervisor Cascading</field>
+        <field name="privilege_id" ref="privilege_leave_modification"/>
+        <field name="implied_ids" eval="[
+            (4, ref('group_leave_modify_supervisor')),
+        ]"/>
+        <field name="comment">Edit own leave requests and those of all subordinates (recursive).</field>
+    </record>
+
     <record id="group_leave_modify_officer" model="res.groups">
         <field name="name">Officer</field>
         <field name="privilege_id" ref="privilege_leave_modification"/>
         <field name="implied_ids" eval="[
-            (4, ref('group_leave_modify_supervisor')),
+            (4, ref('group_leave_modify_supervisor_cascading')),
             (4, ref('hr_holidays.group_hr_holidays_user')),
         ]"/>
         <field name="comment">Edit any leave request company-wide.</field>
@@ -174,11 +201,20 @@
         <field name="comment">Delete own leave requests and those of direct subordinates.</field>
     </record>
 
+    <record id="group_leave_delete_supervisor_cascading" model="res.groups">
+        <field name="name">Supervisor Cascading</field>
+        <field name="privilege_id" ref="privilege_leave_deletion"/>
+        <field name="implied_ids" eval="[
+            (4, ref('group_leave_delete_supervisor')),
+        ]"/>
+        <field name="comment">Delete own leave requests and those of all subordinates (recursive).</field>
+    </record>
+
     <record id="group_leave_delete_officer" model="res.groups">
         <field name="name">Officer</field>
         <field name="privilege_id" ref="privilege_leave_deletion"/>
         <field name="implied_ids" eval="[
-            (4, ref('group_leave_delete_supervisor')),
+            (4, ref('group_leave_delete_supervisor_cascading')),
             (4, ref('hr_holidays.group_hr_holidays_user')),
         ]"/>
         <field name="comment">Delete any leave request company-wide.</field>
@@ -258,10 +294,21 @@
 
     <!-- ===== Viewing ===== -->
     <record id="hr_leave_rule_view_supervisor" model="ir.rule">
-        <field name="name">KSW Leave: view supervisor (subordinates, recursive)</field>
+        <field name="name">KSW Leave: view supervisor (immediate subordinates)</field>
         <field name="model_id" ref="hr_holidays.model_hr_leave"/>
         <field name="groups" eval="[(4, ref('group_leave_view_supervisor'))]"/>
-        <field name="domain_force">['|', ('employee_id.user_id', '=', user.id), ('employee_id', 'child_of', user.employee_ids.ids)]</field>
+        <field name="domain_force">[('employee_id.parent_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="hr_leave_rule_view_supervisor_cascading" model="ir.rule">
+        <field name="name">KSW Leave: view supervisor cascading (subordinates, recursive)</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave"/>
+        <field name="groups" eval="[(4, ref('group_leave_view_supervisor_cascading'))]"/>
+        <field name="domain_force">[('employee_id', 'child_of', user.employee_ids.ids)]</field>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>
@@ -281,10 +328,21 @@
 
     <!-- ===== Creation ===== -->
     <record id="hr_leave_rule_create_supervisor" model="ir.rule">
-        <field name="name">KSW Leave: create supervisor (subordinates, recursive)</field>
+        <field name="name">KSW Leave: create supervisor (immediate subordinates)</field>
         <field name="model_id" ref="hr_holidays.model_hr_leave"/>
         <field name="groups" eval="[(4, ref('group_leave_create_supervisor'))]"/>
-        <field name="domain_force">['|', ('employee_id.user_id', '=', user.id), ('employee_id', 'child_of', user.employee_ids.ids)]</field>
+        <field name="domain_force">[('employee_id.parent_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="hr_leave_rule_create_supervisor_cascading" model="ir.rule">
+        <field name="name">KSW Leave: create supervisor cascading (subordinates, recursive)</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave"/>
+        <field name="groups" eval="[(4, ref('group_leave_create_supervisor_cascading'))]"/>
+        <field name="domain_force">[('employee_id', 'child_of', user.employee_ids.ids)]</field>
         <field name="perm_read" eval="False"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="True"/>
@@ -304,10 +362,21 @@
 
     <!-- ===== Modification ===== -->
     <record id="hr_leave_rule_modify_supervisor" model="ir.rule">
-        <field name="name">KSW Leave: modify supervisor (subordinates, recursive)</field>
+        <field name="name">KSW Leave: modify supervisor (immediate subordinates)</field>
         <field name="model_id" ref="hr_holidays.model_hr_leave"/>
         <field name="groups" eval="[(4, ref('group_leave_modify_supervisor'))]"/>
-        <field name="domain_force">['|', ('employee_id.user_id', '=', user.id), ('employee_id', 'child_of', user.employee_ids.ids)]</field>
+        <field name="domain_force">[('employee_id.parent_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="hr_leave_rule_modify_supervisor_cascading" model="ir.rule">
+        <field name="name">KSW Leave: modify supervisor cascading (subordinates, recursive)</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave"/>
+        <field name="groups" eval="[(4, ref('group_leave_modify_supervisor_cascading'))]"/>
+        <field name="domain_force">[('employee_id', 'child_of', user.employee_ids.ids)]</field>
         <field name="perm_read" eval="False"/>
         <field name="perm_write" eval="True"/>
         <field name="perm_create" eval="False"/>
@@ -327,10 +396,21 @@
 
     <!-- ===== Deletion ===== -->
     <record id="hr_leave_rule_delete_supervisor" model="ir.rule">
-        <field name="name">KSW Leave: delete supervisor (subordinates, recursive)</field>
+        <field name="name">KSW Leave: delete supervisor (immediate subordinates)</field>
         <field name="model_id" ref="hr_holidays.model_hr_leave"/>
         <field name="groups" eval="[(4, ref('group_leave_delete_supervisor'))]"/>
-        <field name="domain_force">['|', ('employee_id.user_id', '=', user.id), ('employee_id', 'child_of', user.employee_ids.ids)]</field>
+        <field name="domain_force">[('employee_id.parent_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="False"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <record id="hr_leave_rule_delete_supervisor_cascading" model="ir.rule">
+        <field name="name">KSW Leave: delete supervisor cascading (subordinates, recursive)</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave"/>
+        <field name="groups" eval="[(4, ref('group_leave_delete_supervisor_cascading'))]"/>
+        <field name="domain_force">[('employee_id', 'child_of', user.employee_ids.ids)]</field>
         <field name="perm_read" eval="False"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>
@@ -367,13 +447,27 @@
         allocation lifecycle to the existing infrastructure.
     -->
     <record id="hr_leave_allocation_rule_view_supervisor" model="ir.rule">
-        <field name="name">KSW Allocation: view supervisor (subordinates, recursive)</field>
+        <field name="name">KSW Allocation: view supervisor (immediate subordinates)</field>
         <field name="model_id" ref="hr_holidays.model_hr_leave_allocation"/>
         <field name="groups" eval="[
             (4, ref('group_leave_view_supervisor')),
             (4, ref('group_leave_create_supervisor')),
         ]"/>
-        <field name="domain_force">['|', ('employee_id.user_id', '=', user.id), ('employee_id', 'child_of', user.employee_ids.ids)]</field>
+        <field name="domain_force">[('employee_id.parent_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="hr_leave_allocation_rule_view_supervisor_cascading" model="ir.rule">
+        <field name="name">KSW Allocation: view supervisor cascading (subordinates, recursive)</field>
+        <field name="model_id" ref="hr_holidays.model_hr_leave_allocation"/>
+        <field name="groups" eval="[
+            (4, ref('group_leave_view_supervisor_cascading')),
+            (4, ref('group_leave_create_supervisor_cascading')),
+        ]"/>
+        <field name="domain_force">[('employee_id', 'child_of', user.employee_ids.ids)]</field>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>
@@ -394,6 +488,68 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
+
+    <!-- ============================================================ -->
+    <!-- Record Rules — ksw.annual.leave (Dashboard)                   -->
+    <!-- ============================================================ -->
+    <record id="ksw_annual_leave_rule_self" model="ir.rule">
+        <field name="name">KSW Annual Leave: self</field>
+        <field name="model_id" ref="model_ksw_annual_leave"/>
+        <field name="groups" eval="[(4, ref('group_leave_view_self'))]"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+    </record>
+
+    <record id="ksw_annual_leave_rule_supervisor" model="ir.rule">
+        <field name="name">KSW Annual Leave: supervisor (immediate)</field>
+        <field name="model_id" ref="model_ksw_annual_leave"/>
+        <field name="groups" eval="[(4, ref('group_leave_view_supervisor'))]"/>
+        <field name="domain_force">[('employee_id.parent_id.user_id', '=', user.id)]</field>
+    </record>
+
+    <record id="ksw_annual_leave_rule_supervisor_cascading" model="ir.rule">
+        <field name="name">KSW Annual Leave: supervisor cascading (recursive)</field>
+        <field name="model_id" ref="model_ksw_annual_leave"/>
+        <field name="groups" eval="[(4, ref('group_leave_view_supervisor_cascading'))]"/>
+        <field name="domain_force">[('employee_id', 'child_of', user.employee_ids.ids)]</field>
+    </record>
+
+    <record id="ksw_annual_leave_rule_officer" model="ir.rule">
+        <field name="name">KSW Annual Leave: officer (all)</field>
+        <field name="model_id" ref="model_ksw_annual_leave"/>
+        <field name="groups" eval="[(4, ref('group_leave_view_officer'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Record Rules — hr.leave.commission.line                       -->
+    <!-- ============================================================ -->
+    <record id="hr_leave_commission_line_rule_self" model="ir.rule">
+        <field name="name">KSW Leave Commission: self</field>
+        <field name="model_id" ref="model_hr_leave_commission_line"/>
+        <field name="groups" eval="[(4, ref('group_leave_view_self'))]"/>
+        <field name="domain_force">[('leave_id.employee_id.user_id', '=', user.id)]</field>
+    </record>
+
+    <record id="hr_leave_commission_line_rule_supervisor" model="ir.rule">
+        <field name="name">KSW Leave Commission: supervisor (immediate)</field>
+        <field name="model_id" ref="model_hr_leave_commission_line"/>
+        <field name="groups" eval="[(4, ref('group_leave_view_supervisor'))]"/>
+        <field name="domain_force">[('leave_id.employee_id.parent_id.user_id', '=', user.id)]</field>
+    </record>
+
+    <record id="hr_leave_commission_line_rule_supervisor_cascading" model="ir.rule">
+        <field name="name">KSW Leave Commission: supervisor cascading (recursive)</field>
+        <field name="model_id" ref="model_hr_leave_commission_line"/>
+        <field name="groups" eval="[(4, ref('group_leave_view_supervisor_cascading'))]"/>
+        <field name="domain_force">[('leave_id.employee_id', 'child_of', user.employee_ids.ids)]</field>
+    </record>
+
+    <record id="hr_leave_commission_line_rule_officer" model="ir.rule">
+        <field name="name">KSW Leave Commission: officer (all)</field>
+        <field name="model_id" ref="model_hr_leave_commission_line"/>
+        <field name="groups" eval="[(4, ref('group_leave_view_officer'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
 
     <!-- ============================================================ -->
     <!-- Odoo built-in rule overrides + Time Off dropdown removal      -->

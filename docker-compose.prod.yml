@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+  odoo:
+    image: ghcr.io/mohammedj-sadiq/kswco-odoo:latest
+    env_file:
+      - .env.prod
+    ports:
+      - "127.0.0.1:8069:8069"
+      - "127.0.0.1:8072:8072"
+    restart: unless-stopped
