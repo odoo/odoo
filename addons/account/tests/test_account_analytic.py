@@ -1167,3 +1167,22 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         credit_note.with_context(validate_analytic=True).action_post()
 
         self.assertEqual(credit_note.state, 'posted')
+
+    def test_analytic_distribution_prefix_placeholder_computation(self):
+        """Ensure the placeholder uses the default prefixes when no expense
+        account code exists, and uses prefixes derived from the account code otherwise.
+        """
+        company = self.env['res.company'].create({'name': 'Demo Company'})
+        expense_account = self.env['account.account'].with_company(company).create({
+            'name': 'Expense Account',
+            'account_type': 'expense',
+        })
+
+        def _get_prefix_placeholder():
+            return Form(
+                self.env['account.analytic.distribution.model'].with_company(company),
+            ).prefix_placeholder
+
+        self.assertEqual(_get_prefix_placeholder(), 'e.g. 60, 61, 62')
+        expense_account.write({'code': '78900'})
+        self.assertEqual(_get_prefix_placeholder(), 'e.g. 78, 79, 80')
