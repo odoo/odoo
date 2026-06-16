@@ -105,16 +105,12 @@ class AccountMove(models.Model):
         """ Capture all transactions linked to this invoice. """
         self.ensure_one()
         payment_utils.check_rights_on_recordset(self)
-
-        # In sudo mode to bypass the checks on the rights on the transactions.
-        return self.sudo().transaction_ids.action_capture()
-
-    def payment_action_void(self):
-        """ Void all transactions linked to this invoice. """
-        payment_utils.check_rights_on_recordset(self)
-
-        # In sudo mode to bypass the checks on the rights on the transactions.
-        self.sudo().authorized_transaction_ids.action_void()
+        return (
+            self
+            .with_context(suggested_amount=self.amount_residual)
+            .sudo()  # To bypass the checks on the rights on the transactions
+            .transaction_ids.action_capture()
+        )
 
     def action_view_payment_transactions(self):
         action = self.env['ir.actions.act_window']._for_xml_id('payment.action_payment_transaction')
