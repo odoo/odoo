@@ -48,23 +48,27 @@ export class Chrome extends Component {
 
         onMounted(this.props.disableLoader);
 
-        const debouncedSendOrderToCustomerDisplay = debounce((pos, routerState) => {
-            this.sendOrderToCustomerDisplay(pos, routerState);
-        });
-        useEffect(() => {
-            debouncedSendOrderToCustomerDisplay(this.pos, this.router.state);
-        });
-    }
+        this.customerDisplayAdapter = new CustomerDisplayPosAdapter();
 
-    sendOrderToCustomerDisplay({ selectedOrder }, routerState) {
-        const adapter = new CustomerDisplayPosAdapter();
-        if (routerState.current === "SaverScreen" || routerState.current === "LoginScreen") {
-            adapter.displayScreenSaver();
-        } else if (selectedOrder) {
-            adapter.formatOrderData(selectedOrder);
-        }
-        adapter.setExtraData(this.getCustomerDisplayExtraData(...arguments));
-        adapter.dispatch(this.pos);
+        const debouncedDispatch = debounce((pos) => {
+            this.customerDisplayAdapter.dispatch(pos);
+        }, 100);
+
+        useEffect(() => {
+            const pos = this.pos;
+            const routerState = this.router.state;
+            const selectedOrder = pos.selectedOrder;
+
+            if (routerState.current === "SaverScreen" || routerState.current === "LoginScreen") {
+                this.customerDisplayAdapter.displayScreenSaver();
+            } else if (selectedOrder) {
+                this.customerDisplayAdapter.formatOrderData(selectedOrder);
+            }
+            this.customerDisplayAdapter.setExtraData(
+                this.getCustomerDisplayExtraData(pos, routerState)
+            );
+            debouncedDispatch(pos);
+        });
     }
 
     getCustomerDisplayExtraData(pos, routerState) {

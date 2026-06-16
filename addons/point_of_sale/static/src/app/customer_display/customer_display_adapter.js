@@ -15,15 +15,22 @@ export class CustomerDisplayPosAdapter {
 
     setup() {
         this.data = {};
+        this.lastSerializedData = "";
         this.channel = new BroadcastChannel("UPDATE_CUSTOMER_DISPLAY");
     }
 
     dispatch(pos) {
-        this.channel.postMessage(JSON.parse(JSON.stringify(this.data)));
+        const serialized = JSON.stringify(this.data);
+        if (serialized === this.lastSerializedData) {
+            return;
+        }
+        this.lastSerializedData = serialized;
+        const payload = JSON.parse(serialized);
+        this.channel.postMessage(payload);
         pos.data
             .call("pos.config", "update_customer_display", [
                 [pos.config.id],
-                this.data,
+                payload,
                 localStorage.getItem("device_uuid"),
             ])
             .catch((error) => {
@@ -38,7 +45,7 @@ export class CustomerDisplayPosAdapter {
     }
 
     displayScreenSaver() {
-        this.data.displayScreenSaver = true;
+        this.data = { displayScreenSaver: true };
     }
 
     setExtraData(data) {
