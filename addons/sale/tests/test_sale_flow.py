@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.sale.tests.common import TestSaleCommon
@@ -83,3 +84,30 @@ class TestSaleFlow(TestSaleCommon):
         self.assertRecordValues(
             sale_order.order_line, [{"qty_delivered": 1.0}, {"qty_delivered": 1.0}]
         )
+
+    def test_free_qty_after_delivery(self):
+        """Test that free_qty is updated correctly when delivered qty exceeds ordered qty."""
+        if self.env["ir.module.module"].search([("name", "=", "stock"), ("state", "=", "installed")]):
+            self.skipTest("This test won't work if stock is installed")
+        product = self.product_a
+        product.is_storable = True
+        product.qty_available = 100
+        sale_order1, sale_order2 = self.env["sale.order"].create([{
+                "partner_id": self.partner_a.id,
+                "order_line": [Command.create({"product_id": product.id, "product_uom_qty": 10})],
+            },
+            {
+                "partner_id": self.partner_a.id,
+                "order_line": [Command.create({"product_id": product.id, "product_uom_qty": 10})],
+            },
+        ])
+        sale_order1.action_confirm()
+        # Confirming the sale order reserves stock, reducing free_qty.
+        self.assertEqual(product.free_qty, 90)
+        sale_order1.order_line.qty_delivered = 20
+        product.invalidate_recordset(['free_qty'])
+        # Delivering the order updates free_qty to reflect the remaining available stock.
+        self.assertEqual(product.free_qty, 80)
+        sale_order2.action_confirm()
+        product.invalidate_recordset(['free_qty'])
+        self.assertEqual(product.free_qty, 70)
