@@ -434,16 +434,13 @@
         <!-- ================================================================
              OM - Oman
              Work week: Sun-Thu  |  Rest days: Fri-Sat
-             Normal rules apply to employees with l10n_om_is_special_overtime = False
-             Special rules apply to employees with l10n_om_is_special_overtime = True
              ================================================================ -->
 
-        <!-- Normal overtime -->
         <record id="hr_time_rule_l10n_om_normal_workdays_daytime" model="hr.time.rule">
             <field name="name">Weekday(s) Daytime Overtime</field>
             <field name="sequence">10</field>
             <field name="country_id" ref="base.om"/>
-            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'OM'), ('l10n_om_is_special_overtime', '=', False)]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'OM')]</field>
             <field name="calendar_source">employee</field>
             <field name="quantity_period">day</field>
             <field name="apply_sunday" eval="True"/>
@@ -464,7 +461,7 @@
             <field name="name">Weekday(s) Nighttime Overtime (Late)</field>
             <field name="sequence">20</field>
             <field name="country_id" ref="base.om"/>
-            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'OM'), ('l10n_om_is_special_overtime', '=', False)]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'OM')]</field>
             <field name="apply_sunday" eval="True"/>
             <field name="apply_monday" eval="True"/>
             <field name="apply_tuesday" eval="True"/>
@@ -483,7 +480,7 @@
             <field name="name">Weekday(s) Nighttime Overtime (Early Morning)</field>
             <field name="sequence">30</field>
             <field name="country_id" ref="base.om"/>
-            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'OM'), ('l10n_om_is_special_overtime', '=', False)]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'OM')]</field>
             <field name="apply_sunday" eval="True"/>
             <field name="apply_monday" eval="True"/>
             <field name="apply_tuesday" eval="True"/>
@@ -502,7 +499,7 @@
             <field name="name">Restday(s) &amp; Public Holidays Overtime</field>
             <field name="sequence">40</field>
             <field name="country_id" ref="base.om"/>
-            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'OM'), ('l10n_om_is_special_overtime', '=', False)]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'OM')]</field>
             <field name="apply_sunday" eval="False"/>
             <field name="apply_monday" eval="False"/>
             <field name="apply_tuesday" eval="False"/>
@@ -515,86 +512,6 @@
             <field name="timing_stop">24</field>
             <field name="amount_rate">2</field>
             <field name="work_entry_type_id" ref="hr_work_entry.l10n_om_work_entry_type_overtime_rest_days"/>
-            <field name="week_start">6</field>
-        </record>
-
-        <!-- Special overtime -->
-        <record id="hr_time_rule_l10n_om_special_workdays_daytime" model="hr.time.rule">
-            <field name="name">Weekday(s) Daytime Special Overtime</field>
-            <field name="sequence">10</field>
-            <field name="country_id" ref="base.om"/>
-            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'OM'), ('l10n_om_is_special_overtime', '=', True)]</field>
-            <field name="calendar_source">employee</field>
-            <field name="quantity_period">day</field>
-            <field name="apply_sunday" eval="True"/>
-            <field name="apply_monday" eval="True"/>
-            <field name="apply_tuesday" eval="True"/>
-            <field name="apply_wednesday" eval="True"/>
-            <field name="apply_thursday" eval="True"/>
-            <field name="apply_friday" eval="False"/>
-            <field name="apply_saturday" eval="False"/>
-            <field name="apply_on_public_holidays" eval="False"/>
-            <field name="timing_start">4</field>
-            <field name="timing_stop">21</field>
-            <field name="amount_rate">1.5</field>
-            <field name="work_entry_type_id" ref="hr_work_entry.l10n_om_work_entry_type_overtime_special_work_days_daytime"/>
-            <field name="week_start">6</field>
-        </record>
-        <record id="hr_time_rule_l10n_om_special_workdays_nighttime_late" model="hr.time.rule">
-            <field name="name">Weekday(s) Nighttime Special Overtime (Late)</field>
-            <field name="sequence">20</field>
-            <field name="country_id" ref="base.om"/>
-            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'OM'), ('l10n_om_is_special_overtime', '=', True)]</field>
-            <field name="apply_sunday" eval="True"/>
-            <field name="apply_monday" eval="True"/>
-            <field name="apply_tuesday" eval="True"/>
-            <field name="apply_wednesday" eval="True"/>
-            <field name="apply_thursday" eval="True"/>
-            <field name="apply_friday" eval="False"/>
-            <field name="apply_saturday" eval="False"/>
-            <field name="apply_on_public_holidays" eval="False"/>
-            <field name="timing_start">21</field>
-            <field name="timing_stop">24</field>
-            <field name="amount_rate">1.75</field>
-            <field name="work_entry_type_id" ref="hr_work_entry.l10n_om_work_entry_type_overtime_special_work_days_nighttime"/>
-            <field name="week_start">6</field>
-        </record>
-        <record id="hr_time_rule_l10n_om_special_workdays_nighttime_early" model="hr.time.rule">
-            <field name="name">Weekday(s) Nighttime Special Overtime (Early Morning)</field>
-            <field name="sequence">30</field>
-            <field name="country_id" ref="base.om"/>
-            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'OM'), ('l10n_om_is_special_overtime', '=', True)]</field>
-            <field name="apply_sunday" eval="True"/>
-            <field name="apply_monday" eval="True"/>
-            <field name="apply_tuesday" eval="True"/>
-            <field name="apply_wednesday" eval="True"/>
-            <field name="apply_thursday" eval="True"/>
-            <field name="apply_friday" eval="False"/>
-            <field name="apply_saturday" eval="False"/>
-            <field name="apply_on_public_holidays" eval="False"/>
-            <field name="timing_start">0</field>
-            <field name="timing_stop">4</field>
-            <field name="amount_rate">1.75</field>
-            <field name="work_entry_type_id" ref="hr_work_entry.l10n_om_work_entry_type_overtime_special_work_days_nighttime"/>
-            <field name="week_start">6</field>
-        </record>
-        <record id="hr_time_rule_l10n_om_special_rest_days" model="hr.time.rule">
-            <field name="name">Restday(s) &amp; Public Holidays Special Overtime</field>
-            <field name="sequence">40</field>
-            <field name="country_id" ref="base.om"/>
-            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'OM'), ('l10n_om_is_special_overtime', '=', True)]</field>
-            <field name="apply_sunday" eval="False"/>
-            <field name="apply_monday" eval="False"/>
-            <field name="apply_tuesday" eval="False"/>
-            <field name="apply_wednesday" eval="False"/>
-            <field name="apply_thursday" eval="False"/>
-            <field name="apply_friday" eval="True"/>
-            <field name="apply_saturday" eval="True"/>
-            <field name="apply_on_public_holidays" eval="True"/>
-            <field name="timing_start">0</field>
-            <field name="timing_stop">24</field>
-            <field name="amount_rate">3</field>
-            <field name="work_entry_type_id" ref="hr_work_entry.l10n_om_work_entry_type_overtime_special_rest_days"/>
             <field name="week_start">6</field>
         </record>
 

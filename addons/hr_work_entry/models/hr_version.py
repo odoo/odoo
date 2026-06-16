@@ -3,6 +3,7 @@
 import itertools
 from collections import defaultdict
 from datetime import datetime, time, timedelta, UTC
+from itertools import pairwise
 from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models, _, SUPERUSER_ID
@@ -20,7 +21,7 @@ class IntervalPayload:
     when merging intervals, the __or__ operator of the payload is used to determine which one has priority (i.e., which work entry type should be chosen in case of overlap).
     """
 
-    __slots__ = ('work_entry_type', 'record', 'all_records')
+    __slots__ = ('all_records', 'record', 'work_entry_type')
 
     def __init__(self, work_entry_type, record=None):
         self.work_entry_type = work_entry_type
@@ -72,7 +73,7 @@ class HrVersion(models.Model):
         return []
 
     # Is used to add more values, for example leave_id (in hr_holidays)
-    def _get_more_vals_leave_interval(self, interval, leaves, work_entry_type):
+    def _get_more_vals_leave_interval(self, interval, leaves):
         return []
 
     def _split_intervals(self, intervals_list):
@@ -82,7 +83,7 @@ class HrVersion(models.Model):
             return []
         times = sorted({t for s, e, _ in intervals_list for t in (s, e)})
         result = []
-        for t0, t1 in zip(times, times[1:]):
+        for t0, t1 in pairwise(times):
             active = None
             for start, end, payload in intervals_list:
                 if start <= t0 and t1 <= end:
@@ -243,7 +244,6 @@ class HrVersion(models.Model):
                     start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
                 real_leaves = leaves & static_attendances
 
-
             absence_attendances = Intervals([
                 (s, e, IntervalPayload(rca.work_entry_type_id[:1], rca))
                 for s, e, rca in expected_attendances
@@ -273,7 +273,7 @@ class HrVersion(models.Model):
                     ('employee_id', employee),
                     ('version_id', version),
                     ('company_id', version.company_id),
-                ] + version._get_more_vals_leave_interval(interval, worked_leaves, work_entry_type))]
+                ] + version._get_more_vals_leave_interval(interval, worked_leaves))]
 
             for interval in real_leaves:
                 if interval[0] == interval[1]:  # if start == stop
@@ -289,7 +289,7 @@ class HrVersion(models.Model):
                     ('employee_id', employee),
                     ('company_id', version.company_id),
                     ('version_id', version),
-                ] + version._get_more_vals_leave_interval(interval, interval_leaves, leave_entry_type))]
+                ] + version._get_more_vals_leave_interval(interval, interval_leaves))]
         return version_vals
 
     def _get_real_attendances(self, attendances, leaves, worked_leaves):

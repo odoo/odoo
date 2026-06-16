@@ -8,5 +8,5 @@ from . import hr_leave
 from . import hr_time_rule
 from . import ir_ui_menu
 from . import hr_employee
-from . import hr_attendance
 from . import hr_version
+from . import resource_calendar_leaves

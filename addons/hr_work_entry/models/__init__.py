@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import res_company
+from . import hr_time_rule
 from . import hr_work_entry_type
 from . import hr_user_work_entry_employee
 from . import resource_calendar
