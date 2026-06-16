@@ -130,10 +130,10 @@
         </field>
     </record>
 
-    <record id="project_sharing_kanban_inherit_project_task_view_kanban" model="ir.ui.view">
-        <field name="name">project.sharing.project.task.timesheet.kanban.inherited</field>
+    <record id="project_sharing_inherit_project_task_view_card" model="ir.ui.view">
+        <field name="name">project.sharing.project.task.timesheet.card.inherited</field>
         <field name="model">project.task</field>
-        <field name="inherit_id" ref="project.project_sharing_project_task_view_kanban"/>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_card"/>
         <field name="arch" type="xml">
             <templates position="before">
                 <field name="progress" />
