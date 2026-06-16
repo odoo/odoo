@@ -24,9 +24,9 @@ class PdpRegistration(models.TransientModel):
         required=True,
     )
     pdp_identifier = fields.Char(
-        related='company_id.pdp_identifier',
+        compute="_compute_pdp_identifier",
+        store=True,
         readonly=False,
-        required=True,
     )
     pdp_pilot_phase = fields.Boolean(
         related='company_id.l10n_fr_pdp_pilot_phase',
@@ -47,7 +47,6 @@ class PdpRegistration(models.TransientModel):
     )
     account_peppol_proxy_state = fields.Selection(
         related='company_id.account_peppol_proxy_state',
-        readonly=False,
     )
     warnings = fields.Json(
         string="Warnings",
@@ -89,6 +88,11 @@ class PdpRegistration(models.TransientModel):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
+    @api.depends('company_id.pdp_identifier')
+    def _compute_pdp_identifier(self):
+        for wizard in self:
+            wizard.pdp_identifier = wizard.company_id.pdp_identifier or wizard.company_id.partner_id._get_suggested_pdp_identifier()
+
     @api.depends('company_id.partner_id.additional_identifiers')
     def _compute_siren_number(self):
         for wizard in self:
@@ -104,10 +108,18 @@ class PdpRegistration(models.TransientModel):
         for wizard in self:
             wizard.edi_mode = wizard.company_id._get_peppol_edi_mode()
 
-    @api.depends('pdp_identifier')
+    @api.depends('pdp_identifier', 'siren_number')
     def _compute_warnings(self):
         for wizard in self:
             warnings = {}
+            # Check SIREN
+            if not wizard.siren_number:
+                warnings['company_siren_warning'] = {
+                    'level': 'warning',
+                    'message': self.env._("The SIREN of the company could not be determined."),
+                    'action_text': self.env._("Go to company"),
+                    'action': wizard.company_id._get_records_action(name=self.env._("Check Company Data")),
+                }
             # Check identifier
             if (
                 wizard.pdp_identifier
@@ -142,6 +154,8 @@ class PdpRegistration(models.TransientModel):
     # -------------------------------------------------------------------------
 
     def _ensure_mandatory_fields(self):
+        if not self.pdp_identifier:
+            raise ValidationError(self.env._("The Identifier is required."))
         if not self.contact_email:
             raise ValidationError(self.env._("The contact email is required."))
 
@@ -165,6 +179,7 @@ class PdpRegistration(models.TransientModel):
         }
 
     def _action_open_pdp_form(self, reopen=True):
+        self.ensure_one()
         return self._get_records_action(
             name=self.env._("Send via French electronic invoicing"),
             target='new',
@@ -309,6 +324,7 @@ class PdpRegistration(models.TransientModel):
         if not self.env["res.company"]._check_pdp_identifier(self.pdp_identifier):
             raise UserError(self.env._("The Identifier is not valid. The expected format is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage"))
 
+        self.company_id.pdp_identifier = self.pdp_identifier
         edi_user = self.edi_user_id or self.env['account_edi_proxy_client.user']._register_proxy_user(self.company_id, 'pdp', self.edi_mode)
 
         # if there is an error when activating the participant below,
