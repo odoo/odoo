@@ -10,6 +10,9 @@ PDP_identifier_re = re.compile(r'^([0-9]{9})(_[0-9]{14})?(_.+)?$')
 
 _logger = logging.getLogger(__name__)
 
+ENDPOINT = 'https://pdp.odoo.com'
+TEST_ENDPOINT = 'https://pdp.test.odoo.com'
+
 
 class ResCompany(models.Model):
     _inherit = 'res.company'
@@ -197,9 +200,13 @@ class ResCompany(models.Model):
                 and company.currency_id == self.env.ref('base.EUR')
             )
 
+    def _pdp_get_iap_url(self):
+        self.ensure_one()
+        return ENDPOINT if self._get_peppol_edi_mode() == 'prod' else TEST_ENDPOINT
+
     def _refresh_pdp_authentication_status(self):
         self.ensure_one()
-        base_url = self.env['pdp.registration']._get_iap_url()
+        base_url = self._pdp_get_iap_url()
         response = iap_tools.iap_jsonrpc(f'{base_url}/api/signaturit_id_authentication/1/kyc_status', params={
             'object_uuid': self.pdp_authentication_uuid,
         })
