@@ -200,8 +200,11 @@ class AccountEdiCommon(models.AbstractModel):
             'model': self,
         }
 
+    def _get_document_type(self, vals):
+        return vals.get('_document_type', {}).get('name')
+
     def _is_document(self, vals, *document_types):
-        return vals.get('_document_type', {}).get('name') in document_types
+        return self._get_document_type(vals) in document_types
 
     def module_installed(self, module_name):
         return self.env['ir.module.module']._get(module_name).state == 'installed'
