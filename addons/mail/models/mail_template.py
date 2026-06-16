@@ -197,7 +197,7 @@ class MailTemplate(models.Model):
             fnames = fnames & dynamic_fnames if fnames else dynamic_fnames
             for fname in fnames:
                 try:
-                    template._render_field(fname, record.ids)
+                    template.sudo()._render_field(fname, record.ids)
                 except Exception as e:
                     raise ValidationError(
                         _("Oops! We couldn't save your template due to an issue with this value: %(template_txt)s. Correct it and try again.",
