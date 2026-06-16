@@ -362,7 +362,7 @@ class ProductProduct(models.Model):
 
     def _with_valuation_context(self):
         valued_locations = self.env['stock.location'].with_context(active_test=False).search(
-            [('is_valued_internal', '=', True)]
+            [('usage', '=', 'internal')] if self.env.context.get('stock_report') else [('is_valued_internal', '=', True)],
         )
         return self.with_context(location=valued_locations.ids, owners=[False, self.env.company.partner_id.id], strict=True)
 
