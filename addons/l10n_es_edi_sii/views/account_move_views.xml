@@ -46,6 +46,14 @@
                                    or l10n_es_edi_sii_state != 'sent'"/>
                 </xpath>
 
+                <xpath expr="//group[@id='header_right_group']" position='inside'>
+                    <field
+                        name="l10n_es_sii_refund_reason"
+                        invisible="move_type not in ('in_refund', 'out_refund') or not l10n_es_edi_is_required"
+                        readonly="state != 'draft'"
+                    />
+                </xpath>
+
                 <xpath expr="//group[@id='other_tab_group']//group[@name='accounting_info_group']" position="inside">
                     <field name="l10n_es_registration_date"
                            readonly="state == 'posted'"
