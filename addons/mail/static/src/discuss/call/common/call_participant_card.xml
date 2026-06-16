@@ -67,10 +67,10 @@
                     <span t-if="this.isLocallyMuted" class="d-flex justify-content-center align-items-center lh-1 me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" title="Muted for you" aria-label="Muted for you">
                         <i class="fa fa-fw fa-volume-off"/>
                     </span>
-                    <span t-if="this.rtcSession.is_deaf" class="d-flex justify-content-center align-items-center lh-1 me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" title="deaf" aria-label="deaf">
+                    <span t-if="this.rtcSession.is_deaf and !this.props.minimized" class="d-flex justify-content-center align-items-center lh-1 me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" title="deaf" aria-label="deaf">
                         <i class="fa fa-fw fa-deaf"/>
                     </span>
-                    <span t-if="this.rtcSession.is_muted and !this.rtcSession.is_deaf" class="d-flex justify-content-center align-items-center lh-1 me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" title="muted" aria-label="muted">
+                    <span t-if="this.rtcSession.is_muted and !this.rtcSession.is_deaf and !this.props.minimized" class="d-flex justify-content-center align-items-center lh-1 me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" title="muted" aria-label="muted">
                         <i class="fa fa-fw fa-microphone-slash"/>
                     </span>
                 </div>
