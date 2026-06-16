@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+        <record model="discuss.channel" id="mail.chat_demo_admin_demo">
+            <field name="name">Marc Demo, Mitchell Admin</field>
+            <field name="channel_type">chat</field>
+            <field name="channel_partner_ids" eval="[Command.link(ref('base.partner_demo')), Command.link(ref('base.partner_admin'))]"/>
+        </record>
+        <record model="mail.message" id="mail.chat_demo_admin_message_0">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="mail.chat_demo_admin_demo"/>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="date" eval="(DateTime.now() - timedelta(days=3, minutes=30))"/>
+            <field name="body">Hi Mitchell, I wanted to let you know that I'll be on time off for the next few days.</field>
+        </record>
+        <record model="mail.message" id="mail.chat_demo_admin_message_1">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="mail.chat_demo_admin_demo"/>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="date" eval="(DateTime.now() - timedelta(days=3, minutes=25))"/>
+            <field name="body">I wrapped up the current tasks and left notes in the thread in case anything urgent comes up while I'm away</field>
+        </record>
+        <record model="mail.message" id="mail.chat_demo_admin_message_2">
+            <field name="model">discuss.channel</field>
+            <field name="res_id" ref="mail.chat_demo_admin_demo"/>
+            <field name="message_type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.partner_admin"/>
+            <field name="date" eval="(DateTime.now() - timedelta(days=3))"/>
+            <field name="body">Thanks Marc, enjoy the break. I'll keep an eye on things on my side.</field>
+        </record>
+    </data>
+</odoo>
