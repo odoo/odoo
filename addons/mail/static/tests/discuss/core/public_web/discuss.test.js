@@ -50,6 +50,10 @@ test("notify message to user as non member", async () => {
     mockService("multi_tab", { isOnMainTab: () => true });
     const pyEnv = await startServer();
     const johnUser = pyEnv["res.users"].create({ name: "John" });
+    pyEnv["res.users.settings"].create({
+        user_id: serverState.userId,
+        inbox_push: true,
+    });
     const johnPartner = pyEnv["res.partner"].create({ name: "John", user_ids: [johnUser] });
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "chat",
