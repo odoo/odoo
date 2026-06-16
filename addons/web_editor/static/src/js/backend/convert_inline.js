@@ -434,7 +434,9 @@ function classToStyle($editable, cssRules) {
         // Flexbox
         for (const styleName of node.style) {
             if (styleName.includes('flex') || `${node.style[styleName]}`.includes('flex')) {
-                writes.push(() => { node.style[styleName] = ''; });
+                // inline-flex falls back to inline-block so inline elements (e.g. buttons) keep their box
+                const fallback = styleName === 'display' && node.style[styleName] === 'inline-flex' ? 'inline-block' : '';
+                writes.push(() => { node.style[styleName] = fallback; });
             }
         }
 
@@ -1696,7 +1698,12 @@ function _getMatchedCSSRules(node, cssRules, checkBlacklisted = false) {
     // flexboxes are not supported in Windows Outlook
     for (const styleName in processedStyle) {
         if (styleName.includes('flex') || `${processedStyle[styleName]}`.includes('flex')) {
-            delete processedStyle[styleName];
+            if (styleName === 'display' && processedStyle[styleName] === 'inline-flex') {
+                // inline-flex falls back to inline-block so inline elements (e.g. buttons) keep their box
+                processedStyle[styleName] = 'inline-block';
+            } else {
+                delete processedStyle[styleName];
+            }
         }
     }
 
