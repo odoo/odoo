@@ -356,11 +356,17 @@ class TestChannelInternals(MailCommon, HttpCase):
     def test_channel_special_mention(self):
         """ Posting a message on a channel should support special mention """
         self.test_channel._add_members(users=self.user_employee | self.user_employee_nomail)
+        self.user_employee.im_status = "online"
         with self.mock_mail_gateway():
             new_msg = self.test_channel.message_post(
                 body="Test", special_mentions=["everyone"],
                 message_type="comment", subtype_xmlid="mail.mt_comment")
         self.assertEqual(new_msg.partner_ids, self.test_channel.channel_member_ids.partner_id)
+        with self.mock_mail_gateway():
+            new_msg = self.test_channel.message_post(
+                body="Test", special_mentions=["here"],
+                message_type="comment", subtype_xmlid="mail.mt_comment")
+        self.assertEqual(new_msg.partner_ids, self.user_employee.partner_id)
 
     @mute_logger('odoo.models.unlink')
     def test_channel_user_synchronize(self):
