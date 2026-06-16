@@ -7,6 +7,7 @@ import { ThemeShadowOption } from "./theme_shadow_option";
 import { ThemeButtonOption } from "./theme_button_option";
 import { ThemeColorsOption } from "./theme_colors_option";
 import { ThemeHeadingsOption } from "./theme_headings_option";
+import { ThemeInputOption } from "./theme_input_option";
 import { CustomizeWebsiteFontFamilyAction } from "./theme_fontfamily_option";
 import {
     CustomizeWebsiteFontWeightAction,
@@ -169,13 +170,7 @@ export class ThemeTabPlugin extends Plugin {
             ),
             withSequence(
                 OPTION_POSITIONS.INPUT,
-                this.getThemeOptionBlock(
-                    "theme-input",
-                    _t("Input Fields"),
-                    class ThemeInputOption extends BaseOptionComponent {
-                        static template = "website.ThemeInputOption";
-                    }
-                )
+                this.getThemeOptionBlock("theme-input", _t("Input Fields"), ThemeInputOption)
             ),
             withSequence(
                 OPTION_POSITIONS.SHADOW,
