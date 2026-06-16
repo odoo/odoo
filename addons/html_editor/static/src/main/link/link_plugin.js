@@ -216,6 +216,13 @@ export class LinkPlugin extends Plugin {
                 },
                 run: this.removeLinkFromSelection.bind(this),
             },
+            {
+                id: "removeImageLinkFromSelection",
+                title: _t("Remove Link"),
+                description: _t("Remove Link"),
+                icon: "fa-unlink",
+                run: this.removeLinkFromSelection.bind(this),
+            },
         ],
 
         toolbar_groups: [withSequence(40, { id: "link", namespaces: ["compact", "expanded"] })],
@@ -246,7 +253,7 @@ export class LinkPlugin extends Plugin {
             withSequence(30, {
                 id: "unlink",
                 groupId: "image_actions",
-                commandId: "removeLinkFromSelection",
+                commandId: "removeImageLinkFromSelection",
                 isDisabled: () => this.removeLinkFromSelectionIsDisabled(),
             }),
         ],

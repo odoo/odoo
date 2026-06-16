@@ -96,6 +96,7 @@ export class TableUIPlugin extends Plugin {
             }
         };
         this.addDomListener(this.document, "scroll", closeMenus, true);
+        this.addDomListener(this.document, "click", this.onClick);
     }
 
     openPicker() {
@@ -139,8 +140,25 @@ export class TableUIPlugin extends Plugin {
         this.activeTd = false;
     }
 
+    onClick() {
+        const selectedTds = this.document.querySelectorAll(".o_selected_td");
+        // If there is a selected td, we hide the table menu as it manipulates
+        // the whole table and shouldn't overlap with the toolbar.
+        if (selectedTds.length !== 0) {
+            this.setActiveTd(null);
+            return;
+        }
+    }
+
     onMouseMove(ev) {
         const target = ev.target;
+        const selectedTds = this.document.querySelectorAll(".o_selected_td");
+        // If there is a selected td, we hide the table menu as it manipulates
+        // the whole table and shouldn't overlap with the toolbar.
+        if (selectedTds.length !== 0) {
+            this.setActiveTd(null);
+            return;
+        }
         if (this.isMenuOpened) {
             return;
         }
@@ -212,8 +230,6 @@ export class TableUIPlugin extends Plugin {
             clearColumnContent: withCommit(this.dependencies.table.clearColumnContent),
             clearRowContent: withCommit(this.dependencies.table.clearRowContent),
             toggleAlternatingRows: withCommit(this.dependencies.table.toggleAlternatingRows),
-            mergeSelectedCells: withCommit(this.dependencies.table.mergeSelectedCells),
-            unmergeSelectedCell: withCommit(this.dependencies.table.unmergeSelectedCell),
             buildTableGrid: this.dependencies.table.buildTableGrid,
         };
         const grid = this.dependencies.table.buildTableGrid(closestElement(td, "table"));
