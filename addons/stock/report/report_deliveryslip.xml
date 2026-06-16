@@ -45,7 +45,7 @@
                 <t t-set="o" t-value="o.with_context(lang=o._get_report_lang())" />
                 <div class="page">
                     <h2 style="margin-top: 15px;">
-                        <span t-out="o.picking_type_id._get_code_report_name()"/>
+                        <span t-out="o._get_deliveryslip_report_title()"/>
                         <span t-field="o.name">WH/OUT/0001</span>
                     </h2>
                     <div class="oe_structure"></div>
