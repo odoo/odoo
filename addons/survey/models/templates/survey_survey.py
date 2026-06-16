@@ -24,7 +24,7 @@ class SurveySurvey(models.Model):
     def get_survey_templates_data(self):
         return {
             'survey': {
-                'description': _('Gather feedbacks from your employees and customers'),
+                'description': _('Gather feedback from your employees and customers'),
                 'icon': '/survey/static/src/img/survey_sample_survey.png',
                 'template_key': 'survey',
                 'title': _('Survey'),
