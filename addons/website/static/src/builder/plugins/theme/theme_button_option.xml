@@ -66,14 +66,23 @@
             boldVariables="['btn-font-weight-bold']"
             fontVariable="'buttons-font'"
         />
-        <BuilderRow label.translate="Round Corners" action="'customizeWebsiteVariable'">
-            <BuilderNumberInput actionParam="'btn-border-radius'" unit="'px'" saveUnit="'rem'"/>
+        <BuilderRow label.translate="Roundness">
+            <t t-call="website.ThemeBorderRadiusOption"
+                variable="'btn-border-radius'"
+                resetVisibility="this.state.variablesDifferentFromGlobal"
+            />
             <t t-set-slot="collapse">
                 <BuilderRow label.translate="Small" level="1">
-                    <BuilderNumberInput actionParam="'btn-border-radius-sm'" unit="'px'" saveUnit="'rem'"/>
+                    <t t-call="website.ThemeBorderRadiusOption"
+                        variable="'btn-border-radius-sm'"
+                        resetVisibility="this.state.variablesDifferentFromGlobal"
+                    />
                 </BuilderRow>
                 <BuilderRow label.translate="Large" level="1">
-                    <BuilderNumberInput actionParam="'btn-border-radius-lg'" unit="'px'" saveUnit="'rem'"/>
+                    <t t-call="website.ThemeBorderRadiusOption"
+                        variable="'btn-border-radius-lg'"
+                        resetVisibility="this.state.variablesDifferentFromGlobal"
+                    />
                 </BuilderRow>
             </t>
         </BuilderRow>
