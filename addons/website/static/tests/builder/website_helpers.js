@@ -497,7 +497,7 @@ export async function setupSidebarBuilderForTranslation(options) {
     // on the "Edit" button of the systray. The goal of this hack is to avoid
     // the handling of an extra reload of the action to arrive in translate
     // mode.
-    patchWithCleanup(Builder.prototype, {
+    patchWithCleanup(WebsiteBuilder.prototype, {
         setup() {
             super.setup();
             this.env.services.website = websiteServiceInTranslateMode;
