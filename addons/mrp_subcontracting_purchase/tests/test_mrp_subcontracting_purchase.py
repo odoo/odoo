@@ -45,6 +45,143 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
             })],
         })
 
+    def _create_purchase_receipt(self, products_qty):
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'name': product.name,
+                'product_id': product.id,
+                'product_qty': qty,
+                'product_uom': product.uom_id.id,
+                'price_unit': 1.0,
+            }) for product, qty in products_qty],
+        })
+        po.button_confirm()
+        receipt = po.picking_ids.filtered(lambda picking: picking.state not in ('done', 'cancel')).ensure_one()
+        return po, receipt
+
+    def _get_po_line(self, po, product):
+        return po.order_line.filtered(lambda line: line.product_id == product).ensure_one()
+
+    def _get_receipt_move(self, receipt, product):
+        return receipt.move_ids.filtered(lambda move: move.product_id == product).ensure_one()
+
+    def _validate_receipt(self, receipt):
+        action = receipt.button_validate()
+        if isinstance(action, dict):
+            Form(self.env[action['res_model']].with_context(action['context'])).save().process()
+
+    def _create_extra_recorded_subcontract_production(self, production, quantity, base_quantity=False):
+        extra_production = production.sudo().with_context(allow_more=True)._split_productions({
+            production: [base_quantity or production.product_qty, quantity],
+        })[-1:]
+        extra_production.qty_producing = extra_production.product_qty
+        extra_production._set_qty_producing()
+        extra_production.subcontracting_has_been_recorded = True
+        return extra_production
+
+    def test_subcontract_receipt_qty_change_keeps_other_subcontract_line_done(self):
+        """Changing one subcontract receipt line must not leave the other line unpicked/cancelled."""
+        for changed_qty in (4.0, 6.0):
+            po, receipt = self._create_purchase_receipt([
+                (self.finished, 5.0),
+                (self.finished2, 5.0),
+            ])
+            move_changed = self._get_receipt_move(receipt, self.finished)
+            move_other = self._get_receipt_move(receipt, self.finished2)
+            move_changed.quantity = changed_qty
+            move_changed.picked = True
+            move_other.quantity = 5.0
+            move_other.picked = False
+
+            self._validate_receipt(receipt)
+
+            self.assertEqual(receipt.state, 'done')
+            self.assertEqual(move_changed.state, 'done')
+            self.assertEqual(move_other.state, 'done')
+            self.assertEqual(move_changed.quantity, changed_qty)
+            self.assertEqual(move_other.quantity, 5.0)
+            self.assertEqual(self._get_po_line(po, self.finished).qty_received, changed_qty)
+            self.assertEqual(self._get_po_line(po, self.finished2).qty_received, 5.0)
+
+    def test_subcontract_receipt_mixed_lines_qty_changes_validate_all_lines(self):
+        """Subcontract picked sync must not cancel a normal receipt line with quantity."""
+        normal_product = self.env['product.product'].create({
+            'name': 'Normal receipt product',
+            'type': 'product',
+        })
+        po, receipt = self._create_purchase_receipt([
+            (self.finished, 5.0),
+            (self.finished2, 5.0),
+            (normal_product, 1.0),
+        ])
+
+        move_increased = self._get_receipt_move(receipt, self.finished)
+        move_decreased = self._get_receipt_move(receipt, self.finished2)
+        move_normal = self._get_receipt_move(receipt, normal_product)
+        move_increased.quantity = 6.0
+        move_increased.picked = True
+        move_decreased.quantity = 4.0
+        move_decreased.picked = True
+        move_normal.quantity = 1.0
+        move_normal.picked = False
+
+        self._validate_receipt(receipt)
+
+        self.assertEqual(receipt.state, 'done')
+        self.assertEqual(move_increased.state, 'done')
+        self.assertEqual(move_decreased.state, 'done')
+        self.assertEqual(move_normal.state, 'done')
+        self.assertEqual(self._get_po_line(po, self.finished).qty_received, 6.0)
+        self.assertEqual(self._get_po_line(po, self.finished2).qty_received, 4.0)
+        self.assertEqual(self._get_po_line(po, normal_product).qty_received, 1.0)
+
+    def test_subcontract_picked_then_po_update_no_extra_mo_after_validate(self):
+        """Picked subcontract line then PO qty update must not finish more MO qty than receipt qty."""
+        self.bom.consumption = 'flexible'
+        po, receipt = self._create_purchase_receipt([
+            (self.finished, 5.0),
+            (self.finished2, 5.0),
+        ])
+        move = self._get_receipt_move(receipt, self.finished)
+        other_move = self._get_receipt_move(receipt, self.finished2)
+
+        move.picked = True
+        self._get_po_line(po, self.finished).product_qty = 6.0
+        move.quantity = 6.0
+        other_move.quantity = 5.0
+        other_move.picked = False
+
+        self._validate_receipt(receipt)
+
+        done_productions = move._get_subcontract_production().filtered(lambda production: production.state == 'done')
+        self.assertEqual(sum(done_productions.mapped('product_qty')), move.quantity)
+        self.assertEqual(self._get_po_line(po, self.finished).qty_received, 6.0)
+        self.assertEqual(self._get_po_line(po, self.finished2).qty_received, 5.0)
+
+    def test_subcontract_stock_move_then_po_update_limits_done_mo_qty(self):
+        """Stock move then PO qty update must not finish the extra 6 + 1 subcontract MO quantity."""
+        self.bom.consumption = 'flexible'
+        po, receipt = self._create_purchase_receipt([
+            (self.finished, 5.0),
+        ])
+        move = self._get_receipt_move(receipt, self.finished)
+
+        move.quantity = 6.0
+        move.picked = True
+        recorded_production = move._get_subcontract_production().filtered(lambda production: production._has_been_recorded()).ensure_one()
+        self._get_po_line(po, self.finished).product_qty = 6.0
+        extra_production = self._create_extra_recorded_subcontract_production(recorded_production, 1.0, base_quantity=move.quantity)
+        active_productions = move._get_subcontract_production().filtered(lambda production: production.state != 'cancel')
+        self.assertEqual(sorted(active_productions.mapped('product_qty')), [1.0, 6.0])
+
+        self._validate_receipt(receipt)
+
+        self.assertEqual(self._get_po_line(po, self.finished).qty_received, 6.0)
+        done_productions = move._get_subcontract_production().filtered(lambda production: production.state == 'done')
+        self.assertEqual(sum(done_productions.mapped('product_qty')), move.quantity)
+        self.assertNotEqual(extra_production.state, 'done')
+
     @freeze_time('2024-01-01')
     def test_bom_overview_availability(self):
         # Create routes for components and the main product
