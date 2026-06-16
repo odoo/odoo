@@ -9,10 +9,6 @@ from odoo.addons.iap.tools import iap_tools
 _logger = logging.getLogger(__name__)
 
 
-ENDPOINT = 'https://pdp.odoo.com'
-TEST_ENDPOINT = 'https://pdp.test.odoo.com'
-
-
 class PdpRegistration(models.TransientModel):
     _name = 'pdp.registration'
     _description = "PDP Registration"
@@ -186,10 +182,6 @@ class PdpRegistration(models.TransientModel):
             target='new',
         )
 
-    @api.model
-    def _get_iap_url(self):
-        return ENDPOINT if self.edi_mode == 'prod' else TEST_ENDPOINT
-
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
@@ -203,7 +195,7 @@ class PdpRegistration(models.TransientModel):
                 action=self.company_id._get_records_action(),
                 button_text=self.env._("Go to company"),
             )
-        base_url = self._get_iap_url()
+        base_url = self.company_id._pdp_get_iap_url()
         response = iap_tools.iap_jsonrpc(f'{base_url}/api/id_authentication/1/authentication', params={
             'db_uuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
             'vat': self.siren_number,
@@ -275,7 +267,7 @@ class PdpRegistration(models.TransientModel):
 
     def button_open_authentication_link(self):
         self.ensure_one()
-        base_url = self._get_iap_url()
+        base_url = self.company_id._pdp_get_iap_url()
         response = iap_tools.iap_jsonrpc(f'{base_url}/api/id_authentication/1/get_authentication_hash', params={
             'db_uuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
             'vat': self.siren_number,
