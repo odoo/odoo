@@ -1,10 +1,9 @@
-import { onWillRender } from "@web/owl2/utils";
 import { formatDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { Component } from "@odoo/owl";
+import { Component, computed } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { _t } from "@web/core/l10n/translation";
 
@@ -32,27 +31,28 @@ export class QtyAtDateWidget extends Component {
     static components = { Popover: QtyAtDatePopover };
     static template = "sale.QtyAtDate";
     static props = { ...standardWidgetProps };
+
+    calcData = computed(() => this.initCalcData());
+
     setup() {
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.orm = useService("orm");
-        this.calcData = {};
-        onWillRender(() => {
-            this.initCalcData();
-        });
     }
 
-    async initCalcData() {
+    initCalcData() {
         // Computes the color of the chart icon representing the widget
+        const calcData = {};
         const { data } = this.props.record;
-        this.calcData.leftToDeliver = data.product_uom_qty - data.qty_delivered;
-        this.calcData.forecasted_issue = data.virtual_available_at_date < this.calcData.leftToDeliver ? "text-danger" : "";
+        calcData.leftToDeliver = data.product_uom_qty - data.qty_delivered;
+        calcData.forecasted_issue = data.virtual_available_at_date < calcData.leftToDeliver ? "text-danger" : "";
+        return calcData;
     }
 
-    updateCalcData() {
+    updateCalcData(calcData) {
         // popup specific data
         const { data } = this.props.record;
         if (data.scheduled_date) {
-            this.calcData.delivery_date = formatDateTime(data.scheduled_date, {
+            calcData.delivery_date = formatDateTime(data.scheduled_date, {
                 format: localization.dateFormat,
             });
         }
@@ -60,10 +60,11 @@ export class QtyAtDateWidget extends Component {
 
     async showPopup(ev) {
         const target = ev.currentTarget;
-        this.updateCalcData();
+        const calcData = { ...this.calcData() };
+        this.updateCalcData(calcData);
         this.popover.open(target, {
             record: this.props.record,
-            calcData: this.calcData,
+            calcData,
         });
     }
 }

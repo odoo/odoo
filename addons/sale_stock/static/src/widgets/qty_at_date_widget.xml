@@ -5,7 +5,7 @@
         <a t-att-tabindex="this.props.record.data.display_qty_widget ? '0' : '-1'"
             t-on-click="this.showPopup"
             t-att-class="!this.props.record.data.display_qty_widget ? 'invisible' : ''"
-            t-attf-class="fa fa-area-chart cursor-pointer {{ this.calcData.forecasted_issue ? 'text-danger' : '' }}"
+            t-attf-class="fa fa-area-chart cursor-pointer {{ this.calcData().forecasted_issue ? 'text-danger' : '' }}"
         />
     </t>
 
