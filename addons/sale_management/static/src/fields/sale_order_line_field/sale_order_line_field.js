@@ -81,6 +81,7 @@ patch(SaleOrderLineOne2Many.prototype, {
                 orderChanges,
                 this.props.record.data.fiscal_position_id.id,
                 this.props.record.data.company_id.id,
+                this.props.record.data.currency_id.id,
                 fieldsSpec,
             ]
         );

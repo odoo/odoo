@@ -120,6 +120,7 @@ class SaleOrder extends saleManagementModels.SaleOrder {
             order_line: SaleOrderLine._records.map(record => record.id),
             company_id: 1,
             fiscal_position_id: 1,
+            currency_id: 1,
         },
     ];
     _views = {
@@ -127,6 +128,7 @@ class SaleOrder extends saleManagementModels.SaleOrder {
             <form>
                 <field name="company_id" invisible="1"/>
                 <field name="fiscal_position_id" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
                 <field
                     name="order_line"
                     widget="sol_o2m"
