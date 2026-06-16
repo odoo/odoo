@@ -37,14 +37,18 @@ export class EventRegistrationPopup extends Component {
                 product_id: data.product_id,
                 questions: {},
             };
-
+            const existingRegData = data?.registration_ids?.[idx];
             for (const question of this.questionsByRegistration) {
-                this.state.byRegistration[idx].questions[question.id] = "";
+                this.state.byRegistration[idx].questions[question.id] =
+                    existingRegData?.[question.id] || "";
             }
         }
-
-        for (const question of this.questionsOncePerOrder) {
-            this.state.byOrder[question.id] = "";
+        // always have one data per order
+        if (this.questionsOncePerOrder.length) {
+            const existingRegData = this.props.data[0]?.registration_ids?.[0];
+            for (const question of this.questionsOncePerOrder) {
+                this.state.byOrder[question.id] = existingRegData?.[question.id] || "";
+            }
         }
 
         // Autofill first ticket with customer data if customer is selected
