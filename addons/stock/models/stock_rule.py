@@ -416,7 +416,7 @@ class StockRule(models.Model):
         :param product: the product of the procurement
         :type product: :class:`~odoo.addons.product.models.product.ProductProduct`
         :return: the cumulative delay and cumulative delay's description
-        :rtype: tuple[defaultdict(float), list[str, str]]
+        :rtype: tuple[defaultdict(float), list[tuple[str, str, str (optional)]]]
         """
         # FIXME : ensure one product or make the method work with multiple products
         _ = self.env._
@@ -428,7 +428,7 @@ class StockRule(models.Model):
         if delaying_rules:
             delays['total_delay'] += sum(delaying_rules.mapped('delay'))
             if not bypass_delay_description:
-                delay_description = [
+                delay_description += [
                     (_('Delay on %s', rule.name), _('+ %d day(s)', rule.delay))
                     for rule in delaying_rules
                 ]
@@ -442,7 +442,7 @@ class StockRule(models.Model):
         if global_horizon_days:
             delays['horizon_time'] += global_horizon_days
             if not bypass_delay_description:
-                delay_description.append((_('Time Horizon'), _('+ %d day(s)', global_horizon_days)))
+                delay_description.insert(0, (_('Time Horizon'), _('+ %d day(s)', global_horizon_days), 'time_horizon'))
         return delays, delay_description
 
     @api.model

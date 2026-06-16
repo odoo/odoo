@@ -33,7 +33,7 @@ class StockRule(models.Model):
             delays['total_delay'] += seller.delay
             delays['purchase_delay'] += seller.delay
             if not bypass_delay_description:
-                delay_description.append((_('Receipt Date'), int(seller.delay)))
+                delay_description.append((_('Receipt Date'), int(seller.delay), 'receipt_date'))
                 delay_description.append((_('Vendor Lead Time'), _('+ %d day(s)', seller.delay)))
         else:
             manufacture_delay = bom.produce_delay
@@ -41,7 +41,7 @@ class StockRule(models.Model):
             # set manufacture_delay to purchase_delay so that PO can be created with correct date
             delays['purchase_delay'] += manufacture_delay
             if not bypass_delay_description:
-                delay_description.append((_('Receipt Date'), manufacture_delay))
+                delay_description.append((_('Receipt Date'), manufacture_delay, 'receipt_date'))
                 delay_description.append((_('Manufacturing Lead Time'), _('+ %d day(s)', manufacture_delay)))
             days_to_order = bom.days_to_prepare_mo
             delays['total_delay'] += days_to_order
