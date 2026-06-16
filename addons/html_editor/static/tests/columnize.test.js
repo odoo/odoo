@@ -126,6 +126,34 @@ describe("2 columns", () => {
         });
     });
 
+    test("should ignore empty columns when turning 4 columns into 2 columns", async () => {
+        await testEditor({
+            contentBefore: columnsContainer(
+                column(3, "<p>abcd</p>") +
+                    column(3, "<h1>ef</h1>") +
+                    column(3, "<p>[]<br></p>") +
+                    column(3, "<p><br></p>")
+            ),
+            stepFunction: columnize(2),
+            contentAfter: columnsContainer(column(6, "<p>abcd</p>") + column(6, "<h1>ef[]</h1>")),
+        });
+    });
+
+    test("should preserve empty paragraphs in non-empty columns when reducing columns", async () => {
+        await testEditor({
+            contentBefore: columnsContainer(
+                column(3, "<p>ab</p>") +
+                    column(3, "<p>cd</p>") +
+                    column(3, "<p>ef</p><p><br></p><p>g[]h</p>") +
+                    column(3, "<p><br></p>")
+            ),
+            stepFunction: columnize(2),
+            contentAfter: columnsContainer(
+                column(6, "<p>ab</p>") + column(6, "<p>cd</p><p>ef</p><p><br></p><p>g[]h</p>")
+            ),
+        });
+    });
+
     test("apply '2 columns' powerbox command", async () => {
         const { el, editor } = await setupEditor("<p>ab[]cd</p>");
         await insertText(editor, "/2columns");
@@ -142,7 +170,7 @@ describe("2 columns", () => {
         expect(queryAllTexts(".o-we-command-name")).toEqual([
             "3 columns",
             "4 columns",
-            "Remove columns",
+            "Remove column layout",
         ]);
     });
 });
@@ -235,7 +263,7 @@ describe("3 columns", () => {
         expect(queryAllTexts(".o-we-command-name")).toEqual([
             "2 columns",
             "4 columns",
-            "Remove columns",
+            "Remove column layout",
         ]);
     });
 });
@@ -321,7 +349,7 @@ describe("4 columns", () => {
         expect(queryAllTexts(".o-we-command-name")).toEqual([
             "2 columns",
             "3 columns",
-            "Remove columns",
+            "Remove column layout",
         ]);
     });
 });
@@ -366,7 +394,33 @@ describe("remove columns", () => {
                     column(3, "<p>[]<br></p>")
             ),
             stepFunction: columnize(0),
-            contentAfter: "<p>abcd</p><h1>ef</h1><ul><li>gh</li></ul><p>ij</p><p>[]<br></p>",
+            contentAfter: "<p>abcd</p><h1>ef</h1><ul><li>gh</li></ul><p>ij[]</p>",
+        });
+    });
+
+    test("should keep at least one paragraph when removing empty columns", async () => {
+        await testEditor({
+            contentBefore: columnsContainer(
+                column(3, "<p><br></p>") +
+                    column(3, "<p><br></p>") +
+                    column(3, "<p><br></p>") +
+                    column(3, "<p>[]<br></p>")
+            ),
+            stepFunction: columnize(0),
+            contentAfter: "<p>[]<br></p>",
+        });
+    });
+
+    test("should preserve empty paragraphs in non-empty columns when removing columns", async () => {
+        await testEditor({
+            contentBefore: columnsContainer(
+                column(3, "<p>ab</p>") +
+                    column(3, "<p>cd</p>") +
+                    column(3, "<p>ef</p><p><br></p><p>g[]h</p>") +
+                    column(3, "<p><br></p>")
+            ),
+            stepFunction: columnize(0),
+            contentAfter: "<p>ab</p><p>cd</p><p>ef</p><p><br></p><p>g[]h</p>",
         });
     });
 
@@ -386,11 +440,11 @@ describe("remove columns", () => {
             `<div class="container o_text_columns o-contenteditable-false" contenteditable="false"><div class="row"><div class="col-6 o-contenteditable-true" contenteditable="true"><p>ab[]cd</p></div><div class="col-6 o-contenteditable-true" contenteditable="true"><p><br></p></div></div></div><p><br></p>`
         );
 
-        await insertText(editor, "/removecolumns");
+        await insertText(editor, "/removecolumn");
         await animationFrame();
-        expect(".active .o-we-command-name").toHaveText("Remove columns");
+        expect(".active .o-we-command-name").toHaveText("Remove column layout");
         await press("enter");
-        expect(getContent(el)).toBe(`<p>ab[]cd</p><p><br></p><p><br></p>`);
+        expect(getContent(el)).toBe(`<p>ab[]cd</p><p><br></p>`);
     });
 });
 
@@ -406,9 +460,8 @@ describe("complex", () => {
                 columnize(2)(editor);
                 columnize(0)(editor);
             },
-            // A paragraph was created for each column + after them and
-            // they were all kept.
-            contentAfter: "<p>ab[]cd</p><p><br></p><p><br></p><p><br></p><p><br></p>",
+            // Empty columns are removed when reducing columns.
+            contentAfter: "<p>ab[]cd</p><p><br></p>",
         });
     });
 
