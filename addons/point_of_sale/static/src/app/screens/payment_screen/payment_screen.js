@@ -166,12 +166,7 @@ export class PaymentScreen extends Component {
         const result = this.currentOrder.addPaymentline(paymentMethod);
         if (result.status) {
             this.numberBuffer.set(result.data.amount.toString());
-            if (
-                !this.isRefundOrder &&
-                ((paymentMethod.use_payment_terminal &&
-                    paymentMethod.payment_terminal.fastPayments) ||
-                    paymentMethod.payment_method_type === "qr_code")
-            ) {
+            if (!this.isRefundOrder && paymentMethod.payment_method_type === "qr_code") {
                 const newPaymentLine = this.paymentLines.at(-1);
                 this.sendPaymentRequest(newPaymentLine);
             }

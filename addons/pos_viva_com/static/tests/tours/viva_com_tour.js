@@ -46,6 +46,7 @@ registry.category("web_tour.tours").add("VivaComTour", {
             ProductScreen.clickPayButton(),
             PaymentScreen.isShown(),
             PaymentScreen.clickPaymentMethod("Viva"),
+            PaymentScreen.clickSendButton(),
             mockVivaWebhook(),
             FeedbackScreen.isShown(),
             FeedbackScreen.clickNextOrder(),

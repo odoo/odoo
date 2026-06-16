@@ -6,6 +6,7 @@ import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
 import { registry } from "@web/core/registry";
+
 const response_from_adyen_on_pos_webhook = (session, ServiceID) => ({
     SaleToPOIResponse: {
         MessageHeader: {
@@ -111,6 +112,7 @@ registry.category("web_tour.tours").add("PosAdyenPaymentTour", {
             ProductScreen.addOrderline("Desk Pad"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Adyen"),
+            PaymentScreen.clickSendButton(),
             adyenWebhookStep(),
             FeedbackScreen.isShown(),
         ].flat(),
@@ -124,6 +126,7 @@ registry.category("web_tour.tours").add("PosAdyenRefundTour", {
             ProductScreen.addOrderline("Desk Pad"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Adyen"),
+            PaymentScreen.clickSendButton(),
             adyenWebhookStep(),
             FeedbackScreen.isShown(),
             FeedbackScreen.clickNextOrder(),

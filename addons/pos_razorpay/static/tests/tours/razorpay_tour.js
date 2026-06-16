@@ -14,6 +14,7 @@ registry.category("web_tour.tours").add("PosRazorpayTour", {
             ProductScreen.addOrderline("Desk Pad"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Razorpay"),
+            PaymentScreen.clickSendButton(),
             FeedbackScreen.isShown(),
         ].flat(),
 });
@@ -26,6 +27,7 @@ registry.category("web_tour.tours").add("PosRazorpayCancelTour", {
             ProductScreen.addOrderline("Desk Pad"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("RazorPay"),
+            PaymentScreen.clickSendButton(),
             PaymentScreen.clickCancelButton(),
             Dialog.is({ title: "Razorpay Error" }),
             Dialog.bodyIs("Razorpay POS transaction canceled successfully"),
@@ -44,6 +46,7 @@ registry.category("web_tour.tours").add("PosRazorpayRefundTour", {
             ProductScreen.addOrderline("Desk Pad"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Razorpay"),
+            PaymentScreen.clickSendButton(),
             FeedbackScreen.isShown(),
             FeedbackScreen.clickNextOrder(),
             ProductScreen.clickRefund(),
