@@ -1,10 +1,8 @@
-import { onWillRender } from "@web/owl2/utils";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { user } from "@web/core/user";
 import { formatNumber } from "@hr_holidays/views/hooks";
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
-
+import { Component, computed } from "@odoo/owl";
 export class TimeOffCardPopover extends Component {
     static template = "hr_holidays.TimeOffCardPopover";
     static props = [
@@ -107,10 +105,9 @@ export class TimeOffCard extends Component {
             (acc, data) => acc + data.amount,
             0
         );
-        this.updateWarning();
-
-        onWillRender(this.updateWarning);
     }
+
+    warning = computed(() => this.updateWarning());
 
     // e.g.: Input: 9.5 Output: 9:30
     formatHour(hoursFloat) {
@@ -137,7 +134,7 @@ export class TimeOffCard extends Component {
         const closeExpire =
             data.closest_allocation_duration &&
             data.closest_allocation_duration < data.closest_allocation_remaining;
-        this.warning = errorLeavesSignificant || accrualExcess || closeExpire;
+        return errorLeavesSignificant || accrualExcess || closeExpire;
     }
 
     onClickInfo(ev) {
@@ -148,7 +145,7 @@ export class TimeOffCard extends Component {
             approved: formatNumber(this.lang, data.leaves_approved),
             planned: formatNumber(this.lang, data.leaves_requested),
             left: formatNumber(this.lang, data.virtual_remaining_leaves),
-            warning: this.warning,
+            warning: this.warning(),
             closest: data.closest_allocation_duration,
             unit_of_measure: data.unit_of_measure,
             exceeding_duration: data.exceeding_duration,
