@@ -7,6 +7,9 @@ export class Instagram extends AbstractThirdPartyVideo {
     static urlMatcher =
         /^(?:https?:\/\/)?(?:(.*)instagram\.com|instagr\.am)(?:\/([a-zA-Z0-9\-_\\.]+))?\/(?:p|reels?)\/(?<id>[a-zA-Z0-9\-_\\.]+)(?:\/embed)?\/?$/i;
 
+    static optionsConfig = {
+        isVertical: { default: true, type: Boolean },
+    };
     /**
      * Returns the embed url for a Instagram video.
      *
