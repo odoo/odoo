@@ -56,7 +56,6 @@
             props='{ "withRoundCorner": false }'/>
         <layout_column_option
             selector=".o_mail_snippet_general"
-            exclude=".s_reviews_wall"
             applyTo=":scope > *:has(> .row:not(.s_nb_column_fixed)), * > .s_allow_columns"/>
         <width_option
             template="html_builder.WidthOption"
@@ -98,9 +97,6 @@
         <customer_testimonials_blockquote
             template="mass_mailing.CustomerTestimonialsBlockquote"
             selector=".s_reviews_wall .s_mail_blockquote"/>
-        <layout_column_option
-            selector=".s_reviews_wall .container"
-            applyTo=":scope > .row:has(> .s_mail_blockquote), :scope > .row > .s_allow_columns"/>
         <!-- This selector targets all direct children of .oe_structure except nested structures -->
         <color_picker_option
             template="mass_mailing.ColorPickerOption"
@@ -108,17 +104,18 @@
             exclude=".o_mail_no_colorpicker, .o_mail_no_options, .s_mail_color_blocks_2"/>
         <badge_option template="html_builder.BadgeOption" selector=".s_badge"/>
         <mass_mailing_border_option
-            selector=".row > div"
-            t-attf-exclude=".o_mail_wrapper_td, .s_image_gallery .row > div, .row > .s_record_snapshot, {{cardBorderOptionSelector}}, {{textBorderOptionSelector}}, {{tableBorderOptionSelector}}"/>
+            selector=".row > div, .s_bento_blocks div[data-name='Bento card'], .s_bento_blocks div[data-name='Bento callout']"
+            t-attf-exclude=".o_mail_wrapper_td, .s_image_gallery .row > div, .row > .s_record_snapshot, .s_bento_blocks .row > div:has(> [data-name='Bento card']), {{cardBorderOptionSelector}}, {{textBorderOptionSelector}}, {{tableBorderOptionSelector}}"/>
         <horizontal_padding_option
             template="mass_mailing.HorizontalPaddingOption"
             t-att-selector="this.horizontalPaddingOptionSelector"
-            exclude=".s_col_no_resize.row > div, .s_col_no_resize, img"/>
+            exclude=".s_col_no_resize.row > div, .s_col_no_resize, img, .s_bento_blocks div[data-name='Bento card'], .s_bento_blocks div[data-name='Bento callout']"/>
         <vertical_padding_option
             template="mass_mailing.VerticalPaddingOption"
-            selector=".o_mail_block_footer_social, .s_header_logo, .s_header_social"
+            selector=".o_mail_block_footer_social, .s_header_logo, .s_header_social, .s_bento_blocks div[data-name='Bento card'], .s_bento_blocks div[data-name='Bento callout']"
             exclude=".s_col_no_resize.row > div, .s_col_no_resize"/>
         <snippet_visibility_option selector="section"/>
+        <bento_blocks_add_card_option selector=".s_bento_blocks"/>
         <t id="bottom_options_hook"/>
     </div>
 </t>

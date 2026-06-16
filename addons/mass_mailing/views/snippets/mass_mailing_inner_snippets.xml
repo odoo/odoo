@@ -12,20 +12,20 @@
         <h3 class="s_rating_title">Quality</h3>
         <div class="s_rating_icons o_not_editable">
             <span class="s_rating_active_icons" style="color: #f3cc00;">
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
+                <i class="fa fa-star" role="presentation"></i>
+                <i class="fa fa-star" role="presentation"></i>
+                <i class="fa fa-star" role="presentation"></i>
             </span>
             <span class="s_rating_inactive_icons" style="color: var(--border-color);">
-                <i class="fa fa-star-o"></i>
-                <i class="fa fa-star-o"></i>
+                <i class="fa fa-star" role="presentation"></i>
+                <i class="fa fa-star" role="presentation"></i>
             </span>
         </div>
     </div>
 </template>
 
 <template id="s_hr" name="Separator">
-    <div class="s_hr o_mail_snippet_general pt16 pb16 o_not_editable" data-vxml="001">
+    <div class="s_hr o_mail_snippet_general pt16 pb16 o_not_editable" data-vxml="001" data-name="Separator" data-snippet="s_hr">
         <hr class="w-100 mx-auto"/>
     </div>
 </template>
@@ -95,7 +95,7 @@
 </template>
 
 <template id="s_social_media" name="Social Media">
-    <div t-attf-class="s_social_media o_not_editable {{optionalTextPosition or 'text-start'}} {{optionalSnippetClass or ''}}" contenteditable="false" t-att-data-company-id="res_company.id">
+    <div data-name="Social Media" t-attf-class="s_social_media o_not_editable {{optionalTextPosition or 'text-start'}} {{optionalSnippetClass or ''}}" contenteditable="false" t-att-data-company-id="res_company.id">
         <span class="s_social_media_links">
             <t t-call="mass_mailing.social_links"/>
         </span>

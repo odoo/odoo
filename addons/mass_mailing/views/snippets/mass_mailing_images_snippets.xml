@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-md-12 oe_img_bg pt56 pb48 col-12" style="background-image: url('/web/image/mass_mailing.s_cover_default_image'); background-position: 50% 84.7081%;">
                     <div class="o_we_bg_filter bg-black-75" contenteditable="false"></div>
-                    <h1 style="text-align: center;"><span style="font-size: 62px;"><strong><font class="text-white">Your journey starts here</font></strong></span></h1>
+                    <h2 style="text-align: center;"><span class="display-4-fs"><font class="text-white">Your journey starts here</font></span></h2>
                     <p class="lead" style="text-align: center;"><font class="text-white">Write one or two paragraphs describing your product, services or a specific feature.<br/> To be successful your content needs to be useful to your readers.</font></p>
                 </div>
             </div>
@@ -14,7 +14,7 @@
 </template>
 
 <template id="s_image_text" name="Image - Text">
-    <section class="s_text_image o_mail_snippet_general pt32 pb32" data-vxml="001">
+    <section class="s_text_image o_mail_snippet_general pt24 pb24" data-vxml="001">
         <div class="container">
             <div class="row align-items-start">
                 <div class="col-md-6 pt16 pb16 col-12">
@@ -34,7 +34,7 @@
 </template>
 
 <template id="s_text_image" name="Text - Image">
-    <section class="s_text_image o_mail_snippet_general pt32 pb32" data-vxml="001">
+    <section class="s_text_image o_mail_snippet_general pt24 pb24" data-vxml="001">
         <div class="container">
             <div class="row align-items-start">
                 <div class="col-md-6 col-12 pt16 pb16">
@@ -54,12 +54,12 @@
 </template>
 
 <template id="s_picture" name="Picture">
-    <section class="s_picture o_mail_snippet_general pt48 pb24 o_cc o_cc2" style="padding-left: 15px; padding-right: 15px;" data-vxml="001">
+    <section class="s_picture o_mail_snippet_general pt40 pb40 o_cc o_cc2" style="padding-left: 15px; padding-right: 15px;" data-vxml="001">
         <div class="container s_allow_columns">
-            <h2 style="text-align: center;"><strong>Step Up Your Game</strong></h2>
+            <h2 style="text-align: center;">Step Up Your Game</h2>
             <p style="text-align: center;">Experience unparalleled comfort, cutting-edge design, and performance-enhancing<br/>technology with this latest innovation, crafted to elevate every athlete's journey.</p>
             <div class="row">
-                <div class="col-md-12 pt24 col-12" style="text-align: center;">
+                <div class="col-md-12 pt0 col-12" style="text-align: center;">
                     <div class="o_not_editable">
                         <img src="/web/image/mass_mailing.s_picture_default_image" style="padding: 10px; width: 100% !important;" class="img img-fluid o_editable_media mx-auto d-block mw-100" width="500" alt=""/>
                     </div>
@@ -74,7 +74,7 @@
     <section class="o_mail_snippet_general s_text_image" data-vxml="001">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-md-6 col-12 pt16 pb16">
+                <div class="col-md-6 col-12 pt40 pb40">
                     <div class="o_not_editable">
                         <img class="img img-fluid o_editable_media mx-auto"
                             src="/html_editor/shape/mass_mailing/s_newsletter_benefits_popup.svg"
@@ -83,8 +83,8 @@
                             data-mimetype="image/svg+xml"/>
                     </div>
                 </div>
-                <div class="col-md-6 col-12 pt16 pb16">
-                    <h2><strong>Stay Ahead with weekly insights &amp; updates</strong></h2>
+                <div class="col-md-6 col-12 pt40 pb40">
+                    <h2>Stay Ahead with weekly insights &amp; updates</h2>
                     <p>Join our mailing list to receive carefully curated resources, tips, and updates straight to your inbox.</p>
                     <p><span class="fa fa-check text-o-color-1" role="img"/>&#160;&#160;Curated Industry Insights</p>
                     <p><span class="fa fa-check text-o-color-1" role="img"/>&#160;&#160;Expert Tips &amp; How-Tos</p>
@@ -97,11 +97,11 @@
 </template>
 
 <template id="mass_mailing.s_content_card_1" name="Content card">
-    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+    <section class="o_mail_snippet_general pt40 pb40" data-vxml="001">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 col-12">
-                    <h1><strong>Unveil Our Exclusive Collections</strong></h1>
+                    <h2>Unveil Our Exclusive Collections</h2>
                 </div>
                 <div class="col-md-6 col-12">
                     <p>Write one or two paragraphs describing your product or services. To be successful, your content needs to be useful to your readers.</p>
@@ -126,7 +126,7 @@
 </template>
 
 <template id="mass_mailing.s_content_card_2" name="Content card">
-    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+    <section class="o_mail_snippet_general pt40 pb40" data-vxml="001">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 col-12">
@@ -144,7 +144,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12 col-12 pt16">
-                    <h1 style="text-align: center"><strong>The Innovation Behind Our Product</strong></h1>
+                    <h2 style="text-align: center">The Innovation Behind Our Product</h2>
                     <p style="text-align: center">Write one or two paragraphs describing your product or services. To be successful, your content needs to be useful to your readers.</p>
                     <p style="text-align: center">Start with the customer - find out what they want and give it to them.</p>
                     <p style="text-align: center"><a href="#" class="btn btn-primary">Learn More</a></p>
@@ -154,15 +154,39 @@
     </section>
 </template>
 
+<template id="s_image_hero_title" name="Hero Image + Title">
+    <section class="s_image_hero_title o_mail_snippet_general pt16 pb16" data-vxml="001">
+        <div class="container pt16">
+            <p style="text-align: center;"><span class="o_small-fs">PREORDER ONLINE</span></p>
+            <h1 class="display-1" style="text-align: center;">Collection launch</h1>
+            <p style="text-align: center;">Add a short intro to set the context before the visuals.</p>
+            <div class="row">
+                <div class="col-md-12 col-12">
+                    <div class="o_not_editable">
+                        <img class="img img-fluid o_editable_media mx-auto"
+                            style="padding-bottom: 16px; width: 100% !important"
+                            src="/mass_mailing/static/src/img/snippets_demo/s_bento_grid_default_image_4.jpg"
+                            data-original-src="/mass_mailing/static/src/img/snippets_demo/s_bento_grid_default_image_4.jpg"
+                            data-original-mimetype="image/jpeg"
+                            data-mimetype="image/jpeg"/>
+                    </div>
+                    <p style="text-align: center;">Add a caption or a short message to reinforce the visual.</p>
+                    <p style="text-align: center"><a href="#" class="btn btn-lg btn-primary">Learn more</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
 <template id="mass_mailing.s_content_card_3" name="Content card">
-    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+    <section class="o_mail_snippet_general pt40 pb40" data-vxml="001">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 col-12">
-                    <h1><strong>Timeless Design</strong></h1>
+                    <h2>Timeless Design</h2>
                     <div class="o_not_editable">
                         <img class="img img-fluid o_editable_media mx-auto"
-                            style="width: 100% !important"
+                            style="width: 100% !important; padding-bottom: 16px;"
                             src="/mass_mailing/static/src/img/snippets_demo/s_bento_grid_default_image_2.webp"
                             data-original-src="/mass_mailing/static/src/img/snippets_demo/s_bento_grid_default_image_2.webp"
                             data-original-mimetype="image/webp"
@@ -177,17 +201,17 @@
 </template>
 
 <template id="mass_mailing.s_content_card_4" name="Content card">
-    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+    <section class="o_mail_snippet_general pt40 pb40" data-vxml="001">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 col-12">
-                    <h2><strong>A Breath of Fresh Air</strong></h2>
+                    <h2>A Breath of Fresh Air</h2>
                 </div>
             </div>
         </div>
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-md-2 col-2">
+                <div class="col-2 col-md-1" style="padding-right: 0px;">
                     <div class="o_not_editable">
                         <img class="img img-fluid o_editable_media mx-auto"
                             style="width: 100% !important;"
@@ -198,7 +222,7 @@
                             data-mimetype="image/svg+xml"/>
                     </div>
                 </div>
-                <div class="col-md-10 col-10 ps-0">
+                <div class="col-md-10 col-10" style="padding-left: 8px !important;">
                     <p class="mb-0"><strong>John DOE</strong><br/><t t-out="datetime.datetime.now().strftime('%b %d, %Y')"/></p>
                 </div>
             </div>
@@ -236,12 +260,12 @@
             <div class="row">
                 <div class="col-md-6 col-6 pt80 pb80 oe_img_bg" style="background-image: url('/web/image/mass_mailing.s_picture_default_image');">
                     <div class="o_we_bg_filter bg-black-50" contenteditable="false"></div>
-                    <h2><strong><font class="text-white">Key Milestone</font></strong></h2>
+                    <h2><font class="text-white">Key Milestone</font></h2>
                     <p><font class="text-white">Reaching new heights together</font></p>
                 </div>
                 <div class="col-md-6 col-6 pt80 pb80 oe_img_bg" style="background-image: url('/web/image/mass_mailing.s_masonry_block_default_image_1');">
                     <div class="o_we_bg_filter bg-black-50" contenteditable="false"></div>
-                    <h2><strong><font class="text-white">Innovation Hub</font></strong></h2>
+                    <h2><font class="text-white">Innovation Hub</font></h2>
                     <p><font class="text-white">Where ideas come to life</font></p>
                 </div>
             </div>
@@ -253,7 +277,7 @@
     <section class="o_mail_snippet_general s_text_image pt16 pb16" data-vxml="001">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-md-6 col-12">
+                <div class="col-md-6 col-12 pt24 pb24">
                     <div class="o_not_editable">
                         <img class="img img-fluid o_editable_media mx-auto"
                             src="/html_editor/image_shape/mass_mailing.s_shape_image_default_image/html_builder/composite/composite_double_pill.svg"
@@ -265,7 +289,7 @@
                     </div>
                 </div>
                 <div class="col-md-6 col-12">
-                    <h2><strong>About our product line</strong></h2>
+                    <h2>About our product line</h2>
                     <p>Our product line offers a range of innovative solutions designed to meet your needs. Each product is crafted for quality and reliability.</p>
                     <p>Enhance your experience with our user-focused designs, ensuring you get the best value.</p>
                 </div>
@@ -275,7 +299,7 @@
 </template>
 
 <template id="mass_mailing.s_content_card_7" name="Content card">
-    <section class="o_mail_snippet_general s_text_image pb16 pt16" data-vxml="001">
+    <section class="o_mail_snippet_general s_text_image pb40 pt40" data-vxml="001">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6 col-12">
@@ -288,7 +312,7 @@
                     </div>
                 </div>
                 <div class="col-md-6 col-12">
-                    <h2><strong>Stay in the Loop !<br/>Get the latest updates</strong></h2>
+                    <h2>Stay in the Loop !<br/>Get the latest updates</h2>
                     <p>Be the first to find out all the latest new, products and trends.</p>
                     <a href="#" class="btn btn-primary">Subscribe</a>
                 </div>
@@ -296,4 +320,50 @@
         </div>
     </section>
 </template>
+
+<template id="s_images_grid" name="Image Grid">
+    <section class="s_images_grid o_mail_snippet_general pt40 pb40">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <img class="img img-fluid o_editable_media"
+                        src="/mass_mailing/static/src/img/snippets_demo/set_catalog_square_md_1.webp"
+                            style="padding-bottom: 10px;"/>
+                    <p style="text-align: center;"><span class="o_small-fs">CABINETS</span></p>
+                </div>
+                <div class="col-12 col-md-6">
+                    <img class="img img-fluid o_editable_media"
+                        src="/mass_mailing/static/src/img/snippets_demo/set_catalog_square_md_2.webp"
+                            style="padding-bottom: 10px;"/>
+                    <p style="text-align: center;"><span class="o_small-fs">CHAIRS</span></p>
+                </div>
+                <div class="col-12 col-md-6 pt32">
+                    <img class="img img-fluid o_editable_media"
+                        src="/mass_mailing/static/src/img/snippets_demo/set_catalog_square_md_3.webp"
+                            style="padding-bottom: 10px;"/>
+                    <p style="text-align: center;"><span class="o_small-fs">CONSOLE</span></p>
+                </div>
+                <div class="col-12 col-md-6 pt32">
+                    <img class="img img-fluid o_editable_media"
+                        src="/mass_mailing/static/src/img/snippets_demo/set_catalog_square_md_4.webp"
+                            style="padding-bottom: 10px;"/>
+                    <p style="text-align: center;"><span class="o_small-fs">BOOKCASES</span></p>
+                </div>
+                <div class="col-12 col-md-6 pt32">
+                    <img class="img img-fluid o_editable_media"
+                        src="/mass_mailing/static/src/img/snippets_demo/set_catalog_square_md_5.webp"
+                            style="padding-bottom: 10px;"/>
+                    <p style="text-align: center;"><span class="o_small-fs">SOFAS</span></p>
+                </div>
+                <div class="col-12 col-md-6 pt32">
+                    <img class="img img-fluid o_editable_media"
+                    src="/mass_mailing/static/src/img/snippets_demo/set_catalog_square_md_6.webp"
+                        style="padding-bottom: 10px;"/>
+                    <p style="text-align: center;"><span class="o_small-fs">TABLES</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
 </odoo>

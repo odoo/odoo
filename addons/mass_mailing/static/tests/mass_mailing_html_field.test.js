@@ -440,9 +440,9 @@ describe("field HTML", () => {
         await waitFor(".o_dialog .o_mass_mailing-builder_sidebar .o_snippet_thumbnail", {
             timeout: 3000,
         });
-        await contains(".o_dialog :iframe .s_text_block", { timeout: 3000 }).click();
+        await contains(".o_dialog :iframe .s_call_to_action", { timeout: 3000 }).click();
         await waitFor(
-            ".o_dialog .o_mass_mailing-builder_sidebar .options-container-header:contains(Text)",
+            ".o_dialog .o_mass_mailing-builder_sidebar .options-container-header:contains(Call to Action)",
             { timeout: 3000 }
         );
         const overlayOptionsSelect =

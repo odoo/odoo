@@ -81,7 +81,7 @@ export const CUSTOMIZE_MAILING_VARIABLES = Object.assign(
     generateSimpleMailingVariables("wrapper", ["> [data-snippet]"], wrapperProperties),
     (() => {
         const variables = {};
-        for (const depth of [1, 2, 3]) {
+        for (const depth of [1, 2, 3, 4]) {
             const prefix = `h${depth}`;
             Object.assign(
                 variables,
@@ -149,7 +149,7 @@ export const CUSTOMIZE_MAILING_VARIABLES_DEFAULTS = {
         "background-color": "#FFFFFF",
     },
     "--h1-font-size": {
-        "font-size": "28px",
+        "font-size": "32px",
     },
     "--h1-font-weight": {
         "font-weight": "500",
@@ -170,7 +170,7 @@ export const CUSTOMIZE_MAILING_VARIABLES_DEFAULTS = {
         "margin-bottom": "7px",
     },
     "--h2-font-size": {
-        "font-size": "23px",
+        "font-size": "24px",
     },
     "--h2-font-weight": {
         "font-weight": "500",
@@ -209,6 +209,27 @@ export const CUSTOMIZE_MAILING_VARIABLES_DEFAULTS = {
         color: "rgb(0, 0, 0)",
     },
     "--h3-margin-bottom": {
+        "margin-bottom": "7px",
+    },
+    "--h4-font-size": {
+        "font-size": "19px",
+    },
+    "--h4-font-weight": {
+        "font-weight": "500",
+    },
+    "--h4-font-style": {
+        "font-style": "",
+    },
+    "--h4-font-family": {
+        "font-family": "Arial,Helvetica Neue,Helvetica,sans-serif",
+    },
+    "--h4-text-decoration-line": {
+        "text-decoration-line": "",
+    },
+    "--h4-color": {
+        color: "rgb(0, 0, 0)",
+    },
+    "--h4-margin-bottom": {
         "margin-bottom": "7px",
     },
     "--text-font-size": {
