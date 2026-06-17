@@ -63,6 +63,7 @@
                 </t>
                 <span t-if="o.name and o.name != '/'" t-field="o.name">INV/2023/0001</span>
             </t>
+            <t t-set="o" t-value="o.with_context(lang=lang)" />
             <t t-set="information_block" t-if="o.partner_shipping_id and (o.partner_shipping_id != o.partner_id)">
                 <div groups="account.group_delivery_invoice_address" name="shipping_address_block">
                     <strong class="d-block mt-3">Shipping Address</strong>
@@ -113,7 +114,6 @@
                 information_block="information_block"
                 lang="lang"
                 address="address">
-                <t t-set="o" t-value="o.with_context(lang=lang)" /> <!-- So that it appears in the footer of the report instead of the company VAT if it's set -->
                 <div class="clearfix invoice_main">
                     <div class="page mb-4">
                         <div class="oe_structure"></div>
