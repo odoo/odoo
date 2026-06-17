@@ -73,6 +73,7 @@ def directory(p, create=False):
         sys.exit("%s is not a directory" % p)
     return expanded
 
+
 if jinja2:
     env = jinja2.Environment()
     env.filters['snake'] = snake

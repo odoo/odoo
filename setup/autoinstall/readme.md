@@ -61,6 +61,12 @@ The docker image can be started in interactive mode using
 
 `docker run -ti --rm -v $(pwd):/home/odoo/autoinstall:ro -v ~/.ssh:/home/odoo/.ssh:ro  -w /home/odoo/autoinstall odoo-autoinstall`
 
+to avoid constant prompt of ssh key
+
+`ssh-add`
+`docker run -ti --rm -v $(pwd):/home/odoo/autoinstall:ro -v $SSH_AUTH_SOCK:/tmp/ssh_auth_sock -e SSH_AUTH_SOCK=/tmp/ssh_auth_sock -w /home/odoo/autoinstall odoo-autoinstall`
+
+
 Note that the scripts requires ssh key linked to a github account in order to clone repositories using ssh and not https
 
 Then, the command to setup the environment is:
