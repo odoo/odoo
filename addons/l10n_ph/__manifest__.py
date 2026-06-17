@@ -16,6 +16,7 @@
     'data': [
         'data/account_tax_report_data.xml',
         'data/menuitem_data.xml',
+        'views/res_config_settings_views.xml',
         'views/account_tax_views.xml',
         'views/res_company_views.xml',
         'views/res_partner_views.xml',
