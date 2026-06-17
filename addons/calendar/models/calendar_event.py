@@ -944,7 +944,7 @@ class CalendarEvent(models.Model):
         update_alarms = False
         update_time = False
         self._set_videocall_location([values])
-        if 'partner_ids' in values:
+        if values.get('partner_ids'):
             values['attendee_ids'] = self._attendees_values(values['partner_ids'])
             update_alarms = True
             if self.videocall_channel_id:

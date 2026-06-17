@@ -167,6 +167,7 @@ class CalendarEvent(models.Model):
             'user_id': google_event.owner(self.env).id,
             'privacy': google_event.visibility or False,
             'attendee_ids': attendee_commands,
+            'partner_ids': [],
             'alarm_ids': alarm_commands,
             'recurrency': google_event.is_recurrent(),
             'videocall_location': google_event.get_meeting_url(),
@@ -209,12 +210,6 @@ class CalendarEvent(models.Model):
         attendee_commands = []
         partner_commands = []
         google_attendees = google_event.attendees or []
-        if len(google_attendees) == 0 and google_event.organizer and google_event.organizer.get('self', False):
-            user = google_event.owner(self.env)
-            google_attendees += [{
-                'email': user.partner_id.email,
-                'responseStatus': 'accepted',
-            }]
         emails = [a.get('email') for a in google_attendees]
         existing_attendees = self.env['calendar.attendee']
         if google_event.exists(self.env):
