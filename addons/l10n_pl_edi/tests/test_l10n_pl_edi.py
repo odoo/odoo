@@ -9,6 +9,7 @@ from odoo.tests import freeze_time, patch, tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
+from odoo.addons.l10n_pl_edi.models.account_move import AccountMove
 from odoo.addons.l10n_pl_edi.tools.ksef_api_service import KsefApiService
 
 
@@ -723,7 +724,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             cron_runs_before = len(capt.records)
             self.env['account.move'].with_company(self.company)._l10n_pl_edi_download_bills_from_ksef()
 
-        bill_1 = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'KSEF-BILL-001')])
+        bill_1 = self.env['account.move'].search([('l10n_pl_edi_status', '=', 'fetched')])
         self.assertTrue(bill_1)
         bill_1_attachment = self.env['ir.attachment'].search([
             ('res_model', '=', 'account.move'),
@@ -733,12 +734,50 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         with tools.file_open('l10n_pl_edi/tests/export_xmls/fa3_bill.xml', mode='rb') as file:
             self.assertEqual(bill_1_attachment.raw, file.read())
 
-        bill_2 = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'KSEF-BILL-002')])
-        self.assertFalse(bill_2)
+        bill_2 = self.env['account.move'].search([('l10n_pl_edi_status', '=', 'fetch_ready')])
+        self.assertTrue(bill_2)
 
         self.assertEqual(len(capt.records), cron_runs_before + 1)
         self.assertGreaterEqual(capt.records[-1].call_at, start + timedelta(seconds=120))
         self.assertLessEqual(capt.records[-1].call_at, start + timedelta(seconds=240))
+
+    def test_l10n_pl_edi_download_problematic_bill_do_not_stop_others(self):
+        """Test that when an error occurs on a single bill, the rest don't get stuck."""
+
+        def query_invoice_metadata(query_criteria, page_size=100, page_offset=0):
+            return {
+                'hasMore': False,
+                'invoices': [{'ksefNumber': 'KSEF-BILL-001'}, {'ksefNumber': 'KSEF-BILL-002'}],
+            }
+
+        def get_invoice_by_ksef_number(ksef_number):
+            return {'xml_content': b'foo'}
+
+        call_count = 0
+
+        def l10n_pl_edi_get_ksef_bill_vals_from_xml(xml_content):
+            nonlocal call_count
+            if call_count == 0:
+                call_count = 1
+                return {'currency_id': None}  # Should raise a NOT NULL db error
+            return {'currency_id': self.env.company.currency_id.id}
+
+        with (
+            patch.object(KsefApiService, 'query_invoice_metadata', side_effect=query_invoice_metadata),
+            patch.object(KsefApiService, 'get_invoice_by_ksef_number', side_effect=get_invoice_by_ksef_number),
+            patch.object(AccountMove, 'l10n_pl_edi_get_ksef_bill_vals_from_xml', side_effect=l10n_pl_edi_get_ksef_bill_vals_from_xml),
+        ):
+            self.env['account.move'].with_company(self.company)._l10n_pl_edi_download_bills_from_ksef()
+
+        bills = self.env['account.move'].search([('l10n_pl_edi_number', 'in', ('KSEF-BILL-001', 'KSEF-BILL-002'))])
+        bills_attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_id', 'in', bills.ids),
+        ])
+        self.assertEqual(len(bills), 2)
+        self.assertEqual(len(bills_attachments), 2)
+        self.assertTrue(bills.filtered(lambda b: b.l10n_pl_edi_status == 'fetch_failed'))
+        self.assertTrue(bills.filtered(lambda b: b.l10n_pl_edi_status == 'fetched'))
 
     def test_import_invoice_with_net_and_gross_unit_price(self):
         self._assert_import_invoice('invoice_with_net_and_gross_unit_price.xml', [
