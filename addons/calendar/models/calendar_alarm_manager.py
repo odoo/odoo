@@ -201,7 +201,22 @@ class CalendarAlarm_Manager(models.AbstractModel):
                 notify_author=True,
             )
 
-        events._setup_event_recurrent_alarms(events_by_alarm)
+        # When executed by the scheduler cron, the recurrent triggers are re-armed in
+        # the cron runner transaction (see ir.cron._clear_schedule).
+        # When called directly (manually or in tests), re-arm them inline.
+        if not self.env.context.get('cron_id'):
+            events._setup_event_recurrent_alarms(events_by_alarm)
+
+    @api.model
+    def _reschedule_recurrent_alarms(self):
+        """ Re-arm the rolling cron trigger of recurrent events for their next occurrence. """
+        Event = self.env['calendar.event']
+        for alarm_type in Event._get_trigger_alarm_types():
+            events_by_alarm = self._get_events_by_alarm_to_notify(alarm_type)
+            if not events_by_alarm:
+                continue
+            event_ids = {event_id for ids in events_by_alarm.values() for event_id in ids}
+            Event.browse(event_ids)._setup_event_recurrent_alarms(events_by_alarm)
 
     @api.model
     def get_next_notif(self):
