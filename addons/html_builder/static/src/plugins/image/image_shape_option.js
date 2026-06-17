@@ -6,16 +6,14 @@ import { loadImageInfo } from "@html_editor/utils/image_processing";
 import { isImageSupportedForProcessing } from "@html_editor/main/media/image_post_process_plugin";
 import { getMimetypeBeforeShape } from "@html_builder/utils/image";
 import { ratioValueConverter } from "@html_builder/utils/utils";
+import { props, t } from "@odoo/owl";
 
 export class ImageShapeOption extends BaseOptionComponent {
     static template = "html_builder.ImageShapeOption";
     static dependencies = ["customizeTab", "imageShapeOption"];
-    static props = {
-        withAnimatedShapes: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        withAnimatedShapes: true,
-    };
+    props = props({
+        withAnimatedShapes: t.boolean().optional(true),
+    });
     static components = { ShapeSelector };
     setup() {
         super.setup();

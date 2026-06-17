@@ -7,7 +7,7 @@ import {
     onWillUnmount,
     onWillUpdateProps,
     props,
-    types,
+    t,
 } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
@@ -21,14 +21,17 @@ export class DiscussClientAction extends Component {
     setup() {
         super.setup();
         this.props = props({
-            action: types.object({
-                context: types.object({
-                    "active_id?": types.or([types.string(), types.number()]),
+            action: t.object({
+                context: t.object({
+                    active_id: t.or([t.string(), t.number()]).optional(),
                 }),
-                "params?": types.object({
-                    "active_id?": types.or([types.string(), types.number()]),
-                    "highlight_message_id?": types.number(),
-                }),
+                params: t
+                    .object({
+                        active_id: t.or([t.string(), t.number()]).optional(),
+                        default_active_id: t.or([t.string(), t.number()]).optional(),
+                        highlight_message_id: t.number().optional(),
+                    })
+                    .optional(),
             }),
         });
         this.store = useService("mail.store");

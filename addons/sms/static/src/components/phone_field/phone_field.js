@@ -2,17 +2,11 @@ import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
 import { user } from "@web/core/user";
-import { PhoneField, phoneField } from "@web/views/fields/phone/phone_field";
+import { t } from "@odoo/owl";
+import { PhoneField, phoneField, phoneFieldProps } from "@web/views/fields/phone/phone_field";
 
-patch(PhoneField, {
-    defaultProps: {
-        ...PhoneField.defaultProps,
-        enableButton: true,
-    },
-    props: {
-        ...PhoneField.props,
-        enableButton: { type: Boolean, optional: true },
-    },
+Object.assign(phoneFieldProps, {
+    enableButton: t.boolean().optional(true),
 });
 patch(PhoneField.prototype, {
     setup() {

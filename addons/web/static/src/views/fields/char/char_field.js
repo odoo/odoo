@@ -8,22 +8,23 @@ import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { TranslationButton } from "../translation_button";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
+
+export const charFieldProps = {
+    ...standardFieldProps,
+    autocomplete: t.string().optional(),
+    isPassword: t.boolean().optional(),
+    placeholder: t.string().optional(),
+    dynamicPlaceholder: t.boolean().optional(false),
+    dynamicPlaceholderModelReferenceField: t.string().optional(),
+};
 
 export class CharField extends Component {
     static template = "web.CharField";
     static components = {
         TranslationButton,
     };
-    static props = {
-        ...standardFieldProps,
-        autocomplete: { type: String, optional: true },
-        isPassword: { type: Boolean, optional: true },
-        placeholder: { type: String, optional: true },
-        dynamicPlaceholder: { type: Boolean, optional: true },
-        dynamicPlaceholderModelReferenceField: { type: String, optional: true },
-    };
-    static defaultProps = { dynamicPlaceholder: false };
+    props = props(charFieldProps);
 
     setup() {
         this.input = useRef("input");

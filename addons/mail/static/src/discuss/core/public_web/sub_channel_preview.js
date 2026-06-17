@@ -2,7 +2,7 @@ import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { isToday } from "@mail/utils/common/dates";
 import { htmlToTextContentInline } from "@mail/utils/common/format";
 
-import { Component, props, types } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -17,9 +17,9 @@ export class SubChannelPreview extends Component {
         super.setup(...arguments);
         this.store = useService("mail.store");
         this.props = props({
-            channel: types.instanceOf(this.store["discuss.channel"].Class),
-            "class?": types.string(),
-            "onClick?": types.function([]),
+            channel: t.instanceOf(this.store["discuss.channel"].Class),
+            class: t.string().optional(),
+            onClick: t.function([]).optional(),
         });
     }
 

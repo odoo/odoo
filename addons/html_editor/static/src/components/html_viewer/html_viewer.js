@@ -6,7 +6,9 @@ import {
     onWillStart,
     onWillUnmount,
     onWillUpdateProps,
+    props,
     proxy,
+    t,
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
@@ -19,13 +21,10 @@ import { browser } from "@web/core/browser/browser";
 
 export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
-    static props = {
-        config: { type: Object },
-        migrateHTML: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        migrateHTML: true,
-    };
+    props = props({
+        config: t.object(),
+        migrateHTML: t.boolean().optional(true),
+    });
 
     setup() {
         this._cleanups = [];

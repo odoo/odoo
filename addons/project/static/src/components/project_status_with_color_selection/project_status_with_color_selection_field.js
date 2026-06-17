@@ -1,20 +1,21 @@
 import { SelectionField, selectionField } from "@web/views/fields/selection/selection_field";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { registry } from "@web/core/registry";
+import { props, t } from "@odoo/owl";
 
 import { STATUS_COLORS, STATUS_COLOR_PREFIX } from "../../utils/project_utils";
 
 export class ProjectStatusWithColorSelectionField extends SelectionField {
-    static props = {
-        ...SelectionField.props,
-        hideIcon: { type: Boolean, optional: true },
-        hideValue: { type: Boolean, optional: true },
-        initialPadding: { type: String, optional: true },
-    };
-
-    static defaultProps = {
-        ...SelectionField.defaultProps,
-        initialPadding: '2',
-    };
+    // first keys inlined from SelectionField.props (still old-style, has no defaultProps)
+    props = props({
+        ...standardFieldProps,
+        placeholder: t.string().optional(),
+        required: t.boolean().optional(),
+        domain: t.or([t.array(), t.function()]).optional(),
+        hideIcon: t.boolean().optional(),
+        hideValue: t.boolean().optional(),
+        initialPadding: t.string().optional("2"),
+    });
 
     static template = "project.ProjectStatusWithColorSelectionField";
 

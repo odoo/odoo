@@ -16,10 +16,10 @@ export class DeviceSelect extends Component {
     setup() {
         super.setup();
         this.props = props({
-            "icon?": types.string(),
+            icon: types.string().optional(),
             kind: types.selection(["audioinput", "videoinput", "audiooutput"]),
-            "menuClass?": types.string(),
-            "permissionDialogConfiguration?": types.object(),
+            menuClass: types.string().optional(),
+            permissionDialogConfiguration: types.object().optional(),
         });
         this.store = useService("mail.store");
         this.notification = useService("notification");

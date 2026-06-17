@@ -3,16 +3,14 @@ import { useDomState } from "@html_builder/core/utils";
 import { getMimetypeBeforeShape } from "@html_builder/utils/image";
 import { isImageSupportedForProcessing } from "@html_editor/main/media/image_post_process_plugin";
 import { isWebGLEnabled } from "@html_editor/utils/image_processing";
+import { props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 export class ImageFilterOption extends BaseOptionComponent {
     static template = "html_builder.ImageFilterOption";
-    static props = {
-        level: { type: Number, optional: true },
-    };
-    static defaultProps = {
-        level: 0,
-    };
+    props = props({
+        level: t.number().optional(0),
+    });
     setup() {
         super.setup();
         this.state = useDomState(async (editingElement) => {

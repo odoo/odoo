@@ -7,7 +7,7 @@ import { getFieldContext } from "@web/model/relational_model/utils";
 import { X2M_TYPES, getClassNameFromDecoration } from "@web/views/utils";
 import { getTooltipInfo } from "./field_tooltip";
 
-import { Component, types as t, xml } from "@odoo/owl";
+import { Component, t, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 const isSmall = utils.isSmall;
@@ -43,60 +43,67 @@ const supportedInfoValidation = t.array(
         label: t.string(),
         name: t.string(),
         type: t.string(),
-        "availableTypes?": t.array(t.string()),
-        "default?": t.any(),
-        "help?": t.string(),
-        "choices?": /* choices if type == selection */ t.array(
-            t.object({
-                label: t.string(),
-                value: t.any(),
-            })
-        ),
+        availableTypes: t.array(t.string()).optional(),
+        default: t.any().optional(),
+        help: t.string().optional(),
+        choices: /* choices if type == selection */ t
+            .array(
+                t.object({
+                    label: t.string(),
+                    value: t.any(),
+                })
+            )
+            .optional(),
         /**
          * If true, the listed fields come from the relation.
          * e.g.: the field is a relational one like many2many_tags, so
          * property 'field' will search on the relation.
          * */
-        "isRelationalField?": t.boolean(),
+        isRelationalField: t.boolean().optional(),
     })
 );
 
 fieldRegistry.addValidation(
     t.object({
         component: t.component(),
-        "displayName?": t.string(),
-        "supportedAttributes?": supportedInfoValidation,
-        "supportedOptions?": supportedInfoValidation,
-        "supportedTypes?": t.customValidator(t.array(t.string()), (array) =>
-            array.every((x) => x in validFieldTypes)
-        ),
-        "extractProps?": t.function(),
-        "isEmpty?": t.function(),
-        "isValid?": t.function(), // Override the validation for the validation visual feedbacks
-        "additionalClasses?": t.array(t.string()),
-        "fieldDependencies?": t.or([
-            t.function(),
-            t.array(t.object({ name: t.string(), type: t.string() })),
-        ]),
-        "relatedFields?": t.or([
-            t.function(),
-            t.array(
-                t.object({
-                    name: t.string(),
-                    type: t.string(),
-                    "readonly?": t.boolean(),
-                    "selection?": t.array(t.tuple([t.any(), t.string()])),
-                })
-            ),
-        ]),
-        "useSubView?": t.boolean(),
-        "label?": t.or([t.string(), t.literal(false)]),
-        "listViewWidth?": t.or([
-            t.number(),
-            t.tuple([t.number()]),
-            t.tuple([t.number(), t.number()]),
-            t.function(),
-        ]),
+        displayName: t.string().optional(),
+        supportedAttributes: supportedInfoValidation.optional(),
+        supportedOptions: supportedInfoValidation.optional(),
+        supportedTypes: t
+            .customValidator(t.array(t.string()), (array) =>
+                array.every((x) => x in validFieldTypes)
+            )
+            .optional(),
+        extractProps: t.function().optional(),
+        isEmpty: t.function().optional(),
+        isValid: t.function().optional(), // Override the validation for the validation visual feedbacks
+        additionalClasses: t.array(t.string()).optional(),
+        fieldDependencies: t
+            .or([t.function(), t.array(t.object({ name: t.string(), type: t.string() }))])
+            .optional(),
+        relatedFields: t
+            .or([
+                t.function(),
+                t.array(
+                    t.object({
+                        name: t.string(),
+                        type: t.string(),
+                        readonly: t.boolean().optional(),
+                        selection: t.array(t.tuple([t.any(), t.string()])).optional(),
+                    })
+                ),
+            ])
+            .optional(),
+        useSubView: t.boolean().optional(),
+        label: t.or([t.string(), t.literal(false)]).optional(),
+        listViewWidth: t
+            .or([
+                t.number(),
+                t.tuple([t.number()]),
+                t.tuple([t.number(), t.number()]),
+                t.function(),
+            ])
+            .optional(),
     })
 );
 

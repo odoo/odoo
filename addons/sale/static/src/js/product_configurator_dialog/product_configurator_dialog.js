@@ -1,5 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Component, onMounted, onWillStart, onWillUnmount, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, props, proxy, t } from "@odoo/owl";
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
@@ -7,57 +7,48 @@ import { ProductList } from "../product_list/product_list";
 import { formatCurrency } from '@web/core/currency';
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
+export const productConfiguratorDialogOptionsShape = {
+    canChangeVariant: t.boolean().optional(),
+    showQuantity: t.boolean().optional(),
+    showPrice: t.boolean().optional(),
+    showPackaging: t.boolean().optional(),
+};
+
+export const productConfiguratorDialogProps = {
+    productTemplateId: t.number(),
+    ptavIds: t.array(t.number()),
+    customPtavs: t.array(
+        t.object({
+            id: t.number(),
+            value: t.string(),
+        })
+    ),
+    quantity: t.number(),
+    productUOMId: t.number().optional(),
+    companyId: t.number().optional(),
+    pricelistId: t.number().optional(),
+    currencyId: t.number().optional(),
+    selectedComboItems: t
+        .array(
+            t.object({
+                name: t.string(),
+            })
+        )
+        .optional(),
+    soDate: t.string(),
+    size: t.selection(["sm", "md", "lg", "xl", "fs", "fullscreen"]).optional(),
+    edit: t.boolean().optional(false),
+    options: t.object(productConfiguratorDialogOptionsShape).optional(),
+    save: t.function(),
+    discard: t.function(),
+    close: t.function(), // This is the close from the env of the Dialog Component
+};
+
 export class ProductConfiguratorDialog extends Component {
     static components = { Dialog, ProductList};
     static template = 'sale.ProductConfiguratorDialog';
-    static props = {
-        productTemplateId: Number,
-        ptavIds: { type: Array, element: Number },
-        customPtavs: {
-            type: Array,
-            element: Object,
-            shape: {
-                id: Number,
-                value: String,
-            }
-        },
-        quantity: Number,
-        productUOMId: { type: Number, optional: true },
-        companyId: { type: Number, optional: true },
-        pricelistId: { type: Number, optional: true },
-        currencyId: { type: Number, optional: true },
-        selectedComboItems: {
-            type: Array,
-            element: Object,
-            shape: {
-                name: String,
-            },
-            optional: true,
-        },
-        soDate: String,
-        size: {
-            type: String,
-            optional: true,
-            validate: (s) => ["sm", "md", "lg", "xl", "fs", "fullscreen"].includes(s),
-        },
-        edit: { type: Boolean, optional: true },
-        options: {
-            type: Object,
-            optional: true,
-            shape: {
-                canChangeVariant: { type: Boolean, optional: true },
-                showQuantity : { type: Boolean, optional: true },
-                showPrice : { type: Boolean, optional: true },
-                showPackaging: { type: Boolean, optional: true },
-            },
-        },
-        save: Function,
-        discard: Function,
-        close: Function, // This is the close from the env of the Dialog Component
-    };
-    static defaultProps = {
-        edit: false,
-    }
+    static props = productConfiguratorDialogProps;
+    props = props(this.constructor.props);
 
     setup() {
         this.title = _t("Configure your product");

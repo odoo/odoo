@@ -25,7 +25,7 @@ import { KanbanRenderer } from "./kanban_renderer";
 import { useProgressBar } from "./progress_bar_hook";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 
-import { Component, onMounted, onWillStart, proxy, useEffect } from "@odoo/owl";
+import { Component, onMounted, onWillStart, props, proxy, t, useEffect } from "@odoo/owl";
 import { QuickCreateState } from "./kanban_record_quick_create";
 
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];
@@ -46,24 +46,20 @@ export class KanbanController extends Component {
         CogMenu: KanbanCogMenu,
         SelectionBox,
     };
-    static props = {
+    props = props({
         ...standardViewProps,
-        editable: { type: Boolean, optional: true },
-        forceGlobalClick: { type: Boolean, optional: true },
-        onSelectionChanged: { type: Function, optional: true },
-        readonly: { type: Boolean, optional: true },
-        Compiler: Function,
-        Model: Function,
-        Renderer: Function,
-        buttonTemplate: String,
-        archInfo: Object,
-    };
-
-    static defaultProps = {
-        createRecord: () => {},
-        forceGlobalClick: false,
-        selectRecord: () => {},
-    };
+        editable: t.boolean().optional(),
+        forceGlobalClick: t.boolean().optional(false),
+        onSelectionChanged: t.function().optional(),
+        readonly: t.boolean().optional(),
+        Compiler: t.function(),
+        Model: t.function(),
+        Renderer: t.function(),
+        buttonTemplate: t.string(),
+        archInfo: t.object(),
+        createRecord: t.function().optional(() => () => {}),
+        selectRecord: t.function().optional(() => () => {}),
+    });
 
     setup() {
         this.actionService = useService("action");

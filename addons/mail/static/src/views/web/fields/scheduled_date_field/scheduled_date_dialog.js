@@ -16,7 +16,7 @@ export class ScheduledDateDialog extends Component {
             close: types.function([types.instanceOf(MouseEvent)]),
             isRemovable: types.boolean(),
             save: types.function([types.or([types.boolean(), types.instanceOf(luxon.DateTime)])]),
-            "scheduledDate?": types.instanceOf(luxon.DateTime),
+            scheduledDate: types.instanceOf(luxon.DateTime).optional(),
         });
         const now = luxon.DateTime.now();
         this.tomorrowMorning = today().plus({ days: 1 }).set({ hour: 8 });

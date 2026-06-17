@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, computed, plugin, props, signal, types as t, useEffect, xml } from "@odoo/owl";
+import { Component, computed, plugin, props, signal, t, useEffect, xml } from "@odoo/owl";
 import { Suite } from "../core/suite";
 import { createUrlFromId } from "../core/url";
 import { lookup, parseQuery, T_NULL, TestReporting } from "../hoot_utils";
@@ -45,7 +45,7 @@ export class HootSideBarSuite extends Component {
 
     // Props & plugins
     props = props({
-        "multi?": t.number(),
+        multi: t.number().optional(),
         name: t.string(),
         hasSuites: t.boolean(),
         reporting: t.instanceOf(TestReporting),

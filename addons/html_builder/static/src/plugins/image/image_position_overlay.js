@@ -1,25 +1,24 @@
 import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { scrollTo } from "@html_builder/utils/scrolling";
-import { Component, onMounted, onWillStart, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, props, t } from "@odoo/owl";
 
 export class ImagePositionOverlay extends Component {
     static template = "html_builder.ImagePositionOverlay";
-    static props = {
-        targetEl: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
-        close: { type: Function },
-        onDrag: { type: Function },
-        getPosition: { type: Function },
+    props = props({
+        targetEl: t.customValidator(t.any(), (p) => p.nodeType === Node.ELEMENT_NODE),
+        close: t.function(),
+        onDrag: t.function(),
+        getPosition: t.function(),
         /**
          * `getDelta` should return the difference between the image container
          * dimensions and the image rendered dimensions. Effectively giving the
          * room the image has to move around in each x and y directions.
          */
-        getDelta: { type: Function },
-        editable: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
-        history: { type: Object, optional: true },
-        scrollToElement: { type: Boolean, optional: true },
-    };
-    static defaultProps = { scrollToElement: true };
+        getDelta: t.function(),
+        editable: t.customValidator(t.any(), (p) => p.nodeType === Node.ELEMENT_NODE),
+        history: t.object().optional(),
+        scrollToElement: t.boolean().optional(true),
+    });
 
     setup() {
         this.overlayRef = useRef("overlay");

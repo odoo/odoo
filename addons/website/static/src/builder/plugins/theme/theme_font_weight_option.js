@@ -1,5 +1,6 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
+import { props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { CustomizeWebsiteVariableAction } from "../customize_website_plugin";
 
@@ -12,14 +13,11 @@ export function getParsedWeight(value) {
 
 export class FontWeightPicker extends BaseOptionComponent {
     static template = "website.FontWeightPicker";
-    static props = {
-        variables: { type: Array },
-        weights: { type: Array },
-        disabled: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        disabled: false,
-    };
+    props = props({
+        variables: t.array(),
+        weights: t.array(),
+        disabled: t.boolean().optional(false),
+    });
 }
 
 export class ThemeFontWeightOption extends BaseOptionComponent {

@@ -9,7 +9,7 @@ export class PipBanner extends Component {
 
     setup() {
         super.setup();
-        this.props = props({ "compact?": types.boolean() }, { compact: false });
+        this.props = props({ compact: types.boolean().optional(false) });
         this.rtc = useService("discuss.rtc");
         useSubEnv({ isDiscussPipBanner: true });
     }

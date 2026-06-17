@@ -1,12 +1,13 @@
-import { FloatField, floatField } from "@web/views/fields/float/float_field";
+import { FloatField, floatField, floatFieldProps } from "@web/views/fields/float/float_field";
 import { roundPrecision } from "@web/core/utils/numbers";
 import {registry} from "@web/core/registry";
+import { props, t } from "@odoo/owl";
 
 export class AccountTaxRepartitionLineFactorPercent extends FloatField {
-    static defaultProps = {
-        ...FloatField.defaultProps,
-        digits: [16, 12],
-    };
+    props = props({
+        ...floatFieldProps,
+        digits: t.array().optional([16, 12]),
+    });
 
     /*
      * @override

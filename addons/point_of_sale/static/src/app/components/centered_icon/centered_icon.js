@@ -1,14 +1,11 @@
-import { Component, xml } from "@odoo/owl";
+import { Component, props, t, xml } from "@odoo/owl";
 
 export class CenteredIcon extends Component {
-    static props = {
-        icon: String,
-        text: { type: String, optional: true },
-        class: { type: String, optional: true },
-    };
-    static defaultProps = {
-        class: "",
-    };
+    props = props({
+        icon: t.string(),
+        text: t.string().optional(),
+        class: t.string().optional(""),
+    });
     static template = xml`
         <div t-attf-class="{{this.props.class}} d-flex flex-column align-items-center justify-content-center">
             <i t-attf-class="fa {{this.props.icon}}" role="img" />

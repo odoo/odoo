@@ -34,6 +34,7 @@ var owl = (() => {
     Suspense: () => Suspense,
     TemplateSet: () => TemplateSet,
     __info__: () => __info__,
+    applyDefaults: () => applyDefaults,
     assertType: () => assertType,
     asyncComputed: () => asyncComputed,
     batched: () => batched,
@@ -41,6 +42,7 @@ var owl = (() => {
     computed: () => computed,
     config: () => config,
     effect: () => effect,
+    getDefault: () => getDefault,
     getScope: () => getScope,
     globalTemplates: () => globalTemplates,
     htmlEscape: () => htmlEscape,
@@ -62,6 +64,7 @@ var owl = (() => {
     proxy: () => proxy,
     signal: () => signal,
     status: () => status,
+    t: () => types2,
     toRaw: () => toRaw,
     types: () => types2,
     untrack: () => untrack,
@@ -656,6 +659,9 @@ var owl = (() => {
     }
     onWriteAtom(signal2[atomSymbol]);
   }
+  function signalRef() {
+    return buildSignal(null, (atom) => atom.value);
+  }
   function signalArray(initialValue) {
     return buildSignal(initialValue, (atom) => proxifyTarget(atom.value, atom));
   }
@@ -672,6 +678,7 @@ var owl = (() => {
     return buildSignal(value, (atom) => atom.value);
   }
   signal.trigger = triggerSignal;
+  signal.ref = signalRef;
   signal.Array = signalArray;
   signal.Map = signalMap;
   signal.Object = signalObject;
@@ -854,7 +861,7 @@ var owl = (() => {
 ${issueStrings}`);
     }
   }
-  function createContext(issues, value, path, parent) {
+  function createContext(issues, value, path, parent, depthOffset = 1) {
     return {
       issueDepth: 0,
       path,
@@ -875,11 +882,11 @@ ${issueStrings}`);
       validate(type) {
         type(this);
         if (!this.isValid && parent) {
-          parent.issueDepth = this.issueDepth + 1;
+          parent.issueDepth = this.issueDepth + depthOffset;
         }
       },
       withIssues(issues2) {
-        return createContext(issues2, this.value, this.path, this);
+        return createContext(issues2, this.value, this.path, this, 0);
       },
       withKey(key) {
         return createContext(issues, this.value[key], this.path.concat(key), this);
@@ -891,33 +898,111 @@ ${issueStrings}`);
     validation(createContext(issues, value, []));
     return issues;
   }
-  function anyType() {
-    return function validateAny() {
+  var defaultSymbol = /* @__PURE__ */ Symbol("default");
+  var innerTypeSymbol = /* @__PURE__ */ Symbol("innerType");
+  var shapeSymbol = /* @__PURE__ */ Symbol("shape");
+  var elementTypeSymbol = /* @__PURE__ */ Symbol("elementType");
+  var optionalSymbol = /* @__PURE__ */ Symbol("optional");
+  function getDefault(type) {
+    return typeof type === "function" ? type[defaultSymbol] : void 0;
+  }
+  function makeOptional(type, value) {
+    const validate = function validateOptional(context) {
+      if (context.value === void 0) {
+        return;
+      }
+      context.validate(type);
     };
+    validate[optionalSymbol] = true;
+    validate[innerTypeSymbol] = type;
+    if (value !== void 0) {
+      validate[defaultSymbol] = typeof value === "function" ? value : () => value;
+    }
+    return validate;
+  }
+  function isOptionalType(type) {
+    return typeof type === "function" && optionalSymbol in type;
+  }
+  function makeType(validate) {
+    validate.optional = (value) => makeOptional(validate, value);
+    return validate;
+  }
+  function applyDefaults(value, type) {
+    return applyDefaultsRec(value, type);
+  }
+  function applyDefaultsRec(value, type) {
+    if (typeof type !== "function") {
+      return value;
+    }
+    if (value === void 0) {
+      const factory = type[defaultSymbol];
+      if (!factory) {
+        return value;
+      }
+      value = factory();
+    }
+    const inner = type[innerTypeSymbol] || type;
+    if (typeof inner !== "function" || !value || typeof value !== "object") {
+      return value;
+    }
+    const elementType = inner[elementTypeSymbol];
+    if (elementType && Array.isArray(value)) {
+      let result2 = value;
+      for (let index = 0; index < value.length; index++) {
+        const newValue = applyDefaultsRec(value[index], elementType);
+        if (newValue !== value[index]) {
+          if (result2 === value) {
+            result2 = [...value];
+          }
+          result2[index] = newValue;
+        }
+      }
+      return result2;
+    }
+    const shape = inner[shapeSymbol];
+    if (!shape) {
+      return value;
+    }
+    let result = value;
+    for (const key in shape) {
+      const subValue = result[key];
+      const newValue = applyDefaultsRec(subValue, shape[key]);
+      if (newValue !== subValue) {
+        if (result === value) {
+          result = Array.isArray(value) ? [...value] : { ...value };
+        }
+        result[key] = newValue;
+      }
+    }
+    return result;
+  }
+  function anyType() {
+    return makeType(function validateAny() {
+    });
   }
   function booleanType() {
-    return function validateBoolean(context) {
+    return makeType(function validateBoolean(context) {
       if (typeof context.value !== "boolean") {
         context.addIssue({ message: "value is not a boolean" });
       }
-    };
+    });
   }
   function numberType() {
-    return function validateNumber(context) {
+    return makeType(function validateNumber(context) {
       if (typeof context.value !== "number") {
         context.addIssue({ message: "value is not a number" });
       }
-    };
+    });
   }
   function stringType() {
-    return function validateString(context) {
+    return makeType(function validateString(context) {
       if (typeof context.value !== "string" && !(context.value instanceof String)) {
         context.addIssue({ message: "value is not a string" });
       }
-    };
+    });
   }
   function arrayType(elementType) {
-    return function validateArray(context) {
+    const validate = makeType(function validateArray(context) {
       if (!Array.isArray(context.value)) {
         context.addIssue({ message: "value is not an array" });
         return;
@@ -928,17 +1013,21 @@ ${issueStrings}`);
       for (let index = 0; index < context.value.length; index++) {
         context.withKey(index).validate(elementType);
       }
-    };
+    });
+    if (elementType) {
+      validate[elementTypeSymbol] = elementType;
+    }
+    return validate;
   }
   function constructorType(constructor) {
-    return function validateConstructor(context) {
+    return makeType(function validateConstructor(context) {
       if (!(typeof context.value === "function") || !(context.value === constructor || context.value.prototype instanceof constructor)) {
         context.addIssue({ message: `value is not '${constructor.name}' or an extension` });
       }
-    };
+    });
   }
   function customValidator(type, validator, errorMessage = "value does not match custom validation") {
-    return function validateCustom(context) {
+    return makeType(function validateCustom(context) {
       context.validate(type);
       if (!context.isValid) {
         return;
@@ -946,37 +1035,37 @@ ${issueStrings}`);
       if (!validator(context.value)) {
         context.addIssue({ message: errorMessage });
       }
-    };
+    });
   }
   function functionType(parameters = [], result = void 0) {
-    return function validateFunction(context) {
+    return makeType(function validateFunction(context) {
       if (typeof context.value !== "function") {
         context.addIssue({ message: "value is not a function" });
       }
-    };
+    });
   }
   function instanceType(constructor) {
-    return function validateInstanceType(context) {
+    return makeType(function validateInstanceType(context) {
       if (!(context.value instanceof constructor)) {
         context.addIssue({ message: `value is not an instance of '${constructor.name}'` });
       }
-    };
+    });
   }
   function intersection(types22) {
-    return function validateIntersection(context) {
+    return makeType(function validateIntersection(context) {
       for (const type of types22) {
         context.validate(type);
       }
-    };
+    });
   }
   function literalType(literal) {
-    return function validateLiteral(context) {
+    return makeType(function validateLiteral(context) {
       if (context.value !== literal) {
         context.addIssue({
           message: `value is not equal to ${typeof literal === "string" ? `'${literal}'` : literal}`
         });
       }
-    };
+    });
   }
   function literalSelection(literals) {
     return union(literals.map(literalType));
@@ -1003,29 +1092,35 @@ ${issueStrings}`);
       }
     }
     const missingKeys = [];
+    const requiredKeys = [];
     for (const key of keys) {
-      const property = key.endsWith("?") ? key.slice(0, -1) : key;
-      if (context.value[property] === void 0) {
-        if (!key.endsWith("?")) {
-          missingKeys.push(property);
+      const isOptional = isOptionalType(shape[key]);
+      if (!isOptional) {
+        requiredKeys.push(key);
+      }
+      if (context.value[key] === void 0) {
+        if (!isOptional) {
+          missingKeys.push(key);
         }
         continue;
       }
       if (isShape) {
-        context.withKey(property).validate(shape[key]);
+        context.withKey(key).validate(shape[key]);
       }
     }
     if (missingKeys.length) {
       context.addIssue({
         message: "object value has missing keys",
         missingKeys,
-        expectedKeys: keys
+        // only required keys are expected to be present (optional keys still
+        // appear in the unknown-keys issue below: they are known to the schema)
+        expectedKeys: requiredKeys
       });
     }
     if (isStrict) {
       const unknownKeys = [];
       for (const key in context.value) {
-        if (!keys.includes(key) && !(`${key}?` in shape)) {
+        if (!keys.includes(key)) {
           unknownKeys.push(key);
         }
       }
@@ -1039,24 +1134,32 @@ ${issueStrings}`);
     }
   }
   function objectType(schema = {}) {
-    return function validateLooseObject(context) {
+    const validate = makeType(function validateLooseObject(context) {
       validateObject(context, schema, false);
-    };
+    });
+    if (!Array.isArray(schema)) {
+      validate[shapeSymbol] = schema;
+    }
+    return validate;
   }
   function strictObjectType(schema) {
-    return function validateStrictObject(context) {
+    const validate = makeType(function validateStrictObject(context) {
       validateObject(context, schema, true);
-    };
+    });
+    if (!Array.isArray(schema)) {
+      validate[shapeSymbol] = schema;
+    }
+    return validate;
   }
   function promiseType(type) {
-    return function validatePromise(context) {
+    return makeType(function validatePromise(context) {
       if (!(context.value instanceof Promise)) {
         context.addIssue({ message: "value is not a promise" });
       }
-    };
+    });
   }
   function recordType(valueType) {
-    return function validateRecord(context) {
+    return makeType(function validateRecord(context) {
       if (typeof context.value !== "object" || Array.isArray(context.value) || context.value === null) {
         context.addIssue({ message: "value is not an object" });
         return;
@@ -1067,10 +1170,10 @@ ${issueStrings}`);
       for (const key in context.value) {
         context.withKey(key).validate(valueType);
       }
-    };
+    });
   }
   function tuple(types22) {
-    return function validateTuple(context) {
+    const validate = makeType(function validateTuple(context) {
       if (!Array.isArray(context.value)) {
         context.addIssue({ message: "value is not an array" });
         return;
@@ -1082,10 +1185,12 @@ ${issueStrings}`);
       for (let index = 0; index < types22.length; index++) {
         context.withKey(index).validate(types22[index]);
       }
-    };
+    });
+    validate[shapeSymbol] = types22;
+    return validate;
   }
   function union(types22) {
-    return function validateUnion(context) {
+    return makeType(function validateUnion(context) {
       let firstIssueIndex = 0;
       const subIssues = [];
       for (const type of types22) {
@@ -1101,17 +1206,20 @@ ${issueStrings}`);
         message: "value does not match union type",
         subIssues
       });
-    };
+    });
   }
   function reactiveValueType(type) {
-    return function validateReactiveValue(context) {
+    return makeType(function validateReactiveValue(context) {
       if (typeof context.value !== "function" || !context.value[atomSymbol]) {
         context.addIssue({ message: "value is not a reactive value" });
       }
-    };
+    });
   }
   function ref(type) {
-    return union([literalType(null), instanceType(type)]);
+    if (typeof HTMLElement === "undefined") {
+      throw new Error("Cannot use ref in a non-DOM environment");
+    }
+    return union([literalType(null), instanceType(type || HTMLElement)]);
   }
   var types = {
     and: intersection,
@@ -1413,7 +1521,7 @@ ${issueStrings}`);
     }
     return plugin2;
   }
-  function config(key, type, defaultValue) {
+  function config(key, type) {
     const scope = useScope();
     if (!(scope instanceof PluginManager)) {
       throw new OwlError("Expected to be in a plugin scope");
@@ -1421,8 +1529,8 @@ ${issueStrings}`);
     if (scope.app.dev && type) {
       assertType(scope.config, types.object({ [key]: type }), "Config does not match the type");
     }
-    const configValue = scope.config[key.endsWith("?") ? key.slice(0, -1) : key];
-    return configValue === void 0 ? defaultValue : configValue;
+    const configValue = scope.config[key];
+    return configValue === void 0 ? getDefault(type)?.() : configValue;
   }
   var EventBus = class extends EventTarget {
     trigger(name, payload) {
@@ -1468,7 +1576,7 @@ ${issueStrings}`);
   }
 
   // ../owl-runtime/dist/owl-runtime.es.js
-  var version = "3.0.0-alpha.34";
+  var version = "3.0.0-alpha.36";
   var fibersInError = /* @__PURE__ */ new WeakMap();
   var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
   function invokeErrorHandlers(node, error, finalize, markFibers) {
@@ -4274,12 +4382,12 @@ ${issueStrings}`);
     }
     handlers.push(callback.bind(scope.component));
   }
-  function staticProp(key, type, ...args) {
+  function staticProp(key, type) {
     const node = getComponentScope();
-    const hasDefault = args.length > 0;
+    const defaultFactory = getDefault(type);
     const propValue = node.props[key];
     if (node.app.dev) {
-      if (type !== void 0 && (!hasDefault || propValue !== void 0)) {
+      if (type !== void 0 && (!defaultFactory || propValue !== void 0)) {
         assertType(propValue, type, `Invalid prop '${key}' in '${node.componentName}'`);
       }
       node.willUpdateProps.push((nextProps) => {
@@ -4290,37 +4398,32 @@ ${issueStrings}`);
         }
       });
     }
-    return propValue === void 0 && hasDefault ? args[0] : propValue;
+    return propValue === void 0 && defaultFactory ? defaultFactory() : propValue;
   }
   function componentType() {
     return constructorType(Component);
   }
-  var types2 = { ...types, component: componentType };
-  function validateDefaults(schema) {
-    const validation = {};
-    if (Array.isArray(schema)) {
-      for (const key of schema) {
-        if (key.endsWith("?")) {
-          validation[key] = types2.any();
-        }
-      }
-    } else {
-      for (const key in schema) {
-        if (key.endsWith("?")) {
-          validation[key] = schema[key];
+  var types2 = {
+    ...types,
+    component: componentType
+  };
+  function makeProps(type) {
+    const node = getComponentScope();
+    const { app, componentName } = node;
+    let defaults = null;
+    if (type && !Array.isArray(type)) {
+      for (const key in type) {
+        const factory = getDefault(type[key]);
+        if (factory) {
+          (defaults ||= {})[key] = factory();
         }
       }
     }
-    return types2.strictObject(validation);
-  }
-  function makeProps(type, defaults) {
-    const node = getComponentScope();
-    const { app, componentName } = node;
     if (defaults) {
       node.defaultProps = Object.assign(node.defaultProps || {}, defaults);
     }
     function resolveValue(props2, key) {
-      if (props2[key] === void 0 && defaults) {
+      if (props2[key] === void 0 && defaults && key in defaults) {
         return defaults[key];
       }
       return props2[key];
@@ -4346,16 +4449,20 @@ ${issueStrings}`);
       }
     }
     if (type) {
-      const keys = (Array.isArray(type) ? type : Object.keys(type)).map(
-        (key) => key.endsWith("?") ? key.slice(0, -1) : key
-      );
+      const keys = Array.isArray(type) ? type : Object.keys(type);
       defineProps(keys);
       node.propsUpdated.push(() => updateSignals(keys));
       if (app.dev) {
         if (defaults) {
+          const defaultedShape = {};
+          for (const key in type) {
+            if (key in defaults) {
+              defaultedShape[key] = type[key];
+            }
+          }
           assertType(
             defaults,
-            validateDefaults(type),
+            types2.object(defaultedShape),
             `Invalid component default props (${componentName})`
           );
         }
@@ -4371,13 +4478,6 @@ ${issueStrings}`);
         for (const k in props2) {
           if (k.charCodeAt(0) !== 1) {
             keys2.push(k);
-          }
-        }
-        if (defaults) {
-          for (const k in defaults) {
-            if (!(k in props2)) {
-              keys2.push(k);
-            }
           }
         }
         return keys2;
@@ -4414,7 +4514,7 @@ ${issueStrings}`);
       <t t-call-slot="default"/>
     </t>
   `;
-    props = props({ "error?": types2.signal() }, { error: signal(null) });
+    props = props({ error: types2.signal().optional(() => signal(null)) });
     setup() {
       onError((e) => this.props.error.set(e));
     }
@@ -4475,7 +4575,7 @@ ${issueStrings}`);
       <t t-call-slot="fallback"/>
     </t>
   `;
-    props = props({ slots: types2.object(["default", "fallback?"]) });
+    props = props({ slots: types2.object({ default: types2.any(), fallback: types2.any().optional() }) });
     prepared = signal(false);
     mounted = signal(false);
     subRootMounted = false;
@@ -4531,8 +4631,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-06-05T08:48:39.601Z",
-    hash: "06699124",
+    date: "2026-06-12T11:02:40.056Z",
+    hash: "79873da1",
     url: "https://github.com/odoo/owl"
   };
 

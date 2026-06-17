@@ -136,8 +136,9 @@ export function useBuilderComponent() {
     newEnv.getEditingElement = () => editingElements[0];
     const weContext = {};
     for (const key in basicContainerBuilderComponentProps) {
-        if (key in comp.props) {
-            weContext[key] = comp.props[key];
+        const value = comp.props[key];
+        if (value !== undefined) {
+            weContext[key] = value;
         }
     }
     if (Object.keys(weContext).length) {

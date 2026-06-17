@@ -7,32 +7,31 @@ import { Operation } from "@web/model/relational_model/operation";
 import { Field, fieldVisualFeedback } from "@web/views/fields/field";
 import { formatDate } from "@web/views/fields/formatters";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 const { DateTime } = luxon;
 
 export class ListConfirmationDialog extends Component {
     static template = "web.ListView.ConfirmationModal";
     static components = { BadgeTag, Dialog, Field };
-    static props = {
-        close: Function,
-        title: {
-            validate: (m) =>
-                typeof m === "string" ||
-                (typeof m === "object" && typeof m.toString === "function"),
-            optional: true,
-        },
-        confirm: { type: Function, optional: true },
-        cancel: { type: Function, optional: true },
-        isDomainSelected: Boolean,
-        fields: Object,
-        nbRecords: Number,
-        nbValidRecords: Number,
-        record: Object,
-        changes: Object,
-    };
-    static defaultProps = {
-        title: _t("Confirmation"),
-    };
+    props = props({
+        close: t.function(),
+        title: t
+            .customValidator(
+                t.any(),
+                (m) =>
+                    typeof m === "string" ||
+                    (typeof m === "object" && typeof m.toString === "function")
+            )
+            .optional(_t("Confirmation")),
+        confirm: t.function().optional(),
+        cancel: t.function().optional(),
+        isDomainSelected: t.boolean(),
+        fields: t.array(),
+        nbRecords: t.number(),
+        nbValidRecords: t.number(),
+        record: t.object(),
+        changes: t.object(),
+    });
 
     setup() {
         useAutofocus();

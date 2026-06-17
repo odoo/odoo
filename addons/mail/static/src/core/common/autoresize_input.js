@@ -1,27 +1,18 @@
-import { Component, onMounted, props, signal, types, useEffect } from "@odoo/owl";
+import { Component, onMounted, props, signal, t, useEffect } from "@odoo/owl";
 
 import { useAutoresize } from "@web/core/utils/autoresize";
 import { useRef } from "@web/owl2/utils";
 
 export class AutoresizeInput extends Component {
     static template = "mail.AutoresizeInput";
-    props = props(
-        {
-            "autofocus?": types.boolean(),
-            "className?": types.string(),
-            "enabled?": types.boolean(),
-            "onValidate?": types.function([types.string()]),
-            "placeholder?": types.string(),
-            value: types.signal(types.string()),
-        },
-        {
-            autofocus: false,
-            className: "",
-            enabled: true,
-            onValidate: () => {},
-            placeholder: "",
-        }
-    );
+    props = props({
+        autofocus: t.boolean().optional(false),
+        className: t.string().optional(""),
+        enabled: t.boolean().optional(true),
+        onValidate: t.function([t.string()]).optional(() => () => {}),
+        placeholder: t.string().optional(""),
+        value: t.signal(t.string()),
+    });
 
     setup() {
         super.setup();

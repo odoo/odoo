@@ -5,7 +5,7 @@ import { UrlField, urlField } from "@web/views/fields/url/url_field";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { debounce } from "@web/core/utils/timing";
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { charField, CharField } from "@web/views/fields/char/char_field";
 
 /**
@@ -15,10 +15,14 @@ import { charField, CharField } from "@web/views/fields/char/char_field";
 class PageUrlField extends UrlField {
     static components = { PageDependencies };
     static template = "website.PageUrlField";
-    static defaultProps = {
-        ...UrlField.defaultProps,
-        websitePath: true,
-    };
+    // Inlined from UrlField's static props (UrlField is not yet converted to
+    // an exported schema const; it has no defaultProps of its own).
+    props = props({
+        ...standardFieldProps,
+        placeholder: t.string().optional(),
+        text: t.string().optional(),
+        websitePath: t.boolean().optional(true),
+    });
 
     setup() {
         super.setup();
@@ -26,7 +30,7 @@ class PageUrlField extends UrlField {
         this.inputRef = useRef("input");
 
         // Trigger onchange api on input event to display redirection
-        // parameters as soon as the user types.
+        // parameters as soon as the user t.
         // TODO should find a way to do this more automatically (and option in
         // the framework? or at least a t-on-input?)
         useLayoutEffect(

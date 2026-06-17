@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Dropdown } from "@web/core/dropdown/dropdown";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, props, t } from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { cookie } from "@web/core/browser/cookie";
@@ -8,23 +8,19 @@ import { user } from "@web/core/user";
 
 export class AccountReviewStateSelectionBadge extends Component {
     static template = "account_reports.AccountReviewStateSelectionBadgeField";
-    static props = {
+    props = props({
         ...standardFieldProps,
-        decorations: { type: Object, optional: true },
-        options: { type: Object, optional: true },
-        class: { type: String, optional: true },
-        size: { type: String, optional: true },
-    };
+        decorations: t.object().optional(),
+        options: t.object().optional(),
+        class: t.string().optional(),
+        size: t.string().optional("normal"),
+    });
 
     setup() {
         onWillStart(async () => {
             this.editableOptions = await this.getEditableOptions();
         });
     }
-
-    static defaultProps = {
-        size: "normal"
-    };
 
     static components = {
         Dropdown,

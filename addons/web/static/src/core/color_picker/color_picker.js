@@ -1,5 +1,5 @@
 import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { isCSSColor, isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
@@ -40,48 +40,32 @@ export const DEFAULT_THEME_COLOR_VARS = [
 export class ColorPicker extends Component {
     static template = "web.ColorPicker";
     static components = { CustomColorPicker, Dropdown, DropdownItem };
-    static props = {
-        state: {
-            type: Object,
-            shape: {
-                selectedColor: String,
-                selectedColorCombination: { type: String, optional: true },
-                getTargetedElements: { type: Function, optional: true },
-                defaultTab: String,
-                selectedTab: { type: String, optional: true },
-            },
-        },
-        getUsedCustomColors: { type: Function, optional: true },
-        applyColor: Function,
-        applyColorPreview: { type: Function, optional: true },
-        applyColorResetPreview: { type: Function, optional: true },
-        editColorCombination: { type: Function, optional: true },
-        setOnCloseCallback: { type: Function, optional: true },
-        setOperationCallbacks: { type: Function, optional: true },
-        enabledTabs: { type: Array, optional: true },
-        colorPrefix: { type: String, optional: true },
-        cssVarColorPrefix: { type: String, optional: true },
-        defaultOpacity: { type: Number, optional: true },
-        grayscales: { type: Object, optional: true },
-        noTransparency: { type: Boolean, optional: true },
-        close: { type: Function, optional: true },
-        className: { type: String, optional: true },
-        useDefaultThemeColors: { type: Boolean, optional: true },
-        onEscape: { type: Function, optional: true },
-    };
-    static defaultProps = {
-        close: () => {},
-        defaultOpacity: 100,
-        enabledTabs: ["solid", "custom"],
-        colorPrefix: "",
-        cssVarColorPrefix: "",
-        getUsedCustomColors: () => [],
-        setOnCloseCallback: () => {},
-        applyColorPreview: () => {},
-        applyColorResetPreview: () => {},
-        useDefaultThemeColors: true,
-        onEscape: () => {},
-    };
+    props = props({
+        state: t.object({
+            selectedColor: t.string(),
+            selectedColorCombination: t.string().optional(),
+            getTargetedElements: t.function().optional(),
+            defaultTab: t.string(),
+            selectedTab: t.string().optional(),
+        }),
+        getUsedCustomColors: t.function().optional(() => () => []),
+        applyColor: t.function(),
+        applyColorPreview: t.function().optional(() => () => {}),
+        applyColorResetPreview: t.function().optional(() => () => {}),
+        editColorCombination: t.function().optional(),
+        setOnCloseCallback: t.function().optional(() => () => {}),
+        setOperationCallbacks: t.function().optional(),
+        enabledTabs: t.array().optional(["solid", "custom"]),
+        colorPrefix: t.string().optional(""),
+        cssVarColorPrefix: t.string().optional(""),
+        defaultOpacity: t.number().optional(100),
+        grayscales: t.object().optional(),
+        noTransparency: t.boolean().optional(),
+        close: t.function().optional(() => () => {}),
+        className: t.string().optional(),
+        useDefaultThemeColors: t.boolean().optional(true),
+        onEscape: t.function().optional(() => () => {}),
+    });
 
     setup() {
         this.tabs = registry

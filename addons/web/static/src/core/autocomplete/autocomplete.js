@@ -4,63 +4,44 @@ import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
-import { Component, onWillUpdateProps, proxy } from "@odoo/owl";
+import { Component, onWillUpdateProps, props, proxy, t } from "@odoo/owl";
 import { mergeClasses } from "@web/core/utils/classname";
+
+export const autoCompleteProps = {
+    value: t.string().optional(""),
+    id: t.string().optional(),
+    sources: t.array(
+        t.object({
+            placeholder: t.string().optional(),
+            options: t.or([t.array(), t.function()]),
+            optionSlot: t.string().optional(),
+        })
+    ),
+    placeholder: t.string().optional(""),
+    title: t.string().optional(""),
+    autocomplete: t.string().optional("new-password"),
+    autoSelect: t.boolean().optional(false),
+    resetOnSelect: t.boolean().optional(),
+    onInput: t.function().optional(() => () => {}),
+    onCancel: t.function().optional(() => () => {}),
+    onChange: t.function().optional(() => () => {}),
+    onBlur: t.function().optional(() => () => {}),
+    onFocus: t.function().optional(() => () => {}),
+    searchOnInputClick: t.boolean().optional(true),
+    input: t.function().optional(),
+    inputDebounceDelay: t.number().optional(250),
+    dropdown: t.boolean().optional(true),
+    autofocus: t.boolean().optional(),
+    class: t.string().optional(),
+    slots: t.object().optional(),
+    menuPositionOptions: t.object().optional({}),
+    menuCssClass: t.or([t.string(), t.array(), t.object()]).optional({}),
+    selectOnBlur: t.boolean().optional(),
+};
 
 export class AutoComplete extends Component {
     static template = "web.AutoComplete";
-    static props = {
-        value: { type: String, optional: true },
-        id: { type: String, optional: true },
-        sources: {
-            type: Array,
-            element: {
-                type: Object,
-                shape: {
-                    placeholder: { type: String, optional: true },
-                    options: [Array, Function],
-                    optionSlot: { type: String, optional: true },
-                },
-            },
-        },
-        placeholder: { type: String, optional: true },
-        title: { type: String, optional: true },
-        autocomplete: { type: String, optional: true },
-        autoSelect: { type: Boolean, optional: true },
-        resetOnSelect: { type: Boolean, optional: true },
-        onInput: { type: Function, optional: true },
-        onCancel: { type: Function, optional: true },
-        onChange: { type: Function, optional: true },
-        onBlur: { type: Function, optional: true },
-        onFocus: { type: Function, optional: true },
-        searchOnInputClick: { type: Boolean, optional: true },
-        input: { type: Function, optional: true },
-        inputDebounceDelay: { type: Number, optional: true },
-        dropdown: { type: Boolean, optional: true },
-        autofocus: { type: Boolean, optional: true },
-        class: { type: String, optional: true },
-        slots: { type: Object, optional: true },
-        menuPositionOptions: { type: Object, optional: true },
-        menuCssClass: { type: [String, Array, Object], optional: true },
-        selectOnBlur: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        value: "",
-        placeholder: "",
-        title: "",
-        autocomplete: "new-password",
-        autoSelect: false,
-        dropdown: true,
-        onInput: () => {},
-        onCancel: () => {},
-        onChange: () => {},
-        onBlur: () => {},
-        onFocus: () => {},
-        searchOnInputClick: true,
-        inputDebounceDelay: 250,
-        menuPositionOptions: {},
-        menuCssClass: {},
-    };
+    props = props(autoCompleteProps);
 
     get timeout() {
         return this.props.inputDebounceDelay;

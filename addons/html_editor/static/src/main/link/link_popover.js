@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { useCrossDocumentListener } from "../../utils/hooks";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
-import { Component, proxy } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { cleanZWChars, deduceURLfromText } from "./utils";
 import { CheckBox } from "@web/core/checkbox/checkbox";
@@ -20,41 +20,38 @@ import {
 } from "@html_editor/utils/button_style";
 import { trapFocus } from "@html_editor/utils/dom_traversal";
 
+export const linkPopoverProps = {
+    document: t.customValidator(t.any(), (p) => p.nodeType === Node.DOCUMENT_NODE),
+    linkElement: t.customValidator(t.any(), (el) => el.nodeType === Node.ELEMENT_NODE),
+    containerElement: t.customValidator(t.any(), (el) => el.nodeType === Node.ELEMENT_NODE),
+    onApply: t.function(),
+    onChange: t.function(),
+    onDiscard: t.function(),
+    onRemove: t.function(),
+    onCopy: t.function(),
+    onEdit: t.function(),
+    getInternalMetaData: t.function(),
+    getExternalMetaData: t.function(),
+    getAttachmentMetadata: t.function(),
+    isImage: t.boolean(),
+    showReplaceTitleBanner: t.boolean(),
+    type: t.string(),
+    LinkPopoverState: t.object(),
+    recordInfo: t.object(),
+    canEdit: t.boolean().optional(true),
+    canRemove: t.boolean().optional(true),
+    canUpload: t.boolean().optional(),
+    onUpload: t.function().optional(),
+    includeStyling: t.boolean().optional(true),
+    allowTargetBlank: t.boolean().optional(),
+    allowStripDomain: t.boolean().optional(),
+    publicAttachments: t.boolean().optional(),
+    advancedAttributeOptions: t.array().optional(),
+};
+
 export class LinkPopover extends Component {
     static template = "html_editor.linkPopover";
-    static props = {
-        document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
-        linkElement: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
-        containerElement: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
-        onApply: Function,
-        onChange: Function,
-        onDiscard: Function,
-        onRemove: Function,
-        onCopy: Function,
-        onEdit: Function,
-        getInternalMetaData: Function,
-        getExternalMetaData: Function,
-        getAttachmentMetadata: Function,
-        isImage: Boolean,
-        showReplaceTitleBanner: Boolean,
-        type: String,
-        LinkPopoverState: Object,
-        recordInfo: Object,
-        canEdit: { type: Boolean, optional: true },
-        canRemove: { type: Boolean, optional: true },
-        canUpload: { type: Boolean, optional: true },
-        onUpload: { type: Function, optional: true },
-        includeStyling: { type: Boolean, optional: true },
-        allowTargetBlank: { type: Boolean, optional: true },
-        allowStripDomain: { type: Boolean, optional: true },
-        publicAttachments: { type: Boolean, optional: true },
-        advancedAttributeOptions: { type: Array, optional: true },
-    };
-    static defaultProps = {
-        canEdit: true,
-        canRemove: true,
-        includeStyling: true,
-    };
+    props = props(linkPopoverProps);
     static components = { CheckBox, Dropdown, DropdownItem };
     buttonSizesData = BUTTON_SIZES;
     buttonShapesData = BUTTON_SHAPES;

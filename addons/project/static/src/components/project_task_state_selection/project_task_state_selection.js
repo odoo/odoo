@@ -1,4 +1,4 @@
-import { proxy } from "@odoo/owl";
+import { props, proxy, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import {
     StateSelectionField,
@@ -8,15 +8,18 @@ import { useCommand } from "@web/core/commands/command_hook";
 import { formatSelection } from "@web/views/fields/formatters";
 
 import { registry } from "@web/core/registry";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 export class ProjectTaskStateSelection extends StateSelectionField {
     static template = "project.ProjectTaskStateSelection";
 
-    static props = {
-        ...stateSelectionField.component.props,
-        isToggleMode: { type: Boolean, optional: true },
-        viewType: { type: String },
-    };
+    props = props({
+        ...standardFieldProps,
+        showLabel: t.boolean().optional(true),
+        withCommand: t.boolean().optional(),
+        isToggleMode: t.boolean().optional(),
+        viewType: t.string().optional(),
+    });
 
     setup() {
         this.state = proxy({

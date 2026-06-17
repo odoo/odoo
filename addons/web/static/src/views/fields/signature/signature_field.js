@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { SignatureViewer } from "@web/core/signature/signature_viewer";
@@ -10,18 +10,15 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 export class SignatureField extends Component {
     static template = "web.SignatureField";
     static components = { SignatureViewer };
-    static props = {
+    props = props({
         ...standardFieldProps,
-        defaultFont: { type: String },
-        fullName: { type: String, optional: true },
-        height: { type: Number, optional: true },
-        previewImage: { type: String, optional: true },
-        width: { type: Number, optional: true },
-        type: { validate: (t) => ["initial", "signature"].includes(t), optional: true },
-    };
-    static defaultProps = {
-        type: "signature",
-    };
+        defaultFont: t.string(),
+        fullName: t.string().optional(),
+        height: t.number().optional(),
+        previewImage: t.string().optional(),
+        width: t.number().optional(),
+        type: t.selection(["initial", "signature"]).optional("signature"),
+    });
 
     get defaultName() {
         const { fullName, record } = this.props;

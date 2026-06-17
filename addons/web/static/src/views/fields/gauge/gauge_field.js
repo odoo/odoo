@@ -5,20 +5,17 @@ import { registry } from "@web/core/registry";
 import { formatFloat } from "@web/views/fields/formatters";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, props, t } from "@odoo/owl";
 
 export class GaugeField extends Component {
     static template = "web.GaugeField";
-    static props = {
+    props = props({
         ...standardFieldProps,
-        maxValueField: { type: String, optional: true },
-        maxValue: { type: Number, optional: true },
-        maxTooltip: { type: String, optional: true },
-        title: { type: String, optional: true },
-    };
-    static defaultProps = {
-        maxValue: 100,
-    };
+        maxValueField: t.string().optional(),
+        maxValue: t.number().optional(100),
+        maxTooltip: t.string().optional(),
+        title: t.string().optional(),
+    });
 
     setup() {
         this.chart = null;
@@ -126,7 +123,7 @@ export const gaugeField = {
             label: _t("Max tooltip"),
             name: "max_tooltip",
             type: "string",
-        }
+        },
     ],
     extractProps: ({ options }) => ({
         maxTooltip: options.max_tooltip,

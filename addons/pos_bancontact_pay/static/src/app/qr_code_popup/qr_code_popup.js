@@ -1,9 +1,6 @@
-import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
-import { patch } from "@web/core/utils/patch";
+import { qrPopupProps } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
+import { t } from "@odoo/owl";
 
-patch(QRPopup, {
-    props: {
-        ...QRPopup.props,
-        frameLanguage: { type: String, optional: true },
-    },
+Object.assign(qrPopupProps, {
+    frameLanguage: t.string().optional(),
 });

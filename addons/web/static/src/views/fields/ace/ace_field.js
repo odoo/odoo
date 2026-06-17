@@ -4,22 +4,18 @@ import { useBus } from "@web/core/utils/hooks";
 import { standardFieldProps } from "../standard_field_props";
 
 import { CodeEditor } from "@web/core/code_editor/code_editor";
-import { Component, proxy } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 import { useRecordObserver } from "@web/model/relational_model/utils";
 import { formatText } from "@web/views/fields/formatters";
 import { cookie } from "@web/core/browser/cookie";
 
 export class AceField extends Component {
     static template = "web.AceField";
-    static props = {
+    props = props({
         ...standardFieldProps,
-        mode: { type: String, optional: true },
-        lineWrapping: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        mode: "qweb",
-        lineWrapping: false,
-    };
+        mode: t.string().optional("qweb"),
+        lineWrapping: t.boolean().optional(false),
+    });
     static components = { CodeEditor };
 
     setup() {

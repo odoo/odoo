@@ -3,22 +3,19 @@ import { registry } from "@web/core/registry";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 const formatters = registry.category("formatters");
 
 export class StatInfoField extends Component {
     static template = "web.StatInfoField";
-    static props = {
+    props = props({
         ...standardFieldProps,
-        labelField: { type: String, optional: true },
-        noLabel: { type: Boolean, optional: true },
-        digits: { type: Array, optional: true },
-        string: { type: String, optional: true },
-        trailingZeros: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        trailingZeros: true,
-    };
+        labelField: t.string().optional(),
+        noLabel: t.boolean().optional(),
+        digits: t.array().optional(),
+        string: t.string().optional(),
+        trailingZeros: t.boolean().optional(true),
+    });
 
     get formattedValue() {
         const field = this.props.record.fields[this.props.name];

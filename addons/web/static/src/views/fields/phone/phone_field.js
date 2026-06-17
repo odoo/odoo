@@ -4,18 +4,20 @@ import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { useChildRef } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
+export const phoneFieldProps = {
+    ...standardFieldProps,
+    placeholder: t.string().optional(),
+    formattedField: t.string().optional(),
+    dialField: t.string().optional(),
+};
+
 export class PhoneField extends Component {
     static template = "web.PhoneField";
-    static props = {
-        ...standardFieldProps,
-        placeholder: { type: String, optional: true },
-        formattedField: { type: String, optional: true },
-        dialField: { type: String, optional: true },
-    };
+    props = props(phoneFieldProps);
     static components = { Dropdown, DropdownItem };
 
     setup() {

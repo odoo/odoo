@@ -32,9 +32,11 @@ import {
     onWillDestroy,
     onWillPatch,
     onWillStart,
+    props,
     signal,
     status,
     proxy,
+    t,
 } from "@odoo/owl";
 import { getCurrencyRates } from "@web/core/currency";
 import { _t } from "@web/core/l10n/translation";
@@ -96,6 +98,23 @@ function getElementToFocus(cell, index) {
     return getTabableElements(cell).at(index) || cell;
 }
 
+export const listRendererProps = {
+    activeActions: t.any().optional(),
+    list: t.any(),
+    archInfo: t.any(),
+    openRecord: t.any(),
+    onAdd: t.any().optional(),
+    cycleOnTab: t.any().optional(true),
+    allowSelectors: t.any().optional(false),
+    editable: t.any().optional(),
+    onOpenFormView: t.any().optional(),
+    hasOpenFormViewButton: t.any().optional(),
+    noContentHelp: t.any().optional(),
+    nestedKeyOptionalFieldsData: t.any().optional(),
+    optionalActiveFields: t.any().optional(),
+    readonly: t.any().optional(),
+};
+
 /** @extends Component<ListRendererProps, OdooEnv> */
 export class ListRenderer extends Component {
     static template = "web.ListRenderer";
@@ -114,24 +133,7 @@ export class ListRenderer extends Component {
         ActionHelper,
         GroupConfigMenu,
     };
-    static defaultProps = { allowSelectors: false, cycleOnTab: true };
-
-    static props = [
-        "activeActions?",
-        "list",
-        "archInfo",
-        "openRecord",
-        "onAdd?",
-        "cycleOnTab?",
-        "allowSelectors?",
-        "editable?",
-        "onOpenFormView?",
-        "hasOpenFormViewButton?",
-        "noContentHelp?",
-        "nestedKeyOptionalFieldsData?",
-        "optionalActiveFields?",
-        "readonly?",
-    ];
+    props = props(listRendererProps);
 
     setup() {
         this.uiService = useService("ui");

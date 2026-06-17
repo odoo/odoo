@@ -12,9 +12,9 @@ export class Follower extends Component {
     setup() {
         this.store = useService("mail.store");
         this.props = props({
-            "close?": types.function([]),
+            close: types.function([]).optional(),
             follower: types.instanceOf(this.store["mail.followers"].Class),
-            "onFollowerChanged?": types.function([]),
+            onFollowerChanged: types.function([]).optional(),
         });
         this.avatarCard = usePopover(AvatarCard, { position: "right" });
     }

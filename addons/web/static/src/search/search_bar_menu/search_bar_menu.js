@@ -1,5 +1,5 @@
-import { Component, proxy } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
+import { Component, props, proxy, t } from "@odoo/owl";
+import { Dropdown, dropdownProps } from "@web/core/dropdown/dropdown";
 import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
@@ -26,16 +26,14 @@ export class SearchBarMenu extends Component {
         AccordionItem,
         PropertiesGroupByItem,
     };
-    static props = {
-        slots: {
-            type: Object,
-            optional: true,
-            shape: {
-                default: { optional: true },
-            },
-        },
-        dropdownState: { ...Dropdown.props.state },
-    };
+    props = props({
+        slots: t
+            .object({
+                default: t.any().optional(),
+            })
+            .optional(),
+        dropdownState: dropdownProps.state,
+    });
 
     setup() {
         this.facet_icons = FACET_ICONS;

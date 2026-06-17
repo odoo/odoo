@@ -1,6 +1,6 @@
 import { useSubEnv } from "@web/owl2/utils";
 import { attClassObjectToString } from "@mail/utils/common/format";
-import { Component, props, signal, types } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { useBackButton, useService } from "@web/core/utils/hooks";
@@ -10,23 +10,17 @@ export class ActionPanel extends Component {
     static components = { ResizablePanel };
     setup() {
         super.setup();
-        this.props = props(
-            {
-                "close?": types.function([types.instanceOf(MouseEvent)]),
-                "contentPadding?": types.boolean(),
-                "contentRef?": types.signal(types.instanceOf(HTMLDivElement)),
-                "icon?": types.string(),
-                "initialWidth?": types.number(),
-                "minWidth?": types.number(),
-                "resizable?": types.boolean(),
-                "title?": types.string(),
-            },
-            {
-                contentPadding: true,
-                contentRef: signal(null, { type: types.instanceOf(HTMLDivElement) }),
-                resizable: true,
-            }
-        );
+        this.props = props({
+            close: t.function([]).optional(),
+            contentPadding: t.boolean().optional(true),
+            contentRef: t.signal(t.instanceOf(HTMLDivElement)).optional(() => signal.ref()),
+            icon: t.string().optional(),
+            initialWidth: t.number().optional(),
+            minWidth: t.number().optional(),
+            resizable: t.boolean().optional(true),
+            slots: t.object().optional(),
+            title: t.string().optional(),
+        });
         this.store = useService("mail.store");
         this.ui = useService("ui");
         useSubEnv({ inDiscussActionPanel: true });

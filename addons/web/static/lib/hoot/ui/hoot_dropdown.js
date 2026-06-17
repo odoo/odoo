@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, props, signal, types as t, xml } from "@odoo/owl";
+import { Component, props, signal, t, xml } from "@odoo/owl";
 import { useAutofocus, useHootKey, useWindowListener } from "../hoot_utils";
 
 //-----------------------------------------------------------------------------
@@ -35,8 +35,8 @@ export class HootDropdown extends Component {
 
     // Props & plugins
     props = props({
-        "buttonClassName?": t.string(),
-        "className?": t.string(),
+        buttonClassName: t.string().optional(),
+        className: t.string().optional(),
         slots: t.object(["toggler", "menu"]),
     });
 

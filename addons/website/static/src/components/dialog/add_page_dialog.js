@@ -15,7 +15,7 @@ import {
     removeTextHighlight,
     getObservedEls,
 } from "@website/js/highlight_utils";
-import { Component, onWillStart, onMounted, status, proxy } from "@odoo/owl";
+import { Component, onWillStart, onMounted, props, status, proxy, t } from "@odoo/owl";
 import { onceAllImagesLoaded } from "@website/utils/images";
 
 const NO_OP = () => {};
@@ -458,36 +458,15 @@ class AddPageTemplates extends Component {
 
 export class AddPageDialog extends Component {
     static template = "website.AddPageDialog";
-    static props = {
-        close: Function,
-        onAddPage: {
-            type: Function,
-            optional: true,
-        },
-        websiteId: {
-            type: Number,
-        },
-        forcedURL: {
-            type: String,
-            optional: true,
-        },
-        goToPage: {
-            type: Boolean,
-            optional: true,
-        },
-        pageTitle: {
-            type: String,
-            optional: true,
-        },
-        defaultTemplateId: {
-            type: String,
-            optional: true,
-        },
-    };
-    static defaultProps = {
-        onAddPage: NO_OP,
-        goToPage: true,
-    };
+    props = props({
+        close: t.function(),
+        onAddPage: t.function().optional(() => NO_OP),
+        websiteId: t.number(),
+        forcedURL: t.string().optional(),
+        goToPage: t.boolean().optional(true),
+        pageTitle: t.string().optional(),
+        defaultTemplateId: t.string().optional(),
+    });
     static components = {
         WebsiteDialog,
         AddPageTemplates,

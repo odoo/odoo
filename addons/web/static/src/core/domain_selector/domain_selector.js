@@ -1,4 +1,4 @@
-import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, props, t } from "@odoo/owl";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Domain } from "@web/core/domain";
 import { getDomainDisplayedOperators } from "@web/core/domain_selector/domain_selector_operator_editor";
@@ -19,24 +19,21 @@ import { getDefaultCondition } from "./utils";
 const ARCHIVED_CONDITION = condition("active", "in", [true, false]);
 const ARCHIVED_DOMAIN = `[("active", "in", [True, False])]`;
 
+export const domainSelectorProps = {
+    domain: t.string(),
+    resModel: t.string(),
+    className: t.string().optional(),
+    defaultConnector: t.selection(["&", "|"]).optional(),
+    isDebugMode: t.boolean().optional(false),
+    readonly: t.boolean().optional(true),
+    update: t.function().optional(() => () => {}),
+    debugUpdate: t.function().optional(),
+};
+
 export class DomainSelector extends Component {
     static template = "web.DomainSelector";
     static components = { TreeEditor, CheckBox };
-    static props = {
-        domain: String,
-        resModel: String,
-        className: { type: String, optional: true },
-        defaultConnector: { type: [{ value: "&" }, { value: "|" }], optional: true },
-        isDebugMode: { type: Boolean, optional: true },
-        readonly: { type: Boolean, optional: true },
-        update: { type: Function, optional: true },
-        debugUpdate: { type: Function, optional: true },
-    };
-    static defaultProps = {
-        isDebugMode: false,
-        readonly: true,
-        update: () => {},
-    };
+    props = props(domainSelectorProps);
 
     setup() {
         this.fieldService = useService("field");

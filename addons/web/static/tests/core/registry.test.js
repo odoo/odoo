@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { Component, types as t } from "@odoo/owl";
+import { Component, t } from "@odoo/owl";
 import { serverState } from "@web/../tests/web_test_helpers";
 
 import { Registry } from "@web/core/registry";
@@ -165,7 +165,7 @@ test("can recursively open sub registry", () => {
 
 test("can validate the values from a schema", () => {
     serverState.debug = "1";
-    const schema = t.strictObject({ name: t.string(), "age?": t.number() });
+    const schema = t.strictObject({ name: t.string(), age: t.number().optional() });
     const friendsRegistry = new Registry();
     friendsRegistry.addValidation(schema);
     expect(() => friendsRegistry.add("jean", { name: "Jean" })).not.toThrow();

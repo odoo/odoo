@@ -41,6 +41,7 @@ export const Scope = _owl.Scope;
 export const signal = _owl.signal;
 export const status = _owl.status;
 export const Suspense = _owl.Suspense;
+export const t = _owl.t;
 export const TemplateSet = _owl.TemplateSet;
 export const toRaw = _owl.toRaw;
 export const types = _owl.types;

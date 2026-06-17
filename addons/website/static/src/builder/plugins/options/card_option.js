@@ -2,6 +2,7 @@ import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useGetItemValue } from "@html_builder/core/utils";
 import { WebsiteBackgroundOption } from "@website/builder/plugins/options/background_option";
 import { CardImageOption } from "./card_image_option";
+import { props, t } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 export class CardOption extends BaseOptionComponent {
@@ -11,12 +12,9 @@ export class CardOption extends BaseOptionComponent {
         CardImageOption,
         WebsiteBackgroundOption,
     };
-    static props = {
-        disableWidth: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        disableWidth: false,
-    };
+    props = props({
+        disableWidth: t.boolean().optional(false),
+    });
     setup() {
         super.setup();
         this.getItemValue = useGetItemValue();

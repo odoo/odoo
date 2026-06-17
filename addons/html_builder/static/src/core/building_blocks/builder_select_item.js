@@ -1,28 +1,56 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, markup, onMounted, xml } from "@odoo/owl";
+import { Component, markup, onMounted, props, t, xml } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
-import {
-    clickableBuilderComponentProps,
-    useActionInfo,
-    useSelectableItemComponent,
-} from "../utils";
+import { useActionInfo, useSelectableItemComponent } from "../utils";
 import { BuilderComponent } from "./builder_component";
 import { BuilderSelectableWrapperComponent } from "./builder_selectable_wrapper_component";
 
 const builderSelectItemProps = {
-    ...clickableBuilderComponentProps,
-    title: { type: String, optional: true },
-    label: { type: String, optional: true },
-    className: { type: String, optional: true },
-    slots: { type: Object, optional: true },
+    // clickableBuilderComponentProps (converted inline)
+    id: t.string().optional(),
+    applyTo: t.string().optional(),
+    preview: t.boolean().optional(),
+    inheritedActions: t.array(t.string()).optional(),
+
+    action: t.string().optional(),
+    actionParam: t.any().optional(),
+
+    // Shorthand actions.
+    classAction: t.any().optional(),
+    attributeAction: t.any().optional(),
+    dataAttributeAction: t.any().optional(),
+    styleAction: t.any().optional(),
+
+    inverseAction: t.boolean().optional(),
+
+    actionValue: t
+        .or([
+            t.boolean(),
+            t.string(),
+            t.number(),
+            t.literal(null),
+            t.array(t.or([t.boolean(), t.string(), t.number()])),
+        ])
+        .optional(),
+
+    // Shorthand actions values.
+    classActionValue: t.or([t.string(), t.array(), t.literal(null)]).optional(),
+    attributeActionValue: t.or([t.string(), t.array(), t.literal(null)]).optional(),
+    dataAttributeActionValue: t.or([t.string(), t.array(), t.literal(null)]).optional(),
+    styleActionValue: t.or([t.string(), t.array(), t.literal(null)]).optional(),
+
+    title: t.string().optional(),
+    label: t.string().optional(),
+    className: t.string().optional(),
+    slots: t.object().optional(),
 };
 
 export class BuilderSelectItemInternal extends Component {
     static template = "html_builder.BuilderSelectItemInternal";
-    static props = { ...builderSelectItemProps };
-    static defaultProps = {
-        className: "",
-    };
+    props = props({
+        ...builderSelectItemProps,
+        className: t.string().optional(""),
+    });
     static components = { BuilderComponent };
 
     setup() {
@@ -84,10 +112,10 @@ export class BuilderSelectItem extends BuilderSelectableWrapperComponent {
         </BuilderSelectItemInternal>
         `;
     static components = { BuilderSelectItemInternal };
-    static props = {
-        ltrRtlMapping: { type: String, optional: true },
-        isLabelLinkedToContent: { type: Boolean, optional: true },
-        slots: { type: Object, optional: true },
+    props = props({
+        ltrRtlMapping: t.string().optional(),
+        isLabelLinkedToContent: t.boolean().optional(),
+        slots: t.object().optional(),
         ...builderSelectItemProps,
-    };
+    });
 }

@@ -1,7 +1,7 @@
 import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 
-import { Component, types as t, xml } from "@odoo/owl";
+import { Component, t, xml } from "@odoo/owl";
 const viewWidgetRegistry = registry.category("view_widgets");
 
 const supportedInfoValidation = t.array(
@@ -9,35 +9,38 @@ const supportedInfoValidation = t.array(
         label: t.string(),
         name: t.string(),
         type: t.string(),
-        "availableTypes?": t.array(t.string()),
-        "default?": t.any(),
-        "help?": t.string(),
-        "choices?": /* choices if type == selection */ t.array(
-            t.object({
-                label: t.string(),
-                value: t.any(),
-            })
-        ),
+        availableTypes: t.array(t.string()).optional(),
+        default: t.any().optional(),
+        help: t.string().optional(),
+        choices: /* choices if type == selection */ t
+            .array(
+                t.object({
+                    label: t.string(),
+                    value: t.any(),
+                })
+            )
+            .optional(),
     })
 );
 
 viewWidgetRegistry.addValidation(
     t.object({
         component: t.component(),
-        "extractProps?": t.function(),
-        "additionalClasses?": t.array(t.string()),
-        "fieldDependencies?": t.or([
-            t.function(),
-            t.array(t.object({ name: t.string(), type: t.string() })),
-        ]),
-        "listViewWidth?": t.or([
-            t.number(),
-            t.tuple([t.number()]),
-            t.tuple([t.number(), t.number()]),
-            t.function(),
-        ]),
-        "supportedAttributes?": supportedInfoValidation,
-        "supportedOptions?": supportedInfoValidation,
+        extractProps: t.function().optional(),
+        additionalClasses: t.array(t.string()).optional(),
+        fieldDependencies: t
+            .or([t.function(), t.array(t.object({ name: t.string(), type: t.string() }))])
+            .optional(),
+        listViewWidth: t
+            .or([
+                t.number(),
+                t.tuple([t.number()]),
+                t.tuple([t.number(), t.number()]),
+                t.function(),
+            ])
+            .optional(),
+        supportedAttributes: supportedInfoValidation.optional(),
+        supportedOptions: supportedInfoValidation.optional(),
     })
 );
 

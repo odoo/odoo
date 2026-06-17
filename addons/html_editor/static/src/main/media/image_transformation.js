@@ -25,7 +25,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 import { useExternalListener, useRef } from "@web/owl2/utils";
 import { useCrossDocumentListener } from "../../utils/hooks";
-import { Component, onMounted } from "@odoo/owl";
+import { Component, onMounted, props, t } from "@odoo/owl";
 import { usePositionHook } from "@html_editor/position_hook";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
@@ -34,18 +34,15 @@ const MIN_IMAGE_SIZE = 20;
 
 export class ImageTransformation extends Component {
     static template = "html_editor.ImageTransformation";
-    static props = {
-        document: { validate: (p) => p.nodeType === Node.DOCUMENT_NODE },
-        editable: { validate: (p) => p.nodeType === Node.ELEMENT_NODE },
-        image: { validate: (p) => p.tagName === "IMG" },
-        destroy: { type: Function },
-        onChange: { type: Function, optional: true },
-        onApply: { type: Function, optional: true },
-        onComponentMounted: { type: Function, optional: true },
-    };
-    static defaultProps = {
-        onComponentMounted: () => {},
-    };
+    props = props({
+        document: t.customValidator(t.any(), (p) => p.nodeType === Node.DOCUMENT_NODE),
+        editable: t.customValidator(t.any(), (p) => p.nodeType === Node.ELEMENT_NODE),
+        image: t.customValidator(t.any(), (p) => p.tagName === "IMG"),
+        destroy: t.function(),
+        onChange: t.function().optional(),
+        onApply: t.function().optional(),
+        onComponentMounted: t.function().optional(() => () => {}),
+    });
 
     setup() {
         this.isCurrentlyTransforming = false;

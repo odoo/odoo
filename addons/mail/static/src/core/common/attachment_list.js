@@ -1,7 +1,7 @@
 import { Gif } from "@mail/core/common/gif";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
-import { Component, props, signal, types } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -20,11 +20,11 @@ class Actions extends Component {
     static components = { Dropdown, DropdownItem };
     static template = "mail.Actions";
     props = props({
-        actions: types.array(
-            types.object({
-                label: types.string(),
-                icon: types.string(),
-                onSelect: types.function([types.instanceOf(Event)]),
+        actions: t.array(
+            t.object({
+                label: t.string(),
+                icon: t.string(),
+                onSelect: t.function([t.instanceOf(Event)]),
             })
         ),
     });
@@ -47,9 +47,9 @@ export class AttachmentList extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.props = props({
-            attachments: types.array(types.instanceOf(this.store["ir.attachment"].Class)),
-            "messageSearch?": types.instanceOf(MessageSearchState),
-            unlinkAttachment: types.function([types.instanceOf(this.store["ir.attachment"].Class)]),
+            attachments: t.array(t.instanceOf(this.store["ir.attachment"].Class)),
+            messageSearch: t.instanceOf(MessageSearchState).optional(),
+            unlinkAttachment: t.function([t.instanceOf(this.store["ir.attachment"].Class)]),
         });
         this.ui = useService("ui");
         this.dialog = useService("dialog");

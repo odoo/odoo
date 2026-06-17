@@ -1,22 +1,19 @@
 import { BaseBadgesField, extractStandardFieldProps } from "./base_badges_field";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { standardFieldProps } from "../standard_field_props";
 
 export class BadgesSelectionField extends Component {
     static template = "web.BadgesSelectionField";
-    static props = {
+    props = props({
         ...standardFieldProps,
-        iconMapping: { type: Object, optional: true },
-        allowedSelectionField: { type: String, optional: true },
-        badgeLimit: { type: Number, optional: true },
-        defaultIcon: { type: String, optional: true },
-        canDeselect: { type: Boolean, optional: true },
-    };
-    static defaultProps = {
-        iconMapping: {},
-    };
+        iconMapping: t.object().optional({}),
+        allowedSelectionField: t.string().optional(),
+        badgeLimit: t.number().optional(),
+        defaultIcon: t.string().optional(),
+        canDeselect: t.boolean().optional(),
+    });
     static components = {
         BaseBadgesField,
     };

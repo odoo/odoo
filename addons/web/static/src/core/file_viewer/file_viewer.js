@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, proxy, signal, useEffect } from "@odoo/owl";
+import { Component, props, proxy, signal, t, useEffect } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { useAutofocus, useBackButton, useService } from "@web/core/utils/hooks";
 import { clamp } from "@web/core/utils/numbers";
@@ -29,10 +29,12 @@ const IMAGE_BUFFER_PADDING = 20;
 export class FileViewer extends Component {
     static template = "web.FileViewer";
     static components = {};
-    static props = ["files", "startIndex", "close?", "modal?"];
-    static defaultProps = {
-        modal: true,
-    };
+    props = props({
+        files: t.any(),
+        startIndex: t.any(),
+        close: t.any().optional(),
+        modal: t.any().optional(true),
+    });
 
     iframeViewerPdfRef = signal(null);
 

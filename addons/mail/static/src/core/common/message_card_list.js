@@ -3,7 +3,7 @@ import { Message } from "@mail/core/common/message";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 import { useVisible } from "@mail/utils/common/hooks";
 
-import { Component, props, types } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
@@ -15,15 +15,15 @@ export class MessageCardList extends Component {
         super.setup();
         this.store = useService("mail.store");
         this.props = props({
-            "emptyText?": types.string(),
-            "loadMore?": types.boolean(),
-            "messageSearch?": types.instanceOf(MessageSearchState),
-            messages: types.array(types.instanceOf(this.store["mail.message"].Class)),
-            mode: types.string(),
-            "onClickJump?": types.function([]),
-            "onLoadMoreVisible?": types.function([]),
-            "showEmpty?": types.boolean(),
-            thread: types.instanceOf(this.store["mail.thread"].Class),
+            emptyText: t.string().optional(),
+            loadMore: t.boolean().optional(),
+            messageSearch: t.instanceOf(MessageSearchState).optional(),
+            messages: t.array(t.instanceOf(this.store["mail.message"].Class)),
+            mode: t.string(),
+            onClickJump: t.function([]).optional(),
+            onLoadMoreVisible: t.function([]).optional(),
+            showEmpty: t.boolean().optional(),
+            thread: t.instanceOf(this.store["mail.thread"].Class),
         });
         this.ui = useService("ui");
         useSubEnv({ messageCard: true });

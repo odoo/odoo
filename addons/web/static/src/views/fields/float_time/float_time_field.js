@@ -6,24 +6,19 @@ import { standardFieldProps } from "../standard_field_props";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
 import { parseFloatTime } from "../parsers";
 
-import { Component, proxy } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
+
+export const floatTimeFieldProps = {
+    ...standardFieldProps,
+    showSeconds: t.boolean().optional(),
+    numeric: t.boolean().optional(false),
+    unit: t.selection(["hours", "minutes", "seconds"]).optional("hours"),
+};
 
 export class FloatTimeField extends Component {
     static template = "web.FloatTimeField";
-    static props = {
-        ...standardFieldProps,
-        showSeconds: { type: Boolean, optional: true },
-        numeric: { type: Boolean, optional: true },
-        unit: {
-            type: [{ value: "hours" }, { value: "minutes" }, { value: "seconds" }],
-            optional: true,
-        },
-    };
-    static defaultProps = {
-        numeric: false,
-        unit: "hours",
-    };
+    props = props(floatTimeFieldProps);
 
     setup() {
         this.inputFloatTimeRef = useInputField({

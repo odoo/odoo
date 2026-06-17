@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { useDropdownCloser } from "@web/core/dropdown/dropdown_hooks";
 
 const ClosingMode = {
@@ -7,35 +7,18 @@ const ClosingMode = {
     AllParents: "all",
 };
 
+export const dropdownItemProps = {
+    tag: t.string().optional(),
+    class: t.or([t.string(), t.object()]).optional(),
+    onSelected: t.function().optional(),
+    closingMode: t.selection(Object.values(ClosingMode)).optional(ClosingMode.AllParents),
+    attrs: t.object().optional({}),
+    slots: t.object().optional(),
+};
+
 export class DropdownItem extends Component {
     static template = "web.DropdownItem";
-    static props = {
-        tag: {
-            type: String,
-            optional: true,
-        },
-        class: {
-            type: [String, Object],
-            optional: true,
-        },
-        onSelected: {
-            type: Function,
-            optional: true,
-        },
-        closingMode: {
-            type: ClosingMode,
-            optional: true,
-        },
-        attrs: {
-            type: Object,
-            optional: true,
-        },
-        slots: { type: Object, optional: true },
-    };
-    static defaultProps = {
-        closingMode: ClosingMode.AllParents,
-        attrs: {},
-    };
+    props = props(dropdownItemProps);
 
     setup() {
         this.dropdownControl = useDropdownCloser();

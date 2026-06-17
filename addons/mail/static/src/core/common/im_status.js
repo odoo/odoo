@@ -1,4 +1,4 @@
-import { Component, props, types } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { Typing } from "@mail/discuss/typing/common/typing";
 import { attClassObjectToString } from "@mail/utils/common/format";
 import { _t } from "@web/core/l10n/translation";
@@ -46,21 +46,20 @@ export class ImStatus extends Component {
     setup() {
         super.setup();
         this.store = useService("mail.store");
-        this.props = props(
-            {
-                "className?": types.string(),
-                "member?": types.instanceOf(this.store["discuss.channel.member"].Class),
-                "persona?": types.or([
-                    types.instanceOf(this.store["res.partner"].Class),
-                    types.instanceOf(this.store["mail.guest"].Class),
-                ]),
-                "size?": types.string(),
-                "style?": types.string(),
-                "typing?": types.boolean(),
-                "user?": types.instanceOf(this.store["res.users"].Class),
-            },
-            { className: "", size: "lg", style: "", typing: true }
-        );
+        this.props = props({
+            className: t.string().optional(""),
+            member: t.instanceOf(this.store["discuss.channel.member"].Class).optional(),
+            persona: t
+                .or([
+                    t.instanceOf(this.store["res.partner"].Class),
+                    t.instanceOf(this.store["mail.guest"].Class),
+                ])
+                .optional(),
+            size: t.string().optional("lg"),
+            style: t.string().optional(""),
+            typing: t.boolean().optional(true),
+            user: t.instanceOf(this.store["res.users"].Class).optional(),
+        });
         this.attClassObjectToString = attClassObjectToString;
     }
 

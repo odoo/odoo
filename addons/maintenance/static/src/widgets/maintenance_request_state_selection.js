@@ -1,13 +1,17 @@
+import { props, t } from "@odoo/owl";
 import { StateSelectionField, stateSelectionField } from "@web/views/fields/state_selection/state_selection_field";
 import { registry } from "@web/core/registry";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 export class MaintenanceRequestStateSelection extends StateSelectionField {
     static template = "maintenance.MaintenanceRequestStateSelection";
 
-    static props = {
-        ...stateSelectionField.component.props,
-        viewType: { type: String },
-    };
+    props = props({
+        ...standardFieldProps,
+        showLabel: t.boolean().optional(true),
+        withCommand: t.boolean().optional(),
+        viewType: t.string().optional(),
+    });
 
     setup() {
         super.setup();

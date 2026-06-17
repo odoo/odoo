@@ -1,12 +1,17 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { sortBy } from "@web/core/utils/arrays";
+
+export const groupProps = {
+    class: t.any().optional(),
+    slots: t.any().optional(),
+    maxCols: t.any().optional(2),
+    style: t.any().optional(),
+};
 
 class Group extends Component {
     static template = "";
-    static props = ["class?", "slots?", "maxCols?", "style?"];
-    static defaultProps = {
-        maxCols: 2,
-    };
+    static propShape = groupProps;
+    props = props(this.constructor.propShape);
 
     _getItems() {
         const items = Object.entries(this.props.slots || {}).filter(([k, v]) => v.type === "item");
@@ -24,11 +29,12 @@ class Group extends Component {
 
 export class OuterGroup extends Group {
     static template = "web.Form.OuterGroup";
-    static defaultProps = {
-        ...Group.defaultProps,
-        slots: [],
-        hasOuterTemplate: true,
+    static propShape = {
+        ...groupProps,
+        slots: t.any().optional([]),
+        hasOuterTemplate: t.any().optional(true),
     };
+    props = props(this.constructor.propShape);
 
     getItems() {
         const nbCols = this.props.maxCols;

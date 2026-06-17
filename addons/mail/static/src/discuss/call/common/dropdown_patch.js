@@ -1,14 +1,10 @@
-import { Dropdown } from "@web/core/dropdown/dropdown";
+import { t } from "@odoo/owl";
+
+import { Dropdown, dropdownProps } from "@web/core/dropdown/dropdown";
 import { patch } from "@web/core/utils/patch";
 
-Object.assign(Dropdown.props, {
-    openOnMouseEnter: {
-        type: Boolean,
-        optional: true,
-    },
-});
-Object.assign(Dropdown.defaultProps, {
-    openOnMouseEnter: true,
+Object.assign(dropdownProps, {
+    openOnMouseEnter: t.boolean().optional(true),
 });
 
 patch(Dropdown.prototype, {

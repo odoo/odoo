@@ -58,7 +58,7 @@ export class ActivityRecord extends Component {
             archInfo: types.object(),
             openRecord: types.function([
                 types.instanceOf(Record),
-                types.object({ "newWindow?": types.boolean() }),
+                types.object({ newWindow: types.boolean().optional() }),
             ]),
             record: types.instanceOf(Record),
         });
