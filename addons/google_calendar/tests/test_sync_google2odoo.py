@@ -1359,6 +1359,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             },
         }
         self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
+        self.env.cr.flush()
         triggers_after = self.env['ir.cron.trigger'].search([('cron_id', '=', cron_id)])
         new_triggers = triggers_after - triggers_before
         self.assertFalse(new_triggers, "The event should not be created with triggers.")
@@ -1390,6 +1391,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             },
         }
         self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
+        self.env.cr.flush()
         triggers_after = self.env['ir.cron.trigger'].search([('cron_id', '=', cron_id)])
         new_triggers = triggers_after - triggers_before
         self.assertFalse(new_triggers, "The event should not be created with triggers.")
