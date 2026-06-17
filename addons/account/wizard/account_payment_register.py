@@ -1045,6 +1045,8 @@ class AccountPaymentRegister(models.TransientModel):
                 raise UserError(_("You can't create payments for entries belonging to different branches without access to parent company."))
             if len(set(available_lines.mapped('account_type'))) > 1:
                 raise UserError(_("You can't register payments for both inbound and outbound moves at the same time."))
+            if any(move.payment_state == 'blocked' for move in available_lines.move_id):
+                raise UserError(self.env._("You cannot register payments for blocked invoices."))
 
             res['line_ids'] = [(6, 0, available_lines.ids)]
 
