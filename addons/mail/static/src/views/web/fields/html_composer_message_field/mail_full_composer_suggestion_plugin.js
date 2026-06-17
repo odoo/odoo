@@ -8,6 +8,7 @@ export class MailFullComposerSuggestionPlugin extends Plugin {
 
     resources = {
         on_beforeinput_handlers: this.onBeforeInput.bind(this),
+        on_input_handlers: this.onInput.bind(this),
     };
 
     setup() {
@@ -37,11 +38,22 @@ export class MailFullComposerSuggestionPlugin extends Plugin {
                     onSelect: this.onSelect.bind(this),
                     thread: this.config.thread,
                     type: ev.data === "@" ? "Partner" : "discuss.channel",
-                    close: () => {
+                    close: ({ cancel = false } = {}) => {
                         this.mentionList.close();
+                        if (cancel) {
+                            this.dependencies.selection.focusEditable();
+                            this.cursors.restore();
+                        }
                     },
                 },
             });
+        }
+    }
+
+    onInput(ev) {
+        if (ev.data === "@" || ev.data === "#") {
+            // Track cursor position after insertion
+            this.cursors = this.dependencies.selection.preserveSelection();
         }
     }
 }

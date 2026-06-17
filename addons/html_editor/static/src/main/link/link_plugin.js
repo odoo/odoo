@@ -357,15 +357,23 @@ export class LinkPlugin extends Plugin {
     setup() {
         this.initializePopovers();
         this.currentOverlay = this.getActivePopover().overlay;
-        this.addDomListener(this.editable, "click", (ev) => {
-            const linkEl = ev.target.closest("a");
-            if (linkEl) {
-                if (ev.ctrlKey || ev.metaKey) {
-                    window.open(linkEl.href, "_blank");
+        this.addDomListener(
+            this.editable,
+            "click",
+            (ev) => {
+                const linkEl = ev.target.closest("a");
+                if (linkEl) {
+                    ev.preventDefault();
+                    if (!this.delegateTo("link_click_overrides", ev, linkEl)) {
+                        if (ev.ctrlKey || ev.metaKey) {
+                            window.open(linkEl.href, "_blank");
+                        }
+                    }
                 }
-                ev.preventDefault();
-            }
-        });
+            },
+            false,
+            true
+        );
         this.addDomListener(this.editable, "mousedown", () => {
             this._isNavigatingByMouse = true;
         });

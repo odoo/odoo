@@ -72,7 +72,7 @@ export class MentionList extends Component {
     onKeydown(ev) {
         switch (ev.key) {
             case "Escape": {
-                this.props.close();
+                this.props.close({ cancel: true });
                 break;
             }
         }
