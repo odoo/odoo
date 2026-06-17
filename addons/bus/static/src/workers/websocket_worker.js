@@ -3,7 +3,7 @@ import { BoundedSet, debounce, Logger } from "@bus/workers/bus_worker_utils";
 /**
  * Type of events that can be sent from the worker to its clients.
  *
- * @typedef { 'BUS:CONNECT' | 'BUS:RECONNECT' | 'BUS:DISCONNECT' | 'BUS:RECONNECTING' | 'BUS:NOTIFICATION' | 'BUS:INITIALIZED' | 'BUS:OUTDATED'| 'BUS:WORKER_STATE_UPDATED' | 'BUS:PROVIDE_LOGS' } WorkerEvent
+ * @typedef { 'BUS:CONNECT' | 'BUS:RECONNECT' | 'BUS:DISCONNECT' | 'BUS:RECONNECTING' | 'BUS:NOTIFICATION' | 'BUS:INITIALIZED' | 'BUS:OUTDATED'| BUS:LAST_ID_RESET | 'BUS:WORKER_STATE_UPDATED' | 'BUS:PROVIDE_LOGS' } WorkerEvent
  */
 
 /**
@@ -219,11 +219,21 @@ export class WebsocketWorker {
      *
      * @param {{type: string, internal: true, payload: any}} param0
      */
-    _onServerMessage({ type }) {
+    _onServerMessage({ type, payload }) {
         switch (type) {
             case "bus/subscription_outdated":
                 this.broadcast("BUS:OUTDATED", { unregisterMultiTab: false });
                 return;
+            case "bus/last_id_reset": {
+                const newLastSeenId = payload;
+                this.lastNotificationId = newLastSeenId;
+                this.seenNotificationIds = new BoundedSet(
+                    10_000,
+                    [...this.seenNotificationIds].filter((id) => id <= newLastSeenId)
+                );
+                this.broadcast("BUS:LAST_ID_RESET", newLastSeenId);
+                return;
+            }
         }
     }
 

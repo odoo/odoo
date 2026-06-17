@@ -162,8 +162,8 @@ export class Logger {
  * threshold is exceeded.
  */
 export class BoundedSet extends Set {
-    constructor(maxSize) {
-        super();
+    constructor(maxSize, iterable = null) {
+        super(iterable);
         this.maxSize = maxSize;
     }
 

@@ -5,7 +5,12 @@ import { user } from "@web/core/user";
 import { session } from "@web/session";
 
 // List of worker events that should not be broadcasted.
-const INTERNAL_EVENTS = new Set(["BUS:INITIALIZED", "BUS:NOTIFICATION", "BUS:PROVIDE_LOGS"]);
+const INTERNAL_EVENTS = new Set([
+    "BUS:INITIALIZED",
+    "BUS:LAST_ID_RESET",
+    "BUS:NOTIFICATION",
+    "BUS:PROVIDE_LOGS",
+]);
 // Slightly delay the reconnection when coming back online as the network is not
 // ready yet and the exponential backoff would delay the reconnection by a lot.
 export const BACK_ONLINE_RECONNECT_DELAY = 5000;
@@ -86,6 +91,9 @@ export const busService = {
                     }
                     break;
                 }
+                case "BUS:LAST_ID_RESET":
+                    localStorage.setItem("bus.last_notification_id", data);
+                    break;
             }
             if (!INTERNAL_EVENTS.has(type)) {
                 bus.trigger(type, data);

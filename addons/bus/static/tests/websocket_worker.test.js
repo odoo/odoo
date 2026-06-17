@@ -88,6 +88,28 @@ test("notification event is broadcasted", async () => {
     await expect.waitForSteps(["broadcast BUS:NOTIFICATION"]);
 });
 
+test("last_id_reset updates worker state", async () => {
+    const worker = await startWebSocketWorker((type, message) => {
+        if (type === "BUS:LAST_ID_RESET") {
+            expect.step(`last_id_reset - ${message}`);
+        }
+    });
+    worker.lastNotificationId = 50;
+    worker.seenNotificationIds.add(5);
+    worker.seenNotificationIds.add(40);
+    worker.seenNotificationIds.add(50);
+    const internalMsg = [{ type: "bus/last_id_reset", internal: true, payload: 10 }];
+    for (const serverWs of MockServer.current._websockets) {
+        serverWs.send(JSON.stringify(internalMsg));
+    }
+    await runAllTimers();
+    await expect.waitForSteps(["last_id_reset - 10"]);
+    expect(worker.lastNotificationId).toBe(10);
+    expect(worker.seenNotificationIds.has(5)).toBe(true);
+    expect(worker.seenNotificationIds.has(40)).toBe(false);
+    expect(worker.seenNotificationIds.has(50)).toBe(false);
+});
+
 test("disconnect event is sent when stopping the worker", async () => {
     const worker = await startWebSocketWorker((type) => {
         if (type !== "BUS:WORKER_STATE_UPDATED") {
