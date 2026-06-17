@@ -330,7 +330,8 @@ PSEUDOCONFIG_MAPPER = {
 }
 
 logging.RUNBOT = 25
-logging.addLevelName(logging.RUNBOT, "INFO") # displayed as info in log
+logging.addLevelName(logging.RUNBOT, "RUNBOT")
+logging._levelToName[logging.RUNBOT] = "INFO"  # displayed as info in log
 IGNORE = {
     'Comparison between bytes and int', # a.foo != False or some shit, we don't care
 }
