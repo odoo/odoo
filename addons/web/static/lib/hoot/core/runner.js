@@ -16,7 +16,6 @@ import {
     T_NULL,
     TestReporting,
     batch,
-    destroy,
     ensureArray,
     ensureError,
     formatHumanReadable,
@@ -2032,7 +2031,6 @@ export class Runner {
                     _window,
                     {
                         __debug__: this,
-                        destroy,
                         getFixture: this.fixture.getFixture,
                     }
                 );

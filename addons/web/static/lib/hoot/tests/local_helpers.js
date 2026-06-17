@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { after, destroy, getFixture } from "@odoo/hoot";
+import { after, getFixture } from "@odoo/hoot";
 import { App, Component, xml } from "@odoo/owl";
 import { Runner } from "../core/runner";
 import { undefineTags } from "../core/tag";
@@ -37,7 +37,7 @@ export async function mountForTest(ComponentClass, params) {
     });
     const fixture = getFixture();
 
-    after(() => destroy(app));
+    after(() => app.destroy());
 
     fixture.style.backgroundColor = "#fff";
     await app.createRoot(ComponentClass, { props: params?.props }).mount(fixture);

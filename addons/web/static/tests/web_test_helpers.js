@@ -39,6 +39,7 @@ import { globalCachedFetch } from "./_framework/module_set.hoot";
 
 export {
     clearRegistry,
+    destroyApp,
     getMockEnv,
     getService,
     getTestApp,

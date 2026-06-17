@@ -1,8 +1,17 @@
-import { describe, destroy, expect, getFixture, test } from "@odoo/hoot";
-import { click, tick } from "@odoo/hoot-dom";
-import { advanceTime, animationFrame, microTick, runAllTimers } from "@odoo/hoot-mock";
+import {
+    advanceTime,
+    animationFrame,
+    click,
+    describe,
+    expect,
+    getFixture,
+    microTick,
+    runAllTimers,
+    test,
+    tick,
+} from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { destroyApp, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import {
     batched,
@@ -424,7 +433,7 @@ describe("useDebounced", () => {
                 this.debounced = useDebounced(() => expect.step("debounced"), 1000);
             }
         }
-        const component = await mountWithCleanup(TestComponent);
+        await mountWithCleanup(TestComponent);
         expect.verifySteps([]);
         expect("button.c").toHaveCount(1);
 
@@ -439,7 +448,7 @@ describe("useDebounced", () => {
         await advanceTime(900);
         expect.verifySteps([]);
 
-        destroy(component);
+        destroyApp();
         await advanceTime(200);
         expect.verifySteps([]);
     });
@@ -454,7 +463,7 @@ describe("useDebounced", () => {
                 });
             }
         }
-        const component = await mountWithCleanup(TestComponent);
+        await mountWithCleanup(TestComponent);
         expect.verifySteps([]);
         expect(`button.c`).toHaveCount(1);
 
@@ -469,7 +478,7 @@ describe("useDebounced", () => {
         await advanceTime(900);
         expect.verifySteps([]);
 
-        destroy(component);
+        destroyApp();
         expect.verifySteps(["debounced: hello"]);
     });
 
@@ -483,7 +492,7 @@ describe("useDebounced", () => {
                 });
             }
         }
-        const component = await mountWithCleanup(TestComponent);
+        await mountWithCleanup(TestComponent);
         expect.verifySteps([]);
         expect(`button.c`).toHaveCount(1);
 
@@ -494,7 +503,7 @@ describe("useDebounced", () => {
         await advanceTime(200);
         expect.verifySteps(["debounced"]);
 
-        destroy(component);
+        destroyApp();
         await advanceTime(1000);
         expect.verifySteps([]);
     });
@@ -509,7 +518,7 @@ describe("useThrottleForAnimation", () => {
                 this.throttled = useThrottleForAnimation(() => expect.step("throttled"), 1000);
             }
         }
-        const component = await mountWithCleanup(TestComponent);
+        await mountWithCleanup(TestComponent);
         expect.verifySteps([]);
         expect(`button.c`).toHaveCount(1);
 
@@ -534,7 +543,7 @@ describe("useThrottleForAnimation", () => {
         await click(`button.c`);
         expect.verifySteps([]);
 
-        destroy(component);
+        destroyApp();
         await animationFrame();
         expect.verifySteps([]);
     });

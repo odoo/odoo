@@ -1,44 +1,56 @@
-import { test, expect, getFixture, destroy } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { animationFrame, expect, getFixture, test } from "@odoo/hoot";
+import { Component, onMounted, props, signal, types as t, xml } from "@odoo/owl";
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { usePopover } from "@web/core/popover/popover_hook";
 
 test("close popover when component is unmounted", async () => {
-    const target = getFixture();
     class Comp extends Component {
         static template = xml`<div t-att-id="this.props.id">in popover</div>`;
-        static props = ["*"];
     }
 
     class CompWithPopover extends Component {
         static template = xml`<div />`;
-        static props = ["*"];
+
+        props = props({ id: t.string() });
+
         setup() {
-            this.popover = usePopover(Comp);
+            const popover = usePopover(Comp);
+            onMounted(() => {
+                popover.open(getFixture(), { id: this.props.id });
+            });
         }
     }
 
-    const comp1 = await mountWithCleanup(CompWithPopover, { noMainContainer: true });
-    comp1.popover.open(target, { id: "comp1" });
-    await animationFrame();
+    class Parent extends Component {
+        static components = { CompWithPopover };
+        static template = xml`
+            <CompWithPopover id="'comp1'" t-if="this.showFirst()" />
+            <CompWithPopover id="'comp2'" t-if="this.showSecond()" />
+        `;
 
-    const comp2 = await mountWithCleanup(CompWithPopover);
-    comp2.popover.open(target, { id: "comp2" });
-    await animationFrame();
+        showFirst = showFirst;
+        showSecond = showSecond;
+    }
+
+    const showFirst = signal(true);
+    const showSecond = signal(true);
+
+    await mountWithCleanup(Parent);
 
     expect(".o_popover").toHaveCount(2);
     expect(".o_popover #comp1").toHaveCount(1);
     expect(".o_popover #comp2").toHaveCount(1);
 
-    destroy(comp1);
+    showFirst.set(false);
+    await animationFrame();
     await animationFrame();
 
     expect(".o_popover").toHaveCount(1);
     expect(".o_popover #comp1").toHaveCount(0);
     expect(".o_popover #comp2").toHaveCount(1);
 
-    destroy(comp2);
+    showSecond.set(false);
+    await animationFrame();
     await animationFrame();
 
     expect(".o_popover").toHaveCount(0);

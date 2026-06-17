@@ -1,11 +1,20 @@
-import { onRendered } from "@web/owl2/utils";
-import { beforeEach, destroy, expect, test } from "@odoo/hoot";
-import { queryAll, queryAllAttributes, queryAllTexts, resize } from "@odoo/hoot-dom";
-import { advanceTime, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import {
+    advanceTime,
+    animationFrame,
+    beforeEach,
+    expect,
+    queryAll,
+    queryAllAttributes,
+    queryAllTexts,
+    resize,
+    runAllTimers,
+    test,
+} from "@odoo/hoot";
 import {
     clearRegistry,
     contains,
     defineMenus,
+    destroyApp,
     getService,
     makeMockEnv,
     mockService,
@@ -13,6 +22,7 @@ import {
     patchWithCleanup,
     serverState,
 } from "@web/../tests/web_test_helpers";
+import { onRendered } from "@web/owl2/utils";
 
 import { Component, xml } from "@odoo/owl";
 import { registry } from "@web/core/registry";
@@ -525,13 +535,13 @@ test("Do not execute adapt when navbar is destroyed", async () => {
 
     // Set menu and mount
     getService("menu").setCurrentMenu(1);
-    const navbar = await mountWithCleanup(MyNavbar);
+    await mountWithCleanup(MyNavbar);
     expect.verifySteps(["adapt NavBar"]);
     await resize();
     await runAllTimers();
     expect.verifySteps(["adapt NavBar"]);
     await resize();
-    destroy(navbar);
+    destroyApp();
     await runAllTimers();
     expect.verifySteps([]);
 });

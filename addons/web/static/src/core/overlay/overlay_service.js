@@ -35,7 +35,7 @@ export const overlayService = {
          * @param {typeof Component} component
          * @param {object} props
          * @param {OverlayServiceAddOptions} [options]
-         * @returns {() => void}
+         * @returns {() => Promise<void>}
          */
         const add = (component, props, options = {}) => {
             const id = ++nextId;

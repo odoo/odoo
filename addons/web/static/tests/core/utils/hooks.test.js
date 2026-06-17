@@ -1,16 +1,25 @@
-import { render } from "@web/owl2/utils";
-import { describe, destroy, expect, getFixture, mockUserAgent, test } from "@odoo/hoot";
-import { click, queryOne } from "@odoo/hoot-dom";
-import { animationFrame, mockTouch } from "@odoo/hoot-mock";
+import {
+    animationFrame,
+    click,
+    describe,
+    expect,
+    getFixture,
+    mockTouch,
+    mockUserAgent,
+    queryOne,
+    test,
+} from "@odoo/hoot";
 import {
     contains,
+    destroyApp,
     getService,
     makeMockEnv,
     mountWithCleanup,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
+import { render } from "@web/owl2/utils";
 
-import { Component, onMounted, xml, proxy } from "@odoo/owl";
+import { Component, onMounted, props, proxy, signal, types as t, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { CommandPalette } from "@web/core/commands/command_palette";
 import { registry } from "@web/core/registry";
@@ -692,11 +701,11 @@ describe("useBackButton", () => {
 
         history.pushState({ sentinel: 1 }, "", "/");
         history.pushState({ sentinel: 2 }, "", "/other");
-        const dummy = await mountWithCleanup(DummyComponent);
+        await mountWithCleanup(DummyComponent);
         expect(history.state.trapState).toBe(true);
         history.back();
         expect.verifySteps(["callback"]);
-        destroy(dummy);
+        destroyApp();
         await animationFrame();
         expect(history.state.sentinel).toBe(2);
     });
@@ -734,29 +743,54 @@ describe("useBackButton", () => {
     test("multiple components' callbacks should be executed in a LIFO manner", async () => {
         mockUserAgent("android");
         class DummyComponent extends Component {
-            static props = ["*"];
-            static template = xml`<div/>`;
+            static template = xml`<div t-out="this.props.name" />`;
+
+            props = props({ name: t.string() });
+
             setup() {
-                useBackButton(() => this._onBack());
+                useBackButton(this.onBack);
             }
-            _onBack() {
+
+            onBack() {
                 expect.step(`${this.props.name} callback`);
-                destroy(this);
+                dummies().delete(this.props.name);
             }
+        }
+
+        class Parent extends Component {
+            static components = { DummyComponent };
+            static template = xml`
+                <t t-foreach="this.dummies()" t-as="name" t-key="name">
+                    <DummyComponent name="name" />
+                </t>
+            `;
+
+            dummies = dummies;
         }
 
         history.pushState({ sentinel: 1 }, "", "/");
         history.pushState({ sentinel: 2 }, "", "/other");
-        await mountWithCleanup(DummyComponent, { props: { name: "dummy1" } });
-        await mountWithCleanup(DummyComponent, { props: { name: "dummy2" } });
-        await mountWithCleanup(DummyComponent, { props: { name: "dummy3" } });
+
+        const dummies = signal.Set(new Set());
+
+        await mountWithCleanup(Parent);
+        // Need to be added 1 by 1 because Owl mounts siblings from last to first
+        dummies().add("dummy1");
+        await animationFrame();
+        dummies().add("dummy2");
+        await animationFrame();
+        dummies().add("dummy3");
+        await animationFrame();
+
         expect(history.state.trapState).toBe(true);
+
         history.back();
         await animationFrame();
         history.back();
         await animationFrame();
         history.back();
         await animationFrame();
+
         expect.verifySteps(["dummy3 callback", "dummy2 callback", "dummy1 callback"]);
         expect(history.state.sentinel).toBe(2);
     });
