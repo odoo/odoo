@@ -3,7 +3,7 @@
 from odoo import Command
 from odoo.fields import Domain
 from odoo.tests import Form, tagged, TransactionCase
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 @tagged("recruitment")
@@ -414,3 +414,15 @@ class TestRecruitmentTalentPool(TransactionCase):
         """ Force the creation of tracking values. """
         self.env.flush_all()
         self.cr.flush()
+
+    def test_copy_applicant(self):
+        """Test that a talent should not be copied."""
+        self.env["talent.pool.add.applicants"].create({
+            "applicant_ids": self.t_applicant_1.ids,
+            "talent_pool_ids": self.t_talent_pool_1.ids,
+        }).action_add_applicants_to_pool()
+
+        talent = self.t_applicant_1.pool_applicant_id
+
+        with self.assertRaises(UserError, msg="You cannot duplicate the talent(s)."):
+            talent.copy()
