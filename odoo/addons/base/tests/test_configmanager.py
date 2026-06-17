@@ -110,6 +110,7 @@ class TestConfigManager(TransactionCase):
             # logging
             'logfile': '',
             'syslog': False,
+            'log_config': '',
             'log_handler': [':INFO'],
             'log_db': '',
             'log_db_level': 'warning',
@@ -229,6 +230,7 @@ class TestConfigManager(TransactionCase):
             # logging
             'logfile': '/tmp/odoo.log',
             'syslog': False,
+            'log_config': '',
             'log_handler': [':DEBUG'],
             'log_db': 'logdb',
             'log_db_level': 'debug',
@@ -352,6 +354,7 @@ class TestConfigManager(TransactionCase):
             'import_url_regex': '^(?:http|https)://',
             'list_db': True,
             'load_language': None,
+            'log_config': '',
             'log_db': '',
             'log_db_level': 'warning',
             'log_handler': [':INFO'],
@@ -526,6 +529,7 @@ class TestConfigManager(TransactionCase):
             # logging
             'logfile': '/tmp/odoo.log',
             'syslog': False,
+            'log_config': '',
             'log_handler': [
                 ':WARNING',
                 'odoo.tools.config:DEBUG',
@@ -656,6 +660,7 @@ class TestConfigManager(TransactionCase):
             # logging
             'logfile': '/tmp/odoo.log',
             'syslog': False,
+            'log_config': '',
             'log_handler': [
                 ':WARNING',
                 'odoo.tools.config:DEBUG',
