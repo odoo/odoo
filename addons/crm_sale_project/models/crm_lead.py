@@ -37,14 +37,35 @@ class CrmLead(models.Model):
     def _get_project_create_from_lead_context(self):
         """Return the context for creating a project from a lead."""
         self.ensure_one()
+        sale_lines_per_delivered_method = dict(
+            self.env['sale.order.line']._read_group(
+                [
+                    ('order_id', 'in', self.order_ids.ids),
+                    ('is_service', '=', True),
+                    ('qty_delivered_method', 'in', ['timesheets', 'milestones', 'manual'])
+                ],
+                ['qty_delivered_method'],
+                ['id:recordset'],
+            )
+        )
+        sale_line = self.env['sale.order.line']
+        if sols := (sale_lines_per_delivered_method.get('timesheets')
+                    or sale_lines_per_delivered_method.get('milestones')
+                    or sale_lines_per_delivered_method.get('manual')):
+            sale_line = sols[:1]
+        default_order_id = False
+        if sale_line:
+            default_order_id = sale_line.order_id.id
+        elif self.order_ids:
+            default_order_id = self.order_ids[0].id
+
         return dict(
             default_company_id=self.company_id.id,
             default_lead_id=self.id,
             default_partner_id=self.partner_id.id,
             default_allow_billable=True,
-            default_reinvoiced_sale_order_id=(
-                self.order_ids[0].id if self.order_ids else False
-            ),
+            default_reinvoiced_sale_order_id=default_order_id,
+            default_sale_line_id=sale_line.id,
             lead_company_id=self.company_id.id,
         )
 

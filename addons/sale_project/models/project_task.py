@@ -44,7 +44,7 @@ class ProjectTask(models.Model):
 
     @property
     def TASK_PORTAL_READABLE_FIELDS(self):
-        return super().TASK_PORTAL_READABLE_FIELDS | {'allow_billable', 'sale_order_id', 'sale_line_id', 'display_sale_order_button'}
+        return super().TASK_PORTAL_READABLE_FIELDS | {'allow_billable', 'sale_order_id', 'sale_line_id', 'display_sale_order_button', 'sale_order_state'}
 
     @api.model
     def default_get(self, fields):

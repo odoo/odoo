@@ -110,4 +110,10 @@
         </xpath>
     </template>
 
+    <template id="portal_timesheet_table_inherit" inherit_id="hr_timesheet.portal_timesheet_table">
+        <xpath expr="//t[@id='timesheet_line']" position="attributes">
+            <attribute name="invisible">sale_order_state != 'sale'</attribute>
+        </xpath>
+    </template>
+
 </odoo>
