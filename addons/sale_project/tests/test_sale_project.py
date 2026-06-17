@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command, SUPERUSER_ID, fields
-from odoo.fields import Datetime
+from odoo.fields import Datetime, Domain
 from odoo.tests import Form, new_test_user, tagged
 from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
@@ -1373,22 +1373,18 @@ class TestSaleProject(TestSaleProjectCommon):
             'project_id': self.project_global.id,
             'sale_order_id': order.id,
         })
-        domain = [
-            ('planned_date_begin', '>=', Datetime.to_datetime('2023-01-01')),
-            ('date_deadline', '<=', Datetime.to_datetime('2023-01-04')),
-        ]
         Task = self.env['project.task'].with_context({
             'gantt_start_date': Datetime.to_datetime('2023-01-01'),
             'gantt_scale': 'month',
         })
 
-        displayed_sale_order = Task._group_expand_sales_order(None, domain)
+        displayed_sale_order = Task._group_expand_sales_order(None, Domain.TRUE)
         self.assertFalse(
             displayed_sale_order,
             'Sale orders without scheduled tasks should not be displayed in the Gantt view',
         )
 
-        displayed_sale_order = Task._group_expand_sales_order(None, [('sale_order_id', 'ilike', 'Test')] + domain)
+        displayed_sale_order = Task._group_expand_sales_order(None, [('sale_order_id', 'ilike', 'Test')])
         self.assertEqual(order, displayed_sale_order, 'The matching sale order should be displayed in the Gantt view')
 
     def test_so_with_service_product_negative_qty(self):
