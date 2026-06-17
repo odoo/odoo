@@ -206,3 +206,64 @@ test("dropdown is hidden when no identifier types are available", async () => {
     // The Dropdown component is rendered conditionally (t-if on length > 0)
     expect(".dropdown-toggle").toHaveCount(0);
 });
+
+test.tags("desktop");
+test("'show' identifiers render in the list ready to fill and are excluded from the dropdown", async () => {
+    Partner._records[1].available_additional_identifiers_metadata = {
+        FR_SIRET: { label: "France SIRET", sequence: 10, display_optional: "show" },
+        FR_SIREN: { label: "France SIREN", sequence: 20 },
+    };
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 2, // no stored identifiers
+    });
+
+    // FR_SIRET is rendered directly in the list as an empty input, ready to fill
+    expect(".o_additional_identifiers_list label").toHaveCount(1);
+    expect(".o_additional_identifiers_list label").toHaveText("France SIRET");
+    expect(".o_additional_identifiers_list input").toHaveCount(1);
+    expect(".o_additional_identifiers_list input").toHaveValue("");
+
+    // ...and it is not offered again in the dropdown (only the plain FR_SIREN is)
+    await contains(".dropdown-toggle").click();
+    expect(queryAllTexts(".o-dropdown--menu .o-dropdown-item")).toEqual(["France SIREN"]);
+});
+
+test.tags("desktop");
+test("'show' identifier row commits its value when filled", async () => {
+    Partner._records[1].available_additional_identifiers_metadata = {
+        FR_SIRET: { label: "France SIRET", sequence: 10, display_optional: "show" },
+    };
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 2,
+    });
+
+    await contains(".o_additional_identifiers_list input").edit("73282932000074");
+    expect(".o_additional_identifiers_list input").toHaveValue("73282932000074");
+});
+
+test.tags("desktop");
+test("'hide' identifiers are not offered in the dropdown nor shown in the list", async () => {
+    Partner._records[1].available_additional_identifiers_metadata = {
+        FR_SIRET: { label: "France SIRET", sequence: 10, display_optional: "hide" },
+        FR_SIREN: { label: "France SIREN", sequence: 20 },
+    };
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 2, // no stored identifiers
+    });
+
+    // 'hide' has no value and is not 'show' → it never appears in the list
+    expect(".o_additional_identifiers_list").toHaveCount(0);
+
+    // ...and it is excluded from the dropdown (only the plain FR_SIREN is offered)
+    await contains(".dropdown-toggle").click();
+    expect(queryAllTexts(".o-dropdown--menu .o-dropdown-item")).toEqual(["France SIREN"]);
+});

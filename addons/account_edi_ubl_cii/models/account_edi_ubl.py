@@ -8,7 +8,7 @@ from odoo import _, fields, models, Command
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import formatLang, frozendict, html2plaintext, html_escape, unique
-from odoo.tools.partner_identifiers import get_tin_metadata_of_country
+from odoo.tools.partner_identifiers import get_tin_metadata_of_country, validate_identifier
 
 from odoo.addons.base.models.res_partner_bank import sanitize_account_number
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
@@ -23,6 +23,7 @@ from odoo.addons.account_edi_ubl_cii.tools.partner_identifiers import (
     ISO_IDENTIFIERS_METADATA,
     normalize_iso_identifier,
     normalize_vat_for_ubl,
+    validate_participant_identifier,
 )
 
 _logger = logging.getLogger(__name__)
@@ -2027,7 +2028,8 @@ class AccountEdiUBL(models.AbstractModel):
             scheme, value = node.attrib.get('schemeID'), node.text.strip()
             customer_values['routing_scheme'] = scheme
             customer_values['routing_endpoint'] = value
-            if (meta := ISO_IDENTIFIERS_METADATA.get(scheme)):
+            meta = ISO_IDENTIFIERS_METADATA.get(scheme)
+            if meta and meta['key'] in self.env['res.partner']._get_all_additional_identifiers_metadata():
                 customer_values.setdefault('additional_identifiers', {})[meta['key']] = value
 
         if not customer_values['vat'] and (country_code := customer_values.get('country_code')):
@@ -2078,13 +2080,26 @@ class AccountEdiUBL(models.AbstractModel):
         partner_create_values = {
             'is_company': True,
         }
-        for key in ('phone', 'name', 'email', 'street', 'street2', 'zip', 'city', 'additional_identifiers', 'routing_scheme', 'routing_endpoint'):
+        for key in ('phone', 'name', 'email', 'street', 'street2', 'zip', 'city'):
             if value := customer_values.get(key):
                 partner_create_values[key] = value
 
-        if (routing_scheme := customer_values.get('routing_scheme')) and (routing_endpoint := customer_values.get('routing_endpoint')):
-            partner_create_values['routing_scheme'] = routing_scheme
-            partner_create_values['routing_endpoint'] = routing_endpoint
+        # The additional identifiers and routing endpoint come from an external
+        # file: keep only the values that validate, so create() does not raise
+        if identifiers := customer_values.get('additional_identifiers'):
+            valid_identifiers = {
+                key: value
+                for key, value in identifiers.items()
+                if validate_identifier(key, value)['valid']
+            }
+            if valid_identifiers:
+                partner_create_values['additional_identifiers'] = valid_identifiers
+
+        if (scheme := customer_values.get('routing_scheme')) and (endpoint := customer_values.get('routing_endpoint')):
+            result = validate_participant_identifier(scheme, endpoint)
+            if result['valid']:
+                partner_create_values['routing_scheme'] = scheme
+                partner_create_values['routing_endpoint'] = result['value']
 
         country = self._import_ubl_get_country(collected_values)
         if country:

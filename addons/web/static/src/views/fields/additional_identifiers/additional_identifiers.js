@@ -57,8 +57,10 @@ export class AdditionalIdentifiersButton extends AdditionalIdentifiersCommon {
 
     get identifiersInDropdown() {
         const typesInUse = Object.keys(this.state.identifiers);
+        // 'display_optional' types are never offered in the dropdown: 'show' ones
+        // are rendered directly in the list, 'hide' ones are not proposed at all.
         return Object.entries(this.state.metadata)
-            .filter(([k, _v]) => !typesInUse.includes(k))
+            .filter(([k, v]) => !typesInUse.includes(k) && !v.display_optional)
             .map(([k, v]) => ({
                 identifierType: k,
                 label: v.label || k,
@@ -78,7 +80,15 @@ export class AdditionalIdentifiersList extends AdditionalIdentifiersCommon {
     static template = "web.AdditionalIdentifiersList";
 
     get sortedIdentifiers() {
-        return Object.entries(this.state.identifiers).sort(([keyA, _valA], [keyB, _valB]) => {
+        const identifiers = { ...this.state.identifiers };
+        // Identifiers flagged 'show' are always rendered in the list, ready to be
+        // filled, even when they have no value yet.
+        for (const [identifierType, meta] of Object.entries(this.state.metadata)) {
+            if (meta.display_optional === "show" && !(identifierType in identifiers)) {
+                identifiers[identifierType] = "";
+            }
+        }
+        return Object.entries(identifiers).sort(([keyA, _valA], [keyB, _valB]) => {
             const seqA = this.state.metadata[keyA]?.sequence || 100;
             const seqB = this.state.metadata[keyB]?.sequence || 100;
             return seqA - seqB;
