@@ -716,6 +716,11 @@ class HrApplicant(models.Model):
 
         return res
 
+    def copy(self, default=None):
+        if self.filtered("is_pool_applicant"):
+            raise UserError(self.env._("You cannot duplicate the talent(s)."))
+        return super().copy(default=default)
+
     def get_empty_list_help(self, help_message):
         if 'active_id' in self.env.context and self.env.context.get('active_model') == 'hr.job':
             hr_job = self.env['hr.job'].browse(self.env.context['active_id'])
