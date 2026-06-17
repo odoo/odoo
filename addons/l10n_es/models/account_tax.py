@@ -42,3 +42,37 @@ class AccountTax(models.Model):
     @api.model
     def _l10n_es_get_main_tax_types(self):
         return {'exento', 'sujeto', 'sujeto_agricultura', 'sujeto_isp', 'no_sujeto', 'no_sujeto_loc', 'no_deducible'}
+
+    @api.model
+    def _l10n_es_get_tax_details_for_report(self, base_lines, company):
+        def filter_to_apply(base_line, tax_values):
+            tax = tax_values['tax_repartition_line'].tax_id
+            return (
+                tax_values['tax_repartition_line'].factor_percent > 0.0
+                and tax.amount != -100
+                and tax.l10n_es_type not in ('ignore', 'retencion')
+            )
+
+        def grouping_key_generator(base_line, tax_values):
+            tax = tax_values['tax_repartition_line'].tax_id
+            l10n_es_exempt_reason = tax.l10n_es_exempt_reason if tax.l10n_es_type == 'exento' else False
+            recargo_taxes = base_line['taxes'].filtered(lambda t: t.l10n_es_type == 'recargo')
+            return {
+                'amount': tax.amount,
+                'recargo_taxes': recargo_taxes,
+                'l10n_es_bien_inversion': tax.l10n_es_bien_inversion,
+                'l10n_es_exempt_reason': l10n_es_exempt_reason,
+                'l10n_es_type': tax.l10n_es_type,
+            }
+
+        to_process = []
+        for base_line in base_lines:
+            if base_line.get('discount') == 100:
+                continue
+            to_update_vals, tax_values_list = self._compute_taxes_for_single_line(base_line)
+            to_process.append((base_line, to_update_vals, tax_values_list))
+        return self._aggregate_taxes(
+            to_process,
+            filter_tax_values_to_apply=filter_to_apply,
+            grouping_key_generator=grouping_key_generator,
+        )
