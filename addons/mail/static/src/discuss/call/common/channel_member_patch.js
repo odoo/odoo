@@ -1,6 +1,9 @@
 import { ChannelMember } from "@mail/discuss/core/common/channel_member";
+import { TalkingAudioBars } from "@mail/discuss/call/common/talking_audio_bars";
 
 import { patch } from "@web/core/utils/patch";
+
+Object.assign(ChannelMember.components, { TalkingAudioBars });
 
 /** @type {ChannelMember} */
 const ChannelMemberPatch = {
@@ -16,17 +19,11 @@ const ChannelMemberPatch = {
         }
         return member.rtcSession;
     },
-    /**
-     * Highlight the avatar while the member is actively talking, mirroring the
-     * sidebar call participants indicator.
-     */
-    get avatarClass() {
-        return {
-            ...super.avatarClass,
-            "o-isTalking": Boolean(
-                this.member().channel_id?.isSelfInCall && this.callSession?.isActuallyTalking
-            ),
-        };
+
+    get isTalking() {
+        return Boolean(
+            this.member().channel_id?.isSelfInCall && this.callSession?.isActuallyTalking
+        );
     },
 };
 patch(ChannelMember.prototype, ChannelMemberPatch);

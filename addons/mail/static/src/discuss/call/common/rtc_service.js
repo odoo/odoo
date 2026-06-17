@@ -334,6 +334,8 @@ export class Rtc extends Record {
      * @type {import("@mail/utils/common/media_monitoring").MonitorAudioReturnType}
      */
     disconnectAudioMonitor;
+    /** @type {Map<number, Function>} per-session remote audio monitor cleanup, keyed by session id */
+    remoteAudioMonitors = new Map();
     disconnectMicAudioTrackListeners;
     /** @type {ReturnType<setTimeout>} */
     pttReleaseTimeout;
@@ -2402,6 +2404,19 @@ export class Rtc extends Record {
     }
 
     /**
+     * Updates the talking volume for a session if the change exceeds the delta threshold,
+     * avoiding unnecessary reactive re-renders for insignificant volume fluctuations.
+     * @param {import("models").RtcSession} session
+     * @param {number} volume volume in [0, 1]
+     * @param {number} [delta] minimum change required to trigger an update
+     */
+    updateTalkingVolume(session, volume, delta = 0.05) {
+        if (Math.abs(volume - session?.talkingVolume) > delta) {
+            session.talkingVolume = volume;
+        }
+    }
+
+    /**
      * Updates the way broadcast of the local audio track is handled,
      * attaches an audio monitor for voice activation if necessary.
      */
@@ -2410,16 +2425,17 @@ export class Rtc extends Record {
         if (!this.localSession) {
             return;
         }
-        if (this.store.settings.usePushToTalk || !this.localChannel || !this.micAudioTrack) {
+        if (!this.localChannel || !this.micAudioTrack) {
             this.localSession.isTalking = false;
             await this.refreshMicAudioStatus();
             return;
         }
         try {
             this.disconnectAudioMonitor = await monitorAudio(this.micAudioTrack, {
-                onThreshold: async (isAboveThreshold) => {
-                    this.setTalking(isAboveThreshold);
-                },
+                onThreshold: this.store.settings.usePushToTalk
+                    ? undefined
+                    : async (isAboveThreshold) => this.setTalking(isAboveThreshold),
+                onTic: (volume) => this.updateTalkingVolume(this.localSession, volume),
                 volumeThreshold: this.store.settings.voiceActivationThreshold,
             });
         } catch {
@@ -2474,6 +2490,17 @@ export class Rtc extends Record {
             session.audioStream = stream;
             session.is_muted = false;
             session.isTalking = false;
+            this.remoteAudioMonitors.get(session.id)?.();
+            try {
+                this.remoteAudioMonitors.set(
+                    session.id,
+                    await monitorAudio(track, {
+                        onTic: (volume) => this.updateTalkingVolume(session, volume),
+                    })
+                );
+            } catch {
+                // ignore monitor setup failures.
+            }
             await session.playAudio();
         }
         if (track.kind === "video") {
@@ -2520,6 +2547,9 @@ export class Rtc extends Record {
      * @param {import("models").RtcSession} session
      */
     removeAudioFromSession(session) {
+        this.remoteAudioMonitors.get(session.id)?.();
+        this.remoteAudioMonitors.delete(session.id);
+        session.talkingVolume = 0;
         closeStream(session.audioStream);
         if (session.audioElement) {
             session.audioElement.pause();

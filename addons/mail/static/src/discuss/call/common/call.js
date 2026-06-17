@@ -169,7 +169,7 @@ export class Call extends Component {
     }
 
     get isActiveCall() {
-        return Boolean(this.channel.eq(this.rtc.channel));
+        return Boolean(this.channel?.eq(this.rtc.channel));
     }
 
     get minimized() {
@@ -345,7 +345,7 @@ export class Call extends Component {
         gridEl.style.setProperty("--width", "0");
         gridEl.style.setProperty("--height", "0");
         const { width, height } = gridEl.getBoundingClientRect();
-        const aspectRatio = this.minimized && this.channel.videoCount === 0 ? 1 : 16 / 9;
+        const aspectRatio = this.isActiveCall ? 16 / 9 : 1;
         const tileCount = gridEl.children.length;
         // Column/row cap: how many tiles fit at MIN_TILED_TILE_WIDTH without shrinking further. Used
         // by "Prioritize tiles with video" to decide when video-less tiles must be dropped.

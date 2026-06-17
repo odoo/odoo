@@ -1,15 +1,8 @@
 .o-discuss-CallParticipantCard {
+    background-color: transparent;
     color: white;
     aspect-ratio: 16/9;
-
-    &.o-isTalking {
-        outline: 4px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
-        outline-offset: -4px;
-
-        &.o-inset {
-            box-shadow: inset 0 0 0 map-get($spacers, 1)/2 var(--discuss-talkingColor, $o-discuss-talkingColor);
-        }
-    }
+    container-type: inline-size;
 
     &.o-inset {
         height: 20%;
@@ -36,8 +29,13 @@
     }
 }
 
+.o-discuss-CallParticipantCard-avatar.o-selfInCall {
+    background-color: var(--discuss-CallParticipantCard-bgColor, #{$o-gray-700});
+    background-image: radial-gradient(circle, rgba(white, 0.06) 0%, rgba(0, 0, 0, 0.4) 100%);
+    border: 1px solid rgba(white, 0.2);
+}
+
 .o-discuss-CallParticipantCard-avatar:not(.o-minimized) {
-    background-color: var(--o-discuss-CallParticipantCard-avatarBgColor, #{$o-gray-800});
     &.o-isRemoteVideo {
         background: linear-gradient(180deg, #144173 0%, #082647 30%, #133c68 60%, #082647 90%);
         background-size: 200% 200%;
@@ -61,44 +59,39 @@
     max-height: #{"min(100%, 80px)"}; // interpolated as not supported by Sass
     max-width: #{"min(100%, 80px)"};
     aspect-ratio: 1;
+    outline: 3px solid transparent;
     border: none;
+    box-shadow: 0 0 0 calc(var(--discuss-CallParticipantCard-talkingVolume, 0) * 4cqi) rgba(white, 0.25);
+    transition: box-shadow 0.3s ease-out, outline 0.3s ease-out;
+
+    &.o-small {
+        box-shadow: 0 0 0 calc(var(--discuss-CallParticipantCard-talkingVolume, 0) * 8cqi) rgba(white, 0.25);
+    }
 
     &.o-isTalking {
-        outline: 4px solid var(--discuss-talkingColor, $o-discuss-talkingColor);
-        outline-offset: -4px;
+        outline: calc(1px + var(--discuss-CallParticipantCard-talkingVolume, 0) * 3px) solid white;
+        &.o-small {
+            outline: 1px solid white;
+        }
     }
 
     &.o-isInvitation:not(:hover) {
-        animation: o-discuss-CallParticipantCard-avatarImag_borderPulse 3s linear infinite;
+        animation: o-discuss-CallParticipantCard-avatarImag_borderPulse 0.5s linear infinite alternate;
     }
 
     &.o-isInvitation:hover {
-        border: solid map-get($theme-colors, 'danger');
+        outline: solid map-get($theme-colors, 'danger');
     }
 }
 
 @keyframes o-discuss-CallParticipantCard-avatarImag_borderPulse {
-    0% { border: solid white }
-    20% { border: solid $gray-600 }
-    35% { border: solid $gray-100 }
-    50% { border: solid $gray-600 }
-    70% { border: solid $gray-100 }
-    85% { border: solid $gray-700 }
+    0% { outline: solid transparent }
+    100% { outline: solid white }
 }
 
 .o-discuss-CallParticipantCard-iconBlackBg {
-    aspect-ratio: 1;
-    background-color: rgba(0, 0, 0, 0.75);
-    opacity: 75%;
-}
-
-.o-discuss-CallParticipantCard-topControls {
-    .o-discuss-CallParticipantCard-iconBlackBg,
-    .o-discuss-CallParticipantCard-contextButton {
-        width: 2rem;
-        height: 2rem;
-        font-size: 0.875rem;
-    }
+    background-color: rgba(0, 0, 0, 0.6);
+    color: var(--discuss-CallParticipantCard-overlay-color, white);
 }
 
 .o-discuss-CallParticipantCard-overlay {
@@ -118,24 +111,8 @@
     }
 }
 
-.o-discuss-CallParticipantCard-overlayBottomName {
-    opacity: .85;
-    text-shadow: 4px 4px 4px black, 0px 0px 4px black, 0px 0px 4px black;
-}
-
-.o-discuss-CallParticipantCard-overlay-replayButton {
-    background-color: $o-gray-900;
-    &:hover {
-        background-color: $o-gray-700;
-    }
-    &:active {
-        background-color: $o-gray-800;
-    }
-}
-
 .o-discuss-CallParticipantCard-contextButton {
     margin: Min(5%, map-get($spacers, 2));
-    background-color: black;
     aspect-ratio: 1;
     color: #F9FAFB !important;
 
