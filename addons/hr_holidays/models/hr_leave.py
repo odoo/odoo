@@ -934,7 +934,8 @@ class HrLeave(models.Model):
                 leave.date_from,
                 leave.date_to,
                 leave.work_entry_type_id.include_public_holidays_in_duration,
-                resource_calendar or leave.resource_calendar_id
+                resource_calendar or leave.resource_calendar_id,
+                leave.work_entry_type_id.allow_request_on_top,
             ] += leave.employee_id
         # We force the company in the domain as we are more than likely in a compute_sudo
         domain = [('count_as', '=', 'absence'),
@@ -946,15 +947,20 @@ class HrLeave(models.Model):
                   ('holiday_id', 'not in', (employee_leaves | employee_leaves.source_leave_id).ids)]
         if additional_domain:
             domain = Domain.AND([domain, additional_domain])
+        # Requests allowed on top keep their duration over employee absences.
+        # Public holidays still follow include_public_holidays_in_duration.
         # Precompute values in batch for performance purposes
         work_time_per_day_mapped = {
-            (date_from, date_to, include_public_holidays_in_duration, calendar): employees.with_context(
-                    compute_leaves=not include_public_holidays_in_duration)._list_work_time_per_day(date_from, date_to, domain=domain, calendar=calendar)
-            for (date_from, date_to, include_public_holidays_in_duration, calendar), employees in employees_by_dates_calendar.items()
+            (date_from, date_to, include_public_holidays_in_duration, calendar, allow_request_on_top): employees.with_context(
+                    compute_leaves=not include_public_holidays_in_duration)._list_work_time_per_day(
+                        date_from, date_to, domain=Domain.AND([domain, [('holiday_id', '=', False)]]) if allow_request_on_top else domain, calendar=calendar)
+            for (date_from, date_to, include_public_holidays_in_duration, calendar, allow_request_on_top), employees in employees_by_dates_calendar.items()
         }
         work_days_data_mapped = {
-            (date_from, date_to, include_public_holidays_in_duration, calendar): employees._get_work_days_data_batch(date_from, date_to, compute_leaves=not include_public_holidays_in_duration, domain=domain, calendar=calendar)
-            for (date_from, date_to, include_public_holidays_in_duration, calendar), employees in employees_by_dates_calendar.items()
+            (date_from, date_to, include_public_holidays_in_duration, calendar, allow_request_on_top): employees._get_work_days_data_batch(
+                date_from, date_to, compute_leaves=not include_public_holidays_in_duration,
+                domain=Domain.AND([domain, [('holiday_id', '=', False)]]) if allow_request_on_top else domain, calendar=calendar)
+            for (date_from, date_to, include_public_holidays_in_duration, calendar, allow_request_on_top), employees in employees_by_dates_calendar.items()
         }
 
         min_start = max_end = False
@@ -1008,13 +1014,13 @@ class HrLeave(models.Model):
                     hours = days * (day_end - day_start)
                 else:
                     # Partial Day Leave
-                    work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, include_public, calendar][leave.employee_id.id]
+                    work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, include_public, calendar, leave.work_entry_type_id.allow_request_on_top][leave.employee_id.id]
                     hours, days = work_days_data['hours'], work_days_data['days']
 
                     # sudo as is_flexible is on version model and employee does not have access to it.
                     if not calendar._is_flexible():
                         # Identify workin days
-                        work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, include_public, calendar][leave.employee_id.id]
+                        work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, include_public, calendar, leave.work_entry_type_id.allow_request_on_top][leave.employee_id.id]
                         working_dates = {interval[0] for interval in work_time_per_day_list}
 
                         total_dates = {
@@ -1091,7 +1097,7 @@ class HrLeave(models.Model):
                     days = hours / 24
             elif leave.work_entry_type_request_unit == 'day' and check_work_entry_type:
                 # list of tuples (day, hours)
-                work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
+                work_time_per_day_list = work_time_per_day_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar, leave.work_entry_type_id.allow_request_on_top][leave.employee_id.id]
                 days = len(work_time_per_day_list)
                 hours = sum(t[1] for t in work_time_per_day_list)
                 if (hours, days) == (0, 0) and leave.work_entry_type_id.count_as == "working_time":
@@ -1100,7 +1106,7 @@ class HrLeave(models.Model):
                     hours_per_day = calendar.hours_per_day if calendar else leave.employee_id.sudo().resource_calendar_id.hours_per_day
                     hours = days * (hours_per_day or HOURS_PER_DAY)
             else:
-                work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
+                work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar, leave.work_entry_type_id.allow_request_on_top][leave.employee_id.id]
                 hours, days = work_days_data['hours'], work_days_data['days']
                 if (hours, days) == (0, 0) and leave.work_entry_type_id.count_as == "working_time":
                     # an end on the last microsecond of a day is that day's end
