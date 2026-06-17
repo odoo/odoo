@@ -335,7 +335,7 @@
     .oe_title {
         color: $headings-color;
 
-        @include media-breakpoint-up(sm) {
+        @include media-breakpoint-up(md) {
             max-width: 75%;
 
             > h1, > h2, > h3 {
@@ -1051,13 +1051,17 @@
             font-weight: $font-weight-normal;
         }
     }
+}
 
-    .o_inner_group {
-        @include form-break-table;
-    }
+@include media-breakpoint-down(md) {
+    .o_form_view {
+        .o_inner_group {
+            @include form-break-table;
+        }
 
-    .o_form_editable .o_inner_group {
-        @include editable-form-break-table();
+        .o_form_editable .o_inner_group {
+            @include editable-form-break-table();
+        }
     }
 }
 
