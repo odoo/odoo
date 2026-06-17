@@ -401,7 +401,7 @@ class TestEventNotifications(CalendarMailCommon):
                 'partner_ids': [fields.Command.link(self.partner.id)],
                 'alarm_ids': [fields.Command.link(alarm.id)],
             })
-            self.env.flush_all()  # flush is required to make partner_ids be present in the event
+            self.env.cr.flush()  # flush is required to make partner_ids be present in the event and create the triggers
 
         self.assertEqual(len(capt.records), 1)
         self.assertLessEqual(capt.records.call_at, now)
@@ -433,7 +433,7 @@ class TestEventNotifications(CalendarMailCommon):
                     'stop': now + relativedelta(minutes=20),
                     'alarm_ids': [fields.Command.link(alarm.id)],
                 })
-                self.env.flush_all()
+                self.env.cr.flush()
                 self.assertEqual(len(capt.records), 1)
         with self.capture_triggers('calendar.ir_cron_scheduler_alarm') as capt:
             with freeze_time('2022-04-13 10:00+0000'):
@@ -448,16 +448,18 @@ class TestEventNotifications(CalendarMailCommon):
                     'count': 5,
                     'alarm_ids': [fields.Command.link(alarm.id)],
                 })
-                self.env.flush_all()
+                self.env.cr.flush()
                 self.assertEqual(len(capt.records), 1, "1 trigger should have been created for the whole recurrence")
                 self.assertEqual(capt.records.call_at, datetime(2022, 4, 13, 10, 14))
                 self.env['calendar.alarm_manager']._send_reminder()
+                self.env.cr.flush()
                 self.assertEqual(len(capt.records), 1)
 
             self.env['ir.cron.trigger'].search([('cron_id', '=', cron.id)]).unlink()
 
             with freeze_time('2022-05-16 10:00+0000'):
                 self.env['calendar.alarm_manager']._send_reminder()
+                self.env.cr.flush()
                 self.assertEqual(capt.records.mapped('call_at'), [datetime(2022, 6, 13, 10, 14)])
                 self.assertEqual(len(capt.records), 1, "1 more trigger should have been created")
 
@@ -471,7 +473,7 @@ class TestEventNotifications(CalendarMailCommon):
                     'allday': True,
                     'alarm_ids': [fields.Command.link(alarm.id)],
                 })
-                self.env.flush_all()
+                self.env.cr.flush()
                 self.assertEqual(len(capt.records), 1)
 
         with self.capture_triggers('calendar.ir_cron_scheduler_alarm') as capt:
@@ -489,7 +491,7 @@ class TestEventNotifications(CalendarMailCommon):
                     'count': 5,
                     'alarm_ids': [fields.Command.link(alarm.id)],
                 })
-                self.env.flush_all()
+                self.env.cr.flush()
                 self.assertEqual(len(capt.records), 1)
 
         with self.capture_triggers('calendar.ir_cron_scheduler_alarm') as capt:
@@ -514,7 +516,7 @@ class TestEventNotifications(CalendarMailCommon):
                     'day': 16,
                     'alarm_ids': [fields.Command.link(alarm_hour.id)],
                 })
-                self.env.flush_all()
+                self.env.cr.flush()
                 # Ensure that there is only one alarm set, exactly for one hour previous the event.
                 self.assertEqual(len(capt.records), 1, "Only one trigger must be created for the entire recurrence.")
                 self.assertEqual(capt.records.mapped('call_at'), [datetime(2024, 4, 16, 11, 0)], "Alarm must be one hour before the first event.")
@@ -525,6 +527,7 @@ class TestEventNotifications(CalendarMailCommon):
                 # The next alarm will be set through the next_date selection for the next event.
                 # Ensure that there is only one alarm set, exactly for one hour previous the event.
                 self.env['calendar.alarm_manager']._send_reminder()
+                self.env.cr.flush()
                 self.assertEqual(len(capt.records), 1, "Only one trigger must be created for the entire recurrence.")
                 self.assertEqual(capt.records.mapped('call_at'), [datetime(2024, 5, 16, 11, 0)], "Alarm must be one hour before the second event.")
 
@@ -550,20 +553,76 @@ class TestEventNotifications(CalendarMailCommon):
                     'count': 3,
                     'alarm_ids': [fields.Command.link(alarm.id)],
                 })
-                self.env.flush_all()
+                self.env.cr.flush()
                 self.assertEqual(len(capt.records), 1, "1 trigger should have been created for the whole recurrence (1)")
                 self.assertEqual(capt.records.call_at, datetime(2022, 4, 13, 10, 10))
 
         with self.capture_triggers('calendar.ir_cron_scheduler_alarm') as capt:
             with freeze_time('2022-04-13 10:11+0000'):
                 self.env['calendar.alarm_manager']._send_reminder()
+                self.env.cr.flush()
                 self.assertEqual(len(capt.records), 1)
 
         with self.capture_triggers('calendar.ir_cron_scheduler_alarm') as capt:
             with freeze_time('2022-04-14 10:11+0000'):
-                self.env['calendar.alarm_manager']._send_reminder()
+                # as done by the cron, only process the alarms since the last call
+                self.env['calendar.alarm_manager'].with_context(lastcall=datetime(2022, 4, 13, 10, 11))._send_reminder()
+                self.env.cr.flush()
                 self.assertEqual(len(capt.records), 1, "1 trigger should have been created for the whole recurrence (2)")
                 self.assertEqual(capt.records.call_at, datetime(2022, 4, 15, 10, 10))
+
+    def test_email_alarm_recurrence_rescheduled_by_cron(self):
+        """The reminder cron re-arms the next occurrence without writing the recurrence:
+        the cron runner locks it while the job runs, writing it would deadlock the job."""
+        alarm, alarm_15 = self.env['calendar.alarm'].create([{
+            'name': 'Alarm',
+            'alarm_type': 'email',
+            'interval': 'minutes',
+            'duration': 5,
+        }, {
+            'name': 'Alarm 15',
+            'alarm_type': 'email',
+            'interval': 'minutes',
+            'duration': 15,
+        }])
+        cron = self.env.ref('calendar.ir_cron_scheduler_alarm')
+        cron.lastcall = False
+        with freeze_time('2022-04-13 10:00+0000'):
+            now = fields.Datetime.now()
+            event = self.env['calendar.event'].create({
+                'name': "Recurring Event",
+                'start': now + relativedelta(minutes=20),
+                'stop': now + relativedelta(minutes=25),
+                'partner_ids': [fields.Command.link(self.customers[0].id)],
+                'recurrency': True,
+                'rrule_type': 'daily',
+                'count': 3,
+                'alarm_ids': (alarm + alarm_15).ids,
+            })
+        self.assertFalse(event.recurrence_id.trigger_id)
+
+        with self.capture_triggers('calendar.ir_cron_scheduler_alarm') as capt, \
+                self.mock_mail_gateway(mail_unlink_sent=False), \
+                self.enter_registry_test_mode(), \
+                freeze_time('2022-04-13 10:06+0000'):
+            cron.method_direct_trigger()
+        self.assertMailMail(self.customers[0], 'sent', author=self.user_root.partner_id)
+        self.assertEqual(capt.records.mapped('call_at'), [datetime(2022, 4, 14, 10, 5), datetime(2022, 4, 14, 10, 15)],
+            "The alarms of the next occurrence should be scheduled")
+        self.assertFalse(event.recurrence_id.trigger_id)
+
+        # the runner sets lastcall with the real database time, set it back in the frozen timeline
+        cron.lastcall = datetime(2022, 4, 13, 10, 6)
+        with self.capture_triggers('calendar.ir_cron_scheduler_alarm') as capt, \
+                self.mock_mail_gateway(mail_unlink_sent=False), \
+                self.enter_registry_test_mode(), \
+                freeze_time('2022-04-13 10:16+0000'):
+            cron.method_direct_trigger()
+        self.assertEqual(len(self._new_mails), 1, "Only the 5 minutes alarm should be sent")
+        self.assertMailMail(self.customers[0], 'sent', author=self.user_root.partner_id)
+        # each alarm of an occurrence schedules the alarms of the next one again
+        # this is accepted as a limitation for now as it has no functional impact
+        self.assertEqual(capt.records.mapped('call_at'), [datetime(2022, 4, 14, 10, 5), datetime(2022, 4, 14, 10, 15)])
 
     def test_notification_event_timezone(self):
         """
