@@ -2,6 +2,7 @@
 
 from . import (
     test_buy_gift_card,
+    test_expire_loyalty_points,
     test_loyalty,
     test_loyalty_history,
     test_pay_with_gift_card,

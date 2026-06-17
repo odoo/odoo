@@ -45,9 +45,7 @@ class LoyaltyCard(models.Model):
 
     use_count = fields.Integer(compute="_compute_use_count")
     active = fields.Boolean(default=True)
-    history_ids = fields.One2many(
-        comodel_name="loyalty.history", inverse_name="card_id", readonly=True
-    )
+    history_ids = fields.One2many(comodel_name="loyalty.history", inverse_name="card_id")
 
     _card_code_unique = models.Constraint(
         "UNIQUE(code)", "A coupon/loyalty card must have a unique code."
@@ -244,3 +242,19 @@ class LoyaltyCard(models.Model):
             "target": "new",
             "context": {"default_card_id": self.id},
         }
+
+    def _recompute_loyalty_card_balances(self):
+        """Recalculate the total point balance for loyalty cards after cancellations."""
+        if available := sum(self.history_ids.mapped("available_issued_points")):
+            self.points = available
+        else:
+            debts = (
+                self
+                .env["loyalty.point.track"]
+                .sudo()
+                .search([
+                    ("issuer_line_id", "=", False),
+                    ("redeemer_line_id.card_id", "=", self.id),
+                ])
+            )
+            self.points = sum(debts.mapped("points"))
