@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import api, fields, models
 from odoo.exceptions import AccessDenied
-
 
 MILKY_WAY_REGIONS = ['P3X', 'P4X', 'P2X', 'P5C']
 PEGASUS_REGIONS = ['M4R', 'P3Y', 'M6R']
@@ -16,6 +15,7 @@ class Test_HttpStargate(models.Model):
     name = fields.Char(required=True, store=True, compute='_compute_name', readonly=False)
     address = fields.Char(required=True)
     sgc_designation = fields.Char(store=True, compute='_compute_sgc_designation')
+    sgc_designation_json = fields.Json(compute='_compute_sgc_designation_json')
     galaxy_id = fields.Many2one('test_http.galaxy', required=True)
     has_galaxy_crystal = fields.Boolean(store=True, compute='_compute_has_galaxy_crystal', readonly=False)
     glyph_attach = fields.Image(attachment=True)
@@ -60,6 +60,11 @@ class Test_HttpStargate(models.Model):
             local_part = str(int.from_bytes(gate.address.encode(), 'big'))[:3]
             gate.sgc_designation = f'{region_part}-{local_part}'
 
+    @api.depends('sgc_designation')
+    def _compute_sgc_designation_json(self):
+        for gate in self:
+            gate.sgc_designation_json = {'sgc_designation': gate.sgc_designation}
+
     @api.depends('glyph_attach')
     def _compute_glyph_compute(self):
         for gate in self:
@@ -78,7 +83,7 @@ class Test_HttpGalaxy(models.Model):
     @api.model
     def render(self, galaxy_id):
         return self.env['ir.qweb']._render('test_http.tmpl_galaxy', {
-            'galaxy': self.browse([galaxy_id])
+            'galaxy': self.browse([galaxy_id]),
         })
 
 

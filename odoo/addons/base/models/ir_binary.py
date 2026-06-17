@@ -1,3 +1,4 @@
+import json
 import logging
 from datetime import datetime
 from mimetypes import guess_extension
@@ -8,7 +9,7 @@ from odoo import models
 from odoo.exceptions import MissingError, UserError
 from odoo.http import request
 from odoo.http.stream import Stream
-from odoo.tools import file_open
+from odoo.tools import file_open, json_default
 from odoo.tools.image import image_guess_size_from_field_name, image_process
 from odoo.tools.mimetypes import get_extension, guess_file_mimetype, guess_mimetype
 from odoo.tools.misc import verify_limited_field_access_token
@@ -70,15 +71,16 @@ class IrBinary(models.AbstractModel):
         outside or the ir.binary model.
 
         :param record: the record where to load the data from.
-        :param field_name: the binary field where to load the data
-            from.
+        :param field_name: the binary or json field where to load the
+            data from.
         """
         if record._name == 'ir.attachment' and field_name in ('raw', 'db_datas'):
             return record._to_http_stream()
 
+        field_def = record._fields[field_name]
         value = record[field_name]
 
-        if value and record._fields[field_name].attachment:
+        if value and field_def.type == 'binary' and field_def.attachment:
             field_attachment = self.env['ir.attachment'].sudo().search(
                 domain=[('res_model', '=', record._name),
                         ('res_id', '=', record.id),
@@ -88,7 +90,13 @@ class IrBinary(models.AbstractModel):
                 raise MissingError(self.env._("The related attachment does not exist."))
             return field_attachment._to_http_stream()
 
-        data = value.content
+        if field_def.type == 'binary':
+            data = value.content
+        elif field_def.type == 'json':
+            data = json.dumps(value, ensure_ascii=False, default=json_default).encode()
+        else:
+            raise TypeError
+
         return Stream(
             type='data',
             data=data,
@@ -133,10 +141,13 @@ class IrBinary(models.AbstractModel):
             field_def = record._fields[field_name]
         except KeyError:
             raise UserError(self.env._("Record has no field “%s”", field_name))
-        if field_def.type != 'binary':
+
+        if field_def.type == 'json':
+            mimetype = 'application/json; charset=utf-8'
+        elif field_def.type != 'binary':
             raise UserError(self.env._(
-                "Field “%(field)s” is type “%(field_type)s” but "
-                "it is only possible to stream Binary or Image fields.",
+                "Field “%(field)s” is type “%(field_type)s” but it is "
+                "only possible to stream Binary, Image or Json fields.",
                 field=field_def, field_type=field_def.type))
 
         stream = self._record_to_stream(record, field_name)

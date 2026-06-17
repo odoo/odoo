@@ -467,6 +467,18 @@ class TestHttpStatic(TestHttpStaticCommon):
         self.assertEqual(res.headers['Date'].count(' GMT'), 1,
             "There must be only 1 Date header, not 2")
 
+    def test_static25_json_field(self):
+        earth = self.env.ref('test_http.earth')
+        self.assertDownload(
+            f'/web/content/test_http.stargate/{earth.id}/sgc_designation_json',
+            headers={},
+            assert_status_code=200,
+            assert_headers={
+                'Content-Type': 'application/json; charset=utf-8',
+            },
+            assert_content=b'{"sgc_designation": "P4X-126"}',
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestHttpStaticLogo(TestHttpStaticCommon):
