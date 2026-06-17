@@ -89,7 +89,7 @@ class IrModuleModule(models.Model):
 
                     if module.state == 'to upgrade' and request:
                         Website = self.env['website']
-                        current_website = Website.get_current_website()
+                        current_website = Website.browse(request.env.context.get('website_id'))
                         websites_to_update = current_website if current_website in websites_to_update else Website
 
                     for website in websites_to_update:
@@ -417,8 +417,8 @@ class IrModuleModule(models.Model):
 
         # this will install 'self' if it is not installed yet
         if request:
-            request.update_context(apply_new_theme=True)
-        self._theme_upgrade_upstream()
+            request.update_context(apply_new_theme=True, website_id=website.id)
+        self.with_context(website_id=website.id)._theme_upgrade_upstream()
 
         result = website.button_go_website()
         return result
@@ -436,7 +436,9 @@ class IrModuleModule(models.Model):
             Indeed the (re)loading of the theme will be done automatically on ``write``.
         """
         website = self.env['website'].get_current_website()
-        website.theme_id._theme_upgrade_upstream()
+        if request:
+            request.update_context(website_id=website.id)
+        website.theme_id.with_context(website_id=website.id)._theme_upgrade_upstream()
 
     @api.model
     def update_list(self):
