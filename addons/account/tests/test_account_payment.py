@@ -895,10 +895,12 @@ class TestAccountPayment(AccountTestInvoicingWithBanksCommon, MailCommon):
             (False, 'partial', 'partial'),
             (False, 'in_payment', 'in_payment'),
             (False, 'paid', 'paid'),
+            (False, 'blocked', 'blocked'),
             (True, 'partial', 'partial'),
             (True, 'in_payment', 'in_payment'),
             (True, 'paid', 'paid'),
             (True, 'reversed', 'reversed'),
+            (True, 'blocked', 'blocked'),
         ]:
             invoice = create_invoice(post=post, kwargs={'payment_state': payment_state})
             self.assertEqual(invoice.status_in_payment, expected)
@@ -909,6 +911,12 @@ class TestAccountPayment(AccountTestInvoicingWithBanksCommon, MailCommon):
         ]:
             invoice = create_invoice(post=True, kwargs={'is_move_sent': is_move_sent})
             self.assertEqual(invoice.status_in_payment, expected)
+
+        invoice = create_invoice(post=True, kwargs={
+            'payment_state': 'blocked',
+            'is_move_sent': True,
+        })
+        self.assertEqual(invoice.status_in_payment, 'blocked')
 
     def test_payment_move_with_multiple_liquidity_lines(self):
         payment = self.env['account.payment'].create({

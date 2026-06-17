@@ -877,6 +877,26 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
             },
         ])
 
+    def test_cannot_register_payment_on_blocked_invoices(self):
+        blocked_invoice = self.init_invoice('out_invoice', products=self.product_a, post=True)
+        blocked_invoice.action_toggle_block_payment()
+
+        invoice_1 = self.init_invoice('out_invoice', products=self.product_a, post=True)
+        invoice_2 = self.init_invoice('out_invoice', products=self.product_a, post=True)
+
+        with self.assertRaisesRegex(UserError, "blocked invoices"):
+            blocked_invoice.action_force_register_payment()
+
+        with self.assertRaisesRegex(UserError, "blocked invoices"):
+            (blocked_invoice + invoice_1 + invoice_2).action_force_register_payment()
+
+        receivable_lines = (blocked_invoice + invoice_1 + invoice_2).line_ids.filtered(
+            lambda line: line.account_type == 'asset_receivable'
+        )
+
+        with self.assertRaisesRegex(UserError, "blocked invoices"):
+            Form.from_action(self.env, receivable_lines.action_register_payment())
+
     def test_register_payment_constraints(self):
         # Test to register a payment for an already fully reconciled journal entry.
         self.env['account.payment.register']\
