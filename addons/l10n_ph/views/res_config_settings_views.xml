@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_l10n_ph" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n.ph</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='invoicing_settings']" position="inside">
+                <setting
+                        id="l10n_ph_discount_privileges_setting"
+                        string="Discount Privileges"
+                        company_dependent="1"
+                        help="Enable Philippine discount privilege setup and management. Also enables Sales order line discounts when Sales is installed."
+                        invisible="country_code != 'PH'"
+                >
+                    <field name="l10n_ph_enable_discount_privilege"/>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

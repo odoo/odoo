@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_l10n_ph_discount_privilege_wizard_form" model="ir.ui.view">
+        <field name="name">l10n_ph.discount.privilege.wizard.form</field>
+        <field name="model">l10n_ph.discount_privilege.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Discount Privilege">
+                <sheet>
+                    <field name="move_id" invisible="1"/> <!-- links wizard to invoice, needed for action_confirm -->
+                    <field name="company_id" invisible="1"/> <!-- multi-company domain filter on privilege_id -->
+                    <field name="currency_id" invisible="1"/> <!-- monetary formatting for discounted_amount -->
+                    <field name="available_product_ids" invisible="1"/> <!-- domain source for product_ids selector -->
+                    <field name="available_category_ids" invisible="1"/> <!-- domain source for category_ids selector -->
+                    <div class="row">
+                        <div class="col-sm-5 col-md-5 col-5">
+                            <group>
+                                <field name="privilege_id" placeholder="Select a privilege..." domain="[('company_id', '=', company_id)]"/>
+                                <field name="category_ids" widget="many2many_tags" invisible="apply_on != 'product_category'"
+                                       domain="[('id', 'in', available_category_ids)]"/>
+                                <field name="product_ids" widget="many2many_tags" invisible="apply_on != 'product'"
+                                       domain="[('id', 'in', available_product_ids)]"/>
+                            </group>
+                        </div>
+                        <div class="col-sm-7 col-md-7 col-7">
+                            <field name="apply_on" widget="radio" nolabel="1"/>
+                        </div>
+                    </div>
+                    <div class="alert alert-warning" role="alert">
+                        Please make sure that selected products are eligible for discount privileges.
+                    </div>
+                    <div style="max-height: 12rem; overflow-y: auto;">
+                        <field name="line_ids" nolabel="1">
+                            <list string="Invoice Lines" create="0" delete="0" no_open="1">
+                                <field name="invoice_line_id" column_invisible="1"/> <!-- links to invoice line for privilege apply/remove -->
+                                <field name="currency_id" column_invisible="1"/> <!-- per-line monetary formatting -->
+                                <field name="has_discount_privilege" column_invisible="1"/> <!-- controls visibility of discount/discounted_amount columns -->
+                                <field name="has_applied_discount_privilege" column_invisible="1"/> <!-- controls visibility of remove-trash button -->
+                                <field name="product_id" string="Product Name"/>
+                                <field name="category_id" string="Product Category"/>
+                                <field name="discount" string="Disc. Applied (%)" invisible="not has_discount_privilege"/>
+                                <field name="discounted_amount" string="Discounted Amount" invisible="not has_discount_privilege"/>
+                                <button
+                                        name="action_remove_line_discount"
+                                        type="object"
+                                        icon="fa-trash"
+                                        title="Remove discount privilege from this line"
+                                        class="btn-link text-danger"
+                                        invisible="not has_applied_discount_privilege"
+                                />
+                            </list>
+                        </field>
+                    </div>
+                </sheet>
+                <footer>
+                    <button
+                            string="Confirm"
+                            type="object"
+                            name="action_confirm"
+                            class="btn btn-primary"
+                            data-hotkey="q"
+                    />
+                    <button
+                            string="Remove All Discount Privileges"
+                            type="object"
+                            name="action_remove_all"
+                            class="btn btn-danger ms-auto"
+                            data-hotkey="z"
+                            confirm="Are you sure you want to remove all discount privileges from this invoice?"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_l10n_ph_discount_privilege_wizard" model="ir.actions.act_window">
+        <field name="name">Discount Privilege</field>
+        <field name="res_model">l10n_ph.discount_privilege.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="group_ids" eval="[
+            Command.link(ref('l10n_ph.group_l10n_ph_discount_privilege')),
+            Command.link(ref('account.group_account_invoice')),
+            Command.link(ref('account.group_account_basic')),
+        ]"/>
+    </record>
+</odoo>

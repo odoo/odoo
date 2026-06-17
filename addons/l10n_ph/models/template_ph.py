@@ -56,3 +56,25 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_variation_id': 'l10n_ph_account_502040',
             },
         }
+
+    @template("ph", "l10n_ph.discount.privilege")
+    def _get_ph_discount_privileges(self):
+        return {
+            "l10n_ph_discount_privilege_sc_20_vat_incl": {
+                "name": "20% Senior Citizen Discount",
+                "discount_amount": 20,
+                "tax_id": "l10n_ph_tax_sale_vat_exempt_sc_discount",
+                "account_id": "l10n_ph_account_401021",
+            },
+            "l10n_ph_discount_privilege_pwd_20_vat_incl": {
+                "name": "20% PWD Discount",
+                "discount_amount": 20,
+                "tax_id": "l10n_ph_tax_sale_vat_exempt_pwd_discount",
+                "account_id": "l10n_ph_account_401022",
+            },
+            "l10n_ph_discount_privilege_sc_5": {
+                "name": "5% Senior Citizen Discount",
+                "discount_amount": 5,
+                "account_id": "l10n_ph_account_401021",
+            },
+        }

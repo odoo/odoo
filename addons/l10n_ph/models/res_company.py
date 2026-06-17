@@ -7,3 +7,7 @@ class ResCompany(models.Model):
 
     branch_code = fields.Char(string='Company Branch Code', related='partner_id.branch_code')
     l10n_ph_rdo = fields.Char("RDO", help="Revenue District Office")
+    l10n_ph_enable_discount_privilege = fields.Boolean(
+        string="Enable Discount Privileges",
+        default=False,
+    )
