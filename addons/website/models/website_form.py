@@ -193,7 +193,7 @@ class website_form_model_fields(models.Model):
             field = self.env[model_name]._fields[field_name]
             if field.type == 'html' and field.sanitize and field.sanitize_form and not field.sanitize_overridable:
                 continue
-            records = self.env[model_name].with_context(active_test=False).search(_form_domain(field_name))
+            records = self.env[model_name].sudo().with_context(active_test=False).search(_form_domain(field_name))
             for record in records:
                 _check(record[field_name], record.display_name)
 
