@@ -6035,13 +6035,14 @@ class AccountMove(models.Model):
         if not self:
             return
 
-        def check_around(previous, current, next):
+        def check_around(previous, current, next_move):
             """Check for moves around `current` and return `True` if `current` made a gap."""
             return (
                 current.name and current.name != '/'
                 and (
-                    (previous and (current.sequence_number != previous.sequence_number + 1))
-                    or (current.state != 'posted' and previous.state == 'posted' and next)
+                    (previous and previous.name and previous.name != '/'
+                    and (current.sequence_number != previous.sequence_number + 1))
+                    or (next_move and current.state != 'posted' and previous.state == 'posted')
                 )
             )
 
@@ -6092,11 +6093,21 @@ class AccountMove(models.Model):
             move_n1, move_n2 = browse(next_ids) if len(next_ids) == 2 else (browse(next_ids), browse())
             current_move = browse(current_id)
 
-            current_move.made_sequence_gap = (not is_computed_with_mixin(current_move) or current_move.state != 'posted') and check_around(move_p1, current_move, move_n1)
+            # Since the value is stored, we prevent unnecessary writes to made_sequence_gap
+            # by only assigning the value if it differs from the checks
+            current_made_gap = bool((not is_computed_with_mixin(current_move) or current_move.state != 'posted') and check_around(move_p1, current_move, move_n1))
+            if current_move.made_sequence_gap != current_made_gap:
+                current_move.made_sequence_gap = current_made_gap
+
             if move_n1:
-                move_n1.made_sequence_gap = (invalidate_current and move_p1) or check_around(self.browse() if invalidate_current else current_move, move_n1, move_n2)
+                n1_made_gap = bool((invalidate_current and move_p1) or check_around(self.browse() if invalidate_current else current_move, move_n1, move_n2))
+                if move_n1.made_sequence_gap != n1_made_gap:
+                    move_n1.made_sequence_gap = n1_made_gap
+
             if move_p1 and (not is_computed_with_mixin(current_move) or current_move.state != 'posted'):
-                move_p1.made_sequence_gap = check_around(move_p2, move_p1, self.browse() if invalidate_current else current_move)
+                p1_made_gap = bool(check_around(move_p2, move_p1, self.browse() if invalidate_current else current_move))
+                if move_p1.made_sequence_gap != p1_made_gap:
+                    move_p1.made_sequence_gap = p1_made_gap
 
         self.journal_id.invalidate_recordset(['has_sequence_holes'])
 
