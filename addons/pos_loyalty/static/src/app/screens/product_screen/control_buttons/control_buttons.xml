@@ -29,8 +29,8 @@
             <t t-if="this.pos.models['loyalty.program'].length and this.pos.cashier._role !== 'minimal'" t-call="point_of_sale.controlButton"
                 iconClasses="'fa fa-star'"
                 btnText.translate="Reward"
-                btnClasses="'btn-secondary ' + (this.state.nbrRewards ? ' highlight' : 'disabled')"
-                disabled="!this.state.nbrRewards"
+                btnClasses="'btn-secondary ' + (this.nbrRewards() ? ' highlight' : 'disabled')"
+                disabled="!this.nbrRewards()"
                 onClick="() => this.clickRewards()">
             </t>
         </xpath>
@@ -44,7 +44,7 @@
             </t>
         </xpath>
         <xpath expr="//button[hasclass('more-btn')]" position="attributes">
-            <attribute name="t-attf-class">{{ this.state.nbrRewards ? 'active text-action' : '' }}</attribute>
+            <attribute name="t-attf-class">{{ this.nbrRewards() ? 'active text-action' : '' }}</attribute>
         </xpath>
     </t>
 </templates>
