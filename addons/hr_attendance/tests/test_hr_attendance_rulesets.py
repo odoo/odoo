@@ -101,7 +101,7 @@ class TestHrAttendanceOvertime(TransactionCase):
                 'check_out': datetime(2021, 1, 4, 18, 0)
             })
 
-            self.assertAlmostEqual(attendance.employee_id.total_overtime, 2, 2, msg="2 hours overtime at 150% should yield 2 hours total overtime")
+            self.assertAlmostEqual(attendance.employee_id._get_total_overtime(), 2, 2, msg="2 hours overtime at 150% should yield 2 hours total overtime")
 
     def test_daily_overtime_10_hours_rule(self):
         """ Test daily overtime for the 10-hour rule """
@@ -113,7 +113,7 @@ class TestHrAttendanceOvertime(TransactionCase):
                 'check_out': datetime(2021, 1, 4, 20, 0)
             })
 
-            self.assertAlmostEqual(attendance.employee_id.total_overtime, 4.0, 2, msg="2 hours overtime at 200% should yield 4 hours total overtime")
+            self.assertAlmostEqual(attendance.employee_id._get_total_overtime(), 4.0, 2, msg="2 hours overtime at 200% should yield 4 hours total overtime")
 
     def test_no_overtime(self):
         """ Test no overtime when working expected hours or less """
@@ -124,7 +124,7 @@ class TestHrAttendanceOvertime(TransactionCase):
                 'check_in': datetime(2021, 1, 4, 8, 0),
                 'check_out': datetime(2021, 1, 4, 16, 0)
             })
-            self.assertAlmostEqual(attendance.employee_id.total_overtime, 0.0, 2, msg="No overtime should be recorded for 8 hours or less")
+            self.assertAlmostEqual(attendance.employee_id._get_total_overtime(), 0.0, 2, msg="No overtime should be recorded for 8 hours or less")
 
     def test_weekly_overtime(self):
         """ Test weekly overtime for the 40-hour rule """
@@ -138,7 +138,7 @@ class TestHrAttendanceOvertime(TransactionCase):
                 } for day in range(4, 9)  # Monday to Friday
             ]
             self.env['hr.attendance'].create(attendance_vals)
-            self.assertAlmostEqual(self.employee.total_overtime, 18, 2, msg="He should work from 8-16h so each day he did 2 hours of overtime")
+            self.assertAlmostEqual(self.employee._get_total_overtime(), 18, 2, msg="He should work from 8-16h so each day he did 2 hours of overtime")
 
     def test_multiple_attendances_same_day(self):
         """ Test multiple attendances in one day """
@@ -157,21 +157,19 @@ class TestHrAttendanceOvertime(TransactionCase):
                 }
             ])
 
-            self.assertAlmostEqual(self.employee.total_overtime, 4.0, 2, msg="2 hours overtime at 200% should yield 4 hours total overtime")
+            self.assertAlmostEqual(self.employee._get_total_overtime(), 4.0, 2, msg="2 hours overtime at 200% should yield 4 hours total overtime")
 
     def test_partial_week(self):
         """ Test partial week with overtime """
         with freeze_time("2021-01-04"):
             # Week: Mon-Wed, 12 hours/day = 36 hours total (no weekly overtime, daily overtime applies)
-            [
-                self.env['hr.attendance'].create({
-                    'employee_id': self.employee.id,
-                    'check_in': datetime(2021, 1, day, 8, 0),
-                    'check_out': datetime(2021, 1, day, 20, 0)
-                }) for day in range(4, 7)  # Monday to Wednesday
-            ]
+            self.env['hr.attendance'].create([{
+                'employee_id': self.employee.id,
+                'check_in': datetime(2021, 1, day, 8, 0),
+                'check_out': datetime(2021, 1, day, 20, 0)
+            } for day in range(4, 7)])  # Monday to Wednesday
 
-            self.assertAlmostEqual(self.employee.total_overtime, 12.0, 2, msg="3 days of 2 hours overtime at 200% should yield 12 hours total overtime")
+            self.assertAlmostEqual(self.employee._get_total_overtime(), 12.0, 2, msg="3 days of 2 hours overtime at 200% should yield 12 hours total overtime")
 
     def test_access_ruleset_on_employee(self):
         """

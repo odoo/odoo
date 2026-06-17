@@ -45,7 +45,7 @@ class ResPartner(models.Model):
 
         # Compute employee's calendars's period and order employee by his involved calendars
         employees = sum(employees_by_partner.values(), start=self.env['hr.employee'])
-        calendar_periods_by_employee = employees._get_calendar_periods(start_period.date(), stop_period.date())
+        calendar_periods_by_employee = employees.sudo()._get_calendar_periods(start_period.date(), stop_period.date())
         for employee, calendar_periods in calendar_periods_by_employee.items():
             for _start, _stop, calendar in calendar_periods:
                 calendar = calendar or self.env.company.resource_calendar_id

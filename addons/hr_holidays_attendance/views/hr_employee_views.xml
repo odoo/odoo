@@ -8,14 +8,14 @@
         <field name="priority" eval="120"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
-                <field name="total_overtime" invisible="1"/>
+                <field name="deductible_overtime" invisible="1"/>
                 <button
                     name="%(hr_leave_allocation_overtime_manager_action)d"
                     string="Deduct Extra Hours"
                     type="action"
                     groups="hr_holidays.group_hr_holidays_user"
                     context="{'default_employee_id': id, 'deduct_extra_hours': True}"
-                    invisible="total_overtime &lt;= 1 or not active"/>
+                    invisible="deductible_overtime &lt;= 1 or not active"/>
             </xpath>
         </field>
     </record>
