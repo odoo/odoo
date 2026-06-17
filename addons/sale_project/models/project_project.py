@@ -506,7 +506,11 @@ class ProjectProject(models.Model):
     def action_real_margin(self):
         self.ensure_one()
         action = self.env['ir.actions.act_window']._for_xml_id('sale_project.action_analytic_reporting_inherit_sale_project')
-        action['views'] = [(self.env.ref('sale_project.view_account_analytic_line_inherit_sale_project_pivot_single').id, 'pivot')]
+        pivot_view_id = self.env.ref('sale_project.view_account_analytic_line_inherit_sale_project_pivot_single', raise_if_not_found=False).id
+        action['views'] = [
+            (pivot_view_id if view_type == 'pivot' else view_id, view_type)
+            for view_id, view_type in action['views']
+        ]
         action['display_name'] = self.env._("%(name)s's Real Margins", name=self.name)
         action['domain'] = [('account_id', 'in', self.account_id.ids)]
         return action
