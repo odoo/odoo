@@ -1,21 +1,15 @@
-import { after, afterEach, beforeEach, destroy, registerDebugInfo } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-mock";
+import { after, afterEach, animationFrame, beforeEach, registerDebugInfo } from "@odoo/hoot";
+import { App } from "@odoo/owl";
 import { startRouter } from "@web/core/browser/router";
 import { createDebugContext } from "@web/core/debug/debug_context";
-import {
-    translatedTerms,
-    translatedTermsGlobal,
-    translationLoaded,
-} from "@web/core/l10n/translation";
+import { appTranslateFn } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { services } from "@web/core/services";
+import { getTemplate } from "@web/core/templates";
 import { pick } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
-import { makeEnv, startServices } from "@web/env";
+import { customDirectives, globalValues, makeEnv, startServices } from "@web/env";
 import { MockServer, makeMockServer, onRpc } from "./mock_server/mock_server";
-import { App } from "@odoo/owl";
-import { services } from "@web/core/services";
-import { rpc } from "@web/core/network/rpc";
-import { getTemplate } from "@web/core/templates";
 
 /**
  * @typedef {Record<keyof Services, any>} Dependencies
@@ -30,6 +24,11 @@ import { getTemplate } from "@web/core/templates";
 //-----------------------------------------------------------------------------
 // Internals
 //-----------------------------------------------------------------------------
+
+function cleanupMockEnvs() {
+    registry.category("services").trigger("CLEANUP");
+    currentEnvs.length = 0;
+}
 
 /**
  * TODO: remove when services do not have side effects anymore
@@ -48,39 +47,55 @@ const registerRegistryForCleanup = (registry) => {
 };
 
 const registriesContent = new WeakMap();
-/** @type {OdooEnv | null} */
-let currentEnv = null;
+/** @type {OdooEnv[]} */
+const currentEnvs = [];
+/**
+ * Current main test App instance. It is assigned via a patch of `App.apps.set`
+ * becaue the app can be instantiated either from the test helpers, or by the production
+ * code itself. As the latter cannot be tracked by a direct 'App.constructor' patch,
+ * the 'apps' set is used to track the active app.
+ * @type {App | null}
+ */
+let currentApp = null;
 
 // Registers all registries for cleanup in all tests
-beforeEach(() => registerRegistryForCleanup(registry));
-afterEach(() => restoreRegistry(registry));
+beforeEach(function registerMainRegistryForCleanup() {
+    registerRegistryForCleanup(registry);
+});
+afterEach(function restoreMainRegistry() {
+    restoreRegistry(registry);
+});
+
+patch(App.apps, {
+    add(app) {
+        if (!currentApp) {
+            currentApp = app;
+            registerDebugInfo("app", app);
+        }
+        after(() => destroyApp(app));
+        return super.add(app);
+    },
+});
 
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 
-let currentPluginManager = null;
-beforeEach(() => (currentPluginManager = null));
-
-export function makeApp(config) {
-    if (!currentPluginManager) {
-        const app = new App(config);
-        currentPluginManager = app.pluginManager;
-        after(() => destroy(app));
-        return app;
+/**
+ * @deprecated
+ * @param {OdooEnv} env
+ * @param {App} app
+ */
+export function assignEnvToApp(env, app) {
+    if (!app.env === env) {
+        return;
     }
-    const _config = { ...config };
-    _config.plugins = undefined; // shadow plugins to remove them
-    const app = new App(_config);
-    // note that this is gefoireux... pluginmanager could have been
-    // instantiated with a specific config, which is different from the
-    // config in _config.
-    app.pluginManager = currentPluginManager;
-    // this is also gefoireux... it kind of works if we have 2 Apps, but
-    // not if we have more
-    currentPluginManager.app = app;
-    after(() => destroy(app));
-    return app;
+    app.env = env;
+    app.pluginManager.config.env = env;
+    const envPluginInstance = app.pluginManager.getPluginById("__ENV__");
+    if (envPluginInstance) {
+        envPluginInstance.env = env;
+    }
 }
 
 /**
@@ -94,8 +109,20 @@ export function clearRegistry(registry) {
     registry.entries = null;
 }
 
+/**
+ * @param {App} [app]
+ */
+export function destroyApp(app = currentApp) {
+    if (app && !app.destroyed) {
+        app.destroy();
+    }
+    if (app === currentApp) {
+        currentApp = null;
+    }
+}
+
 export function getMockEnv() {
-    return currentEnv;
+    return currentEnvs[0];
 }
 
 /**
@@ -104,7 +131,33 @@ export function getMockEnv() {
  * @returns {Services[T]}
  */
 export function getService(name) {
-    return currentEnv.services[name];
+    return currentEnvs[0]?.services[name];
+}
+
+/**
+ * @param {{
+ *  makeNew?: boolean;
+ *  name?: string;
+ * }} [options]
+ */
+export function getTestApp(options) {
+    if (currentApp && !options?.makeNew) {
+        if (options?.name) {
+            currentApp.name = options.name;
+        }
+        return currentApp;
+    }
+    return new App({
+        customDirectives,
+        dev: false,
+        getTemplate,
+        globalValues,
+        name: options?.name || "TEST",
+        plugins: services,
+        test: true,
+        translatableAttributes: ["data-tooltip"],
+        translateFn: appTranslateFn,
+    });
 }
 
 /**
@@ -115,8 +168,8 @@ export function getService(name) {
  *  makeNew?: boolean;
  * }} [options]
  */
-export async function makeMockEnv(partialEnv, options = {}) {
-    if (currentEnv && !options?.makeNew) {
+export async function makeMockEnv(partialEnv, options) {
+    if (currentEnvs.length && !options?.makeNew) {
         throw new Error(
             `cannot create mock environment: a mock environment has already been declared`
         );
@@ -126,51 +179,17 @@ export async function makeMockEnv(partialEnv, options = {}) {
         await makeMockServer();
     }
 
+    const app = getTestApp(options);
     const env = makeEnv();
     Object.assign(env, partialEnv, createDebugContext(env)); // This is needed if the views are in debug mode
 
-    registerDebugInfo("env", env);
+    assignEnvToApp(env, app);
 
-    if (!currentEnv) {
-        currentEnv = env;
+    if (!currentEnvs.length) {
         startRouter();
-        after(() => {
-            registry.category("services").trigger("CLEANUP");
-
-            // Ideally: this should be done in a stop of the service !!!
-            // This is done to remove the observer that disables the buttons.
-            if (currentEnv.services.offline) {
-                currentEnv.services.offline.offline = false;
-            }
-
-            // cleanup the rpc patch done in check_identity.js
-            // TODO: in master, the patch can be done in a Plugin, which has a cleanup function
-            if (rpc._originalRpc) {
-                rpc._rpc = rpc._originalRpc;
-                delete rpc._originalRpc;
-            }
-
-            currentEnv = null;
-
-            // Ideally: should be done in a patch of the localization service, but this
-            // is less intrusive for now.
-            if (translatedTerms[translationLoaded]) {
-                for (const key in translatedTerms) {
-                    delete translatedTerms[key];
-                }
-                for (const key in translatedTermsGlobal) {
-                    delete translatedTermsGlobal[key];
-                }
-                translatedTerms[translationLoaded] = false;
-            }
-        });
+        after(cleanupMockEnvs);
     }
-    const app =
-        options.app ||
-        makeApp({
-            getTemplate,
-            plugins: services,
-        });
+    currentEnvs.push(env);
 
     await startServices(env, app);
 
@@ -227,12 +246,14 @@ export function mockService(name, serviceFactory) {
     );
 
     // Patch already initialized service
-    if (currentEnv?.services?.[name]) {
-        if (typeof serviceFactory === "function") {
-            const dependencies = pick(currentEnv.services, ...(originalService.dependencies || []));
-            currentEnv.services[name] = serviceFactory(currentEnv, dependencies);
-        } else {
-            patch(currentEnv.services[name], serviceFactory);
+    for (const env of currentEnvs) {
+        if (env.services?.[name]) {
+            if (typeof serviceFactory === "function") {
+                const dependencies = pick(env.services, ...(originalService.dependencies || []));
+                env.services[name] = serviceFactory(env, dependencies);
+            } else {
+                patch(env.services[name], serviceFactory);
+            }
         }
     }
 }
@@ -254,19 +275,23 @@ export function restoreRegistry(registry) {
 
 /**
  * Makes a function to set Offline all RPCs and set Offline the service.
- *
- * @returns {Function} setOffline
  */
 export function mockOffline() {
+    /**
+     * @param {boolean} offline
+     */
+    function setOffline(offline) {
+        _offline = offline;
+        getService("offline").offline = _offline;
+        return animationFrame();
+    }
+
     let _offline = false;
     onRpc("/*", () => {
         if (_offline) {
             return new Response("", { status: 502 });
         }
     });
-    return (offline) => {
-        _offline = offline;
-        getService("offline").offline = _offline;
-        return animationFrame();
-    };
+
+    return setOffline;
 }

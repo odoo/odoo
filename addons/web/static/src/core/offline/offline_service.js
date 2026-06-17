@@ -96,6 +96,10 @@ class OfflineManager extends Reactive {
                 this._syncORM();
             }
         });
+
+        registry
+            .category("services")
+            .addEventListener("CLEANUP", () => (this.offline = false), { once: true });
     }
 
     get offline() {

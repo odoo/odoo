@@ -36,7 +36,7 @@ export const profilingService = {
 
         const bus = new EventBus();
         const disposeEffect = effect(notify);
-        registry.category("services").addEventListener("CLEANUP", disposeEffect);
+        registry.category("services").addEventListener("CLEANUP", disposeEffect, { once: true });
 
         async function setProfiling(params) {
             const kwargs = Object.assign(

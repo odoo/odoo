@@ -73,7 +73,7 @@ export async function loadAssets(styleTarget) {
  * the fonts.
  *
  * @param {HTMLElement} root
- * @returns {ShadowRoot}
+ * @returns {Promise<ShadowRoot>}
  */
 export async function makeShadow(root) {
     const shadow = root.attachShadow({ mode: "open" });

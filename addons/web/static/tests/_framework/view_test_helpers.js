@@ -1,6 +1,4 @@
-import { useSubEnv } from "@web/owl2/utils";
 import {
-    after,
     animationFrame,
     click,
     expect,
@@ -15,6 +13,7 @@ import {
 import { Component, onMounted, xml } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { MainComponentsContainer } from "@web/core/main_components_container";
+import { useSubEnv } from "@web/owl2/utils";
 import { View } from "@web/views/view";
 import { mountWithCleanup } from "./component_test_helpers";
 import { contains } from "./dom_test_helpers";
@@ -234,13 +233,11 @@ export async function mountViewInDialog(params) {
 
 /**
  * @param {MountViewParams} params
- * @param {HTMLElement} [target]
  */
-export async function mountView(params, target = null) {
+export async function mountView(params) {
     const actionManagerEl = document.createElement("div");
     actionManagerEl.classList.add("o_action_manager");
-    (target ?? getFixture()).append(actionManagerEl);
-    after(() => actionManagerEl.remove());
+    getFixture().appendChild(actionManagerEl);
     return mountWithCleanup(View, {
         env: params.env,
         componentEnv: { config: params.config },

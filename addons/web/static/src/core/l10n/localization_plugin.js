@@ -1,4 +1,4 @@
-import { onWillStart, plugin, Plugin, useListener } from "@odoo/owl";
+import { onWillDestroy, onWillStart, plugin, Plugin, useListener } from "@odoo/owl";
 import { session } from "@web/session";
 import { jsToPyLocale } from "@web/core/l10n/utils";
 import { user } from "@web/core/user";
@@ -57,6 +57,18 @@ export class LocalizationPlugin extends Plugin {
         });
 
         onWillStart(() => this.load());
+        onWillDestroy(() => {
+            if (!translatedTerms[translationLoaded]) {
+                return;
+            }
+            for (const key in translatedTerms) {
+                delete translatedTerms[key];
+            }
+            for (const key in translatedTermsGlobal) {
+                delete translatedTermsGlobal[key];
+            }
+            translatedTerms[translationLoaded] = false;
+        });
     }
 
     async load() {
