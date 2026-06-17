@@ -70,12 +70,19 @@ class IrWebsocket(models.AbstractModel):
 
     def _subscribe(self, og_data):
         data = self._prepare_subscribe_data(og_data["channels"], og_data["last"])
-        dispatch.subscribe(data["channels"], data["last"], wsrequest.ws)
         # sudo - bus.bus: checking if last received notification still exists is acceptable.
         if og_data["check_outdated"] and not self.env["bus.bus"].sudo().search(
             [("id", "=", og_data["last"])],
         ):
             wsrequest.ws.send_worker_internal_message("bus/subscription_outdated")
+        if og_data["last"] != data["last"]:
+            # Last was outdated, ask the worker to update its local state to the last
+            # known server id.
+            wsrequest.ws.send_worker_internal_message(
+                "bus/last_id_reset",
+                self.env["bus.bus"].sudo()._bus_last_id(),
+            )
+        dispatch.subscribe(data["channels"], data["last"], wsrequest.ws)
 
     def _on_websocket_closed(self, cookies):
         """Function invoked upon WebSocket termination.

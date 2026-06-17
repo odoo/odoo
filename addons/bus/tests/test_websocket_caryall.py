@@ -121,6 +121,15 @@ class TestWebsocketCaryall(WebsocketCase):
             websocket = self.websocket_connect()
             self.subscribe(websocket, ['my_channel'], client_last_notification_id)
             self.assertEqual(mock.call_args[0][2], 0)
+            message = json.loads(websocket.recv())[0]
+            self.assertEqual(
+                message,
+                {
+                    "type": "bus/last_id_reset",
+                    "internal": True,
+                    "payload": self.env["bus.bus"]._bus_last_id(),
+                },
+            )
 
     def test_subscribe_lower_last_notification_id(self):
         server_last_notification_id = self.env['bus.bus'].sudo().search([], limit=1, order='id desc').id or 0
@@ -205,8 +214,26 @@ class TestWebsocketCaryall(WebsocketCase):
         message = json.loads(websocket.recv())[0]
         self.assertEqual(
             message,
-            {'type': 'bus/subscription_outdated', 'internal': True, 'payload': None},
+            {"type": "bus/subscription_outdated", "internal": True, "payload": None},
+        )
+        message = json.loads(websocket.recv())[0]
+        self.assertEqual(
+            message,
+            {
+                "type": "bus/last_id_reset",
+                "internal": True,
+                "payload": self.env["bus.bus"]._bus_last_id(),
+            },
         )
         self.subscribe(websocket, ['channel_A'], last_id, check_outdated=False)
+        message = json.loads(websocket.recv())[0]
+        self.assertEqual(
+            message,
+            {
+                "type": "bus/last_id_reset",
+                "internal": True,
+                "payload": self.env["bus.bus"]._bus_last_id(),
+            },
+        )
         with self.assertRaises(ws._exceptions.WebSocketTimeoutException):
             websocket.recv()
