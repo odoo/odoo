@@ -28,6 +28,12 @@ class MailMail(models.Model):
     def _generate_mail_recipient_token(self, mail_id):
         return tools.hmac(self.env(su=True), 'mass_mailing-mail_mail-open', mail_id)
 
+    def _filter_mail_mail_servers(self, mail_servers):
+        mail_servers = super()._filter_mail_mail_servers(mail_servers)
+        if self.mailing_id:
+            mail_servers = mail_servers.filtered(lambda s: not s.owner_user_id)
+        return mail_servers
+
     def _prepare_outgoing_body(self):
         """ Override to add the tracking URL to the body and to add trace ID in
         shortened urls """
