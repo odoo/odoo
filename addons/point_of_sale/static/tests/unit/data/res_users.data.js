@@ -21,6 +21,12 @@ export class ResUsers extends MailResUsers {
             partner_id: 4,
             role: "cashier",
         },
+        {
+            id: 4,
+            name: "User2",
+            partner_id: 15,
+            role: "minimal",
+        },
     ];
 
     _post_read_pos_data(records) {
