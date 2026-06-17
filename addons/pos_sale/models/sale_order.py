@@ -89,8 +89,8 @@ class SaleOrder(models.Model):
             already_invoiced = downpayment_lines.filtered(
                 lambda pol: any(aml.move_id.state == 'posted' for aml in pol.sale_order_line_id.invoice_lines)
             )
-            pos_lines -= already_invoiced
-            order.amount_to_invoice -= sum(pos_lines.mapped('price_subtotal_incl'))
+            downpayment_lines -= already_invoiced
+            order.amount_to_invoice -= sum(downpayment_lines.mapped('price_subtotal_incl'))
 
     @api.depends('order_line.pos_order_line_ids')
     def _compute_amount_invoiced(self):
