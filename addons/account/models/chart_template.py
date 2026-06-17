@@ -435,7 +435,7 @@ class AccountChartTemplate(models.AbstractModel):
                     if 'code' in values:
                         # Inactive accounts are typically parents — skip padding to avoid code collisions
                         normalized_code = f'{values["code"]:<0{int(template_data.get("code_digits", 6))}}' if values.get("active", True) else values["code"]
-                        if not account or not re.match(f'^{values["code"]}0*$', account.code):
+                        if not (account and account.code and re.match(f'^{values["code"]}0*$', account.code)):
                             query = self.env['account.account'].with_context(active_test=False)._search(
                                 self.env['account.account']._check_company_domain(company)
                             )
