@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_l10n_ph_discount_privilege" model="res.groups">
+        <field name="name">Discount Privileges</field>
+        <field name="comment">Can configure and manage Philippine Discount Privileges.</field>
+    </record>
+
+    <record id="l10n_ph_discount_privilege_company_rule" model="ir.rule">
+        <field name="name">Discount Privilege: Philippine company only</field>
+        <field name="model_id" ref="model_l10n_ph_discount_privilege"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+    </record>
+</odoo>

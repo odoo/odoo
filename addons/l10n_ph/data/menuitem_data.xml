@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <menuitem id="account_reports_ph_statements_menu" name="Philippines" parent="account.menu_finance_reports" sequence="6" groups="account.group_account_readonly"/>
+    <menuitem
+            id="menu_l10n_ph_discount_privilege_invoicing"
+            name="Discount Privileges"
+            parent="account.account_invoicing_menu"
+            action="action_l10n_ph_discount_privilege"
+            sequence="999"
+            groups="l10n_ph.group_l10n_ph_discount_privilege"
+    />
 </odoo>
