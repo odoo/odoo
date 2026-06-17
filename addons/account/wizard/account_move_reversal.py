@@ -141,7 +141,7 @@ class AccountMoveReversal(models.TransientModel):
             new_moves = moves._reverse_moves(default_values_list, cancel=is_cancel_needed)
             new_moves._compute_partner_bank_id()
             moves._message_log_batch(
-                bodies={move.id: move.env._('This entry has been %s', reverse._get_html_link(title=move.env._("reversed"))) for move, reverse in zip(moves, new_moves)}
+                bodies={move.id: move.env._('This entry has been reversed by %s', reverse._get_html_link(title=reverse.name)) for move, reverse in zip(moves, new_moves)}
             )
 
             if is_modify:
