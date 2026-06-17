@@ -31,7 +31,9 @@ export class EatingLocationPage extends Component {
     // restaurant (they scanned QR Code and have a table_identifier in the URL) or if the self is in KioskMode.
     get presets() {
         const all = this.selfOrder.models["pos.preset"].getAll();
-        return this.router.getTableIdentifier() != null || this.selfOrder.kioskMode
+        return this.router.getTableIdentifier() != null ||
+            this.router.getOrderUuid() != null ||
+            this.selfOrder.kioskMode
             ? all
             : all.filter((item) => item.service_at !== "table");
     }

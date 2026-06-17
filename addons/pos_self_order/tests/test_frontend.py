@@ -59,6 +59,7 @@ class TestFrontendMobile(SelfOrderCommonTest):
                         "uuid": str(uuid4()),
                     },
                     "table_identifier": None,
+                    "order_uuid": None,
                 }
             }),
             headers={"Content-Type": "application/json"},

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="pos_self_order.pos_qr_receipt">
+            <html id="pos-receipt">
+                <head>
+                    <meta charset="UTF-8"></meta>  <!--  Needed for wkhtmltoimage to render UTF-8 characters properly -->
+                    <t t-call="point_of_sale.pos_order_receipt_style" />
+                </head>
+                <body>
+                    <div class="pos-receipt">
+                        <div class="w-100 text-center mb-3" name="logo">
+                            <img t-if="image.get('logo')" t-att-src="image['logo']" style="max-height: 75px" />
+                        </div>
+                        <div class="text-large text-center mb-2">
+                            <span t-out="extra_data['date']" />
+                        </div>
+                        <div class="text-large text-center text-bold">
+                            Order from your table!
+                        </div>
+
+                        <hr/>
+
+                        <div t-if="extra_data.get('table')" class="text-large text-center text-bold mt-2 mb-2">
+                            Table: <span t-out="extra_data['table']" />
+                        </div>
+
+                        <div class="w-100 text-center mt-3 mb-3">
+                            <img t-if="image.get('qrCode')"
+                                 t-att-src="image['qrCode']"
+                                 style="width: 240px; height: 240px;"
+                                 alt="QR Code" />
+                        </div>
+
+                        <div class="text-center mb-3">
+                            Scan this QR code with your phone camera to view our menu and place your order.
+                        </div>
+
+                        <hr/>
+
+                        <t t-call="point_of_sale.company_info_receipt" />
+                    </div>
+                </body>
+            </html>
+        </template>
+    </data>
+</odoo>

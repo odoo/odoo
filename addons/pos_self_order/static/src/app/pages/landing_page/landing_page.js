@@ -60,9 +60,7 @@ export class LandingPage extends Component {
             return;
         }
 
-        return (
-            this.draftOrder.length > 0 && this.selfOrder.config.self_ordering_pay_after === "each"
-        );
+        return this._hasActivePayEachOrder();
     }
 
     clickMyOrder() {
@@ -82,17 +80,28 @@ export class LandingPage extends Component {
     }
 
     start() {
-        if (
-            this.draftOrder.length > 0 &&
-            this.selfOrder.config.self_ordering_pay_after === "each"
-        ) {
+        if (this._hasActivePayEachOrder()) {
             return;
         }
+
         if (this.selfOrder.hasPresets() && !this.selfOrder.currentOrder.preset_id) {
             this.router.navigate("location");
         } else {
             this.router.navigate("product_list");
         }
+    }
+
+    _hasActivePayEachOrder() {
+        if (this.selfOrder.config.self_ordering_pay_after !== "each") {
+            return false;
+        }
+
+        const hasOrderUuid = this.router.getOrderUuid();
+        if (hasOrderUuid) {
+            return this.selfOrder.currentOrder.lines.length > 0;
+        }
+
+        return this.draftOrder.length > 0;
     }
 
     openLanguages() {
