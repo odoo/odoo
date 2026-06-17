@@ -1,4 +1,4 @@
-import { useComponent, useExternalListener, useLayoutEffect } from "@web/owl2/utils";
+import { normalizeRef, useComponent, useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import { onMounted } from "@odoo/owl";
 
 export const scrollSymbol = Symbol("scroll");
@@ -90,10 +90,7 @@ export function useSetupAction(params = {}) {
         });
     }
 
-    // Transitional check: Owl 3 native refs are signals (element obtained by
-    // calling the ref), while legacy refs expose `.el`. Resolve the element
-    // lazily at read time, mirroring the timing of the legacy `.el` getter.
-    const getRootEl = () => (typeof rootRef === "function" ? rootRef() : rootRef?.el);
+    const getRootEl = () => normalizeRef(rootRef)?.el;
 
     function setScrollFromState() {
         const { state } = component.props;

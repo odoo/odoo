@@ -1,4 +1,4 @@
-import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
+import { normalizeRef, useExternalListener, useLayoutEffect } from "@web/owl2/utils";
 import { onWillUnmount, proxy } from "@odoo/owl";
 import { useThrottleForAnimation } from "./timing";
 import { useSortable as nativeUseSortable } from "@web/core/utils/sortable";
@@ -14,6 +14,7 @@ import { useSortable as nativeUseSortable } from "@web/core/utils/sortable";
 export function useSortable(params) {
     return nativeUseSortable({
         ...params,
+        ref: normalizeRef(params.ref),
         setupHooks: {
             addListener: useExternalListener,
             setup: useLayoutEffect,

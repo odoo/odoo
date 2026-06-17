@@ -1,4 +1,4 @@
-import { useComponent, useEnv, useRef, useSubEnv } from "@web/owl2/utils";
+import { normalizeRef, useComponent, useEnv, useRef, useSubEnv } from "@web/owl2/utils";
 import { useService } from "@web/core/utils/hooks";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -69,22 +69,8 @@ export function useViewButtons(ref, options = {}) {
     //    `useChildRef`, which returns a *function* that also exposes an `.el`
     //    getter (only defined after it has been forwarded) — calling it would
     //    clear its value and return undefined.
-    let getRefEl;
-    if (typeof ref === "string") {
-        const internalRef = useRef(ref);
-        getRefEl = () => internalRef.el;
-    } else {
-        getRefEl = () => {
-            if (ref && "el" in ref) {
-                return ref.el;
-            }
-            if (typeof ref === "function") {
-                // Owl 3 native signal ref: calling it returns the element.
-                return ref();
-            }
-            return null;
-        };
-    }
+    const normRef = typeof ref === "string" ? useRef(ref) : normalizeRef(ref);
+    const getRefEl = () => normRef?.el ?? null;
     useSubEnv({
         async onClickViewButton({ clickParams, getResParams, beforeExecute, newWindow }) {
             async function execute() {
