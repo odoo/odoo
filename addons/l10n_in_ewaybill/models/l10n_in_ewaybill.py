@@ -325,6 +325,7 @@ class L10nInEwaybill(models.Model):
             self._check_gst_treatment,
             self._check_transporter,
             self._check_state,
+            self._check_pincode,
         ]
         for get_error_message in methods_to_check:
             error_message.extend(get_error_message())
@@ -354,6 +355,14 @@ class L10nInEwaybill(models.Model):
             error_message.append(_(
                 "An E-waybill cannot be generated for a %s move.",
                 dict(self.env['account.move']._fields['state']._description_selection(self.env))[self.account_move_id.state]
+            ))
+        return error_message
+
+    def _check_pincode(self):
+        error_message = []
+        if self.partner_ship_from_id.zip == self.partner_ship_to_id.zip and not self.distance:
+            error_message.append(self.env._(
+                "Set a valid distance when the dispatch and delivery pincodes are the same.",
             ))
         return error_message
 
