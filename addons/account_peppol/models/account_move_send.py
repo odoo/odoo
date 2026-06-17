@@ -170,7 +170,10 @@ class AccountMoveSend(models.AbstractModel):
         if method == 'peppol':
             partner = move.partner_id.commercial_partner_id.with_company(move.company_id)
             invoice_edi_format = move_data.get('invoice_edi_format') or partner._get_peppol_edi_format()
-            if partner.peppol_verification_state == 'not_verified':
+            if (
+                partner.peppol_verification_state == 'not_verified'
+                or (partner.peppol_verification_state == 'not_valid' and partner.peppol_eas == '9925')
+            ):
                 partner.button_account_peppol_check_partner_endpoint(company=move.company_id)
             return all([
                 partner.country_code in PEPPOL_LIST,

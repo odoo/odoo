@@ -264,11 +264,25 @@ class ResPartner(models.Model):
         if not self_partner.peppol_eas or not self_partner.peppol_endpoint:
             return False
         old_value = self_partner.peppol_verification_state
+        partner_edi_format = self_partner._get_peppol_edi_format()
         new_value = self_partner._get_peppol_verification_state(
             self_partner.peppol_endpoint,
             self_partner.peppol_eas,
-            self_partner._get_peppol_edi_format(),
+            partner_edi_format,
         )
+        if new_value == 'not_valid' and self_partner.peppol_eas == '9925':
+            partner_endpoint = self_partner.peppol_endpoint
+            if partner_endpoint[:2].upper() == 'BE':
+                partner_endpoint = partner_endpoint[2:]
+            if not self_partner._build_error_peppol_endpoint('0208', partner_endpoint):
+                recomputed_value = self_partner._get_peppol_verification_state(
+                    partner_endpoint, '0208', partner_edi_format,
+                )
+                if recomputed_value != 'not_valid':
+                    self_partner.peppol_eas = '0208'
+                    self_partner.peppol_endpoint = partner_endpoint
+                    new_value = recomputed_value
+
         if old_value != new_value:
             self_partner.peppol_verification_state = new_value
             self._log_verification_state_update(company, old_value, self_partner.peppol_verification_state)
