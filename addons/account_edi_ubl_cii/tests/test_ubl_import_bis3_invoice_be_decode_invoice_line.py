@@ -144,6 +144,19 @@ class TestUblImportBis3InvoiceBEDecodeInvoiceLine(TestUblImportBis3InvoiceBE):
             'price_subtotal': 0.0,
         }])
 
+    def test_partial_import_invoice_line_zero_line_extension_amount_zero_quantity_with_price_amount(self):
+        """
+        A line with LineExtensionAmount=0 and InvoicedQuantity=0 but a non-zero PriceAmount caused a division by zero.
+        Such lines must be skipped without blocking the rest of the import.
+        """
+        # Include an extra line to distinct import error from no lines imported
+        invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_zero_line_extension_amount_zero_quantity_with_price_amount')
+        self.assertRecordValues(invoice.invoice_line_ids, [{
+            'price_unit': 100.0,
+            'quantity': 1.0,
+            'price_subtotal': 100.0,
+        }])
+
     def test_import_charge_and_discount_for_price_zero(self):
         imported_invoice = self._import_invoice_as_attachment_on(test_name='test_import_invoice_discount_on_price_zero')
         self.assertRecordValues(imported_invoice, [{'amount_total': 1.73}])
