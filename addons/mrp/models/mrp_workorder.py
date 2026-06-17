@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 import json
+from zoneinfo import ZoneInfo
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -500,7 +501,10 @@ class MrpWorkorder(models.Model):
         # are not exact inverses around non-working periods.
         if self.date_start and self.date_finished and self.workcenter_id \
                 and self.date_finished != self._calculate_date_finished():
-            self.duration_expected = self._calculate_duration_expected()
+            self.duration_expected = self._calculate_duration_expected(
+                date_start=self.date_start.astimezone(ZoneInfo(self.env.company.tz)),
+                date_finished=self.date_finished.astimezone(ZoneInfo(self.env.company.tz)),
+            )
         if not self.date_finished and self.date_start:
             raise UserError(_("It is not possible to unplan one single Work Order. "
                               "You should unplan the Manufacturing Order instead in order to unplan all the linked operations."))

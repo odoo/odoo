@@ -4254,6 +4254,25 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(wos[0].date_finished, dt + timedelta(hours=1, minutes=1))
         self.assertEqual(wos[1].date_finished, dt + timedelta(hours=1, minutes=2))
 
+    def test_tmp(self):
+        """
+        """
+        self.env.company.tz = 'Europe/Brussels'
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product.id,
+            'uom_id': self.bom_1.uom_id.id,
+        })
+
+        wo_form = Form(self.env['mrp.workorder'].with_context(default_production_id=mo.id))
+
+        wo_form.name = 'Test order'
+        wo_form.workcenter_id = self.workcenter_1
+        wo_form.duration_expected = 24000
+        wo_form.date_start = datetime(2026, 7, 5, 11)  # sunday
+        wo = wo_form.save()
+        self.assertEqual(wo.duration_expected, 24000)
+        self.assertEqual(wo.date_finished, datetime(2026, 9, 11, 15))
+
     @users('hilda')
     def test_update_mo_with_mrp_user(self):
         """
