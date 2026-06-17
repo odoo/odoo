@@ -36,7 +36,7 @@
                             </select>
                             <div class="input-group input-group-sm mt-2">
                                 <div class="input-group-text">Time Limit (seconds)</div>
-                                <input type="number" class="form-control" t-on-click.stop.prevent="" t-on-change="(ev) => this.changeParam('time_limit', ev)" t-att-value="profiling.state.params.time_limit || '0'" placeholder="None"/>
+                                <input type="number" class="form-control" t-on-click.stop.prevent="" t-on-change="(ev) => this.changeParam('time_limit', ev)" t-att-value="this.profiling.state.params.time_limit || '0'" placeholder="None"/>
                             </div>
                         </div>
                         <span class="o_profiling_switch form-check form-switch mt-2" t-on-click.stop.prevent="() => this.profiling.toggleCollector('memory')">
