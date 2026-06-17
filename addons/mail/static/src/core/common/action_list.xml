@@ -86,7 +86,7 @@
     <t t-set="inMeetingViewCallButtonsFullscreen" t-value="this.props.inline and this.env.inMeetingView and !this.env.inComposer and !this.env.inDiscussActionPanel and this.store.rtc.isFullscreen"/>
     <t t-set="btnClass" t-value="this.attClassObjectToString({
         [btnClass]: true,
-        'px-2 o-py-2_5': inMeetingViewCallButtonsFullscreen,
+        'p-2': inMeetingViewCallButtonsFullscreen,
         'o-px-1_5 py-1': this.props.inline   and  ((this.hasBtnBg and !isInlineCircleButton and !this.env.inMeetingView) or (!this.hasBtnBg and this.env.inComposer)),
         'o-p-1_5':       this.props.inline   and  !this.env.inMeetingView and this.hasBtnBg and isInlineCircleButton and !this.env.inChatWindow,
         'o-px-0_5':      this.props.inline   and  !this.env.inMeetingView and !this.hasBtnBg and !this.action.icon,
@@ -99,8 +99,9 @@
     <!-- simulated dark theme -->
     <t t-set="btnClass" t-value="this.attClassObjectToString({
        [btnClass]: true,
-        'o-text-white border-transparent o-simulateDarkTheme': this.store.shouldSimulateDarkTheme(this),
-       'bg-transparent': this.store.shouldSimulateDarkTheme(this) and !this.hasBtnBg,
+        'o-text-white o-simulateDarkTheme': this.store.shouldSimulateDarkTheme(this),
+        'bg-transparent': this.store.shouldSimulateDarkTheme(this) and !this.hasBtnBg,
+        'o-inDiscussCall': this.env?.inDiscussCallView or this.env?.inCallInvitation or this.env.isDiscussPipBanner or this.env?.inWelcomePage,
     })"/>
     <!-- dynamic classes-->
     <t t-set="btnClass" t-value="this.attClassObjectToString({
@@ -123,7 +124,7 @@
 <t t-name="mail.Action.content">
     <t t-if="this.action.icon?.template" t-call="{{ this.action.icon.template }}"
         templateParams="this.action.icon.params"/>
-    <i t-elif="this.action.icon" t-attf-class="{{ this.action.icon }}" t-att-class="{ 'o-fs-small': this.props.dropdown, 'fa-fw': this.props.fw, 'fa-lg': inMeetingViewCallButtonsFullscreen }"/>
+    <i t-elif="this.action.icon" t-attf-class="{{ this.action.icon }}" t-att-class="{ 'o-fs-small': this.props.dropdown, 'fa-fw': this.props.fw, 'fa-lg': inMeetingViewCallButtonsFullscreen, 'py-1': inMeetingViewCallButtonsFullscreen and !(this.props.inline and isInlineCircleButton) }"/>
     <i t-elif="this.props.dropdown" class="fa-question fa-fw opacity-0" t-att-class="this.props.fw ? 'fa-fw' : ''"/>
     <span t-if="this.action.name and (this.props.dropdown or (this.props.inline and (!this.action.icon or this.action.inlineName)))" t-ref="this.props.action.actionRef" class="o-mail-ActionList-actionLabel" t-attf-class="{{ this.action.nameClass }}" t-att-class="{ 'mx-1': this.props.dropdown }" t-out="(this.props.inline and this.action.inlineName) or this.action.name"/>
     <t t-if="this.props.dropdown and this.action.badge" t-call="mail.Action.badge"/>

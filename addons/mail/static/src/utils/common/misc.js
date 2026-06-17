@@ -329,3 +329,78 @@ export async function loadCssFromBundle(targetNode, bundleName) {
         }
     }
 }
+
+export const extractAccentColor = memoize((src, brightnessThreshold = 0.45) => {
+    const threshold = Math.max(0, Math.min(1, brightnessThreshold));
+
+    const toTargetBrightness = (r, g, b) => {
+        const scale = (threshold * 255) / Math.max(r, g, b, 1);
+        let nr = r * scale,
+            ng = g * scale,
+            nb = b * scale;
+        if (threshold > 0.5) {
+            const mix = (threshold - 0.5) * 2;
+            nr += (255 - nr) * mix;
+            ng += (255 - ng) * mix;
+            nb += (255 - nb) * mix;
+        }
+        return { r: Math.round(nr), g: Math.round(ng), b: Math.round(nb) };
+    };
+
+    const [SIZE, ALPHA_FLOOR, BLACK_FLOOR, WHITE_CEILING] = [8, 128, 20, 230];
+    const FALLBACK = toTargetBrightness(128, 128, 128);
+
+    return new Promise((resolve) => {
+        const img = Object.assign(new Image(), {
+            crossOrigin: "Anonymous",
+            onerror: () => resolve(FALLBACK),
+            onload: () => {
+                try {
+                    const canvas = document.createElement("canvas");
+                    canvas.width = canvas.height = SIZE;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, SIZE, SIZE);
+                    const { data } = ctx.getImageData(0, 0, SIZE, SIZE);
+
+                    let wR = 0,
+                        wG = 0,
+                        wB = 0,
+                        total = 0;
+                    const accumulate = (x, y) => {
+                        const idx = (y * SIZE + x) * 4;
+                        const r = data[idx],
+                            g = data[idx + 1],
+                            b = data[idx + 2],
+                            a = data[idx + 3];
+                        if (
+                            a < ALPHA_FLOOR ||
+                            Math.max(r, g, b) < BLACK_FLOOR ||
+                            Math.min(r, g, b) > WHITE_CEILING
+                        ) {
+                            return;
+                        }
+                        wR += r;
+                        wG += g;
+                        wB += b;
+                        total++;
+                    };
+
+                    for (let i = 0; i < SIZE; i++) {
+                        accumulate(i, 0); // top
+                        accumulate(0, i); // left
+                        accumulate(SIZE - 1, i); // right
+                    }
+
+                    resolve(
+                        total > 0
+                            ? toTargetBrightness(wR / total, wG / total, wB / total)
+                            : FALLBACK
+                    );
+                } catch {
+                    resolve(FALLBACK);
+                }
+            },
+        });
+        img.src = src;
+    });
+});

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="discuss.MeetingReadyBanner">
-        <div t-if="this.show" class="o-mail-MeetingReadyBanner position-absolute bottom-0 start-0 m-3 p-3 bg-white rounded-3 border shadow z-1">
+        <div t-if="this.show" class="o-mail-MeetingReadyBanner position-absolute bottom-0 start-0 m-3 p-3 bg-light rounded-3 border shadow z-1">
             <button class="o-mail-MeetingReadyBanner-close btn btn-link p-0 position-absolute top-0 end-0 m-2 text-reset" title="Close" aria-label="Close" t-on-click="() => this.rtc.isMeetingReadyBannerDismissed = true">
                 <i class="oi oi-close"/>
             </button>
