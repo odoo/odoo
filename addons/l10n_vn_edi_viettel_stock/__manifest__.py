@@ -17,11 +17,11 @@ Vietnam - Delivery E-invoicing
 Using SInvoice by Viettel
     """,
     "data": [
-        "security/ir.model.access.csv",
         "views/res_config_settings_views.xml",
         "views/stock_warehouse_views.xml",
         "views/stock_picking_views.xml",
         "wizard/wizard_send_views.xml",
+        'security/ir.access.csv',
     ],
     "auto_install": True,
     "license": "LGPL-3",

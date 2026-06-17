@@ -10,8 +10,8 @@ fields are stored in a "serialized" field in the form of a JSON mapping.
     'category': 'Hidden',
     'depends': ['base'],
     'data': [
-        'security/ir.model.access.csv',
         'views/views.xml',
+        'security/ir.access.csv',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

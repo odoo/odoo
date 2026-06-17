@@ -5,7 +5,7 @@
     'depends': ['point_of_sale'],
     'data': [
         "views/pos_payment_method_views.xml",
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     "assets": {
         "point_of_sale._assets_pos": [

@@ -5,7 +5,7 @@
     'depends': ['base'],
     'data': [
         'data/test_translated_field/test_model_data.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

@@ -30,7 +30,6 @@
         'data/mail_templates_email_layouts.xml',
         'data/peppol_clarification_data.xml',
         'data/res_partner_data.xml',
-        'security/ir.model.access.csv',
         'views/account_move_views.xml',
         'views/account_peppol_response_views.xml',
         'views/account_portal_templates.xml',
@@ -39,6 +38,7 @@
         'views/res_config_settings_views.xml',
         'wizard/peppol_registration_views.xml',
         'wizard/peppol_rejection_wizard_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/account_peppol_demo.xml',

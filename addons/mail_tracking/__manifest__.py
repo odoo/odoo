@@ -22,6 +22,6 @@ This is especially useful for:
         'views/mail_message_views.xml',
         'views/mail_tracking_value_views.xml',
         'views/mail_menus.xml',
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
 }

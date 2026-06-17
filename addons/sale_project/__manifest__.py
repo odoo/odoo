@@ -11,8 +11,6 @@ This module allows to generate a project/task from sales orders.
     'depends': ['sale_management', 'sale_service', 'project_account'],
     'auto_install': ['sale_management', 'project_account'],
     'data': [
-        'security/ir.model.access.csv',
-        'security/sale_project_security.xml',
         'views/product_views.xml',
         'views/project_task_views.xml',
         'views/sale_order_line_views.xml',
@@ -26,6 +24,7 @@ This module allows to generate a project/task from sales orders.
         'wizard/project_template_create_wizard.xml',
         'report/account_analytic_line_views.xml',
         'views/project_menus.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/sale_project_demo.xml',

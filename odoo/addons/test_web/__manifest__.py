@@ -7,7 +7,7 @@
 
     'depends': ['web', 'test_orm'],
 
-    'data': ['ir.model.access.csv'],
+    'data': ['ir.access.csv'],
 
     'assets': {
         'web.assets_tests': [

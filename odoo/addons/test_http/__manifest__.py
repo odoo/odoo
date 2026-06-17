@@ -6,8 +6,8 @@
     'depends': ['web', 'web_tour', 'mail', 'rpc'],
     'data': [
         'data.xml',
-        'ir.model.access.csv',
-        'views.xml'
+        'views.xml',
+        'ir.access.csv',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

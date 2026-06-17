@@ -15,7 +15,7 @@ test_mail. """,
         'test_mail_sms',
     ],
     'data': [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

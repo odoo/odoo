@@ -11,7 +11,7 @@ This addon provides an extensible, maintainable editor.
     'category': 'Hidden',
     'depends': ['base', 'bus', 'web'],
     'data': [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'auto_install': True,
     'assets': {

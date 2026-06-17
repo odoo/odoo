@@ -22,8 +22,6 @@ If you need to manage your meetings, you should install the CRM module.
         'data/calendar_demo.xml'
     ],
     'data': [
-        'security/ir.model.access.csv',
-        'security/calendar_security.xml',
         'data/calendar_cron.xml',
         'data/mail_templates_chatter.xml',
         'data/mail_template_data.xml',
@@ -39,6 +37,7 @@ If you need to manage your meetings, you should install the CRM module.
         'wizard/calendar_provider_config.xml',
         'wizard/calendar_popover_delete_wizard.xml',
         'wizard/mail_activity_schedule_views.xml',
+        'security/ir.access.csv',
     ],
     'application': True,
     'assets': {

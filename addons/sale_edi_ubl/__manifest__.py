@@ -11,7 +11,7 @@ File with embedded xml data will allow seller to retrieve Order data from Files.
     """,
     'depends': ['sale', 'account_edi_ubl_cii'],
     'data': [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'auto_install': True,
     'author': 'Odoo S.A.',

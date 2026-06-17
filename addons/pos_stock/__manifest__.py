@@ -7,7 +7,6 @@
     'auto_install': True,
     'data': [
         'security/pos_stock_security.xml',
-        'security/ir.model.access.csv',
         'data/pos_stock_data.xml',
         'views/pos_order_view.xml',
         'views/product_view.xml',
@@ -16,6 +15,7 @@
         'views/res_config_settings_views.xml',
         'views/stock_reference_views.xml',
         'receipt/pos_order_receipt.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         # Main PoS assets, they are loaded in the PoS UI
