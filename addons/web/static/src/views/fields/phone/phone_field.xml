@@ -5,7 +5,7 @@
         <div class="d-inline-flex align-items-baseline w-100">
             <t t-if="this.props.readonly">
                 <span t-out="this.value"/>
-                <t t-call="web.PhoneFieldActions"/>
+                <t t-if="this.props.displayButtons" t-call="web.PhoneFieldActions"/>
             </t>
             <t t-else="">
                 <input
@@ -16,7 +16,7 @@
                     t-att-placeholder="this.props.placeholder"
                     t-custom-ref="input"
                 />
-                <t t-call="web.PhoneFieldActions"/>
+                <t t-if="this.props.displayButtons" t-call="web.PhoneFieldActions"/>
             </t>
         </div>
     </t>

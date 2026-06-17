@@ -13,6 +13,7 @@ export const phoneFieldProps = {
     placeholder: t.string().optional(),
     formattedField: t.string().optional(),
     dialField: t.string().optional(),
+    displayButtons: t.boolean().optional(true),
 };
 
 export class PhoneField extends Component {
@@ -80,10 +81,11 @@ export const phoneField = {
         },
     ],
     supportedTypes: ["char"],
-    extractProps: ({ options, placeholder }) => ({
+    extractProps: ({ options, placeholder, viewType }) => ({
         placeholder,
         formattedField: options.formatted_field,
         dialField: options.dial_field,
+        displayButtons: viewType === "form",
     }),
 };
 
