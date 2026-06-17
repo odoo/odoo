@@ -4,8 +4,9 @@ from unittest.mock import patch
 from zoneinfo import ZoneInfo
 
 from odoo import Command
+from odoo.exceptions import AccessError
 
-from odoo.tests import Form, tagged
+from odoo.tests import Form, new_test_user, tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.l10n_pl_bank_verification.tests.utils.utils import FakeResponse
 
@@ -24,6 +25,7 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
 
         cls.verification_sudo = cls.env['l10n_pl.bank.account.verification'].sudo()
         cls.pl_supplier, cls.pl_supplier_bank_account, cls.pl_supplier_move = cls._create_partner_bank_and_move(cls, '1111111111', 'PL61109010140000071219812874')  # valid bank account number
+        cls.invoicing_user = new_test_user(cls.env, login='invoicing_user', groups='account.group_account_invoice')
         cls.startClassPatcher(freeze_time('2026-01-31 10:00:00'))
         date = datetime(2026, 1, 31, 10, 0).replace(tzinfo=ZoneInfo('Europe/Warsaw')).astimezone(timezone.utc)
         cls.date = date.replace(tzinfo=None)
@@ -105,6 +107,28 @@ class TestL10nPlBankAccountVerification(AccountTestInvoicingCommon):
 
         payment = self._create_payments_for_moves(self.pl_supplier_move)
 
+        self.assertRecordValues(payment.l10n_pl_verification_id, [{
+            'verification_status': 'valid',
+            'verification_timestamp': self.date,
+            'verification_request_id': 'AZERTYUIOP-01',
+            'partner_bank_id': self.pl_supplier_bank_account.id,
+            'partner_bank_account_number': self.pl_supplier_bank_account.sanitized_acc_number,
+            'partner_id': self.pl_supplier.id,
+            'partner_vat': self.pl_supplier.vat,
+        }])
+
+    @patch('odoo.addons.l10n_pl_bank_verification.models.bank_account_verification.BankAccountVerification._make_request', _make_request_patched)
+    def test_register_single_payment_with_valid_bank_account_check_as_invoicing_user(self):
+        self.assertTrue(self.invoicing_user.has_group('account.group_account_invoice'))
+        self.assertFalse(self.invoicing_user.has_group('account.group_account_user'))
+        with self.assertRaises(AccessError):
+            self.env['l10n_pl.bank.account.verification'].with_user(self.invoicing_user).search([])
+
+        move = self.pl_supplier_move.with_user(self.invoicing_user)
+        with self.with_user(self.invoicing_user.login):
+            self._check_form_fields(move)
+
+        payment = self._create_payments_for_moves(move)
         self.assertRecordValues(payment.l10n_pl_verification_id, [{
             'verification_status': 'valid',
             'verification_timestamp': self.date,
