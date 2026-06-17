@@ -303,6 +303,7 @@ class MicrosoftSync(models.AbstractModel):
         # ... and update them
         rec_values = {}
         update_events = self.env['calendar.event']
+        events_by_timeslot = None
         for e in events_to_update:
             if e.type == "exception":
                 event_values = self.env['calendar.event']._microsoft_to_odoo_values(e)
@@ -321,6 +322,21 @@ class MicrosoftSync(models.AbstractModel):
                 odoo_event = self.env['calendar.event'].browse(e.odoo_id(self.env)).exists().with_context(
                     no_mail_to_attendees=True, mail_create_nolog=True
                 )
+                if not odoo_event and event_values.get('start'):
+                    # The occurrence is not mapped to an Odoo event yet. This happens when the
+                    # whole series is shifted in Outlook: the occurrences are recreated in Odoo
+                    # (without any Microsoft ids) and the Outlook instances come back with new
+                    # ids, so they match no Odoo event by id. Re-link them by timeslot so they
+                    # recover their Microsoft ids instead of staying orphaned
+                    if events_by_timeslot is None:
+                        events_by_timeslot = {
+                            ev._timeslot_key(e.isAllDay): ev for ev in self.calendar_event_ids
+                        }
+                    odoo_event = events_by_timeslot.get(
+                        (event_values['start'], event_values['stop']), self.env['calendar.event']
+                    ).with_context(no_mail_to_attendees=True, mail_create_nolog=True)
+                    if odoo_event and e.type == "occurrence":
+                        event_values = dict(event_values, follow_recurrence=True)
                 odoo_event.with_context(dont_notify=True).write(dict(event_values, need_sync_m=False))
                 update_events |= odoo_event
 
