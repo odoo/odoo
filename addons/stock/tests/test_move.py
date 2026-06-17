@@ -6977,3 +6977,22 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(picking.date_deadline, move1.date_deadline, 'Picking deadline should be the earliest move deadline')
         move1._action_cancel()
         self.assertEqual(picking.date_deadline, move2.date_deadline, 'Picking deadline should update to the remaining move after cancellation')
+
+    def test_open_reference_opens_picking_for_inventory_loss(self):
+        """Inventory loss moves without scrap_id should open the picking, not scrap."""
+        self.picking_type_out.default_location_dest_id = self.env['stock.location'].create({
+            'name': 'Office supplies consumption',
+            'usage': 'inventory',
+        })
+        view = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_out.id,
+            'partner_id': self.partner_1.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 1.0,
+                }),
+            ],
+        }).move_ids.action_open_reference()
+        self.assertTrue(view['res_id'])
+        self.assertEqual(view['res_model'], 'stock.picking')
