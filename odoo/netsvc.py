@@ -328,7 +328,8 @@ PSEUDOCONFIG_MAPPER = {
 }
 
 logging.RUNBOT = 25
-logging.addLevelName(logging.RUNBOT, "INFO") # displayed as info in log
+logging.addLevelName(logging.RUNBOT, "RUNBOT")
+logging._levelToName[logging.RUNBOT] = "INFO"  # displayed as info in log
 logging.captureWarnings(True)
 # must be after `loggin.captureWarnings` so we override *that* instead of the
 # other way around
