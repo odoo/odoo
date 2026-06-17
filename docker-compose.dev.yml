@@ -2,12 +2,18 @@ version: '3.9'
 
 services:
   odoo:
+    build: .
     env_file:
       - .env.dev
     depends_on:
       - db
     ports:
       - '777:8069'
+    volumes:
+      - ./odoo:/usr/lib/python3/dist-packages/odoo
+      - ./addons:/usr/lib/python3/dist-packages/addons
+      - ./custom_addons:/mnt/extra-addons
+      - odoo-data:/var/lib/odoo
 
   db:
     image: postgres:18
@@ -20,4 +26,5 @@ services:
     restart: unless-stopped
 
 volumes:
+  odoo-data:
   db-data:

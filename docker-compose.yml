@@ -2,14 +2,5 @@ version: '3.9'
 
 services:
   odoo:
-    build: .
     image: ghcr.io/mohammedj-sadiq/kswco-odoo:latest
-    volumes:
-      - ./odoo:/usr/lib/python3/dist-packages/odoo
-      - ./addons:/usr/lib/python3/dist-packages/addons
-      - ./custom_addons:/mnt/extra-addons
-      - odoo-data:/var/lib/odoo
     restart: unless-stopped
-
-volumes:
-  odoo-data:
