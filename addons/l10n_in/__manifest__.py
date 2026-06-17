@@ -62,6 +62,7 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'views/uom_uom_views.xml',
         'views/base_document_layout_views.xml',
         'security/ir.access.csv',
+        'views/report_export_commercial_invoice.xml',
     ],
     'demo': [
         'demo/product_demo.xml',
