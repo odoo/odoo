@@ -6,12 +6,11 @@
     'depends': ['hr', 'calendar'],
     'auto_install': True,
     'data': [
-        'security/security.xml',
-        'security/ir.model.access.csv',
         'views/calendar_views.xml',
         'views/calendar_views_calendarApp.xml',
         'views/res_partner_views.xml',
         'wizard/homework_location_wizard.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_backend': [

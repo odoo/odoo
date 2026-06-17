@@ -1,0 +1,58 @@
+id,name,model_id,group_id/id,operation,domain
+access_mrp_workcenter_productivity_loss_manager,mrp.workcenter.productivity.loss,mrp.workcenter.productivity.loss,mrp.group_mrp_manager,crud,
+access_mrp_workcenter_productivity_loss,mrp.workcenter.productivity.loss,mrp.workcenter.productivity.loss,mrp.group_mrp_user,r,
+access_mrp_workcenter_productivity_loss_type,mrp.workcenter.productivity.loss.type,mrp.workcenter.productivity.loss.type,mrp.group_mrp_user,r,
+access_mrp_workcenter_productivity,mrp.workcenter.productivity,mrp.workcenter.productivity,mrp.group_mrp_user,crud,
+mrp_workcenter_productivity,mrp_workcenter_productivity multi-company,mrp.workcenter.productivity,,crud,"[('company_id', 'in', company_ids)]"
+access_mrp_workcenter,mrp.workcenter,mrp.workcenter,mrp.group_mrp_user,r,
+access_mrp_workcenter_manager,mrp.workcenter.manager,mrp.workcenter,mrp.group_mrp_manager,crud,
+mrp_workcenter_rule,mrp_workcenter multi-company,mrp.workcenter,,crud,"[('company_id', 'in', company_ids + [False])]"
+access_mrp_routing_workcenter,mrp.routing.workcenter,mrp.routing.workcenter,mrp.group_mrp_user,r,
+access_mrp_routing_workcenter_manager,mrp.routing.workcenter.manager,mrp.routing.workcenter,mrp.group_mrp_manager,crud,
+mrp_routing_workcenter_rule,mrp_routing_workcenter multi-company,mrp.routing.workcenter,,crud,"[('company_id', 'in', company_ids + [False])]"
+access_mrp_bom_manager,mrp.bom.manager,mrp.bom,mrp.group_mrp_manager,crud,
+access_mrp_bom_stockuser,mrp.bom,mrp.bom,stock.group_stock_user,r,
+mrp_bom_rule,mrp_bom multi-company,mrp.bom,,crud,"[('company_id', 'in', company_ids + [False])]"
+access_mrp_bom_line_manager,mrp.bom.line.manager,mrp.bom.line,mrp.group_mrp_manager,crud,
+access_mrp_bom_line_stockuser,mrp.bom.line,mrp.bom.line,stock.group_stock_user,r,
+mrp_bom_line_rule,mrp_bom_line multi-company,mrp.bom.line,,crud,"[('company_id', 'in', company_ids + [False])]"
+access_mrp_bom_byproduct_user,mrp.bom.byproduct,mrp.bom.byproduct,mrp.group_mrp_user,r,
+access_mrp_bom_byproduct_manager,mrp.bom.byproduct manager,mrp.bom.byproduct,mrp.group_mrp_manager,crud,
+mrp_bom_byproduct_rule,mrp_bom_byproduct multi-company,mrp.bom.byproduct,,crud,"[('company_id', 'in', company_ids + [False])]"
+access_mrp_production,mrp.production user,mrp.production,mrp.group_mrp_user,crud,
+access_mrp_production_stock_worker,mrp.production stock_worker,mrp.production,stock.group_stock_user,r,
+mrp_production_rule,mrp_production multi-company,mrp.production,,crud,"[('company_id', 'in', company_ids)]"
+access_mrp_production_group,access_mrp_production_group,mrp.production.group,mrp.group_mrp_user,cru,
+access_product_product_user,product.product user,product.product,mrp.group_mrp_user,r,
+access_product_template_user,product.template user,product.template,mrp.group_mrp_user,r,
+access_uom_uom_user,uom.uom user,uom.uom,mrp.group_mrp_user,r,
+res_partner_rule_edit_all,edit all (mrp),res.partner,mrp.group_mrp_manager,u,
+res_partner_rule_user,user read access,res.partner,mrp.group_mrp_user,r,
+access_product_group_res_partner_mrp_manager,res_partner group_mrp_manager,res.partner,mrp.group_mrp_manager,c,
+access_mrp_workorder_mrp_user,mrp.workorder.user,mrp.workorder,mrp.group_mrp_user,crud,
+mrp_workorder_rule,mrp_workorder multi-company,mrp.workorder,,crud,"[('company_id', 'in', company_ids)]"
+resource_calendar_leaves_rule_group_user_create,resource.calendar.leaves: employee reads own or global,resource.calendar.leaves,mrp.group_mrp_user,r,"['|', ('resource_id', '=', False), ('resource_id.user_id', 'in', [False, user.id])]"
+resource_calendar_leaves_rule_group_user_modify,resource.calendar.leaves: employee modifies own,resource.calendar.leaves,mrp.group_mrp_user,cud,"[('resource_id', '!=', False), ('resource_id.user_id', 'in', [False, user.id])]"
+access_resource_calendar_attendance_mrp_user,mrp.resource.calendar.attendance.mrp.user,resource.calendar.attendance,mrp.group_mrp_user,crud,
+access_resource_resource,resource.resource,resource.resource,mrp.group_mrp_user,r,
+access_resource_resource_manager,resource.resource.manager,resource.resource,mrp.group_mrp_manager,crud,
+access_product_supplierinfo_manager,product.supplierinfo user,product.supplierinfo,mrp.group_mrp_manager,r,
+access_product_pricelist_item_mrp_manager,product.pricelist.item mrp_manager,product.pricelist.item,mrp.group_mrp_manager,crud,
+access_resource_calendar_manufacturinguser,resource.calendar manufacturing.user,resource.calendar,mrp.group_mrp_user,r,
+access_mrp_unbuild,mrp.unbuild,mrp.unbuild,mrp.group_mrp_user,crud,
+mrp_unbuild_rule,mrp_unbuild multi-company,mrp.unbuild,,crud,"[('company_id', 'in', company_ids)]"
+access_change_production_qty,access.change.production.qty,change.production.qty,mrp.group_mrp_user,cru,
+access_stock_warn_insufficient_qty_unbuild,access.stock.warn.insufficient.qty.unbuild,stock.warn.insufficient.qty.unbuild,mrp.group_mrp_user,cru,
+access_mrp_production_backorder,access.mrp.production.backorder,mrp.production.backorder,mrp.group_mrp_user,cru,
+access_mrp_production_backorder_line,access.mrp.production.backorder.line,mrp.production.backorder.line,mrp.group_mrp_user,cru,
+access_mrp_consumption_warning,access.mrp.consumption.warning,mrp.consumption.warning,mrp.group_mrp_user,cru,
+access_mrp_consumption_warning_line,access.mrp.consumption.warning.line,mrp.consumption.warning.line,mrp.group_mrp_user,cru,
+access_mrp_workcenter_tag_group_user,access.mrp.workcenter.tag,mrp.workcenter.tag,mrp.group_mrp_user,r,
+access_mrp_workcenter_tag_manager,access.mrp.workcenter.tag,mrp.workcenter.tag,mrp.group_mrp_manager,crud,
+access_mrp_production_split_multi,access.mrp.production.split.multi,mrp.production.split.multi,mrp.group_mrp_user,cru,
+access_mrp_production_split,access.mrp.production.split,mrp.production.split,mrp.group_mrp_user,cru,
+access_mrp_production_split_line,access.mrp.production.split.line,mrp.production.split.line,mrp.group_mrp_user,crud,
+access_mrp_workcenter_capacity_manager,mrp.workcenter.capacity.manager,mrp.workcenter.capacity,mrp.group_mrp_manager,crud,
+access_mrp_workcenter_capacity_group_user,mrp.workcenter.capacity,mrp.workcenter.capacity,mrp.group_mrp_user,r,
+access_stock_move_mrp_user,stock.move mrp_user,stock.move,mrp.group_mrp_user,crud,
+access_mrp_production_serials,access.mrp_production_serials,mrp.production.serials,mrp.group_mrp_user,cru,

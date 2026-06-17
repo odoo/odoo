@@ -26,7 +26,7 @@ Re-implement Odoo's file import system:
     'category': 'Hidden/Tools',
     'auto_install': True,
     'data': [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_backend': [

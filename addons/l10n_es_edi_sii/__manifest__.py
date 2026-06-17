@@ -29,12 +29,11 @@ You need to configure your certificate and the tax agency.
         'l10n_es',
     ],
     'data': [
-        'security/ir.model.access.csv',
-        'security/ir_rule.xml',
 
         'views/account_move_views.xml',
         'views/l10n_es_edi_sii_certificate_views.xml',
         'views/res_config_settings_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/demo_certificate.xml',

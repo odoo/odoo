@@ -11,7 +11,6 @@
     'website': 'https://www.odootech.hu',
     'depends': ['account_debit_note', 'l10n_hu'],
     'data': [
-        'security/ir.model.access.csv',
         'data/uom.uom.csv',
         'data/template_requests.xml',
         'data/template_invoice.xml',
@@ -27,6 +26,7 @@
         'views/res_config_settings_views.xml',
         'wizard/l10n_hu_edi_cancellation.xml',
         'wizard/l10n_hu_edi_tax_audit_export.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'demo/demo_partner.xml',

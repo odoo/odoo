@@ -8,6 +8,6 @@
     'category': 'Hidden/Tests',
     'depends': ['populate'],
     'data': [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
 }

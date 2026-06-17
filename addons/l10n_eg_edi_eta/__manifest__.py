@@ -18,8 +18,6 @@ Integrates with the ETA portal to automatically send and sign the Invoices to th
         'data/l10n_eg_edi.activity.type.csv',
         'data/l10n_eg_edi.uom.code.csv',
         'data/uom.uom.csv',
-        'security/ir.model.access.csv',
-        'security/eta_thumb_drive_security.xml',
         'views/uom_uom_view.xml',
         'views/account_move_view.xml',
         'views/account_journal_view.xml',
@@ -29,6 +27,7 @@ Integrates with the ETA portal to automatically send and sign the Invoices to th
         'views/report_invoice.xml',
         'data/res_country_data.xml',
         'views/res_company_view.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_backend': [

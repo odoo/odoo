@@ -9,13 +9,13 @@
     'description': "This module allows to publish your available job positions on your website and keep track of application submissions easily.",
     'depends': ['hr_recruitment', 'website_mail'],
     'data': [
-        'security/ir.model.access.csv',
         'security/website_hr_recruitment_security.xml',
         'data/config_data.xml',
         'views/website_hr_recruitment_templates.xml',
         'views/hr_recruitment_views.xml',
         'views/hr_job_views.xml',
         'views/website_pages_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/hr_job_demo.xml',

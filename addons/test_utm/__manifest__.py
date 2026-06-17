@@ -12,7 +12,7 @@ tests independently to functional aspects of other models. """,
         'utm',
     ],
     'data': [
-        'security/ir.model.access.csv',
+        'security/ir.access.csv',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

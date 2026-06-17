@@ -5,11 +5,11 @@
     'description': """A module to test translation.""",
     'depends': ['base', 'web_tour'],
     'data': [
-        'security/ir.model.access.csv',
         'view.xml',
         'data/test_translation_data.xml',
         'data/test.translation.model1.csv',
         'data/test.translation.model1-translated.csv',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_backend': [

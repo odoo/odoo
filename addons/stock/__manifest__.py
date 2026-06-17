@@ -17,7 +17,6 @@
     ],
     'data': [
         'security/stock_security.xml',
-        'security/ir.model.access.csv',
 
         'data/digest_data.xml',
         'data/mail_message_subtype_data.xml',
@@ -89,6 +88,7 @@
         'views/stock_reference_views.xml',
         'views/uom_uom_views.xml',
         'views/digest_digest_views.xml',
+        'security/ir.access.csv',
     ],
     'application': True,
     'pre_init_hook': 'pre_init_hook',
