@@ -695,13 +695,12 @@ class IrModuleModule(models.Model):
                     dynamic_snippets = [snippet for snippet, *_ in snippets_to_insert]
                     configurator_snippets[page] = list(dict.fromkeys(snippets + dynamic_snippets))
 
+        # This covers themes being installed while optional addon modules such
+        # as `website_sale` are already installed.
+        add_addons_snippets(manifest.get('configurator_snippets_addons', {}))
+
         theme = self.env['website'].get_current_website().theme_id
-        if theme and theme.name == self.name:
-            # The theme itself is being installed. Its manifest may add
-            # snippets for already installed modules such as `website_sale`.
-            addons = manifest.get('configurator_snippets_addons', {})
-            add_addons_snippets(addons)
-        elif theme:
+        if theme and theme.name != self.name:
             # Another module is being installed after the theme was selected.
             # Only include the theme addon snippets targeting this module.
             theme_manifest = Manifest.for_addon(theme.name)
