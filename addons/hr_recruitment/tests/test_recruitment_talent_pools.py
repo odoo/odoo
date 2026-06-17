@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.mail.tests.common import MailCase
+from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tests import Form, tagged, TransactionCase
 
@@ -305,3 +306,15 @@ class TestRecruitmentTalentPool(TransactionCase, MailCase):
             new_email,
             "The email_from field should be updated successfully",
         )
+
+    def test_copy_applicant(self):
+        """Test that a talent should not be copied."""
+        self.env["talent.pool.add.applicants"].create({
+            "applicant_ids": self.t_applicant_1.ids,
+            "talent_pool_ids": self.t_talent_pool_1.ids,
+        }).action_add_applicants_to_pool()
+
+        talent = self.t_applicant_1.pool_applicant_id
+
+        with self.assertRaises(UserError, msg="You cannot duplicate the talent(s)."):
+            talent.copy()
