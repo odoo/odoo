@@ -152,11 +152,13 @@ export class ComboConfiguratorDialog extends Component {
                 await this.handleConfigurableItem(comboId, comboItem);
                 return;
             }
+            const baseItem = configuredItem || this.getSelectedOrProvidedComboItem(comboId, comboItem);
+
             for (let i = 0; i < qtyToBeAdded; i++) {
                 this.state.selectedItemsList.push({
                     comboId: comboId,
                     comboItemId: comboItem.id,
-                    item: configuredItem ? configuredItem : comboItem.deepCopy()
+                    item: baseItem.deepCopy()
                 });
             }
         } else if (qtyToBeAdded < 0) {
