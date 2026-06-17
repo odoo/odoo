@@ -1049,9 +1049,19 @@ class MailingMailing(models.Model):
         done_res_ids = {record['res_id'] for record in already_mailed}
         return [rid for rid in res_ids if rid not in done_res_ids]
 
+    def _get_recipient_base_url(self):
+        """ Base URL of the recipient record passed in context when sending,
+        so links stay on the recipient's website in multi-website setups (see
+        mail.mail). Only a recordset is used, never a plain value, so a context
+        set from an RPC call cannot redirect the links to another host. """
+        recipient = self.env.context.get('mailing_recipient_record')
+        if isinstance(recipient, models.BaseModel):
+            return recipient.get_base_url()
+        return self.get_base_url()
+
     def _get_unsubscribe_oneclick_url(self, email_to, res_id):
         url = werkzeug.urls.url_join(
-            self.get_base_url(), 'mailing/%(mailing_id)s/unsubscribe_oneclick?%(params)s' % {
+            self._get_recipient_base_url(), 'mailing/%(mailing_id)s/unsubscribe_oneclick?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
                     'document_id': res_id,
@@ -1064,7 +1074,7 @@ class MailingMailing(models.Model):
 
     def _get_unsubscribe_url(self, email_to, res_id):
         url = werkzeug.urls.url_join(
-            self.get_base_url(), 'mailing/%(mailing_id)s/confirm_unsubscribe?%(params)s' % {
+            self._get_recipient_base_url(), 'mailing/%(mailing_id)s/confirm_unsubscribe?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
                     'document_id': res_id,
@@ -1077,7 +1087,7 @@ class MailingMailing(models.Model):
 
     def _get_view_url(self, email_to, res_id):
         url = werkzeug.urls.url_join(
-            self.get_base_url(), 'mailing/%(mailing_id)s/view?%(params)s' % {
+            self._get_recipient_base_url(), 'mailing/%(mailing_id)s/view?%(params)s' % {
                 'mailing_id': self.id,
                 'params': werkzeug.urls.url_encode({
                     'document_id': res_id,
