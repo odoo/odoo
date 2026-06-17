@@ -6366,6 +6366,7 @@ class AccountMove(models.Model):
         except UserError:  # if at least one move cannot be posted, handle moves one by one
             self.env.cr.rollback()
 
+        failed_msgs = []
         for move in moves:
             try:
                 move = move.try_lock_for_update().filtered_domain(domain)
@@ -6376,8 +6377,13 @@ class AccountMove(models.Model):
             except UserError as e:
                 self.env.cr.rollback()
                 msg = _('The move could not be posted for the following reason: %(error_message)s', error_message=e)
+                failed_msgs.append(msg)
                 move.message_post(body=msg, message_type='comment')
                 self.env['ir.cron']._commit_progress()
+
+        # Mark the cron job as failed when the entire batch fails
+        if len(failed_msgs) == len(moves):
+            raise Exception(failed_msgs)
 
     @api.model
     def _cron_account_move_send(self, job_count=10):

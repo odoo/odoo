@@ -4,6 +4,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
 from odoo import fields, Command
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import mute_logger
 
 from collections import defaultdict
 from unittest.mock import patch
@@ -4114,8 +4115,14 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         (valid_invoice + invalid_invoice_1 + invalid_invoice_2).auto_post = 'at_date'
 
-        with self.enter_registry_test_mode():
-            self.env.ref('account.ir_cron_auto_post_draft_entry').method_direct_trigger()
+        cron = self.env.ref('account.ir_cron_auto_post_draft_entry')
+
+        # Once the valid move is posted, the retry batch is 100% invalid moves,
+        # which the cron marks as failed
+        # (expected behavior, mute_logger).
+        with self.enter_registry_test_mode(), mute_logger('odoo.addons.base.models.ir_cron'):
+            cron.method_direct_trigger()
+
         self.assertEqual(valid_invoice.state, 'posted')
         self.assertEqual(invalid_invoice_1.state, 'draft')
 
@@ -4132,6 +4139,10 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 "<p>The move could not be posted for the following reason: Even magicians can't post nothing!</p>"
             )
             for message in invalid_invoice_2.message_ids))
+
+        # The remaining batch (the 2 unpostable moves) failed entirely,
+        # The job should be marked as failed rather than rescheduled ASAP.
+        self.assertEqual(cron.failure_count, 1)
 
     def test_no_taxes_on_payment_term_line(self):
         ''' No tax should be set on payment_term lines'''
