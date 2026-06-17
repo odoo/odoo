@@ -340,6 +340,12 @@ export const checkIdentityService = {
 
 registry.category("public_components").add("web.check_identity_form", CheckIdentityForm);
 registry.category("services").add("check_identity", checkIdentityService);
+registry.category("services").addEventListener("CLEANUP", function restorOriginalRpc() {
+    if (rpc._originalRpc) {
+        rpc._rpc = rpc._originalRpc;
+        delete rpc._originalRpc;
+    }
+});
 
 // Patch RPC to replay it automatically when the identity is verified
 const originalRpc = rpc._rpc;

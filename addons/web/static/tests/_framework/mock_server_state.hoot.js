@@ -116,7 +116,6 @@ const subscriptions = new Map([
                 server_version_info: serverVersion,
                 isEnterprise: serverVersion.slice(-1)[0] === "e",
             },
-            isReady: true,
         }),
     ],
 ]);

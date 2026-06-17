@@ -41,6 +41,7 @@ export {
     clearRegistry,
     getMockEnv,
     getService,
+    getTestApp,
     makeDialogMockEnv,
     makeMockEnv,
     mockOffline,

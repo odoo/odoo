@@ -1,9 +1,9 @@
-import { after, beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
-import { tick } from "@odoo/hoot-mock";
-import { App, Component, signal, xml } from "@odoo/owl";
+import { afterEach, beforeEach, describe, expect, getFixture, test, tick } from "@odoo/hoot";
+import { Component, signal, xml } from "@odoo/owl";
 import {
     allowTranslations,
     clearRegistry,
+    getTestApp,
     makeMockEnv,
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
@@ -16,11 +16,6 @@ describe.current.tags("headless");
 
 const servicesRegistry = registry.category("services");
 
-function _startServices(env) {
-    const app = new App({ plugins: services });
-    return startServices(env, app);
-}
-
 beforeEach(() => {
     clearRegistry(servicesRegistry);
     // ideally, should not be done like this, we should simply start odoo with
@@ -28,6 +23,10 @@ beforeEach(() => {
     patchWithCleanup(services, {
         _items: signal.Array([]),
     });
+});
+afterEach(() => {
+    delete odoo.isReady;
+    delete odoo.__WOWL_DEBUG__;
 });
 
 /**
@@ -171,14 +170,14 @@ test(`startServices: throws if all dependencies are not met in the same microtic
     const env = makeEnv();
     registerService("b", ["a"], () => "b");
 
-    const serviceStartingPromise = _startServices(env);
+    const serviceStartingPromise = startServices(env, getTestApp());
     await expect(serviceStartingPromise).rejects.toThrow(
         "Some services could not be started: b. Missing dependencies: a"
     );
     expect(env.services).toEqual({});
 
     registerService("a", [], () => "a");
-    await _startServices(env);
+    await startServices(env, getTestApp());
     expect(env.services).toEqual({ a: "a", b: "b" });
 });
 
@@ -186,7 +185,7 @@ test(`startServices: waits for all synchronous code before attempting to start s
     const env = makeEnv();
     registerService("b", ["a"], () => "b");
 
-    const serviceStartingPromise = _startServices(env);
+    const serviceStartingPromise = startServices(env, getTestApp());
     // Dependency added in the same microtick doesn't cause startServices to throw even if it was added after the call
     // (eg, a module is defined after main.js)
     registerService("a", [], () => "a");
@@ -204,9 +203,6 @@ test(`mountComponent creates an env and sets the application as root when no env
         static props = ["*"];
     }
     const app = await mountComponent(Root, getFixture());
-    after(() => {
-        delete odoo.__WOWL_DEBUG__;
-    });
     const { env } = app;
     expect(env.services).toEqual({ my_service: "a" });
     const [firstRoot] = app.roots;
@@ -223,7 +219,7 @@ test(`mountComponent uses the env when provided and doesn't start the services`,
 
     const env = makeEnv();
     expect.verifySteps([]);
-    await _startServices(env);
+    await startServices(env, getTestApp());
     expect.verifySteps(["starting myService"]);
 
     class Root extends Component {
@@ -234,7 +230,8 @@ test(`mountComponent uses the env when provided and doesn't start the services`,
     const app = await mountComponent(Root, getFixture(), { env });
     expect.verifySteps([]);
     expect(app.env.services).toBe(env.services);
-    expect(odoo.__WOWL_DEBUG__).toBe(undefined);
+    expect(odoo).not.toInclude("isReady");
+    expect(odoo).not.toInclude("__WOWL_DEBUG__");
     expect(getFixture()).toHaveText("Root");
 });
 
@@ -245,9 +242,6 @@ test(`mountComponent: can pass props to the root component`, async () => {
     }
 
     await mountComponent(Root, getFixture(), { props: { text: "text from props" } });
-    after(() => {
-        delete odoo.__WOWL_DEBUG__;
-    });
     expect(getFixture()).toHaveText("text from props");
 });
 

@@ -234,7 +234,6 @@ export async function mountComponent(component, target, appConfig = {}) {
         env,
         getTemplate,
         dev: env.debug || session.test_mode,
-        warnIfNoStaticProps: !session.test_mode,
         name: component.constructor.name,
         translatableAttributes: ["data-tooltip"],
         translateFn: appTranslateFn,
