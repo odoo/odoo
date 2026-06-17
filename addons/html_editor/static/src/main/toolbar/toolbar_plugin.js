@@ -1,6 +1,6 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
-import { isEmptyTextNode, isZWS } from "@html_editor/utils/dom_info";
+import { isEmptyTextNode, isZWS, isZwnbsp } from "@html_editor/utils/dom_info";
 import { composeToolbarButton, Toolbar } from "./toolbar";
 import { hasTouch, isMacOS, isIOS } from "@web/core/browser/feature_detection";
 import { registry } from "@web/core/registry";
@@ -156,7 +156,7 @@ export const DISABLED_NAMESPACE = "disabled";
 
 export class ToolbarPlugin extends Plugin {
     static id = "toolbar";
-    static dependencies = ["overlay", "selection", "userCommand"];
+    static dependencies = ["format", "overlay", "selection", "userCommand"];
     static shared = ["getToolbarInfo", "getIsToolbarOpen"];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -398,16 +398,16 @@ export class ToolbarPlugin extends Plugin {
             this.closeToolbar();
             return;
         }
-        // Prevent toolbar to open if the selection is only non-editable nodes.
+        // Prevent toolbar to open if the selection has no formattable node.
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
-        if (targetedNodes.every((node) => !this.dependencies.selection.isNodeEditable(node))) {
+        let filteredtargetedNodes = [];
+        filteredtargetedNodes = this.getFilteredTargetedNodes(targetedNodes);
+        if (!filteredtargetedNodes.length) {
             this.closeToolbar();
             return;
         }
         // Determine the namespace to use
         let currentNamespace = null;
-        let filteredtargetedNodes = [];
-        filteredtargetedNodes = this.getFilteredTargetedNodes(targetedNodes);
         for (const fn of this.getResource("toolbar_namespace_providers")) {
             currentNamespace = fn(filteredtargetedNodes, selectionData.editableSelection);
             if (currentNamespace) {
@@ -440,8 +440,9 @@ export class ToolbarPlugin extends Plugin {
         return targetedNodes
             .filter(
                 (node) =>
-                    this.dependencies.selection.isNodeEditable(node) &&
-                    (node.nodeType !== Node.TEXT_NODE || (!isEmptyTextNode(node) && !isZWS(node)))
+                    this.dependencies.format.isNodeFormattable(node) &&
+                    (node.nodeType !== Node.TEXT_NODE ||
+                        (!isEmptyTextNode(node) && !isZWS(node) && !isZwnbsp(node)))
             )
             .filter((node) => {
                 const element = closestElement(node);
