@@ -340,8 +340,6 @@
                         t-att-name="column.name"
                         t-att-data-column-id="column.id"
                         t-att-colspan="column.colspan"
-                        t-att-data-tooltip="!isInvisible ? this.getCellTitle(column, record) : false"
-                        data-tooltip-delay="1000"
                         t-custom-click="(ev, isMiddleClick) => this.onCellClicked(record, column, ev, isMiddleClick)"
                         tabindex="-1">
                         <t t-if="!isInvisible">

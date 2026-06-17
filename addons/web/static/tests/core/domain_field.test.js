@@ -397,7 +397,7 @@ test("basic domain field: show the selection", async function () {
     // click on a record -> should not open the record
     // we don't actually check that it doesn't open the record because even
     // if it tries to, it will crash as we don't define an arch in this test
-    await contains(".modal .o_list_view .o_data_row .o_data_cell[data-tooltip='gold']").click();
+    await contains(".modal .o_list_view .o_data_row .o_data_cell:text('gold')").click();
 });
 
 test.tags("desktop");
