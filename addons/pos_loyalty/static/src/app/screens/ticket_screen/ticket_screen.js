@@ -54,4 +54,8 @@ patch(TicketScreen.prototype, {
                 program.trigger_product_ids.map((p) => p.id).includes(orderline.product_id.id)
         );
     },
+    async onDoRefund() {
+        await super.onDoRefund(...arguments);
+        await this.pos.updatePrograms();
+    },
 });
