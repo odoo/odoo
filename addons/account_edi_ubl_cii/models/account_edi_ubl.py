@@ -2609,7 +2609,10 @@ class AccountEdiUBL(models.AbstractModel):
             # discount_amount = 250.0
             if not currency.is_zero(price_subtotal):
                 quantity = subtotal * price_quantity / (price_subtotal - price_discount_amount)
-                price_unit = (subtotal / quantity) + (price_discount_amount / price_quantity)
+                if quantity:
+                    price_unit = (subtotal / quantity) + (price_discount_amount / price_quantity)
+                else:
+                    price_unit = price_amount
                 discount_amount += price_discount_amount * quantity / price_quantity
 
         elif (
