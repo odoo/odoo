@@ -2870,3 +2870,112 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(production.move_finished_ids.date_deadline, so.commitment_date, "Finished move's deadline should match SO commitment date")
         production.button_mark_done()
         self.assertEqual(production.state, 'done')
+
+    def test_mto_fifo_perpetual_lot_valuation(self):
+        """
+        Test that cogs valuation on invoices for a FIFO lot valuated product comes from the value of
+        its delivered lot.
+
+        Manufacture lot1 with a component at 10$. Sell, manufacture lot2 with a component at 20$, deliver
+        and invoice it. The cogs used for the product valuation on the invoice should be 20$.
+        """
+        warehouse = self.company_data['default_warehouse']
+        # manufacture in 2-steps to check the dependency in the pre-production operations
+        warehouse.manufacture_steps = 'pbm'
+        route_mto = warehouse.mto_pull_id.route_id
+        route_mto.active = True
+        stock_location = warehouse.lot_stock_id
+
+        def _make_in_move(product, quantity, value):
+            move = self.env['stock.move'].create({
+                'product_id': product.id,
+                'product_uom_qty': quantity,
+                'uom_id': product.uom_id.id,
+                'location_id': self.env.ref('stock.stock_location_suppliers').id,
+                'location_dest_id': stock_location.id,
+                'picking_type_id': warehouse.in_type_id.id,
+                'price_unit': value,
+                'value_manual': value,
+            })
+            move._action_confirm()
+            move.picked = True
+            move._action_done()
+
+        finished_product, component = self.env['product.product'].create([
+            {
+                'name': 'Finished Product',
+                'is_storable': True,
+                'tracking': 'lot',
+                'lot_valuated': True,
+                'invoice_policy': 'delivery',
+                'categ_id': self.stock_account_product_categ.id,
+                'route_ids': [Command.link(route_mto.id)],
+            },
+            {
+                'name': 'Component',
+                'is_storable': True,
+                'categ_id': self.stock_account_product_categ.id,
+            }
+        ])
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [Command.create({
+                'product_id': component.id,
+                'product_qty': 1.0,
+            })],
+        })
+        lot1, lot2 = self.env['stock.lot'].create([{'name': f'LOT-00{i + 1}', 'product_id': finished_product.id} for i in range(2)])
+        # manufacture lot1 at cost 10$
+        _make_in_move(component, 1.0, 10.0)
+        mo1 = self.env['mrp.production'].create({
+            'product_id': finished_product.id,
+            'product_qty': 1.0,
+            'bom_id': bom.id,
+        })
+        mo1.action_confirm()
+        mo1.picking_ids.button_validate()
+        self.assertEqual(mo1.picking_ids.state, 'done')
+        with Form(mo1) as mo_form:
+            mo_form.qty_producing = 1.0
+            mo_form.lot_producing_ids = lot1
+        mo1.button_mark_done()
+        self.assertEqual(mo1.state, 'done')
+        # sell, manufacture and deliver lot2 at cost 20$
+        _make_in_move(component, 1.0, 20.0)
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': finished_product.id,
+                'product_uom_qty': 1.0,
+                'price_unit': 50.0,
+            })],
+        })
+        so.action_confirm()
+        mo2 = so.mrp_production_ids
+        mo2.picking_ids.button_validate()
+        self.assertEqual(mo2.picking_ids.state, 'done')
+        with Form(mo2) as mo_form:
+            mo_form.qty_producing = 1.0
+            mo_form.lot_producing_ids = lot2
+        mo2.button_mark_done()
+        self.assertEqual(mo2.state, 'done')
+
+        # lot1 and lot2 carry distinct FIFO costs
+        self.assertAlmostEqual(lot1.standard_price, 10.0, places=2)
+        self.assertAlmostEqual(lot2.standard_price, 20.0, places=2)
+        delivery = so.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel'))
+        self.assertEqual(len(delivery), 1)
+        delivery.action_assign()
+        delivery.move_ids.write({'quantity': 1.0, 'picked': True})
+        delivery.move_ids.move_line_ids.lot_id = lot2
+        delivery.button_validate()
+        self.assertEqual(delivery.state, 'done')
+        # Delivery must be valued at lot2's FIFO cost: 20$
+        self.assertAlmostEqual(delivery.move_ids.value, 20.0, places=2)
+        # Invoice and confirm COGS uses lot2's valuation
+        invoice = so._create_invoices()
+        invoice.action_post()
+        self.assertEqual(invoice.state, 'posted')
+        cogs_lines = invoice.line_ids.filtered(lambda l: l.display_type == 'cogs' and l.debit > 0)
+        self.assertAlmostEqual(cogs_lines.debit, 20.0, places=2)
