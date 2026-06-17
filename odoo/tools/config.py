@@ -216,6 +216,9 @@ class configmanager(object):
         group.add_option('--log-sql', action="append_const", dest="log_handler", const="odoo.sql_db:DEBUG", help='shortcut for --log-handler=odoo.sql_db:DEBUG')
         group.add_option('--log-db', dest='log_db', help="Logging database", my_default=False)
         group.add_option('--log-db-level', dest='log_db_level', my_default='warning', help="Logging database level")
+        group.add_option('--log-config', dest='log_config', my_default='',
+                         help="JSON logging configuration file, in dictconfig format ("
+                              "https://docs.python.org/3/library/logging.config.html#logging-config-dictschema).")
         # For backward-compatibility, map the old log levels to something
         # quite close.
         levels = [
@@ -464,7 +467,7 @@ class configmanager(object):
                 'smtp_ssl_certificate_filename', 'smtp_ssl_private_key_filename',
                 'db_maxconn', 'db_maxconn_gevent', 'import_partial', 'addons_path', 'upgrade_path', 'pre_upgrade_scripts',
                 'syslog', 'without_demo', 'skip_auto_install', 'screencasts', 'screenshots',
-                'dbfilter', 'log_level', 'log_db',
+                'dbfilter', 'log_config', 'log_level', 'log_db',
                 'log_db_level', 'geoip_city_db', 'geoip_country_db', 'dev_mode',
                 'shell_interface', 'limit_time_worker_cron',
         ]
