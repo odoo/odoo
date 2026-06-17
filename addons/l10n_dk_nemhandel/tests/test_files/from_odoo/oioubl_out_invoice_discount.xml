@@ -204,6 +204,14 @@
       <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
       <cbc:AllowanceChargeReasonCode>95</cbc:AllowanceChargeReasonCode>
       <cbc:Amount currencyID="DKK">500.00</cbc:Amount>
+      <cac:TaxCategory>
+        <cbc:ID schemeID="urn:oioubl:id:taxcategoryid-1.3" schemeAgencyID="320">StandardRated</cbc:ID>
+        <cbc:Percent>25.0</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID schemeID="urn:oioubl:id:taxschemeid-1.5">63</cbc:ID>
+          <cbc:Name>Moms</cbc:Name>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
     </cac:AllowanceCharge>
     <cac:TaxTotal>
       <cbc:TaxAmount currencyID="DKK">1125.00</cbc:TaxAmount>
