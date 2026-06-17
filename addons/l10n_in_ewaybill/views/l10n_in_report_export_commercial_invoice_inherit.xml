@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_in_report_export_commercial_invoice_ewaybill_inherit" inherit_id="l10n_in.l10n_in_report_export_commercial_invoice_doc">
+        <xpath expr="//div[@id='export_informations']" position="inside">
+            <t t-foreach="o.l10n_in_ewaybill_ids" t-as="ewaybill">
+                <div class="col-auto col-3 mw-100 mb-2" name="eway_mode">
+                    <strong>Mode</strong>
+                    <p class="m-0" t-field="ewaybill.mode"/>
+                </div>
+                <div class="col-auto col-3 mw-100 mb-2" name="eway_transport_doc" t-if="ewaybill.transportation_doc_no">
+                    <strong>
+                        <t t-if="ewaybill.mode == '3'">Airway Bill No.</t>
+                        <t t-elif="ewaybill.mode == '4'">Bill of Lading</t>
+                        <t t-elif="ewaybill.mode == '2'">RR No.</t>
+                        <t t-else="">Tracking No.</t>
+                    </strong>
+                    <p class="m-0" t-field="ewaybill.transportation_doc_no"/>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

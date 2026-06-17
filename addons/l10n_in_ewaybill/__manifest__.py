@@ -25,6 +25,7 @@ Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-c
         'views/account_move_views.xml',
         'views/edi_pdf_report.xml',
         'views/res_config_settings_views.xml',
+        'views/l10n_in_report_export_commercial_invoice_inherit.xml',
         'wizard/l10n_in_ewaybill_cancel_views.xml',
         'report/ewaybill_report_views.xml',
         'report/ewaybill_report.xml',
