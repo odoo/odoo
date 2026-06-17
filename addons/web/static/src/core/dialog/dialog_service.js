@@ -22,7 +22,7 @@ class DialogWrapper extends Component {
  *          Component: typeof import("@odoo/owl").Component,
  *          props: {},
  *          options?: DialogServiceInterfaceAddOptions
- *      ): () => void;
+ *      ): () => Promise<void>;
  *  }} DialogServiceInterface
  */
 

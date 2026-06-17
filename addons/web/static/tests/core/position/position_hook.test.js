@@ -1,15 +1,23 @@
-import { useRef } from "@web/owl2/utils";
-import { before, destroy, expect, getFixture, test } from "@odoo/hoot";
 import {
+    animationFrame,
+    before,
+    expect,
+    getFixture,
     manuallyDispatchProgrammaticEvent,
     queryOne,
     queryRect,
     resize,
     scroll,
-} from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+    test,
+} from "@odoo/hoot";
 import { Component, onMounted, xml } from "@odoo/owl";
-import { defineParams, defineStyle, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    defineParams,
+    defineStyle,
+    destroyApp,
+    mountWithCleanup,
+} from "@web/../tests/web_test_helpers";
+import { useRef } from "@web/owl2/utils";
 
 import { usePosition } from "@web/core/position/position_hook";
 
@@ -83,10 +91,10 @@ test("can add margin", async () => {
                 marginLeft: `${SHEET_MARGINS.left}px`,
             },
         });
-        const comp = await mountWithCleanup(TestComp);
+        await mountWithCleanup(TestComp);
         const popBox = queryOne("#popper").getBoundingClientRect();
         const targetBox = queryOne("#target").getBoundingClientRect();
-        destroy(comp);
+        destroyApp();
         return [popBox, targetBox];
     }
 
@@ -211,7 +219,7 @@ test("has no effect when component is destroyed", async () => {
         },
     });
 
-    const comp = await mountWithCleanup(TestComp);
+    await mountWithCleanup(TestComp);
     // onPositioned called when component mounted
     expect.verifySteps(["onPositioned called"]);
 
@@ -221,7 +229,7 @@ test("has no effect when component is destroyed", async () => {
     expect.verifySteps(["onPositioned called"]);
 
     await scroll(queryOne("#scroll-container"), { y: 100 });
-    destroy(comp);
+    destroyApp();
     await animationFrame();
     // onPositioned not called even if scroll happened right before the component destroys
     expect.verifySteps([]);
@@ -327,10 +335,10 @@ test("is positioned relative to its containing block", async () => {
         }
     );
 
-    let popper = await mountWithCleanup(TestComp);
+    await mountWithCleanup(TestComp);
 
-    const popBox1 = queryOne("#popper").getBoundingClientRect();
-    destroy(popper);
+    const popBox1 = queryRect("#popper");
+    destroyApp();
 
     TestComp = getTestComponent(
         {
@@ -346,9 +354,9 @@ test("is positioned relative to its containing block", async () => {
         }
     );
 
-    popper = await mountWithCleanup(TestComp);
-    const popBox2 = queryOne("#popper").getBoundingClientRect();
-    destroy(popper);
+    await mountWithCleanup(TestComp);
+    const popBox2 = queryRect("#popper");
+    destroyApp();
 
     // best positions are not the same relative to their containing block
     expect(pos1.top).toBe(pos2.top + margin + fixtureBox.top);

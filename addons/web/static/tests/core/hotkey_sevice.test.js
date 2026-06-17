@@ -1,10 +1,21 @@
-import { useRef } from "@web/owl2/utils";
-import { destroy, expect, getFixture, onError, test } from "@odoo/hoot";
-import { keyDown, keyUp, press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
-import { animationFrame, mockUserAgent, tick } from "@odoo/hoot-mock";
-import { Component, xml, proxy } from "@odoo/owl";
+import {
+    animationFrame,
+    expect,
+    getFixture,
+    keyDown,
+    keyUp,
+    mockUserAgent,
+    onError,
+    press,
+    queryAllTexts,
+    queryOne,
+    test,
+    tick,
+} from "@odoo/hoot";
+import { Component, proxy, signal, xml } from "@odoo/owl";
 import {
     contains,
+    destroyApp,
     getService,
     makeMockEnv,
     mountWithCleanup,
@@ -13,6 +24,7 @@ import {
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { getActiveHotkey, hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { useActiveElement } from "@web/core/ui/ui_service";
+import { useRef } from "@web/owl2/utils";
 
 const getOverlays = () => queryAllTexts(".o_web_hotkey_overlay");
 
@@ -200,13 +212,13 @@ test("data-hotkey", async () => {
     await press(strokes);
     expect.verifySteps([]);
 
-    const comp = await mountWithCleanup(MyComponent);
+    await mountWithCleanup(MyComponent);
 
     await press(strokes);
     await tick();
     expect.verifySteps(["click"]);
 
-    destroy(comp);
+    destroyApp();
 
     await press(strokes);
     expect.verifySteps([]);
@@ -254,12 +266,12 @@ test("hook", async () => {
     await press(key);
     expect.verifySteps([]);
 
-    const comp = await mountWithCleanup(TestComponent);
+    await mountWithCleanup(TestComponent);
 
     await press(key);
     expect.verifySteps([key]);
 
-    destroy(comp);
+    destroyApp();
 
     await press(key);
     expect.verifySteps([]);
@@ -579,7 +591,6 @@ test("many components can register same hotkeys (call order matters)", async () 
 test("registrations and elements belong to the correct UI owner", async () => {
     class MyComponent1 extends Component {
         static template = xml`<div><button data-hotkey="b" t-on-click="this.onClick">b</button></div>`;
-        static props = ["*"];
         setup() {
             useHotkey("a", () => expect.step("MyComponent1 subscription"));
         }
@@ -590,7 +601,6 @@ test("registrations and elements belong to the correct UI owner", async () => {
 
     class MyComponent2 extends Component {
         static template = xml`<div t-custom-ref="active"><button data-hotkey="b" t-on-click="this.onClick">b</button></div>`;
-        static props = ["*"];
         setup() {
             useHotkey("a", () => expect.step("MyComponent2 subscription"));
             useActiveElement("active");
@@ -600,20 +610,33 @@ test("registrations and elements belong to the correct UI owner", async () => {
         }
     }
 
-    await mountWithCleanup(MyComponent1);
+    class Parent extends Component {
+        static components = { MyComponent1, MyComponent2 };
+        static template = xml`
+            <MyComponent1 />
+            <MyComponent2 t-if="this.showSecond()" />
+        `;
+
+        showSecond = showSecond;
+    }
+
+    const showSecond = signal(false);
+
+    await mountWithCleanup(Parent);
     await press("a");
     await press(["alt", "b"]);
     await tick();
     expect.verifySteps(["MyComponent1 subscription", "MyComponent1 [data-hotkey]"]);
 
-    const comp2 = await mountWithCleanup(MyComponent2);
+    showSecond.set(true);
+    await animationFrame();
     await press("a");
     await press(["alt", "b"]);
     await tick();
     expect.verifySteps(["MyComponent2 subscription", "MyComponent2 [data-hotkey]"]);
 
-    destroy(comp2);
-    await Promise.resolve();
+    showSecond.set(false);
+    await animationFrame();
     await press("a");
     await press(["alt", "b"]);
     await tick();

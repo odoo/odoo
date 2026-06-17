@@ -1,14 +1,12 @@
-import { Wysiwyg } from "@html_editor/wysiwyg";
-import { destroy, expect, getFixture } from "@odoo/hoot";
-import { queryOne } from "@odoo/hoot-dom";
-import { Component, markup, onWillDestroy, useApp, xml } from "@odoo/owl";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { getContent, getSelection, setContent, setSelection } from "./selection";
-import { animationFrame, tick } from "@odoo/hoot-mock";
-import { processThroughCleanForSave } from "./dispatch";
-import { fixInvalidHTML } from "@html_editor/utils/sanitize";
-import { toExplicitString } from "@web/../lib/hoot/hoot_utils";
 import { EmbeddedComponentPlugin } from "@html_editor/others/embedded_component_plugin";
+import { fixInvalidHTML } from "@html_editor/utils/sanitize";
+import { Wysiwyg } from "@html_editor/wysiwyg";
+import { animationFrame, expect, getFixture, queryOne, tick } from "@odoo/hoot";
+import { Component, markup, onWillDestroy, useApp, xml } from "@odoo/owl";
+import { toExplicitString } from "@web/../lib/hoot/hoot_utils";
+import { destroyApp, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { processThroughCleanForSave } from "./dispatch";
+import { getContent, getSelection, setContent, setSelection } from "./selection";
 
 export const Direction = {
     BACKWARD: "BACKWARD",
@@ -197,7 +195,7 @@ export async function testEditor(config) {
     delete config.props?.mobile;
     const willBeDestroyed = Promise.withResolvers();
     config.onWillDestroy = () => willBeDestroyed.resolve();
-    const { el, editor, editorComponent } = await setupEditor(
+    const { el, editor } = await setupEditor(
         reverseSelection ? reverseTextualSelection(contentBefore) : contentBefore,
         config
     );
@@ -271,7 +269,7 @@ export async function testEditor(config) {
         // Test that the saved value matches the cleaned value tested above.
         await compareFunction(content, innerHTML, "Value from editor.getContent()", editor);
     }
-    destroy(editorComponent);
+    destroyApp();
     await willBeDestroyed.promise;
 
     if (

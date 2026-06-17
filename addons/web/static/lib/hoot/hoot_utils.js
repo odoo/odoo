@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { on, queryAll } from "@odoo/hoot-dom";
-import { App, t, useEffect, useListener, validateType } from "@odoo/owl";
+import { t, useEffect, useListener, validateType } from "@odoo/owl";
 import { isNode } from "@web/../lib/hoot-dom/helpers/dom";
 import {
     isInstanceOf,
@@ -803,18 +803,6 @@ export function deepCopy(value) {
  */
 export function deepEqual(a, b, options) {
     return _deepEqual(a, b, !!options?.ignoreOrder, !!options?.partial, makeObjectCache());
-}
-
-/**
- * @param {App | import("@odoo/owl").Component} target
- */
-export function destroy(target) {
-    const app = isInstanceOf(target, App) ? target : target.__owl__.app;
-    if (destroyed.has(app)) {
-        return;
-    }
-    destroyed.add(app);
-    app.destroy();
 }
 
 /**

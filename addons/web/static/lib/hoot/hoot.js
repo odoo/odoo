@@ -65,7 +65,6 @@ export const stop = exposeMethod(runner, "stop");
 
 export { makeExpect } from "./core/expect";
 export { defineTags } from "./core/tag";
-export { destroy } from "./hoot_utils";
 
 // Constants
 export const globals = copyAndBind(globalThis);
