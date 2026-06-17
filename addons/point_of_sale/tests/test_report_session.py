@@ -439,6 +439,53 @@ class TestReportSession(TestPoSCommon):
         self.assertEqual(report["discount_amount"], 12.0, "Discount amount should be equal to 12.0")
         self.assertEqual(report["taxes_info"]["base_amount"], 90.0, "Base amount should be equal to 90.0")
 
+    def test_session_report_discount_with_refund(self):
+        """A refunded discount must be subtracted, not added, in the report."""
+        product = self.create_product('Discounted Book', self.categ_basic, 100)
+        self.config.open_ui()
+        session = self.config.current_session_id
+
+        # Sell 2 units at 10% discount: subtotal 200 -> 180, discount 20.
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': session.id,
+            'partner_id': self.partner_a.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': product.id,
+                'price_unit': 100,
+                'discount': 10,
+                'qty': 2,
+                'tax_ids': [],
+                'price_subtotal': 180,
+                'price_subtotal_incl': 180,
+            })],
+            'amount_paid': 180.0,
+            'amount_total': 180.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'last_order_preparation_change': '{}',
+            'to_invoice': False,
+        })
+        self.make_payment(order, self.bank_pm1, 180.0)
+
+        # Fully refund the order: refund line has negative qty, positive subtotal.
+        order.refund()
+        refund = session.order_ids.filtered(lambda o: o.state == 'draft')
+        self.assertEqual(refund.lines[0].discount, 10)
+        self.assertEqual(refund.lines[0].qty, -2)
+        self.assertEqual(refund.lines[0].price_subtotal_incl, 180)
+        self.make_payment(refund, self.bank_pm1, -180.0)
+
+        session.action_pos_session_closing_control()
+        report = self.env['report.point_of_sale.report_saledetails'].get_sale_details()
+
+        # Sale discount is 200 - 180 = 20; the refund must cancel it out.
+        self.assertEqual(
+            report["discount_amount"], 0.0,
+            "A fully refunded discounted line must net its discount to zero",
+        )
+
     def test_report_header_reflects_actual_order_sessions(self):
         """A date-range report whose orders span multiple sessions (e.g. one
         closed and one still open) must show state='multiple' rather than
