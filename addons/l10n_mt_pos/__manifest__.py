@@ -8,9 +8,9 @@
         "point_of_sale",
     ],
     "data": [
-        'security/ir.model.access.csv',
         'wizards/compliance_letter_view.xml',
         'reports/compliance_letter_report.xml',
+        'security/ir.access.csv',
     ],
     "auto_install": True,
     "author": "Odoo S.A.",

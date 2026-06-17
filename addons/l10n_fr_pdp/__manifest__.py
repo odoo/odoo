@@ -14,7 +14,6 @@
     'auto_install': ['l10n_fr_account'],
     'data': [
         'data/ir_cron.xml',
-        'security/ir.model.access.csv',
         'views/account_journal_dashboard_views.xml',
         'views/account_move_views.xml',
         'views/account_peppol_response_views.xml',
@@ -26,6 +25,7 @@
         'wizard/pdp_config_wizard.xml',
         'wizard/pdp_registration_views.xml',
         'wizard/pdp_response_wizard_views.xml',
+        'security/ir.access.csv',
     ],
     'author': 'Odoo S.A.',
     'assets': {

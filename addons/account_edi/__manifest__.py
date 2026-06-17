@@ -12,11 +12,11 @@ governements, etc.)
     'category': 'Accounting/Accounting',
     'depends' : ['account'],
     'data': [
-        'security/ir.model.access.csv',
         'views/account_edi_document_views.xml',
         'views/account_move_views.xml',
         'views/account_journal_views.xml',
-        'data/cron.xml'
+        'data/cron.xml',
+        'security/ir.access.csv',
     ],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

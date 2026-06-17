@@ -19,7 +19,6 @@ actions(Check in/Check out) performed by them.
     'data': [
         'data/hr_attendance_data.xml',
         'security/hr_attendance_security.xml',
-        'security/ir.model.access.csv',
         'data/hr_attendance_overtime_ruleset_data.xml',
         'data/hr_attendance_overtime_rule_data.xml',
         'views/hr_attendance_view.xml',
@@ -30,6 +29,7 @@ actions(Check in/Check out) performed by them.
         'views/hr_attendance_kiosk_templates.xml',
         'views/hr_attendance_overtime_rule_views.xml',
         'views/hr_version_views.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/hr_attendance_demo.xml'

@@ -25,11 +25,10 @@
         "views/payment_token_views.xml",  # Depends on `action_payment_transaction_linked_to_token`.
         "views/res_partner_views.xml",
         # Security.
-        "security/ir.model.access.csv",
-        "security/payment_security.xml",
         # Wizard views.
         "wizards/payment_capture_wizard_views.xml",
         "wizards/payment_link_wizard_views.xml",
+        'security/ir.access.csv',
     ],
     "assets": {
         "web.assets_frontend": [

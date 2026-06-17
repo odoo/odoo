@@ -18,8 +18,6 @@ The system is able to add and compute the shipping line.
         "data/mail_template_data.xml",
         "data/payment_method_data.xml",
         "data/payment_provider_data.xml",  # Depends on `payment_method_cash_on_delivery`.
-        "security/ir.model.access.csv",
-        "security/ir_rules.xml",
         "views/delivery_carrier_views.xml",
         "views/delivery_price_rule_views.xml",
         "views/delivery_zip_prefix_views.xml",
@@ -32,6 +30,7 @@ The system is able to add and compute the shipping line.
         "wizard/choose_delivery_carrier_views.xml",
         "wizard/delivery_note_line_views.xml",
         "wizard/delivery_note_views.xml",
+        'security/ir.access.csv',
     ],
     "demo": ["data/delivery_demo.xml"],
     "assets": {"web.assets_frontend": ["delivery/static/src/**/*"]},

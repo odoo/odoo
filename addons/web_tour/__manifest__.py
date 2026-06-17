@@ -10,8 +10,8 @@ Odoo Web tours.
 """,
     'depends': ['web'],
     'data': [
-        'security/ir.model.access.csv',
         'views/tour_views.xml',
+        'security/ir.access.csv',
     ],
     'assets': {
         'web.assets_backend': [

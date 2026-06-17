@@ -9,7 +9,6 @@
     'depends': ['resource', 'product', 'account', 'barcodes_gs1_nomenclature', 'html_editor', 'digest', 'phone_validation', 'google_address_autocomplete', 'base_report_wkhtmltox'],
     'data': [
         'security/point_of_sale_security.xml',
-        'security/ir.model.access.csv',
         'data/default_barcode_patterns.xml',
         'data/digest_data.xml',
         'data/pos_note_data.xml',
@@ -62,6 +61,7 @@
         'receipt/pos_cash_move_receipt.xml',  # needed in the backend and frontend
         'receipt/pos_sale_details_receipt.xml',  # needed in the backend and frontend
         'data/ir_cron_data.xml',
+        'security/ir.access.csv',
     ],
     'demo': [
         'data/demo_data.xml',
