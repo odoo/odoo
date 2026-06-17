@@ -66,7 +66,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_ca_account_account(self):
         return {
             'l10n_ca_inventory_valuation': {
-                'account_stock_variation_id': 'l10n_ca_cost_of_goods_sold',
+                'account_stock_variation_id': 'l10n_ca_inventory_variation',
             },
         }
 

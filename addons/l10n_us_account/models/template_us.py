@@ -107,7 +107,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_us_account_account(self):
         return {
             'account_account_us_inventory_valuation': {
-                'account_stock_variation_id': 'account_account_us_raw_materials',
+                'account_stock_variation_id': 'account_account_us_inventory_variation',
             },
             'account_account_us_technology': {
                 'asset_depreciation_account_id': 'account_account_us_depreciation_technology',
