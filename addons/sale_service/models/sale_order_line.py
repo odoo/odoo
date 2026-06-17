@@ -26,7 +26,9 @@ class SaleOrderLine(models.Model):
         if kwargs.get("check_is_expense", True):
             domain.append(('is_expense', '=', False))
         if kwargs.get("check_state", True):
-            domain.append(('state', '=', 'sale'))
+            # This domain is later used as a key in a dict inside the _get_last_sol_of_customer_domain function. This
+            # means we can not use mutable list and have to use '|' operator instead.
+            domain.extend(['|', '|', ('state', '=', 'draft'), ('state', '=', 'sale'), ('state', '=', 'sent')])
         return domain
 
     @api.depends('product_id.type')

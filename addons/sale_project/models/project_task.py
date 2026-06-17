@@ -40,10 +40,11 @@ class ProjectTask(models.Model):
 
     # Project sharing  fields
     display_sale_order_button = fields.Boolean(string='Display Sales Order', compute='_compute_display_sale_order_button')
+    show_sale_order_info = fields.Boolean(compute='_compute_show_sale_order_info')
 
     @property
     def TASK_PORTAL_READABLE_FIELDS(self):
-        return super().TASK_PORTAL_READABLE_FIELDS | {'allow_billable', 'sale_order_id', 'sale_line_id', 'display_sale_order_button'}
+        return super().TASK_PORTAL_READABLE_FIELDS | {'allow_billable', 'sale_order_id', 'sale_line_id', 'display_sale_order_button', 'show_sale_order_info'}
 
     @api.model
     def default_get(self, fields):
@@ -143,6 +144,11 @@ class ProjectTask(models.Model):
                 task.display_sale_order_button = task.sale_order_id in sale_orders
         except AccessError:
             self.display_sale_order_button = False
+
+    @api.depends('sale_order_id')
+    def _compute_show_sale_order_info(self):
+        for task in self:
+            task.show_sale_order_info = task.sale_order_id and task.sale_order_id.state == 'sale' and task.partner_id
 
     @api.constrains('sale_line_id')
     def _check_sale_line_type(self):

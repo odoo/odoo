@@ -17,6 +17,7 @@ PROJECT_TASK_READABLE_FIELDS = {
     'encode_uom_in_days',
     'allocated_hours',
     'progress',
+    'portal_timesheet_ids',
     'overtime',
     'remaining_hours',
     'subtask_effective_hours',
@@ -44,6 +45,7 @@ class ProjectTask(models.Model):
     overtime = fields.Float(compute='_compute_progress_hours', store=True)
     subtask_effective_hours = fields.Float("Time Spent on Sub-tasks", compute='_compute_subtask_effective_hours', recursive=True, store=True, help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets', export_string_translation=False)
+    portal_timesheet_ids = fields.One2many('account.analytic.line', compute='_compute_portal_timesheet_ids', compute_sudo=True, export_string_translation=False)
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days', default=lambda self: self._uom_in_days(), export_string_translation=False)
     display_name = fields.Char(help="""Use these keywords in the title to set new tasks:\n
         30h Allocate 30 hours to the task
@@ -97,10 +99,13 @@ class ProjectTask(models.Model):
             for task in self:
                 task.effective_hours = sum(task.timesheet_ids.mapped('unit_amount'))
             return
-        timesheet_read_group = self.env['account.analytic.line']._read_group([('task_id', 'in', self.ids)], ['task_id'], ['unit_amount:sum'])
+        timesheet_read_group = self.env['account.analytic.line']._read_group(self._get_domain_effective_hours(), ['task_id'], ['unit_amount:sum'])
         timesheets_per_task = {task.id: amount for task, amount in timesheet_read_group}
         for task in self:
             task.effective_hours = timesheets_per_task.get(task.id, 0.0)
+
+    def _get_domain_effective_hours(self):
+        return [('task_id', 'in', self.ids)]
 
     @api.depends('effective_hours', 'subtask_effective_hours', 'allocated_hours')
     def _compute_progress_hours(self):
@@ -152,6 +157,11 @@ class ProjectTask(models.Model):
     def _compute_subtask_effective_hours(self):
         for task in self.with_context(active_test=False):
             task.subtask_effective_hours = sum(child_task.effective_hours + child_task.subtask_effective_hours for child_task in task.child_ids)
+
+    @api.depends('timesheet_ids')
+    def _compute_portal_timesheet_ids(self):
+        for task in self:
+            task.portal_timesheet_ids = task.timesheet_ids
 
     def _get_group_pattern(self):
         return {

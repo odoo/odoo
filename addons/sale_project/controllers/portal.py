@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _
+from operator import itemgetter
 
 from odoo.addons.project.controllers.portal import ProjectCustomerPortal
+from odoo.tools import groupby as groupbyelem
 
 
 class SaleProjectCustomerPortal(ProjectCustomerPortal):
@@ -43,3 +45,18 @@ class SaleProjectCustomerPortal(ProjectCustomerPortal):
             'allow_billable': project.allow_billable,
         })
         return session_info
+
+    def _concat_tasks(self, task_sudo, groupby, tasks):
+        if groupby == 'sale_line_id':
+            tasks_no_sol = tasks.filtered(lambda task: task.sale_line_id.state != 'sale' or not task.sale_line_id)
+            tasks_sol = tasks - tasks_no_sol
+            grouped_tasks = [task_sudo.concat(g) for k, g in groupbyelem(tasks_sol, itemgetter(groupby))]
+            if not grouped_tasks:
+                if tasks_no_sol:
+                    grouped_tasks = [tasks_no_sol]
+            else:
+                grouped_tasks.append(tasks_no_sol)
+
+            return grouped_tasks
+
+        return super()._concat_tasks(task_sudo, groupby, tasks)

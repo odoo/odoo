@@ -53,7 +53,7 @@ class ProjectProject(models.Model):
     @api.model
     def default_get(self, fields):
         defaults = super().default_get(fields)
-        if self.env.context.get('order_state') == 'sale':
+        if self.env.context.get('order_state') in ['draft', 'sent', 'sale']:
             order_id = self.env.context.get('order_id')
             sale_line_id = self.env['sale.order.line'].search(
                 [('order_id', '=', order_id), ('is_service', '=', True)],
@@ -62,8 +62,6 @@ class ProjectProject(models.Model):
                 'reinvoiced_sale_order_id': order_id,
                 'sale_line_id': sale_line_id,
             })
-        if defaults.get('sale_order_id') and self.env['sale.order'].search([('id', '=', defaults['sale_order_id']), ('state', '=', 'draft')]):
-            defaults.pop('sale_line_id', False)
         return defaults
 
     @api.model

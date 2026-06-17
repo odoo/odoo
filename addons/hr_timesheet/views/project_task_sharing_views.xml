@@ -48,8 +48,7 @@
                 <field name="allow_timesheets" invisible="1"/>
                 <field name="show_portal_timesheets" invisible="1"/>
                 <page string="Timesheets" name="page_timesheets" id="timesheets_tab" invisible="not allow_timesheets or not show_portal_timesheets">
-                    <field name="timesheet_ids" mode="list,kanban"
-                          readonly="1">
+                    <field name="portal_timesheet_ids" mode="list,kanban"  readonly="1">
                         <list string="Timesheet Activities" no_open="1" create="false" delete="0">
                             <field name="date"/>
                             <field name="employee_id"/>

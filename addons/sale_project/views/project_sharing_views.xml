@@ -22,7 +22,7 @@
                 <attribute name="invisible">not allow_billable</attribute>
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="sale_line_id" string="Sales Order Item" options='{"no_open": True}' readonly="1" invisible="not partner_id" context="{'create': False, 'edit': False, 'delete': False}"/>
+                <field name="sale_line_id" string="Sales Order Item" options='{"no_open": True}' readonly="1" invisible="not show_sale_order_info" context="{'create': False, 'edit': False, 'delete': False}"/>
             </xpath>
             <xpath expr="//field[@name='child_ids']/list/field[@name='partner_id']" position="after">
                 <field name="allow_billable" column_invisible="1"/>
