@@ -18,6 +18,7 @@ export class DeviceSelect extends Component {
         this.props = props({
             icon: types.string().optional(),
             kind: types.selection(["audioinput", "videoinput", "audiooutput"]),
+            label: types.string().optional(),
             menuClass: types.string().optional(),
             permissionDialogConfiguration: types.object().optional(),
         });

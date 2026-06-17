@@ -51,7 +51,7 @@ registry.category("web_tour.tours").add("discuss_call_invitation.js", {
                 run: "click",
             },
             {
-                trigger: "label:contains('Blur background')",
+                trigger: "span:contains('Blur background')",
             },
             {
                 trigger: ".o-discuss-CallInvitation button[title='Hide camera preview']",

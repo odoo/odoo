@@ -87,7 +87,8 @@ export class CallActionList extends Component {
                                             CALL_PROMOTE_FULLSCREEN.ACTIVE
                                     ),
                                 }),
-                            dropdownMenuClass: "m-0 mb-1 overflow-x-hidden",
+                            dropdownMenuClass:
+                                "o-discuss-CallActionList-callLayout m-0 mb-1 overflow-x-hidden",
                             dropdownPosition: "top-end",
                             id: "call-layout",
                             name: this.MORE,
