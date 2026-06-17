@@ -336,7 +336,9 @@ class ProductProduct(models.Model):
         for product in self:
             template = product.product_tmpl_id
             if len(template.with_context(active_test=False).product_variant_ids) == 1 and not template.has_configurable_attributes:
-                product.list_price = product.lst_price
+                product.write({
+                    'list_price': product.lst_price
+                })
 
     @api.depends_context('partner_id')
     def _compute_product_code(self):
