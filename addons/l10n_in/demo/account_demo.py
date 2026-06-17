@@ -16,6 +16,8 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     def _install_demo(self, companies):
+        if not isinstance(companies, models.BaseModel):
+            companies = self.env['res.company'].browse(companies)
         in_without_state = companies.filtered(lambda c: c.chart_template == "in" and not c.state_id)
         if in_without_state:
             _logger.warning('Error while loading Indian-Accounting demo data in the companies "%s". State is not set in the company.', companies.mapped('name'))
