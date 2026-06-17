@@ -13,12 +13,12 @@
 
 <t t-name="web.Form.InnerGroup">
     <div t-attf-class="{{ this.allClasses }}" class="o_inner_group grid" t-att-style="this.props.style">
-        <div t-if="this.props.slots and this.props.slots.title" t-attf-class="g-col-sm-{{ this.props.maxCols }}">
+        <div t-if="this.props.slots and this.props.slots.title" t-attf-class="g-col-md-{{ this.props.maxCols }}">
             <t t-slot="title" />
         </div>
         <t t-foreach="this.getRows()" t-as="row" t-key="row_index" t-if="row.isVisible">
             <t t-foreach="row" t-as="cell" t-key="cell_index">
-                <t t-set="marginOnSmallScreen" t-value="cell_last ? 'mb-3 mb-sm-0' : ''"/>
+                <t t-set="marginOnSmallScreen" t-value="cell_last ? 'mb-3 mb-md-0' : ''"/>
                 <t t-if="cell.subType === 'item_component'">
                     <t t-call="web.Form.InnerGroup.ItemComponent">
                         <t t-set="cell" t-value="cell" />
