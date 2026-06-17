@@ -6,10 +6,16 @@ from num2words import num2words
 
 from odoo import api, models
 from odoo.exceptions import UserError
+<<<<<<< 3e05567fe95b1d428a8b77f0d6dd6f72d955b8dd
 from odoo.tools import float_compare, frozendict, html2plaintext
 
 from odoo.addons.l10n_tr_nilvera_einvoice.tools.clean_node_dict import clean_node_dict
 from odoo.addons.l10n_tr_nilvera_einvoice.tools.ubl_tr_invoice import TrInvoice
+||||||| 65937b5cdc6c638a9e9ff7085cbab1567ca24142
+from odoo.tools import html2plaintext
+=======
+from odoo.tools import float_round, html2plaintext
+>>>>>>> 05f4e2bd0f4a73b7166533de98f89bd3294dd9a1
 
 
 class AccountEdiXmlUblTr(models.AbstractModel):
@@ -164,8 +170,15 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             document_node['cac:Delivery'] = None
 
     def _l10n_tr_get_currency_conversion_rate(self, invoice):
-        """Return the exchange rate from invoice currency to company currency, rounded to 6 decimals."""
-        return round(1 / invoice.invoice_currency_rate, 6)
+        """Return the exchange rate: 1 [invoice currency] = X TRY, rounded to 6 decimals."""
+        company_currency_to_try_rate = self.env['res.currency']._get_conversion_rate(
+            invoice.company_id.currency_id,
+            self.env.ref('base.TRY'),
+            invoice.company_id,
+            invoice.invoice_date
+            )
+
+        return float_round(company_currency_to_try_rate / invoice.invoice_currency_rate, 6)
 
     def _add_invoice_payment_means_nodes(self, document_node, vals):
         # EXTENDS account.edi.xml.ubl_21
@@ -176,10 +189,11 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
     def _add_invoice_exchange_rate_nodes(self, document_node, vals):
         invoice = vals['invoice']
-        if vals['currency_id'] != vals['company_currency_id']:
+
+        if vals['currency_name'] != 'TRY':
             document_node['cac:PricingExchangeRate'] = {
                 'cbc:SourceCurrencyCode': {'_text': vals['currency_name']},
-                'cbc:TargetCurrencyCode': {'_text': vals['company_currency_id'].name},
+                'cbc:TargetCurrencyCode': {'_text': 'TRY'},
                 'cbc:CalculationRate': {'_text': self._l10n_tr_get_currency_conversion_rate(invoice)},
                 'cbc:Date': {'_text': invoice.invoice_date},
             }
