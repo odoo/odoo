@@ -1420,6 +1420,14 @@ class TestVariantsArchive(ProductVariantsCommon):
         self.assertEqual(len(variants), 1)
         self.assertFalse(variants[0].product_template_attribute_value_ids)
 
+    def test_lst_price_sync_on_variant_creation(self):
+        lst_price = 20
+        variant = self.env['product.product'].create({
+            'name': 'Test Product',
+            'lst_price': lst_price
+        })
+        self.assertEqual(variant.product_tmpl_id.list_price, lst_price)
+
     @mute_logger('odoo.models.unlink')
     def test_unlink_and_archive_multiple_variants(self):
         """
