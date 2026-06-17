@@ -459,3 +459,35 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
         })
         expected_msg = _('- Transporter %s does not have a valid GST Number', self.partner_b.name)
         self.assertEqual(ewaybill_invoice_2._check_transporter(), [expected_msg])
+
+    def test_ewaybill_cancel(self):
+        ewaybill_invoice = self.env['l10n.in.ewaybill'].create({
+            "name": "123456789012",
+            "account_move_id": self.invoice.id,
+            "cancel_reason": "1",
+        })
+        expected = {
+            "ewbNo": 123456789012,
+            "cancelRsnCode": 1,
+        }
+
+        with self.subTest(scenario="without remarks"):
+            cancel_json_value = ewaybill_invoice._get_cancellation_request_vals()
+            self.assertDictEqual(
+                cancel_json_value,
+                expected,
+                "Indian EDI cancellation JSON values do not match the expected values",
+            )
+
+        ewaybill_invoice.write({
+            "cancel_remarks": "Test Cancel Remarks",
+        })
+        expected['cancelRmrk'] = "Test Cancel Remarks"
+
+        with self.subTest(scenario="with remarks"):
+            cancel_json_value = ewaybill_invoice._get_cancellation_request_vals()
+            self.assertDictEqual(
+                cancel_json_value,
+                expected,
+                "Indian EDI cancellation JSON values with remarks do not match the expected values",
+            )

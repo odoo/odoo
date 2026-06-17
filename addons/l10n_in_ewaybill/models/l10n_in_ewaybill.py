@@ -503,8 +503,9 @@ class L10nInEwaybill(models.Model):
         cancel_json_vals = {
             'ewbNo': int(self.name),
             'cancelRsnCode': int(self.cancel_reason),
-            'cancelRmrk': self.cancel_remarks,
         }
+        if self.cancel_remarks:
+            cancel_json_vals['cancelRmrk'] = self.cancel_remarks
         return cancel_json_vals
 
     def _ewaybill_cancel(self):
