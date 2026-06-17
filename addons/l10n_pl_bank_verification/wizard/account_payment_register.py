@@ -33,7 +33,7 @@ class L10nPlAccountPaymentRegister(models.TransientModel):
                     partner_to_partner_banks[batch['payment_values']['partner_id']] |= self._get_partner_bank_from_batch(batch)
 
             partner_bank_data = [(partner_id, partner_banks) for partner_id, partner_banks in partner_to_partner_banks.items()]
-            verifications = self.env['l10n_pl.bank.account.verification']._l10n_pl_get_verification(partner_bank_data, date)
+            verifications = self.env['l10n_pl.bank.account.verification'].sudo()._l10n_pl_get_verification(partner_bank_data, date)
             wizard.l10n_pl_bank_verification_ids = verifications
             wizard.l10n_pl_bank_verification_invalid_bank_account_ids = verifications.filtered(
                 lambda verif: verif.verification_status == 'invalid'
