@@ -1,5 +1,4 @@
-import { onWillRender } from "@web/owl2/utils";
-import { Component, xml } from "@odoo/owl";
+import { Component, computed, xml, useEffect } from "@odoo/owl";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { zip } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
@@ -24,10 +23,10 @@ export class Router extends Component {
     static props = { slots: Object, pos_config_id: Number };
     static template = xml`<t t-call-slot="{{this.activeSlot}}" t-props="this.slotProps"/>`;
 
+    routeMatch = computed(() => this.matchURL());
+
     setup() {
         this.router = useService("router");
-        this.activeSlot = "default";
-        this.slotProps = {};
         this.routes = {};
         const lgPrefixRegex = "^(?:/([a-zA-Z]{2}(?:_[a-zA-Z]{2})?))?"; // optional language code: e.g. fr/ or fr_be/
 
@@ -61,8 +60,12 @@ export class Router extends Component {
 
         this.router.registerRoutes(this.routes);
 
-        onWillRender(() => {
-            this.matchURL();
+        useEffect(() => {
+            const routeMatch = this.routeMatch();
+            this.router.activeSlot = routeMatch.activeSlot;
+            if (!routeMatch.matched) {
+                this.router.navigate("default");
+            }
         });
     }
 
@@ -73,14 +76,26 @@ export class Router extends Component {
             const match = path.match(regex);
             if (match) {
                 const parsedParams = parseParams(match.slice(2), paramSpecs);
-                this.router.activeSlot = routeName;
-                this.activeSlot = routeName;
-                this.slotProps = parsedParams;
-                return;
+                return {
+                    activeSlot: routeName,
+                    matched: true,
+                    slotProps: parsedParams,
+                };
             }
         }
 
-        this.router.activeSlot = "default";
-        this.router.navigate("default");
+        return {
+            activeSlot: "default",
+            matched: false,
+            slotProps: {},
+        };
+    }
+
+    get activeSlot() {
+        return this.routeMatch().activeSlot;
+    }
+
+    get slotProps() {
+        return this.routeMatch().slotProps;
     }
 }
