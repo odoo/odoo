@@ -60,7 +60,7 @@ patch(PaymentForm.prototype, {
         // Create the bricksBuilder object if not already done for another payment method.
         if (!this.mercadoPagoBricksBuilder) {
             await this.waitFor(loadJS('https://sdk.mercadopago.com/js/v2'));
-            const mercadoPago = new MercadoPago(publicKey, { locale: 'en-US' });
+            const mercadoPago = new MercadoPago(publicKey, { locale: inlineFormValues['locale'] });
             this.mercadoPagoBricksBuilder = mercadoPago.bricks();
         }
 
