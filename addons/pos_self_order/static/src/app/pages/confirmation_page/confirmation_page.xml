@@ -15,14 +15,7 @@
                         Hope you enjoyed your meal!
                     </h1>
                     <div t-else="" class="confirmation-block d-flex flex-column align-items-center gap-4" style="text-wrap: pretty;">
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="115px" height="115px" viewBox="0 0 133 133" version="1.1">
-                            <g id="check-group" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                <circle id="filled-circle" fill="#28a745" cx="66.5" cy="66.5" r="54.5" />
-                                <circle id="white-circle" fill="#FFFFFF" cx="66.5" cy="66.5" r="55.5" />
-                                <circle id="outline" stroke="#28a745" stroke-width="4" cx="66.5" cy="66.5" r="54.5" />
-                                <polyline id="check" stroke="#FFFFFF" stroke-width="5.5" points="41 70 56 85 92 49" />
-                            </g>
-                        </svg>
+                        <t t-call="point_of_sale.ValidationAnimation"/>
                         <t t-if="this.confirmedOrder.preset_id?.use_timing and this.selfOrder.config.self_ordering_service_mode !== 'table'">
                             <t t-set="slotDate" t-value="this.confirmedOrder.preset_id.slotPrefix(this.confirmedOrder.preset_time) or this.confirmedOrder.preset_id.formatDate(this.confirmedOrder.preset_time)"/>
                             <h1 class="mb-0">Order for
