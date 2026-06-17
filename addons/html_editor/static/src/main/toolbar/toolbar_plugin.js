@@ -162,7 +162,7 @@ export class ToolbarPlugin extends Plugin {
     /** @type {import("plugins").EditorResources} */
     resources = {
         selectionchange_handlers: this.handleSelectionChange.bind(this),
-        selection_leave_handlers: () => this.closeToolbar(),
+        selection_leave_handlers: () => this.closeToolbar(null, { force: true }),
         selection_enter_handlers: () => this.updateToolbar(),
         step_added_handlers: () => this.updateToolbar(),
         user_commands: {
@@ -461,7 +461,7 @@ export class ToolbarPlugin extends Plugin {
     /**
      * @param {SelectionData} selectionData
      */
-    closeToolbar(selectionData = null) {
+    closeToolbar(selectionData = null, { force = false } = {}) {
         if (!this.overlay.isOpen) {
             return;
         }
@@ -470,8 +470,9 @@ export class ToolbarPlugin extends Plugin {
             ? selectionData.editableSelection?.anchorNode
             : document.getSelection()?.anchorNode;
         const shouldPreventClosing =
+            !force &&
             anchor?.closest?.("[data-prevent-closing-overlay]")?.dataset?.preventClosingOverlay ===
-            "true";
+                "true";
         if (!shouldPreventClosing) {
             this.overlay.close();
             this.isToolbarExpanded = false;
