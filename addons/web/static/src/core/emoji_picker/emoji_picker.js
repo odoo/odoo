@@ -1,3 +1,4 @@
+import { FrequentEmojiPlugin } from "@web/core/emoji_picker/frequent_emoji_plugin";
 import { markEventHandled } from "@web/core/utils/misc";
 import {
     useComponent,
@@ -14,6 +15,7 @@ import {
     onWillPatch,
     onWillStart,
     onWillUnmount,
+    plugin,
     proxy,
     xml,
 } from "@odoo/owl";
@@ -77,7 +79,7 @@ export class EmojiPicker extends Component {
             /** @type {Emoji | undefined} */
             hoveredEmoji: undefined,
         });
-        this.frequentEmojiService = useService("frequent_emoji");
+        this.frequentEmojiService = plugin(FrequentEmojiPlugin);
         const loadEmoji = useLoadEmoji();
         useAutofocus();
         onWillStart(async () => {

@@ -1102,6 +1102,7 @@ MISC_WHITELIST = {
 }
 # serviceName: [PluginClass, ImportPath]
 SERVICES_MAPPING = {
+    "frequent_emoji": ['FrequentEmojiPlugin', '@web/core/emoji_picker/frequent_emoji_plugin'],
     "notification": ['NotificationPlugin', '@web/core/notifications/notification_plugin'],
 }
 

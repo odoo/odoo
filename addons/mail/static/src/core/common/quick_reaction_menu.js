@@ -1,5 +1,6 @@
+import { FrequentEmojiPlugin } from "@web/core/emoji_picker/frequent_emoji_plugin";
 import { useRef } from "@web/owl2/utils";
-import { Component, props, t, useListener } from "@odoo/owl";
+import { Component, plugin, props, t, useListener } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { emojiLoader, useLoadEmoji } from "@web/core/emoji_picker/emoji_loader";
@@ -44,7 +45,7 @@ export class QuickReactionMenu extends Component {
                 }
             },
         });
-        this.frequentEmojiService = useService("frequent_emoji");
+        this.frequentEmojiService = plugin(FrequentEmojiPlugin);
         useListener(window, "keydown", async (ev) => {
             if (
                 !this.dropdown.isOpen ||
