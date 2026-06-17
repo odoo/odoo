@@ -140,6 +140,9 @@ export class HtmlField extends Component {
         };
         model.hooks.onWillSaveRecord = (...args) => {
             this.pendingAttachmentsService.addAttachmentsIdsToContext(this.props.record);
+            if (this.editor?.editable) {
+                this.pendingAttachmentsService.syncAttachmentsName(this.editor.editable);
+            }
             return onWillSaveRecord(...args);
         };
         model.hooks.onRecordSaved = (...args) => {
@@ -517,6 +520,13 @@ const pendingAttachmentsService = {
         function clearAttachmentsIdsFromContext(record) {
             delete record.context["pending_attachment_ids"];
         }
+        function syncAttachmentsName(editable) {
+            editable.querySelectorAll(".o_file_box").forEach((fileBox) => {
+                orm.write("ir.attachment", [parseInt(fileBox.dataset.attachmentId)], {
+                    name: fileBox.querySelector(".o_file_name_container").textContent,
+                });
+            });
+        }
         return {
             unlinkPendingAttachments,
             addPendingAttachments,
@@ -524,6 +534,7 @@ const pendingAttachmentsService = {
             pendingAttachmentIds,
             addAttachmentsIdsToContext,
             clearAttachmentsIdsFromContext,
+            syncAttachmentsName,
         };
     },
 };
