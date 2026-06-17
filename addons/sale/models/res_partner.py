@@ -106,17 +106,20 @@ class ResPartner(models.Model):
                 "any",
                 [("commercial_partner_id", "in", commercial_partners.ids)],
             ),
-            ("order_line", "any", [
-                "|", ("untaxed_amount_to_invoice", ">", 0),
-                     ("invoice_status", "=", "no"),
-            ]),
+            (
+                "order_line",
+                "any",
+                ["|", ("untaxed_amount_to_invoice", ">", 0), ("invoice_status", "=", "no")],
+            ),
             ("state", "=", "sale"),
             ("invoicing_closed", "=", False),
         ])
         for (partner, currency), orders in sale_orders.grouped(
             lambda so: (so.partner_invoice_id, so.currency_id)
         ).items():
-            amount_to_invoice_sum = sum(orders.mapped("amount_to_invoice"))
+            amount_to_invoice_sum = sum(
+                orders.with_context(credit_limit=True).mapped("amount_to_invoice")
+            )
             credit_company_currency = currency._convert(
                 amount_to_invoice_sum, company.currency_id, company
             )
