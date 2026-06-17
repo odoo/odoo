@@ -286,6 +286,7 @@ export class ListRenderer extends Component {
             hasSelectors: this.hasSelectors,
             hasOpenFormViewColumn: this.hasOpenFormViewColumn,
             hasActionsColumn: this.hasActionsColumn,
+            showCountColumn: this.showCountColumn,
         }));
 
         useExternalListener(window, "keydown", (ev) => {

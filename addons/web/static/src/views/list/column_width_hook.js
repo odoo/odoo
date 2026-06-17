@@ -60,7 +60,8 @@ import { onMounted, onWillUnmount, status, xml } from "@odoo/owl";
 const DEFAULT_MIN_WIDTH = 80;
 const SELECTOR_WIDTH = 20;
 const OPEN_FORM_VIEW_BUTTON_WIDTH = 54;
-const DELETE_BUTTON_WIDTH = 12;
+const DELETE_BUTTON_WIDTH = 52;
+const COUNT_COLUMN_WIDTH = 105;
 let _dateWidths = null; // computed dynamically, lazily, see @computeOptimalDateWidths
 export const FIELD_WIDTHS = Object.freeze({
     boolean: [20, 100], // [minWidth, maxWidth]
@@ -235,13 +236,24 @@ function computeWidths(table, state, allowedWidth, startingWidths) {
     if (state.hasSelectors) {
         _columnWidths[0] = SELECTOR_WIDTH;
     }
-    if (state.hasOpenFormViewColumn) {
-        const index = _columnWidths.length - (state.hasActionsColumn ? 2 : 1);
-        _columnWidths[index] = OPEN_FORM_VIEW_BUTTON_WIDTH;
-    }
+
+    let trailingIndex = _columnWidths.length - 1;
+
     if (state.hasActionsColumn) {
-        _columnWidths[_columnWidths.length - 1] = DELETE_BUTTON_WIDTH;
+        _columnWidths[trailingIndex] = DELETE_BUTTON_WIDTH;
+        trailingIndex--;
     }
+
+    if (state.showCountColumn) {
+        _columnWidths[trailingIndex] = Math.max(COUNT_COLUMN_WIDTH, _columnWidths[trailingIndex]);
+        trailingIndex--;
+    }
+
+    if (state.hasOpenFormViewColumn) {
+        _columnWidths[trailingIndex] = OPEN_FORM_VIEW_BUTTON_WIDTH;
+        trailingIndex--;
+    }
+
     const columnWidthSpecs = getWidthSpecs(columns);
     const columnOffset = state.hasSelectors ? 1 : 0;
     for (let columnIndex = 0; columnIndex < columns.length; columnIndex++) {
