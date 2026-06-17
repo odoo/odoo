@@ -13,7 +13,7 @@ from markupsafe import escape as markup_escape
 from psycopg2.extras import Json as PsycopgJson
 
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.netsvc import COLOR_PATTERN, DEFAULT, GREEN, RED
+from odoo.logging import COLOR_PATTERN, DEFAULT, GREEN, RED
 from odoo.tools import SQL, config, html_normalize, html_sanitize, html2plaintext, is_html_empty, plaintext2html, sql
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.misc import SENTINEL, Sentinel

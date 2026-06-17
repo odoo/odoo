@@ -6,126 +6,17 @@ import logging.config
 import logging.handlers
 import os
 import platform
-import pprint
 import sys
 import threading
 import tomllib
 import traceback
 import warnings
 
-from . import release
-from . import sql_db
-from . import tools
+from . import release, tools
+from .logging import *  # noqa: F403
+from .logging import ColoredFormatter, PostgreSQLHandler
 
 _logger = logging.getLogger(__name__)
-
-def log(logger, level, prefix, msg, depth=None):
-    warnings.warn(
-        "odoo.netsvc.log is deprecated starting Odoo 18, use normal logging APIs",
-        category=DeprecationWarning,
-        stacklevel=2,
-    )
-    indent=''
-    indent_after=' '*len(prefix)
-    for line in (prefix + pprint.pformat(msg, depth=depth)).split('\n'):
-        logger.log(level, indent+line)
-        indent=indent_after
-
-
-class WatchedFileHandler(logging.handlers.WatchedFileHandler):
-    def __init__(self, filename):
-        self.errors = None  # py38
-        super().__init__(filename)
-        # Unfix bpo-26789, in case the fix is present
-        self._builtin_open = None
-
-    def _open(self):
-        return open(self.baseFilename, self.mode, encoding=self.encoding, errors=self.errors)
-
-class PostgreSQLHandler(logging.Handler):
-    """ PostgreSQL Logging Handler will store logs in the database, by default
-    the current database, can be set using --log-db=DBNAME
-    """
-
-    def __init__(self):
-        super().__init__()
-        self._support_metadata = False
-        if tools.config['log_db'] != '%d':
-            with contextlib.suppress(Exception), tools.mute_logger('odoo.sql_db'), sql_db.db_connect(tools.config['log_db'], allow_uri=True).cursor() as cr:
-                cr.execute("""SELECT 1 FROM information_schema.columns WHERE table_name='ir_logging' and column_name='metadata' AND table_schema = current_schema""")
-                self._support_metadata = bool(cr.fetchone())
-
-    def emit(self, record):
-        ct = threading.current_thread()
-        ct_db = getattr(ct, 'dbname', None)
-        dbname = tools.config['log_db'] if tools.config['log_db'] and tools.config['log_db'] != '%d' else ct_db
-        if not dbname:
-            return
-        with contextlib.suppress(Exception), tools.mute_logger('odoo.sql_db'), sql_db.db_connect(dbname, allow_uri=True).cursor() as cr:
-            # preclude risks of deadlocks
-            cr.execute("SET LOCAL statement_timeout = 1000")
-            msg = str(record.msg)
-            if record.args:
-                msg = msg % record.args
-            traceback = getattr(record, 'exc_text', '')
-            if traceback:
-                msg = f"{msg}\n{traceback}"
-            # we do not use record.levelname because it may have been changed by ColoredFormatter.
-            levelname = logging.getLevelName(record.levelno)
-
-            val = ('server', ct_db, record.name, levelname, msg, record.pathname, record.lineno, record.funcName)
-
-            if self._support_metadata:
-                from . import modules
-                metadata = {}
-                if modules.module.current_test:
-                    with contextlib.suppress(Exception):
-                        metadata['test'] = modules.module.current_test.get_log_metadata(record)
-
-                if metadata:
-                    cr.execute("""
-                        INSERT INTO ir_logging(create_date, type, dbname, name, level, message, path, line, func, metadata)
-                        VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s, %s)
-                    """, (*val, json.dumps(metadata)))
-                    return
-
-            cr.execute("""
-                INSERT INTO ir_logging(create_date, type, dbname, name, level, message, path, line, func)
-                VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s)
-            """, val)
-
-BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, HIGH_INTENSITY, DEFAULT = range(10)
-HI_BLACK, HI_RED, HI_GREEN, HI_YELLOW, HI_BLUE, HI_MAGENTA, HI_CYAN, HI_WHITE = range(
-    BLACK + HIGH_INTENSITY, WHITE + HIGH_INTENSITY + 1)
-#The background is set with 40 plus the number of the color, and the foreground with 30
-#These are the sequences needed to get colored output
-RESET_SEQ = "\033[0m"
-COLOR_SEQ = "\033[1;%dm"
-BOLD_SEQ = "\033[1m"
-COLOR_PATTERN = f"{COLOR_SEQ}{COLOR_SEQ}%s{RESET_SEQ}"
-TRUE_COLOR_PATTERN = f"\033[38;5;%dm%s{RESET_SEQ}"
-LEVEL_COLOR_MAPPING = {
-    logging.DEBUG: (BLUE, DEFAULT),
-    logging.INFO: (GREEN, DEFAULT),
-    logging.WARNING: (YELLOW, DEFAULT),
-    logging.ERROR: (RED, DEFAULT),
-    logging.CRITICAL: (WHITE, RED),
-}
-# all colors but black, grey, silver, WARNING and ERROR; length must be prime.
-PID_COLORS = (
-    GREEN, BLUE, MAGENTA, CYAN,
-    HI_RED, HI_GREEN, HI_YELLOW, HI_BLUE, HI_MAGENTA, HI_CYAN, HI_WHITE,
-)
-
-
-class ColoredFormatter(logging.Formatter):
-    def format(self, record):
-        fg_color, bg_color = LEVEL_COLOR_MAPPING.get(record.levelno, (GREEN, DEFAULT))
-        if tools.config.colors['loglevel']:
-            record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
-        if tools.config.colors['pid']:
-            record.process = TRUE_COLOR_PATTERN % (PID_COLORS[record.thread_native % len(PID_COLORS)], record.thread_native)
-        return super().format(record)
 
 
 class LogRecord(logging.LogRecord):
@@ -134,7 +25,11 @@ class LogRecord(logging.LogRecord):
         self.perf_info = ""
         self.thread_native = threading.get_native_id()
         self.dbname = getattr(threading.current_thread(), 'dbname', '?')
-
+        from . import modules  # noqa: PLC0415
+        self.test = None
+        if modules.module.current_test:
+            with contextlib.suppress(Exception):
+                self.test = modules.module.current_test.get_log_metadata(self)
 
 showwarning = None
 def init_logger():
@@ -145,7 +40,7 @@ def init_logger():
     logging.setLogRecordFactory(LogRecord)
 
     logging.captureWarnings(True)
-    # must be after `loggin.captureWarnings` so we override *that* instead of
+    # must be after `logging.captureWarnings` so we override *that* instead of
     # the other way around
     showwarning = warnings.showwarning
     warnings.showwarning = showwarning_with_traceback
@@ -227,7 +122,7 @@ def init_logger():
             if dirname and not os.path.isdir(dirname):
                 os.makedirs(dirname)
             if os.name == 'posix':
-                handler = WatchedFileHandler(logf)
+                handler = logging.handlers.WatchedFileHandler(logf)
             else:
                 handler = logging.FileHandler(logf)
         except Exception:
@@ -236,7 +131,7 @@ def init_logger():
     handler.setFormatter(ColoredFormatter(format))
     logging.getLogger().addHandler(handler)
 
-    if tools.config['log_db']:
+    if log_db := tools.config['log_db']:
         db_levels = {
             'debug': logging.DEBUG,
             'info': logging.INFO,
@@ -244,7 +139,7 @@ def init_logger():
             'error': logging.ERROR,
             'critical': logging.CRITICAL,
         }
-        postgresqlHandler = PostgreSQLHandler()
+        postgresqlHandler = PostgreSQLHandler(log_db)
         postgresqlHandler.setLevel(int(db_levels.get(tools.config['log_db_level'], tools.config['log_db_level'])))
         logging.getLogger().addHandler(postgresqlHandler)
 
@@ -277,9 +172,6 @@ PSEUDOCONFIG_MAPPER = {
     'critical': ['odoo:CRITICAL'],
 }
 
-logging.RUNBOT = 25
-logging.addLevelName(logging.RUNBOT, "RUNBOT")
-logging._levelToName[logging.RUNBOT] = "INFO"  # displayed as info in log
 IGNORE = {
     'Comparison between bytes and int', # a.foo != False or some shit, we don't care
 }
@@ -302,7 +194,3 @@ def showwarning_with_traceback(message, category, filename, lineno, file=None, l
         file=file,
         line=''.join(traceback.format_list(filtered))
     )
-
-def runbot(self, message, *args, **kws):
-    self.log(logging.RUNBOT, message, *args, **kws)
-logging.Logger.runbot = runbot
