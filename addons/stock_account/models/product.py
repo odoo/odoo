@@ -270,7 +270,7 @@ class ProductProduct(models.Model):
             total_value_by_company_id[company.id] = total_value_by_product_id
 
         for product in self:
-            product.total_value = sum(total_value_by_company_id[c.id].get(product.id, 0) for c in self.env.companies)
+            product.total_value = sum(c.currency_id._convert(total_value_by_company_id[c.id].get(product.id, 0), self.env.company.currency_id) for c in self.env.companies)
             valued_quantity = valued_quantity_by_product_id[product.id]
             product.avg_cost = product.total_value / valued_quantity if valued_quantity else std_price_by_company_id[self.env.company.id].get(product.id, product.standard_price)
 
