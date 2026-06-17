@@ -1695,6 +1695,18 @@ test("toolbar should close when clicked outside the iframe", async () => {
     await expectElementCount(".o-we-toolbar", 0);
 });
 
+test.tags("desktop", "iframe");
+test("toolbar should close when clicked outside the iframe (even if selection got in the toolbar)", async () => {
+    await setupEditor("<p>[a]</p>", { props: { iframe: true } });
+    await expectElementCount(".o-we-toolbar", 1);
+    const sepEl = queryFirst(".o-we-toolbar .o-we-toolbar-vertical-separator");
+    setSelection({ anchorNode: sepEl, anchorOffset: 0 });
+    await expectElementCount(".o-we-toolbar", 1);
+    // click outside the iframe
+    await click(".o-main-components-container");
+    await expectElementCount(".o-we-toolbar", 0);
+});
+
 describe.tags("desktop");
 describe("toolbar open and close on user interaction", () => {
     describe("mouse", () => {
