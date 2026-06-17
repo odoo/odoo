@@ -1130,3 +1130,16 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
             self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
         self.assertEqual(company.chart_template, 'test')
+
+    def test_reload_template_with_account_missing_code(self):
+        """
+        Test that chart template loading works correctly when an account without a code exists.
+        """
+        account = self.env['account.account'].search([('code', '=', '411111')])
+        self.assertTrue(account)
+
+        account.code = False
+        # Reload the chart template.
+        self._use_chart_template(self.company)
+
+        self.assertFalse(account.code)
