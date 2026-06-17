@@ -232,9 +232,12 @@ export class FilePlugin extends Plugin {
 
     onClickFileImage(fileImage) {
         const fileBox = closestElement(fileImage, ".o_file_box");
+        // We use the url text content as file name.
+        const fileName =
+            fileBox.querySelector(".o_file_name_container")?.textContent || fileImage.title;
         const fileModel = Object.assign(new FileModel(), {
             id: fileBox.dataset.attachmentId,
-            name: fileImage.title,
+            name: fileName,
             mimetype: fileImage.dataset.mimetype,
         });
         if (fileModel.isViewable) {
