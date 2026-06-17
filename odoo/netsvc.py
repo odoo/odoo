@@ -22,7 +22,6 @@ _logger = logging.getLogger(__name__)
 class LogRecord(logging.LogRecord):
     def __init__(self, name, level, pathname, lineno, msg, args, exc_info, func=None, sinfo=None, **kwargs):
         super().__init__(name, level, pathname, lineno, msg, args, exc_info, func=func, sinfo=sinfo, **kwargs)
-        self.perf_info = ""
         self.thread_native = threading.get_native_id()
         self.dbname = getattr(threading.current_thread(), 'dbname', '?')
         from . import modules  # noqa: PLC0415
@@ -99,7 +98,7 @@ def init_logger():
             return
 
     # create a format for log messages and dates
-    format = '%(asctime)s %(process)s %(levelname)s %(dbname)s %(name)s: %(message)s %(perf_info)s'
+    format = '%(asctime)s %(process)s %(levelname)s %(dbname)s %(name)s: %(message)s'
     # Normal Handler on stderr
     handler = logging.StreamHandler()
 
