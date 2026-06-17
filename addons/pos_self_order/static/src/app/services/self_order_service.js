@@ -730,7 +730,7 @@ export class SelfOrder extends Reactive {
             (!preset.needsName || name) &&
             (!preset.needsEmail || selectedPartner || isValidEmail(email)) &&
             (!preset.needsPartner || validPartnerInfos) &&
-            (!phone || selectedPartner || isValidPhone(phone))
+            (!preset.needsPhone || selectedPartner || isValidPhone(phone))
         );
     }
 
