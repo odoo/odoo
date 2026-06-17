@@ -638,14 +638,14 @@ class ProductProduct(models.Model):
                 continue
             products_by_cost_method[product.cost_method].add(product.id)
         for cost_method, product_ids in products_by_cost_method.items():
-            products = self.env['product.product'].browse(product_ids)
+            products = self.env['product.product'].sudo().browse(product_ids)
             if cost_method == 'standard':
                 continue
 
             if extra_value is not None and extra_quantity is not None:
                 products_with_incremental_recompute = (
                     self.env['product.product'].concat(*extra_value.keys()) & products
-                ).with_context(
+                ).sudo().with_context(
                     allowed_company_ids=self.env.company.ids
                 )._with_valuation_context()
                 products_with_incremental_recompute.fetch(['qty_available'])

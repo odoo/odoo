@@ -3560,3 +3560,39 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(lot.with_company(self.branch).standard_price, 100.00)
         lot_multi_company = lot.with_context(allowed_company_ids=[self.env.company.id, self.branch.id])
         self.assertEqual(lot_multi_company.with_company(self.env.company).total_value, 100.00)
+
+    def test_update_standard_price_with_limited_access_users(self):
+        """ Ensure that custom record rules do not impact the standard_price compute """
+        product = self.product_fifo
+        product.standard_price = 1.0
+
+        # Create Location B
+        location_b = self.env['stock.location'].create({
+            'name': 'Location B',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+
+        self.env['stock.quant']._update_available_quantity(product, self.stock_location, 10.0)
+        self.env['stock.quant']._update_available_quantity(product, location_b, 100.0)
+
+        self.assertEqual(product.total_value, 110)
+
+        # Create a record rule so that inventory user doesn't have access to StockQuant records in location B
+        self.env['ir.rule'].create({
+            'name': 'Forbid Quant Access of Location B for Inventory Users',
+            'model_id': self.env['ir.model']._get_id('stock.quant'),
+            'domain_force': f"[('location_id', '!=', {location_b.id})]",
+            'groups': [Command.set(self.env.ref('stock.group_stock_user').ids)],
+        })
+
+        # Quantity accessible to the user
+        self.assertEqual(product.with_user(self.inventory_user).qty_available, 10)
+        # Full value in the company
+        self.assertEqual(product.with_user(self.inventory_user).total_value, 110)
+
+        # Out move of 1 by inventory user
+        self._make_out_move(product, 1, user=self.inventory_user)
+
+        # Ensure that we didn't do 109 / 9 to compute the price
+        self.assertEqual(product.standard_price, 1.0)
