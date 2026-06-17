@@ -11,7 +11,7 @@ def migrate(cr, version):
         'dk_coa_3680', 'dk_coa_5040', 'dk_coa_5060', 'dk_coa_5080', 'dk_coa_5270', 'dk_coa_5680', 'dk_coa_5840',
         'dk_coa_5850', 'dk_coa_5880', 'dk_coa_6060', 'dk_coa_6220', 'dk_coa_6230', 'dk_coa_6250', 'dk_coa_6270',
         'dk_coa_6290', 'dk_coa_6300', 'dk_coa_6580', 'dk_coa_7020', 'dk_coa_7160', 'dk_coa_7170', 'dk_coa_7190',
-        'dk_coa_7520', 'dk_coa_7630', 'dk_coa_7630',
+        'dk_coa_7520', 'dk_coa_7630',
     )
     # All tags (right-hand side) that should be replaced with new tags (left-hand side).
     new_tag_name_to_old_tag_names = {
