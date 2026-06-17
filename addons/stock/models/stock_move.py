@@ -179,7 +179,7 @@ class StockMove(models.Model):
     is_initial_demand_editable = fields.Boolean('Is initial demand editable', compute='_compute_is_initial_demand_editable')
     is_date_editable = fields.Boolean("Is Date Editable", compute="_compute_is_date_editable")
     is_quantity_done_editable = fields.Boolean('Is quantity done editable', compute='_compute_is_quantity_done_editable')
-    reference = fields.Char(compute='_compute_reference', string="Reference", store=True, readonly=False)
+    reference = fields.Char(compute='_compute_reference', string="Reference", store=True, readonly=False, copy=False)
     move_lines_count = fields.Integer(compute='_compute_move_lines_count')
     display_assign_serial = fields.Boolean(compute='_compute_display_assign_serial')
     display_import_lot = fields.Boolean(compute='_compute_display_assign_serial')
