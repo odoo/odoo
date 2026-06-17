@@ -2135,7 +2135,6 @@ test(`field titles are not escaped`, async () => {
         arch: `<list><field name="foo"/></list>`,
     });
     expect(`tbody tr:eq(0) .o_data_cell`).toHaveText("<div>Hello</div>");
-    expect(`tbody tr:eq(0) .o_data_cell`).toHaveAttribute("data-tooltip", "<div>Hello</div>");
 });
 
 test(`record-depending invisible lines are correctly aligned`, async () => {
@@ -2153,16 +2152,6 @@ test(`record-depending invisible lines are correctly aligned`, async () => {
     expect(`.o_data_row`).toHaveCount(4);
     expect(`.o_data_row td:not(.o_list_record_selector)`).toHaveCount(12); // 3 cells per row (td checkboxes selector excluded)
     expect(`.o_data_row td:not(.o_list_record_selector):eq(1)`).toHaveInnerHTML("");
-});
-
-test(`invisble fields must not have a tooltip`, async () => {
-    await mountView({
-        resModel: "foo",
-        type: "list",
-        arch: `<list><field name="foo" invisible="id == 1"/></list>`,
-    });
-    expect(`.o_data_row`).toHaveCount(4);
-    expect(`.o_data_row td[data-tooltip]`).toHaveCount(3);
 });
 
 test(`do not perform extra RPC to read invisible many2one fields`, async () => {

@@ -10,13 +10,6 @@ import { computeM2OProps, Many2One } from "@web/views/fields/many2one/many2one";
 import { useInputField } from "@web/views/fields/input_field_hook";
 
 export const ProductNameAndDescriptionListRendererMixin = {
-    getCellTitle(column, record) {
-        // When using this list renderer, we don't want the product_id cell to have a tooltip with its label.
-        if (this.productColumns.includes(column.name)) {
-            return;
-        }
-        return super.getCellTitle(column, record);
-    },
 
     getActiveColumns() {
         let activeColumns = super.getActiveColumns();

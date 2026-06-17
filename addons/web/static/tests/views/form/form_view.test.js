@@ -4070,13 +4070,12 @@ test(`reference field in one2many list`, async () => {
         `,
         resId: 17,
     });
-    await contains(`table td[data-tooltip="first record"]`).click();
+    await contains(`table td:text("first record")`).click();
     await contains(`table td button.o_external_button`, { visible: false }).click();
     await contains(`.o_dialog:not(.o_inactive_modal) .o_field_widget[name="name"] input`).edit(
         "New name"
     );
     await contains(`.o_dialog:not(.o_inactive_modal) footer .o_form_button_save`).click();
-    expect(`.o_field_cell[data-tooltip="New name"]`).toHaveCount(1);
 });
 
 test(`there is an Actions menu when creating a new record`, async () => {
