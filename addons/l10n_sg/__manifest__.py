@@ -24,6 +24,7 @@ This module add, for accounting:
     ],
     'auto_install': ['account'],
     'data': [
+        'data/account.account.tag.csv',
         'data/l10n_sg_chart_data.xml',
         'data/account_tax_report_data.xml',
         'views/account_invoice_view.xml',
