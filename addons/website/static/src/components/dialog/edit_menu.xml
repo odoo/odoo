@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 <t t-name="website.MenuDialog">
-    <WebsiteDialog title="this.title" primaryTitle.translate="Continue" secondaryTitle.translate="Discard"
+    <WebsiteDialog title.translate="Menu item" primaryTitle.translate="Continue" secondaryTitle.translate="Discard"
         closeOnClick="false" primaryClick.bind="this.onClickOk" secondaryClick="this.props.close">
         <div class="o_menu_dialog_form mb-3 row">
             <label class="col-form-label col-md-3">
@@ -12,7 +12,15 @@
                     class="form-control" t-att-class="{ 'is-invalid': this.state.invalidName }" t-ref="this.autofocusRef"/>
             </div>
         </div>
-        <div t-if="!this.props.isMegaMenu" class="mb-3 row">
+        <div class="o_menu_dialog_form mb-3 row">
+            <label class="col-form-label col-md-3">
+                Mega Menu
+            </label>
+            <div class="col-md-9 d-flex align-items-center">
+                <input type="checkbox" t-custom-model="this.state.isMegaMenu" class="form-switch"/>
+            </div>
+        </div>
+        <div t-if="!this.state.isMegaMenu and !this.props.hasChildren" class="mb-3 row">
             <label class="col-form-label col-md-3">
                 Url or Email
             </label>
@@ -74,11 +82,8 @@
         </ul>
         <div class="d-flex mt-4 justify-content-between align-items-end">
             <div class="d-flex flex-column">
-                <a href="#" t-on-click="() => this.addMenu(false)">
+                <a href="#" t-on-click="this.addMenu">
                     <i class="oi me-1" data-icon="add_circle"/> Add Menu Item
-                </a>
-                <a href="#" t-on-click="() => this.addMenu(true)">
-                    <i class="oi me-1" data-icon="add_circle"/> Add Mega Menu Item
                 </a>
             </div>
             <small class="text-muted">

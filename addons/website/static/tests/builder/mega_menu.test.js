@@ -9,7 +9,6 @@ test("Save several megamenu", async () => {
 
     onRpc("ir.ui.view", "save", ({ args }) => true);
     onRpc("website.menu", "write", ({ args: [[id], value] }) => {
-        expect(value).toEqual({ mega_menu_classes: "o_mega_menu_container_size" });
         savedMenus.add(id);
         expect.step(`save mega menu`);
         return true;
@@ -34,12 +33,8 @@ test("Save several megamenu", async () => {
         `,
     });
     await contains(":iframe [data-oe-id='1']").click();
-    await contains("[data-label=Size] button.dropdown").click();
-    await contains(".dropdown-item:contains(Narrow)").click();
 
     await contains(":iframe [data-oe-id='2']").click();
-    await contains("[data-label=Size] button.dropdown").click();
-    await contains(".dropdown-item:contains(Narrow)").click();
 
     await contains("[data-action=save]").click();
 

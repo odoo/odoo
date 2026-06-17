@@ -1,23 +1,24 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
-/**
- * @typedef { Object } MegaMenuOptionShared
- * @property { MegaMenuOptionPlugin['getTemplatePrefix'] } getTemplatePrefix
- */
-
 export class MegaMenuOptionPlugin extends Plugin {
     static id = "megaMenuOptionPlugin";
-    static dependencies = [];
-    static shared = ["getTemplatePrefix"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        dropzone_selectors: {
-            selector: ".o_mega_menu .nav > .nav-link",
-            dropIn: ".o_mega_menu nav",
-            dropNear: ".o_mega_menu .nav-link",
-        },
+        dropzone_selectors: [
+            {
+                selector: ".o_mega_menu .nav > .nav-link",
+                dropIn: ".o_mega_menu nav",
+                dropNear: ".o_mega_menu .nav-link",
+            },
+            {
+                // Should be removed when floating snippets are restricted from being added in mega
+                // menu.
+                selector: ".s_whatsapp",
+                excludeAncestor: ".o_mega_menu",
+            },
+        ],
         on_ready_to_save_document_handlers: this.saveMegaMenuClasses.bind(this),
         no_parent_containers: ".o_mega_menu",
         is_unremovable_selectors: ".o_mega_menu > section",
@@ -31,10 +32,6 @@ export class MegaMenuOptionPlugin extends Plugin {
             }
         },
     };
-
-    getTemplatePrefix() {
-        return "website.";
-    }
 
     async saveMegaMenuClasses() {
         const proms = [];

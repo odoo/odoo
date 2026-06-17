@@ -203,17 +203,22 @@ const createMegaMenu = function (name) {
     return [
         {
             content: "Create a new mega menu item",
-            trigger: ".modal-body a:eq(1):contains(add mega menu item)",
+            trigger: ".modal-body a:contains(add menu item)",
+            run: "click",
+        },
+        {
+            content: "Toggle is mega menu option",
+            trigger: `.modal:contains(menu item) input[type=checkbox]`,
             run: "click",
         },
         {
             content: "Set the mega menu item name to " + name,
-            trigger: ".modal:contains(mega menu item) .modal-dialog .o_website_dialog input:eq(0)",
+            trigger: ".modal:contains(menu item) .modal-dialog .o_website_dialog input:eq(0)",
             run: `edit ${name}`,
         },
         {
             trigger:
-                ".modal:contains(mega menu item) .modal-footer .btn-primary:contains(continue)",
+                ".modal:contains(menu item) .modal-footer .btn-primary:contains(continue)",
             run: "click",
         },
         {
@@ -226,7 +231,7 @@ const createDropdown = function (name) {
     return [
         {
             content: "Create a new menu item for the dropdown",
-            trigger: ".modal:contains(edit menu) .modal-body a:eq(0):contains(add menu item)",
+            trigger: ".modal:contains(edit menu) .modal-body a:contains(add menu item)",
             run: "click",
         },
         {
@@ -235,7 +240,7 @@ const createDropdown = function (name) {
             run: `edit ${name}`,
         },
         {
-            trigger: ".modal:contains(menu item) .modal-dialog .o_website_dialog input:eq(1)",
+            trigger: ".modal:contains(menu item) .modal-dialog .o_website_dialog input:eq(2)",
             run: "edit /",
         },
         {
@@ -247,7 +252,7 @@ const createDropdown = function (name) {
         },
         {
             content: "Create a new menu item for the dropdown item",
-            trigger: ".modal:contains(edit menu) .modal-body a:eq(0):contains(add menu item)",
+            trigger: ".modal:contains(edit menu) .modal-body a:contains(add menu item)",
             run: "click",
         },
         {
@@ -255,7 +260,7 @@ const createDropdown = function (name) {
             run: `edit ${name} item`,
         },
         {
-            trigger: ".modal:contains(menu item) .modal-dialog .o_website_dialog input:eq(1)",
+            trigger: ".modal:contains(menu item) .modal-dialog .o_website_dialog input:eq(2)",
             run: "edit /",
         },
         {

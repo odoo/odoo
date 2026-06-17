@@ -11,7 +11,6 @@ import {
 } from "@website/js/tours/tour_utils";
 
 export const triggerModalEditMenu = `.modal:has(.modal-title:contains(edit menu))`;
-const triggerModalMegaMenuItem = `.modal:has(.modal-title:contains(mega menu item))`;
 const triggerModalMenuItem = `.modal:has(.modal-title:contains(menu item))`;
 
 const menuEditorLi = (title, isMegaMenu = false) =>
@@ -23,17 +22,22 @@ export const addMegaMenu = (title) => {
     const steps = [
         {
             content: "Trigger the link dialog",
-            trigger: `${triggerModalEditMenu} a:contains(Add Mega Menu Item)`,
+            trigger: `${triggerModalEditMenu} a:contains(Add Menu Item)`,
+            run: "click",
+        },
+        {
+            content: "Toggle is mega menu option",
+            trigger: `${triggerModalMenuItem} input[type=checkbox]`,
             run: "click",
         },
         {
             content: "Write a label for the new menu item",
-            trigger: `${triggerModalMegaMenuItem} input:first`,
+            trigger: `${triggerModalMenuItem} input:first`,
             run: `edit ${title}`,
         },
         {
             content: "Confirm the mega menu label",
-            trigger: `${triggerModalMegaMenuItem} button:contains(Continue)`,
+            trigger: `${triggerModalMenuItem} button:contains(Continue)`,
             run: "click",
         },
         {

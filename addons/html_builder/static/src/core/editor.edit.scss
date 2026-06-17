@@ -38,14 +38,16 @@
         }
 
         // Exception 1: empty wrap NOT during drag & drop
-        &#wrap:empty {
+        &#wrap:empty, .oe_wrap:empty {
             @include o-editor-messages;
             padding: 112px 0px;
             margin: 20px $-editor-messages-margin-x;
         }
 
         // Exception 2: empty wrap during drag & drop (override of base case)
-        &#wrap > .oe_drop_zone.oe_insert:not(.oe_vertical):not(.oe_sanitized_drop_zone):only-child {
+        &#wrap > .oe_drop_zone.oe_insert:not(.oe_vertical):not(.oe_sanitized_drop_zone):only-child,
+        &.oe_wrap > .oe_drop_zone.oe_insert:not(.oe_vertical):not(.oe_sanitized_drop_zone):only-child
+        {
             padding: 112px 0px;
         }
     }
