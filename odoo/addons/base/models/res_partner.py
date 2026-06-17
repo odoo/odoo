@@ -17,9 +17,9 @@ from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.tools.date_utils import all_timezones
 from odoo.tools.translate import LazyGettext
 from odoo.tools.partner_identifiers import (
-    get_additional_identifiers_metadata_of_country,
+    ADDITIONAL_IDENTIFIERS_METADATA,
+    ALL_IDENTIFIERS_METADATA,
     get_deduced_identifiers,
-    get_identifier_metadata,
     get_tin_metadata_of_country,
     is_identifier_void,
     pick_preferred_identifier,
@@ -1285,19 +1285,20 @@ class ResPartner(models.Model):
     @api.depends('country_id')
     def _compute_available_additional_identifiers_metadata(self):
         for partner in self:
-            # 0 -> 199 is an abitrary range to display, we consider we want to display only the most common identifiers
-            # for the partner, yet we allow to store in the JSON more corner-case identifiers that are typically
-            # accessed through a compute/inverse in the views.
-            metadata = get_additional_identifiers_metadata_of_country(partner.country_code, seq_max=199)
-            # Resolve lazy translations now: JSON would otherwise stringify them in a frame where
-            # no language can be detected.
-            partner.available_additional_identifiers_metadata = {
+            vals = {
                 key: {
+                    # Resolve lazy translations now: JSON would otherwise stringify them in a frame where
+                    # no language can be detected.
                     k: self.env._(v) if isinstance(v, LazyGettext) else v  # pylint: disable=gettext-variable
-                    for k, v in entry.items()
+                    for k, v in metadata.items()
                 }
-                for key, entry in metadata.items()
+                for key, metadata in self._get_all_additional_identifiers_metadata().items()
+                if not metadata.get('countries') or partner.country_code in metadata['countries']  # includes international
             }
+            if {key: metadata for key, metadata in vals.items() if metadata.get('category') == 'EN' and key != 'OTHER'}:
+                # Pops out the default 'OTHER' only if another 'EN' identifier is available
+                vals.pop('OTHER', None)
+            partner.available_additional_identifiers_metadata = vals
 
     def _get_additional_identifier(self, identifier_type):
         """Convenience getter for an entry of the JSON."""
@@ -1342,6 +1343,20 @@ class ResPartner(models.Model):
             for identifier_type, value in identifiers.items():
                 enriched_identifiers.update(get_deduced_identifiers(identifier_type, value))
         return {**enriched_identifiers, **identifiers}
+
+    @api.model
+    def _get_all_identifiers_metadata(self):
+        """ Returns a dict with the metadata of the additional identifiers.
+        TO BE OVERRIDEN by modules that want to add or modify the default metadata.
+        """
+        return ALL_IDENTIFIERS_METADATA
+
+    @api.model
+    def _get_all_additional_identifiers_metadata(self):
+        """ Returns a dict with the metadata of the additional identifiers.
+        TO BE OVERRIDEN by modules that want to add or modify the default metadata.
+        """
+        return ADDITIONAL_IDENTIFIERS_METADATA
 
     @api.model
     def _get_legal_entity_category_priority(self):
@@ -1426,7 +1441,7 @@ class ResPartner(models.Model):
             return vals
         cleaned = {}
         for key, value in vals['additional_identifiers'].items():
-            if not get_identifier_metadata(key):
+            if not self._get_all_additional_identifiers_metadata().get(key):
                 _logger.warning(" Skipped %s: identifier %s is not in supported identifiers.", value, key)
                 continue
             if not value:

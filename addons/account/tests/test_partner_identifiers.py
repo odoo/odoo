@@ -3,7 +3,7 @@ from odoo.tests import tagged, TransactionCase
 
 
 @tagged('post_install', '-at_install')
-class TestPartnerIdentifiers(TransactionCase):
+class TestAccountPartnerIdentifiers(TransactionCase):
 
     def test_identifier_proxy_gln(self):
         """ Test the "proxy" field (compute/inverse on the JSON) behavior. """

@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import common
-from . import test_additional_identifiers
 from . import test_avatar_mixin
 from . import test_ir_actions
 from . import test_ir_actions_report
@@ -22,6 +21,7 @@ from . import test_ir_qweb_fields
 from . import test_ir_sequence
 from . import test_ir_ui_menu
 from . import test_ir_ui_view
+from . import test_partner_identifiers
 from . import test_res_company
 from . import test_res_config
 from . import test_res_country

@@ -411,8 +411,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 meta = ISO_IDENTIFIERS_METADATA.get(scheme)
                 # Skip an endpoint whose value is malformed.
                 if not meta or validate_identifier(meta['key'], value)['valid']:
-                    partner_vals['routing_identifier'] = f"{scheme}:{value}"
-                    if meta:
+                    partner_vals['routing_scheme'] = scheme
+                    partner_vals['routing_endpoint'] = value
+                    if meta and meta['key'] in self.env['res.partner']._get_all_additional_identifiers_metadata():
                         partner_vals.setdefault('additional_identifiers', {})[meta['key']] = value
                 elif partner_vals.get('vat') == value:
                     # VAT is malformed: clear that bogus vat
