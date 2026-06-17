@@ -622,6 +622,7 @@
                     <button type="action"
                         name="%(hr_holidays.action_hr_leave_generate_multi_wizard)d"
                         string="New Group Time Off" class="btn btn-secondary"
+                        invisible="context.get('default_employee_id', False)"
                         groups="hr_holidays.group_hr_holidays_responsible" display="always"
                     />
                     <button type="object"

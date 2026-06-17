@@ -355,22 +355,15 @@ class HrEmployee(models.Model):
             'name': _('Time Off Dashboard'),
             'type': 'ir.actions.act_window',
             'res_model': 'hr.leave',
-            'views': [[self.env.ref('hr_holidays.hr_leave_employee_view_dashboard').id, 'calendar']],
+            'view_mode': 'calendar,list,form',
+            'views': [
+                [self.env.ref('hr_holidays.hr_leave_employee_view_dashboard').id, 'calendar'],
+                [False, 'list'],
+                [False, 'form'],
+            ],
             'domain': [('employee_id', 'in', self.ids)],
             'context': {
                 'employee_id': self.ids,
-            },
-        }
-
-    def action_time_off_employee(self):
-        self.ensure_one()
-        return {
-            'name': _('Time Off'),
-            'type': 'ir.actions.act_window',
-            'res_model': 'hr.leave',
-            'views': [[self.env.ref('hr_holidays.hr_leave_view_tree').id, 'list'], [self.env.ref('hr_holidays.hr_leave_employee_view_dashboard').id, 'calendar']],
-            'domain': [('employee_id', '=', self.id)],
-            'context': {
                 'search_default_filter_date_from': 1,
                 'search_default_group_date_from': 1,
                 'default_employee_id': self.id,
