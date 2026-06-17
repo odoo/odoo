@@ -795,6 +795,27 @@ describe("popover for file uploads", () => {
         expect(favIcon).toHaveAttribute("data-mimetype", "text/plain");
     });
 
+    test("updating the file name updates the link URL in popover to include the filename in the path", async () => {
+        onRpc("ir.attachment", "read", () => [{ name: "abc", mimetype: "text/plain" }]);
+        const { el, editor } = await setupEditor(
+            '<p><a href="/web/content/1?download=true&unique=123">abc[]</a></p>'
+        );
+        await waitFor(".o-we-linkpopover");
+        expect(".o_we_url_link").toHaveAttribute(
+            "href",
+            "/web/content/1/abc?download=true&unique=123"
+        );
+
+        await insertText(editor, "def");
+        const link = el.querySelector("a");
+        link.dispatchEvent(new KeyboardEvent("keyup"));
+        await animationFrame();
+        expect(".o_we_url_link").toHaveAttribute(
+            "href",
+            "/web/content/1/abcdef?download=true&unique=123"
+        );
+    });
+
     test("should not insert attachment as link if popover is discarded during file upload", async () => {
         const patchUpload = (editor) => {
             const mockedUploadPromise = new Promise((resolve) => {
