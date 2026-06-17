@@ -39,26 +39,6 @@ test("constructDomainFromTree", async () => {
             tree: condition("id", "=", 1),
             domain: `[("id", "=", 1)]`,
         },
-        {
-            tree: condition("m2m", "any", connector("&")),
-            domain: `[("m2m", "any", [])]`,
-        },
-        {
-            tree: condition("m2m", "any", connector("&", [connector("&")])),
-            domain: `[("m2m", "any", [(1, "=", 1)])]`,
-        },
-        {
-            tree: condition("m2m", "any", connector("&", [connector("|")])),
-            domain: `[("m2m", "any", [(0, "=", 1)])]`,
-        },
-        {
-            tree: condition("m2m", "any", connector("|", [connector("|")])),
-            domain: `[("m2m", "any", [(0, "=", 1)])]`,
-        },
-        {
-            tree: condition("m2m", "any", connector("|", [connector("&")])),
-            domain: `[("m2m", "any", [(1, "=", 1)])]`,
-        },
     ];
     for (const { tree, domain } of toTest) {
         expect(constructDomainFromTree(tree)).toBe(formatDomain(domain));

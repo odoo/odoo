@@ -83,7 +83,7 @@ class ProductAttributeValue(models.Model):
         # `sudo` required to know which products we lack access to
         ptavs_by_pav = self.env['product.template.attribute.value'].sudo().search_fetch([
             ('product_attribute_value_id', 'in', self.ids),
-            ('product_tmpl_id', 'any', company_domain),
+            ('product_tmpl_id', 'in', self.env['product.template']._search(company_domain)),
         ], ['price_extra', 'product_attribute_value_id']).grouped('product_attribute_value_id')
         for pav in self:
             ptavs = ptavs_by_pav.get(pav, [])

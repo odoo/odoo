@@ -269,7 +269,7 @@ class AccountTax(models.Model):
         if fp_id := self.env.context.get('dynamic_fiscal_position_id'):
             domain &= Domain('fiscal_position_ids', 'in', [False, int(fp_id)])
         if self.env.context.get('hide_original_tax_ids') and fp_id:
-            domain &= Domain('replacing_tax_ids', 'not any', domain) | Domain.custom(
+            domain &= Domain('replacing_tax_ids', 'not in', self._search(domain)) | Domain.custom(
                 to_sql=lambda table: SQL(
                     "EXISTS (SELECT 1 FROM %s WHERE %s = %s AND %s = %s)",
                     SQL.identifier('account_tax_alternatives'),

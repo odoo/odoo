@@ -733,12 +733,9 @@ class AccountMoveLine(models.Model):
         `account.account` doesn't grow too large. (e.g. <10k rows)
         """
         if (
-            operator in ('in', 'not in', 'any', 'not any')
+            operator in ('in', 'not in')
             and not isinstance(value, (tuple, list, OrderedSet))
         ):
-            if operator in ('any', 'not any'):
-                operator = {'any': 'in', 'not any': 'not in'}[operator]
-
             if isinstance(value, (Query, SQL)):
                 query_value = value.select() if isinstance(value, Query) else value
                 value = [row[0] for row in self.env.execute_query(query_value)]

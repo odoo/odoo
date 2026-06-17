@@ -89,7 +89,7 @@ test("The domain editor should not crash the view when given a dynamic filter (a
 
 test("The domain editor should not crash the view when given a dynamic filter (allow_expressions=False) in a sub domain", async function () {
     Partner._fields.company_id = fields.Many2one({ relation: "partner" });
-    Partner._records[0].foo = "[('company_id', 'any', [('id', '=', uid)])]";
+    Partner._records[0].foo = "[('company_id.id', '=', uid)]";
 
     replaceNotificationService();
 
@@ -1147,9 +1147,9 @@ test("foldable domain field unfolds and hides caret when domain is invalid", asy
     expect(".o_field_domain span:first").toHaveText("Match all records");
 });
 
-test("folded domain field with any operator", async function () {
+test("folded domain field with dot notation", async function () {
     Partner._fields.company_id = fields.Many2one({ relation: "partner" });
-    Partner._records[0].foo = "[('company_id', 'any', [('id', '=', 1)])]";
+    Partner._records[0].foo = "[('company_id.id', '=', 1)]";
     await mountView({
         type: "form",
         resModel: "partner",
@@ -1163,7 +1163,7 @@ test("folded domain field with any operator", async function () {
                 </sheet>
             </form>`,
     });
-    expect(`.o_field_domain .o_facet_values`).toHaveText("Company : ( Id = 1 )");
+    expect(`.o_field_domain .o_facet_values`).toHaveText("Company → Id = 1");
 });
 
 test("foldable domain, search_count delayed", async function () {

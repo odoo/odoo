@@ -18,7 +18,7 @@ patch(ControlButtons.prototype, {
         if (this.pos.getOrder()?.getPartner()) {
             domain = [
                 ...domain,
-                ["partner_id", "any", [["id", "child_of", [this.pos.getOrder().getPartner().id]]]],
+                ["partner_id", "child_of", this.pos.getOrder().getPartner().id],
             ];
         }
 

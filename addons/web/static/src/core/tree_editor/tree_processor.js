@@ -235,10 +235,6 @@ export const treeProcessorService = {
                     case "!=":
                     case "not in":
                         return _t("not =");
-                    case "any":
-                        return ":";
-                    case "not any":
-                        return _t(": not");
                 }
             });
 

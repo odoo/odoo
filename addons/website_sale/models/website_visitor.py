@@ -30,8 +30,8 @@ class WebsiteVisitor(models.Model):
                 ("product_id", "!=", False),
                 (
                     "product_id",
-                    "any",
-                    self.env["product.product"]._check_company_domain(self.env.companies),
+                    "in",
+                    self.env["product.product"]._search(self.env["product.product"]._check_company_domain(self.env.companies)),
                 ),
             ],
             ["visitor_id"],

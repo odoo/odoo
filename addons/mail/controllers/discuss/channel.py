@@ -51,8 +51,7 @@ class DiscussChannelWebclientController(WebclientController):
             store.add(channels._get_last_messages(), "_store_message_fields")
 
     def store_init_messaging(self, store: Store):
-        member_domain = [("is_self", "=", True), ("rtc_inviting_session_id", "!=", False)]
-        channel_domain = [("channel_member_ids", "any", member_domain)]
+        channel_domain = [("channel_member_ids.is_self", "=", True), ("channel_member_ids.rtc_inviting_session_id", "!=", False)]
         channels = request.env["discuss.channel"].search_fetch(channel_domain)
         request.update_context(channels=request.env.context["channels"] | channels)
         super().store_init_messaging(store)
@@ -60,7 +59,7 @@ class DiscussChannelWebclientController(WebclientController):
     @store_handler("channels_as_member", audience="everyone")
     def store_channels_as_member(self, store: Store):
         channels = request.env["discuss.channel"].search_fetch(
-            [("channel_member_ids", "any", [("is_self", "=", True), ("is_pinned", "=", True)])],
+            [("channel_member_ids.is_self", "=", True), ("channel_member_ids.is_pinned", "=", True)],
         )
         request.update_context(
             channels=request.env.context["channels"] | channels,

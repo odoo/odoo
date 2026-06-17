@@ -438,7 +438,7 @@ class EventEvent(models.Model):
             domain = value.map_conditions(lambda cond: cond if cond.field_expr != 'display_name' else make_codomain(cond.value))
             return Domain('address_id', operator, domain)
         if operator == 'ilike' and isinstance(value, str):
-            return Domain('address_id', 'any', make_codomain(value))
+            return Domain('address_id', 'in', self.env['res.partner']._search(make_codomain(value)))
         # for the trivial "empty" case, there is no empty address
         if operator == 'in' and (not value or not any(value)):
             return Domain(False)

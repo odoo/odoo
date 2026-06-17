@@ -54,17 +54,29 @@ function isSimplePath(c) {
 }
 
 /**
- * Wraps a given condition tree in an "any" operator condition using the specified initial path.
+ * Prefixes all condition paths in a tree with the given initial path (dot notation).
  * @param {Tree} tree
  * @param {string} initialPath
  * @param {boolean} [negate]
  * @returns {Tree}
  */
-function wrapInAny(tree, initialPath, negate) {
+function wrapWithPrefix(tree, initialPath, negate) {
     if (initialPath) {
-        return condition(initialPath, "any", cloneTree(tree), negate);
+        const result = cloneTree(tree);
+        _prefixPaths(result, initialPath);
+        return { ...result, negate: negate || false };
     }
-    return { ...cloneTree(tree), negate };
+    return { ...cloneTree(tree), negate: negate || false };
+}
+
+function _prefixPaths(node, prefix) {
+    if (node.type === "condition" && typeof node.path === "string") {
+        node.path = `${prefix}.${node.path}`;
+    } else if (node.children) {
+        for (const child of node.children) {
+            _prefixPaths(child, prefix);
+        }
+    }
 }
 
 /**
@@ -366,8 +378,8 @@ function introduceInRangeOperators(tree, options = {}) {
 }
 
 /**
- * Expands "in range" operators into standard domain bounds, scoping nested paths with
- * an "any" condition to ensure both bounds apply to the exact same related record.
+ * Expands "in range" operators into standard domain bounds, using dot notation
+ * to scope nested paths.
  * @param {Tree} tree
  * @param {TreeOperatorOptions} options
  * @returns {boolean}
@@ -390,7 +402,7 @@ function eliminateInRangeOperators(tree, options = {}) {
             const [, leftBound, rightBound] = bounds.find(([v]) => v === valueType);
             tree = makeStrictBetween(lastPart, leftBound, rightBound, c.isProperty);
         }
-        return wrapInAny(tree, initialPath, c.negate);
+        return wrapWithPrefix(tree, initialPath, c.negate);
     }
     return operate(_eliminateInRangeOperator, tree, options);
 }
@@ -423,8 +435,8 @@ function introduceBetweenOperators(tree, options = {}) {
 }
 
 /**
- * Expands "Between" operators into standard domain bounds, scoping nested paths with
- * an "any" condition to ensure both bounds apply to the exact same related record.
+ * Expands "Between" operators into standard domain bounds, using dot notation
+ * to scope nested paths.
  * @param {Tree} tree
  * @returns {Tree}
  */
@@ -434,7 +446,7 @@ function eliminateBetweenOperators(tree) {
             return;
         }
         const { initialPath, lastPart } = splitPath(c);
-        return wrapInAny(
+        return wrapWithPrefix(
             makeBetween(lastPart, c.value[0], c.value[1], c.isProperty),
             initialPath,
             c.negate
@@ -444,26 +456,10 @@ function eliminateBetweenOperators(tree) {
 }
 
 /**
- * Flattens specific "any" operators containing "between" or "in range" conditions by combining their paths
- * @param {Tree} tree
- * @returns {Tree}
+ * @deprecated No longer needed as "any" operators are no longer generated.
  */
 function eliminateAnyOperators(tree) {
-    function _eliminateAnyOperator(c) {
-        if (
-            c.operator === "any" &&
-            isTree(c.value) &&
-            c.value.type === "condition" &&
-            typeof c.path === "string" &&
-            typeof c.value.path === "string" &&
-            !c.negate &&
-            !c.value.negate &&
-            ["between", "in range"].includes(c.value.operator)
-        ) {
-            return updateCondition(c.value, { path: `${c.path}.${c.value.path}` });
-        }
-    }
-    return operate(_eliminateAnyOperator, tree);
+    return tree;
 }
 
 /**

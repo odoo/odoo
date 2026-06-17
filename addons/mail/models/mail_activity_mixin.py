@@ -233,7 +233,7 @@ class MailActivityMixin(models.AbstractModel):
                     return domain
                 operand = values
         # basic case
-        return domain | Domain('activity_ids', 'any', [('active', 'in', [True, False]), ('user_id', operator, operand)])
+        return domain | Domain('activity_ids', 'in', self.env['mail.activity'].with_context(active_test=False)._search([('user_id', operator, operand)]))
 
     @api.model
     def _search_activity_type_id(self, operator, operand):
@@ -260,12 +260,10 @@ class MailActivityMixin(models.AbstractModel):
     def _search_my_activity_date_deadline(self, operator, operand):
         if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
-        return [('activity_ids', 'any', [
-            ('active', '=', True),  # never overdue if "done"
-            ('date_deadline', operator, operand),
-            ('res_model', '=', self._name),
-            ('user_id', '=', self.env.user.id)
-        ])]
+        return [
+            ('activity_ids.date_deadline', operator, operand),
+            ('activity_ids.user_id', '=', self.env.user.id),
+        ]
 
     # Reschedules next my activity to Today
     def action_reschedule_my_next_today(self):

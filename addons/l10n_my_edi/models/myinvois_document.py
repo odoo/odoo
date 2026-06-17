@@ -1402,13 +1402,13 @@ class MyInvoisDocument(models.Model):
         Used both when finding invoices that can be consolidated and to determine if a MyInvois Document with a single
         invoice is a consolidated invoice or not.
         """
-        return Domain('commercial_partner_id', 'any',
-            Domain('vat', '=', 'EI00000000010')
-            | Domain('l10n_my_edi_malaysian_tin', '=', 'EI00000000010')
+        return (
+            Domain('commercial_partner_id.vat', '=', 'EI00000000010')
+            | Domain('commercial_partner_id.l10n_my_edi_malaysian_tin', '=', 'EI00000000010')
             | (
-                Domain('l10n_my_identification_number', '=', False)
-                & Domain('vat', '=', False)
-                & Domain('l10n_my_edi_malaysian_tin', '=', False)
+                Domain('commercial_partner_id.l10n_my_identification_number', '=', False)
+                & Domain('commercial_partner_id.vat', '=', False)
+                & Domain('commercial_partner_id.l10n_my_edi_malaysian_tin', '=', False)
             )
         )
 

@@ -378,9 +378,6 @@ function matchCondition(record, condition) {
                     new RegExp(escapeRegExp(value).replace(/%/g, ".*"), "i").test(fieldValue)
                 ) != isNot
             );
-        case "any":
-        case "not any":
-            return true;
         case "child_of":
         case "parent_of":
             return true;

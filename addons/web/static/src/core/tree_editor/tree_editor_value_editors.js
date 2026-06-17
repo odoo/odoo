@@ -260,21 +260,6 @@ function getPartialValueEditorInfo(fieldDef, operator, params = {}) {
                 }
             }
         }
-        case "any":
-        case "not any": {
-            switch (fieldDef.type) {
-                case "many2one":
-                case "many2many":
-                case "one2many": {
-                    return {
-                        component: null,
-                        extractProps: null,
-                        isSupported: isTree,
-                        defaultValue: () => connector("&"),
-                    };
-                }
-            }
-        }
     }
 
     const { type } = fieldDef;

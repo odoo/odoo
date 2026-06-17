@@ -211,7 +211,7 @@ class StockQuant(models.Model):
 
     def _search(self, domain, *args, **kwargs):
         domain = Domain(domain).map_conditions(
-            lambda condition: Domain('lot_id', 'any', [condition]) if condition.field_expr.startswith('lot_properties.') else condition
+            lambda condition: Domain('lot_id.' + condition.field_expr, condition.operator, condition.value) if condition.field_expr.startswith('lot_properties.') else condition
         )
         return super()._search(domain, *args, **kwargs)
 

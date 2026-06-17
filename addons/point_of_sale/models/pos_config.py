@@ -1086,7 +1086,7 @@ class PosConfig(models.Model):
         ]
         bank_pm = self.env['pos.payment.method'].search([
             *self.env['pos.payment.method']._check_company_domain(self.env.company),
-            ('journal_id', 'any', journal_domain),
+            ('journal_id', 'in', self.env['account.journal']._search(journal_domain)),
         ])
         if not bank_pm:
             bank_journal = self.env['account.journal'].search(journal_domain, limit=1)

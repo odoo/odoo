@@ -30,7 +30,7 @@ class ProjectShareWizard(models.TransientModel):
                 collaborator_vals_list.append({
                     'partner_id': collaborator.partner_id.id,
                     'partner_name': collaborator.partner_id.display_name,
-                    'access_mode': 'edit_limited' if collaborator.limited_access else 'edit',
+                    'access_mode': 'edit',
                 })
             for follower in project.message_partner_ids:
                 if follower.partner_share and follower.id not in collaborator_ids:
@@ -74,7 +74,6 @@ class ProjectShareWizard(models.TransientModel):
         wizards = super().create(vals_list)
         for wizard in wizards:
             collaborator_ids_to_add = []
-            collaborator_ids_to_add_with_limited_access = []
             collaborator_ids_vals_list = []
             project = wizard.resource_ref
             project_collaborator_ids_to_remove = [
@@ -93,20 +92,9 @@ class ProjectShareWizard(models.TransientModel):
             for collaborator in wizard.collaborator_ids:
                 partner_id = collaborator.partner_id.id
                 project_collaborator = project_collaborator_per_partner_id.get(partner_id, self.env['project.collaborator'])
-                if collaborator.access_mode in ("edit", "edit_limited"):
-                    limited_access = collaborator.access_mode == "edit_limited"
+                if collaborator.access_mode == "edit":
                     if not project_collaborator:
-                        if limited_access:
-                            collaborator_ids_to_add_with_limited_access.append(partner_id)
-                        else:
-                            collaborator_ids_to_add.append(partner_id)
-                    elif project_collaborator.limited_access != limited_access:
-                        collaborator_ids_vals_list.append(
-                            Command.update(
-                                project_collaborator.id,
-                                {'limited_access': limited_access},
-                            )
-                        )
+                        collaborator_ids_to_add.append(partner_id)
                 elif project_collaborator:
                     project_collaborator_ids_to_remove.append(project_collaborator.id)
                 if partner_id not in project_followers.ids:
@@ -115,11 +103,6 @@ class ProjectShareWizard(models.TransientModel):
                 partners = project._get_new_collaborators(self.env['res.partner'].browse(collaborator_ids_to_add))
                 collaborator_ids_vals_list.extend(Command.create({'partner_id': partner_id}) for partner_id in partners.ids)
                 project.tasks.message_subscribe(partner_ids=partners.ids)
-            if collaborator_ids_to_add_with_limited_access:
-                partners = project._get_new_collaborators(self.env['res.partner'].browse(collaborator_ids_to_add_with_limited_access))
-                collaborator_ids_vals_list.extend(
-                    Command.create({'partner_id': partner_id, 'limited_access': True}) for partner_id in partners.ids
-                )
             if project_collaborator_ids_to_remove:
                 collaborator_ids_vals_list.extend(Command.delete(collaborator_id) for collaborator_id in project_collaborator_ids_to_remove)
             project_vals = {}

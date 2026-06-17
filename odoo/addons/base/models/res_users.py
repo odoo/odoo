@@ -175,11 +175,11 @@ class ResUsers(models.Model):
     _order = 'name, login'
     _allow_sudo_commands = False
 
-    def _check_company_domain(self, companies):
+    def _check_company_domain(self, companies, prefix=''):
         if not companies:
             return Domain.TRUE
         company_ids = companies if isinstance(companies, str) else models.to_record_ids(companies)
-        return Domain('company_ids', 'in', company_ids)
+        return Domain(prefix+'company_ids', 'in', company_ids)
 
     def _valid_field_parameter(self, field, name):
         # see `_has_field_access``

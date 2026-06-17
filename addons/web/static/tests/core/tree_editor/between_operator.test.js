@@ -48,21 +48,11 @@ test("between operator: introduction/elimination", async () => {
             ]),
         },
         {
-            tree_py: condition(
-                "m2o",
-                "any",
-                connector("&", [condition("int_2", ">=", 1), condition("int_2", "<=", 2)])
-            ),
+            tree_py: connector("&", [
+                condition("m2o.int_2", ">=", 1),
+                condition("m2o.int_2", "<=", 2),
+            ]),
             tree: condition("m2o.int_2", "between", [1, 2]),
-        },
-        {
-            tree_py: condition(
-                "m2o",
-                "any",
-                connector("&", [condition("int_2", ">=", 1), condition("int_2", "<=", 2)]),
-                true
-            ),
-            tree: condition("m2o", "any", condition("int_2", "between", [1, 2]), true),
         },
         {
             tree_py: connector("&", [
@@ -73,24 +63,6 @@ test("between operator: introduction/elimination", async () => {
                 condition(expression("path"), ">=", 1),
                 condition(expression("path"), "<=", 2),
             ]),
-        },
-        {
-            tree_py: condition(
-                "m2o",
-                "any",
-                connector("&", [
-                    condition(expression("path"), ">=", 1),
-                    condition(expression("path"), "<=", 2),
-                ])
-            ),
-            tree: condition(
-                "m2o",
-                "any",
-                connector("&", [
-                    condition(expression("path"), ">=", 1),
-                    condition(expression("path"), "<=", 2),
-                ])
-            ),
         },
     ];
     for (const { tree_py, tree } of toTest) {

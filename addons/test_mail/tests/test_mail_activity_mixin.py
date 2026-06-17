@@ -564,12 +564,9 @@ class TestActivityMixin(TestActivityCommon):
                 "Complex search on related archived (done) activities finds active parent record",
                 [
                     ('id', 'in', all_records.ids),
-                    ('activity_ids', 'any', [
-                        '&', '&',
-                        ('date_done', '=', '2025-09-15'),
-                        ('date_deadline', '>=', '2025-09-01'),
-                        ('date_deadline', '<', '2025-09-05'),
-                    ]),
+                    ('activity_ids.date_done', '=', '2025-09-15'),
+                    ('activity_ids.date_deadline', '>=', '2025-09-01'),
+                    ('activity_ids.date_deadline', '<', '2025-09-05'),
                 ],
                 self.test_record,
                 {},

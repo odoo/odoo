@@ -948,9 +948,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
 
         orderpoint.action_replenish()
         purchase_order = self.env['purchase.order'].search([
-            ('order_line', 'any', [
-                ('product_id', '=', self.finished.id),
-            ]),
+            ('order_line.product_id', '=', self.finished.id),
         ], limit=1)
         self.assertEqual(purchase_order.date_planned.date(), Date.today())
 

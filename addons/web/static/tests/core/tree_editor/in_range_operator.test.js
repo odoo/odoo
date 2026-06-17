@@ -41,7 +41,16 @@ const pyDatetime = (delta) => expression(pyDatetimeStr(delta));
 const and = (c, negate) => connector("&", c, negate);
 const or = (c, negate) => connector("|", c, negate);
 const inRange = (f, v, negate) => condition(f, "in range", v, negate);
-const m2oAny = (c, negate = false) => condition("m2o", "any", c, negate);
+const m2oPrefix = (c, negate = false) => {
+    if (c.type === "connector" && c.children) {
+        const children = c.children.map(child => ({
+            ...child,
+            path: typeof child.path === "string" ? `m2o.${child.path}` : child.path,
+        }));
+        return { ...c, children, negate: negate || false };
+    }
+    return { ...c, path: typeof c.path === "string" ? `m2o.${c.path}` : c.path, negate: negate || false };
+};
 
 test(`"in range" operator: no introduction for complex paths (generateSmartDates=false)`, async () => {
     const toTest = [
@@ -52,7 +61,7 @@ test(`"in range" operator: no introduction for complex paths (generateSmartDates
             ]),
         },
         {
-            tree_py: m2oAny(
+            tree_py: m2oPrefix(
                 and([
                     condition(complexPath, ">=", DATE_START),
                     condition(complexPath, "<=", DATE_END),
@@ -66,7 +75,7 @@ test(`"in range" operator: no introduction for complex paths (generateSmartDates
             ]),
         },
         {
-            tree_py: m2oAny(
+            tree_py: m2oPrefix(
                 and([
                     condition(complexPath, ">=", DATE_START),
                     condition(complexPath, "<=", DATE_END),
@@ -291,21 +300,21 @@ test(`"in range" operator: introduction/elimination for datetime fields (generat
             domain: ["!", "&", ["dt_1", ">=", DATE_START], ["dt_1", "<=", DATE_END]],
         },
         {
-            tree_py: m2oAny(
+            tree_py: m2oPrefix(
                 and([condition("dt_2", ">=", DATE_START), condition("dt_2", "<=", DATE_END)])
             ),
             tree: inRange("m2o.dt_2", ["datetime", "dateRange", DATE_START, DATE_END]),
-            domain: [["m2o", "any", ["&", ["dt_2", ">=", DATE_START], ["dt_2", "<=", DATE_END]]]],
+            domain: [["m2o.dt_2", ">=", DATE_START], ["m2o.dt_2", "<=", DATE_END]],
         },
         {
-            tree_py: m2oAny(
+            tree_py: m2oPrefix(
                 and([condition("dt_2", ">=", DATE_START), condition("dt_2", "<=", DATE_END)]),
                 true
             ),
-            tree: m2oAny(inRange("dt_2", ["datetime", "dateRange", DATE_START, DATE_END]), true),
+            tree: m2oPrefix(inRange("dt_2", ["datetime", "dateRange", DATE_START, DATE_END]), true),
             domain: [
-                "!",
-                ["m2o", "any", ["&", ["dt_2", ">=", DATE_START], ["dt_2", "<=", DATE_END]]],
+                "!", "&",
+                ["m2o.dt_2", ">=", DATE_START], ["m2o.dt_2", "<=", DATE_END],
             ],
         },
     ];
@@ -411,23 +420,23 @@ test(`"in range" operator: introduction/elimination for date fields (generateSma
             domain: ["!", "&", ["date_1", ">=", DATE_START], ["date_1", "<=", DATE_END]],
         },
         {
-            tree_py: m2oAny(
+            tree_py: m2oPrefix(
                 and([condition("date_2", ">=", DATE_START), condition("date_2", "<=", DATE_END)])
             ),
             tree: inRange("m2o.date_2", ["date", "dateRange", DATE_START, DATE_END]),
             domain: [
-                ["m2o", "any", ["&", ["date_2", ">=", DATE_START], ["date_2", "<=", DATE_END]]],
+                ["m2o.date_2", ">=", DATE_START], ["m2o.date_2", "<=", DATE_END],
             ],
         },
         {
-            tree_py: m2oAny(
+            tree_py: m2oPrefix(
                 and([condition("date_2", ">=", DATE_START), condition("date_2", "<=", DATE_END)]),
                 true
             ),
-            tree: m2oAny(inRange("date_2", ["date", "dateRange", DATE_START, DATE_END]), true),
+            tree: m2oPrefix(inRange("date_2", ["date", "dateRange", DATE_START, DATE_END]), true),
             domain: [
-                "!",
-                ["m2o", "any", ["&", ["date_2", ">=", DATE_START], ["date_2", "<=", DATE_END]]],
+                "!", "&",
+                ["m2o.date_2", ">=", DATE_START], ["m2o.date_2", "<=", DATE_END],
             ],
         },
     ];
@@ -449,7 +458,7 @@ test(`"in range" operator: no introduction for complex paths`, async () => {
             ]),
         },
         {
-            tree_py: m2oAny(
+            tree_py: m2oPrefix(
                 and([
                     condition(complexPath, ">=", DATE_START),
                     condition(complexPath, "<=", DATE_END),
@@ -463,7 +472,7 @@ test(`"in range" operator: no introduction for complex paths`, async () => {
             ]),
         },
         {
-            tree_py: m2oAny(
+            tree_py: m2oPrefix(
                 and([
                     condition(complexPath, ">=", DATE_START),
                     condition(complexPath, "<=", DATE_END),
@@ -624,21 +633,21 @@ test(`"in range" operator: introduction/elimination for datetime fields`, async 
             domain: ["!", "&", ["dt_1", ">=", DATE_START], ["dt_1", "<=", DATE_END]],
         },
         {
-            tree_py: m2oAny(
+            tree_py: m2oPrefix(
                 and([condition("dt_2", ">=", DATE_START), condition("dt_2", "<=", DATE_END)])
             ),
             tree: inRange("m2o.dt_2", ["datetime", "dateRange", DATE_START, DATE_END]),
-            domain: [["m2o", "any", ["&", ["dt_2", ">=", DATE_START], ["dt_2", "<=", DATE_END]]]],
+            domain: [["m2o.dt_2", ">=", DATE_START], ["m2o.dt_2", "<=", DATE_END]],
         },
         {
-            tree_py: m2oAny(
+            tree_py: m2oPrefix(
                 and([condition("dt_2", ">=", DATE_START), condition("dt_2", "<=", DATE_END)]),
                 true
             ),
-            tree: m2oAny(inRange("dt_2", ["datetime", "dateRange", DATE_START, DATE_END]), true),
+            tree: m2oPrefix(inRange("dt_2", ["datetime", "dateRange", DATE_START, DATE_END]), true),
             domain: [
-                "!",
-                ["m2o", "any", ["&", ["dt_2", ">=", DATE_START], ["dt_2", "<=", DATE_END]]],
+                "!", "&",
+                ["m2o.dt_2", ">=", DATE_START], ["m2o.dt_2", "<=", DATE_END],
             ],
         },
     ];
@@ -727,23 +736,23 @@ test(`"in range" operator: introduction/elimination for date fields`, async () =
             domain: ["!", "&", ["date_1", ">=", DATE_START], ["date_1", "<=", DATE_END]],
         },
         {
-            tree_py: m2oAny(
+            tree_py: m2oPrefix(
                 and([condition("date_2", ">=", DATE_START), condition("date_2", "<=", DATE_END)])
             ),
             tree: inRange("m2o.date_2", ["date", "dateRange", DATE_START, DATE_END]),
             domain: [
-                ["m2o", "any", ["&", ["date_2", ">=", DATE_START], ["date_2", "<=", DATE_END]]],
+                ["m2o.date_2", ">=", DATE_START], ["m2o.date_2", "<=", DATE_END],
             ],
         },
         {
-            tree_py: m2oAny(
+            tree_py: m2oPrefix(
                 and([condition("date_2", ">=", DATE_START), condition("date_2", "<=", DATE_END)]),
                 true
             ),
-            tree: m2oAny(inRange("date_2", ["date", "dateRange", DATE_START, DATE_END]), true),
+            tree: m2oPrefix(inRange("date_2", ["date", "dateRange", DATE_START, DATE_END]), true),
             domain: [
-                "!",
-                ["m2o", "any", ["&", ["date_2", ">=", DATE_START], ["date_2", "<=", DATE_END]]],
+                "!", "&",
+                ["m2o.date_2", ">=", DATE_START], ["m2o.date_2", "<=", DATE_END],
             ],
         },
     ];

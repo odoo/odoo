@@ -188,15 +188,12 @@ class ForumForum(models.Model):
 
     @api.depends_context('uid')
     def _compute_has_pending_post(self):
-        domain = [
+        pending_forums = self.env('forum.post').search([
             ('create_uid', '=', self.env.user.id),
             ('state', '=', 'pending'),
             ('parent_id', '=', False),
-        ]
-        pending_forums = self.env['forum.forum'].search([
-            ('id', 'in', self.ids),
-            ('post_ids', 'any', domain),
-        ])
+            ('forum_id', 'in', self.ids)
+        ]).forum_id
         pending_forums.has_pending_post = True
         (self - pending_forums).has_pending_post = False
 
