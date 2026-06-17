@@ -170,6 +170,7 @@
         'views/snippets/s_mega_menu_images_subtitles.xml',
         'views/snippets/s_mega_menu_menus_logos.xml',
         'views/snippets/s_mega_menu_odoo_menu.xml',
+        'views/snippets/s_mega_menu_dropzone.xml',
         'views/snippets/s_mega_menu_big_icons_subtitles.xml',
         'views/snippets/s_mega_menu_cards.xml',
         'views/snippets/s_google_map.xml',
