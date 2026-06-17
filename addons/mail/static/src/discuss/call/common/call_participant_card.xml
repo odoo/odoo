@@ -20,6 +20,7 @@
             t-on-mousedown="this.onMouseDown"
             t-on-touchmove="this.onTouchMove"
             t-ref="this.root"
+            t-att-style="this.cardBgStyle"
         >
             <!-- card -->
             <t t-if="!this.props.isSidebarItem and this.props.cardData.type === 'screen' and this.rtc.screenTrack and !this.rtc.screenTrack.enabled">
@@ -35,68 +36,79 @@
                 </div>
             </t>
             <CallParticipantVideo t-elif="this.hasVideo" session="this.rtcSession" type="this.props.cardData.type" inset="this.props.inset"/>
-            <div t-else="" class="o-discuss-CallParticipantCard-avatar d-flex align-items-center justify-content-center h-100 w-100 rounded-3" t-att-class="{ 'o-minimized': this.props.minimized, 'o-isRemoteVideo': this.isRemoteVideo }" draggable="false">
-                <img t-if="!this.showRemoteWarning" alt="Avatar" class="h-100 rounded-circle border-5 object-fit-cover" t-att-src="this.channelMember?.avatarUrl" draggable="false" t-att-class="{
-                    'o-isTalking': this.isTalking and this.props.minimized,
+            <div t-else="" class="o-discuss-CallParticipantCard-avatar d-flex align-items-center justify-content-center h-100 w-100 rounded-3" t-att-class="{ 'o-minimized': this.props.minimized, 'o-isRemoteVideo': this.isRemoteVideo, 'o-selfInCall': this.isActiveCall }" draggable="false">
+                <img t-if="!this.showRemoteWarning" alt="Avatar" class="rounded-circle border-5 object-fit-cover" t-att-src="this.channelMember?.avatarUrl" draggable="false" t-att-class="{
+                    'o-isTalking': this.isTalking,
                     'o-isInvitation': !this.rtcSession,
+                    'h-50': this.props.minimized or this.props.isSidebarItem or this.props.inset,
+                    'h-100': !this.isActiveCall,
+                    'o-minimized': this.props.minimized,
+                    'o-small': this.isSmall,
                 }"/>
             </div>
-            <t t-if="this.rtcSession">
-                <!-- overlay -->
-                <span class="o-discuss-CallParticipantCard-overlay o-discuss-CallParticipantCard-overlayBottom z-1 position-absolute bottom-0 start-0 d-flex overflow-hidden rounded-3" t-att-class="{ 'o-proportional-container w-50': this.isSmall }" t-att-data-connection-state="this.rtcSession.connectionState">
-                    <span t-if="!this.props.minimized" class="rounded-3 text-truncate o-proportional-text o-discuss-CallParticipantCard-overlayBottomName" t-att-class="{'o-minimized px-1 small': this.isSmall, 'o-px-1_5 py-1': !this.isSmall }" t-out="this.name"/>
-                    <small t-if="this.rtcSession.is_screen_sharing_on and this.props.minimized and !this.isOfActiveCall" class="user-select-none o-proportional-text o-minimized rounded text-bg-danger d-flex align-items-center o-fw-600 p-1" title="live" aria-label="live">
-                        LIVE
-                    </small>
+            <!-- overlay -->
+            <t t-if="this.isActiveCall and this.rtcSession">
+                <!-- Bottom Left -->
+                <span class="o-discuss-CallParticipantCard-overlay z-1 position-absolute bottom-0 start-0 d-flex overflow-hidden rounded-3 m-2" t-att-class="{'o-proportional-container w-75': this.isSmall, 'o-m-2_5': !this.isSmall and this.store.meetingViewOpened }" t-att-data-connection-state="this.rtcSession.connectionState">
+                    <span t-if="!this.props.minimized" class="rounded-pill text-truncate o-proportional-text o-discuss-CallParticipantCard-overlayBottomName o-discuss-CallParticipantCard-iconBlackBg gap-2 d-flex align-items-center" t-att-class="{'o-minimized px-2 o-py-0_5 small': this.isSmall, 'o-px-2_5 py-1': !this.isSmall }">
+                        <span class="text-truncate" t-out="this.name"/>
+                        <span t-if="this.rtcSession.is_deaf or this.rtcSession.is_muted" class="h-75 border-end opacity-25" style="--border-color: white;"/>
+                        <i t-if="this.rtcSession.is_deaf" class="oi" data-icon="hearing_disabled"/>
+                        <i t-elif="this.rtcSession.is_muted" class="oi" data-icon="mic_off"/>
+                    </span>
                 </span>
                 <span t-if="this.showRemoteWarning" class="o-discuss-CallParticipantCard-overlay o-proportional-container z-1 w-50 position-absolute d-flex align-items-center justify-content-center overflow-hidden">
                     <span class="o-fw-600 p-1 rounded-3 o-video-text o-proportional-text">Video visible in the call tab</span>
                 </span>
-                <div t-if="!this.props.inset" class="o-discuss-CallParticipantCard-overlay o-discuss-CallParticipantCard-topControls position-absolute top-0 end-0 d-flex align-items-start w-50 flex-row-reverse" t-att-class="{ 'o-proportional-container': this.isSmall, 'mw-25': this.props.isSidebarItem or this.props.inset }">
-                    <CallDropdown t-if="this.isContextMenuAvailable" menuClass="'d-flex o-discuss-CallParticipantCard-contextMenu'">
-                        <button class="o-discuss-CallParticipantCard-contextButton btn btn-secondary btn-sm rounded-circle border-0 m-0 smaller d-flex align-items-center justify-content-center lh-1" t-att-class="{ invisible: !this.rootHover.isHover and !this.isMobileOS }" title="Participant options">
-                            <i class="oi oi-fw" data-icon="expand_more"/>
+                <!-- Top Right -->
+                <div class="o-discuss-CallParticipantCard-overlay position-absolute top-0 end-0 d-flex align-items-center w-50 flex-row-reverse gap-1 m-2" t-att-class="{ 'o-m-2_5': !this.isSmall and this.store.meetingViewOpened, 'mw-25': this.props.isSidebarItem or this.props.inset }">
+                    <CallDropdown t-if="this.isContextMenuAvailable and ((!this.isMobileOS and this.rootHover.isHover) or (this.isMobileOS and !this.props.minimized))" menuClass="'d-flex o-discuss-CallParticipantCard-contextMenu'">
+                        <button class="o-discuss-CallParticipantCard-contextButton h-100 d-flex justify-content-center align-items-center rounded-pill border-0 o-py-0_5 o-py-1_5 m-0 smaller o-discuss-CallParticipantCard-iconBlackBg" title="Participant options">
+                            <i class="oi" data-icon="expand_more"/>
                         </button>
                         <t t-set-slot="content">
                             <CallContextMenu rtcSession="this.rtcSession"/>
                         </t>
                     </CallDropdown>
-                    <span t-if="this.isPinned" class="d-flex justify-content-center align-items-center lh-1 me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" title="Pinned" aria-label="Pinned">
-                        <i class="oi oi-fw" data-icon="push_pin"/>
+                    <span t-if="this.isPinned" class="d-flex flex-column justify-content-center rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized p-1': this.isSmall, 'p-2': !this.isSmall }" title="Pinned" aria-label="Pinned">
+                        <i class="oi" data-icon="push_pin"/>
                     </span>
-                    <span t-if="this.isLocallyMuted" class="d-flex justify-content-center align-items-center lh-1 me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" title="Muted for you" aria-label="Muted for you">
-                        <i class="oi oi-fw" data-icon="volume_off"/>
+                    <span t-if="this.isLocallyMuted" class="d-flex flex-column justify-content-center rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized p-1': this.isSmall, 'p-2': !this.isSmall }" title="Muted for you" aria-label="Muted for you">
+                        <i class="oi oi-fw o-py-0_5" data-icon="volume_off"/>
                     </span>
-                    <span t-if="this.rtcSession.is_deaf and !this.props.minimized" class="d-flex justify-content-center align-items-center lh-1 me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" title="deaf" aria-label="deaf">
-                        <i class="oi oi-fw" data-icon="hearing_disabled"/>
-                    </span>
-                    <span t-if="this.rtcSession.is_muted and !this.rtcSession.is_deaf and !this.props.minimized" class="d-flex justify-content-center align-items-center lh-1 me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" title="muted" aria-label="muted">
-                        <i class="oi oi-fw" data-icon="mic_off"/>
-                    </span>
+                    <div t-if="!this.props.minimized and this.hasVideo and this.props.cardData.type !== 'screen'" class="o-mt-0_5 o-me-0_5">
+                        <TalkingAudioBars t-if="this.isTalking" asPill="true" session="this.rtcSession"/>
+                    </div>
                 </div>
-                <div class="o-discuss-CallParticipantCard-overlay position-absolute bottom-0 end-0 d-flex w-50 flex-row-reverse w-50" t-att-class="{ 'o-proportional-container': this.isSmall, 'mw-25': this.props.isSidebarItem or this.props.inset }">
-                    <span t-if="this.hasRaisingHand" class="o-proportional-text d-flex flex-column justify-content-center me-1 rounded-circle bg-500" t-att-class="{'o-minimized p-1': this.isSmall, 'p-2': !this.isSmall }" title="raising hand" aria-label="raising hand">
+                <!-- Bottom Right -->
+                <div class="o-discuss-CallParticipantCard-overlay position-absolute bottom-0 end-0 d-flex w-50 m-2 flex-row-reverse" t-att-class="{ 'mw-25': this.props.isSidebarItem or this.props.inset, 'o-m-2_5': !this.isSmall and this.store.meetingViewOpened }">
+                    <span t-if="this.hasRaisingHand" class="d-flex flex-column justify-content-center rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized p-1': this.isSmall, 'p-2': !this.isSmall }" title="raising hand" aria-label="raising hand">
                         <i class="oi" data-icon="back_hand"/>
                     </span>
-                    <span t-if="this.rtcSession.is_muted and !this.rtcSession.is_deaf and (this.props.inset or this.props.minimized)" class="o-proportional-text d-flex flex-column justify-content-center me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized p-1': this.isSmall, 'p-2': !this.isSmall }" title="muted" aria-label="muted">
-                        <i class="oi" data-icon="mic_off"/>
-                    </span>
-                    <span t-if="this.rtcSession.is_deaf and (this.props.inset or this.props.minimized)" class="o-proportional-text d-flex flex-column justify-content-center me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized p-1': this.isSmall, 'p-2': !this.isSmall }" title="deaf" aria-label="deaf">
-                        <i class="oi" data-icon="hearing_disabled"/>
-                    </span>
-                    <span t-if="this.hasMediaError" class="o-discuss-CallParticipantCard-overlay-replayButton o-proportional-text d-flex flex-column justify-content-center me-1 rounded-circle" t-att-class="{'o-minimized p-1': this.isSmall, 'p-2': !this.isSmall }" title="media player Error" t-on-click.stop="this.onClickReplay">
+                    <span t-if="this.hasMediaError" class="d-flex flex-column justify-content-center rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized p-1': this.isSmall, 'p-2': !this.isSmall }" title="media player Error" t-on-click.stop="this.onClickReplay">
                         <i t-if="this.rootHover.isHover" class="oi text-danger" data-icon="redo"/>
                         <i t-else="" class="oi text-danger" data-icon="warning"/>
                     </span>
-                    <span t-if="this.showConnectionState" class="o-proportional-text d-flex flex-column justify-content-center me-1 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized p-1': this.isSmall, 'p-2': !this.isSmall }" t-att-title="this.rtcSession.connectionState">
+                </div>
+                <!-- Bottom Left -->
+                <div class="o-discuss-CallParticipantCard-overlay position-absolute bottom-0 start-0 d-flex w-50 m-2" t-att-class="{ 'mw-25': this.props.isSidebarItem or this.props.inset, 'o-m-2_5': !this.isSmall and this.store.meetingViewOpened }">
+                    <span t-if="this.rtcSession.is_muted and !this.rtcSession.is_deaf and (this.props.inset or this.props.minimized)" class="d-flex justify-content-center rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized o-px-0_5': this.isSmall }" title="muted" aria-label="muted">
+                        <i class="oi oi-fw py-1" data-icon="mic_off"/>
+                    </span>
+                    <span t-if="this.rtcSession.is_deaf and (this.props.inset or this.props.minimized)" class="d-flex justify-content-center rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized o-px-0_5': this.isSmall }" title="deaf" aria-label="deaf">
+                        <i class="oi oi-fw py-1" data-icon="hearing_disabled"/>
+                    </span>
+                </div>
+                <!-- Top Left -->
+                <div class="o-discuss-CallParticipantCard-overlay position-absolute top-0 start-0 d-flex w-50 m-2" t-att-class="{ 'mw-25': this.props.isSidebarItem or this.props.inset, 'o-m-2_5': !this.isSmall and this.store.meetingViewOpened }">
+                    <span t-if="this.showConnectionState" class="d-flex flex-column justify-content-center rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-class="{'o-minimized p-1': this.isSmall, 'p-2': !this.isSmall }" t-att-title="this.rtcSession.connectionState">
                         <i class="oi text-warning" data-icon="warning"/>
                     </span>
-                    <span t-if="this.showLiveLabel" class="user-select-none rounded o-proportional-text text-bg-danger d-flex align-items-center p-1 o-fw-600" title="live" aria-label="live">
+                    <span t-if="this.showLiveLabel or (this.rtcSession.is_screen_sharing_on and this.props.minimized and !this.isOfActiveCall)" class="user-select-none rounded-pill smaller text-bg-danger d-flex align-items-center o-px-1_5 o-fw-600" t-att-class="{ 'o-px-2_5 py-1': !this.isSmall }" title="live" aria-label="live">
                         LIVE
                     </span>
                 </div>
             </t>
         </div>
     </t>
-
 </templates>

@@ -2,19 +2,30 @@ import { CallContextMenu } from "@mail/discuss/call/common/call_context_menu";
 import { CallParticipantVideo } from "@mail/discuss/call/common/call_participant_video";
 import { CallDropdown } from "@mail/discuss/call/common/call_dropdown";
 import { CONNECTION_TYPES } from "@mail/discuss/call/common/rtc_service";
+import { TalkingAudioBars } from "@mail/discuss/call/common/talking_audio_bars";
 import { useHover } from "@mail/utils/common/hooks";
+import { extractAccentColor } from "@mail/utils/common/misc";
 import { isEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 
-import { Component, onMounted, onWillUnmount, props, signal, types, useListener } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillUnmount,
+    props,
+    signal,
+    types,
+    useEffect,
+    useListener,
+} from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { rpc } from "@web/core/network/rpc";
 
 const HIDDEN_CONNECTION_STATES = new Set(["connected", "completed"]);
 
 export class CallParticipantCard extends Component {
-    static components = { CallParticipantVideo, CallContextMenu, CallDropdown };
+    static components = { CallParticipantVideo, CallContextMenu, CallDropdown, TalkingAudioBars };
     static template = "discuss.CallParticipantCard";
     /** @type {import("models").Rtc} */
     rtc;
@@ -22,6 +33,7 @@ export class CallParticipantCard extends Component {
 
     setup() {
         super.setup();
+        this.cardBgColor = signal();
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
         this.props = props({
@@ -54,7 +66,12 @@ export class CallParticipantCard extends Component {
         this.dragPos = undefined;
         this.isDrag = false;
         this.parentBoundingRect = undefined;
-        onMounted(() => {
+        onMounted(async () => {
+            const avatarUrl = this.channelMember?.avatarUrl;
+            if (avatarUrl) {
+                const { r, g, b } = await extractAccentColor(avatarUrl, 0.53);
+                this.cardBgColor.set(`rgb(${r}, ${g}, ${b})`);
+            }
             if (!this.rtcSession) {
                 return;
             }
@@ -71,6 +88,36 @@ export class CallParticipantCard extends Component {
             });
         });
         useListener(browser, "fullscreenchange", () => this.onFullScreenChange());
+        // Drive the talking glow on rAF, reading volume in render would re-render too often.
+        useEffect(() => {
+            if (!this.isTalking) {
+                this.root.el?.style.setProperty("--discuss-CallParticipantCard-talkingVolume", 0);
+                return;
+            }
+            let frame;
+            const update = () => {
+                const volume = this.rtcSession?.talkingVolume ?? 0;
+                const logScaledVolume = volume > 0 ? Math.log10(1 + volume * 9) : 0;
+                this.root()?.style.setProperty(
+                    "--discuss-CallParticipantCard-talkingVolume",
+                    logScaledVolume
+                );
+                frame = browser.requestAnimationFrame(update);
+            };
+            // Defer the read so this effect tracks isTalking, not volume.
+            frame = browser.requestAnimationFrame(update);
+            return () => browser.cancelAnimationFrame(frame);
+        });
+    }
+
+    get cardBgStyle() {
+        return this.cardBgColor()
+            ? `--discuss-CallParticipantCard-bgColor: ${this.cardBgColor()};`
+            : "";
+    }
+
+    get isActiveCall() {
+        return Boolean(this.props.channel.eq(this.rtc.channel));
     }
 
     get isContextMenuAvailable() {

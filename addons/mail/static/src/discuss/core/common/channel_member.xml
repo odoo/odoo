@@ -3,13 +3,13 @@
     <t t-name="discuss.ChannelMember">
         <t t-set="memberAtRender" t-value="this.member()"/>
         <div class="o-discuss-ChannelMember d-flex align-items-center p-1 bg-inherit rounded-3" t-att-class="this.attClass" t-on-click.stop="(ev) => this.onClickAvatar(ev, { memberAtRender })">
-            <DiscussAvatar record="this.member()" className="this.attClassObjectToString(this.avatarClass)"/>
+            <DiscussAvatar record="this.member()"/>
             <div t-ref="this.displayNameRef" class="d-flex overflow-hidden flex-column lh-sm">
                 <span class="ms-2 text-truncate text-muted fw-bold" t-out="this.member().name" t-att-title="this.member().name"/>
             </div>
             <i t-if="this.member().channel_role === 'owner'" class="oi oi-filled ms-1 text-warning lh-sm" data-icon="star" role="img" title="Channel Owner" aria-label="Channel Owner"/>
             <i t-if="this.member().channel_role === 'admin'" class="oi oi-filled ms-1 text-primary lh-sm" data-icon="star" role="img" title="Channel Admin" aria-label="Channel Admin"/>
-            <span class="o-discuss-ChannelMember-callIndicators ms-auto">
+            <span class="o-discuss-ChannelMember-callIndicators ms-auto d-flex align-items-center o-gap-0_5 ps-2">
                 <span t-if="this.member().in(this.member().channel_id.invited_member_ids)" class="oi p-1 opacity-75" data-icon="person_add"/>
                 <span t-if="this.member().rtcSession?.is_muted and !this.member().rtcSession?.is_deaf" class="oi p-1 opacity-75" data-icon="mic_off"/>
                 <span t-elif="this.member().rtcSession?.is_deaf" class="oi p-1 opacity-75" data-icon="hearing_disabled"/>

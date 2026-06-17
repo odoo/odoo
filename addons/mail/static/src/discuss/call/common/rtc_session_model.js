@@ -120,6 +120,8 @@ export class RtcSession extends Record {
     dataChannel;
     audioError;
     videoError;
+    /** @type {number} value between 0 and 1 that represents volume in % */
+    talkingVolume = 0;
     isTalking = fields.Attr(false, {
         /** @this {import("models").RtcSession} */
         onUpdate() {

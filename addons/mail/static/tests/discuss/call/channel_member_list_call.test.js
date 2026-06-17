@@ -107,7 +107,5 @@ test("can see who is talking among call participants", async () => {
     // Talking indicator shows up while Alice is actually talking.
     const store = getService("mail.store");
     store["discuss.channel.rtc.session"].get(aliceSessionId).isTalking = true;
-    await contains(
-        ".o-discuss-ChannelMember:has(:text('Alice')) .o-mail-DiscussAvatar.o-isTalking"
-    );
+    await contains(".o-discuss-ChannelMember:has(:text('Alice')) .o-discuss-TalkingAudioBars");
 });

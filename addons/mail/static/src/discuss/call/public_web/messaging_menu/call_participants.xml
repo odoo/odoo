@@ -18,13 +18,14 @@
                 <t t-foreach="this.sessions" t-as="session" t-key="session.localId">
                     <div class="o-mail-MessagingMenuCallParticipants-participant d-flex text-reset overflow-hidden align-items-center" t-att-class="this.participantClass(session)" t-on-click.stop="(ev) => this.onClickParticipant(ev, session)">
                         <div class="bg-inherit position-relative d-flex flex-shrink-0" style="width:30px;height:30px;margin: 1.5px;">
-                            <img class="o-mail-MessagingMenuCallParticipants-avatar w-100 h-100 rounded-circle object-fit-cover" t-att-src="session.channel_member_id?.avatarUrl" t-att-class="{'o-isTalking': session.isActuallyTalking}" alt="Participant avatar" t-att-title="session.channel_member_id?.name"/>
+                            <img class="w-100 h-100 rounded-circle object-fit-cover" t-att-src="session.channel_member_id?.avatarUrl" alt="Participant avatar" t-att-title="session.channel_member_id?.name"/>
                         </div>
                         <span class="o-mail-MessagingMenuCallParticipants-name mx-1 text-truncate fw-bold smaller user-select-none" t-att-title="session.channel_member_id?.name" t-att-class="{ 'o-isTalking': session.isActuallyTalking }">
                             <t t-out="session.channel_member_id?.name"/>
                         </span>
                         <div class="flex-grow-1"/>
-                        <div class="o-mail-MessagingMenuCallParticipants-status small opacity-75 ms-1 d-flex align-items-center justify-content-center">
+                        <div class="o-mail-MessagingMenuCallParticipants-status small ms-1 d-flex gap-1 align-items-center justify-content-center">
+                            <TalkingAudioBars t-if="session.isActuallyTalking" session="session"/>
                             <span t-if="session.is_deaf" class="p-1 oi opacity-75" t-att-data-icon="this.CALL_ICON_DEAFEN"/>
                             <span t-elif="session.is_muted" class="p-1 oi opacity-75" t-att-data-icon="this.CALL_ICON_MUTED"/>
                             <span t-if="session.is_screen_sharing_on" class="o-live bg-danger o-text-white rounded">LIVE</span>

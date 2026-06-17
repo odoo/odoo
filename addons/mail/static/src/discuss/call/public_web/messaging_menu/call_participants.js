@@ -1,4 +1,5 @@
 import { CALL_ICON_DEAFEN, CALL_ICON_MUTED } from "@mail/discuss/call/common/call_actions";
+import { TalkingAudioBars } from "@mail/discuss/call/common/talking_audio_bars";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { toggleFn } from "@mail/utils/common/signal";
 
@@ -10,7 +11,7 @@ import { useService } from "@web/core/utils/hooks";
 
 export class MessagingMenuCallParticipants extends Component {
     static template = "mail.MessagingMenuCallParticipants";
-    static components = { AvatarStack };
+    static components = { AvatarStack, TalkingAudioBars };
 
     CALL_ICON_DEAFEN = CALL_ICON_DEAFEN;
     CALL_ICON_MUTED = CALL_ICON_MUTED;

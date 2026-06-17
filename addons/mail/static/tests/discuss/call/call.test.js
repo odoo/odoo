@@ -740,7 +740,7 @@ test("Can use Call actions in Call Systray Menu", async () => {
     await start();
     await openDiscuss(channelId);
     await click("[title='Start Call']");
-    await click(".o-discuss-CallMenu-dropdownMore");
+    await click(".o-discuss-CallMenu-actionsButton");
     await contains(".o-dropdown-item", { count: 9 });
     await contains(".o-dropdown-item:has(:text('Mute'))");
     await contains(".o-dropdown-item:has(:text('Deafen'))");
@@ -1024,7 +1024,7 @@ test("show call participants after stopping screen share", async () => {
     await click("[title='Stop Sharing Screen']");
     await contains("video", { count: 0 });
     // when all participant cards are shown they are minimized
-    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard .o-minimized");
+    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard-avatar .o-minimized");
 });
 
 test("show call participants after stopping camera share", async () => {
@@ -1038,7 +1038,7 @@ test("show call participants after stopping camera share", async () => {
     await click("[title='Turn camera off']");
     await contains("video", { count: 0 });
     // when all participant cards are shown they are minimized
-    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard .o-minimized");
+    await contains(".o-discuss-Call-mainCards .o-discuss-CallParticipantCard-avatar .o-minimized");
 });
 
 test("Cross tab calls: tabs can interact with calls remotely", async () => {
