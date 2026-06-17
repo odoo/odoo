@@ -85,6 +85,7 @@ class AccountMove(models.Model):
             render_context['peppol_info'] = {
                 'peppol_country': invoice_country,
                 'is_peppol_sent': invoice.peppol_is_sent,
+                'is_partner_b2c': invoice.commercial_partner_id._is_vat_void(invoice.commercial_partner_id.vat),
                 'partner_on_peppol': invoice.commercial_partner_id.peppol_verification_state in ('valid', 'not_valid_format'),
             }
         return render_context
