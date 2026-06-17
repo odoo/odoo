@@ -292,7 +292,7 @@ class WebsiteStructuredDataMixin(models.AbstractModel):
         :return: List of Schema.org dictionaries.
         :rtype: list[dict]
         """
-        website = self.env['website'].get_current_website()
+        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         return [website._prepare_jsonld_vals()]
 
     def _render_jsonld(self, is_detail_page=False):
@@ -334,7 +334,7 @@ class WebsiteStructuredDataMixin(models.AbstractModel):
         :return: BreadcrumbList schema dictionary.
         :rtype: dict
         """
-        website = self.env['website'].get_current_website()
+        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         base_url = website.get_base_url()
         return {
             '@type': 'BreadcrumbList',
@@ -365,7 +365,8 @@ class WebsiteStructuredDataMixin(models.AbstractModel):
             otherwise it emits a flat ``url`` + ``name``.
         :rtype: dict
         """
-        base_url = self.env['website'].get_current_website().get_base_url()
+        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
+        base_url = website.get_base_url()
         return {
             '@type': 'CollectionPage',
             'name': name,

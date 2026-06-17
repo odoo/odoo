@@ -17,7 +17,8 @@
 
     <template id="forum_post_link">
         <p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
-            <t t-set="_company_id" t-value="object.forum_id.website_id.get_current_website().company_id"/>
+            <t t-set="_website" t-value="object.forum_id.website_id or object.env.website or object.env.website.browse(env.context.get('host_id'))"/>
+            <t t-set="_company_id" t-value="_website.company_id"/>
             <a t-attf-href="/forum/#{slug(object.forum_id)}/#{slug(object)}"
                 t-attf-style="
                     padding: 5px 10px;

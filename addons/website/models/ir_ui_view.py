@@ -642,12 +642,8 @@ class IrUiView(models.Model):
         :param str xpath: valid xpath to the tag to replace
         """
         self.ensure_one()
-        current_website = self.env['website'].get_current_website(fallback=False)
-
+        current_website = self.env.website
         view = self
-        if current_website:
-            view = view.with_context(website_id=current_website.id)
-
         # xpath condition is important to be sure we are editing a view and not
         # a field as in that case `self` might not exist (check commit message)
         if xpath and view.key and current_website:

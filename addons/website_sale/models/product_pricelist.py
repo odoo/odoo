@@ -71,7 +71,7 @@ class ProductPricelist(models.Model):
 
     def _get_partner_pricelist_multi_search_domain_hook(self, company_id):
         domain = super()._get_partner_pricelist_multi_search_domain_hook(company_id)
-        website = self.env["website"].get_current_website(fallback=False)
+        website = self.env.website
         if website:
             domain += self._get_website_pricelists_domain(website)
         return domain

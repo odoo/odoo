@@ -4,7 +4,7 @@
 	<template id="s_whatsapp" name="WhatsApp Snippet">
         <section
             class="s_whatsapp position-fixed o_no_save"
-            t-att-data-whatsapp-number="env['website'].get_current_website().company_id.phone or ''"
+            t-att-data-whatsapp-number="env.website.company_id.phone or ''"
             data-agent-avatar-src="/website/static/src/img/snippets_demo/s_whatsapp_agent.webp"
         >
             <div class="s_whatsapp_translation_inputs">

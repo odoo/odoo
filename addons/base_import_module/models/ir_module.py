@@ -108,7 +108,7 @@ class IrModuleModule(models.Model):
     def _import_module(self, module, path, force=False, with_demo=False):
         # Do not create a bridge module for these neutralizations.
         # Do not involve specific website during import by resetting
-        # information used by website's get_current_website.
+        # information used by website_id's context.
         self = self.with_context(website_id=None)  # noqa: PLW0642
 
         known_mods = self.search([])

@@ -487,20 +487,6 @@ class TestWebsitePriceList(WebsiteSaleCommon):
         self.assertEqual(order_sudo.pricelist_id, list_benelux_2)
 
 
-def simulate_frontend_context(self, website_id=None):
-    if website_id is None:
-        website_id = self.ref("base.default_website")
-
-    # Mock this method will be enough to simulate frontend context in most methods
-    def get_current_website(fallback=None):  # noqa: ARG001
-        return self.env["website"].browse(website_id)
-
-    patcher = patch(
-        "odoo.addons.website.models.website.Website.get_current_website", wraps=get_current_website
-    )
-    self.startPatcher(patcher)
-
-
 @tagged("post_install", "-at_install")
 class TestWebsitePriceListAvailable(WebsiteSaleCommon):
     @classmethod
@@ -551,10 +537,6 @@ class TestWebsitePriceListAvailable(WebsiteSaleCommon):
         })
         cls.w2_pl = Pricelist.create({"name": "Website 2 Pricelist", "website_id": cls.website2.id})
         existing_pricelists.action_archive()
-
-    def setUp(self):
-        super().setUp()
-        simulate_frontend_context(self)
 
     def test_get_pricelist_available(self):
         """Test get all available pricelists."""
@@ -705,7 +687,8 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         # Test get all available pricelists with geoip and no partner pricelist
 
         # property_product_pricelist will also be returned in the available pricelists
-        self.website1_be_pl += self.env.user.partner_id.property_product_pricelist
+        website_id = self.ref('base.default_website')
+        self.website1_be_pl += self.env.user.with_context(website_id=website_id).partner_id.property_product_pricelist
 
         with patch(
             "odoo.addons.website_sale.models.website.Website._get_geoip_country_code",
@@ -754,7 +737,8 @@ class TestWebsitePriceListAvailableGeoIP(TestWebsitePriceListAvailable):
         # Test get all available with geoip and visible pricelists + promo pl
         pls_to_return = self.generic_pl_select + self.w1_pl_select + self.generic_pl_code_select
         # property_product_pricelist will also be returned in the available pricelists
-        pls_to_return += self.env.user.partner_id.property_product_pricelist
+        website_id = self.ref('base.default_website')
+        pls_to_return += self.env.user.with_context(website_id=website_id).partner_id.property_product_pricelist
 
         current_pl = self.w1_pl_code
         with (
@@ -914,8 +898,6 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         for the company1 as we should get the website's company pricelist
         and not the demo user's current company pricelist.
         """
-        simulate_frontend_context(self, self.website.id)
-
         # First check: It should return c2_pl as company_id is
         # website.company_id and not env.user.company_id
         company_id = self.website.company_id.id

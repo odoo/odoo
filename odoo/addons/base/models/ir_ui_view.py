@@ -2576,7 +2576,7 @@ actual arch.
     @api.model
     def render_public_asset(self, template, values=None):
         self._get_template_view(template).sudo()._check_view_access()
-        return self.env['ir.qweb'].sudo()._render(template, values)
+        return self.sudo()._render_template(template, values)
 
     def _render_template(self, template, values=None):
         return self.env['ir.qweb']._render(template, values)

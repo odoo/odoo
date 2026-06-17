@@ -698,7 +698,8 @@ class IrModuleModule(models.Model):
         # as `website_sale` are already installed.
         add_addons_snippets(manifest.get('configurator_snippets_addons', {}))
 
-        theme = self.env['website'].get_current_website().theme_id
+        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
+        theme = website.theme_id
         if theme and theme.name != self.name:
             # Another module is being installed after the theme was selected.
             # Only include the theme addon snippets targeting this module.
