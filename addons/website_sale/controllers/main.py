@@ -167,6 +167,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     subdomains.extend((
                         Domain('website_description', 'ilike', srch),
                         Domain('description_sale', 'ilike', srch),
+                        Domain('description_ecommerce', 'ilike', srch),
                     ))
                 extra_subdomain = self._add_search_subdomains_hook(srch)
                 if extra_subdomain:

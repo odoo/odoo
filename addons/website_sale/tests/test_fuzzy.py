@@ -60,3 +60,44 @@ class TestFuzzy(ProductVariantsCommon):
         self.product_template_sofa.company_id = False
         _, results, _ = website._search_with_fuzzy('products_only', 'Sofa', 5, 'name asc', options)
         self.assertIn(self.product_template_sofa, results[0]['results'])
+
+    def test_search_description_ecommerce(self):
+        """
+        Products must appear in website search results when the search keyword
+        exists only in the description_ecommerce field.
+
+        Regression test for GitHub issue #267505.
+        """
+        website = self.env.ref('website.default_website')
+
+        # Create a product with keyword only in description_ecommerce
+        product = self.env['product.template'].create({
+            'name': 'Regression Test Product 267505',
+            'description_sale': False,
+            'description_ecommerce': '<p>aperolspecialkeyword267505</p>',
+            'is_published': True,
+            'website_id': website.id,
+        })
+        self.cr.flush()  # flush to DB so search index picks it up, same pattern as existing tests
+
+        options = {
+            'displayDescription': True,
+            'displayDetail': True,
+            'display_currency': True,
+            'displayExtraDetail': True,
+            'displayExtraLink': True,
+            'displayImage': True,
+            'allowFuzzy': False,  # exact search — we want to confirm ilike match, not fuzzy
+        }
+
+        results_count, results, _ = website._search_with_fuzzy(
+            'products_only', 'aperolspecialkeyword267505', 5, 'name asc', options
+        )
+
+        result_records = results[0]['results'] if results else []
+        self.assertIn(
+            product,
+            result_records,
+            "Product must appear in search results when keyword is in description_ecommerce"
+        )
+        self.assertGreaterEqual(results_count, 1, "Search must return at least one result")
