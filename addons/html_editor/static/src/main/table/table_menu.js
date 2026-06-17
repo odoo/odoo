@@ -31,6 +31,7 @@ export class TableMenu extends Component {
         toggleAlternatingRows: Function,
         buildTableGrid: Function,
         close: Function,
+        commit: Function,
         tableDragDropOverlay: Object,
         dropdownState: Object,
         target: { validate: (el) => el.nodeType === Node.ELEMENT_NODE },
@@ -88,10 +89,11 @@ export class TableMenu extends Component {
         if (!table) {
             return false;
         }
-        const rows = [...table.rows];
-        const rowHasHeight = rows.some((row) => row.style.height);
-        const colgroup = table.querySelector("colgroup");
-        return rowHasHeight || colgroup;
+        const rowHasHeight = [...table.rows].some((row) => row.style.height);
+        const colHasWidth = [...table.querySelectorAll("colgroup col")].some(
+            (col) => col.style.width
+        );
+        return rowHasHeight || colHasWidth;
     }
 
     get hasCustomRowHeight() {
@@ -100,12 +102,13 @@ export class TableMenu extends Component {
 
     get hasCustomColumnWidth() {
         const table = closestElement(this.props.target, "table");
-        const index = this.tableGrid[0].indexOf(closestElement(this.props.target, isTableCell));
+        const index = this.tableGrid[0].indexOf(this.props.target);
         const colgroup = table.querySelector("colgroup");
-        if (colgroup) {
-            return colgroup.children[index]?.style.width;
+        if (!colgroup) {
+            return false;
         }
-        return false;
+        const targetCols = [...colgroup.children].slice(index, index + this.props.target.colSpan);
+        return targetCols.some((col) => col.style.width);
     }
 
     get hasContent() {
@@ -157,6 +160,7 @@ export class TableMenu extends Component {
     }
     onSelected(item) {
         item.action(this.props.target);
+        this.props.commit();
         this.props.close();
     }
 
@@ -188,6 +192,7 @@ export class TableMenu extends Component {
                     close: () => this.props.tableDragDropOverlay.close(),
                     moveRow: this.props.moveRow,
                     moveColumn: this.props.moveColumn,
+                    commit: this.props.commit,
                     tableGrid: this.tableGrid,
                 },
             });
@@ -268,8 +273,26 @@ export class TableMenu extends Component {
                 name: "reset_column_size",
                 icon: "fa-table",
                 text: _t("Reset column size"),
-                action: (target) =>
-                    this.props.resetColumnWidth(closestElement(target, isTableCell)),
+                action: (target) => {
+                    const cell = closestElement(target, isTableCell);
+                    const table = closestElement(cell, "table");
+                    const colgroup = table.querySelector("colgroup");
+                    if (!colgroup) {
+                        return;
+                    }
+                    const colIndex = this.tableGrid[0].indexOf(cell);
+                    const targetCols = [...colgroup.children].slice(
+                        colIndex,
+                        colIndex + cell.colSpan
+                    );
+                    const layoutContainer = closestElement(cell, "table");
+                    targetCols.forEach((col) => {
+                        this.props.resetColumnWidth(col, {
+                            layoutContainer,
+                            hasProxyElements: true,
+                        });
+                    });
+                },
             },
             this.hasCustomTableSize && {
                 name: "reset_table_size",
@@ -371,7 +394,11 @@ export class TableMenu extends Component {
                 name: "reset_row_size",
                 icon: "fa-table",
                 text: _t("Reset row size"),
-                action: (target) => this.props.resetRowHeight(closestElement(target, "tr")),
+                action: (target) =>
+                    this.props.resetRowHeight(closestElement(target, "tr"), {
+                        layoutContainer: closestElement(target, "table"),
+                        elementsSelector: "tr",
+                    }),
             },
             this.hasCustomTableSize && {
                 name: "reset_table_size",

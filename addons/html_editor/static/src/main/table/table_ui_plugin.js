@@ -16,7 +16,7 @@ import { getRowIndex } from "@html_editor/utils/table";
  */
 export class TableUIPlugin extends Plugin {
     static id = "tableUi";
-    static dependencies = ["history", "overlay", "selection", "table"];
+    static dependencies = ["history", "overlay", "selection", "table", "resize"];
     /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
@@ -191,29 +191,23 @@ export class TableUIPlugin extends Plugin {
         if (!td) {
             return;
         }
-        const withCommit =
-            (fn) =>
-            (...args) => {
-                fn(...args);
-                this.dependencies.history.commit();
-            };
         const tableMethods = {
-            moveColumn: withCommit(this.dependencies.table.moveColumn),
-            addColumn: withCommit(this.dependencies.table.addColumn),
-            removeColumn: withCommit(this.dependencies.table.removeColumn),
-            moveRow: withCommit(this.dependencies.table.moveRow),
-            addRow: withCommit(this.dependencies.table.addRow),
-            removeRow: withCommit(this.dependencies.table.removeRow),
-            turnIntoHeader: withCommit(this.dependencies.table.turnIntoHeader),
-            turnIntoRow: withCommit(this.dependencies.table.turnIntoRow),
-            resetRowHeight: withCommit(this.dependencies.table.resetRowHeight),
-            resetColumnWidth: withCommit(this.dependencies.table.resetColumnWidth),
-            resetTableSize: withCommit(this.dependencies.table.resetTableSize),
-            clearColumnContent: withCommit(this.dependencies.table.clearColumnContent),
-            clearRowContent: withCommit(this.dependencies.table.clearRowContent),
-            toggleAlternatingRows: withCommit(this.dependencies.table.toggleAlternatingRows),
-            mergeSelectedCells: withCommit(this.dependencies.table.mergeSelectedCells),
-            unmergeSelectedCell: withCommit(this.dependencies.table.unmergeSelectedCell),
+            moveColumn: this.dependencies.table.moveColumn,
+            addColumn: this.dependencies.table.addColumn,
+            removeColumn: this.dependencies.table.removeColumn,
+            moveRow: this.dependencies.table.moveRow,
+            addRow: this.dependencies.table.addRow,
+            removeRow: this.dependencies.table.removeRow,
+            turnIntoHeader: this.dependencies.table.turnIntoHeader,
+            turnIntoRow: this.dependencies.table.turnIntoRow,
+            resetRowHeight: this.dependencies.resize.resetHeight,
+            resetColumnWidth: this.dependencies.resize.resetWidth,
+            resetTableSize: this.dependencies.table.resetTableSize,
+            clearColumnContent: this.dependencies.table.clearColumnContent,
+            clearRowContent: this.dependencies.table.clearRowContent,
+            toggleAlternatingRows: this.dependencies.table.toggleAlternatingRows,
+            mergeSelectedCells: this.dependencies.table.mergeSelectedCells,
+            unmergeSelectedCell: this.dependencies.table.unmergeSelectedCell,
             buildTableGrid: this.dependencies.table.buildTableGrid,
         };
         const grid = this.dependencies.table.buildTableGrid(closestElement(td, "table"));
@@ -230,6 +224,7 @@ export class TableUIPlugin extends Plugin {
                     close: () => this.closeRowMenu(),
                     document: this.document,
                     editable: this.editable,
+                    commit: this.dependencies.history.commit,
                     ...tableMethods,
                 },
             });
@@ -248,6 +243,7 @@ export class TableUIPlugin extends Plugin {
                         document: this.document,
                         editable: this.editable,
                         close: () => this.closeColumnMenu(),
+                        commit: this.dependencies.history.commit,
                         ...tableMethods,
                     },
                 });
