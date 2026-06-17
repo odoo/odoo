@@ -26,7 +26,7 @@
         <xpath expr="//t[@t-call='web.external_layout']" position="attributes">
             <attribute name="t-call">account_edi_ubl_cii.layout_invoices_generated_by_odoo</attribute>
         </xpath>
-        <xpath expr="//div[@t-if=&quot;o.move_type in ('out_invoice', 'in_refund') and o.payment_reference&quot;]" position="attributes">
+        <xpath expr="//p[@name='payment_communication']/parent::*" position="attributes">
             <attribute name="t-if">o.payment_reference</attribute>
         </xpath>
         <xpath expr="//t[@t-set='address']" position="after">
