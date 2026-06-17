@@ -19,8 +19,10 @@ class SmsComposer(models.TransientModel):
     # ------------------------------------------------------------
 
     def _get_unsubscribe_url(self, res_id, trace_code, number):
+        # Resolve the base URL from the recipient (passed in context) so the opt-out
+        # link stays on the recipient's website in multi-website setups, like the mail.
         return werkzeug.urls.url_join(
-            self.get_base_url(),
+            self.mailing_id._get_recipient_base_url(),
             '/sms/%s/%s' % (self.mailing_id.id, trace_code)
         )
 
@@ -47,7 +49,10 @@ class SmsComposer(models.TransientModel):
             trace_values['trace_status'] = 'cancel'
         else:
             if self.mass_sms_allow_unsubscribe:
-                stop_sms = self._get_unsubscribe_info(self._get_unsubscribe_url(record.id, trace_code, sms_values['number']))
+                unsubscribe_url = self.with_context(
+                    mailing_recipient_record=record
+                )._get_unsubscribe_url(record.id, trace_code, sms_values['number'])
+                stop_sms = self._get_unsubscribe_info(unsubscribe_url)
                 sms_values['body'] = '%s\n%s' % (sms_values['body'] or '', stop_sms)
         return trace_values
 
