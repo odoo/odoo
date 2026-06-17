@@ -1126,7 +1126,7 @@ class SlideChannel(models.Model):
 
     def _prepare_jsonld_vals(self):
         self.ensure_one()
-        website = self.env['website'].get_current_website()
+        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         base_url = website.get_base_url()
         description = self.description_short and text_from_html(self.description_short, True)
         if not description and self.description:

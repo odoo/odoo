@@ -28,7 +28,7 @@ class ResPartner(models.Model):
 
     def _prepare_jsonld_vals(self):
         self.ensure_one()
-        website = self.env['website'].get_current_website()
+        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         base_url = website.get_base_url()
         schema_type = 'Organization' if self.is_company else 'Person'
         vals = {
@@ -60,7 +60,8 @@ class ResPartner(models.Model):
 
     def _build_profilepage_jsonld_vals(self):
         self.ensure_one()
-        base_url = self.env['website'].get_current_website().get_base_url()
+        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
+        base_url = website.get_base_url()
         return {
             '@type': 'ProfilePage',
             'url': f'{base_url}{self.website_url}',

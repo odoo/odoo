@@ -366,7 +366,7 @@ class BlogPost(models.Model):
 
     def _prepare_jsonld_vals(self):
         self.ensure_one()
-        website = self.env['website'].get_current_website()
+        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         base_url = self.get_base_url()
         post_url = f'{base_url}{self.website_url}'
         vals = {

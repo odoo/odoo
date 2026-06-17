@@ -85,7 +85,7 @@ class WebsitePage(models.Model):
             page.parent_ids = self.browse(reversed(parent_ids))
 
     def _compute_is_homepage(self):
-        website = self.env['website'].get_current_website()
+        website = self.env.website or self.env.website.browse(self.env.context.get('host_id'))
         for page in self:
             page.is_homepage = page.url == (website.homepage_url or page.website_id == website and '/')
 
@@ -156,7 +156,8 @@ class WebsitePage(models.Model):
             :param page_id : website.page identifier
         """
         page = self.browse(int(page_id))
-        copy_param = dict(name=page_name or page.name, website_id=self.env['website'].get_current_website().id)
+        website = self.env.website or self.env.website.browse(self.env.context.get('host_id'))
+        copy_param = dict(name=page_name or page.name, website_id=website.id)
         if page_name:
             url = '/' + self.env['ir.http']._slugify(page_name, max_length=1024, path=True)
             copy_param['url'] = self.env['website'].get_unique_path(url)
@@ -214,7 +215,7 @@ class WebsitePage(models.Model):
                 url = self.env['website'].with_context(website_id=page.website_id.id).get_unique_path(vals_url)
                 page.menu_ids.write({'url': url})
                 # Sync website's homepage URL
-                website = self.env['website'].get_current_website()
+                website = self.env.website or self.env.website.browse(self.env.context.get('host_id'))
                 page_url_normalized = {'homepage_url': page.url}
                 website._handle_homepage_url(page_url_normalized)
                 if website.homepage_url == page_url_normalized['homepage_url']:
@@ -473,7 +474,7 @@ class WebsitePage(models.Model):
         fields_to_fetch = [name for name, field in self.view_id._fields.items() if field.prefetch]
         self.view_id.fetch(fields_to_fetch)
 
-        website = self.env["website"].get_current_website()
+        website = self.env.website
 
         if (
             (self.env.user.has_group('website.group_website_designer') or self.is_visible)

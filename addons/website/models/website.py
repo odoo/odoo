@@ -690,7 +690,7 @@ class Website(models.CachedModel):
     @api.model
     def configurator_init(self):
         r = dict()
-        current_website = self.get_current_website(fallback=True)
+        current_website = self.env.website or self.env.website.browse(self.env.context.get('host_id')) or self.env.ref('base.default_website')
         company = current_website.company_id
         r['logo'] = False
         if not company.uses_default_logo:
@@ -839,7 +839,7 @@ class Website(models.CachedModel):
 
     @api.model
     def configurator_apply(self, **kwargs):
-        website = self.get_current_website(fallback=True)
+        website = self.env.website or self.env.website.browse(self.env.context.get('host_id')) or self.env.ref('base.default_website')
         self = self.with_context(website_id=website.id)  # noqa: PLW0642
         skip_ai = kwargs.get('skip_ai')  # Used by design-themes tooling
         theme_name = kwargs['theme_name']
@@ -1334,7 +1334,7 @@ class Website(models.CachedModel):
         # we only want a unique_path for website specific.
         # we need to be able to have /url for website=False, and /url for website=1
         # in case of duplicate, page manager will allow you to manage this case
-        website_id = self.env.context.get('website_id', False) or self.get_current_website().id
+        website_id = self.env.context.get('website_id') or self.env.context.get('host_id') or False
         domain_static = [('website_id', '=', website_id)]  # .website_domain()
         page_temp = page_url
         while self.env['website.page'].with_context(active_test=False).sudo().search([('url', '=', page_temp)] + domain_static):
@@ -1456,53 +1456,6 @@ class Website(models.CachedModel):
     # ----------------------------------------------------------
     # Utilities
     # ----------------------------------------------------------
-
-    @api.model
-    def get_current_website(self, fallback: bool | None = None):
-        """Return the current website record, or an empty recordset.
-
-        We look for the current website (or a good enough one) looking
-        at, in order:
-
-        1. The ``website_id`` context.
-        2. The ``host_id`` context or ``ir.http._get_host_id()`` (domain
-           lookup), if ``fallback`` is ``None`` or ``True``
-        3. The first installed website, if ``fallback`` is ``True``.
-
-        Otherwise, if the contexts are missing, or contain a bad id, and
-        we can't fallback further: it returns an empty recordset.
-
-        ==============  ==============  =============  =============
-        Lookup order    fallback=False  fallback=None  fallback=True
-        ==============  ==============  =============  =============
-        website_id      Yes             Yes            Yes
-        host_id         No              Yes            Yes
-        first website   No              No             Yes
-        ==============  ==============  =============  =============
-        """
-        existing_ids = self.get_all().ids
-        if website_id := self.env.context.get('website_id'):
-            # during the match of env['ir.http'], the website information was
-            # added from the request.
-            if website_id in existing_ids:
-                return self.browse(website_id)
-
-        if fallback is False:
-            return self.browse(False).with_context(website_id=False)
-
-        if 'host_id' in self.env.context:
-            # during the match of env['ir.http'], the website information was
-            # added from the request.
-            website_id = self.env.context.get('host_id')
-
-        if website_id not in existing_ids:
-            if fallback and existing_ids:
-                # TODO: check if we can remove it
-                website_id = existing_ids[0]
-            else:
-                website_id = False
-
-        return self.browse(website_id).with_context(website_id=website_id)
 
     def _force(self):
         if request:

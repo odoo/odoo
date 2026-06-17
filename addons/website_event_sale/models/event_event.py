@@ -8,7 +8,7 @@ class EventEvent(models.Model):
 
     def _build_offer_jsonld_vals(self, ticket):
         offer = super()._build_offer_jsonld_vals(ticket)
-        website = self.env["website"].get_current_website()
+        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         if website.show_line_subtotals_tax_selection == "tax_excluded":
             price = ticket.total_price_reduce
         else:

@@ -767,7 +767,7 @@ class ProductTemplate(models.Model):
         self.ensure_one()
 
         combination = combination or self.env["product.template.attribute.value"]
-        website = self.env["website"].get_current_website()
+        website = self.env.website
         uom = self.env["uom.uom"].browse(uom_id) or self._get_main_uom()
 
         if not product_id and not combination and not only_template:
@@ -1447,7 +1447,7 @@ class ProductTemplate(models.Model):
         :rtype: dict
         """
         self.ensure_one()
-        website = self.env["website"].get_current_website()
+        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
 
         if self.product_variant_count == 1:
             vals = self.product_variant_id._prepare_jsonld_vals()

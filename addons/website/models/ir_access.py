@@ -7,7 +7,7 @@ class IrAccess(models.Model):
     @api.model
     def _eval_context(self):
         res = super()._eval_context()
-        res['website'] = self.env['website'].get_current_website(fallback=False)
+        res['website'] = self.env.website
         return res
 
     def _get_access_context(self):

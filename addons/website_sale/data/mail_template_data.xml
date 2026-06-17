@@ -292,7 +292,7 @@
             <field name="use_default_to" eval="False"/>
             <field name="email_layout_xmlid">mail.mail_notification_light</field>
             <field name="body_html" type="html">
-                <t t-set="website" t-value="object.website_id or object.website_id.get_current_website()"/>
+                <t t-set="website" t-value="object.website_id or object.env.website or object.env.website.browse(env.context.get('host_id'))"/>
                 <div style="margin: 0px; padding: 0px;">
                     <t
                         t-if="website"

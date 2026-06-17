@@ -542,7 +542,7 @@ class SlideSlide(models.Model):
 
     def _prepare_jsonld_vals(self):
         self.ensure_one()
-        website = self.env['website'].get_current_website()
+        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         base_url = website.get_base_url()
         slide_url = self.website_absolute_url
         vals = {

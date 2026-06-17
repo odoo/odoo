@@ -127,7 +127,7 @@ class ProductProduct(models.Model):
         """JSON-LD payload describing the variant as a https://schema.org/Product."""
         self.ensure_one()
 
-        website = self.env["website"].get_current_website()
+        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
         base_url = website.get_base_url()
         product_price = request.pricelist._get_product_price(
             self, quantity=1, currency=website.currency_id
