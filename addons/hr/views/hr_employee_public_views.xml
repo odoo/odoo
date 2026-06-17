@@ -198,7 +198,7 @@
                                     <i class="fa fa-fw me-2 fa-envelope text-primary" title="Email"/>
                                     <field name="work_email"/>
                                 </div>
-                                <div t-if="record.work_phone.raw_value">
+                                <div t-if="record.work_phone.raw_value" class="d-flex align-items-baseline">
                                     <i class="fa fa-fw me-2 fa-phone text-primary" title="Phone"/>
                                     <field name="work_phone" widget="phone"/>
                                 </div>
