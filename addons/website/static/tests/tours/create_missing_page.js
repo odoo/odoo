@@ -25,11 +25,11 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check if the 'url' input is correctly slugified.",
-            trigger: ".modal-dialog .o_website_dialog input:eq(1):value('zoé-s-diner')",
+            trigger: ".modal-dialog .o_website_dialog input:eq(2):value('zoé-s-diner')",
         },
         {
             content: "Edit the 'url' input",
-            trigger: ".modal-dialog .o_website_dialog input:eq(1)",
+            trigger: ".modal-dialog .o_website_dialog input:eq(2)",
             run: "edit /contactus",
         },
         {
@@ -40,7 +40,7 @@ registerWebsitePreviewTour(
         {
             content:
                 "Edit the 'url' input again (with a character that will be ignored at creation)",
-            trigger: ".modal-dialog .o_website_dialog input:eq(1)",
+            trigger: ".modal-dialog .o_website_dialog input:eq(2)",
             run: "edit zoé-s-di,ner",
         },
         {
@@ -143,7 +143,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Edit the 'url' input",
-            trigger: ".modal-dialog .o_website_dialog input:eq(1)",
+            trigger: ".modal-dialog .o_website_dialog input:eq(2)",
             run: "edit sea-hotel",
         },
         {
