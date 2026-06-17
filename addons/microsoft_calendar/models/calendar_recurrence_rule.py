@@ -134,6 +134,8 @@ class RecurrenceRule(models.Model):
                     | self.env["calendar.event"]._get_recurrent_fields()
             )
             # We avoid to write time_fields because they are not shared between events.
+            # Attendee commands can stay in new_event_values because each event write
+            # applies them against that event's own attendees.
             self.with_context(dont_notify=True)._write_events(dict({
                 field: value
                 for field, value in new_event_values.items()

@@ -303,6 +303,16 @@ class MicrosoftSync(models.AbstractModel):
         # ... and update them
         rec_values = {}
         update_events = self.env['calendar.event']
+        events_by_timeslot = {}
+
+        def _get_events_by_timeslot(allday):
+            # Build this lazily: most occurrences are still matched by their stored Odoo id.
+            if allday not in events_by_timeslot:
+                events_by_timeslot[allday] = {
+                    ev._timeslot_key(allday): ev for ev in self.calendar_event_ids
+                }
+            return events_by_timeslot[allday]
+
         for e in events_to_update:
             if e.type == "exception":
                 event_values = self.env['calendar.event']._microsoft_to_odoo_values(e)
@@ -318,10 +328,24 @@ class MicrosoftSync(models.AbstractModel):
                         event_values, need_sync_m=False
                     )
 
-                odoo_event = self.env['calendar.event'].browse(e.odoo_id(self.env)).exists().with_context(
-                    no_mail_to_attendees=True, mail_create_nolog=True
+                odoo_event = self.env['calendar.event'].browse(e.odoo_id(self.env)).exists()
+                if not odoo_event and event_values.get('start'):
+                    # The occurrence is not mapped to an Odoo event yet. This happens when the
+                    # whole series is shifted in Outlook: the occurrences are recreated in Odoo
+                    # (without any Microsoft ids) and the Outlook instances come back with new
+                    # ids, so they match no Odoo event by id. Re-link them by timeslot so they
+                    # recover their Microsoft ids instead of staying orphaned
+                    timeslot_key = self.env['calendar.event']._get_timeslot_key(
+                        event_values['start'], event_values['stop'], e.isAllDay
+                    )
+                    odoo_event = _get_events_by_timeslot(e.isAllDay).get(
+                        timeslot_key, self.env['calendar.event']
+                    )
+                    if odoo_event and e.type == "occurrence":
+                        event_values = dict(event_values, follow_recurrence=True)
+                odoo_event.with_context(dont_notify=True, no_mail_to_attendees=True).write(
+                    dict(event_values, need_sync_m=False)
                 )
-                odoo_event.with_context(dont_notify=True).write(dict(event_values, need_sync_m=False))
                 update_events |= odoo_event
 
         # update the recurrence
