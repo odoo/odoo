@@ -30,6 +30,7 @@ registry.category("web_tour.tours").add("self_order_preset_takeaway_tour", {
         CartPage.checkProduct("Coca-Cola", "2.53", "1"),
         Utils.clickBtn("Order"),
         CartPage.fillInput("Name", "Dr Dre"),
+        CartPage.fillInput("Phone", "490904390"),
         Utils.clickBtn("Continue"),
         Utils.checkConfirmationString(),
         Utils.clickBtn("Ok"),
@@ -101,6 +102,7 @@ registry.category("web_tour.tours").add("self_order_preset_slot_tour", {
         Utils.clickBtn("Order"),
         ...CartPage.selectTimeSlot(),
         CartPage.fillInput("Name", "Dr Dre"),
+        CartPage.fillInput("Phone", "490904390"),
         Utils.clickBtn("Continue"),
         Utils.checkConfirmationString(true),
         Utils.clickBtn("Ok"),
@@ -119,6 +121,7 @@ registry.category("web_tour.tours").add("test_slot_limit_orders", {
             Utils.clickBtn("Order"),
             CartPage.selectSpecificSlot("6:00pm"),
             CartPage.fillInput("Name", "Dr Dre"),
+            CartPage.fillInput("Phone", "490904390"),
             Utils.clickBtn("Continue"),
             Utils.clickBtn("Ok"),
             Utils.clickBtn("Order Now"),
@@ -141,7 +144,7 @@ registry.category("web_tour.tours").add("test_preset_takeaway_email_tour", {
         Utils.clickBtn("Order"),
         CartPage.fillInput("Name", "Public user"),
         CartPage.fillInput("Email", "public.user@test.com"),
-        CartPage.fillInput("Phone", "000111222"),
+        CartPage.fillInput("Phone", "490904390"),
         Utils.clickBtn("Continue"),
         // Waiting for mail to be sent
         {
