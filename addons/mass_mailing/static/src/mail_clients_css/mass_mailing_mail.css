@@ -1,14 +1,8 @@
-// TODO EGGMAIL: check if still relevant after mail refactoring to use the new converter
-// Redeclare CSS values that use color-mix()
-// to avoid issues with mail rendering engines
-:root {
-    --o-border-color: #{o-color('300')};
-}
-
-// TODO EGGMAIL: Copy of dynamic styleSheet, decide on final style implementation
-// TODO EGGMAIL: don't use a style tag for most of these if possible, as they
-// are not fully supported across mail clients => maybe better to inline most
-// of the style
+/* 
+TODO EGGMAIL: don't use a style tag for most of these if possible, as they
+are not fully supported across mail clients => maybe better to inline most
+of the style
+*/
 body {
     font-family:Arial,Helvetica Neue,Helvetica,sans-serif;
     margin: 0;

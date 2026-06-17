@@ -50,10 +50,11 @@ export class TableStrategyPlugin extends Plugin {
             const rowMeasures = this.extractRowsFromBands(emailNode);
             return this.fillTableContainer(emailNode, rowMeasures);
         },
-        refine_layout_processors: withSequence(
-            DEFAULT_SPACING_SEQUENCE - 1,
-            this.applyTableSpacing.bind(this)
-        ),
+        refine_layout_processors: [
+            withSequence(DEFAULT_SPACING_SEQUENCE - 1, this.applyTableSpacing.bind(this)),
+            this.applyDescendantBackground.bind(this),
+            this.applyDescendantBorder.bind(this),
+        ],
         accept_table_strategy_report_overrides: this.acceptTableStrategyReport.bind(this),
     };
 
@@ -77,6 +78,22 @@ export class TableStrategyPlugin extends Plugin {
         backgroundRules.allow(/^background.*/);
     }
 
+    applyDescendantBackground(layout, { emailNode }) {
+        const facts = emailNode.analysis.facts;
+        const { useTableStrategy, acceptDescendantBackground } = facts;
+        if (!useTableStrategy || !acceptDescendantBackground) {
+            return;
+        }
+    }
+
+    applyDescendantBorder(layout, { emailNode }) {
+        const facts = emailNode.analysis.facts;
+        const { useTableStrategy, acceptDescendantBorder } = facts;
+        if (!useTableStrategy || !acceptDescendantBorder) {
+            return;
+        }
+    }
+
     applyTableSpacing(layout, { emailNode }) {
         if (!emailNode.analysis.facts.useTableStrategy) {
             return;
@@ -92,7 +109,7 @@ export class TableStrategyPlugin extends Plugin {
         }
         // apply cell margin bottom
         // - identify that the node is a tableLayout cell or a hybridTableLayout cell
-        // - add the hardcoded mass_mailing_mail.scss class for the closest equivalent margin
+        // - add the hardcoded mass_mailing_mail.css class for the closest equivalent margin
         // DONE
         if (emailNode.analysis.facts.acceptCellMobileMarginBottom) {
             this.applyCellMobileMarginBottom(layout, { emailNode });

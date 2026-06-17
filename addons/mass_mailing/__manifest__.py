@@ -131,7 +131,7 @@
             # email sent, they are added here to create as many inline style
             # rules as possible during html conversion.
             # Files added here should also be handled in _prepare_mail_values
-            'mass_mailing/static/src/scss/mass_mailing_mail.scss',
+            'mass_mailing/static/src/mail_clients_css/mass_mailing_mail.css',
         ],
         # style assets used to view the mail content with a basic editor
         'mass_mailing.assets_inside_basic_editor_iframe': [

@@ -40,10 +40,11 @@ export class HybridFluidStrategyPlugin extends Plugin {
     resources = {
         element_layout_analysis_processors: this.analyzeElementLayout.bind(this),
         synthetic_email_node_processors: this.fillHybridFluidContainer.bind(this),
-        refine_layout_processors: withSequence(
-            DEFAULT_SPACING_SEQUENCE - 1,
-            this.applyTableSpacing.bind(this)
-        ),
+        refine_layout_processors: [
+            withSequence(DEFAULT_SPACING_SEQUENCE - 1, this.applyTableSpacing.bind(this)),
+            this.applyDescendantBackground.bind(this),
+            this.applyDescendantBorder.bind(this),
+        ],
         accept_table_strategy_report_overrides: this.acceptTableStrategyReport.bind(this),
     };
 
@@ -60,6 +61,22 @@ export class HybridFluidStrategyPlugin extends Plugin {
             emptyCell: this.buildTableEmptyCell.bind(this),
             cellWithOffset: this.buildTableCellWithOffset.bind(this),
         };
+    }
+
+    applyDescendantBackground(layout, { emailNode }) {
+        const facts = emailNode.analysis.facts;
+        const { useTableStrategy, acceptDescendantBackground } = facts;
+        if (!useTableStrategy || !acceptDescendantBackground) {
+            return;
+        }
+    }
+
+    applyDescendantBorder(layout, { emailNode }) {
+        const facts = emailNode.analysis.facts;
+        const { useTableStrategy, acceptDescendantBorder } = facts;
+        if (!useTableStrategy || !acceptDescendantBorder) {
+            return;
+        }
     }
 
     applyTableSpacing(layout, { emailNode }) {
