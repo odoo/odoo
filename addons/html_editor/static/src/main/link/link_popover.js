@@ -26,7 +26,7 @@ import {
     getButtonSize,
     getButtonType,
 } from "@html_editor/utils/button_style";
-import { trapFocus } from "@html_editor/utils/dom_traversal";
+import { closestElement, trapFocus } from "@html_editor/utils/dom_traversal";
 
 export const linkPopoverProps = {
     document: t.customValidator(t.any(), (p) => p.nodeType === Node.DOCUMENT_NODE),
@@ -106,7 +106,9 @@ export class LinkPopover extends Component {
         this.state = proxy({
             editing: this.props.LinkPopoverState.editing,
             // `.getAttribute("href")` instead of `.href` to keep relative url
-            url: linkElement.getAttribute("href") || this.deduceUrl(textContent),
+            url: this.setUrlFileNamePath(
+                linkElement.getAttribute("href") || this.deduceUrl(textContent)
+            ),
             label: labelEqualsUrl ? "" : textContent,
             previewIcon: {
                 /** @type {'oi'|'imgSrc'|'mimetype'} */
@@ -155,8 +157,30 @@ export class LinkPopover extends Component {
         };
         useCrossDocumentListener(this.props.document, "pointerdown", onPointerDown);
         useContentChange(this.props.linkElement, () => {
-            this.state.urlTitle = this.props.linkElement.textContent;
+            const fileName = this.props.linkElement.textContent;
+            this.state.urlTitle = fileName;
+            this.state.url = this.setUrlFileNamePath(this.state.url);
         });
+    }
+    setUrlFileNamePath(url) {
+        const fileName = this.props.linkElement.textContent;
+        const file = closestElement(this.props.linkElement, ".o_file_box");
+        if (!file) {
+            return url;
+        }
+        const hadOrigin = /^https?:\/\//i.test(url);
+        const urlObj = new URL(url, window.location.origin);
+        const match = urlObj.pathname.match(/^(\/web\/content\/\d+)(?:\/[^/]*)?$/);
+        if (!match) {
+            return url;
+        }
+        let cleanName = fileName.replace(/\ufeff/g, "");
+        const extension = file.dataset.extension;
+        if (extension && !cleanName.toLowerCase().endsWith(`.${extension.toLowerCase()}`)) {
+            cleanName += `.${extension}`;
+        }
+        urlObj.pathname = `${match[1]}/${encodeURIComponent(cleanName)}`;
+        return hadOrigin ? urlObj.toString() : urlObj.toString().replace(urlObj.origin, "");
     }
 
     toggleAdvancedOptions() {
