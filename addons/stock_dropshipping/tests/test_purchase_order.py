@@ -131,7 +131,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             })],
             'route_ids': [Command.link(self.dropshipping_route.id)],
         })
-        serials = _, serial2 = self.env['stock.lot'].create([{
+        serials = serial1, serial2 = self.env['stock.lot'].create([{
             'name': name,
             'product_id': serial_dropship_product.id,
             'company_id': self.env.company.id,
@@ -180,6 +180,10 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         credit_note.invoice_line_ids[0].quantity = 1
         credit_note.action_post()
 
+        self.assertEqual(
+            [(rec['product_name'], rec['lot_id']) for rec in invoice._get_invoiced_lot_values()],
+            [(serial_dropship_product.name, serial1.id)],
+        )
         self.assertEqual(
             [(rec['product_name'], rec['lot_id']) for rec in credit_note._get_invoiced_lot_values()],
             [(serial_dropship_product.name, serial2.id)],
