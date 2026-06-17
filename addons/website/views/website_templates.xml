@@ -2583,7 +2583,9 @@
 
 <template id="footer_copyright_company_name" inherit_id="website.layout">
     <xpath expr="//footer//span[hasclass('o_footer_copyright_name')]" position="replace">
-        <span class="o_footer_copyright_name me-2 small">Copyright &amp;copy; Company name</span>
+        <span class="o_footer_copyright_name me-2 small" t-ignore="true">
+            Copyright &amp;copy; <span t-out="res_company.name"/>
+        </span>
     </xpath>
     <xpath expr="//footer//span[hasclass('o_footer_copyright_name')]/.." position="attributes">
         <attribute name="class" remove="text-sm-start" add="d-flex flex-column-reverse gap-2 text-md-start" separator=" "/>
