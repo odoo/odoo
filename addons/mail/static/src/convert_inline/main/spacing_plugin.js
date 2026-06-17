@@ -66,8 +66,13 @@ export class SpacingPlugin extends Plugin {
         Object.assign(facts, { desktopMarginStyleInfo, desktopPaddingStyleInfo });
     }
 
-    mergeSpacingInfo({ fact }) {
-        if (fact === "desktopMarginStyleInfo") {
+    mergeSpacingInfo({ fact, isConstraint }) {
+        if (fact === "desktopMarginStyleInfo" && !isConstraint) {
+            // TODO EGGMAIL: we need to prevent this only
+            // when/if we are merging emailNodes
+            // there is currently no distinction on the
+            // context of merging facts
+
             // Prevent override of desktopMarginStyleInfo:
             // use case is top -> down traversal, margin info of the ancestor is
             // kept.

@@ -155,8 +155,11 @@ export class RenderPlugin extends Plugin {
         const parentAnalysis = parentEmailNode.analysis;
         const mergedAnalysis = new Analysis(parentAnalysis);
         parentEmailNode.analysis = mergedAnalysis;
-        this.mergeFacts(parentEmailNode, analysis.parsingFacts, "parsingFacts");
-        this.mergeFacts(parentEmailNode, analysis.facts);
+        this.mergeFacts(parentEmailNode, {
+            facts: analysis.parsingFacts,
+            factType: "parsingFacts",
+        });
+        this.mergeFacts(parentEmailNode, { facts: analysis.facts });
         mergedAnalysis.constraintsForAncestors = mergedAnalysis.constraintsForAncestors.concat(
             analysis.constraintsForAncestors
         );
@@ -224,9 +227,17 @@ export class RenderPlugin extends Plugin {
         });
     }
 
-    mergeFacts(emailNode, facts = {}, factType = "facts") {
+    mergeFacts(emailNode, { facts = {}, factType = "facts", isConstraint = false } = {}) {
         for (const [fact, value] of Object.entries(facts)) {
-            if (!this.delegateTo("merge_fact_overrides", { emailNode, fact, value, factType })) {
+            if (
+                !this.delegateTo("merge_fact_overrides", {
+                    emailNode,
+                    fact,
+                    value,
+                    factType,
+                    isConstraint,
+                })
+            ) {
                 // TODO EGGMAIL: not sure if delegate is the best action here
                 // (only one plugin can interfere with a fact)
                 // TODO EGGMAIL: maybe we need another argument (exception, ...)?
@@ -254,11 +265,22 @@ export class RenderPlugin extends Plugin {
         for (const constraint of childConstraints) {
             // `constraint` API => return object with "shouldPropagate"+ "facts" + "constraint" function
             const annotations = constraint(emailNode);
+            if (!annotations) {
+                continue;
+            }
             if (annotations.shouldPropagate) {
                 const newConstraint = annotations.constraint ?? constraint;
                 propagatedConstraints.push(newConstraint);
             }
-            this.mergeFacts(emailNode, annotations.facts ?? {});
+            if (annotations.constraintsForDescendants) {
+                emailNode.analysis.constraintsForDescendants.push(
+                    ...annotations.constraintsForDescendants
+                );
+            }
+            this.mergeFacts(emailNode, {
+                facts: annotations.facts ?? {},
+                isConstraint: true,
+            });
         }
         return emailNode.analysis.constraintsForAncestors.concat(propagatedConstraints);
     }
@@ -271,11 +293,17 @@ export class RenderPlugin extends Plugin {
         const propagatedConstraints = [];
         for (const constraint of constraints) {
             const annotations = constraint(emailNode);
+            if (!annotations) {
+                continue;
+            }
             if (annotations.shouldPropagate) {
                 const newConstraint = annotations.constraint ?? constraint;
                 propagatedConstraints.push(newConstraint);
             }
-            this.mergeFacts(emailNode, annotations.facts ?? {});
+            this.mergeFacts(emailNode, {
+                facts: annotations.facts ?? {},
+                isConstraint: true,
+            });
         }
         for (const child of emailNode.children) {
             this.addTopDownConstraints(

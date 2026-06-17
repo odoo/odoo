@@ -205,18 +205,39 @@ export class TableStrategyPlugin extends Plugin {
         if (borderStyleInfo.size === 0 && backgroundStyleInfo.size === 0) {
             return;
         }
+        const cleanupStyleInfo = (sourceStyleInfo, referenceNode, emailNode) => {
+            if (!emailNode.referenceNodes.has(referenceNode)) {
+                return { shouldPropagate: true };
+            }
+            // TODO EGGMAIL: it is possible that the element style was applied
+            // on a ref different than "root", in that case the following code
+            // is incorrect, to investigate.
+            const styleInfo = emailNode.layout.getRef().styleInfo;
+            for (const propertyName of sourceStyleInfo.keys()) {
+                styleInfo.removeProperty(propertyName);
+            }
+        };
+        const cleanupSpacing = (referenceNode, emailNode) => {
+            if (!emailNode.referenceNodes.has(referenceNode)) {
+                return { shouldPropagate: true };
+            }
+            emailNode.analysis.facts.desktopPaddingStyleInfo = undefined;
+            emailNode.analysis.facts.desktopMarginStyleInfo = undefined;
+        };
+        const cleanupBorder = cleanupStyleInfo.bind(undefined, borderStyleInfo, referenceNode);
+        const cleanupBackground = cleanupStyleInfo.bind(
+            undefined,
+            backgroundStyleInfo,
+            referenceNode
+        );
         // In a topdown traversal (existing only if the propagationReport was accepted)
         // we can search for all owners (keys) and remove their ownership by key:
         // i.e. we find the emailNode which has referenceNode in its referenceNodes,
         // then we remove all propertyInfo by key /!\ in case of merge, we may not
         // remove all that is necessary but oh well for now.
-        const ownerships = new Map();
-        const ownedInfo = {
-            styleInfo: [borderStyleInfo, backgroundStyleInfo],
-            facts: {},
-        };
         const marginStyleInfo = analysis.facts.desktopMarginStyleInfo;
         const referenceRect = this.getBoundingClientRect(referenceNode);
+        const spacingCleanup = [];
         let marginRect = { ...referenceRect };
         if (marginStyleInfo.size > 0) {
             // TODO EGGMAIL: cleanup this code, as it will probably be reused
@@ -233,14 +254,26 @@ export class TableStrategyPlugin extends Plugin {
                 bottom: bottom.number,
                 left: -left.number,
             });
-            ownedInfo.facts.desktopMarginStyleInfo = marginStyleInfo;
+            spacingCleanup.push((emailNode) => {
+                if (!emailNode.referenceNodes.has(referenceNode)) {
+                    return { shouldPropagate: true };
+                }
+                emailNode.analysis.facts.desktopMarginStyleInfo = undefined;
+            });
         }
-        ownerships.set(referenceNode, ownedInfo);
         const tableStrategyReport = {
-            borderStyleInfo,
-            backgroundStyleInfo,
-            referenceRect,
-            ownerships,
+            descendantBackground: {
+                styleInfo: backgroundStyleInfo,
+                cleanup: [cleanupBackground],
+            },
+            descendantBorder: {
+                styleInfo: borderStyleInfo,
+                cleanup: [cleanupBorder],
+            },
+            spacing: {
+                referenceRect,
+                cleanup: spacingCleanup,
+            },
         };
         analysis.facts.tableStrategyReport = tableStrategyReport;
         /**
@@ -266,15 +299,29 @@ export class TableStrategyPlugin extends Plugin {
                 "accept_table_strategy_report_overrides",
                 emailNode
             );
-            if (analysis.facts.tableStrategyReport) {
-                return { shouldPropagate: false };
-            }
             if (acceptTableStrategyReport) {
+                const report = { ...tableStrategyReport };
+                report.spacing = { ...report.spacing, marginRect };
+                const constraintsForDescendants = [];
+                let shouldPropagate = true;
+                if (analysis.facts.acceptTableOuterSpacing) {
+                    shouldPropagate = false;
+                    constraintsForDescendants.push(...tableStrategyReport.spacing.cleanup);
+                }
+                if (analysis.facts.acceptDescendantBorder) {
+                    constraintsForDescendants.push(...tableStrategyReport.descendantBorder.cleanup);
+                }
+                if (analysis.facts.acceptDescendantBackground) {
+                    constraintsForDescendants.push(
+                        ...tableStrategyReport.descendantBackground.cleanup
+                    );
+                }
                 return {
-                    facts: { tableStrategyReport: { ...tableStrategyReport, marginRect } },
-                    shouldPropagate: !analysis.facts.acceptTableOuterSpacing,
+                    facts: { tableStrategyReport: report },
+                    shouldPropagate,
+                    constraintsForDescendants,
                 };
-            } else if (!referenceNode) {
+            } else if (!referenceNode || analysis.facts.tableStrategyReport) {
                 return { shouldPropagate: false };
             }
             const paddingStyleInfo = analysis.facts.desktopPaddingStyleInfo;
@@ -298,6 +345,7 @@ export class TableStrategyPlugin extends Plugin {
                 return { shouldPropagate: false };
             }
             marginRect = referenceRect;
+            tableStrategyReport.spacing.cleanup.push(cleanupSpacing.bind(undefined, referenceNode));
             const marginStyleInfo = analysis.facts.desktopMarginStyleInfo;
             if (marginStyleInfo.size > 0) {
                 const computedStyle = this.getComputedStyle(referenceNode);
