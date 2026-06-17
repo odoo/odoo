@@ -598,3 +598,34 @@ class TestSalePurchaseStockFlow(TransactionCase):
             so.picking_ids[2].move_ids.quantity = 10
             so.picking_ids[2].button_validate()
         self.assertEqual(self.mto_product.monthly_demand, 10.0)
+
+    def test_reordering_rule_not_merged_into_so_po(self):
+        """ With group_rfq='default' (On Order), a reordering rule procurement
+        must not merge into a PO that was created for a specific sale order. """
+        self.assertEqual(self.mto_product.seller_ids.partner_id.group_rfq, 'default')
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [Command.create({
+                'product_id': self.mto_product.id,
+                'product_uom_qty': 5,
+                'price_unit': 10,
+            })],
+        })
+        so.action_confirm()
+
+        po_from_so = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id)])
+        self.assertEqual(len(po_from_so), 1, 'One PO should be created from the sale order')
+        self.assertTrue(po_from_so.reference_ids, 'PO from sale order must carry reference_ids')
+
+        # Trigger reordering rule for the same product, no reference involved
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.mto_product.id,
+            'product_min_qty': 5,
+            'product_max_qty': 10,
+            'trigger': 'manual',
+        })
+        orderpoint.action_replenish()
+        all_pos = self.env['purchase.order'].search([('partner_id', '=', self.vendor.id)])
+        self.assertEqual(len(all_pos), 2, 'Reordering rule must create a separate PO, not merge into the sale order PO')
+        po_from_rr = all_pos - po_from_so
+        self.assertFalse(po_from_rr.reference_ids, 'Reordering rule PO should have no reference_ids')
