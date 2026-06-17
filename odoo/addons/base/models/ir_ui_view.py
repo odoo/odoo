@@ -1963,6 +1963,15 @@ actual arch.
                 )
                 self._raise_view_error(msg, node)
 
+            if validate and node_info['view_type'] == 'list' and node.get('optional') == 'hide' \
+                    and (field.required if node.get('required') is None else node.get('required') in ('True', '1')) \
+                    and (not field.readonly if node.get('readonly') is None else node.get('readonly') in ('False', '0')):
+                msg = _(
+                    'Field "%(name)s" is always required but hidden by default',
+                    name=name,
+                )
+                self._log_view_warning(msg, node)
+
             if field.type == 'properties' and node_info['view_type'] != 'search':
                 name_manager.must_have_fields(node, {field._description_definition_record}, node_info, use=f"definition record of {field.name}")
 
