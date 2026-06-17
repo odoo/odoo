@@ -8,6 +8,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 from odoo.exceptions import ValidationError
 from odoo.tests import Form, tagged
+from odoo import Command
 
 
 class TestStockValuationStandard(TestStockValuationCommon):
@@ -179,7 +180,9 @@ class TestStockValuationStandard(TestStockValuationCommon):
             self.env.user.company_id = old_company
 
     def test_multicompany(self):
-        """Standard: total_value = standard_price * qty, isolated per company."""
+        """Standard: total_value = standard_price * qty, isolated per company.
+        Additional check: if the companies don't have same currency, the conversion is applied
+        when selecting both"""
         self.product.with_company(self.company).standard_price = 10
         self.product.with_company(self.other_company).standard_price = 50
 
@@ -206,6 +209,20 @@ class TestStockValuationStandard(TestStockValuationCommon):
         product_both = self.product.with_context(allowed_company_ids=(self.company | self.other_company).ids)
         self.assertEqual(product_both.qty_available, 115)
         self.assertEqual(product_both.total_value, 5150)
+
+        other_currency = self.env['res.currency'].create({
+            'name': 'Other curr',
+            'symbol': 'O',
+            'rounding': 0.1,
+            'rate_ids': [
+                Command.create({'name': '2020-01-01', 'rate': 0.5}),
+            ],
+        })
+        self.other_company.currency_id = other_currency
+        self.product.invalidate_recordset(['total_value'])
+        # total value should now be 150 (from comp 1) + 10000 (5000 from comp 2 converted to 10000
+        # in the currency of comp 1 which is the main company selected) = 10150
+        self.assertEqual(product_both.total_value, 10150)
 
     def test_change_qty_and_locations_of_done_sml(self):
         sub_stock_loc = self.env['stock.location'].create({
