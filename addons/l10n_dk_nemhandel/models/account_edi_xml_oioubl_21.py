@@ -290,3 +290,17 @@ class AccountEdiXmlOIOUBL21(models.AbstractModel):
         charge_amount = sum(d['amount'] for d in charges)
 
         return rebate + (discount_amount - charge_amount) / quantity
+
+    def _get_line_discount_allowance_charge_node(self, vals):
+        if not (charge_node := super()._get_line_discount_allowance_charge_node(vals)):
+            return None
+
+        aggregated_tax_details = self.env['account.tax']._aggregate_base_line_tax_details(vals['base_line'], vals['tax_grouping_function'])
+        return {
+            **charge_node,
+            'cac:TaxCategory': [
+                self._get_tax_category_node({**vals, 'grouping_key': grouping_key})
+                for grouping_key in aggregated_tax_details
+                if grouping_key
+            ],
+        }
