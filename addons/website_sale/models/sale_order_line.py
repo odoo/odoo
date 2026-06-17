@@ -99,6 +99,13 @@ class SaleOrderLine(models.Model):
         )
         return sum(self._get_lines_with_price().mapped(price_type))
 
+    def _get_max_line_qty(self):
+        max_quantity = self._get_max_available_qty()
+        return self.product_uom_qty + max_quantity if (max_quantity is not None) else None
+
+    def _get_max_available_qty(self):
+        return None
+
     def _check_validity(self):
         if (
             not self.combo_item_id
