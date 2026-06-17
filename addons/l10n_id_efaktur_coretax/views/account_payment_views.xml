@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_account_payment_form_inherit_ebupot" model="ir.ui.view">
+        <field name="name">account.payment.form.inherit.ebupot</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='memo']" position="after">
+                <field name="l10n_id_ebupot_doctype" invisible="country_code != 'ID'"/>
+                <field name="l10n_id_ebupot_sp2dnum" invisible="not l10n_id_ebupot_doctype or l10n_id_ebupot_doctype == 'N/A'"/>
+                <field name="l10n_id_ebupot_document_xml" invisible="country_code != 'ID'"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="dowload_ebupot_action" model="ir.actions.server">
+        <field name="name">Download E-Bupot</field>
+        <field name="model_id" ref="account.model_account_payment"/>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="state">code</field>
+        <field name="code">action = records.download_ebupot()</field>
+    </record>
+
+</odoo>

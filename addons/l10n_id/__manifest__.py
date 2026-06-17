@@ -3,7 +3,7 @@
     'name': 'Indonesian - Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['id'],
-    'version': '1.3',
+    'version': '1.4',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the latest Indonesian Odoo localisation necessary to run Odoo accounting for SMEs with:
@@ -15,11 +15,13 @@ This is the latest Indonesian Odoo localisation necessary to run Odoo accounting
     'depends': [
         'account',
         'base_vat',
+        'l10n_account_withholding_tax',
     ],
     'auto_install': ['account'],
     'data': [
         'security/ir.model.access.csv',
         'data/ir_cron.xml',
+        'views/account_tax_views.xml',
         'views/account_move_views.xml',
         'views/res_bank.xml',
     ],
