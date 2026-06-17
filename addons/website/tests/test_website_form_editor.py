@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.http import request
 from odoo.tests.common import TransactionCase, tagged
 
@@ -137,3 +137,34 @@ class TestWebsiteForm(TransactionCase):
         with self.assertRaises(ValidationError):
             self.test_field.unlink()
         self.assertTrue(self.test_field.exists())
+
+    def test_can_delete_field_when_no_access_other_field(self):
+        """
+        Tests that a user without access to an html field checked by the website form delete hook can still delete other fields
+        """
+        self.test_field_2 = self.env['ir.model.fields'].create({
+            'name': 'x_test_field_2',
+            'model_id': self.partner_model.id,
+            'ttype': 'html',
+            'field_description': 'test2',
+            'sanitize': False,
+        })
+        user = self.env['res.users'].create({
+            'name': 'A User',
+            'login': 'a_user',
+            'email': 'a@user.com',
+            'group_ids': [(6, 0, [self.env.ref('base.group_system').id])],
+        })
+        self.env['ir.model.access'].search([('model_id', '=', self.partner_model.id)]).perm_read = False
+        with self.with_user(user.login):
+            with self.assertRaises(AccessError):
+                self.env['res.partner'].search([])
+            activity_model = self.env['ir.model'].search([('model', '=', 'mail.activity')])
+            other_test_field = self.env['ir.model.fields'].create({
+                'name': 'x_test_field',
+                'model_id': activity_model.id,
+                'ttype': 'char',
+                'field_description': 'test',
+            })
+            other_test_field.unlink()
+            self.assertFalse(other_test_field.exists())
