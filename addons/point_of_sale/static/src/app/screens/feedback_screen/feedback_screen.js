@@ -3,7 +3,6 @@ import { registry } from "@web/core/registry";
 import { Component, onMounted, onWillStart, onWillUnmount, signal } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
-import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useErrorHandlers } from "@point_of_sale/app/hooks/hooks";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
@@ -27,7 +26,6 @@ export class FeedbackScreen extends Component {
         this.pos = usePos();
         useRouterParamsChecker();
         useErrorHandlers();
-        this.notification = useService("notification");
         this.ui = useService("ui");
         this.dialog = useService("dialog");
         this.containerRef = useRef("feedback-screen");
@@ -89,12 +87,6 @@ export class FeedbackScreen extends Component {
     onClick(buttonClicked = false) {
         if (!this.isAutoSkip || buttonClicked) {
             if (this.loading()) {
-                this.notification.add(
-                    _t("A request is still being processed in the background. Please wait."),
-                    {
-                        type: "warning",
-                    }
-                );
                 return;
             }
             this.goNext();
