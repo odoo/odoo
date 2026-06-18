@@ -1,7 +1,5 @@
 from odoo import fields, models, api
 
-COMPANY_SCHEMES = {'CRN', 'MOM', 'MLS', '700', 'SAG', 'OTH'}
-
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
@@ -31,23 +29,6 @@ class ResPartner(models.Model):
         "CHECK (l10n_sa_edi_plot_identification IS NULL OR l10n_sa_edi_plot_identification ~ '^[0-9]{4}$')",
         "Secondary Number must contain 4 numeric digits.",
         )
-
-    @api.depends('l10n_sa_edi_additional_identification_scheme', 'l10n_sa_edi_additional_identification_number')
-    def _compute_is_company(self):
-        """ Determines if a Saudi partner is a company or an individual based on VAT and
-        additional identification fields.
-        """
-        l10n_sa_commercial_partners = self.filtered(
-            lambda p: (
-                p.country_code == 'SA'
-                and p.commercial_partner_id == p
-                and p._is_vat_void(p.vat)
-                and p.l10n_sa_edi_additional_identification_number
-                and p.l10n_sa_edi_additional_identification_scheme in COMPANY_SCHEMES
-            )
-        )
-        l10n_sa_commercial_partners.is_company = True
-        super(ResPartner, self - l10n_sa_commercial_partners)._compute_is_company()
 
     @api.depends('additional_identifiers')
     def _compute_l10n_sa_edi_additional_identification_fields(self):
