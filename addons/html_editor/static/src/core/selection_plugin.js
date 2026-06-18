@@ -410,8 +410,39 @@ export class SelectionPlugin extends Plugin {
                     (isProtected(anchorNode) && !isUnprotecting(anchorNode)))
             ) {
                 // Keep the previous activeSelection in case of user interactions
-                // inside a protected zone.
-                return this.activeSelection;
+                // inside a protected zone, but only if it is still valid. A DOM
+                // mutation (e.g. link autoconversion) can leave it stale with an
+                // out-of-range offset; reusing it would make setStart/setEnd
+                // raise an IndexSizeError. In that case fall back to the range's
+                // own collapsed start position, which is always consistent.
+                const previousSelectionIsValid =
+                    this.activeSelection.anchorNode?.isConnected &&
+                    nodeSize(this.activeSelection.anchorNode) >=
+                        this.activeSelection.anchorOffset &&
+                    nodeSize(this.activeSelection.focusNode) >=
+                        this.activeSelection.focusOffset;
+                if (previousSelectionIsValid) {
+                    return this.activeSelection;
+                }
+                const node = range.startContainer;
+                const offset = range.startOffset;
+                activeSelection = {
+                    anchorNode: node,
+                    anchorOffset: offset,
+                    focusNode: node,
+                    focusOffset: offset,
+                    startContainer: node,
+                    startOffset: offset,
+                    endContainer: node,
+                    endOffset: offset,
+                    commonAncestorContainer: node,
+                    isCollapsed: true,
+                    direction: DIRECTIONS.RIGHT,
+                    textContent: () => "",
+                    intersectsNode: () => false,
+                };
+                Object.freeze(activeSelection);
+                return activeSelection;
             }
 
             // For Safari, in edge cases in collaboration, the selection can be
