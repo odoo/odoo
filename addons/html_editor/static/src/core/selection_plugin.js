@@ -902,7 +902,9 @@ export class SelectionPlugin extends Plugin {
         if (selection.isCollapsed && selection.anchorNode.nodeType !== Node.TEXT_NODE) {
             targetedNodes = [root];
         }
-        targetedNodes.push(...descendants(root));
+        for (const node of descendants(root)) {
+            targetedNodes.push(node);
+        }
         if (!targetedNodes.length) {
             targetedNodes = [root];
         }
