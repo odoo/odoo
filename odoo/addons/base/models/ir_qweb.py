@@ -998,6 +998,8 @@ class IrQweb(models.AbstractModel):
 
     def _compile(self, template):
         ref = None
+        if 'lang' not in self.env.context:
+            self = self.with_context(lang=self.env.user.lang)
         if isinstance(template, str) and template.endswith('.xml'):
             module_path = Manifest.for_addon(Path(template).parts[0]).path
             if 'templates' not in Path(file_path(template)).relative_to(module_path).parts:

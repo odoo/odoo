@@ -344,6 +344,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
         self.pos_config.current_session_id.set_opening_control(0, '')
         self_route = self.pos_config._get_self_order_route()
 
+        self.env.registry.clear_cache('routing')
         @http.route('/pos-self-order/test-delete-order-from-backend/', auth='public', type='jsonrpc', website=True)
         def delete_mobile_order_from_backend(self, order_ids):
             self.env['pos.order'].sudo().browse(order_ids).unlink()

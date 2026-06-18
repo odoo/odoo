@@ -9,7 +9,6 @@ from odoo.tests.common import tagged, HttpCase
 from odoo.tools import mute_logger
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestSurveyController(common.TestSurveyCommon, HttpCase):
 
     def test_submit_route_scoring_after_page(self):

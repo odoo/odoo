@@ -3,6 +3,7 @@ import importlib.util
 import inspect
 import logging
 import sys
+import time
 from pathlib import Path
 from unittest import case
 
@@ -98,6 +99,7 @@ def make_suite(module_names, position='at_install'):
     available_modules = module_names if position == 'post_install' else None
     config_tags = TagsSelector(tools.config['test_tags'], available_modules)
     position_tag = TagsSelector(position, available_modules)
+
     tests = (
         t
         for module_name in module_names

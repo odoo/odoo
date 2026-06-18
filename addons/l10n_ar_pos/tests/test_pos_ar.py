@@ -22,6 +22,10 @@ class TestPosAR(AccountTestInvoicingHttpCommon, TestArCommon):
                 (4, cls.env.ref('account.group_account_invoice').id),
             ],
         })
+        pos_user_env = cls.env(user=cls.pos_user)
+        # warmup ormcache
+        pos_user_env['ir.model.access']._get_allowed_models('read')
+        pos_user_env['ir.model.access']._get_allowed_models('write')
 
         cls.company = cls.company_data['company']
         cls.pos_receivable_bank = cls.copy_account(cls.company.account_default_pos_receivable_account_id, {'name': 'POS Receivable'})
