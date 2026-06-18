@@ -101,7 +101,11 @@ export class Meeting extends Component {
             return true;
         }
         if (this.rtc.isFullscreen) {
-            this.rtc.exitFullscreen();
+            if (this.rtc.isBrowserFullscreen) {
+                this.rtc.exitBrowserFullscreen();
+            } else {
+                this.rtc.exitFullscreen();
+            }
             return true;
         }
         return false;
