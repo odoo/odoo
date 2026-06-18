@@ -23,7 +23,6 @@ from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_sale.const import MAX_EXPANDED_FILTER_SECTIONS, SHOP_PATH
 from odoo.addons.website_sale.models.website import (
-    PRICELIST_SELECTED_COUNTRY_SESSION_CACHE_KEY,
     PRICELIST_SELECTED_SESSION_CACHE_KEY,
     PRICELIST_SESSION_CACHE_KEY,
 )
@@ -417,7 +416,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if search:
             post["search"] = search
 
-        tax_display = website.show_line_subtotals_tax_selection
+        tax_display = website.tax_display
         sale_tax = request.fiscal_position.map_tax(website.company_id.sudo().account_sale_tax_id)
 
         if tax_display == "tax_included" and sale_tax:
@@ -1078,22 +1077,22 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(
         '/shop/change_pricelist/<model("product.pricelist"):pricelist>',
         type="http",
+        methods=["POST"],
         auth="public",
         website=True,
         sitemap=False,
     )
-    def pricelist_change(self, pricelist, **post):
+    def pricelist_change(self, pricelist, country_id=None, **_kwargs):
         website = self.env.website
         redirect_url = request.httprequest.referrer
-        prev_pricelist = request.pricelist
+        prev_pricelist = website.pricelist_id
         applied_pricelist = self._apply_selectable_pricelist(pricelist.id)
         if (
             applied_pricelist
             and redirect_url
             and website.is_view_active("website_sale.filter_products_price")
-            and prev_pricelist != pricelist
         ):
-            # Convert prices to the new priceslist currency in the query params of the referrer
+            # Convert prices to the new pricelist currency in the query params of the referrer
             decoded_url = url_parse(redirect_url)
             args = url_decode(decoded_url.query)
             min_price = args.get("min_price")
@@ -1119,9 +1118,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
                     pass
             redirect_url = decoded_url.replace(query=url_encode(args)).to_url()
 
-        if applied_pricelist and (country_id := post.get("country_id")):
-            request.session[PRICELIST_SELECTED_COUNTRY_SESSION_CACHE_KEY] = int(country_id)
-
+        if applied_pricelist and country_id:
+            website.sudo().country_id = int(country_id)
         return request.redirect(redirect_url or SHOP_PATH)
 
     @route("/shop/pricelist", type="http", auth="public", website=True, sitemap=False)

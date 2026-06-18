@@ -263,13 +263,6 @@ class Website(models.Model):
         string="Categories", comodel_name="product.public.category"
     )
 
-    currency_id = fields.Many2one(
-        string="Default Currency",
-        comodel_name="res.currency",
-        compute="_compute_currency_id",
-        compute_sql="_compute_sql_currency_id",
-        compute_sudo=True,
-    )
     pricelist_ids = fields.One2many(
         string="Price list available for this Ecommerce/Website",
         comodel_name="product.pricelist",
@@ -288,11 +281,26 @@ class Website(models.Model):
         check_company=True,
     )
 
-    selected_pricelist_id = fields.Many2one(
-        "product.pricelist", compute="_compute_selected_pricelist_info", compute_sudo=True
+    # Session dependant
+    pricelist_id = fields.Many2one(
+        comodel_name="product.pricelist", compute="_compute_session_info", compute_sudo=True
     )
-    selected_pricelist_country_id = fields.Many2one(
-        "res.country", compute="_compute_selected_pricelist_info", compute_sudo=True
+    currency_id = fields.Many2one(
+        string="Default Currency",
+        comodel_name="res.currency",
+        compute="_compute_session_info",
+        compute_sql="_compute_sql_currency_id",
+        compute_sudo=True,
+    )
+    country_id = fields.Many2one(
+        comodel_name="res.country",
+        compute="_compute_session_info",
+        compute_sudo=True,
+        inverse="_inverse_country_id",
+    )
+    tax_display = fields.Selection(
+        selection=[("tax_excluded", "Tax Excluded"), ("tax_included", "Tax Included")],
+        compute="_compute_tax_display",
     )
 
     # === COMPUTE METHODS ===#
@@ -306,11 +314,22 @@ class Website(models.Model):
             )
 
     @api.depends("company_id")
-    def _compute_currency_id(self):
+    def _compute_session_info(self):
+        session_pricelist = self.env["product.pricelist"].browse(
+            request and hasattr(request, "pricelist") and request.pricelist.id
+        )
+        session_country = self.env["res.country"].browse(
+            request and request.session.get(PRICELIST_SELECTED_COUNTRY_SESSION_CACHE_KEY)
+        )
         for website in self:
-            website.currency_id = (
-                request and hasattr(request, "pricelist") and request.pricelist.currency_id
-            ) or website.company_id.sudo().currency_id
+            website.pricelist_id = session_pricelist
+            website.country_id = session_country or website.company_id.country_id
+            website.currency_id = session_pricelist.currency_id or website.company_id.currency_id
+
+    def _inverse_country_id(self):
+        self.ensure_one()
+        if request:
+            request.session[PRICELIST_SELECTED_COUNTRY_SESSION_CACHE_KEY] = self.country_id.id
 
     def _compute_sql_currency_id(self, table):  # noqa: ARG002
         msg = "website.currency_id is not searchable"
@@ -327,17 +346,11 @@ class Website(models.Model):
         for website in self:
             website.show_line_subtotals_tax_selection = "tax_excluded"
 
-    @api.depends("company_id")
-    def _compute_selected_pricelist_info(self):
-        session_pricelist = request and hasattr(request, "pricelist") and request.pricelist
-        session_country = self.env["res.country"].browse(
-            request and request.session.get(PRICELIST_SELECTED_COUNTRY_SESSION_CACHE_KEY)
-        )
+    @api.depends("country_id", "show_line_subtotals_tax_selection")
+    def _compute_tax_display(self):
         for website in self:
-            if session_pricelist:
-                website.selected_pricelist_id = session_pricelist.id
-            website.selected_pricelist_country_id = session_country or (
-                website.company_id.country_id
+            website.tax_display = (
+                website.country_id.tax_display or website.show_line_subtotals_tax_selection
             )
 
     # === SELECTION METHODS ===#

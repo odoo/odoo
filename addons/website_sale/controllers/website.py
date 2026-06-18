@@ -92,35 +92,39 @@ class Website(main.Website):
         return super().change_lang(lang, **kwargs)
 
     @route(
-        "/shop/selectable_pricelists", type="jsonrpc", auth="public", website=True, readonly=True
+        "/shop/selectable_pricelists",
+        type="http",
+        methods=["GET"],
+        auth="public",
+        readonly=True,
+        sitemap=False,
+        website=True,
     )
-    def get_selectable_pricelists_info(self):
-        website = request.website
+    def get_selectable_pricelists(self):
+        website = self.env["website"].get_current_website()
         selectable_pricelists = website.get_pricelist_available(show_visible=True)
+        all_countries = self.env["res.country"].browse(self.env["res.country"]._cached_data()["id"])
+
         response = {
-            "pricelist_ids": {
-                data["id"]: {**data, "selected": request.pricelist == pricelist}
-                for pricelist, data in zip(
-                    selectable_pricelists,
-                    selectable_pricelists.web_read({
-                        "name": {},
-                        "currency_id": {"fields": {"name": {}}},
-                    }),
-                )
+            "default_currency_id": website.company_id.currency_id.id,
+            "currencies": {
+                data["id"]: data
+                for data in selectable_pricelists.currency_id.web_read({"name": {}, "symbol": {}})
             },
-            "country_ids": {},
+            "countries": {
+                data["id"]: data
+                for data in all_countries.web_read({"name": {}, "image_url": {}, "currency_id": {}})
+            },
         }
 
-        country_ids_info = response["country_ids"]
-        for pricelist in selectable_pricelists:
-            for country in pricelist.country_group_ids.country_ids or website.company_id.country_id:
-                if country.id not in country_ids_info:
-                    country_ids_info[country.id] = {
-                        **country.web_read({"name": {}})[0],
-                        "pricelist_ids": [],
-                        "selected": website.selected_pricelist_country_id == country,
-                    }
+        for currency, pricelists in selectable_pricelists.grouped("currency_id").items():
+            response["currencies"][currency.id]["pricelist_id"] = pricelists[:1].id
 
-                country_ids_info[country.id]["pricelist_ids"].append(pricelist.id)
+        if request.env.user._is_internal():
+            # Ensure the internal users can always see the most up to date list of pricelists.
+            cache_control = "no-cache"
+        else:
+            # Cache the pricelists for public/portal users for 7 days.
+            cache_control = "public, max-age=604800, stale-while-revalidate=86400"
 
-        return response
+        return request.make_json_response(response, headers=[("Cache-Control", cache_control)])

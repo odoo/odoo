@@ -422,72 +422,74 @@
     </template>
 
     <template id="website_sale.footer_pricelist_selector" inherit_id="website.footer_copyright_company_name">
-        <xpath expr="//span[hasclass('o_footer_copyright_name')]" position="after">
-            <t t-call="website_sale.pricelist_selector"/>
+        <xpath expr="//span[hasclass('o_footer_copyright_name')]" position="replace">
+            <div class="d-flex align-items-baseline">
+                <t>$0</t>
+                <t t-call="website_sale.pricelist_selector"/>
+            </div>
         </xpath>
-
     </template>
 
     <template id="website_sale.pricelist_selector" name="Pricelist Selector">
-           <!-- The pricelist form loads options on user interaction. `align-self-start` keeps the
-                form at its content width to reduce hover area and avoid unnecessary RPC calls. -->
-        <form name="pricelist_selector" class="row">
-            <t t-set="country" t-value="request.website.selected_pricelist_country_id"/>
-            <t t-set="pricelist" t-value="request.website.selected_pricelist_id"/>
-            <t t-set="currency" t-value="request.website.currency_id"/>
-            <input name="country_id" hidden=""/>
-            <input name="pricelist_id" hidden=""/>
+        <t t-set="country" t-value="request.website.country_id"/>
+        <t t-set="currency" t-value="request.website.currency_id"/>
+        <form
+            class="row g-2"
+            name="pricelist_selector"
+            method="POST"
+            t-attf-action="/shop/change_pricelist/{{request.website.pricelist_id.id}}"
+        >
+            <input type="hidden" name="country_id" t-att-value="country.id"/>
+            <input type="hidden" name="currency_id" t-att-value="currency.id"/>
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <div class="col-auto">
-                <div class="dropdown">
-                    <button
-                        class="btn btn-light dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        data-bs-auto-close="true"
-                        aria-expanded="false"
-                    >
-                        <span
-                            name="country_flag"
-                            t-field="country.image_url"
-                            t-options='{"widget": "image_url", "style": "width: 36px;"}'
-                            class="me-2"
-                        />
-                        <span name="country_name" t-out="country.name"/>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown-item">
-                            <div class="d-flex justify-content-center">
-                                <div class="spinner-border" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+                <t
+                    t-call="website_sale.pricelist_selector_lazy_dropdown"
+                    attrs="{'name': 'country_dropdown'}"
+                >
+                    <span
+                        class="me-2"
+                        name="country_flag"
+                        t-field="country.image_url"
+                        t-options="{'widget': 'image_url', 'style': 'width: 24px;'}"
+                    />
+                    <small name="country_name" t-out="country.name"/>
+                </t>
             </div>
             <div class="col-auto">
-                <div class="dropdown">
-                    <button
-                        class="btn btn-light dropdown-toggle"
-                        type="button"
-                        data-bs-toggle="dropdown"
-                        data-bs-auto-close="true"
-                        aria-expanded="false"
-                    >
-                        <span name="currency_name" t-out="currency.name"/>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown-item">
-                            <div class="d-flex justify-content-center">
-                                <div class="spinner-border" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+                <t
+                    t-call="website_sale.pricelist_selector_lazy_dropdown"
+                    attrs="{'name': 'currency_dropdown'}"
+                >
+                    <small name="currency_name" t-out="currency.symbol"/>
+                </t>
             </div>
         </form>
+    </template>
+
+    <template id="website_sale.pricelist_selector_lazy_dropdown">
+        <div class="dropdown" t-att="attrs">
+            <button
+                class="btn btn-secondary btn-sm dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown"
+                data-bs-auto-close="true"
+                aria-expanded="false"
+                t-out="0"
+            />
+            <ul class="dropdown-menu">
+                <li class="dropdown-item">
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <div class="dropdown-item-template" hidden="">
+                <li class="dropdown-item" t-out="0"/>
+            </div>
+        </div>
     </template>
 
 </odoo>
