@@ -58,17 +58,14 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             len(order.order_line.ids), 1, "Free Large Cabinet should have been removed"
         )
 
-        # Free product in cart will be considered as paid product when changing quantity of paid
-        # product, so the free product quantity computation will be wrong.
-        # 75 Large Cabinet in cart, 25 free, set quantity to 6 Large Cabinet, you should have 2 free
-        # Large Cabinet, but you get 8 because it adds the 25 initial free Large Cabinet to the
-        # total paid Large Cabinet when computing (25+10 > 35 > /4 = 8 free Large Cabinet).
+        # A reward claim grants reward_product_qty (1 here) per claim, regardless of
+        # how many points are available.
         sol1.product_uom_qty = 75
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(
             sum(order.order_line.filtered(lambda x: x.is_reward_line).mapped("product_uom_qty")),
-            25,
-            "We should have 25 Free Large Cabinet",
+            1,
+            "We should have 1 Free Large Cabinet",
         )
         sol1.product_uom_qty = 6
         self._auto_rewards(order, self.all_programs)
@@ -293,6 +290,59 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             order.amount_untaxed, 2636.09, "The discount should be limited to $200 tax included (2)"
         )
 
+    def test_reward_product_clear_wallet_true_claims_one_and_drains_wallet(self):
+        """When clear_wallet is True, only 1 unit is claimed. The cost consumes
+        the entire point balance instead of just `required_points`.
+        """
+        order = self.empty_order
+
+        program = self.env["loyalty.program"].create({
+            "name": "Free product - clear wallet",
+            "trigger": "auto",
+            "program_type": "loyalty",
+            "applies_on": "both",
+            "rule_ids": [Command.create({"reward_point_mode": "money"})],
+            "reward_ids": [
+                Command.create({
+                    "reward_type": "product",
+                    "reward_product_id": self.pedalBin.id,
+                    "reward_product_qty": 1,
+                    "required_points": 200,
+                    "clear_wallet": True,
+                })
+            ],
+        })
+
+        coupon = self.env["loyalty.card"].create({
+            "program_id": program.id,
+            "partner_id": order.partner_id.id,
+            "points": 1000,
+        })
+        order.applied_coupon_ids |= coupon
+
+        status = order._apply_program_reward(program.reward_ids, coupon)
+        self.assertNotIn("error", status, "The reward should be claimable")
+
+        reward_lines = order.order_line.filtered(lambda line: line.reward_id == program.reward_ids)
+        self.assertEqual(len(reward_lines), 1, "Only one reward line should be created")
+        self.assertEqual(
+            reward_lines.product_uom_qty,
+            1,
+            "Only 1 product should be claimed, same as when clear_wallet is False, "
+            "even though 1000 points (5x the required 200) are available",
+        )
+        self.assertEqual(
+            reward_lines.points_cost,
+            1000,
+            "The entire point balance should be consumed when clear_wallet is True, "
+            "draining the wallet completely",
+        )
+
+        remaining_points = order._get_real_points_for_coupon(coupon)
+        self.assertEqual(
+            remaining_points, 0, "The wallet should be fully drained after a clear_wallet claim"
+        )
+
     def test_program_numbers_one_discount_line_per_tax(self):
         order = self.empty_order
         self.env["ir.config_parameter"].set_bool("loyalty.compute_all_discount_product_ids", True)
@@ -387,6 +437,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "reward_product_id": self.largeCabinet.id,
                     "reward_product_qty": 1,
                     "required_points": 1,
+                    "clear_wallet": True,
                 })
             ],
         })
@@ -409,6 +460,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "reward_product_id": self.conferenceChair.id,
                     "reward_product_qty": 1,
                     "required_points": 1,
+                    "clear_wallet": True,
                 })
             ],
         })
@@ -430,6 +482,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                     "reward_product_id": self.pedalBin.id,
                     "reward_product_qty": 1,
                     "required_points": 1,
+                    "clear_wallet": True,
                 })
             ],
         })
