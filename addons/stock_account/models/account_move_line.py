@@ -71,7 +71,7 @@ class AccountMoveLine(models.Model):
             if self.product_id.cost_method in ['standard', 'average']:
                 price_unit = self.product_id.standard_price
             else:
-                price_unit = self.product_id._run_fifo(cogs_qty) / cogs_qty if cogs_qty else 0
+                price_unit = self.product_id._get_fifo_value(cogs_qty) / cogs_qty if cogs_qty else 0
         line_quantity_uom = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
         return abs((price_unit * cogs_qty - self._get_posted_cogs_value()) / line_quantity_uom)
 
