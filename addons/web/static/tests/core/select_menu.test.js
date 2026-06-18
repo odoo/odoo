@@ -1416,6 +1416,71 @@ test("prevent glitch on open or focusout", async () => {
     expect(searchInput.placeholder).toBe("searchPlaceholder");
 });
 
+test("search input value is not overwritten during re-renders unrelated to search state", async () => {
+    // Bug: t-att-value="this.displayValue" compiles to new String(displayValue).
+    // Since new String("x") !== new String("x") (different object references), OWL's patch
+    // algorithm always considers the value "changed" and calls input.value = displayValue on
+    // EVERY re-render, even ones caused by unrelated state changes (e.g. async search results
+    // arriving while the user is typing). Under specific timing this resets typed characters.
+    //
+    // Fix: useLayoutEffect with [state.searchValue, selectedChoice] deps — the setter fires
+    // only when those deps actually change, leaving unrelated re-renders untouched.
+
+    class MyParent extends Component {
+        static props = ["*"];
+        static components = { SelectMenu };
+        static template = xml`
+            <SelectMenu choices="this.state.choices" />
+        `;
+        setup() {
+            this.state = proxy({
+                choices: [
+                    { label: "Alpha", value: "alpha" },
+                    { label: "Beta", value: "beta" },
+                ],
+            });
+        }
+    }
+
+    const parent = await mountSingleApp(MyParent);
+    await open();
+    // Type "al" and let the debounce fire → state.searchValue = "al", pendingValue deleted.
+    await contains(".o_select_menu_input").edit("al", { confirm: false });
+    await runAllTimers();
+    await animationFrame();
+
+    // Install a spy on this specific input element AFTER the debounce has settled.
+    const input = queryOne(".o_select_menu_input");
+    const setterCalls = [];
+    const proto = HTMLInputElement.prototype;
+    const originalDescriptor = Object.getOwnPropertyDescriptor(proto, "value");
+    Object.defineProperty(input, "value", {
+        get() {
+            return originalDescriptor.get.call(this);
+        },
+        set(v) {
+            setterCalls.push(v);
+            originalDescriptor.set.call(this, v);
+        },
+        configurable: true,
+    });
+
+    // Simulate async search results arriving (e.g. from a concurrent onInput("") triggered
+    // by onBeforeOpen). This changes props.choices without touching searchValue or selectedChoice.
+    parent.state.choices = [
+        { label: "Alpha", value: "alpha" },
+        { label: "Beta", value: "beta" },
+        { label: "Gamma", value: "gamma" },
+    ];
+    await animationFrame();
+
+    // With t-att-value (bug): new String("al") !== new String("al") is always true, so OWL
+    //   calls input.value = "al" on this re-render even though searchValue didn't change.
+    // With useLayoutEffect (fix): deps ["al", undefined] are unchanged → setter not called.
+    expect(setterCalls.length).toBe(0);
+    expect(".o_select_menu_input").toHaveValue("al");
+});
+
 test("Prevents loss of value due to debounce when changing state (rendering)", async () => {
     class MyParent extends Component {
         static props = ["*"];

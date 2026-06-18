@@ -720,7 +720,7 @@ class TestUi(HttpCaseWithWebsiteUser):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'snippet_carousel', login='admin')
 
     def test_snippet_carousel_clickable_slides(self):
-        self.start_tour(self.env['website'].get_client_action_url('/', True), "snippet_carousel_clickable_slides", login="admin")
+        self.start_tour(self.env['website'].get_client_action_url('/', True), "snippet_carousel_clickable_slides", login="admin", debug=1)
 
     def test_media_iframe_video(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), "website_media_iframe_video", login="admin")

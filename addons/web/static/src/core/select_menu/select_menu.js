@@ -137,6 +137,14 @@ export class SelectMenu extends Component {
             isFocused: false,
         });
         this.inputRef = useRef("inputRef");
+        useLayoutEffect(
+            () => {
+                if (this.inputRef.el) {
+                    this.inputRef.el.value = this.displayValue;
+                }
+            },
+            () => [this.state.searchValue, this.selectedChoice, this.dropdownState?.isOpen]
+        );
         this.menuRef = useChildRef();
         this.choicesRef = useRef("choicesRef");
         this.props.menuRef?.(this.menuRef);
@@ -392,9 +400,6 @@ export class SelectMenu extends Component {
             }
         } else if (!this.selectedChoice || this.selectedChoice.value !== value) {
             this.props.onSelect(value);
-            if (this.inputRef.el && this.state.choices && this.state.choices.length) {
-                this.inputRef.el.value = this.state.choices.find((c) => c.value === value).label;
-            }
         }
         this.state.searchValue = null;
     }
