@@ -3,6 +3,7 @@
 import json
 from urllib.parse import parse_qs
 
+from lxml import etree
 from urllib3.util import parse_url
 from werkzeug.test import EnvironBuilder
 from werkzeug.urls import url_encode
@@ -225,6 +226,37 @@ class TestControllers(tests.HttpCase):
                 actual_srcs,
                 "XPath should filter out dynamic images, include only static",
             )
+
+    def test_08_update_alt_images(self):
+        test_view = self.env["ir.ui.view"].create({
+            "name": "Image Alt Update Test View",
+            "type": "qweb",
+            "arch_db": """
+                <template>
+                    <div>
+                        <img t-att-src="dynamic_source" />
+                        <img src="/static/image1.jpg" alt="Old alt" />
+                        <img src="/static/image2.jpg" />
+                    </div>
+                </template>
+            """,
+        })
+        models = [{"model": "ir.ui.view", "id": test_view.id, "field": "arch"}]
+        env = self.env(user=self.env.ref('base.user_admin'))
+
+        with MockRequest(env, website=env.ref('base.default_website')):
+            imgs = json.loads(Website().get_alt_images(models))
+            imgs[0].update(alt="New alt", updated=True)
+            imgs[1].update(decorative=True, updated=True)
+            Website().update_alt_images(imgs)
+
+        # The updates must be written back on the images matching the ids
+        # returned by get_alt_images, and the arch must stay valid XML.
+        tree = etree.fromstring(test_view.arch_db)
+        img1, img2 = tree.findall('.//img[@src]')
+        self.assertEqual(img1.get("alt"), "New alt")
+        self.assertEqual(img2.get("alt"), "")
+        self.assertEqual(img2.get("role"), "presentation")
 
     def test_website_force_domain_redirect(self):
         """

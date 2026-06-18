@@ -951,6 +951,9 @@ export class OptimizeSEODialog extends Component {
     };
     static props = {
         close: Function,
+        // Opened from the builder: skip the reload on save to keep unsaved edits.
+        reloadOnSave: { type: Boolean, optional: true },
+        applyImageAlts: { type: Function, optional: true },
     };
 
     setup() {
@@ -1205,15 +1208,25 @@ export class OptimizeSEODialog extends Component {
                     saveDelayTranslations(translationsRootEl, currentLang, translationsByRecord)
                 );
             }
-        } else if (seoContext.updatedAlts?.length) {
-            rpcCalls.push(
-                rpc("/website/update_alt_images", {
-                    imgs: seoContext.updatedAlts,
-                })
-            );
+        }
+        if (seoContext.updatedAlts?.length) {
+            if (this.props.applyImageAlts) {
+                this.props.applyImageAlts(seoContext.updatedAlts);
+            } else {
+                rpcCalls.push(
+                    rpc("/website/update_alt_images", {
+                        imgs: seoContext.updatedAlts,
+                    })
+                );
+            }
         }
 
         await Promise.all(rpcCalls);
+
+        if (this.props.reloadOnSave === false) {
+            // Reloading here would discard unsaved builder edits.
+            return;
+        }
 
         this.website.goToWebsite({
             path: this.url.replace(
