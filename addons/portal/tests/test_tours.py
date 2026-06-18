@@ -2,11 +2,11 @@
 
 from odoo.tests import tagged
 
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
+from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 
 
 @tagged('post_install', '-at_install')
-class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
+class TestUi(HttpCaseWithUserPortal):
 
     @classmethod
     def setUpClass(cls):

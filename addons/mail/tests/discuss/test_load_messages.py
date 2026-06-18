@@ -2,10 +2,10 @@
 
 import odoo.tests
 
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.tests import HttpCase
 
 
-class TestLoadMessages(HttpCaseWithUserDemo):
+class TestLoadMessages(HttpCase):
     def test_01_mail_message_load_order_tour(self):
         admin = self.env.ref("base.user_admin")
         channel = self.env["discuss.channel"].with_user(admin).create({"name": "MyTestChannel"})

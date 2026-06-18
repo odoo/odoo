@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.tests import HttpCase
 
 
-class TestLivechatChatbotFormUI(HttpCaseWithUserDemo):
+class TestLivechatChatbotFormUI(HttpCase):
     def test_chatbot_steps_sequence_ui(self):
         """ As sequences are *critical* for the chatbot_script script, let us a run a little tour that
         creates a few steps, then verify sequences are properly applied. """

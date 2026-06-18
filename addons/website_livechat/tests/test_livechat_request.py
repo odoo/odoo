@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon
+from odoo.tests import HttpCase
 from odoo.tests.common import new_test_user
 
 
-class TestLivechatRequestHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
+class TestLivechatRequestHttpCase(HttpCase, TestLivechatCommon):
     def test_livechat_request_complete_flow(self):
         self._clean_livechat_sessions()
 

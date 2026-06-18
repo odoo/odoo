@@ -3,13 +3,12 @@
 from freezegun import freeze_time
 
 from odoo import fields, _
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon
-from odoo.tests.common import new_test_user
+from odoo.tests.common import HttpCase, new_test_user
 
 
-class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
+class TestLivechatBasicFlowHttpCase(HttpCase, TestLivechatCommon):
     def test_channel_created_on_user_interaction(self):
         self.start_tour('/', 'im_livechat_request_chat', login=None)
         channel = self.env["discuss.channel"].search(
@@ -435,7 +434,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         self.assertEqual(channel_info["livechat_visitor_id"], False)
 
 
-class TestLivechatBasicFlowHttpCaseMobile(HttpCaseWithUserDemo, TestLivechatCommon):
+class TestLivechatBasicFlowHttpCaseMobile(HttpCase, TestLivechatCommon):
     browser_size = '375x667'
     touch_enabled = True
 

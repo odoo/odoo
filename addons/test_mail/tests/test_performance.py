@@ -5,7 +5,6 @@ from markupsafe import Markup
 from unittest.mock import patch
 
 from odoo import Command, fields
-from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 from odoo.addons.mail.tools.discuss import Store
@@ -14,7 +13,7 @@ from odoo.tools import mute_logger, formataddr
 
 
 @tagged('mail_performance', 'post_install', '-at_install')
-class BaseMailPerformance(MailCommon, TransactionCaseWithUserDemo):
+class BaseMailPerformance(MailCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -213,14 +212,14 @@ class TestBaseMailPerformance(BaseMailPerformance):
             }
         ])
 
-    @users('admin', 'demo')
+    @users('admin', 'employee')
     @warmup
     def test_read_mail(self):
         """ Read records inheriting from 'mail.thread'. """
         records = self.env['mail.performance.thread'].search([])
         self.assertEqual(len(records), 5)
 
-        with self.assertQueryCount(admin=3, demo=3):
+        with self.assertQueryCount(admin=3, employee=3):
             # without cache
             for record in records:
                 record.partner_id.country_id.name
@@ -235,7 +234,7 @@ class TestBaseMailPerformance(BaseMailPerformance):
             for record in records:
                 record.value_pc
 
-    @users('admin', 'demo')
+    @users('admin', 'employee')
     @warmup
     def test_write_mail(self):
         """ Write records inheriting from 'mail.thread' (no recomputation). """
@@ -243,20 +242,20 @@ class TestBaseMailPerformance(BaseMailPerformance):
         self.assertEqual(len(records), 5)
 
         profile = self.profile() if self.warm else nullcontext()
-        with profile, self.assertQueryCount(admin=3, demo=3):
+        with profile, self.assertQueryCount(admin=3, employee=3):
             records.write({'name': 'X'})
 
-    @users('admin', 'demo')
+    @users('admin', 'employee')
     @warmup
     def test_write_mail_with_recomputation(self):
         """ Write records inheriting from 'mail.thread' (with recomputation). """
         records = self.env['mail.performance.thread'].search([])
         self.assertEqual(len(records), 5)
 
-        with self.assertQueryCount(admin=3, demo=3):
+        with self.assertQueryCount(admin=3, employee=3):
             records.write({'value': 42})
 
-    @users('admin', 'demo')
+    @users('admin', 'employee')
     @warmup
     def test_write_mail_with_tracking(self):
         """ Write records inheriting from 'mail.thread' (with field tracking). """
@@ -267,23 +266,23 @@ class TestBaseMailPerformance(BaseMailPerformance):
             'partner_id': self.res_partner_12.id,
         })
 
-        with self.assertQueryCount(admin=3, demo=3):
+        with self.assertQueryCount(admin=3, employee=3):
             record.track = 'X'
 
-    @users('admin', 'demo')
+    @users('admin', 'employee')
     @warmup
     def test_create_mail(self):
         """ Create records inheriting from 'mail.thread' (without field tracking). """
         model = self.env['mail.performance.thread']
 
-        with self.assertQueryCount(admin=2, demo=2):
+        with self.assertQueryCount(admin=2, employee=2):
             model.with_context(tracking_disable=True).create({'name': 'X'})
 
-    @users('admin', 'demo')
+    @users('admin', 'employee')
     @warmup
     def test_create_mail_with_tracking(self):
         """ Create records inheriting from 'mail.thread' (with field tracking). """
-        with self.assertQueryCount(admin=9, demo=9):
+        with self.assertQueryCount(admin=9, employee=9):
             self.env['mail.performance.thread'].create({'name': 'X'})
 
     @users('admin', 'employee')

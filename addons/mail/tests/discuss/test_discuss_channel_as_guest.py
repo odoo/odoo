@@ -2,11 +2,11 @@
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests.common import tagged
-from odoo.addons.base.tests.common import HttpCaseWithUserPortal, HttpCaseWithUserDemo
+from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 
 
 @tagged("is_tour")
-class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
+class TestMailPublicPage(HttpCaseWithUserPortal):
     """Checks that the invite page redirects to the channel and that all
     modules load correctly on the welcome and channel page when authenticated as various users"""
 
@@ -94,10 +94,10 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
         self.start_tour(self.group.invitation_url, self.tour, cookies={guest._cookie_name: guest._format_auth_cookie()})
 
     def test_discuss_channel_public_page_as_internal(self):
-        self._open_channel_page_as_user('demo')
+        self._open_channel_page_as_user("internal_luigi")
 
     def test_mail_group_public_page_as_internal(self):
-        self._open_group_page_as_user('demo')
+        self._open_group_page_as_user("internal_luigi")
 
     def test_discuss_channel_public_page_as_portal(self):
         self._open_channel_page_as_user('portal')

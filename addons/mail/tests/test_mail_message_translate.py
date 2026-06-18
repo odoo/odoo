@@ -6,10 +6,8 @@ from unittest.mock import patch
 
 import requests
 
-from odoo.tests.common import JsonRpcException, new_test_user, tagged
+from odoo.tests.common import HttpCase, JsonRpcException, new_test_user, tagged
 from odoo.tools import mute_logger
-
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 SAMPLE = {
     "text": "<p>Al mal tiempo, buena cara.</p>",
@@ -40,7 +38,7 @@ def mock_response(fun):
 
 # Google Cloud Translation Documentation: https://cloud.google.com/translate/docs/reference/api-overview?hl=en
 @tagged("mail_message")
-class TestTranslationController(HttpCaseWithUserDemo):
+class TestTranslationController(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -113,7 +111,8 @@ class TestTranslationController(HttpCaseWithUserDemo):
 
     def test_invalid_api_key(self):
         self.env["ir.config_parameter"].set_str("mail.google_translate_api_key", "INVALIDKEY")
-        self.authenticate("demo", "demo")
+        test_user = new_test_user(self.env, login="test_user", password="test_user")
+        self.authenticate(test_user.login, test_user.password)
         result = self._mock_translation_request({"message_id": self.message.id})
         self.assertNotIn("body", result)
         self.assertNotIn("lang_name", result)
