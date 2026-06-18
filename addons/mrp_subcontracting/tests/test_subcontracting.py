@@ -1293,6 +1293,34 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         self.assertEqual(avail_qty_comp2, -todo_nb)
         self.assertEqual(avail_qty_finished, todo_nb)
 
+    def test_subcontracting_quantity_kept_after_scheduler(self):
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.subcontractor_partner1
+        with picking_form.move_ids.new() as move:
+            move.product_id = self.finished
+            move.product_uom_qty = 10
+        picking_receipt = picking_form.save()
+        picking_receipt.action_confirm()
+        action = picking_receipt.action_show_subcontract_details()
+        mo = self.env['mrp.production'].browse(action['res_id'])
+
+        self.assertEqual(mo.product_qty, 10)
+        self.assertEqual(picking_receipt.move_ids.product_uom_qty, 10)
+        self.assertEqual(picking_receipt.move_ids.quantity, 10)
+
+        with Form(mo.with_context(**action['context']), view=action['views'][0][0]) as mo_form:
+            mo_form.product_qty = 1
+        mo = mo_form.save()
+
+        self.assertEqual(mo.product_qty, 1)
+        self.assertEqual(picking_receipt.move_ids.quantity, 1)
+
+        self.env['stock.rule'].run_scheduler()
+
+        self.assertEqual(mo.product_qty, 1)
+        self.assertEqual(picking_receipt.move_ids.quantity, 1)
+
     def test_flow_backorder_production(self):
         """ Test subcontracted MO backorder (i.e. through record production window, NOT through
         picking backorder). Finished product is serial tracked to ensure subcontracting MO window
