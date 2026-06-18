@@ -2704,7 +2704,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         """
             Create an accrual plan that is based on worked time and
             - Test that the number of accrued days is 0 in the case of an accrual allocation with multiple employees.
-            - Test that the number of accrued days is propagated correctly to single-employee allocations created from the multi-employee allocation.
+            - Test that each single-employee allocation created from the multi-employee allocation
+              is accrued from the allocation start date, based on its own employee's worked time.
         """
         leave_type = self.env['hr.leave.type'].create({
             'name': 'Test Leave Type',
@@ -2746,8 +2747,8 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             multi_employee_allocation.action_validate()
             for single_employee_allocation in multi_employee_allocation.linked_request_ids:
                 self.assertEqual(
-                    single_employee_allocation.number_of_days, 0,
-                    "Each single employee allocation must have the same number of days as the multi-employee allocation after validation"
+                    single_employee_allocation.number_of_days, 10,
+                    "Each single employee allocation must be accrued from the allocation start date"
                 )
 
     def test_accrual_allocation_data_with_different_units(self):
@@ -3343,3 +3344,44 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             with freeze_time(test_date):
                 allocation._update_accrual()
                 self.assert_virtual_leaves_equal(self.leave_type_day, expected_days, self.employee_emp, test_date, 2)
+
+    def test_department_accrual_allocation_past_start(self):
+        """
+        A multi-employee (department/company) accrual allocation whose plan started
+        in the past must back-fill every elapsed period for each employee, exactly
+        like a single-employee allocation does. The child allocations used to start
+        accruing from the current period only, dropping the whole backlog.
+        """
+        with freeze_time("2026-06-01"):
+            self.env['hr.employee'].create([
+                {
+                    'name': 'Past Start Employee 1',
+                    'company_id': self.company.id,
+                    'department_id': self.department.id,
+                },
+                {
+                    'name': 'Past Start Employee 2',
+                    'company_id': self.company.id,
+                    'department_id': self.department.id,
+                },
+            ])
+
+            with Form(self.env['hr.leave.allocation']) as f:
+                f.allocation_type = "accrual"
+                f.accrual_plan_id = self.accrual_plan_monthly_end
+                f.date_from = '2026-01-01'
+                f.holiday_type = 'department'
+                f.department_id = self.department
+                f.holiday_status_id = self.leave_type
+                f.private_name = "Past Start Department Allocation"
+            department_allocation = f.record
+            department_allocation.action_validate()
+
+            children_allocations = self.env['hr.leave.allocation'].search(
+                [('employee_id', 'in', self.department.member_ids.ids)])
+            self.assertEqual(len(children_allocations), 2)
+            # Monthly accrual of 2 days, gained at the end of each period, starting
+            # 2026-01-01: by 2026-06-01 the Jan->May periods have elapsed, so each
+            # employee must be back-filled with 5 * 2 = 10 days.
+            self.assertEqual(children_allocations[0].number_of_days, 10.0)
+            self.assertEqual(children_allocations[1].number_of_days, 10.0)
