@@ -909,6 +909,49 @@ class TestPartnerAddressCompany(TransactionCase):
         for partner in company_2 + contact + contact_dlr + contact_ct + contact2:
             self.assertEqual(partner.vat, contactvat, 'Commercial sync works upstream, therefore also for siblings')
 
+    def test_additional_identifiers_per_contact_sync(self):
+        """ ``additional_identifiers`` is a synced commercial field, but identifiers
+        flagged ``synced=False`` in their metadata (e.g. the ``ID_TKU`` branch code) are
+        per-contact: they stay on their own record and are never propagated by the
+        commercial-entity sync, while the synced ones (here ``DUNS``) are.
+        """
+        Partner = self.env['res.partner']
+        company = Partner.create({
+            'name': 'Company',
+            'is_company': True,
+            'additional_identifiers': {'DUNS': '372441183', 'ID_TKU': '999999'},
+        })
+        branch = Partner.create({
+            'name': 'Branch',
+            'parent_id': company.id,
+            'additional_identifiers': {'ID_TKU': '111111'},
+        })
+        contact = Partner.create({'name': 'Contact', 'parent_id': company.id})
+
+        # Down: the synced identifier reaches every contact; the per-contact one never
+        # does (each record keeps only its own, the company's is not shared).
+        self.assertEqual(company.additional_identifiers, {'DUNS': '372441183', 'ID_TKU': '999999'})
+        self.assertEqual(branch.additional_identifiers, {'DUNS': '372441183', 'ID_TKU': '111111'})
+        self.assertEqual(contact.additional_identifiers, {'DUNS': '372441183'})
+
+        # A per-contact change stays strictly local (no sync up nor to siblings).
+        contact.additional_identifiers = {'DUNS': '372441183', 'ID_TKU': '222222'}
+        self.assertEqual(contact.additional_identifiers, {'DUNS': '372441183', 'ID_TKU': '222222'})
+        self.assertEqual(branch.additional_identifiers, {'DUNS': '372441183', 'ID_TKU': '111111'})
+        self.assertEqual(company.additional_identifiers, {'DUNS': '372441183', 'ID_TKU': '999999'})
+
+        # A synced change on a contact propagates up to the company and to siblings,
+        # while every record keeps its own per-contact identifier.
+        contact.additional_identifiers = {'DUNS': '198273645', 'ID_TKU': '222222'}
+        self.assertEqual(company.additional_identifiers, {'DUNS': '198273645', 'ID_TKU': '999999'})
+        self.assertEqual(branch.additional_identifiers, {'DUNS': '198273645', 'ID_TKU': '111111'})
+        self.assertEqual(contact.additional_identifiers, {'DUNS': '198273645', 'ID_TKU': '222222'})
+
+        # A synced change on the company replaces it everywhere; per-contact untouched.
+        company.additional_identifiers = {'DUNS': '564738291', 'ID_TKU': '999999'}
+        self.assertEqual(branch.additional_identifiers, {'DUNS': '564738291', 'ID_TKU': '111111'})
+        self.assertEqual(contact.additional_identifiers, {'DUNS': '564738291', 'ID_TKU': '222222'})
+
     def test_commercial_field_sync_reset(self):
         """ Test voiding fields propagation. We would like to allow forcing void
         values from parent, but limiting upstream reset from children. """

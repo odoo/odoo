@@ -677,6 +677,37 @@ class ResPartner(models.Model):
             return self._convert_fields_to_values(set_synced_fields)
         return {}
 
+    def _apply_synced_identifiers(self, source_identifiers):
+        """ Mirror the *synced* identifiers of ``source_identifiers`` onto every record
+        in ``self``, while keeping per-contact identifiers untouched.
+        Per-contact identifiers are those flagged ``synced=False`` in their metadata
+        """
+        all_metadata = self._get_all_identifiers_metadata()
+        synced = {
+            key: value
+            for key, value in (source_identifiers or {}).items()
+            if all_metadata.get(key, {}).get('synced', True)
+        }
+        for record in self:
+            existing = record.additional_identifiers or {}
+            merged = {
+                key: value
+                for key, value in existing.items()
+                if not all_metadata.get(key, {}).get('synced', True)
+            } | synced
+            if merged != existing:
+                record.write({'additional_identifiers': merged})
+
+    def _write_commercial_sync(self, sync_vals):
+        """ Apply commercial-fields ``sync_vals`` to ``self``.
+        ``additional_identifiers`` is special-cased so only its flagged synced keys
+        are propagated; the remaining fields are written as-is.
+        """
+        if 'additional_identifiers' in sync_vals:
+            sync_vals = dict(sync_vals)
+            self._apply_synced_identifiers(sync_vals.pop('additional_identifiers'))
+        self.write(sync_vals)
+
     @api.model
     def _company_dependent_commercial_fields(self):
         return [
@@ -691,7 +722,7 @@ class ResPartner(models.Model):
         if commercial_partner != self:
             sync_vals = commercial_partner._get_commercial_values()
             if sync_vals:
-                self.write(sync_vals)
+                self._write_commercial_sync(sync_vals)
                 self._commercial_sync_to_descendants()
             self._company_dependent_commercial_sync()
 
@@ -718,7 +749,7 @@ class ResPartner(models.Model):
         sync_children = self.child_ids.filtered(lambda c: not c.is_company)
         for child in sync_children:
             child._commercial_sync_to_descendants(fields_to_sync)
-        sync_children.write(sync_vals)
+        sync_children._write_commercial_sync(sync_vals)
 
     def _fields_sync(self, values):
         """ Sync commercial fields and address fields from company and to children.
@@ -765,7 +796,7 @@ class ResPartner(models.Model):
         )
         if commercial_to_upstream:
             new_synced_commercials = self._get_synced_commercial_values()
-            self.parent_id.write(new_synced_commercials)
+            self.parent_id._write_commercial_sync(new_synced_commercials)
 
         # 3. To DOWNSTREAM: sync children
         self._children_sync(values)

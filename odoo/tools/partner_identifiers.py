@@ -673,6 +673,7 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
         'placeholder': '000000',
         'category': 'EN',
         'countries': ['ID'],
+        'synced': False,
     },
     'IE_PPSN': {
         'label': _lt('PPSN'),
