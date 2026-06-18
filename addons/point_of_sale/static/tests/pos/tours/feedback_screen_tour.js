@@ -344,6 +344,7 @@ registry.category("web_tour.tours").add("test_automatic_receipt_printing", {
             FeedbackScreen.isShown(),
             FeedbackScreen.isContinueEnabled(),
             FeedbackScreen.isTransitioning(),
+            FeedbackScreen.isSuccess(),
             ProductScreen.isShown(),
             Chrome.closePrintingWarning(),
             ProductScreen.clickDisplayedProduct("Desk Organizer"),
@@ -353,6 +354,7 @@ registry.category("web_tour.tours").add("test_automatic_receipt_printing", {
             FeedbackScreen.isShown(),
             FeedbackScreen.isContinueEnabled(),
             FeedbackScreen.isTransitioning(),
+            FeedbackScreen.isSuccess(),
             ProductScreen.isShown(),
         ].flat(),
 });
