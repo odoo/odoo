@@ -448,6 +448,36 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
             msg="The capture failed, the tx state should still be 'authorized'.",
         )
 
+    def test_failed_webhook_capture_notification_cancels_done_transaction(self):
+        tx = self._create_transaction(
+            'direct', state='done', provider_reference=self.original_reference
+        )
+        payload = dict(self.webhook_notification_batch_data, notificationItems=[{
+            'NotificationRequestItem': dict(
+                self.webhook_notification_payload, eventCode='CAPTURE', success='false'
+            )
+        }])
+        self._webhook_notification_flow(payload)
+        self.assertEqual(
+            tx.state, 'cancel',
+            msg="A failed capture after confirmation should cancel the transaction.",
+        )
+
+    def test_webhook_capture_failed_notification_cancels_done_transaction(self):
+        tx = self._create_transaction(
+            'direct', state='done', provider_reference=self.original_reference
+        )
+        payload = dict(self.webhook_notification_batch_data, notificationItems=[{
+            'NotificationRequestItem': dict(
+                self.webhook_notification_payload, eventCode='CAPTURE_FAILED'
+            )
+        }])
+        self._webhook_notification_flow(payload)
+        self.assertEqual(
+            tx.state, 'cancel',
+            msg="A CAPTURE_FAILED notification should cancel a confirmed transaction.",
+        )
+
     def test_failed_webhook_cancellation_notification_leaves_transaction_authorized(self):
         tx = self._create_transaction('direct', state='authorized')
         payload = dict(self.webhook_notification_batch_data, notificationItems=[{
