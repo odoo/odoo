@@ -831,9 +831,19 @@ export class SeoChecks extends Component {
             return { model, id: parseInt(id), field, type };
         });
 
-        const results = await rpc("/website/get_alt_images", { models });
+        const results = JSON.parse(await rpc("/website/get_alt_images", { models }));
 
-        return JSON.parse(results);
+        // The RPC reads the saved arch: overlay the live DOM values so that
+        // unsaved changes (e.g. pending builder edits) show up in the dialog.
+        for (const img of results) {
+            const liveImgEl = [...imgEls].find((el) => el.getAttribute("src") === img.src);
+            if (liveImgEl) {
+                img.alt = (liveImgEl.getAttribute("alt") || "").trim();
+                img.decorative = liveImgEl.getAttribute("role") === "presentation";
+            }
+        }
+
+        return results;
     }
 
     async getBrokenLinks() {
@@ -951,6 +961,9 @@ export class OptimizeSEODialog extends Component {
     };
     static props = {
         close: Function,
+        // Opened from the builder: skip the reload on save to keep unsaved edits.
+        reloadOnSave: { type: Boolean, optional: true },
+        applyImageAlts: { type: Function, optional: true },
     };
 
     setup() {
@@ -1205,15 +1218,25 @@ export class OptimizeSEODialog extends Component {
                     saveDelayTranslations(translationsRootEl, currentLang, translationsByRecord)
                 );
             }
-        } else if (seoContext.updatedAlts?.length) {
-            rpcCalls.push(
-                rpc("/website/update_alt_images", {
-                    imgs: seoContext.updatedAlts,
-                })
-            );
+        }
+        if (seoContext.updatedAlts?.length) {
+            if (this.props.applyImageAlts) {
+                this.props.applyImageAlts(seoContext.updatedAlts);
+            } else {
+                rpcCalls.push(
+                    rpc("/website/update_alt_images", {
+                        imgs: seoContext.updatedAlts,
+                    })
+                );
+            }
         }
 
         await Promise.all(rpcCalls);
+
+        if (this.props.reloadOnSave === false) {
+            // Reloading here would discard unsaved builder edits.
+            return;
+        }
 
         this.website.goToWebsite({
             path: this.url.replace(
