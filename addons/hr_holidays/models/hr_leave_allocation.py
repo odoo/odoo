@@ -839,6 +839,7 @@ class HolidaysAllocation(models.Model):
         self._action_approve()
         return True
 
+<<<<<<< dc3272c5f6529212fe3c94ffa57c4358afa7c7fd
     def action_validate(self):
         # We don't know all the places in all the apps where `action_validate` is called.
         # Hence, `action_validate` is kept and not removed.
@@ -862,6 +863,38 @@ class HolidaysAllocation(models.Model):
         second_validate_allocs.write({'state': 'validate', 'second_approver_id': current_employee.id})
 
         self.activity_update()
+||||||| 3851c66b896e3c5cd5034603356c88ebbb64b6b4
+                allocation_vals += allocation._prepare_holiday_values(employees)
+        if allocation_vals:
+            allocations = self.env['hr.leave.allocation'].with_context(
+                mail_notify_force_send=False,
+                mail_activity_automation_skip=True
+            ).create(allocation_vals)
+            accrual_allocations = allocations.filtered(lambda a: a.allocation_type == 'accrual')
+            for date_to, allocation in accrual_allocations.grouped('date_to').items():
+                date_to = min(date_to, date.today()) if date_to else False
+                allocation._process_accrual_plans(date_to)
+        self.linked_request_ids.filtered(lambda c: c.state != 'validate').action_validate()
+=======
+                allocation_vals += allocation._prepare_holiday_values(employees)
+        if allocation_vals:
+            allocations = self.env['hr.leave.allocation'].with_context(
+                mail_notify_force_send=False,
+                mail_activity_automation_skip=True
+            ).create(allocation_vals)
+            accrual_allocations = allocations.filtered(lambda a: a.allocation_type == 'accrual')
+            for date_from, allocation in accrual_allocations.grouped('date_from').items():
+                allocation.write({
+                    'lastcall': date_from,
+                    'nextcall': False,
+                    'already_accrued': False,
+                    'number_of_days': 0.0,
+                })
+            for date_to, allocation in accrual_allocations.grouped('date_to').items():
+                date_to = min(date_to, date.today()) if date_to else False
+                allocation._process_accrual_plans(date_to)
+        self.linked_request_ids.filtered(lambda c: c.state != 'validate').action_validate()
+>>>>>>> e32bac1f4f6fda2967c870b57d45e40b50727117
 
     def action_refuse(self):
         current_employee = self.env.user.employee_id

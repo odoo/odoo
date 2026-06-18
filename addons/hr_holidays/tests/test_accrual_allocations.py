@@ -3901,6 +3901,211 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             allocation._update_accrual()
             self.assertEqual(allocation.number_of_days, 8, "The number of days should be updated successfully")
 
+<<<<<<< dc3272c5f6529212fe3c94ffa57c4358afa7c7fd
+||||||| 3851c66b896e3c5cd5034603356c88ebbb64b6b4
+    def test_multi_employee_accrual_allocation_not_based_on_worked_time(self):
+        """
+            Create an accrual plan that is not based on worked time and
+            - Test that the number of accrued days is computed correctly in the case of an accrual allocation with multiple employees.
+            - Test that the number of accrued days is propagated correctly to single-employee allocations created from the multi-employee allocation.
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'officer',
+            'employee_requests': 'no',
+        })
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Test Accrual Plan',
+            'accrued_gain_time': 'end',
+            'carryover_date': 'year_start',
+            'is_based_on_worked_time': False,
+            'level_ids': [Command.create({
+                'added_value': 10,
+                'added_value_type': 'day',
+                'action_with_unused_accruals': 'all',
+                'frequency': 'yearly',
+                'yearly_month': 'jan',
+                'yearly_day': 1,
+                'start_count': 0,
+                'start_type': 'day',
+            })],
+        })
+
+        with freeze_time("2025-01-01"):
+            with Form(self.env['hr.leave.allocation']) as multi_employee_allocation:
+                multi_employee_allocation.private_name = "Accrual allocation for employee"
+                multi_employee_allocation.allocation_type = "accrual"
+                multi_employee_allocation.accrual_plan_id = accrual_plan
+                multi_employee_allocation.employee_ids.add(self.employee_emp)
+                multi_employee_allocation.employee_ids.add(self.employee_hruser)
+                multi_employee_allocation.holiday_status_id = leave_type
+                multi_employee_allocation.date_from = '2024-01-01'
+
+            multi_employee_allocation = multi_employee_allocation.record
+            self.assertEqual(multi_employee_allocation.number_of_days, 10, "Employees are accrued 10 days yearly")
+            # Create single-employee allocations from the multi-employee allocation
+            multi_employee_allocation.action_validate()
+            for single_employee_allocation in multi_employee_allocation.linked_request_ids:
+                self.assertEqual(
+                    single_employee_allocation.number_of_days, 10,
+                    "Each single employee allocation must have the same number of days as the multi-employee allocation after validation"
+                )
+
+    def test_multi_employee_accrual_allocation_based_on_worked_time(self):
+        """
+            Create an accrual plan that is based on worked time and
+            - Test that the number of accrued days is 0 in the case of an accrual allocation with multiple employees.
+            - Test that the number of accrued days is propagated correctly to single-employee allocations created from the multi-employee allocation.
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'officer',
+            'employee_requests': 'no',
+        })
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Test Accrual Plan',
+            'accrued_gain_time': 'end',
+            'carryover_date': 'year_start',
+            'is_based_on_worked_time': True,
+            'level_ids': [Command.create({
+                'added_value': 10,
+                'added_value_type': 'day',
+                'action_with_unused_accruals': 'all',
+                'frequency': 'yearly',
+                'yearly_month': 'jan',
+                'yearly_day': 1,
+                'start_count': 0,
+                'start_type': 'day',
+            })],
+        })
+
+        with freeze_time("2025-01-01"):
+            with Form(self.env['hr.leave.allocation']) as multi_employee_allocation:
+                multi_employee_allocation.private_name = "Accrual allocation for employee"
+                multi_employee_allocation.allocation_type = "accrual"
+                multi_employee_allocation.accrual_plan_id = accrual_plan
+                multi_employee_allocation.employee_ids.add(self.employee_emp)
+                multi_employee_allocation.employee_ids.add(self.employee_hruser)
+                multi_employee_allocation.holiday_status_id = leave_type
+                multi_employee_allocation.date_from = '2024-01-01'
+
+            multi_employee_allocation = multi_employee_allocation.record
+            self.assertEqual(multi_employee_allocation.number_of_days, 0, "Employees are accrued 10 days yearly")
+            # Create single-employee allocations from the multi-employee allocation
+            multi_employee_allocation.action_validate()
+            for single_employee_allocation in multi_employee_allocation.linked_request_ids:
+                self.assertEqual(
+                    single_employee_allocation.number_of_days, 0,
+                    "Each single employee allocation must have the same number of days as the multi-employee allocation after validation"
+                )
+
+=======
+    def test_multi_employee_accrual_allocation_not_based_on_worked_time(self):
+        """
+            Create an accrual plan that is not based on worked time and
+            - Test that the number of accrued days is computed correctly in the case of an accrual allocation with multiple employees.
+            - Test that the number of accrued days is propagated correctly to single-employee allocations created from the multi-employee allocation.
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'officer',
+            'employee_requests': 'no',
+        })
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Test Accrual Plan',
+            'accrued_gain_time': 'end',
+            'carryover_date': 'year_start',
+            'is_based_on_worked_time': False,
+            'level_ids': [Command.create({
+                'added_value': 10,
+                'added_value_type': 'day',
+                'action_with_unused_accruals': 'all',
+                'frequency': 'yearly',
+                'yearly_month': 'jan',
+                'yearly_day': 1,
+                'start_count': 0,
+                'start_type': 'day',
+            })],
+        })
+
+        with freeze_time("2025-01-01"):
+            with Form(self.env['hr.leave.allocation']) as multi_employee_allocation:
+                multi_employee_allocation.private_name = "Accrual allocation for employee"
+                multi_employee_allocation.allocation_type = "accrual"
+                multi_employee_allocation.accrual_plan_id = accrual_plan
+                multi_employee_allocation.employee_ids.add(self.employee_emp)
+                multi_employee_allocation.employee_ids.add(self.employee_hruser)
+                multi_employee_allocation.holiday_status_id = leave_type
+                multi_employee_allocation.date_from = '2024-01-01'
+
+            multi_employee_allocation = multi_employee_allocation.record
+            self.assertEqual(multi_employee_allocation.number_of_days, 10, "Employees are accrued 10 days yearly")
+            # Create single-employee allocations from the multi-employee allocation
+            multi_employee_allocation.action_validate()
+            for single_employee_allocation in multi_employee_allocation.linked_request_ids:
+                self.assertEqual(
+                    single_employee_allocation.number_of_days, 10,
+                    "Each single employee allocation must have the same number of days as the multi-employee allocation after validation"
+                )
+
+    def test_multi_employee_accrual_allocation_based_on_worked_time(self):
+        """
+            Create an accrual plan that is based on worked time and
+            - Test that the number of accrued days is 0 in the case of an accrual allocation with multiple employees.
+            - Test that each single-employee allocation created from the multi-employee allocation
+              is accrued from the allocation start date, based on its own employee's worked time.
+        """
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Test Leave Type',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+            'allocation_validation_type': 'officer',
+            'employee_requests': 'no',
+        })
+        accrual_plan = self.env['hr.leave.accrual.plan'].create({
+            'name': 'Test Accrual Plan',
+            'accrued_gain_time': 'end',
+            'carryover_date': 'year_start',
+            'is_based_on_worked_time': True,
+            'level_ids': [Command.create({
+                'added_value': 10,
+                'added_value_type': 'day',
+                'action_with_unused_accruals': 'all',
+                'frequency': 'yearly',
+                'yearly_month': 'jan',
+                'yearly_day': 1,
+                'start_count': 0,
+                'start_type': 'day',
+            })],
+        })
+
+        with freeze_time("2025-01-01"):
+            with Form(self.env['hr.leave.allocation']) as multi_employee_allocation:
+                multi_employee_allocation.private_name = "Accrual allocation for employee"
+                multi_employee_allocation.allocation_type = "accrual"
+                multi_employee_allocation.accrual_plan_id = accrual_plan
+                multi_employee_allocation.employee_ids.add(self.employee_emp)
+                multi_employee_allocation.employee_ids.add(self.employee_hruser)
+                multi_employee_allocation.holiday_status_id = leave_type
+                multi_employee_allocation.date_from = '2024-01-01'
+
+            multi_employee_allocation = multi_employee_allocation.record
+            self.assertEqual(multi_employee_allocation.number_of_days, 0, "Employees are accrued 10 days yearly")
+            # Create single-employee allocations from the multi-employee allocation
+            multi_employee_allocation.action_validate()
+            for single_employee_allocation in multi_employee_allocation.linked_request_ids:
+                self.assertEqual(
+                    single_employee_allocation.number_of_days, 10,
+                    "Each single employee allocation must be accrued from the allocation start date"
+                )
+
+>>>>>>> e32bac1f4f6fda2967c870b57d45e40b50727117
     def test_accrual_allocation_data_with_different_units(self):
         '''
         Test that the allocation data is correctly computed when the request unit
@@ -4793,6 +4998,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             with freeze_time(test_date):
                 allocation._update_accrual()
                 self.assert_virtual_leaves_equal(self.leave_type_day, expected_days, self.employee_emp, test_date, 2)
+<<<<<<< dc3272c5f6529212fe3c94ffa57c4358afa7c7fd
 
     def test_hr_leave_after_adding_accrual_plan_levels(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].create({
@@ -4818,3 +5024,47 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             'request_date_to': datetime.date.today() + relativedelta(days=3),
         })
         self.assertTrue(leave.action_validate())
+||||||| 3851c66b896e3c5cd5034603356c88ebbb64b6b4
+=======
+
+    def test_department_accrual_allocation_past_start(self):
+        """
+        A multi-employee (department/company) accrual allocation whose plan started
+        in the past must back-fill every elapsed period for each employee, exactly
+        like a single-employee allocation does. The child allocations used to start
+        accruing from the current period only, dropping the whole backlog.
+        """
+        with freeze_time("2026-06-01"):
+            self.env['hr.employee'].create([
+                {
+                    'name': 'Past Start Employee 1',
+                    'company_id': self.company.id,
+                    'department_id': self.department.id,
+                },
+                {
+                    'name': 'Past Start Employee 2',
+                    'company_id': self.company.id,
+                    'department_id': self.department.id,
+                },
+            ])
+
+            with Form(self.env['hr.leave.allocation']) as f:
+                f.allocation_type = "accrual"
+                f.accrual_plan_id = self.accrual_plan_monthly_end
+                f.date_from = '2026-01-01'
+                f.holiday_type = 'department'
+                f.department_id = self.department
+                f.holiday_status_id = self.leave_type
+                f.private_name = "Past Start Department Allocation"
+            department_allocation = f.record
+            department_allocation.action_validate()
+
+            children_allocations = self.env['hr.leave.allocation'].search(
+                [('employee_id', 'in', self.department.member_ids.ids)])
+            self.assertEqual(len(children_allocations), 2)
+            # Monthly accrual of 2 days, gained at the end of each period, starting
+            # 2026-01-01: by 2026-06-01 the Jan->May periods have elapsed, so each
+            # employee must be back-filled with 5 * 2 = 10 days.
+            self.assertEqual(children_allocations[0].number_of_days, 10.0)
+            self.assertEqual(children_allocations[1].number_of_days, 10.0)
+>>>>>>> e32bac1f4f6fda2967c870b57d45e40b50727117
