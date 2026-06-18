@@ -7,10 +7,9 @@ from unittest import skip
 from unittest.mock import patch
 
 from odoo.addons.base.models.res_users import ResUsersPatchedInTest
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
-from odoo.tests import RecordCapturer, tagged, users
+from odoo.tests import HttpCase, RecordCapturer, tagged, users
 from odoo.tools import mute_logger
 
 
@@ -182,28 +181,33 @@ class TestUser(MailCommon):
 
 
 @tagged('res_users')
-class TestUserTours(HttpCaseWithUserDemo):
+class TestUserTours(HttpCase):
 
     def test_user_modify_own_profile(self):
-        """" A user should be able to modify their own profile.
-        Even if that user does not have access rights to write on the res.users model. """
-        if 'hr.employee' in self.env and not self.user_demo.employee_id:
+        """ A user should be able to modify their own profile.
+        Even if that user does not have access rights to write on the res.users model."""
+        test_user = mail_new_test_user(
+            self.env,
+            login="employee",
+            password="employee",
+            notification_type="email",
+            tz="Europe/Brussels",
+        )
+        if 'hr.employee' in self.env and not test_user.employee_id:
             self.env['hr.employee'].create({
-                'name': 'Marc Demo',
-                'user_id': self.user_demo.id,
+                'name': test_user.name,
+                'user_id': test_user.id,
             })
-            self.user_demo.group_ids += self.env.ref('hr.group_hr_user')
-        self.user_demo.tz = "Europe/Brussels"
-        self.user_demo.notification_type = "email"
+            test_user.group_ids += self.env.ref('hr.group_hr_user')
 
         # avoid 'reload_context' action in the middle of the tour to ease steps and form save checks
         with patch.object(ResUsersPatchedInTest, 'preference_save', lambda self: True):
             self.start_tour(
                 "/odoo",
                 "mail/static/tests/tours/user_modify_own_profile_tour.js",
-                login="demo",
+                login=test_user.login,
             )
-        self.assertEqual(self.user_demo.notification_type, "inbox")
+        self.assertEqual(test_user.notification_type, "inbox")
 
 
 class TestUserSettings(MailCommon):

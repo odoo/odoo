@@ -8,12 +8,12 @@ from odoo.http.stream import STATIC_CACHE_LONG
 from odoo.tests import tagged, users
 from odoo.tools import mute_logger
 
-from odoo.addons.base.tests.common import HttpCase, HttpCaseWithUserDemo
+from odoo.addons.base.tests.common import HttpCase
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user
 
 
 @odoo.tests.tagged("mail_controller")
-class TestMessageController(HttpCaseWithUserDemo, MailCommon):
+class TestMessageController(HttpCase, MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

@@ -4,12 +4,11 @@ import datetime
 import random
 
 from odoo import fields
-from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.website.models.ir_http import IrHttp
 
 
-class TestLivechatCommon(MailCommon, TransactionCaseWithUserDemo):
+class TestLivechatCommon(MailCommon):
     def setUp(self):
         super().setUp()
         self.maxDiff = None
@@ -46,13 +45,13 @@ class TestLivechatCommon(MailCommon, TransactionCaseWithUserDemo):
             'lang_id': self.env.ref('base.lang_en').id,
             'country_id': self.env.ref('base.de').id,
             'website_id': self.env.ref('base.default_website').id,
-            'partner_id': self.partner_demo.id,
-            'access_token': self.user_demo.partner_id.id,
+            'partner_id': self.partner_employee.id,
+            'access_token': self.user_employee.partner_id.id,
         }] + [
             dict(visitor_vals, access_token='%032x' % random.randrange(16**32))
             for _ in range(self.max_sessions_per_operator)
         ])
-        self.visitor_demo, self.visitor = self.visitors[0], self.visitors[1]
+        self.visitor_employee, self.visitor = self.visitors[0], self.visitors[1]
         self.page_1, self.page_2 = self.env["website.page"].create(
             [
                 {

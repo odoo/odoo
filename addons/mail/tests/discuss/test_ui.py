@@ -1,11 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo, new_test_user
 from odoo.addons.mail.tests.common import freeze_all_time
+from odoo.tests import HttpCase, new_test_user
 
 
-class TestUi(HttpCaseWithUserDemo):
+class TestUi(HttpCase):
 
     def test_01_mail_tour(self):
         self.start_tour("/odoo", 'discuss_channel_tour', login="admin")
@@ -59,6 +59,7 @@ class TestUi(HttpCaseWithUserDemo):
 
     def test_05_can_create_channel_tour(self):
         self.env["discuss.channel"].create({"name": "Sports"})
-        settings = self.user_demo.res_users_settings_id
+        test_user = new_test_user(self.env, login="test_user", password="test_user")
+        settings = test_user.res_users_settings_id
         settings.set_res_users_settings({"channel_notifications": "all"})
-        self.start_tour("odoo/discuss", "can_create_channel_from_form_view", login="demo")
+        self.start_tour("odoo/discuss", "can_create_channel_from_form_view", login=test_user.login)
