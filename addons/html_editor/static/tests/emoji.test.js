@@ -141,4 +141,12 @@ describe("Emoji shortcuts", () => {
         expect(getContent(el)).toBe(`<p>😕[]</p>`);
         await expectElementCount(".o-we-powerbox", 0);
     });
+
+    test("should insert emoji when typing an emoji shortcut inline with preceding space", async () => {
+        const { el, editor } = await setupEditor("<p>abc []def</p>");
+        expect(getContent(el)).toBe(`<p>abc []def</p>`);
+        await insertText(editor, ":/");
+        await animationFrame();
+        expect(getContent(el)).toBe(`<p>abc 😕[]def</p>`);
+    });
 });
