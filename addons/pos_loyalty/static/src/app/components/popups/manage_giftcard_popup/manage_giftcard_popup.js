@@ -59,9 +59,14 @@ export class ManageGiftCardPopup extends Component {
     }
 
     async checkGiftCard() {
+        if (this.pos.data.network.offline) {
+            this.state.lockGiftCardFields = false;
+            this.state.loading = false;
+            return true;
+        }
         try {
             const code = this.state.inputValue.trim();
-            const result = await this.pos.data.call("loyalty.card", "get_gift_card_status", [
+            const result = await this.pos.data.call("loyalty.card", "get_card_status", [
                 code,
                 this.pos.config.id,
             ]);
@@ -74,13 +79,12 @@ export class ManageGiftCardPopup extends Component {
                     ),
                 });
                 this.state.error = true;
-                this.state.lastCheck = false;
                 this.state.inputValue = "";
                 return false;
             }
 
-            if (result.data["loyalty.card"].length > 0) {
-                const giftCard = result.data["loyalty.card"][0];
+            if (result["loyalty.card"].length > 0) {
+                const giftCard = result["loyalty.card"][0];
                 this.state.amountValue = roundCurrency(
                     giftCard.points?.toString() || "0",
                     this.pos.currency
@@ -101,9 +105,8 @@ export class ManageGiftCardPopup extends Component {
                 false,
                 [error]
             );
-            this.pos.notification.add({
+            this.pos.notification.add(_t("An error occurred while checking the gift card."), {
                 type: "danger",
-                body: _t("An error occurred while checking the gift card."),
             });
         } finally {
             this.state.error = false;

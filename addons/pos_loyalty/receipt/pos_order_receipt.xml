@@ -7,7 +7,7 @@
                     <tbody t-foreach="extra_data['loyalties']" t-as="loyalty">
                         <tr class="loyalty">
                             <td class="text-start" t-out="loyalty['name'] + ' ' + loyalty['type']"/>
-                            <td class="text-end w-50"  t-out="loyalty['points']"/>
+                            <td class="text-end w-50" t-out="loyalty['points']"/>
                         </tr>
                     </tbody>
                 </table>
@@ -16,7 +16,7 @@
                         <tr>
                             <td class="text-start text-top pt-3">
                                 <div class="pb-1" t-out="coupon['name']"/>
-                                <div class="pb-1"> Until: <t t-if="coupon.get('expiration_date')" t-out="coupon['expiration_date']"/><t t-else="">no expiration</t></div>
+                                <div class="pb-1"> Until: <t t-if="coupon['expiration_date']" t-out="coupon['expiration_date']"/><t t-else="">no expiration</t></div>
                             </td>
                             <td class="text-end pt-3">
                                 <div><img t-att-src="coupon['barcode_base64']" style="width:300px;height:70px"/></div>

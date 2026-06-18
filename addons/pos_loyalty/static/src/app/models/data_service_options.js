@@ -9,10 +9,10 @@ patch(DataServiceOptions.prototype, {
                 key: "id",
                 condition: (record) =>
                     record
-                        .backLink("<-pos.order.line.coupon_id")
+                        .backLink("<-pos.order.line.card_id")
                         .find((l) => !l.order_id?.canBeRemovedFromIndexedDB),
                 getRecordsBasedOnLines: (orderlines) =>
-                    orderlines.map((line) => line.coupon_id).filter((c) => c),
+                    orderlines.map((line) => line.card_id).filter((c) => c),
             },
         };
     },

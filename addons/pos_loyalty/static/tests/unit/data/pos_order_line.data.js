@@ -7,8 +7,7 @@ patch(PosOrderLine.prototype, {
             ...super._load_pos_data_fields(),
             "is_reward_line",
             "reward_id",
-            "coupon_id",
-            "reward_identifier_code",
+            "card_id",
             "points_cost",
         ];
     },

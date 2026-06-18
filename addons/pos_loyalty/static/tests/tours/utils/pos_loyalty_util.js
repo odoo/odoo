@@ -62,6 +62,12 @@ export function hasRewardLine(rewardName, amount, qty) {
         quantity: qty,
     });
 }
+export function doesNotHaveRewardLine(rewardName) {
+    return Order.doesNotHaveLine({
+        withClass: ".fst-italic",
+        productName: rewardName,
+    });
+}
 export function orderTotalIs(total_str) {
     return [...Order.hasTotal(total_str)];
 }
@@ -127,8 +133,8 @@ export function pointsAwardedAre(points_str) {
 export function pointsTotalIs(points_str) {
     return [
         {
-            content: "loyalty points awarded " + points_str,
-            trigger: '.loyalty-points-totaltext-end:contains("' + points_str + '")',
+            content: "loyalty points total " + points_str,
+            trigger: '.loyalty-points-total:contains("' + points_str + '")',
         },
     ];
 }
@@ -143,7 +149,7 @@ export function finalizeOrder(paymentMethod, amount) {
     ];
 }
 export function removeRewardLine(name) {
-    return [selectRewardLine(name), ProductScreen.clickNumpad("⌫"), Dialog.confirm()].flat();
+    return [selectRewardLine(name), ProductScreen.clickNumpad("⌫")].flat();
 }
 
 export function checkAddedLoyaltyPoints(points) {

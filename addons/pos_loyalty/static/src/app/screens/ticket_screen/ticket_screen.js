@@ -56,7 +56,7 @@ patch(TicketScreen.prototype, {
     },
     async onDoRefund() {
         await super.onDoRefund(...arguments);
-        await this.pos.updatePrograms();
+        this.pos.updateRewards();
     },
     onClickOrderline(orderline) {
         if (

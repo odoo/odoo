@@ -2,27 +2,22 @@ import { PartnerList } from "@point_of_sale/app/screens/partner_list/partner_lis
 import { patch } from "@web/core/utils/patch";
 
 patch(PartnerList.prototype, {
+    setup() {
+        super.setup(...arguments);
+        // Load the loyalty cards of the partners shown on open so their balances
+        // are displayed; freshly fetched partners are handled in getNewPartners.
+        this.pos.loadPartnerCards(this.state.initialPartners.map((partner) => partner.id));
+    },
     /**
-     * Needs to be set to true to show the loyalty points in the partner list.
+     * Show the balance column so each partner's loyalty points can be displayed.
      * @override
      */
     get isBalanceDisplayed() {
-        return true;
+        return this.pos.models["loyalty.program"].length > 0 || super.isBalanceDisplayed;
     },
-
-    async searchPartner() {
-        const res = await super.searchPartner();
-        const programIds = this.pos.models["loyalty.program"].getAll().map((p) => p.id);
-        const coupons = await this.pos.fetchCoupons(
-            [
-                ["partner_id", "in", res.map((partner) => partner.id)],
-                ["program_id.active", "=", true],
-                ["program_id", "in", programIds],
-                ["points", ">", 0],
-            ],
-            null
-        );
-        this.pos.computePartnerCouponIds(coupons);
-        return res;
+    async getNewPartners() {
+        const partners = await super.getNewPartners();
+        await this.pos.loadPartnerCards(partners.map((partner) => partner.id));
+        return partners;
     },
 });

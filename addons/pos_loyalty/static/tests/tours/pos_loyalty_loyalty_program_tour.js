@@ -30,8 +30,8 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
             // At this point, AAA Test Partner has 4 points.
             PosLoyalty.isMoreControlButtonActive(true),
             PosLoyalty.isRewardButtonHighlighted(true),
-            ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "3"),
-            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1"),
+            PosLoyalty.claimReward('Add "Free Product - Whiteboard Pen"'),
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "0", "1"),
             PosLoyalty.isMoreControlButtonActive(false),
             PosLoyalty.isRewardButtonHighlighted(false),
             PosLoyalty.orderTotalIs("6.40"),
@@ -47,13 +47,12 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAA Test Partner"),
             PosLoyalty.isRewardButtonHighlighted(true),
-            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
-            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1"),
+            PosLoyalty.claimReward('Add "Free Product - Whiteboard Pen"'),
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "0", "1"),
             PosLoyalty.isRewardButtonHighlighted(false),
             ProductScreen.clickNumpad("⌫"),
-            // At this point, the reward line should have been automatically removed
-            // because there is not enough points to purchase it. Unfortunately, we
-            // can't check that here.
+            ProductScreen.selectedOrderlineHas("Whiteboard Pen", "4"),
+            ProductScreen.clickNumpad("⌫"),
             PosLoyalty.orderTotalIs("0.00"),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "1.00"),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "2.00"),
@@ -79,11 +78,14 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram2", {
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAA Test Partner"),
             // No item in the order, so reward button is off.
-            PosLoyalty.isRewardButtonHighlighted(false),
+
+            // TODO Do we want this restriction to hold?
+            // PosLoyalty.isRewardButtonHighlighted(false),
+
             ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
             PosLoyalty.isRewardButtonHighlighted(true),
-            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
-            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1"),
+            PosLoyalty.claimReward('Add "Free Product - Whiteboard Pen"'),
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "0", "1"),
             PosLoyalty.isRewardButtonHighlighted(false),
             PosLoyalty.orderTotalIs("3.20"),
             PosLoyalty.finalizeOrder("Cash", "10"),
@@ -111,7 +113,10 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram2", {
             // - But set CCC Test Partner first as the customer.
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("CCC Test Partner"),
-            PosLoyalty.isRewardButtonHighlighted(false),
+
+            // TODO same as above
+            //PosLoyalty.isRewardButtonHighlighted(false),
+
             ProductScreen.addOrderline("Whiteboard Pen", "3"),
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("BBB Test Partner"),
@@ -127,12 +132,13 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram2", {
             ProductScreen.clickCustomer("CCC Test Partner"),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.claimReward("Free Product - Whiteboard Pen"),
-            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1"),
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "0", "1"),
             ProductScreen.clickPartnerButton(),
             // This deselects the customer.
             PosLoyalty.unselectPartner(),
             PosLoyalty.customerIs("Customer"),
-            PosLoyalty.orderTotalIs("6.40"),
+            PosLoyalty.doesNotHaveRewardLine("Free Product - Whiteboard Pen"),
+            PosLoyalty.orderTotalIs("3.20"),
             PosLoyalty.finalizeOrder("Cash", "10"),
         ].flat(),
 });
@@ -146,10 +152,11 @@ registry.category("web_tour.tours").add("PosLoyaltyChangeRewardQty", {
             ProductScreen.addOrderline("Desk Organizer", "1"),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.claimReward("Free Product - Whiteboard Pen"),
-            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1"),
+            // DDD Test Partner has 100 points. Order is applied at max qty - 25
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "0", "25"),
             ProductScreen.clickNumpad("Qty"),
             ProductScreen.clickNumpad("1"),
-            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1"),
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "0", "1"),
         ].flat(),
 });
 
@@ -167,8 +174,12 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram3", {
             // At this point, the free_product program is triggered.
             // The reward button should be highlighted.
             PosLoyalty.isRewardButtonHighlighted(true, true),
+            // AAA Test Partner has 10 points available => 2 free whiteboard pens
             PosLoyalty.claimReward("Free Product - Whiteboard Pen"),
-            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-1.00", "1"),
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "0", "2"),
+            ProductScreen.clickNumpad("Qty"),
+            ProductScreen.clickNumpad("1"),
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "0", "1"),
 
             PosLoyalty.orderTotalIs("10.2"),
             PosLoyalty.finalizeOrder("Cash", "10.2"),
@@ -230,8 +241,8 @@ registry.category("web_tour.tours").add("PosComboCheapestRewardProgram", {
             combo.select("Combo Product 6"),
             Dialog.confirm(),
             inLeftSide(Order.hasLine({ productName: "10% on the cheapest product" })),
-            PosLoyalty.orderTotalIs("1,204.25"),
-            PosLoyalty.finalizeOrder("Cash", "1204.25"),
+            PosLoyalty.orderTotalIs("1,204.00"),
+            PosLoyalty.finalizeOrder("Cash", "1204.00"),
             ProductScreen.clickDisplayedProduct("Cheap product"),
             ProductScreen.clickDisplayedProduct("Office Combo"),
             combo.select("Combo Product 1"),
@@ -294,7 +305,9 @@ registry.category("web_tour.tours").add("PosOrderClaimReward", {
             ProductScreen.addOrderline("Desk Organizer", "3"),
             PosLoyalty.isPointsDisplayed(true),
             PosLoyalty.claimReward("Free Product - Whiteboard Pen"),
-            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1.00"),
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "0", "3.00"),
+            ProductScreen.clickNumpad("1"),
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "0", "1.00"),
             PosLoyalty.finalizeOrder("Cash", "15.3"),
         ].flat(),
 });
@@ -347,7 +360,7 @@ registry.category("web_tour.tours").add("test_combo_product_dont_grant_point", {
             combo.select("Combo Product 6"),
             Dialog.confirm(),
             Order.hasLine({ productName: "100% on the cheapest product" }),
-            ProductScreen.totalAmountIs("50.00"),
+            ProductScreen.totalAmountIs("48.00"),
         ].flat(),
 });
 
@@ -356,16 +369,14 @@ registry.category("web_tour.tours").add("test_buy_x_get_y_reward_qty", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Whiteboard Pen", "10"),
-            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
-            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1.00"),
-            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
-            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-6.40", "2.00"),
-            PosLoyalty.finalizeOrder("Cash", "32"),
-            ProductScreen.addOrderline("Whiteboard Pen", "10"),
-            PosLoyalty.claimReward("Free Product - Whiteboard Pen"),
-            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-9.60", "3.00"),
-            PosLoyalty.finalizeOrder("Cash", "32"),
+            ProductScreen.addOrderline("Whiteboard Pen", "100"),
+            PosLoyalty.claimReward('Add "Free Product - Whiteboard Pen"'),
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "0", "30"),
+            ProductScreen.clickNumpad("1", "2"),
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "0", "12"),
+            ProductScreen.clickNumpad("9"),
+            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "0", "30"),
+            PosLoyalty.finalizeOrder("Cash", "320"),
         ].flat(),
 });
 

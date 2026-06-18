@@ -32,6 +32,23 @@ registry.category("web_tour.tours").add("GiftCardProgramTour2", {
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("GiftCardProgramTwoCardsTour", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Whiteboard Pen", "1", "35", "35.00"),
+            // Pay with two gift cards of the same program: both payment lines must stay.
+            PosLoyalty.enterCode("044111111"),
+            Dialog.proceed({ title: "unpaid gift card" }),
+            PosLoyalty.orderTotalIs("15.00"),
+            PosLoyalty.enterCode("044222222"),
+            Dialog.proceed({ title: "unpaid gift card" }),
+            PosLoyalty.orderTotalIs("0.00"),
+            PosLoyalty.finalizeOrder("Cash", "0"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("GiftCardWithRefundTour", {
     steps: () =>
         [
@@ -128,7 +145,7 @@ registry.category("web_tour.tours").add("PosLoyaltyGiftCardTaxes", {
             ProductScreen.clickDisplayedProduct("Test Product A"),
             PosLoyalty.enterCode("044123456"),
             PosLoyalty.orderTotalIs("50.00"),
-            ProductScreen.checkTaxAmount("-6.52"),
+            ProductScreen.hasNoTax(),
         ].flat(),
 });
 
@@ -163,21 +180,18 @@ registry.category("web_tour.tours").add("MultiplePhysicalGiftCardProgramSaleTour
             ProductScreen.clickDisplayedProduct("Gift Card"),
             PosLoyalty.clickGiftCardProgram("Gift Cards1"),
             PosLoyalty.createManualGiftCard("test-card-0000", 125),
-            PosLoyalty.clickGiftCardProgram("Gift Cards"),
             ProductScreen.selectedOrderlineHas("Gift Card", "1.00", "125"),
             PosLoyalty.orderTotalIs("125"),
             PosLoyalty.finalizeOrder("Cash", "125"),
             ProductScreen.clickDisplayedProduct("Gift Card"),
             PosLoyalty.clickGiftCardProgram("Gift Cards2"),
             PosLoyalty.createManualGiftCard("test-card-0001", 125),
-            PosLoyalty.clickGiftCardProgram("Gift Cards2"),
             ProductScreen.selectedOrderlineHas("Gift Card", "1.00", "125"),
             PosLoyalty.orderTotalIs("125"),
             PosLoyalty.finalizeOrder("Cash", "125"),
             ProductScreen.clickDisplayedProduct("Gift Card"),
             PosLoyalty.clickGiftCardProgram("Gift Cards3"),
             PosLoyalty.createManualGiftCard("test-card-0002", 125),
-            PosLoyalty.clickGiftCardProgram("Gift Cards3"),
             ProductScreen.selectedOrderlineHas("Gift Card", "1.00", "125"),
             PosLoyalty.orderTotalIs("125"),
             PosLoyalty.finalizeOrder("Cash", "125"),

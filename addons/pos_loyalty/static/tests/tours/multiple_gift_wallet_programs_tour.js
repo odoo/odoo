@@ -36,7 +36,6 @@ registry.category("web_tour.tours").add("MultipleGiftWalletProgramsTour", {
             SelectionPopup.has("ewallet_1"),
             SelectionPopup.has("ewallet_2"),
             SelectionPopup.has("ewallet_1", { run: "click" }),
-            ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAAAAAA"),
             ProductScreen.clickNumpad("Price"),
             ProductScreen.modeIsActive("Price"),
@@ -46,7 +45,6 @@ registry.category("web_tour.tours").add("MultipleGiftWalletProgramsTour", {
             // Top up ewallet_2 for AAAAAAA.
             ProductScreen.clickDisplayedProduct("Top-up eWallet"),
             SelectionPopup.has("ewallet_2", { run: "click" }),
-            ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAAAAAA"),
             ProductScreen.clickNumpad("Price"),
             ProductScreen.modeIsActive("Price"),
@@ -56,7 +54,6 @@ registry.category("web_tour.tours").add("MultipleGiftWalletProgramsTour", {
             // Top up ewallet_1 for BBBBBBB.
             ProductScreen.clickDisplayedProduct("Top-up eWallet"),
             SelectionPopup.has("ewallet_1", { run: "click" }),
-            ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("BBBBBBB"),
             PosLoyalty.orderTotalIs("50.00"),
             PosLoyalty.finalizeOrder("Cash", "50"),

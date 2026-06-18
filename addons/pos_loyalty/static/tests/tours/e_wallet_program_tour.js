@@ -19,11 +19,9 @@ registry.category("web_tour.tours").add("EWalletProgramTour1", {
 
             // Topup 50$ for partner_aaa
             ProductScreen.clickDisplayedProduct("Top-up eWallet"),
+            PartnerList.clickPartner("AAAAAAA"),
             PosLoyalty.orderTotalIs("50.00"),
             ProductScreen.clickPayButton(false),
-            // If there's no partner, we asked to redirect to the partner list screen.
-            Dialog.confirm(),
-            PartnerList.clickPartner("AAAAAAA"),
             PosLoyalty.finalizeOrder("Cash", "50"),
 
             // Topup 10$ for partner_bbb
@@ -152,9 +150,7 @@ registry.category("web_tour.tours").add("ExpiredEWalletProgramTour", {
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("AAAA"),
             ProductScreen.addOrderline("Whiteboard Pen", "2", "6", "12.00"),
-            PosLoyalty.eWalletButtonState({ highlighted: false, click: true }),
-            Dialog.is({ title: "No valid eWallet found" }),
-            Dialog.confirm(),
+            PosLoyalty.eWalletButtonState({ highlighted: false }),
         ].flat(),
 });
 
@@ -184,9 +180,8 @@ registry.category("web_tour.tours").add("EWalletLoyaltyHistory", {
             Dialog.confirm("Open Register"),
 
             ProductScreen.clickDisplayedProduct("Top-up eWallet"),
-            PosLoyalty.orderTotalIs("50.00"),
-            ProductScreen.clickPartnerButton(),
             PartnerList.clickPartner("AAAAAAA"),
+            PosLoyalty.orderTotalIs("50.00"),
             PosLoyalty.finalizeOrder("Cash", "50"),
 
             ProductScreen.addOrderline("Whiteboard Pen", "2", "6", "12.00"),

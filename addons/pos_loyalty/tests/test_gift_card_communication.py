@@ -65,6 +65,10 @@ class TestGiftCardCommunication(TestPointOfSaleHttpCommon):
         self.env.ref('loyalty.gift_card_product_50').write({'active': True})
         self.main_pos_config.open_ui()
 
+        card_id = self.env['loyalty.card']._get_or_create_pos_card(
+            self.gift_card_program, self.test_partner.id, 'TEST-GIFT-CARD-001',
+        ).id
+
         pos_order = self.env['pos.order'].create({
             'config_id': self.main_pos_config.id,
             'session_id': self.main_pos_config.current_session_id.id,
@@ -76,6 +80,7 @@ class TestGiftCardCommunication(TestPointOfSaleHttpCommon):
                 'qty': 1,
                 'price_subtotal': 50.00,
                 'price_subtotal_incl': 50.00,
+                'card_id': card_id,
             })],
             'amount_paid': 50.0,
             'amount_total': 50.0,
@@ -85,16 +90,7 @@ class TestGiftCardCommunication(TestPointOfSaleHttpCommon):
 
         messages_before = len(pos_order.message_ids)
 
-        coupon_data = {
-            '-1': {
-                'points': 50,
-                'program_id': self.gift_card_program.id,
-                'coupon_id': -1,
-                'product_id': self.env.ref('loyalty.gift_card_product_50').id,
-                'code': 'TEST-GIFT-CARD-001',
-            },
-        }
-        pos_order.confirm_coupon_programs(coupon_data)
+        pos_order._process_loyalty()
 
         gift_card = self.env['loyalty.card'].search([
             ('code', '=', 'TEST-GIFT-CARD-001'),
@@ -149,6 +145,12 @@ class TestGiftCardCommunication(TestPointOfSaleHttpCommon):
             })],
             'mail_template_id': self.mail_template.id,
         })
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'available_in_pos': True,
+            'list_price': 100,
+            'taxes_id': [],
+        })
 
         self.main_pos_config.open_ui()
 
@@ -156,6 +158,13 @@ class TestGiftCardCommunication(TestPointOfSaleHttpCommon):
             'config_id': self.main_pos_config.id,
             'session_id': self.main_pos_config.current_session_id.id,
             'partner_id': self.test_partner.id,
+            'lines': [Command.create({
+                'product_id': product.id,
+                'price_unit': 100,
+                'qty': 1,
+                'price_subtotal': 100.00,
+                'price_subtotal_incl': 100.00,
+            })],
             'amount_paid': 100.0,
             'amount_total': 100.0,
             'amount_tax': 0.0,
@@ -164,15 +173,7 @@ class TestGiftCardCommunication(TestPointOfSaleHttpCommon):
 
         messages_before = len(pos_order.message_ids)
 
-        coupon_data = {
-            '-1': {
-                'points': 100,
-                'program_id': loyalty_program.id,
-                'coupon_id': -1,
-                'partner_id': self.test_partner.id,
-            },
-        }
-        pos_order.confirm_coupon_programs(coupon_data)
+        pos_order._process_loyalty()
 
         loyalty_card = self.env['loyalty.card'].search([
             ('program_id', '=', loyalty_program.id),
@@ -199,6 +200,10 @@ class TestGiftCardCommunication(TestPointOfSaleHttpCommon):
         self.env.ref('loyalty.gift_card_product_50').write({'active': True})
         self.main_pos_config.open_ui()
 
+        card_id = self.env['loyalty.card']._get_or_create_pos_card(
+            self.gift_card_program, False, 'TEST-NO-CUSTOMER-001',
+        ).id
+
         pos_order = self.env['pos.order'].create({
             'config_id': self.main_pos_config.id,
             'session_id': self.main_pos_config.current_session_id.id,
@@ -209,6 +214,7 @@ class TestGiftCardCommunication(TestPointOfSaleHttpCommon):
                 'qty': 1,
                 'price_subtotal': 50.00,
                 'price_subtotal_incl': 50.00,
+                'card_id': card_id,
             })],
             'amount_paid': 50.0,
             'amount_total': 50.0,
@@ -218,16 +224,7 @@ class TestGiftCardCommunication(TestPointOfSaleHttpCommon):
 
         messages_before = len(pos_order.message_ids)
 
-        coupon_data = {
-            '-1': {
-                'points': 50,
-                'program_id': self.gift_card_program.id,
-                'coupon_id': -1,
-                'product_id': self.env.ref('loyalty.gift_card_product_50').id,
-                'code': 'TEST-NO-CUSTOMER-001',
-            },
-        }
-        pos_order.confirm_coupon_programs(coupon_data)
+        pos_order._process_loyalty()
 
         gift_card = self.env['loyalty.card'].search([
             ('code', '=', 'TEST-NO-CUSTOMER-001'),
