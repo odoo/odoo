@@ -39,7 +39,7 @@
             </t>
             <t t-if="this.pos.models['loyalty.program'].length and this.pos.accessRight.canApplyRewards" t-call="point_of_sale.controlButton"
                 icon="'star'"
-                iconClasses="'oi-filled ' + (this.nbrRewards() ? 'o_reward-icon-active' : '')"
+                iconClasses="this.nbrRewards() ? 'oi-filled o_reward-icon-active' : ''"
                 btnText.translate="Reward"
                 btnClasses="'btn-secondary ' + (this.nbrRewards() ? 'active' : 'disabled')"
                 disabled="!this.nbrRewards() || this.pos.disableForSelfOrder"
