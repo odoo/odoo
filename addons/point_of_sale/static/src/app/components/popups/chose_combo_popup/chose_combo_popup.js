@@ -1,16 +1,16 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 
 export class ChoseComboPopup extends Component {
     static template = "point_of_sale.ChoseComboPopup";
     static components = { Dialog };
-    static props = {
-        potentialCombos: Object,
-        close: Function,
-        getPayload: Function,
-    };
+    props = props({
+        potentialCombos: t.object(),
+        close: t.function(),
+        getPayload: t.function(),
+    });
 
     setup() {
         super.setup();

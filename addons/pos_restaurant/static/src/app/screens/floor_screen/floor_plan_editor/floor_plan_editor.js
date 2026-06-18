@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { onMounted, onWillUnmount, useListener } from "@odoo/owl";
+import { onMounted, onWillUnmount, useListener, props, t } from "@odoo/owl";
 import { EditDecorProperties } from "./edit_decor/edit_decor";
 import { EditTableProperties } from "./edit_table/edit_table";
 import { EditFloorProperties } from "./edit_floor/edit_floor";
@@ -39,9 +39,9 @@ const IMG_SIZE = 220;
 export class FloorPlanEditor extends FloorPlanBase {
     static template = "pos_restaurant.floor_plan_editor";
     static components = { Handles, EditTableProperties, EditDecorProperties, EditFloorProperties };
-    static props = {
-        initActionHandler: Function,
-    };
+    props = props({
+        initActionHandler: t.function(),
+    });
 
     setup() {
         super.setup();

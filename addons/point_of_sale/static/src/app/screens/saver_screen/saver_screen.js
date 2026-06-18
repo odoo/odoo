@@ -7,7 +7,6 @@ export class SaverScreen extends Component {
     static template = "point_of_sale.SaverScreen";
     static storeOnOrder = false;
     static updatePreviousScreen = false;
-    static props = [];
 
     setup() {
         this.time = useTime();

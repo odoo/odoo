@@ -12,7 +12,7 @@ import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/pr
 import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
 import { PaymentScreenStatus } from "@point_of_sale/app/screens/payment_screen/payment_status/payment_status";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component, onMounted } from "@odoo/owl";
+import { Component, onMounted, props, t } from "@odoo/owl";
 import { Numpad, enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 
@@ -24,9 +24,9 @@ export class PaymentScreen extends Component {
         PaymentScreenStatus,
         PriceFormatter,
     };
-    static props = {
-        orderUuid: String,
-    };
+    props = props({
+        orderUuid: t.string(),
+    });
 
     setup() {
         this.pos = usePos();

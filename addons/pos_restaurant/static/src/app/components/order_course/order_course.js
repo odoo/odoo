@@ -1,12 +1,12 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 export class OrderCourse extends Component {
     static template = "pos_restaurant.OrderCourse";
-    static props = {
-        course: Object,
-        course_index: Number,
-        slots: { type: Object, optional: true },
-    };
+    props = props({
+        course: t.object(),
+        course_index: t.number(),
+        slots: t.object().optional(),
+    });
 
     get course() {
         return this.props.course;

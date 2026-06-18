@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { Handles } from "@pos_restaurant/app/screens/floor_screen/floor_plan_editor/handles/handles";
 import { getColors } from "@pos_restaurant/app/services/floor_plan/utils/colors";
 import { useService } from "@web/core/utils/hooks";
@@ -8,11 +8,11 @@ import { SHAPE_TYPES } from "@pos_restaurant/app/services/floor_plan/elements/fl
 export class EditTableProperties extends Component {
     static template = "pos_restaurant.floor_editor.edit_table_properties";
     static components = { Handles };
-    static props = {
-        table: { optional: false },
-        updateElement: Function,
-        onSizeUpdated: Function,
-    };
+    props = props({
+        table: t.any(),
+        updateElement: t.function(),
+        onSizeUpdated: t.function(),
+    });
 
     setup() {
         this.dialog = useService("dialog");

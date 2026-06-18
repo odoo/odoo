@@ -17,7 +17,6 @@ const { DateTime } = luxon;
 export class CartPage extends Component {
     static template = "pos_self_order.CartPage";
     static components = { OrderWidget };
-    static props = {};
 
     setup() {
         this.selfOrder = useSelfOrder();

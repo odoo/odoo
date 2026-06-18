@@ -1,26 +1,27 @@
 import { _t } from "@web/core/l10n/translation";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { useService } from "@web/core/utils/hooks";
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { parseFloat } from "@web/views/fields/parsers";
 import { enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 
+export const paymentScreenPaymentLinesProps = {
+    paymentLines: t.array().optional(),
+    deleteLine: t.function(),
+    selectLine: t.function(),
+    sendForceDone: t.function(),
+    sendForceCancel: t.function(),
+    sendPaymentCancel: t.function(),
+    sendPaymentRequest: t.function(),
+    updateSelectedPaymentline: t.function(),
+    isRefundOrder: t.boolean(),
+};
 export class PaymentScreenPaymentLines extends Component {
     static template = "point_of_sale.PaymentScreenPaymentLines";
     static components = { PriceFormatter };
-    static props = {
-        paymentLines: { type: Array, optional: true },
-        deleteLine: Function,
-        selectLine: Function,
-        sendForceDone: Function,
-        sendForceCancel: Function,
-        sendPaymentCancel: Function,
-        sendPaymentRequest: Function,
-        updateSelectedPaymentline: Function,
-        isRefundOrder: Boolean,
-    };
+    props = props(paymentScreenPaymentLinesProps);
 
     setup() {
         this.ui = useService("ui");

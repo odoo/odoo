@@ -7,11 +7,10 @@ import { _t } from "@web/core/l10n/translation";
 
 class ListContainerDialog extends Component {
     static components = { Dialog };
-    static props = {
-        items: Array,
-        slots: { type: Object },
-        close: Function,
-    };
+    props = props({
+        items: t.array(),
+        close: t.function(),
+    });
     static template = xml`
         <Dialog title="this.title" footer="false">
             <div class="list-container-items d-flex p-2 flex-wrap" style="gap: 0.5rem;">

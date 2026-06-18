@@ -1,5 +1,5 @@
 import { registry } from "@web/core/registry";
-import { Component, onWillStart, onWillUnmount, signal } from "@odoo/owl";
+import { Component, onWillStart, onWillUnmount, signal, props, t } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { useErrorHandlers } from "@point_of_sale/app/hooks/hooks";
@@ -12,10 +12,10 @@ export class FeedbackScreen extends Component {
     static template = "point_of_sale.FeedbackScreen";
     static storeOnOrder = false;
     static components = { FeedbackPaymentSummary };
-    static props = {
-        orderUuid: String,
-        waitFor: { type: Object, optional: true },
-    };
+    props = props({
+        orderUuid: t.string(),
+        waitFor: t.object().optional(),
+    });
 
     loading = signal(true);
     timeout = signal(null);

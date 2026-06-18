@@ -1,4 +1,4 @@
-import { Component, onMounted, proxy, useListener } from "@odoo/owl";
+import { Component, onMounted, proxy, useListener, props, t } from "@odoo/owl";
 import { Handles } from "@pos_restaurant/app/screens/floor_screen/floor_plan_editor/handles/handles";
 import { _t } from "@web/core/l10n/translation";
 import { getColorRGBA, getColors } from "@pos_restaurant/app/services/floor_plan/utils/colors";
@@ -18,11 +18,11 @@ import { useFloorPlanStore } from "@pos_restaurant/app/hooks/floor_plan_hook";
 export class EditFloorProperties extends Component {
     static template = "pos_restaurant.floor_editor.edit_floor_properties";
     static components = { Handles };
-    static props = {
-        floor: { optional: true },
-        canvasRef: { optional: true },
-        onSizeUpdated: { type: Function },
-    };
+    props = props({
+        floor: t.any().optional(),
+        canvasRef: t.object().optional(),
+        onSizeUpdated: t.function(),
+    });
 
     setup() {
         this.dialog = useService("dialog");

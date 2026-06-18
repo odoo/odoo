@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, props } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
@@ -11,9 +11,7 @@ import { useLayoutEffect } from "@web/owl2/utils";
 
 export class CashdroAdminButtons extends Component {
     static template = `pos_cashdro.CashdroAdminButtons`;
-    static props = {
-        ...standardWidgetProps,
-    };
+    props = props(standardWidgetProps);
 
     setup() {
         super.setup();

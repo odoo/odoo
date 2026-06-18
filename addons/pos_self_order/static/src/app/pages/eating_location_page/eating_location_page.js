@@ -7,7 +7,6 @@ import { SIZES } from "@web/core/ui/ui_service";
 
 export class EatingLocationPage extends Component {
     static template = "pos_self_order.EatingLocationPage";
-    static props = {};
 
     setup() {
         this.selfOrder = useSelfOrder();
