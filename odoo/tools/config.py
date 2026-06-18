@@ -244,7 +244,7 @@ class configmanager:
         group = optparse.OptionGroup(parser, "Common options")
         group.add_option("-c", "--config", dest="config", type='path', file_loadable=False, env_name='ODOO_RC',
                          help="specify alternate config file")
-        group.add_option("-s", "--save", action="store_true", dest="save", my_default=False, file_loadable=False,
+        group.add_option("--save", action="store_true", dest="save", my_default=False, file_loadable=False,
                          help="save configuration to ~/.odoorc (or to ~/.openerp_serverrc if it exists)")
         group.add_option("-i", "--init", dest="init", type='comma', metavar="MODULE,...", my_default=[], file_loadable=False,
                          help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
@@ -641,7 +641,7 @@ class configmanager:
             self.parser.error(f"unrecognized parameters: {' '.join(unknown_args)}")
 
         if not opt.save and opt.config and not os.access(opt.config, os.R_OK):
-            self.parser.error(f"the config file {opt.config!r} selected with -c/--config doesn't exist or is not readable, use -s/--save if you want to generate it")
+            self.parser.error(f"the config file {opt.config!r} selected with -c/--config doesn't exist or is not readable, use --save if you want to generate it")
 
         # Even if they are not exposed on the CLI, cli un-loadable variables still show up in the opt, remove them
         for option_name in list(vars(opt).keys()):
