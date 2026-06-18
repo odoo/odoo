@@ -155,9 +155,7 @@ class ResCompany(models.Model):
         This CRON method will be run every 24 hours to synchronize the invoices and the bills with the ANAF
         """
         ro_companies = self.env['res.company'].sudo().search([
-            ('l10n_ro_edi_refresh_token', '!=', False),
-            ('l10n_ro_edi_client_id', '!=', False),
-            ('l10n_ro_edi_client_secret', '!=', False),
+            ('l10n_ro_edi_access_token', '!=', False),
         ])
         for company in ro_companies:
             try:
