@@ -35,6 +35,14 @@ class FleetVehicle(models.Model):
         current_year = datetime.now().year
         return [(str(i), i) for i in range(1970, current_year + 1)]
 
+    @api.model
+    def default_get(self, fields):
+        result = super().default_get(fields)
+        default_name = self.env.context.get('default_name')
+        if 'license_plate' not in result and not self.env.context.get('default_license_plate') and default_name:
+            result['license_plate'] = default_name
+        return result
+
     name = fields.Char(compute="_compute_vehicle_name", store=True)
     description = fields.Html("Vehicle Description")
     active = fields.Boolean('Active', default=True, tracking=True)
