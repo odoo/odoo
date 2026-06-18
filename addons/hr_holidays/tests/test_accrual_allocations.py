@@ -3127,3 +3127,44 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         self.assertEqual(len(children_allocations), 2)
         self.assertEqual(children_allocations[0].number_of_days, 20.0)
         self.assertEqual(children_allocations[1].number_of_days, 20.0)
+
+    def test_department_accrual_allocation_past_start(self):
+        """
+        A multi-employee (department/company) accrual allocation whose plan started
+        in the past must back-fill every elapsed period for each employee, exactly
+        like a single-employee allocation does. The child allocations used to start
+        accruing from the current period only, dropping the whole backlog.
+        """
+        with freeze_time("2026-06-01"):
+            self.env['hr.employee'].create([
+                {
+                    'name': 'Past Start Employee 1',
+                    'company_id': self.company.id,
+                    'department_id': self.department.id,
+                },
+                {
+                    'name': 'Past Start Employee 2',
+                    'company_id': self.company.id,
+                    'department_id': self.department.id,
+                },
+            ])
+
+            with Form(self.env['hr.leave.allocation']) as f:
+                f.allocation_type = "accrual"
+                f.accrual_plan_id = self.accrual_plan_monthly_end
+                f.date_from = '2026-01-01'
+                f.holiday_type = 'department'
+                f.department_id = self.department
+                f.holiday_status_id = self.leave_type
+                f.private_name = "Past Start Department Allocation"
+            department_allocation = f.record
+            department_allocation.action_validate()
+
+            children_allocations = self.env['hr.leave.allocation'].search(
+                [('employee_id', 'in', self.department.member_ids.ids)])
+            self.assertEqual(len(children_allocations), 2)
+            # Monthly accrual of 2 days, gained at the end of each period, starting
+            # 2026-01-01: by 2026-06-01 the Jan->May periods have elapsed, so each
+            # employee must be back-filled with 5 * 2 = 10 days.
+            self.assertEqual(children_allocations[0].number_of_days, 10.0)
+            self.assertEqual(children_allocations[1].number_of_days, 10.0)
