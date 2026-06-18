@@ -303,11 +303,15 @@ class SaleOrder(models.Model):
         )
         points = self._get_real_points_for_coupon(coupon)
         claimable_count = (
-            float_round(
-                points / reward.required_points, precision_rounding=1, rounding_method="DOWN"
+            1
+            if reward.reward_type == "product" and reward.program_type == "loyalty"
+            else (
+                float_round(
+                    points / reward.required_points, precision_rounding=1, rounding_method="DOWN"
+                )
+                if not reward.clear_wallet
+                else 1
             )
-            if not reward.clear_wallet
-            else 1
         )
         cost = points if reward.clear_wallet else claimable_count * reward.required_points
         return [
