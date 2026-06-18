@@ -918,13 +918,14 @@ class StockPicking(models.Model):
                 volume += move.uom_id._compute_quantity(move.quantity, move.product_id.uom_id) * move.product_id.volume
             picking.shipping_volume = volume
 
-    @api.depends('move_ids.date_deadline', 'move_type')
+    @api.depends('move_ids.date_deadline', 'move_ids.state', 'move_type')
     def _compute_date_deadline(self):
         for picking in self:
+            moves = picking.move_ids.filtered(lambda m: m.state != 'cancel' and m.date_deadline)
             if picking.move_type == 'direct':
-                picking.date_deadline = min(picking.move_ids.filtered('date_deadline').mapped('date_deadline'), default=False)
+                picking.date_deadline = min(moves.mapped('date_deadline'), default=False)
             else:
-                picking.date_deadline = max(picking.move_ids.filtered('date_deadline').mapped('date_deadline'), default=False)
+                picking.date_deadline = max(moves.mapped('date_deadline'), default=False)
 
     def _set_scheduled_date(self):
         for picking in self:
