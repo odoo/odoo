@@ -4,7 +4,7 @@ import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_mode
 
 definePosModels();
 
-test("handlePaymentResponse", async () => {
+test("bancontact_pay_success_payment/bancontact_pay_failed_payment: handlePaymentResponse", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
     const display = store.models["pos.payment.method"].get(4);
@@ -59,7 +59,7 @@ test("handlePaymentCancelResponse", async () => {
     expect(paymentline.uiState.qrCode).toBeEmpty();
 });
 
-test("forceDone", async () => {
+test("bancontact_pay_success_payment: forceDone", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
     const display = store.models["pos.payment.method"].get(4);
@@ -74,7 +74,7 @@ test("forceDone", async () => {
     expect(paymentline.uiState.qrCode).toBeEmpty();
 });
 
-test("forceCancel", async () => {
+test("bancontact_pay_failed_to_cancel_payment_error_422: forceCancel", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
     const display = store.models["pos.payment.method"].get(4);

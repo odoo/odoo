@@ -6,7 +6,7 @@ import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_mode
 definePosModels();
 
 describe("getBancontactErrorMessage", () => {
-    test("EXPIRED", async () => {
+    test("bancontact_pay_failed_payment: EXPIRED", async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
         order.floating_order_name = "test_order";
@@ -20,7 +20,7 @@ describe("getBancontactErrorMessage", () => {
         expect(actualCurrentOrder).toBe("Payment expired");
     });
 
-    test("CANCELLED", async () => {
+    test("bancontact_pay_failed_payment: CANCELLED", async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
         order.floating_order_name = "test_order";
@@ -34,7 +34,7 @@ describe("getBancontactErrorMessage", () => {
         expect(actualCurrentOrder).toBe("Payment cancelled");
     });
 
-    test("OTHER", async () => {
+    test("bancontact_pay_failed_payment: OTHER", async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
         order.floating_order_name = "test_order";
@@ -53,7 +53,7 @@ describe("getBancontactErrorMessage", () => {
 });
 
 describe("handleBancontactPayNotification", () => {
-    test("SUCCEEDED", async () => {
+    test("bancontact_pay_success_payment", async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
         const display = store.models["pos.payment.method"].get(4);
@@ -190,7 +190,7 @@ describe("handleBancontactPayNotification", () => {
         expect.verifySteps([]);
     });
 
-    test("FAILED", async () => {
+    test("bancontact_pay_failed_payment", async () => {
         const store = await setupPosEnv();
         const order = await getFilledOrder(store);
         const display = store.models["pos.payment.method"].get(4);
