@@ -57,7 +57,7 @@ class Module(Command):
         ):
             parser.formatter_class = argparse.RawDescriptionHelpFormatter
             parser.add_argument(
-                '-c', '--config', dest='config',
+                '-c', '--config', dest='config', action='append', default=[],
                 help="use a specific configuration file")
             parser.add_argument(
                 '-d', '--database', dest='db_name', default=None,
@@ -93,8 +93,8 @@ class Module(Command):
     def run(self, cmdargs):
         parsed_args = self.parser.parse_args(args=cmdargs)
         config_args = ['--no-http']
-        if parsed_args.config:
-            config_args += ['-c', parsed_args.config]
+        for config_file in parsed_args.config:
+            config_args += ['-c', config_file]
         if parsed_args.db_name:
             config_args += ['-d', parsed_args.db_name]
         if parsed_args.data_dir:
