@@ -12,7 +12,9 @@ import { expect } from "@odoo/hoot";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { patch } from "@web/core/utils/patch";
 import { onMounted } from "@odoo/owl";
+import { session } from "@web/session";
 import { user } from "@web/core/user";
+import { CustomerDisplay } from "@point_of_sale/customer_display/customer_display";
 
 const { DateTime } = luxon;
 
@@ -174,3 +176,28 @@ export const normalizeFunctionsInObject = (obj) =>
             typeof value === "function" ? "function" : value,
         ])
     );
+
+export const mountCustomerDisplayWithOrder = async (orderData = {}) => {
+    patchWithCleanup(session, {
+        company_id: 1,
+        config_id: 1,
+        has_bg_img: false,
+        customer_display_bg_img: false,
+    });
+
+    const customerDisplayData = getService("customer_display_data");
+    for (const key of Object.keys(customerDisplayData)) {
+        delete customerDisplayData[key];
+    }
+    Object.assign(customerDisplayData, {
+        finalized: false,
+        lines: [],
+        paymentLines: [],
+        qrPaymentData: null,
+        onlinePaymentData: null,
+        displayScreenSaver: false,
+        ...orderData,
+    });
+
+    return mountWithCleanup(CustomerDisplay);
+};

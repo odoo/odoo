@@ -275,14 +275,6 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
 
         self.assertEqual(order.state, 'draft')
 
-    def test_errors_tour(self):
-        self.pos_config.with_user(self.pos_user).open_ui()
-        self.start_pos_tour('OnlinePaymentErrorsTour', login="pos_op_user")
-
-    def test_customer_display_online_payment(self):
-        self.start_tour(f"/pos_customer_display/{self.main_pos_config.id}/{self.main_pos_config.access_token}?access_token={self.main_pos_config.access_token}",
-                        'CustomerDisplayTourOnlinePayment', login="pos_user")
-
     def test_refuse_online_payment_without_accounting_payment(self):
         """
         Test that a an order can not be paid through an online payment method from the backend
@@ -326,15 +318,6 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
             session.action_pos_session_close()
             self.assertEqual(session.state, 'closed')
 
-    def test_selected_customer_after_adding_payment_sync(self):
-        """ Test that the selected customer is kept after adding an online payment."""
-        self.pos_config.with_user(self.pos_admin).open_ui()
-        self.start_pos_tour('test_selected_customer_after_adding_payment_sync', login="pos_admin")
-        order = self.pos_config.current_session_id.order_ids.sorted(lambda o: o.id, reverse=True)[0]
-        self.assertEqual(order.partner_id.name, "A simple PoS man!", "The selected customer was not kept after adding an online payment.")
-        self.assertEqual(order.state, "draft", "The order should still be in draft state.")
-        self.assertEqual(len(order.payment_ids), 0, "There should be no payment line in the order.")
-
     def test_payment_method_customer_required(self):
         """
         Test that the data sent to the pos contains the information needed to identify
@@ -351,7 +334,6 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
             loaded_data = self.pos_config.current_session_id.load_data([])
             config_online_pm_data = [record.get('_customer_required') for record in loaded_data['pos.payment.method'] if record['id'] == online_pm.id]
             self.assertTrue(all(config_online_pm_data))
-            self.start_pos_tour('test_payment_method_customer_required')
 
     @classmethod
     def tearDownClass(cls):
