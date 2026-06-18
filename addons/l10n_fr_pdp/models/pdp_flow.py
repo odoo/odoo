@@ -537,6 +537,7 @@ class PdpFlow(models.Model):
         """Open list view of related invoices."""
         return self._get_moves()._get_records_action(
             name=self.env._("Related Invoices"),
+            views=[(self.env.ref("l10n_fr_pdp.l10n_fr_pdp_list_view_move_ereporting").id, "list"), (False, 'form')],
             context={'create': False, 'group_by': ['move_type']},
         )
 

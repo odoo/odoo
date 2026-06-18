@@ -232,4 +232,31 @@
         </field>
     </record>
 
+    <record id="l10n_fr_pdp_list_view_move_ereporting" model="ir.ui.view">
+        <field name="name">account.move.list.l10n.fr.pdp.move.ereporting</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <list decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
+                <field name="name" decoration-bf="1" decoration-danger="made_sequence_gap and state == 'posted'" widget="char_with_placeholder_field" placeholder="/" on_change="1"/>
+                <field name="partner_id" widget="partner_field" string="Partner" readonly="state != 'draft'" on_change="1" can_create="1" can_write="1"/>
+                <field name="invoice_date" optional="show" readonly="state != 'draft'" string="Invoice Date" decoration-warning="abnormal_date_warning" on_change="1"/>
+                <field name="date" optional="hide" string="Accounting Date" readonly="state in ['cancel', 'posted']" on_change="1"/>
+                <field name="amount_untaxed_in_currency_signed" string="Tax Excluded" sum="Total" optional="show"/>
+                <field name="amount_total_in_currency_signed" string="Total" sum="Total" optional="show" decoration-bf="1" decoration-warning="abnormal_amount_warning" on_change="1"/>
+                <field name="company_id" options="{'no_create': 1}" optional="hide" on_change="1" can_create="1" can_write="1"/>
+                <field name="currency_id" optional="hide" readonly="state in ['cancel', 'posted']" on_change="1"/>
+                <field name="company_currency_id" column_invisible="1" on_change="1"/> <!-- Used for the multi currency display -->
+                <field name="status_in_payment" string="Status" widget="badge" decoration-info="state == 'draft'" decoration-danger="payment_state == 'not_paid' and invoice_date_due &lt; context_today().strftime('%Y-%m-%d')" decoration-warning="payment_state in ('partial', 'in_payment')" decoration-success="payment_state in ('paid', 'reversed')" invisible="payment_state == 'invoicing_legacy' or move_type == 'entry'" optional="show"/>
+                <field name="l10n_fr_pdp_status"
+                       widget="badge"
+                       optional="show"
+                       decoration-danger="l10n_fr_pdp_status == 'error'"
+                       decoration-success="l10n_fr_pdp_status == 'sent'"
+                       decoration-info="l10n_fr_pdp_status == 'ready'"
+                       decoration-muted="l10n_fr_pdp_status in ['pending', 'out_of_scope']"
+                       invisible="not l10n_fr_pdp_status"/>
+            </list>
+        </field>
+    </record>
+
 </odoo>
