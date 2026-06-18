@@ -48,6 +48,22 @@ class HrLeaveAllocation(models.Model):
             defaults['work_entry_type_id'] = work_entry_type.id
         return defaults
 
+    @api.model
+    def get_empty_list_help(self, help_message):
+        if not self.env.user.employee_id:
+            return '''
+                <p class="o_view_nocontent_smiling_face">
+                    %s
+                </p><p>
+                    %s
+                </p>
+            ''' % (
+                _("Your employee is missing"),
+                _("You can not manage your time offs without an employee linked to your user.")
+            )
+
+        return super().get_empty_list_help(help_message)
+
     def _domain_work_entry_type_id(self):
         domain = [
             ('requires_allocation', '=', True),
