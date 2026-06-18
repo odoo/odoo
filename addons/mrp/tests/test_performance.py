@@ -18,8 +18,8 @@ class TestMrpSerialMassProducePerformance(common.TransactionCase):
         quantity = 1
 
         raw_materials_count = 10
-        trackings = [
-            'none',
+        storage_methods = [
+            'quantity',
             # 'lot',
             # 'serial'
         ]
@@ -30,13 +30,11 @@ class TestMrpSerialMassProducePerformance(common.TransactionCase):
         for i in range(raw_materials_count):
             raw_materials.append(self.env['product.product'].create({
                 'name': '@raw_material#' + str(i + 1),
-                'is_storable': True,
-                'tracking': trackings[i % len(trackings)]
+                'store_by': storage_methods[i % len(storage_methods)]
             }))
         finished = self.env['product.product'].create({
             'name': '@finished',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         bom = self.env['mrp.bom'].create({
             'product_id': finished.id,
@@ -57,36 +55,37 @@ class TestMrpSerialMassProducePerformance(common.TransactionCase):
         mo.action_confirm()
 
         for i in range(raw_materials_count):
-            if raw_materials[i].tracking == 'none':
-                self.env['stock.quant'].with_context(inventory_mode=True).create({
-                    'product_id': raw_materials[i].id,
-                    'inventory_quantity': total_quantity,
-                    'location_id': mo.location_src_id.id,
-                })._apply_inventory()
-            elif raw_materials[i].tracking == 'lot':
-                qty = total_quantity
-                while qty > 0:
-                    lot = self.env['stock.lot'].create({
-                        'product_id': raw_materials[i].id,
-                    })
+            match raw_materials[i].store_by:
+                case 'quantity':
                     self.env['stock.quant'].with_context(inventory_mode=True).create({
                         'product_id': raw_materials[i].id,
-                        'inventory_quantity': 10,
+                        'inventory_quantity': total_quantity,
                         'location_id': mo.location_src_id.id,
-                        'lot_id': lot.id,
                     })._apply_inventory()
-                    qty -= 10
-            elif raw_materials[i].tracking == 'serial':
-                for _ in range(total_quantity):
-                    lot = self.env['stock.lot'].create({
-                        'product_id': raw_materials[i].id,
-                    })
-                    self.env['stock.quant'].with_context(inventory_mode=True).create({
-                        'product_id': raw_materials[i].id,
-                        'inventory_quantity': 1,
-                        'location_id': mo.location_src_id.id,
-                        'lot_id': lot.id,
-                    })._apply_inventory()
+                case 'lot':
+                    qty = total_quantity
+                    while qty > 0:
+                        lot = self.env['stock.lot'].create({
+                            'product_id': raw_materials[i].id,
+                        })
+                        self.env['stock.quant'].with_context(inventory_mode=True).create({
+                            'product_id': raw_materials[i].id,
+                            'inventory_quantity': 10,
+                            'location_id': mo.location_src_id.id,
+                            'lot_id': lot.id,
+                        })._apply_inventory()
+                        qty -= 10
+                case 'serial':
+                    for _ in range(total_quantity):
+                        lot = self.env['stock.lot'].create({
+                            'product_id': raw_materials[i].id,
+                        })
+                        self.env['stock.quant'].with_context(inventory_mode=True).create({
+                            'product_id': raw_materials[i].id,
+                            'inventory_quantity': 1,
+                            'location_id': mo.location_src_id.id,
+                            'lot_id': lot.id,
+                        })._apply_inventory()
 
         mo.action_assign()
 

@@ -36,7 +36,7 @@ class ReportMrpLabelProductionPdf(models.AbstractModel):
                 (move_line.lot_name or move_line.lot_id.name)
                 if move_line.product_id.tracking in ['lot', 'serial'] and (move_line.lot_name or move_line.lot_id)
                 else move_line.product_id.barcode
-                if move_line.product_id.tracking == 'none' and move_line.product_id.barcode
+                if not move_line.product_id.tracking and move_line.product_id.barcode
                 else False
             )
             for _index in range(int(move_line.quantity) if is_unit else 1):

@@ -281,12 +281,12 @@ class TestMrpProductionBackorder(TestMrpCommon):
         product_finished = self.env['product.product'].create({
             'name': 'Young Tom',
             'type': 'consu',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         product_component = self.env['product.product'].create({
             'name': 'Botox',
             'type': 'consu',
-            'is_storable': True,
+            'store_by': 'quantity',
             'uom_id': self.uom_kg.id,
         })
 
@@ -1021,7 +1021,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         """
         self.warehouse_1.manufacture_steps = 'pbm'
         final_product, component = self.product, self.productA
-        self.productA.tracking = 'lot'
+        self.productA.store_by = 'lot'
         bom = self.env['mrp.bom'].create({
             'product_id': final_product.id,
             'product_tmpl_id': final_product.product_tmpl_id.id,
@@ -1072,17 +1072,17 @@ class TestMrpWorkorderBackorder(TransactionCase):
         cls.finished1 = cls.env['product.product'].create({
             'name': 'finished1',
             'type': 'consu',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         cls.compfinished1 = cls.env['product.product'].create({
             'name': 'compfinished1',
             'type': 'consu',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         cls.compfinished2 = cls.env['product.product'].create({
             'name': 'compfinished2',
             'type': 'consu',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         cls.workcenter1 = cls.env['mrp.workcenter'].create({
             'name': 'workcenter1',
@@ -1173,7 +1173,7 @@ class TestMrpWorkorderBackorder(TransactionCase):
         )
         water_bottle_kit_product = self.env["product.product"].create({
                 "name": "Water Bottle Kit",
-                "is_storable": True,
+                "store_by": "quantity",
             })
         water_bottle_kit = self.env['mrp.bom'].create({
             'product_id': water_bottle_kit_product.id,
@@ -1188,7 +1188,7 @@ class TestMrpWorkorderBackorder(TransactionCase):
         })
         water_bottle = self.env["product.product"].create({
             "name": "Water Bottle",
-            "is_storable": True,
+            "store_by": "quantity",
         })
         water_bottle_bom = self.env['mrp.bom'].create({
             'product_id': water_bottle.id,

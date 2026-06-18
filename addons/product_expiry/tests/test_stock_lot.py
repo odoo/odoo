@@ -19,8 +19,7 @@ class TestStockLot(TestStockCommon):
         # Creates a tracked product with expiration dates.
         cls.apple_product = cls.ProductObj.create({
             'name': 'Apple',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'use_expiration_date': True,
             'expiration_time': 10,
             'use_time': 5,
@@ -34,8 +33,7 @@ class TestStockLot(TestStockCommon):
         # create product
         self.productAAA = self.ProductObj.create({
             'name': 'Product AAA',
-            'is_storable': True,
-            'tracking':'lot',
+            'store_by': 'lot',
             'company_id': self.env.company.id,
         })
 
@@ -131,8 +129,7 @@ class TestStockLot(TestStockCommon):
         # create product
         self.productBBB = self.ProductObj.create({
             'name': 'Product BBB',
-            'is_storable': True,
-            'tracking':'lot'
+            'store_by': 'lot',
         })
 
         # create a new lot with with alert date in the past
@@ -186,7 +183,7 @@ class TestStockLot(TestStockCommon):
         """ Test Scheduled Task on lot without an alert_date does not create an activity """
 
         # create product
-        self.productCCC = self.ProductObj.create({'name': 'Product CCC', 'is_storable': True, 'tracking': 'lot'})
+        self.productCCC = self.ProductObj.create({'name': 'Product CCC', 'store_by': 'lot'})
 
         # create a new lot with with alert date in the past
         self.lot1_productCCC = self.LotObj.create({'name': 'Lot 1 ProductCCC', 'product_id': self.productCCC.id})
@@ -778,14 +775,13 @@ class TestStockLot(TestStockCommon):
     def test_no_expiration_wizard_when_tracking_removed(self):
         product = self.ProductObj.create({
             'name': 'Expirable Product',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'use_expiration_date': True,
             'expiration_time': 0,
             'removal_time': 2,
         })
 
-        product.write({'tracking': 'none'})
+        product.store_by = 'quantity'
 
         self.assertFalse(product.use_expiration_date)
 

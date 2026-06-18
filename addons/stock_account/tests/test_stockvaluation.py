@@ -44,7 +44,7 @@ class TestStockValuation(TestStockValuationCommon):
         # Enter 10 products while price is 5.0
         product = self.product_standard_auto
         product.standard_price = 5.0
-        product.is_storable = False
+        product.store_by = 'untracked'
         self._make_in_move(product, 10, 5)
         with self.assertRaises(UserError):
             self._close()
@@ -2343,9 +2343,8 @@ class TestStockValuation(TestStockValuationCommon):
         lot_product = self.env['product.product'].create([
             {
                 'name': 'Product LOT',
-                'tracking': 'lot',
+                'store_by': 'lot',
                 'categ_id': self.category_avco.id,
-                'is_storable': True,
                 'standard_price': 10.0,
                 'lot_valuated': True,
             },
@@ -2362,7 +2361,7 @@ class TestStockValuation(TestStockValuationCommon):
                 quantity=10.0,
                 location_id=self.supplier_location.id,
                 location_dest_id=self.stock_location.id,
-                lot_ids=lot if product.tracking == 'lot' else self.env['stock.lot'],
+                lot_ids=lot if product.store_by == 'lot' else self.env['stock.lot'],
             )
 
         expected_values = [
@@ -2437,7 +2436,7 @@ class TestStockValuation(TestStockValuationCommon):
         self._use_multi_warehouses()
         product = self.product_avco_auto
         product.write({
-            'tracking': 'lot',
+            'store_by': 'lot',
             'lot_valuated': True,
         })
         warehouse_1, warehouse_2 = self.warehouse, self.other_warehouse
@@ -2486,7 +2485,7 @@ class TestStockValuation(TestStockValuationCommon):
         self._use_multi_warehouses()
         product = self.product_fifo_auto
         product.write({
-            'tracking': 'lot',
+            'store_by': 'lot',
             'lot_valuated': True,
         })
         warehouse_1, warehouse_2 = self.warehouse, self.other_warehouse
@@ -3251,9 +3250,9 @@ class TestStockValuation(TestStockValuationCommon):
             "standard_price": 10.0,
             "list_price": 20.0,
             "uom_id": self.uom.id,
-            "is_storable": True,
             'name': 'Avco Product',
             'categ_id': self.category_avco.id,
+            'store_by': 'quantity',
         })
         recs = self.env['stock.avco.report'].search([('product_id', '=', prod_avco.id)]).sorted('date, id')
         self.assertEqual(len(recs), 1)
@@ -3273,9 +3272,9 @@ class TestStockValuation(TestStockValuationCommon):
 
         product_avco = self.env['product.product'].create({
             'uom_id': self.uom.id,
-            'is_storable': True,
             'name': "AVCO product",
             'standard_price': 10,
+            'store_by': 'quantity',
         })
 
         self._make_in_move(product_avco, quantity=10, unit_cost=10)
@@ -3325,8 +3324,7 @@ class TestStockValuation(TestStockValuationCommon):
         lot_product = self.env['product.product'].create([
             {
                 'name': 'Product LOT',
-                'is_storable': True,
-                'tracking': 'lot',
+                'store_by': 'lot',
                 'categ_id': self.category_fifo.id,
                 'lot_valuated': True,
                 'standard_price': 10,

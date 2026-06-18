@@ -750,7 +750,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
     def test_change_reception_serial(self):
         self.env.ref('base.group_user').write({'implied_ids': [(4, self.env.ref('stock.group_production_lot').id)]})
-        self.finished.tracking = 'serial'
+        self.finished.store_by = 'serial'
 
         finished_lots = self.env['stock.lot'].create([{
             'name': 'lot_%s' % number,
@@ -1072,8 +1072,8 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         """ This test mimics test_flow_1 but with a BoM that has tracking included in it.
         """
         # Create a receipt picking from the subcontractor
-        self.finished.tracking = 'lot'
-        self.comp1.tracking = 'serial'
+        self.finished.store_by = 'lot'
+        self.comp1.store_by = 'serial'
         picking_receipt = self.env['stock.picking'].create({
             'picking_type_id': self.warehouse.in_type_id.id,
             'partner_id': self.subcontractor_partner1.id,
@@ -1126,8 +1126,8 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
     def test_flow_tracked_only_finished(self):
         """ Test when only the finished product is tracked """
-        self.finished.tracking = "serial"
-        self.comp1.tracking = "none"
+        self.finished.store_by = 'serial'
+        self.comp1.store_by = 'quantity'
         nb_finished_product = 3
         # Create a receipt picking from the subcontractor
         picking_form = Form(self.env['stock.picking'])
@@ -1174,8 +1174,8 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
     def test_flow_tracked_backorder(self):
         """ This test uses tracked (serial and lot) component and tracked (serial) finished product """
         todo_nb = 4
-        self.comp2.tracking = 'lot'
-        self.finished.tracking = 'serial'
+        self.comp2.store_by = 'lot'
+        self.finished.store_by = 'serial'
 
         # Create a receipt picking from the subcontractor
         picking_form = Form(self.env['stock.picking'])
@@ -1285,7 +1285,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         """
         todo_nb = 3
         self.warehouse.subcontracting_to_resupply = True
-        self.finished.tracking = 'serial'
+        self.finished.store_by = 'serial'
         finished_serials = self.env['stock.lot'].create([{
             'name': 'sn_%s' % str(i),
             'product_id': self.finished.id,
@@ -1328,7 +1328,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
     def test_flow_subcontracting_portal(self):
         # Create a receipt picking from the subcontractor
-        self.finished.tracking = 'lot'
+        self.finished.store_by = 'lot'
         other_product = self.env['product.product'].create({'name': 'Other Product', 'is_storable': True})
         self.portal_user = self.env['res.users'].create({
             'name': 'portal user (subcontractor)',
@@ -1442,8 +1442,7 @@ class TestSubcontractingSerialMassReceipt(TransactionCase):
         })
         self.finished = self.env['product.product'].create({
             'name': 'Finished',
-            'is_storable': True,
-            'tracking': 'serial'
+            'store_by': 'serial'
         })
         self.bom = self.env['mrp.bom'].create({
             'product_id': self.finished.id,

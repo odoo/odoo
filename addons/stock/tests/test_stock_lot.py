@@ -23,7 +23,7 @@ class TestLotSerial(TestStockCommon):
             'name': 'Location C',
             'usage': 'internal',
         })
-        cls.productA.tracking = 'lot'
+        cls.productA.store_by = 'lot'
         cls.lot_p_a = cls.LotObj.create({
             'name': 'lot_product_a',
             'product_id': cls.productA.id,
@@ -35,7 +35,7 @@ class TestLotSerial(TestStockCommon):
             'lot_id': cls.lot_p_a.id
         })
 
-        cls.productB.tracking = 'serial'
+        cls.productB.store_by = 'serial'
         cls.lot_p_b = cls.LotObj.create({
             'name': 'lot_product_b',
             'product_id': cls.productB.id,
@@ -243,7 +243,7 @@ class TestLotSerial(TestStockCommon):
             'country_id': self.env.company.country_id.id,
             'parent_id': self.env.company.id,
         })
-        self.assertEqual(self.productB.tracking, 'serial')
+        self.assertEqual(self.productB.store_by, 'serial')
         self.productB.company_id = self.env.company
         branch_a_warehouse = self.env['stock.warehouse'].search([('company_id', '=', branch_a.id)])
         branch_receipt_type = self.env['stock.picking.type'].search([('company_id', '=', branch_a.id), ('code', '=', 'incoming')], limit=1)
@@ -281,8 +281,8 @@ class TestLotSerial(TestStockCommon):
             'usage': 'internal',
         })
         product_lot_a, product_lot_b = self.env['product.product'].create([
-            {'name': 'product_lot_a', 'is_storable': True, 'tracking': 'lot'},
-            {'name': 'product_lot_b', 'is_storable': True, 'tracking': 'serial'},
+            {'name': 'product_lot_a', 'store_by': 'lot'},
+            {'name': 'product_lot_b', 'store_by': 'serial'},
         ])
         lot_a, lot_b = self.env['stock.lot'].create([
             {'name': 'test_lot_product_a', 'product_id': product_lot_a.id},
@@ -334,7 +334,7 @@ class TestLotSerial(TestStockCommon):
         """Test that the default lot sequence is used when the product is created with a null prefix"""
         product_a = self.env['product.product'].create({
             'name': 'Test Product A',
-            'tracking': 'lot',
+            'store_by': 'lot',
             'serial_prefix_format': False,
         })
         default_lot_sequence = self.env.ref('stock.sequence_production_lots')

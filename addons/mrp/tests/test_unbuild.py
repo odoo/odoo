@@ -168,7 +168,7 @@ class TestUnbuild(TestMrpCommon):
         self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
         mo.action_assign()
         for ml in mo.move_raw_ids.mapped('move_line_ids'):
-            if ml.product_id.tracking in ['lot', 'serial']:
+            if ml.product_id.store_by in ['lot', 'serial']:
                 self.assertEqual(ml.lot_id, lot, 'Wrong reserved lot.')
 
         # FIXME sle: behavior change
@@ -334,7 +334,7 @@ class TestUnbuild(TestMrpCommon):
         """ This test creates a MO from 3 different lot on a consumed product (p2).
         The unbuild order should revert the correct quantity for each specific lot.
         """
-        mo, bom, p_final, p1, p2 = self.generate_mo(tracking_final='none', tracking_base_2='lot', tracking_base_1='none')
+        mo, bom, p_final, p1, p2 = self.generate_mo(tracking_base_2='lot')
         self.assertEqual(len(mo), 1, 'MO should have been created')
 
         lot_1 = self.env['stock.lot'].create({
@@ -385,7 +385,7 @@ class TestUnbuild(TestMrpCommon):
     def test_production_links_with_non_tracked_lots(self):
         """ This test produces an MO in two times and checks that the move lines are linked in a correct way
         """
-        mo, bom, p_final, p1, p2 = self.generate_mo(tracking_final='lot', tracking_base_1='none', tracking_base_2='lot')
+        mo, _, p_final, p1, p2 = self.generate_mo(tracking_final='lot', tracking_base_2='lot')
         # Young Tom
         #    \ Botox - 4 - p1
         #    \ Old Tom - 1 - p2
@@ -469,7 +469,7 @@ class TestUnbuild(TestMrpCommon):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p1, self.stock_location), 80, 'You should have 80 products in stock')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(p2, self.stock_location), 0, 'You should have consumed all the 5 product in stock')
 
-        p1.tracking = 'lot'
+        p1.store_by = 'lot'
 
         # ---------------------------------------------------
         #       unbuild
@@ -519,15 +519,15 @@ class TestUnbuild(TestMrpCommon):
         # Create a stockable product and its components
         finshed_product = ProductObj.create({
             'name': 'Table',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         component1 = ProductObj.create({
             'name': 'Table head',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         component2 = ProductObj.create({
             'name': 'Table stand',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         # Create bom and add components
@@ -643,11 +643,10 @@ class TestUnbuild(TestMrpCommon):
         """
         compo, finished = self.env['product.product'].create([{
             'name': 'compo',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         }, {
             'name': 'finished',
-            'is_storable': True,
+            'store_by': 'quantity',
         }])
 
         lot01, lot02 = self.env['stock.lot'].create([{
@@ -760,8 +759,7 @@ class TestUnbuild(TestMrpCommon):
         """
         product_1 = self.env['product.product'].create({
             'name': 'Product tracked by sn',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         product_1_sn = self.env['stock.lot'].create({
             'name': 'sn1',
@@ -769,7 +767,7 @@ class TestUnbuild(TestMrpCommon):
         })
         component = self.env['product.product'].create({
             'name': 'Product component',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         bom_1 = self.env['mrp.bom'].create({
             'product_id': product_1.id,
@@ -783,7 +781,7 @@ class TestUnbuild(TestMrpCommon):
         })
         product_2 = self.env['product.product'].create({
             'name': 'finished Product',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.env['mrp.bom'].create({
             'product_id': product_2.id,
@@ -839,8 +837,7 @@ class TestUnbuild(TestMrpCommon):
         """
         finished_product = self.env['product.product'].create({
             'name': 'Product tracked by sn',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         finished_product_sn = self.env['stock.lot'].create({
             'name': 'sn1',
@@ -848,7 +845,7 @@ class TestUnbuild(TestMrpCommon):
         })
         component = self.env['product.product'].create({
             'name': 'Product component',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         bom_1 = self.env['mrp.bom'].create({
             'product_id': finished_product.id,
@@ -879,7 +876,7 @@ class TestUnbuild(TestMrpCommon):
         self.assertEqual(mo.unbuild_ids.produce_line_ids[1].lot_ids.id, False)
 
         # set the component as tracked
-        component.tracking = 'serial'
+        component.store_by = 'serial'
         component_sn = self.env['stock.lot'].create({
             'name': 'component-sn1',
             'product_id': component.id,
@@ -1072,9 +1069,7 @@ class TestUnbuild(TestMrpCommon):
     def test_unbuild_non_storable_product(self):
         """Check that the move values of an unbuild of a non-storable product are correct.
         """
-        self.product_4.is_storable = False
-        self.product_3.is_storable = False
-
+        (self.product_3 | self.product_4).store_by = 'untracked'
         self.env['mrp.bom.byproduct'].create({
             'bom_id': self.bom_1.id,
             'product_id': self.product_3.id,
@@ -1120,8 +1115,7 @@ class TestUnbuild(TestMrpCommon):
         - Unbuild the first P1 → serial SN1 of C1 is restored
         - Unbuild the second P1 → serial SN2 of C1 is restored (SN1 must not be reused)
         """
-        (self.bom_4.product_id | self.bom_4.bom_line_ids.product_id).is_storable = True
-        (self.bom_4.product_id | self.bom_4.bom_line_ids.product_id).tracking = 'serial'
+        (self.bom_4.product_id | self.bom_4.bom_line_ids.product_id).store_by = 'serial'
         component = self.bom_4.bom_line_ids.product_id
         # Serials for component
         sn1 = self.env['stock.lot'].create({

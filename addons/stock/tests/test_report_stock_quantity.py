@@ -20,8 +20,7 @@ class TestReportStockQuantity(tests.TransactionCase):
         cls.product1 = cls.env['product.product'].create({
             'name': 'Mellohi',
             'default_code': 'C418',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'barcode': 'scan_me'
         })
         cls.wh = cls.env['stock.warehouse'].create({

@@ -17,7 +17,7 @@
 ^XA
 ^FO100,50
 ^A0N,44,33^FD<t t-out="move_line.product_id.display_name"/>^FS
-<t t-if="move_line.product_id.tracking != 'none' and move_line.lot_id">
+<t t-if="move_line.product_id.tracking and move_line.lot_id">
 ^FO100,100
 ^A0N,44,33^FDLN/SN: <t t-out="move_line.lot_id.name"/>^FS
 ^FO100,150^BY3

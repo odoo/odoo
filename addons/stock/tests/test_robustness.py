@@ -18,7 +18,7 @@ class TestRobustness(TransactionCase):
         cls.uom_dozen = cls.env.ref('uom.product_uom_dozen')
         cls.product1 = cls.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
     def test_uom_factor(self):
@@ -146,13 +146,11 @@ class TestRobustness(TransactionCase):
         """
         product1 = self.env['product.product'].create({
             'name': 'Product 1',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         product2 = self.env['product.product'].create({
             'name': 'Product 2',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
 
         lot1 = self.env['stock.lot'].create({
@@ -209,8 +207,7 @@ class TestRobustness(TransactionCase):
         """
         productA = self.env['product.product'].create({
             'name': 'ProductA',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         lotA = self.env['stock.lot'].create({
             'name': 'lotA',
@@ -243,8 +240,8 @@ class TestRobustness(TransactionCase):
     def test_new_move_done_picking(self):
         """ Ensure that adding a Draft move to a Done picking doesn't change the picking state
         """
-        product1 = self.env['product.product'].create({'name': 'P1', 'is_storable': True})
-        product2 = self.env['product.product'].create({'name': 'P2', 'is_storable': True})
+        product1 = self.env['product.product'].create({'name': 'P1', 'store_by': 'quantity'})
+        product2 = self.env['product.product'].create({'name': 'P2', 'store_by': 'quantity'})
 
         receipt = self.env['stock.picking'].create({
             'location_id': self.supplier_location.id,
@@ -288,7 +285,7 @@ class TestRobustness(TransactionCase):
         """ Ensure the _clean_reservaion method align the quants on stock.move.line """
         product_reservation_too_high = self.env['product.product'].create({
             'name': 'Product Reservation',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.env['stock.quant']._update_available_quantity(product_reservation_too_high, self.stock_location, 10)
         quant = self.env['stock.quant']._gather(product_reservation_too_high, self.stock_location)
@@ -320,7 +317,7 @@ class TestRobustness(TransactionCase):
 
         product_without_move = self.env['product.product'].create({
             'name': 'Product reserved without move',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.env['stock.quant']._update_available_quantity(product_without_move, self.stock_location, 10)
         quant = self.env['stock.quant']._gather(product_without_move, self.stock_location)
@@ -335,7 +332,7 @@ class TestRobustness(TransactionCase):
         uom_kg = self.env.ref('uom.product_uom_kgm')
         product_reservation_too_high = self.env['product.product'].create({
             'name': 'Product Reservation',
-            'is_storable': True,
+            'store_by': 'quantity',
             'uom_id': uom_kg.id,
         })
         # update available quantity to 1 kg
@@ -368,7 +365,7 @@ class TestRobustness(TransactionCase):
         """
         product_without_quant = self.env['product.product'].create({
             'name': 'Product reserved without quant',
-            'is_storable': True,
+            'store_by': 'quantity',
             'company_id': self.stock_location.company_id.id,
         })
         reservation_move = self.env['stock.move'].create({

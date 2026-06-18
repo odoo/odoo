@@ -43,8 +43,7 @@ class TestUi(TestPosStockHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
 
         self.monitor_stand.write({
-            'tracking': 'lot',
-            'is_storable': True,
+            'store_by': 'lot',
             'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],
         })
         preparation_printer = self.env['pos.printer'].create({
@@ -79,8 +78,7 @@ class TestUi(TestPosStockHttpCommon):
 
         self.product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
             'available_in_pos': True,
         })
 
@@ -90,8 +88,7 @@ class TestUi(TestPosStockHttpCommon):
     def test_receipt_tracking_method(self):
         self.product_a = self.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'available_in_pos': True,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
@@ -131,7 +128,7 @@ class TestUi(TestPosStockHttpCommon):
             'taxes_id': False,
             'available_in_pos': True,
             'pos_categ_ids': [(4, limited_category.id)],
-            'tracking': 'lot',
+            'store_by': 'lot',
             'attribute_line_ids': [(0, 0, {
                 'attribute_id': color_attribute.id,
                 'value_ids': [(6, 0, color_attribute.value_ids.ids)]
@@ -185,14 +182,12 @@ class TestUi(TestPosStockHttpCommon):
     def test_lot(self):
         self.product1 = self.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
             'available_in_pos': True,
         })
         product2 = self.env['product.product'].create({
             'name': 'Product B',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'available_in_pos': True,
         })
         self.env['stock.quant'].with_context(inventory_mode=True).create({
@@ -222,8 +217,7 @@ class TestUi(TestPosStockHttpCommon):
     def test_only_existing_lots(self):
         product = self.env['product.product'].create({
             'name': 'Product with existing lots',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'available_in_pos': True,
         })
         self.env['stock.quant'].with_context(inventory_mode=True).create([{
@@ -249,8 +243,7 @@ class TestUi(TestPosStockHttpCommon):
     def test_order_with_existing_serial(self):
         product = self.env['product.product'].create({
             'name': 'Serial Product',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
             'available_in_pos': True,
         })
         for sn in ["SN1", "SN2"]:
@@ -281,8 +274,7 @@ class TestUi(TestPosStockHttpCommon):
     def test_add_multiple_serials_at_once(self):
         self.product_a = self.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
             'available_in_pos': True,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
@@ -333,8 +325,7 @@ class TestUi(TestPosStockHttpCommon):
     def test_lot_refund_lower_qty(self):
         product = self.env['product.product'].create({
             'name': 'Serial Product',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
             'available_in_pos': True,
         })
         for sn in ["SN1", "SN2"]:
@@ -362,15 +353,14 @@ class TestUi(TestPosStockHttpCommon):
             "use_existing_lots": False,
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
-        self.monitor_stand.tracking = 'lot'
+        self.monitor_stand.store_by = 'lot'
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_lot_tracking_without_lot_creation', login="pos_user")
 
     def test_combo_price_unchanged_with_lot_tracked_product(self):
         """Test that assigning a lot to a combo item does not affect the combo price."""
         lot_product = self.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'available_in_pos': True,
         })
         combo = self.env["product.combo"].create({
@@ -437,8 +427,7 @@ class TestUi(TestPosStockHttpCommon):
         product_tmpl = self.env['product.template'].create({
             'name': 'GS1 Variant Product',
             'available_in_pos': True,
-            'tracking': 'lot',
-            'is_storable': True,
+            'store_by': 'lot',
             'attribute_line_ids': [Command.create({
                 'attribute_id': size_attribute.id,
                 'value_ids': [Command.set(size_attribute.value_ids.ids)],

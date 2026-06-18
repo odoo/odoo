@@ -1634,8 +1634,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         Creates a sale order with a tracked product, validates it and its delivery, then creates a
         return validates it and finally creates a second return.
         """
-        self.product_a.tracking = 'serial'
-        self.product_a.is_storable = True
+        self.product_a.store_by = 'serial'
         sn1 = self.env['stock.lot'].create({
             'name': 'SN0001',
             'product_id': self.product_a.id,
@@ -1728,7 +1727,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
             'name': 'Super product',
             'uom_id': self.env.ref('uom.product_uom_unit').id,
             'lst_price': 100.0,
-            'is_storable': True,
+            'store_by': 'quantity',
             'invoice_policy': 'delivery',
         })
         sale_order = self.env['sale.order'].create({
@@ -1760,7 +1759,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         warehouse.delivery_steps = 'pick_pack_ship'
         product = self.env['product.product'].create({
             'name': 'To be delivered',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.env['stock.quant']._update_available_quantity(product, warehouse.lot_stock_id, 10)
         with Form(self.env['sale.order']) as so_form:
@@ -1816,7 +1815,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         warehouse.delivery_steps = 'pick_pack_ship'
         product = self.env['product.product'].create({
             'name': 'To be delivered',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.env['stock.quant']._update_available_quantity(product, warehouse.lot_stock_id, 10)
         with Form(self.env['sale.order']) as so_form:
@@ -2034,7 +2033,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         warehouse.active = False
         storable_product = self.env['product.product'].create({
             'name': 'Lovely Product',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         so = self.env['sale.order'].with_company(new_company).create({
             'partner_id': self.partner_a.id,
@@ -2489,7 +2488,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
 
         product = self.env['product.product'].create({
             'name': 'SuperProduct',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [route_product.id],
         })
 
@@ -2615,7 +2614,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         """
         user = new_test_user(self.env, login='fgh',
                              groups='sales_team.group_sale_salesman')
-        self.new_product.tracking = 'lot'
+        self.new_product.store_by = 'lot'
         lot = self.env['stock.lot'].create({
             'name': 'SN001',
             'product_id': self.new_product.id,

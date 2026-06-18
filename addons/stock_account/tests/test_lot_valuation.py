@@ -17,7 +17,7 @@ class TestLotValuation(TestStockValuationCommon):
             'name': 'Lot Valuated Product',
             'categ_id': cls.category_avco.id,
             'lot_valuated': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'standard_price': 10,
         })
         cls.lot1, cls.lot2, cls.lot3 = cls.env['stock.lot'].create([
@@ -173,8 +173,7 @@ class TestLotValuation(TestStockValuationCommon):
         })
         template = self.env['product.template'].create({
             'name': 'Sofa',
-            'tracking': 'lot',
-            'is_storable': True,
+            'store_by': 'lot',
             'uom_id': self.uom.id,
             'categ_id': self.category_avco.id,
             'attribute_line_ids': [
@@ -477,18 +476,18 @@ class TestLotValuation(TestStockValuationCommon):
 
     def test_lot_valuation_after_tracking_update(self):
         """
-        Test that 'lot_valuated' is set to False when the tracking is changed to 'none'.
+        Test that 'lot_valuated' is set to False when tracking is disabled.
         """
         # update the tracking from product.product
-        self.assertEqual(self.product.tracking, 'lot')
+        self.assertEqual(self.product.store_by, 'lot')
         self.product.lot_valuated = True
         self.assertTrue(self.product.lot_valuated)
-        self.product.tracking = 'none'
+        self.product.store_by = 'untracked'
         self.assertFalse(self.product.lot_valuated)
         # update the tracking from product.template
-        self.product.tracking = 'lot'
+        self.product.store_by = 'lot'
         self.product.lot_valuated = True
-        self.product.product_tmpl_id.tracking = 'none'
+        self.product.product_tmpl_id.store_by = 'untracked'
         self.assertFalse(self.product.lot_valuated)
 
     def test_lot_valuation_lot_product_price_diff(self):
@@ -535,7 +534,7 @@ class TestLotValuation(TestStockValuationCommon):
     def test_lot_valuated_update_from_product_product(self):
         tmpl1 = self.product.product_tmpl_id
         tmpl1.standard_price = 1
-        tmpl1.tracking = 'lot'
+        tmpl1.store_by = 'lot'
         tmpl1.lot_valuated = False
 
         lot = self.env['stock.lot'].create({
@@ -576,7 +575,7 @@ class TestLotValuation(TestStockValuationCommon):
         This is because you can't validate a move without lot when lot valuation is enabled.
         The user would hence be unable to use the quant without lot anyway.
         """
-        self.product.tracking = 'none'
+        self.product.store_by = False
         self.product.lot_valuated = False
         quant = self.env['stock.quant'].create({
             'product_id': self.product.id,
@@ -585,7 +584,7 @@ class TestLotValuation(TestStockValuationCommon):
         })
         quant.action_apply_inventory()
 
-        self.product.tracking = 'lot'
+        self.product.store_by = 'lot'
         with self.assertRaises(UserError):
             self.product.lot_valuated = True
 

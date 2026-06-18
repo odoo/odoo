@@ -19,13 +19,13 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         self.kit = self.env['product.product'].create({
             'name': 'Pizza Chicken',
             'available_in_pos': True,
-            'is_storable': True,
+            'store_by': 'quantity',
             'lst_price': 10.0,
         })
 
         self.component_a = self.env['product.product'].create({
             'name': 'Chicken',
-            'is_storable': True,
+            'store_by': 'quantity',
             'available_in_pos': True,
             'uom_id': self.env.ref('uom.product_uom_gram').id,
             'lst_price': 10.0,
@@ -91,13 +91,13 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         product_a = self.env['product.product'].create({
             'name': 'Product A',
             'available_in_pos': True,
-            'is_storable': True,
+            'store_by': 'quantity',
             'lst_price': 10.0,
         })
         product_b = self.env['product.product'].create({
             'name': 'Product B',
             'available_in_pos': True,
-            'is_storable': True,
+            'store_by': 'quantity',
             'lst_price': 10.0,
         })
         # create a sale order with 2 lines
@@ -149,7 +149,7 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         self.product = self.env['product.product'].create({
             'name': 'Product',
             'available_in_pos': True,
-            'is_storable': True,
+            'store_by': 'quantity',
             'lst_price': 10.0,
             'taxes_id': False,
             'categ_id': self.product_category.id,
@@ -218,7 +218,7 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         product_a = self.env['product.product'].create({
             'name': 'Product A',
             'available_in_pos': True,
-            'is_storable': True,
+            'store_by': 'quantity',
             'lst_price': 10.0,
         })
         self.env['stock.quant']._update_available_quantity(product_a, warehouse.lot_stock_id, 1)
@@ -256,9 +256,8 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         groupable_product, non_groupable_product = self.env['product.product'].create([{
             'name': name,
             'available_in_pos': True,
-            'is_storable': True,
             'lst_price': 10.0,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'taxes_id': False,
         } for name in ('Groupable Product', 'Non Groupable Product')])
         non_groupable_product.uom_id = non_groupable_uom.id
@@ -349,7 +348,7 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         product_a = self.env['product.product'].create({
             'name': 'Product A',
             'available_in_pos': True,
-            'is_storable': True,
+            'store_by': 'quantity',
             'lst_price': 10.0,
             'seller_ids': [(0, 0, {
                 'partner_id': self.partner_test.id,
@@ -513,8 +512,7 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         stock_location = warehouse.lot_stock_id
         product = self.env['product.product'].create({
             'name': 'Product A',
-            'tracking': 'serial',
-            'is_storable': True,
+            'store_by': 'serial',
             'lst_price': 10,
         })
 
@@ -567,11 +565,10 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         self.product = self.env['product.product'].create({
             'name': 'Product',
             'available_in_pos': True,
-            'is_storable': True,
+            'store_by': 'lot',
             'lst_price': 10.0,
             'taxes_id': False,
             'categ_id': self.product_category.id,
-            'tracking': 'lot',
         })
 
         self.warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
@@ -658,11 +655,10 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
         self.product = self.env['product.product'].create({
             'name': 'Product',
             'available_in_pos': True,
-            'is_storable': True,
+            'store_by': 'lot',
             'lst_price': 1.0,
             'taxes_id': False,
             'categ_id': self.product_category.id,
-            'tracking': 'lot',
             'uom_id': groupable_uom_unit.id,
         })
 
@@ -859,7 +855,7 @@ class TestPoSSaleStock(TestPosStockHttpCommon, TestPoSSale):
             'available_in_pos': True,
             'lst_price': 100.0,
             'taxes_id': False,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         self.env['sale.order'].create({
             'partner_id': partner.id,

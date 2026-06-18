@@ -21,22 +21,20 @@ class TestReportsCommon(TransactionCase):
 
         cls.product1 = cls.env['product.product'].create({
             'name': 'Mellohi"',
-            'is_storable': True,
             'categ_id': cls.env.ref('product.product_category_goods').id,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'default_code': 'C4181234""154654654654',
             'barcode': 'scan""me'
         })
         cls.serial_product = cls.env['product.product'].create({
             'name': 'simple prod',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
 
         cls.product = cls.env['product.product'].create({
             'name': 'Product',
             'categ_id': cls.env.ref('product.product_category_goods').id,
-            'tracking': 'none',
+            'store_by': 'quantity',
         })
         cls.product_template = cls.product.product_tmpl_id
         cls.wh_2 = cls.env['stock.warehouse'].create({
@@ -107,8 +105,7 @@ class TestReports(TestReportsCommon):
     def test_reports_with_special_characters(self):
         product_test = self.env['product.product'].create({
             'name': 'Mellohi"',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'default_code': 'C4181234""154654654654',
             'barcode': '9745213796142'
         })
@@ -983,7 +980,7 @@ class TestReports(TestReportsCommon):
         # Create a new product and set some variants on the product.
         product_template = self.env['product.template'].create({
             'name': 'Game Joy',
-            'is_storable': True,
+            'store_by': 'quantity',
             'attribute_line_ids': [
                 (0, 0, {
                     'attribute_id': product_attr_color.id,
@@ -1527,10 +1524,10 @@ class TestReports(TestReportsCommon):
         """
         product2, product3 = self.env['product.product'].create([{
             'name': 'Extra Product',
-            'is_storable': True,
+            'store_by': 'quantity',
         }, {
             'name': 'Unpopular Product',
-            'is_storable': True,
+            'store_by': 'quantity',
         }])
 
         # Creates some deliveries for reception report to match against
@@ -2081,7 +2078,7 @@ class TestReports(TestReportsCommon):
         customer_location = self.env.ref('stock.stock_location_customers')
         out_type = self.env.ref('stock.picking_type_out')
 
-        self.product.is_storable = False
+        self.product.store_by = 'untracked'
         delivery = self.env['stock.picking'].create({
             'partner_id': self.partner.id,
             'picking_type_id': out_type.id,

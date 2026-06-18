@@ -16,11 +16,13 @@ class TestTourManualConsumption(HttpCase):
         product_finish = Product.create({
             'name': 'finish',
             'is_storable': True,
-            'tracking': 'none',})
+            'tracking': False,
+        })
         product_nt = Product.create({
             'name': 'No tracking',
             'is_storable': True,
-            'tracking': 'none',})
+            'tracking': False,
+        })
         bom = self.env['mrp.bom'].create({
             'product_id': product_finish.id,
             'product_tmpl_id': product_finish.product_tmpl_id.id,
@@ -99,15 +101,18 @@ class TestManualConsumption(TestMrpCommon):
         product_finish = Product.create({
             'name': 'finish',
             'is_storable': True,
-            'tracking': 'none'})
+            'tracking': False,
+        })
         product_auto_consumption = Product.create({
             'name': 'Automatic',
             'is_storable': True,
-            'tracking': 'none'})
+            'tracking': False,
+        })
         product_manual_consumption = Product.create({
             'name': 'Manual',
             'is_storable': True,
-            'tracking': 'none'})
+            'tracking': False,
+        })
         bom = self.env['mrp.bom'].create({
             'product_id': product_finish.id,
             'product_tmpl_id': product_finish.product_tmpl_id.id,
