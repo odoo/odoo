@@ -183,7 +183,7 @@ export class Composer extends Component {
                 );
             },
         });
-        this.suggestion = useSuggestion();
+        this.suggestion = useSuggestion(this.props.composer);
         this.markEventHandled = markEventHandled;
         this.onDropFile = this.onDropFile.bind(this);
         this.saveContentDebounced = useDebounced(this.saveContent, 5000, {

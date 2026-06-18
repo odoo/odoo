@@ -1,4 +1,4 @@
-import { useComponent, useLayoutEffect } from "@web/owl2/utils";
+import { useLayoutEffect } from "@web/owl2/utils";
 import { isContentEditable, isTextNode } from "@html_editor/utils/dom_info";
 import { rightPos } from "@html_editor/utils/position";
 import {
@@ -6,7 +6,7 @@ import {
     generateRoleMentionElement,
     generateSpecialMentionElement,
 } from "@mail/utils/common/format";
-import { proxy, status } from "@odoo/owl";
+import { proxy, status, useScope } from "@odoo/owl";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { useSearch } from "@mail/utils/common/hooks";
@@ -51,8 +51,11 @@ export const SUGGESTION_DELIMITERS = Object.freeze({
  */
 
 export class UseSuggestion {
-    constructor(comp) {
-        this.comp = comp;
+    constructor(composer) {
+        this.composer = composer;
+        this.scope = useScope();
+        this.comp = this.scope.component;
+        this.store = useService("mail.store");
         this.suggestionService = useService("mail.suggestion");
         this.detection = proxy({
             /** @type {SuggestionDelimiter|undefined} */
@@ -79,11 +82,6 @@ export class UseSuggestion {
             ]
         );
     }
-    /** @type {import("@mail/core/common/composer").Composer} */
-    comp;
-    get composer() {
-        return this.comp.props.composer;
-    }
     clearRawMentions() {
         this.composer.mentionedPartners.length = 0;
         this.composer.mentionedRoles.length = 0;
@@ -103,7 +101,7 @@ export class UseSuggestion {
         let start = 0;
         let end = 0;
         let text = "";
-        if (this.comp.composerService.htmlEnabled) {
+        if (this.store.env.services["mail.composer"].htmlEnabled) {
             const selection = this.comp.editor.shared.selection.getEditableSelection();
             if (
                 !isTextNode(selection.startContainer) ||
@@ -198,12 +196,12 @@ export class UseSuggestion {
             [SUGGESTION_DELIMITERS.EMOJI, SUGGESTION_DELIMITERS.CANNED_RESPONSE].includes(
                 this.detection.delimiter
             ) ||
-            (this.comp.composerService.htmlEnabled &&
+            (this.store.env.services["mail.composer"].htmlEnabled &&
                 this.detection.delimiter !== SUGGESTION_DELIMITERS.CHANNEL_COMMAND)
         ) {
             position = this.detection.position;
         }
-        if (this.comp.composerService.htmlEnabled) {
+        if (this.store.env.services["mail.composer"].htmlEnabled) {
             const { startContainer, endContainer, endOffset } =
                 this.comp.editor.shared.selection.getEditableSelection();
             this.comp.editor.shared.selection.setSelection({
@@ -220,7 +218,7 @@ export class UseSuggestion {
         } else if (option.cannedResponse) {
             this.composer.cannedResponses.push(option.cannedResponse);
         }
-        if (this.comp.composerService.htmlEnabled) {
+        if (this.store.env.services["mail.composer"].htmlEnabled) {
             const inlineElement = makeMentionFromOption(option, { thread: this.thread });
             this.comp.editor.shared.dom.insert(inlineElement);
             const [anchorNode, anchorOffset] = rightPos(inlineElement);
@@ -285,8 +283,8 @@ export class UseSuggestion {
     }
 }
 
-export function useSuggestion() {
-    return new UseSuggestion(useComponent());
+export function useSuggestion(composer) {
+    return new UseSuggestion(composer);
 }
 
 /**
