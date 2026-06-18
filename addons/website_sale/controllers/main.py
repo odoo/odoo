@@ -1353,7 +1353,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
                     if address_mode == 'billing':
                         update_values['partner_invoice_id'] = partner_id
-                        if kw.get('use_same'):
+                        if (
+                            kw.get('use_same') or
+                            # Shipping is disabled in settings; always use billing as shipping
+                            not request.env.user.has_group('account.group_delivery_invoice_address')
+                        ):
                             update_values['partner_shipping_id'] = partner_id
                         elif (
                             order._is_public_order()
