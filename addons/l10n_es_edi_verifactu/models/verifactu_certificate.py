@@ -3,6 +3,7 @@
 from base64 import b64decode
 from pytz import timezone
 from datetime import datetime
+from cryptography import x509
 from cryptography.hazmat.primitives.serialization import Encoding, NoEncryption, PrivateFormat
 
 
@@ -90,3 +91,14 @@ class L10nEsEdiVerifactuCertificate(models.Model):
             if spain_dt > cert_date_end:
                 raise ValidationError(_("The certificate is expired since %s", certificate.date_end))
         return certificates
+
+    def _l10n_es_edi_verifactu_is_sello_certificate(self):
+        self.ensure_one()
+        _pem_cert, _pem_key, cert = self._decode_certificate()
+        subject = cert.subject
+        given_names = cert.subject.get_attributes_for_oid(x509.NameOID.GIVEN_NAME)
+        if given_names:
+            return False
+        organization_identifier_oid = x509.ObjectIdentifier('2.5.4.97')
+        org_id_attrs = subject.get_attributes_for_oid(organization_identifier_oid)
+        return bool(org_id_attrs and org_id_attrs[0].value.startswith('VATES'))
