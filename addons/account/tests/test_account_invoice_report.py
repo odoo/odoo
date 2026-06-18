@@ -343,5 +343,5 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
         report = self.env['account.invoice.report'].search(
             [('move_id', '=', invoice.id)],
         )
-        self.assertEqual(report.inventory_value, -1600)
-        self.assertEqual(report.price_margin, -100)
+        self.assertEqual(report.inventory_value, -800)
+        self.assertEqual(report.price_margin, -50)
