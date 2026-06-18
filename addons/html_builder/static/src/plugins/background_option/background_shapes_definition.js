@@ -161,6 +161,8 @@ export const backgroundShapesDefinition = {
                     "html_builder/Blurry/04": { selectLabel: _t("Blurry 04") },
                     "html_builder/Blurry/05": { selectLabel: _t("Blurry 05") },
                     "html_builder/Blurry/06": { selectLabel: _t("Blurry 06") },
+                    "html_builder/Blurry/07": { selectLabel: _t("Blurry 07") },
+                    "html_builder/Blurry/08": { selectLabel: _t("Blurry 08") },
                 },
             },
 
