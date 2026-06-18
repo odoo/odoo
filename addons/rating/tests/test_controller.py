@@ -56,3 +56,21 @@ class TestControllersRoute(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
                 message = b'You cannot rate this' if login == self.user_demo.login else b'Feel free to share feedback on your experience:'
                 self.assertIn(message, res.content)
+
+    def test_controller_rating_multi_company(self):
+        extra_company = self.env["res.company"].create({"name": "Extra company"})
+        partner = self.env["res.partner"].create({
+            "name": "Test partner",
+            "company_id": extra_company.id,
+        })
+        rating_test = self.env['rating.rating'].with_user(self.user).create({
+            'res_model_id': self.env['ir.model'].sudo().search([('model', '=', 'res.partner')], limit=1).id,
+            'res_model': 'res.partner',
+            'res_id': partner.id,
+            'rating': 3
+        })
+        self.authenticate(None, None)
+        access_token = rating_test.access_token
+        url = '/rate/%s/submit_feedback' % access_token
+        req = self.url_open(url)
+        self.assertIn("Extra company", str(req.content))
