@@ -262,6 +262,7 @@ class TestAccountMoveSyncTaxLines(AccountTestInvoicingCommon):
     def test_manual_tax_amount_preserved_on_analytic_change(self):
         # Test that a manually adjusted tax amount is preserved when
         # an unrelated field like analytic_distribution is modified.
+        self.tax_21.invoice_repartition_line_ids.use_in_tax_closing = True
         analytic_plan = self.env['account.analytic.plan'].create({'name': 'Test Plan'})
         analytic_account = self.env['account.analytic.account'].create({
             'name': 'Test Account',

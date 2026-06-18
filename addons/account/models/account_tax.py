@@ -3226,7 +3226,7 @@ class AccountTax(models.Model):
                         })
                         new_analytic_distributions = new_values.get('analytic_distributions', [])
                         old_analytic_distributions = old_values.get('analytic_distributions', [])
-                        if new_analytic_distributions != old_analytic_distributions:
+                        if (tax_rep_data['tax_rep'].tax_id.analytic or not tax_rep_data['tax_rep'].use_in_tax_closing) and new_analytic_distributions != old_analytic_distributions:
                             for analytic_distribution in set(
                                     [frozendict(x) if x else False for x in new_analytic_distributions]
                                     + [frozendict(x) if x else False for x in old_analytic_distributions]
