@@ -29,10 +29,8 @@
                                 <t t-if="showTaxGroupLabels">
                                     (<span t-if="tax_group.group_label" t-out="tax_group.group_label"/>)
                                 </t>
-                                <t id="tax_base" t-if="!taxTotals.same_tax_base">
-                                    on
-                                    <span t-esc="formatCurrency(tax_group.base_amount_currency)"/>
-                                </t>
+                                on
+                                <span t-esc="formatCurrency(tax_group.base_amount_currency)"/>
                             </span>
                             <span t-out="formatCurrency(tax_group.tax_amount_currency)" class="ms-auto font-monospace"/>
                         </div>
