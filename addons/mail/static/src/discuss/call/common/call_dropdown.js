@@ -13,17 +13,15 @@ import { getFirstElementOfNode } from "@web/core/dropdown/dropdown";
  */
 export class CallDropdown extends Component {
     static template = "discuss.CallDropdown";
-    props = props({
-        position: t.string().optional("bottom"),
-        class: t.string().optional(""),
-        menuClass: t.string().optional(""),
-        slots: t.any().optional(),
-        openByDefault: t.boolean().optional(false),
-        state: t.object().optional(),
-    });
 
     setup() {
         super.setup();
+        this.props = props({
+            class: t.string().optional(""),
+            menuClass: t.string().optional(""),
+            openByDefault: t.boolean().optional(false),
+            position: t.string().optional("bottom"),
+        });
         this.menuRef = useRef("menu");
         this.isOpen = signal(this.props.openByDefault);
         usePosition("menu", () => this.triggerRef.el, {

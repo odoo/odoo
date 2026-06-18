@@ -11,7 +11,6 @@ export class Tabs extends Component {
             direction: t.selection(["h", "v"]).optional("v"),
             initialTabId: t.or([t.string(), t.number()]).optional(),
             ref: t.function().optional(),
-            slots: t.object().optional(),
         });
         this.activeHeaderId = signal(this.props.initialTabId);
         this.headerRefs = useChildRefs();
@@ -56,7 +55,6 @@ export class InternalTabHeader extends Component {
         this.props = props({
             headerRefs: t.object(),
             id: t.or([t.string(), t.number()]),
-            slots: t.object().optional(),
             title: t.string().optional(),
         });
         this.rootRef = signal();
@@ -87,7 +85,6 @@ export class TabHeader extends Component {
         super.setup(...arguments);
         this.props = props({
             id: t.any(),
-            slots: t.object().optional(),
             title: t.string().optional(),
         });
     }
@@ -101,7 +98,6 @@ export class TabPanel extends Component {
         this.props = props({
             id: t.any(),
             onBecameVisible: t.function([]).optional(),
-            slots: t.object().optional(),
         });
         useLayoutEffect(
             (active) => {

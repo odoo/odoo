@@ -123,8 +123,8 @@ export class Message extends Component {
                 delete this.rootRef().dataset.rightClicking;
             },
         });
-        this.rightClickAnchor = signal(null, { type: t.ref(HTMLElement) });
-        this.rootRef = signal(null, { type: t.ref(HTMLDivElement) });
+        this.rightClickAnchor = signal.ref();
+        this.rootRef = signal.ref(HTMLDivElement);
         if (isMobileOS()) {
             useLongPress(this.rootRef, {
                 action: () => this.openMobileActions(),
@@ -134,7 +134,7 @@ export class Message extends Component {
         useForwardRefsToParent("messageRefs", (props) => props.message.id, this.rootRef);
         this.messageBody = useRef("body");
         this.messageActions = useMessageActions(this.messageActionsParams);
-        this.shadowBody = signal(null, { type: t.ref(HTMLDivElement) });
+        this.shadowBody = signal.ref(HTMLDivElement);
         this.shadowRoot = signal(null, { type: t.ref(ShadowRoot) });
         this.dialog = useService("dialog");
         this.ui = useService("ui");

@@ -15,15 +15,15 @@ export class Discuss extends Component {
         DiscussSidebar,
         MessagingMenu,
     };
-    props = props({
-        hasSidebar: t.boolean().optional(true),
-        thread: t.any().optional(),
-    });
     static template = "mail.Discuss";
 
     setup() {
         super.setup();
         this.store = useService("mail.store");
+        this.props = props({
+            hasSidebar: t.boolean().optional(true),
+            thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
+        });
         this.messageHighlight = useMessageScrolling({ thread: () => this.thread });
         this.root = useRef("root");
         this.orm = useService("orm");

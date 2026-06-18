@@ -24,7 +24,7 @@ export class MeetingChat extends Component {
         this.ui = useService("ui");
         this.rtc = useService("discuss.rtc");
         this.state = proxy({ jumpPresent: 0 });
-        this.panelContentRef = signal(null, { type: types.instanceOf(HTMLElement) });
+        this.panelContentRef = signal.ref();
         this.isMobileOS = isMobileOS();
         useSubEnv({ inMeetingChat: true });
     }

@@ -48,7 +48,7 @@ export class ChatWindow extends Component {
             editingName: false,
         });
         this.ui = useService("ui");
-        this.chatWindowContentRef = signal(null, { type: t.instanceOf(HTMLDivElement) });
+        this.chatWindowContentRef = signal.ref(HTMLDivElement);
         this.threadActions = useThreadActions({ thread: () => this.channel?.thread });
         this.actionsMenuButtonHover = useHover("actionsMenuButton");
         this.parentChannelHover = useHover("parentChannel");

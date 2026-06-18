@@ -19,7 +19,7 @@ export class ConvertInlineContainer extends Component {
 
 export const convertInlineIframeService = {
     start() {
-        const rootRef = signal(null, { type: types.instanceOf(HTMLDivElement) });
+        const rootRef = signal.ref(HTMLDivElement);
         const { promise: readyPromise, resolve } = Promise.withResolvers();
         mainComponents.add("ConvertInlineContainer", {
             Component: ConvertInlineContainer,

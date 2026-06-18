@@ -152,13 +152,13 @@ export class Composer extends Component {
         this.composerService = useService("mail.composer");
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
-        this.inputContainerRef = signal(null, { type: t.ref(HTMLSpanElement) });
+        this.inputContainerRef = signal.ref(HTMLSpanElement);
         this.pickerContainerRef = useRef("picker-container");
         this.state = proxy({
             active: true,
             isFullComposerOpen: false,
         });
-        this.rootRef = signal(null, { type: t.ref(HTMLDivElement) });
+        this.rootRef = signal.ref(HTMLDivElement);
         this.fullComposerRecoveryPopover = usePopover(FullComposerRecoveryPopover, {
             closeOnClickAway: false,
             closeOnEscape: false,
