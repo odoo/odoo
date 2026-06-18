@@ -9,9 +9,11 @@
                 <notebook invisible="payment_provider != 'mercado_pago'">
                     <page name="settings" string="Mercado Pago">
                         <group>
+                            <field name="mp_is_test_mode" string="Test Mode" invisible="payment_provider !='mercado_pago'" widget="boolean_toggle"/>
                             <field name="mp_bearer_token" placeholder="APP_USR-..." invisible="payment_provider != 'mercado_pago'" required="payment_provider == 'mercado_pago'"/>
                             <field name="mp_webhook_secret_key" placeholder="c2f3662..." invisible="payment_provider != 'mercado_pago'" required="payment_provider == 'mercado_pago'"/>
                             <field name="mp_id_point_smart" placeholder="1494126963" invisible="payment_provider != 'mercado_pago'" required="payment_provider == 'mercado_pago'"/>
+                            <field name="mp_webhook_endpoint" string="Webhook Endpoint" invisible="payment_provider != 'mercado_pago' or not id" required="payment_provider == 'mercado_pago'" widget="CopyClipboardChar"/>
                             <button string="Force PDV" type="object" name="force_pdv" groups="base.group_no_one" class="oe_highlight" invisible="payment_provider != 'mercado_pago'" required="payment_provider == 'mercado_pago'"/>
                         </group>
                     </page>

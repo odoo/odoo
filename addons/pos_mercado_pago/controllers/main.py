@@ -11,8 +11,8 @@ _logger = logging.getLogger(__name__)
 
 
 class PosMercadoPagoWebhook(http.Controller):
-    @http.route('/pos_mercado_pago/notification', methods=['POST'], type="http", auth="none", csrf=False)
-    def notification(self):
+    @http.route('/pos_mercado_pago/notification', methods=['POST'], type="http", auth="public", csrf=False)
+    def notification(self, **kwargs):
         """ Process the notification sent by Mercado Pago
 
         Notification format is always json
@@ -38,17 +38,17 @@ class PosMercadoPagoWebhook(http.Controller):
 
         # Check for payload
         data = request.httprequest.get_json(silent=True)
-        if not data:
-            _logger.warning('POST message received with no data')
+        if not data or data.get('type') != 'order':
+            _logger.warning('POST message received with no or malformed data')
             return http.Response(status=400)
 
-        # If and only if this webhook is related with a payment intend (see payment_mercado_pago.js)
-        # then the field data['additional_info']['external_reference'] contains a string
+        # If and only if this webhook is related with an order (see payment_mercado_pago.js)
+        # then the field data['data']['external_reference'] contains a string
         # formated like `XXX_YYY_ZZZ` where:
         # - `XXX` is the session_id
         # - `YYY` is the payment_method_id
         # - `ZZZ` is the pos order uuid for customer identification (Format xxxx-xxxx-xxx) where x is a hexadecimal digit
-        external_reference = data.get('additional_info', {}).get('external_reference')
+        external_reference = data.get('data', {}).get('external_reference')
 
         mercado_pago_pattern = r'(\d+)_(\d+)_([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})'
 
@@ -70,9 +70,12 @@ class PosMercadoPagoWebhook(http.Controller):
             # This error is not related with Mercado Pago, simply acknowledge Mercado Pago message
             return http.Response('OK', status=200)
 
-        # We have to check if this comes from Mercado Pago with the secret key
+        # We have to check if this comes from Mercado Pago with the secret key.
+        # MP builds the signature from the `data.id` query param lowercased even
+        # though it is sent uppercase.
         secret_key = payment_method_sudo.mp_webhook_secret_key
-        signed_template = f"id:{data['id']};request-id:{x_request_id};ts:{ts};"
+        data_id = kwargs.get('data.id', '')
+        signed_template = f"id:{data_id.lower()};request-id:{x_request_id};ts:{ts};"
         cyphed_signature = hmac.new(secret_key.encode(), signed_template.encode(), hashlib.sha256).hexdigest()
         if not hmac.compare_digest(cyphed_signature, v1):
             _logger.error('Webhook authenticating failure, ts: %s, v1: %s', ts, v1)
