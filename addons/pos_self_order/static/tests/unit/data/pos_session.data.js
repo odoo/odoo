@@ -47,6 +47,8 @@ patch(PosSession.prototype, {
             "res.country.state",
             "pos.prep.order",
             "pos.prep.line",
+            "pos.course",
+            "restaurant.order.course",
         ];
     },
     getModelsToLoad(opts) {

@@ -48,4 +48,7 @@ patch(PosOrderline.prototype, {
             return prices.total_excluded;
         }
     },
+    getCourse() {
+        return this.course_id ? { index: this.course_id.index, name: this.course_id.name } : false;
+    },
 });

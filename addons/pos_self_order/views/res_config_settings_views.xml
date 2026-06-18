@@ -86,6 +86,11 @@
             <xpath expr="//label[@for='pos_available_pricelist_ids']" position="attributes">
                 <attribute name="invisible">use_kiosk_mode</attribute>
             </xpath>
+            <xpath expr="//setting[@id='use_course_allocation']" position="attributes">
+                <attribute name="invisible">
+                    not pos_module_pos_restaurant and not use_kiosk_mode
+                </attribute>
+            </xpath>
 
             <setting id="margin_and_cost" position="attributes">
                 <attribute name="invisible">use_kiosk_mode</attribute>

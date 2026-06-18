@@ -45,4 +45,26 @@ describe("preparation ticket", () => {
         ]);
         expect(result).toBe(true);
     });
+    test("course allocation preparation ticket", async () => {
+        const store = await setupSelfPosEnv();
+        const foodCourse = store.models["pos.course"].create({
+            name: "Food",
+            sequence: 1,
+        });
+
+        store.config.use_course_allocation = true;
+        store.models["pos.category"].get(2).course_id = foodCourse;
+
+        const product = store.models["product.template"].get(11); // Steel desk
+        await store.addToCart(product, 1);
+        const result = await checkKioskPreparationTicketData(store, [
+            {
+                name: product.name,
+                quantity: 1,
+                course: "Food",
+            },
+        ]);
+
+        expect(result).toBe(true);
+    });
 });

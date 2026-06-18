@@ -111,7 +111,7 @@ class PosConfig(models.Model):
             'rounding_method', 'cash_rounding', 'only_round_cash_method', 'has_active_session',
             'available_preset_ids', 'default_preset_id', 'use_presets', 'iface_tax_included',
             'status', 'self_ordering_image_background_ids', 'preparation_printer_ids',
-            'receipt_printer_ids', 'use_order_printer', 'other_devices', 'pos_snooze_ids', 'self_ordering_primary_color',
+            'receipt_printer_ids', 'use_order_printer', 'other_devices', 'pos_snooze_ids', 'self_ordering_primary_color', 'use_course_allocation'
         ]
 
     def _update_access_token(self):
@@ -297,7 +297,7 @@ class PosConfig(models.Model):
             'account.tax.group', 'res.country', 'product.category', 'product.pricelist', 'product.pricelist.item', 'res.currency', 'account.fiscal.position',
             'res.lang', 'product.attribute', 'product.attribute.custom.value', 'product.template.attribute.line', 'product.template.attribute.value', 'product.tag',
             'decimal.precision', 'uom.uom', 'pos_self_order.custom_link', 'restaurant.floor', 'restaurant.table', 'account.cash.rounding',
-            'res.country', 'res.country.state', 'mail.template', 'pos.product.template.snooze', 'pos.prep.order', 'pos.prep.line']
+            'res.country', 'res.country.state', 'mail.template', 'pos.product.template.snooze', 'pos.prep.order', 'pos.prep.line', 'pos.course', 'restaurant.order.course']
 
     @api.model
     def _load_pos_self_data_domain(self, data, config):
