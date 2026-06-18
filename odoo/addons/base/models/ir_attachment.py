@@ -31,7 +31,7 @@ from odoo.tools import (
     str2bool,
 )
 from odoo.tools.binary import EMPTY_BINARY, BinaryBytes, BinaryValue
-from odoo.tools.constants import PREFETCH_MAX
+from odoo.tools.constants import IN_MAX
 from odoo.tools.mimetypes import guess_file_mimetype, guess_mimetype
 from odoo.tools.misc import limited_field_access_token
 
@@ -41,7 +41,7 @@ if typing.TYPE_CHECKING:
 _logger = logging.getLogger(__name__)
 SECURITY_FIELDS = ('res_model', 'res_id', 'create_uid', 'public', 'res_field')
 MAX_COMODELS_FOR_DOMAIN = 5
-MAX_SEARCH_LIMIT = PREFETCH_MAX * 10
+MAX_SEARCH_LIMIT = IN_MAX * 10
 CREATE_FROM_STREAM_FLAG = object()  # sentinel that cannot be given over RPC
 DIRECTORY_MODE = 0o751
 GC_FILE_SUFFIX = '.__gc'
@@ -305,7 +305,7 @@ class IrAttachment(models.Model):
         # for each chunk.
         checked = 0
         removed = 0
-        for name_pairs in split_every(self.env.cr.IN_MAX, files_to_gc()):
+        for name_pairs in split_every(IN_MAX, files_to_gc()):
             # start a new transaction (see latest data) and release locks of
             # previous loop which we don't want modified during processing
             self.env.cr.commit()
@@ -850,14 +850,14 @@ class IrAttachment(models.Model):
                 domain,
                 SECURITY_FIELDS,
                 offset=sub_offset,
-                limit=PREFETCH_MAX,
+                limit=IN_MAX,
                 order=order,
             ).sudo(False)
             result.extend(records._filtered_access('read')._ids)
-            if len(records) < PREFETCH_MAX:
+            if len(records) < IN_MAX:
                 # There are no more records
                 break
-            sub_offset += PREFETCH_MAX
+            sub_offset += IN_MAX
         return self.browse(result[offset:limit])._as_query(ordered)
 
     def write(self, vals):

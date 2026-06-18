@@ -194,7 +194,7 @@ class TestMailActivityIntegrity(ActivityScheduleCase):
 
         Activity = self.registry[activities._name]
         with (
-            patch.object(mail_activity_module, 'PREFETCH_MAX', 3),
+            patch.object(mail_activity_module, 'IN_MAX', 3),
             patch.object(Activity, '_search', autospec=True, side_effect=Activity._search) as search_func,
         ):
             self.assertEqual(activities.search(domain, limit=100), accessible)

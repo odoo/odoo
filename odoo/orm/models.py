@@ -48,7 +48,7 @@ from odoo.tools import (
     partition, split_every, unique,
     SQL, sql, groupby,
 )
-from odoo.tools.constants import PREFETCH_MAX
+from odoo.tools.constants import BIG_RECORDSET_SIZE, IN_MAX
 from odoo.tools.func import deprecated
 from odoo.tools.lru import LRU
 from odoo.tools.misc import ReversedIterable, exception_to_unicode, unquote
@@ -3064,7 +3064,7 @@ class BaseModel(metaclass=MetaModel):
             instance) for ``self`` in cache.
         """
         # determine which fields can be prefetched
-        if self.env.context.get('prefetch_fields', True) and field.prefetch:
+        if field.prefetch and self.env.context.get('prefetch_fields', len(self) < BIG_RECORDSET_SIZE):
             fnames = [
                 name
                 for name, f in self._fields.items()
@@ -3098,10 +3098,11 @@ class BaseModel(metaclass=MetaModel):
             return
 
         fields_to_fetch = self._determine_fields_to_fetch(field_names, ignore_when_in_cache=True)
-
+        queries = []
         # first determine a query that satisfies the domain and access rules
         if any(field.column_type for field in fields_to_fetch):
-            query = self._search([('id', 'in', self.ids)], active_test=False)
+            for ids in split_every(BIG_RECORDSET_SIZE, self._ids):
+                queries.append(self._search([('id', 'in', ids)], active_test=False))
         else:
             try:
                 self.check_access('read')
@@ -3114,10 +3115,17 @@ class BaseModel(metaclass=MetaModel):
                 self.check_access('read')
             if not fields_to_fetch:
                 return
-            query = self._as_query(ordered=False)
+            # The query is split into domains of BIG_RECORDSET_SIZE so no one
+            # query would have a domain large enough to spill to disk and slow
+            # the transaction
+            for ids in split_every(BIG_RECORDSET_SIZE, self._ids):
+                queries.append(self.browse(ids)._as_query(ordered=False))
 
         # fetch the fields
-        fetched = self._fetch_query(query, fields_to_fetch)
+        fetched = self.browse().union(
+            self._fetch_query(query, fields_to_fetch)
+            for query in queries
+        )
         env = self.env
         if not env.su:
             env._add_to_access_cache(fetched)
@@ -3515,13 +3523,7 @@ class BaseModel(metaclass=MetaModel):
         # access in batch.
         # We want to avoid rechecking *all* the prefetch every time we have an
         # inaccessible record.
-        ids_to_check = tuple(id_ for id_ in ids if not access.get(id_))
-        if len(ids) < PREFETCH_MAX and self._prefetch_ids is not ids:
-            ids_to_check = itertools.chain(ids_to_check, (
-                id_ for id_ in self._prefetch_ids
-                if id_ not in access
-            ))
-            ids_to_check = itertools.islice(unique(ids_to_check), PREFETCH_MAX)
+        ids_to_check = tuple(id_ for id_ in unique(itertools.chain(ids, self._prefetch_ids)) if not access.get(id_))
         records = self.browse(ids_to_check).sudo().with_context(active_test=False)
 
         # Check access
@@ -3670,7 +3672,7 @@ class BaseModel(metaclass=MetaModel):
         with self.env.protecting(self._fields.values(), self):
             self.modified(self._fields, before=True)
 
-        for sub_ids in split_every(cr.IN_MAX, self.ids):
+        for sub_ids in split_every(IN_MAX, self.ids):
             records = self.browse(sub_ids)
 
             cr.execute(SQL(
@@ -5594,10 +5596,6 @@ class BaseModel(metaclass=MetaModel):
             records = self
             for rel_field_name in rel_field_names:
                 records = records[rel_field_name]
-            if len(records) > PREFETCH_MAX:
-                # fetch fields for all recordset in case we have a recordset
-                # that is larger than the prefetch
-                records.fetch([field_name])
             field = records._fields[field_name]
             getter = field.__get__
             if field.relational:
@@ -5651,7 +5649,7 @@ class BaseModel(metaclass=MetaModel):
             raise TypeError(f"Invalid function {func!r} to filter on {self._name}")
 
         ids = tuple(id_ for id_, rec in zip(self._ids, self) if func(rec))
-        return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids))
+        return self.__class__(self.env, ids, self._prefetch_ids)
 
     @typing.overload
     def grouped(self, key: str) -> dict[typing.Any, Self]:
@@ -5697,7 +5695,7 @@ class BaseModel(metaclass=MetaModel):
             return self
         predicate = Domain(domain)._as_predicate(self)
         ids = tuple(id_ for id_, rec in zip(self._ids, self) if predicate(rec))
-        return self.__class__(self.env, ids, Prefetch.union(ids, self._prefetch_ids))
+        return self.__class__(self.env, ids, self._prefetch_ids)
 
     @api.private
     def sorted(self, key: Callable[[Self], typing.Any] | str | None = None, reverse: bool = False) -> Self:
@@ -5934,13 +5932,8 @@ class BaseModel(metaclass=MetaModel):
         cls = self.__class__
         env = self.env
         prefetch_ids = self._prefetch_ids
-        if size > PREFETCH_MAX and prefetch_ids is ids:
-            for sub_ids in split_every(PREFETCH_MAX, ids):
-                for id_ in sub_ids:
-                    yield cls(env, (id_,), sub_ids)
-        else:
-            for id_ in ids:
-                yield cls(env, (id_,), prefetch_ids)
+        for id_ in ids:
+            yield cls(env, (id_,), prefetch_ids)
 
     def __reversed__(self) -> Iterator[Self]:
         """ Return an reversed iterator over ``self``. """
@@ -5953,15 +5946,9 @@ class BaseModel(metaclass=MetaModel):
             return
         cls = self.__class__
         env = self.env
-        prefetch_ids = self._prefetch_ids
-        if size > PREFETCH_MAX and prefetch_ids is ids:
-            for sub_ids in split_every(PREFETCH_MAX, reversed(ids)):
-                for id_ in sub_ids:
-                    yield cls(env, (id_,), sub_ids)
-        else:
-            prefetch_ids = ReversedIterable(prefetch_ids)
-            for id_ in reversed(ids):
-                yield cls(env, (id_,), prefetch_ids)
+        prefetch_ids = ReversedIterable(self._prefetch_ids)
+        for id_ in reversed(ids):
+            yield cls(env, (id_,), prefetch_ids)
 
     def __contains__(self, item: BaseModel | str) -> bool:
         """ Test whether ``item`` (record or field name) is an element of ``self``.

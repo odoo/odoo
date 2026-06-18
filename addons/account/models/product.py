@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.tools import format_amount, frozendict
 from odoo.tools.misc import split_every
-from odoo.tools.constants import PREFETCH_MAX
+from odoo.tools.constants import IN_MAX
 
 ACCOUNT_DOMAIN = "[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card','off_balance'))]"
 
@@ -162,7 +162,7 @@ class ProductTemplate(models.Model):
         if not default_customer_taxes:
             return
         links = [Command.link(t.id) for t in default_customer_taxes]
-        for sub_ids in split_every(self.env.cr.IN_MAX, self.ids):
+        for sub_ids in split_every(IN_MAX, self.ids):
             chunk = self.browse(sub_ids)
             chunk.write({'taxes_id': links})
             chunk.invalidate_recordset(['taxes_id'])
@@ -172,7 +172,7 @@ class ProductTemplate(models.Model):
         if not default_supplier_taxes:
             return
         links = [Command.link(t.id) for t in default_supplier_taxes]
-        for sub_ids in split_every(self.env.cr.IN_MAX, self.ids):
+        for sub_ids in split_every(IN_MAX, self.ids):
             chunk = self.browse(sub_ids)
             chunk.write({'supplier_taxes_id': links})
             chunk.invalidate_recordset(['supplier_taxes_id'])
@@ -409,7 +409,7 @@ class ProductProduct(models.Model):
                 ]),
             ).ids
             lowered_name = name.lower()
-            for products in split_every(PREFETCH_MAX, all_product_ids, self.browse):
+            for products in split_every(IN_MAX, all_product_ids, self.browse):
                 products.fetch(['product_tmpl_id'])
                 templates = products.product_tmpl_id
                 templates.fetch(['name'])

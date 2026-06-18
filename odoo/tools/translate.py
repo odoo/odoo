@@ -40,6 +40,7 @@ from .config import config
 from .i18n import format_list
 from .misc import file_open, file_path, frozendict, split_every, OrderedSet, SKIPPED_ELEMENT_TYPES
 from .sql import SQL
+from odoo.tools.constants import IN_MAX
 
 if typing.TYPE_CHECKING:
     import types
@@ -2218,7 +2219,7 @@ class TranslationImporter:
             # field_name, {xmlid: {src: {lang: value}}}
             for field_name, field_dictionary in model_dictionary.items():
                 field = fields.get(field_name)
-                for sub_xmlids in split_every(env.cr.IN_MAX, field_dictionary.keys()):
+                for sub_xmlids in split_every(IN_MAX, field_dictionary.keys()):
                     # [module_name, imd_name, module_name, imd_name, ...]
                     params = [xmlid.split('.', maxsplit=1) for xmlid in sub_xmlids]
                     rows = env.execute_query(SQL("""
@@ -2279,7 +2280,7 @@ class TranslationImporter:
             Model = env[model_name]
             model_table = Model._table
             for field_name, field_dictionary in model_dictionary.items():
-                for sub_field_dictionary in split_every(env.cr.IN_MAX, field_dictionary.items()):
+                for sub_field_dictionary in split_every(IN_MAX, field_dictionary.items()):
                     # Parallel arrays + ORDINALITY preserve sub_field_dictionary order
                     # so colliding xmlids merge deterministically in SQL.
                     imd_modules, imd_names, values = [], [], []
