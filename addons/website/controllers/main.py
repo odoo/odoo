@@ -32,6 +32,8 @@ from odoo.tools import OrderedSet, py_to_js_locale
 from odoo.tools import html_escape as escape
 from odoo.tools.image import hex_to_rgb
 from odoo.tools.json import scriptsafe as json
+from odoo.tools.mimetypes import guess_mimetype
+from odoo.tools.misc import file_open
 from odoo.tools.sql import escape_like_value
 from odoo.tools.translate import LazyTranslate, TRANSLATED_ELEMENTS
 
@@ -40,6 +42,8 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
 from odoo.addons.web.controllers.binary import Binary
 from odoo.addons.web.controllers.session import Session
+from odoo.addons.html_editor.controllers.svg_utils import get_shape_svg, make_shaped_image
+from odoo.addons.html_editor.models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
 from odoo.addons.website.tools import get_base_domain
 
 _lt = LazyTranslate(__name__)
@@ -580,13 +584,27 @@ class Website(Home):
             module, _, shape_filename = shape_file_path.partition('/')
             if not shape_filename:
                 continue
+            if not mapped_image_url.startswith(API_WEBSITE_IMAGES_URL):
+                try:
+                    with file_open(
+                        urllib.parse.unquote(mapped_image_url).lstrip('/'),
+                        'rb',
+                        filter_ext=tuple(SUPPORTED_IMAGE_MIMETYPES.values()),
+                    ) as file:
+                        image = file.read()
+                except (FileNotFoundError, ValueError):
+                    continue
+                mimetype = guess_mimetype(image)
+                if mimetype not in SUPPORTED_IMAGE_MIMETYPES:
+                    continue
+                shape_svg = get_shape_svg(module, 'image_shapes', shape_filename)
+                shape_options = dict(urllib.parse.parse_qsl(shape_query.replace('&amp;', '&'), keep_blank_values=True))
+                shape_svg = make_shaped_image(request.env, shape_svg, image, mimetype, shape_options)
+                shape_data_uri = 'data:image/svg+xml;base64,%s' % base64.b64encode(shape_svg.encode()).decode()
+                final_html = final_html.replace(shape_src, shape_data_uri)
+                continue
             shaped_url = f'/html_editor/image_shape_url/{module}/{shape_filename}'
-            image_url = (
-                f"{request.httprequest.host_url.rstrip('/')}{mapped_image_url}"
-                if mapped_image_url.startswith('/')
-                else mapped_image_url
-            )
-            image_query = werkzeug.urls.url_encode({'image_url': image_url})
+            image_query = werkzeug.urls.url_encode({'image_url': mapped_image_url})
             shaped_url = f'{shaped_url}?{shape_query}&{image_query}' if shape_query else f'{shaped_url}?{image_query}'
             final_html = final_html.replace(shape_src, shaped_url)
         return final_html
