@@ -63,9 +63,9 @@ class StockPickingBatch(models.Model):
     is_wave = fields.Boolean('This batch is a wave')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
     estimated_shipping_weight = fields.Float(
-        "shipping_weight", compute='_compute_estimated_shipping_capacity', digits='Product Unit')
+        "shipping_weight", compute='_compute_shipping_weight', digits='Product Unit')
     estimated_shipping_volume = fields.Float(
-        "shipping_volume", compute='_compute_estimated_shipping_capacity', digits='Product Unit')
+        "shipping_volume", compute='_compute_shipping_volume', digits='Product Unit')
     properties = fields.Properties('Properties', definition='picking_type_id.batch_properties_definition', copy=True)
 
     @api.depends('description')
@@ -81,29 +81,31 @@ class StockPickingBatch(models.Model):
         for batch in self:
             batch.show_lots_text = batch.picking_ids and batch.picking_ids[0].show_lots_text
 
-    def _compute_estimated_shipping_capacity(self):
+    @api.depends(
+        'move_line_ids.result_package_id', 'move_line_ids.result_package_id.package_type_id', 'move_line_ids.result_package_id.shipping_weight',
+        'move_line_ids.result_package_id.outermost_package_id', 'move_line_ids.result_package_id.outermost_package_id.package_type_id', 'move_line_ids.result_package_id.outermost_package_id.shipping_weight',
+        'picking_ids.weight_bulk')
+    def _compute_shipping_weight(self):
+        outermost_packages = self.move_line_ids.result_package_id.outermost_package_id
+        packages_weights_per_batch = outermost_packages._get_weight(self)
+
         for batch in self:
-            estimated_shipping_weight = 0
-            estimated_shipping_volume = 0
-            done_package_ids = set()
-            # packs
-            for pack in batch.move_line_ids.result_package_id:
-                p_type = pack.package_type_id
-                if pack.shipping_weight:
-                    # shipping_weight was computed, so base_weight should be included.
-                    estimated_shipping_weight += pack.shipping_weight
-                    done_package_ids.add(pack.id)
-                elif p_type:
-                    estimated_shipping_weight += p_type.base_weight or 0
-                    estimated_shipping_volume += (p_type.packaging_length * p_type.width * p_type.height) / 1000.0**3
-            # move without packs
-            for move_line in batch.picking_ids.move_ids.move_line_ids:
-                if move_line.result_package_id.id in done_package_ids:
-                    continue
-                estimated_shipping_weight += move_line.product_id.weight * move_line.quantity_product_uom
-                estimated_shipping_volume += move_line.product_id.volume * move_line.quantity_product_uom
-            batch.estimated_shipping_weight = estimated_shipping_weight
-            batch.estimated_shipping_volume = estimated_shipping_volume
+            if batch.state == 'done':
+                continue
+            batch.estimated_shipping_weight = sum(picking_id.weight_bulk for picking_id in batch.picking_ids) + packages_weights_per_batch[batch.id]
+
+    @api.depends(
+        'move_line_ids.result_package_id', 'move_line_ids.result_package_id.volume', 'move_line_ids.result_package_id.shipping_volume',
+        'move_line_ids.result_package_id.outermost_package_id', 'move_line_ids.result_package_id.outermost_package_id.volume',
+        'move_line_ids.result_package_id.outermost_package_id.shipping_volume', 'picking_ids.volume_bulk')
+    def _compute_shipping_volume(self):
+        outermost_packages = self.move_line_ids.result_package_id.outermost_package_id
+        packages_volumes_per_batch = outermost_packages._get_volume(self)
+
+        for batch in self:
+            if batch.state == 'done':
+                continue
+            batch.estimated_shipping_volume = sum(picking_id.volume_bulk for picking_id in batch.picking_ids) + packages_volumes_per_batch[batch.id]
 
     @api.depends('company_id', 'picking_type_id', 'state')
     def _compute_allowed_picking_ids(self):

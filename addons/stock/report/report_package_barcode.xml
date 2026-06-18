@@ -19,6 +19,26 @@
                     <div t-if="o.valid_sscc" class="col-6 text-center">
                         <t t-set="barcode" t-value="'00' + o.name"/>
                         <t t-if="o.pack_date" t-set="barcode" t-value="barcode + '13' + o.pack_date.strftime('%y%m%d')"/>
+                        <t t-if="o.shipping_weight or o.weight">
+                            <t t-if="o.shipping_weight" t-set="weight_str" t-value="str(int(o.shipping_weight/o.weight_uom_rounding))"/>
+                            <t t-else="" t-set="weight_str" t-value="str(int(o.weight/o.weight_uom_rounding))"/>
+                            <t t-if="len(weight_str) &lt;= 6">
+                                <t t-if="o.weight_is_kg" t-set="barcode" t-value="barcode + '310'"/>
+                                <t t-else="" t-set="barcode" t-value="barcode + '320'"/>
+                                <t t-set="barcode" t-value="barcode + str(len(str(o.weight_uom_rounding).split('.')[1]))"/>
+                                <t t-set="barcode" t-value="barcode + '0' * (6 - len(str(weight_str))) + weight_str"/>
+                            </t>
+                        </t>
+                        <t t-if="o.shipping_volume or o.volume">
+                            <t t-if="o.shipping_volume" t-set="volume_str" t-value="str(int(o.shipping_volume/o.volume_uom_rounding))"/>
+                            <t t-else="" t-set="volume_str" t-value="str(int(o.volume/o.volume_uom_rounding))"/>
+                            <t t-if="len(volume_str) &lt;= 6">
+                                <t t-if="o.volume_is_m3" t-set="barcode" t-value="barcode + '316'"/>
+                                <t t-else="" t-set="barcode" t-value="barcode + '365'"/>
+                                <t t-set="barcode" t-value="barcode + str(len(str(o.volume_uom_rounding).split('.')[1]))"/>
+                                <t t-set="barcode" t-value="barcode + '0' * (6 - len(str(volume_str))) + volume_str"/>
+                            </t>
+                        </t>
                         <div name="datamatrix_barcode" t-out="barcode" t-options="{'widget': 'barcode', 'symbology': 'QR', 'width': 100, 'height': 100}">
                             <div class="bg-light border-1 rounded d-flex flex-column align-items-center justify-content-center px-1 py-2 opacity-75 text-muted text-center">
                                 (package barcode)
@@ -44,6 +64,26 @@
                         <strong>Package Type:</strong>
                         <span t-field="o.package_type_id.name">Pallet</span>
                     </div>
+                    <t t-if="o.valid_sscc">
+                        <div t-if="o.shipping_weight" class="col"><strong>Shipping Weight: </strong><span t-field="o.shipping_weight"/> <t t-out="o.weight_uom_name"/></div>
+                        <div t-elif="o.weight" class="col"><strong>Weight: </strong><span t-field="o.weight"/> <t t-out="o.weight_uom_name"/></div>
+                        <div t-if="o.shipping_volume" class="col"><strong>Shipping Volume: </strong><span t-field="o.shipping_volume"/> <t t-out="o.volume_uom_name"/></div>
+                        <div t-elif="o.volume" class="col"><strong>Volume: </strong><span t-field="o.volume"/> <t t-out="o.volume_uom_name"/></div>
+                    </t>
+                    <t t-else="">
+                        <div t-if="o.shipping_weight" class="col">
+                            <strong>Shipping Weight:</strong>
+                            <br/>
+                            <span t-field="o.shipping_weight"/>
+                            <span t-out="o.weight_uom_name"/>
+                        </div>
+                        <div t-if="o.shipping_volume" class="col">
+                            <strong>Shipping Volume:</strong>
+                            <br/>
+                            <span t-field="o.shipping_volume"/>
+                            <span t-out="o.volume_uom_name"/>
+                        </div>
+                    </t>
                 </div>
                 <div class="oe_structure"/>
                 <!-- CONTAINED PACKAGES CONTENT -->
@@ -213,6 +253,26 @@
                         <div class="row">
                             <t t-set="barcode" t-value="'00' + o.name"/>
                             <t t-if="o.pack_date" t-set="barcode" t-value="barcode + '13' + o.pack_date.strftime('%y%m%d')"/>
+                            <t t-if="o.shipping_weight or o.weight">
+                                <t t-if="o.shipping_weight" t-set="weight_str" t-value="str(int(o.shipping_weight/o.weight_uom_rounding))"/>
+                                <t t-else="" t-set="weight_str" t-value="str(int(o.weight/o.weight_uom_rounding))"/>
+                                <t t-if="len(weight_str) &lt;= 6">
+                                    <t t-if="o.weight_is_kg" t-set="barcode" t-value="barcode + '310'"/>
+                                    <t t-else="" t-set="barcode" t-value="barcode + '320'"/>
+                                    <t t-set="barcode" t-value="barcode + str(len(str(o.weight_uom_rounding).split('.')[1]))"/>
+                                    <t t-set="barcode" t-value="barcode + '0' * (6 - len(str(weight_str))) + weight_str"/>
+                                </t>
+                            </t>
+                            <t t-if="o.shipping_volume or o.volume">
+                                <t t-if="o.shipping_volume" t-set="volume_str" t-value="str(int(o.shipping_volume/o.volume_uom_rounding))"/>
+                                <t t-else="" t-set="volume_str" t-value="str(int(o.volume/o.volume_uom_rounding))"/>
+                                <t t-if="len(volume_str) &lt;= 6">
+                                    <t t-if="o.volume_is_m3" t-set="barcode" t-value="barcode + '316'"/>
+                                    <t t-else="" t-set="barcode" t-value="barcode + '365'"/>
+                                    <t t-set="barcode" t-value="barcode + str(len(str(o.volume_uom_rounding).split('.')[1]))"/>
+                                    <t t-set="barcode" t-value="barcode + '0' * (6 - len(str(volume_str))) + volume_str"/>
+                                </t>
+                            </t>
                             <div class="col-5 text-end" name="datamatrix_barcode" style="margin: 0px 20px 40px 60px">
                                 <span t-out="barcode" t-options="{'widget': 'barcode', 'symbology': 'ECC200DataMatrix', 'width': 200, 'height': 200}">Barcode Demo</span>
                             </div>
@@ -220,6 +280,10 @@
                                 <div class="row">SSCC: <span t-field="o.name">SSCC Demo</span></div>
                                 <div t-if="o.pack_date" class="row">Pack Date: <span t-field="o.pack_date">Pack Date Demo</span></div>
                                 <div t-if="o.package_type_id" class="row" name="datamatrix_pack_type">Package Type: <span t-field="o.package_type_id.name">Package Type Demo</span></div>
+                                <div t-if="o.shipping_weight" class="row">Shipping Weight: <span t-field="o.shipping_weight"/> <t t-out="o.weight_uom_name"/></div>
+                                <div t-elif="o.weight" class="row">Weight: <span t-field="o.weight"/> <t t-out="o.weight_uom_name"/></div>
+                                <div t-if="o.shipping_volume" class="row">Shipping Volume: <span t-field="o.shipping_volume"/> <t t-out="o.volume_uom_name"/></div>
+                                <div t-elif="o.volume" class="row">Volume: <span t-field="o.volume"/> <t t-out="o.volume_uom_name"/></div>
                             </div>
                         </div>
                     </t>
@@ -233,6 +297,12 @@
                         <div t-if="o.pack_date" class="col-12 text-center" style="font-size:24px; font-weight:bold;">Pack Date: <span t-field="o.pack_date">2023-01-01</span></div>
                         <div class="row o_packaging_type" t-if="o.package_type_id">
                             <div class="col-12 text-center" style="font-size:24px; font-weight:bold;"><span>Package Type: </span><span t-field="o.package_type_id.name">Package Type Demo</span></div>
+                        </div>
+                        <div class="row o_package_shipping_weight" t-if="o.shipping_weight">
+                            <div class="col-12 text-center" style="font-size:24px; font-weight:bold;"><span>Shipping Weight: </span><span t-field="o.shipping_weight"/> <t t-out="o.weight_uom_name"/></div>
+                        </div>
+                        <div class="row" t-if="o.shipping_volume">
+                            <div class="col-12 text-center" style="font-size:24px; font-weight:bold;"><span>Shipping Volume: </span><span t-field="o.shipping_volume"/> <t t-out="o.volume_uom_name"/></div>
                         </div>
                     </t>
                     <div class="oe_structure"/>
