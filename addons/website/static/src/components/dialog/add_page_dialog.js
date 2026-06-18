@@ -174,6 +174,29 @@ class AddPageTemplatePreview extends Component {
                     visibility: visible;
                     animation-name: none;
                 }
+                .s_floating_blocks {
+                    /* Make s_floating_blocks snippet look good. */
+                    .s_floating_blocks_wrapper {
+                        box-shadow: none !important;
+                    }
+                    .s_floating_blocks_block {
+                        position: relative !important;
+                        opacity: 1 !important;
+                    }
+                    .s_floating_blocks_block:nth-child(1) {
+                        z-index: 1;
+                        transform: scale(.96) !important;
+                    }
+                    .s_floating_blocks_block:nth-child(2) {
+                        z-index: 2;
+                        transform: scale(.98) !important;
+                        margin-top: -45% !important;
+                    }
+                    .s_floating_blocks_block:nth-child(3) {
+                        z-index: 3;
+                        margin-top: -45% !important;
+                    } 
+                }
             `;
             const cssText = document.createTextNode(css);
             styleEl.appendChild(cssText);
