@@ -71,6 +71,18 @@ export const getFilledOrder = async (store, data = {}) => {
     return order;
 };
 
+export const makeOrder = (store, overrides = {}) => {
+    const order = store.createNewOrder();
+    Object.assign(order, {
+        state: "draft",
+        date_order: DateTime.now(),
+        pos_reference: "Order 00001",
+        getScreenData: () => ({ name: "ProductScreen" }),
+        ...overrides,
+    });
+    return order;
+};
+
 export async function waitUntilOrdersSynced(store, options) {
     await waitUntil(() => !store.syncingOrders.size, options);
     await tick();

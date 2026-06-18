@@ -547,8 +547,8 @@ describe("pos_store.js", () => {
         const store = await setupPosEnv();
         const order = store.addNewOrder();
         const deletedOrder = await store.onDeleteOrder(order);
-        expect(order.uiState.displayed).toBe(false);
         expect(deletedOrder).toBe(true);
+        expect(store.models["pos.order"].getBy("uuid", order.uuid)).toBeEmpty();
     });
 
     test("setNextOrderRefs", async () => {

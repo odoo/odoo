@@ -53,9 +53,11 @@ registry.category("web_tour.tours").add("test_cancel_order_from_ui", {
             FloorScreen.isShown(),
             Chrome.clickOrders(),
             TicketScreen.noOrderIsThere(),
+            TicketScreen.selectFilter("Cancelled"),
+            TicketScreen.checkStatus("001", "Cancelled"),
+            Chrome.storedOrderCount(1),
             TicketScreen.selectFilter("Paid"),
             TicketScreen.noOrderIsThere(),
-            Chrome.storedOrderCount(0),
         ].flat(),
 });
 
