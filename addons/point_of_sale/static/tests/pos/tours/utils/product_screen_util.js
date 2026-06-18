@@ -9,6 +9,7 @@ import * as ChoseComboPopup from "@point_of_sale/../tests/pos/tours/utils/chose_
 import { LONG_PRESS_DURATION } from "@point_of_sale/utils";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
+import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 
 export function firstProductIsFavorite(name) {
     return [
@@ -687,6 +688,12 @@ export function checkTaxAmount(amount) {
     return {
         trigger: `.order-summary .tax:contains(${amount})`,
     };
+}
+
+export function hasNoTax() {
+    return negateStep({
+        trigger: `.order-summary .tax-info`,
+    });
 }
 
 export function checkRoundingAmountIsNotThere() {

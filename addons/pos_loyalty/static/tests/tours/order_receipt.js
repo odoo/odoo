@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add("test_receipt_data_pos_loyalty", {
             ProductScreen.clickPartnerButton(),
             ProductScreen.clickCustomer("Example Partner"),
             PosLoyalty.claimReward("Free Product - Example Simple Product"),
-            PosLoyalty.hasRewardLine("Free Product - Example Simple Product", "-5.80", "1"),
+            PosLoyalty.hasRewardLine("Free Product - Example Simple Product", "0", "1"),
             PosLoyalty.orderTotalIs("23.20"),
             PosLoyalty.finalizeOrder("Cash", "23.20"),
             Chrome.isSynced(),
@@ -23,7 +23,6 @@ registry.category("web_tour.tours").add("test_receipt_data_pos_loyalty", {
                 trigger: "body",
                 run: async () => {
                     const order = posmodel.models["pos.order"].find((o) => o.finalized);
-                    await posmodel.postProcessLoyalty(order);
                     const data = posmodel.ticketPrinter.getOrderReceiptData(order);
                     try {
                         await posmodel.data.call("pos.order", "get_order_frontend_receipt_data", [

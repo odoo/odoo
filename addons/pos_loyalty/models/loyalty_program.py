@@ -8,12 +8,22 @@ class LoyaltyProgram(models.Model):
     _name = 'loyalty.program'
     _inherit = ['loyalty.program', 'pos.load.mixin']
 
-    # NOTE: `pos_config_ids` satisfies an excpeptional use case: when no PoS is specified, the loyalty program is
-    # applied to every PoS. You can access the loyalty programs of a PoS using _get_program_ids() of pos.config
-    pos_config_ids = fields.Many2many('pos.config', compute="_compute_pos_config_ids", store=True, readonly=False, string="Point of Sales", help="Restrict publishing to those shops. Note: A program will only be used in the shops using the same currency as the program.")
+    pos_config_ids = fields.Many2many(
+        'pos.config',
+        compute="_compute_pos_config_ids",
+        store=True,
+        readonly=False,
+        string="Point of Sales",
+        help="Restrict publishing to those shops. Note: A program will only be used in the shops using the same currency as the program.")
     pos_order_count = fields.Integer("PoS Order Count", compute='_compute_pos_order_count')
-    pos_ok = fields.Boolean("Point of Sale", default=True)
-    pos_report_print_id = fields.Many2one('ir.actions.report', string="Print Report", domain=[('model', '=', 'loyalty.card')], compute='_compute_pos_report_print_id', inverse='_inverse_pos_report_print_id', readonly=False,
+    pos_ok = fields.Boolean(string="Point of sale", default=True)
+    pos_report_print_id = fields.Many2one(
+        'ir.actions.report',
+        string="Print Report",
+        domain=[('model', '=', 'loyalty.card')],
+        compute='_compute_pos_report_print_id',
+        inverse='_inverse_pos_report_print_id',
+        readonly=False,
         help="This is used to print the generated gift cards from PoS.")
 
     @api.model
@@ -25,12 +35,23 @@ class LoyaltyProgram(models.Model):
         return [
             'name', 'trigger', 'applies_on', 'program_type', 'pricelist_ids', 'date_from',
             'date_to', 'limit_usage', 'max_usage', 'total_order_count', 'is_nominative',
-            'portal_visible', 'portal_point_name', 'trigger_product_ids', 'rule_ids', 'reward_ids'
+            'portal_visible', 'portal_point_name', 'trigger_product_ids', 'rule_ids', 'reward_ids',
+            'is_payment_program'
         ]
 
     @api.model
     def _load_pos_data_read(self, records, config):
         return super()._load_pos_data_read(records.sudo(), config)
+
+    def _get_pos_order_points(self, order, lines=None):
+        """
+        Points this program generates for `order` over `lines` (defaults to all its lines).
+        mirror of *static/src/app/models/loyalty_program.js* LoyaltyProgram.getEarnedPoints
+        """
+        self.ensure_one()
+        if self.program_type == 'coupons':
+            return 0
+        return sum(rule._get_pos_order_points(order, lines) for rule in self.rule_ids)
 
     def _unrelevant_records(self, config):
         valid_record = config._get_program_ids()

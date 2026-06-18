@@ -12,19 +12,14 @@ patch(ProductScreen.prototype, {
         });
     },
     async _onCouponScan(code) {
-        // IMPROVEMENT: Ability to understand if the scanned code is to be paid or to be redeemed.
-        const res = await this.pos.activateCode(code.base_code);
-        if (res !== true) {
-            this.notification.add(res, { type: "danger" });
+        const order = this.pos.getOrder();
+        const loadError = await this.pos.loadCode(code.base_code);
+        if (loadError) {
+            this.notification.add(loadError, { type: "danger" });
+            return;
         }
-    },
-    async _barcodeProductAction(code) {
-        await super._barcodeProductAction(code);
-        this.pos.updateRewards();
-    },
-    async _barcodeGS1Action(code) {
-        await super._barcodeGS1Action(code);
-        this.pos.updateRewards();
+        await this.pos.applyCode(code.base_code);
+        order.recomputeRewards();
     },
     async _barcodePartnerAction(code) {
         await super._barcodePartnerAction(code);

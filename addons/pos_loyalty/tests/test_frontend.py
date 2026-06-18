@@ -514,6 +514,27 @@ class TestUi(TestPointOfSaleHttpCommon):
         loyalty_history = self.env['loyalty.history'].search([('card_id', '=', gift_card_program.coupon_ids.id), ('id', '!=', gift_card_creation_history.id)])
         self.assertEqual(loyalty_history.used, 3.2)
 
+    def test_gift_card_two_cards_same_program(self):
+        """Paying one order with two gift cards of the same program must keep both
+        payment lines and debit each card its own amount."""
+        LoyaltyProgram = self.env['loyalty.program']
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
+        gift_card_program = self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
+        card_1, card_2 = self.env['loyalty.card'].create([
+            {'program_id': gift_card_program.id, 'code': '044111111', 'points': 20},
+            {'program_id': gift_card_program.id, 'code': '044222222', 'points': 15},
+        ])
+        self.main_pos_config.open_ui()
+        self.start_pos_tour("GiftCardProgramTwoCardsTour")
+
+        card_1.invalidate_recordset()
+        card_2.invalidate_recordset()
+        self.assertEqual(card_1.points, 0, "The first card should be fully spent")
+        self.assertEqual(card_2.points, 0, "The second card should be fully spent")
+        self.assertEqual(card_1.history_ids.used, 20)
+        self.assertEqual(card_2.history_ids.used, 15)
+
     def test_ewallet_program(self):
         """
         Test for ewallet program.
@@ -1345,6 +1366,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Promo Program',
             'program_type': 'promotion',
             'pos_ok': True,
+            'trigger': 'auto',
             'rule_ids': [(0, 0, {
                 'minimum_amount': 0,
                 'minimum_qty': 0
@@ -2971,7 +2993,9 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_refund_does_not_decrease_points(self):
         """
-        Tests that when refunding a product bought while spending points, it does not decrease the points a second time
+        Refunding a product bought while spending points fully undoes the sale on the card:
+        Here the card starts at 100, the sale earns 30 and spends 100 (-> 30), and the full
+        refund restores it to 100.
         """
         self.pos_user.group_ids |= self.quick_ref('product.group_product_manager')
         LoyaltyProgram = self.env['loyalty.program']
@@ -3010,7 +3034,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_refund_does_not_decrease_points', login="pos_user")
-        self.assertEqual(card.points, 30)
+        self.assertEqual(card.points, 100)
 
     def test_loyalty_reward_with_variant(self):
         self.env['loyalty.program'].search([]).write({'active': False})
@@ -3337,7 +3361,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'available_in_pos': True,
             'taxes_id': False,
             'product_tag_ids': [Command.link(promo_tag.id)],
-        } for suffix in ('A', 'B', 'C')])
+        } for suffix in ('A', 'B')])
 
         self.env['loyalty.program'].create({
             'name': 'Buy 2 Take 1',
@@ -3519,18 +3543,19 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_confirm_coupon_programs_one_by_one(self):
         """
-        Sync from UI is now syncing orders one by one.
-        confirm_coupon_programs should be called 6 times in this tour (6 orders created).
+        Sync from UI is now syncing orders one by one, so the per-order loyalty
+        processing (_process_loyalty) runs once per order: 6 times in this tour
+        (6 orders created).
         """
         self.create_programs([('arbitrary_name', 'gift_card')])['arbitrary_name']
         pos_order = self.env.registry.models['pos.order']
         sync_counter = {'count': 0}
 
-        def confirm_coupon_programs_patch(self, coupon_data):
+        def _process_loyalty_patch(self):
             sync_counter['count'] += 1
-            return super(pos_order, self).confirm_coupon_programs(coupon_data)
+            return super(pos_order, self)._process_loyalty()
 
-        with patch.object(pos_order, "confirm_coupon_programs", confirm_coupon_programs_patch):
+        with patch.object(pos_order, "_process_loyalty", _process_loyalty_patch):
             self.start_pos_tour("test_confirm_coupon_programs_one_by_one", login="pos_user")
             self.assertEqual(sync_counter['count'], 6)
 
@@ -3729,7 +3754,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.env['loyalty.program'].search([]).write({'pos_ok': False})
         self.loyalty_program = self.env['loyalty.program'].create({
             'name': 'Coupon Program - Pricelist',
-            'program_type': 'coupons',
+            'program_type': 'promotion',
             'trigger': 'auto',
             'applies_on': 'current',
             'pos_ok': True,

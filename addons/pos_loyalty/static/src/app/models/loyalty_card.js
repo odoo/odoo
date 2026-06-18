@@ -12,7 +12,7 @@ export class LoyaltyCard extends Base {
             return false;
         }
 
-        return DateTime.fromISO(this.expiration_date).toMillis() < DateTime.now().toMillis();
+        return DateTime.fromISO(this.expiration_date).endOf("day") < DateTime.now();
     }
 }
 

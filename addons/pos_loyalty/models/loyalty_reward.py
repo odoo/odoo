@@ -1,22 +1,47 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, api
-from odoo.fields import Domain
-
-import ast
 import json
+import math
+
+from odoo import api, models
+from odoo.fields import Domain
 
 
 class LoyaltyReward(models.Model):
     _name = 'loyalty.reward'
     _inherit = ['loyalty.reward', 'pos.load.mixin']
 
-    def _get_discount_product_values(self):
-        res = super()._get_discount_product_values()
-        for vals in res:
-            vals.update({'taxes_id': False})
-        return res
+    def _get_pos_points_cost(self, reward_lines, available_points):
+        """
+        Points this reward costs as applied on `reward_lines`.
+
+        mirror of *static/src/app/models/loyalty_reward.js* LoyaltyReward.getRewardLines
+
+        :param reward_lines: this reward's lines on the order
+        :param available_points: points the card can spend on this order (card balance
+            plus what the order issues, minus what earlier rewards already consumed)
+        """
+        self.ensure_one()
+        if self.clear_wallet:
+            return available_points
+        if self.program_id.is_payment_program:
+            # Payment line, mirrors pos.order.applyPaymentProgram: the line's
+            # tax-included total is the paid amount, the cost is paid / discount.
+            if not self.discount:
+                return 0
+            paid = -sum(reward_lines.mapped('price_subtotal_incl'))
+            return paid / self.discount
+        if self.reward_type == 'product':
+            if not self.reward_product_qty:
+                return 0
+            qty = sum(reward_lines.mapped('qty'))
+            return math.ceil(qty / self.reward_product_qty) * self.required_points
+        if self.discount_mode == 'per_point':
+            if not self.discount:
+                return 0
+            reduction = -sum(reward_lines.mapped('price_subtotal_incl'))
+            return self.currency_id.round(reduction / self.discount)
+        return self.required_points
 
     @api.model
     def _load_pos_data_domain(self, data, config):
@@ -50,12 +75,17 @@ class LoyaltyReward(models.Model):
         return read_records
 
     def _get_reward_product_domain_fields(self, config):
+        """Product fields referenced by the reward domains of this config's programs.
+
+        These must be loaded onto the POS product so the domains can be evaluated
+        client-side; otherwise a char-field condition (e.g. `name ilike ...`, which
+        stays untouched by `_replace_ilike_with_in`) would hit an undefined field.
+        """
         fields = set()
         search_domain = [('program_id', 'in', config._get_program_ids().ids)]
         domains = self.search_read(search_domain, fields=['reward_product_domain'], load=False)
         for domain in filter(lambda d: d['reward_product_domain'] != "null", domains):
-            domain = json.loads(domain['reward_product_domain'])
-            for condition in self._parse_domain(domain).values():
+            for condition in self._parse_domain(json.loads(domain['reward_product_domain'])).values():
                 field_name, _, _ = condition
                 fields.add(field_name)
         return fields
@@ -81,7 +111,6 @@ class LoyaltyReward(models.Model):
 
     def _parse_domain(self, domain):
         parsed_domain = {}
-
         for index, condition in enumerate(domain):
             if isinstance(condition, (list, tuple)) and len(condition) == 3:
                 parsed_domain[index] = condition

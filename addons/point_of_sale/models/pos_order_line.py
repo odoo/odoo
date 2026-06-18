@@ -107,6 +107,11 @@ class PosOrderLine(models.Model):
             'refunded_orderline_id': self.id,
         }
 
+    def _is_tip_line(self):
+        self.ensure_one()
+        tip_product = self.order_id.config_id.tip_product_id
+        return bool(self.order_id.config_id.iface_tipproduct) and bool(tip_product) and self.product_id == tip_product
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:

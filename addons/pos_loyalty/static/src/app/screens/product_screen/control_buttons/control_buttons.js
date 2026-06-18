@@ -5,108 +5,147 @@ import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_
 import { _t } from "@web/core/l10n/translation";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
+import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
 patch(ControlButtons.prototype, {
     setup() {
         super.setup(...arguments);
+        this.numberBuffer = useService("number_buffer");
         this.nbrRewards = computed(() => this.getPotentialRewards().length);
     },
     _getEWalletRewards(order) {
-        const claimableRewards = order.getClaimableRewards();
-        return claimableRewards.filter((reward_line) => {
-            const coupon = this.pos.models["loyalty.card"].get(reward_line.coupon_id);
-            return (
-                coupon &&
-                reward_line.reward.program_id.program_type == "ewallet" &&
-                !coupon.isExpired()
+        const appliedRewardIds = new Set(
+            order._active_payment_programs.map((entry) => entry.reward_id)
+        );
+        const rewards = [];
+        for (const program of this._getEWalletPrograms()) {
+            const reward = program.reward_ids[0];
+            if (appliedRewardIds.has(reward.id)) {
+                // Already applied to this order: don't offer it again.
+                continue;
+            }
+            const card = this.pos.models["loyalty.card"].find(
+                (card) =>
+                    card.program_id?.id === program.id &&
+                    card.partner_id?.id === order.partner_id?.id &&
+                    !card.isExpired() &&
+                    card.points > 0
             );
-        });
+            if (card) {
+                rewards.push({ reward, card_id: card.id });
+            }
+        }
+        return rewards;
     },
     _getEWalletPrograms() {
         return this.pos.models["loyalty.program"].filter((p) => p.program_type == "ewallet");
     },
-    async onClickWallet() {
+    async onClickWalletRefund() {
         const order = this.pos.getOrder();
         const eWalletPrograms = this._getEWalletPrograms();
         const orderTotal = order.priceIncl;
-        const eWalletRewards = this._getEWalletRewards(order);
-        if (eWalletRewards.length === 0 && orderTotal >= 0) {
+        if (eWalletPrograms.length === 0) {
             this.dialog.add(AlertDialog, {
                 title: _t("No valid eWallet found"),
                 body: _t("Please select a customer and a valid eWallet."),
             });
             return;
         }
-        if (orderTotal < 0 && eWalletPrograms.length >= 1) {
-            let selectedProgram = null;
-            if (eWalletPrograms.length == 1) {
-                selectedProgram = eWalletPrograms[0];
-            } else {
-                selectedProgram = await makeAwaitable(this.dialog, SelectionPopup, {
-                    title: _t("Refund with eWallet"),
-                    list: eWalletPrograms.map((program) => ({
-                        id: program.id,
-                        item: program,
-                        label: program.name,
-                    })),
-                });
+        let program = eWalletPrograms[0];
+        if (eWalletPrograms.length > 1) {
+            program = await makeAwaitable(this.dialog, SelectionPopup, {
+                title: _t("Refund with eWallet"),
+                list: eWalletPrograms.map((p) => ({ id: p.id, item: p, label: p.name })),
+            });
+            if (!program) {
+                return;
             }
-            if (selectedProgram) {
-                this.pos.addLineToCurrentOrder(
-                    {
-                        product_id: selectedProgram.trigger_product_ids[0],
-                        product_tmpl_id: selectedProgram.trigger_product_ids[0].product_tmpl_id,
-                        _e_wallet_program_id: selectedProgram,
-                        price_unit: -orderTotal,
-                    },
-                    {}
-                );
+        }
+        const triggerProducts = program.trigger_product_ids.filter(
+            (product) => product.product_tmpl_id?.canBeDisplayed
+        );
+        if (triggerProducts.length === 0) {
+            this.dialog.add(AlertDialog, {
+                title: _t("No valid eWallet found"),
+                body: _t("This eWallet has no product available to refund to."),
+            });
+            return;
+        }
+        let triggerProduct = triggerProducts[0];
+        if (triggerProducts.length > 1) {
+            triggerProduct = await makeAwaitable(this.dialog, SelectionPopup, {
+                title: _t("Select a product"),
+                list: triggerProducts.map((product) => ({
+                    id: product.id,
+                    item: product,
+                    label: product.display_name,
+                })),
+            });
+            if (!triggerProduct) {
+                return;
             }
-        } else if (eWalletRewards.length >= 1) {
-            let eWalletReward = null;
-            if (eWalletRewards.length == 1) {
-                eWalletReward = eWalletRewards[0];
-            } else {
-                eWalletReward = await makeAwaitable(this.dialog, SelectionPopup, {
-                    title: _t("Use eWallet to pay"),
-                    list: eWalletRewards.map(({ reward, coupon_id }) => ({
-                        id: reward.id,
-                        item: { reward, coupon_id },
-                        label: `${reward.description} (${reward.program_id.name})`,
-                    })),
-                });
-            }
-            if (eWalletReward) {
-                const result = order._applyReward(
-                    eWalletReward.reward,
-                    eWalletReward.coupon_id,
-                    {}
-                );
-                if (result !== true) {
-                    // Returned an error
-                    this.dialog.add(AlertDialog, {
-                        title: _t("Oh snap !"),
-                        body: result,
-                    });
-                }
-                this.pos.updateRewards();
-            }
+        }
+        await this.pos.addLineToCurrentOrder(
+            {
+                product_id: triggerProduct,
+                product_tmpl_id: triggerProduct.product_tmpl_id,
+                qty: 1,
+                price_unit: -orderTotal,
+            },
+            { paymentProgram: program }
+        );
+    },
+    async onClickWalletPay() {
+        const order = this.pos.getOrder();
+        const eWalletRewards = this._getEWalletRewards(order);
+        if (eWalletRewards.length === 0) {
+            this.dialog.add(AlertDialog, {
+                title: _t("No valid eWallet found"),
+                body: _t("Please select a customer and a valid eWallet."),
+            });
+            return;
+        }
+        let eWalletReward = null;
+        if (eWalletRewards.length == 1) {
+            eWalletReward = eWalletRewards[0];
+        } else {
+            eWalletReward = await makeAwaitable(this.dialog, SelectionPopup, {
+                title: _t("Use eWallet to pay"),
+                list: eWalletRewards.map(({ reward, card_id }) => ({
+                    id: reward.id,
+                    item: { reward, card_id },
+                    label: `${reward.description} (${reward.program_id.name})`,
+                })),
+            });
+        }
+        if (eWalletReward) {
+            // Activate the eWallet by its card code: applyCode routes payment programs
+            // into _active_payment_programs, which recomputeRewards spends via
+            // applyPaymentProgram.
+            const card = this.pos.models["loyalty.card"].get(eWalletReward.card_id);
+            await this.pos.applyCode(card.code);
+            this.pos.updateRewards();
         }
     },
     async clickPromoCode() {
+        const order = this.pos.getOrder();
         this.dialog.add(TextInputPopup, {
             title: _t("Enter Code"),
             placeholder: _t("Gift card or Discount code"),
             size: "md",
             getPayload: async (code) => {
                 code = code.trim();
-                if (code !== "") {
-                    const res = await this.pos.activateCode(code);
-                    if (res !== true) {
-                        this.notification.add(res, { type: "danger" });
-                    }
+                if (code === "") {
+                    return;
                 }
+                const loadError = await this.pos.loadCode(code);
+                if (loadError) {
+                    this.notification.add(loadError, { type: "danger" });
+                    return;
+                }
+                await this.pos.applyCode(code);
+                order.recomputeRewards();
             },
         });
     },
@@ -117,17 +156,17 @@ patch(ControlButtons.prototype, {
         // eWallet rewards are handled in the eWalletButton.
         let rewards = [];
         if (order) {
-            const claimableRewards = order.getClaimableRewards();
+            const claimableRewards = order.availableRewards;
             rewards = claimableRewards.filter(
-                ({ reward }) => reward.program_id.program_type !== "ewallet"
+                (reward) => reward.reward.program_id.program_type !== "ewallet"
             );
         }
         const result = {};
-        const discountRewards = rewards.filter(({ reward }) => reward.reward_type == "discount");
-        const freeProductRewards = rewards.filter(({ reward }) => reward.reward_type == "product");
-        const potentialFreeProductRewards = this.pos.getPotentialFreeProductRewards();
+        const discountRewards = rewards.filter((reward) => reward.reward.reward_type == "discount");
+        const freeProductRewards = rewards.filter(
+            (reward) => reward.reward.reward_type == "product"
+        );
         const avaiRewards = [
-            ...potentialFreeProductRewards,
             ...discountRewards,
             ...freeProductRewards, // Free product rewards at the end of array to prioritize them
         ];
@@ -138,58 +177,8 @@ patch(ControlButtons.prototype, {
 
         return Object.values(result);
     },
-
-    /**
-     * Applies the reward on the current order, if multiple products can be claimed opens a popup asking for which one.
-     *
-     * @param {Object} reward
-     * @param {Integer} coupon_id
-     */
-    async _applyReward(reward, coupon_id, potentialQty) {
-        const order = this.pos.getOrder();
-        order.uiState.disabledRewards.delete(reward.id);
-
-        const args = {};
-        if (reward.reward_type === "product" && reward.multi_product) {
-            const productsList = reward.reward_product_ids.map((product_id) => ({
-                id: product_id.id,
-                label: product_id.display_name,
-                item: product_id,
-            }));
-            const selectedProduct = await makeAwaitable(this.dialog, SelectionPopup, {
-                title: _t("Please select a product for this reward"),
-                list: productsList,
-            });
-            if (!selectedProduct) {
-                return false;
-            }
-            args["product"] = selectedProduct;
-        }
-        if (
-            (reward.reward_type == "product" && reward.program_id.applies_on !== "both") ||
-            (reward.program_id.applies_on == "both" && potentialQty)
-        ) {
-            const product = args["product"] || reward.reward_product_ids[0];
-            await this.pos.addLineToCurrentOrder(
-                {
-                    product_id: product,
-                    product_tmpl_id: product.product_tmpl_id,
-                    qty: potentialQty || 1,
-                },
-                {}
-            );
-            return true;
-        } else {
-            const result = order._applyReward(reward, coupon_id, args);
-            if (result !== true) {
-                // Returned an error
-                this.notification.add(result);
-            }
-            this.pos.updateRewards();
-            return result;
-        }
-    },
     async clickRewards() {
+        const order = this.pos.getOrder();
         const rewards = this.getPotentialRewards();
         if (rewards.length >= 1) {
             const rewardsList = rewards.map((reward) => ({
@@ -201,12 +190,43 @@ patch(ControlButtons.prototype, {
             this.dialog.add(SelectionPopup, {
                 title: _t("Available rewards"),
                 list: rewardsList,
-                getPayload: (selectedReward) => {
-                    this._applyReward(
-                        selectedReward.reward,
-                        selectedReward.coupon_id,
-                        selectedReward.potentialQty
-                    );
+                getPayload: async (selectedReward) => {
+                    const reward = selectedReward.reward;
+                    const programId = reward.program_id?.id;
+                    if (order._disabled_program_ids.includes(programId)) {
+                        order._disabled_program_ids = order._disabled_program_ids.filter(
+                            (id) => id !== programId
+                        );
+                        if (order.appliedPrograms.some((program) => program.id === programId)) {
+                            order.recomputeRewards();
+                            if (order._selectRewardLine(reward)) {
+                                this.numberBuffer.reset();
+                            }
+                            return;
+                        }
+                    }
+
+                    let reward_product_id;
+
+                    if (reward.multi_product) {
+                        reward_product_id = await makeAwaitable(this.dialog, SelectionPopup, {
+                            title: _t("Please select a product for this reward"),
+                            list: reward.reward_product_ids.map((product) => ({
+                                id: product.id,
+                                item: product,
+                                label: product.display_name,
+                            })),
+                        });
+                        if (!reward_product_id) {
+                            return;
+                        }
+                    }
+
+                    order._active_rewards.push({ reward_id: reward.id, reward_product_id });
+                    order.recomputeRewards();
+                    if (order._selectRewardLine(reward)) {
+                        this.numberBuffer.reset();
+                    }
                 },
             });
         }
