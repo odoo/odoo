@@ -1623,6 +1623,7 @@ class ResPartner(models.Model):
         winner_key, winner_value, winner_meta = candidates[0]
         return {'key': winner_key, 'value': winner_value, **winner_meta}
 
+    @api.depends_context('company')
     @api.depends('country_id')
     def _compute_available_additional_identifiers_metadata(self):
         for partner in self:
