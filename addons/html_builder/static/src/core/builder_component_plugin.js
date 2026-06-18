@@ -23,6 +23,7 @@ import { Plugin } from "@html_editor/plugin";
 import { Image } from "./img";
 import { BuilderUrlPicker } from "./building_blocks/builder_urlpicker";
 import { BuilderFontFamilyPicker } from "./building_blocks/builder_fontfamilypicker";
+import { BuilderDropdownItem } from "./building_blocks/builder_dropdown_item";
 
 /** @typedef {import("@odoo/owl").Component} Component */
 /**
@@ -47,6 +48,7 @@ export class BuilderComponentPlugin extends Plugin {
             BuilderUrlPicker,
             Dropdown,
             DropdownItem,
+            BuilderDropdownItem,
             BuilderButtonGroup,
             BuilderButton,
             BuilderTextInput,
