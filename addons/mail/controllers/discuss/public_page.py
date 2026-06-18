@@ -51,7 +51,7 @@ class PublicPageController(http.Controller):
         return self._response_discuss_channel_invitation(store, channel, guest_email)
 
     @mail_route("/discuss/channel/<int:channel_id>", methods=["GET"], type="http", auth="public")
-    def discuss_channel(self, channel_id, *, highlight_message_id=None, fullscreen=None):
+    def discuss_channel(self, channel_id, *, debug=None, highlight_message_id=None, fullscreen=None):
         # highlight_message_id and fullscreen are used JS side by parsing the query string
         channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
         if not channel:
