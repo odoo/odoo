@@ -20,6 +20,12 @@ class PosConfig(models.Model):
         'hr.employee', 'pos_hr_advanced_employee_hr_employee', string="Employees with manager access",
         bypass_search_access=True,
         help='Employees linked to users with the PoS Manager role are automatically added to this list')
+    logged_employee_ids = fields.Many2many(
+        'hr.employee',
+        related='current_session_id.logged_employee_ids',
+        readonly=True,
+        help="All employees who have logged into the current session",
+    )
 
     def write(self, vals):
         sudo_fields = ('minimal_employee_ids', 'basic_employee_ids', 'advanced_employee_ids')

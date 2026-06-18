@@ -431,3 +431,25 @@ registry.category("web_tour.tours").add("test_scan_employee_barcode_with_pos_hr_
             ProductScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_logged_employee_ids_tracking", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            PosHr.loginScreenIsShown(),
+            PosHr.clickLoginButton(),
+            CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
+            Dialog.confirm("Open Register"),
+            ProductScreen.isShown(),
+
+            PosHr.clickCashierName(),
+            CashierSelectionPopup.has("Pos Employee1", { run: "click" }),
+            PosHr.enterPin("2580"),
+            ProductScreen.isShown(),
+
+            PosHr.clickCashierName(),
+            CashierSelectionPopup.has("Pos Employee2", { run: "click" }),
+            PosHr.enterPin("1234"),
+            ProductScreen.isShown(),
+        ].flat(),
+});
