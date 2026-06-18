@@ -824,10 +824,11 @@ export class ApplyConfiguratorScreen extends Component {
                     // used because the web client needs to be reloaded after
                     // the configurator has updated the website.
                     window.sessionStorage.setItem("website.first_configurator_edit", "1");
+                    const defaultLanguagePath = encodeURIComponent("/website/lang/default?r=/");
                     redirect(
                         `/odoo/action-website.website_preview?website_id=${encodeURIComponent(
                             resp.website_id
-                        )}&enable_editor=1`
+                        )}&path=${defaultLanguagePath}&enable_editor=1`
                     );
                 },
             });
