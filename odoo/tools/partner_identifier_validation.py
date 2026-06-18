@@ -1,5 +1,6 @@
 import re
-from stdnum.exceptions import InvalidFormat
+from stdnum.exceptions import InvalidFormat, ValidationError
+from stdnum.sg import uen as sg_uen
 from odoo.tools import single_email_re
 
 NON_DIGIT_RE = re.compile(r'\D')
@@ -11,6 +12,12 @@ NL_OIN_RE = re.compile(r'\d{20}')
 TH_BRANCH_CODE_RE = re.compile(r'\d{5}')
 # PK Consumer Identification: 13-digit CNIC
 PK_CN_RE = re.compile(r'\d{13}')
+# Prefixes of the Peppol scheme 0195 participant identifiers: 'SGUEN'/'SGUXN' wrap a
+# Singapore UEN (for businesses and government bodies respectively) and have their
+# remainder validated as such; 'SGTST'/'SGGST' identify test participants and 'XXUID' is a
+# universal identifier (where 'XX' is an ISO 3166-1 alpha-2 country code, e.g. 'FRUID' for
+# France) whose remainder is not a UEN and is taken as-is.
+SG_PEPPOL_PREFIX_RE = re.compile(r'(?P<uen_prefix>SGUEN|SGUXN)|(?P<other_prefix>SGTST|SGGST|[A-Z]{2}UID)')
 
 
 # ===========================================================
@@ -30,6 +37,25 @@ def nl_oin_validate(value):
     if not NL_OIN_RE.fullmatch(value):
         raise InvalidFormat()
     return value
+
+
+def sg_uen_validate(value):
+    """Normalize and validate a Singapore UEN.
+
+    Also accepts the prefixed forms under which the SGNIC SMP registers participants for
+    Peppol scheme 0195. Only the prefixes wrapping a UEN have their remainder validated;
+    the test and universal identifiers are taken as they are.
+    """
+    try:
+        return sg_uen.validate(value)
+    except ValidationError:
+        prefix, remainder = value[:5].upper(), value[5:]
+        match = SG_PEPPOL_PREFIX_RE.fullmatch(prefix)
+        if match and match.group('uen_prefix'):
+            return prefix + sg_uen.validate(remainder)
+        if match and match.group('other_prefix') and remainder:
+            return prefix + remainder
+        raise
 
 
 def th_branch_code_validate(value):
