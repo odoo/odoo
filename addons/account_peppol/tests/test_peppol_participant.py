@@ -64,6 +64,34 @@ class TestPeppolParticipant(TransactionCase):
         with self.assertRaises(ValidationError):
             wizard.button_register_peppol_participant()
 
+    def test_peppol_registration_wizard_form_view(self):
+        """ Form-test for the wizard basic registrationflow. """
+        with (
+            mock_can_connect(),
+            mock_lookup_not_found(peppol_identifier='0208:0239843188'),
+            mock_connect(peppol_state='sender'),
+        ):
+            wizard_form = Form(self.env['peppol.registration'])
+            self.assertEqual(wizard_form.peppol_eas, '0208')
+            self.assertEqual(wizard_form.peppol_endpoint, '0239843188')
+            self.assertEqual(wizard_form.edi_mode, 'test')
+            self.assertEqual(wizard_form.contact_email, 'yourcompany@test.example.com')
+            self.assertEqual(wizard_form.phone_number, '+32483123456')
+            self.assertFalse(wizard_form.use_parent_connection)
+            # No authentication required in test mode: the plain "Activate" button is shown.
+            self.assertTrue(wizard_form.display_no_auth_buttons)
+            self.assertFalse(wizard_form.display_itsme_login)
+
+            # The onchange normalizes the phone number
+            wizard_form.phone_number = '+32 483 12 34 56'
+            self.assertEqual(wizard_form.phone_number, '+32483123456')
+
+            wizard = wizard_form.save()
+            self.assertTrue(wizard.smp_registration)
+            wizard.button_register_peppol_participant()
+
+        self.assertEqual(self.env.company.account_peppol_proxy_state, 'sender')
+
     def test_register_participant_for_the_first_time_as_sender_then_receiver_then_unregister(self):
         # Register the use for the very first time as sender.
         with (

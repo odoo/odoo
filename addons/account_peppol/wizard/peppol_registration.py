@@ -10,6 +10,7 @@ from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.urls import urljoin
 
+from odoo.addons.account_edi_ubl_cii.tools.partner_identifiers import validate_participant_identifier
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.addons.account_peppol.tools.peppol_iap_connector import PeppolIAPConnector
 
@@ -201,7 +202,7 @@ class PeppolRegistration(models.TransientModel):
             if all((
                 wizard.peppol_eas,
                 wizard.peppol_endpoint,
-                not wizard.selected_company_id._check_peppol_endpoint_number(warning=True),
+                not validate_participant_identifier(wizard.peppol_eas, wizard.peppol_endpoint)['valid'],
             )):
                 peppol_warnings['company_peppol_endpoint_warning'] = {
                     'level': 'warning',
