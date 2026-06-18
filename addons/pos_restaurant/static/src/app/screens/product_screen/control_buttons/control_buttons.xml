@@ -12,7 +12,7 @@
                 <t t-call="point_of_sale.controlButton">
                     <t t-set="iconClasses" t-value="'fa fa-user d-md-none'"/>
                     <t t-set="badge">
-                        <span t-out="this.currentOrder?.getCustomerCount() || 0" class="o_guests_number order-last order-md-first rounded-5 text-bg-500 d-md-block ms-auto me-md-auto px-2"/>
+                        <span t-out="this.currentOrder?.getCustomerCount() || 0" class="order-last order-md-first rounded-5 text-bg-500 d-md-block ms-auto me-md-auto px-2"/>
                     </t>
                     <t t-set="btnText">
                         <t t-if="this.currentOrder?.getCustomerCount() === 1">Guest</t>
@@ -34,8 +34,8 @@
                 <button 
                     class="control-button btn btn-lg btn-secondary d-inline-flex flex-md-column justify-content-md-center gap-1 overflow-hidden"
                     t-on-click.stop="() => this.clickTransferOrder()">
-                    <i t-attf-class="oi oi-arrow-right {{!this.ui.isSmall ? ' fa-2x fa-fw' : ''}} align-self-center opacity-50" role="img" aria-hidden="true"/>
-                    <span t-attf-class="d-flex flex-md-column flex-grow-1 flex-md-grow-0 align-items-center align-items-md-stretch min-w-0 {{this.ui.isSmall ? ' lh-sm' : ''}} text-start text-md-center">
+                    <i t-attf-class="oi oi-arrow-right {{this.ui.isSmall ? ' fa-fw' : ''}} align-self-center opacity-50" role="img" aria-hidden="true"/>
+                    <span t-attf-class="d-flex flex-md-column flex-grow-1 flex-md-grow-0 align-items-center align-self-md-stretch justify-content-md-center min-w-0 {{this.ui.isSmall ? ' lh-sm' : ''}} text-start text-md-center">
                         <span class="px-1">Transfer / Merge</span>
                     </span>
                 </button>
@@ -44,8 +44,8 @@
                     class="control-button btn btn-lg btn-secondary d-inline-flex flex-md-column justify-content-md-center gap-1 overflow-hidden"
                     t-on-click.stop="() => this.clickTransferCourse()"
                     t-att-disabled="!this.showTransferCourse()">
-                    <i t-attf-class="oi oi-arrow-down {{!this.ui.isSmall ? ' fa-2x fa-fw' : ''}} align-self-center opacity-50" role="img" aria-hidden="true"/>
-                    <span t-attf-class="d-flex flex-md-column flex-grow-1 flex-md-grow-0 align-items-center align-items-md-stretch min-w-0 {{this.ui.isSmall ? ' lh-sm' : ''}} text-start text-md-center">
+                    <i t-attf-class="oi oi-arrow-down {{this.ui.isSmall ? ' fa-fw' : ''}} align-self-center opacity-50" role="img" aria-hidden="true"/>
+                    <span t-attf-class="d-flex flex-md-column flex-grow-1 flex-md-grow-0 align-items-center align-self-md-stretch justify-content-md-center min-w-0 {{this.ui.isSmall ? ' lh-sm' : ''}} text-start text-md-center">
                         <span class="px-1">Transfer Course</span>
                     </span>
                 </button>
