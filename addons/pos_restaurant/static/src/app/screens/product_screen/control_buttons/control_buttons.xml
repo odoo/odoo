@@ -9,8 +9,34 @@
         <xpath expr="//t[@t-if='this.props.showRemainingButtons']/div/t[@name='o_pricelist_button']" position="before">
             <!-- All these buttons will only be displayed in a dialog -->
             <t t-if="this.pos.config.module_pos_restaurant">
+<<<<<<< 2fb276668c824d6fe759a7c51f9ef10677532508
                 <t t-set="guestBadge">
                     <span t-out="this.currentOrder?.getCustomerCount() || 0" class="o_guests_number order-last order-md-first rounded-5 text-bg-500 d-md-block ms-auto me-md-auto px-2"/>
+||||||| 6dc5a29d0b812706b4f89ec1cab2f1cea5dc02e4
+                <t t-call="point_of_sale.controlButton">
+                    <t t-set="iconClasses" t-value="'fa fa-user d-md-none'"/>
+                    <t t-set="badge">
+                        <span t-out="this.currentOrder?.getCustomerCount() || 0" class="o_guests_number order-last order-md-first rounded-5 text-bg-500 d-md-block ms-auto me-md-auto px-2"/>
+                    </t>
+                    <t t-set="btnText">
+                        <t t-if="this.currentOrder?.getCustomerCount() === 1">Guest</t>
+                        <t t-else="">Guests</t>
+                    </t>
+                    <t t-set="btnClasses" t-value="'o_guests_button btn-secondary '"/>
+                    <t t-set="onClick" t-value="this.clickTableGuests"/>
+=======
+                <t t-call="point_of_sale.controlButton">
+                    <t t-set="iconClasses" t-value="'fa fa-user d-md-none'"/>
+                    <t t-set="badge">
+                        <span t-out="this.currentOrder?.getCustomerCount() || 0" class="order-last order-md-first rounded-5 text-bg-500 d-md-block ms-auto me-md-auto px-2"/>
+                    </t>
+                    <t t-set="btnText">
+                        <t t-if="this.currentOrder?.getCustomerCount() === 1">Guest</t>
+                        <t t-else="">Guests</t>
+                    </t>
+                    <t t-set="btnClasses" t-value="'o_guests_button btn-secondary '"/>
+                    <t t-set="onClick" t-value="this.clickTableGuests"/>
+>>>>>>> 93b4a6c3941e7c58890595dc653b7faf73a7d8f5
                 </t>
                 <t t-set="guestBtnText">
                     <t t-if="this.currentOrder?.getCustomerCount() === 1">Guest</t>
@@ -35,8 +61,8 @@
                 <button 
                     class="control-button btn btn-lg btn-secondary d-inline-flex flex-md-column justify-content-md-center gap-1 overflow-hidden"
                     t-on-click.stop="() => this.clickTransferOrder()">
-                    <i t-attf-class="oi oi-arrow-right {{!this.ui.isSmall ? ' fa-2x fa-fw' : ''}} align-self-center opacity-50" role="img" aria-hidden="true"/>
-                    <span t-attf-class="d-flex flex-md-column flex-grow-1 flex-md-grow-0 align-items-center align-items-md-stretch min-w-0 {{this.ui.isSmall ? ' lh-sm' : ''}} text-start text-md-center">
+                    <i t-attf-class="oi oi-arrow-right {{this.ui.isSmall ? ' fa-fw' : ''}} align-self-center opacity-50" role="img" aria-hidden="true"/>
+                    <span t-attf-class="d-flex flex-md-column flex-grow-1 flex-md-grow-0 align-items-center align-self-md-stretch justify-content-md-center min-w-0 {{this.ui.isSmall ? ' lh-sm' : ''}} text-start text-md-center">
                         <span class="px-1">Transfer / Merge</span>
                     </span>
                 </button>
@@ -45,8 +71,8 @@
                     class="control-button btn btn-lg btn-secondary d-inline-flex flex-md-column justify-content-md-center gap-1 overflow-hidden"
                     t-on-click.stop="() => this.clickTransferCourse()"
                     t-att-disabled="!this.showTransferCourse()">
-                    <i t-attf-class="oi oi-arrow-down {{!this.ui.isSmall ? ' fa-2x fa-fw' : ''}} align-self-center opacity-50" role="img" aria-hidden="true"/>
-                    <span t-attf-class="d-flex flex-md-column flex-grow-1 flex-md-grow-0 align-items-center align-items-md-stretch min-w-0 {{this.ui.isSmall ? ' lh-sm' : ''}} text-start text-md-center">
+                    <i t-attf-class="oi oi-arrow-down {{this.ui.isSmall ? ' fa-fw' : ''}} align-self-center opacity-50" role="img" aria-hidden="true"/>
+                    <span t-attf-class="d-flex flex-md-column flex-grow-1 flex-md-grow-0 align-items-center align-self-md-stretch justify-content-md-center min-w-0 {{this.ui.isSmall ? ' lh-sm' : ''}} text-start text-md-center">
                         <span class="px-1">Transfer Course</span>
                     </span>
                 </button>
