@@ -48,6 +48,11 @@ function runConfiguratorFlow(industrySearchText) {
             trigger: ":iframe [data-view-xmlid='website.homepage']",
             timeout: 30000,
         },
+        {
+            content: "Check that the editor, not translation mode, is opened",
+            trigger:
+                ":iframe html[data-editable='1']:not([data-translatable='1'][data-edit_translations='1'])",
+        },
     ];
 }
 
