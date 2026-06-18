@@ -23,12 +23,12 @@ UUID_INVALID_INVOICE = 'uuid_invalid_invoice'
 UUID_VALID_INVOICE = 'uuid_valid_invoice'
 
 
-def mock_requests_request(method, url, *args, **kwargs):
+def mock_requests_request(method, endpoint, *args, **kwargs):
     response = MagicMock()
     response.status_code = 200
 
-    if method == 'GET' and 'Check/TaxNumber' in url:
-        if EINVOICE_PARTNER_VAT in url:
+    if method == 'GET' and 'Check/TaxNumber' in endpoint:
+        if EINVOICE_PARTNER_VAT in endpoint:
             response.json.return_value = [
                 {
                     'DocumentType': 'Invoice',
@@ -38,7 +38,7 @@ def mock_requests_request(method, url, *args, **kwargs):
                     'Type': 'OZEL',
                 },
             ]
-        elif COMPANY_VAT in url:
+        elif COMPANY_VAT in endpoint:
             response.json.return_value = [
                 {
                     'TaxNumber': 'text',
@@ -50,10 +50,10 @@ def mock_requests_request(method, url, *args, **kwargs):
                     'Type': 'text',
                 },
             ]
-        elif EARCHIVE_PARTNER_VAT in url:
+        elif EARCHIVE_PARTNER_VAT in endpoint:
             response.json.return_value = []
 
-    elif method == 'GET' and (match := re.fullmatch(r'/einvoice/sale/([\w-]+)/Status', url)):
+    elif method == 'GET' and (match := re.fullmatch(r'/einvoice/sale/([\w-]+)/Status', endpoint)):
         if match.group(1) == UUID_INVALID_STATUS:
             data = {
                 "InvoiceStatus": {
@@ -73,14 +73,14 @@ def mock_requests_request(method, url, *args, **kwargs):
             }
             response.get.side_effect = data.get
 
-    elif method == 'POST' and 'Send/Xml' in url:
-        if UNAUTHORIZED_ALIAS in url:
+    elif method == 'POST' and 'Send/Xml' in endpoint:
+        if UNAUTHORIZED_ALIAS in endpoint:
             response.status_code = 401
             response.text = 'Unauthorized'
-        elif SERVER_ERROR_ALIAS in url:
+        elif SERVER_ERROR_ALIAS in endpoint:
             response.status_code = 500
             response.text = 'Internal Server Error'
-        elif ERRORENOUS_ALIAS in url:
+        elif ERRORENOUS_ALIAS in endpoint:
             response.status_code = 422
             response.json.return_value = {
                 "Message": "HATALI ISTEK",
@@ -96,11 +96,11 @@ def mock_requests_request(method, url, *args, **kwargs):
                 "InvoiceNumber": "",
             }
 
-    elif method == 'GET' and '/einvoice/Purchase' in url:
-        if '/xml' in url:
+    elif method == 'GET' and '/einvoice/Purchase' in endpoint:
+        if '/xml' in endpoint:
             with file_open('l10n_tr_nilvera_einvoice/tests/test_files/fetching/invoice.xml', 'rb') as xml:
                 response = xml.read().decode()
-        elif '/pdf' in url:
+        elif '/pdf' in endpoint:
             with file_open('l10n_tr_nilvera_einvoice/tests/test_files/fetching/invoice.pdf', 'rb') as pdf:
                 # Nilvera's /pdf endpoint returns the PDF base64-encoded inside a JSON
                 # string body. NilveraClient.request() calls response.json() by default,
@@ -245,6 +245,32 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
         self.assertIn(
             invoice.message_ids[0].preview,
             "The invoice status couldn't be retrieved from Nilvera.",
+        )
+
+    @patch_nilvera_request
+    def test_cancel_earchive(self, mocked_request):
+        _, invoice = self._generate_invoice_xml(self.earchive_partner, include_invoice=True)
+        invoice.l10n_tr_nilvera_send_status = 'sent'
+
+        invoice.button_cancel_earchive()
+
+        mocked_request.assert_called_once_with(
+            'PUT',
+            endpoint=f'/earchive/Invoices/{invoice.l10n_tr_nilvera_uuid}/Cancel',
+        )
+        self.assertEqual(invoice.state, 'cancel')
+        self.assertEqual(invoice.l10n_tr_nilvera_send_status, 'cancelled')
+        self.assertIn("Cancellation request created on Nilvera.", invoice.message_ids[0].body)
+
+    def test_cancel_earchive_invalid_status(self):
+        _, invoice = self._generate_invoice_xml(self.earchive_partner, include_invoice=True)
+
+        with self.assertRaises(UserError) as error:
+            invoice.button_cancel_earchive()
+
+        self.assertEqual(
+            str(error.exception),
+            "Only e-Archive invoices that have been sent successfully to Nilvera can be cancelled.",
         )
 
     @freeze_time('2025-03-05')
