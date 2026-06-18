@@ -19,8 +19,18 @@ test("shows recent page views", async () => {
     });
     const visitorId = pyEnv["website.visitor"].create({ website_id });
     pyEnv["website.track"].create([
-        { page_id: page1, visitor_id: visitorId, visit_datetime: "2025-07-16 10:00:20" },
-        { page_id: page2, visitor_id: visitorId, visit_datetime: "2025-07-16 10:20:20" },
+        {
+            res_model: "website.page",
+            res_id: page1,
+            visitor_id: visitorId,
+            visit_datetime: "2025-07-16 10:00:20",
+        },
+        {
+            res_model: "website.page",
+            res_id: page2,
+            visitor_id: visitorId,
+            visit_datetime: "2025-07-16 10:20:20",
+        },
     ]);
     const guestId = pyEnv["mail.guest"].create({ name: `Visitor #${visitorId}` });
     // Do not add agent to the channel to ensure information is properly

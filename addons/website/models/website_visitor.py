@@ -20,9 +20,10 @@ class WebsiteTrack(models.Model):
     _log_access = False
 
     visitor_id = fields.Many2one('website.visitor', ondelete="cascade", index=True, required=True, readonly=True)
-    page_id = fields.Many2one('website.page', index=True, ondelete='cascade', readonly=True)
     url = fields.Text('Url', index=True)
     visit_datetime = fields.Datetime('Visit Date', default=fields.Datetime.now, required=True, readonly=True)
+    res_model = fields.Char(string="Model Name")
+    res_id = fields.Many2oneReference(model_field='res_model', string="Record")
 
 
 class WebsiteVisitor(models.Model):
@@ -66,7 +67,7 @@ class WebsiteVisitor(models.Model):
     website_track_ids = fields.One2many('website.track', 'visitor_id', string='Visited Pages History', readonly=True)
     visitor_page_count = fields.Integer('Page Views', compute="_compute_page_statistics", help="Total number of visits on tracked pages")
     page_ids = fields.Many2many('website.page', string="Visited Pages", compute="_compute_page_statistics", groups="website.group_website_designer", search="_search_page_ids")
-    page_count = fields.Integer('# Visited Pages', compute="_compute_page_statistics", help="Total number of tracked page visited")
+    page_count = fields.Integer('# Visited Pages', compute="_compute_page_statistics", help="Number of distinct tracked pages visited")
     last_visited_page_id = fields.Many2one('website.page', string="Last Visited Page", compute="_compute_last_visited_page_id")
 
     # Time fields
@@ -119,34 +120,72 @@ class WebsiteVisitor(models.Model):
 
     @api.depends('website_track_ids')
     def _compute_page_statistics(self):
+        domain = Domain('visitor_id', 'in', self.ids) & Domain('url', '!=', False)
+
         results = self.env['website.track']._read_group(
-            [('visitor_id', 'in', self.ids), ('url', '!=', False)], ['visitor_id', 'page_id'], ['__count'])
+            domain=domain,
+            groupby=['visitor_id', 'res_model', 'res_id'],
+            aggregates=['__count'],
+        )
         mapped_data = {}
-        for visitor, page, count in results:
-            visitor_info = mapped_data.get(visitor.id, {'page_count': 0, 'visitor_page_count': 0, 'page_ids': set()})
-            visitor_info['visitor_page_count'] += count
-            visitor_info['page_count'] += 1
-            if page:
-                visitor_info['page_ids'].add(page.id)
-            mapped_data[visitor.id] = visitor_info
+        for visitor, res_model, res_id, count in results:
+            stats = mapped_data.setdefault(visitor.id, {'ids': set(), 'count': 0})
+            stats['count'] += count
+            if res_model == 'website.page' and res_id:
+                stats['ids'].add(res_id)
 
         for visitor in self:
-            visitor_info = mapped_data.get(visitor.id, {'page_count': 0, 'visitor_page_count': 0, 'page_ids': set()})
-            # sudo - website.visitor: access to page_ids is restricted to group_website_designer
-            visitor.sudo().page_ids = [(6, 0, visitor_info['page_ids'])]
-            visitor.visitor_page_count = visitor_info['visitor_page_count']
-            visitor.page_count = visitor_info['page_count']
+            stats = mapped_data.get(visitor.id, {'ids': [], 'count': 0})
+            visitor.page_ids = [(6, 0, list(stats['ids']))]
+            visitor.visitor_page_count = stats['count']
+            visitor.page_count = len(stats['ids'])
+
+    def _get_visitor_statistics(self, rel_model, track_field='res_id', extra_domain=None):
+        """
+        Return visitor statistics from `website.track`.
+
+        :param track_field: Field on `website.track` to aggregate
+        :param rel_model: Filter on res_model
+        :param extra_domain: Additional domain filters
+        :return: dict mapping visitor.id to
+                    {'ids': [record ids], 'count': total_visits}
+        """
+        # Build base domain
+        domain = Domain('visitor_id', 'in', self.ids) & Domain('res_model', '=', rel_model)
+
+        groupby = ['visitor_id']
+        if extra_domain:
+            domain &= Domain(extra_domain)
+
+        Track = self.env['website.track']
+        results = Track._read_group(
+            domain=domain,
+            groupby=groupby,
+            aggregates=[f'{track_field}:array_agg', '__count'],
+        )
+        return {
+            visitor.id: {
+                'ids': ids or [],
+                'count': count or 0,
+            }
+            for visitor, ids, count in results
+        }
 
     def _search_page_ids(self, operator, value):
-        return [('website_track_ids.page_id.name', operator, value)]
+        return [
+            ('website_track_ids.res_model', '=', 'website.page'),
+            ('website_track_ids.res_id.name', operator, value),
+        ]
 
-    @api.depends('website_track_ids.page_id')
+    @api.depends('website_track_ids.res_id', 'website_track_ids.res_model')
     def _compute_last_visited_page_id(self):
+        domain = Domain('visitor_id', 'in', self.ids) & Domain('res_model', '=', 'website.page') & Domain('res_id', '!=', False)
+
         results = self.env['website.track']._read_group(
-            [('visitor_id', 'in', self.ids), ('page_id', '!=', False)],
-            ['visitor_id', 'page_id'],
+            domain=domain,
+            groupby=['visitor_id', 'res_id'],
             order='visit_datetime:max')
-        mapped_data = {visitor.id: page.id for visitor, page in results}
+        mapped_data = dict(results)
         for visitor in self:
             visitor.last_visited_page_id = mapped_data.get(visitor.id, False)
 
@@ -203,7 +242,7 @@ class WebsiteVisitor(models.Model):
         :param timezone: visitors time zone
         :param url: optional url to create a track record at the same time
         :param kwargs: additional values to include in the track record, including
-            page_id: the id of the page visited
+            res_model/res_id for the visited resource
         :return: a tuple containing the visitor id and the upsert result (either
             `inserted` or `updated).
         """
@@ -270,6 +309,32 @@ class WebsiteVisitor(models.Model):
                 cols.append(SQL(", %s", SQL.identifier(fname)))
                 vals.append(SQL(", %s", val))
         return SQL().join(cols), SQL().join(vals)
+
+    def visitor_view_action_button(self):
+        """Return an action to display tracking records for this visitor.
+
+        Reads model name and title from context, and opens a list/graph view
+        of `website.track` filtered by the current visitor and model.
+
+        :return: action dict to open tracking views
+        """
+        self.ensure_one()
+        context = self.env.context
+        if not context.get('model_name'):
+            raise UserError(_("Model information is required to view visitor tracking details."))
+        return {
+            'type': 'ir.actions.act_window',
+            'name': context.get('title', _('Views History')),
+            'res_model': 'website.track',
+            'view_mode': 'list',
+            'views': [
+                (self.env.ref("website.website_visitor_track_view_base_list").id, 'list'),
+            ],
+            'domain': [
+                ('visitor_id', '=', self.id),
+                ('res_model', '=', context.get('model_name')),
+            ],
+        }
 
     def _merge_visitor(self, target):
         """ Merge an anonymous visitor data to a partner visitor then unlink

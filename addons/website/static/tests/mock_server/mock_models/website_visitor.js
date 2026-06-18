@@ -9,7 +9,8 @@ export class WebsiteTrack extends models.ServerModel {
 
     visitor_id = fields.Many2one({ relation: "website.visitor" });
 
-    page_id = fields.Many2one({ relation: "website.page" });
+    res_model = fields.Char("Model Name");
+    res_id = fields.Integer("Viewed Record");
     url = fields.Char("Url");
     visit_datetime = fields.Datetime("Visit DateTime");
 }

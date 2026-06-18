@@ -265,7 +265,10 @@ class WebsiteLocatedMixin(models.AbstractModel):
                 record.website_absolute_url = url_join(record.get_base_url(), record.website_url)
 
     def _get_extra_tracking_values(self, **kwargs):
-        return {}
+        return {
+            'res_model': kwargs.get('res_model'),
+            'res_id': kwargs.get('res_id'),
+        }
 
 
 class WebsitePublishedMixin(models.AbstractModel):

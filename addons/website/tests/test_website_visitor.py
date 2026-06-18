@@ -112,7 +112,8 @@ class WebsiteVisitorTestsCommon(MockVisitor, HttpCaseWithUserDemo):
 
     def assertPageTracked(self, visitor, page):
         """ Check a page is in visitor tracking data """
-        self.assertIn(page, visitor.website_track_ids.page_id)
+        page_tracks = visitor.website_track_ids.filtered(lambda track: track.res_model == 'website.page' and track.res_id == page.id)
+        self.assertTrue(page_tracks, f"Page {page} is not tracked for visitor {visitor}")
         self.assertIn(page, visitor.page_ids)
 
     def assertVisitorTracking(self, visitor, pages):
@@ -169,7 +170,8 @@ class WebsiteVisitorTestsCommon(MockVisitor, HttpCaseWithUserDemo):
             'website_id': self.ref('base.default_website'),
             'access_token': self.partner_admin.id,
             'website_track_ids': [(0, 0, {
-                'page_id': self.tracked_page.id,
+                'res_model': 'website.page',
+                'res_id': self.tracked_page.id,
                 'url': self.tracked_page.url
             })]
         }
@@ -181,7 +183,8 @@ class WebsiteVisitorTestsCommon(MockVisitor, HttpCaseWithUserDemo):
             'website_id': self.ref('base.default_website'),
             'access_token': '%032x' % random.randrange(16**32),
             'website_track_ids': [(0, 0, {
-                'page_id': self.tracked_page_2.id,
+                'res_model': 'website.page',
+                'res_id': self.tracked_page_2.id,
                 'url': self.tracked_page_2.url
             })]
         }

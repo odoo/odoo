@@ -253,7 +253,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 self.env.user.partner_id.id, website_id=self.website.id
             )
             self.env["website.track"].create([
-                {"visitor_id": visitor[0], "product_id": product_id}
+                {"visitor_id": visitor[0], "res_model": "product.product", "res_id": product_id}
                 for product_id in viewed_products.ids
             ])
             with_variants = self.WebsiteSnippetFilter.with_context(

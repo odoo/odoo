@@ -1,6 +1,6 @@
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 
-import { Command, makeKwArgs, serverState } from "@web/../tests/web_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { websiteModels } from "@website/../tests/helpers";
 
 export class WebsiteVisitor extends websiteModels.WebsiteVisitor {
@@ -70,28 +70,38 @@ export class WebsiteVisitor extends websiteModels.WebsiteVisitor {
         super._to_store(store);
         /** @type {import("mock_models").WebsiteTrack} */
         const WebsiteTrack = this.env["website.track"];
+        const WebsitePage = this.env["website.page"];
         for (const visitor of this) {
             const visitor_model = this.browse(visitor.id);
             const [data] = this._read_format(visitor.id, []);
             const track_records = WebsiteTrack.search_read(
                 [
-                    ["page_id", "!=", false],
+                    ["res_model", "=", "website.page"],
+                    ["res_id", "!=", false],
                     ["visitor_id", "=", visitor.id],
                 ],
                 { limit: 3 }
             );
-            data.last_track_ids = mailDataHelpers.Store.many(
-                WebsiteTrack.browse(track_records.map((t) => t.id)),
-                makeKwArgs({
-                    fields: [mailDataHelpers.Store.one("page_id", ["name"]), "visit_datetime"],
-                    sort: (a, b) => {
-                        if (a.visit_datetime === b.visit_datetime) {
-                            return a.id - b.id;
-                        }
-                        return a.visit_datetime < b.visit_datetime ? 1 : -1;
-                    },
+            // Add track records to the store with only the fields the frontend needs.
+            store.add(WebsiteTrack.browse(track_records.map((t) => t.id)), [
+                "res_model",
+                "res_id",
+                "visit_datetime",
+            ]);
+            // Add referenced website.page records so the frontend resRecord getter
+            // can resolve them by res_id.
+            store.add(WebsitePage.browse(track_records.map((t) => t.res_id).filter(Boolean)), [
+                "name",
+            ]);
+            // Sort newest first (visit_datetime DESC, id DESC) to match Python ordering.
+            data.last_track_ids = track_records
+                .sort((a, b) => {
+                    if (a.visit_datetime === b.visit_datetime) {
+                        return b.id - a.id;
+                    }
+                    return a.visit_datetime < b.visit_datetime ? 1 : -1;
                 })
-            );
+                .map((t) => t.id);
             store._add_record_fields(visitor_model, data);
         }
     }
