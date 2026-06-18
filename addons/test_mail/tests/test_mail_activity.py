@@ -41,6 +41,12 @@ class TestActivityRights(TestActivityCommon):
                 return Domain.FALSE
             return DEFAULT
 
+        def _employee_no_company_access(records, operation):
+            """Simulates employee having no access due to company restriction"""
+            if records.company_id not in records.env.user.company_ids and not records.env.su:
+                return Domain.FALSE
+            return Domain.TRUE
+
         test_activity = self.env['mail.activity'].with_user(self.user_admin).create({
             'activity_type_id': self.env.ref('test_mail.mail_act_test_todo').id,
             'res_model_id': self.env.ref('test_mail.model_mail_test_activity').id,
@@ -53,14 +59,23 @@ class TestActivityRights(TestActivityCommon):
         self.assertEqual(action['res_model'], self.test_record._name)
         self.assertEqual(action['res_id'], self.test_record.id)
 
-        # If user has no access to the record, should return activity view instead
+        # If user has no access to the record, should return activity popup instead
         with patch.object(MailTestActivity, '_access_domain', autospec=True, side_effect=_employee_no_access):
             self.env.transaction.invalidate_access_cache()
+            test_activity.invalidate_recordset(['has_res_access'])
             self.assertFalse(self.test_record.with_user(self.user_employee).has_access('read'))
 
             action = test_activity.with_user(self.user_employee).action_open_document()
             self.assertEqual(action['res_model'], 'mail.activity')
             self.assertEqual(action['res_id'], test_activity.id)
+
+        # Multi-company restriction
+        self.test_record.company_id = self.company_2
+
+        with patch.object(MailTestActivity, '_access_domain', autospec=True, side_effect=_employee_no_company_access):
+            self.env.transaction.invalidate_access_cache()
+            test_activity.invalidate_recordset(['has_res_access'])
+            self.assertFalse(self.test_record.with_user(self.user_employee).has_access('read'))
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_activity_security_user_access(self):
