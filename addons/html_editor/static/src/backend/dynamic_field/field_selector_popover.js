@@ -2,10 +2,47 @@ import { Component, onWillStart, props, proxy, t } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { ModelFieldSelectorPopover } from "@web/core/model_field_selector/model_field_selector_popover";
+
+class EditorModelFieldSelectorPopover extends ModelFieldSelectorPopover {
+    // When clicking on a field of which we can follow relation, if it has a
+    // name field in its subfields, we return the name by default.
+    async selectFieldDisplayname(fieldDef) {
+        const { modelsInfo } = await this.keepLast.add(
+            this.fieldService.loadPath(
+                fieldDef.is_property ? fieldDef.relation : this.state.page.resModel,
+                `${fieldDef.name}.*`
+            )
+        );
+        const { fieldDefs } = modelsInfo.at(-1);
+        const fieldName = "name" in fieldDefs ? `${fieldDef.name}.name` : fieldDef.name;
+        const fieldData = "name" in fieldDefs ? fieldDefs.name : fieldDef;
+        return [fieldName, fieldData];
+    }
+
+    async selectField(field) {
+        if (field.type === "properties") {
+            return this.followRelation(field);
+        }
+        const [fieldName, fieldData] = this.canFollowRelationFor(field)
+            ? await this.selectFieldDisplayname(field)
+            : [field.name, field];
+        this.keepLast.add(Promise.resolve());
+        this.state.page.selectedName = fieldName;
+        this.props.update(this.state.page.path, fieldData);
+        this.props.close(true);
+    }
+}
+
+class EditorModelFieldSelector extends ModelFieldSelector {
+    static components = {
+        Popover: EditorModelFieldSelectorPopover,
+    };
+}
 
 export class FieldSelectorPopover extends Component {
     static template = "html_editor.FieldSelectorPopover";
-    static components = { ModelFieldSelector };
+    static components = { EditorModelFieldSelector };
     props = props({
         resModel: t.string(),
         validate: t.function(),

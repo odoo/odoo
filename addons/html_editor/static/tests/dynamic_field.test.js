@@ -12,13 +12,18 @@ import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 describe.current.tags("desktop");
 
+class OneModel extends models.Model {
+    name = fields.Char({ string: "The many2one model name" });
+}
+
 class SomeModel extends models.Model {
     _name = "some.model";
 
     field = fields.Char({ string: "My little field" });
+    many2one_model_id = fields.Many2one({ relation: "one.model" });
 }
 
-defineModels([SomeModel]);
+defineModels([OneModel, SomeModel]);
 
 function getEditorOptions() {
     return {
@@ -50,6 +55,32 @@ test("add dynamic field", async () => {
         <p data-selection-placeholder=""><br></p>
             <div class="o-paragraph">
                 <t data-oe-expression-readable="My little field" t-out="object.field" data-oe-demo="My little field" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">My little field</t>[]
+            </div>
+        <p data-selection-placeholder=""><br></p>
+    `)
+    );
+});
+
+test("add many2one dynamic field should take the name by default", async () => {
+    const { editor, el } = await setupEditor(`<div>[hop hop]</div>`, getEditorOptions());
+    await insertText(editor, "/");
+    await contains(".o-we-powerbox .o-we-command-name:contains(/^Field$/)").click();
+
+    await contains(".o-dynamic-field-popover .o_model_field_selector_value").click();
+    await contains(
+        ".o_model_field_selector_popover_page li[data-name='many2one_model_id'] button"
+    ).click();
+    expect(".o-dynamic-field-popover input[name='label_value']").toHaveValue(
+        "The many2one model name"
+    );
+
+    await contains(".o-dynamic-field-popover button.btn-primary").click();
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        unformat(`
+        <p data-selection-placeholder=""><br></p>
+            <div class="o-paragraph">
+                <t data-oe-expression-readable="The many2one model name" t-out="object.many2one_model_id.name" data-oe-demo="The many2one model name" data-oe-t-inline="true" data-oe-protected="true" contenteditable="false">The many2one model name</t>[]
             </div>
         <p data-selection-placeholder=""><br></p>
     `)
