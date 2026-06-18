@@ -194,17 +194,17 @@
 
 <!-- Event - Calendar Links -->
 <template id="event_calendar_links">
-    <h5>Add to your calendar</h5>
-    <div id="add_to_calendar" class="o_event_add_to_calendar_btns d-flex flex-wrap gap-3 mt-2">
+    <h5 class="fs-6">Add to</h5>
+    <div id="add_to_calendar" class="o_event_add_to_calendar_btns d-flex flex-wrap gap-2 mt-2">
         <a role="button" class="o_outlook_calendar btn bg-white"
             t-att-href="iCal_url">
             <img src="/event/static/src/img/outlook-calendar.svg" alt="Outlook" loading="lazy"/>
-            Add to iCal/Outlook
+            iCal/Outlook
         </a>
         <a role="button" class="o_google_calendar btn bg-white"
             t-att-href="google_url">
             <img src="/event/static/src/img/google-calendar.svg" alt="Google Agenda" loading="lazy"/>
-            Add to Google Agenda
+            Google Agenda
         </a>
     </div>
 </template>
@@ -445,17 +445,12 @@
 </template>
 
 <template id="registration_ticket_access" name="Registration Ticket Access">
-    <div class="row mb-2 o_wevent_registration_ticket_access">
-        <div class="col-12 mb-2 d-flex flex-column flex-md-row align-items-stretch align-items-md-baseline justify-content-md-start">
-            <a t-if="event.address_id" class="btn btn-primary" title="Download All Tickets" target="_blank"
-                t-attf-href="/event/{{ event.id }}/my_tickets?registration_ids={{ attendees.ids }}&amp;tickets_hash={{ event._get_tickets_access_hash(attendees.ids) }}">
-                Download Tickets
-            </a>
-            <a t-else="" class="btn btn-primary" title="Join online" target="_blank"
-                t-att-href="event.event_url or event.website_url">
-                Join online <i class="ms-1 fa fa-globe"/>
-            </a>
-        </div>
+    <div class="o_wevent_registration_ticket_access">
+        <a t-if="event.address_id" class="btn btn-primary text-nowrap" title="Download All Tickets" target="_blank"
+            t-attf-href="/event/{{ event.id }}/my_tickets?registration_ids={{ attendees.ids }}&amp;tickets_hash={{ event._get_tickets_access_hash(attendees.ids) }}">
+            <i class="fa fa-download me-1"/>
+            Tickets
+        </a>
     </div>
 </template>
 
