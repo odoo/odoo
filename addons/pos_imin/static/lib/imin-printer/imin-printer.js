@@ -162,24 +162,33 @@
       var this$1$1 = this;
 
     return new Promise(function (resolve, reject) {
+      var settled = false;
+      var connectTimeout = setTimeout(function () {
+        if (!settled) { settled = true; resolve(false); }
+      }, 5000);
       var Socket = window.MozWebSocket || window.WebSocket;
-      if (!Socket) { reject(assert(Socket, 'Browser does not support Websocket!')); }
+      if (!Socket) { settled = true; clearTimeout(connectTimeout); reject(assert(Socket, 'Browser does not support Websocket!')); }
       try {
         var ws = new Socket(
           ("" + (this$1$1.protocol) + (this$1$1.address) + ":" + (this$1$1.port) + (this$1$1.prefix))
         );
         ws.onopen = function (e) {
+          if (settled) { return; }
+          settled = true;
+          clearTimeout(connectTimeout);
           this$1$1.heartCheck();
           if (ws.readyState === ws.OPEN) {
             resolve(true);
           } else {
-            reject();
+            resolve(false);
           }
         };
         ws.onclose = function (e) {
+          if (!settled) { settled = true; clearTimeout(connectTimeout); resolve(false); }
           this$1$1.reconnect();
         };
-        ws.onerror = function (e) {
+        ws.onerror = function () {
+          if (!settled) { settled = true; clearTimeout(connectTimeout); resolve(false); }
           this$1$1.reconnect();
         };
         ws.onmessage = function (e) {
@@ -402,7 +411,7 @@
           type !== void 0 ? (type <= 0 ? 0 : type >= 2 ? 2 : type) : void 0
         )
       );
-
+  
     };
     /**
      * Print a row of the table (not support Arabic)
@@ -565,7 +574,7 @@
      */
     IminPrinter.prototype.printSingleBitmap = async function printSingleBitmap(bitmap, alignmentMode) {
       var this$1$1 = this;
-
+    
       return new Promise(async (resolve, reject) => {
         var image = new Image();
         var regex = /^\s*data:([a-z]+\/[a-z0-9-+.]+(;[a-z-]+=[a-z0-9-]+)?)?(;base64)?,([a-z0-9!$&',()*+;=\-._~:@\/?%\s]*?)\s*$/i;
@@ -575,7 +584,7 @@
         } else {
           image.src = bitmap;
         }
-
+    
         image.onload = async function () {
           try {
             var formData = new FormData();
@@ -583,7 +592,7 @@
               'file',
               dataURItoBlob(compressImg(image, dataURItoBlob(bitmap).type))
             );
-
+    
             const response = await fetch(
               `${TCPConnectProtocol.HTTP}${this$1$1.address}:${this$1$1.port}${TCPConnectPrefix.HTTP}`,
               {
@@ -591,7 +600,7 @@
                 body: formData
               }
             );
-
+    
             if (response.ok) {
               const resultValue = await response.text();
               if (resultValue) {
@@ -605,8 +614,7 @@
 
                 let hasBeenCalled = false;
                 if (!hasBeenCalled) {
-                  this$1$1.partialCut();
-                  hasBeenCalled = true;
+                  hasBeenCalled = true; 
                   resolve(1);
                 }
               } else {
@@ -619,13 +627,13 @@
             reject(new Error(`Network request failed: ${error.message}`));
           }
         };
-
+    
         image.onerror = function () {
           reject(new Error("Failed to load image"));
         };
       });
     };
-
+    
     IminPrinter.prototype.partialCut = function partialCut () {
       this.send(this.sendParameter('', 5));
     };
@@ -691,9 +699,37 @@
     };
 
     /**
+     * Get printer paper distance
+     */
+    IminPrinter.prototype.getPrinterPaperDistance = function getPrinterPaperDistance () {
+      var this$1$1 = this;
+      return new Promise(function (resolve) {
+        this$1$1.send(this$1$1.sendParameter('', 90));
+        this$1$1.callback = function (data) {
+          console.log('getPrinterPaperDistance callback:', JSON.stringify(data));
+          resolve(data.data);
+        };
+      })
+    };
+
+    /**
+     * Get printer cut times
+     */
+    IminPrinter.prototype.getPrinterCutTimes = function getPrinterCutTimes () {
+      var this$1$1 = this;
+      return new Promise(function (resolve) {
+        this$1$1.send(this$1$1.sendParameter('', 91));
+        this$1$1.callback = function (data) {
+          console.log('getPrinterCutTimes callback:', JSON.stringify(data));
+          resolve(data.data);
+        };
+      })
+    };
+
+    /**
      * labelInitCanvas
      * @param {Object} labelData
-     */
+     */ 
     IminPrinter.prototype.labelInitCanvas = function labelInitCanvas (labelData) {
       this.send(
         this.sendParameter('', 200, void 0, labelData)
@@ -703,7 +739,7 @@
     /**
      * labelAddText
      * @param {Object} labelData
-     */
+     */ 
     IminPrinter.prototype.labelAddText = function labelAddText (labelData) {
       this.send(
         this.sendParameter('', 201, void 0, labelData)
@@ -713,7 +749,7 @@
     /**
      * labelAddBarCod
      * @param {Object} labelData
-     */
+     */ 
     IminPrinter.prototype.labelAddBarCod = function labelAddBarCod (labelData) {
       this.send(
         this.sendParameter('', 202, void 0, labelData)
@@ -723,7 +759,7 @@
     /**
      * labelAddQrCode
      * @param {Object} labelData
-     */
+     */ 
     IminPrinter.prototype.labelAddQrCode = function labelAddQrCode (labelData) {
       this.send(
         this.sendParameter('', 203, void 0, labelData)
@@ -733,11 +769,11 @@
       /**
      * labelAddBitmap
      * @param {Object} labelData
-     */
+     */ 
       IminPrinter.prototype.labelAddBitmap = function labelAddBitmap (bitmap, labelData) {
 
         var this$1$1 = this;
-
+    
       return new Promise((resolve, reject) => {
         var image = new Image();
         var regex = /^\s*data:([a-z]+\/[a-z0-9-+.]+(;[a-z-]+=[a-z0-9-]+)?)?(;base64)?,([a-z0-9!$&',()*+;=\-._~:@\/?%\s]*?)\s*$/i;
@@ -747,14 +783,14 @@
         } else {
           image.src = bitmap;
         }
-
+    
         image.onload = function () {
           var formData = new FormData();
           formData.append(
             'file',
             dataURItoBlob(compressImg(image, dataURItoBlob(bitmap).type))
           );
-
+    
           var XHR = null;
           if (window.XMLHttpRequest) {
             XHR = new XMLHttpRequest();
@@ -764,12 +800,12 @@
             reject(new Error("XMLHttpRequest is not supported"));
             return;
           }
-
+    
           XHR.open(
             'POST',
             ("" + (TCPConnectProtocol.HTTP) + (this$1$1.address) + ":" + (this$1$1.port) + (TCPConnectPrefix.HTTP))
           );
-
+    
           XHR.onreadystatechange = function () {
             if (XHR.readyState === 4) {
               if (XHR.status === 200) {
@@ -783,7 +819,7 @@
                       labelData
                     )
                   );
-
+    
                   this$1$1.callback = (data) => {
                     resolve(data.data.value);
                   };
@@ -796,73 +832,73 @@
               XHR = null;
             }
           };
-
+    
           XHR.send(formData);
         };
-
+    
         image.onerror = function () {
           reject(new Error("Failed to load image"));
         };
       });
-      };
+      };  
 
       /**
      * labelAddArea
      * @param {Object} labelData
-     */
+     */ 
       IminPrinter.prototype.labelAddArea = function labelAddArea (labelData) {
         this.send(
           this.sendParameter('', 205, void 0, labelData)
         )
-      };
+      }; 
 
       /**
      * labelPrintCanvas
      * @param {Object} labelData
-     */
+     */ 
       IminPrinter.prototype.labelPrintCanvas = function labelPrintCanvas (labelData) {
         this.send(
           this.sendParameter('', 206, void 0, labelData)
         )
-      };
+      }; 
 
     /**
      * labelLearning
      * @param {Object} labelData
-     */
+     */ 
           IminPrinter.prototype.labelLearning = function labelLearning (labelData) {
             this.send(
               this.sendParameter('', 207, void 0, labelData)
             )
-          };
+          }; 
 
       /**
      * setPrintMode
      * @param {Object} labelData
-     */
+     */ 
        IminPrinter.prototype.setPrintMode = function setPrintMode (labelData) {
         this.send(
           this.sendParameter('', 208, void 0, labelData)
         )
-      };
-
+      }; 
+    
     /**
      * getPrintModel
      * @param {Object} labelData
-     */
+     */ 
           IminPrinter.prototype.getPrintModel = function getPrintModel (labelData) {
             this.send(
               this.sendParameter('', 209, void 0, labelData)
             )
-          };
+          };  
     /**
      * printLabelBitmap
      * @param {Object} labelData
-     */
+     */ 
     IminPrinter.prototype.printLabelBitmap = function printLabelBitmap (bitmap, labelData) {
 
       var this$1$1 = this;
-
+  
     return new Promise((resolve, reject) => {
       var image = new Image();
       var regex = /^\s*data:([a-z]+\/[a-z0-9-+.]+(;[a-z-]+=[a-z0-9-]+)?)?(;base64)?,([a-z0-9!$&',()*+;=\-._~:@\/?%\s]*?)\s*$/i;
@@ -872,14 +908,14 @@
       } else {
         image.src = bitmap;
       }
-
+  
       image.onload = function () {
         var formData = new FormData();
         formData.append(
           'file',
           dataURItoBlob(compressImg(image, dataURItoBlob(bitmap).type))
         );
-
+  
         var XHR = null;
         if (window.XMLHttpRequest) {
           XHR = new XMLHttpRequest();
@@ -889,12 +925,12 @@
           reject(new Error("XMLHttpRequest is not supported"));
           return;
         }
-
+  
         XHR.open(
           'POST',
           ("" + (TCPConnectProtocol.HTTP) + (this$1$1.address) + ":" + (this$1$1.port) + (TCPConnectPrefix.HTTP))
         );
-
+  
         XHR.onreadystatechange = function () {
           if (XHR.readyState === 4) {
             if (XHR.status === 200) {
@@ -908,7 +944,7 @@
                     labelData
                   )
                 );
-
+  
                 this$1$1.callback = (data) => {
                   resolve(data.data.value);
                 };
@@ -921,16 +957,16 @@
             XHR = null;
           }
         };
-
+  
         XHR.send(formData);
       };
-
+  
       image.onerror = function () {
         reject(new Error("Failed to load image"));
       };
     });
-    };
-
+    };  
+          
 
 
     return IminPrinter;
