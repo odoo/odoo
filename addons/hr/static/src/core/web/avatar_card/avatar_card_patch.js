@@ -1,5 +1,6 @@
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 
+import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
@@ -13,6 +14,22 @@ const avatarCardPatch = {
     setup() {
         super.setup();
         this.orm = useService("orm");
+    },
+    /**
+     * Whether the employee's company is not active but can be activated by the
+     * current user, in which case a dedicated "View Profile" dropdown is shown.
+     *
+     * @returns {boolean}
+     */
+    get canActivateEmployeeCompany() {
+        if (!this.employeeCompany) {
+            return false;
+        }
+        const activeCompanyIds = user.activeCompanies.map((c) => c.id);
+        if (activeCompanyIds.includes(this.employeeCompany.id)) {
+            return false;
+        }
+        return user.allowedCompanies.map((c) => c.id).includes(this.employeeCompany.id);
     },
     /** @override */
     get displayAvatar() {
@@ -33,6 +50,14 @@ const avatarCardPatch = {
         }
         return this.partner?.employee_id;
     },
+    /**
+     * Company the employee belongs to, if any.
+     *
+     * @returns {object|undefined}
+     */
+    get employeeCompany() {
+        return this.employee?.company_id;
+    },
     /** @override */
     get name() {
         return this.employee?.name || super.name;
@@ -50,7 +75,9 @@ const avatarCardPatch = {
     },
     /** @override */
     get showViewProfileBtn() {
-        return super.showViewProfileBtn || Boolean(this.employee);
+        return (
+            (super.showViewProfileBtn || Boolean(this.employee)) && !this.canActivateEmployeeCompany
+        );
     },
     /** @override */
     get user() {
@@ -64,7 +91,24 @@ const avatarCardPatch = {
         if (!this.employee) {
             return super.getProfileAction(...arguments);
         }
+        const activeCompanyIds = user.activeCompanies.map((c) => c.id);
+        if (!activeCompanyIds.includes(this.employeeCompany.id)) {
+            return super.getProfileAction(...arguments);
+        }
         return this.orm.call("hr.employee", "get_record_default_action", [this.employee.id]);
+    },
+    /**
+     * Activate the employee's company before opening its profile, so the
+     * employee form can be displayed for a currently inactive company.
+     *
+     * @returns {Promise<void>}
+     */
+    async onClickViewEmployeeProfile() {
+        const activeCompanyIds = user.activeCompanies.map((c) => c.id);
+        user.activateCompanies([...activeCompanyIds, this.employeeCompany.id], { reload: false });
+        const action = await this.getProfileAction();
+        this.props.close();
+        this.actionService.doAction(action);
     },
 };
 export const unpatchAvatarCard = patch(AvatarCard.prototype, avatarCardPatch);
