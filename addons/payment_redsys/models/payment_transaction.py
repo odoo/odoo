@@ -87,6 +87,16 @@ class PaymentTransaction(models.Model):
         base_url = self.provider_id.get_base_url()
         return_url = urljoin(base_url, RedsysController._return_url)
         webhook_url = urljoin(base_url, RedsysController._webhook_url)
+        emv3ds_payload = {
+            'billAddrCity': self.partner_city,
+            'billAddrCountry': COUNTRY_NUMERIC_CODES.get(self.partner_country_id.code, ''),
+            'billAddrLine1': self.partner_address,
+            'billAddrPostCode': self.partner_zip,
+            'cardholderName': self.partner_name,
+            'email': self.partner_email,
+        }
+        if self.partner_state_id.code:
+            emv3ds_payload['billAddrState'] = self.partner_state_id.code
         merchant_parameters = {
             'DS_MERCHANT_AMOUNT': str(converted_amount),
             'DS_MERCHANT_CURRENCY': self.currency_id.iso_numeric,
@@ -100,15 +110,7 @@ class PaymentTransaction(models.Model):
             'DS_MERCHANT_PAYMETHODS': const.PAYMENT_METHODS_MAPPING.get(
                 self.payment_method_id.code, 'C'
             ),
-            'DS_MERCHANT_EMV3DS': {
-                'billAddrCity': self.partner_city,
-                'billAddrCountry': COUNTRY_NUMERIC_CODES.get(self.partner_country_id.code, ''),
-                'billAddrLine1': self.partner_address,
-                'billAddrPostCode': self.partner_zip,
-                'billAddrState': self.partner_state_id.code,
-                'cardholderName': self.partner_name,
-                'email': self.partner_email,
-            }
+            'DS_MERCHANT_EMV3DS': emv3ds_payload
         }
         return merchant_parameters
 
