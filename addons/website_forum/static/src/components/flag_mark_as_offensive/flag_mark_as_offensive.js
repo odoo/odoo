@@ -22,12 +22,12 @@ export class FlagMarkAsOffensiveDialog extends Component {
 
         useLayoutEffect(
             (discardButton) => {
-                if (discardButton) {
-                    discardButton.addEventListener("click", onClickDiscard);
-                    return () => {
-                        discardButton.removeEventListener("click", onClickDiscard);
-                    };
-                }
+                // if (discardButton) {
+                //     discardButton.addEventListener("click", onClickDiscard);
+                //     return () => {
+                //         discardButton.removeEventListener("click", onClickDiscard);
+                //     };
+                // }
             },
             () => [this.modalRef.el?.querySelector(".btn-link")]
         );
