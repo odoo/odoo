@@ -7303,3 +7303,30 @@ class StockMove(TransactionCase):
         self.assertIn(lot_1, picking.move_ids_without_package[0].lot_ids)
         self.assertIn(lot_2, picking.move_ids_without_package[0].lot_ids)
         self.assertIn(lot_3, picking.move_ids_without_package[0].lot_ids)
+
+    def test_picking_deadline_excludes_cancelled_move(self):
+        """ Picking deadline must recompute on move cancellation and must not include cancelled moves. """
+        today = fields.Datetime.now()
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [
+                Command.create({
+                    'name': 'move1',
+                    'product_id': self.product_consu.id,
+                    'product_uom_qty': 1,
+                    'date_deadline': today,
+                }),
+                Command.create({
+                    'name': 'move2',
+                    'product_id': self.product_consu.id,
+                    'product_uom_qty': 1,
+                    'date_deadline': today + relativedelta(days=2),
+                }),
+            ],
+        })
+        move1, move2 = picking.move_ids
+        self.assertEqual(picking.date_deadline, move1.date_deadline, 'Picking deadline should be the earliest move deadline')
+        move1._action_cancel()
+        self.assertEqual(picking.date_deadline, move2.date_deadline, 'Picking deadline should update to the remaining move after cancellation')
