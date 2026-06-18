@@ -140,7 +140,7 @@ class AccountMoveLine(models.Model):
                     return 'sale_non_gst_supplies'
 
             # B2CS: Unregistered or Consumer sales with gst tags
-            if gst_treatment in ('unregistered', 'consumer') and not is_reverse_charge_tax(line):
+            if gst_treatment == 'unregistered' and not is_reverse_charge_tax(line):
                 if (transaction_type == 'intra_state' and tags_have_categ(line_tags, ['sgst', 'cgst', 'cess'])) or (
                     transaction_type == "inter_state"
                     and tags_have_categ(line_tags, ['igst', 'cess'])
@@ -168,7 +168,7 @@ class AccountMoveLine(models.Model):
                 if not is_reverse_charge_tax(line):
                     # B2CL: Unregistered interstate sales above threshold
                     if (
-                        gst_treatment in ('unregistered', 'consumer')
+                        gst_treatment == 'unregistered'
                         and tags_have_categ(line_tags, ['igst', 'cess'])
                         and not is_lut_tax(line)
                         and transaction_type == 'inter_state'
@@ -207,7 +207,7 @@ class AccountMoveLine(models.Model):
                         return 'sale_cdnr_deemed_export'
                     # CDN for B2CL (interstate > threshold)
                     if (
-                        gst_treatment in ('unregistered', 'consumer')
+                        gst_treatment == 'unregistered'
                         and tags_have_categ(line_tags, ['igst', 'cess'])
                         and not is_lut_tax(line)
                         and transaction_type == 'inter_state'
@@ -262,8 +262,8 @@ class AccountMoveLine(models.Model):
                 ):
                     return 'purchase_b2b_regular'
 
-                # B2C Unregistered or Consumer sales with gst tags
-                if gst_treatment in ('unregistered', 'consumer') and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']) and is_reverse_charge_tax(line):
+                # B2C Unregistered sales with gst tags
+                if gst_treatment == 'unregistered' and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']) and is_reverse_charge_tax(line):
                     return 'purchase_b2c_rcm'
 
                 # export service type products purchases
@@ -284,7 +284,7 @@ class AccountMoveLine(models.Model):
                     return 'purchase_cdnr_regular'
 
                 # credit notes for b2c purchases
-                if gst_treatment in ('unregistered', 'consumer') and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']) and is_reverse_charge_tax(line):
+                if gst_treatment == 'unregistered' and tags_have_categ(line_tags, ['sgst', 'cgst', 'igst', 'cess']) and is_reverse_charge_tax(line):
                     return 'purchase_cdnur_rcm'
 
                 if not is_reverse_charge_tax(line):

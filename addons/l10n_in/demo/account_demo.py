@@ -343,7 +343,7 @@ class AccountChartTemplate(models.AbstractModel):
                     'invoice_user_id': 'base.user_demo',
                     'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                     'invoice_date': datetime.now(),
-                    'l10n_in_gst_treatment': 'consumer',
+                    'l10n_in_gst_treatment': 'unregistered',
                     'journal_id': 'sale',
                     'invoice_line_ids': [
                         Command.create({
@@ -379,7 +379,7 @@ class AccountChartTemplate(models.AbstractModel):
                     'invoice_user_id': 'base.user_demo',
                     'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                     'invoice_date': datetime.now(),
-                    'l10n_in_gst_treatment': 'consumer',
+                    'l10n_in_gst_treatment': 'unregistered',
                     'journal_id': 'sale',
                     'invoice_line_ids': [
                         Command.create({
@@ -496,7 +496,7 @@ class AccountChartTemplate(models.AbstractModel):
                     'invoice_user_id': 'base.user_demo',
                     'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                     'invoice_date': datetime.now(),
-                    'l10n_in_gst_treatment': 'consumer',
+                    'l10n_in_gst_treatment': 'unregistered',
                     'reversed_entry_id': 'demo_invoice_b2cl',
                     'journal_id': 'sale',
                     'invoice_line_ids': [
