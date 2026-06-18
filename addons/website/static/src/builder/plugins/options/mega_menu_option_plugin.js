@@ -27,6 +27,8 @@ export class MegaMenuOptionPlugin extends Plugin {
         is_unremovable_selector: ".o_mega_menu > section",
         unsplittable_node_predicates: (node) =>
             node?.nodeType === Node.ELEMENT_NODE && node.matches(".o_mega_menu .nav > .nav-link"), //avoid merge
+        content_editable_selectors:
+            ".s_mega_menu_thumbnails_footer, .s_mega_menu_menus_logos_wrapper",
     };
 
     getTemplatePrefix() {
