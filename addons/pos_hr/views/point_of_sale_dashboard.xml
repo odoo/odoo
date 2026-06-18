@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_config_kanban_inherit_pos_hr" model="ir.ui.view">
+        <field name="name">pos.config.kanban.view.inherit.pos.hr</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_config_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='current_user_id']" position="replace">
+                <t t-if="record.logged_employee_ids.raw_value.length">
+                    <field class="mt-2" name="logged_employee_ids" widget="many2many_avatar_employee" options="{'tag_limit': 5}"/>
+                </t>
+                <t t-else="">$0</t>
+            </xpath>
+        </field>
+    </record>
+</odoo>

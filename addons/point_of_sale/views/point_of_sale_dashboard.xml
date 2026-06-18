@@ -101,22 +101,24 @@
                         <div name="card_title" class="mb-1 ms-2">
                             <div class="d-flex align-items-center gap-2 position-relative">
                                 <field name="name" class="fw-bold fs-4"/>
-                                <div t-if="record.pos_session_state.raw_value == 'opening_control'" class="badge rounded-pill text-bg-info position-absolute start-50 translate-middle-x">Opening Control</div>
-                                <div t-if="!record.current_session_id.raw_value &amp;&amp; record.pos_session_username.value" class="badge rounded-pill text-bg-info position-absolute start-50 translate-middle-x">Opened by <field name="pos_session_username"/></div>
-                                <div t-if="record.pos_session_state.raw_value == 'closing_control'" class="badge rounded-pill text-bg-info position-absolute start-50 translate-middle-x">Closing Control</div>
-                                <div t-if="record.pos_session_state.raw_value == 'opened' and record.pos_session_duration.raw_value > 1" t-attf-class="badge rounded-pill bg-#{record.pos_session_duration.raw_value > 3 and 'danger' or 'warning'} position-absolute start-50 translate-middle-x"
+                                <div t-if="record.pos_session_state.raw_value == 'opening_control'" class="badge rounded text-bg-info position-absolute start-50 translate-middle-x">Opening Control</div>
+                                <div t-if="!record.current_session_id.raw_value &amp;&amp; record.pos_session_username.value" class="badge rounded text-bg-info position-absolute start-50 translate-middle-x">Opened by <field name="pos_session_username"/></div>
+                                <div t-if="record.pos_session_state.raw_value == 'closing_control'" class="badge rounded text-bg-info position-absolute start-50 translate-middle-x">Closing Control</div>
+                                <div t-if="record.pos_session_state.raw_value == 'opened' and record.pos_session_duration.raw_value > 1" t-attf-class="badge rounded bg-#{record.pos_session_duration.raw_value > 3 and 'danger' or 'warning'} position-absolute start-50 translate-middle-x"
                                         title="The session has been opened for an unusually long period. Please consider closing.">
                                         To Close
-                            </div>
-                                <field name="current_user_id" widget="many2one_avatar_user" class="ms-auto me-4" options="{'size': 'sm'}"/>
+                                </div>
                             </div>
                         </div>
                         <div class="row g-0 pb-2 ms-2 mt-4">
                             <div name="card_left" class="col-12 col-md-6 d-flex flex-wrap align-items-start gap-2 mb-2 mb-md-0">
-                                <div t-if="record.current_session_state.raw_value != 'closing_control'">
-                                    <widget name="pos_open_ui_button" action="open_ui"/>
+                                <div class="d-flex flex-column gap-2">
+                                    <div t-if="record.current_session_state.raw_value != 'closing_control'">
+                                        <widget name="pos_open_ui_button" action="open_ui"/>
+                                    </div>
+                                    <button t-else="" class="btn btn-secondary" name="open_existing_session_cb" type="object">Close</button>
+                                    <field class="mt-2" name="current_user_id" widget="many2one_avatar_user" />
                                 </div>
-                                <button t-else="" class="btn btn-secondary" name="open_existing_session_cb" type="object">Close</button>
                             </div>
                             <div class="col-12 col-md-6">
                                 <t t-set="statistics" t-value="record.statistics_for_current_session.raw_value" />

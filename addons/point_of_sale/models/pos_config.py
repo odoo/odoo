@@ -12,6 +12,7 @@ from odoo import SUPERUSER_ID, Command, _, api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import request
 from odoo.tools import SQL, convert
+from odoo.fields import Domain
 from odoo.tools.misc import get_lang
 
 from odoo.addons.point_of_sale.models.pos_printer import format_epson_certified_domain
@@ -112,7 +113,7 @@ class PosConfig(models.Model):
     uuid = fields.Char(readonly=True, default=lambda self: str(uuid4()), copy=False,
         help='A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data.')
     session_ids = fields.One2many('pos.session', 'config_id', string='Sessions')
-    current_session_id = fields.Many2one('pos.session', compute='_compute_current_session', string="Current Session")
+    current_session_id = fields.Many2one('pos.session', compute='_compute_current_session', string="Current Session", search='_search_current_session')
     current_session_state = fields.Char(compute='_compute_current_session')
     number_of_rescue_session = fields.Integer(string="Number of Rescue Session", compute='_compute_current_session')
     last_session_closing_cash = fields.Float(compute='_compute_last_session')
@@ -361,6 +362,11 @@ class PosConfig(models.Model):
             pos_config.current_session_id = session and session[0].id or False
             pos_config.current_session_state = session and session[0].state or False
             pos_config.number_of_rescue_session = len(rescue_sessions)
+
+    def _search_current_session(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+        return Domain('session_ids', operator, value)
 
     def _compute_statistics_for_session(self):
         for config in self:

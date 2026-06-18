@@ -281,3 +281,20 @@ class TestUi(TestPosHrHttpCommon):
             "test_scan_employee_barcode_with_pos_hr_disabled",
             login="pos_admin"
         )
+
+    def test_logged_employee_ids_tracking(self):
+        """Test that logged_employee_ids tracks all employees who logged into the session."""
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "test_logged_employee_ids_tracking",
+            login="pos_user",
+        )
+
+        self.assertEqual(len(self.main_pos_config.logged_employee_ids), 3, "Session should have exactly 3 logged employees.")
+        self.assertEqual(
+            set(self.main_pos_config.current_session_id.logged_employee_ids.mapped('name')),
+            {"Mitchell Admin", "Pos Employee1", "Pos Employee2"},
+            "Logged employees don't match expected",
+        )
