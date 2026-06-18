@@ -25,13 +25,13 @@ export class LivechatChannelInfoList extends Component {
         useSubEnv({ inLivechatInfoPanel: true });
         useLayoutEffect(
             () => {
-                if (this.props.thread.hasFetchedLivechatSessionData) {
-                    return;
-                }
-                this.store.fetchStoreData("/im_livechat/session/data", {
-                    channel_id: this.props.thread.id,
-                });
-                this.props.thread.hasFetchedLivechatSessionData = true;
+                // if (this.props.thread.hasFetchedLivechatSessionData) {
+                //     return;
+                // }
+                // this.store.fetchStoreData("/im_livechat/session/data", {
+                //     channel_id: this.props.thread.id,
+                // });
+                // this.props.thread.hasFetchedLivechatSessionData = true;
             },
             () => [this.props.thread.id, this.props.thread.hasFetchedLivechatSessionData]
         );
