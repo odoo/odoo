@@ -176,9 +176,25 @@ class AccountMoveSend(models.AbstractModel):
         if method == 'peppol':
             partner = move.partner_id.commercial_partner_id.with_company(move.company_id)
             invoice_edi_format = move_data.get('invoice_edi_format') or partner._get_peppol_edi_format()
+
+            partner.button_account_peppol_check_partner_endpoint(company=move.company_id)
+            if partner.peppol_verification_state != 'valid' and partner.peppol_eas in ('0208', '9925'):
+                # only for BE participants
+                inverse_eas = '9925' if partner.peppol_eas == '0208' else '0208'
+                inverse_endpoint = f'BE{partner.peppol_endpoint}' if partner.peppol_eas == '0208' else partner.peppol_endpoint[2:]
+                if (
+                    not partner._build_error_peppol_endpoint(inverse_eas, inverse_endpoint)
+                    and partner._get_peppol_verification_state(inverse_endpoint, inverse_eas, invoice_edi_format) == 'valid'
+                ):
+                    partner.write({
+                        'peppol_eas': inverse_eas,
+                        'peppol_endpoint': inverse_endpoint,
+                        'peppol_verification_state': 'valid',
+                    })
+
             result = all([
                 self._is_applicable_to_company(method, move.company_id),
-                self.env['res.partner'].with_company(move.company_id)._get_peppol_verification_state(partner.peppol_endpoint, partner.peppol_eas, invoice_edi_format) == 'valid',
+                partner.peppol_verification_state == 'valid',
                 move.company_id.account_peppol_proxy_state != 'rejected',
                 move._need_ubl_cii_xml(invoice_edi_format) or move.ubl_cii_xml_id and not move.peppol_is_sent,
             ])
