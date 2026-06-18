@@ -518,7 +518,8 @@ been taken for this time off type. Changing it now would affect existing employe
             target_date = fields.Date.context_today(self)
 
         allocations_leaves_consumed, extra_data = employees.with_context(
-            ignored_leave_ids=self.env.context.get('ignored_leave_ids')
+            ignored_leave_ids=self.env.context.get('ignored_leave_ids'),
+            ignored_cash_out_ids=self.env.context.get('ignored_cash_out_ids')
         )._get_consumed_leaves(self, target_date)
 
         today = fields.Date.context_today(self)
