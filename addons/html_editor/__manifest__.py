@@ -57,6 +57,7 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/src/others/embedded_component*',
             'html_editor/static/src/others/qweb_picker*',
             'html_editor/static/src/others/qweb_plugin*',
+            'html_editor/static/src/others/autofocus_plugin*',
             'html_editor/static/src/services/**/*',
             ('remove', 'html_editor/static/src/**/*.dark.scss'),
         ],
