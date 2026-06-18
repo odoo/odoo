@@ -681,6 +681,7 @@ class SaleOrder(models.Model):
         product_custom_attribute_values=None,
         combo_item_id=None,
         combo_item_ratio=1.0,
+        donation_amount=None,
         **_kwargs,
     ):
         self.ensure_one()

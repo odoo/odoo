@@ -13,7 +13,12 @@
                 <group>
                     <group>
                         <field name="qty_max" string="Maximum items" invisible="not is_from_pos"/>
-                        <field name="qty_free" string="Includes" invisible="is_upsell"/>
+                        <field
+                            name="qty_free"
+                            string="Included"
+                            invisible="is_upsell"
+                            class="oe_inline"
+                        />
                         <field name="is_upsell" widget="boolean_toggle" invisible="not is_from_pos"/>
                         <field
                             name="upsell_warning"
@@ -22,6 +27,13 @@
                             invisible="not is_upsell or is_from_pos"
                             class="oe_edit_only"
                         />
+                        <field
+                            name="company_id"
+                            placeholder="Visible to all"
+                            groups="base.group_multi_company"
+                            options="{'no_create': True}"
+                            class="oe_inline"
+                        />
                     </group>
                     <group>
                         <field
@@ -29,13 +41,6 @@
                             widget="monetary"
                             options="{'field_digits': True}"
                             invisible="not is_from_pos"
-                        />
-                        <field
-                            name="company_id"
-                            placeholder="Visible to all"
-                            groups="base.group_multi_company"
-                            options="{'no_create': True}"
-                            class="oe_inline"
                         />
                     </group>
                 </group>

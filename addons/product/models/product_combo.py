@@ -30,7 +30,7 @@ class ProductCombo(models.Model):
         compute='_compute_base_price',
     )
     qty_free = fields.Integer(
-        string="Includes",
+        string="Included",
         default=1,
         help="Number of free items included in the combo."
     )

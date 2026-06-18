@@ -27,7 +27,7 @@ class ProductCombo(models.Model):
             if record.is_upsell:
                 record.upsell_warning = _(
                         "⚠️ This item is configured as Upsell. "
-                        "Go to Point of Sale to disable Upsell if you want to modify 'Includes'."
+                        "Go to Point of Sale to disable Upsell if you want to modify 'Included'."
                     )
             else:
                 record.upsell_warning = False

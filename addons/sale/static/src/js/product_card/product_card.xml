@@ -4,7 +4,7 @@
         <div class="col">
             <article
                 tabindex="0"
-                t-attf-class="product-card d-flex align-items-stretch h-100 rounded p-2 cursor-pointer {{this.props.isSelected ? 'selected' : ''}}"
+                t-attf-class="product-card d-flex align-items-start h-100 rounded p-2 cursor-pointer {{this.props.isSelected ? 'selected' : ''}}"
                 t-on-keypress="(event) => event.code === 'Space' ? this.props.onClick() : () => {}"
                 t-on-click="this.props.onClick"
             >
@@ -15,8 +15,7 @@
                     alt="Product Image"
                 />
 
-                <div class="w-75 p-2 d-flex flex-column justify-content-between">
-
+                <div class="w-75 p-2 d-flex flex-column justify-content-between align-items-start">
                     <div>
                         <t t-set="ptalsToShow" t-value="this.props.product.ptals.filter(this.shouldShowPtal)"/>
                         <h6 name="product_card_title" class="mb-1" t-out="this.props.product.display_name"/>
@@ -29,7 +28,6 @@
                                     t-out="ptal.ptalDisplayName"
                                 />
                             </t>
-                            <small t-elif="this.props.isConfigurable">Click to configure</small>
                         </div>
                         <BadgeExtraPrice
                             t-if="this.props.extraPrice"
@@ -37,11 +35,9 @@
                             currencyId="this.env.currency.id"
                         />
                     </div>
-
                     <div class="mt-2">
                         <t t-call-slot="quantityButtons" />
                     </div>
-
                 </div>
             </article>
         </div>

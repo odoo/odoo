@@ -45,12 +45,14 @@
                 </div>
             </div>
             <div t-foreach="this.configurableCombos" t-as="combo" t-key="combo.id">
-                <div class="d-flex align-items-center mb-3">
+                <div class="d-flex align-items-baseline mb-3">
                     <span name="sale_combo_configurator_title" class="mb-0" t-out="combo.name"/>
-                    <h5 class="text-muted ms-2 mb-0">
-                        <t t-out="this.getSelectedComboItemsText(combo)"/>
-                        <span class="fst-italic"> included</span>
-                    </h5>
+                    <h6 class="text-muted ms-2 mb-0 fw-normal fst-normal">
+                        <span class="small">
+                            <t t-out="this.getSelectedComboItemsText(combo)"/>
+                        </span>
+                        <span class="small"> included</span>
+                    </h6>
                 </div>
                 <div class="row row-cols-1 row-cols-md-3 g-3">
                     <t t-foreach="combo.combo_items" t-as="comboItem" t-key="comboItem.id">
