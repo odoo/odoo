@@ -11,6 +11,7 @@ export class FileUploader extends Component {
     props = props({
         onClick: t.function().optional(),
         onUploaded: t.function(),
+        canUpload: t.function().optional(),
         onUploadComplete: t.function().optional(),
         multiUpload: t.boolean().optional(),
         checkSize: t.boolean().optional(true),
@@ -36,7 +37,7 @@ export class FileUploader extends Component {
      */
     async onFileChange(ev) {
         const files = [...ev.target.files].filter((file) => this.validFileType(file));
-        if (!files.length) {
+        if (!files.length || (this.props.canUpload && !await this.props.canUpload())) {
             return;
         }
         const { target } = ev;
