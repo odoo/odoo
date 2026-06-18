@@ -309,7 +309,7 @@ class TestReplenishWizard(PurchaseTestCommon):
     def test_purchase_supplier_route_delay(self):
         self.product = self.env['product.product'].create({
             'name': "Furniture Service",
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [Command.link(self.route_buy.id)],
         })
         supplier = self.env['product.supplierinfo'].create({
@@ -520,7 +520,7 @@ class TestReplenishWizard(PurchaseTestCommon):
         })
         product_to_buy = self.env['product.product'].create({
             'name': "Furniture Service",
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [Command.link(self.route_buy.id)],
         })
 
@@ -592,7 +592,7 @@ class TestReplenishWizard(PurchaseTestCommon):
 
         product = self.env['product.product'].create({
             'name': "Furniture Service",
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [Command.link(self.route_buy.id)],
         })
         self.vendor1, self.vendor2 = self.env['res.partner'].create([

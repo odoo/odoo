@@ -98,7 +98,7 @@ class TestRoutes(TransactionCase):
 
         product = self.env['product.product'].create({
             'name': 'test product',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         partner = self.env['res.partner'].create({'name': 'test vendor'})

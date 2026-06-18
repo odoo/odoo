@@ -21,19 +21,19 @@ class CommonPosMrpTest(CommonPosStockTest):
         self.product_product_comp_three = self.twenty_dollars_with_10_incl.product_variant_id
         self.product_product_comp_four = self.twenty_dollars_with_15_incl.product_variant_id
         self.product_product_kit_one.write({
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': self.category_fifo.id,
         })
         self.product_product_kit_two.write({
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': self.category_fifo.id,
         })
         self.product_product_kit_three.write({
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': self.category_fifo.id,
         })
         self.product_product_kit_four.write({
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': self.category_fifo.id,
         })
         self.product_product_comp_one.product_tmpl_id.write({

@@ -25,7 +25,7 @@ class TestDeliveryMrpKitBom(BaseCommon):
         kit_product, component_a, component_b = self.env['product.product'].create([
             {
                 'name': name,
-                'is_storable': True,
+                'store_by': 'quantity',
                 'standard_price': 1.0,
                 'list_price': price,
             } for (name, price) in zip(('Kit Product', 'Component A', 'Component B'), (200, 0.08, 5))
@@ -92,7 +92,7 @@ class TestDeliveryMrpKitBom(BaseCommon):
                 'name': name,
                 'list_price': price,
                 'type': product_type,
-                'is_storable': product_type == 'consu',
+                'store_by': 'quantity' if product_type == 'consu' else 'untracked',
             } for name, price, product_type in [
                 ('Lovely Kit 1', 120.0, 'consu'),
                 ('Lovely Kit 2', 50.0, 'consu'),

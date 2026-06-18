@@ -36,7 +36,7 @@ class TestPurchaseOldRules(PurchaseTestCommon):
         cls.reference = cls.env['stock.reference'].create({'name': 'New Group'})
         cls.product = cls.env['product.product'].create({
             'name': 'Geyser',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [Command.set([cls.route_mto.id, cls.route_buy.id])],
             'seller_ids': [Command.create({
                 'partner_id': cls.customer.id,

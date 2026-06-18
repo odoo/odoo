@@ -15,7 +15,7 @@ class TestValuationReconciliationCommon(TestStockValuationCommon, TestSaleStockC
         cls.product_standard_auto = cls.env['product.product'].create({
             'name': 'Test product template invoiced on delivery',
             'standard_price': 42.0,
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': cls.category_standard_auto.id,
             'uom_id': cls.uom.id,
             'invoice_policy': 'delivery',
@@ -23,7 +23,7 @@ class TestValuationReconciliationCommon(TestStockValuationCommon, TestSaleStockC
         cls.product_standard_auto_2 = cls.env['product.product'].create({
             'name': 'Test product template invoiced on delivery 2',
             'standard_price': 42.0,
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': cls.category_standard_auto.id,
             'uom_id': cls.uom.id,
             'invoice_policy': 'delivery',

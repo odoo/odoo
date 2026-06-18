@@ -42,7 +42,7 @@ class TestAngloSaxonCommon(AccountTestInvoicingCommon):
             'name': 'New product',
             'standard_price': 100,
             'available_in_pos': True,
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         cls.company.anglo_saxon_accounting = True
         cls.company.point_of_sale_update_stock_quantities = 'real'
@@ -489,7 +489,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
             'name': 'New product 2',
             'standard_price': 20,
             'available_in_pos': True,
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': self.category.id,
         })
 
@@ -497,7 +497,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
             'name': 'New product 1',
             'standard_price': 0,
             'available_in_pos': True,
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': self.category.id,
         })
 
@@ -602,7 +602,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
             'standard_price': 100,
             'list_price': 200,
             'available_in_pos': True,
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         self.pos_config.open_ui()

@@ -24,7 +24,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
 
         self.finished2, self.comp3 = self.env['product.product'].create([{
             'name': 'SuperProduct',
-            'is_storable': True,
+            'store_by': 'quantity',
         }, {
             'name': 'Component',
             'type': 'consu',
@@ -45,7 +45,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
 
         self.finished3, self.comp4 = self.env['product.product'].create([{
             'name': 'Finished 3',
-            'is_storable': True,
+            'store_by': 'quantity',
         }, {
             'name': 'Component 4',
             'type': 'consu',
@@ -736,11 +736,11 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         resupply_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         finished, component = self.env['product.product'].create([{
             'name': 'Finished Product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'seller_ids': [(0, 0, {'partner_id': self.subcontractor_partner1.id})]
         }, {
             'name': 'Component',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [(4, resupply_route.id)],
         }])
 
@@ -992,7 +992,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         """ Ensure that invoice creation doesn't trigger an error
         with subcontracted tracked products."""
         todo_nb = 5
-        self.finished2.tracking = 'serial'
+        self.finished2.store_by = 'serial'
         self.finished2.purchase_method = 'purchase'
         po = self.env['purchase.order'].create({
             'partner_id': self.subcontractor_partner1.id,

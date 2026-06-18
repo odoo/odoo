@@ -332,7 +332,7 @@ class TestWebsiteSalePerformanceWithTrackedProducts(TestWebsiteSalePerformanceNo
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.heavy_product.is_storable = True
+        cls.heavy_product.store_by = 'quantity'
         cls.heavy_product.allow_out_of_stock_order = False
         for i, product in enumerate(cls.heavy_product.product_variant_ids):
             product.qty_available = i - 1

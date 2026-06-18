@@ -28,8 +28,7 @@ class TestStockQuant(TestStockCommon):
 
         cls.product_lot = cls.env['product.product'].create({
             'name': 'Product Lot',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         cls.product_consu = cls.env['product.product'].create({
             'name': 'Product Consu',
@@ -37,8 +36,7 @@ class TestStockQuant(TestStockCommon):
         })
         cls.product_serial = cls.env['product.product'].create({
             'name': 'Product Serial',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         cls.picking_type_out.reservation_method = 'at_confirm'
 
@@ -228,7 +226,7 @@ class TestStockQuant(TestStockCommon):
         """
         product2 = self.env['product.product'].create({
             'name': 'Product B',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1.0)
         self.env['stock.quant']._update_available_quantity(self.productA, self.shelf_1, 1.0)
@@ -449,7 +447,7 @@ class TestStockQuant(TestStockCommon):
         quants = self.gather_relevant(self.product_consu, self.stock_location)
         self.assertEqual(sum(quants.mapped('reserved_quantity')), 0.0)
 
-        self.product_consu.is_storable = True
+        self.product_consu.store_by = 'quantity'
         quants = self.gather_relevant(self.product_consu, self.stock_location)
         self.assertEqual(sum(quants.mapped('reserved_quantity')), 5.0)
 
@@ -640,7 +638,7 @@ class TestStockQuant(TestStockCommon):
         QUANTITY = 22.43
         product = self.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': self.env.ref('product.product_category_goods').id,
         })
         product.product_tmpl_id.categ_id.packaging_reserve_method = 'full'
@@ -902,8 +900,7 @@ class TestStockQuant(TestStockCommon):
         """
         product = self.env['product.product'].create({
             'name': 'Product',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         sn1 = self.env['stock.lot'].create({
             'name': 'SN1',
@@ -975,12 +972,12 @@ class TestStockQuant(TestStockCommon):
         # testing moving multiple packed quants to a new location with incomplete package
         product_b = self.env['product.product'].create({
             'name': 'product B',
-            'is_storable': True
+            'store_by': 'quantity'
         })
         self.env['stock.quant']._update_available_quantity(product_b, self.stock_location, 10, package_id=package_01)
         product_c = self.env['product.product'].create({
             'name': 'product C',
-            'is_storable': True
+            'store_by': 'quantity'
         })
         self.env['stock.quant']._update_available_quantity(product_c, self.stock_location, 10, package_id=package_01)
 
@@ -1017,12 +1014,12 @@ class TestStockQuant(TestStockCommon):
         })
         product_a_company_B = self.env['product.product'].create({
             'name': 'product A company B',
-            'is_storable': True,
+            'store_by': 'quantity',
             'company_id': company_B.id
         })
         product_b_company_B = self.env['product.product'].create({
             'name': 'product b company B',
-            'is_storable': True,
+            'store_by': 'quantity',
             'company_id': company_B.id
         })
         self.env['stock.quant']._update_available_quantity(product_a_company_B, location_company_B, 10, package_id=package_03)
@@ -1051,7 +1048,7 @@ class TestStockQuant(TestStockCommon):
         """ With the changes implemented in _get_inventory_move_values(), we want to make sure that it correctly
         writes the package and destination package for inventory adjustments in _apply_inventory(). """
 
-        dummy_product = self.env['product.product'].create({'name': 'dummy product', 'is_storable': True})
+        dummy_product = self.env['product.product'].create({'name': 'dummy product', 'store_by': 'quantity'})
         dummy_package = self.env['stock.package'].create({'name': 'dummy package'})
         dummy_quant = self.env['stock.quant'].create({
             'product_id': dummy_product.id,
@@ -1086,20 +1083,18 @@ class TestStockQuant(TestStockCommon):
         # Create some products with a valid EAN-13 and LN/SN for tracked ones.
         product_ean13 = self.env['product.product'].create({
             'name': 'Product Test EAN13',
-            'is_storable': True,
+            'store_by': 'quantity',
             'barcode': '0100011101014',
         })
         product_serial_ean13 = self.env['product.product'].create({
             'name': 'Product Test EAN13 - Tracked by SN',
-            'is_storable': True,
             'barcode': '0200022202028',
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         product_lot_ean13 = self.env['product.product'].create({
             'name': 'Product Test EAN13 - Tracked by Lots',
-            'is_storable': True,
             'barcode': '0300033303032',
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
 
         serial_numbers = self.env['stock.lot'].create([{
@@ -1190,20 +1185,18 @@ class TestStockQuant(TestStockCommon):
         # Creates some product with not GS1 compliant barcodes.
         product = self.env['product.product'].create({
             'name': "Product Test",
-            'is_storable': True,
+            'store_by': 'quantity',
             'barcode': 'PRODUCT-TEST',
         })
         product_serial = self.env['product.product'].create({
             'name': "Product Test - Tracked by SN",
-            'is_storable': True,
+            'store_by': 'serial',
             'barcode': 'PRODUCT-SN',
-            'tracking': 'serial',
         })
         product_lot = self.env['product.product'].create({
             'name': "Product Test - Tracked by Lots",
-            'is_storable': True,
+            'store_by': 'lot',
             'barcode': 'PRODUCT-LN',
-            'tracking': 'lot',
         })
         # Creates some lot/serial numbers.
         serial_numbers = self.env['stock.lot'].create([{
@@ -1266,8 +1259,7 @@ class TestStockQuant(TestStockCommon):
         """
         product = self.env['product.product'].create({
             'name': 'Product',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         lot_a = self.env['stock.lot'].create({
             'name': 'A',
@@ -1363,8 +1355,7 @@ class TestStockQuant(TestStockCommon):
         """
         product_lot_2 = self.env['product.product'].create({
             'name': 'Product',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         lot_a = self.env['stock.lot'].create({
             'name': 'A',
@@ -1508,7 +1499,7 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
             [('method', '=', 'least_packages')])
         cls.product = cls.env['product.product'].create({
             'name': 'Product',
-            'is_storable': True,
+            'store_by': 'quantity',
             # categ_id is required to set the removal strategy later
             'categ_id': cls.env.ref('product.product_category_goods').id,
         })
@@ -1711,9 +1702,9 @@ class TestStockQuantRemovalStrategy(TestStockCommon):
         Check that the delivery is still reserved in the proper locations.
         """
         products = self.env['product.product'].create([
-            {'name': 'Good product', 'is_storable': True},
-            {'name': 'Great product', 'is_storable': True},
-            {'name': 'Super product', 'is_storable': True},
+            {'name': 'Good product', 'store_by': 'quantity'},
+            {'name': 'Great product', 'store_by': 'quantity'},
+            {'name': 'Super product', 'store_by': 'quantity'},
         ])
         products.categ_id.removal_strategy_id = self.env['product.removal']
         packages = self.env['stock.package'].create([

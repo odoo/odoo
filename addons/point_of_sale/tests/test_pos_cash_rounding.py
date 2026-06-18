@@ -172,8 +172,8 @@ class TestPosCashRounding(TestPointOfSaleHttpCommon):
             ]
         })
         self.env['product.product'].create({
-            'is_storable': True,
             'name': 'A Test Product',
+            'store_by': True,
             'available_in_pos': True,
             'list_price': 1,
         })

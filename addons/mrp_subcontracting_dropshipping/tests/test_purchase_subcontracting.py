@@ -268,7 +268,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon, TestStock
 
         compo_drop, compo_rr = self.env['product.product'].create([{
             'name': name,
-            'is_storable': True,
+            'store_by': 'quantity',
             'seller_ids': [Command.create({'partner_id': self.subcontractor_partner1.parent_id.id})],
             'route_ids': [Command.set(routes)],
         } for name, routes in [
@@ -360,7 +360,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon, TestStock
         route_mto.active = True
         component = self.env['product.product'].create([{
             'name': 'Common Component',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [Command.set(route_mto.ids)],
             'seller_ids': [Command.create({'partner_id': vendor.id})],
         }])
@@ -369,7 +369,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon, TestStock
         for finished_product_name in ['fp1', 'fp2']:
             finished_product = self.env['product.product'].create([{
                 'name': finished_product_name,
-                'is_storable': True,
+                'store_by': 'quantity',
                 'route_ids': [Command.set(route_mto.ids)],
             }])
             bom_form = Form(self.env['mrp.bom'])
@@ -427,7 +427,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon, TestStock
             'group_ids': [Command.set([self.env.ref('base.group_portal').id, self.env.ref('stock.group_production_lot').id])]
         })
 
-        self.finished.tracking = 'serial'
+        self.finished.store_by = 'serial'
         self.bom.bom_line_ids[1].unlink()
         dropship_routes = self.env.ref('stock_dropshipping.route_drop_shipping')
         self.comp1.route_ids = [Command.link(dropship_routes.id)]

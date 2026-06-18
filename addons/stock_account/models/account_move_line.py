@@ -30,7 +30,7 @@ class AccountMoveLine(models.Model):
 
     def _eligible_for_stock_account(self):
         self.ensure_one()
-        if not self.product_id.is_storable:
+        if self.product_id.tracking == 'untracked':
             return False
         moves = self._get_stock_moves()
         return all(not m._is_dropshipped() for m in moves)

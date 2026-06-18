@@ -30,7 +30,7 @@ class TestReorderingRule(TransactionCase):
         # create product and set the vendor
         product_form = Form(cls.env['product.product'])
         product_form.name = 'Product A'
-        product_form.tracking = 'none'
+        product_form.store_by = 'untracked'
         product_form.description = 'Internal Notes'
         with product_form.seller_ids.new() as seller:
             seller.partner_id = cls.partner
@@ -239,7 +239,7 @@ class TestReorderingRule(TransactionCase):
         vendor1 = self.env['res.partner'].create({'name': 'AAA', 'email': 'from.test@example.com'})
         product = self.env['product.product'].create({
             'name': 'product_rr_3',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [(4, route.id)],
         })
         self.env['product.supplierinfo'].create({
@@ -371,7 +371,7 @@ class TestReorderingRule(TransactionCase):
 
         product_form = Form(self.env['product.product'])
         product_form.name = 'Simple Product'
-        product_form.tracking = 'none'
+        product_form.store_by = 'untracked'
         with product_form.seller_ids.new() as s:
             s.partner_id = partner
             s.uom_id = product_form.uom_id
@@ -379,7 +379,7 @@ class TestReorderingRule(TransactionCase):
 
         product_form = Form(self.env['product.product'])
         product_form.name = 'Product BUY + MTO'
-        product_form.tracking = 'none'
+        product_form.store_by = 'untracked'
         product_form.route_ids.add(route_buy)
         product_form.route_ids.add(route_mto)
         with product_form.seller_ids.new() as s:
@@ -471,7 +471,7 @@ class TestReorderingRule(TransactionCase):
 
         product_form = Form(self.env['product.product'])
         product_form.name = 'Simple Product'
-        product_form.tracking = 'none'
+        product_form.store_by = 'untracked'
         with product_form.seller_ids.new() as s:
             s.partner_id = partner
             s.uom_id = product_form.uom_id
@@ -479,7 +479,7 @@ class TestReorderingRule(TransactionCase):
 
         product_form = Form(self.env['product.product'])
         product_form.name = 'Product BUY + MTO'
-        product_form.tracking = 'none'
+        product_form.store_by = 'untracked'
         product_form.route_ids.add(route_buy)
         product_form.route_ids.add(route_mto)
         with product_form.seller_ids.new() as s:
@@ -570,7 +570,7 @@ class TestReorderingRule(TransactionCase):
         product = self.env["product.product"].create({
             "name": "product TEST",
             "standard_price": 100.0,
-            "is_storable": True,
+            "store_by": "quantity",
             "uom_id": uom_unit.id,
             "default_code": "A",
             "route_ids": [(6, 0, purchase_route.ids)],
@@ -675,7 +675,7 @@ class TestReorderingRule(TransactionCase):
         product = self.env["product.product"].create({
             "name": "product TEST",
             "standard_price": 100.0,
-            "is_storable": True,
+            "store_by": "quantity",
             "uom_id": uom_unit.id,
             "default_code": "A",
             "route_ids": [(6, 0, [
@@ -736,7 +736,7 @@ class TestReorderingRule(TransactionCase):
         product = self.env["product.product"].create({
             "name": "product TEST",
             "standard_price": 100.0,
-            "is_storable": True,
+            "store_by": "quantity",
             "uom_id": self.ref("uom.product_uom_unit"),
             "default_code": "A",
             "route_ids": [Command.set([route_buy_id])],
@@ -1123,7 +1123,7 @@ class TestReorderingRule(TransactionCase):
         })
         product = self.env['product.product'].create({
             'name': 'Storable Product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'seller_ids': [(0, 0, {'partner_id': self.partner.id})],
         })
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
@@ -1168,7 +1168,7 @@ class TestReorderingRule(TransactionCase):
         """
         product = self.env['product.product'].create({
             'name': 'Storable Product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'uom_id': self.env.ref('uom.product_uom_kgm').id,
             'seller_ids': [(0, 0, {'partner_id': self.partner.id, 'min_qty': 6, 'uom_id': self.env.ref('uom.product_uom_ton').id})],
         })
@@ -1200,7 +1200,7 @@ class TestReorderingRule(TransactionCase):
         branch = self.env.company.child_ids
         product = self.env['product.product'].with_company(branch).create({
             'name': 'Storable Product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'seller_ids': [Command.create({'partner_id': self.partner.id, 'min_qty': 1})],
         })
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', branch.id)], limit=1)
@@ -1226,7 +1226,7 @@ class TestReorderingRule(TransactionCase):
         buy_route = self.env.ref('purchase_stock.route_warehouse0_buy')
         product = self.env['product.product'].create({
             'name': 'Super product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [Command.set(buy_route.ids)],
         })
 
@@ -1263,7 +1263,7 @@ class TestReorderingRule(TransactionCase):
         })
         product = self.env['product.product'].create({
             'name': 'Storable Product',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         orderpoint = self.env['stock.warehouse.orderpoint'].create({
             'product_id': product.id,
@@ -1403,7 +1403,7 @@ class TestReorderingRule(TransactionCase):
         ])
         product = self.env['product.product'].create({
             'name': 'super product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [Command.set(route_resupply_from_intercomp.ids)],
             'seller_ids': [Command.create({'partner_id': self.partner.id, 'company_id': company_b.id})],
         })

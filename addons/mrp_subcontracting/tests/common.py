@@ -18,17 +18,17 @@ class TestMrpSubcontractingCommon(TransactionCase):
         cls.product_category = cls.env.ref('product.product_category_goods')
         cls.comp1 = cls.env['product.product'].create({
             'name': 'Component1',
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': cls.product_category.id,
         })
         cls.comp2 = cls.env['product.product'].create({
             'name': 'Component2',
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': cls.product_category.id,
         })
         cls.finished = cls.env['product.product'].create({
             'name': 'finished',
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': cls.product_category.id,
         })
         bom_form = Form(cls.env['mrp.bom'])
@@ -51,7 +51,7 @@ class TestMrpSubcontractingCommon(TransactionCase):
         # Create a BoM for cls.comp2
         cls.comp2comp = cls.env['product.product'].create({
             'name': 'component for Component2',
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': cls.product_category.id,
         })
         bom_form = Form(cls.env['mrp.bom'])

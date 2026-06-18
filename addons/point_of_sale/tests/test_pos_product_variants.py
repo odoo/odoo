@@ -54,7 +54,7 @@ class TestPoSProductVariants(ProductVariantsCommon, TestPointOfSaleHttpCommon):
         product_template = self.env['product.template'].create({
             'name': 'A always product',
             'uom_id': self.env.ref('uom.product_uom_unit').id,
-            'is_storable': True,
+            'store_by': 'quantity',
             'taxes_id': False,
             'available_in_pos': True,
             'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],
@@ -75,7 +75,7 @@ class TestPoSProductVariants(ProductVariantsCommon, TestPointOfSaleHttpCommon):
         product_template = self.env['product.template'].create({
             'name': 'A never product',
             'uom_id': self.env.ref('uom.product_uom_unit').id,
-            'is_storable': True,
+            'store_by': 'quantity',
             'taxes_id': False,
             'available_in_pos': True,
             'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],
@@ -189,7 +189,7 @@ class TestPoSProductVariants(ProductVariantsCommon, TestPointOfSaleHttpCommon):
         product_template = self.env['product.template'].create({
             'name': 'A alw/nev product',
             'uom_id': self.env.ref('uom.product_uom_unit').id,
-            'is_storable': True,
+            'store_by': 'quantity',
             'taxes_id': False,
             'available_in_pos': True,
             'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],
@@ -277,7 +277,7 @@ class TestPoSProductVariants(ProductVariantsCommon, TestPointOfSaleHttpCommon):
         }])
         product_template = self.env['product.template'].create({
             'name': 'Image Product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'taxes_id': False,
             'available_in_pos': True,
         })
@@ -295,7 +295,7 @@ class TestPoSProductVariants(ProductVariantsCommon, TestPointOfSaleHttpCommon):
         product_template = self.env['product.template'].create({
             'name': 'A variant product',
             'uom_id': self.env.ref('uom.product_uom_unit').id,
-            'is_storable': True,
+            'store_by': 'quantity',
             'taxes_id': False,
             'available_in_pos': True,
             'pos_categ_ids': [Command.set(self.pos_desk_misc_test.ids)],

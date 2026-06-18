@@ -11,7 +11,7 @@ class TestBomPriceCommon(TestStockValuationCommon):
     def _create_product(cls, name, price, quantity=100, category=None):
         vals = {
             'name': name,
-            'is_storable': True,
+            'store_by': 'quantity',
             'standard_price': price,
             'qty_available': quantity,
         }

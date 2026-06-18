@@ -297,7 +297,7 @@
                                 <field name="date_deadline" force_save="1"/>
                                 <field name="is_scrap" readonly="1"/>
                                 <field name="scrap_reason_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="not is_scrap"/>
-                                <field name="lot_ids" string="Scrapped Lots" widget="many2many_tags" invisible="not is_scrap or has_tracking == 'none'"/>
+                                <field name="lot_ids" string="Scrapped Lots" widget="many2many_tags" invisible="not is_scrap or not has_tracking"/>
                             </group>
                         </group>
                         <group name="origin_grp" string="Origin" groups="base.group_no_one" >

@@ -27,7 +27,7 @@ class TestLeadTime(TestCommonSalePurchaseNoChart):
         })
         cls.product = cls.env['product.product'].create({
             'name': 'corpse starch',
-            'is_storable': True,
+            'store_by': 'quantity',
             'seller_ids': [Command.create({
                 'partner_id': cls.vendor.id,
                 'min_qty': 1,

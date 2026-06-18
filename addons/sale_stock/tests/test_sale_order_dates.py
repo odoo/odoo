@@ -23,19 +23,19 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
         unit = self.ref('uom.product_uom_unit')
         product_A = Product.create({
             'name': 'Product A',
-            'is_storable': True,
+            'store_by': 'quantity',
             'sale_delay': 5,
             'uom_id': unit,
         })
         product_B = Product.create({
             'name': 'Product B',
-            'is_storable': True,
+            'store_by': 'quantity',
             'sale_delay': 10,
             'uom_id': unit,
         })
         product_C = Product.create({
             'name': 'Product C',
-            'is_storable': True,
+            'store_by': 'quantity',
             'sale_delay': 15,
             'uom_id': unit,
         })
@@ -104,7 +104,7 @@ class TestSaleExpectedDate(ValuationReconciliationTestCommon):
                 Command.create({
                     'product_id': self.env['product.product'].create({
                         'name': 'A product',
-                        'is_storable': True,
+                        'store_by': 'quantity',
                     }).id,
                     'price_unit': 750,
                 })

@@ -393,7 +393,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
         super_product = self.env['product.product'].create({
             'name': 'Super Product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': self.stock_account_product_categ.id,
             'standard_price': 9.876543,
         })
@@ -539,7 +539,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         """ check that the quant created by a PO can be applied in an inventory adjustment correctly """
         product = self.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         po_form = Form(self.env['purchase.order'])
         po_form.partner_id = self.partner_a
@@ -636,7 +636,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         Create a purchase order, confirm it, invoice it, but don't post the invoice.
         Receive the products.
         """
-        self.product_id_1.is_storable = True
+        self.product_id_1.store_by = 'quantity'
         self.product_id_1.categ_id = self.env.ref('product.product_category_goods').id
         self.product_id_1.categ_id.property_cost_method = 'average'
         po = self.env['purchase.order'].create(self.po_vals)
@@ -666,7 +666,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.env['stock.route'].search([('name', '=', 'Buy')]).warehouse_ids = self.env['stock.warehouse'].search([])
         product = self.env['product.product'].create({
             'name': 'Super product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'seller_ids': [Command.create({
                 'partner_id': self.partner_a.id,
                 'price': 100.0,
@@ -886,7 +886,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         </div>"""
 
         product_c = self.env['product.product'].create({
-            'name': 'Product C', 'is_storable': True,
+            'name': 'Product C', 'store_by': 'quantity',
         })
         po_user = self.env['res.users'].create({
             'name': 'Test PO user',
@@ -1034,7 +1034,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             'is_company': True,
         })
 
-        self.product_a.is_storable = True
+        self.product_a.store_by = 'quantity'
         self.product_a.categ_id.property_cost_method = 'standard'
         self.product_a.categ_id.property_price_difference_account_id = self.company_data['default_account_revenue'].id
 

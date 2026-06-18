@@ -427,7 +427,7 @@ class TestStockValuationCommon(BaseCommon):
                     "standard_price": 10.0,
                     "list_price": 20.0,
                     "uom_id": cls.uom.id,
-                    "is_storable": True,
+                    "store_by": "quantity",
                     }
         with freeze_time(fields.Datetime.now() - timedelta(seconds=10)):
             cls.product = cls.env['product.product'].create(

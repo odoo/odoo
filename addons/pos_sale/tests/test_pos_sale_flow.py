@@ -32,14 +32,14 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         product1 = self.env['product.product'].create({
             'name': 'product1',
             'available_in_pos': True,
-            'is_storable': True,
+            'store_by': 'quantity',
             'lst_price': 10,
             'taxes_id': [Command.clear()],
         })
         product2 = self.env['product.product'].create({
             'name': 'product2',
             'available_in_pos': True,
-            'is_storable': True,
+            'store_by': 'quantity',
             'lst_price': 11,
             'taxes_id': [Command.clear()],
         })
@@ -93,7 +93,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         product_a = self.env['product.product'].create({
             'name': 'Product A',
             'available_in_pos': True,
-            'is_storable': True,
+            'store_by': 'quantity',
             'lst_price': 10.0,
             'uom_id': uom.id,
         })
@@ -439,7 +439,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         """
         self.component_kg = self.env['product.product'].create({
             'name': 'Pomme de Terre',
-            'is_storable': True,
+            'store_by': 'quantity',
             'available_in_pos': True,
             'taxes_id': False,
             'lst_price': 10.0,
@@ -688,7 +688,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         product_a = self.env['product.product'].create({
             'name': 'Product A',
             'available_in_pos': True,
-            'is_storable': True,
+            'store_by': 'quantity',
             'lst_price': 10.0,
         })
 
@@ -713,7 +713,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         product1 = self.env['product.product'].create({
             'name': 'product1',
             'available_in_pos': True,
-            'is_storable': True,
+            'store_by': 'quantity',
             'lst_price': 10,
             'taxes_id': [Command.clear()],
         })
@@ -918,7 +918,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         product_a = self.env['product.product'].create({
             'name': 'Product A',
             'available_in_pos': True,
-            'is_storable': True,
+            'store_by': 'quantity',
             'lst_price': 10.0,
             'taxes_id': [],
         })
@@ -1087,7 +1087,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         product_a = self.env['product.product'].create({
             'name': 'Product A',
             'available_in_pos': True,
-            'is_storable': True,
+            'store_by': 'quantity',
             'lst_price': 10.0,
         })
         test_partner = self.env['res.partner'].create({'name': 'Test Partner'})
@@ -1305,14 +1305,14 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         product_a, product_b = self.env['product.product'].create([{
             "name": "Product A",
             "available_in_pos": True,
-            "is_storable": True,
+            "store_by": "quantity",
             "lst_price": 10.0,
             "uom_id": uom_a.id,
             "taxes_id": [],
         }, {
             "name": "Product B",
             "available_in_pos": True,
-            "is_storable": True,
+            "store_by": "quantity",
             "lst_price": 20.0,
             "uom_id": uom_b.id,
             "taxes_id": [],

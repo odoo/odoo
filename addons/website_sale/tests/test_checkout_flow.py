@@ -70,7 +70,7 @@ class TestCheckoutFlow(WebsiteSaleCommon, PaymentCommon, HttpCase):
         self.assert_redirected_to(response, "/web/login?redirect=/shop/checkout")
 
     def test_impossible_to_checkout_if_a_product_is_sold_out(self):
-        self.product.write({"is_storable": True, "allow_out_of_stock_order": False, "free_qty": 0})
+        self.product.write({"store_by": "quantity", "allow_out_of_stock_order": False, "free_qty": 0})
 
         with self.mock_request(path="/shop/checkout", sale_order_id=self.cart.id):
             response = self.CheckoutController.shop_checkout()

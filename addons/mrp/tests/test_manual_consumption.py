@@ -15,12 +15,12 @@ class TestTourManualConsumption(HttpCase):
         Product = self.env['product.product']
         product_finish = Product.create({
             'name': 'finish',
-            'is_storable': True,
-            'tracking': 'none',})
+            'store_by': 'quantity',
+        })
         product_nt = Product.create({
             'name': 'No tracking',
-            'is_storable': True,
-            'tracking': 'none',})
+            'store_by': 'quantity',
+        })
         bom = self.env['mrp.bom'].create({
             'product_id': product_finish.id,
             'product_tmpl_id': product_finish.product_tmpl_id.id,
@@ -69,7 +69,7 @@ class TestManualConsumption(TestMrpCommon):
         """
         component = self.bom_4.bom_line_ids.product_id
         component.write({
-            'is_storable': True,
+            'store_by': 'quantity',
             'standard_price': 10,
         })
         self.env['stock.quant']._update_available_quantity(component, self.stock_location, 2)
@@ -98,16 +98,16 @@ class TestManualConsumption(TestMrpCommon):
         Product = self.env['product.product']
         product_finish = Product.create({
             'name': 'finish',
-            'is_storable': True,
-            'tracking': 'none'})
+            'store_by': 'quantity',
+        })
         product_auto_consumption = Product.create({
             'name': 'Automatic',
-            'is_storable': True,
-            'tracking': 'none'})
+            'store_by': 'quantity',
+        })
         product_manual_consumption = Product.create({
             'name': 'Manual',
-            'is_storable': True,
-            'tracking': 'none'})
+            'store_by': 'quantity',
+        })
         bom = self.env['mrp.bom'].create({
             'product_id': product_finish.id,
             'product_tmpl_id': product_finish.product_tmpl_id.id,
@@ -220,7 +220,7 @@ class TestManualConsumption(TestMrpCommon):
         self.warehouse_1.manufacture_steps = "pbm"
         bom = self.bom_1
         components = bom.bom_line_ids.mapped('product_id')
-        components.is_storable = True
+        components.store_by = 'quantity'
         # make the second component optional
         bom.bom_line_ids[-1].product_qty = 0.0
         self.env['stock.quant']._update_available_quantity(components[0], self.warehouse_1.lot_stock_id, 10.0)
@@ -250,10 +250,7 @@ class TestManualConsumption(TestMrpCommon):
         """
         bom = self.bom_4
         component = bom.bom_line_ids.product_id
-        component.write({
-            "is_storable": True,
-            "tracking": "lot",
-        })
+        component.store_by = 'lot'
 
         # Create two lots with quants.
         lots = self.env["stock.lot"].create([
@@ -305,10 +302,7 @@ class TestManualConsumption(TestMrpCommon):
         """
         bom = self.bom_4
         component = bom.bom_line_ids.product_id
-        component.write({
-            "is_storable": True,
-            "tracking": "lot",
-        })
+        component.store_by = 'lot'
 
         lot = self.env["stock.lot"].create({"name": "lot_1", "product_id": component.id})
         self.env["stock.quant"]._update_available_quantity(component, self.stock_location, 5, lot_id=lot)
@@ -337,8 +331,7 @@ class TestManualConsumption(TestMrpCommon):
         """
         product_lot = self.env['product.product'].create({
             'name': 'Product Lot',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         lot_1, lot_2 = self.env['stock.lot'].create([{
             'name': 'lot_1', 'product_id': product_lot.id,

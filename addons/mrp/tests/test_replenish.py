@@ -42,7 +42,7 @@ class TestMrpReplenish(TestMrpCommon):
         route_manufacture.rule_ids.delay = 2
         product_1 = self.env['product.product'].create({
             'name': 'Cake',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [(6, 0, [route_manufacture.id])]
         })
 
@@ -364,7 +364,7 @@ class TestMrpReplenish(TestMrpCommon):
         route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
         product = self.env['product.product'].create({
             'name': 'test',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': route_manufacture.ids,
         })
         orderpoint = self.env['stock.warehouse.orderpoint'].create({

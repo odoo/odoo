@@ -21,7 +21,7 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
 
         cls.fifo_product = cls.env['product.product'].create({
             'name': 'product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': cls.stock_account_product_categ.id,
         })
 

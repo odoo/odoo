@@ -19,7 +19,7 @@ class TestWebsiteSaleStockProductConfigurator(ProductCommon, HttpCase):
             "show_availability": True,
             "available_threshold": 5000,
             "allow_out_of_stock_order": False,
-            "is_storable": True,
+            "store_by": "quantity",
         })
         self.product.website_published = True
         self.env["stock.quant"].create({
@@ -42,7 +42,7 @@ class TestWebsiteSaleStockProductConfigurator(ProductCommon, HttpCase):
             "show_availability": True,
             "available_threshold": 5000,
             "allow_out_of_stock_order": False,
-            "is_storable": True,
+            "store_by": "quantity",
         })
         self.env["stock.quant"].create({
             "product_id": product_product_without_options.id,

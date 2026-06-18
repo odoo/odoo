@@ -35,12 +35,12 @@ class TestMrpAnalyticAccount(TransactionCase):
         })
         cls.product = cls.env['product.product'].create({
             'name': 'Product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'standard_price': 233.0,
         })
         cls.component = cls.env['product.product'].create({
             'name': 'Component',
-            'is_storable': True,
+            'store_by': 'quantity',
             'standard_price': 10.0,
         })
         cls.bom = cls.env['mrp.bom'].create({
@@ -317,12 +317,12 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         """
         component = self.env['product.product'].create({
             'name': 'Component',
-            'is_storable': True,
+            'store_by': 'quantity',
             'standard_price': 100,
         })
         product = self.env['product.product'].create({
             'name': 'Product',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         bom = self.env['mrp.bom'].create({
                 'product_tmpl_id': product.product_tmpl_id.id,

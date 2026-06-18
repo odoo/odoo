@@ -23,11 +23,11 @@ class TestSaleMrpAccount(TestMultistepManufacturing):
         })
         cls.product, cls.component = cls.env['product.product'].create([{
             'name': 'Product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'standard_price': 233.0,
         }, {
             'name': 'Component',
-            'is_storable': True,
+            'store_by': 'quantity',
             'standard_price': 10.0,
         }])
         cls.bom = cls.env['mrp.bom'].create({

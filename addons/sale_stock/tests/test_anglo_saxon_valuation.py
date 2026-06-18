@@ -359,7 +359,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         """ Sell and deliver some products before the user encodes the products receipt """
         product = self.product_avco_auto
         product.invoice_policy = 'order'
-        product.is_storable = True
+        product.store_by = 'quantity'
         product.categ_id.property_cost_method = 'average'
         product.categ_id.property_valuation = 'real_time'
         product.list_price = 100
@@ -1571,7 +1571,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.product_avco_auto.product_tmpl_id.categ_id.property_cost_method = 'average'
         self.product_avco_auto.write({
             'lot_valuated': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         self.lot1, self.lot2 = self.env['stock.lot'].create([
             {'name': 'lot1', 'product_id': self.product_avco_auto.id},

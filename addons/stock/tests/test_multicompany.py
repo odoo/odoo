@@ -127,7 +127,7 @@ class TestMultiCompany(TransactionCase):
         before validating. The quant and stock moves should belong to Company A.
         """
         product = self.env['product.product'].create({
-            'is_storable': True,
+            'store_by': 'quantity',
             'company_id': self.company_a.id,
             'name': 'Product limited to company A',
         })
@@ -182,8 +182,7 @@ class TestMultiCompany(TransactionCase):
         the lot is created in Company A since the product belongs to Company A.
         """
         product = self.env['product.product'].create({
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
             'name': 'product',
             'company_id': self.company_a.id,
         })
@@ -223,8 +222,7 @@ class TestMultiCompany(TransactionCase):
         """
         product = self.env['product.product'].create({
             'type': 'consu',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
             'name': 'Cross-Company Product',
         })
         lot = self.env['stock.lot'].create({
@@ -254,7 +252,7 @@ class TestMultiCompany(TransactionCase):
         # Required for `warehouse_id` and `location_id` to be visible in the view
         self.user_a.group_ids += self.env.ref("stock.group_stock_multi_locations")
         product = self.env['product.product'].create({
-            'is_storable': True,
+            'store_by': 'quantity',
             'name': 'shared product',
         })
         orderpoint = Form(self.env['stock.warehouse.orderpoint'].with_user(self.user_a))
@@ -275,7 +273,7 @@ class TestMultiCompany(TransactionCase):
         # Required for `warehouse_id` and `location_id` to be visible in the view
         self.user_a.group_ids += self.env.ref("stock.group_stock_multi_locations")
         product = self.env['product.product'].create({
-            'is_storable': True,
+            'store_by': 'quantity',
             'name': 'shared product',
         })
         orderpoint = Form(self.env['stock.warehouse.orderpoint'].with_user(self.user_a))
@@ -294,7 +292,7 @@ class TestMultiCompany(TransactionCase):
         # to test the change of location when changing of warehouse within a same company
         warehouse_a2 = self.env['stock.warehouse'].with_user(self.user_a).sudo().create({'name': 'foo', 'code': 'foo'})
         product = self.env['product.product'].create({
-            'is_storable': True,
+            'store_by': 'quantity',
             'name': 'shared product',
         })
         orderpoint = self.env['stock.warehouse.orderpoint'].with_user(self.user_a).create({
@@ -414,7 +412,7 @@ class TestMultiCompany(TransactionCase):
         """
         product = self.env['product.product'].create({
             'name': 'p1',
-            'is_storable': True,
+            'store_by': 'quantity',
             'company_id': self.company_b.id,
         })
         picking_type_b = self.env['stock.picking.type'].search([
@@ -443,8 +441,7 @@ class TestMultiCompany(TransactionCase):
 
         self.user_a.company_ids = [(6, 0, [self.company_a.id])]
         product_lot = self.env['product.product'].create({
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'name': 'product lot',
         })
 
@@ -545,8 +542,7 @@ class TestMultiCompany(TransactionCase):
         self.assertTrue(resupply_route, "Resupply route not found")
 
         product_lot = self.env['product.product'].create({
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'name': 'product lot',
             'route_ids': [(4, resupply_route.id), (4, self.env.ref('stock.route_warehouse0_mto').id)],
         })
@@ -635,7 +631,7 @@ class TestMultiCompany(TransactionCase):
         self.warehouse_a.resupply_route_ids.rule_ids.propagate_cancel = True
         product = self.env['product.product'].create({
             'name': 'product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [(6, 0, self.warehouse_a.resupply_route_ids.ids)],
         })
 
@@ -706,7 +702,7 @@ class TestMultiCompany(TransactionCase):
         product = self.env['product.product'].create({
             'name': 'Test Storable Product',
             'type': 'consu',
-            'is_storable': True,
+            'store_by': 'quantity',
             'company_id': self.company_a.id,
         })
 

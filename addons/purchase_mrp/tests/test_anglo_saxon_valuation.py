@@ -20,7 +20,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         kit, compo01, compo02 = self.env['product.product'].create([{
             'name': name,
             'standard_price': price,
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': self.avco_category.id,
         } for name, price in [('Kit', 0), ('Compo 01', 10), ('Compo 02', 20)]])
 
@@ -82,7 +82,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
 
         component01, component02 = self.env['product.product'].create([{
             'name': 'Component %s' % name,
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': self.avco_category.id,
             'uom_id': uom_litre.id,
         } for name in ['01', '02']])
@@ -169,7 +169,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         kit, cmp = self.env['product.product'].create([{
             'name': name,
             'standard_price': 0,
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': self.avco_category.id,
         } for name in ['Kit', 'Cmp']])
 
@@ -224,13 +224,13 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         kit, component = self.env['product.product'].create([
             {
                 'name': 'Kit multi UoM',
-                'is_storable': True,
+                'store_by': 'quantity',
                 'uom_id': uom_unit.id,
                 'categ_id': self.category_avco_auto.id,
             },
             {
                 'name': 'Component meter',
-                'is_storable': True,
+                'store_by': 'quantity',
                 'uom_id': uom_meter.id,
                 'categ_id': self.category_avco_auto.id,
             },
@@ -344,14 +344,14 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         self.avco_category.property_stock_account_production_cost_id = cost_of_production_account.id
         final_product = self.env['product.product'].create({
             'name': 'final product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'standard_price': 0,
             'categ_id': self.avco_category.id,
             'route_ids': [(6, 0, self.env['stock.route'].search([('name', '=', 'Manufacture')], limit=1).ids)],
         })
         comp_1, comp_2 = self.env['product.product'].create([{
             'name': name,
-            'is_storable': True,
+            'store_by': 'quantity',
             'standard_price': 0,
             'categ_id': self.avco_category.id,
             'route_ids': [(4, self.env['stock.route'].search([('name', '=', 'Buy')], limit=1).id)],
@@ -576,7 +576,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         } for attribute, names in attributes_values for name in names])
         product_template = self.env['product.template'].create({
             'name': "lovely product",
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         size_attribute_lines, color_attribute_lines = self.env['product.template.attribute.line'].create([{
             'product_tmpl_id': product_template.id,
@@ -693,7 +693,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         } for name in ('S', 'M', 'L')])
         product_template = self.env['product.template'].create({
             'name': "Lovely product",
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         attribute_lines = self.env['product.template.attribute.line'].create({
             'product_tmpl_id': product_template.id,
@@ -773,7 +773,7 @@ class TestAngloSaxonValuationPurchaseMRP(TestStockValuationCommon):
         """
         kit, *components = self.env['product.product'].create([{
             'name': 'Product %s' % i,
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': self.category_avco_auto.id,
         } for i in range(7)])
         self.env['mrp.bom'].create([{

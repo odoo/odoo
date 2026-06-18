@@ -10,7 +10,7 @@ class TestAnalyticToSaleStock(TestStockCommon):
         cls.product_to_upsell = cls.env['product.product'].create({
             'name': 'Upsell Product',
             'type': 'consu',
-            'is_storable': True,
+            'store_by': 'quantity',
             'invoice_policy': 'delivery',
             'reinvoice_policy': 'sales_price',
         })

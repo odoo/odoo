@@ -110,7 +110,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
 
         prod1 = self.env['product.product'].create({
             'name': 'Special 1',
-            'is_storable': True,
+            'store_by': 'quantity',
             'list_price': 0,
             'taxes_id': False,
             'available_in_pos': True,
@@ -120,7 +120,7 @@ class TestSelfOrderMobile(SelfOrderCommonTest):
 
         prod2 = self.env['product.product'].create({
             'name': 'Special 2',
-            'is_storable': True,
+            'store_by': 'quantity',
             'list_price': 0,
             'taxes_id': False,
             'available_in_pos': True,

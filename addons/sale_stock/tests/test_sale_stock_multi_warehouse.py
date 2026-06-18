@@ -10,7 +10,7 @@ class TestSaleStockMultiWarehouse(TestSaleStockCommon, ValuationReconciliationTe
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.product_a.is_storable = True
+        cls.product_a.store_by = 'quantity'
 
         cls.warehouse_A = cls.company_data['default_warehouse']
         cls.env['stock.quant']._update_available_quantity(cls.product_a, cls.warehouse_A.lot_stock_id, 10)

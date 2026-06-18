@@ -118,7 +118,7 @@ class TestMrpMulticompany(common.TransactionCase):
 
         product = self.env['product.product'].create({
             'name': 'p1',
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         component = self.env['product.product'].create({
             'name': 'p2',
@@ -136,7 +136,7 @@ class TestMrpMulticompany(common.TransactionCase):
         mo_form = Form(self.env['mrp.production'].with_user(self.user_a))
         mo_form.product_id = product
         # The mo must be confirmed, no longer in draft, in order for `lot_producing_ids` to be visible in the view
-        # <div class="o_row" invisible="state == 'draft' or product_tracking in ('none', False)">
+        # <div class="o_row" invisible="state == 'draft' or not product_tracking">
         mo = mo_form.save()
         mo.action_confirm()
         mo_form = Form(mo)
@@ -154,7 +154,7 @@ class TestMrpMulticompany(common.TransactionCase):
         })
         component = self.env['product.product'].create({
             'name': 'p2',
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         lot_b = self.env['stock.lot'].create({
             'product_id': component.id,
@@ -290,7 +290,7 @@ class TestMrpMulticompany(common.TransactionCase):
         """ Check that is_kits is company dependant """
         semi_kit_product = self.env['product.product'].create({
             'name': 'Kit Kat',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.env['mrp.bom'].create([{
             'product_id': semi_kit_product.id,
@@ -321,8 +321,8 @@ class TestMrpMulticompany(common.TransactionCase):
         """
         self.warehouse_a.active = False
         product, component = self.env['product.product'].create([
-            {'name': 'p1', 'is_storable': True},
-            {'name': 'c1', 'is_storable': True},
+            {'name': 'p1', 'store_by': 'quantity'},
+            {'name': 'c1', 'store_by': 'quantity'},
         ])
         bom = self.env['mrp.bom'].create({
             'product_tmpl_id': product.product_tmpl_id.id,

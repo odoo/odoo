@@ -11,8 +11,7 @@ class TestPointOfSaleFlow(CommonPosStockTest):
         self.env.user.group_ids += self.env.ref('account.group_account_manager')
         self.stock_location = self.company_data['default_warehouse'].lot_stock_id
         self.twenty_dollars_no_tax.product_variant_id.write({
-            'tracking': 'serial',
-            'is_storable': True,
+            'store_by': 'serial',
             'taxes_id': []
         })
         lot_1 = self.env['stock.lot'].create({
@@ -78,8 +77,7 @@ class TestPointOfSaleFlow(CommonPosStockTest):
 
         product = self.env['product.product'].create({
             'name': 'Product Lot Tracked',
-            'tracking': 'lot',
-            'is_storable': True,
+            'store_by': 'lot',
             'available_in_pos': True,
             'lst_price': 10,
         })
