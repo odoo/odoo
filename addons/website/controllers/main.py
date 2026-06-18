@@ -534,10 +534,9 @@ class Website(Home):
                         continue
         return None
 
-    def _get_configurator_preview_image_url(self, theme_name, images_map, image_name):
-        """Return the replacement URL for a preview image.
+    def _get_configurator_industry_image_url(self, images_map, image_name):
+        """Return the IAP industry image replacing a preview image, if any.
 
-        :param str theme_name: name of the previewed theme
         :param dict images_map: industry image replacement mapping
         :param str image_name: original image name or URL segment
         :return: replacement image URL, if any
@@ -549,6 +548,22 @@ class Website(Home):
         image_url = images_map.get(image_name)
         if image_url:
             return image_url.replace('/small/', '/')
+        return None
+
+    def _get_configurator_preview_image_url(self, theme_name, images_map, image_name):
+        """Return the replacement URL for a preview image.
+
+        :param str theme_name: name of the previewed theme
+        :param dict images_map: industry image replacement mapping
+        :param str image_name: original image name or URL segment
+        :return: replacement image URL, if any
+        :rtype: str | None
+        """
+        image_url = self._get_configurator_industry_image_url(images_map, image_name)
+        if image_url:
+            return image_url
+        image_name = urllib.parse.unquote(image_name).split('?', 1)[0]
+        image_name = CONFIGURATOR_PREVIEW_FALLBACK_IMAGES.get(image_name, image_name)
         return self._get_theme_static_preview_image_url(theme_name, image_name)
 
     def _apply_configurator_preview_images(self, final_html, theme_name, images_map):
@@ -560,15 +575,6 @@ class Website(Home):
         :return: preview HTML with updated image URLs
         :rtype: str
         """
-        for image_url in set(re.findall(r'/web/image/[^"\'\s,)]+', final_html)):
-            mapped_image_url = self._get_configurator_preview_image_url(
-                theme_name,
-                images_map,
-                image_url.replace('/web/image/', '', 1),
-            )
-            if mapped_image_url:
-                final_html = final_html.replace(image_url, mapped_image_url)
-
         shape_urls = set(re.findall(r'/html_editor/image_shape/([^/"\']+)/([^"\'\s)]+)', final_html))
         for image_name, shape_path in shape_urls:
             mapped_image_url = self._get_configurator_preview_image_url(theme_name, images_map, image_name)
@@ -607,6 +613,31 @@ class Website(Home):
             image_query = werkzeug.urls.url_encode({'image_url': mapped_image_url})
             shaped_url = f'{shaped_url}?{shape_query}&{image_query}' if shape_query else f'{shaped_url}?{image_query}'
             final_html = final_html.replace(shape_src, shaped_url)
+
+        # The preview generator keeps theme images local (in src or in a
+        # style url()) and stores their attachment key in the
+        # industry_image_key attribute: replace the local image when an IAP
+        # industry image matches the key.
+        def replace_keyed_image(match):
+            el = match.group(0)
+            image_url = self._get_configurator_industry_image_url(images_map, match.group(1))
+            if not image_url:
+                return el
+            el = re.sub(r'src="[^"]*"', lambda _m: f'src="{image_url}"', el)
+            return re.sub(r'url\((["\']?)[^)]*?\1\)', lambda m: f'url({m.group(1)}{image_url}{m.group(1)})', el)
+
+        final_html = re.sub(r'<[^>]*\bindustry_image_key="([^"]*)"[^>]*>', replace_keyed_image, final_html)
+
+        def replace_image_url(match):
+            image_url = match.group(0)
+            mapped_image_url = self._get_configurator_preview_image_url(
+                theme_name,
+                images_map,
+                image_url.replace('/web/image/', '', 1),
+            )
+            return mapped_image_url or image_url
+
+        final_html = re.sub(r'/web/image/[^"\'\s,)]+', replace_image_url, final_html)
         return final_html
 
     def _get_configurator_preview_shape_url(self, shape_url, palette_map):
