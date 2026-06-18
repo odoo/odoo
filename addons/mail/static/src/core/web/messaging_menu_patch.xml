@@ -20,9 +20,9 @@
                 <t t-if="!this.ui.isSmall">
                     <MessagingMenuQuickSearch t-if="this.state.searchOpen" onClose.bind="this.toggleSearch"/>
                     <t t-else="">
-                        <button class="o-mail-MessagingMenu-headerFilter btn btn-sm btn-link o-px-1_5 py-1 m-1 lh-1" t-att-class="this.store.discuss.activeTab === 'notification' ? 'fw-bold o-active shadow-sm' : 'text-muted'" type="button" role="tab" t-on-click="() => this.store.discuss.activeTab = 'notification'">Notifications</button>
-                        <button class="o-mail-MessagingMenu-headerFilter btn btn-sm btn-link o-px-1_5 py-1 m-1 lh-1" t-att-class="this.store.discuss.activeTab === 'chat' ? 'fw-bold o-active shadow-sm' : 'text-muted'" type="button" role="tab" t-on-click="() => this.store.discuss.activeTab = 'chat'">Chats</button>
-                        <button class="o-mail-MessagingMenu-headerFilter btn btn-sm btn-link o-px-1_5 py-1 m-1 lh-1" t-att-class="this.store.discuss.activeTab === 'channel' ? 'fw-bold o-active shadow-sm' : 'text-muted'" type="button" role="tab" t-on-click="() => this.store.discuss.activeTab = 'channel'">Channels</button>
+                        <t t-call="mail.MessagingMenu.headerFilter" name="'notification'" label.translate="Notifications"/>
+                        <t t-call="mail.MessagingMenu.headerFilter" name="'chat'" label.translate="Chats"/>
+                        <t t-call="mail.MessagingMenu.headerFilter" name="'channel'" label.translate="Channels"/>
                         <button t-if="(this.threads.length + this.visibleStandaloneMessages.length) >= 20 and this.store.channels.status !== 'fetching'" class="btn btn-sm btn-link py-1 rounded-0 text-muted" type="button" title="Quick search" t-on-click="this.toggleSearch"><i class="fa fa-fw fa-search"/></button>
                         <button t-if="this.store.channels.status === 'fetching'" class="btn btn-sm btn-light py-1 rounded-0" disabled="true" type="button"><i class="fa fa-fw fa-circle-o-notch fa-spin"/></button>
                     </t>
@@ -99,5 +99,9 @@
                 </t>
             </t>
         </xpath>
+    </t>
+
+    <t t-name="mail.MessagingMenu.headerFilter">
+        <button class="o-mail-MessagingMenu-headerFilter btn btn-sm btn-link o-px-1_5 py-1 m-1 lh-1" t-att-class="this.store.discuss.activeTab === name ? 'fw-bold o-active shadow-sm' : 'text-muted'" t-out="label" type="button" role="tab" t-on-click="() => this.store.discuss.activeTab = name"/>
     </t>
 </templates>

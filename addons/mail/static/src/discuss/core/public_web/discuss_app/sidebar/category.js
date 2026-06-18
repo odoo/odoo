@@ -46,6 +46,10 @@ export class DiscussSidebarCategory extends Component {
         return [];
     }
 
+    get isOpen() {
+        return this.category.is_open;
+    }
+
     get isToggleFoldDisabled() {
         return !this.category.channels.some((channel) => channel.isDisplayInSidebar);
     }
