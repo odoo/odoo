@@ -5,9 +5,9 @@
         t-attf-class="control-button btn btn-lg {{btnClasses ? btnClasses : ''}} d-inline-flex flex-md-column justify-content-md-center gap-1 overflow-hidden"
         t-on-click="onClick"
         t-att-disabled="disabled ? 'disabled' : ''">
-            <i t-if="iconClasses" t-attf-class="{{iconClasses}} {{!this.ui.isSmall ? ' fa-2x fa-fw' : ''}} align-self-center opacity-50" role="img" aria-hidden="true"/>
+            <i t-if="iconClasses" t-attf-class="{{iconClasses}} {{this.ui.isSmall ? ' fa-fw' : ''}} align-self-center opacity-50" role="img" aria-hidden="true"/>
             <t t-if="badge" t-out="badge"/>
-            <span t-attf-class="d-flex flex-md-column flex-grow-1 flex-md-grow-0 align-items-center align-items-md-stretch min-w-0 {{this.ui.isSmall ? ' lh-sm' : ''}} text-start text-md-center">
+            <span t-attf-class="d-flex flex-md-column flex-grow-1 flex-md-grow-0 align-items-center align-self-md-stretch justify-content-md-center min-w-0 text-start text-md-center">
                 <span class="px-1" t-out="btnText"/>
                 <t t-if="subText" t-out="subText"/>
             </span>
