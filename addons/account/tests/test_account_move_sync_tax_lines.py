@@ -258,3 +258,39 @@ class TestAccountMoveSyncTaxLines(AccountTestInvoicingCommon):
 
         py_tax_line = invoice.line_ids.filtered(lambda l: l.tax_line_id == py_tax)
         self.assertEqual(py_tax_line.amount_currency, -7, "manual tax amount must be preserved on neutral edit")
+
+    def test_manual_tax_amount_preserved_on_analytic_change(self):
+        # Test that a manually adjusted tax amount is preserved when
+        # an unrelated field like analytic_distribution is modified.
+        analytic_plan = self.env['account.analytic.plan'].create({'name': 'Test Plan'})
+        analytic_account = self.env['account.analytic.account'].create({
+            'name': 'Test Account',
+            'plan_id': analytic_plan.id,
+        })
+        analytic_dist = {str(analytic_account.id): 100.0}
+
+        invoice = self._create_invoice_one_line(
+            price_unit=82.64,
+            tax_ids=self.tax_21,
+        )
+        self.assertRecordValues(invoice.line_ids.sorted('amount_currency'), [
+            {'amount_currency': -82.64},
+            {'amount_currency': -17.35},
+            {'amount_currency': 99.99},
+        ])
+
+        tax_line = invoice.line_ids.filtered('tax_line_id')
+        invoice.line_ids = [Command.update(tax_line.id, {'amount_currency': -17.36})]
+        self.assertRecordValues(invoice.line_ids.sorted('amount_currency'), [
+            {'amount_currency': -82.64},
+            {'amount_currency': -17.36},
+            {'amount_currency': 100.00},
+        ])
+
+        base_line = invoice.invoice_line_ids
+        invoice.line_ids = [Command.update(base_line.id, {'analytic_distribution': analytic_dist})]
+        self.assertRecordValues(invoice.line_ids.sorted('amount_currency'), [
+            {'amount_currency': -82.64, 'analytic_distribution': analytic_dist},
+            {'amount_currency': -17.36, 'analytic_distribution': False},
+            {'amount_currency': 100.00, 'analytic_distribution': False},
+        ])
