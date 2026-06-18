@@ -95,7 +95,7 @@ export class EmojiPlugin extends Plugin {
         const text = selection.anchorNode.textContent;
 
         for (let candidatePosition = start - 1; candidatePosition >= 0; candidatePosition--) {
-            const match = text.substring(candidatePosition);
+            const match = text.substring(candidatePosition, start);
             if (!emojiLoader.map.has(match)) {
                 continue;
             }
