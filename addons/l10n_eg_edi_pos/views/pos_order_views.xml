@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_pos_form" model="ir.ui.view">
+        <field name="name">pos.order.form.inherit.l10n_eg_edi_pos</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="action_l10n_eg_edi_pos_resend" type="object" string="ETA (Egypt)"
+                        invisible="country_code != 'EG' or not l10n_eg_edi_pos_enable or state in ['draft', 'cancel'] or l10n_eg_edi_pos_state in ['sent', 'sent_test']"/>
+            </header>
+            <button name="action_pos_order_invoice" position="attributes">
+                <attribute name="invisible" add="(country_code == 'EG' and l10n_eg_edi_pos_state not in ['sent', 'sent_test'])" separator=" or "/>
+            </button>
+            <xpath expr="//sheet" position="before">
+                <div class="alert alert-warning" role="alert" invisible="not l10n_eg_edi_pos_error">
+                    <div class="p-0 m-0">
+                        <i class="fa fa-warning" role="img" title="ETA Error"/>
+                        <span class="mx-1">e-Receipt (Egypt)</span>
+                        <a name="download_l10n_eg_edi_pos_json_doc_file" type="object" groups="base.group_no_one" class="float-end">Download JSON</a>
+                    </div>
+                    <field name="l10n_eg_edi_pos_error"/>
+                </div>
+            </xpath>
+            <group name="other_information" position="inside">
+                <field name="l10n_eg_edi_pos_state" invisible="country_code != 'EG'" readonly="1"/>
+            </group>
+        </field>
+    </record>
+
+    <record id="view_pos_order_tree" model="ir.ui.view">
+        <field name="name">pos.order.list.inherit.l10n_eg_edi_pos</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="before">
+                <field name="l10n_eg_edi_pos_state" widget="badge" optional="hide"
+                       decoration-success="l10n_eg_edi_pos_state in ['sent', 'sent_test']"
+                       decoration-danger="l10n_eg_edi_pos_state in ['error', 'error_test', 'rejected', 'rejected_test']"/>
+                <field name="l10n_eg_edi_pos_error" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_pos_order_filter" model="ir.ui.view">
+        <field name="name">pos.order.search.inherit.l10n_eg_edi_pos</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='status']" position="before">
+                <filter string="ETA Receipt State" name="l10n_eg_edi_pos_state" context="{'group_by': 'l10n_eg_edi_pos_state'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

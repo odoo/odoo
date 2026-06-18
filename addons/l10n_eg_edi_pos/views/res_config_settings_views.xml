@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_eg_edi_pos</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="point_of_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <block id="pos_bills_and_receipts_section" position="after">
+                <block title="Egypt E-Receipts (ETA)" id="l10n_eg_edi_pos_section" invisible="country_code != 'EG'">
+                    <setting id="l10n_eg_edi_pos_setting"
+                             string="Submit POS receipts to ETA">
+                        <field name="pos_l10n_eg_edi_pos_enable"/>
+                        <div class="row" invisible="not pos_l10n_eg_edi_pos_enable">
+                            <div>
+                                <div class="text-muted">Egypt ETA e-Receipt Configuration Steps:</div>
+                                <ol class="text-muted">
+                                    <li>Access the portal based on your environment — Production: invoicing.eta.gov.eg<br/>Pre-production (testing only): profile.preprod.eta.gov.eg</li>
+                                    <li>Go to "View Taxpayer Profile", under "Representatives", "ERP". Click the three dots (⋮) next to your ERP entry and select Regenerate Secrets.</li>
+                                    <li>Navigate to the "Point of Sale" section and click "Register Point of Sale". Fill in the required details: Branch, Vendor &amp; Model, Active from, and Serial Number.</li>
+                                    <li>Once POS registered, note down the "Serial Number" and "Branch / Address Number".</li>
+                                    <li>In Odoo, fill in the fields below using the credentials and device details retrieved above.</li>
+                                </ol>
+                                <div class="text-muted">Onboard your Point of Sale Journal:</div>
+                                <ol class="text-muted">
+                                    <li>Access the portal based on your environment:<br/>Production: invoicing.eta.gov.eg<br/>Pre-production (testing only): profile.preprod.eta.gov.eg</li>
+                                    <li>Go to "View Taxpayer Profile", Click on Branches.</li>
+                                    <li>Under Activity Codes, note down the Code and the descriptions.</li>
+                                    <li>In Odoo, go to Point of Sales &gt; Configuration &gt; Settings.</li>
+                                    <li>Scroll to Accounting Section &gt; Default Journals.</li>
+                                    <li>Click on the internal link of Orders Journal.</li>
+                                    <li>Fill Branch with "Company Contact Name" , ETA Activity Code and ETA Branch ID.</li>
+                                </ol>
+                                <div class="text-muted">⚠️ Notes:</div>
+                                <ol class="text-muted">
+                                    <li>Save your Client ID, Client Secret 1, and Client Secret 2 immediately. You will not be able to retrieve them again after closing this screen.</li>
+                                    <li>Production and Pre-production portals have separate credentials. Make sure to update your Odoo instance when switching environments.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </setting>
+                    <setting invisible="not pos_l10n_eg_edi_pos_enable">
+                        <div class="content-group">
+                            <div class="row">
+                                <label class="col-lg-4 o_light_label" for="pos_l10n_eg_edi_pos_client_id" string="Client ID"/>
+                                <field required="pos_l10n_eg_edi_pos_enable" name="pos_l10n_eg_edi_pos_client_id"/>
+                            </div>
+                            <div class="row">
+                                <label class="col-lg-4 o_light_label" for="pos_l10n_eg_edi_pos_client_secret" string="Client Secret"/>
+                                <field required="pos_l10n_eg_edi_pos_enable" name="pos_l10n_eg_edi_pos_client_secret"/>
+                            </div>
+                            <div class="row">
+                                <label class="col-lg-4 o_light_label" for="pos_l10n_eg_edi_pos_serial_number" string="Serial Number"/>
+                                <field required="pos_l10n_eg_edi_pos_enable" name="pos_l10n_eg_edi_pos_serial_number"/>
+                            </div>
+                            <div class="row mt-16">
+                                <field required="pos_l10n_eg_edi_pos_enable" class="mx-0 oe_inline" name="pos_l10n_eg_edi_pos_preprod"/>
+                                <label class="col-lg-7 o_light_label" for="pos_l10n_eg_edi_pos_preprod"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </block>
+        </field>
+    </record>
+</odoo>

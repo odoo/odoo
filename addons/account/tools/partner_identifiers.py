@@ -256,6 +256,13 @@ IDENTIFIERS_METADATA = {
         'category': 'TIN',
         'countries': ['EC'],
     },
+    'EG_NIN': {
+        'sequence': 10,
+        'label': _lt('National ID'),
+        'help': _lt('Egyptian National ID (14 digits) used to identify individuals.'),
+        'placeholder': '12345678901234',
+        'countries': ['EG'],
+    },
     'EE_EN': {
         'sequence': 10,
         'scheme': '0191',

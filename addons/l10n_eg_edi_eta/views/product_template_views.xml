@@ -8,8 +8,22 @@
             <field name="inherit_id" ref="product.product_template_only_form_view"/>
             <field name="arch" type="xml">
                 <page name="invoicing" position="inside">
-                    <group name="l10n_eg_eta_edi" string="Egyptian Electronic Invoicing" invisible="'EG' not in fiscal_country_codes or product_variant_count &gt; 1">
+                    <group name="l10n_eg_eta_edi" string="Egypt Electronic Invoicing" invisible="'EG' not in fiscal_country_codes or product_variant_count &gt; 1">
                         <field name="l10n_eg_eta_code" help="ETA Field for GS1/EGS product codes. Please use the barcode field to store GS1/EGS ETA code if possible"/>
+                        <div colspan="2" class="alert alert-warning" role="alert">
+                            <p class="m-0">
+                                <strong>WARNING - This code must match the ETA portal</strong>
+                            </p>
+                            <p class="mt-1 mb-2">
+                                Submissions to the Egyptian Tax Authority will be silently rejected if this code does not match the one registered for this item on the ETA portal.
+                            </p>
+                            <div>
+                                <button name="action_open_eta_codes_portal" type="object" class="btn btn-link p-0">
+                                    <i class="fa fa-arrow-right text-muted me-1"/>
+                                    Check on the ETA portal
+                                </button>
+                            </div>
+                        </div>
                     </group>
                 </page>
                 <page name="invoicing" position="attributes">
@@ -24,8 +38,22 @@
             <field name="inherit_id" ref="product.product_normal_form_view" />
             <field name="arch" type="xml">
                 <page name="invoicing" position="inside">
-                    <group name="l10n_eg_eta_edi" string="Egyptian Electronic Invoicing">
+                    <group name="l10n_eg_eta_edi" string="Egypt Electronic Invoicing">
                         <field name="l10n_eg_eta_code" help="ETA Field for GS1/EGS product codes. Please use the barcode field to store GS1/EGS ETA code if possible"/>
+                        <div colspan="2" class="alert alert-warning" role="alert">
+                            <p class="m-0">
+                                <strong>WARNING - This code must match the ETA portal</strong>
+                            </p>
+                            <p class="mt-1 mb-2">
+                                Submissions to the Egyptian Tax Authority will be silently rejected if this code does not match the one registered for this item on the ETA portal.
+                            </p>
+                            <div>
+                                <button name="action_open_eta_codes_portal" type="object" class="btn btn-link p-0">
+                                    <i class="fa fa-arrow-right text-muted me-1"/>
+                                    Check on the ETA portal
+                                </button>
+                            </div>
+                        </div>
                     </group>
                 </page>
             </field>

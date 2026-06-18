@@ -221,7 +221,10 @@ class AccountEdiFormat(models.Model):
         fields = ["country_id",
                   "state_id", "city", "street",
                   "l10n_eg_building_no"]
-        if (invoice and invoice.amount_total >= invoice.company_id.l10n_eg_invoicing_threshold) or self._l10n_eg_get_partner_tax_type(partner_id, issuer) != 'P':
+        partner_type = self._l10n_eg_get_partner_tax_type(partner_id, issuer)
+        if partner_type != 'P' or (invoice and invoice.amount_total >= invoice.company_id.l10n_eg_invoicing_threshold):
+            if partner_type == 'P':
+                return all(partner_id[field] for field in fields) and partner_id._get_additional_identifier('EG_NIN')
             fields.append('vat')
         return all(partner_id[field] for field in fields)
 
@@ -384,7 +387,7 @@ class AccountEdiFormat(models.Model):
         individual_type = self._l10n_eg_get_partner_tax_type(partner, issuer)
         address['type'] = individual_type or ''
         if invoice.amount_total >= invoice.company_id.l10n_eg_invoicing_threshold or individual_type != 'P':
-            address['id'] = partner.vat or ''
+            address['id'] = (partner._get_additional_identifier('EG_NIN') if individual_type == 'P' else partner.vat) or ''
         return address
 
     # -------------------------------------------------------------------------
