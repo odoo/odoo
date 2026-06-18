@@ -250,7 +250,7 @@ class ProductProduct(models.Model):
                 if cost_method == 'standard':
                     std_prices, total_values = products._run_standard_batch(at_date=at_date)
                 elif cost_method == 'average':
-                    std_prices, total_values = products._run_average_batch(at_date=at_date)
+                    std_prices, total_values = products._run_avco(at_date=at_date)
                 else:
                     std_prices, total_values = products._run_fifo_batch(at_date=at_date)
 
@@ -390,7 +390,7 @@ class ProductProduct(models.Model):
         value_by_product_id = {p.id: p.qty_available * std_price_by_product_id.get(p.id, 0) for p in self}
         return std_price_by_product_id, value_by_product_id
 
-    def _run_average_batch(self, at_date=None, lot=None, force_recompute=False):
+    def _run_avco(self, at_date=None, lot=None, force_recompute=False):
         std_price_by_product_id = defaultdict(float)
         value_by_product_id = defaultdict(float)
         quantity_by_product_id = {}
@@ -526,18 +526,15 @@ class ProductProduct(models.Model):
 
         return std_price_by_product_id, value_by_product_id
 
-    def _run_fifo(self, quantity, lot=None, at_date=None, location=None):
+    def _get_fifo_value(self, quantity, lot=None, location=None):
         """ Returns the value for the next outgoing product base on the qty give as argument."""
         self.ensure_one()
         if self.uom_id.compare(quantity, 0) <= 0:
             std_price = lot.standard_price if lot else self.standard_price
-            if at_date:
-                last_in = self._get_last_in(at_date)
-                return quantity * (last_in._get_price_unit() if last_in else std_price)
             return quantity * std_price
 
         fifo_cost = 0
-        fifo_stack, qty_on_first_move = self._run_fifo_get_stack(lot=lot, at_date=at_date, location=location)
+        fifo_stack, qty_on_first_move = self._run_fifo_get_stack(lot=lot, location=location)
         last_move = False
         # Going up to get the quantity in the argument
         while quantity > 0 and fifo_stack:
@@ -641,21 +638,10 @@ class ProductProduct(models.Model):
                             product.sudo().standard_price = last_in_price_unit
                 continue
             if cost_method == 'average':
-                new_standard_price_by_product = self._run_average_batch(force_recompute=True)[0]
+                new_standard_price_by_product = self._run_avco(force_recompute=True)[0]
                 for product in products:
                     if product.id in new_standard_price_by_product:
                         product.sudo().standard_price = new_standard_price_by_product[product.id]
-
-    # -------------------------------------------------------------------------
-    # Old to remove
-    # -------------------------------------------------------------------------
-    def _run_avco(self, at_date=None, lot=None, method="realtime"):
-        self.ensure_one()
-        price_unit, value = self._run_average_batch(at_date=at_date, lot=lot, force_recompute=True)
-        return price_unit[self.id], value[self.id]
-
-    def _get_value_from_lots(self):
-        return 0
 
 
 class ProductCategory(models.Model):

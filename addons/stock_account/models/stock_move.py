@@ -343,7 +343,7 @@ class StockMove(models.Model):
 
             if move.product_id.cost_method == 'fifo':
                 valued_qty = move._get_valued_qty()
-                move.value = - move.product_id.with_context(fifo_qty_already_processed=fifo_qty_processed[move.product_id])._run_fifo(valued_qty)
+                move.value = - move.product_id.with_context(fifo_qty_already_processed=fifo_qty_processed[move.product_id])._get_fifo_value(valued_qty)
                 fifo_qty_processed[move.product_id] += valued_qty
             else:
                 move.value = - move.product_id.standard_price * move._get_valued_qty()
