@@ -162,6 +162,7 @@
                                     <field name="for_read" readonly="is_standard"/>
                                     <field name="for_write" readonly="is_standard"/>
                                     <field name="for_unlink" readonly="is_standard"/>
+                                    <field name="operation" column_invisible="1"/> <!-- field is necessary for create() -->
                                     <field name="domain" readonly="is_standard"/>
                                     <button name="customize" type="object" invisible="not is_standard"
                                         string="Customize" help="Duplicate this access to customize it"/>
