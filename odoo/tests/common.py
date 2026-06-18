@@ -1123,10 +1123,16 @@ class BaseCase(case.TestCase):
             message = f"Trying to open a test cursor for {self.canonical_tag} while already in a test {odoo.modules.module.current_test.canonical_tag}"
             _logger.runbot(message)
             raise BadRequest(message)
+        if isinstance(request, Mock):
+            return
         if not request or self.http_request_allow_all:
             return
         http_request_required_key = self.http_request_key
-        http_request_key = request.cookies.get(TEST_CURSOR_COOKIE_NAME)
+        # Read from the raw transmitted cookies rather than request.cookies.
+        # The latter can be cleared by a handler (e.g. downgrade_to_public_user
+        # in livechat CORS flows) before a new cursor is opened, which would
+        # incorrectly fail this check even though the cookie was sent by the test.
+        http_request_key = request.httprequest.cookies.get(TEST_CURSOR_COOKIE_NAME)
         if http_request_key != http_request_required_key:
             expected = http_request_required_key
             if not expected:
