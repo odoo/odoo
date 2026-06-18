@@ -77,7 +77,7 @@ class AccountMoveSend(models.AbstractModel):
             })
         # Add mail attachments if sending methods support them
         if self._display_attachments_widget(vals['invoice_edi_format'], vals['sending_methods']):
-            mail_attachments_widget = self._get_default_mail_attachments_widget(
+            mail_attachments_widget = self.with_context(sending_method=vals['sending_methods'])._get_default_mail_attachments_widget(
                 move,
                 mail_template,
                 invoice_edi_format=vals['invoice_edi_format'],
