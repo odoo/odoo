@@ -1,7 +1,21 @@
-import { effect, immediateEffect, proxy, untrack, useEffect } from "@odoo/owl";
+import { effect, immediateEffect, plugin, proxy, untrack, useEffect, useScope } from "@odoo/owl";
 
 import { AssetsLoadingError, getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
+
+/**
+ * Version of plugin() where the plugin is allowed to not be provided by any parented component.
+ *
+ * @template T
+ * @param {T extends import("@odoo/owl").PluginConstructor} pluginType
+ * @returns {import("@odoo/owl").PluginInstance<T>|undefined}
+ */
+export function maybePlugin(pluginType) {
+    if (useScope().pluginManager?.getPluginById(pluginType.id)) {
+        return plugin(pluginType);
+    }
+    return undefined;
+}
 
 export function assignDefined(obj, data, keys = Object.keys(data)) {
     for (const key of keys) {
