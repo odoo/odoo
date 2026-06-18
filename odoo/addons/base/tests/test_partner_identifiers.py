@@ -135,6 +135,7 @@ class TestPartnerIdentifiers(TransactionCase):
             'placeholder',
             'scheme',
             'sequence',
+            'synced',
             'validation_function',
         }
         for identifier_name, metadata in self.env['res.partner']._get_all_identifiers_metadata().items():
@@ -146,6 +147,8 @@ class TestPartnerIdentifiers(TransactionCase):
                     self.assertTrue(isinstance(metadata[key], list) if metadata[key] else True, f"Value for key '{key}' is not a list or None for identifier {identifier_name}")
                 if key == 'display_optional':
                     self.assertIn(metadata[key], ['show', 'hide', None], f"Value for key '{key}' is not in ['show', 'hide', None] for identifier {identifier_name}")
+                if key == 'synced':
+                    self.assertTrue(isinstance(metadata[key], bool), f"Value for key '{key}' is not a boolean for identifier {identifier_name}")
 
     def test_tin_metadata_single_entry_per_country(self):
         """ ``get_tin_metadata_of_country`` assumes a single tax ID per country, so each
