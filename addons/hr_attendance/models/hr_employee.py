@@ -88,7 +88,7 @@ class HrEmployee(models.Model):
 
     def _has_attendance_check_in_ability(self):
         self.ensure_one()
-        return True
+        return self.company_id.attendance_from_systray
 
     @api.depends('parent_id')
     def _compute_attendance_manager(self):
