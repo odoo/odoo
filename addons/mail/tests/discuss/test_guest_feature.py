@@ -1,11 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+
+from odoo.tests.common import HttpCase
+
 from odoo.addons.bus.tests.common import WebsocketCase
 from odoo.addons.mail.tests.common import MailCommon
 
 
-class TestGuestFeature(WebsocketCase, MailCommon):
+class TestGuestFeature(MailCommon, HttpCase):
     def test_mark_as_read_as_guest(self):
         guest = self.env["mail.guest"].create({"name": "Guest"})
         partner = self.env["res.partner"].create({"name": "John"})
@@ -30,6 +33,8 @@ class TestGuestFeature(WebsocketCase, MailCommon):
         )
         self.assertEqual(guest_member.seen_message_id, channel.message_ids[0])
 
+
+class TestGuestFeatureWebsocket(WebsocketCase, MailCommon):
     def test_subscribe_to_guest_channel(self):
         self._reset_bus()
         guest = self.env["mail.guest"].create({"name": "Guest"})

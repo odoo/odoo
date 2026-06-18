@@ -1,21 +1,23 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from datetime import timedelta
 from hashlib import sha512
 from secrets import choice
-from markupsafe import Markup
-from datetime import timedelta
 
-from odoo import _, api, fields, models, tools, Command
+from markupsafe import Markup
+
+from odoo import Command, _, api, fields, models, tools
+from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
+from odoo.fields import Domain
+from odoo.tools import BinaryBytes, email_normalize, format_list, html_escape
+from odoo.tools.misc import OrderedSet, hash_sign, limited_field_access_token
+from odoo.tools.sql import SQL
+
 from odoo.addons.base.models.avatar_mixin import get_random_ui_color_from_seed
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.web_push import PUSH_NOTIFICATION_TYPE
-from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.fields import Domain
-from odoo.tools import BinaryBytes, format_list, email_normalize, html_escape
-from odoo.tools.misc import hash_sign, limited_field_access_token, OrderedSet
-from odoo.tools.sql import SQL
 
 channel_avatar = '''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530.06 530.06">
 <rect width="530.06" height="530.06" fill="#875a7b"/>
@@ -568,6 +570,67 @@ class DiscussChannel(models.Model):
         res[None].attr("is_readonly", predicate=is_channel)
         res[None].extend(["last_interest_dt", "member_count", "name", "uuid"])
 
+    def _update_last_interest_dt(self, date=None):
+        """Update last_interest_dt in a way that prevents concurrency errors against parallel
+        callers of this method.
+
+        The goal is to allow several users to post messages in parallel by not holding a lock on a
+        common table, including in situations where one post is particularly slow. If the channel
+        row is locked through another flow, it is acceptable to have the concurrency error still
+        happening, as other channel writes should be infrequent enough compared to posting messages.
+
+        In particular, if the row is locked to write another field than last_interest_dt, the error
+        must not be ignored and a retry is expected to happen to guarantee last_interest_dt does
+        get updated to a recent value, which is very important to unhide (if necessary) and to bump
+        the channel to the top of the list when new messages are posted.
+
+        On the other hand, if the row is locked specifically to write last_interest_dt, it means
+        another message is being posted and it is acceptable to not update last_interest_dt in this
+        case, as it should be updated by the concurrent flow. This explains why
+        pg_try_advisory_xact_lock is used rather than FOR UPDATE NOWAIT or ON CONFLICT DO NOTHING.
+
+        Important note: this method is meant to be called only in flows where no other writes on
+        channel occur on the main transaction, as this would create a guaranteed concurrency issue.
+        This constraint is acceptable, as if there was another write that locks the channel row in
+        the same flow, it would imply the goal of allowing concurrent posts would not be achieved.
+
+        Using a separate transaction allows to quickly release the lock, which reduces situations
+        where an old transaction could keep the lock for a long time and prevent newer transactions
+        from updating the field to a more recent value. If this was allowed, this would create a
+        situation where the channel would not be bumped to the top of the list even though it
+        contains newer messages. The separate transaction implies last_interest_dt might be updated
+        even if the main transaction is rolled back, but this is an acceptable trade-off as it is
+        less problematic to bump the channel by mistake than not bumping it when necessary,
+        especially because if a user attempted to post a message, they are likely to try again soon
+        afterwards.
+
+        Finally, it is preferable to update last_interest_dt through the ORM rather than with a
+        custom query, as its change must be caught to both trigger _sync_field_names to send the newer
+        value on the bus, and as a dependency of some compute fields.
+        """
+        date = date or fields.Datetime.now()
+        if not self.env.context.get("mail_post_check_concurrency"):
+            # sudo: discuss.channel - can update last interest in controlled flows
+            self.sudo().last_interest_dt = date
+            return
+        for channel in self:
+            with self.env.registry.cursor() as cr:
+                cr.execute(
+                    SQL(
+                        "SELECT pg_try_advisory_xact_lock(hashtext('discuss_channel.last_interest_dt'), %(channel_id)s)",
+                        channel_id=channel.id,
+                    ),
+                )
+                if not cr.fetchone()[0]:
+                    continue
+                # sudo: discuss.channel - can update last interest in controlled flows
+                try:
+                    channel.with_env(self.env(cr=cr)).sudo().last_interest_dt = date
+                except MissingError:
+                    # when the channel is created in the outer transaction it is not yet visible
+                    # by the inner transaction and there can be no concurrency issue
+                    channel.sudo().last_interest_dt = date
+
     # ------------------------------------------------------------
     # MEMBERS MANAGEMENT
     # ------------------------------------------------------------
@@ -1067,8 +1130,7 @@ class DiscussChannel(models.Model):
 
     def message_post(self, *, message_type="notification", partner_ids=None, **kwargs):
         if message_type not in ["notification", "user_notification"]:
-            # sudo: discuss.channel - write to discuss.channel is not accessible for most users
-            self.sudo().last_interest_dt = fields.Datetime.now()
+            self._update_last_interest_dt()
         if special_mentions := kwargs.pop("special_mentions", []):
             partners = self.env['res.partner'].browse(partner_ids or [])
             partner_members = self.channel_member_ids.partner_id
