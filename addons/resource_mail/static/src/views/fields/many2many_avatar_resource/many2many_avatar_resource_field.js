@@ -20,11 +20,10 @@ import { Many2ManyTagsAvatarFieldPopover } from "@web/views/fields/many2many_tag
 // TODO: Remove me in master
 export class AvatarResourceMany2XAutocomplete extends Many2XAutocomplete {}
 
-class ResourceTag extends Component {
+export class ResourceTag extends Component {
     static template = "resource_mail.ResourceTag";
     static components = { AvatarTag };
     static props = {
-        color: { type: Number, optional: true },
         imageUrl: { type: String, optional: true },
         onAvatarClick: { type: Function, optional: true },
         onDelete: { type: Function, optional: true },
@@ -53,7 +52,6 @@ const WithResourceFieldMixin = (T) => class ResourceFieldMixin extends T {
         return {
             ...super.specification,
             resource_type: {},
-            color: {},
         }
     }
 
@@ -64,7 +62,6 @@ const WithResourceFieldMixin = (T) => class ResourceFieldMixin extends T {
     getTagProps(record) {
         return {
             ...super.getTagProps(...arguments),
-            color: record.data.color,
             type: record.data.resource_type,
             imageUrl: record.data.resource_type === "user"
                 ? `/web/image/${this.relation}/${record.resId}/avatar_128`
@@ -84,10 +81,6 @@ const resourceFieldMixin = {
                     ["user", _t("Human")],
                     ["material", _t("Material")],
                 ],
-            },
-            {
-                name: "color",
-                type: "integer",
             },
         ];
     },
