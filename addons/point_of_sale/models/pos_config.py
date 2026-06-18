@@ -674,6 +674,18 @@ class PosConfig(models.Model):
             vals['tip_product_id'] = False
             vals['set_tip_after_payment'] = False
         else:
+            if vals.get('iface_tipproduct') and not self.env.ref(
+                'point_of_sale.product_product_tip',
+                raise_if_not_found=False,
+            ):
+                convert.convert_file(
+                    self._env_with_clean_context(),
+                    'point_of_sale',
+                    'data/point_of_sale_tips_data.xml',
+                    idref=None,
+                    mode='init',
+                    noupdate=True,
+                )
             if 'tip_product_id' not in vals and (default_tip := self._get_default_tip_product()):
                 vals['tip_product_id'] = default_tip.id
 

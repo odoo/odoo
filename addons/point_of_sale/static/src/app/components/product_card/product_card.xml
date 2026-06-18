@@ -17,7 +17,7 @@
                 t-att-class="{'d-flex' : !this.props.isComboPopup, 'my-1': !(this.props.isComboPopup and !this.props.imageUrl)}">
                 <div class="lh-sm product-name o_line_clamp"
                     t-att-class="{
-                        'no-image d-flex justify-content-center align-items-center text-center': !this.props.imageUrl,
+                        'no-image d-flex': !this.props.imageUrl,
                         'mt-1': this.props.isComboPopup and !this.props.imageUrl,
                         'o_line_clamp_7': !this.props.imageUrl,
                     }"
