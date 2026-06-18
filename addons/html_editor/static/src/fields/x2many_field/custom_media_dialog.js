@@ -9,6 +9,8 @@ export class CustomMediaDialog extends MediaDialog {
         extraTabs: t
             .array(t.object())
             .optional([{ id: "VIDEOS", title: _t("Videos"), Component: VideoSelector }]),
+        imageSave: t.function(),
+        videoSave: t.function().optional(),
     });
     async save() {
         if (this.errorMessages[this.activeTab()]) {
