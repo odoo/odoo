@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Layer 1: Module Category                                      -->
+    <!-- ============================================================ -->
+    <!--
+        Mirrors the layout of KSW_annual_leave / KSW_deduction:
+        a single row in the User form ("KSW Commissions") with two
+        privilege dropdowns:
+
+          • Commission Management — tiered (Self / Supervisor /
+            Officer) for sheet CRUD scope.
+          • Commission Approval   — the Accountant role that
+            unlocks the loans-locked field on confirmed sheets and
+            can finalise (state confirmed → done).
+
+        A separate "Commission Configuration" privilege gates
+        master-data (categories + sites) so that Officers can
+        manage day-to-day sheets without being able to alter the
+        catalog.
+    -->
+    <record id="module_category_ksw_commissions" model="ir.module.category">
+        <field name="name">KSW Commissions</field>
+        <field name="sequence">210</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Layer 2: Privileges                                           -->
+    <!-- ============================================================ -->
+    <record id="privilege_commission_management" model="res.groups.privilege">
+        <field name="name">Commission Management</field>
+        <field name="sequence">10</field>
+        <field name="category_id" ref="module_category_ksw_commissions"/>
+    </record>
+
+    <record id="privilege_commission_approval" model="res.groups.privilege">
+        <field name="name">Commission Approval</field>
+        <field name="sequence">20</field>
+        <field name="category_id" ref="module_category_ksw_commissions"/>
+    </record>
+
+    <record id="privilege_commission_configuration" model="res.groups.privilege">
+        <field name="name">Commission Configuration</field>
+        <field name="sequence">30</field>
+        <field name="category_id" ref="module_category_ksw_commissions"/>
+    </record>
+
+    <!-- Sales Override — gates the per-line "Override Condition" button on
+         ksw.sales.commission.line so that a sales manager can grant the
+         commission to a salesperson who didn't meet the threshold (with
+         a captured reason and audit trail). -->
+    <record id="privilege_sales_override" model="res.groups.privilege">
+        <field name="name">Sales Override</field>
+        <field name="sequence">40</field>
+        <field name="category_id" ref="module_category_ksw_commissions"/>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Layer 3: Groups — Commission Management (tiered)              -->
+    <!-- ============================================================ -->
+    <record id="group_commission_self" model="res.groups">
+        <field name="name">Self</field>
+        <field name="privilege_id" ref="privilege_commission_management"/>
+        <field name="comment">See own commission sheet only.</field>
+    </record>
+
+    <record id="group_commission_supervisor" model="res.groups">
+        <field name="name">Supervisor</field>
+        <field name="privilege_id" ref="privilege_commission_management"/>
+        <field name="implied_ids" eval="[(4, ref('group_commission_self'))]"/>
+        <field name="comment">Edit commission sheets for direct subordinates with x_is_attendance_sheet=True.</field>
+    </record>
+
+    <record id="group_commission_officer" model="res.groups">
+        <field name="name">Officer</field>
+        <field name="privilege_id" ref="privilege_commission_management"/>
+        <field name="implied_ids" eval="[(4, ref('group_commission_supervisor'))]"/>
+        <field name="comment">Edit any commission sheet company-wide and reset confirmed sheets back to draft.</field>
+    </record>
+
+    <!-- Baseline: every internal user is implicitly Self. -->
+    <function model="res.groups" name="write">
+        <value eval="[ref('base.group_user')]"/>
+        <value eval="{'implied_ids': [(4, ref('group_commission_self'))]}"/>
+    </function>
+
+    <!-- ============================================================ -->
+    <!-- Layer 3: Groups — Commission Approval                         -->
+    <!-- ============================================================ -->
+    <!--
+        The Accountant who finalises commission sheets. Confers:
+          • write access to ``x_loans_amount_locked`` while the sheet
+            is in 'confirmed' state,
+          • permission to call ``action_done``,
+          • implicitly the Officer-tier viewing scope so the
+            accountant can see every sheet pending finalisation.
+    -->
+    <record id="group_commission_accountant" model="res.groups">
+        <field name="name">Accountant</field>
+        <field name="privilege_id" ref="privilege_commission_approval"/>
+        <field name="implied_ids" eval="[(4, ref('group_commission_officer'))]"/>
+        <field name="comment">Adjust the locked loans amount on confirmed sheets and finalise (state done). Implicitly grants Officer scope so the accountant can see every confirmed sheet.</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Layer 3: Groups — Commission Configuration                    -->
+    <!-- ============================================================ -->
+    <record id="group_commission_admin" model="res.groups">
+        <field name="name">Admin</field>
+        <field name="privilege_id" ref="privilege_commission_configuration"/>
+        <field name="comment">Manage the commission/allowance category catalog and the site/trip-tier configuration. Independent of the Management/Approval scopes.</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Layer 3: Groups — Sales Override                              -->
+    <!-- ============================================================ -->
+    <record id="group_sales_commission_manager" model="res.groups">
+        <field name="name">Sales Manager</field>
+        <field name="privilege_id" ref="privilege_sales_override"/>
+        <field name="comment">Override the commission-rule condition on individual sales/collection commission lines (e.g. grant the commission to a salesperson who fell below the threshold).</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Record Rules — ksw.commission.sheet                            -->
+    <!-- ============================================================ -->
+    <record id="commission_sheet_rule_self" model="ir.rule">
+        <field name="name">KSW Commission Sheet: Self</field>
+        <field name="model_id" ref="model_ksw_commission_sheet"/>
+        <field name="groups" eval="[(4, ref('group_commission_self'))]"/>
+        <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="commission_sheet_rule_supervisor" model="ir.rule">
+        <field name="name">KSW Commission Sheet: Supervisor (subordinates with attendance sheet)</field>
+        <field name="model_id" ref="model_ksw_commission_sheet"/>
+        <field name="groups" eval="[(4, ref('group_commission_supervisor'))]"/>
+        <field name="domain_force">[
+            '&amp;',
+            ('employee_id.x_is_attendance_sheet', '=', True),
+            '|',
+                ('employee_id.user_id', '=', user.id),
+                ('employee_id', 'child_of', user.employee_ids.ids),
+        ]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <record id="commission_sheet_rule_officer" model="ir.rule">
+        <field name="name">KSW Commission Sheet: Officer (all)</field>
+        <field name="model_id" ref="model_ksw_commission_sheet"/>
+        <field name="groups" eval="[(4, ref('group_commission_officer'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!--
+        Admin/root assignment: keep these users in every top tier
+        across the four privileges so module installation / -u runs
+        don't lock out the bootstrap admin.
+    -->
+    <function model="res.groups" name="write">
+        <value eval="[ref('group_commission_officer')]"/>
+        <value eval="{'user_ids': [(4, ref('base.user_root')), (4, ref('base.user_admin'))]}"/>
+    </function>
+    <function model="res.groups" name="write">
+        <value eval="[ref('group_commission_accountant')]"/>
+        <value eval="{'user_ids': [(4, ref('base.user_root')), (4, ref('base.user_admin'))]}"/>
+    </function>
+    <function model="res.groups" name="write">
+        <value eval="[ref('group_commission_admin')]"/>
+        <value eval="{'user_ids': [(4, ref('base.user_root')), (4, ref('base.user_admin'))]}"/>
+    </function>
+    <function model="res.groups" name="write">
+        <value eval="[ref('group_sales_commission_manager')]"/>
+        <value eval="{'user_ids': [(4, ref('base.user_root')), (4, ref('base.user_admin'))]}"/>
+    </function>
+
+</odoo>
+

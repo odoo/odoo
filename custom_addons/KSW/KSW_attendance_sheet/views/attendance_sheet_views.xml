@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- List View                                                     -->
+    <!-- ============================================================ -->
+    <record id="ksw_attendance_sheet_view_list" model="ir.ui.view">
+        <field name="name">ksw.attendance.sheet.list</field>
+        <field name="model">ksw.attendance.sheet</field>
+        <field name="arch" type="xml">
+            <list string="Attendance Sheets"
+                  decoration-info="state == 'draft'"
+                  decoration-success="state == 'confirmed'">
+                <header>
+                    <button name="action_generate_all_sheets" type="object"
+                            string="⟳ Generate All Sheets"
+                            class="btn-primary"/>
+                </header>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="manager_id"/>
+                <field name="month"/>
+                <field name="year"/>
+                <field name="total_days"/>
+                <field name="total_attended"
+                       decoration-success="total_attended > 0"/>
+                <field name="total_absent"
+                       decoration-danger="total_absent > 0"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'confirmed'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Form View                                                     -->
+    <!-- ============================================================ -->
+    <record id="ksw_attendance_sheet_view_form" model="ir.ui.view">
+        <field name="name">ksw.attendance.sheet.form</field>
+        <field name="model">ksw.attendance.sheet</field>
+        <field name="arch" type="xml">
+            <form string="Attendance Sheet">
+                <header>
+                    <button name="action_mark_all_absent" type="object"
+                            string="✗ All Absent"
+                            invisible="state == 'confirmed' or is_locked"
+                            class="btn-warning"/>
+                    <button name="action_mark_all_present" type="object"
+                            string="✓ All Present"
+                            invisible="state == 'confirmed' or is_locked"
+                            class="btn-info"/>
+                    <button name="action_reset_to_draft" type="object"
+                            string="↩ Reset to Draft"
+                            invisible="state != 'confirmed'"
+                            confirm="This will delete all auto-generated attendance records. Continue?"
+                            groups="KSW_attendance_sheet.group_attendance_sheet_manager"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id"
+                                   readonly="state == 'confirmed'"/>
+                            <field name="department_id"/>
+                            <field name="manager_id"/>
+                        </group>
+                        <group>
+                            <field name="month"
+                                   readonly="state == 'confirmed'"/>
+                            <field name="year"
+                                   readonly="state == 'confirmed'"/>
+                            <field name="is_locked" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Summary">
+                        <group>
+                            <field name="total_days"/>
+                        </group>
+                        <group>
+                            <field name="total_attended"
+                                   class="text-success fw-bold"/>
+                            <field name="total_absent"
+                                   class="text-danger fw-bold"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Daily Attendance"
+                              name="daily_attendance">
+                            <field name="line_ids" nolabel="1"
+                                   readonly="state == 'confirmed' or is_locked">
+                                <list editable="bottom"
+                                      create="false" delete="false"
+                                      decoration-muted="not is_workday and is_attended"
+                                      decoration-danger="not is_attended"
+                                      decoration-success="is_attended">
+                                    <field name="date" readonly="1"/>
+                                    <field name="day_name" readonly="1"/>
+                                    <field name="is_workday" readonly="1"
+                                           optional="hide"/>
+                                    <field name="is_attended"/>
+                                    <field name="attendance_id"
+                                           readonly="1" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Search View                                                   -->
+    <!-- ============================================================ -->
+    <record id="ksw_attendance_sheet_view_search" model="ir.ui.view">
+        <field name="name">ksw.attendance.sheet.search</field>
+        <field name="model">ksw.attendance.sheet</field>
+        <field name="arch" type="xml">
+            <search string="Search Attendance Sheets">
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="manager_id"/>
+                <filter name="my_team" string="My Team"
+                        domain="[('manager_id.user_id', '=', uid)]"/>
+                <separator/>
+                <filter name="draft" string="Draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter name="confirmed" string="Confirmed"
+                        domain="[('state', '=', 'confirmed')]"/>
+                <group>
+                    <filter string="Employee" name="group_employee"
+                            domain="[]"
+                            context="{'group_by': 'employee_id'}"/>
+                    <filter string="Department" name="group_department"
+                            domain="[]"
+                            context="{'group_by': 'department_id'}"/>
+                    <filter string="Status" name="group_state"
+                            domain="[]"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Window Action                                                 -->
+    <!-- ============================================================ -->
+    <record id="action_ksw_attendance_sheet" model="ir.actions.act_window">
+        <field name="name">Attendance Sheets</field>
+        <field name="res_model">ksw.attendance.sheet</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{
+            'search_default_draft': 1,
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No attendance sheets yet.
+            </p>
+            <p>Attendance sheets are auto-generated monthly for employees
+               marked with "Uses Attendance Sheet".</p>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Menu Item                                                     -->
+    <!-- ============================================================ -->
+    <menuitem
+        id="menu_ksw_attendance_sheet"
+        name="Attendance Sheets"
+        parent="hr_attendance.menu_hr_attendance_root"
+        action="action_ksw_attendance_sheet"
+        groups="KSW_attendance_sheet.group_attendance_sheet_supervisor"
+        sequence="30"/>
+
+</odoo>
+
+

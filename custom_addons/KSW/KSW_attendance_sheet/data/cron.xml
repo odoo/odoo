@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+    <record id="cron_generate_attendance_sheets" model="ir.cron">
+        <field name="name">Generate Monthly Attendance Sheets (1st of Month, 3 AM GMT+3)</field>
+        <field name="model_id" ref="model_ksw_attendance_sheet"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_generate_sheets()</field>
+        <field name="active" eval="True"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">months</field>
+        <field name="nextcall">2026-04-01 00:00:00</field>
+    </record>
+
+</odoo>
+
+

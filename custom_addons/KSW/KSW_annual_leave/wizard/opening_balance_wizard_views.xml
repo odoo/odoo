@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Wizard Form View                                             -->
+    <!-- ============================================================ -->
+    <record id="opening_balance_wizard_view_form" model="ir.ui.view">
+        <field name="name">opening.balance.wizard.form</field>
+        <field name="model">opening.balance.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Bulk Opening Balance Setup">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        <strong>Go-Live Baseline Setup</strong><br/>
+                        For each employee, enter their last vacation return date as the
+                        <em>Opening Reset Date</em>. From that date, the system will treat
+                        the employee's balance as starting from zero (plus any extra carry-over
+                        days you specify). All annual leaves validated on or after this date
+                        will be tracked automatically by the system.
+                    </div>
+                    <group>
+                        <field name="skip_locked"/>
+                    </group>
+                    <separator string="Employees"/>
+                    <field name="line_ids">
+                        <list editable="bottom">
+                            <field name="employee_id"/>
+                            <field name="department_id" optional="show"/>
+                            <field name="current_balance" optional="show"/>
+                            <field name="opening_reset_date"/>
+                            <field name="opening_extra_days"/>
+                            <field name="lock_after_apply"/>
+                            <field name="note" optional="show"/>
+                        </list>
+                    </field>
+                </sheet>
+                <footer>
+                    <button name="action_load_all_employees" type="object"
+                            string="Load All Unlocked Employees"
+                            class="btn-secondary"/>
+                    <button name="action_apply" type="object"
+                            string="Apply Opening Balances"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Window Action to open wizard                                 -->
+    <!-- ============================================================ -->
+    <record id="action_opening_balance_wizard" model="ir.actions.act_window">
+        <field name="name">Setup Opening Balances</field>
+        <field name="res_model">opening.balance.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Menu Item under Management                                    -->
+    <!-- ============================================================ -->
+    <menuitem
+        id="menu_opening_balance_wizard"
+        name="Setup Opening Balances"
+        parent="hr_holidays.menu_hr_holidays_management"
+        action="action_opening_balance_wizard"
+        sequence="21"
+        groups="KSW_annual_leave.group_annual_leave_hr"/>
+
+</odoo>
+
+
+

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Extend hr.leave FORM for unpaid leave                        -->
+    <!-- ============================================================ -->
+    <record id="hr_leave_view_form_inherit_unpaid" model="ir.ui.view">
+        <field name="name">hr.leave.form.inherit.unpaid</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="KSW_annual_leave.hr_leave_view_form_inherit_annual_return"/>
+        <field name="arch" type="xml">
+
+            <!-- Hidden helper: stored related for reliable invisible -->
+            <xpath expr="//field[@name='x_is_annual_leave_type']" position="after">
+                <field name="x_is_unpaid_leave_type" invisible="1"/>
+            </xpath>
+
+            <!-- ===== Widen multi-step button visibility ===== -->
+
+            <!-- Step 1 – DM: also show for unpaid_multi -->
+            <xpath expr="//button[@name='action_dm_approve']" position="attributes">
+                <attribute name="invisible">
+                    (x_annual_approval_state != 'pending_dm') or not id or (validation_type != 'annual_multi' and validation_type != 'unpaid_multi')
+                </attribute>
+            </xpath>
+
+            <!-- Step 2 – HR: also show for unpaid_multi -->
+            <xpath expr="//button[@name='action_hr_approve']" position="attributes">
+                <attribute name="invisible">
+                    (x_annual_approval_state != 'pending_hr') or not id or (validation_type != 'annual_multi' and validation_type != 'unpaid_multi')
+                </attribute>
+            </xpath>
+
+            <!-- Step 3 – GM Initial: also show for unpaid_multi -->
+            <xpath expr="//button[@name='action_gm_initial_approve']" position="attributes">
+                <attribute name="invisible">
+                    (x_annual_approval_state != 'pending_gm_initial') or not id or (validation_type != 'annual_multi' and validation_type != 'unpaid_multi')
+                </attribute>
+            </xpath>
+
+            <!-- Step 4 – Accounting: show for both annual_multi and unpaid_multi -->
+            <xpath expr="//button[@name='action_acc_approve']" position="attributes">
+                <attribute name="invisible">
+                    (x_annual_approval_state != 'pending_acc') or not id or (validation_type != 'annual_multi' and validation_type != 'unpaid_multi')
+                </attribute>
+            </xpath>
+
+            <!-- Step 5 – GM Final: also show for unpaid_multi -->
+            <xpath expr="//button[@name='action_gm_final_approve']" position="attributes">
+                <attribute name="invisible">
+                    (x_annual_approval_state != 'pending_gm_final') or not id or (validation_type != 'annual_multi' and validation_type != 'unpaid_multi')
+                </attribute>
+            </xpath>
+
+            <!-- ===== Hide full-clearance toggle for unpaid ===== -->
+            <xpath expr="//field[@name='x_is_full_clearance'][@widget='boolean_toggle']" position="attributes">
+                <attribute name="invisible">
+                    not x_is_annual_leave_type or x_is_unpaid_leave_type or x_excess_days_accepted or x_exceeds_annual_balance
+                </attribute>
+            </xpath>
+            <!-- Also hide the clearance-related fields -->
+            <xpath expr="//field[@name='x_actual_vacation_days']" position="attributes">
+                <attribute name="invisible">
+                    not x_is_full_clearance or x_actual_vacation_days == 0 or x_is_unpaid_leave_type
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='x_clearance_balance']" position="attributes">
+                <attribute name="invisible">
+                    not x_is_full_clearance or x_clearance_balance == 0 or x_is_unpaid_leave_type
+                </attribute>
+            </xpath>
+
+            <!-- ===== Hide flight ticket fields for unpaid ===== -->
+            <xpath expr="//field[@name='x_flight_ticket_amount']" position="attributes">
+                <attribute name="invisible">validation_type == 'unpaid_multi'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='x_flight_ticket_description']" position="attributes">
+                <attribute name="invisible">validation_type == 'unpaid_multi'</attribute>
+            </xpath>
+
+            <!-- ===== Hide "Accounting — Allowances" group for unpaid ===== -->
+            <xpath expr="//group[@name='accounting_allowances']" position="attributes">
+                <attribute name="invisible">
+                    x_annual_approval_state in ('pending_hr', 'pending_gm_initial') or validation_type == 'unpaid_multi'
+                </attribute>
+            </xpath>
+
+            <!-- ===== Hide commission lines section for unpaid ===== -->
+            <xpath expr="//separator[@name='commission_lines_section']" position="attributes">
+                <attribute name="invisible">
+                    x_annual_approval_state in ('pending_dm', 'pending_hr', 'pending_gm_initial') or not x_annual_approval_state or validation_type == 'unpaid_multi'
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='x_commission_line_ids']" position="attributes">
+                <attribute name="invisible">
+                    x_annual_approval_state in ('pending_dm', 'pending_hr', 'pending_gm_initial') or not x_annual_approval_state or validation_type == 'unpaid_multi'
+                </attribute>
+            </xpath>
+
+            <!-- ===== Unpaid accounting fields (unpaid_multi OR combined annual+unpaid) ===== -->
+            <xpath expr="//group[@name='accounting_allowances']" position="after">
+                <group string="Accounting — Unpaid Leave"
+                       name="unpaid_accounting"
+                       invisible="(validation_type != 'unpaid_multi' and (not x_excess_days_accepted or x_unpaid_portion_days == 0)) or x_annual_approval_state in ('pending_hr', 'pending_gm_initial')">
+                    <field name="x_financial_consideration_excess"
+                           readonly="x_annual_approval_state != 'pending_acc'"/>
+                    <field name="x_financial_consideration_excess_description"
+                           readonly="x_annual_approval_state != 'pending_acc'"
+                           placeholder="Details..."/>
+                    <field name="x_visa_cost_recovery"
+                           readonly="x_annual_approval_state != 'pending_acc'"/>
+                    <field name="x_visa_cost_recovery_description"
+                           readonly="x_annual_approval_state != 'pending_acc'"
+                           placeholder="Details..."/>
+                </group>
+            </xpath>
+
+            <!-- ===== Add Unpaid Leave ribbon ===== -->
+            <xpath expr="//sheet" position="inside">
+                <widget name="web_ribbon" title="⛔ Unpaid Leave"
+                        bg_color="text-bg-secondary"
+                        invisible="validation_type != 'unpaid_multi'"/>
+            </xpath>
+
+            <!-- ===== Hide return confirmation fields for unpaid ===== -->
+            <xpath expr="//field[@name='x_return_date']" position="attributes">
+                <attribute name="invisible">
+                    x_return_state == 'not_applicable' or x_is_unpaid_leave_type
+                </attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='x_return_state'][@widget='badge']" position="attributes">
+                <attribute name="invisible">
+                    x_return_state == 'not_applicable' or x_is_unpaid_leave_type
+                </attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Extend hr.leave SEARCH: add unpaid leave filters             -->
+    <!-- ============================================================ -->
+    <record id="hr_leave_view_search_inherit_unpaid" model="ir.ui.view">
+        <field name="name">hr.leave.search.inherit.unpaid</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.view_hr_holidays_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='refused_leaves']" position="after">
+                <separator/>
+                <filter string="⛔ Unpaid Leaves"
+                        name="unpaid_leaves"
+                        domain="[('holiday_status_id.is_unpaid_leave', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+
+
+
+
+

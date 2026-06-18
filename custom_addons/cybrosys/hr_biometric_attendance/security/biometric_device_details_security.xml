@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- ZK Machine Multi company rule    -->
+    <record id="zk_machine_rule_multi_company" model="ir.rule">
+        <field name="name">ZK Machine Multi-Company Rule</field>
+        <field name="model_id" ref="model_biometric_device_details"/>
+        <field name="domain_force">[('company_id', 'in', user.company_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+    <!-- ZK Machine Daily Attendance Multi-Company Rule   -->
+    <record id="zk_machine_attendance_multi_company" model="ir.rule">
+        <field name="name">ZK Machine Daily Attendance Multi-Company Rule</field>
+        <field name="model_id" ref="model_daily_attendance"/>
+        <field name="domain_force">[('company_id', 'in', user.company_ids.ids)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+</odoo>

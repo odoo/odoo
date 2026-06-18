@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_ksw_site_list" model="ir.ui.view">
+        <field name="name">ksw.site.list</field>
+        <field name="model">ksw.site</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="required_trips_full_month"/>
+                <field name="tier2_trips"/>
+                <field name="tier2_rate"/>
+                <field name="tier3_trips"/>
+                <field name="tier3_rate"/>
+                <field name="tier4_trips"/>
+                <field name="tier4_rate"/>
+                <field name="tier5_rate"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ksw_site_form" model="ir.ui.view">
+        <field name="name">ksw.site.form</field>
+        <field name="model">ksw.site</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group string="Identification">
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Trip Base">
+                            <field name="required_trips_full_month"/>
+                        </group>
+                    </group>
+                    <group string="Tiered Commission Rules">
+                        <group string="Tier 2">
+                            <field name="tier2_trips" string="Trips in band"/>
+                            <field name="tier2_rate" string="Rate (SAR / trip)"/>
+                        </group>
+                        <group string="Tier 3">
+                            <field name="tier3_trips" string="Trips in band"/>
+                            <field name="tier3_rate" string="Rate (SAR / trip)"/>
+                        </group>
+                        <group string="Tier 4">
+                            <field name="tier4_trips" string="Trips in band"/>
+                            <field name="tier4_rate" string="Rate (SAR / trip)"/>
+                        </group>
+                        <group string="Tier 5 (remaining)">
+                            <field name="tier5_rate" string="Rate (SAR / trip)"/>
+                        </group>
+                    </group>
+                    <field name="note" placeholder="Notes…"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ksw_site" model="ir.actions.act_window">
+        <field name="name">Work Sites</field>
+        <field name="res_model">ksw.site</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>
+

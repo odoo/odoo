@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Wizard Form View -->
+    <record id="view_absent_days_wizard_form" model="ir.ui.view">
+        <field name="name">absent.days.wizard.form</field>
+        <field name="model">absent.days.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Service Days Calculator">
+                <group>
+                    <group string="Employee">
+                        <field name="employee_id"/>
+                        <field name="joining_date"/>
+                        <field name="today_date"/>
+                    </group>
+                    <group string="Service">
+                        <field name="total_days"/>
+                        <field name="service_years" class="fw-bold"/>
+                    </group>
+                </group>
+                <separator string="Annual Leave Balance"/>
+                <group>
+                    <group string="Accrual">
+                        <field name="entitlement_days"/>
+                        <field name="total_accrued_days" class="fw-bold text-primary"/>
+                    </group>
+                    <group string="Usage">
+                        <field name="annual_leave_taken"/>
+                        <field name="annual_leave_balance" class="fw-bold text-success"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action to open the wizard -->
+    <record id="action_absent_days_wizard" model="ir.actions.act_window">
+        <field name="name">Service Days Calculator</field>
+        <field name="res_model">absent.days.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
+

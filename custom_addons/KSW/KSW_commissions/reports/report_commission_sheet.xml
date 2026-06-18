@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ================================================================ -->
+    <!-- Report action — bound to the model so it appears in the          -->
+    <!-- "Print" menu on both the list and the form view.                 -->
+    <!-- ================================================================ -->
+    <record id="action_report_commission_sheet" model="ir.actions.report">
+        <field name="name">Commission &amp; Allowance Sheet</field>
+        <field name="model">ksw.commission.sheet</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">KSW_commissions.report_commission_sheet</field>
+        <field name="report_file">KSW_commissions.report_commission_sheet</field>
+        <field name="binding_model_id" ref="model_ksw_commission_sheet"/>
+        <field name="binding_type">report</field>
+        <!-- A4 portrait -->
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <!-- ================================================================ -->
+    <!-- Main QWeb template                                                -->
+    <!-- ================================================================ -->
+    <template id="report_commission_sheet">
+        <t t-call="web.html_container">
+
+            <!-- ── One page per sheet ─────────────────────────────── -->
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+
+                        <!-- Title -->
+                        <h2 class="text-center mb-3">
+                            Commission &amp; Allowance Sheet
+                        </h2>
+                        <h4 class="text-center text-muted mb-4">
+                            <t t-out="o.period and o.period.strftime('%B %Y') or ''"/>
+                        </h4>
+
+                        <!-- ── Employee header block ── -->
+                        <table class="table table-sm table-bordered mb-3">
+                            <tr>
+                                <td style="width:20%"><strong>Employee</strong></td>
+                                <td style="width:30%" t-out="o.employee_id.name or ''"/>
+                                <td style="width:20%"><strong>Department</strong></td>
+                                <td style="width:30%" t-out="o.department_id.name or ''"/>
+                            </tr>
+                            <tr>
+                                <td><strong>Job Position</strong></td>
+                                <td t-out="o.job_id.name or ''"/>
+                                <td><strong>Site</strong></td>
+                                <td t-out="o.site_id.name or ''"/>
+                            </tr>
+                            <tr>
+                                <td><strong>National ID</strong></td>
+                                <td t-out="o.identification_id or ''"/>
+                                <td><strong>Basic Wage</strong></td>
+                                <td>
+                                    <t t-if="o.wage">
+                                        <t t-out="'%.2f' % o.wage"/>
+                                        <t t-out="' ' + (o.currency_id.name or 'SAR')"/>
+                                    </t>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Period</strong></td>
+                                <td t-out="o.period and o.period.strftime('%B %Y') or ''"/>
+                                <td><strong>Sheet Ref.</strong></td>
+                                <td t-out="o.name or ''"/>
+                            </tr>
+                        </table>
+
+                        <!-- ── Allowance / Commission lines ── -->
+                        <h5 class="mt-3">Allowance &amp; Commission Lines</h5>
+                        <table class="table table-sm table-bordered mb-3">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width:4%">#</th>
+                                    <th style="width:26%">Category</th>
+                                    <th style="width:12%">Type</th>
+                                    <th style="width:14%">Holiday</th>
+                                    <th style="width:8%" class="text-end">Qty</th>
+                                    <th style="width:14%" class="text-end">Amount</th>
+                                    <th style="width:22%">Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.line_ids" t-as="ln">
+                                    <tr>
+                                        <td t-out="ln_index + 1"/>
+                                        <td t-out="ln.category_id.name or ''"/>
+                                        <td t-out="dict(ln.fields_get(['kind'])['kind']['selection']).get(ln.kind, ln.kind) if ln.kind else ''"/>
+                                        <td>
+                                            <t t-if="ln.holiday_id">
+                                                <t t-out="dict(ln.fields_get(['holiday_id'])['holiday_id']['selection']).get(ln.holiday_id, ln.holiday_id)"/>
+                                            </t>
+                                            <t t-else="">—</t>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-if="ln.is_quantity_based">
+                                                <t t-out="'%g' % ln.quantity"/>
+                                                <t t-if="ln.quantity_label">
+                                                    <span class="text-muted ms-1" t-out="ln.quantity_label"/>
+                                                </t>
+                                            </t>
+                                            <t t-else="">—</t>
+                                        </td>
+                                        <td class="text-end">
+                                            <t t-out="'%.2f' % ln.amount"/>
+                                        </td>
+                                        <td t-out="ln.description or ''"/>
+                                    </tr>
+                                </t>
+                                <t t-if="not o.line_ids">
+                                    <tr>
+                                        <td colspan="7" class="text-center text-muted">
+                                            No lines entered.
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- ── Totals summary ── -->
+                        <div class="row justify-content-end">
+                            <div class="col-6">
+                                <table class="table table-sm table-bordered">
+                                    <tr>
+                                        <td><strong>Lines Subtotal</strong></td>
+                                        <td class="text-end">
+                                            <t t-out="'%.2f' % o.lines_subtotal"/>
+                                            <t t-out="' ' + (o.currency_id.name or 'SAR')"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Driver's Commission</strong></td>
+                                        <td class="text-end">
+                                            <t t-out="'%.2f' % (o.driver_commission_amount or 0.0)"/>
+                                            <t t-out="' ' + (o.currency_id.name or 'SAR')"/>
+                                        </td>
+                                    </tr>
+                                    <tr class="table-light">
+                                        <td><strong>Gross Total</strong></td>
+                                        <td class="text-end fw-bold">
+                                            <t t-out="'%.2f' % o.total"/>
+                                            <t t-out="' ' + (o.currency_id.name or 'SAR')"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Loans Deduction</strong></td>
+                                        <td class="text-end text-danger">
+                                            (<t t-out="'%.2f' % (o.x_loans_amount_locked or 0.0)"/>
+                                            <t t-out="' ' + (o.currency_id.name or 'SAR')"/>)
+                                        </td>
+                                    </tr>
+                                    <tr class="table-success">
+                                        <td><strong>Bank Transfer Amount</strong></td>
+                                        <td class="text-end fw-bold">
+                                            <t t-out="'%.2f' % o.total_payable"/>
+                                            <t t-out="' ' + (o.currency_id.name or 'SAR')"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- ── Status trail ── -->
+                        <table class="table table-sm table-bordered mt-2 mb-4">
+                            <tr>
+                                <td style="width:20%"><strong>Status</strong></td>
+                                <td style="width:30%">
+                                    <t t-if="o.state == 'draft'">Draft</t>
+                                    <t t-elif="o.state == 'confirmed'">Awaiting Accountant</t>
+                                    <t t-elif="o.state == 'done'">Done (Finalised)</t>
+                                </td>
+                                <td style="width:20%"><strong>Confirmed by</strong></td>
+                                <td style="width:30%">
+                                    <t t-if="o.confirmed_by">
+                                        <t t-out="o.confirmed_by.name"/>
+                                        <t t-if="o.confirmed_date">
+                                            on <t t-out="o.confirmed_date.strftime('%d/%m/%Y')"/>
+                                        </t>
+                                    </t>
+                                    <t t-else="">—</t>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Finalised by</strong></td>
+                                <td>
+                                    <t t-if="o.done_by">
+                                        <t t-out="o.done_by.name"/>
+                                        <t t-if="o.done_date">
+                                            on <t t-out="o.done_date.strftime('%d/%m/%Y')"/>
+                                        </t>
+                                    </t>
+                                    <t t-else="">—</t>
+                                </td>
+                                <td><strong>Printed on</strong></td>
+                                <td t-out="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+                            </tr>
+                        </table>
+
+                        <!-- ── Signature block ── -->
+                        <div class="row mt-5" style="page-break-inside: avoid;">
+                            <div class="col-4 text-center">
+                                <p style="border-top: 1px solid #000; padding-top: 4px;">
+                                    <strong>Prepared by Supervisor</strong>
+                                </p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <p style="border-top: 1px solid #000; padding-top: 4px;">
+                                    <strong>Reviewed by Accountant</strong>
+                                </p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <p style="border-top: 1px solid #000; padding-top: 4px;">
+                                    <strong>Approved by Manager</strong>
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+
+            <!-- ── Cumulative monthly summary (only when printing 2+ sheets) ── -->
+            <t t-if="len(docs) > 1">
+                <t t-call="web.external_layout">
+                    <div class="page">
+
+                        <h2 class="text-center mb-2">Monthly Cumulative Summary</h2>
+                        <h4 class="text-center text-muted mb-4">
+                            <!-- Group by periods present in the batch -->
+                            <t t-set="periods" t-value="sorted(set(o.period for o in docs if o.period), reverse=True)"/>
+                            <t t-foreach="periods" t-as="p">
+                                <t t-out="p.strftime('%B %Y')"/>
+                                <t t-if="not p_last"> · </t>
+                            </t>
+                        </h4>
+
+                        <table class="table table-sm table-bordered">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th style="width:4%">#</th>
+                                    <th style="width:20%">Employee</th>
+                                    <th style="width:14%">Department</th>
+                                    <th style="width:8%">Period</th>
+                                    <th style="width:10%" class="text-end">Lines</th>
+                                    <th style="width:10%" class="text-end">Driver</th>
+                                    <th style="width:10%" class="text-end">Gross</th>
+                                    <th style="width:10%" class="text-end">Loans</th>
+                                    <th style="width:10%" class="text-end">Bank Transfer</th>
+                                    <th style="width:4%">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="docs" t-as="o">
+                                    <tr>
+                                        <td t-out="o_index + 1"/>
+                                        <td t-out="o.employee_id.name or ''"/>
+                                        <td t-out="o.department_id.name or ''"/>
+                                        <td t-out="o.period and o.period.strftime('%m/%Y') or ''"/>
+                                        <td class="text-end" t-out="'%.2f' % o.lines_subtotal"/>
+                                        <td class="text-end" t-out="'%.2f' % (o.driver_commission_amount or 0.0)"/>
+                                        <td class="text-end fw-bold" t-out="'%.2f' % o.total"/>
+                                        <td class="text-end text-danger" t-out="'%.2f' % (o.x_loans_amount_locked or 0.0)"/>
+                                        <td class="text-end fw-bold" t-out="'%.2f' % o.total_payable"/>
+                                        <td>
+                                            <t t-if="o.state == 'draft'">Draft</t>
+                                            <t t-elif="o.state == 'confirmed'">Pending</t>
+                                            <t t-elif="o.state == 'done'">✓</t>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                            <tfoot class="table-light fw-bold">
+                                <tr>
+                                    <td colspan="4" class="text-end">TOTALS</td>
+                                    <td class="text-end">
+                                        <t t-out="'%.2f' % sum(o.lines_subtotal for o in docs)"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <t t-out="'%.2f' % sum((o.driver_commission_amount or 0.0) for o in docs)"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <t t-out="'%.2f' % sum(o.total for o in docs)"/>
+                                    </td>
+                                    <td class="text-end text-danger">
+                                        <t t-out="'%.2f' % sum((o.x_loans_amount_locked or 0.0) for o in docs)"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <t t-out="'%.2f' % sum(o.total_payable for o in docs)"/>
+                                    </td>
+                                    <td/>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <!-- Department sub-totals -->
+                        <h5 class="mt-4">Summary by Department</h5>
+                        <t t-set="depts" t-value="sorted(set(o.department_id for o in docs if o.department_id), key=lambda d: d.name or '')"/>
+                        <table class="table table-sm table-bordered">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th style="width:30%">Department</th>
+                                    <th style="width:10%" class="text-end">Employees</th>
+                                    <th style="width:15%" class="text-end">Lines Total</th>
+                                    <th style="width:15%" class="text-end">Driver Total</th>
+                                    <th style="width:15%" class="text-end">Gross Total</th>
+                                    <th style="width:15%" class="text-end">Bank Transfer</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="depts" t-as="dept">
+                                    <t t-set="dept_docs" t-value="[o for o in docs if o.department_id == dept]"/>
+                                    <tr>
+                                        <td t-out="dept.name"/>
+                                        <td class="text-end" t-out="len(dept_docs)"/>
+                                        <td class="text-end" t-out="'%.2f' % sum(o.lines_subtotal for o in dept_docs)"/>
+                                        <td class="text-end" t-out="'%.2f' % sum((o.driver_commission_amount or 0.0) for o in dept_docs)"/>
+                                        <td class="text-end fw-bold" t-out="'%.2f' % sum(o.total for o in dept_docs)"/>
+                                        <td class="text-end fw-bold" t-out="'%.2f' % sum(o.total_payable for o in dept_docs)"/>
+                                    </tr>
+                                </t>
+                                <!-- No-dept bucket -->
+                                <t t-set="nodept_docs" t-value="[o for o in docs if not o.department_id]"/>
+                                <t t-if="nodept_docs">
+                                    <tr>
+                                        <td class="text-muted">— No Department —</td>
+                                        <td class="text-end" t-out="len(nodept_docs)"/>
+                                        <td class="text-end" t-out="'%.2f' % sum(o.lines_subtotal for o in nodept_docs)"/>
+                                        <td class="text-end" t-out="'%.2f' % sum((o.driver_commission_amount or 0.0) for o in nodept_docs)"/>
+                                        <td class="text-end fw-bold" t-out="'%.2f' % sum(o.total for o in nodept_docs)"/>
+                                        <td class="text-end fw-bold" t-out="'%.2f' % sum(o.total_payable for o in nodept_docs)"/>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <p class="text-muted mt-3" style="font-size:10px;">
+                            Printed on
+                            <t t-out="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y %H:%M')"/>
+                            — <t t-out="len(docs)"/> sheet(s)
+                        </p>
+
+                    </div>
+                </t>
+            </t>
+
+        </t>
+    </template>
+
+</odoo>
+

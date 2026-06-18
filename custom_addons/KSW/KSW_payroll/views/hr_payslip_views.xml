@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- WORKED DAYS: colour-coded rows + deduction amount column     -->
+    <!-- ============================================================ -->
+    <record id="view_hr_payslip_form_inherit_worked_days"
+            model="ir.ui.view">
+        <field name="name">hr.payslip.form.inherit.worked.days</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="om_hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+
+            <!-- ── Replace the entire worked-days list with a styled one ── -->
+            <xpath expr="//field[@name='worked_days_line_ids']/list"
+                   position="replace">
+                <list string="Worked Days" editable="bottom"
+                      decoration-success="code == 'WORK100'"
+                      decoration-danger="code in ('ATT_ABS', 'ATT_DED')"
+                      decoration-warning="code in ('ATT_LATE', 'ATT_EARLY')"
+                      decoration-bf="code in ('WORK100', 'ATT_DED')">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="x_count_display" string="Count"/>
+                    <field name="x_value_display" string="Value"/>
+                    <field name="amount"          string="Deduction"
+                           decoration-danger="amount &gt; 0"/>
+                    <field name="number_of_days"  column_invisible="True"/>
+                    <field name="number_of_hours" column_invisible="True"/>
+                    <field name="version_id" column_invisible="True"/>
+                    <field name="sequence" invisible="True"/>
+                </list>
+            </xpath>
+
+            <!-- ── Replace the worked-days form popup ── -->
+            <xpath expr="//field[@name='worked_days_line_ids']/form"
+                   position="replace">
+                <form string="Worked Day">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="sequence"/>
+                        <field name="number_of_days"  string="Count"/>
+                        <field name="number_of_hours" string="Value"/>
+                        <field name="amount"          string="Deduction"/>
+                        <field name="version_id" invisible="1"/>
+                    </group>
+                </form>
+            </xpath>
+
+            <!-- ── Hide version_id in Other Inputs list & form ── -->
+            <xpath expr="//field[@name='input_line_ids']/list/field[@name='version_id']"
+                   position="attributes">
+                <attribute name="column_invisible">True</attribute>
+            </xpath>
+            <xpath expr="//field[@name='input_line_ids']/form//field[@name='version_id']"
+                   position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <!-- ── Daily / Hourly wage info before notebook ── -->
+            <xpath expr="//field[@name='credit_note']" position="after">
+                <field name="x_daily_wage" string="Daily Wage"/>
+                <field name="x_hourly_wage" string="Hourly Wage"/>
+            </xpath>
+
+            <!-- ── Replace the salary computation list with a styled one ── -->
+            <xpath expr="//field[@name='line_ids']/list"
+                   position="replace">
+                <list string="Salary Structure" editable="bottom"
+                      decoration-muted="total == 0"
+                      decoration-danger="total &lt; 0"
+                      decoration-success="code == 'NET' and total &gt; 0"
+                      decoration-bf="code in ('BASIC', 'GROSS', 'NET', 'ATTDED')">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="category_id"/>
+                    <field name="sequence" column_invisible="True"/>
+                    <field name="quantity"  string="Qty"/>
+                    <field name="rate"      string="Rate (%)"/>
+                    <field name="amount"/>
+                    <field name="total"
+                           decoration-danger="total &lt; 0"/>
+                    <field name="salary_rule_id" optional="hide"/>
+                </list>
+            </xpath>
+
+            <!-- ── Replace the Details By Salary Rule Category list ── -->
+            <xpath expr="//field[@name='details_by_salary_rule_category']/list"
+                   position="replace">
+                <list string="Payslip Lines"
+                      decoration-muted="total == 0"
+                      decoration-danger="total &lt; 0"
+                      decoration-bf="code in ('BASIC', 'GROSS', 'NET')">
+                    <field name="category_id"/>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="total"/>
+                </list>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Generate Payslips wizard: move button to footer so the       -->
+    <!-- default Save/Discard buttons are suppressed.                 -->
+    <!-- ============================================================ -->
+    <record id="view_hr_payslip_by_employees_inherit"
+            model="ir.ui.view">
+        <field name="name">hr.payslip.employees.form.inherit.ksw</field>
+        <field name="model">hr.payslip.employees</field>
+        <field name="inherit_id"
+               ref="om_hr_payroll.view_hr_payslip_by_employees"/>
+        <field name="arch" type="xml">
+            <!-- Remove the Generate button from header -->
+            <xpath expr="//header/button[@name='compute_sheet']"
+                   position="replace"/>
+
+            <!-- Add explicit footer (suppresses default Save/Discard) -->
+            <xpath expr="//form" position="inside">
+                <footer>
+                    <button icon="fa-cogs" string="Generate"
+                            name="compute_sheet" type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Payslip List: add Net Salary column                        -->
+    <!-- ============================================================ -->
+    <record id="view_hr_payslip_list_inherit_ksw_net" model="ir.ui.view">
+        <field name="name">hr.payslip.list.inherit.ksw.net</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="om_hr_payroll.view_hr_payslip_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list/field[@name='state']" position="before">
+                <field name="x_net_wage" string="Net Salary" digits="[16,0]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Payslip Batch: Export Bank File button + Skip log section  -->
+    <!-- ============================================================ -->
+    <record id="hr_payslip_run_form_inherit_ksw" model="ir.ui.view">
+        <field name="name">hr.payslip.run.form.inherit.ksw</field>
+        <field name="model">hr.payslip.run</field>
+        <field name="inherit_id" ref="om_hr_payroll.hr_payslip_run_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='close_payslip_run']"
+                   position="after">
+                <button name="action_open_export_wizard" type="object"
+                        string="Export Bank File"
+                        icon="fa-download"
+                        class="btn-secondary"/>
+            </xpath>
+            <!-- Bank account selector for WPS export -->
+            <xpath expr="//field[@name='credit_note']" position="after">
+                <field name="x_salary_bank_account_id"/>
+            </xpath>
+            <xpath expr="//field[@name='slip_ids']" position="before">
+                <button name="action_open_batch_payslips" type="object"
+                        string="Search Payslip Lines"
+                        icon="fa-search"
+                        class="btn-secondary"/>
+            </xpath>
+            <!-- Skipped employees log below the payslips list -->
+            <xpath expr="//field[@name='slip_ids']" position="after">
+                <separator string="⚠ Skipped Employees"
+                           invisible="not x_skip_line_ids"/>
+                <div class="alert alert-warning mb-0" role="alert"
+                     invisible="not x_skip_line_ids">
+                    The following employees were automatically skipped during
+                    payslip generation. Resolve the issue shown and
+                    re-generate payslips to include them.
+                </div>
+                <field name="x_skip_line_ids" readonly="1"
+                       invisible="not x_skip_line_ids">
+                    <list string="Skipped Employees"
+                          decoration-warning="True">
+                        <field name="employee_id"/>
+                        <field name="reason" string="Reason Skipped"/>
+                    </list>
+                </field>
+                <div invisible="not x_skip_line_ids">
+                    <button name="action_clear_skip_log" type="object"
+                            string="Clear Skip Log"
+                            icon="fa-trash"
+                            class="btn-sm btn-secondary"
+                            confirm="Remove all skipped-employee entries from this batch?"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

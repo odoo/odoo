@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ================================================================ -->
+    <!-- Technician Location Allowance Sheet — Form                         -->
+    <!-- ================================================================ -->
+    <record id="view_ksw_location_allowance_sheet_form" model="ir.ui.view">
+        <field name="name">ksw.location.allowance.sheet.form</field>
+        <field name="model">ksw.location.allowance.sheet</field>
+        <field name="arch" type="xml">
+            <form string="Technician Location Allowance">
+                <field name="is_locked" invisible="1"/>
+                <field name="state" invisible="1"/>
+
+                <header>
+                    <button name="action_confirm" string="Confirm"
+                            type="object" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_reset_to_draft"
+                            string="Reset to Draft"
+                            type="object" class="btn-secondary"
+                            groups="KSW_commissions.group_commission_officer"
+                            invisible="state == 'draft'"/>
+                    <statusbar statusfield="state"
+                               statusbar_visible="draft,confirmed"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+
+                    <group>
+                        <group string="Sheet">
+                            <field name="period" readonly="is_locked"/>
+                        </group>
+                        <group string="Summary">
+                            <field name="total_allowance" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Technicians" name="technicians">
+                            <field name="line_ids">
+                                <list editable="bottom"
+                                      decoration-info="total_allowance &gt; 0"
+                                      decoration-muted="total_allowance == 0">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="employee_id"
+                                           options="{'no_create': True}"/>
+                                    <field name="department_id"
+                                           optional="show" readonly="1"/>
+                                    <field name="breakfast_qty"
+                                           string="Breakfast (qty)"/>
+                                    <field name="breakfast_price"
+                                           string="× Price"
+                                           readonly="1" optional="hide"/>
+                                    <field name="breakfast_amount"
+                                           string="Breakfast (SAR)"
+                                           readonly="1"/>
+                                    <field name="lunch_qty"
+                                           string="Lunch (qty)"/>
+                                    <field name="lunch_price"
+                                           string="× Price"
+                                           readonly="1" optional="hide"/>
+                                    <field name="lunch_amount"
+                                           string="Lunch (SAR)"
+                                           readonly="1"/>
+                                    <field name="dinner_qty"
+                                           string="Dinner (qty)"/>
+                                    <field name="dinner_price"
+                                           string="× Price"
+                                           readonly="1" optional="hide"/>
+                                    <field name="dinner_amount"
+                                           string="Dinner (SAR)"
+                                           readonly="1"/>
+                                    <field name="total_allowance"
+                                           string="Total"
+                                           readonly="1" sum="Total"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+
+                                <!-- Per-row pop-up form -->
+                                <form string="Technician Allowance">
+                                    <sheet>
+                                        <group>
+                                            <group string="Technician">
+                                                <field name="employee_id"
+                                                       options="{'no_create': True}"/>
+                                                <field name="department_id"
+                                                       readonly="1"/>
+                                            </group>
+                                            <group string="Total"
+                                                   class="oe_subtotal_footer oe_right">
+                                                <field name="total_allowance"
+                                                       readonly="1"
+                                                       class="oe_subtotal_footer_separator"/>
+                                                <field name="currency_id" invisible="1"/>
+                                            </group>
+                                        </group>
+                                        <group string="Meal Occurrences" col="3">
+                                            <group string="Breakfast">
+                                                <field name="breakfast_qty"/>
+                                                <field name="breakfast_price" readonly="1"/>
+                                                <field name="breakfast_amount" readonly="1"/>
+                                            </group>
+                                            <group string="Lunch">
+                                                <field name="lunch_qty"/>
+                                                <field name="lunch_price" readonly="1"/>
+                                                <field name="lunch_amount" readonly="1"/>
+                                            </group>
+                                            <group string="Dinner">
+                                                <field name="dinner_qty"/>
+                                                <field name="dinner_price" readonly="1"/>
+                                                <field name="dinner_amount" readonly="1"/>
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+
+                    <group class="oe_subtotal_footer oe_right">
+                        <field name="total_allowance"
+                               string="Sheet Total"
+                               readonly="1"
+                               class="oe_subtotal_footer_separator"/>
+                    </group>
+                </sheet>
+
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Technician Location Allowance Sheet — List -->
+    <record id="view_ksw_location_allowance_sheet_list" model="ir.ui.view">
+        <field name="name">ksw.location.allowance.sheet.list</field>
+        <field name="model">ksw.location.allowance.sheet</field>
+        <field name="arch" type="xml">
+            <list decoration-success="state == 'confirmed'"
+                  decoration-muted="state == 'draft'">
+                <field name="name"/>
+                <field name="period"/>
+                <field name="total_allowance" sum="Total"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search -->
+    <record id="view_ksw_location_allowance_sheet_search" model="ir.ui.view">
+        <field name="name">ksw.location.allowance.sheet.search</field>
+        <field name="model">ksw.location.allowance.sheet</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="period"/>
+                <filter name="draft" string="Draft"
+                        domain="[('state','=','draft')]"/>
+                <filter name="confirmed" string="Confirmed"
+                        domain="[('state','=','confirmed')]"/>
+                <group>
+                    <filter string="Period" name="grp_period" domain="[]"
+                            context="{'group_by': 'period'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ksw_location_allowance_sheet"
+            model="ir.actions.act_window">
+        <field name="name">Technician Location Allowance</field>
+        <field name="res_model">ksw.location.allowance.sheet</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id"
+               ref="view_ksw_location_allowance_sheet_search"/>
+        <field name="context">{'search_default_grp_period': 1}</field>
+    </record>
+
+</odoo>
+

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="contrib_register_employees" model="hr.contribution.register">
+            <field name="name">Employees</field>
+            <field name="partner_id" eval="False"/>
+        </record>
+
+        <record id="BASIC" model="hr.salary.rule.category">
+            <field name="name">Basic</field>
+            <field name="code">BASIC</field>
+        </record>
+
+        <record id="ALW" model="hr.salary.rule.category">
+            <field name="name">Allowance</field>
+            <field name="code">ALW</field>
+        </record>
+
+        <record id="GROSS" model="hr.salary.rule.category">
+            <field name="name">Gross</field>
+            <field name="code">GROSS</field>
+        </record>
+
+        <record id="DED" model="hr.salary.rule.category">
+            <field name="name">Deduction</field>
+            <field name="code">DED</field>
+        </record>
+
+        <record id="NET" model="hr.salary.rule.category">
+            <field name="name">Net</field>
+            <field name="code">NET</field>
+        </record>
+
+        <record id="COMP" model="hr.salary.rule.category">
+            <field name="name">Company Contribution</field>
+            <field name="code">COMP</field>
+        </record>
+
+        <record id="HRA" model="hr.salary.rule.category">
+            <field name="name">House Rent Allowance</field>
+            <field name="code">HRA</field>
+        </record>
+
+        <record id="DA" model="hr.salary.rule.category">
+            <field name="name">Dearness Allowance</field>
+            <field name="code">DA</field>
+        </record>
+
+        <record id="Travel" model="hr.salary.rule.category">
+            <field name="name">Travel Allowance</field>
+            <field name="code">Travel</field>
+        </record>
+
+        <record id="Meal" model="hr.salary.rule.category">
+            <field name="name">Meal Allowance</field>
+            <field name="code">Meal</field>
+        </record>
+
+        <record id="Medical" model="hr.salary.rule.category">
+            <field name="name">Medical Allowance</field>
+            <field name="code">Medical</field>
+        </record>
+
+        <record id="Other" model="hr.salary.rule.category">
+            <field name="name">Other Allowance</field>
+            <field name="code">Other</field>
+        </record>
+
+    </data>
+</odoo>

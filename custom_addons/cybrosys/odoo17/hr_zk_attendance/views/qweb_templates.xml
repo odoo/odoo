@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="get_current_hour">
+        <t t-esc="(datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=3)))).hour"/>
+    </template>
+</odoo>

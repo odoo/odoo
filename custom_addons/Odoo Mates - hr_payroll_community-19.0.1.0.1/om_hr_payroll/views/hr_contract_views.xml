@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root Menus -->
+
+    <menuitem id="menu_hr_payroll_root"
+              name="Payroll"
+              sequence="186"
+              web_icon="om_hr_payroll,static/description/icon.png"/>
+
+    <menuitem id="menu_hr_payroll_configuration"
+              name="Configuration" parent="menu_hr_payroll_root"
+              sequence="100"
+              groups="om_hr_payroll.group_hr_payroll_manager"/>
+
+    <!-- Contract View -->
+    <record id="hr_contract_form_inherit" model="ir.ui.view">
+        <field name="name">hr.version.view.form.inherit</field>
+        <field name="model">hr.version</field>
+        <field name="inherit_id" ref="hr.hr_contract_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="required">not employee_id</attribute>
+                <attribute name="invisible">employee_id</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="employee_id" class="text-truncate" placeholder="Employee" readonly="1"
+                       invisible="not employee_id"/>
+
+            </xpath>
+            <xpath expr="//div[@name='title']" position="after">
+                <div class="o_row" name="contract_dates" invisible="not employee_id" groups="hr.group_hr_manager">
+                    <i class="fa fa-fw me-2 fa-briefcase text-primary" title="Contract"/>
+                    <field name="contract_date_start" string="Start Date" placeholder="Not Employed"
+                           class="o_hr_narrow_field me-3"/>
+                    <span invisible="not contract_date_start">to</span>
+                    <field name="contract_date_end" string="End Date" placeholder="Indefinite"
+                           class="o_hr_narrow_field ms-3" invisible="not contract_date_start"/>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='job_id']" position="after">
+                <field name="struct_id" required="1"/>
+                <field name="type_id" required="1"/>
+            </xpath>
+
+            <xpath expr="//field[@name='job_id']" position="before">
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="currency_id" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='resource_calendar_id']" position="after">
+                <field name="schedule_pay"/>
+            </xpath>
+
+            <!--            <xpath expr="//page[@name='information']" position="after">-->
+            <!--                <page name="other" position="move"/>-->
+            <!--            </xpath>-->
+
+            <xpath expr="//group[@name='salary_info']" position="after">
+                <group string="Monthly Advantages in Cash" name='allowances'>
+                    <label for="hra"/>
+                    <div class="o_row">
+                        <field name="hra" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                    <label for="da"/>
+                    <div class="o_row">
+                        <field name="da" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                    <label for="travel_allowance"/>
+                    <div class="o_row">
+
+                        <field name="travel_allowance" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                    <label for="meal_allowance"/>
+                    <div class="o_row">
+
+                        <field name="meal_allowance" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                    <label for="medical_allowance"/>
+                    <div class="o_row">
+
+                        <field name="medical_allowance" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                    <label for="other_allowance"/>
+                    <div class="o_row">
+
+                        <field name="other_allowance" nolabel="1"/>
+                        <span>/ month</span>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_contract_advantage_template_view_form" model="ir.ui.view">
+        <field name="name">hr.contract.advantage.template.form</field>
+        <field name="model">hr.contract.advantage.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Advantage Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="default_value"/>
+                            <field name="lower_bound"/>
+                            <field name="upper_bound"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_contract_advantage_template_view_tree" model="ir.ui.view">
+        <field name="name">hr.contract.advantage.template.list</field>
+        <field name="model">hr.contract.advantage.template</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="lower_bound"/>
+                <field name="upper_bound"/>
+                <field name="default_value"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_contract_advantage_template_action" model="ir.actions.act_window">
+        <field name="name">Contract Advantage Templates</field>
+        <field name="res_model">hr.contract.advantage.template</field>
+    </record>
+
+    <menuitem
+            id="hr_contract_advantage_template_menu_action"
+            action="hr_contract_advantage_template_action"
+            parent="menu_hr_payroll_configuration"
+            sequence="50"/>
+
+</odoo>

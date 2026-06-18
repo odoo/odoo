@@ -1,0 +1,68 @@
+<odoo>
+    <record id="todo_tasks_report" model="ir.actions.report">
+        <field name="name">To-Do Tasks Report</field>
+        <field name="model">todo.task</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="binding_model_id" ref="model_todo_task"/>
+        <field name="binding_type">report</field>
+        <field name="report_name">todo_management.todo_tasks_report_template</field>
+    </record>
+
+    <template id="todo_tasks_report_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div style="margin: 20px 0;">
+                        <div style="font-size: 14px; margin-bottom: 10px;">
+                            <span style="display: inline-block; width: 150px; font-weight: bold;">Task:</span>
+                            <span><t t-esc="o.name"/></span>
+                        </div>
+                        <div style="font-size: 14px; margin-bottom: 10px;">
+                            <span style="display: inline-block; width: 150px; font-weight: bold;">Due Date:</span>
+                            <span><t t-esc="o.due_date"/></span>
+                        </div>
+                        <div style="font-size: 14px; margin-bottom: 10px;">
+                            <span style="display: inline-block; width: 150px; font-weight: bold;">Assign To:</span>
+                            <span><t t-esc="o.assigned_to.partner_id.name"/></span>
+                        </div>
+                        <div style="font-size: 14px; margin-bottom: 10px;">
+                            <span style="display: inline-block; width: 150px; font-weight: bold;">Estimated Time:</span>
+                            <span><t t-esc="o.estimated_time"/></span>
+                            <span style="display: inline-block; width: 150px;">H</span>
+                        </div>
+                        <br/>
+                         <div style="font-size: 14px; margin-bottom: 10px;">
+                            <span style="width: 150px; font-weight: bold;">Description</span>
+                            <p style="width: 350px;">You have to call all customers to collect feedback and
+                                ensure there is not problem with them</p>
+                        </div>
+                        <br/>
+                        <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                            <thead>
+                                <tr>
+                                    <th colspan="4" style="border: 1px solid black; padding: 8px; text-align: Center;">TimeSheet</th>
+                                </tr>
+                                <tr>
+                                    <th style="border: 1px solid black; padding: 8px; text-align: center; width:25px">#</th>
+                                    <th style="border: 1px solid black; padding: 8px; text-align: center; width:50px">Date</th>
+                                    <th style="border: 1px solid black; padding: 8px; text-align: center; width:50px">Description</th>
+                                    <th style="border: 1px solid black; padding: 8px; text-align: center; width:50px">Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.lines_ids" t-as="line">
+                                    <tr>
+                                        <td style="border: 1px solid black; text-align: center; padding: 8px;"><t t-esc="line_index +1"/></td>
+                                        <td style="border: 1px solid black; text-align: center; padding: 8px;"><t t-esc="line.due_date"/></td>
+                                        <td style="border: 1px solid black; text-align: center; padding: 8px;"><t t-esc="line.description"/></td>
+                                        <td style="border: 1px solid black; text-align: center; padding: 8px;"><t t-esc="line.hours_spent"/>H</td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

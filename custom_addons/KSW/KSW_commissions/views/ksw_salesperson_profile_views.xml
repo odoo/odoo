@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ================================================================ -->
+    <!-- Salesperson Profile — Form / List / Search                       -->
+    <!-- ================================================================ -->
+    <record id="view_ksw_salesperson_profile_form" model="ir.ui.view">
+        <field name="name">ksw.salesperson.profile.form</field>
+        <field name="model">ksw.salesperson.profile</field>
+        <field name="arch" type="xml">
+            <form string="Salesperson Profile">
+                <header>
+                    <button name="action_redistribute_targets"
+                            string="Redistribute Annual → Monthly (Even)"
+                            type="object" class="btn-secondary"
+                            confirm="Overwrite the 12 monthly target rows with an even split of the current annual totals?"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id"
+                                   options="{'no_create': True}"/>
+                            <field name="year"/>
+                            <field name="role"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="annual_sales_target"/>
+                            <field name="annual_collection_target"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="Commission Rules">
+                        <div class="alert alert-info col-12" role="alert"
+                             style="margin-bottom:8px;">
+                            <i class="fa fa-info-circle me-2"/>
+                            Select which commission rule applies to this employee.
+                            Leave blank to auto-select the most-specific active rule
+                            by scope matching.
+                        </div>
+                        <group>
+                            <field name="sales_rule_id"
+                                   options="{'no_create': True}"
+                                   invisible="role == 'collect'"/>
+                            <field name="collection_rule_id"
+                                   options="{'no_create': True}"
+                                   invisible="role == 'sales'"/>
+                            <field name="combined_rule_id"
+                                   options="{'no_create': True}"
+                                   invisible="role != 'both'"/>
+                        </group>
+                        <group string="Collection Manager Options"
+                               invisible="role == 'sales'">
+                            <field name="x_collection_based_on_total"
+                                   widget="boolean_toggle"/>
+                            <div class="alert alert-warning col-12"
+                                 role="status"
+                                 style="font-size:0.85em;"
+                                 invisible="not x_collection_based_on_total">
+                                <i class="fa fa-info-circle me-2"/>
+                                On import, <b>Achieved Collection</b> will be set
+                                to the <b>grand total</b> of all collections from
+                                the Excel file (all reps combined), and
+                                <b>Target Collection</b> will be set to the grand
+                                total of all targets from the same file.
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Client Splits">
+                            <div class="alert alert-info col-12" role="alert"
+                                 style="margin-bottom:8px;">
+                                <i class="fa fa-code-fork me-2"/>
+                                Define client buckets that receive <b>separate</b> commission
+                                lines on the monthly sheet. Each split must reference a
+                                <i>Client-specific</i> or <i>Employee + Client</i> rule whose
+                                <b>Clients</b> list names the customers in this bucket.
+                                The <b>general</b> line will receive the remaining sales
+                                (total minus all split amounts). Leave empty when the
+                                employee has a single uniform rule.
+                            </div>
+                            <field name="split_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="label"/>
+                                    <field name="rule_id"
+                                           options="{'no_create': True}"
+                                           domain="[('scope', 'in', ['client', 'employee_client']), ('active', '=', True)]"/>
+                                    <field name="role"/>
+                                    <field name="client_names" readonly="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Monthly Targets">
+                            <field name="target_line_ids">
+                                <list editable="bottom">
+                                    <field name="month"/>
+                                    <field name="sales_target"/>
+                                    <field name="collection_target"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes">
+                            <field name="note" placeholder="Internal notes…"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ksw_salesperson_profile_list" model="ir.ui.view">
+        <field name="name">ksw.salesperson.profile.list</field>
+        <field name="model">ksw.salesperson.profile</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="employee_id"/>
+                <field name="year"/>
+                <field name="role"/>
+                <field name="annual_sales_target" sum="Annual Sales Target"/>
+                <field name="annual_collection_target" sum="Annual Collection Target"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ksw_salesperson_profile_search" model="ir.ui.view">
+        <field name="name">ksw.salesperson.profile.search</field>
+        <field name="model">ksw.salesperson.profile</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="year"/>
+                <filter name="role_sales" string="Salesman"
+                        domain="[('role', '=', 'sales')]"/>
+                <filter name="role_collect" string="Collector"
+                        domain="[('role', '=', 'collect')]"/>
+                <filter name="role_both" string="Both"
+                        domain="[('role', '=', 'both')]"/>
+                <separator/>
+                <filter name="archived" string="Archived"
+                        domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Year" name="group_year"
+                            domain="[]" context="{'group_by': 'year'}"/>
+                    <filter string="Role" name="group_role"
+                            domain="[]" context="{'group_by': 'role'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ksw_salesperson_profile" model="ir.actions.act_window">
+        <field name="name">Salesperson Profiles</field>
+        <field name="res_model">ksw.salesperson.profile</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ksw_salesperson_profile_search"/>
+        <field name="context">{'search_default_group_year': 1}</field>
+    </record>
+
+</odoo>
+

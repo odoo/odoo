@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Inherit ksw.deduction form: add the "Awaiting Commission"    -->
+    <!-- column to both the read-only and the editable installment    -->
+    <!-- lists. The accountant (group_installment_edit) ticks it on a  -->
+    <!-- new pending line they add for the slice they want recouped   -->
+    <!-- via the commission sheet instead of payroll.                 -->
+    <!-- ============================================================ -->
+    <record id="view_ksw_deduction_form_inherit_awaiting_commission"
+            model="ir.ui.view">
+        <field name="name">ksw.deduction.form.inherit.awaiting.commission</field>
+        <field name="model">ksw.deduction</field>
+        <field name="inherit_id" ref="KSW_deduction.ksw_deduction_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Read-only list (non-privileged users) -->
+            <xpath expr="//field[@name='line_ids'][@readonly='1']/list/field[@name='settlement_label']"
+                   position="before">
+                <field name="x_awaiting_commission"
+                       string="Awaiting Commission"
+                       widget="boolean"
+                       optional="show"/>
+            </xpath>
+            <xpath expr="//field[@name='line_ids'][@readonly='1']/list/field[@name='settlement_label']"
+                   position="after">
+                <field name="x_paid_via_commission_sheet_id"
+                       string="Paid via Sheet"
+                       optional="show"/>
+                <field name="x_pending_commission_sheet_id"
+                       string="Awaiting Sheet"
+                       optional="hide"/>
+            </xpath>
+            <!-- Editable list (group_installment_edit) -->
+            <xpath expr="//field[@name='line_ids'][not(@readonly='1')]/list/field[@name='settlement_label']"
+                   position="before">
+                <field name="x_awaiting_commission"
+                       string="Awaiting Commission"
+                       readonly="state != 'pending'"
+                       optional="show"/>
+            </xpath>
+            <xpath expr="//field[@name='line_ids'][not(@readonly='1')]/list/field[@name='settlement_label']"
+                   position="after">
+                <field name="x_paid_via_commission_sheet_id"
+                       string="Paid via Sheet"
+                       readonly="1" optional="show"/>
+                <field name="x_pending_commission_sheet_id"
+                       string="Awaiting Sheet"
+                       readonly="1" optional="hide"/>
+            </xpath>
+            <!-- Help block: explain the new flow -->
+            <xpath expr="//div[hasclass('text-muted')]" position="after">
+                <div class="alert alert-info mt-2" role="status"
+                     groups="KSW_deduction.group_installment_edit">
+                    <i class="fa fa-info-circle" title="Info"
+                       role="img" aria-label="Info"/>
+                    <b class="ms-1">Recouping a slice via the Commission Sheet</b> —
+                    when an employee can't afford a full installment from
+                    salary alone, you can route part (or all) of it to
+                    their monthly commission sheet:
+                    <ol class="mb-0">
+                        <li>Reduce the original month's row to the amount
+                            payroll <em>can</em> afford (e.g. 200 → 50).</li>
+                        <li>Add a new row for the <em>same</em> year/month with
+                            the remainder (e.g. 150) and tick
+                            <b>Awaiting Commission</b>. Leave it as
+                            <i>Pending</i>.</li>
+                        <li>The matching commission sheet automatically
+                            picks the 150 up in its <i>Loans (auto)</i>
+                            field and settles it on Finalise.</li>
+                    </ol>
+                    The loan total stays balanced (50 + 150 = 200) so
+                    the schedule is unaffected; payroll skips the
+                    parked row, and the commission sheet flips it to
+                    <i>Paid</i> when finalised.
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+
+
+
+

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Wizard Form View -->
+    <record id="view_attendance_report_wizard_form" model="ir.ui.view">
+        <field name="name">attendance.report.wizard.form</field>
+        <field name="model">attendance.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Monthly Attendance Report">
+                <group>
+                    <group string="Selection">
+                        <field name="employee_id"/>
+                        <field name="month"/>
+                        <field name="year"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_print" string="🖨 Print Report"
+                            type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action to open the wizard -->
+    <record id="action_attendance_report_wizard" model="ir.actions.act_window">
+        <field name="name">Monthly Attendance Report</field>
+        <field name="res_model">attendance.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menu item under Attendances -->
+    <menuitem id="menu_attendance_report"
+              name="Monthly Report"
+              parent="hr_attendance.menu_hr_attendance_reporting"
+              action="action_attendance_report_wizard"
+              sequence="100"/>
+
+</odoo>
+
+

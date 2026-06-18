@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_ksw_sales_commission_import_wizard_form"
+            model="ir.ui.view">
+        <field name="name">ksw.sales.commission.import.wizard.form</field>
+        <field name="model">ksw.sales.commission.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import Sales &amp; Collection from Excel">
+                <sheet>
+                    <field name="sheet_id" invisible="1"/>
+                    <div class="alert alert-info" role="alert">
+                        <i class="fa fa-info-circle me-2" title="Info" role="img" aria-label="Info"/>
+                        Upload the monthly Excel files produced by the accountant application.
+                        You may upload one or both files — only the uploaded file(s) will update
+                        the corresponding achieved amounts. The other column is left unchanged.
+                    </div>
+                    <group string="Sales File">
+                        <div class="alert alert-secondary mx-3" role="status" style="font-size:0.85em;">
+                            Expected columns: Account number · Customer name ·
+                            Sales (VAT-incl.) · <b>Pre-tax sales ← imported</b> · Salesman
+                        </div>
+                        <field name="sales_file" widget="binary" filename="sales_filename"/>
+                        <field name="sales_filename" invisible="1"/>
+                    </group>
+                    <group string="Collection File">
+                        <div class="alert alert-secondary mx-3" role="status" style="font-size:0.85em;">
+                            Expected columns: Account number · Customer name ·
+                            Balance · Aging · <b>Target ← imported</b> ·
+                            <b>Collected ← imported</b> · Rep name · Collection %
+                        </div>
+                        <field name="collection_file" widget="binary" filename="collection_filename"/>
+                        <field name="collection_filename" invisible="1"/>
+                        <field name="collection_exclude_vat" widget="boolean_toggle"/>
+                        <div class="alert alert-secondary mx-3 mt-1" role="status"
+                             style="font-size:0.85em;"
+                             invisible="not collection_exclude_vat">
+                            <i class="fa fa-calculator me-1" role="img" aria-label="VAT"/>
+                            Target and Collected amounts will be divided by <b>1.15</b>
+                            to remove the 15% VAT before being saved.
+                        </div>
+                    </group>
+                    <div class="alert alert-warning mt-2" role="alert">
+                        <i class="fa fa-link me-2" title="Mapping" role="img" aria-label="Mapping"/>
+                        <b>Employee mapping:</b> the wizard matches the salesman name in the Excel file
+                        using the <i>Commission Import Name</i> field on each employee record.
+                        If blank, it falls back to the employee's <i>Name</i>.
+                        Unmatched names are listed in the sheet's chatter after import.
+                    </div>
+                </sheet>
+                <footer>
+                    <button name="action_import" string="Import" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
+

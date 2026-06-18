@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_ksw_commission_bank_export_wizard_form" model="ir.ui.view">
+        <field name="name">ksw.commission.bank.export.wizard.form</field>
+        <field name="model">ksw.commission.bank.export.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Export Bank File">
+                <group>
+                    <field name="batch_id" readonly="1"/>
+                    <field name="export_mode" widget="radio"/>
+                    <field name="bank_account_id"
+                           invisible="export_mode not in ('specific_excel','specific_txt')"
+                           required="export_mode in ('specific_excel','specific_txt')"/>
+                    <field name="value_date"
+                           invisible="export_mode not in ('all_txt','specific_txt')"/>
+                    <field name="operation_code"
+                           invisible="export_mode not in ('all_txt','specific_txt')"/>
+                    <field name="company_partner_id" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="action_export" string="Export" type="object"
+                            class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>
+

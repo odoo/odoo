@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>HR Biometric Device Integration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"/>
+    <style>
+        :root {
+            --primary-color: #7f54b3;
+            --bg-white: #fff;
+            --text-color: #121212;
+            --text-color-light: #64728f;
+        }
+
+        body {
+            font-family: "Montserrat", sans-serif;
+        }
+
+        .nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+            color: #121212;
+            font-family: Montserrat;
+            font-size: 16px !important;
+            font-weight: 500 !important;
+            border-radius: 30px;
+            line-height: normal;
+            text-transform: capitalize;
+            background-color: #F5F5F5;
+            border: none;
+            margin-bottom: 0;
+            padding: 12px 24px;
+        }
+
+        .nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover {
+            border-color: transparent;
+            isolation: isolate;
+        }
+
+        .nav-tabs .nav-link:focus-visible {
+            border-color: transparent;
+            box-shadow: none;
+        }
+
+        /* owl-carosel */
+        .owl-carousel .owl-nav {
+            position: absolute;
+            top: 42%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-42%);
+        }
+
+        .owl-carousel .owl-nav button.owl-prev {
+            position: absolute;
+            right: -36px;
+            font-size: 28px;
+            background-color: #e4e4e4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .owl-carousel .owl-nav button.owl-next {
+            position: absolute;
+            left: -36px;
+            font-size: 28px;
+            background-color: #e4e4e4;
+            border-radius: 20px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+        }
+
+    </style>
+</head>
+<body>
+<!-- overview -->
+<div class="container">
+    <div class="my-5">
+        <!-- button tab -->
+        <!--  -->
+        <!-- version support -->
+        <div class="my-3 d-flex align-items-center justify-content-end">
+            <div class="text-center"
+                 style="background-color:#017E84 !important; font-size:0.8rem !important; color:#fff !important; font-weight:500 !important; padding:4px !important; margin:0 3px !important; border-radius:50px !important; min-width:120px !important">
+                Community
+            </div>
+            <div class="text-center"
+                 style="background-color:#875A7B !important; color:#fff !important; font-size:0.8rem !important; font-weight:500 !important; padding:4px !important; margin:0 3px !important; border-radius:50px !important; min-width:120px !important">
+                Enterprise
+            </div>
+        </div>
+        <div class="tab-content">
+            <!-- description -->
+            <div class="tab-pane fade show active" id="home" role="tabpanel"
+                 aria-labelledby="home-tab">
+                <div class="position-relative"
+                     style="border-radius: 16px; background: #f8f8f8; padding: 20px 0;">
+                    <div class="row " style="
+          padding: 2rem 0rem 0 !important;
+        ">
+                        <div class="col-lg-8 mx-auto gap-4 d-flex flex-column align-items-center">
+                            <p class="my-1 text-center text-uppercase"
+                               style="
+              letter-spacing: 4px !important;
+              color: #7f54b3;
+              font-weight: bold;
+              text-align: center;
+              font-size: 14px;
+              font-weight: 600;
+              line-height: 15.96px;
+              text-transform: uppercase;
+            ">
+                                THIS MODULE INTEGRATES ODOO EMPLOYEE MANAGEMENT
+                                            WITH BIOMETRIC DEVICE.
+
+                                            Fetch biometric user details from biometric
+                                            device and sync with odoo, available in
+                                            community and enterprise V18
+                            </p>
+                            <h1 class="text-center text-uppercase my-0"
+                                style="color: #121212;font-size: 46px;font-weight: 700;line-height: normal;">HR BIOMETRIC DEVICE INTEGRATION
+                            </h1>
+                        </div>
+                        <div class="col-lg-12 d-flex justify-content-center align-items-center"
+                             style="margin: 3rem 0;">
+                            <img src="./assets/icons/brand-pair.svg"
+                                 width="100%"
+                                 height="auto"
+                                 style="width: 50%"
+                                 class="img-responsive"/>
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <a href="mailto:odoo@cybrosys.com"
+                               target="_blank"
+                               style="background-color: transparent;border-radius: 35px;
+              font-family: Montserrat;
+              display: inline-block;
+              padding: 7px 33px;
+              border: 1px solid #7f54b3;
+              color: #7f54b3;
+              text-decoration: none;
+            "
+                               class="mx-1 mb-2 deep-1 deep_hover">
+                                <img class="img"
+                                     style="width: 24px"
+                                     src="./assets/icons/mail.svg"/>
+                                <span class="pl-2"
+                                      style=" font-size: 16px; vertical-align: middle"
+                                >Email Us</span
+                                >
+                            </a>
+
+                        </div>
+                        <div class="d-flex justify-content-center mt-2">
+                            <img src="./assets/V-18-GIF.gif"
+                                 class="w-100"
+                                 style="z-index: 3; height: auto;">
+                        </div>
+                    </div>
+                    <div class="position-absolute bottom-0"
+                         style="z-index: 1; width: 100%;">
+                        <img src="./assets/icons/banner-bg.svg"
+                             class="img-fluid w-100">
+                    </div>
+                    <div class="position-absolute bottom-0 end-0"
+                         style=" z-index: 2;">
+                        <img src="./assets/icons/patter.svg">
+                    </div>
+                </div>
+                <section class="oe_container pb-5">
+                            <div class="mt64 mb64">
+                                <div class="col-sm-12 py-4">
+
+                                    <div class="alert alert-primary mt-4"
+                                         style="color: #000;background-color: #f8f8f8;border: 1px solid #dcdcdc;border-radius: 16px;">
+                                        <hr style="color: #888;">
+                                        This module uses an external python dependency
+                                        'pyzk'. Before installing the module install the
+                                        python package first. The required python
+                                        package can be installed using the following
+                                        command,
+                                        <br>
+                                        <code class="d-block mt-2"
+                                              style="background-color:#4e4e4e;color: #fff; border-radius: 5px; padding: 6px 8px;">pip
+                                            install pyzk</code>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                <!-- key-highlight -->
+                <div class="" style="border-radius: 16px;
+     padding: 60px 40px;
+     border: 1px solid #EBEEF2;
+     background: #F5F5F7;
+     box-shadow: 0px 5px 20px -11px rgba(0, 0, 0, 0.25); ">
+                    <div class="row">
+                        <div class="col-lg-12 d-flex flex-column justify-content-center align-items-center">
+                            <h2 style=" color: #121212;
+            text-align: center;
+            font-size: 40px;
+            font-weight: 700;
+            text-transform: uppercase; padding-bottom: 50px;">Key
+                                Highlights</h2>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="mb-4 d-flex flex-column justify-content-center gap-3"
+                                 style="border-radius: 12px; border: 1px solid  #B6BCCD;
+            background:  #FFF;padding:32px ">
+                                <div class="d-flex justify-content-center align-items-center"
+                                     style="background-color:#7847D9 !important; border-radius:8px !important; height:42px; width:42px">
+                                    <img src="./assets/icons/feature-icon.svg"
+                                         class="img-responsive" height="26px"
+                                         width="26px">
+                                </div>
+                                <h5 class="m-0"
+                                    style="color:#000 !important; font-weight:bold">
+                                    Live Capture
+                                </h5>
+                                <p class="m-0"
+                                   style="font-size:0.9rem; color:#64728f; font-size: 16px; font-weight: 400;">
+                                    Real-time Data Fetching from Biometric
+                                            Device to Odoo .</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="mb-4 d-flex flex-column justify-content-center gap-3"
+                                 style="border-radius: 12px;
+          border: 1px solid  #B6BCCD;
+          background:  #FFF;padding:32px ">
+                                <div class="d-flex justify-content-center align-items-center"
+                                     style="background-color:#7847D9 !important; border-radius:8px !important; height:42px; width:42px">
+                                    <img src="./assets/icons/feature-icon.svg"
+                                         class="img-responsive" height="26px"
+                                         width="26px">
+                                </div>
+                                <h5 class="m-0"
+                                    style="color:#000 !important; font-weight:bold">
+                                    Schedule Downloads
+                                </h5>
+                                <p class="m-0"
+                                   style="font-size:0.9rem; color:#64728f; font-size: 16px; font-weight: 400;">
+                                    You can schedule attendance downloads by
+                                            configuring the time in the settings.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="mb-4 d-flex flex-column justify-content-center gap-3"
+                                 style="border-radius: 12px;
+            border: 1px solid  #B6BCCD;
+            background:  #FFF;padding:32px ">
+                                <div class="d-flex justify-content-center align-items-center"
+                                     style="background-color:#7847D9 !important; border-radius:8px !important; height:42px; width:42px">
+                                    <img src="./assets/icons/feature-icon.svg"
+                                         class="img-responsive" height="26px"
+                                         width="26px">
+                                </div>
+                                <h5 class="m-0"
+                                    style="color:#000 !important; font-weight:bold">
+                                    User Management
+                                </h5>
+                                <p class="m-0"
+                                   style="font-size:0.9rem; color:#64728f; font-size: 16px; font-weight: 400;">
+                                    You can create, update, and delete users
+                                            from the biometric device, managing them
+                                            through Odoo employees
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="mb-4 d-flex flex-column justify-content-center gap-3"
+                                 style="border-radius: 12px;
+          border: 1px solid  #B6BCCD;
+          background:  #FFF;padding:32px ">
+                                <div class="d-flex justify-content-center align-items-center"
+                                     style="background-color:#7847D9; border-radius:8px !important; height:42px; width:42px">
+                                    <img src="./assets/icons/feature-icon.svg"
+                                         class="img-responsive" height="26px"
+                                         width="26px">
+                                </div>
+                                <h5 class="m-0"
+                                    style="color:#000 !important; font-weight:bold">
+                                    Options for Restart and Clear Data
+                                </h5>
+                                <p class="m-0"
+                                   style="font-size:0.9rem; color:#64728f; font-size: 16px; font-weight: 400;">
+                                    We can restart the device and also clear
+                                            attendance log in a single click.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="mb-4 d-flex flex-column justify-content-center gap-3"
+                                 style="border-radius: 12px;
+          border: 1px solid  #B6BCCD;
+          background:  #FFF;padding:32px ">
+                                <div class="d-flex justify-content-center align-items-center"
+                                     style="background-color:#7847D9; border-radius:8px !important; height:42px; width:42px">
+                                    <img src="./assets/icons/feature-icon.svg"
+                                         class="img-responsive" height="26px"
+                                         width="26px">
+                                </div>
+                                <h5 class="m-0"
+                                    style="color:#000 !important; font-weight:bold">
+                                    Supporting Models
+                                </h5>
+                                <p class="m-0"
+                                   style="font-size:0.9rem; color:#64728f; font-size: 16px; font-weight: 400;">
+                                    This Module Support With The Following
+                                    ZKteco Machines (Clients have
+                                    Reported):<br>
+                                    * UFace202<br>
+                                    * IFace990<br>
+                                    * K40 Pro<br>
+                                    * SFace900<br>
+                                    * FR1500<br>
+                                    * UA760<br>
+                                    * MB10</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--code  -->
+                <div class="my-5">
+                    <div class="position-relative"
+                         style=" padding: 5rem 4rem 5rem 4rem; background-color: #0A1425; border-radius: 12px;">
+                        <div class="d-flex flex-column gap-4">
+                            <span class="wrapper-subtitle"
+                                  style="font-size: 40px; font-weight: 700; color: #fff;line-height: 60px; text-transform: capitalize; width: 450px;  font-family: Montserrat;">HR Biometric Device Integration</span>
+                            <h3 class="wrapper-details"
+                                style="font-size: 20px; font-weight: 400; color: #fff; line-height: 32px;  ">
+                                Are you ready to make your business more
+                                organized?
+                                <br> Improve now!
+                            </h3>
+                            <div class="d-flex gap-3">
+                                <a href="mailto:odoo@cybrosys.com"
+                                   class="shop-btn" style="cursor: pointer; border-radius: 16px; display: flex; justify-content: center; align-items: center; gap: 7px;
+            border: 1px solid  #ffffff33;
+            background-color: #ffffff14;
+            backdrop-filter: blur(10px); color: #fff; padding: 12px 16px 12px 16px; text-decoration: none;">
+             <span style="border-radius: 12px;
+             background-color: #ffffff1a;
+             backdrop-filter: blur(6px);padding: 12px;  ">
+              <img src="./assets/icons/banner-mail.svg">
+           </span>
+                                    <span style="font-weight: 500;font-family: Montserrat;">odoo@cybrosys.com</span>
+                                </a>
+                                <a href="tel:+91 9074270811" class="shop-btn"
+                                   style="cursor: pointer; border-radius: 16px; display: flex; justify-content: center; align-items: center; gap: 7px;
+             border: 1px solid  #ffffff33;
+             background-color: #ffffff14;
+            backdrop-filter: blur(10px); color: #fff; padding: 12px 22px 12px 18px; text-decoration: none;">
+             <span style="border-radius: 12px;
+             background-color: #ffffff1a;
+             backdrop-filter: blur(6px);padding: 12px;">
+              <img src="./assets/icons/banner-call.svg">
+           </span>
+                                    <span style="font-weight: 500;font-family: Montserrat;">+91 9074270811</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="position-absolute bottom-0 end-0">
+                            <img src="./assets/icons/banner-pattern.svg"
+                                 style="width: 540px;">
+                        </div>
+                    </div>
+                </div>
+                <!-- end-code -->
+                <!--  -->
+                <!-- screenshot and other -->
+
+                <div class="mb-4 bg-white"
+                     style=" border: 1px solid #EBEEF2; border-radius: 6px; box-shadow: 0px 8px 20px -4px rgba(0, 0, 0, 0.10); border: 1px solid #EBEEF2;">
+                    <div>
+                        <ul class="nav nav-tabs justify-content-center bg-white py-2"
+                            id="myTab" role="tablist"
+                            style="border-radius: 6px 6px 0 0;">
+                            <li class="nav-item">
+                                <a aria-controls="overview"
+                                   aria-bs-selected="true"
+                                   class="nav-link active" data-bs-toggle="tab"
+                                   href="#overview" id="overview-tab" role="tab"
+                                   style="color:#121212; font-weight:500; font-size:16px">
+                                    Screenshots</a>
+                            </li>
+                            <li class="nav-item">
+                                <a aria-controls="feature"
+                                   aria-bs-selected="false"
+                                   class="nav-link py-2" data-bs-toggle="tab"
+                                   href="#feature" id="feature-tab" role="tab"
+                                   style="color:#121212; font-weight:500; font-size:16px">Features</a>
+                            </li>
+                            <li class="nav-item">
+                                <a aria-controls="faq" aria-bs-selected="false"
+                                   class="nav-link" data-bs-toggle="tab"
+                                   href="#faq" id="faq-tab" role="tab"
+                                   style="color:#121212; font-weight:500; font-size:16px">
+                                    FAQs</a>
+                            </li>
+                            <li class="nav-item">
+                                <a aria-controls="releases"
+                                   aria-bs-selected="false" class="nav-link"
+                                   data-bs-toggle="tab" href="#releases"
+                                   id="releases-tab" role="tab"
+                                   style="color:#121212; font-weight:500; font-size:16px">Releases</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-content p-md-5 p-2 py-3" id="myTabContent">
+                        <div aria-labelledby="overview-tab"
+                             class="tab-pane fade show active" id="overview"
+                             role="tabpanel">
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px">
+                                <img alt="acc_bg"
+                                     class="w-100 h-100 position-absolute img-fluid left_0"
+                                     loading="lazy"
+                                     src="//apps.odoocdn.com/apps/assets/17.0/ks_dashboard_ninja/ai-img/o3.png?007008f"
+                                     style="">
+                            </div>
+                            <!-- screenshots section-->
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                                      <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Biometric Device Menu.
+                                      </span>
+
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:#64728f">
+                                                A new menu has been added to the
+                                                        Attendance Module for
+                                                        configuring the Biometric
+                                                        Device. You can find this option
+                                                        under Attendance --> Biometric
+                                                        Device.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/img.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                                      <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Test Connection
+                                      </span>
+                                                <span style="color: #7f54b3; font-size:calc(1.1rem + 1vw)"></span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:#64728f">
+                                                Create a new biometric device by
+                                                        configuring the machine's IP
+                                                        address and port, and then test
+                                                        the connection to ensure it is
+                                                        working.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/img_1.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                                      <span style="color:#121212; font-size:calc(1.1rem + 1vw)"> Notification If Test Connection Succeed
+                                      </span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:#64728f">
+                                                If the Test connection fails,
+                                                        you will be notified with a
+                                                        Validation error message
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/img_2.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                                      <span style="color:#121212; font-size:calc(1.1rem + 1vw)">
+                                      </span>
+                                                <span style="color: #7f54b3; font-size:calc(1.1rem + 1vw)">Biometric Device Functionalities</span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:#64728f">
+                                                In this area, you can see
+                                                        buttons
+                                                        that provide access to different
+                                                        functionalities.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/img_3.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                                      <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Download Data
+                                      </span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:#64728f">
+                                                Clicking the Download button
+                                                        allows you to manually download
+                                                        data from the machine. This will
+                                                        save the attendance records,
+                                                        register employee details, and
+                                                        update the device information.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/img_4.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                                      <span style="color:#121212; font-size:calc(1.1rem + 1vw)"> Attendance Analysis
+                                      </span>
+                                                <span style="color: #7f54b3; font-size:calc(1.1rem + 1vw)"></span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:#64728f">
+                                               Here we can see the Attendance
+                                                        in Attendance Analysis
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/img_5.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                                      <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Clear Data
+                                      </span>
+                                                <span style="color: #7f54b3; font-size:calc(1.1rem + 1vw)"></span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:#64728f">
+                                                We can clear attendance from
+                                                        both device and odoo.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/img_6.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                                      <span style="color:#121212; font-size:calc(1.1rem + 1vw)">
+                                      </span>
+                                                <span style="color: #7f54b3; font-size:calc(1.1rem + 1vw)"></span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:#64728f">
+                                                We can see the cleared log in
+                                                        Chatter.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/img_5.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                                      <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Restart Device
+                                      </span>
+                                                <span style="color: #7f54b3; font-size:calc(1.1rem + 1vw)"></span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:#64728f">
+                                                We can restart the device in a
+                                                        single click.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/img_8.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                                      <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Live Capture
+                                      </span>
+                                                <span style="color: #7f54b3; font-size:calc(1.1rem + 1vw)"></span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:#64728f">
+                                                If 'Live Capture' enabled, we
+                                                        can get the real-time attendance
+                                                        from the device.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/img_9.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-4">
+                                            <p style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:#64728f">
+                                                The stopwatch appears when live
+                                                        capturing is enabled. You also
+                                                        have the option to disable live
+                                                        capturing.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/img_10.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/30.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                              font-weight: 700;">
+                                      <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Set Timezone
+                                      </span>
+                                                <span style="color: #7f54b3; font-size:calc(1.1rem + 1vw)"></span>
+                                            </h1>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:#64728f">
+                                                We can set the Timezone of the
+                                                        user into the device.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/img_11.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:#64728f">
+                                                Will notify if the timezone is
+                                                        set.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/img_12.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="position-relative mb-4"
+                                 style="border-radius:10px; background-color:#f4f4f4">
+                                <div class="p-md-5 p-3 position-relative">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                                    <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                                                    font-weight: 700;">
+                                                        <span style="color:#121212; font-size:calc(1.1rem + 1vw)">  User Management
+                                                        </span>
+                                                    </h1>
+                                                </div>
+                                        <div class="col-md-12 mb-4">
+                                            <p style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:#64728f">
+                                                By clicking this button, a
+                                                        wizard will open to manage
+                                                        users.
+                                            </p>
+                                        </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/img_13.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 mb-0 mt-2">
+                                                    <h2 style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                        Here we have several options for
+                                                        managing users.
+                                                    </h2>
+                                                </div>
+                                        <div class="col-md-12 text-center">
+                                            <div class="d-inline-block p-3 shadow-sm"
+                                                 style="background-color:#fff; border-radius:10px">
+                                                <img alt="" class="img-fluid"
+                                                     loading="lazy"
+                                                     src="./assets/screenshots/img_14.png"
+                                                     style="min-height: 1px;">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 mb-0 mt-2">
+                                                    <h2 style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                        by selecting 'Get all Users', we
+                                                        can get all users from the
+                                                        device.
+                                                    </h2>
+                                                </div>
+                                                <div class="col-md-12 text-center">
+                                                    <div class="d-inline-block p-3 shadow-sm"
+                                                         style="background-color:#fff; border-radius:10px">
+                                                        <img alt="" class="img-fluid"
+                                                             loading="lazy"
+                                                             src="./assets/screenshots/img_15.png"
+                                                             style="min-height: 1px;">
+                                                    </div>
+                                                </div>
+                                        <div class="col-md-12 mb-0 mt-2">
+                                                    <h2 style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                        Here we can see all the users
+                                                        from the device.
+                                                        .
+                                                    </h2>
+                                                </div>
+                                                <div class="col-md-12 text-center">
+                                                    <div class="d-inline-block p-3 shadow-sm"
+                                                         style="background-color:#fff; border-radius:10px">
+                                                        <img alt="" class="img-fluid"
+                                                             loading="lazy"
+                                                             src="./assets/screenshots/img_16.png"
+                                                             style="min-height: 1px;">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 mb-0 mt-2">
+                                                    <h2 style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                        By selecting 'create user', we
+                                                        can select the employee from the
+                                                        list.
+
+                                                    </h2>
+                                                </div>
+                                                <div class="col-md-12 text-center">
+                                                    <div class="d-inline-block p-3 shadow-sm"
+                                                         style="background-color:#fff; border-radius:10px">
+                                                        <img alt="" class="img-fluid"
+                                                             loading="lazy"
+                                                             src="./assets/screenshots/img_17.png"
+                                                             style="min-height: 1px;">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 mb-0 mt-2">
+                                                    <h2 style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+
+
+                                                        We can see the details in the
+                                                        Chatter.
+                                                    </h2>
+                                                </div>
+                                                <div class="col-md-12 text-center">
+                                                    <div class="d-inline-block p-3 shadow-sm"
+                                                         style="background-color:#fff; border-radius:10px">
+                                                        <img alt="" class="img-fluid"
+                                                             loading="lazy"
+                                                             src="./assets/screenshots/img_18.png"
+                                                             style="min-height: 1px;">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 mb-0 mt-2">
+                                                    <h2 style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                        By selecting 'update user', the
+                                                        user will update in device.
+                                                    </h2>
+                                                </div>
+                                                <div class="col-md-12 text-center">
+                                                    <div class="d-inline-block p-3 shadow-sm"
+                                                         style="background-color:#fff; border-radius:10px">
+                                                        <img alt="" class="img-fluid"
+                                                             loading="lazy"
+                                                             src="./assets/screenshots/img_19.png"
+                                                             style="min-height: 1px;">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 mb-0 mt-2">
+                                                    <h2 style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                        By clicking 'Delete User', We
+                                                        can Delete the user from machine
+                                                        or both devices.
+                                                    </h2>
+                                                </div>
+                                                <div class="col-md-12 text-center">
+                                                    <div class="d-inline-block p-3 shadow-sm"
+                                                         style="background-color:#fff; border-radius:10px">
+                                                        <img alt="" class="img-fluid"
+                                                             loading="lazy"
+                                                             src="./assets/screenshots/img_20.png"
+                                                             style="min-height: 1px;">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 mb-0 mt-2">
+                                                    <h2 style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                        We can see the details in the
+                                                        Chatter.
+                                                    </h2>
+                                                </div>
+                                                <div class="col-md-12 text-center">
+                                                    <div class="d-inline-block p-3 shadow-sm"
+                                                         style="background-color:#fff; border-radius:10px">
+                                                        <img alt="" class="img-fluid"
+                                                             loading="lazy"
+                                                             src="./assets/screenshots/img_21.png"
+                                                             style="min-height: 1px;">
+                                                    </div>
+                                                </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="position-relative mb-4"
+                                         style="border-radius:10px; background-color:#f4f4f4">
+                                        <div class="p-md-5 p-3 position-relative">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                                                        font-weight: 700;">
+                                                        <span style="color:#121212; font-size:calc(1.1rem + 1vw)">
+                                                            Biometric Device details in the Employee's Form.
+                                                        </span>
+                                                    </h1>
+                                                </div>
+                                                <div class="col-md-12 mb-4">
+                                                    <p style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                        You can see the biometric device
+                                                        details in the HR Settings of
+                                                        the Employee form.
+
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-12 text-center">
+                                                    <div class="d-inline-block p-3 shadow-sm"
+                                                         style="background-color:#fff; border-radius:10px">
+                                                        <img alt="" class="img-fluid"
+                                                             loading="lazy"
+                                                             src="./assets/screenshots/img_22.png"
+                                                             style="min-height: 1px;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="position-relative mb-4"
+                                         style="border-radius:10px; background-color:#f4f4f4">
+                                        <div class="p-md-5 p-3 position-relative">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                                                        font-weight: 700;">
+                                                        <span style="color:#121212; font-size:calc(1.1rem + 1vw)">  Configure from Employee form.
+                                                        </span>
+                                                    </h1>
+                                                </div>
+                                                <div class="col-md-12 mb-4">
+                                                    <p style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                        You can configure the biometric
+                                                        device user details from
+                                                        employee form.
+
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-12 text-center">
+                                                    <div class="d-inline-block p-3 shadow-sm"
+                                                         style="background-color:#fff; border-radius:10px">
+                                                        <img alt="" class="img-fluid"
+                                                             loading="lazy"
+                                                             src="./assets/screenshots/img_23.png"
+                                                             style="min-height: 1px;">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 mb-0 mt-2">
+                                                    <h2 style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                        If the employee is already a
+                                                        device user, here we can update
+                                                        and delete.Else we can create
+                                                        the user from here.
+                                                    </h2>
+                                                </div>
+                                                <div class="col-md-12 text-center">
+                                                    <div class="d-inline-block p-3 shadow-sm"
+                                                         style="background-color:#fff; border-radius:10px">
+                                                        <img alt="" class="img-fluid"
+                                                             loading="lazy"
+                                                             src="./assets/screenshots/img_24.png"
+                                                             style="min-height: 1px;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="position-relative mb-4"
+                                         style="border-radius:10px; background-color:#f4f4f4">
+                                        <div class="p-md-5 p-3 position-relative">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <h1 style="font-weight:bold; font-size:calc(1.1rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize; font-size: 40px;
+                                                    font-weight: 700;">
+                                                        <span style="color:#121212; font-size:calc(1.1rem + 1vw)">Schedule Downloads
+                                                        </span>
+                                                    </h1>
+                                                </div>
+                                                <div class="col-md-12 mb-4">
+                                                    <p style="font-weight:400; font-size:16px; line-height:150%; text-align:center;  color:var(--text-color-light)">
+                                                        In the settings, you can set up
+                                                        a schedule for automatic
+                                                        attendance downloads and
+                                                        configure the time interval and
+                                                        period for these downloads
+
+                                                    </p>
+                                                </div>
+                                                <div class="col-md-12 text-center">
+                                                    <div class="d-inline-block p-3 shadow-sm"
+                                                         style="background-color:#fff; border-radius:10px">
+                                                        <img alt="" class="img-fluid"
+                                                             loading="lazy"
+                                                             src="./assets/screenshots/img_25.png"
+                                                             style="min-height: 1px;">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                        </div>
+                        <div aria-labelledby="feature-tab"
+                             class="tab-pane fade show py-1" id="feature"
+                             role="tabpanel">
+                            <div class="row py-4">
+                                <!-- Features Section -->
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#faf8ff">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#7847D9 ; margin-right:10px">
+                                                <i class="fa fa-star  "
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                Real-Time Attendance Capturing</p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#faf8ff">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#7847D9 ; margin-right:10px">
+                                                <i class="fa fa-star  "
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                Option To Restart Biometric
+                                                        Device In Odoo. </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#faf8ff">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#7847D9 ; margin-right:10px">
+                                                <i class="fa fa-star  "
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                Option To Maintain Biometric
+                                                        Device Attendance Logs In Odoo</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#faf8ff">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#7847D9 ; margin-right:10px">
+                                                <i class="fa fa-star  "
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                Downloads And Save Machine
+                                                        Information</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#faf8ff">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#7847D9 ; margin-right:10px">
+                                                <i class="fa fa-star"
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                Set Device's Timezone As The
+                                                        Odoo User Time Zone.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#faf8ff">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#7847D9 ; margin-right:10px">
+                                                <i class="fa fa-star  "
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                You Can Schedule Attendance
+                                                        Downloads By Configuring The
+                                                        Time In The Settings.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 p-3">
+                                    <div class="d-flex flex-column align-items-start h-100"
+                                         style="padding:30px; border-radius:12px; background-color:#faf8ff">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <div class="d-flex align-items-center justify-content-center "
+                                                 style="width:36px; height:36px; border-radius:50%; background-color:#7847D9 ; margin-right:10px">
+                                                <i class="fa fa-star  "
+                                                   style="color:#fff; font-size:14px"></i>
+                                            </div>
+                                            <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                You Can Create, Update, And
+                                                        Delete Users From The Biometric
+                                                        Device, Managing Them Through
+                                                        Odoo Employees. Also, You Can
+                                                        Manage It From The Biometric
+                                                        Device Form.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 p-3">
+                                            <div class="d-flex flex-column align-items-start h-100"
+                                                 style="padding:30px; border-radius:12px; background-color:#faf8ff">
+                                                <div class="d-flex align-items-center justify-content-center">
+                                                    <div class="d-flex align-items-center justify-content-center "
+                                                         style="width:36px; height:36px; border-radius:50%; background-color:#7847D9 ; margin-right:10px">
+                                                        <i class="fa fa-star  "
+                                                           style="color:#fff; font-size:14px"></i>
+                                                    </div>
+                                                    <p style="color:#1A202C; font-weight:600; font-size:1.2rem; margin-bottom:2px">
+                                                        This Module Support With The
+                                                        Following ZKteco Machines
+                                                        (Clients have Reported):<br>
+                                                        * UFace202<br>
+                                                        * IFace990<br>
+                                                        * K40 Pro<br>
+                                                        * SFace900<br>
+                                                        * FR1500<br>
+                                                        * UA760<br>
+                                                        * MB10<br>
+                                                    </p>
+                                                </div>
+                                                <div class="ms-5">
+                                                    <p class="m-0"
+                                                       style="color:#718096">
+
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                            </div>
+                        </div>
+                        <div aria-labelledby="faq-tab"
+                             class="tab-pane fade show" id="faq"
+                             role="tabpanel">
+                            <div class="row"
+                                 style=" background-color:#fff !important">
+                                <div class="col-md-12" aria-labelledby="faq-tab"
+                                      role="tabpanel">
+                                    <div class="accordion mb-4" id="accordion6">
+                                        <div style="background-color:#fff">
+                                            <!-- accordian -->
+                                            <div class="accordion"
+                                                 id="accordion_faq">
+                                                <!-- Question 1 -->
+                                                <div class=""
+                                                     style="margin:1rem 0rem">
+                                                    <div aria-expanded="false"
+                                                         class=" card-header collapsed"
+                                                         data-bs-toggle="collapse"
+                                                         data-bs-target="#collapseFAQOne"
+                                                         href="#collapseFAQOne"
+                                                         aria-controls="collapseFAQOne"
+                                                         style="cursor: pointer; background-color:#f8f8f8; border:none; border-top-right-radius:10px; border-top-left-radius:10px; padding: 12px 24px;">
+                                                        <a class="card-title text-decoration-none"
+                                                           style=" font-size:18px; line-height:30px; font-weight:500; color:#040f3a">
+                                                            Can I integrate biometric devices automatically?
+                                                            <img alt=""
+                                                                 class="float-end"
+                                                                 src="//apps.odoocdn.com/apps/assets/16.0/index_test_odoo/assets/icons/down.svg?6ef7fd7"
+                                                                 width="25px">
+                                                        </a>
+                                                    </div>
+                                                    <div class="accordion-collapse collapse"
+                                                         aria-labelledby="collapseFAQOne"
+                                                         data-bs-parent="#accordion_faq"
+                                                         id="collapseFAQOne"
+                                                         style=" box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px; border: 1px solid #f8f8f8; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                        <p style=" padding:0.75rem 1.25rem; font-size:16px; line-height:27px;  color:#888; font-weight:normal; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                            Yes. This module supports integration with various zk biometric devices. You can configure device settings, and it will automatically fetch attendance logs into Odoo
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <!-- Question 2 -->
+                                                <div style="margin:1rem 0rem">
+                                                    <div aria-expanded="false"
+                                                         class="cursor-pointer card-header collapsed"
+                                                         data-bs-toggle="collapse"
+                                                         aria-controls="collapseFAQThree"
+                                                         data-bs-target="#collapseFAQThree"
+                                                         style="cursor: pointer; background-color:#f8f8f8; border:1px solid #f8f8f8; border-top-right-radius:10px; border-top-left-radius:10px; padding: 12px 24px">
+                                                        <a class="card-title text-decoration-none"
+                                                           style=" font-size:18px; line-height:30px; font-weight:500; color:#040f3a">
+                                                            How frequently is the attendance data synced?
+                                                            <img alt=""
+                                                                 class="float-end"
+                                                                 src="//apps.odoocdn.com/apps/assets/16.0/index_test_odoo/assets/icons/down.svg?6ef7fd7"
+                                                                 width="25px">
+                                                        </a>
+                                                    </div>
+                                                    <div class="accordion-collapse collapse"
+                                                         aria-labelledby="collapseFAQThree"
+                                                         data-bs-parent="#accordion_faq"
+                                                         id="collapseFAQThree"
+                                                         style="box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px; border: 1px solid #f8f8f8; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                        <p style="padding:0.75rem 1.25rem; font-size:16px; line-height:27px;  color:#888; font-weight:normal; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                            You can configure the sync interval manually or set it to auto-sync at specific time intervals using scheduled actions.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                                <!-- Question 3 -->
+                                                <div style="margin:1rem 0rem">
+                                                    <div aria-expanded="false"
+                                                         class="cursor-pointer card-header collapsed"
+                                                         data-bs-toggle="collapse"
+                                                         aria-controls="collapseFAQFour"
+                                                         data-bs-target="#collapseFAQFour"
+                                                         style="cursor: pointer; background-color:#f8f8f8; border:1px solid #f8f8f8; border-top-right-radius:10px; border-top-left-radius:10px; padding: 12px 24px">
+                                                        <a class="card-title text-decoration-none"
+                                                           style=" font-size:18px; line-height:30px; font-weight:500; color:#040f3a">
+                                                            Is there a way to handle duplicate entries?
+                                                            <img alt=""
+                                                                 class="float-end"
+                                                                 src="//apps.odoocdn.com/apps/assets/16.0/index_test_odoo/assets/icons/down.svg?6ef7fd7"
+                                                                 width="25px">
+                                                        </a>
+                                                    </div>
+                                                    <div class="accordion-collapse collapse"
+                                                         aria-labelledby="collapseFAQFour"
+                                                         data-bs-parent="#accordion_faq"
+                                                         id="collapseFAQFour"
+                                                         style="box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px; border: 1px solid #f8f8f8; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                        <p style="padding:0.75rem 1.25rem; font-size:16px; line-height:27px;  color:#888; font-weight:normal; border-bottom-right-radius:10px; border-bottom-left-radius:10px">
+                                                           Yes. The module has built-in logic to prevent duplication based on employee, device ID, and timestamp.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--  -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div aria-labelledby="releases-tab"
+                             class="tab-pane fade show" id="releases"
+                             role="tabpanel">
+                            <!-- Release Notes -->
+                            <div class="row pt-5 m-0">
+                                <div class="col-md-3">
+                                    <h4 style="font-size:16px; font-weight:600; color:#514F4F; margin:0; line-height:26px;">
+                                        Latest Release 18.0.1.0.0
+                                    </h4>
+                                    <span style="font-size:14px; color:#7A7979; display:block; margin-bottom:20px;">
+                                          3rd July, 2025
+                                    </span>
+                                </div>
+                                <div class="col-md-8">
+                                    <div style="padding:0 0 40px">
+                                        <div style="margin:0 0 10px">
+                                            <div style="display:inline-block; padding:0px 8px; color:#514F4F; background-color:#FFD8D8; border-radius:20px">
+                                                Add
+                                            </div>
+                                        </div>
+                                        <div class="d-flex m-0"
+                                             style="color:#7A7979;">
+                                            <ul class="pl-3 mb-0">
+                                                <li>
+                                                    Initial Commit
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div style="padding:0 0 0; border-bottom:1px solid #E3E3E3">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
+                <!-- related post -->
+                <!--  -->
+                <section class="oe_container mt32">
+                    <h2 style="color: #091E42;font-family: &quot;Montserrat&quot;;text-align: center;margin: 25px auto;text-transform: uppercase;"
+                        class="oe_slogan">
+                        <b>Related Products</b>
+                    </h2>
+                    <div id="demo" class="row carousel slide mt64 mb32"
+                         data-bs-ride="carousel">
+                        <!-- The slideshow -->
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16"
+                                     style="float: left; padding: 10px;">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/hrms_dashboard"
+                                       target="_blank"
+                                       style="color: #000; text-decoration: none;">
+                                        <div style="border-radius: 6px; padding: 16px; border: 1px solid #cbcbcb;"
+                                             class="shadow-sm">
+                                            <img class="img img-responsive center-block"
+                                                 style=" max-width: 100%;"
+                                                 src="./assets/modules/1.jpg"/>
+                                            <h4 class="mt0 text-truncate"
+                                                style="text-align:center;width:100&#37; margin-bottom: 8px; font-weight: 600; padding-top: 16px; text-decoration:none;font-size: 18px; padding-bottom: 8px; margin-bottom: 0px">
+                                                Open HRMS HR Dashboard</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16"
+                                     style="float: left; padding: 10px;">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/auto_database_backup"
+                                       target="_blank"
+                                       style="color: #000; text-decoration: none;">
+                                        <div style="border-radius: 6px; padding: 16px; border: 1px solid #cbcbcb;"
+                                             class="shadow-sm">
+                                            <img class="img img-responsive center-block"
+                                                 style=" max-width: 100%;"
+                                                 src="./assets/modules/2.gif"/>
+                                            <h4 class="mt0 text-truncate"
+                                                style="text-align:center;width:100&#37; margin-bottom: 8px; font-weight: 600; padding-top: 16px; text-decoration:none;font-size: 18px; padding-bottom: 8px; margin-bottom: 0px">
+                                                Automatic Database Backup</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16"
+                                     style="float: left; padding: 10px;">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/hr_payroll_community"
+                                       target="_blank"
+                                       style="color: #000; text-decoration: none;">
+                                        <div style="border-radius: 6px;padding: 16px; border: 1px solid #cbcbcb;"
+                                             class="shadow-sm">
+                                            <img class="img img-responsive center-block"
+                                                 style=" max-width: 100%;"
+                                                 src="./assets/modules/3.png"/>
+                                            <h4 class="mt0 text-truncate"
+                                                style="text-align:center;width:100&#37; margin-bottom: 8px; font-weight: 600; padding-top: 16px; text-decoration:none;font-size: 18px; padding-bottom: 8px; margin-bottom: 0px">
+                                                Odoo 18 HR Payroll </h4>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16"
+                                     style="float: left; padding: 10px;">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/rest_api_odoo"
+                                       target="_blank"
+                                       style="color: #000; text-decoration: none;">
+                                        <div style="border-radius: 6px; padding: 16px; border: 1px solid #cbcbcb;"
+                                             class="shadow-sm">
+                                            <img class="img img-responsive center-block"
+                                                 style=" max-width: 100%;"
+                                                 src="./assets/modules/4.jpg"/>
+                                            <h4 class="mt0 text-truncate"
+                                                style="text-align:center;width:100&#37; margin-bottom: 8px; font-weight: 600; padding-top: 16px; text-decoration:none;font-size: 18px; padding-bottom: 8px; margin-bottom: 0px">
+                                                Odoo rest API</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16"
+                                     style="float: left; padding: 10px;">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/odoo_dynamic_dashboard"
+                                       target="_blank"
+                                       style="color: #000; text-decoration: none;">
+                                        <div style="border-radius: 6px; padding: 16px; border: 1px solid #cbcbcb;"
+                                             class="shadow-sm">
+                                            <img class="img img-responsive center-block"
+                                                 style=" max-width: 100%;"
+                                                 src="./assets/modules/5.gif"/>
+                                            <h4 class="mt0 text-truncate"
+                                                style="text-align:center;width:100&#37; margin-bottom: 8px; font-weight: 600; padding-top: 16px; text-decoration:none;font-size: 18px; padding-bottom: 8px; margin-bottom: 0px">
+                                                Odoo Dynamic Dashboard </h4>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-xs-12 col-sm-4 col-md-4 mb16 mt16"
+                                     style="float: left; padding: 10px;">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/dynamic_accounts_report"
+                                       target="_blank"
+                                       style="color: #000; text-decoration: none;">
+                                        <div style="border-radius: 6px; padding: 16px; border: 1px solid #cbcbcb;"
+                                             class="shadow-sm">
+                                            <img class="img img-responsive center-block"
+                                                 style=" max-width: 100%;"
+                                                 src="./assets/modules/6.jpg"/>
+                                            <h4 class="mt0 text-truncate"
+                                                style="text-align:center;width:100&#37; margin-bottom: 8px; font-weight: 600; padding-top: 16px; text-decoration:none;font-size: 18px; padding-bottom: 8px; margin-bottom: 0px">
+                                               Odoo18 Dynamic Accounting Reports</h4>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Left and right controls -->
+                        <a class="carousel-control-prev" href="#demo"
+                           data-bs-slide="prev"
+                           style="margin-left: -30px;width: 35px;color: #000;">
+                        <span class="carousel-control-prev-icon">
+        <i class="fa fa-chevron-left" style="font-size:24px"></i>
+      </span>
+                        </a>
+                        <a class="carousel-control-next" href="#demo"
+                           data-bs-slide="next"
+                           style="margin-right: -30px;width: 35px;color: #000;">
+                        <span class="carousel-control-next-icon">
+        <i class="fa fa-chevron-right" style="font-size:24px"></i>
+      </span>
+                        </a>
+                    </div>
+                </section>
+                <!-- service-section -->
+
+                <section id="services" class="mt-5" style="border-radius: 16px;
+                                                            border: 1px solid #EBEEF2;
+                                                            background: var(--Neutral-N0, #FFF);
+                                                            padding: 60px 40px;
+                                                            box-shadow: 0px 5px 20px -11px rgba(0, 0, 0, 0.25);">
+                    <div class="text-center mt-4"><h3 class="mb-0" style="color: #000;
+                                                                  text-align: center;
+                                                                  font-family: Montserrat;
+                                                                  font-size: 40px;
+                                                                  font-style: normal;
+                                                                  font-weight: 700;
+                                                                  line-height: normal;
+                                                                  text-transform: uppercase;
+                                                                  padding-bottom: 50px;">
+                        Our Services</h3></div>
+                    <div class="row mt-3">
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="#" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#FFE2E5; margin:auto; gap: 16px; border-radius: 8px;">
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#FA5A7D; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/gear.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+                                  color: var(--text-color);
+                                  font-weight: 600;"> Odoo Customization</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="#" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#FFF4DE; margin:auto; gap: 16px; border-radius: 8px;">
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#FF947A; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/wrench-icon.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+                    color: var(--text-color);
+                    font-weight: 600;"> Odoo Implementation</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="#" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#DCFCE7; margin:auto; gap: 16px; border-radius: 8px;">
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#3CD856; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/life-ring-icon.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+                  color: var(--text-color);
+                  font-weight: 600;">Odoo Support</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="#" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#F3E8FF; margin:auto; gap: 16px; border-radius: 8px;">
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#BF83FF; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/arrows-repeat.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+                color: var(--text-color);
+                font-weight: 600;">Odoo Migration</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="#" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#F1F9FF; margin:auto; gap: 16px; border-radius: 8px;">
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#01649C; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/puzzle-piece-icon.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+              color: var(--text-color);
+              font-weight: 600;">Odoo integration</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="#" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#EDF8ED; margin:auto; gap: 16px; border-radius: 8px;">
+
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#69CC70; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/odoo-consultancy.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+            color: var(--text-color);
+            font-weight: 600;">Odoo Consultancy</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="#" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#F1F6FF; margin:auto; gap: 16px; border-radius: 8px;">
+
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#2E4556; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/odoo-licencing.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+          color: var(--text-color);
+          font-weight: 600;">Odoo Licensing</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-lg-3 col-sm-12 mb-3">
+                            <a href="#" style="text-decoration:none">
+                                <div class="btn-lg btn-block p-4 mb-2 d-flex flex-column justify-content-center align-items-center"
+                                     style="font-size:25px; font-weight:bold;background-color:#FAF6EA; margin:auto; gap: 16px; border-radius: 8px;">
+
+                                    <div class="d-flex justify-content-center align-items-center"
+                                         style="background-color:#FCD12C; border-radius:50%; height:56px; width:56px">
+                                        <img src="./assets/icons/hire-odoo.svg"
+                                             class="img-responsive"
+                                             height="28px" width="28px">
+                                    </div>
+                                    <span style="font-size: 18px;
+          color: var(--text-color);
+          font-weight: 600;">Hire Odoo Developer</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <!-- licence -->
+            <div class="tab-pane fade" id="profile" role="tabpanel"
+                 aria-labelledby="profile-tab">
+                <div class="px-5">
+                    ....
+                </div>
+            </div>
+            <!--  -->
+        </div>
+        <!--  -->
+    </div>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+        integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script>
+    $('.owl-carousel').owlCarousel({
+        rtl: true,
+        loop: true,
+        margin: 10,
+        nav: true,
+        responsive: {
+            0: {
+                items: 1
+            },
+            600: {
+                items: 3
+            },
+            1000: {
+                items: 3
+            }
+        }
+    })
+</script>
+</html>

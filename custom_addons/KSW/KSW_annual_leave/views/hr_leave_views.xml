@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Extend hr.leave FORM: return confirmation + multi-step UI    -->
+    <!-- ============================================================ -->
+    <!-- Design goals                                                 -->
+    <!--   * Dedicated approval-stage statusbar in the header so the  -->
+    <!--     request stage is visible at a glance.                    -->
+    <!--   * HR / Accounting / Approval-Trail / Attachments are       -->
+    <!--     pushed into a notebook so the sheet no longer scrolls    -->
+    <!--     forever.                                                 -->
+    <!--   * Clearance / excess toggles and return fields stay inline -->
+    <!--     next to the dates because they are part of the request   -->
+    <!--     itself (not the approval workflow).                      -->
+    <!--                                                              -->
+    <!-- Anchors preserved for inheriting views:                      -->
+    <!--   * field     x_is_annual_leave_type        (KSW_unpaid)     -->
+    <!--   * group     name="accounting_allowances"  (KSW_unpaid)     -->
+    <!--   * separator name="commission_lines_section"                -->
+    <!--   * field     x_commission_line_ids                          -->
+    <!--   * field     x_return_date                                  -->
+    <!--   * field     x_return_state[@widget='badge']                -->
+    <!--   * field     x_dm_approved_by              (KSW_payroll)    -->
+    <!--   * the 5 approval buttons (action_dm_approve, etc.)         -->
+    <!-- ============================================================ -->
+    <record id="hr_leave_view_form_inherit_annual_return" model="ir.ui.view">
+        <field name="name">hr.leave.form.inherit.annual.return</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Hidden helper fields -->
+            <xpath expr="//field[@name='employee_id']" position="after">
+                <field name="x_return_state" invisible="1"/>
+                <field name="x_is_on_vacation" invisible="1"/>
+                <field name="x_can_confirm_return_manager" invisible="1"/>
+                <field name="x_can_confirm_return_hr" invisible="1"/>
+                <field name="x_is_full_clearance" invisible="1"/>
+                <field name="x_excess_days_accepted" invisible="1"/>
+                <field name="x_unpaid_portion_days" invisible="1"/>
+                <field name="validation_type" invisible="1"/>
+                <field name="x_is_annual_leave_type" invisible="1"/>
+                <field name="x_exceeds_annual_balance" invisible="1"/>
+            </xpath>
+
+            <!-- Return confirmation button in header -->
+            <xpath expr="//button[@name='action_refuse']" position="after">
+                <button string="✅ Confirm Return"
+                        name="action_confirm_return_manager"
+                        type="object"
+                        class="oe_highlight"
+                        invisible="not x_can_confirm_return_manager"/>
+            </xpath>
+
+            <!-- ===== Multi-step approval buttons ===== -->
+            <xpath expr="//button[@name='action_approve']" position="before">
+                <button string="✅ Approve (DM)"
+                        name="action_dm_approve"
+                        type="object" class="oe_highlight"
+                        invisible="x_annual_approval_state != 'pending_dm' or not id"/>
+                <button string="✅ Approve (HR)"
+                        name="action_hr_approve"
+                        type="object" class="oe_highlight"
+                        groups="KSW_annual_leave.group_annual_leave_hr"
+                        invisible="x_annual_approval_state != 'pending_hr' or not id"/>
+                <button string="✅ Initial Approve (GM)"
+                        name="action_gm_initial_approve"
+                        type="object" class="oe_highlight"
+                        groups="KSW_annual_leave.group_annual_leave_gm"
+                        invisible="x_annual_approval_state != 'pending_gm_initial' or not id"/>
+                <button string="✅ Approve (Accounting)"
+                        name="action_acc_approve"
+                        type="object" class="oe_highlight"
+                        groups="KSW_annual_leave.group_annual_leave_acc"
+                        invisible="x_annual_approval_state != 'pending_acc' or not id"/>
+                <button string="✅ Final Approve (GM)"
+                        name="action_gm_final_approve"
+                        type="object" class="btn-success"
+                        groups="KSW_annual_leave.group_annual_leave_gm"
+                        invisible="x_annual_approval_state != 'pending_gm_final' or not id"/>
+            </xpath>
+
+            <!-- Hide the built-in 'state' statusbars for multi-step
+                 leaves; we render our own approval-stage statusbar. -->
+            <xpath expr="//field[@name='state'][@widget='statusbar'][1]"
+                   position="attributes">
+                <attribute name="invisible">validation_type != 'both' or validation_type == 'annual_multi'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state'][@widget='statusbar'][2]"
+                   position="attributes">
+                <attribute name="invisible">validation_type == 'both' or validation_type == 'annual_multi'</attribute>
+            </xpath>
+            <xpath expr="//field[@name='state'][@widget='statusbar'][2]"
+                   position="after">
+                <field name="x_annual_approval_state"
+                       widget="statusbar"
+                       statusbar_visible="pending_dm,pending_hr,pending_gm_initial,pending_acc,pending_gm_final,approved"
+                       invisible="not x_annual_approval_state"
+                       readonly="1"/>
+            </xpath>
+
+            <!-- Ribbons -->
+            <xpath expr="//sheet" position="inside">
+                <widget name="web_ribbon" title="🏖️ On Vacation"
+                        bg_color="text-bg-warning"
+                        invisible="x_return_state != 'on_vacation'"/>
+                <widget name="web_ribbon" title="⚠ Full Clearance"
+                        bg_color="text-bg-danger"
+                        invisible="not x_is_full_clearance"/>
+                <widget name="web_ribbon" title="⚠ Combined Leave"
+                        bg_color="text-bg-warning"
+                        invisible="not x_excess_days_accepted or x_unpaid_portion_days == 0"/>
+            </xpath>
+
+            <!-- Inline fields below the leave description (compact). -->
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="x_is_full_clearance" widget="boolean_toggle"
+                       invisible="not x_is_annual_leave_type or x_excess_days_accepted or x_exceeds_annual_balance"
+                       readonly="state != 'confirm'"/>
+                <field name="x_actual_vacation_days"
+                       invisible="not x_is_full_clearance or x_actual_vacation_days == 0"
+                       string="Actual Days Away"/>
+                <field name="x_clearance_balance"
+                       invisible="not x_is_full_clearance or x_clearance_balance == 0"
+                       string="Balance Consumed"/>
+
+                <field name="x_excess_days_accepted" widget="boolean_toggle"
+                       string="Accept Excess Days as Unpaid"
+                       invisible="not x_is_annual_leave_type or x_is_full_clearance or not x_exceeds_annual_balance"
+                       readonly="state != 'confirm'"/>
+                <field name="x_annual_portion_days"
+                       invisible="not x_excess_days_accepted or x_annual_portion_days == 0"
+                       string="Annual Portion (Days)"/>
+                <field name="x_unpaid_portion_days"
+                       invisible="not x_excess_days_accepted or x_unpaid_portion_days == 0"
+                       string="Unpaid Portion (Days)"/>
+
+                <field name="x_return_date"
+                       invisible="x_return_state == 'not_applicable'"
+                       readonly="x_return_state in ('hr_confirmed',)"
+                       required="x_return_state == 'on_vacation' and x_can_confirm_return_manager"/>
+                <field name="x_return_state" widget="badge"
+                       decoration-warning="x_return_state == 'on_vacation'"
+                       decoration-success="x_return_state == 'hr_confirmed'"
+                       invisible="x_return_state == 'not_applicable'"/>
+                <field name="x_manager_return_confirmed_by"
+                       invisible="x_return_state != 'hr_confirmed'"/>
+            </xpath>
+
+            <!-- ========================================================= -->
+            <!-- Notebook — replaces the long stacked groups               -->
+            <!-- Only visible for multi-step leaves (annual or unpaid).    -->
+            <!-- ========================================================= -->
+            <xpath expr="//group[@name='col_left']" position="after">
+                <notebook invisible="not x_annual_approval_state"
+                          class="o_ksw_annual_notebook">
+
+                    <!-- Tab 1 · HR Review -->
+                    <page string="📝 HR Review" name="hr_review"
+                          invisible="x_annual_approval_state == 'pending_dm'">
+                        <group>
+                            <group string="Penalty / Iqama / Flight" col="2">
+                                <field name="x_penalty_amount"
+                                       readonly="x_annual_approval_state != 'pending_hr'"/>
+                                <field name="x_penalty_description"
+                                       readonly="x_annual_approval_state != 'pending_hr'"
+                                       placeholder="Reason..."/>
+                                <field name="x_iqama_renewal_amount"
+                                       readonly="x_annual_approval_state != 'pending_hr'"/>
+                                <field name="x_iqama_renewal_description"
+                                       readonly="x_annual_approval_state != 'pending_hr'"
+                                       placeholder="Reason..."/>
+                                <field name="x_flight_ticket_amount"
+                                       readonly="x_annual_approval_state != 'pending_hr'"/>
+                                <field name="x_flight_ticket_description"
+                                       readonly="x_annual_approval_state != 'pending_hr'"
+                                       placeholder="Details..."/>
+                            </group>
+                        </group>
+                    </page>
+
+                    <!-- Tab 2 · Accounting -->
+                    <page string="💰 Accounting" name="accounting_page"
+                          invisible="x_annual_approval_state in ('pending_dm', 'pending_hr', 'pending_gm_initial')">
+                        <group>
+                            <!-- KEEP name="accounting_allowances" —
+                                 KSW_unpaid_leave inserts a sibling group
+                                 (unpaid_accounting) with position="after". -->
+                            <group string="Allowances &amp; Loans"
+                                   name="accounting_allowances"
+                                   invisible="x_annual_approval_state in ('pending_hr', 'pending_gm_initial')">
+                                <field name="x_additional_commissions" string="Total Commissions"
+                                       readonly="1"/>
+                                <field name="x_remaining_loans"
+                                       readonly="x_annual_approval_state != 'pending_acc'"/>
+                                <field name="x_remaining_loans_description"
+                                       readonly="x_annual_approval_state != 'pending_acc'"
+                                       placeholder="Details..."/>
+                            </group>
+                        </group>
+
+                        <separator string="Additional Commissions Detail"
+                                   name="commission_lines_section"
+                                   invisible="x_annual_approval_state in ('pending_dm', 'pending_hr', 'pending_gm_initial') or not x_annual_approval_state"/>
+                        <field name="x_commission_line_ids" nolabel="1"
+                               readonly="x_annual_approval_state != 'pending_acc'"
+                               invisible="x_annual_approval_state in ('pending_dm', 'pending_hr', 'pending_gm_initial') or not x_annual_approval_state">
+                            <list editable="bottom">
+                                <field name="sequence" widget="handle"/>
+                                <field name="name" string="Month / Description"/>
+                                <field name="amount" sum="Total"/>
+                            </list>
+                        </field>
+                    </page>
+
+                    <!-- Tab 3 · Approval Trail -->
+                    <page string="📜 Approval Trail" name="approval_trail"
+                          invisible="x_annual_approval_state == 'pending_dm'">
+                        <group col="4" name="approval_history">
+                            <field name="x_dm_approved_by" string="DM"
+                                   invisible="not x_dm_approved_by"/>
+                            <field name="x_dm_approved_date" string="Date"
+                                   invisible="not x_dm_approved_date"/>
+                            <field name="x_hr_approved_by" string="HR"
+                                   invisible="not x_hr_approved_by"/>
+                            <field name="x_hr_approved_date" string="Date"
+                                   invisible="not x_hr_approved_date"/>
+                            <field name="x_gm_initial_approved_by" string="GM (Initial)"
+                                   invisible="not x_gm_initial_approved_by"/>
+                            <field name="x_gm_initial_approved_date" string="Date"
+                                   invisible="not x_gm_initial_approved_date"/>
+                            <field name="x_acc_approved_by" string="Accounting"
+                                   invisible="not x_acc_approved_by"/>
+                            <field name="x_acc_approved_date" string="Date"
+                                   invisible="not x_acc_approved_date"/>
+                            <field name="x_gm_final_approved_by" string="GM (Final)"
+                                   invisible="not x_gm_final_approved_by"/>
+                            <field name="x_gm_final_approved_date" string="Date"
+                                   invisible="not x_gm_final_approved_date"/>
+                        </group>
+                    </page>
+
+                    <!-- Tab 4 · Attachments -->
+                    <page string="📎 Attachments" name="attachments_page"
+                          invisible="x_annual_approval_state == 'pending_dm'">
+                        <field name="x_attachment_ids" widget="many2many_binary"
+                               string="Supporting Documents" nolabel="1"/>
+                    </page>
+
+                </notebook>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Extend hr.leave LIST: add return + clearance + approval cols  -->
+    <!-- ============================================================ -->
+    <record id="hr_leave_view_tree_inherit_annual_return" model="ir.ui.view">
+        <field name="name">hr.leave.list.inherit.annual.return</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="after">
+                <field name="x_annual_approval_state" widget="badge" optional="show"
+                       string="Approval Progress"
+                       decoration-info="x_annual_approval_state in ('pending_dm','pending_hr')"
+                       decoration-warning="x_annual_approval_state in ('pending_gm_initial','pending_acc','pending_gm_final')"
+                       decoration-success="x_annual_approval_state == 'approved'"/>
+                <field name="x_is_full_clearance" widget="boolean_toggle"
+                       optional="hidden" string="Full Clearance"/>
+                <field name="x_return_state" widget="badge" optional="show"
+                       string="Return Status"
+                       decoration-warning="x_return_state == 'on_vacation'"
+                       decoration-success="x_return_state == 'hr_confirmed'"/>
+                <field name="x_return_date" optional="hidden" string="Return Date"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Extend hr.leave SEARCH: add return + clearance + approval    -->
+    <!-- ============================================================ -->
+    <record id="hr_leave_view_search_inherit_annual_return" model="ir.ui.view">
+        <field name="name">hr.leave.search.inherit.annual.return</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.view_hr_holidays_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='refused_leaves']" position="after">
+                <separator/>
+                <filter string="🏖️ Currently On Vacation"
+                        name="on_vacation"
+                        domain="[('x_return_state', '=', 'on_vacation')]"/>
+                <filter string="✅ Return Confirmed"
+                        name="return_confirmed"
+                        domain="[('x_return_state', '=', 'hr_confirmed')]"/>
+                <separator/>
+                <filter string="📋 Full Clearance"
+                        name="full_clearance"
+                        domain="[('x_is_full_clearance', '=', True)]"/>
+                <separator/>
+                <filter string="⏳ Pending Approval"
+                        name="pending_annual_approval"
+                        domain="[('x_annual_approval_state', 'in', ['pending_dm','pending_hr','pending_gm_initial','pending_acc','pending_gm_final'])]"/>
+                <filter string="✅ Annual — Fully Approved"
+                        name="annual_approved"
+                        domain="[('x_annual_approval_state', '=', 'approved')]"/>
+            </xpath>
+            <xpath expr="//filter[@name='group_state']" position="after">
+                <filter string="Return Status" name="group_return_state"
+                        domain="[]" context="{'group_by': 'x_return_state'}"/>
+                <filter string="Approval Progress" name="group_approval_state"
+                        domain="[]" context="{'group_by': 'x_annual_approval_state'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+

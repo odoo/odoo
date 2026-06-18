@@ -1,0 +1,160 @@
+<odoo>
+    <data>
+        <record id="property_view_form" model="ir.ui.view">
+            <field name="name">Property</field>
+            <field name="model">property</field>
+            <field name="arch" type="xml">
+                <form string="Property">
+                    <sheet>
+                        <div name="button_box" class="oe_button_box" role="group">
+                            <button name="action_open_related_owner" type="object" class="btn-secondary" invisible="not owner_id" string="Owner" icon="fa-user"/>
+                        </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active" />
+                        <widget name="web_ribbon" title="Accepted Offer" bg_color="text-bg-success" invisible="state != 'offer_accepted'"/>
+                        <header>
+                            <button name="action" type="object" class="btn-primary" string="Action"/>
+                            <button name="action_new" type="object" class="btn-primary" invisible="state == 'closed'" string="Set to New"/>
+                            <button name="action_offer_received" type="object" class="btn-primary" string="Set to Offer Received"/>
+                            <button name="action_offer_accepted" type="object" class="btn-primary" string="Set to Offer Accepted"/>
+                            <field name="state" widget="statusbar" statusbar_visible="new,sold,closed,canceled"/>
+                        </header>
+                        <div class="oe_title">
+                            <label for="ref"/>
+                            <h1>
+                                <field name="ref"/>
+                            </h1>
+                            <label for="name"/>
+                            <h3>
+                                <field name="name" readonly="state=='closed'"/>
+                            </h3>
+                        </div>
+                        <group>
+                            <group string="General Info.">
+                                <field name="create_time" readonly="1"/>
+                                <field name="next_time" readonly="1"/>
+                                <field name="postcode" readonly="state=='closed'"/>
+                                <field name="date_availability" readonly="state=='closed'"/>
+                                <field name="expected_selling_date" readonly="state=='closed'"/>
+                                <field name="is_late" readonly="state=='closed'"/>
+                                <field name="expected_price" readonly="state=='closed'" groups="real_estate_property.property_manager_group"/>
+                                <field name="selling_price" readonly="state=='closed'"/>
+                                <field name="diff" readonly="state=='closed'"/>
+                                <field name="bedrooms" readonly="state=='closed'"/>
+                                <field name="active" invisible="1"/>
+                            </group>
+                            <group string="Detailed Info.">
+                                <field name="living_area" readonly="state=='closed'"/>
+                                <field name="facades" readonly="state=='closed'"/>
+                                <field name="garage" readonly="state=='closed'"/>
+                                <field name="garden" readonly="state=='closed'"/>
+                                <field name="garden_area" readonly="state=='closed'"/>
+                                <field name="garden_orientation" readonly="state=='closed'"/>
+                            </group>
+                            <group string="Owner">
+                                <field name="owner_id" readonly="state=='closed'"/>
+                                <field name="owner_address" readonly="state=='closed'"/>
+                                <field name="owner_phone" readonly="state=='closed'"/>
+                            </group>
+                            <group string="Tags">
+                                <field name="tag_ids" widget="many2many_tags" readonly="state=='closed'"/>
+                            </group>
+                            <group string="Description">
+                                <field name="description"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Bedrooms">
+                                <field name="line_ids">
+                                    <list editable="bottom">
+                                        <field name="area"/>
+                                        <field name="description"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record id="property_view_list" model="ir.ui.view">
+            <field name="name">Property</field>
+            <field name="model">property</field>
+            <field name="arch" type="xml">
+                <list string="Property" class="header_custom" decoration-warning="is_late">
+                            <field name="name"/>
+                            <field name="description"/>
+                            <field name="active" invisible="1"/>
+                            <field name="postcode"/>
+                            <field name="is_late" invisible="True"/>
+                            <field name="state"/>
+                            <field name="date_availability"/>
+                            <field name="expected_price"/>
+                            <field name="selling_price"/>
+                            <field name="bedrooms"/>
+                            <field name="living_area" optional="1"/>
+                            <field name="facades" optional="1"/>
+                            <field name="garage" optional="1"/>
+                            <field name="garden" optional="1"/>
+                            <field name="garden_area" optional="1"/>
+                            <field name="garden_orientation" optional="1"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="property_view_search" model="ir.ui.view">
+            <field name="name">Property Search</field>
+            <field name="model">property</field>
+            <field name="arch" type="xml">
+                <search string="Property">
+                    <field name="postcode"/>
+                    <field name="name"/>
+
+                    <filter name="is_garden" string="With Garden" domain="[('garden','=','True')]"/>
+                    <filter name="is_garage" string="With Garage" domain="[('garage','=','True')]"/>
+
+                    <filter name="group_garden" string="Garden" context="{'group_by':'garden'}"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="property_action" model="ir.actions.act_window">
+            <field name="name">properties</field>
+            <field name="res_model">property</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <record id="property_closed_server_action" model="ir.actions.server">
+            <field name="name">Closed</field>
+            <field name="model_id" ref="model_property"/>
+            <field name="binding_model_id" ref="model_property"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.action_closed()
+            </field>
+        </record>
+
+        <record id="property_change_state_server_action" model="ir.actions.server">
+            <field name="name">Change State</field>
+            <field name="model_id" ref="model_property"/>
+            <field name="binding_model_id" ref="model_property"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.action_open_change_state_wizard()
+            </field>
+        </record>
+
+
+        <record id="check_selling_date_cron" model="ir.cron">
+            <field name="name">Property: Check Selling Date</field>
+            <field name="model_id" ref="model_property"/>
+            <field name="state">code</field>
+            <field name="code">model.check_expected_selling_date()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+
+        <menuitem id="property_menu_item" name="Properties" parent="properties_menu" action="property_action"/>
+    </data>
+</odoo>

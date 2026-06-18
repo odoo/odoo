@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- 1. Module Category                                            -->
+    <!-- ============================================================ -->
+    <record id="module_category_attendance_sheet" model="ir.module.category">
+        <field name="name">Attendance Sheet</field>
+        <field name="sequence">25</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- 2. Privilege (creates the dropdown in the User form)          -->
+    <!-- ============================================================ -->
+    <record id="privilege_attendance_sheet" model="res.groups.privilege">
+        <field name="name">Attendance Sheet</field>
+        <field name="category_id" ref="module_category_attendance_sheet"/>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- 3. Groups (linked to privilege via privilege_id)              -->
+    <!-- ============================================================ -->
+
+    <!-- Supervisor: can read/write/create sheets for their subordinates -->
+    <record id="group_attendance_sheet_supervisor" model="res.groups">
+        <field name="name">Supervisor</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="privilege_attendance_sheet"/>
+        <field name="comment">Supervisors (managers) can view and manage attendance
+            sheets of employees who report to them (parent_id).</field>
+    </record>
+
+    <!-- Manager: full access to all sheets -->
+    <record id="group_attendance_sheet_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="sequence">20</field>
+        <field name="privilege_id" ref="privilege_attendance_sheet"/>
+        <field name="implied_ids" eval="[(4, ref('group_attendance_sheet_supervisor'))]"/>
+        <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        <field name="comment">Managers have full access to all attendance sheets
+            regardless of the employee's manager.</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- 4. Record Rules (noupdate so manual edits are preserved)      -->
+    <!-- ============================================================ -->
+    <data noupdate="1">
+
+        <!-- Supervisor: only see sheets where they are the manager -->
+        <record id="rule_attendance_sheet_supervisor" model="ir.rule">
+            <field name="name">Attendance Sheet: Supervisor sees own subordinates</field>
+            <field name="model_id" ref="model_ksw_attendance_sheet"/>
+            <field name="groups" eval="[(4, ref('group_attendance_sheet_supervisor'))]"/>
+            <field name="domain_force">[('manager_id.user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!-- Manager: see everything -->
+        <record id="rule_attendance_sheet_manager" model="ir.rule">
+            <field name="name">Attendance Sheet: Manager full access</field>
+            <field name="model_id" ref="model_ksw_attendance_sheet"/>
+            <field name="groups" eval="[(4, ref('group_attendance_sheet_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+        <!-- Supervisor: lines follow sheet access -->
+        <record id="rule_attendance_sheet_line_supervisor" model="ir.rule">
+            <field name="name">Attendance Sheet Line: Supervisor sees own subordinates</field>
+            <field name="model_id" ref="model_ksw_attendance_sheet_line"/>
+            <field name="groups" eval="[(4, ref('group_attendance_sheet_supervisor'))]"/>
+            <field name="domain_force">[('sheet_id.manager_id.user_id', '=', user.id)]</field>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="0"/>
+        </record>
+
+        <!-- Manager: lines full access -->
+        <record id="rule_attendance_sheet_line_manager" model="ir.rule">
+            <field name="name">Attendance Sheet Line: Manager full access</field>
+            <field name="model_id" ref="model_ksw_attendance_sheet_line"/>
+            <field name="groups" eval="[(4, ref('group_attendance_sheet_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+        </record>
+
+    </data>
+
+</odoo>
+

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Helpdesk Menu -->
+    <menuitem id="menu_helpdesk" name="Helpdesk"
+              web_icon="odoo_website_helpdesk,static/description/icon.png"
+              sequence="1"/>
+    <!-- Tickets Submenu -->
+    <menuitem id="helpdesk_management" parent="menu_helpdesk" name="Tickets"
+              action="ticket_helpdesk_action" sequence="2"/>
+    <!-- My Tickets -->
+    <menuitem id="helpdesk_tickets_my" parent="helpdesk_management"
+              name="My Tickets"
+              action="ticket_helpdesk_action_my" sequence="1"/>
+    <!-- All Tickets -->
+    <menuitem id="helpdesk_tickets" parent="helpdesk_management"
+              name="All Tickets"
+              action="ticket_helpdesk_action" sequence="2"
+              groups="odoo_website_helpdesk.helpdesk_manager"/>
+    <!-- Configuration Menu -->
+    <menuitem id="menu_helpdesk_configuration" name="Configuration"
+              sequence="50" parent="menu_helpdesk"/>
+    <!-- Categories Configuration -->
+    <menuitem id="menu_helpdesk_categories" name="Categories"
+              action="action_helpdesk_category"
+              groups="odoo_website_helpdesk.group_show_category"
+              parent="menu_helpdesk_configuration" sequence="10"/>
+    <!-- Settings Configuration -->
+    <menuitem id="menu_helpdesk_settings" name="Settings"
+              action="action_helpdesk_general_settings"
+              parent="menu_helpdesk_configuration" sequence="1"/>
+    <!-- Teams Configuration -->
+    <menuitem id="menu_helpdesk_team" name="Teams"
+              action="action_helpdesk_team"
+              parent="menu_helpdesk_configuration" sequence="3"/>
+    <!-- Tags Configuration -->
+    <menuitem id="menu_helpdesk_tag" name="Tags"
+              action="action_helpdesk_tag"
+              parent="menu_helpdesk_configuration" sequence="4"/>
+    <!-- Stages Configuration -->
+    <menuitem id="menu_helpdesk_stage" name="Stages"
+              action="action_helpdesk_stage"
+              parent="menu_helpdesk_configuration" sequence="5"/>
+    <!-- Types Configuration -->
+    <menuitem id="menu_helpdesk_types" name="Types"
+              action="action_helpdesk_type"
+              parent="menu_helpdesk_configuration" sequence="6"/>
+    <!-- Helpdesk Report -->
+    <menuitem id="report_helpdesk" name="Report" parent="menu_helpdesk"
+              sequence="3"
+              action="ticket_helpdesk_action_report"/>
+</odoo>

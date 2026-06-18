@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Layer 1: Module Category                                      -->
+    <!-- ============================================================ -->
+    <record id="module_category_ksw_deduction" model="ir.module.category">
+        <field name="name">KSW Deductions</field>
+        <field name="sequence">210</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Layer 2: Privileges                                           -->
+    <!-- ============================================================ -->
+    <!--
+        Privilege: Deduction Management
+        Every internal user is at least "User" (see group_deduction_user
+        below — it is implied by base.group_user, which removes the
+        implicit "No" choice from the privilege dropdown).
+    -->
+    <record id="privilege_deduction_management" model="res.groups.privilege">
+        <field name="name">Deduction Management</field>
+        <field name="sequence">10</field>
+        <field name="category_id" ref="module_category_ksw_deduction"/>
+    </record>
+
+    <!--
+        Privilege: Loan Approval
+        There is no "DM Approver" role here: DM approval is conferred by
+        being the employee's direct manager (hr.employee.parent_id.user_id).
+        The remaining approver roles are explicit, since they are not
+        derivable from any employee relation.
+    -->
+    <record id="privilege_loan_approval" model="res.groups.privilege">
+        <field name="name">Loan Approval</field>
+        <field name="sequence">20</field>
+        <field name="category_id" ref="module_category_ksw_deduction"/>
+    </record>
+
+    <!--
+        Privilege: Loan Request Modification (pre-confirmation)
+        Controls who can EDIT amount / installments and DELETE deduction
+        records DURING the approval chain (i.e. before the loan is
+        confirmed/active). Once the loan is active, any further change
+        to an individual installment (date / amount) is governed by the
+        separate "Loan Installment Modification" privilege below.
+
+        Four levels (rendered as a single privilege dropdown in the
+        user form, directly under "Deduction Management" and "Loan
+        Approval" in the KSW Deductions row):
+
+            (blank)          – No: user cannot edit amount/installments
+                               after draft and cannot delete records.
+            Edit only        – May edit amount & installments where the
+                               state/approval-step otherwise permits it,
+                               but cannot delete.
+            Delete only      – May delete records (subject to the
+                               "no paid installments" guard) but cannot
+                               edit amount/installments.
+            Edit and Delete  – Both of the above. Implied automatically
+                               for Deduction Managers.
+
+        This privilege is orthogonal to the approver roles (HR / Acc /
+        GM); an Accounting Approver can, for instance, approve loans
+        but be refused edit rights by leaving this privilege blank.
+    -->
+    <record id="privilege_loan_modification" model="res.groups.privilege">
+        <field name="name">Loan Request Modification (pre-confirmation)</field>
+        <field name="sequence">30</field>
+        <field name="category_id" ref="module_category_ksw_deduction"/>
+    </record>
+
+    <!--
+        Privilege: Loan Installment Modification (post-confirmation)
+        Controls who can edit an individual installment (date / amount)
+        on a loan that has ALREADY been confirmed and is in the
+        'active' state. Typical use-case: an employee contacts the
+        accountant explaining they cannot pay this month's installment
+        and requests that it be postponed or reduced.
+
+        Only one level for now — "Edit". Blank = no access.
+
+            (blank)      – Cannot edit installments on active loans.
+            Edit         – May change the year/month and amount of
+                           pending installments on an active loan.
+                           Changing the date pushes all subsequent
+                           pending installments forward by the same
+                           month-delta (handled in ksw.deduction.line
+                           write()).
+
+        Not implied by any other role (not even Deduction Manager) —
+        must be granted explicitly, typically to accounting staff.
+    -->
+    <record id="privilege_loan_installment_modification" model="res.groups.privilege">
+        <field name="name">Loan Installment Modification (post-confirmation)</field>
+        <field name="sequence">40</field>
+        <field name="category_id" ref="module_category_ksw_deduction"/>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Layer 3: Groups — Deduction Management                        -->
+    <!-- ============================================================ -->
+    <!--
+        User: baseline role. Auto-granted to every internal user
+        (base.group_user implies group_deduction_user — see below).
+        Scope: own deductions + any subordinate's deductions.
+    -->
+    <record id="group_deduction_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="privilege_id" ref="privilege_deduction_management"/>
+        <field name="comment">Read own deductions and any subordinate's (employees who report directly to me).</field>
+    </record>
+
+    <!-- Make every internal user implicitly a Deduction User.
+         This removes the empty/"No" choice from the privilege dropdown
+         in the user form. Uses <function> (not <record>) because updating
+         base.group_user's implied_ids via <record> is unreliable; a
+         direct write runs on every install and upgrade. -->
+    <function model="res.groups" name="write">
+        <value eval="[ref('base.group_user')]"/>
+        <value eval="{'implied_ids': [(4, ref('group_deduction_user'))]}"/>
+    </function>
+
+    <record id="group_deduction_officer" model="res.groups">
+        <field name="name">Officer</field>
+        <field name="privilege_id" ref="privilege_deduction_management"/>
+        <field name="implied_ids" eval="[(4, ref('group_deduction_user'))]"/>
+        <field name="comment">Create and edit non-loan deductions for all employees.</field>
+    </record>
+
+    <record id="group_deduction_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="privilege_id" ref="privilege_deduction_management"/>
+        <field name="implied_ids" eval="[(4, ref('group_deduction_officer'))]"/>
+        <field name="comment">Full access to non-loan deductions including delete. Loan-specific edit/delete still requires the dedicated "Loan Modification" privilege — Manager does NOT auto-grant it, so an HR/Admin can be Deduction Manager without being able to touch loan amount/installments or delete loans.</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Layer 3: Groups — Loan Approval workflow                      -->
+    <!-- ============================================================ -->
+    <!-- NOTE: "DM Approver" intentionally removed. DM approval is
+         derived dynamically from employee.parent_id.user_id. -->
+    <record id="group_loan_hr" model="res.groups">
+        <field name="name">HR Approver</field>
+        <field name="privilege_id" ref="privilege_loan_approval"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_loan_acc" model="res.groups">
+        <field name="name">Accounting Approver</field>
+        <field name="privilege_id" ref="privilege_loan_approval"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_loan_gm" model="res.groups">
+        <field name="name">GM Final Approver</field>
+        <field name="privilege_id" ref="privilege_loan_approval"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Layer 3: Groups — Loan Modification (edit / delete tiers)      -->
+    <!-- ============================================================ -->
+    <!--
+        Three parallel groups behind one privilege dropdown. "Edit and
+        Delete" implies BOTH "Edit only" and "Delete only", so
+        `has_group('group_loan_edit')` / `has_group('group_loan_delete')`
+        return True for any user who holds the combined group. Picking
+        the blank option in the dropdown = no group = no extra rights.
+    -->
+    <record id="group_loan_edit" model="res.groups">
+        <field name="name">Edit only</field>
+        <field name="privilege_id" ref="privilege_loan_modification"/>
+        <field name="comment">May edit amount and installments on loan deductions (where the state/approval step otherwise permits it).</field>
+    </record>
+
+    <record id="group_loan_delete" model="res.groups">
+        <field name="name">Delete only</field>
+        <field name="privilege_id" ref="privilege_loan_modification"/>
+        <field name="comment">May delete deductions (subject to the "no paid installments" guard). Cannot edit amount or installments.</field>
+    </record>
+
+    <record id="group_loan_edit_delete" model="res.groups">
+        <field name="name">Edit and Delete</field>
+        <field name="privilege_id" ref="privilege_loan_modification"/>
+        <field name="implied_ids" eval="[(4, ref('group_loan_edit')), (4, ref('group_loan_delete'))]"/>
+        <field name="comment">Full modification rights — edit and delete loan records. NOT auto-granted to Deduction Managers; must be set explicitly so an HR/Admin can be a Deduction Manager without inheriting loan modification rights.</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Layer 3: Groups — Loan Installment Modification                -->
+    <!-- ============================================================ -->
+    <!--
+        Single group behind the "Loan Installment Modification"
+        privilege dropdown. Blank = no access, "Edit" = may modify the
+        year/month and amount of pending installments on an active loan.
+        Not implied by any other role.
+    -->
+    <record id="group_installment_edit" model="res.groups">
+        <field name="name">Edit</field>
+        <field name="privilege_id" ref="privilege_loan_installment_modification"/>
+        <field name="comment">May change the date (year/month) and amount of pending installments on a confirmed/active loan. Changing an installment's date to a later month automatically pushes all subsequent pending installments forward by the same month-delta.</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Record Rules                                                  -->
+    <!-- ============================================================ -->
+    <!--
+        User rule: a plain user sees
+          (a) their own deductions, and
+          (b) deductions of any employee whose direct manager is them.
+        Department membership is NOT used.
+    -->
+    <record id="ksw_deduction_rule_user" model="ir.rule">
+        <field name="name">Deduction: own + subordinates</field>
+        <field name="model_id" ref="model_ksw_deduction"/>
+        <field name="groups" eval="[(4, ref('group_deduction_user'))]"/>
+        <field name="domain_force">['|', ('employee_id.user_id', '=', user.id), ('employee_id.parent_id.user_id', '=', user.id)]</field>
+    </record>
+
+    <!-- Officers see everything -->
+    <record id="ksw_deduction_rule_officer" model="ir.rule">
+        <field name="name">Deduction: officer all</field>
+        <field name="model_id" ref="model_ksw_deduction"/>
+        <field name="groups" eval="[(4, ref('group_deduction_officer'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <!-- Loan approvers (HR/Accounting/GM) see all loan deductions
+         so they can act on the ones pending their step. -->
+    <record id="ksw_deduction_rule_loan_approvers" model="ir.rule">
+        <field name="name">Deduction: loan approvers see all loans</field>
+        <field name="model_id" ref="model_ksw_deduction"/>
+        <field name="groups" eval="[(4, ref('group_loan_hr')), (4, ref('group_loan_acc')), (4, ref('group_loan_gm'))]"/>
+        <field name="domain_force">[('is_loan', '=', True)]</field>
+    </record>
+
+</odoo>
+
+
