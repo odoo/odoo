@@ -69,7 +69,7 @@
             <field name="arch" type="xml">
                 <list string="Picking list" multi_edit="1" sample="1" js_class="stock_list_view">
                     <header>
-                        <button name="action_assign" type="object" string="Reserve"/>
+                        <button name="action_assign" type="object" string="Reserve" invisible="context.get('hide_check_availability')"/>
                     </header>
                     <field name="company_id" column_invisible="True"/>
                     <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
