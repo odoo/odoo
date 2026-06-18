@@ -4,7 +4,6 @@
     'name': 'Nepal - Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['np'],
-    'version': '1.0',
     'description': """
     """,
     'category': 'Accounting/Localizations/Account Charts',
