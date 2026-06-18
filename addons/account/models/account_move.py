@@ -3880,6 +3880,8 @@ class AccountMove(models.Model):
         :param default: The default values dict passed to copy method
         :return: The message content string
         """
+        if default.get('reversed_entry_id'):
+            return _('This entry has been reversed from %s', self._get_html_link())
         return _('This entry has been duplicated from %s', self._get_html_link())
 
     def _get_review_state_access_groups(self):
