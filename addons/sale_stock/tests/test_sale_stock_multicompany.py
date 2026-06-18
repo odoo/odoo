@@ -152,11 +152,9 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
         self.env.user.group_ids |= self.env.ref('stock_account.group_lot_on_invoice')
         company2 = self.company_data_2['company']
         self.product_a.write({
-            'is_storable': 'True',
-            'tracking': 'serial',
+            'store_by': 'serial',
             'invoice_policy': 'delivery',
         })
-        self.product_a.tracking = 'serial'
         sn = self.env['stock.lot'].create({'name': 'SN0012', 'product_id': self.product_a.id})
         self.env['stock.quant']._update_available_quantity(self.product_a, self.warehouse_A.lot_stock_id, 1.0, lot_id=sn)
         so = self.env['sale.order'].create({

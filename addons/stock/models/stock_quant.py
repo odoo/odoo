@@ -843,7 +843,7 @@ class StockQuant(models.Model):
         """
         self = self.sudo()
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
-        if product_id.tracking == 'none':
+        if not product_id.tracking:
             available_quantity = sum(quants.mapped('quantity')) - sum(quants.mapped('reserved_quantity'))
             if allow_negative:
                 return available_quantity
@@ -971,7 +971,7 @@ class StockQuant(models.Model):
         if self.product_id and self.location_id:
             # Sanity check if a lot has been set.
             if self.lot_id:
-                if self.tracking == 'none' or self.product_id != self.lot_id.product_id:
+                if not self.tracking or self.product_id != self.lot_id.product_id:
                     vals['lot_id'] = None
 
             quant = self._gather(
@@ -1393,7 +1393,7 @@ class StockQuant(models.Model):
         if self.product_id.valid_ean:
             barcode = self.product_id.barcode
             barcode = '01' + '0' * (14 - len(barcode)) + barcode
-        elif self.tracking == 'none' or not self.lot_id:
+        elif not self.tracking or not self.lot_id:
             return ''  # Doesn't make sense to generate a GS1 barcode for qty with no other data.
 
         # Quantity part.

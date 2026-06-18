@@ -153,11 +153,11 @@ class TestProcurement(TestMrpCommon):
 
         finished_product = self.env['product.product'].create({
             'name': 'Finished Product',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         component = self.env['product.product'].create({
             'name': 'Component',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [Command.link(warehouse.mto_pull_id.route_id.id)],
         })
         self.env['stock.quant']._update_available_quantity(component, warehouse.wh_input_stock_loc_id, 100)
@@ -487,12 +487,12 @@ class TestProcurement(TestMrpCommon):
 
         product_1 = self.env['product.product'].create({
             'name': 'Cake',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [(6, 0, [route_manufacture.id])]
         })
         product_2 = self.env['product.product'].create({
             'name': 'Cake Mix',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [(6, 0, [route_manufacture.id])]
         })
         product_3 = self.env['product.product'].create({
@@ -523,7 +523,7 @@ class TestProcurement(TestMrpCommon):
         # extra manufactured component added to 1st MO after it is already confirmed
         product_4 = self.env['product.product'].create({
             'name': 'Flavor Enchancer',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [(6, 0, [route_manufacture.id])]
         })
         product_5 = self.env['product.product'].create({
@@ -696,7 +696,7 @@ class TestProcurement(TestMrpCommon):
         # Define products requested for this BoM.
         product = self.env['product.product'].create({
             'name': 'product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [
                 Command.link(self.warehouse_1.mto_pull_id.route_id.id),
                 Command.link(self.warehouse_1.manufacture_pull_id.route_id.id),
@@ -704,7 +704,7 @@ class TestProcurement(TestMrpCommon):
         })
         component = self.env['product.product'].create({
             'name': 'component',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.env['mrp.bom'].create({
             'product_id': product.id,
@@ -758,17 +758,17 @@ class TestProcurement(TestMrpCommon):
         route_manufacture = self.warehouse_1.manufacture_pull_id.route_id
         product_1 = self.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [(6, 0, [route_manufacture.id])]
         })
         product_2 = self.env['product.product'].create({
             'name': 'Product B',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [(6, 0, [route_manufacture.id, route_mto.id])]
         })
         product_3 = self.env['product.product'].create({
             'name': 'Product C',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [(6, 0, [route_manufacture.id])]
         })
         product_4 = self.env['product.product'].create({
@@ -862,7 +862,7 @@ class TestProcurement(TestMrpCommon):
             'type': 'consu',
         }, {
             'name': 'finished',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [(6, 0, manu_route.ids)],
         }])
 
@@ -922,7 +922,7 @@ class TestProcurement(TestMrpCommon):
         # add a third component, should reflect in picking
         comp3 = self.env['product.product'].create({
             'name': 'Comp3',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         mo.write({
             'move_raw_ids': [Command.create({
@@ -955,15 +955,15 @@ class TestProcurement(TestMrpCommon):
 
         super_product = self.env['product.product'].create({
             'name': 'Super Product',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         comp1 = self.env['product.product'].create({
             'name': 'Comp1',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         comp2 = self.env['product.product'].create({
             'name': 'Comp2',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         bom = self.env['mrp.bom'].create({
             'product_id': super_product.id,
@@ -1006,7 +1006,7 @@ class TestProcurement(TestMrpCommon):
         # add new comp3
         comp3 = self.env['product.product'].create({
             'name': 'Comp3',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         mo.write({
             'move_raw_ids': [Command.create({
@@ -1218,7 +1218,7 @@ class TestProcurement(TestMrpCommon):
         - When updating the producing quantity to 11, stock can only cover 10 units,
         so a procurement is created for the remaining 1 unit.
         """
-        self.product_1.is_storable = True
+        self.product_1.store_by = 'quantity'
         self.route_mto.active = True
         self.route_mto.rule_ids.procure_method = 'mts_else_mto'
         self.product_1.route_ids = [
@@ -1315,7 +1315,7 @@ class TestProcurement(TestMrpCommon):
         mto_route = self.warehouse_1.mto_pull_id.route_id
         mto_route.action_unarchive()
         component.write({
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [Command.set(mto_route.ids)]
         })
         self.env['mrp.bom'].create({
@@ -1393,7 +1393,7 @@ class TestProcurement(TestMrpCommon):
         mto_route.action_unarchive()
         final, sub_a, sub_b, component = self.env['product.product'].create([{
             'name': name,
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [Command.set(mto_route.ids)],
         } for name in ['Final', 'Subassembly A', 'Subassembly B', 'Component']])
         bom_final, _bom_a, _bom_b, _bom_compo = self.env['mrp.bom'].create([

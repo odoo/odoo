@@ -144,7 +144,7 @@ class TestCreatePicking(ProductVariantsCommon):
 
         product = self.env['product.product'].create({
             'name': 'product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
             'supplier_taxes_id': [(6, 0, [])],
         })
@@ -280,7 +280,7 @@ class TestCreatePicking(ProductVariantsCommon):
         mto_route.rule_ids.procure_method = 'mts_else_mto'
         self.product_id_1 = self.env['product.product'].create({
             'name': 'ProductA',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
             'seller_ids': [Command.create({
                 'partner_id': self.partner_id.id,
@@ -357,7 +357,7 @@ class TestCreatePicking(ProductVariantsCommon):
 
         product = self.env['product.product'].create({
             'name': 'product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
         })
 
@@ -505,7 +505,7 @@ class TestCreatePicking(ProductVariantsCommon):
 
         product = self.env['product.product'].create({
             'name': 'Usb Keyboard',
-            'is_storable': True,
+            'store_by': 'quantity',
             'uom_id': unit,
             'route_ids': [(6, 0, [route_buy.id, route_mto.id])]
         })
@@ -647,7 +647,7 @@ class TestCreatePicking(ProductVariantsCommon):
         self.env['stock.route'].browse(self.ref('stock.route_warehouse0_mto')).rule_ids.procure_method = "make_to_order"
         product = self.env['product.product'].create({
             'name': 'product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [(4, self.ref('stock.route_warehouse0_mto')), (4, self.ref('purchase_stock.route_warehouse0_buy'))],
             'supplier_taxes_id': [(6, 0, [])],
         })

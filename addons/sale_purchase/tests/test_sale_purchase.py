@@ -408,7 +408,7 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
 
         # Setup: Create a product with qty on hand and SO line with that product
         self.product.qty_available = 25  # consu product
-        self.product.is_storable = True
+        self.product.store_by = 'quantity'
         self.assertEqual(self.product.virtual_available, 25)  # Makes sure no PO or SO impacting forecasted
         sale_order_1, sale_order_2 = self.env['sale.order'].create([{
             'partner_id': self.partner_a.id,
@@ -486,7 +486,7 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         self.assertEqual(self.product.qty_available, 45.0)  # 65 on_hand - 20 sold
         self.assertEqual(self.product.outgoing_qty, 0.0)
 
-        self.product.is_storable = False  # revert to original state
+        self.product.store_by = 'untracked'  # revert to original state
 
     def test_purchase_service_qty_increase_with_uom_conversion(self):
         """Ensure that increasing the quantity of a service-to-purchase product

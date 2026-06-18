@@ -21,7 +21,7 @@ class TestDropship(common.TransactionCase):
         # dropship route to be added in test
         cls.dropship_product = cls.env['product.product'].create({
             'name': "Pen drive",
-            'is_storable': True,
+            'store_by': 'quantity',
             'lst_price': 100.0,
             'standard_price': 0.0,
             'uom_id': cls.env.ref('uom.product_uom_unit').id,
@@ -34,7 +34,7 @@ class TestDropship(common.TransactionCase):
 
         cls.lot_dropship_product = cls.env['product.product'].create({
             'name': "Serial product",
-            'tracking': 'lot',
+            'store_by': 'lot',
             'seller_ids': [(0, 0, {
                 'partner_id': cls.supplier.id,
             })],
@@ -259,7 +259,7 @@ class TestDropship(common.TransactionCase):
         # dropship route to be added in test
         self.dropship_product = self.env['product.product'].create({
             'name': "Pen drive",
-            'is_storable': "True",
+            'store_by': 'quantity',
             'lst_price': 100.0,
             'standard_price': 0.0,
             'uom_id': self.env.ref('uom.product_uom_unit').id,
@@ -425,7 +425,7 @@ class TestDropship(common.TransactionCase):
 
         product = self.env['product.product'].create({
             'name': 'Super Product',
-            'is_storable': "True",
+            'store_by': 'quantity',
             'lst_price': 100.0,
             'uom_id': self.env.ref('uom.product_uom_unit').id,
             'seller_ids': [
@@ -510,7 +510,7 @@ class TestDropshipPostInstall(common.TransactionCase):
         ])
         cls.dropship_product = cls.env['product.product'].create({
             'name': 'Dropshipped Product',
-            'tracking': 'none',
+            'store_by': 'quantity',
             'standard_price': 20,
             'invoice_policy': 'delivery',
             'seller_ids': [Command.create({

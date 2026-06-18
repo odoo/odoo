@@ -18,7 +18,7 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
 
         cls.product1 = cls.env['product.product'].create({
             'name': 'product1',
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': cls.stock_account_product_categ.id,
         })
         cls.productlc1 = cls.env['product.product'].create({

@@ -64,7 +64,7 @@ class TestPurchaseAlternativeStock(TestPurchaseAlternativeCommon):
         vendor_2 = self.env['res.partner'].create({'name': 'Vendor 2'})
         product = self.env['product.product'].create({
             'name': 'Test product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'seller_ids': [Command.create({
                 'partner_id': vendor_1.id,
                 'price': 10.0,

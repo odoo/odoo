@@ -17,7 +17,7 @@ class TestReorderingRuleProjectPurchase(TransactionCase):
         partner = self.env['res.partner'].create({'name': 'Test Partner'})
         buy_product = self.env['product.product'].create({
             'name': 'Buy Product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'seller_ids': [Command.create({
                 'partner_id': partner.id,
             })],

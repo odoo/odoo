@@ -187,7 +187,7 @@ class TestOldRules(TestStockCommon):
         final_location = partner_demo_customer.property_stock_customer
         product_a = self.env['product.product'].create({
             'name': 'ProductA',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         self.env['stock.quant']._update_available_quantity(product_a, warehouse.wh_output_stock_loc_id, 4.0)
@@ -358,7 +358,7 @@ class TestOldRules(TestStockCommon):
         warehouse = self.warehouse_3_steps
         self.product = self.env['product.product'].create({
             'name': 'Test product',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         ship_move = self.env['stock.move'].create({
@@ -426,7 +426,7 @@ class TestOldRules(TestStockCommon):
         # create a procurement group
         product1 = self.env['product.product'].create({
             'name': 'test_procurement_cancel_propagation',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         pick_pack_ship_route = self.warehouse_3_steps.delivery_route_id
         pick_rule = pick_pack_ship_route.rule_ids.filtered(lambda rule: rule.picking_type_id == self.warehouse_3_steps.pick_type_id)

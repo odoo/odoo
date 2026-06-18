@@ -326,7 +326,7 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         shared_product = self.env['product.product'].create({
             'name': 'Shared Product',
             'available_in_pos': True,
-            'is_storable': True,
+            'store_by': 'quantity',
             'taxes_id': [(5, 0, 0)],
             'lst_price': 100.0,
             'company_id': False,

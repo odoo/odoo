@@ -20,8 +20,7 @@ class TestStockMoveLine(TestStockCommon):
         cls.env.user.group_ids += cls.env.ref('stock.group_stock_multi_locations')
         cls.product = cls.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         cls.pack = cls.env['stock.package'].create({
             'name': 'Pack A',
@@ -228,11 +227,9 @@ class TestStockMoveLine(TestStockCommon):
         Test that if the product already have quantities and after that tracking is set to serial,
         we can create a lot and assign it to the move.
         """
-        self.productA.tracking = "none"
-
+        self.productA.store_by = 'quantity'
         self.env["stock.quant"]._update_available_quantity(self.productA, self.stock_location, 100)
-
-        self.productA.tracking = "serial"
+        self.productA.store_by = 'serial'
 
         serial_lot = self.env["stock.lot"].create(
             {

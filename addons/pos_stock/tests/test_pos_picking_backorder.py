@@ -12,15 +12,13 @@ class TestPosPickingBackorder(CommonPosStockTest):
         """Mixed order: untracked line with stock + serial line without stock nor SN."""
         qty_product = self.env['product.product'].create({
             'name': 'POS Qty Product Backorder Test',
-            'is_storable': True,
-            'tracking': 'none',
+            'store_by': 'quantity',
             'available_in_pos': True,
             'list_price': 10.0,
         })
         serial_product = self.env['product.product'].create({
             'name': 'POS Serial Product Backorder Test',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
             'available_in_pos': True,
             'list_price': 20.0,
         })

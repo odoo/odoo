@@ -25,11 +25,11 @@ class TestBatchPicking(TransactionCase):
         cls.env['stock.picking.type'].browse(cls.picking_type_out).reservation_method = 'manual'
         cls.productA = cls.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         cls.productB = cls.env['product.product'].create({
             'name': 'Product B',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         cls.client_1 = cls.env['res.partner'].create({'name': 'Client 1'})
@@ -831,11 +831,11 @@ class TestBatchPicking02(TransactionCase):
         self.picking_type_internal = self.env.ref('stock.picking_type_internal')
         self.productA = self.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.productB = self.env['product.product'].create({
             'name': 'Product B',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.package_type = self.env['stock.package.type'].create({
             'name': 'Big box',
@@ -1282,7 +1282,7 @@ class TestBatchPickingSynchronization(HttpCase):
 
         productA = self.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         picking_type_internal = self.env.ref('stock.picking_type_internal')

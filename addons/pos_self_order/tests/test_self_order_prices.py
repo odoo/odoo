@@ -92,7 +92,7 @@ class TestSelfOrderPrice(SelfOrderCommonTest):
 
         self.price_extra_product = self.env['product.product'].create({
             'name': 'Product with attributes',
-            'is_storable': True,
+            'store_by': 'quantity',
             'available_in_pos': True,
             'lst_price': 100.95,
             'pos_categ_ids': [(6, 0, [self.combo_category.id])],
@@ -148,21 +148,21 @@ class TestSelfOrderPrice(SelfOrderCommonTest):
     def combo_generator(self, name, extra_price, lst_price, max=1, free=1):
         product1 = self.env['product.product'].create({
             'name': f'{name} 1',
-            'is_storable': True,
+            'store_by': 'quantity',
             'available_in_pos': True,
             'lst_price': lst_price[0],
             'taxes_id': [(6, 0, [self.tax_6.id])],
         })
         product2 = self.env['product.product'].create({
             'name': f'{name} 2',
-            'is_storable': True,
+            'store_by': 'quantity',
             'available_in_pos': True,
             'lst_price': lst_price[1],
             'taxes_id': [(6, 0, [self.tax_12.id])],
         })
         product3 = self.env['product.product'].create({
             'name': f'{name} 3',
-            'is_storable': True,
+            'store_by': 'quantity',
             'available_in_pos': True,
             'lst_price': lst_price[2],
             'taxes_id': [(6, 0, [self.tax_21.id])],

@@ -28,19 +28,19 @@ class TestAutoWaving(TransactionCase):
 
         cls.product_1 = cls.env['product.product'].create({
             'name': 'Product 1',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         cls.product_2 = cls.env['product.product'].create({
             'name': 'Product 2',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         cls.product_3 = cls.env['product.product'].create({
             'name': 'Product 3',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         cls.product_4 = cls.env['product.product'].create({
             'name': 'Product 4',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         Quant = cls.env['stock.quant']

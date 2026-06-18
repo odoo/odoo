@@ -18,8 +18,7 @@ class TestSaleMrpInvoices(TestSaleCommon):
 
         cls.product_by_lot = cls.env['product.product'].create({
             'name': 'Product By Lot',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         cls.warehouse = cls.env['stock.warehouse'].search([('company_id', '=', cls.env.company.id)], limit=1)
         cls.stock_location = cls.warehouse.lot_stock_id
@@ -79,7 +78,7 @@ class TestSaleMrpInvoices(TestSaleCommon):
         manufacturing_route = self.env.ref('mrp.route_warehouse0_manufacture')
         product = self.env['product.product'].create({
             'name': 'SuperProduct',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [Command.set((mto_route + manufacturing_route).ids)]
         })
 

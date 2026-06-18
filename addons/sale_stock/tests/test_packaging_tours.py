@@ -13,8 +13,7 @@ class TestPackagingTours(HttpCase):
         """ Test the barcode duplication error when creating a new product with an existing barcode """
         product_a = self.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
-            'tracking': 'none',
+            'store_by': 'quantity',
             'uom_id': self.env.ref('uom.product_uom_unit').id,
             'uom_ids': [Command.link(self.env.ref('uom.product_uom_pack_6').id)],
             'product_uom_ids': [Command.create({

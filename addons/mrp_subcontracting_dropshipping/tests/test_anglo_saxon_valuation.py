@@ -28,7 +28,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
         categ_form.property_valuation = 'real_time'
         cls.categ_avco_auto = categ_form.save()
 
-        (cls.product_a | cls.product_b).is_storable = True
+        (cls.product_a | cls.product_b).store_by = 'quantity'
 
         cls.dropship_route = cls.env.ref('stock_dropshipping.route_drop_shipping')
 
@@ -212,7 +212,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
             'property_account_expense_id': self.copy_account(self.company_data['default_account_expense']).id,
             'taxes_id': [Command.set((self.tax_sale_a + self.tax_sale_b).ids)],
             'supplier_taxes_id': [Command.set((self.tax_purchase_a + self.tax_purchase_b).ids)],
-            'is_storable': True
+            'store_by': 'quantity'
         })
         kit_bom = self.env['mrp.bom'].create({
             'product_tmpl_id': kit_final_prod.product_tmpl_id.id,

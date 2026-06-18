@@ -39,14 +39,14 @@ class TestStockLandedCostsCommon(ValuationReconciliationTestCommon):
         # Create product refrigerator & oven
         cls.product_refrigerator = cls.Product.create({
             'name': 'Refrigerator',
-            'is_storable': True,
+            'store_by': 'quantity',
             'standard_price': 1.0,
             'weight': 10,
             'volume': 1,
             'categ_id': cls.categ_real_time.id})
         cls.product_oven = cls.Product.create({
             'name': 'Microwave Oven',
-            'is_storable': True,
+            'store_by': 'quantity',
             'standard_price': 1.0,
             'weight': 20,
             'volume': 1.5,

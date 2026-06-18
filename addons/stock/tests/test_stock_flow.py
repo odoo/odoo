@@ -35,9 +35,9 @@ class TestStockFlow(TestStockCommon):
         })
 
         # Product for different unit of measure.
-        cls.DozA = cls.ProductObj.create({'name': 'Dozon-A', 'is_storable': True, 'uom_id': cls.uom_dozen.id})
-        cls.SDozA = cls.ProductObj.create({'name': 'SuperDozon-A', 'is_storable': True, 'uom_id': cls.uom_sdozen.id})
-        cls.UnitA = cls.ProductObj.create({'name': 'Unit-A', 'is_storable': True})
+        cls.DozA = cls.ProductObj.create({'name': 'Dozon-A', 'store_by': 'quantity', 'uom_id': cls.uom_dozen.id})
+        cls.SDozA = cls.ProductObj.create({'name': 'SuperDozon-A', 'store_by': 'quantity', 'uom_id': cls.uom_sdozen.id})
+        cls.UnitA = cls.ProductObj.create({'name': 'Unit-A', 'store_by': 'quantity'})
 
     @mute_logger('odoo.addons.base.models.ir_access', 'odoo.models')
     def test_00_picking_create_and_transfer_quantity(self):
@@ -907,7 +907,7 @@ class TestStockFlow(TestStockCommon):
         # Create product in kg and receive in ton.
         # -----------------------------------------
 
-        productKG = self.ProductObj.create({'name': 'Product KG', 'uom_id': self.uom_kg.id, 'is_storable': True})
+        productKG = self.ProductObj.create({'name': 'Product KG', 'uom_id': self.uom_kg.id, 'store_by': 'quantity'})
         picking_in = self.PickingObj.create({
             'picking_type_id': self.picking_type_in.id,
             'location_id': self.supplier_location.id,
@@ -1080,8 +1080,8 @@ class TestStockFlow(TestStockCommon):
         # TEST EMPTY INVENTORY WITH PACKS and LOTS
         # ---------------------------------------------------------
 
-        packproduct = self.ProductObj.create({'name': 'Pack Product', 'uom_id': self.uom_unit.id, 'is_storable': True})
-        lotproduct = self.ProductObj.create({'name': 'Lot Product', 'uom_id': self.uom_unit.id, 'is_storable': True})
+        packproduct = self.ProductObj.create({'name': 'Pack Product', 'uom_id': self.uom_unit.id, 'store_by': 'quantity'})
+        lotproduct = self.ProductObj.create({'name': 'Lot Product', 'uom_id': self.uom_unit.id, 'store_by': 'quantity'})
         quant_obj = self.env['stock.quant'].with_context(inventory_mode=True)
         pack_obj = self.env['stock.package']
         lot_obj = self.env['stock.lot']
@@ -1147,7 +1147,7 @@ class TestStockFlow(TestStockCommon):
         # Change basic operation type not to get lots
         # Create product with lot tracking
         self.picking_type_in.use_create_lots = False
-        self.productA.tracking = 'lot'
+        self.productA.store_by = 'lot'
         picking_in = self.PickingObj.create({
             'picking_type_id': self.picking_type_in.id,
             'location_id': self.supplier_location.id,
@@ -1860,7 +1860,7 @@ class TestStockFlow(TestStockCommon):
 
         product = self.env['product.product'].create({
             'name': 'The product from the other company that I absolutely want',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [Command.link(route_a.id), Command.link(route_b.id)]
         })
 
@@ -1940,13 +1940,13 @@ class TestStockFlow(TestStockCommon):
 
         product_from_company_2 = self.env['product.product'].create({
             'name': 'The product from the other company that I absolutely want',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [Command.link(route_a.id), Command.link(route_b.id)]
         })
 
         product_from_company_3 = self.env['product.product'].create({
             'name': 'Ice',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [Command.link(route_a.id), Command.link(route_c.id)]
         })
 
@@ -1984,7 +1984,7 @@ class TestStockFlow(TestStockCommon):
         test ensure the scheduled_date is writable on a picking in state 'draft' or 'confirmed'
         """
         partner = self.env['res.partner'].create({'name': 'Hubert Bonisseur de la Bath'})
-        product = self.env['product.product'].create({'name': 'Un petit coup de polish', 'is_storable': True})
+        product = self.env['product.product'].create({'name': 'Un petit coup de polish', 'store_by': 'quantity'})
         wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
         picking = self.env['stock.picking'].create({
@@ -2020,7 +2020,7 @@ class TestStockFlow(TestStockCommon):
         grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
         self.env.user.write({'group_ids': [Command.link(grp_multi_loc.id)]})
 
-        product = self.env['product.product'].create({'name': 'Un petit coup de polish', 'is_storable': True})
+        product = self.env['product.product'].create({'name': 'Un petit coup de polish', 'store_by': 'quantity'})
         wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
         self.env['stock.quant']._update_available_quantity(product, wh.wh_qc_stock_loc_id, 10)
@@ -2049,13 +2049,11 @@ class TestStockFlow(TestStockCommon):
         # Creates two tracked products (one by lots and one by SN).
         product_lot = self.env['product.product'].create({
             'name': 'Tracked by lot',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         product_serial = self.env['product.product'].create({
             'name': 'Tracked by SN',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         # Creates two receipts using some lot names in common.
         picking_form = Form(self.env['stock.picking'])
@@ -2284,7 +2282,7 @@ class TestStockFlow(TestStockCommon):
         """
         partner_1 = self.env['res.partner'].create({'name': 'Hubert Bonisseur de la Bath'})
         partner_2 = self.env['res.partner'].create({'name': 'Donald Clairvoyant du Bled'})
-        product = self.env['product.product'].create({'name': 'Un petit coup de polish', 'is_storable': True})
+        product = self.env['product.product'].create({'name': 'Un petit coup de polish', 'store_by': 'quantity'})
         wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
 
         f = Form(self.env['stock.picking'])
@@ -2305,9 +2303,7 @@ class TestStockFlow(TestStockCommon):
         if is_scrap context is set."""
         tracked_product = self.env['product.product'].create({
             'name': 'Tracked Product',
-            'type': 'consu',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
         self.env['stock.quant']._update_available_quantity(tracked_product, self.stock_location, 1.0)
 
@@ -2363,7 +2359,7 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(scrap.state, 'done')
 
     def test_receive_tracked_product(self):
-        self.productA.tracking = 'serial'
+        self.productA.store_by = 'serial'
 
         receipt_form = Form(self.env['stock.picking'])
         receipt_form.picking_type_id = self.picking_type_in
@@ -2501,7 +2497,7 @@ class TestStockFlow(TestStockCommon):
         stock_location = warehouse.lot_stock_id
         sub_loc = stock_location.child_ids[0]
 
-        self.productA.tracking = 'lot'
+        self.productA.store_by = 'lot'
 
         receipt_form = Form(self.env['stock.picking'])
         receipt_form.picking_type_id = self.picking_type_in
@@ -2610,7 +2606,7 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(backorder.state, 'done')
 
     def test_picking_mixed_tracking_with_backorder(self):
-        self.productB.tracking = 'lot'
+        self.productB.store_by = 'lot'
         picking = self.env['stock.picking'].create({
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
@@ -2739,8 +2735,7 @@ class TestStockFlowPostInstall(TestStockCommon):
 
         product = self.env['product.product'].create({
             'name': 'Super Product',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         sn = self.env['stock.lot'].create({
             'name': 'super_sn',

@@ -1066,8 +1066,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         self.cat.property_cost_method = 'average'
         product = self.env['product.product'].create({
             'name': 'product1',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
             'categ_id': self.cat.id,
             'lot_valuated': True,
         })
@@ -1412,7 +1411,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         company.anglo_saxon_accounting = True
         company.currency_id = self.usd_currency
 
-        self.product1.is_storable = True
+        self.product1.store_by = 'quantity'
         self.product1.purchase_method = 'purchase'
 
         self.product1.with_company(company).categ_id.property_cost_method = 'fifo'
@@ -1527,7 +1526,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         })
         analytic_product = self.env['product.product'].create({
             'name': 'Analytic Product',
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': analytic_product_category.id,
             'lst_price': 100.0,
             'standard_price': 25.0,

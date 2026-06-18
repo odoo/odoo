@@ -121,7 +121,7 @@ class TestUi(TestPointOfSaleHttpCommon, OnlinePaymentCommon):
         })
         cls.letter_tray = cls.env['product.product'].create({
             'name': 'Letter Tray',
-            'is_storable': True,
+            'store_by': 'quantity',
             'available_in_pos': True,
             'list_price': 4.8,
             'taxes_id': False,

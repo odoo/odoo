@@ -11,8 +11,7 @@ class TestPerishableQtyAtDate(TestStockCommon, HttpCase):
     def test_forecast_widget_perishable_qty_at_date(self):
         product_exp = self.env['product.product'].create([{
             'name': f'Perishable Product {i}',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
             'use_expiration_date': True,
             'expiration_time': 7,
             'removal_time': 1,

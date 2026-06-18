@@ -12,7 +12,7 @@ class StockMove(TransactionCase):
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.product = cls.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         cls.env['stock.quant']._update_available_quantity(cls.product, cls.stock_location, 10.0)
         cls.product_consu = cls.env['product.product'].create({

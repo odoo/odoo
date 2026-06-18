@@ -22,13 +22,13 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             {
                 'name': 'Stick',
                 'uom_id': cls.uom_unit.id,
-                'tracking': 'none',
+                'store_by': 'quantity',
                 'route_ids': [Command.set(cls.route_mto.ids)],
             },
             {
                 'name': 'Raw Stick',
                 'uom_id': cls.uom_unit.id,
-                'tracking': 'none',
+                'store_by': 'quantity',
             },
         ])
         # Create bom for manufactured product
@@ -310,7 +310,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             warehouse.manufacture_steps = 'pbm_sam'
         new_product = self.env['product.product'].create({
             'name': 'New product',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         production_form = Form(self.env['mrp.production'])
         production_form.product_id = self.finished_product
@@ -349,11 +349,11 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
 
         finished_product = self.env['product.product'].create({
             'name': 'Super Product',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         secondary_product = self.env['product.product'].create({
             'name': 'Secondary',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         component = self.env['product.product'].create({
             'name': 'Component',
@@ -415,7 +415,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         # Create an additional BoM for component
         product_form = Form(self.env['product.product'])
         product_form.name = 'Wood'
-        product_form.tracking = 'none'
+        product_form.store_by = 'quantity'
         product_form.uom_id = self.uom_unit
         self.wood_product = product_form.save()
 
@@ -565,7 +565,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             warehouse.manufacture_steps = 'pbm_sam'
         finished_product = self.env['product.product'].create({
             'name': 'Product',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.env['mrp.bom'].create({
             'product_tmpl_id': finished_product.product_tmpl_id.id,
@@ -603,9 +603,9 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         # Configure warehouse for 3-step manufacturing and MTO
         self.warehouse_1.manufacture_steps = 'pbm_sam'
         self.warehouse_1.mto_pull_id.route_id.active = True
-        # change the tracking to 'lot' and update available qty for the finished product with Lot1
+        # change the store_by to 'lot' and update available qty for the finished product with Lot1
         self.finished_product.write({
-            'tracking': 'lot',
+            'store_by': 'lot',
             'route_ids': self.warehouse_1.mto_pull_id.route_id,
         })
 
@@ -799,7 +799,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.env.user.group_ids += self.env.ref('mrp.group_mrp_byproducts')
         demo = self.env['product.product'].create({
             'name': 'DEMO',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         comp1 = self.env['product.product'].create({
             'name': 'COMP1'

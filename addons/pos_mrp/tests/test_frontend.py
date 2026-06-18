@@ -19,8 +19,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         cls.basic_kit, cls.finished, cls.component_a, cls.component_b = cls.env['product.product'].create([{
             'name': name,
-            'type': 'consu',
-            'is_storable': True,
+            'store_by': 'quantity',
             'available_in_pos': True,
             'list_price': 10.0,
             'standard_price': 1.0,

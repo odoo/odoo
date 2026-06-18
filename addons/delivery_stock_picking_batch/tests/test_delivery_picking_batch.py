@@ -39,7 +39,7 @@ class TestDeliveryPickingBatch(common.TransactionCase):
 
         cls.product_a = cls.env['product.product'].create({
             'name': 'product_a',
-            'is_storable': True,
+            'store_by': 'quantity',
             'weight': 1.0,
         })
 

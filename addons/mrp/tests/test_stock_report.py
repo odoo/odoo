@@ -18,15 +18,15 @@ class TestMrpStockReports(TestReportsCommon):
         })
         product_chococake = self.env['product.product'].create({
             'name': 'Choco Cake',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         product_double_chococake = self.env['product.product'].create({
             'name': 'Double Choco Cake',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         byproduct = self.env['product.product'].create({
             'name': 'by-product',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         # Creates two BOM: one creating a regular slime, one using regular slimes.
@@ -123,7 +123,7 @@ class TestMrpStockReports(TestReportsCommon):
         # Configures a product.
         product_apple_pie = self.env['product.product'].create({
             'name': 'Apple Pie',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         product_apple = self.env['product.product'].create({
             'name': 'Apple',
@@ -186,7 +186,7 @@ class TestMrpStockReports(TestReportsCommon):
         """
         product_banana = self.env['product.product'].create({
             'name': 'Banana',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         product_chocolate = self.env['product.product'].create({
             'name': 'Chocolate',
@@ -227,7 +227,7 @@ class TestMrpStockReports(TestReportsCommon):
 
         compo01, compo02 = self.env['product.product'].create([{
             'name': n,
-            'is_storable': True,
+            'store_by': 'quantity',
             'uom_id': self.env.ref('uom.product_uom_meter').id,
         } for n in ['Compo 01', 'Compo 02']])
 
@@ -346,7 +346,7 @@ class TestMrpStockReports(TestReportsCommon):
         })
         product_chococake = self.env['product.product'].create({
             'name': 'Choco Cake',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         workcenter = self.env['mrp.workcenter'].create({
             'name': 'workcenter test',
@@ -463,7 +463,7 @@ class TestMrpStockReports(TestReportsCommon):
             {
                 'name': name,
                 'type': 'consu',
-                'is_storable': True,
+                'store_by': 'quantity',
             } for name in ['Part', 'Finished']
         ])
         self.env['mrp.bom'].create([

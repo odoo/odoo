@@ -34,23 +34,19 @@ class TestRepairCommon(common.TransactionCase):
         # Storable products
         cls.product_storable_no = cls.env['product.product'].create({
             'name': 'Product Storable No Tracking #1',
-            'is_storable': True,
-            'tracking': 'none',
+            'store_by': 'quantity',
         })
         cls.product_storable_no2 = cls.env['product.product'].create({
             'name': 'Product Storable No Tracking #2',
-            'is_storable': True,
-            'tracking': 'none',
+            'store_by': 'quantity',
         })
         cls.product_storable_serial = cls.env['product.product'].create({
             'name': 'Product Storable Serial',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         cls.product_storable_lot = cls.env['product.product'].create({
             'name': 'Product Storable Lot',
-            'is_storable': True,
-            'tracking': 'lot',
+            'store_by': 'lot',
         })
 
         # Repair product
@@ -164,7 +160,7 @@ class TestRepairCommon(common.TransactionCase):
     @classmethod
     def create_quant(cls, product, qty, offset=0, name="L"):
         i = 1
-        if product.tracking == 'serial':
+        if product.store_by == 'serial':
             i, qty = qty, 1
             if name == "L":
                 name = "S"
@@ -177,7 +173,7 @@ class TestRepairCommon(common.TransactionCase):
                 'inventory_quantity': qty,
             }
 
-            if product.tracking in ['lot', 'serial']:
+            if product.store_by in ['lot', 'serial']:
                 qDict['lot_id'] = cls.env['stock.lot'].create({
                     'name': name + str(offset + x),
                     'product_id': product.id,
@@ -521,7 +517,7 @@ class TestRepair(TestRepairCommon):
 
         product = self.env['product.product'].create({
             'name': 'Test Product',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.env['stock.quant']._update_available_quantity(product, self.stock_location_14, 1)
         picking_form = Form(self.env['stock.picking'])
@@ -568,8 +564,7 @@ class TestRepair(TestRepairCommon):
         """
         Test That a repair order can be validated when the repaired product is tracked and in a package
         """
-        self.product_product_3.tracking = 'serial'
-        self.product_product_3.is_storable = True
+        self.product_product_3.store_by = 'serial'
         # Create two serial numbers
         sn_1 = self.env['stock.lot'].create({'name': 'sn_1', 'product_id': self.product_product_3.id})
         sn_2 = self.env['stock.lot'].create({'name': 'sn_2', 'product_id': self.product_product_3.id})
@@ -649,7 +644,7 @@ class TestRepair(TestRepairCommon):
         })
         part = self.env['product.product'].create({
             'name': 'Part',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.env['stock.move'].create({
             'repair_line_type': 'add',
@@ -822,7 +817,7 @@ class TestRepair(TestRepairCommon):
             'product_max_qty': 1,
             'trigger': 'auto'
         })
-        self.product_product_3.is_storable = True
+        self.product_product_3.store_by = 'quantity'
         repair_order = self.env['repair.order'].create({
             'product_id': self.product_product_3.id,
             'uom_id': self.product_product_3.uom_id.id,
@@ -857,8 +852,7 @@ class TestRepair(TestRepairCommon):
         context = action.get('context')
         tracked_product_repair_line = self.env['product.product'].create({
             'name': 'Test Product',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         tracked_product_sn = self.env['stock.lot'].create({'name': 'tracked_product_sn1', 'product_id': tracked_product_repair_line.id})
         repair_order = self.env['repair.order'].with_context(context).create({

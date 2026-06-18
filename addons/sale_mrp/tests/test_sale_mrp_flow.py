@@ -148,7 +148,7 @@ class TestSaleMrpFlowCommon(ValuationReconciliationTestCommon, TestSaleCommon):
         product = cls.env['product.product'].create({
             'name': name,
             'uom_id': uom_id.id,
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [Command.set([route.id for route in routes])],
         })
         return product
@@ -478,11 +478,11 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
 
         product_wood_panel = self.env['product.product'].create({
             'name': 'Wood Panel',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         product_desk_bolt = self.env['product.product'].create({
             'name': 'Bolt',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
         self.env['mrp.bom'].create({
             'product_tmpl_id': product.product_tmpl_id.id,
@@ -582,19 +582,19 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         Product = self.env['product.product']
         self.finished_product = Product.create({
                 'name': 'Finished product',
-                'is_storable': True,
+                'store_by': 'quantity',
                 'uom_id': self.uom_unit.id,
                 'invoice_policy': 'delivery',
                 'categ_id': self.category.id})
         self.component1 = Product.create({
                 'name': 'Component 1',
-                'is_storable': True,
+                'store_by': 'quantity',
                 'uom_id': self.uom_unit.id,
                 'categ_id': self.category.id,
                 'standard_price': 20})
         self.component2 = Product.create({
                 'name': 'Component 2',
-                'is_storable': True,
+                'store_by': 'quantity',
                 'uom_id': self.uom_unit.id,
                 'categ_id': self.category.id,
                 'standard_price': 10})
@@ -1444,7 +1444,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         # Create finished product
         finished_product = self.env['product.product'].create({
             'name': 'Geyser',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [(4, route_mto), (4, route_manufacture)],
         })
 
@@ -1493,13 +1493,13 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         # Create finished product
         finished_product = self.env['product.product'].create({
             'name': 'Geyser',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [(4, route_mto.id), (4, route_manufacture.id)],
         })
 
         product_raw = self.env['product.product'].create({
             'name': 'raw Geyser',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         # Create bom for finish product
@@ -1547,13 +1547,13 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         # Create finished product
         finished_product = self.env['product.product'].create({
             'name': 'Geyser',
-            'is_storable': True,
+            'store_by': 'quantity',
             'route_ids': [(4, route_mto.id), (4, route_manufacture.id)],
         })
 
         product_raw = self.env['product.product'].create({
             'name': 'raw Geyser',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         # Create bom for finish product
@@ -1610,17 +1610,17 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         """
         main_kit_product = self.env['product.product'].create({
             'name': 'Main Kit',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         nested_kit_product = self.env['product.product'].create({
             'name': 'Nested Kit',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         product = self.env['product.product'].create({
             'name': 'Screw',
-            'is_storable': True,
+            'store_by': 'quantity',
         })
 
         self.env['mrp.bom'].create({
@@ -1752,7 +1752,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         # Create the template
         self.product_template = self.env['product.template'].create({
             'name': 'Template A',
-            'is_storable': True,
+            'store_by': 'quantity',
             'uom_id': self.uom_unit.id,
             'invoice_policy': 'delivery',
             'categ_id': self.category.id,
@@ -1773,14 +1773,14 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         # Create the components
         self.comp_kit_a = self.env['product.product'].create({
             'name': 'Component Kit A',
-            'is_storable': True,
+            'store_by': 'quantity',
             'uom_id': self.uom_unit.id,
             'categ_id': self.category.id,
             'standard_price': 20
         })
         self.comp_kit_b = self.env['product.product'].create({
             'name': 'Component Kit B',
-            'is_storable': True,
+            'store_by': 'quantity',
             'uom_id': self.uom_unit.id,
             'categ_id': self.category.id,
             'standard_price': 10
@@ -1894,7 +1894,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         # Create the template
         self.product_template = self.env['product.template'].create({
             'name': 'Template A',
-            'is_storable': True,
+            'store_by': 'quantity',
             'uom_id': self.uom_unit.id,
             'invoice_policy': 'delivery',
             'categ_id': self.category.id,
@@ -1913,14 +1913,14 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         # Create the components
         self.comp_kit_a = self.env['product.product'].create({
             'name': 'Component Kit A',
-            'is_storable': True,
+            'store_by': 'quantity',
             'uom_id': self.uom_unit.id,
             'categ_id': self.category.id,
             'standard_price': 20
         })
         self.comp_kit_b = self.env['product.product'].create({
             'name': 'Component Kit B',
-            'is_storable': True,
+            'store_by': 'quantity',
             'uom_id': self.uom_unit.id,
             'categ_id': self.category.id,
             'standard_price': 10
@@ -2314,7 +2314,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
 
         compo01, compo02, kit = self.env['product.product'].create([{
             'name': name,
-            'is_storable': True,
+            'store_by': 'quantity',
             'standard_price': price,
             'categ_id': self.stock_account_product_categ.id,
             'invoice_policy': 'delivery',
@@ -2852,7 +2852,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         )
         product = self.env['product.product'].create({
             'name': 'Test MTO Finished',
-            'is_storable': True,
+            'store_by': 'quantity',
             'categ_id': self.stock_account_product_categ.id,
             'route_ids': [Command.set([
                 self.env.ref('stock.route_warehouse0_mto').id,
@@ -2925,8 +2925,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         finished_product, component = self.env['product.product'].create([
             {
                 'name': 'Finished Product',
-                'is_storable': True,
-                'tracking': 'lot',
+                'store_by': 'lot',
                 'lot_valuated': True,
                 'invoice_policy': 'delivery',
                 'categ_id': self.stock_account_product_categ.id,
@@ -2934,7 +2933,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
             },
             {
                 'name': 'Component',
-                'is_storable': True,
+                'store_by': 'quantity',
                 'categ_id': self.stock_account_product_categ.id,
             }
         ])

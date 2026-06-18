@@ -14,15 +14,14 @@ class TestWarehouseMrp(common.TestMrpCommon):
             'name': 'Individual Workplace',
             'uom_id': cls.uom_unit.id,
             'type': 'consu',
-            'is_storable': True,
-            'tracking': 'none',
+            'store_by': 'quantity',
         })
         cls.laptop = cls.env['product.product'].create({
             'name': 'Acoustic Bloc Screens',
             'uom_id': cls.uom_unit.id,
             'type': 'consu',
-            'is_storable': True,
-            'tracking': 'none',
+            'store_by': 'quantity',
+
         })
         cls.depot_location = cls.env['stock.location'].create({
             'name': 'Depot',
@@ -188,9 +187,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
         """
 
         # Update demo products
-        (self.product_4 | self.product_2).write({
-            'tracking': 'lot',
-        })
+        (self.product_4 | self.product_2).store_by = 'lot'
 
         # Update Bill Of Material to remove product with phantom bom.
         self.bom_3.bom_line_ids.filtered(lambda x: x.product_id == self.product_5).unlink()
@@ -256,7 +253,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
         defined in putaway strategy when the production is recorded with
         product.produce wizard.
         """
-        self.laptop.tracking = 'serial'
+        self.laptop.store_by = 'serial'
         mo_laptop = self.new_mo_laptop()
         serial = self.env['stock.lot'].create({'product_id': self.laptop.id})
 
@@ -275,7 +272,7 @@ class TestWarehouseMrp(common.TestMrpCommon):
         """ Test that movement of pack in backorder is correctly handled. """
         self.warehouse_1.manufacture_steps = 'pbm'
 
-        self.product_1.tracking = 'none'
+        self.product_1.store_by = 'quantity'
         self.env['stock.quant']._update_available_quantity(self.product_1, self.stock_location, 100)
 
         mo_form = Form(self.env['mrp.production'])
@@ -362,7 +359,7 @@ class TestKitPicking(common.TestMrpCommon):
         def create_product(name):
             return cls.env['product.product'].create({
                 'name': name,
-                'tracking': 'none',
+                'store_by': 'quantity',
             })
 
         # Create a kit 'kit_parent' :
@@ -530,7 +527,7 @@ class TestKitPicking(common.TestMrpCommon):
         self.bom_4.type = 'phantom'
         kit = self.bom_4.product_id
         compo = self.bom_4.bom_line_ids.product_id
-        product = self.env['product.product'].create({'name': 'Super Product', 'is_storable': True})
+        product = self.env['product.product'].create({'name': 'Super Product', 'store_by': 'quantity'})
 
         receipt = self.env['stock.picking'].create({
             'picking_type_id': in_type.id,
@@ -570,7 +567,7 @@ class TestKitPicking(common.TestMrpCommon):
         """
         kit, kit_component_1, kit_component_2, not_kit_1, not_kit_2 = self.env['product.product'].create([{
             'name': name,
-            'is_storable': True,
+            'store_by': 'quantity',
             'uom_id': self.uom_unit.id,
         } for name in ['Kit', 'Kit Component 1', 'Kit Component 2', 'Not Kit 1', 'Not Kit 2']])
 
@@ -634,7 +631,7 @@ class TestKitPicking(common.TestMrpCommon):
         bom.product_id = False
         bom.type = 'phantom'
         kit = bom.product_tmpl_id.product_variant_id
-        kit.is_storable = True
+        kit.store_by = 'quantity'
         # product is in unit and bom in dozen
         kit.uom_id = self.uom_unit
         bom.uom_id = self.uom_dozen

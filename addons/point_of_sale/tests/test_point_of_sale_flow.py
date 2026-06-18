@@ -461,9 +461,7 @@ class TestPointOfSaleFlow(CommonPosTest):
             - one payment of $460 with cash
         Then, we refund the order with $10, and check that the amount still due is 300$.
         """
-        self.twenty_dollars_no_tax.product_variant_id.write({
-            'is_storable': True,
-        })
+        self.twenty_dollars_no_tax.product_variant_id.store_by = 'quantity'
         order, _ = self.create_backend_pos_order({
             'order_data': {
                 'partner_id': self.partner_adgu.id,
@@ -1371,7 +1369,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         })
         product = self.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
+            'store_by': 'quantity',
             'company_id': self.env.company.id,
         })
         config = self.env['pos.config'].with_company(branch).create({
@@ -1530,7 +1528,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         current_session = self.pos_config_usd.current_session_id
         product = self.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
+            'store_by': 'quantity',
             'available_in_pos': True,
             'lst_price': 200.0,
             'company_id': new_company.id,

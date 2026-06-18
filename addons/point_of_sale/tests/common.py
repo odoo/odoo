@@ -779,7 +779,7 @@ class TestPoSCommon(AccountTestInvoicingCommon):
     @classmethod
     def create_product(cls, name, category, lst_price, standard_price=None, tax_ids=None, sale_account=None):
         product = cls.env['product.product'].create({
-            'is_storable': True,
+            'store_by': 'quantity',
             'available_in_pos': True,
             'taxes_id': [(5, 0, 0)] if not tax_ids else [(6, 0, tax_ids)],
             'name': name,

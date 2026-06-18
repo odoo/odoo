@@ -23,7 +23,7 @@ class TestWarnUnwantedReplenish(common.TransactionCase):
 
         cls.product_A = cls.env['product.product'].create({
             'name': 'Product A',
-            'is_storable': True,
+            'store_by': 'quantity',
             'purchase_method': 'purchase',
             'invoice_policy': 'delivery',
             'standard_price': 5.0,
@@ -34,7 +34,7 @@ class TestWarnUnwantedReplenish(common.TransactionCase):
 
         cls.product_B = cls.env['product.product'].create({
             'name': 'Product B',
-            'is_storable': True,
+            'store_by': 'quantity',
             'purchase_method': 'purchase',
             'invoice_policy': 'delivery',
             'standard_price': 6.0,
@@ -143,8 +143,7 @@ class TestWarnUnwantedReplenish(common.TransactionCase):
 
         dropshipped_product = self.env['product.product'].create({
             'name': 'Dropshipped Product',
-            'type': 'consu',
-            'is_storable': True,
+            'store_by': 'quantity',
             'seller_ids': [(0, 0, {
                 'partner_id': self.vendor.id,
             })],

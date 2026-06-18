@@ -54,8 +54,7 @@ class TestReturnPicking(TestStockCommon):
         """
         product_serial = self.env['product.product'].create({
             'name': 'Tracked by SN',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         serial1 = self.env['stock.lot'].create({
             'name': 'serial1',
@@ -158,8 +157,7 @@ class TestReturnPicking(TestStockCommon):
         # create a storable product
         product_serial = self.env['product.product'].create({
             'name': 'Tracked by SN',
-            'is_storable': True,
-            'tracking': 'serial',
+            'store_by': 'serial',
         })
         # Create a stock picking with moves
         original_picking = self.PickingObj.create({
