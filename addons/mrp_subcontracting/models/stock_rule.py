@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.fields import Domain
 
 
 class StockRule(models.Model):
@@ -18,3 +19,7 @@ class StockRule(models.Model):
             if values.get('move_dest_ids') and values['move_dest_ids'].raw_material_production_id.subcontractor_id:
                 move_values['partner_id'] = values['move_dest_ids'].raw_material_production_id.subcontractor_id.id
         return move_values
+
+    def _get_moves_to_assign_domain(self, company_id):
+        domain = super()._get_moves_to_assign_domain(company_id)
+        return Domain(domain) & Domain('is_subcontract', '=', False)
