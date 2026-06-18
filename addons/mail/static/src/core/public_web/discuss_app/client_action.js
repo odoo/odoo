@@ -21,18 +21,22 @@ export class DiscussClientAction extends Component {
     setup() {
         super.setup();
         this.props = props({
-            action: t.object({
-                context: t.object({
-                    active_id: t.or([t.string(), t.number()]).optional(),
-                }),
-                params: t
-                    .object({
+            action: t
+                .object({
+                    context: t.object({
                         active_id: t.or([t.string(), t.number()]).optional(),
-                        default_active_id: t.or([t.string(), t.number()]).optional(),
-                        highlight_message_id: t.number().optional(),
-                    })
-                    .optional(),
-            }),
+                    }),
+                    params: t
+                        .object({
+                            active_id: t.or([t.string(), t.number()]).optional(),
+                            default_active_id: t.or([t.string(), t.number()]).optional(),
+                            highlight_message_id: t.number().optional(),
+                        })
+                        .optional(),
+                })
+                // The public page doesn't use the action service, but overrides
+                // `getActiveId` to provide the id from the URL instead of the action.
+                .optional(),
         });
         this.store = useService("mail.store");
         onWillStart(() => {

@@ -62,7 +62,7 @@ class TestMailPublicPage(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
     def _open_group_page_as_user(self, login):
         user = self.env["res.users"].search([("login", "=", login)])
         url = (
-            f"/discuss/channel/{self.channel.id}"
+            f"/discuss/channel/{self.channel.id}?debug=tests"
             if user._is_internal()
             else self.group.invitation_url
         )
