@@ -1,15 +1,13 @@
-import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
 
-import { markup } from "@odoo/owl";
 import { omit } from "@web/core/utils/objects";
 import { stepUtils } from "@web_tour/tour_utils";
 
 export function addMedia() {
     return {
         trigger: `.modal-content footer .btn-primary`,
-        content: markup(_t("<b>Add</b> the selected image.")),
+        content: "Add the selected image.",
         run: "click",
     };
 }
@@ -36,11 +34,8 @@ export function changeBackground() {
     return [
         {
             trigger: `.o_customize_tab button[data-action-id="replaceBgImage"]`,
-            content: markup(
-                _t(
-                    "<b>Customize</b> any block through this menu. Try to change the background image of this block."
-                )
-            ),
+            content:
+                "Customize any block through this menu. Try to change the background image of this block.",
             run: "click",
         },
     ];
@@ -49,11 +44,8 @@ export function changeBackground() {
 export function changeBackgroundColor() {
     return {
         trigger: ".o_customize_tab .o_we_color_preview",
-        content: markup(
-            _t(
-                "<b>Customize</b> any block through this menu. Try to change the background color of this block."
-            )
-        ),
+        content:
+            "Customize any block through this menu. Try to change the background color of this block.",
         run: "click",
     };
 }
@@ -65,9 +57,7 @@ export function changeImage(snippet) {
         },
         {
             trigger: snippet.id ? `#wrapwrap .${snippet.id} img` : snippet,
-            content: markup(
-                _t("<b>Double click on an image</b> to change it with one of your choice.")
-            ),
+            content: "Double click on an image to change it with one of your choice.",
             run: "dblclick",
         },
     ];
@@ -91,9 +81,7 @@ export function changeOption(
     const option_block = `${noPalette} [data-container-title='${blockName}']`;
     return {
         trigger: `${option_block} ${actionId}, ${option_block} [data-action-id="${actionId}"]`,
-        content: markup(
-            _t("<b>Click</b> on this option to change the %s of the block.", optionTooltipLabel)
-        ),
+        content: `Click on this option to change the ${optionTooltipLabel} of the block.`,
         run: "click",
     };
 }
@@ -159,7 +147,7 @@ export function selectNested(
     const option_block = `${noPalette} we-customizeblock-option[class='snippet-option-${optionName}']`;
     return {
         trigger: trigger + (altTrigger ? `, ${option_block} ${altTrigger}` : ""),
-        content: markup(_t("<b>Select</b> a %s.", optionTooltipLabel)),
+        content: `Select a ${optionTooltipLabel}.`,
         run: "click",
     };
 }
@@ -173,7 +161,7 @@ export function changePaddingSize(direction) {
     }
     return {
         trigger: `.oe_overlay.oe_active .o_handle.${paddingDirection}`,
-        content: markup(_t("<b>Slide</b> this button to change the %s padding", direction)),
+        content: `Slide this button to change the ${direction} padding`,
         tooltipPosition: position,
         run: "click",
     };
@@ -226,7 +214,7 @@ export function clickOnElement(elementName, selector) {
 export function clickOnEditAndWaitEditMode() {
     return [
         {
-            content: markup(_t("<b>Click Edit</b> to start designing your homepage.")),
+            content: "Click Edit to start designing your homepage.",
             trigger:
                 "body:has(:iframe body[is-ready=true]) .o_menu_systray .o_menu_systray_item.o_edit_website_container button",
             run: "click",
@@ -247,13 +235,13 @@ export function clickOnEditAndWaitEditMode() {
 export function clickOnEditAndWaitEditModeInTranslatedPage() {
     return [
         {
-            content: markup(_t("<b>Click Edit</b> dropdown")),
+            content: "Click Edit dropdown",
             trigger:
                 "body:has(:iframe body[is-ready=true]) .o_menu_systray button:contains('Edit')",
             run: "click",
         },
         {
-            content: markup(_t("<b>Click Edit</b> to start designing your homepage.")),
+            content: "Click Edit to start designing your homepage.",
             trigger: ".o_edit_website_dropdown_item",
             run: "click",
         },
@@ -277,7 +265,7 @@ export function clickOnSnippet(snippet, position = "bottom") {
         },
         {
             trigger: `:iframe ${trigger}`,
-            content: markup(_t("<b>Click on a snippet</b> to access its options menu.")),
+            content: "Click on a snippet to access its options menu.",
             tooltipPosition: position,
             run: "click",
         },
@@ -320,7 +308,7 @@ export function clickOnText(snippet, element) {
         },
         {
             trigger: snippet.id ? `:iframe #wrapwrap .${snippet.id} ${element}` : snippet,
-            content: markup(_t("<b>Click on a text</b> to start editing it.")),
+            content: "Click on a text to start editing it.",
             run: "click",
         },
         {
@@ -350,13 +338,13 @@ export function insertSnippet(snippet, { position = "bottom", ignoreLoading = fa
     if (snippet.groupName) {
         insertSnippetSteps.push(
             {
-                content: markup(_t("Click on the <b>%s</b> category.", blockEl)),
+                content: `Click on the ${blockEl} category.`,
                 trigger: `.o_block_tab:not(.o_we_ongoing_insertion) #snippet_groups .o_snippet[name="${blockEl}"].o_draggable .o_snippet_thumbnail_area`,
                 tooltipPosition: position,
                 run: "click",
             },
             {
-                content: markup(_t("Click on the <b>%s</b> building block.", snippet.name)),
+                content: `Click on the ${snippet.name} building block.`,
                 // FIXME `:not(.d-none)` should obviously not be needed but it seems
                 // currently needed when using a tour in user/interactive mode.
                 trigger: `.modal .show:iframe .o_snippet_preview_wrap${snippetIDSelector}:not(.d-none)`,
@@ -366,9 +354,7 @@ export function insertSnippet(snippet, { position = "bottom", ignoreLoading = fa
         );
     } else {
         insertSnippetSteps.push({
-            content: markup(
-                _t("Drag the <b>%s</b> block and drop it at the bottom of the page.", blockEl)
-            ),
+            content: `Drag the ${blockEl} block and drop it at the bottom of the page.`,
             trigger: `.o_block_tab:not(.o_we_ongoing_insertion) #snippet_content .o_snippet[name="${blockEl}"].o_draggable .o_snippet_thumbnail`,
             tooltipPosition: position,
             run: "drag_and_drop :iframe #wrapwrap > footer",
@@ -387,7 +373,7 @@ export function insertSnippet(snippet, { position = "bottom", ignoreLoading = fa
 export function goBackToBlocks() {
     return {
         trigger: "button[data-name='blocks']",
-        content: _t("Click here to go back to block tab."),
+        content: "Click here to go back to block tab.",
         run: "click",
     };
 }
@@ -399,7 +385,7 @@ export function goToTheme() {
         },
         {
             trigger: "button[data-name='theme']",
-            content: _t("Go to the Theme tab"),
+            content: "Go to the Theme tab",
             run: "click",
         },
         {
@@ -412,7 +398,7 @@ export function goToTheme() {
 export function selectHeader() {
     return {
         trigger: `:iframe header#top`,
-        content: markup(_t(`<b>Click</b> on this header to configure it.`)),
+        content: "Click on this header to configure it.",
         run: "click",
     };
 }

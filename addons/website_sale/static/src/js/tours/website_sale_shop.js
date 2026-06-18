@@ -1,9 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
-import {
-    goBackToBlocks,
-    insertSnippet,
-    registerWebsitePreviewTour,
-} from "@website/js/tours/tour_utils";
+import { registerWebsitePreviewTour } from "@website/js/tours/tour_utils";
 
 import { markup } from "@odoo/owl";
 
@@ -65,15 +61,32 @@ registerWebsitePreviewTour("website_sale.onboarding_tour", {}, () => [
         tooltipPosition: "bottom",
         run: "click .modal-footer .btn-secondary",
     },
-    goBackToBlocks(),
+    {
+        trigger: "button[data-name='blocks']",
+        content: _t("Click here to go back to block tab."),
+        run: "click",
+    },
     {
         trigger: "body:not(.modal-open)",
     },
-    ...insertSnippet({
-        id: "s_text_image",
-        name: "Text - Image",
-        groupName: "Content",
-    }),
+    {
+        trigger: ".o_builder_sidebar_open",
+    },
+    {
+        content: markup(_t("Click on the <b>Content</b> category.")),
+        trigger: `.o_block_tab:not(.o_we_ongoing_insertion) #snippet_groups .o_snippet[name="Content"].o_draggable .o_snippet_thumbnail_area`,
+        tooltipPosition: "bottom",
+        run: "click",
+    },
+    {
+        content: markup(_t("Click on the <b>Text - Image</b> building block.")),
+        trigger: `.modal .show:iframe .o_snippet_preview_wrap[data-snippet-id="s_text_image"]:not(.d-none)`,
+        tooltipPosition: "top",
+        run: "click",
+    },
+    {
+        trigger: ".o_website_preview :iframe:not(:has(.o_loading_screen))",
+    },
     {
         // Wait until the drag and drop is resolved (causing a history step)
         // before clicking save.

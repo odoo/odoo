@@ -1,4 +1,3 @@
-import { _t } from "@web/core/l10n/translation";
 
 export function addToWishlistFromProductPage() {
     return [
@@ -31,7 +30,7 @@ export function addToWishlistFromShopPage() {
 
 export function goToWishlist({ quantity = 1 } = {}) {
     return {
-        content: _t("Go to wishlist"),
+        content: "Go to wishlist",
         trigger: `a sup.my_wish_quantity:text(${quantity})`,
         run: "click",
         expectUnloadPage: true,

@@ -1,4 +1,3 @@
-import { markup } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
 
@@ -13,7 +12,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             run: "click",
         }, {
             trigger: 'input#subject_0',
-            content: markup('Pick the <b>email subject</b>.'),
+            content: 'Pick the email subject.',
             tooltipPosition: 'bottom',
             run: "edit Test",
         }, {
@@ -26,11 +25,11 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             run: 'click',
         }, {
             trigger: 'div[name="body_arch"] :iframe .o_mailing_template_preview_wrapper [data-name="default"]',
-            content: markup('Choose this <b>theme</b>.'),
+            content: 'Choose this theme.',
             run: 'click',
         }, {
             trigger: '.o_codeview_btn',
-            content: markup('Click here to switch to <b>code view</b>'),
+            content: 'Click here to switch to code view',
             run: 'click'
         }, {
             trigger: "textarea.o_codeview",
@@ -41,7 +40,7 @@ registry.category("web_tour.tours").add('mass_mailing_code_view_tour', {
             },
         }, {
             trigger: '.o_codeview_btn',
-            content: markup('Click here to switch back from <b>code view</b>'),
+            content: 'Click here to switch back from code view',
             run: 'click'
         }, {
             trigger: '[name="body_arch"] :iframe .o_mail_wrapper_td',
