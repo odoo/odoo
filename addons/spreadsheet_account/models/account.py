@@ -62,19 +62,18 @@ class AccountAccount(models.Model):
             tag_ids = [int(tag_id) for tag_id in formula_params["account_tag_ids"]]
             account_id_domain = Domain('account_id.tag_ids', 'in', tag_ids) if tag_ids else Domain.FALSE
         elif 'codes' in formula_params:
-            codes = [code for code in formula_params.get("codes", []) if code]
-            default_domain = Domain.FALSE
-            if not codes:
-                if not default_accounts:
-                    return default_domain
-                default_domain = Domain('account_type', 'in', ['liability_payable', 'asset_receivable'])
-
             # It is more optimized to (like) search for code directly in account.account than in account_move_line
-            code_domain = Domain.OR(
-                Domain("code", "=like", f"{code}%")
-                for code in codes
-            )
-            account_domain = code_domain | default_domain
+            codes = [code for code in formula_params.get("codes", []) if code]
+            if codes:
+                account_domain = Domain.OR(
+                    Domain.OR([Domain("code", "=like", f"{code}%"), Domain("name", "ilike", code), Domain("description", "ilike", code)])
+                    for code in codes
+                )
+            elif default_accounts:
+                account_domain = Domain('account_type', 'in', ['liability_payable', 'asset_receivable'])
+            else:
+                return Domain.FALSE
+
             account_ids = self.env["account.account"].with_company(company_id).search(account_domain).ids
             account_id_domain = [("account_id", "in", account_ids)]
         else:
@@ -195,10 +194,14 @@ class AccountAccount(models.Model):
                 ("account_type", "in", account_types),
             ],
             ['account_type'],
-            ['code:array_agg'],
+            ['id:recordset'],
         )
         mapped = dict(data)
-        return [mapped.get(account_type, []) for account_type in account_types]
+        return [
+            [
+                account.code or account.name for account in mapped.get(account_type, self.env["account.account"])
+            ] for account_type in account_types
+        ]
 
     @api.model
     def spreadsheet_fetch_balance_tag(self, args_list):
