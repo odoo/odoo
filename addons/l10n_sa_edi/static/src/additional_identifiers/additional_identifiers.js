@@ -16,7 +16,7 @@ patch(AdditionalIdentifiersButton.prototype, {
 
     onAdd(identifierType) {
         if (identifierType === "SA_TIN") {
-            this.state.identifiers[identifierType] = this.props.record.data.vat.slice(10) || "";
+            this.state.identifiers[identifierType] = this.props.record.data.vat.slice(0, 10) || "";
             this.debouncedCommitChanges();
         } else {
             super.onAdd(identifierType);
