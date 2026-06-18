@@ -540,6 +540,99 @@ export function mockGetMedia() {
 }
 
 /**
+ * Intercept the browser's native fullscreen API so tests can drive it without a real user
+ * gesture. `document.fullscreenElement` and the `fullscreenchange` event are simulated, letting
+ * the `mail.fullscreen` service derive its `isBrowserFullscreen` state from a controllable source.
+ *
+ * @param {Object} [param0]
+ * @param {boolean} [param0.grant=true] Whether fullscreen requests are granted. When `false`,
+ *  `requestFullscreen` resolves without entering fullscreen (as a browser does without a user
+ *  gesture), so callers fall back to the windowed overlay.
+ * @returns {{ isBrowserFullscreen: () => boolean, leaveBrowserFullscreen: () => void }}
+ *  `isBrowserFullscreen` reads the simulated state; `leaveBrowserFullscreen` simulates the user
+ *  leaving fullscreen externally (e.g. with the Escape key).
+ */
+export function mockBrowserFullscreen({ grant = true } = {}) {
+    let fullscreenElement = null;
+    function setFullscreenElement(element) {
+        if (fullscreenElement === element) {
+            return;
+        }
+        fullscreenElement = element;
+        window.dispatchEvent(new Event("fullscreenchange"));
+    }
+    Object.defineProperty(document, "fullscreenElement", {
+        configurable: true,
+        get: () => fullscreenElement,
+    });
+    after(() => delete document.fullscreenElement);
+    patchWithCleanup(document.body, {
+        async requestFullscreen() {
+            if (grant) {
+                setFullscreenElement(document.body);
+            }
+        },
+    });
+    patchWithCleanup(document, {
+        async exitFullscreen() {
+            setFullscreenElement(null);
+        },
+    });
+    return {
+        isBrowserFullscreen: () => Boolean(fullscreenElement),
+        leaveBrowserFullscreen: () => setFullscreenElement(null),
+    };
+}
+
+/**
+ * Simulate the popout window used for picture-in-picture by backing it with an in-DOM iframe.
+ * Forces the non-native popout path (`documentPictureInPicture` disabled) and makes `browser.open`
+ * return a fake window whose document is the iframe's, so the PiP content can be queried in tests
+ * through the returned `popoutIframe.contentDocument`.
+ *
+ * @returns {{ popoutWindow: Object, popoutIframe: HTMLIFrameElement }}
+ */
+export function mockPipWindow() {
+    const popoutIframe = document.createElement("iframe");
+    const outsideArea = document.createElement("div");
+    getFixture().appendChild(outsideArea);
+    const popoutWindow = {
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        closed: false,
+        get document() {
+            const doc = popoutIframe.contentDocument;
+            if (!doc) {
+                return undefined;
+            }
+            const originalWrite = doc.write;
+            doc.write = (content) => {
+                // This avoids duplicating the test script in the popoutWindow.
+                const sanitizedContent = content.replace(
+                    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+                    ""
+                );
+                originalWrite.call(doc, sanitizedContent);
+            };
+            return doc;
+        },
+        close() {
+            popoutWindow.closed = true;
+            popoutIframe.remove();
+        },
+    };
+    patchWithCleanup(window, { documentPictureInPicture: false });
+    patchWithCleanup(browser, {
+        open: () => {
+            popoutWindow.closed = false;
+            outsideArea.append(popoutIframe);
+            return popoutWindow;
+        },
+    });
+    return { popoutWindow, popoutIframe };
+}
+
+/**
  * A MockRemote represents the network API of a remote user, for example calling remote.updateUpload() behaves as if that remote user
  * had called this function on their own rtc_service.network
  *

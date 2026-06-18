@@ -108,6 +108,21 @@ export const CROSS_TAB_CLIENT_MESSAGE = {
 const PING_INTERVAL = 30_000;
 const UNAVAILABLE_AS_REMOTE = _t("This action can only be done in the call tab.");
 const CALL_FULLSCREEN_ID = Symbol("CALL_FULLSCREEN");
+/**
+ * Meeting view state that {@link Rtc.viewToRestore} brings back when leaving the temporary mode
+ * that replaced it (PIP or true browser fullscreen). The meeting view is always restored as the
+ * full-window overlay, as re-entering browser fullscreen requires a user gesture we cannot trigger
+ * programmatically.
+ *
+ * - `NONE`: there is nothing to restore.
+ * - `FULLSCREEN`: the full-window overlay (browser header kept visible).
+ *
+ * @typedef {"none"|"fullscreen"} ViewToRestore
+ */
+const VIEW_TO_RESTORE = Object.freeze({
+    NONE: "none",
+    FULLSCREEN: "fullscreen",
+});
 
 /**
  * @param {Array<RTCIceServer>} iceServers
@@ -323,15 +338,12 @@ export class Rtc extends Record {
     /** Whether the meeting view is open (either as the full-window overlay or true browser fullscreen). */
     isFullscreen = false;
     /**
-     * Whether the meeting view is in true browser fullscreen (no browser UI), as opposed to the
-     * full-window overlay that keeps the browser header. Only the fullscreen button toggles this;
-     * switching layouts/modes uses the full-window overlay.
+     * Meeting view state to restore when leaving the temporary mode that replaced it (PIP or true
+     * browser fullscreen), or `NONE` when there is nothing to restore.
+     *
+     * @type {ViewToRestore}
      */
-    isBrowserFullscreen = false;
-    /** Whether the meeting view was open before opening PIP. */
-    hadFullscreen = false;
-    /** Whether the meeting view was in true browser fullscreen before opening PIP. */
-    hadBrowserFullscreen = false;
+    viewToRestore = VIEW_TO_RESTORE.NONE;
     /** @type {RtcLog} */
     logs = {};
     notifications = proxy(new Map());
@@ -441,6 +453,14 @@ export class Rtc extends Record {
      */
     get isHost() {
         return Boolean(this.localSession);
+    }
+
+    /**
+     * Whether the meeting view is in true browser fullscreen (no browser UI)
+     * @returns {boolean}
+     */
+    get isBrowserFullscreen() {
+        return this.isFullscreen && this.fullscreen.isBrowserFullscreen;
     }
 
     get showMicrophonePermissionWarning() {
@@ -677,10 +697,12 @@ export class Rtc extends Record {
 
     async openPip(options) {
         if (this.isHost) {
-            this.hadFullscreen = this.isFullscreen;
-            this.hadBrowserFullscreen = this.isBrowserFullscreen;
             if (this.isFullscreen) {
                 this.exitFullscreen();
+                // Always restore as the full-window overlay: re-entering browser fullscreen
+                // requires a user gesture, which closing the PIP is not, so the request would be
+                // denied and leave us in the overlay anyway.
+                this.viewToRestore = VIEW_TO_RESTORE.FULLSCREEN;
             }
             await this.pipService.openPip(options);
             return;
@@ -829,20 +851,37 @@ export class Rtc extends Record {
      */
     async enterFullscreen(props, { browserFullscreen = false } = {}) {
         const Meeting = registry.category("discuss.call/components").get("Meeting");
+        this.viewToRestore =
+            browserFullscreen && this.isFullscreen && !this.isBrowserFullscreen
+                ? VIEW_TO_RESTORE.FULLSCREEN
+                : VIEW_TO_RESTORE.NONE;
         this.store.fullscreenChannel = this.channel;
-        this.isBrowserFullscreen = browserFullscreen;
         await this.fullscreen.enter(Meeting, {
             id: CALL_FULLSCREEN_ID,
-            keepBrowserHeader: !browserFullscreen,
+            browserFullscreen,
+            onExitBrowserFullscreen: browserFullscreen
+                ? () => this.exitBrowserFullscreen()
+                : undefined,
             props,
             rootId: this.rootEl?.getRootNode()?.host?.id,
         });
     }
 
     async exitFullscreen() {
+        this.viewToRestore = VIEW_TO_RESTORE.NONE;
         this.store.fullscreenChannel = null;
-        this.isBrowserFullscreen = false;
         await this.fullscreen.exit(CALL_FULLSCREEN_ID);
+    }
+
+    /**
+     * @returns {Promise<void>}
+     */
+    async exitBrowserFullscreen() {
+        if (this.viewToRestore === VIEW_TO_RESTORE.FULLSCREEN && this.channel) {
+            await this.enterFullscreen();
+            return;
+        }
+        await this.exitFullscreen();
     }
 
     /**
@@ -2528,13 +2567,10 @@ export const rtcService = {
         rtc.registerOnChange(rtc.pipService.state, "active", () => {
             const isPipMode = rtc.pipService.state.active;
             if (!isPipMode) {
-                if (rtc.hadFullscreen && rtc.channel) {
-                    rtc.enterFullscreen(undefined, {
-                        browserFullscreen: rtc.hadBrowserFullscreen,
-                    });
+                if (rtc.viewToRestore !== VIEW_TO_RESTORE.NONE && rtc.channel) {
+                    rtc.enterFullscreen();
                 }
-                rtc.hadFullscreen = false;
-                rtc.hadBrowserFullscreen = false;
+                rtc.viewToRestore = VIEW_TO_RESTORE.NONE;
                 rtc.channel?.openChatWindow();
             }
             rtc.isPipMode = isPipMode;
@@ -2547,9 +2583,6 @@ export const rtcService = {
         rtc.registerOnChange(rtc.fullscreen, "id", () => {
             const wasFullscreen = rtc.isFullscreen;
             rtc.isFullscreen = rtc.fullscreen.id === CALL_FULLSCREEN_ID;
-            if (!rtc.isFullscreen) {
-                rtc.isBrowserFullscreen = false;
-            }
             if (
                 rtc.screenTrack &&
                 rtc.displaySurface !== "browser" &&

@@ -213,7 +213,7 @@ registerCallAction("fullscreen", {
     onSelected: ({ channel, store }) => {
         channel.promoteFullscreen = CALL_PROMOTE_FULLSCREEN.DISCARDED;
         if (store.rtc.isBrowserFullscreen) {
-            store.rtc.exitFullscreen();
+            store.rtc.exitBrowserFullscreen();
         } else {
             store.rtc.closePip();
             store.rtc.enterFullscreen(undefined, { browserFullscreen: true });
