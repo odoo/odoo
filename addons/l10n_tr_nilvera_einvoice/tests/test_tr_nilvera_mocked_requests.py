@@ -1,4 +1,5 @@
 import re
+from base64 import b64encode
 from dateutil.relativedelta import relativedelta
 from functools import wraps
 from io import BytesIO
@@ -101,7 +102,10 @@ def mock_requests_request(method, url, *args, **kwargs):
                 response = xml.read().decode()
         elif '/pdf' in url:
             with file_open('l10n_tr_nilvera_einvoice/tests/test_files/fetching/invoice.pdf', 'rb') as pdf:
-                response = pdf.read()
+                # Nilvera's /pdf endpoint returns the PDF base64-encoded inside a JSON
+                # string body. NilveraClient.request() calls response.json() by default,
+                # so the caller receives a base64 str, not raw bytes.
+                response = b64encode(pdf.read()).decode()
         else:
             data = {
                     'TotalPages': 1,
@@ -288,3 +292,7 @@ class TestTRNilveraMockedRequests(TestUBLTRCommon):
             self.assertFalse(invoice.attachment_ids)
             self.assertTrue(invoice.ubl_cii_xml_id)  # XML file used at import
             self.assertTrue(invoice.l10n_tr_nilvera_pdf_id)
+            self.assertTrue(
+                invoice.l10n_tr_nilvera_pdf_id.raw.content.startswith(b'%PDF-'),
+                "PDF attachment must contain decoded PDF bytes, not base64 text",
+            )
