@@ -280,3 +280,36 @@ class TestAutomation(TransactionCaseWithUserDemo):
             f.trg_date_range = 2
             self.assertEqual(f.trg_date_range_mode, 'after')
             self.assertEqual(f.trg_date_range, 2)
+
+    def test_automation_rule_with_today_operator(self):
+        """ Simple on_create with admin user """
+        model = self.env.ref("base.model_res_partner")
+        automation = self.env["base.automation"].create({
+            "name": "Force Archived Contacts",
+            "trigger": "on_create_or_write",
+            "filter_domain": '["&", ("create_date", ">=", datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")), ("create_date", "<=", datetime.datetime.combine(context_today(), datetime.time(23, 59, 59)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]',
+            "model_id": model.id,
+            "trigger_field_ids": [(6, 0, [
+                self.env.ref("base.field_res_partner__name").id,
+                self.env.ref("base.field_res_partner__vat").id,
+            ])],
+        })
+
+        action = self.env["ir.actions.server"].create({
+            "name": "Set Active To False",
+            "base_automation_id": automation.id,
+            "state": "object_write",
+            "update_path": "active",
+            "update_boolean_value": "false",
+            "model_id": model.id,
+        })
+        automation.write({"action_server_ids": [Command.link(action.id)]})
+
+        # verify the partner can be created and the action still runs
+        bilbo = self.env["res.partner"].create({"name": "Bilbo Baggins"})
+        self.assertFalse(bilbo.active)
+
+        # verify the partner can be updated and the action still runs
+        bilbo.active = True
+        bilbo.name = "Bilbo"
+        self.assertFalse(bilbo.active)
