@@ -551,10 +551,6 @@ class AccountMove(models.Model):
         self.ensure_one()
         return False
 
-    def _can_be_unlinked(self):
-        self.ensure_one()
-        return (self.country_code != 'IN' or not self.posted_before) and super()._can_be_unlinked()
-
     def _generate_qr_code(self, silent_errors=False):
         self.ensure_one()
         if (
