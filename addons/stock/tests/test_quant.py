@@ -1498,6 +1498,64 @@ class TestStockQuant(TestStockCommon):
             'product_id': self.productA.id,
         }])
 
+    def test_request_quant_relocation(self):
+        different_location = self.env['stock.location'].create({
+            'name': 'Different Location',
+            'usage': 'internal',
+            'location_id': self.stock_location.warehouse_id.view_location_id.id,
+        })
+        package_1 = self.env['stock.package'].create({'name': 'PACK001'})
+        package_2 = self.env['stock.package'].create({'name': 'PACK002'})
+        lot_1 = self.env['stock.lot'].create({'name': 'SN001', 'product_id': self.productA.id, 'company_id': self.env.company.id})
+        lot_2 = self.env['stock.lot'].create({'name': 'SN002', 'product_id': self.productA.id, 'company_id': self.env.company.id})
+        quant_1 = self.env['stock.quant'].create({
+            'location_id': self.stock_location.id,
+            'product_id': self.productA.id,
+            'quantity': 1,
+            'lot_id': lot_1.id,
+            'package_id': package_1.id,
+        })
+
+        quant_2 = self.env['stock.quant'].create({
+            'location_id': different_location.id,
+            'product_id': self.productA.id,
+            'quantity': 1,
+            'lot_id': lot_2.id,
+            'package_id': package_2.id,
+        })
+
+        wizard_single = self.env['stock.quant.relocate'].create({
+            'quant_ids': quant_1,
+            'message': "Single Location Transfer",
+            'dest_location_id': self.shelf_2.id,
+        })
+        wizard_single.action_request_quants_relocation()
+        picking_single = self.env['stock.picking'].search([('origin', '=', 'Relocation Request: Single Location Transfer')])
+        self.assertEqual(len(picking_single), 1)
+        self.assertEqual(picking_single.location_id, self.stock_location)
+        self.assertEqual(len(picking_single.move_line_ids), 1)
+        self.assertEqual(picking_single.move_line_ids.lot_id, lot_1)
+        self.assertEqual(picking_single.move_line_ids.package_id, package_1)
+
+        wizard_multi = self.env['stock.quant.relocate'].create({
+            'quant_ids': quant_1 + quant_2,
+            'message': "Multi Location Transfer",
+            'dest_location_id': self.shelf_2.id,
+        })
+        wizard_multi.action_request_quants_relocation()
+        pickings_multi = self.env['stock.picking'].search([('origin', '=', 'Relocation Request: Multi Location Transfer')])
+        self.assertEqual(len(pickings_multi), 2)
+
+        picking_1 = pickings_multi.filtered(lambda p: p.location_id == self.stock_location)
+        self.assertTrue(picking_1)
+        self.assertEqual(picking_1.move_line_ids.lot_id, lot_1)
+        self.assertEqual(picking_1.move_line_ids.package_id, package_1)
+
+        picking_2 = pickings_multi.filtered(lambda p: p.location_id == different_location)
+        self.assertTrue(picking_2)
+        self.assertEqual(picking_2.move_line_ids.lot_id, lot_2)
+        self.assertEqual(picking_2.move_line_ids.package_id, package_2)
+
 
 class TestStockQuantRemovalStrategy(TestStockCommon):
 
