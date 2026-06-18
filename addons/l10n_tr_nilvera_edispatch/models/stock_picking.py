@@ -361,6 +361,9 @@ class StockPicking(models.Model):
             'mimetype': 'application/xml',
         })
         self.invalidate_recordset(fnames=['l10n_tr_nilvera_edispatch_xml_id', 'l10n_tr_nilvera_edispatch_xml_file'])
+        # Has to be manually tiggered since the field is stored and the update on l10n_tr_nilvera_edispatch_xml_file
+        # Does not happen even when the file changes
+        self._compute_linked_attachment_id('l10n_tr_nilvera_edispatch_xml_id', 'l10n_tr_nilvera_edispatch_xml_file')
         self.message_post(
             body=_("e-Dispatch XML file generated successfully."),
             attachment_ids=[attachment.id],
