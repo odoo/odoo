@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="html_builder.BuilderNumberInputSelect" t-inherit="html_builder.BuilderSelect">
+    <xpath expr="//BuilderComponent//Dropdown" position="replace">
+        <BuilderInputNumberDropdown state="this.dropdown" menuClass="this.props.dropdownClass" closeOnClickAway.bind="this.closeOnClickAway">
+            <div t-ref="this.inputRef">
+                <div t-if="this.showNumberInput()" class="d-flex">
+                    <BuilderNumberInput
+                        action="this.props.builderAction"
+                        actionParam="this.props.builderActionParam"
+                        unit="'px'"
+                        min="0"
+                        composable="true"
+                    />
+                </div>
+                <div t-else="" class="d-flex">
+                    <t t-call="html_builder.BuilderNumberText" />
+                </div>
+            </div>
+            <t t-set-slot="content">
+                <div
+                    t-att-class="this.props.dropdownContainerClass"
+                    data-prevent-closing-overlay="true"
+                    t-on-click="(event) =>this.updateShowNumberInput(false)"
+                >
+                    <t t-call-slot="default" />
+                </div>
+            </t>
+        </BuilderInputNumberDropdown>
+    </xpath>
+</t>
+
+<t t-name="html_builder.BuilderNumberText">
+    <div class="d-flex flex-row flex-nowrap w-100 align-items-baseline o-hb-input-field-number justify-content-end">
+        <input class="o-hb-input-base o-hb-input-number text-end" t-att-value="this.label()" />
+    </div>
+</t>
+
+</templates>

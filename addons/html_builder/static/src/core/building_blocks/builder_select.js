@@ -26,6 +26,18 @@ export class WithIgnoreItem extends Component {
     }
 }
 
+export const builderSelectProps = {
+    ...basicContainerBuilderComponentProps,
+    className: t.string().optional(),
+    dropdownContainerClass: t.string().optional(),
+    disabled: t.boolean().optional(),
+    slots: t.object({
+        default: t.object(), // Content is not optional
+        fixedButton: t.object().optional(),
+    }),
+    dropdownClass: t.string().optional("o-hb-select-dropdown"),
+};
+
 export class BuilderSelect extends Component {
     static components = {
         Dropdown,
@@ -34,17 +46,7 @@ export class BuilderSelect extends Component {
     };
     static template = "html_builder.BuilderSelect";
 
-    props = useProps({
-        ...basicContainerBuilderComponentProps,
-        className: t.string().optional(),
-        dropdownContainerClass: t.string().optional(),
-        disabled: t.boolean().optional(),
-        slots: t.object({
-            default: t.object(), // Content is not optional
-            fixedButton: t.object().optional(),
-        }),
-        dropdownClass: t.string().optional("o-hb-select-dropdown"),
-    });
+    props = useProps(builderSelectProps);
     buttonRef = signal.ref();
     rootRef = signal.ref();
     contentRef = signal.ref();
@@ -54,27 +56,28 @@ export class BuilderSelect extends Component {
 
         this.dropdown = useDropdownState();
 
-        let currentLabel;
-        const updateCurrentLabel = () => {
-            if (!this.props.slots.fixedButton) {
-                const newHtml = currentLabel || _t("None");
-                const buttonEl = this.buttonRef();
-                if (buttonEl && buttonEl.innerHTML !== newHtml) {
-                    setElementContent(buttonEl, newHtml);
-                }
-            }
-        };
+        this.currentLabel = null;
         useSelectableComponent(this.props, {
-            onItemChange(item) {
-                currentLabel = item.getLabel();
-                updateCurrentLabel();
+            onItemChange: (item) => {
+                this.currentLabel = item.getLabel();
+                this.updateCurrentLabel();
             },
         });
-        onMounted(updateCurrentLabel);
+        onMounted(() => this.updateCurrentLabel());
         useSubEnv({
             onSelectItem: () => {
                 this.dropdown.close();
             },
         });
+    }
+
+    updateCurrentLabel() {
+        if (!this.props.slots.fixedButton) {
+            const newHtml = this.currentLabel || _t("None");
+            const buttonEl = this.buttonRef();
+            if (buttonEl && buttonEl.innerHTML !== newHtml) {
+                setElementContent(buttonEl, newHtml);
+            }
+        }
     }
 }
