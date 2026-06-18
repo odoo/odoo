@@ -16,6 +16,7 @@ class VendorDelayReport(models.Model):
     date = fields.Datetime('Effective Date', readonly=True)
     qty_total = fields.Float('Total Quantity', readonly=True)
     qty_on_time = fields.Float('On-Time Quantity', readonly=True)
+    qty_received = fields.Float('Quantity Received', readonly=True)
     on_time_rate = fields.Float('On-Time Delivery Rate', readonly=True)
 
     def init(self):
@@ -29,6 +30,7 @@ SELECT pol.id                   AS id,
        Min(pc.id)               AS category_id,
        pol.partner_id           AS partner_id,
        pol.product_uom_qty      AS qty_total,
+       pol.qty_received         AS qty_received,
        Sum(CASE
              WHEN (m.state = 'done' and pol.date_promised::date >= m.date::date) THEN ((ml.quantity * ml_uom.factor) / pt_uom.factor)
              ELSE 0
@@ -48,14 +50,16 @@ FROM   stock_move m
          ON ml.move_id = m.id
        LEFT JOIN uom_uom ml_uom
          ON ml_uom.id = ml.uom_id
+WHERE  pt.type != 'service'
+       AND pol.qty_received > 0
+       AND pol.date_promised IS NOT NULL
 GROUP  BY pol.id
 )""")
 
     def _read_group_select(self, table, aggregate_spec):
         if aggregate_spec == 'on_time_rate:sum':
-            # Make a weigthed average instead of simple average for these fields
             return SQL(
-                'CASE WHEN SUM(%s) !=0 THEN SUM(%s) / SUM(%s) * 100 ELSE 100 END',
+                'CASE WHEN SUM(%s) !=0 THEN SUM(%s) / SUM(%s) ELSE 1 END',
                 table.qty_total, table.qty_on_time, table.qty_total,
             )
         return super()._read_group_select(table, aggregate_spec)
