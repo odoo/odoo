@@ -36,6 +36,7 @@ export class MessagingMenu extends Component {
         this.state = proxy({
             activeIndex: null,
             adding: false,
+            activeFilterPill: "all",
         });
         this.dropdown = useDropdownState();
         this.discussSystray = useDiscussSystray(this.dropdown);
@@ -150,6 +151,17 @@ export class MessagingMenu extends Component {
         return this.store.menuThreads;
     }
 
+    get filteredThreads() {
+        if (!this.shouldShowConversationPills) {
+            return this.threads;
+        }
+        const pill = this.pills.find((p) => p.id === this.state.activeFilterPill);
+        if (!pill?.filter) {
+            return this.threads;
+        }
+        return this.threads.filter((thread) => pill.filter(thread));
+    }
+
     get visibleStandaloneMessages() {
         const tab = this.store.discuss.activeTab;
         if (tab !== "notification") {
@@ -167,25 +179,60 @@ export class MessagingMenu extends Component {
     get _tabs() {
         return [
             {
-                counter: this.store.discuss.chatCategory.channelsWithCounter.length,
-                icon: "oi oi-users",
-                id: "chat",
-                label: _t("Chats"),
-                sequence: 20,
-            },
-            {
+                icon: "fa fa-comment-o",
+                activeIcon: "fa fa-comment",
+                id: "conversations",
+                label: _t("Conversations"),
+                sequence: 30,
+                counter: this.store.discuss.allCategories.reduce(
+                    (acc, cat) => acc + cat.channelsWithCounter.length,
+                    0
+                ),
                 channelHasUnread: Boolean(this.store.discuss.unreadChannels.length),
-                counter: this.store.discuss.channelCategory.channelsWithCounter.length,
-                icon: "fa fa-hashtag",
-                id: "channel",
-                label: _t("Channels"),
-                sequence: 40,
             },
         ];
     }
 
     get tabs() {
         return this._tabs.sort((t1, t2) => t1.sequence - t2.sequence);
+    }
+
+    get pills() {
+        const pills = [
+            {
+                id: "all",
+                icon: "fa fa-inbox",
+                label: _t("All"),
+                counter: this.store.discuss.allCategories.reduce(
+                    (acc, cat) => acc + cat.channelsWithCounter.length,
+                    0
+                ),
+            },
+        ];
+        for (const category of this.store.discuss.allCategories) {
+            if (!category.isVisible) {
+                continue;
+            }
+            pills.push({
+                id: category.id,
+                icon: category.icon,
+                label: category.name,
+                counter: category.channelsWithCounter.length,
+                filter: (thread) => thread.channel?.discussAppCategory?.eq(category),
+            });
+        }
+        return pills;
+    }
+
+    get shouldShowConversationPills() {
+        return this.ui.isSmall && this.store.discuss.activeTab === "conversations";
+    }
+
+    onClickPillFilter(pillId) {
+        if (this.state.activeFilterPill === pillId) {
+            return;
+        }
+        this.state.activeFilterPill = pillId;
     }
 
     onClickNavTab(tabId) {

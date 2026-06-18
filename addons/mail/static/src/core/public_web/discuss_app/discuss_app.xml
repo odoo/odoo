@@ -4,7 +4,7 @@
 <t t-name="mail.Discuss">
     <div class="o-mail-Discuss d-flex h-100 flex-grow-1" t-att-class="{ 'flex-column align-items-center': this.ui.isSmall, 'border-top border-dark o-border-opacity-15': !this.ui.isSmall }" t-att-data-active="this.store.discuss.isActive" t-custom-ref="root">
         <DiscussSidebar t-if="!this.ui.isSmall and this.props.hasSidebar"/>
-        <DiscussContent t-if="!this.ui.isSmall" thread="this.props.thread"/>
+        <DiscussContent t-if="!this.ui.isSmall" thread="this.props.thread"/>    
         <MessagingMenu t-if="this.ui.isSmall"/>
     </div>
 </t>

@@ -9,7 +9,17 @@
     <div t-att-class="`${this.discussSystray.contentClass} o-mail-MessagingMenu ${this.ui.isSmall ? 'o-small' : ''}`">
         <t name="before-content"/>
         <DiscussContent t-if="['inbox', 'bookmark'].includes(this.store.discuss.activeTab) and this.ui.isSmall"/>
-        <div t-else="" class="o-mail-MessagingMenu-list d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1 list-group list-group-flush o-scrollbar-thin" t-custom-ref="notification-list">
+        <t t-else="">
+        <div t-if="this.ui.isSmall and this.store.discuss.activeTab === 'conversations'" class="o-mail-MessagingMenu-pillbar d-flex flex-shrink-0 align-items-center gap-2 px-2 py-2 overflow-x-auto border-bottom">
+            <button t-foreach="this.pills" t-as="pill" t-key="pill.id" class="o-mail-MessagingMenu-pill btn btn-sm d-inline-flex align-items-center flex-shrink-0 gap-1 px-3 rounded-pill position-relative" t-att-class="{  'active': pill.id === this.state.activeFilterPill,
+            'pe-none': pill.id === this.state.activeFilterPill
+            }" t-on-click="() => this.onClickPillFilter(pill.id)" t-att-aria-label="pill.label">
+                <i t-if="pill.icon" t-attf-class="o-mail-MessagingMenu-pillIcon {{ pill.icon }}"/>
+                <span class="o-mail-MessagingMenu-pillLabel" t-out="pill.label"/>
+                <span t-if="pill.counter" class="o-mail-MessagingMenu-pillCounter badge o-discuss-badge rounded-pill" t-out="pill.counter"/>
+            </button>
+        </div>
+        <div class="o-mail-MessagingMenu-list d-flex flex-column overflow-auto o-scrollbar-thin flex-grow-1 list-group list-group-flush o-scrollbar-thin" t-custom-ref="notification-list">
             <t t-set="itemIndex" t-value="0"/>
             <t t-foreach="this.visibleStandaloneMessages" name="standaloneInboxMessages" t-as="message" t-key="message.id">
                 <NotificationItem
@@ -33,7 +43,7 @@
                 </NotificationItem>
                 <t t-set="itemIndex" t-value="itemIndex + 1"/>
             </t>
-            <t t-foreach="this.threads" name="threads" t-as="thread" t-key="thread.localId">
+            <t t-foreach="this.filteredThreads" name="threads" t-as="thread" t-key="thread.localId">
                 <t t-set="message" t-value="thread.channel?.isChatChannel or (thread.channel?.channel_type === 'channel' and thread.needactionMessages.length === 0) ? thread.newestPersistentOfAllMessage : thread.needactionMessages.at(-1)"/>
                 <NotificationItem
                     isActive="this.state.activeIndex === itemIndex"
@@ -75,6 +85,7 @@
                 <div class="d-flex align-items-center justify-content-center gap-2 py-4 px-2"><span class="o-visible-short-delay"><i class="fa fa-circle-o-notch fa-spin me-1"/> Loading…</span></div>
             </t>
         </div>
+        </t>
     </div>
     <nav t-if="this.ui.isSmall" t-attf-class="o-mail-MessagingMenu-navbar d-flex flex-shrink-0 border-top w-100 p-2 gap-2 o-mail-MessagingMenu-navbar-with-{{this.tabs.length}}-elements {{ this.tabs.length > 4 ? 'overflow-x-scroll' : '' }}">
         <button t-foreach="this.tabs" t-key="tab.id" t-as="tab" class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center flex-grow-1 flex-shrink-1 p-1 bg-transparent position-relative border-0" t-att-class="{

@@ -57,6 +57,12 @@ patch(Store.prototype, {
             },
         });
     },
+    tabToThreadType(tab) {
+        if (tab === "conversations") {
+            return ["chat", "group", "channel"];
+        }
+        return super.tabToThreadType(...arguments);
+    },
     onStarted() {
         super.onStarted(...arguments);
         this.discuss = { activeTab: "notification" };

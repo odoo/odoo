@@ -48,6 +48,7 @@ patch(MessagingMenu.prototype, {
     },
     beforeOpen() {
         this.state.searchOpen = false;
+        this.state.activeFilterPill = "all";
         this.store.discuss.searchTerm = "";
         this.store.isReadyPromise.then(() => {
             if (
