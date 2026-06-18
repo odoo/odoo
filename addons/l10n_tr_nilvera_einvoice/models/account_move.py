@@ -1,5 +1,6 @@
 import logging
 import uuid
+from base64 import b64decode
 from datetime import timedelta
 from json import JSONDecodeError
 from urllib.parse import quote, urlencode, urlparse
@@ -601,7 +602,7 @@ class AccountMove(models.Model):
             'res_id': invoice.id,
             'res_field': 'l10n_tr_nilvera_pdf_file',
             'res_model': 'account.move',
-            'raw': response,
+            'raw': b64decode(response),
             'type': 'binary',
             'mimetype': 'application/pdf',
         })
