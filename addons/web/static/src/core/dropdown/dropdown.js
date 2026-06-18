@@ -395,6 +395,8 @@ export class Dropdown extends Component {
                 subtree: true,
             });
         }
+
+        // this.alignGroupIcons();
     }
 
     onClosed() {
@@ -414,4 +416,50 @@ export class Dropdown extends Component {
             this.observer = null;
         }
     }
+
+    // alignGroupIcons() {
+    //     const menuEl = this.menuRef.el;
+    //     if (!menuEl) {
+    //         return;
+    //     }
+
+    //     let currentGroup = [];
+    //     const groups = [currentGroup];
+
+    //     Array.from(menuEl.children).forEach((child) => {
+    //         if (child.classList.contains("dropdown-divider")) {
+    //             currentGroup = [];
+    //             groups.push(currentGroup);
+    //         } else if (child.classList.contains("dropdown-item")) {
+    //             currentGroup.push(child);
+    //         }
+    //     });
+
+    //     groups.forEach((group) => {
+    //         // Check if any item in this group has an icon (adjust selectors based on your icon classes)
+    //         const groupHasIcon = group.some((item) => item.querySelector(".fa, .oi"));
+
+    //         if (groupHasIcon) {
+    //             group.forEach((item) => {
+    //                 const hasIcon = item.querySelector(".fa, .oi");
+
+    //                 if (!hasIcon && !item.querySelector(".o-invisible-spacer")) {
+    //                     const spacer = document.createElement("i");
+    //                     spacer.className = "fa fa-fw oi-fw me-1 opacity-0 o-invisible-spacer";
+    //                     spacer.setAttribute("aria-hidden", "true");
+
+    //                     item.prepend(spacer);
+    //                 }
+    //             });
+    //         } else {
+    //             // clean up spacers if state changes dynamically and group no longer has icons
+    //             group.forEach((item) => {
+    //                 const spacer = item.querySelector(".o-invisible-spacer");
+    //                 if (spacer) {
+    //                     spacer.remove();
+    //                 }
+    //             });
+    //         }
+    //     });
+    // }
 }
