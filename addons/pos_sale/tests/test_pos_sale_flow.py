@@ -2394,6 +2394,52 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_pos_tour('test_settle_so_custom_attribute_value', login="accountman")
 
+    def test_downpayment_rounding_discrepancy(self):
+        """
+        Test that a 100% downpayment on a Sale Order does not result in a 1 cent discrepancy
+        """
+        tax_15 = self.env['account.tax'].create({
+            'name': 'Tax 15%',
+            'amount': 15,
+            'amount_type': 'percent',
+        })
+
+        product_a = self.env['product.product'].create({
+            'name': 'Product A 5503.26',
+            'available_in_pos': True,
+            'lst_price': 5503.26,
+            'taxes_id': [odoo.Command.set([tax_15.id])],
+        })
+
+        product_b = self.env['product.product'].create({
+            'name': 'Product B 4058.04',
+            'available_in_pos': True,
+            'lst_price': 4058.04,
+            'taxes_id': [odoo.Command.set([tax_15.id])],
+        })
+
+        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'order_line': [
+                odoo.Command.create({
+                    'product_id': product_a.id,
+                    'product_uom_qty': 7,
+                    'price_unit': product_a.lst_price,
+                }),
+                odoo.Command.create({
+                    'product_id': product_b.id,
+                    'product_uom_qty': 2,
+                    'price_unit': product_b.lst_price,
+                })
+            ],
+        })
+        sale_order.action_confirm()
+        self.main_pos_config.down_payment_product_id = self.env.ref("pos_sale.default_downpayment_product")
+        self.main_pos_config.open_ui()
+        self.start_pos_tour('test_downpayment_rounding_discrepancy', login="accountman")
+
 
 @odoo.tests.tagged('post_install', '-at_install')
 class TestPosSaleAccount(TestPoSCommon):
