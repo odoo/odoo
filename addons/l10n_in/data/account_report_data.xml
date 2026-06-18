@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_in_account_invoices_duplicate" model="ir.actions.report">
+            <field name="name">Duplicate (2 Copies)</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_in.l10n_in_invoice_document_duplicate</field>
+            <field name="report_file">l10n_in.l10n_in_invoice_document_duplicate</field>
+            <field name="print_report_name">"%s (2 Copies)" % (object._get_report_base_filename())</field>
+            <field name="binding_model_id" ref="model_account_move"/>
+            <field name="binding_type">report</field>
+            <field name="domain" eval="[('move_type', 'in', ['out_invoice', 'out_refund', 'in_refund'])]"/> 
+        </record>
+        <record id="l10n_in_account_invoices_triplicate" model="ir.actions.report">
+            <field name="name">Triplicate (3 Copies)</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_in.l10n_in_invoice_document_triplicate</field>
+            <field name="report_file">l10n_in.l10n_in_invoice_document_triplicate</field>
+            <field name="print_report_name">"%s (3 Copies)" % (object._get_report_base_filename())</field>
+            <field name="binding_model_id" ref="model_account_move"/>
+            <field name="binding_type">report</field>
+            <field name="domain" eval="[('move_type', 'in', ['out_invoice', 'out_refund', 'in_refund'])]"/>
+        </record>
+    </data>
+</odoo>
