@@ -28,6 +28,7 @@ export const seoContext = proxy({
     defaultTitle: "",
     updatedAlts: [],
     brokenLinks: [],
+    isFillingWithAi: false,
 });
 
 const LINK_CHECK_BASE_OPTIONS = {
@@ -942,12 +943,16 @@ export class OptimizeSEODialog extends Component {
     };
     static props = {
         close: Function,
+        autoFillWithAi: { type: Boolean, optional: true },
+        // Opened from the builder: skip the reload on save to keep unsaved edits.
+        reloadOnSave: { type: Boolean, optional: true },
     };
 
     setup() {
         this.website = useService("website");
         this.dialogs = useService("dialog");
         this.orm = useService("orm");
+        this.seoContext = proxy(seoContext);
 
         this.title = _t("Search Engine Optimization");
         this.saveButton = _t("Save");
@@ -1141,6 +1146,11 @@ export class OptimizeSEODialog extends Component {
         }
 
         await Promise.all(rpcCalls);
+
+        if (this.props.reloadOnSave === false) {
+            // Reloading here would discard unsaved builder edits.
+            return;
+        }
 
         this.website.goToWebsite({
             path: this.url.replace(
