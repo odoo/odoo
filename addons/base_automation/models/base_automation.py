@@ -683,6 +683,7 @@ class BaseAutomation(models.Model):
         self.ensure_one()
         model = self.env[self.model_name]
         eval_context = {
+            'context_today': safe_eval.datetime.datetime.today,
             'datetime': safe_eval.datetime,
             'dateutil': safe_eval.dateutil,
             'time': safe_eval.time,
@@ -741,6 +742,7 @@ class BaseAutomation(models.Model):
                 # this context flag enables to detect the executions of
                 # automations while evaluating their postcondition
                 records = records.with_context(__action_feedback=True)
+            self_sudo.filter_domain = self_sudo.filter_domain.replace('.to_utc()', '')
             domain = safe_eval.safe_eval(self_sudo.filter_domain, self._get_eval_context())
             return records.sudo().filtered_domain(domain).with_env(records.env), domain
         else:
