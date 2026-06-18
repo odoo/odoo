@@ -17,13 +17,7 @@ export class HrHolidaysGraphRenderer extends GraphRenderer {
         let data = super.getBarChartData();
         for (let index = 0; index < data.datasets.length; ++index) {
             const dataset = data.datasets[index];
-            // dataset.label takes the form 'Mitchell Admin / Paid Time Off / Allocation'.
-            if (dataset.label.split(this.delimiter).includes(this.model.allocation_label)){
-                dataset.stack = this.model.allocation_label;
-            }
-            else if (dataset.label.split(this.delimiter).includes(this.model.timeoff_label)){
-                dataset.stack = this.model.timeoff_label;
-            }
+            this._assignDatasetStack(dataset);
         }
 
         if (!(data.datasets.every(dataset => dataset.stack === this.model.allocation_label)
@@ -39,17 +33,32 @@ export class HrHolidaysGraphRenderer extends GraphRenderer {
         return data;
     }
 
+    _assignDatasetStack(dataset) {
+        // dataset.label takes the form 'Mitchell Admin / Paid Time Off / Allocation'.
+        const parts = dataset.label.split(this.delimiter);
+        if (parts.includes(this.model.allocation_label)) {
+            dataset.stack = this.model.allocation_label;
+        } else if (parts.includes(this.model.timeoff_label)) {
+            dataset.stack = this.model.timeoff_label;
+        }
+    }
+
+    _getBalanceLabel(labelPart) {
+        if (
+            labelPart === this.model.allocation_label ||
+            labelPart === this.model.timeoff_label
+        ) {
+            return this.balance_label;
+        }
+        return labelPart;
+    }
+
     _computeBalanceDatasets(data) {
         this.balance_label = _t('Balance')
         const datasetsByLabel = Object.groupBy(data.datasets, (dataset) =>
             dataset.label
                 .split(this.delimiter)
-                .map((labelPart) =>
-                    labelPart === this.model.allocation_label ||
-                    labelPart === this.model.timeoff_label
-                        ? this.balance_label
-                        : labelPart
-                )
+                .map((labelPart) => this._getBalanceLabel(labelPart))
                 .join(this.delimiter)
         );
         this.datasets_offset = data.datasets.length;
