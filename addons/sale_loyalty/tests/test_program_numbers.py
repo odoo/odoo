@@ -58,24 +58,58 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             len(order.order_line.ids), 1, "Free Large Cabinet should have been removed"
         )
 
-        # Free product in cart will be considered as paid product when changing quantity of paid
-        # product, so the free product quantity computation will be wrong.
-        # 75 Large Cabinet in cart, 25 free, set quantity to 6 Large Cabinet, you should have 2 free
-        # Large Cabinet, but you get 8 because it adds the 25 initial free Large Cabinet to the
-        # total paid Large Cabinet when computing (25+10 > 35 > /4 = 8 free Large Cabinet).
+        # A reward claim grants reward_product_qty (1 here) per claim, regardless of how many
+        # points are available. Previously, a single claim granted
+        # floor(points / required_points) * reward_product_qty, so 75 Large Cabinets (75 points,
+        # 3 required) gave 25 free Large Cabinets at once. Now each claim grants
+        # only 1 free Large Cabinet.
         sol1.product_uom_qty = 75
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(
             sum(order.order_line.filtered(lambda x: x.is_reward_line).mapped("product_uom_qty")),
-            25,
-            "We should have 25 Free Large Cabinet",
+            1,
+            "The claim should have created a single line of 1 Free Large Cabinet",
         )
         sol1.product_uom_qty = 6
         self._auto_rewards(order, self.all_programs)
         self.assertEqual(
             sum(order.order_line.filtered(lambda x: x.is_reward_line).mapped("product_uom_qty")),
             2,
-            "We should have 2 Free Large Cabinet",
+            "We should have 2 Free Large Cabinet lines, one per claim",
+        )
+        self.assertEqual(
+            len(order.order_line.filtered(lambda x: x.is_reward_line)),
+            2,
+            "We should have 2 separate reward lines, one per claim",
+        )
+
+    def test_program_numbers_free_product_clear_wallet(self):
+        # 6 Large Cabinets = 6 points; with clear_wallet, one claim costs all of them,
+        # so only 1 free Large Cabinet is granted and no second claim is possible.
+        self.p2.reward_ids.clear_wallet = True
+        order = self.empty_order
+        self.env["sale.order.line"].create({
+            "product_id": self.largeCabinet.id,
+            "name": "Large Cabinet",
+            "product_uom_qty": 6.0,
+            "order_id": order.id,
+        })
+
+        self._auto_rewards(order, self.p2)
+        reward_lines = order.order_line.filtered(lambda x: x.is_reward_line)
+        self.assertEqual(len(reward_lines), 1, "We should have 1 reward line")
+        self.assertEqual(
+            reward_lines.product_uom_qty,
+            1,
+            "Clearing the wallet should still grant only 1 Free Large Cabinet",
+        )
+        self.assertEqual(reward_lines.points_cost, 6, "The claim should have cost all the points")
+
+        self._auto_rewards(order, self.p2)
+        self.assertEqual(
+            len(order.order_line.filtered(lambda x: x.is_reward_line)),
+            1,
+            "Without any point left, the reward should not be claimed a second time",
         )
 
     def test_program_numbers_check_eligibility(self):
@@ -455,9 +489,9 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
         # --------------------------------------------------------------------------------
-        # Free ConferenceChair |  2  |   -100.00  | 10% incl | -181.82 | -200.00 |  -18.18
-        # Free Pedal Bin       |  5  |   -100.00  | /        | -500.00 | -500.00 |       /
-        # Free Large Cabinet   |  3  |   -100.00  | 15% excl | -300.00 | -345.00 |  -45.00
+        # Free ConferenceChair |  1  |   -100.00  | 10% incl | -181.82 | -200.00 |  -18.18
+        # Free Pedal Bin       |  1  |   -100.00  | /        | -500.00 | -500.00 |       /
+        # Free Large Cabinet   |  1  |   -100.00  | 15% excl | -300.00 | -345.00 |  -45.00
         # --------------------------------------------------------------------------------
         # TOTAL AFTER APPLYING FREE PRODUCT PROGRAMS         | 1594.95 | 1901.11 |  306.16
 
@@ -497,7 +531,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             12,
             "Recomputing tax on sale order lines should not change number of order line",
         )
-        self._auto_rewards(order, self.all_programs)
+        order._update_programs_and_rewards()
         self.assertRecordValues(order, [{"amount_total": 1711.0, "amount_untaxed": 1435.45}])
         self.assertEqual(
             len(order.order_line.ids),
@@ -507,7 +541,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # -- End test inside the test
 
         # Now we want to apply a 20% discount only on Large Cabinet
-        self.all_programs |= self.env["loyalty.program"].create({
+        pc20_large_cabinet = self.env["loyalty.program"].create({
             "name": "20% reduction on Large Cabinet in cart",
             "trigger": "auto",
             "program_type": "promotion",
@@ -524,7 +558,8 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
                 })
             ],
         })
-        self._auto_rewards(order, self.all_programs)
+        self.all_programs |= pc20_large_cabinet
+        self._auto_rewards(order, pc20_large_cabinet)
 
         # 20% on large cabinet which are already discounted by 10%
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
@@ -554,13 +589,12 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         # Add back the coupon to continue the test flow
         self._apply_promo_code(order, "test_10pc")
-        self._auto_rewards(order, self.all_programs)
         self.assertEqual(len(order.order_line.ids), 13, "The 10% discount line should be back")
 
         # Check that if you change a product qty, his discount tax line got updated
         self.p_conference_chair.rule_ids.reward_point_amount = 0.752
         sol2.product_uom_qty = 4
-        self._auto_rewards(order, self.all_programs)
+        order._update_programs_and_rewards()
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
         # --------------------------------------------------------------------------------
         # Large Cabinet        |  4  |    100.00  | 15% excl |  400.00 |  460.00 |   60.00
@@ -569,9 +603,9 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # Drawer Black         |  2  |    100.00  | 15% excl |  200.00 |  230.00 |   30.00
         # Product A            |  3  |    100.00  | 35% incl |  222.22 |  411.11 |  188.89
         #                                           50% excl
-        # Free - Large Cabinet |  3  |      0.00  | 15% excl |    0.00 |    0.00 |    0.00
-        # Free - Conference Ch |  3  |      0.00  | 10% incl |    0.00 |    0.00 |    0.00
-        # Free - Pedal Bins    |  5  |      0.00  | /        |    0.00 |    0.00 |       /
+        # Free - Large Cabinet |  1  |      0.00  | 15% excl |    0.00 |    0.00 |    0.00
+        # Free - Conference Ch |  1  |      0.00  | 10% incl |    0.00 |    0.00 |    0.00
+        # Free - Pedal Bins    |  1  |      0.00  | /        |    0.00 |    0.00 |       /
         # 20% on Large Cabinet |  1  |    -80.00  | 15% excl |  -80.00 |  -92.00 |  -12.00
         # 10% on tax 15% excl  |  1  |    -52.00  | 15% excl |  -52.00 |  -59.80 |   -7.80
         # 10% on tax 10% excl  |  1  |    -40.00  | 15% excl |  -36.36 |  -40.00 |   -3.64
@@ -591,7 +625,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # Check that if you remove a product, his reward lines got removed, especially the discount
         # per tax one.
         sol2.unlink()
-        self._auto_rewards(order, self.all_programs)
+        order._update_programs_and_rewards()
         # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
         # --------------------------------------------------------------------------------
         # Pedal Bins           |  5  |    100.00  | /        |  500.00 |  500.00 |       /
@@ -599,8 +633,8 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         # Drawer Black         |  2  |    100.00  | 15% excl |  200.00 |  230.00 |   30.00
         # Product A            |  3  |    100.00  | 35% incl |  222.22 |  411.11 |  188.89
         #                                           50% excl
-        # Pedal Bins           |  5  |      0.00  | /        |    0.00 |    0.00 |       /
-        # Large Cabinet        |  3  |      0.00  | 15% excl |    0.00 |    0.00 |    0.00
+        # Pedal Bins           |  1  |      0.00  | /        |    0.00 |    0.00 |       /
+        # Large Cabinet        |  1  |      0.00  | 15% excl |    0.00 |    0.00 |    0.00
         # 20% on Large Cabinet |  1  |    -80.00  | 15% excl |  -80.00 |  -92.00 |  -12.00
         # 10% on tax 15% excl  |  1  |    -52.00  | 15% excl |  -52.00 |  -59.80 |   -7.80
         # 10% on no tax        |  1  |    -50.00  | /        |  -50.00 |  -50.00 |       /
