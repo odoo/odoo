@@ -89,13 +89,43 @@ PID_COLORS = (
 )
 
 
-class ColoredFormatter(logging.Formatter):
-    def format(self, record):
+class ColoredPercentStyle(logging.PercentStyle):
+    def __init__(self, fmt, colors, *, defaults=None):
+        super().__init__(fmt, defaults=defaults)
+        self.colors = colors
+
+    def _format(self, record):
+        colors = self.colors or tools.config.colors  # tools.config.colors may be updated after the Formatter initialization, so we need to get the latest value
+        acc = {}
         fg_color, bg_color = LEVEL_COLOR_MAPPING.get(record.levelno, (GREEN, DEFAULT))
-        if tools.config.colors['loglevel']:
-            record.levelname = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
-        if tools.config.colors['pid']:
-            record.process = TRUE_COLOR_PATTERN % (PID_COLORS[record.thread_native % len(PID_COLORS)], record.thread_native)
+        if colors['loglevel']:
+            acc['levelname'] = COLOR_PATTERN % (30 + fg_color, 40 + bg_color, record.levelname)
+        if colors['pid']:
+            acc['process'] = TRUE_COLOR_PATTERN % (PID_COLORS[record.thread_native % len(PID_COLORS)], record.thread_native)
+        values = record.__dict__ | acc if acc else record.__dict__
+        return self._fmt % values
+
+
+class Formatter(logging.Formatter):
+    default_format = '%(asctime)s %(process)s %(levelname)s %(dbname)s %(name)s: %(message)s'
+
+    def __init__(self, fmt=None, **kwargs):
+        if fmt is None:
+            fmt = self.default_format
+        super().__init__(fmt=fmt, **kwargs)
+
+
+class ColoredFormatter(Formatter):
+    def __init__(self, fmt=None, datefmt=None, style='%', validate=True, *, defaults=None, colors=None):
+        if fmt is None:
+            fmt = self.default_format
+        fmt = fmt.replace('%(message)s', '%(colored_message)s')
+        super().__init__(fmt=fmt, datefmt=datefmt, style=style, validate=validate, defaults=defaults)
+        self._style = ColoredPercentStyle(fmt, colors=colors)
+
+    def format(self, record):
+        if not hasattr(record, 'colored_message'):
+            record.colored_message = record.getMessage()
         return super().format(record)
 
 

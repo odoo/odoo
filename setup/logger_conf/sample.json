@@ -1,9 +1,14 @@
 {
   "version": 1,
   "formatters": {
-    "singledb": {
+    "colored": {
       "class": "odoo.logging.ColoredFormatter",
-      "format": "%(asctime)s\t%(levelname)s\t%(dbname)s\t%(message)s",
+      "format": "%(asctime)s %(dbname)s %(levelname)s:\t%(message)s",
+      "datefmt": "%Y-%m-%dT%H:%M:%S"
+    },
+    "nocolor": {
+      "class": "logging.Formatter",
+      "format": "%(asctime)s %(dbname)s %(levelname)s:\t%(message)s",
       "datefmt": "%Y-%m-%dT%H:%M:%S"
     },
     "json": {
@@ -13,28 +18,40 @@
   "handlers": {
     "console": {
       "class": "logging.StreamHandler",
-      "formatter": "singledb",
+      "formatter": "colored",
       "level": "INFO",
       "stream": "ext://sys.stderr"
+    },
+    "file": {
+      "class": "logging.handlers.WatchedFileHandler",
+      "formatter": "nocolor",
+      "level": "INFO",
+      "filename": "odoo_log.txt"
     },
     "json": {
       "class": "logging.handlers.WatchedFileHandler",
       "formatter": "json",
-      "filename": "odoo.log"
+      "filename": "odoo_log.json"
     },
     "buffer": {
       "class": "logging.handlers.MemoryHandler",
-      "target": "json",
+      "target": "file",
       "capacity": 10000
     },
     "db": {
       "class": "odoo.logging.PostgreSQLHandler",
       "log_db": "%d",
       "level": "RUNBOT"
+    },
+    "syslog": {
+      "class": "logging.handlers.SysLogHandler",
+      "address": "/dev/log",
+      "formatter": "nocolor",
+      "level": "WARNING"
     }
   },
   "root": {
-    "handlers": ["console", "buffer", "db"],
+    "handlers": ["console", "buffer", "db", "syslog", "json"],
     "level": "DEBUG"
   },
   "loggers": {

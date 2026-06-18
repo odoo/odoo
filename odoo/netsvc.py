@@ -97,10 +97,9 @@ def init_logger():
         if not conf.get('keep_odoo_default', False):
             return
 
-    # create a format for log messages and dates
-    format = '%(asctime)s %(process)s %(levelname)s %(dbname)s %(name)s: %(message)s'
     # Normal Handler on stderr
     handler = logging.StreamHandler()
+    formatter = ColoredFormatter()
 
     if tools.config['syslog']:
         # SysLog Handler
@@ -110,7 +109,7 @@ def init_logger():
             handler = logging.handlers.SysLogHandler('/var/run/log')
         else:
             handler = logging.handlers.SysLogHandler('/dev/log')
-        format = f'{release.description} {release.version}:%(dbname)s:%(levelname)s:%(name)s:%(message)s'
+        formatter = logging.Formatter(f'{release.description} {release.version}:%(dbname)s:%(levelname)s:%(name)s:%(message)s')
 
     elif tools.config['logfile']:
         # LogFile Handler
@@ -127,7 +126,7 @@ def init_logger():
         except Exception:
             sys.stderr.write("ERROR: couldn't create the logfile directory. Logging to the standard output.\n")
 
-    handler.setFormatter(ColoredFormatter(format))
+    handler.setFormatter(formatter)
     logging.getLogger().addHandler(handler)
 
     if log_db := tools.config['log_db']:
