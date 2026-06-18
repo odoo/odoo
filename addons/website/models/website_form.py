@@ -56,6 +56,7 @@ class IrModel(models.Model):
         fields_get = model.fields_get(attributes=[
             'required', 'domain', 'readonly', 'type', 'relation', 'manual',
             'definition_record', 'definition_record_field', 'string', 'selection',
+            'currency_field',
         ])
 
         field_details_translated = {}
@@ -83,6 +84,8 @@ class IrModel(models.Model):
                     fields_get[field]['selection'] = field_translations.get('selection')
             if 'domain' in fields_get[field] and isinstance(fields_get[field]['domain'], str):
                 del fields_get[field]['domain']
+            if fields_get[field].get('currency_field'):
+                fields_get[field]['currency'] = self._get_currency_name(fields_get[field], default_values)
             if fields_get[field].get('readonly') or field in models.MAGIC_COLUMNS or \
                     fields_get[field]['type'] in ('many2one_reference', 'json'):
                 del fields_get[field]
@@ -136,9 +139,19 @@ class IrModel(models.Model):
                                 property_definition['domain'] = list(Domain(property_definition['domain']))
                             except ValueError:
                                 continue
+                        elif property_definition['type'] == 'monetary':
+                            property_definition['currency'] = self._get_currency_name(property_definition, default_values)
                         fields_get[property_definition.get('name')] = property_definition
 
         return fields_get
+
+    def _get_currency_name(self, field, default_values):
+        currency_field_name = field.get('currency_field')
+        currency_id = default_values.get(currency_field_name)
+        if currency_id:
+            return self.env['res.currency'].browse(currency_id).name
+        else:
+            return self.env.company.currency_id.name
 
     @api.model
     def get_compatible_form_models(self):
