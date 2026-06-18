@@ -18,12 +18,12 @@
                             t-if="this.props.chatWindow.exists()"
                             class="o-mail-ChatWindow-moreActions btn rounded-0 d-flex align-items-center o-ps-1_5 pe-0 py-1 my-0 w-100 rounded-end-0 bg-inherit"
                             t-att-class="{ 'rounded-top-3': !this.ui.isSmall, 'o-active': this.state.actionsMenuOpened, 'o-hover': this.actionsMenuButtonHover.isHover and !this.parentChannelHover.isHover }"
-                            t-att-disabled="this.state.editingName or this.props.chatWindow.actionsDisabled"
+                            t-att-disabled="this.editingName() or this.props.chatWindow.actionsDisabled"
                             t-att-title="this.actionsMenuTitleText"
                             t-custom-ref="actionsMenuButton"
                         >
                             <t t-call="mail.ChatWindow.headerContent"/>
-                            <i t-if="!this.state.editingName" class="fa fa-fw fa-caret-down"/>
+                            <i t-if="!this.editingName()" class="fa fa-fw fa-caret-down"/>
                         </button>
                         <t t-set-slot="content">
                             <t t-if="this.props.chatWindow.exists()">
@@ -34,14 +34,14 @@
                     </Dropdown>
                 </div>
                 <AutoresizeInput
-                    t-if="this.state.editingName"
+                    t-if="this.editingName()"
                     className="'text-truncate fw-bold flex-shrink-1 me-1 py-0 ' + (this.ui.isSmall ? 'fs-4' : 'fs-5')"
                     enabled="true"
                     autofocus="true"
                     onValidate.bind="this.renameChannel"
                     value="this.channelDisplayName"
                 />
-                <i t-if="this.state.editingName" class="fa fa-fw fa-caret-down opacity-50"/>
+                <i t-if="this.editingName()" class="fa fa-fw fa-caret-down opacity-50"/>
             </t>
             <t t-else="">
                 <t t-call="mail.ChatWindow.headerContent"/>
@@ -66,7 +66,7 @@
                 />
             </t>
         </div>
-        <div t-if="!this.props.chatWindow.folded or this.ui.isSmall" class="d-flex flex-column h-100 overflow-auto o-scrollbar-thin position-relative bg-inherit" t-att-class="{ 'opacity-50': this.state.editingName }" t-ref="this.chatWindowContentRef">
+        <div t-if="!this.props.chatWindow.folded or this.ui.isSmall" class="d-flex flex-column h-100 overflow-auto o-scrollbar-thin position-relative bg-inherit" t-att-class="{ 'opacity-50': this.editingName() }" t-ref="this.chatWindowContentRef">
             <t name="thread content">
                 <div t-if="this.threadActions.activeAction?.actionPanelComponentCondition" class="h-100 bg-inherit" t-attf-class="{{ this.threadActions.activeAction.actionPanelOuterClass }}">
                     <t t-component="this.threadActions.activeAction.actionPanelComponent" t-props="this.threadActions.activeAction.actionPanelComponentProps"/>
@@ -99,7 +99,7 @@
         <i class="fa fa-chevron-right o-xsmaller ms-1 mt-1 text-muted opacity-75"/>
     </t>
     <CountryFlag t-if="this.channel.showCorrespondentCountry" country="this.channel.correspondentCountry" class="'o-mail-ChatWindow-country border shadow-sm'"/>
-    <div t-if="!this.state.editingName" class="o-mail-ChatWindow-displayName text-truncate fw-bold border border-transparent o-mx-0_5 my-0 py-1" t-att-title="this.props.chatWindow.channel.displayName" t-out="this.props.chatWindow.channel.displayName" t-att-class="{ 'fs-4': this.ui.isSmall, 'fs-5': !this.ui.isSmall }"/>
+    <div t-if="!this.editingName()" class="o-mail-ChatWindow-displayName text-truncate fw-bold border border-transparent o-mx-0_5 my-0 py-1" t-att-title="this.props.chatWindow.channel.displayName" t-out="this.props.chatWindow.channel.displayName" t-att-class="{ 'fs-4': this.ui.isSmall, 'fs-5': !this.ui.isSmall }"/>
 </t>
 
 <t t-name="mail.ChatWindow.memberTyping">
