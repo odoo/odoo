@@ -8,7 +8,6 @@ class AccountChartTemplate(models.AbstractModel):
     @template('np')
     def _get_np_template_data(self):
         return {
-            'name': _("Nepal Chart of Accounts"),
             'code_digits': '6',
         }
 
