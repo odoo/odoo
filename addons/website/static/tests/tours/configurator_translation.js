@@ -48,11 +48,23 @@ function runConfiguratorFlow(industrySearchText) {
             trigger: ":iframe [data-view-xmlid='website.homepage']",
             timeout: 30000,
         },
+        {
+            content: "Check that the editor, not translation mode, is opened",
+            trigger:
+                ":iframe html[data-editable='1']:not([data-translatable='1'][data-edit_translations='1'])",
+        },
     ];
 }
 
 registry.category("web_tour.tours").add("configurator_translation", {
     steps: () => [
+        {
+            content: "Set the visitor's frontend language to Parseltongue",
+            trigger: "body",
+            run() {
+                document.cookie = "frontend_lang=pa_GB;path=/";
+            },
+        },
         ...runConfiguratorFlow("in fr"),
         {
             content: "Check if the current interface language is active and monkey patch terms",
