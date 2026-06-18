@@ -31,7 +31,6 @@ export class AvatarStack extends Component {
                 ])
             ),
             size: t.number().optional(24),
-            slots: t.object().optional(),
             spacing: t.number().optional(8),
             total: t.number().optional(),
         });

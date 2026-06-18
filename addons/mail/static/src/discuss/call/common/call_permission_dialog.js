@@ -5,17 +5,17 @@ import { useService } from "@web/core/utils/hooks";
 
 export class CallPermissionDialog extends Component {
     static components = { PermissionPromptDialog };
-    props = props({
-        close: t.function(),
-        media: t.selection(["camera", "microphone"]),
-        permissionPrompt: t.string().optional(),
-        suggestAllMedias: t.boolean().optional(true),
-        useMicrophone: t.function(),
-        useCamera: t.function(),
-    });
     static template = "discuss.CallPermissionDialog";
 
     setup() {
+        this.props = props({
+            close: t.function([]),
+            media: t.selection(["camera", "microphone"]),
+            permissionPrompt: t.string().optional(),
+            suggestAllMedias: t.boolean().optional(true),
+            useCamera: t.function([]),
+            useMicrophone: t.function([]),
+        });
         this.rtc = useService("discuss.rtc");
         this.ui = useService("ui");
     }

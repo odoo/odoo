@@ -5,17 +5,17 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export class Typing extends Component {
-    props = props({
-        channel: t.any().optional(),
-        size: t.any().optional("small"),
-        displayText: t.any().optional(true),
-        member: t.any().optional(),
-    });
     static template = "discuss.Typing";
 
     setup() {
         super.setup(...arguments);
         this.store = useService("mail.store");
+        this.props = props({
+            channel: t.instanceOf(this.store["discuss.channel"].Class).optional(),
+            displayText: t.boolean().optional(true),
+            member: t.instanceOf(this.store["discuss.channel.member"].Class).optional(),
+            size: t.string().optional("small"),
+        });
         this.isBrowserSafari = isBrowserSafari;
     }
 

@@ -12,16 +12,16 @@ import { Dialog } from "@web/core/dialog/dialog";
 
 export class CallSettings extends Component {
     static template = "discuss.CallSettings";
-    props = props({
-        close: t.any().optional(),
-        initialTab: t.any().optional(),
-        isCompact: t.any().optional(),
-        withActionPanel: t.any().optional(true),
-    });
     static components = { ActionPanel, DeviceSelect, Tabs, TabHeader, TabPanel };
 
     setup() {
         super.setup();
+        this.props = props({
+            close: t.function([t.instanceOf(MouseEvent)]).optional(),
+            initialTab: t.string().optional(),
+            isCompact: t.boolean().optional(),
+            withActionPanel: t.boolean().optional(true),
+        });
         this.notification = useService("notification");
         this.store = useService("mail.store");
         this.rtc = useService("discuss.rtc");
@@ -112,5 +112,6 @@ export class CallSettingsDialog extends Component {
             <CallSettings initialTab="this.props.initialTab" withActionPanel="false"/>
         </Dialog>
     `;
+    props = props({ initialTab: t.string().optional() });
     static components = { CallSettings, Dialog };
 }

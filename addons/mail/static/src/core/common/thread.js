@@ -98,7 +98,7 @@ export class Thread extends Component {
         );
         this.present = useRef("load-newer");
         this.jumpPresentRef = useRef("jump-present");
-        this.rootRef = signal(null, { type: t.instanceOf(HTMLDivElement) });
+        this.rootRef = signal.ref(HTMLDivElement);
         this.visibleState = useVisible(this.rootRef, () => {
             this.updateShowJumpPresent();
         });

@@ -2,7 +2,7 @@ import { useRef } from "@web/owl2/utils";
 import { ActivityListPopover } from "@mail/core/web/activity_list_popover";
 import { Avatar } from "@mail/views/web/fields/avatar/avatar";
 
-import { Component, props, types } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 import { usePopover } from "@web/core/popover/popover_hook";
 
@@ -18,22 +18,22 @@ export class ActivityCell extends Component {
 
     setup() {
         this.props = props({
-            activityIds: types.array(types.number()),
-            activityTypeId: types.number(),
-            attachmentsInfo: types
+            activityIds: t.array(t.number()),
+            activityTypeId: t.number(),
+            attachmentsInfo: t
                 .object({
-                    count: types.number(),
-                    most_recent_id: types.number(),
-                    most_recent_name: types.string(),
+                    count: t.number(),
+                    most_recent_id: t.number(),
+                    most_recent_name: t.string(),
                 })
                 .optional(),
-            countByState: types.record(types.number()),
-            reloadFunc: types.function([]),
-            reportingDate: types.string(),
-            resId: types.number(),
-            resModel: types.string(),
-            summaries: types.array(),
-            userAssignedIds: types.array(types.number()),
+            countByState: t.record(t.number()),
+            reloadFunc: t.function([]),
+            reportingDate: t.string(),
+            resId: t.number(),
+            resModel: t.string(),
+            summaries: t.array(),
+            userAssignedIds: t.array(t.number()),
         });
         this.popover = usePopover(ActivityListPopover, { position: "bottom-start" });
         this.contentRef = useRef("content");

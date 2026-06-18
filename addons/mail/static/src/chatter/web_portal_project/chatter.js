@@ -38,7 +38,7 @@ export class Chatter extends Component {
             messageFetchRouteParams: () => this.messageFetchRouteParams,
         });
         this.highlightMessage = router.current.highlight_message_id;
-        this.rootRef = signal(null, { type: t.instanceOf(HTMLDivElement) });
+        this.rootRef = signal.ref(HTMLDivElement);
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
         useChildSubEnv(this.childSubEnv);
         useSubEnv(this.subEnv);

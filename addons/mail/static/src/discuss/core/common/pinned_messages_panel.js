@@ -18,7 +18,7 @@ export class PinnedMessagesPanel extends Component {
         this.store = useService("mail.store");
         this.props = props({
             channel: t.instanceOf(this.store["discuss.channel"].Class),
-            close: t.function([]).optional(),
+            close: t.function([t.instanceOf(MouseEvent)]).optional(),
         });
         useOnChange(
             () => [this.props.channel],

@@ -1,19 +1,21 @@
 import { useRef } from "@web/owl2/utils";
 import { Component, onMounted, props, signal, t, useListener } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 export class ActivityMarkAsDone extends Component {
     static template = "mail.ActivityMarkAsDone";
-    props = props({
-        activity: t.any(),
-        close: t.any().optional(),
-        hasHeader: t.any().optional(false),
-        onClickDone: t.any().optional(),
-        onClickDoneAndScheduleNext: t.any().optional(),
-        onActivityChanged: t.any(),
-    });
 
     setup() {
         super.setup();
+        this.store = useService("mail.store");
+        this.props = props({
+            activity: t.instanceOf(this.store["mail.activity"].Class),
+            close: t.function([t.instanceOf(MouseEvent)]).optional(),
+            hasHeader: t.boolean().optional(false),
+            onActivityChanged: t.function([t.instanceOf(this.store["mail.thread"].Class)]),
+            onClickDone: t.function([]).optional(),
+            onClickDoneAndScheduleNext: t.function([]).optional(),
+        });
         this.textArea = useRef("textarea");
         this.disableDoneButton = signal(false);
         onMounted(() => {
