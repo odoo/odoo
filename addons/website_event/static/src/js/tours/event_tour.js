@@ -3,7 +3,6 @@ import EventAdditionalTourSteps from "@event/js/tours/event_steps";
 
 import { markup } from "@odoo/owl";
 import { patch } from "@web/core/utils/patch";
-import { insertSnippet } from '@website/js/tours/tour_utils';
 
 patch(EventAdditionalTourSteps.prototype, {
 
@@ -20,11 +19,24 @@ patch(EventAdditionalTourSteps.prototype, {
                 tooltipPosition: 'bottom',
                 run: "click",
             },
-            ...insertSnippet({
-                id: "s_image_text",
-                name: "Image - Text",
-                groupName: "Content",
-            }),
+            {
+                trigger: ".o_builder_sidebar_open",
+            },
+            {
+                content: markup(_t("Click on the <b>Content</b> category.")),
+                trigger: `.o_block_tab:not(.o_we_ongoing_insertion) #snippet_groups .o_snippet[name="Content"].o_draggable .o_snippet_thumbnail_area`,
+                tooltipPosition: "bottom",
+                run: "click",
+            },
+            {
+                content: markup(_t("Click on the <b>Image - Text</b> building block.")),
+                trigger: `.modal .show:iframe .o_snippet_preview_wrap[data-snippet-id="s_image_text"]:not(.d-none)`,
+                tooltipPosition: "top",
+                run: "click",
+            },
+            {
+                trigger: ".o_website_preview :iframe:not(:has(.o_loading_screen))",
+            },
             {
                 trigger: 'button[data-action="save"]',
                 content: markup(_t("Don't forget to click <b>save</b> when you're done.")),
