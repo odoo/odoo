@@ -83,7 +83,12 @@ class AccountReport(models.Model):
     )
     availability_condition = fields.Selection(
         string="Availability",
-        selection=[('country', "Country Matches"), ('coa', "Chart of Accounts Matches"), ('always', "Always")],
+        selection=[
+            ('country', "Country Matches"),
+            ('coa', "Chart of Accounts Matches"),
+            ('coa_children', "Children of the Chart of Accounts"),
+            ('always', "Always"),
+        ],
         compute='_compute_default_availability_condition', readonly=False, store=True,
     )
     load_more_limit = fields.Integer(string="Load More Limit", default=500)

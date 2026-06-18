@@ -1016,7 +1016,11 @@ class ResCompany(models.Model):
         return bool(self.env['account.move.line'].sudo().search_count([('company_id', 'child_of', self.id)], limit=1))
 
     def _chart_template_selection(self):
-        return self.env['account.chart.template']._select_chart_template(self.country_id)
+        selection = self.env['account.chart.template']._select_chart_template(self.country_id)
+        if self.chart_template and self.root_id._existing_accounting():
+            template_code = self.chart_template
+            return [(template_code, dict(selection)[template_code])]
+        return selection
 
     @api.model
     def _action_check_hash_integrity(self):

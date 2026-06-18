@@ -28,17 +28,23 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_be_asso_template_data(self):
         return {
             'name': _('Associations and Foundations'),
+            'visible': False,
             'parent': 'be',
             'code_digits': '6',
         }
 
-    @template('be_asso', 'res.company')
-    def _get_be_asso_res_company(self):
+    @template('be_asso_abbr')
+    def _get_be_asso_abbr_template_data(self):
         return {
-            self.env.company.id: {
-                'account_fiscal_country_id': 'base.be',
-                'bank_account_code_prefix': '550',
-                'cash_account_code_prefix': '570',
-                'transfer_account_code_prefix': '580',
-            },
+            'name': _('Associations and Foundations (Abbreviated)'),
+            'parent': 'be_asso',
+            'code_digits': '6',
+        }
+
+    @template('be_asso_full')
+    def _get_be_asso_full_template_data(self):
+        return {
+            'name': _('Associations and Foundations (Full)'),
+            'parent': 'be_asso',
+            'code_digits': '6',
         }
