@@ -378,7 +378,8 @@ class PosOrderReceipt(models.AbstractModel):
                 'data': order_changes['noteUpdate'],
             }))
 
-        if order_changes.get('internal_note') or order_changes.get('general_customer_note'):
+        # Print a separate order note ticket only if no other tickets exist
+        if len(receipts_data) == 0 and (order_changes.get('internal_note') or order_changes.get('general_customer_note')):
             receipts_data.append(self._prepare_preparation_grouped_data({
                 'title': '',
                 'data': [],
