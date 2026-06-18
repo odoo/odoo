@@ -18,8 +18,10 @@ from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import BinaryBytes, frozendict, reset_cached_properties, split_every, sql, unique, OrderedSet, SQL
+from odoo.tools.constants import IN_MAX
 from odoo.tools.safe_eval import expr_eval, safe_eval, datetime, dateutil, time
 from odoo.tools.translate import FIELD_TRANSLATE, LazyTranslate, _
+
 
 _lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
@@ -90,7 +92,7 @@ def query_insert(cr, table, rows):
         rows = [rows]
     cols = list(rows[0])
     ids = []
-    for srows in split_every(cr.IN_MAX, rows, list):
+    for srows in split_every(IN_MAX, rows, list):
         query = SQL(
             "INSERT INTO %s (%s) VALUES %s RETURNING id",
             SQL.identifier(table),
@@ -2301,7 +2303,7 @@ class IrModelData(models.Model):
                 FROM ir_model_data d LEFT JOIN %s r on d.res_id=r.id
                 WHERE d.module=%s
             """, SQL.identifier(model._table), prefix)
-            for subsuffixes in split_every(self.env.cr.IN_MAX, suffixes):
+            for subsuffixes in split_every(IN_MAX, suffixes):
                 result.extend(self.env.execute_query(SQL("%s AND d.name IN %s", query, subsuffixes)))
 
         return result
@@ -2325,7 +2327,7 @@ class IrModelData(models.Model):
             noupdate = bool(data.get('noupdate'))
             rows.add((prefix, suffix, record._name, record.id, noupdate))
 
-        for sub_rows in split_every(self.env.cr.IN_MAX, rows):
+        for sub_rows in split_every(IN_MAX, rows):
             # insert rows or update them
             query = self._build_update_xmlids_query(sub_rows, update)
             try:

@@ -1,7 +1,7 @@
 from odoo import Command
 from odoo.tests import tagged
 from odoo.tools import mute_logger
-from odoo.tools.constants import PREFETCH_MAX
+from odoo.tools.constants import IN_MAX, BIG_RECORDSET_SIZE
 
 from .common import TestOrmPartnerCommon
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
@@ -101,7 +101,7 @@ class TestPrefecth(TestOrmPartnerCommon, SavepointCaseWithUserDemo):
 
     def test_prefetch_model_performance(self):
         # number of records, and number of children per record
-        RECORDS = PREFETCH_MAX
+        RECORDS = IN_MAX
         CHILDREN = 7
 
         country = self.env['test_orm.country'].create({'name': 'Belgium'}).id
@@ -153,25 +153,85 @@ class TestPrefecth(TestOrmPartnerCommon, SavepointCaseWithUserDemo):
             records.invalidate_model(['name'])
             records.mapped('name')
             fetched_ids = records._fields['name']._get_all_cache_ids(records.env)
-            self.assertEqual(set(fetched_ids), set(records._ids))
+            self.assertTrue(set(records._ids).issubset(set(fetched_ids)))
+            self.assertEqual(set(records._prefetch_ids), set(fetched_ids))
 
             records = children[500 : RECORDS + 500]
             records.invalidate_model(['name'])
             records.mapped('name')
             fetched_ids = records._fields['name']._get_all_cache_ids(records.env)
-            self.assertEqual(set(fetched_ids), set(records._ids))
+            self.assertTrue(set(records._ids).issubset(set(fetched_ids)))
+            self.assertEqual(set(records._prefetch_ids), set(fetched_ids))
 
             records = children - children[500 : RECORDS + 500]
             records.invalidate_model(['name'])
             records.mapped('name')
             fetched_ids = records._fields['name']._get_all_cache_ids(records.env)
-            self.assertEqual(set(fetched_ids), set(records._ids))
+            self.assertTrue(set(records._ids).issubset(set(fetched_ids)))
+            self.assertEqual(set(records._prefetch_ids), set(fetched_ids))
 
             records = self.env['test_orm.partner'].concat(partner.child_ids[0] for partner in partners)
             records.invalidate_model(['name'])
             records.mapped('name')
             fetched_ids = records._fields['name']._get_all_cache_ids(records.env)
-            self.assertEqual(set(fetched_ids), set(records._ids))
+            self.assertTrue(set(records._ids).issubset(set(fetched_ids)))
+            self.assertEqual(set(records._prefetch_ids), set(fetched_ids))
+
+    @mute_logger('odoo.models')
+    def test_big_recordset(self):
+        """
+        1. Prefetch expansion is suppressed: touching one field on a big recordset
+           must NOT drag other prefetchable fields into the cache.
+
+        2. fetch() chunks the WHERE clause at BIG_RECORDSET_SIZE, so all ids still
+           land in cache after a single fetch() call.
+
+        3. filtered() / filtered_domain() return the parent _prefetch_ids as-is,
+           so subsets still benefit from the parent's prefetch context.
+
+        4. __iter__ / __reversed__ share the parent _prefetch_ids on every yielded
+           record regardless of recordset size.
+        """
+        N = BIG_RECORDSET_SIZE + 10
+        country = self.env['test_orm.country'].create({'name': 'Belgium'})
+        partners = self.env['test_orm.partner'].create([
+            {'name': f'big_partner_{i}', 'country_id': country.id}
+            for i in range(N)
+        ])
+
+        # 1. Sideways prefetch is disabled on big recordsets
+        partners.invalidate_model()
+        with self.subTest("no sideways prefetch on big recordset"):
+            _ = partners[0].name
+            self.assertTrue(partners._fields['name']._get_all_cache_ids(partners.env))
+            self.assertFalse(partners._fields['country_id']._get_all_cache_ids(partners.env))
+
+        # 2. fetch() still populates the cache for all records despite chunking
+        with self.subTest("fetch() covers all ids across chunks"):
+            partners.invalidate_model(['name'])
+            partners.fetch(['name'])
+            name_cached = set(partners._fields['name']._get_all_cache_ids(partners.env))
+            self.assertTrue(set(partners._ids).issubset(name_cached))
+
+        # 3. filtered / filtered_domain reuse the parent _prefetch_ids
+        with self.subTest("filtered keeps parent prefetch_ids"):
+            subset = partners.filtered(lambda p: p.id in set(partners._ids[:5]))
+            self.assertIs(partners._prefetch_ids, subset._prefetch_ids)
+
+        with self.subTest("filtered_domain keeps parent prefetch_ids"):
+            subset_d = partners.filtered_domain([('id', 'in', list(partners._ids[:5]))])
+            self.assertIs(partners._prefetch_ids, subset_d._prefetch_ids)
+
+        # 4. __iter__ / __reversed__ share the parent _prefetch_ids
+        with self.subTest("__iter__ shares prefetch_ids"):
+            for record in partners:
+                self.assertIs(record._prefetch_ids, partners._prefetch_ids)
+                break
+
+        with self.subTest("__reversed__ shares prefetch_ids"):
+            for record in reversed(partners):
+                self.assertEqual(set(record._prefetch_ids), set(partners._prefetch_ids))
+                break
 
     @mute_logger('odoo.models')
     def test_prefetch_read_compute(self):

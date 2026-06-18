@@ -11,7 +11,7 @@ from odoo import api, fields, models, _
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.tools import OrderedSet, is_html_empty
-from odoo.tools.constants import PREFETCH_MAX
+from odoo.tools.constants import IN_MAX
 from odoo.tools.misc import clean_context, format_date, groupby
 from odoo.addons.base.models.ir_attachment import condition_values
 from odoo.addons.mail.tools.discuss import Store
@@ -443,14 +443,14 @@ class MailActivity(models.Model):
                 domain,
                 SECURITY_FIELDS,
                 offset=looping_offset,
-                limit=PREFETCH_MAX,
+                limit=IN_MAX,
                 order=order,
             ).sudo(False)
             result.extend(records._filtered_access('read')._ids)
-            if len(records) < PREFETCH_MAX:
+            if len(records) < IN_MAX:
                 # There are no more records
                 break
-            looping_offset += PREFETCH_MAX
+            looping_offset += IN_MAX
         return self.browse(result[offset:limit])._as_query(ordered)
 
     def _search_res_access(self, operation, domain_operator):

@@ -35,6 +35,7 @@ import odoo
 from . import tools
 from .release import MIN_PG_VERSION
 from .tools import SQL, config
+from .tools.constants import IN_MAX as IN_MAX_CONST
 from .tools.func import frame_codeinfo, locked
 from .tools.misc import Callbacks, real_time
 
@@ -250,7 +251,7 @@ class Cursor(_CursorProtocol):
             *any* data which may be modified during the life of the cursor.
 
     """
-    IN_MAX = 1000   # decent limit on size of IN queries - guideline = Oracle limit
+    IN_MAX = IN_MAX_CONST   # decent limit on size of IN queries - guideline = Oracle limit
 
     def __init__(self, cnx: PsycoConnection, dbname: str):
         super().__init__()

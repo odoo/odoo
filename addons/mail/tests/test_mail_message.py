@@ -80,7 +80,7 @@ class TestMailMessage(common.MailCommon, HttpCase):
 
         Message = self.registry[messages._name]
         with (
-            patch.object(mail_message_module, 'PREFETCH_MAX', 3),
+            patch.object(mail_message_module, 'IN_MAX', 3),
             patch.object(Message, '_search', autospec=True, side_effect=Message._search) as search_func,
         ):
             self.assertEqual(messages.search(domain, limit=100), accessible)

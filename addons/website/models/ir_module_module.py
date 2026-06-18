@@ -10,7 +10,7 @@ from odoo.exceptions import MissingError
 from odoo.http import request
 from odoo.modules import Manifest
 from odoo.tools import SQL, split_every
-from odoo.tools.constants import PREFETCH_MAX
+from odoo.tools.constants import IN_MAX
 from odoo.tools.translate import StoredTranslations
 
 _logger = logging.getLogger(__name__)
@@ -503,7 +503,7 @@ class IrModuleModule(models.Model):
         View = self.env['ir.ui.view'].with_context(lang='en_US')
         env_en = View.env
         field = self.env['ir.ui.view']._fields['arch_db']
-        batch_size = PREFETCH_MAX // 10
+        batch_size = IN_MAX // 10
         self.env.cr.execute(""" SELECT generic.arch_db, specific.arch_db, specific.id
                                           FROM ir_ui_view generic
                                          INNER JOIN ir_ui_view specific

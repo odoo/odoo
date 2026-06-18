@@ -17,7 +17,7 @@ from odoo.http.dispatcher import serialize_exception
 from odoo.http.stream import content_disposition
 from odoo.tools import BinaryBytes, BinaryValue, osutil
 from odoo.tools.misc import split_every
-from odoo.tools.constants import PREFETCH_MAX
+from odoo.tools.constants import IN_MAX
 
 _logger = logging.getLogger(__name__)
 
@@ -613,7 +613,7 @@ class ExportFormat:
             response_data = self.from_group_data(fields, columns_headers, tree)
         else:
             all_rows = []
-            for batch in split_every(PREFETCH_MAX, records.ids, Model.browse):
+            for batch in split_every(IN_MAX, records.ids, Model.browse):
                 export_data = batch.export_data(field_names).get('datas', [])
                 all_rows.extend(export_data)
                 batch.invalidate_recordset()

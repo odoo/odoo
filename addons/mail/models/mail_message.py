@@ -15,7 +15,7 @@ from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import AccessError, MissingError
 from odoo.fields import Domain
 from odoo.tools import clean_context, groupby, SQL
-from odoo.tools.constants import PREFETCH_MAX
+from odoo.tools.constants import IN_MAX
 from odoo.tools.misc import OrderedSet
 from odoo.addons.base.models.ir_attachment import condition_values
 from odoo.addons.mail.tools.discuss import Store
@@ -28,7 +28,7 @@ _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)
 
 MAX_COMODELS_FOR_DOMAIN = 5
-MAX_SEARCH_LIMIT = PREFETCH_MAX * 10
+MAX_SEARCH_LIMIT = IN_MAX * 10
 SHARE_DOMAIN = (
     Domain("message_type", "!=", "tracking")
     & Domain("is_internal", "=", False)
@@ -455,14 +455,14 @@ class MailMessage(models.Model):
                 domain,
                 [],
                 offset=looping_offset,
-                limit=PREFETCH_MAX,
+                limit=IN_MAX,
                 order=order,
             ).sudo(False)
             result.extend(records._filtered_access('read')._ids)
-            if len(records) < PREFETCH_MAX:
+            if len(records) < IN_MAX:
                 # There are no more records
                 break
-            looping_offset += PREFETCH_MAX
+            looping_offset += IN_MAX
         return self.browse(result[offset:limit])._as_query(ordered)
 
     def _compute_res_access(self, operation: str):

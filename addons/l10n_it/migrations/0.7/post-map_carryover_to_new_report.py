@@ -1,5 +1,6 @@
 from odoo import SUPERUSER_ID, api
 from odoo.tools import SQL, split_every, sql
+from odoo.tools.constants import IN_MAX
 
 
 def migrate(cr, version):
@@ -60,7 +61,7 @@ def migrate(cr, version):
         if report_id == vat_report_id
     ]
 
-    for sub_data in split_every(cr.IN_MAX, data_to_insert, list):
+    for sub_data in split_every(IN_MAX, data_to_insert, list):
         cr.execute(SQL("""
         INSERT INTO account_report_external_value (
                         target_report_expression_id,
