@@ -1,5 +1,6 @@
 import re
-from stdnum.exceptions import InvalidFormat
+from stdnum.exceptions import InvalidFormat, ValidationError
+from stdnum.sg import uen as sg_uen
 from odoo.tools import single_email_re
 
 NON_DIGIT_RE = re.compile(r'\D')
@@ -30,6 +31,20 @@ def nl_oin_validate(value):
     if not NL_OIN_RE.fullmatch(value):
         raise InvalidFormat()
     return value
+
+
+def sg_uen_validate(value):
+    """Normalize and validate a Singapore UEN.
+
+    Also accepts the 'SGUEN' + UEN form, under which the SGNIC SMP registers
+    Singapore participants for Peppol scheme 0195.
+    """
+    try:
+        return sg_uen.validate(value)
+    except ValidationError:
+        if value[:5].upper() != 'SGUEN':
+            raise
+        return 'SGUEN' + sg_uen.validate(value[5:])
 
 
 def th_branch_code_validate(value):

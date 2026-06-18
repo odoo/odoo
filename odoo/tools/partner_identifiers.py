@@ -19,10 +19,9 @@ from stdnum.ma import ice as ma_ice
 from stdnum.no import orgnr as no_en
 from stdnum.ro import cui as ro_cui
 from stdnum.se import orgnr as se_en
-from stdnum.sg import uen as sg_en
 
 from odoo.tools.translate import LazyTranslate
-from odoo.tools.partner_identifier_validation import nl_kvk_validate, nl_oin_validate, pk_cn_validate, th_branch_code_validate
+from odoo.tools.partner_identifier_validation import nl_kvk_validate, nl_oin_validate, pk_cn_validate, sg_uen_validate, th_branch_code_validate
 
 from odoo.addons.base.models.res_country import (
     FR_AND_OVERSEAS_TERRITORIES,
@@ -940,7 +939,7 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
         'help': _lt('Singapore Unique Entity Number.'),
         'placeholder': '00192200M',
         'category': 'EN',
-        'validation_function': sg_en.validate,
+        'validation_function': sg_uen_validate,
         'countries': ['SG'],
     },
     'SK_EN': {

@@ -15,10 +15,10 @@ class TestPeppolKYC(HttpCase):
         super().setUp()
         self.env['ir.config_parameter'].sudo().set_str('account_peppol.edi.mode', 'test')
 
-    def _mock_can_connect_method(self, with_auth=False):
-        auth_vals = {'available_auths': {'itsme': {'authorization_url': 'test_authorization_url'}}} if with_auth else {}
+    def _mock_can_connect_method(self, auth_type=None):
+        auth_vals = {'available_auths': {auth_type: {'authorization_url': 'test_authorization_url'}}} if auth_type else {}
         return patch('odoo.addons.account_peppol.tools.peppol_iap_connector.PeppolIAPConnector.can_connect', return_value={
-            'auth_required': with_auth,
+            'auth_required': bool(auth_type),
             **auth_vals,
         })
 
@@ -31,7 +31,7 @@ class TestPeppolKYC(HttpCase):
         company = self.env.company
         eas, endpoint = '0208', '0239843188'
         peppol_identifier = f'{eas}:{endpoint}'
-        with mock_lookup_not_found(peppol_identifier), mock_can_connect(with_auth=False), mock_connect():
+        with mock_lookup_not_found(peppol_identifier), mock_can_connect(), mock_connect():
             wizard = self.env['peppol.registration'].create({
                 'peppol_eas': eas,
                 'peppol_endpoint': endpoint,
@@ -56,7 +56,7 @@ class TestPeppolKYC(HttpCase):
         eas, endpoint = '0208', '0239843188'
         with (
             mock_lookup_not_found(f'{eas}:{endpoint}'),
-            self._mock_can_connect_method(with_auth=True) as mocked_can_connect,
+            self._mock_can_connect_method(auth_type='itsme') as mocked_can_connect,
         ):
             wizard = self.env['peppol.registration'].create({
                 'peppol_eas': '0208',
@@ -105,7 +105,7 @@ class TestPeppolKYC(HttpCase):
         authentication first when it is necessary, the route raises an error.
         """
         company = self.env.company
-        with mock_lookup_not_found('0208:0239843188'), mock_can_connect(with_auth=True):
+        with mock_lookup_not_found('0208:0239843188'), mock_can_connect(auth_type='itsme'):
             wizard = self.env['peppol.registration'].create({
                 'peppol_eas': '0208',
                 'peppol_endpoint': '0239843188',
@@ -139,7 +139,7 @@ class TestPeppolKYC(HttpCase):
         with mock_lookup_not_found('0208:0239843188'):
             self.assertTrue(wizard.smp_registration)
 
-        with self._mock_can_connect_method(with_auth=True) as mocked_can_connect:
+        with self._mock_can_connect_method(auth_type='itsme') as mocked_can_connect:
             self.assertEqual(wizard.peppol_can_connect_data, {
                 'auth_required': True,
                 'available_auths': {

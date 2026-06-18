@@ -101,15 +101,15 @@ def mock_lookup_not_found(peppol_identifier):
 
 
 @contextmanager
-def mock_can_connect(with_auth=False):
+def mock_can_connect(auth_type=None):
     expected_url = 'https://peppol.test.odoo.com/api/peppol/2/can_connect'
     auth_vals = {
         'available_auths': {
-            'itsme': {'authorization_url': 'test_authorization_url'},
+            auth_type: {'authorization_url': 'test_authorization_url'},
         },
-    } if with_auth else {}
+    } if auth_type else {}
     with MockHTTPClient(url=expected_url, return_json={
-        'auth_required': with_auth,
+        'auth_required': bool(auth_type),
         **auth_vals,
     }) as mock_response:
         yield mock_response

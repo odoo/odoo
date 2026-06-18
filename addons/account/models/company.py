@@ -35,7 +35,7 @@ MONTH_SELECTION = [
 PEPPOL_DEFAULT_COUNTRIES = [
     'AT', 'BE', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES', 'FI',
     'FR', 'IE', 'IS', 'LT', 'LU', 'LV', 'MT', 'NL', 'NO', 'SE',
-    'SI',
+    'SG', 'SI',
 ]
 
 # List of countries where Peppol footnote will be added when sending by mail.
