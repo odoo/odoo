@@ -1,3 +1,4 @@
+from odoo.exceptions import ValidationError
 from odoo.tests import TransactionCase, tagged
 from odoo.tools.partner_identifiers import TIN_METADATA
 
@@ -162,3 +163,15 @@ class TestPartnerIdentifiers(TransactionCase):
         identifiers = partner._get_all_identifiers()
         self.assertIn('MX_RFC', identifiers)
         self.assertNotIn('RO_VAT', identifiers)
+
+    def test_sg_uen_peppol_prefixes(self):
+        """A plain UEN validates as-is; a Peppol prefix wrapping a UEN is validated and
+        kept prefixed, while the other Peppol prefixes are taken as-is."""
+        self.partner._set_additional_identifier('SG_UEN', '00192200M')
+        self.assertEqual(self.partner.additional_identifiers['SG_UEN'], '00192200M')
+        self.partner._set_additional_identifier('SG_UEN', 'sguxn00192200m')
+        self.assertEqual(self.partner.additional_identifiers['SG_UEN'], 'SGUXN00192200M')
+        self.partner._set_additional_identifier('SG_UEN', 'FRUIDsomeidentifier')
+        self.assertEqual(self.partner.additional_identifiers['SG_UEN'], 'FRUIDsomeidentifier')
+        with self.assertRaisesRegex(ValidationError, "Invalid identifier: SGUENnotauen"):
+            self.partner._set_additional_identifier('SG_UEN', 'SGUENnotauen')

@@ -21,6 +21,7 @@ This module add, for accounting:
         'account_qr_code_emv',
         'account',
         'account_edi_ubl_cii',
+        'account_peppol',
     ],
     'auto_install': ['account'],
     'data': [
@@ -36,6 +37,7 @@ This module add, for accounting:
     'demo': [
         'demo/demo_company.xml',
     ],
-    'post_init_hook': '_preserve_tag_on_taxes',
+    'post_init_hook': '_l10n_sg_post_init',
+    'uninstall_hook': '_l10n_sg_uninstall',
     'license': 'LGPL-3',
 }
