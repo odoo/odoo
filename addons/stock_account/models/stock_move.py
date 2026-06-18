@@ -289,7 +289,7 @@ class StockMove(models.Model):
                 for line in lines:
                     quantities[line.lot_id] += line.quantity_product_uom
             else:
-                quantities[self.env['stock.lot']] += move.product_qty
+                quantities[self.env['stock.lot']] += move.product_uom._compute_quantity(move.quantity, move.product_id.uom_id)
 
             unit_cost = move._get_price_unit()
             if move.product_id.cost_method == 'standard':
