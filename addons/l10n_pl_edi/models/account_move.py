@@ -51,9 +51,11 @@ class AccountMove(models.Model):
         depends=['l10n_pl_edi_upo_file'],
     )
 
-    _sql_constraints = [
-        ('unique_l10n_pl_edi_number', 'UNIQUE(l10n_pl_edi_number)', 'The KSeF number must be unique'),
-    ]
+    _sql_constraints = [(
+        'unique_l10n_pl_edi_number_company_id_move_type',
+        'UNIQUE(l10n_pl_edi_number, company_id, move_type)',
+        'The KSeF number must be unique per company per move_type'
+    )]
 
     def _l10n_pl_edi_check_mandatory_fields(self):
         errors = {}
@@ -630,19 +632,22 @@ class AccountMove(models.Model):
             ('l10n_pl_edi_number', '!=', False),
             ('move_type', '=', 'in_invoice'),
             ('invoice_date', '!=', False),
-            *self._check_company_domain(self.env.company)
+            *self._check_company_domain(self.env.company),
         ], order='invoice_date DESC', limit=1)
 
         if last_processed_move:
             date_from = fields.Datetime.to_datetime(last_processed_move.invoice_date)
         else:
-            date_from = fields.Datetime.now() - relativedelta(months=1)
+            date_from = fields.Datetime.from_string("2026-01-31 00:00:00")  # The date it became mandatory
+
+        tomorrow = fields.Datetime.now() + relativedelta(days=1)
+        date_to = min(date_from + relativedelta(months=2), tomorrow)
 
         query = {
             'subjectType': 'Subject2',
             'dateRange': {
                 'from': date_from.isoformat(),
-                'to': fields.Datetime.now().isoformat(),
+                'to': date_to.isoformat(),
                 'dateType': 'Invoicing',
             },
         }
@@ -658,12 +663,23 @@ class AccountMove(models.Model):
             if response.get('error'):
                 blocking_error = self._handle_download_bills_from_ksef_error(response['error'])
                 break
+
+            if not response['invoices'] and date_to < tomorrow:
+                # We must keep the time window moving until we find something
+                date_from = date_to
+                date_to = min(date_from + relativedelta(months=2), tomorrow)
+                query['dateRange']['from'] = date_from.isoformat()
+                query['dateRange']['to'] = date_to.isoformat()
+                continue
+
             invoice_numbers.extend(invoice['ksefNumber'] for invoice in response['invoices'])
             has_more = response['hasMore']
             page_offset += 1
 
         already_processed = set(self.env['account.move'].search([
-            ('l10n_pl_edi_number', 'in', invoice_numbers)
+            ('l10n_pl_edi_number', 'in', invoice_numbers),
+            ('move_type', '=', 'in_invoice'),
+            *self._check_company_domain(self.env.company),
         ]).mapped('l10n_pl_edi_number'))
 
         if to_process := [invoice_nr for invoice_nr in invoice_numbers if invoice_nr not in already_processed]:
@@ -712,4 +728,3 @@ class AccountMove(models.Model):
                         'res_id': bill.id,
                         'res_model': bill._name,
                     })
-        return False
