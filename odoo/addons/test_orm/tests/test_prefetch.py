@@ -151,25 +151,29 @@ class TestPrefecth(TestOrmPartnerCommon, SavepointCaseWithUserDemo):
             records.invalidate_model(['name'])
             records.mapped('name')
             fetched_ids = records._fields['name']._get_all_cache_ids(records.env)
-            self.assertEqual(set(fetched_ids), set(records._ids))
+            self.assertTrue(set(records._ids).issubset(set(fetched_ids)))
+            self.assertEqual(set(records._prefetch_ids), set(fetched_ids))
 
             records = children[500 : RECORDS + 500]
             records.invalidate_model(['name'])
             records.mapped('name')
             fetched_ids = records._fields['name']._get_all_cache_ids(records.env)
-            self.assertEqual(set(fetched_ids), set(records._ids))
+            self.assertTrue(set(records._ids).issubset(set(fetched_ids)))
+            self.assertEqual(set(records._prefetch_ids), set(fetched_ids))
 
             records = children - children[500 : RECORDS + 500]
             records.invalidate_model(['name'])
             records.mapped('name')
             fetched_ids = records._fields['name']._get_all_cache_ids(records.env)
-            self.assertEqual(set(fetched_ids), set(records._ids))
+            self.assertTrue(set(records._ids).issubset(set(fetched_ids)))
+            self.assertEqual(set(records._prefetch_ids), set(fetched_ids))
 
             records = self.env['test_orm.partner'].concat(partner.child_ids[0] for partner in partners)
             records.invalidate_model(['name'])
             records.mapped('name')
             fetched_ids = records._fields['name']._get_all_cache_ids(records.env)
-            self.assertEqual(set(fetched_ids), set(records._ids))
+            self.assertTrue(set(records._ids).issubset(set(fetched_ids)))
+            self.assertEqual(set(records._prefetch_ids), set(fetched_ids))
 
     @mute_logger('odoo.models')
     def test_prefetch_read_compute(self):
