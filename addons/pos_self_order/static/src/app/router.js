@@ -1,5 +1,5 @@
 import { onWillRender } from "@web/owl2/utils";
-import { Component, xml } from "@odoo/owl";
+import { Component, xml, props, t } from "@odoo/owl";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { zip } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
@@ -21,7 +21,10 @@ function parseParams(matches, paramSpecs) {
 }
 
 export class Router extends Component {
-    static props = { slots: Object, pos_config_id: Number };
+    props = props({
+        slots: t.object(),
+        pos_config_id: t.number(),
+    });
     static template = xml`<t t-call-slot="{{this.activeSlot}}" t-props="this.slotProps"/>`;
 
     setup() {

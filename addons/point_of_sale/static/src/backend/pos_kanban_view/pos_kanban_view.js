@@ -35,7 +35,7 @@ export class PosKanbanController extends KanbanController {
 
 export class PosKanbanRenderer extends KanbanRenderer {
     static template = "point_of_sale.PosKanbanRenderer";
-    props = props({ ...kanbanRendererProps, initialPosState: t.any() });
+    props = props({ ...kanbanRendererProps, initialPosState: t.object() });
 
     setup() {
         super.setup();

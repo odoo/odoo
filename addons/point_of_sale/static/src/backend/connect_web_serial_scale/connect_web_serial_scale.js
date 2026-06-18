@@ -1,4 +1,4 @@
-import { Component } from "@odoo/owl";
+import { Component, props } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { _t } from "@web/core/l10n/translation";
@@ -7,9 +7,7 @@ import { WebSerialScale } from "@point_of_sale/app/utils/scale/web_serial_scale"
 
 export class ConnectWebSerialScale extends Component {
     static template = `point_of_sale.ConnectWebSerialScale`;
-    static props = {
-        ...standardWidgetProps,
-    };
+    props = props(standardWidgetProps);
 
     setup() {
         super.setup();

@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, props, t } from "@odoo/owl";
 import { scrollToSelected } from "@pos_self_order/app/utils/scroll_to_selected";
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -29,14 +29,14 @@ import { getDisplayDateInfo } from "@point_of_sale/utils";
 export class PillsSelectionPopup extends Component {
     static template = "pos_self_order.PillsSelectionPopup";
     static components = { Dialog };
-    static props = {
-        options: Object,
-        title: String,
-        subtitle: String,
-        close: Function,
-        getPayload: Function,
-        selectionType: String,
-    };
+    props = props({
+        options: t.object(),
+        title: t.string(),
+        subtitle: t.string(),
+        close: t.function(),
+        getPayload: t.function(),
+        selectionType: t.string(),
+    });
 
     setup() {
         this.ui = useService("ui");

@@ -12,7 +12,6 @@ import { FeedbackPaymentSummary } from "@point_of_sale/app/components/feedback_p
 export class CustomerDisplay extends Component {
     static template = "point_of_sale.CustomerDisplay";
     static components = { OdooLogo, MainComponentsContainer, BadgeTag, FeedbackPaymentSummary };
-    static props = [];
 
     setup() {
         this.session = session;

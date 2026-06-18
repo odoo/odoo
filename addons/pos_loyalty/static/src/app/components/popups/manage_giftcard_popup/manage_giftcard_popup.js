@@ -10,6 +10,7 @@ import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { debounce } from "@bus/workers/bus_worker_utils";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 import { roundCurrency } from "@point_of_sale/app/models/utils/currency";
+import { PosOrderline } from "@point_of_sale/app/models/pos_order_line";
 
 export class ManageGiftCardPopup extends Component {
     static template = "pos_loyalty.ManageGiftCardPopup";
@@ -19,7 +20,7 @@ export class ManageGiftCardPopup extends Component {
         placeholder: t.string().optional(""),
         rows: t.number().optional(1),
         startingValue: t.string().optional(""),
-        line: t.object(),
+        line: t.instanceOf(PosOrderline),
         getPayload: t.function(),
         close: t.function(),
     });

@@ -1,10 +1,16 @@
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, props, t } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { AttributeSelectionHelper } from "./attribute_selection_helper";
+import { ProductTemplate } from "@point_of_sale/app/models/product_template";
+import { ProductProduct } from "@point_of_sale/app/models/product_product";
 
 export class AttributeSelection extends Component {
     static template = "pos_self_order.AttributeSelection";
-    static props = ["productTemplate", "onSelection?", "isCombo?"];
+    props = props({
+        productTemplate: t.or([t.instanceOf(ProductTemplate), t.instanceOf(ProductProduct)]),
+        onSelection: t.function().optional(),
+        isCombo: t.boolean().optional(),
+    });
 
     setup() {
         this.selfOrder = useSelfOrder();

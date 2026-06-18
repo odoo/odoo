@@ -1,10 +1,10 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 
 export class InfoPopup extends Component {
     static template = "pos_self_order.InfoPopup";
-    static props = {
-        text: String,
-        close: Function,
-        buttons: Array,
-    };
+    props = props({
+        text: t.string(),
+        close: t.function(),
+        buttons: t.array(t.object({ text: t.string(), onClick: t.function() })),
+    });
 }

@@ -1,15 +1,15 @@
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useTime } from "@point_of_sale/app/hooks/time_hook";
 import { _t } from "@web/core/l10n/translation";
 
 export class LoginScreen extends Component {
     static template = "point_of_sale.LoginScreen";
-    static props = {
-        orderUuid: { type: String, optional: true },
-    };
+    props = props({
+        orderUuid: t.string().optional(),
+    });
     static storeOnOrder = false;
     setup() {
         this.pos = usePos();

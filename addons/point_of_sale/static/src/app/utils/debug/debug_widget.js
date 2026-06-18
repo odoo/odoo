@@ -10,7 +10,6 @@ const { DateTime } = luxon;
 
 export class DebugWidget extends Component {
     static template = "point_of_sale.DebugWidget";
-    static props = {};
 
     setup() {
         this.pos = usePos();

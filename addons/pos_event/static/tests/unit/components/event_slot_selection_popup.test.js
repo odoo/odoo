@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { EventSlotSelectionPopup } from "@pos_event/app/components/popup/event_slot_selection_popup/event_slot_selection_popup";
 import { mountPosDialog, setupPosEnv } from "@point_of_sale/../tests/unit/utils";
-import { click } from "@odoo/hoot-dom";
+import { click, waitFor } from "@odoo/hoot-dom";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 
 definePosModels();
@@ -12,13 +12,14 @@ test("confirm payload", async () => {
     let payload = [];
     const comp = await mountPosDialog(EventSlotSelectionPopup, {
         event: event,
-        availabilityPerSlot: [event.event_slot_ids[0].id, 10],
+        availabilityPerSlot: { [event.event_slot_ids[0].id]: 10 },
         getPayload: (data) => {
             payload = data;
         },
         close: () => {},
     });
 
+    await waitFor("button.o_event_slot_btn");
     await click(`button.o_event_slot_btn`);
     comp.confirm();
 

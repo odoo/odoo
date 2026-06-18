@@ -3,7 +3,7 @@ import { SaleDetailsButton } from "@point_of_sale/app/components/navbar/sale_det
 import { ConfirmationDialog, AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { MoneyDetailsPopup } from "@point_of_sale/app/components/popups/money_details_popup/money_details_popup";
 import { useService } from "@web/core/utils/hooks";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, props, t } from "@odoo/owl";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
@@ -19,15 +19,15 @@ const { DateTime } = luxon;
 export class ClosePosPopup extends Component {
     static components = { SaleDetailsButton, Dialog, PaymentMethodBreakdown, CashInput };
     static template = "point_of_sale.ClosePosPopup";
-    static props = [
-        "orders_details",
-        "opening_notes",
-        "default_cash_details",
-        "non_cash_payment_methods",
-        "is_manager",
-        "amount_authorized_diff",
-        "close",
-    ];
+    props = props({
+        orders_details: t.object(),
+        opening_notes: t.string(),
+        default_cash_details: t.object(),
+        non_cash_payment_methods: t.array(t.object()),
+        is_manager: t.boolean(),
+        amount_authorized_diff: t.or([t.number(), t.literal(null)]),
+        close: t.function(),
+    });
 
     setup() {
         this.pos = usePos();

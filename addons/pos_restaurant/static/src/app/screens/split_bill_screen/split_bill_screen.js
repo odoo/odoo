@@ -1,4 +1,4 @@
-import { Component, onWillDestroy, props, proxy, types as t } from "@odoo/owl";
+import { Component, onWillDestroy, props, proxy, t } from "@odoo/owl";
 import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_display";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";

@@ -1,21 +1,23 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, onWillUnmount, proxy } from "@odoo/owl";
+import { Component, onWillUnmount, proxy, props, t } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { AccordionItem } from "@point_of_sale/app/components/accordion_item/accordion_item";
 import { debounce } from "@web/core/utils/timing";
+import { ProductTemplate } from "@point_of_sale/app/models/product_template";
+import { ProductProduct } from "@point_of_sale/app/models/product_product";
 
 export class ProductInfoBanner extends Component {
     static template = "point_of_sale.ProductInfoBanner";
     static components = {
         AccordionItem,
     };
-    static props = {
-        productTemplate: Object,
-        product: { type: [Object, { value: null }], optional: true },
-        info: { type: Object, optional: true },
-    };
+    props = props({
+        productTemplate: t.instanceOf(ProductTemplate),
+        product: t.or([t.instanceOf(ProductProduct), t.literal(null)]).optional(),
+        info: t.object().optional(),
+    });
 
     setup() {
         this.pos = usePos();

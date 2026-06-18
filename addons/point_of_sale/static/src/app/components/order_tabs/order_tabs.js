@@ -2,6 +2,7 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { Component, props, t } from "@odoo/owl";
 import { ListContainer } from "@point_of_sale/app/components/list_container/list_container";
+import { PosOrder } from "@point_of_sale/app/models/pos_order";
 
 export class OrderTabs extends Component {
     static template = "point_of_sale.OrderTabs";
@@ -9,7 +10,7 @@ export class OrderTabs extends Component {
         ListContainer,
     };
     props = props({
-        orders: t.array(),
+        orders: t.array(t.instanceOf(PosOrder)),
         class: t.string().optional(""),
     });
     setup() {

@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "@web/owl2/utils";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, props, t } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
@@ -8,11 +8,11 @@ import { Input } from "@point_of_sale/app/components/inputs/input/input";
 export class MpesaTransactionPopup extends Component {
     static components = { Dialog, Input };
     static template = "pos_safaricom.MpesaTransactionPopup";
-    static props = {
-        close: Function,
-        getPayload: Function,
-        qrCode: { type: String, optional: true },
-    };
+    props = props({
+        close: t.function(),
+        getPayload: t.function(),
+        qrCode: t.string().optional(),
+    });
 
     setup() {
         this.pos = usePos();

@@ -1,4 +1,6 @@
 import { Component, props, t } from "@odoo/owl";
+import { ProductProduct } from "@point_of_sale/app/models/product_product";
+import { ProductTemplate } from "@point_of_sale/app/models/product_template";
 
 export class ProductCard extends Component {
     static template = "point_of_sale.ProductCard";
@@ -6,7 +8,7 @@ export class ProductCard extends Component {
         class: t.string().optional(""),
         name: t.string(),
         available: t.boolean().optional(true),
-        product: t.object(),
+        product: t.or([t.instanceOf(ProductTemplate), t.instanceOf(ProductProduct)]),
         productId: t.or([t.number(), t.string()]),
         comboExtraPrice: t.string().optional(),
         color: t.or([t.number(), t.literal(undefined)]).optional(),

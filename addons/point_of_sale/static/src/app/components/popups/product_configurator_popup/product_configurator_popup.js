@@ -1,18 +1,23 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, props, t } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { ProductInfoBanner } from "@point_of_sale/app/components/product_info_banner/product_info_banner";
+import { ProductTemplateAttributeLine } from "@point_of_sale/app/models/product_template_attribute_line";
+import { ProductTemplateAttributeValue } from "@point_of_sale/app/models/product_template_attribute_value";
+import { ProductTemplate } from "@point_of_sale/app/models/product_template";
+import { PosOrderline } from "@point_of_sale/app/models/pos_order_line";
+
+export const BaseProductAttributeProps = {
+    attribute: t.instanceOf(ProductTemplateAttributeLine),
+    selected: t.instanceOf(ProductTemplateAttributeValue),
+    setSelected: t.function(),
+    customValue: t.string(),
+    setCustomValue: t.function(),
+    allSelectedValues: t.array(t.instanceOf(ProductTemplateAttributeValue)),
+};
 
 export class BaseProductAttribute extends Component {
     static template = "";
-    static props = [
-        "attribute",
-        "selected",
-        "setSelected",
-        "customValue",
-        "setCustomValue",
-        "allSelectedValues",
-    ];
 
     setup() {
         super.setup(...arguments);
@@ -27,14 +32,17 @@ export class BaseProductAttribute extends Component {
 
 export class RadioProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.RadioProductAttribute";
+    props = props(BaseProductAttributeProps);
 }
 
 export class PillsProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.PillsProductAttribute";
+    props = props(BaseProductAttributeProps);
 }
 
 export class SelectProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.SelectProductAttribute";
+    props = props(BaseProductAttributeProps);
 
     onChange(event) {
         this.props.setSelected(
@@ -45,15 +53,21 @@ export class SelectProductAttribute extends BaseProductAttribute {
 
 export class ColorProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.ColorProductAttribute";
+    props = props(BaseProductAttributeProps);
 }
 
 export class ImageProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.ImageProductAttribute";
+    props = props(BaseProductAttributeProps);
 }
 
 export class MultiProductAttribute extends BaseProductAttribute {
     static template = "point_of_sale.MultiProductAttribute";
-    static props = [...BaseProductAttribute.props, "selected?", "customValue?"];
+    props = props({
+        ...BaseProductAttributeProps,
+        selected: t.array(t.instanceOf(ProductTemplateAttributeValue)).optional(),
+        customValue: t.string().optional(),
+    });
 
     setup() {
         super.setup(...arguments);
@@ -85,14 +99,14 @@ export class ProductConfiguratorPopup extends Component {
         MultiProductAttribute,
         Dialog,
     };
-    static props = {
-        productTemplate: Object,
-        getPayload: Function,
-        close: Function,
-        hideAlwaysVariants: { type: Boolean, optional: true },
-        forceVariantValue: { type: Object, optional: true },
-        line: { type: Object, optional: true },
-    };
+    props = props({
+        productTemplate: t.instanceOf(ProductTemplate),
+        getPayload: t.function(),
+        close: t.function(),
+        hideAlwaysVariants: t.boolean().optional(),
+        forceVariantValue: t.array().optional(),
+        line: t.instanceOf(PosOrderline).optional(),
+    });
 
     setup() {
         this.pos = usePos();

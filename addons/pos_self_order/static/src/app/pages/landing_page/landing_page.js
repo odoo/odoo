@@ -6,7 +6,6 @@ import { useCarousel } from "@pos_self_order/app/utils/carousel_hook";
 
 export class LandingPage extends Component {
     static template = "pos_self_order.LandingPage";
-    static props = {};
 
     setup() {
         this.selfOrder = useSelfOrder();

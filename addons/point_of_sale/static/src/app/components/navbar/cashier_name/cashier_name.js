@@ -5,7 +5,6 @@ import { useService } from "@web/core/utils/hooks";
 // Previously UsernameWidget
 export class CashierName extends Component {
     static template = "point_of_sale.CashierName";
-    static props = {};
 
     setup() {
         this.pos = usePos();

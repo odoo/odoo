@@ -4,10 +4,11 @@ import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/center
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
 import { formatCurrency } from "@web/core/currency";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
+import { PosOrder } from "@point_of_sale/app/models/pos_order";
 
 // This methods is service-less, see PoS knowledges for more information
 export const orderDisplayProps = {
-    order: t.object(),
+    order: t.instanceOf(PosOrder),
     slots: t.object(),
     mode: t.string().optional("display"), // display, receipt
 };

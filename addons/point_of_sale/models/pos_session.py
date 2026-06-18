@@ -783,7 +783,7 @@ class PosSession(models.Model):
                 'quantity': len(orders),
                 'amount': sum(orders.mapped('amount_total'))
             },
-            'opening_notes': self.opening_notes,
+            'opening_notes': self.opening_notes or "",
             'default_cash_details': {
                 'name': default_cash_payment_method_id.name,
                 'amount': self.cash_register_balance_start

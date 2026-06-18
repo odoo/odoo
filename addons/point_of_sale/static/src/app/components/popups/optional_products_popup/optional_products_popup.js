@@ -1,14 +1,19 @@
 import { Dialog } from "@web/core/dialog/dialog";
-import { Component, proxy } from "@odoo/owl";
+import { Component, proxy, props, t } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { useService } from "@web/core/utils/hooks";
 import { ComboConfiguratorPopup } from "@point_of_sale/app/components/popups/combo_configurator_popup/combo_configurator_popup";
+import { ProductTemplate } from "@point_of_sale/app/models/product_template";
+import { ProductProduct } from "@point_of_sale/app/models/product_product";
 
 export class OptionalProductPopup extends Component {
     static template = "point_of_sale.OptionalProductPopup";
     static components = { Dialog };
-    static props = ["close", "productTemplate"];
+    props = props({
+        close: t.function(),
+        productTemplate: t.or([t.instanceOf(ProductProduct), t.instanceOf(ProductTemplate)]),
+    });
 
     setup() {
         this.pos = usePos();

@@ -8,7 +8,7 @@ import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/n
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-import { Component, onMounted } from "@odoo/owl";
+import { Component, onMounted, props, t } from "@odoo/owl";
 import { Numpad, enhancedButtons } from "@point_of_sale/app/components/numpad/numpad";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
@@ -23,9 +23,9 @@ export class PaymentScreen extends Component {
         PaymentScreenStatus,
         PriceFormatter,
     };
-    static props = {
-        orderUuid: String,
-    };
+    props = props({
+        orderUuid: t.string(),
+    });
 
     setup() {
         this.pos = usePos();

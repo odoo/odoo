@@ -1,13 +1,13 @@
-import { Component } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 export class ProgressBar extends Component {
     static template = "point_of_sale.ProgressBar";
-    static props = {
-        currentValue: { type: Number, required: true },
-        maxValue: { type: Number, required: true },
-        addressNeeded: { type: Boolean, required: true },
-    };
+    props = props({
+        currentValue: t.number(),
+        maxValue: t.number(),
+        addressNeeded: t.boolean(),
+    });
 
     remainingTime() {
         const minutes = this.props.currentValue;
