@@ -7,6 +7,7 @@ import { registry } from "@web/core/registry";
 import { CustomizeTab } from "@html_builder/sidebar/customize_tab";
 import { OptionsContainerWithSnippetVersionControl } from "./options/options_container";
 import { PowerButtonsPlugin } from "@html_editor/main/power_buttons_plugin";
+import { BannerPlugin } from "@html_editor/main/banner_plugin";
 
 class CustomizeTabWithSnippetVersionControl extends CustomizeTab {
     static components = {
@@ -41,7 +42,7 @@ export class MassMailingBuilder extends Component {
             "EmbeddedFilePlugin",
             "FilePlugin",
             "AddDocumentsAttachmentPlugin",
-            "BannerPlugin",
+            // "BannerPlugin",
             "CTABadgeOptionPlugin",
             "OperationPlugin",
             "LinkPlugin",
@@ -60,8 +61,8 @@ export class MassMailingBuilder extends Component {
         const optionalPlugins = [
             ...(this.props.builderProps.config.dynamicPlaceholder
                 ? removePlugins(
-                      DYNAMIC_FIELD_PLUGINS,
-                      ["PromptPlugin"] // mass_mailing does not use the dependency banner plugin
+                      [...DYNAMIC_FIELD_PLUGINS, BannerPlugin],
+                      [] // mass_mailing does not use the dependency banner plugin
                   )
                 : []),
         ];
