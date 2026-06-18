@@ -1,6 +1,5 @@
-import { useComponent } from "@web/owl2/utils";
 import { isRecord, STORE_SYM } from "@mail/model/misc";
-import { Component, proxy, signal } from "@odoo/owl";
+import { Component, proxy, signal, useScope } from "@odoo/owl";
 import { DropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useService } from "@web/core/utils/hooks";
 import { markEventHandled } from "@web/core/utils/misc";
@@ -741,7 +740,7 @@ function useActionState({ UseActionClass, component }) {
  * @returns {InstanceType<UseActionClass_T>}
  */
 export function useAction(actionRegistry, UseActionClass, ActionClass, actionClassParams) {
-    const component = useComponent();
+    const component = useScope().component;
     const actions = useActionState({ UseActionClass, component });
     /** @type {Action_T[]} */
     const transformedActions = actionRegistry.getEntries().map(
