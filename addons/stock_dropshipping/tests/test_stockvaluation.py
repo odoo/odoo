@@ -21,7 +21,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
             'taxes_id': [(6, 0, [])],
         })
 
-    def _dropship_product1(self, bill_price=None):
+    def _dropship_product1(self, bill_price=None, qty_SO=1, qty_delivery=1):
         # enable the dropship route on the product
         dropshipping_route = self.env.ref('stock_dropshipping.route_drop_shipping')
         self.product1.write({'route_ids': [(6, 0, [dropshipping_route.id])]})
@@ -43,7 +43,7 @@ class TestStockValuation(ValuationReconciliationTestCommon):
             'order_line': [(0, 0, {
                 'name': self.product1.name,
                 'product_id': self.product1.id,
-                'product_uom_qty': 1,
+                'product_uom_qty': qty_SO,
                 'price_unit': 12,
                 'tax_ids': [(6, 0, [])],
             })],
@@ -57,8 +57,13 @@ class TestStockValuation(ValuationReconciliationTestCommon):
 
         # validate the dropshipping picking
         self.assertEqual(len(self.sale_order1.picking_ids), 1)
-        self.sale_order1.picking_ids.button_validate()
-        self.assertEqual(self.sale_order1.picking_ids.state, 'done')
+        if qty_SO > qty_delivery:
+            dropship = self.sale_order1.picking_ids
+            dropship.move_ids.quantity = qty_delivery
+            Form.from_action(self.env, dropship.button_validate()).save().process_cancel_backorder()
+        else:
+            self.sale_order1.picking_ids.button_validate()
+            self.assertEqual(self.sale_order1.picking_ids.state, 'done')
 
         # create the vendor bill
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
@@ -449,3 +454,15 @@ class TestStockValuation(ValuationReconciliationTestCommon):
         }
 
         self._check_results(expected_aml, 12, all_amls)
+
+    def test_dropship_partial_quantity(self):
+        """ check that when the dropship delivery is validated with a partial quantity
+        the svl created has the same quantity
+        """
+        self.env.company.anglo_saxon_accounting = True
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+
+        all_amls = self._dropship_product1(qty_SO=2, qty_delivery=1)
+        svls_qty = all_amls.sale_line_ids.order_id.picking_ids.filtered(lambda p: p.state == 'done').move_ids.stock_valuation_layer_ids.mapped('quantity')
+        self.assertEqual(svls_qty, [1.0, -1.0])
