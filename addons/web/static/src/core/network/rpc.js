@@ -1,4 +1,4 @@
-import { EventBus } from "@odoo/owl";
+import { EventBus, useScope } from "@odoo/owl";
 import { browser } from "../browser/browser";
 import { omit } from "../utils/objects";
 
@@ -93,6 +93,37 @@ let rpcId = 0;
 export function rpc(url, params = {}, settings = {}) {
     return rpc._rpc(url, params, settings);
 }
+
+function useRpc(scope, throwOnAbort) {
+    function usingRPC(...args) {
+        if (!scope) {
+            return rpc(...args);
+        }
+        if (scope.abortSignal?.aborted) {
+            return new Promise(() => {});
+        }
+        const prom = rpc(...args);
+        const abort = () => prom.abort(throwOnAbort);
+        scope.abortSignal?.addEventListener("abort", abort);
+        return prom.finally(() => scope.abortSignal?.removeEventListener("abort", abort));
+    }
+    usingRPC.use = function use(_scope, _throwOnAbort) {
+        _scope ??= scope;
+        if (Object.is(scope, _scope) && _throwOnAbort === throwOnAbort) {
+            return usingRPC;
+        }
+        return rpc.use(_scope, _throwOnAbort);
+    };
+    return usingRPC;
+}
+rpc.use = function use(scope, throwOnAbort) {
+    try {
+        scope ??= useScope();
+    } catch {
+        /** do nothing */
+    }
+    return useRpc(scope, throwOnAbort);
+};
 // such that it can be overriden in tests
 rpc._rpc = function (url, params, settings) {
     validateRPCSettings(settings);
