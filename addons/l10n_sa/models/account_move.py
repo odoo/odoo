@@ -18,15 +18,16 @@ class AccountMove(models.Model):
         compute="_compute_l10n_sa_invoice_type",
         store=True,
         readonly=False,
+        copy=False,
     )
 
-    @api.depends('commercial_partner_id')
+    @api.depends('commercial_partner_id.is_company')
     def _compute_l10n_sa_invoice_type(self):
         for move in self:
-            if move.country_code == 'SA' and move.is_sale_document():
+            if move.country_code != 'SA' or not move.is_sale_document():
+                move.l10n_sa_invoice_type = False
+            elif move.state == 'draft' or not move.l10n_sa_invoice_type:
                 move.l10n_sa_invoice_type = 'tax' if move.commercial_partner_id.is_company else 'simplified'
-            else:
-                move.l10n_sa_invoice_type = None
 
     def _get_name_invoice_report(self):
         # EXTENDS account
