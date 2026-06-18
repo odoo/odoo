@@ -74,7 +74,8 @@ class AccountMoveSend(models.AbstractModel):
             extra_edis = {}
         # EXTENDS 'account'
         results = super()._get_placeholder_mail_attachments_data(move, invoice_edi_format=invoice_edi_format, extra_edis=extra_edis)
-        if move._need_ubl_cii_xml(invoice_edi_format):
+        sending_method = self.env.context.get('sending_method')
+        if move.with_context(sending_method=sending_method or {})._need_ubl_cii_xml(invoice_edi_format):
             builder = move.partner_id.commercial_partner_id._get_edi_builder(invoice_edi_format)
             filename = builder._export_invoice_filename(move)
             results.append({
@@ -115,7 +116,7 @@ class AccountMoveSend(models.AbstractModel):
         # EXTENDS 'account'
         super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
 
-        if invoice._need_ubl_cii_xml(invoice_data['invoice_edi_format']):
+        if invoice.with_context(sending_method=invoice_data['sending_methods'])._need_ubl_cii_xml(invoice_data['invoice_edi_format']):
             builder = invoice.partner_id.commercial_partner_id._get_edi_builder(invoice_data['invoice_edi_format'])
             xml_content, errors = (
                 builder
