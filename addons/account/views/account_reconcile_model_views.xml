@@ -61,7 +61,7 @@
                                 <div class="d-flex gap-2">
                                     <field name="match_amount" placeholder="Any amount"/>
                                     <field name="match_amount_min"
-                                           invisible="match_amount in (False, 'lower')"
+                                           invisible="match_amount in (False, 'lower', 'remaining_percentage')"
                                            required="match_amount"/>
                                     <span class="o_form_label"
                                           invisible="match_amount != 'between'">and</span>
