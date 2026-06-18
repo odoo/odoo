@@ -199,9 +199,6 @@ class SaleOrder(models.Model):
 
     def action_view_project_ids(self):
         self.ensure_one()
-        if not self.order_line:
-            return {'type': 'ir.actions.act_window_close'}
-
         sorted_line = self.order_line.sorted('sequence')
         default_sale_line = next((
             sol for sol in sorted_line if sol.product_id.type == 'service'
