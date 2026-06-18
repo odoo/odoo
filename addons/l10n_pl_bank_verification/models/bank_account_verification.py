@@ -2,7 +2,7 @@ import json
 import logging
 import requests
 
-from datetime import datetime
+from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models
@@ -34,7 +34,7 @@ class BankAccountVerification(models.Model):
             "- Partner not found: Partner VAT not found in Government files.\n"
             "- Error: An error occurred during check with Government API.\n"
     )
-    # Timestamp received by the API, in PL tz
+    # Timestamp received in PL tz by the API, stored in UTC
     verification_timestamp = fields.Datetime("Verification Timestamp", readonly=True)
     # Technical field to ease search
     verification_date = fields.Date(
@@ -201,7 +201,11 @@ class BankAccountVerification(models.Model):
                 # Read received datas from API and create verifications
                 datas = json.loads(response_content)['result']
                 request_id = datas['requestId']
-                timestamp = datetime.strptime(datas['requestDateTime'], "%d-%m-%Y %H:%M:%S")
+
+                # we receive the datetime in PL timezone, and store it in UTC
+                api_date = datetime.strptime(datas['requestDateTime'], "%d-%m-%Y %H:%M:%S")
+                timestamp = api_date.replace(tzinfo=ZoneInfo('Europe/Warsaw')).astimezone(timezone.utc)
+                timestamp = timestamp.replace(tzinfo=None)
 
                 for entry in datas.get('entries'):
                     identifier = entry.get('identifier')
@@ -301,7 +305,7 @@ class BankAccountVerification(models.Model):
         create_vals = []
         default_vals = {
             'verification_status': status,
-            'verification_timestamp': timestamp or fields.Datetime.to_string(datetime.now(tz=ZoneInfo('Europe/Warsaw'))),
+            'verification_timestamp': timestamp or fields.Datetime.now(),
             'verification_request_id': request_id,
         }
 
