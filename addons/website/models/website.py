@@ -725,7 +725,7 @@ class Website(models.CachedModel):
             if (manifest := get_manifest(theme_name))
         }
         theme_catalog = {
-            theme_name: manifest.get('summary', '')
+            theme_name: manifest.get('description', '')
             for theme_name, manifest in manifests.items()
         }
 
@@ -768,7 +768,7 @@ class Website(models.CachedModel):
             return []
         try:
             catalog_desc = "\n".join(
-                f"- {name}: {summary}" for name, summary in theme_catalog.items() if summary
+                f"- {name}: {description}" for name, description in theme_catalog.items() if description
             )
             prompt = (
                 f"I'm building {website_type or 'a'} website for a {industry_name} business "
