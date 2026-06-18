@@ -26,7 +26,7 @@
                         <div class="d-flex flex-column align-items-center">
                             <h1 class="mt-kiosk-p-3 mb-3" t-out="this.currentCombo.name" t-custom-ref="productName"/>
                             <div t-if="this.props.productTemplate.showProductImageInSelf" class="o_self_combo_image ratio ratio-1x1 rounded-4 w-70 w-m-50 ">
-                                <img class="rounded-4 object-fit-cover" t-attf-src="/web/image/product.template/{{ this.props.productTemplate.id }}/image_512?unique=#{this.props.productTemplate.write_date}" loading="lazy"/>
+                                <img class="rounded-4 object-fit-scale" t-attf-src="/web/image/product.template/{{ this.props.productTemplate.id }}/image_512?unique=#{this.props.productTemplate.write_date}" loading="lazy"/>
                             </div>
                         </div>
                     </div>
@@ -59,8 +59,8 @@
                                             class="combo_product_box btn btn-light position-relative d-flex flex-row-reverse flex-md-column align-items-center w-100 py-2 px-3 p-md-0 rounded-4 shadow-sm overflow-hidden border-2 text-start"
                                             t-att-class="{'border-primary': itemSelected, 'border-transparent': !itemSelected, 'opacity-50': isOutOfStock }">
                                         <div t-att-class="{'d-none d-md-block': !product.showProductImageInSelf}" class="o_self_product_image w-25 w-sm-100 ratio ratio-1x1 flex-shrink-0 ms-2 ms-sm-0">
-                                            <img class="d-md-none  object-fit-cover rounded-4" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
-                                            <img class="d-none d-md-block object-fit-cover" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                                            <img class="d-md-none  object-fit-scale rounded-4" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                                            <img class="d-none d-md-block object-fit-scale" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
                                         </div>
                                         <span t-if="extraPrice" class="badge position-absolute top-0 end-0 m-1 px-2 py-1 rounded-3 text-bg-primary fw-medium">
                                         + <t t-out="this.selfOrder.formatMonetary(extraPrice)"/>
@@ -133,7 +133,7 @@
                                         <t t-set="attributes" t-value="combo_item.attributes"/>
                                         <t t-set="extraPriceSelected" t-value="this.getExtraPriceForItem(combo_item.combo_item_id, selection_index, true)"/>
                                         <div class="o_self_product_image me-3 ratio ratio-1x1 w-25" >
-                                            <img class="object-fit-cover rounded-4" t-attf-src="/web/image/product.product/{{product.id}}/image_512?unique=#{product.write_date}" loading="lazy"/>
+                                            <img class="object-fit-scale rounded-4" t-attf-src="/web/image/product.product/{{product.id}}/image_512?unique=#{product.write_date}" loading="lazy"/>
                                         </div>
                                         <div class="d-flex flex-column gap-1">
                                             <div class="fs-4 fw-bold text-break">
