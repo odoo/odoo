@@ -128,8 +128,11 @@ class ResPartner(models.Model):
 
     def _get_suggested_invoice_edi_format(self):
         # EXTENDS 'account'
-        if self.country_code == 'FR' and not self._l10n_fr_pdp_is_b2c():
-            return 'ubl_21_fr'
+        if self.country_code == 'FR':
+            if self.pdp_verification_display_state == 'peppol_valid':
+                return 'ubl_bis3'
+            elif self.pdp_verification_display_state == 'pdp_valid':
+                return 'ubl_21_fr'
         return super()._get_suggested_invoice_edi_format()
 
     def _get_pdp_display_verification_state(self, state=None):
