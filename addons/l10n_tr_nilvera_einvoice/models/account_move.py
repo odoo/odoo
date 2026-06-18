@@ -1,4 +1,5 @@
 import uuid
+from base64 import b64decode
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 from urllib.parse import quote, urlencode, urlparse
@@ -363,7 +364,7 @@ class AccountMove(models.Model):
             'name': filename,
             'res_id': invoice.id,
             'res_model': 'account.move',
-            'raw': response,
+            'raw': b64decode(response),
             'type': 'binary',
             'mimetype': 'application/pdf',
         })
