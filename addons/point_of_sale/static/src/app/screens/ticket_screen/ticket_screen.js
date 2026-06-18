@@ -165,9 +165,7 @@ export class TicketScreen extends Component {
         if (nbr && !isNaN(nbr)) {
             this.state.nbrByPage = parseInt(nbr);
             this.state.page = 1;
-            if (this.state.filter == "SYNCED") {
-                await this._fetchSyncedOrders();
-            }
+            await this._updateSyncedOrders();
         }
     }
     onPresetSelected(preset) {
@@ -197,10 +195,7 @@ export class TicketScreen extends Component {
         this.pos.screenState.ticketScreen.totalCount = 0;
         this.pos.screenState.ticketScreen.offsetByDomain = {};
 
-        if (this.state.filter == "SYNCED") {
-            await this._fetchSyncedOrders();
-        }
-
+        await this._updateSyncedOrders();
         this.updateOrderTimers();
     }
     getNumpadButtons() {
@@ -237,9 +232,7 @@ export class TicketScreen extends Component {
     async onSearch(search) {
         this.state.search = search;
         this.state.page = 1;
-        if (this.state.filter == "SYNCED") {
-            await this._fetchSyncedOrders();
-        }
+        await this._updateSyncedOrders();
     }
     onClickOrder(clickedOrder) {
         this.setSelectedOrder(clickedOrder);
@@ -275,17 +268,13 @@ export class TicketScreen extends Component {
     async onNextPage() {
         if (this.state.page < this.getNbrPages()) {
             this.state.page += 1;
-            if (this.state.filter == "SYNCED") {
-                await this._fetchSyncedOrders();
-            }
+            await this._updateSyncedOrders();
         }
     }
     async onPrevPage() {
         if (this.state.page > 1) {
             this.state.page -= 1;
-            if (this.state.filter == "SYNCED") {
-                await this._fetchSyncedOrders();
-            }
+            await this._updateSyncedOrders();
         }
     }
     async onInvoiceOrder(orderId) {
@@ -294,7 +283,7 @@ export class TicketScreen extends Component {
     }
     onClickOrderline(orderline) {
         const order = this.getSelectedOrder();
-        if (order?.finalized) {
+        if (this.isOrderSynced) {
             if (this.state.selectedOrderlineIds[order.id] == orderline.id) {
                 const toRefundDetail = this.getToRefundDetail(orderline);
                 if (Object.values(toRefundDetail).some((detail) => detail.destination_order_uuid)) {
@@ -508,24 +497,37 @@ export class TicketScreen extends Component {
             return this.state.selectedOrderlineIds[this.getSelectedOrder().id];
         }
     }
-    get isOrderSynced() {
-        return (
-            this.getSelectedOrder()?.finalized &&
-            (this.getSelectedOrder().getScreenData().name === "" || this.state.filter === "SYNCED")
-        );
+    isOrderDoneOrPaid(order) {
+        return order.state === "done" || order.state === "paid";
     }
-    activeOrderFilter(o) {
-        const oScreen = o.getScreenData();
-        return (!o.finalized || oScreen.name == "TipScreen") && o.uiState.displayed;
+    isOrderCancelled(order) {
+        return order.state === "cancel";
+    }
+    get isOrderSynced() {
+        const order = this.getSelectedOrder();
+        return (
+            order &&
+            this.isOrderDoneOrPaid(order) &&
+            (order.getScreenData().name === "" || this.state.filter === "SYNCED")
+        );
     }
     getFilteredOrderList() {
         const orderModel = this.pos.models["pos.order"];
         let orders =
             this.state.filter === "SYNCED"
-                ? orderModel.filter((o) => o.finalized && o.uiState.displayed)
-                : orderModel.filter(this.activeOrderFilter);
+                ? orderModel.filter((o) => this.isOrderDoneOrPaid(o))
+                : this.state.filter === "CANCELLED"
+                ? orderModel.filter((o) => this.isOrderCancelled(o))
+                : orderModel.filter(
+                      (o) =>
+                          (!this.isOrderDoneOrPaid(o) && !this.isOrderCancelled(o)) ||
+                          o.getScreenData().name == "TipScreen"
+                  );
 
-        if (this.state.filter && !["ACTIVE_ORDERS", "SYNCED"].includes(this.state.filter)) {
+        if (
+            this.state.filter &&
+            !["ACTIVE_ORDERS", "SYNCED", "CANCELLED"].includes(this.state.filter)
+        ) {
             orders = orders.filter((order) => {
                 const screen = order.getScreenData();
                 return this._getScreenToStatusMap()[screen.name] === this.state.filter;
@@ -558,8 +560,9 @@ export class TicketScreen extends Component {
                 }
             });
 
+        let sortedOrders;
         if (this.state.selectedPreset?.use_timing) {
-            const sortedByTimer = orders.sort((a, b) => {
+            sortedOrders = orders.sort((a, b) => {
                 const timerA = this.orderTimers[a.uuid] ?? 0;
                 const timerB = this.orderTimers[b.uuid] ?? 0;
                 const finishedA = timerA <= 0;
@@ -569,25 +572,18 @@ export class TicketScreen extends Component {
                 }
                 return timerA - timerB;
             });
-            this.pos.screenState.ticketScreen.totalCount = sortedByTimer.length;
-            return sortedByTimer.slice(
-                (this.state.page - 1) * this.state.nbrByPage,
-                this.state.page * this.state.nbrByPage
-            );
-        }
-
-        if (this.state.filter === "SYNCED") {
-            return sortOrders(orders).slice(
-                (this.state.page - 1) * this.state.nbrByPage,
-                this.state.page * this.state.nbrByPage
-            );
+            this.pos.screenState.ticketScreen.totalCount = sortedOrders.length;
+        } else if (["SYNCED", "CANCELLED"].includes(this.state.filter)) {
+            sortedOrders = sortOrders(orders);
         } else {
             this.pos.screenState.ticketScreen.totalCount = orders.length;
-            return sortOrders(orders, true).slice(
-                (this.state.page - 1) * this.state.nbrByPage,
-                this.state.page * this.state.nbrByPage
-            );
+            sortedOrders = sortOrders(orders, true);
         }
+
+        return sortedOrders.slice(
+            (this.state.page - 1) * this.state.nbrByPage,
+            this.state.page * this.state.nbrByPage
+        );
     }
     get buttonClasses() {
         return this.getHasItemsToRefund() ? "btn-primary" : "btn-secondary disabled";
@@ -608,15 +604,29 @@ export class TicketScreen extends Component {
         return order.employee_id ? order.employee_id.name : "";
     }
     getStatus(order) {
+        if (this.isOrderCancelled(order)) {
+            return _t("Cancelled");
+        }
         if (
-            order.finalized &&
+            this.isOrderDoneOrPaid(order) &&
             (order.getScreenData().name === "" || this.state.filter === "SYNCED")
         ) {
             return _t("Paid");
-        } else {
-            const screen = order.getScreenData();
-            return this._getOrderStates().get(this._getScreenToStatusMap()[screen.name])?.text;
         }
+        const screen = order.getScreenData();
+        return this._getOrderStates().get(this._getScreenToStatusMap()[screen.name])?.text;
+    }
+    getStatusDecoration(status) {
+        if (status === "Ongoing" || status === "Payment") {
+            return "info";
+        }
+        if (status === "Receipt" || status === "Paid") {
+            return "success";
+        }
+        if (status === "Cancelled") {
+            return "danger";
+        }
+        return "secondary";
     }
     /**
      * If the order is the only order and is empty
@@ -643,8 +653,7 @@ export class TicketScreen extends Component {
             order.finalized ||
             order.payment_ids.some(
                 (payment) => payment.isElectronic() && payment.getPaymentStatus() === "done"
-            ) ||
-            order.finalized
+            )
         );
     }
     isHighlighted(order) {
@@ -881,21 +890,17 @@ export class TicketScreen extends Component {
     _getOrderStates() {
         // We need the items to be ordered, therefore, Map is used instead of normal object.
         const states = new Map();
-        states.set("ACTIVE_ORDERS", {
-            text: _t("Active"),
-        });
+        states.set("ACTIVE_ORDERS", { text: _t("Active") });
         // The spaces are important to make sure the following states
         // are under the category of `Active`.
-        states.set("ONGOING", {
-            text: _t("Ongoing"),
-            indented: true,
-        });
+        states.set("ONGOING", { text: _t("Ongoing"), indented: true });
         if (this.pos.config.set_tip_after_payment) {
             states.set("OPEN", { text: _t("Open"), indented: true });
             states.set("TIPPING", { text: _t("Tipping"), indented: true });
         } else {
             states.set("PAYMENT", { text: _t("Payment"), indented: true });
         }
+        states.set("CANCELLED", { text: _t("Cancelled") });
         return states;
     }
     //#region SEARCH SYNCED ORDERS
@@ -929,20 +934,25 @@ export class TicketScreen extends Component {
      * If the order is already in cache, the full information about that
      * order is not fetched anymore, instead, we use info from cache.
      */
-    async _fetchSyncedOrders() {
+    async _updateSyncedOrders() {
+        if (this.state.filter !== "CANCELLED" && this.state.filter !== "SYNCED") {
+            return;
+        }
         const screenState = this.pos.screenState.ticketScreen;
         const domain = this._computeSyncedOrdersDomain();
         const offset = screenState.offsetByDomain[JSON.stringify(domain)] || 0;
         const config_id = this.pos.config.id;
+        const state_filter = this.state.filter === "CANCELLED" ? "cancelled" : "paid";
         const { ordersInfo, totalCount } = await this.pos.data.call(
             "pos.order",
-            "search_paid_order_ids",
+            "search_order_ids",
             [],
             {
                 config_id,
                 domain,
                 limit: this.state.nbrByPage,
                 offset,
+                state_filter,
             }
         );
 

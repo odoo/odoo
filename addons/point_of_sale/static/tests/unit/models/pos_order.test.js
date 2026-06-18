@@ -566,6 +566,23 @@ test("priceDoesntChangeWhenChangingPreset", async () => {
     expect(order4.amount_total).toBe(total);
 });
 
+test("finalized", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+
+    order.state = "draft";
+    expect(order.finalized).toBe(false);
+
+    order.state = "paid";
+    expect(order.finalized).toBe(true);
+
+    order.state = "done";
+    expect(order.finalized).toBe(true);
+
+    order.state = "cancel";
+    expect(order.finalized).toBe(true);
+});
+
 describe("print history", () => {
     test("lastPrints", async () => {
         const store = await setupPosEnv();

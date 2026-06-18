@@ -763,9 +763,8 @@ registry.category("web_tour.tours").add("test_open_register_with_preset_takeaway
             Dialog.isNot({ title: "Existing orderlines" }),
             FloorScreen.isShown(),
             Chrome.clickOrders(),
-            {
-                trigger: ".orders:contains(no orders found)",
-            },
+            TicketScreen.selectFilter("Cancelled"),
+            TicketScreen.checkStatus("001", "Cancelled"),
         ].flat(),
 });
 
@@ -790,7 +789,8 @@ registry.category("web_tour.tours").add("test_cancel_future_order", {
             TicketScreen.deleteOrder("001"),
             Dialog.confirm(),
             refresh(),
-            negateStep(...TicketScreen.selectOrder("001")),
+            TicketScreen.selectFilter("Cancelled"),
+            TicketScreen.checkStatus("001", "Cancelled"),
         ].flat(),
 });
 
@@ -1051,6 +1051,8 @@ registry.category("web_tour.tours").add("test_transfering_orders", {
             ProductScreen.clickLine("Water", "3"),
             Chrome.clickOrders(),
             TicketScreen.nbOrdersIs(3),
+            TicketScreen.selectFilter("Cancelled"),
+            TicketScreen.nbOrdersIs(1),
 
             // Transfering order from table 5 to table 4
             Chrome.clickPlanButton(),
@@ -1060,6 +1062,8 @@ registry.category("web_tour.tours").add("test_transfering_orders", {
             ProductScreen.clickLine("Minute Maid", "3"),
             ProductScreen.clickLine("Coca-Cola", "3"),
             Chrome.clickOrders(),
+            TicketScreen.nbOrdersIs(2),
+            TicketScreen.selectFilter("Cancelled"),
             TicketScreen.nbOrdersIs(2),
 
             // Transfering order from table to floating order
@@ -1077,8 +1081,11 @@ registry.category("web_tour.tours").add("test_transfering_orders", {
             ProductScreen.clickLine("Minute Maid", "3"),
             Chrome.clickOrders(),
             TicketScreen.nbOrdersIs(1),
+            TicketScreen.selectFilter("Cancelled"),
+            TicketScreen.nbOrdersIs(3),
 
             // Transfering floating order to empty table
+            TicketScreen.selectFilter("Active"),
             TicketScreen.selectOrder("Water"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.clickControlButton("Transfer"),
@@ -1088,13 +1095,23 @@ registry.category("web_tour.tours").add("test_transfering_orders", {
             ProductScreen.clickLine("Minute Maid", "3"),
             Chrome.clickPlanButton(),
             FloorScreen.orderCountSyncedInTableIs("5", "1"),
+            Chrome.clickOrders(),
+            TicketScreen.nbOrdersIs(1),
+            TicketScreen.selectFilter("Cancelled"),
+            TicketScreen.nbOrdersIs(3),
 
             // Create a new floating order and transfer it to filled table
+            Chrome.clickPlanButton(),
             FloorScreen.clickNewOrder(),
             ProductScreen.clickDisplayedProduct("Water"),
             ProductScreen.setTab("Water2"),
             Chrome.clickPlanButton(),
             Chrome.clickOrders(),
+            TicketScreen.nbOrdersIs(2),
+            TicketScreen.selectFilter("Cancelled"),
+            TicketScreen.nbOrdersIs(3),
+
+            TicketScreen.selectFilter("Active"),
             TicketScreen.selectOrder("Water2"),
             TicketScreen.loadSelectedOrder(),
             ProductScreen.clickControlButton("Transfer"),
@@ -1104,6 +1121,8 @@ registry.category("web_tour.tours").add("test_transfering_orders", {
             ProductScreen.clickLine("Minute Maid", "3"),
             Chrome.clickOrders(),
             TicketScreen.nbOrdersIs(1),
+            TicketScreen.selectFilter("Cancelled"),
+            TicketScreen.nbOrdersIs(4),
         ].flat(),
 });
 registry.category("web_tour.tours").add("test_direct_sales", {

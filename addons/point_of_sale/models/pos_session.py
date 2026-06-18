@@ -557,7 +557,10 @@ class PosSession(models.Model):
         return {'successful': True}
 
     def post_close_register_message(self):
-        self.message_post(body=_('Closed Register'))
+        self.message_post(body=_('Closed Register'), author_id=self._get_message_author().id)
+
+    def _get_message_author(self):
+        return self.env.user.partner_id
 
     def update_closing_control_state_session(self, notes):
         # Prevent closing the session again if it was already closed

@@ -693,7 +693,6 @@ export class PosStore extends WithLazyGetterTrap {
         if (!orderIsDeleted) {
             return false;
         }
-        order.uiState.displayed = false;
         // Delete refunded lines linked to the current order
         for (const refundedLine of refundedOrderLines) {
             delete refundedLine.order?.uiState?.lineToRefund[refundedLine.uuid];
