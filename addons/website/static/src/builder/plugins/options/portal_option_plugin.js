@@ -1,7 +1,9 @@
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { WebsiteBorderConfigurator } from "@website/builder/plugins/options/website_border_configurator_option";
 
 export class PortalOptionPlugin extends Plugin {
     static id = "portalOption";
@@ -195,4 +197,13 @@ export class UpdatePortalCardListAction extends BuilderAction {
     }
 }
 
+export class PortalOption extends BaseOptionComponent {
+    static id = "portal_option";
+    static template = "website.PortalOption";
+    static components = {
+        WebsiteBorderConfigurator,
+    };
+}
+
 registry.category("website-plugins").add(PortalOptionPlugin.id, PortalOptionPlugin);
+registry.category("website-options").add(PortalOption.id, PortalOption);
