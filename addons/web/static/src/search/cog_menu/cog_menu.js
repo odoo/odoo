@@ -78,6 +78,10 @@ export class CogMenu extends ActionMenus {
         );
     }
 
+    hasGroupIcons(groupNumber) {
+        return this.cogItems.some((item) => item.groupNumber === groupNumber && item.icon);
+    }
+
     getPrintItemAriaLabel(item) {
         return _t("Print report: %s", item.description);
     }

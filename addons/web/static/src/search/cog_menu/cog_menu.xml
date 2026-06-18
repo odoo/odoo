@@ -34,12 +34,15 @@
                                 <i class="fa fa-print me-1"/> <t t-out="this.state.printItems[0].description"/>
                             </DropdownItem>
                         </t>
-
                         <t t-set="currentGroup" t-value="null"/>
+                        <t t-set="hasGroupIcons" t-value="null"/>
                         <t t-foreach="this.cogItems" t-as="item" t-key="item.key">
-                            <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
-                                <div role="separator" class="dropdown-divider"/>
+                            <t t-if="item_first or currentGroup !== item.groupNumber">
+                                <t t-set="currentGroup" t-value="item.groupNumber"/>
+                                <t t-set="hasGroupIcons" t-value="this.hasGroupIcons(currentGroup)"/>
+                                <div t-if="!item_first" role="separator" class="dropdown-divider"/>
                             </t>
+                            
 
                             <t t-if="item.Component" t-component="item.Component"/>
 
@@ -48,11 +51,10 @@
                                 class="{ [item.class]: !!item.class, 'o_menu_item': true, 'pe-none text-muted opacity-50': this.offlinePlugin.isOffline() and !(item.availableOffline and !this.env.model.root.isNew) }"
                                 onSelected="() => this.onItemSelected(item)"
                             >
-                                <i t-if="item.icon" t-att-class="item.icon" class="fa-fw oi-fw me-1"/>
+                                <i t-if="hasGroupIcons" t-att-class="item.icon ?? 'fa'" class="fa-fw oi-fw me-1"/>
                                 <t t-out="item.description"/>
                             </DropdownItem>
 
-                            <t t-set="currentGroup" t-value="item.groupNumber"/>
                         </t>
                     </t>
                 </Dropdown>
