@@ -76,6 +76,11 @@ export class ProductConfiguratorDialog extends Component {
             isPossibleCombination: this._isPossibleCombination,
         });
 
+        // If the product configurator is opened after the combo configurator (which happens if
+        // a combo product has optional products), props.products will contain a single product
+        // (i.e. the combo product), which should be linked to the previously selected combo
+        // items.
+
         this.props.products[0].selectedComboItems = this.props.selectedComboItems || [];
 
         this.state.products = this.props.products;

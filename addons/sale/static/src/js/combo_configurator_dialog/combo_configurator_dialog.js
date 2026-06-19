@@ -90,9 +90,7 @@ export class ComboConfiguratorDialog extends Component {
                     show_packaging: false,
                     ...this._getAdditionalRpcParams(),
                 });
-            const {
-                products,
-            } = productConfiguratorData;
+            const { products } = productConfiguratorData;
             this.dialog.add(ProductConfiguratorDialog, {
                 productTemplateId: product.product_tmpl_id,
                 products: products,

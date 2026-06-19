@@ -215,12 +215,8 @@ export class CartService {
         };
 
         const result = await this.rpc('/website_sale/product_configurator/get_values', configDataParams);
-        if (result.products || result.has_optional_products) {
-            const {
-                products,
-                optional_products,
-                currency_id,
-            } = result;
+        if (result.products) {
+            const { products, optional_products, currency_id } = result;
             return this._openProductConfigurator(
                 productTemplateId,
                 products,
@@ -235,6 +231,7 @@ export class CartService {
                 rest
             );
         }
+
         return this._makeRequest({
             productTemplateId,
             productId,

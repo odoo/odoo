@@ -19,27 +19,31 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         return super().sale_product_configurator_get_values(*args, **kwargs)
 
     def should_show_product_configurator(
-        self, single_product_variant_dict, product_template, **kwargs
+        self, single_product_variant_dict, product_template, is_product_configured=False, **kwargs
     ):
         """Return whether the product configurator dialog should be shown.
 
-        :param int product_template_id: The product being checked, as a `product.template` id.
+        :param dict single_product_variant_dict: Information about the single product variant.
+        :param recordset product_template: The product.template record being checked.
         :param bool is_product_configured: Whether the product is already configured.
         :rtype: bool
         :return: Whether the product configurator dialog should be shown.
         """
         if not request.is_frontend:
             return super().should_show_product_configurator(
-                single_product_variant_dict, product_template
+                single_product_variant_dict,
+                product_template,
+                is_product_configured=is_product_configured,
+                **kwargs,
             )
-        is_product_configured = kwargs.get("is_product_configured")
-        single_product_variant = product_template.get_single_product_variant()
+        if product_template._is_donation():
+            return False
         has_optional_products = bool(
             product_template.optional_product_ids.filtered(self._should_show_product)
         )
         return (
             has_optional_products
-            or not (single_product_variant.get("product_id") or is_product_configured)
+            or not (single_product_variant_dict.get("product_id") or is_product_configured)
             or (len(product_template._get_available_uoms()) > 1 and not is_product_configured)
         )
 

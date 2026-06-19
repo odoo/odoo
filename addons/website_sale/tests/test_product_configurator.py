@@ -329,6 +329,8 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
 
         self.assertFalse(show_configurator)
         self.assertFalse(configurator_values["has_optional_products"])
+        self.assertNotIn("products", configurator_values)
+        self.assertNotIn("optional_products", configurator_values)
 
     def test_product_configurator_extra_price_taxes(self):
         """Test that the product configurator applies taxes to PTAV extra prices."""
