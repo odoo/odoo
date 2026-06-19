@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import {
     BG_CLASSES_REGEX,
+    closestColoredElement,
     hasAnyNodesColor,
     hasColor,
     TEXT_CLASSES_REGEX,
@@ -67,8 +68,8 @@ export class ColorPlugin extends Plugin {
 
         /** Predicates */
         has_format_predicates: [
-            (node) => hasColor(closestElement(node), "color"),
-            (node) => hasColor(closestElement(node), "backgroundColor"),
+            (node) => !!closestColoredElement(node, "color"),
+            (node) => !!closestColoredElement(node, "backgroundColor"),
         ],
         normalize_handlers: this.normalize.bind(this),
         /** Providers */
@@ -119,7 +120,7 @@ export class ColorPlugin extends Plugin {
         if (nodes.length === 0) {
             return;
         }
-        const el = closestElement(nodes[0]);
+        const el = closestColoredElement(nodes[0], "backgroundColor");
         if (!el) {
             return;
         }
@@ -309,7 +310,12 @@ export class ColorPlugin extends Plugin {
 
         const getFonts = (selectedNodes) =>
             selectedNodes.flatMap((node) => {
+                // When removing a color, the closest <font> is not necessarily
+                // the one applying it (e.g. a <font> with a background color
+                // nested in a <font> with a text color).
+                const coloredFont = color ? null : closestColoredElement(node, mode);
                 let font =
+                    (coloredFont?.nodeName === "FONT" && coloredFont) ||
                     closestElement(node, "font") ||
                     closestElement(
                         node,
