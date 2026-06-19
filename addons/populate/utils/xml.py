@@ -65,6 +65,8 @@ def parse(xml):
             model_data['type'] = type_
         if ref := (model_elem.get('id') or model_elem.get('ref')):
             model_data['ref'] = ref
+        if domain := model_elem.get('domain'):
+            model_data['domain'] = domain
         if parallel := model_elem.get('parallel'):
             model_data['parallel'] = str2bool(parallel)
         if context := model_elem.get('context'):

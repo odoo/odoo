@@ -110,6 +110,7 @@ dictionaries – the same keys you would write as XML attributes
 | `id`       |              | Reference tag - lets later blocks target these records               |
 | `type`     |              | `create` (default) or `write`                                        |
 | `ref`      | for `write`  | Reference to a previously created batch (its `id`)                   |
+| `domain`   |              | ORM domain selecting target records; not allowed on create blocks    |
 | `scale`    |              | `True` (default) / `False` - whether `--scale` applies to this block |
 | `parallel` |              | `True` (default) / `False` - whether the job can run in parallel     |
 | `context`  |              | Python dict literal merged into the ORM context                      |
@@ -517,8 +518,29 @@ same blueprint, referenced by their `id`/`ref`:
 </model>
 ```
 
-A `write` block without `ref` updates **all** existing records of that
-model.
+A `write` block can also use a top-level `domain` to select target
+records:
+
+```xml
+<!-- Update all active customers -->
+<model name="res.partner" type="write"
+       domain="[('customer_rank', '>', 0), ('active', '=', True)]">
+    <field name="phone" generator="fake.phone_number"/>
+</model>
+```
+
+Targeting rules:
+
+| Attributes       | Target records                                              |
+|------------------|-------------------------------------------------------------|
+| `ref` only       | Records created under that populate reference               |
+| `domain` only    | Records of the job model matching the domain                |
+| `ref` + `domain` | Intersection: referenced records that also match the domain |
+| neither          | All existing records of the job model                       |
+
+Domains on `write` jobs are evaluated once to select the target
+records. They are not dynamic per generated record. Create jobs cannot
+define a top-level `domain`, they don't target records.
 
 ## Blueprint Inheritance
 

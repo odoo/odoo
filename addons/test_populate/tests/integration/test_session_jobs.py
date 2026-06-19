@@ -1,8 +1,9 @@
 from odoo.addons.populate import start_populate
+from odoo.addons.populate.models.job import MAX_RECORD_COMMIT_SIZE
 from odoo.addons.test_populate.tests.common import PopulateTestCase
 
 
-class TestJobTypes(PopulateTestCase):
+class TestSessionFieldGeneration(PopulateTestCase):
 
     def test_eval_generator(self):
         blueprint = self.env['populate.blueprint'].create({
@@ -93,7 +94,77 @@ class TestJobTypes(PopulateTestCase):
 
             self.assertEqual(product.name, "Product")
 
-    def test_write_job_type(self):
+    def test_field_with_no_generator_or_eval_uses_field_type_default(self):
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Default Generator Test',
+            'definition_json': [{
+                'name': 'test_populate.customer',
+                'count': 3,
+                'fields': {
+                    'name': {},         # char
+                    'email': {},        # char
+                    'age': {},          # integer
+                    'is_vip': {},       # boolean
+                    'total_spent': {},  # float
+                },
+            }],
+        })
+        session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
+        start_populate(session)
+
+        customer_ids = self.env['populate.model.data'].search([
+            ('session_id', '=', session.id),
+        ]).mapped('res_id')
+        customers = self.env['test_populate.customer'].browse(customer_ids)
+        self.assertEqual(len(customers), 3)
+
+        for customer in customers:
+            self.assertTrue(customer.name)
+            self.assertTrue(customer.email)
+
+    def test_field_with_no_generator_unknown_type_raises(self):
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Unknown Type Test',
+            'definition_json': [{
+                'name': 'test_populate.product',
+                'count': 1,
+                'fields': {
+                    'name': {'generator': 'textual.char'},
+                    'v_thing': {'virtual': True},  # virtual fields don't have a default generator
+                },
+            }],
+        })
+        session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
+        with self.assertRaises(ValueError) as cm:
+            start_populate(session)
+
+        self.assertIn('v_thing', str(cm.exception))
+
+    def test_explicit_eval_is_not_overridden_by_default(self):
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Eval Priority Test',
+            'definition_json': [{
+                'name': 'test_populate.product',
+                'count': 3,
+                'fields': {
+                    'name': {'eval': '"Fixed"'},
+                    'is_sellable': {'eval': 'True'},
+                },
+            }],
+        })
+        session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
+        start_populate(session)
+
+        product_ids = self.env['populate.model.data'].search([
+            ('session_id', '=', session.id),
+        ]).mapped('res_id')
+        products = self.env['test_populate.product'].browse(product_ids)
+        self.assertTrue(all(p.name == 'Fixed' for p in products))
+
+
+class TestWriteJobTargeting(PopulateTestCase):
+
+    def test_write_without_ref_generates_values_for_existing_records(self):
         existing_products = self.env['test_populate.product'].create([
             {'name': 'Product 1', 'price': 10.0},
             {'name': 'Product 2', 'price': 20.0},
@@ -123,7 +194,7 @@ class TestJobTypes(PopulateTestCase):
         for product in updated_products:
             self.assertTrue(product.description)
 
-    def test_blueprint_with_write_jobs_and_references(self):
+    def test_write_with_plain_ref_updates_created_records(self):
         blueprint = self.env['populate.blueprint'].create({
             'name': 'Create and Write Blueprint',
             'definition_json': [
@@ -205,19 +276,62 @@ class TestJobTypes(PopulateTestCase):
         for supplier in updated_suppliers:
             self.assertEqual(supplier.notes, "Global update")
 
+    def test_write_job_with_domain_only_updates_matching_records(self):
+        us_supplier, ca_supplier = self.env['test_populate.supplier'].create([{
+            'name': 'US Supplier',
+            'country_code': 'US',
+        }, {
+            'name': 'CA Supplier',
+            'country_code': 'CA',
+        }])
 
-class TestSubjobs(PopulateTestCase):
-
-    def test_large_record_count_subjobs(self):
         blueprint = self.env['populate.blueprint'].create({
-            'name': 'Large Count Blueprint',
+            'name': 'Write Domain Blueprint',
+            'definition_json': [{
+                'name': 'test_populate.supplier',
+                'type': 'write',
+                'domain': "[('country_code', '=', 'US')]",
+                'fields': {
+                    'notes': {'eval': '"Domain update"'},
+                },
+            }],
+        })
+
+        session = self.env['populate.session'].create({
+            'blueprint_id': blueprint.id,
+        })
+
+        start_populate(session)
+
+        self.assertEqual(us_supplier.notes, "Domain update")
+        self.assertFalse(ca_supplier.notes)
+
+    def test_write_job_with_ref_and_domain_updates_intersection(self):
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Write Ref Domain Blueprint',
             'definition_json': [
                 {
-                    'name': 'test_populate.product',
-                    'count': 25000,
+                    'name': 'test_populate.supplier',
+                    'ref': 'mixed_suppliers',
+                    'count': 2,
                     'fields': {
-                        'name': {'generator': 'textual.char'},
-                        'price': {'generator': 'scalar.float'},
+                        'name': {'generator': 'textual.char', 'length': 20},
+                        'v_index': {
+                            'virtual': True,
+                            'generator': 'misc.counter',
+                            'start': 0,
+                            'end': 2,
+                        },
+                        'country_code': {'eval': '"US" if v_index == 0 else "CA"'},
+                    },
+                },
+                {
+                    'name': 'test_populate.supplier',
+                    'type': 'write',
+                    'ref': 'mixed_suppliers',
+                    'domain': "[('country_code', '=', 'US')]",
+                    'fields': {
+                        'notes': {'eval': '"Intersection update"'},
                     },
                 },
             ],
@@ -225,10 +339,32 @@ class TestSubjobs(PopulateTestCase):
 
         session = self.env['populate.session'].create({
             'blueprint_id': blueprint.id,
-            'worker_count': 3,
         })
+        write_job = session.job_ids.filtered(lambda job: job.type == 'write')
+        self.assertEqual(write_job.domain, "[('country_code', '=', 'US')]")
+        self.assertEqual(
+            write_job.record_count,
+            2,
+            "The domain cannot narrow records that do not exist yet, so a plain ref write keeps "
+            "the referenced create count as an upper bound.",
+        )
 
-        self.assertTrue(session.job_ids.child_ids)
+        start_populate(session)
+
+        supplier_ids = self.env['populate.model.data'].search([
+            ('session_id', '=', session.id),
+            ('res_model', '=', 'test_populate.supplier'),
+            ('ref', '=', 'mixed_suppliers'),
+        ]).mapped('res_id')
+        suppliers = self.env['test_populate.supplier'].browse(supplier_ids)
+
+        us_supplier = suppliers.filtered(lambda supplier: supplier.country_code == 'US')
+        ca_supplier = suppliers.filtered(lambda supplier: supplier.country_code == 'CA')
+        self.assertEqual(us_supplier.notes, "Intersection update")
+        self.assertFalse(ca_supplier.notes)
+
+
+class TestWriteJobRecordCount(PopulateTestCase):
 
     def test_write_job_record_count_with_ref(self):
         blueprint = self.env['populate.blueprint'].create({
@@ -294,6 +430,46 @@ class TestSubjobs(PopulateTestCase):
         self.assertEqual(write_job.record_count, expected_count,
                          "Write job without ref should have record_count equal to existing records in DB")
 
+    def test_write_job_record_count_without_ref_counts_domain_matches_plus_preceding_creates(self):
+        self.env['test_populate.customer'].create([
+            {'name': 'Young Customer', 'email': 'young@test.com', 'age': 10},
+            {'name': 'Adult Customer', 'email': 'adult@test.com', 'age': 25},
+            {'name': 'Senior Customer', 'email': 'senior@test.com', 'age': 60},
+        ])
+
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Create Then Write Domain No Ref Blueprint',
+            'definition_json': [
+                {
+                    'name': 'test_populate.customer',
+                    'count': 5,
+                    'fields': {
+                        'name': {'generator': 'textual.char', 'length': 10},
+                        'email': {'generator': 'textual.char', 'length': 15},
+                    },
+                },
+                {
+                    'name': 'test_populate.customer',
+                    'type': 'write',
+                    'domain': "[('age', '>=', 20)]",
+                    'fields': {
+                        'is_vip': {'eval': 'True'},
+                    },
+                },
+            ],
+        })
+
+        session = self.env['populate.session'].create({
+            'blueprint_id': blueprint.id,
+        })
+
+        write_job = session.job_ids.filtered(lambda job: job.type == 'write')
+        self.assertEqual(
+            write_job.record_count,
+            7,
+            "No-ref write count should be matching existing records plus all preceding creates for the model.",
+        )
+
     def test_write_job_record_count_without_ref_includes_preceding_creates(self):
         existing = self.env['test_populate.customer'].create([
             {'name': 'Existing', 'email': 'existing@test.com'},
@@ -340,94 +516,6 @@ class TestSubjobs(PopulateTestCase):
             "Write job without ref should count existing records "
             "+ all preceding create jobs (with refs or not) for the model",
         )
-
-    def test_write_job_creates_subjobs_when_large(self):
-        create_count = 25000  # > MAX_RECORD_COMMIT_SIZE (10000)
-
-        blueprint = self.env['populate.blueprint'].create({
-            'name': 'Large Write Blueprint',
-            'definition_json': [
-                {
-                    'name': 'test_populate.customer',
-                    'count': create_count,
-                    'ref': 'big_customers',
-                    'fields': {
-                        'name': {'generator': 'textual.char', 'length': 10},
-                        'email': {'generator': 'textual.char', 'length': 15},
-                    },
-                },
-                {
-                    'name': 'test_populate.customer',
-                    'type': 'write',
-                    'ref': 'big_customers',
-                    'fields': {
-                        'is_vip': {'eval': 'True'},
-                    },
-                },
-            ],
-        })
-
-        session = self.env['populate.session'].create({
-            'blueprint_id': blueprint.id,
-            'worker_count': 3,
-        })
-
-        write_job = session.job_ids.filtered(lambda j: j.type == 'write' and not j.parent_id)
-        self.assertTrue(write_job.child_ids,
-                        "Write job with large record_count should be split into subjobs")
-        self.assertEqual(write_job.record_count, create_count)
-        self.assertEqual(
-            sum(write_job.child_ids.mapped('record_count')),
-            write_job.record_count,
-            "Subjobs record counts should sum up to parent's record_count",
-        )
-
-    def test_write_subjobs_have_correct_offset_and_limit(self):
-        self.env['test_populate.customer'].create([
-            {'name': f'Customer {i}', 'email': f'c{i}@test.com'}
-            for i in range(5)
-        ])
-
-        blueprint = self.env['populate.blueprint'].create({
-            'name': 'Write Ref Small Blueprint',
-            'definition_json': [
-                {
-                    'name': 'test_populate.customer',
-                    'count': 5,
-                    'ref': 'some_customers',
-                    'fields': {
-                        'name': {'generator': 'textual.char', 'length': 10},
-                        'email': {'generator': 'textual.char', 'length': 15},
-                    },
-                },
-                {
-                    'name': 'test_populate.customer',
-                    'type': 'write',
-                    'ref': 'some_customers',
-                    'fields': {
-                        'notes': {'eval': '"Updated"', 'null_ratio': 0},
-                    },
-                },
-            ],
-        })
-
-        session = self.env['populate.session'].create({
-            'blueprint_id': blueprint.id,
-        })
-
-        start_populate(session)
-
-        # Verify the created records were updated (write job targeted them via ref)
-        model_data = self.env['populate.model.data'].search([
-            ('session_id', '=', session.id),
-            ('res_model', '=', 'test_populate.customer'),
-            ('ref', '=', 'some_customers'),
-        ])
-        created_ids = model_data.mapped('res_id')
-        updated_customers = self.env['test_populate.customer'].browse(created_ids)
-        for customer in updated_customers:
-            self.assertEqual(customer.notes, "Updated",
-                             "Each record in the ref batch should have been updated by the write job")
 
     def test_write_job_scaling_factor_applied_to_record_count(self):
         blueprint = self.env['populate.blueprint'].create({
@@ -510,77 +598,114 @@ class TestSubjobs(PopulateTestCase):
                          "Write job without ref should sum existing records + all preceding unreferenced creates")
 
 
-class TestDefaultGenerators(PopulateTestCase):
+class TestSubjobs(PopulateTestCase):
 
-    def test_field_with_no_generator_or_eval_uses_field_type_default(self):
+    def test_large_create_job_is_split_into_subjobs(self):
+        create_count = 25000
+        self.assertGreater(create_count, MAX_RECORD_COMMIT_SIZE)
+
         blueprint = self.env['populate.blueprint'].create({
-            'name': 'Default Generator Test',
+            'name': 'Large Count Blueprint',
+            'definition_json': [
+                {
+                    'name': 'test_populate.product',
+                    'count': create_count,
+                    'fields': {
+                        'name': {'generator': 'textual.char'},
+                        'price': {'generator': 'scalar.float'},
+                    },
+                },
+            ],
+        })
+
+        session = self.env['populate.session'].create({
+            'blueprint_id': blueprint.id,
+        })
+
+        self.assertTrue(session.job_ids.child_ids)
+
+    def test_large_write_job_with_plain_ref_is_split_into_subjobs(self):
+        create_count = 25000
+        self.assertGreater(create_count, MAX_RECORD_COMMIT_SIZE)
+
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Large Write Blueprint',
+            'definition_json': [
+                {
+                    'name': 'test_populate.customer',
+                    'count': create_count,
+                    'ref': 'big_customers',
+                    'fields': {
+                        'name': {'generator': 'textual.char', 'length': 10},
+                        'email': {'generator': 'textual.char', 'length': 15},
+                    },
+                },
+                {
+                    'name': 'test_populate.customer',
+                    'type': 'write',
+                    'ref': 'big_customers',
+                    'fields': {
+                        'is_vip': {'eval': 'True'},
+                    },
+                },
+            ],
+        })
+
+        session = self.env['populate.session'].create({
+            'blueprint_id': blueprint.id,
+        })
+
+        write_job = session.job_ids.filtered(lambda j: j.type == 'write' and not j.parent_id)
+        self.assertTrue(write_job.child_ids,
+                        "Write job with large record_count should be split into subjobs")
+        self.assertEqual(write_job.record_count, create_count)
+        self.assertEqual(
+            sum(write_job.child_ids.mapped('record_count')),
+            write_job.record_count,
+            "Subjobs record counts should sum up to parent's record_count",
+        )
+
+    def test_write_subjobs_apply_offset_and_limit_after_domain(self):
+        create_count = 1205
+        self.assertGreater(create_count, MAX_RECORD_COMMIT_SIZE)
+
+        non_matching_customers = self.env['test_populate.customer'].create([
+            {'name': f'Young Customer {i}', 'email': f'young{i}@test.com', 'age': 10}
+            for i in range(5)
+        ])
+        matching_customers = self.env['test_populate.customer'].create([
+            {'name': f'Adult Customer {i}', 'email': f'adult{i}@test.com', 'age': 20}
+            for i in range(create_count)
+        ])
+
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Split Write Domain Blueprint',
             'definition_json': [{
                 'name': 'test_populate.customer',
-                'count': 3,
+                'type': 'write',
+                'domain': "[('age', '>=', 20)]",
                 'fields': {
-                    'name': {},         # char
-                    'email': {},        # char
-                    'age': {},          # integer
-                    'is_vip': {},       # boolean
-                    'total_spent': {},  # float
+                    'notes': {'eval': '"Domain split update"'},
                 },
             }],
         })
-        session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
+
+        session = self.env['populate.session'].create({
+            'blueprint_id': blueprint.id,
+        })
+
+        write_job = session.job_ids.filtered(lambda j: j.type == 'write' and not j.parent_id)
+        self.assertEqual(write_job.record_count, len(matching_customers))
+        self.assertTrue(write_job.child_ids, "The domain-targeted write job should be split into subjobs")
+        self.assertEqual(sum(write_job.child_ids.mapped('record_count')), len(matching_customers))
+
         start_populate(session)
 
-        customer_ids = self.env['populate.model.data'].search([
-            ('session_id', '=', session.id),
-        ]).mapped('res_id')
-        customers = self.env['test_populate.customer'].browse(customer_ids)
-        self.assertEqual(len(customers), 3)
-
-        for customer in customers:
-            self.assertTrue(customer.name)
-            self.assertTrue(customer.email)
-
-    def test_field_with_no_generator_unknown_type_raises(self):
-        blueprint = self.env['populate.blueprint'].create({
-            'name': 'Unknown Type Test',
-            'definition_json': [{
-                'name': 'test_populate.product',
-                'count': 1,
-                'fields': {
-                    'name': {'generator': 'textual.char'},
-                    'v_thing': {'virtual': True},  # virtual fields don't have a default generator
-                },
-            }],
-        })
-        session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
-        with self.assertRaises(ValueError) as cm:
-            start_populate(session)
-
-        self.assertIn('v_thing', str(cm.exception))
-
-    def test_explicit_eval_is_not_overridden_by_default(self):
-        blueprint = self.env['populate.blueprint'].create({
-            'name': 'Eval Priority Test',
-            'definition_json': [{
-                'name': 'test_populate.product',
-                'count': 3,
-                'fields': {
-                    'name': {'eval': '"Fixed"'},
-                    'is_sellable': {'eval': 'True'},
-                },
-            }],
-        })
-        session = self.env['populate.session'].create({'blueprint_id': blueprint.id})
-        start_populate(session)
-
-        product_ids = self.env['populate.model.data'].search([
-            ('session_id', '=', session.id),
-        ]).mapped('res_id')
-        products = self.env['test_populate.product'].browse(product_ids)
-        self.assertTrue(all(p.name == 'Fixed' for p in products))
+        self.assertTrue(all(customer.notes == "Domain split update" for customer in matching_customers))
+        self.assertFalse(any(customer.notes for customer in non_matching_customers))
 
 
-class TestRelationalRefDomain(PopulateTestCase):
+class TestDottedRefTargeting(PopulateTestCase):
     """Tests for the get_ref_domain() dotted-path (ref.field) feature."""
 
     def test_write_job_with_relational_ref_targets_corecords(self):
@@ -818,4 +943,43 @@ class TestRelationalRefDomain(PopulateTestCase):
         self.assertFalse(
             write_job.child_ids,
             "Write job with unknown record_count (relational ref) should not be split into subjobs",
+        )
+
+    def test_write_job_relational_ref_with_domain_keeps_unknown_count_and_no_subjobs(self):
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Relational Ref Domain No Split Blueprint',
+            'definition_json': [
+                {
+                    'name': 'test_populate.supplier',
+                    'ref': 'suppliers_domain_nosplit',
+                    'count': 30000,
+                    'fields': {
+                        'name': {'generator': 'textual.char', 'length': 20},
+                    },
+                },
+                {
+                    'name': 'test_populate.product',
+                    'type': 'write',
+                    'ref': 'suppliers_domain_nosplit.product_ids',
+                    'domain': "[('category', '=', 'books')]",
+                    'fields': {
+                        'description': {'eval': '"domain no split"', 'null_ratio': '0'},
+                    },
+                },
+            ],
+        })
+
+        session = self.env['populate.session'].create({
+            'blueprint_id': blueprint.id,
+            'worker_count': 3,
+        })
+
+        write_job = session.job_ids.filtered(
+            lambda job: job.type == 'write' and not job.parent_id,
+        )
+        self.assertEqual(write_job.record_count, 0)
+        self.assertEqual(write_job.domain, "[('category', '=', 'books')]")
+        self.assertFalse(
+            write_job.child_ids,
+            "Dotted-ref writes stay unsplit even when they also have a domain.",
         )

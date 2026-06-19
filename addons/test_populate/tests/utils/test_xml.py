@@ -71,6 +71,17 @@ class TestXMLParse(TransactionCase):
         result = xml.parse(xml_str)
         self.assertEqual(result[0]['ref'], 'special_products')
 
+    def test_parse_model_with_domain(self):
+        xml_str = '''
+        <data>
+            <model name="test_populate.product" domain="[('category', '=', 'books')]">
+                <field name="name" generator="textual.char"/>
+            </model>
+        </data>
+        '''
+        result = xml.parse(xml_str)
+        self.assertEqual(result[0]['domain'], "[('category', '=', 'books')]")
+
     def test_parse_model_missing_name_raises(self):
         xml_str = '''
         <data>

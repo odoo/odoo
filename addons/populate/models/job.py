@@ -3,12 +3,14 @@ from __future__ import annotations
 import logging
 import math
 import time
+from ast import literal_eval
 from contextlib import contextmanager
 from random import Random
 from typing import TYPE_CHECKING, Self
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 from odoo.tools import str2bool
 
 from ..generators import DEFAULT_GENERATORS, Generator, get_fields_vals
@@ -17,8 +19,6 @@ from ..utils.seed import derive_seed_from
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
-
-    from odoo.fields import Domain
 
 MAX_RECORD_COMMIT_SIZE = 1000
 
@@ -58,6 +58,7 @@ class Job(models.Model):
     If the job type is 'create' -> Annotates the records for referencing.
     If the job type is 'write' -> Refers to records with said reference.
     """)
+    domain = fields.Char(help="Domain selecting target records for jobs that update existing records.")
     model_name = fields.Char(required=True)
     record_count = fields.Integer(default=1)  # Semantics: 0 <-> None
     type = fields.Selection([
@@ -72,6 +73,10 @@ class Job(models.Model):
         "CHECK (record_count > 0 OR (type = 'write' AND record_count = 0))",
         "A job's record_count needs to be a non-zero positive integer. "
         "Only write jobs are allowed to have no record_count, whose cardinality is unknown at creation time.",
+    )
+    _create_job_without_domain = models.Constraint(
+        "CHECK (type != 'create' OR domain IS NULL OR domain = '')",
+        "Create jobs cannot define a domain.",
     )
     # partial unique constraint, subjobs copy the info from parents,
     # and you can have multiple write jobs refer the same created records' ref.
@@ -238,7 +243,7 @@ class Job(models.Model):
         self.ensure_one()
         assert self.type == 'write'
 
-        domain = self._get_ref_domain() if self.ref else []
+        domain = self._get_target_domain()
 
         slice_kwargs = {}
         if self.parent_id:
@@ -252,12 +257,15 @@ class Job(models.Model):
             vals = get_fields_vals(generators)
             record.write(vals)
 
-    def _get_ref_domain(self) -> Domain:
-        """Build the ORM domain matching records selected by this job's ``ref``.
+    def _get_target_domain(self) -> Domain:
+        """Build the ORM domain matching records selected by this job's ``domain`` (+ optional ``ref``)."""
+        self.ensure_one()
 
-        :return: Domain restricted to this job's session and blueprint.
-        """
-        return get_ref_domain(self.env, self.model_name, self.ref, self.session_id, self.blueprint_id)
+        domain = Domain(literal_eval(self.domain)) if self.domain else Domain.TRUE
+        if self.ref:
+            domain &= get_ref_domain(self.env, self.model_name, self.ref, self.session_id, self.blueprint_id)
+
+        return domain
 
     def __create_generators(self, seed: int) -> Mapping[str, Generator]:
         """Instantiate field generators from the job instructions.
