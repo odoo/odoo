@@ -47,11 +47,12 @@ SORT_ALIASES = {
 }
 
 RRULE_TYPE_SELECTION_UI = [
+    ('none', 'None'),
     ('daily', 'Daily'),
     ('weekly', 'Weekly'),
     ('monthly', 'Monthly'),
     ('yearly', 'Yearly'),
-    ('custom', 'Custom')
+    ('custom', 'Custom'),
 ]
 
 # regex to match common ways to represent time
@@ -269,11 +270,11 @@ class CalendarEvent(models.Model):
     # If some of these fields are set and recurrence_id does not exists,
     # a `calendar.recurrence.rule` will be dynamically created.
     rrule = fields.Char('Recurrent Rule', compute='_compute_recurrence', readonly=False)
-    rrule_type_ui = fields.Selection(RRULE_TYPE_SELECTION_UI, string='Repeat',
+    rrule_type_ui = fields.Selection(RRULE_TYPE_SELECTION_UI, string='Recurrence',
                                      compute="_compute_rrule_type_ui",
                                      readonly=False,
                                      help="Let the event automatically repeat at that interval")
-    rrule_type = fields.Selection(RRULE_TYPE_SELECTION, string='Recurrence',
+    rrule_type = fields.Selection(RRULE_TYPE_SELECTION, string='Repeat',
                                   help="Let the event automatically repeat at that interval",
                                   compute='_compute_recurrence', readonly=False)
     event_tz = fields.Selection(
@@ -554,7 +555,14 @@ class CalendarEvent(models.Model):
         """
         return [True] * len(vals_list)
 
-    @api.depends('recurrence_id', 'recurrency')
+    @api.onchange('rrule_type_ui')
+    def _onchange_rrule_type_ui(self):
+        if self.rrule_type_ui == 'none':
+            self.recurrency = False
+        else:
+            self.recurrency = True
+
+    @api.depends('recurrence_id')
     def _compute_rrule_type_ui(self):
         defaults = self.env["calendar.recurrence"].default_get(["interval", "rrule_type"])
         for event in self:
@@ -563,8 +571,10 @@ class CalendarEvent(models.Model):
                     event.rrule_type_ui = 'custom' if event.recurrence_id.interval != 1 else (event.recurrence_id.rrule_type)
                 else:
                     event.rrule_type_ui = defaults["rrule_type"]
+            else:
+                event.rrule_type_ui = 'none'
 
-    @api.depends('recurrence_id', 'recurrency', 'rrule_type_ui')
+    @api.depends('recurrence_id', 'recurrency')
     def _compute_recurrence(self):
         recurrence_fields = self._get_recurrent_fields()
         false_values = {field: False for field in recurrence_fields}  # computes need to set a value

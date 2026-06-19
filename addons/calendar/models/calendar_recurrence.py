@@ -50,8 +50,8 @@ RRULE_TYPE_SELECTION = [
 ]
 
 END_TYPE_SELECTION = [
-    ('count', 'Number of repetitions'),
-    ('end_date', 'End date'),
+    ('count', 'Repeating'),
+    ('end_date', 'Until'),
     ('forever', 'Forever'),
 ]
 
@@ -106,7 +106,7 @@ class CalendarRecurrence(models.Model):
     rrule_type = fields.Selection(RRULE_TYPE_SELECTION, default='weekly')
     end_type = fields.Selection(END_TYPE_SELECTION, default='forever')
     interval = fields.Integer(default=1)
-    count = fields.Integer(default=1)
+    count = fields.Integer(default=10)
     mon = fields.Boolean()
     tue = fields.Boolean()
     wed = fields.Boolean()
@@ -602,7 +602,7 @@ class CalendarRecurrence(models.Model):
             rrule_params['wkst'] = self._get_lang_week_start()
 
         # Limit the number of years to avoid creating recurrent events for up to hundreds of years
-        limit_years = self.env['ir.config_parameter'].sudo().get_int('calendar.max_recurrence_years', 15)
+        limit_years = self.env['ir.config_parameter'].sudo().get_int('calendar.max_recurrence_years', 5)
         if self.end_type == 'count':  # e.g. stop after X occurence
             rrule_params['count'] = min(self.count, MAX_RECURRENT_EVENT)
         elif self.end_type == 'forever':

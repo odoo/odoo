@@ -69,8 +69,8 @@ class TestRecurrentEvent(common.TransactionCase):
         }
         for rrule_type, name, expected_count in (
             ('daily', 'Daily Meeting', 720),
-            ('monthly', 'Monthly Meeting', 180),
-            ('yearly', 'Yearly Meeting', 15),
+            ('monthly', 'Monthly Meeting', 60),
+            ('yearly', 'Yearly Meeting', 5),
         ):
             with self.subTest(rrule_type=rrule_type):
                 self.CalendarEvent.create(dict(values, name=name, rrule_type=rrule_type))

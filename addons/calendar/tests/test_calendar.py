@@ -116,11 +116,11 @@ class TestCalendar(SavepointCaseWithUserDemo):
         f = Form(event.with_context(tz='America/New_York').with_user(self.user_demo))
         f.name = 'test'
         f.start = '2022-07-07 01:00:00'  # This is in UTC. In NY, it corresponds to the 6th of july at 9pm.
-        f.recurrency = True
+        f.rrule_type_ui = 'weekly'
         f.end_type = 'count'
         self.assertEqual(f.weekday, 'WED')
         self.assertEqual(f.event_tz, 'America/New_York', "The value should correspond to the user tz")
-        self.assertEqual(f.count, 1, "The default value should be displayed")
+        self.assertEqual(f.count, 10, "The default value should be displayed")
         self.assertEqual(f.interval, 1, "The default value should be displayed")
         self.assertEqual(f.month_by, "date", "The default value should be displayed")
         self.assertEqual(f.end_type, "count", "The default value should be displayed")

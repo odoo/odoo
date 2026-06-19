@@ -1,6 +1,8 @@
 import { FormController } from "@web/views/form/form_controller";
 import { useAskRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
 import { useService } from "@web/core/utils/hooks";
+import { executeButtonCallback } from "@web/views/view_button/view_button_hook";
+
 
 export class CalendarFormController extends FormController {
     setup() {
@@ -72,5 +74,34 @@ export class CalendarFormController extends FormController {
             [id], recurrenceUpdate
         ]);
         this.env.config.historyBack();
+    }
+
+    async save(params) {
+        const record = this.model.root;
+        let recurrenceUpdate = false;
+        if (record.data.recurrency || record.data.recurrence_id) {
+            recurrenceUpdate = await this.askRecurrenceUpdatePolicy();
+            record.update({"recurrence_update" : recurrenceUpdate});
+        }
+        let saved = false;
+        if (record.data.recurrency && !recurrenceUpdate) {
+            return saved;
+        }
+        if (this.props.saveRecord) {
+            saved = await this.props.saveRecord(record, params);
+        } else {
+            saved = await record.save({
+                onError: (error, options) => this.onSaveError(error, options, false),
+                ...params,
+            });
+        }
+        if (saved && this.props.onSave) {
+            this.props.onSave(record, params);
+        }
+        return saved;
+    }
+
+    saveButtonClicked(params = {}) {
+        return executeButtonCallback(this.ui.activeElement, () => this.save(params));
     }
 }

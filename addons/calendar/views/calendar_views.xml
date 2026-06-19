@@ -106,10 +106,7 @@
                 <header>
                     <button name="action_open_composer" class="btn btn-primary" type="object" string="Send email" invisible="not user_can_edit"/>
                 </header>
-                <div invisible="not recurrence_id" class="alert alert-info oe_edit_only" role="status">
-                    <label for="recurrence_update" class="me-2">Edit recurring event</label>
-                    <field name="recurrence_update" widget="radio" options="{'horizontal': True}"/>
-                </div>
+                <field name="recurrence_update" invisible="1"/>
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="active" invisible="1"/>
@@ -225,24 +222,36 @@
                                     <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True, 'on_tag_click': 'open_form'}" readonly="not user_can_edit"/>
                                     <field name="recurrence_id" invisible="1" />
                                     <field name="rrule_type" invisible="1" />
-                                    <field name="recurrency" widget="boolean_toggle" readonly="not user_can_edit"/>
-                                    <field name="rrule_type_ui" invisible="not recurrency" required="recurrency" readonly="not user_can_edit"/>
+                                    <field name="recurrency" invisible="1" />
+                                    <label for="rrule_type_ui" class="fw-bold text-900"></label>
+                                    <div>        
+                                        <div class="d-flex align-items-center gap-4">
+                                            <field name="rrule_type_ui" readonly="not user_can_edit"/>
+                                            <field name="end_type" invisible="not recurrency" required="recurrency" readonly="not user_can_edit"/>
+                                            <field name="count" invisible="end_type != 'count'" required="recurrency" readonly="not user_can_edit"/>
+                                            <span invisible="end_type != 'count'">times</span>
+                                            <field name="until" invisible="end_type != 'end_date'" readonly="not user_can_edit"
+                                                required="recurrency and end_type == 'end_date'"
+                                                placeholder="End date"
+                                            />
+                                        </div>
+                                    </div>
                                     <label for="interval" class="fw-bold text-900" invisible="not recurrency or rrule_type_ui != 'custom'"/>
                                     <div class="d-flex gap-1" invisible="not recurrency or rrule_type_ui != 'custom'">
                                         <field name="interval" string="Repeat every" class="oe_inline w-auto o_input_5ch" readonly="not user_can_edit"/>
-                                        <field name="rrule_type" nolabel="1" class="oe_inline" required="rrule_type_ui == 'custom'" readonly="not user_can_edit"/>
+                                        <field name="rrule_type" class="oe_inline" required="rrule_type_ui == 'custom'" readonly="not user_can_edit"/>
                                     </div>
                                     <span class="fw-bold text-nowrap" invisible="rrule_type_ui not in ['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'weekly')">Repeat on</span>
                                     <div invisible="rrule_type_ui not in ['weekly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'weekly')" ><widget name="calendar_week_days" readonly="not user_can_edit"/></div>
                                     <field name="recurrence_id" invisible="1" />
-
                                     <label string="Day of Month" for="month_by" class="fw-bold text-900" style="width: fit-content;" invisible="rrule_type_ui not in ['monthly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'monthly')"/>
                                     <div class="d-flex gap-2" invisible="rrule_type_ui not in ['monthly', 'custom'] or (rrule_type_ui == 'custom' and rrule_type != 'monthly')">
                                         <field name="month_by" nolabel="1" class="oe_inline w-auto" required="rrule_type_ui == 'monthly' or rrule_type == 'monthly'"/>
+                                        <span invisible="month_by != 'date'">The  
                                         <field name="day" nolabel="1" class="oe_inline w-auto"
                                             required="(rrule_type_ui == 'monthly' or rrule_type == 'monthly') and month_by == 'date'"
                                             invisible="month_by != 'date'"
-                                        />
+                                        />of the month</span>
                                         <field name="byday" string="The" class="oe_inline w-auto" nolabel="1"
                                             required="(rrule_type_ui == 'monthly' or rrule_type == 'monthly') and month_by == 'day'"
                                             invisible="month_by != 'day'"
@@ -250,15 +259,6 @@
                                         <field name="weekday" nolabel="1" class="oe_inline w-auto"
                                             required="(rrule_type_ui == 'monthly' or rrule_type == 'monthly') and month_by == 'day'"
                                             invisible="month_by != 'day'"
-                                        />
-                                    </div>
-                                    <label string="Until" for="end_type" class="fw-bold text-900" invisible="not recurrency"/>
-                                    <div class="d-flex gap-2" invisible="not recurrency">
-                                        <field name="end_type" class="oe_inline w-auto" nolabel="1" required="recurrency" readonly="not user_can_edit"/>
-                                        <field name="count" class="oe_inline w-auto" nolabel="1" invisible="end_type != 'count'" required="recurrency" readonly="not user_can_edit"/>
-                                        <field name="until" class="oe_inline w-auto" nolabel="1" invisible="end_type != 'end_date'" readonly="not user_can_edit"
-                                            required="recurrency and end_type == 'end_date'"
-                                            placeholder="e.g: 12/31/2030"
                                         />
                                     </div>
                                     <field name="event_tz" invisible="not recurrency" readonly="not user_can_edit"/>
