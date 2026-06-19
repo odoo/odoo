@@ -18,6 +18,7 @@ Integrates with the ETA portal to automatically send and sign the Invoices to th
         'data/l10n_eg_edi.activity.type.csv',
         'data/l10n_eg_edi.uom.code.csv',
         'data/uom.uom.csv',
+        'views/l10n_eg_edi_activity_type_view.xml',
         'views/uom_uom_view.xml',
         'views/account_move_view.xml',
         'views/account_journal_view.xml',
