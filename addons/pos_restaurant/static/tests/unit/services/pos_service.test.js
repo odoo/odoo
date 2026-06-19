@@ -510,4 +510,77 @@ describe("restaurant pos_store.js", () => {
         );
         expect(tableOrderChange[0].extra_data.order_label).toBe(`T ${table.table_number}`);
     });
+
+    test("use_show_items_on_course_ticket keeps course items while course firing", async () => {
+        const store = await setupPosEnv();
+        store.config.use_show_items_on_course_ticket = true;
+        const order = store.addNewOrder();
+        const course1 = store.addCourse();
+        const course2 = store.addCourse();
+        const course3 = store.addCourse();
+
+        const line1 = await store.addLineToOrder(
+            { product_tmpl_id: 5, qty: 1, course_id: course1 },
+            order
+        );
+        const line2 = await store.addLineToOrder(
+            { product_tmpl_id: 6, qty: 2, course_id: course1 },
+            order
+        );
+        const line3 = await store.addLineToOrder(
+            { product_tmpl_id: 8, qty: 1, course_id: course2 },
+            order
+        );
+        const line4 = await store.addLineToOrder(
+            { product_tmpl_id: 9, qty: 2, course_id: course2 },
+            order
+        );
+        const line5 = await store.addLineToOrder(
+            { product_tmpl_id: 10, qty: 1, course_id: course3 },
+            order
+        );
+        const line6 = await store.addLineToOrder(
+            { product_tmpl_id: 11, qty: 2, course_id: course3 },
+            order
+        );
+
+        course1.line_ids = [line1, line2];
+        course2.line_ids = [line3, line4];
+        course3.line_ids = [line5, line6];
+
+        const printedOrderChanges = [];
+        store.ticketPrinter.printOrderChanges = async ({ opts }) => {
+            printedOrderChanges.push(opts.orderChange);
+            return true;
+        };
+
+        await store.fireCourse(course2);
+
+        expect(order.lines).toHaveLength(6);
+        expect(printedOrderChanges).toHaveLength(1);
+        expect(printedOrderChanges[0].addedQuantity).toHaveLength(0);
+        expect(printedOrderChanges[0].removedQuantity).toHaveLength(0);
+        expect(printedOrderChanges[0].printNoteUpdateData).toBe(true);
+        expect(printedOrderChanges[0].noteUpdateTitle).toInclude("Course 2");
+        expect(printedOrderChanges[0].noteUpdateTitle).toInclude("fired");
+        expect(printedOrderChanges[0].noteUpdate).toHaveLength(2);
+        expect(printedOrderChanges[0].noteUpdate[0].basic_name).toBe("Wood chair");
+        expect(printedOrderChanges[0].noteUpdate[0].product_id).toBe(8);
+        expect(printedOrderChanges[0].noteUpdate[1].basic_name).toBe("Steel chair");
+        expect(printedOrderChanges[0].noteUpdate[1].product_id).toBe(9);
+
+        await store.fireCourse(course3);
+
+        expect(printedOrderChanges).toHaveLength(2);
+        expect(printedOrderChanges[1].addedQuantity).toHaveLength(0);
+        expect(printedOrderChanges[1].removedQuantity).toHaveLength(0);
+        expect(printedOrderChanges[1].printNoteUpdateData).toBe(true);
+        expect(printedOrderChanges[1].noteUpdateTitle).toInclude("Course 3");
+        expect(printedOrderChanges[1].noteUpdateTitle).toInclude("fired");
+        expect(printedOrderChanges[1].noteUpdate).toHaveLength(2);
+        expect(printedOrderChanges[1].noteUpdate[0].basic_name).toBe("Wood desk");
+        expect(printedOrderChanges[1].noteUpdate[0].product_id).toBe(10);
+        expect(printedOrderChanges[1].noteUpdate[1].basic_name).toBe("Steel desk");
+        expect(printedOrderChanges[1].noteUpdate[1].product_id).toBe(11);
+    });
 });
