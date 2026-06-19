@@ -184,7 +184,7 @@
             <span t-if="blog_post.message_ids" class="text-nowrap o_not_editable">|
             <i class="fa fa-comment ms-1 text-muted"/>
             <a href="#discussion">
-                <t t-out="len(blog_post.message_ids)"/>
+                <t t-out="len(blog_post.message_ids.filtered(lambda message: not message.subtype_id.internal))"/>
                 <t t-if="len(blog_post.message_ids) > 1">Comments</t>
                 <t t-else="">Comment</t>
             </a>
