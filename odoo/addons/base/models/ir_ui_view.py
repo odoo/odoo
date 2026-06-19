@@ -28,8 +28,6 @@ from odoo.tools.template_inheritance import apply_inheritance_specs, locate_node
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
 from odoo.tools.view_validation import valid_view, get_domain_value_names, get_expression_field_names, get_dict_asts
 
-from . import ir_access
-
 _logger = logging.getLogger(__name__)
 
 MOVABLE_BRANDING = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath', 'data-oe-source-id']
@@ -1535,13 +1533,8 @@ actual arch.
         """ Return the group expression object that represents the users who
         can perform ``operation`` on model ``model_name``.
         """
-        accesses = self.env['ir.access']._get_all_access().get(model_name, ())
-        operations = ir_access.IN_SELECTION['read']
-        return group_definitions.from_ids(
-            access.group_id
-            for access in accesses
-            if access.group_id and access.operation in operations
-        )
+        groups = self.env['ir.access']._get_groups_with_access(model_name, 'read')
+        return group_definitions.from_ids(groups._ids)
 
     def _add_missing_fields(self, node, name_manager):
         """ Add the fields required for evaluating expressions in the view given by ``node``. """

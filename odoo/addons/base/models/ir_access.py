@@ -7,7 +7,7 @@ from collections.abc import Iterator
 from odoo import api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import SQL, OrderedSet, frozendict
+from odoo.tools import SQL, frozendict
 from odoo.tools.safe_eval import safe_eval, time
 from odoo.tools.translate import _lt
 
@@ -390,15 +390,54 @@ class IrAccess(models.Model):
         operations = IN_SELECTION[operation]
 
         # groups that imply some group having some access record for model
-        # FIXME: does not take into account 'access' conditions in domains
-        group_ids = OrderedSet(
-            access.group_id
-            for access in self._get_all_access().get(model_name, ())
-            if access.group_id and access.operation in operations
-        )
-        groups = self.env['res.groups'].sudo().browse(group_ids).all_implied_by_ids
-
+        groups = self.env['res.groups'].sudo()
         model = self.env[model_name]
+        for access in self._get_all_access().get(model_name, ()):
+            if not (access.group_id and access.operation in operations):
+                continue
+            # extract the necessary 'access' conditions from the access' domain
+            domain_access_only = (
+                access.domain.map_conditions(lambda c: c if c.operator == 'access' else Domain.TRUE)
+                if isinstance(access.domain, Domain) else
+                Domain.TRUE
+            )
+            # domain_access_only is either TRUE, FALSE, an 'access' condition or
+            # a logical combination of 'access' conditions
+            if domain_access_only.is_false():
+                # no group of users can satisfy this domain
+                continue
+
+            if domain_access_only.is_true():
+                # no 'access' conditions, add the group
+                groups |= groups.browse(access.group_id).all_implied_by_ids
+                continue
+
+            # 'access' conditions found: for each of them, get all the user
+            #  groups satisfying them, logically combine them, and intersect
+            #  them with the groups of the access itself
+            def groups_satisfying(domain: Domain):
+                if domain.is_condition():
+                    assert domain.operator == 'access'
+                    comodel_name = model._fields[domain.field_expr].comodel_name
+                    return self._get_groups_with_access(comodel_name, domain.value)
+                if not hasattr(domain, 'OPERATOR'):  # custom domain
+                    return all_groups
+                if domain.OPERATOR == '|':
+                    return groups.browse().union(map(groups_satisfying, domain.children))
+                if domain.OPERATOR == '&':
+                    g = all_groups
+                    for d in domain.children:
+                        g &= groups_satisfying(d)
+                    return g
+                assert domain.OPERATOR == '!'
+                return all_groups - groups_satisfying(domain.child)
+
+            all_groups = groups.browse(groups._get_group_definitions().get_all_ids())
+            access_groups = groups.browse(access.group_id).all_implied_by_ids
+            groups |= access_groups & groups_satisfying(domain_access_only)
+
+        groups = groups.with_prefetch()
+
         if model._inherits:
             # groups must also have access to all parent models
             # FIXME: does not take into account overrides of method has_access()
