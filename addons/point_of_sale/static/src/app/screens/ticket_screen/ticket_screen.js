@@ -231,6 +231,12 @@ export class TicketScreen extends Component {
     onClickOrderline(orderline) {
         const order = this.getSelectedOrder();
         if (order?.finalized) {
+            // A refund line (one that already refunds another line) must not
+            // be refunded again, so a refund order cannot itself be refunded.
+            const refundableLine = orderline.combo_parent_id || orderline;
+            if (refundableLine.refunded_orderline_id) {
+                return;
+            }
             if (this.state.selectedOrderlineIds[order.id] == orderline.id) {
                 const toRefundDetail = this.getToRefundDetail(orderline);
                 if (Object.values(toRefundDetail).some((detail) => detail.destination_order_uuid)) {
