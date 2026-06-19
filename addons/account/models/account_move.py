@@ -5184,8 +5184,10 @@ class AccountMove(models.Model):
 
         def inverse_tax_rep(tax_rep):
             tax = tax_rep.tax_id
-            index = list(tax.invoice_repartition_line_ids).index(tax_rep)
-            return tax.refund_repartition_line_ids[index]
+            source, target = tax.invoice_repartition_line_ids, tax.refund_repartition_line_ids
+            if tax_rep.document_type == 'refund':
+                source, target = target, source
+            return target[list(source).index(tax_rep)]
 
         company = self.company_id
         payment_term_line = self.line_ids.filtered(lambda x: x.display_type == 'payment_term')
