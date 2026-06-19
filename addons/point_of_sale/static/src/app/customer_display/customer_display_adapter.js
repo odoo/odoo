@@ -63,6 +63,7 @@ export class CustomerDisplayPosAdapter {
             lines: order.lines.map((l) => this.getOrderlineData(l)),
             qrPaymentData: this.getQrPaymentData(order),
             displayScreenSaver: false,
+            processingValidation: order.processingValidation,
         };
     }
 

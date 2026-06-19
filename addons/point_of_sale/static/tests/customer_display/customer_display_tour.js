@@ -17,12 +17,12 @@ registry.category("web_tour.tours").add("CustomerDisplayTour", {
             CustomerDisplay.amountIs("Cash", "2,972.75"),
             CustomerDisplay.postMessage(CustomerDisplay.ORDER_IS_FINALIZED, "order is finalized"),
             {
-                content: "Check that we are now on the 'Thank you' screen",
-                trigger: "div:contains('Thank you.')",
+                content: "Check that we are now on the feedback screen",
+                trigger: ".feedback-summary",
             },
             CustomerDisplay.postMessage(CustomerDisplay.NEW_ORDER, "new order"),
             {
-                trigger: " div:contains('Welcome.')",
+                trigger: " div:contains('Welcome')",
             },
             Order.doesNotHaveLine({}),
             CustomerDisplay.amountIs("Total", "0.00"),
@@ -108,8 +108,8 @@ registry.category("web_tour.tours").add("CustomerDisplayTourWithQr", {
             CustomerDisplay.postMessage(CustomerDisplay.PAY_WITH_CARD, "confirm payment"),
             CustomerDisplay.postMessage(CustomerDisplay.ORDER_IS_FINALIZED, "order is finalized"),
             {
-                content: "Check that we are now on the 'Thank you' screen",
-                trigger: "div:contains('Thank you.')",
+                content: "Verify feedback summary screen is displayed",
+                trigger: ".feedback-summary",
             },
         ].flat(),
 });

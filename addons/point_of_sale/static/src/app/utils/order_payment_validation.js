@@ -149,6 +149,7 @@ export default class OrderPaymentValidation {
         this.pos.addPendingOrder([this.order.id]);
         this.order.state = "paid";
 
+        this.order.processingValidation = true;
         try {
             // 1. Save order to server.
             const syncOrderResult = await this.pos.syncAllOrders({ throw: true });
@@ -186,6 +187,8 @@ export default class OrderPaymentValidation {
             return await this.afterOrderValidation(!!syncOrderResult && syncOrderResult.length > 0);
         } catch (error) {
             return this.handleValidationError(error);
+        } finally {
+            this.order.processingValidation = false;
         }
     }
 

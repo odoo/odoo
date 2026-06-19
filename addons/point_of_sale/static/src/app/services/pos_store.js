@@ -9,6 +9,7 @@ import {
     orderUsageUTCtoLocalUtil,
     getTimeUtil,
     generateQRCodeDataUrl,
+    getColorScheme,
 } from "@point_of_sale/utils";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
@@ -364,6 +365,16 @@ export class PosStore extends WithLazyGetterTrap {
                     this.router.state.current === "LoginScreen" && this.navigate("SaverScreen"),
             },
         ];
+    }
+
+    get customerDisplayUrl() {
+        if (!localStorage.getItem("device_uuid")) {
+            localStorage.setItem("device_uuid", uuidv4());
+        }
+        const deviceUuid = localStorage.getItem("device_uuid");
+        return `${this.config._base_url}/pos_customer_display/${
+            this.config.id
+        }/${deviceUuid}?access_token=${this.config.access_token}&theme=${getColorScheme()}`;
     }
 
     async reloadData(fullReload = false) {

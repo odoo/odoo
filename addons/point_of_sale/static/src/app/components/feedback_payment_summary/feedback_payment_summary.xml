@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="point_of_sale.FeedbackPaymentSummary">
+        <div
+            t-ref="this.summaryContainerRef"
+            t-att-class="this.props.class"
+            class="feedback-summary bg-100 w-100 d-flex flex-column align-items-center justify-content-center"
+        >
+            <div style="width: 115px; height: 115px;">
+                <t t-if="!this.props.loading">
+                    <t t-call="point_of_sale.ValidationAnimation"/>
+                </t>
+            </div>
+            <div class="amount-paid fw-bolder mt-2">
+                <t t-if="this.props.loading">Processing...</t>
+                <t t-else="">Amount Paid</t>
+            </div>
+            <div class="amount-container">
+                <div t-ref="this.amountTextRef" class="amount lh-sm">
+                    <PriceFormatter price="this.props.formattedAmount"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
