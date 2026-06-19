@@ -98,21 +98,22 @@ export class SelectMenu extends Component {
         this.state = proxy({
             choices: [],
             displayedOptions: [],
-            searchValue: null,
             isFocused: false,
         });
-        this.inputRef = useRef("inputRef");
+
+        this.inputRefs = {
+            toggler: useRef("inputRefToggler"),
+            menu: useRef("inputRefMenu"),
+        };
+
         this.menuRef = useChildRef();
         this.choicesRef = useRef("choicesRef");
         this.props.menuRef?.(this.menuRef);
-        this.debouncedOnInput = useDebounced((ev) => {
+        this.debouncedOnInput = useDebounced(() => {
             if (!this.dropdownState.isOpen) {
                 this.dropdownState.open();
             }
-            const searchString = ev.target.value;
-            this.state.searchValue = searchString;
-            delete this.pendingValue;
-            this.onInput(searchString);
+            this.onInput(this.pendingValue);
         }, DEBOUNCED_DELAY);
         this.dropdownState = useDropdownState();
 
@@ -130,10 +131,15 @@ export class SelectMenu extends Component {
             () => {
                 if (this.dropdownState.isOpen) {
                     const groups = [{ choices: this.props.choices }, ...this.props.groups];
-                    this.filterOptions(this.state.searchValue, groups);
+                    this.filterOptions(this.pendingValue, groups);
                 }
             },
             () => [this.props.choices, this.props.groups]
+        );
+
+        useLayoutEffect(
+            () => this.updateInputValue(),
+            () => [this.selectedChoice]
         );
 
         const navigationCallback = (navigator) => {
@@ -175,16 +181,20 @@ export class SelectMenu extends Component {
 
     handleInputDebounced(ev) {
         this.pendingValue = ev.target.value;
-        this.debouncedOnInput(ev);
+        this.debouncedOnInput();
     }
 
-    get displayValue() {
-        if (this.pendingValue) {
-            return this.pendingValue;
+    clearInputValue() {
+        delete this.pendingValue;
+        this.updateInputValue();
+    }
+
+    updateInputValue(value = null) {
+        for (const ref of Object.values(this.inputRefs)) {
+            if (ref.el) {
+                ref.el.value = value || this.pendingValue || this.selectedChoice?.label || "";
+            }
         }
-        return this.state.searchValue === null
-            ? this.selectedChoice?.label || ""
-            : this.state.searchValue;
     }
 
     get displayInputInToggler() {
@@ -269,8 +279,12 @@ export class SelectMenu extends Component {
         if (this.displayInputInToggler) {
             this.state.isFocused = false;
         }
-        if (ev.target.value === "" && this.canDeselect && !this.props.multiSelect) {
-            this.onInputClear();
+        if (ev.target.value === "" && !this.props.multiSelect) {
+            if (this.canDeselect) {
+                this.onInputClear();
+            } else {
+                this.clearInputValue();
+            }
         }
     }
 
@@ -293,16 +307,17 @@ export class SelectMenu extends Component {
                 document.activeElement.blur();
             }
             if (this.displayInputInDropdown && !this.isBottomSheet) {
-                this.inputRef.el.focus();
+                this.inputRefs.menu.el?.focus();
             }
             this.choicesRef.el?.addEventListener("scroll", (ev) => this.onScroll(ev));
             const selectedElement = this.menuRef.el?.querySelectorAll(".selected")[0];
             if (selectedElement) {
                 scrollTo(selectedElement);
             }
+            this.updateInputValue();
             this.props.onOpened();
         } else {
-            this.state.searchValue = null;
+            this.clearInputValue();
             this.props.onClosed();
         }
     }
@@ -357,11 +372,11 @@ export class SelectMenu extends Component {
             }
         } else if (!this.selectedChoice || this.selectedChoice.value !== value) {
             this.props.onSelect(value);
-            if (this.inputRef.el && this.state.choices && this.state.choices.length) {
-                this.inputRef.el.value = this.state.choices.find((c) => c.value === value).label;
+            if (this.state.choices && this.state.choices.length) {
+                this.updateInputValue(this.state.choices.find((c) => c.value === value).label);
             }
         }
-        this.state.searchValue = null;
+        this.clearInputValue();
     }
 
     // ==========================================================================================

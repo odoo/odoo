@@ -27,25 +27,14 @@ registerBackendAndFrontendTour("question_tour", {}, () => [{
     trigger: `.note-editable p:not(:text(<br>))`,
 },
 {
-    trigger: ".o_select_menu_toggler",
     content: "Insert tags related to your question.",
-    tooltipPosition: "top",
-    run: "click",
-},
-{
-    content: "Make sure a SelectMenu has been opened",
-    trigger: ".o_select_menu_menu",
-},
-{
     trigger: ".o_select_menu_input",
-    run: "edit Test && press Tab",
-},
-{
-    trigger: ".o_select_menu_input:value(Test)",
+    tooltipPosition: "top",
+    run: "edit Test",
 },
 {
     content: "Select found select menu item",
-    trigger: ".o_popover.o_select_menu_menu .o_select_menu_item:contains('Test')",
+    trigger: ".o_select_menu_menu .o_select_menu_item:contains('Test')",
     run: 'click',
 },
 {
