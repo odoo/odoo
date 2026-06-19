@@ -62,6 +62,8 @@ class HrTimeRule(models.Model):
         )
 
         leave_create_vals = []
+        archive_source_ids = []
+
         for employee, by_source in deficit.items():
             tz = ZoneInfo(employee._get_tz())
             for source_leave, intervals in by_source.items():
@@ -103,9 +105,6 @@ class HrTimeRule(models.Model):
                         if allocation:
                             allocation.number_of_days = max(0, allocation.number_of_days - deduct_days)
 
-        remainder_writes = defaultdict(list)
-        zeroout_writes = defaultdict(list)
-
         for employee, by_source in excess.items():
             tz = ZoneInfo(employee._get_tz())
             for source_leave, intervals in by_source.items():
@@ -118,6 +117,8 @@ class HrTimeRule(models.Model):
                 if not output_slices:
                     continue
 
+                archive_source_ids.append(source_leave.id)
+
                 src_start = source_leave.date_from.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
                 src_stop = source_leave.date_to.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
                 src_iv = Intervals([(src_start, src_stop, self.env['resource.calendar'])])
@@ -125,21 +126,12 @@ class HrTimeRule(models.Model):
                     [(s, e, self.env['resource.calendar']) for s, e, _ in output_slices],
                     keep_distinct=True,
                 )
-                remainder = list(src_iv - out_iv)
-
-                if remainder:
-                    first_start, first_stop, _ = remainder[0]
-                    first_date_from = first_start.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-                    first_date_to = first_stop.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-                    remainder_writes[first_date_from, first_date_to].append(source_leave.id)
-                    for seg_start, seg_stop, _ in remainder[1:]:
-                        seg_date_from = seg_start.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-                        seg_date_to = seg_stop.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-                        leave_create_vals.append(
-                            self._get_remainder_leave_vals(employee, source_leave, seg_date_from, seg_date_to)
-                        )
-                else:
-                    zeroout_writes[source_leave.date_from].append(source_leave.id)
+                for seg_start, seg_stop, _ in src_iv - out_iv:
+                    seg_date_from = seg_start.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                    seg_date_to = seg_stop.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                    leave_create_vals.append(
+                        self._get_remainder_leave_vals(employee, source_leave, seg_date_from, seg_date_to)
+                    )
 
                 alloc_create_vals = []
                 for start_local, stop_local, rules in output_slices:
@@ -187,18 +179,7 @@ class HrTimeRule(models.Model):
                         self._get_output_leave_vals(employee, rule, date_from, date_to, source_leave, all_rules=all_rules)
                     )
 
-        all_modified_source_ids = []
-        for (df, dt), ids in remainder_writes.items():
-            Leave.browse(ids).with_context(**auto_ctx).write({
-                'date_from': df,
-                'date_to': dt,
-            })
-            all_modified_source_ids.extend(ids)
-        for date_from, ids in zeroout_writes.items():
-            Leave.browse(ids).with_context(**auto_ctx).write({'date_to': date_from})
-            all_modified_source_ids.extend(ids)
-        if all_modified_source_ids:
-            resource_leave_ctx = {k: v for k, v in auto_ctx.items() if k != 'skip_create_resource_leave'}
-            Leave.browse(all_modified_source_ids).with_context(**resource_leave_ctx)._create_resource_leave()
+        if archive_source_ids:
+            Leave.browse(archive_source_ids).with_context(**auto_ctx).write({'active': False})
 
         Leave.with_context(**auto_ctx).create(leave_create_vals)

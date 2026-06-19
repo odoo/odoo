@@ -47,44 +47,38 @@ class HrTimeRule(models.Model):
         return resolve_intervals_by_sequence(valid)
 
     def _apply_attendance_output(self, excess, deficit):
-        """Create output and remainder attendance records from the computed excess/deficit.
-        """
+        """Create output and remainder attendance records from the computed excess/deficit."""
         Attendance = self.env['hr.attendance'].sudo()
         auto_ctx = dict(skip_time_rules=True, tracking_disable=True)
         att_create_vals = []
+        archive_source_ids = []
         dummy = self.env['resource.calendar']
 
         for employee, by_source in excess.items():
             tz = ZoneInfo(employee._get_tz())
             for source_att, intervals in by_source.items():
-                output_intervals = self._resolve_output_intervals(intervals)
-                if not output_intervals:
-                    continue
-
-                # trim source att to the portion not covered by outputs
-                src_start = source_att.check_in.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
-                src_stop = source_att.check_out.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
-                out_union = Intervals([(s, e, dummy) for s, e, _ in output_intervals], keep_distinct=True)
-                remainder = list(Intervals([(src_start, src_stop, dummy)]) - out_union)
-
-                if remainder:
-                    s0, e0, _ = remainder[0]
-                    Attendance.browse([source_att.id]).with_context(**auto_ctx).write({
-                        'check_in': s0.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
-                        'check_out': e0.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
-                    })
-                    for s, e, _ in remainder[1:]:
+                # day-rule intervals: archive source + create remainder + create outputs
+                day_ivs = [(s, e, r) for s, e, r in intervals if r.quantity_period != 'week']
+                day_output_intervals = self._resolve_output_intervals(day_ivs)
+                if day_output_intervals:
+                    archive_source_ids.append(source_att.id)
+                    src_start = source_att.check_in.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+                    src_stop = source_att.check_out.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+                    out_union = Intervals([(s, e, dummy) for s, e, _ in day_output_intervals], keep_distinct=True)
+                    for s, e, _ in Intervals([(src_start, src_stop, dummy)]) - out_union:
                         att_create_vals.append(self._get_remainder_attendance_vals(
                             employee, source_att,
                             s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
                             e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
                         ))
-                else:
-                    Attendance.browse([source_att.id]).with_context(**auto_ctx).write(
-                        {'check_out': source_att.check_in}
-                    )
+                    for s, e, rule in day_output_intervals:
+                        ci = s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                        co = e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                        att_create_vals.append(self._get_output_attendance_vals(employee, rule, ci, co, source_att))
 
-                for s, e, rule in output_intervals:
+                # week-rule intervals: source stays active, just emit the output record
+                week_ivs = [(s, e, r) for s, e, r in intervals if r.quantity_period == 'week']
+                for s, e, rule in self._resolve_output_intervals(week_ivs):
                     ci = s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
                     co = e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
                     att_create_vals.append(self._get_output_attendance_vals(employee, rule, ci, co, source_att))
@@ -105,5 +99,8 @@ class HrTimeRule(models.Model):
                     ci = s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
                     co = e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
                     att_create_vals.append(self._get_output_attendance_vals(employee, rule, ci, co, source_att))
+
+        if archive_source_ids:
+            Attendance.browse(archive_source_ids).with_context(**auto_ctx).write({'active': False})
 
         Attendance.with_context(**auto_ctx).create(att_create_vals)
