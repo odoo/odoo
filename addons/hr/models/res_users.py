@@ -301,6 +301,8 @@ class ResUsers(models.Model):
         # HACK: search directly on public ids to avoid optimization on employee
         # where we may not have access to all fields.
         employee_field = 'employee_ids' if self.env['hr.employee'].has_access('read') else 'employee_public_ids'
+        if isinstance(value, models.Query):
+            value._model = None  # we use another model
         domain = Domain(employee_field, operator, value)
         user_ids = self.env['res.users'].with_context(active_test=False)._search(domain, limit=IN_MAX).get_result_ids()
         if len(user_ids) < IN_MAX:
