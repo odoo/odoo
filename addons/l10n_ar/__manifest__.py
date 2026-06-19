@@ -115,4 +115,12 @@ Master Data:
     ],
     'installable': True,
     'license': 'LGPL-3',
+    'assets': {
+        'web.assets_backend': [
+            'l10n_ar/static/src/helpers/*.js',
+        ],
+        'web.assets_frontend': [
+            'l10n_ar/static/src/helpers/*.js',
+        ],
+    },
 }
