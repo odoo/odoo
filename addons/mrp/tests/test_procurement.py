@@ -1452,3 +1452,68 @@ class TestProcurement(TestMrpCommon):
         self.assertRecordValues(target_moves, [
             {'quantity': 2.0}, {'quantity': 2.0}, {'quantity': 3.0}
         ])
+
+    def test_split_sn_mo_with_mto_component(self):
+        """
+        Check that generating a serial on a split MO with an MTO child MO does not raise a negative reservation error.
+        """
+        mto_route = self.warehouse_1.mto_pull_id.route_id
+        mto_route.action_unarchive()
+        final_product, super_component, basic_component = self.env['product.product'].create([
+            {'name': 'Final Product', 'is_storable': True, 'tracking': 'serial'},
+            {'name': 'Super Component', 'is_storable': True, 'tracking': 'serial', 'route_ids': [Command.set(mto_route.ids)]},
+            {'name': 'Basic Component', 'is_storable': True},
+        ])
+        self.env['mrp.bom'].create([
+            {
+                'product_tmpl_id': final_product.product_tmpl_id.id,
+                'product_qty': 1.0,
+                'bom_line_ids': [Command.create({'product_id': super_component.id, 'product_qty': 1})],
+            },
+            {
+                'product_tmpl_id': super_component.product_tmpl_id.id,
+                'product_qty': 1.0,
+                'bom_line_ids': [Command.create({'product_id': basic_component.id, 'product_qty': 1})],
+            },
+        ])
+        mo = self.env['mrp.production'].create({
+            'product_id': final_product.id,
+            'product_qty': 4.0,
+        })
+        mo.action_confirm()
+
+        # Split the child MO in 3 and validate the first one
+        child_mo = mo._get_children()
+        wizard = Form.from_action(self.env, child_mo.action_split())
+        wizard.max_batch_size = 1
+        wizard.save().action_split()
+        child_mos = child_mo.production_group_id.production_ids
+        self.assertEqual(len(child_mos), 4)
+        child_mos[-1].action_generate_serial()
+        child_mos[-1].button_mark_done()
+        self.assertEqual(child_mos[-1].state, 'done')
+
+        # Split the main MO in 3 and validate the first one
+        wizard = Form.from_action(self.env, mo.action_split())
+        wizard.max_batch_size = 1
+        wizard.save().action_split()
+        mos = mo.production_group_id.production_ids
+        self.assertEqual(len(mos), 4)
+        mos[0].action_generate_serial()
+        mos[0].button_mark_done()
+        self.assertEqual(mos[0].state, 'done')
+        self.assertEqual(mos.move_raw_ids.lot_ids, child_mos[-1].lot_producing_ids)
+
+        # Generate 3 serials but produce only 2 Super Component
+        child_mos[0].action_generate_serial()
+        child_mos[1].action_generate_serial()
+        child_mos[2].action_generate_serial()
+        child_mos[1:3].button_mark_done()
+        self.assertEqual(child_mos[1].state, 'done')
+        self.assertEqual(child_mos[2].state, 'done')
+        mos[1].action_generate_serial()
+        mos[1].button_mark_done()
+        self.assertEqual(mos[1].state, 'done')
+        self.assertEqual(mos[1].move_raw_ids.lot_ids, child_mos[1].lot_producing_ids)
+        self.assertEqual(mos[2].state, 'confirmed')
+        self.assertEqual(mos[2].move_raw_ids.lot_ids, child_mos[2].lot_producing_ids)
