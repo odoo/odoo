@@ -1,6 +1,6 @@
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { isColorGradient } from "@web/core/utils/colors";
-import { isElement } from "./dom_info";
+import { isElement, isParagraphRelatedElement } from "./dom_info";
 
 export const COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES = [
     "primary",
@@ -147,6 +147,38 @@ export function hasColor(element, mode) {
 }
 
 /**
+ * Returns the closest element applying a visible color (fore- or -background
+ * depending on the given mode) to the given node, if any.
+ *
+ * The color is not necessarily applied by the closest element: it can come
+ * from any inline ancestor (e.g. a <font> wrapping a <span>). The lookup is
+ * therefore done up to the closest block, or up to the closest list item
+ * ('color' mode) or table cell ('backgroundColor' mode), as those apply their
+ * color to their whole content. It is stopped by elements resetting the color
+ * of their content (`o_default_color`).
+ *
+ * @param {Node} node
+ * @param {string} mode 'color' or 'backgroundColor'
+ * @returns {Element|null}
+ */
+export function closestColoredElement(node, mode) {
+    // A list item applies its color, a table cell its background color, to
+    // their whole content.
+    const lookupLimit = closestElement(node, mode === "color" ? "li" : "td");
+    const isLookupLimit = (el) =>
+        lookupLimit ? el === lookupLimit : isParagraphRelatedElement(el);
+    let coloredElement;
+    const element = closestElement(node, (el) => {
+        if (hasColor(el, mode)) {
+            coloredElement = el;
+            return true;
+        }
+        return (mode === "color" && el.classList.contains("o_default_color")) || isLookupLimit(el);
+    });
+    return element === coloredElement ? element : null;
+}
+
+/**
  * Returns true if any given nodes has a visible color (fore- or
  * -background depending on the given mode).
  *
@@ -155,12 +187,7 @@ export function hasColor(element, mode) {
  * @returns {boolean}
  */
 export function hasAnyNodesColor(nodes, mode) {
-    for (const node of nodes) {
-        if (hasColor(closestElement(node), mode)) {
-            return true;
-        }
-    }
-    return false;
+    return nodes.some((node) => closestColoredElement(node, mode));
 }
 
 export function getTextColorOrClass(node) {

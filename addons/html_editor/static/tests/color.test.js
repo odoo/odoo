@@ -4,6 +4,7 @@ import { unformat } from "./_helpers/format";
 import { setColor } from "./_helpers/user_actions";
 import { getContent } from "./_helpers/selection";
 import { animationFrame, press } from "@odoo/hoot-dom";
+import { execCommand } from "./_helpers/userCommands";
 
 const redToBlueGradient = "linear-gradient(rgb(255, 0, 0), rgb(0, 0, 255))";
 const greenToBlueGradient = "linear-gradient(rgb(0, 255, 0), rgb(0, 0, 255))";
@@ -1117,4 +1118,36 @@ test("should not apply color to selection placeholder nodes", async () => {
             <p data-selection-placeholder="">]<br></p>
         `)
     );
+});
+
+test("should remove color of the node even if the font is not the direct parent of the text node", async () => {
+    await testEditor({
+        contentBefore:
+            '<p><a href="#" class="btn btn-primary">[\ufeff<span style="font-weight: normal;">Test</span>\ufeff]</a></p>',
+        stepFunction: (editor) => {
+            setColor("rgb(255, 0, 0)", "color")(editor);
+            expect(getContent(editor.editable)).toBe(
+                '<p>\ufeff<a href="#" class="btn btn-primary">[\ufeff<font style="color: rgb(255, 0, 0);"><span style="font-weight: normal;">Test</span></font>\ufeff]</a>\ufeff</p>'
+            );
+            // Remove format
+            execCommand(editor, "removeFormat");
+        },
+        contentAfterEdit:
+            '<p>\ufeff<a href="#" class="btn btn-primary">[\ufeff<span style="font-weight: normal;">Test</span>\ufeff]</a>\ufeff</p>',
+    });
+});
+
+test("should remove color of the node even if the color is applied on the list", async () => {
+    await testEditor({
+        contentBefore: "<ol><li><h3>[Test]</h3></li></ol>",
+        stepFunction: (editor) => {
+            setColor("rgb(255, 0, 0)", "color")(editor);
+            expect(getContent(editor.editable)).toBe(
+                '<ol><li style="color: rgb(255, 0, 0);"><h3>[Test]</h3></li></ol>'
+            );
+            // Remove format
+            execCommand(editor, "removeFormat");
+        },
+        contentAfterEdit: "<ol><li><h3>[Test]</h3></li></ol>",
+    });
 });

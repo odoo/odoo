@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import {
     BG_CLASSES_REGEX,
+    closestColoredElement,
     COLOR_COMBINATION_CLASSES_REGEX,
     hasAnyNodesColor,
     hasColor,
@@ -73,11 +74,13 @@ export class ColorPlugin extends Plugin {
 
         /** Predicates */
         has_format_predicates: [
-            (node) => hasColor(closestElement(node), "color"),
-            (node) => hasColor(closestElement(node), "backgroundColor"),
+            (node) => !!closestColoredElement(node, "color"),
+            (node) => !!closestColoredElement(node, "backgroundColor"),
         ],
         format_class_predicates: (className) =>
-            TEXT_CLASSES_REGEX.test(className) || BG_CLASSES_REGEX.test(className),
+            className === "o_default_color" ||
+            TEXT_CLASSES_REGEX.test(className) ||
+            BG_CLASSES_REGEX.test(className),
         normalize_handlers: this.normalize.bind(this),
     };
 
@@ -225,8 +228,8 @@ export class ColorPlugin extends Plugin {
                 const li = closestElement(node, "li");
                 if (li && color && this.dependencies.selection.areNodeContentsFullySelected(li)) {
                     const existingColor = li.style.color
-                    ? li.style.color
-                    : [...li.classList].find((cls) => TEXT_CLASSES_REGEX.test(cls));
+                        ? li.style.color
+                        : [...li.classList].find((cls) => TEXT_CLASSES_REGEX.test(cls));
                     return rgbaToHex(existingColor).toLowerCase() !== hexColor;
                 }
                 return true;
@@ -242,7 +245,12 @@ export class ColorPlugin extends Plugin {
 
         const getFonts = (selectedNodes) =>
             selectedNodes.flatMap((node) => {
+                // When removing a color, the closest <font> is not necessarily
+                // the one applying it (e.g. a <font> with a background color
+                // nested in a <font> with a text color).
+                const coloredFont = color ? null : closestColoredElement(node, mode);
                 let font =
+                    (coloredFont?.nodeName === "FONT" && coloredFont) ||
                     closestElement(node, "font") ||
                     closestElement(
                         node,
