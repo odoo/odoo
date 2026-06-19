@@ -7,6 +7,7 @@ import { isTextNode } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { isCSSColor, normalizeCSSColor, RGBA_REGEX } from "@web/core/utils/colors";
 import { withSequence } from "@html_editor/utils/resource";
+import { closestColoredElement } from "@html_editor/utils/color";
 
 const RGBA_OPACITY = 0.6;
 const HEX_OPACITY = "99";
@@ -130,7 +131,7 @@ export class ColorUIPlugin extends Plugin {
         if (nodes.length === 0) {
             return;
         }
-        const el = closestElement(nodes[0]);
+        const el = closestColoredElement(nodes[0], "backgroundColor");
         if (!el) {
             return;
         }
