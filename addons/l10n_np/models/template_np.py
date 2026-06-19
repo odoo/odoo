@@ -1,4 +1,4 @@
-from odoo import models, _
+from odoo import models
 from odoo.addons.account.models.chart_template import template
 
 
@@ -35,13 +35,5 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_valuation_id': 'stock_valuation',
                 'account_production_wip_account_id': 'wip',
                 'account_production_wip_overhead_account_id': 'cost_of_production',
-            },
-        }
-
-    @template('np', 'account.account')
-    def _get_np_account_account(self):
-        return {
-            'stock_valuation': {
-                'account_stock_variation_id': 'stock_variation',
             },
         }

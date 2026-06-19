@@ -10,6 +10,9 @@
     'depends': [
         'account',
     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
     'auto_install': True,
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
