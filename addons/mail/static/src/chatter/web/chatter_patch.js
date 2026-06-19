@@ -112,7 +112,7 @@ const chatterPatch = {
                         Promise.all(
                             files.map((file) => this.attachmentUploader.uploadFile(file))
                         ).then(() => {
-                            if (this.props.hasParentReloadOnAttachmentsChanged) {
+                            if (this.hasParentReloadOnAttachmentsChanged) {
                                 this.reloadParentView();
                             }
                         });
@@ -366,7 +366,7 @@ const chatterPatch = {
     },
 
     onPostCallback() {
-        if (this.props.hasParentReloadOnMessagePosted) {
+        if (this.hasParentReloadOnMessagePosted) {
             this.reloadParentView();
         }
         this.toggleComposer();
@@ -396,7 +396,7 @@ const chatterPatch = {
                     if (!thread.eq(self.state.thread)) {
                         return;
                     }
-                    if (self.props.hasParentReloadOnAttachmentsChanged) {
+                    if (self.hasParentReloadOnAttachmentsChanged) {
                         self.reloadParentView();
                     }
                     self.state.isAttachmentBoxOpened = true;
@@ -466,13 +466,21 @@ const chatterPatch = {
 
     async unlinkAttachment(attachment) {
         await this.attachmentUploader.unlink(attachment);
-        if (this.props.hasParentReloadOnAttachmentsChanged) {
+        if (this.hasParentReloadOnAttachmentsChanged) {
             this.reloadParentView();
         }
     },
 
     popoutAttachment() {
         this.attachmentPopout.popout();
+    },
+
+    get hasParentReloadOnMessagePosted() {
+        return this.props.hasParentReloadOnMessagePosted;
+    },
+
+    get hasParentReloadOnAttachmentsChanged() {
+        return this.props.hasParentReloadOnAttachmentsChanged;
     },
 };
 patch(Chatter.prototype, chatterPatch);
