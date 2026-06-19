@@ -2399,6 +2399,11 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(len(invoice.line_ids.filtered('reconciled')), 1)
 
     def test_avoid_removing_kit_bom_in_use(self):
+        """
+        Check that we can not unlink, archive or change the bom type of a kit bom
+        that is used by a relevant sale order line. In particular, sols
+        from an other company should not block these operations.
+        """
         so = self.env['sale.order'].create({
             'partner_id': self.partner_a.id,
             'order_line': [
@@ -2410,8 +2415,31 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
                     'tax_ids': False,
                 })],
         })
+<<<<<<< f7e877e1061053c4fbe544ac06b009778725955a
         self.bom_kit_1.action_archive()
         self.bom_kit_1.action_unarchive()
+||||||| aed1619c34b1f65bd9a3d155fe76a82d404ef5e7
+        self.bom_kit_1.toggle_active()
+        self.bom_kit_1.toggle_active()
+=======
+        company2 = self.env['res.company'].create({'name': 'company 2'})
+        so_2 = self.env['sale.order'].with_company(company2).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'name': self.kit_1.name,
+                'product_id': self.kit_1.id,
+                'product_uom_qty': 1.0,
+                'product_uom': self.kit_1.uom_id.id,
+                'price_unit': 5,
+                'tax_id': False,
+            })],
+        })
+        so_2.action_confirm()
+        self.bom_kit_1.write({'type': 'normal'})
+        self.bom_kit_1.write({'type': 'phantom'})
+        self.bom_kit_1.toggle_active()
+        self.bom_kit_1.toggle_active()
+>>>>>>> e5be5aa91861670140669bb6b9a0fc79d43c2618
 
         so.action_confirm()
         with self.assertRaises(UserError):
