@@ -139,10 +139,7 @@ test("hotkey control+enter on input triggers blur event before clicking dialog b
 
     await press("control+enter");
 
-    expect.verifySteps([
-        "inputBlur: new value",
-        "confirmed with value: new value"
-    ]);
+    expect.verifySteps(["inputBlur: new value", "confirmed with value: new value"]);
 });
 
 test("simple rendering with two dialogs", async () => {
@@ -500,4 +497,25 @@ test("back button closes dialog in mobile", async () => {
     expect(".o_dialog").toHaveCount(1);
     history.back();
     expect.verifySteps(["dismiss"]);
+});
+
+test("dialog can be closed on click away", async () => {
+    class Parent extends Component {
+        static template = xml`
+            <div>
+                <Dialog closeOnClickAway="true">
+                    Hello!
+                </Dialog>
+            </div>
+        `;
+        static props = ["*"];
+        static components = { Dialog };
+    }
+    await makeDialogMockEnv({ dialogData: { close: () => expect.step("close") } });
+    await mountWithCleanup(Parent);
+    expect(".o_dialog").toHaveCount(1);
+    await contains(".modal-content").click(); // inside => no click away
+    expect.verifySteps([]);
+    await contains(".modal-dialog").click(); // click away
+    expect.verifySteps(["close"]);
 });

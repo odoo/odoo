@@ -100,6 +100,7 @@ export class AttachmentList extends Component {
                 'Are you sure you want to delete "%s"?\nThis action cannot be undone.',
                 attachment.name
             ),
+            closeOnClickAway: true,
             confirmLabel: _t("Delete Attachment"),
             cancel: () => {},
             confirm: () => this.onConfirmUnlink(attachment),

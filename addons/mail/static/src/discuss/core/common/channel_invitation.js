@@ -182,6 +182,7 @@ export class ChannelInvitation extends Component {
                 "You're about to create a new invite link. The current link will no longer grant guests access to the channel. Do you want to proceed?"
             ),
             cancel: () => {},
+            closeOnClickAway: true,
             confirmLabel: _t("Generate"),
             confirm: () =>
                 this.orm.call("discuss.channel", "action_reset_invitation_uuid", [
