@@ -33,7 +33,7 @@ registry.category("web_tour.tours").add("test_edit_paid_order_stock", {
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.clickPartnerButton(),
-            PaymentScreen.clickCustomer("Partner Full"),
+            PaymentScreen.clickCustomer("APartner Full"),
             // This will set today's date as shipping date
             StockPaymentScreen.clickShipLaterButton(),
             PaymentScreen.clickValidate(),

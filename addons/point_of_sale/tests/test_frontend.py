@@ -620,7 +620,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             {'name': 'Partner Test 2'},
             {'name': 'Partner Test 3'},
             {
-                'name': 'Partner Full',
+                'name': 'APartner Full',
                 'email': 'partner.full@example.com',
                 'street': '77 Santa Barbara Rd',
                 'city': 'Pleasant Hill',
