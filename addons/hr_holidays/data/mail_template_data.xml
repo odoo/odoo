@@ -22,5 +22,30 @@
             </field>
             <field name="lang">{{ object.user_id.lang }}</field>
         </record>
+
+        <record id="mail_template_allocation_confirmed" model="mail.template">
+            <field name="name">Time Off Allocation Confirmed</field>
+            <field name="model_id" ref="hr_holidays.model_hr_leave_allocation"/>
+            <field name="subject">Time Off Allocation Confirmed: {{ object.work_entry_type_id.name }} ({{ object.number_of_days_display }} {{ 'hours' if object.type_request_unit == 'hour' else 'days' }})</field>
+            <field name="description">Sent to employee when their time off allocation is confirmed</field>
+            <field name="body_html" type="html">
+                <div>
+                    Dear <t t-out="object.employee_id.name or 'Employee'"/>,<br/><br/>
+                    Your time off allocation has been confirmed.<br/><br/>
+                    Details:<br/>
+                    - Time Type: <t t-out="object.work_entry_type_id.name or ''"/><br/>
+                    - Allocation: <t t-out="object.number_of_days_display or ''"/> <t t-if="object.type_request_unit == 'hour'">Hours</t><t t-else="">Days</t><br/>
+                    - Valid From: <t t-out="object.date_from or ''"/> <t t-if="not object.date_to">(No Expiry)</t><t t-else=""> to <t t-out="object.date_to or ''"/></t><br/>
+                    <t t-if="object.accrual_plan_id">
+                    - Accrual Plan: <t t-out="object.accrual_plan_id.name or ''"/><br/>
+                    </t>
+                    <br/>
+                    For any questions, contact HR Responsible.<br/><br/>
+                    Regards,<br/>
+                    <t t-out="object.env.user.name or ''"/>
+                </div>
+            </field>
+            <field name="lang">{{ object.employee_id.user_id.lang }}</field>
+        </record>
     </data>
 </odoo>
