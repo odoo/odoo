@@ -35,6 +35,15 @@ class PaypalController(http.Controller):
             ._search_by_reference("paypal", {"reference_id": reference})
         )
         if tx_sudo:
+            if tx_sudo.payment_method_code == "card":
+                order_details = tx_sudo._send_api_request("GET", f"/v2/checkout/orders/{order_id}")
+                card_info = order_details.get("payment_source", {}).get("card", {})
+                auth_result = card_info.get("authentication_result", {})
+                if (
+                    auth_result and auth_result.get("liability_shift") != "POSSIBLE"
+                ):  # TODO LEKER BE LESS RESTRICTIVE
+                    raise ValidationError(self.env._("3D Secure authentication failed."))
+
             idempotency_key = payment_utils.generate_idempotency_key(
                 tx_sudo, scope="payment_request_controller"
             )
@@ -155,9 +164,9 @@ class PaypalController(http.Controller):
         except ValidationError:
             if tx_sudo:
                 tx_sudo.with_context(
-                # The verification request is idempotent; the handler is safe to replay
-                payment_safe_write=True
-            )._set_error(self.env._("Unable to verify the payment data"))
+                    # The verification request is idempotent; the handler is safe to replay
+                    payment_safe_write=True
+                )._set_error(self.env._("Unable to verify the payment data"))
             return
 
         if verification.get("verification_status") != "SUCCESS":

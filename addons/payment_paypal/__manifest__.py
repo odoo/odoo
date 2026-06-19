@@ -12,6 +12,7 @@
         "views/payment_form_templates.xml",
         "views/payment_provider_views.xml",
         "views/payment_transaction_views.xml",
+        "views/payment_paypal_templates.xml",
         "data/payment_method_data.xml",
         "data/payment_provider_data.xml",
     ],

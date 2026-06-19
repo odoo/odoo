@@ -145,6 +145,7 @@ class PaymentProvider(models.Model):
         inline_form_values = {
             "provider_id": self.id,
             "client_id": self.paypal_client_id,
+            "merchant_id": self.paypal_account_id,
             "currency_code": currency and currency.name,
             "country_code": partner.country_code,
         }
