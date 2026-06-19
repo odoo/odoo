@@ -630,9 +630,9 @@ export class PropertiesField extends Component {
             type: "char",
             definition_changed: true,
         });
+        await this.props.record.update({ [this.props.name]: propertiesDefinitions });
         this.openPropertyDefinition = newName;
         this.state.showAddButton = true;
-        this.props.record.update({ [this.props.name]: propertiesDefinitions });
     }
 
     /**
