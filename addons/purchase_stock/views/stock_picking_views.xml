@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="purchase_help_message_template" inherit_id="stock.help_message_template">
-        <xpath expr="//p[@name='top_help_message']/t[@name='receipt_message']" position="replace">
-            <t t-if="picking_type_code == 'incoming'">
-                No receipt yet! Automate them with purchase orders.
-            </t>
-        </xpath>
-        <xpath expr="//p[@name='bottom_help_message']" position="after">
-            <a t-if="picking_type_code == 'incoming'" class="btn btn-secondary" name="purchase.purchase_form_action" type="action">Purchase Orders</a>
-        </xpath>
-    </template>
+    <record id="stock.action_picking_tree_incoming" model="ir.actions.act_window">
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face o_view_nocontent_stock">
+                    No receipt yet! Automate them with purchase orders.
+                </p>
+                <p class="text-muted">
+                    Reduce stockouts with alerts, barcode app, replenishment propositions, etc.
+                </p>
+                <a class="btn btn-secondary" name="purchase.purchase_form_action" type="action">
+                    Purchase Orders
+                </a>
+            </field>
+    </record>
+
     <record model="ir.ui.view" id="view_picking_form">
         <field name="name">purchase.stock.view.picking.form</field>
         <field name="model">stock.picking</field>
