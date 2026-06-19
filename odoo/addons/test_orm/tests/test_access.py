@@ -1,4 +1,5 @@
 from contextlib import contextmanager
+import functools
 import re
 
 from odoo import Command
@@ -320,3 +321,48 @@ class TestAccess(TransactionCase):
                 r"If you really"
             ):
                 self.records.check_access('read')
+
+    def test_get_groups_with_access(self):
+        recs = self.records
+        get_groups_with_access = self.env['ir.access']._get_groups_with_access
+        get_groups = functools.partial(get_groups_with_access, recs._name, 'read')
+        self.assertFalse(get_groups())
+
+        # simple group (self.group1.all_implied_by_ids == self.group1)
+        self.make_access("Good guys", records=recs[:5], group=self.group1)
+        self.assertEqual(get_groups(), self.group1)
+
+        # using access operator (group everyone)
+        Category = self.env['test_access_right.obj_categ']
+        everyone = self.env.ref('base.group_everyone')
+        comodel_groups = get_groups_with_access(Category._name, 'read')
+        assert everyone not in comodel_groups
+
+        rule = self.make_access("Delegated permission", group=everyone)
+        rule.domain = str([('categ_id', 'access', 'read')])
+        groups = get_groups()
+        self.assertEqual(groups, self.group1 | comodel_groups)
+        self.assertNotIn(everyone, groups, "Everyone should not be part of the group")
+
+        # using access operator (restriced group)
+        access_group = self.env.ref('base.group_user')
+        rule.group_id = access_group
+        self.assertEqual(get_groups(), self.group1 | (access_group.all_implied_by_ids & comodel_groups))
+
+        # combining access, where access condition is necessary
+        rule.group_id = everyone
+        rule.domain = str(['&', ('categ_id', 'access', 'read'), ('id', '>', 5)])
+        self.assertEqual(get_groups(), self.group1 | comodel_groups)
+
+        # combining access, where access condition is not necessary
+        rule.domain = str(['|', ('categ_id', 'access', 'read'), ('id', '>', 5)])
+        self.assertEqual(get_groups(), self.group1 | everyone.all_implied_by_ids)
+
+        # combining access, where access conditions are necessary
+        comodel_groups_write = get_groups_with_access(Category._name, 'write')
+        rule.domain = str(['&', ('categ_id', 'access', 'read'), ('categ_id', 'access', 'write')])
+        self.assertEqual(get_groups(), self.group1 | (comodel_groups & comodel_groups_write))
+
+        # combining access, where access condition is negated
+        rule.domain = str(['&', ('categ_id', 'access', 'read'), '!', ('categ_id', 'access', 'write')])
+        self.assertEqual(get_groups(), self.group1 | (comodel_groups - comodel_groups_write))
