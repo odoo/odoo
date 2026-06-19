@@ -148,6 +148,7 @@ export class AttachmentList extends Component {
                     }
                 ),
                 confirmLabel: _t("Delete Attachment"),
+                closeOnClickAway: true,
                 cancel: () => resolve(false),
                 confirm: () => {
                     this.onConfirmUnlink(duplicates);

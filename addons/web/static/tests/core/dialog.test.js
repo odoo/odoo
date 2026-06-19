@@ -5,6 +5,8 @@ import {
     keyUp,
     mockTouch,
     mockUserAgent,
+    pointerDown,
+    pointerUp,
     press,
     queryAllTexts,
     queryOne,
@@ -21,6 +23,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { Dialog } from "@web/core/dialog/dialog";
+import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useService } from "@web/core/utils/hooks";
 
 test("simple rendering", async () => {
@@ -505,4 +508,45 @@ test("back button closes dialog in mobile", async () => {
     expect(".o_dialog").toHaveCount(1);
     history.back();
     expect.verifySteps(["dismiss"]);
+});
+
+test.tags("desktop");
+test("dialog can be closed on click away", async () => {
+    class CustomDialog extends Component {
+        static components = { Dialog };
+        static template = xml`<Dialog closeOnClickAway="true"><input class="my-input"/></Dialog>`;
+    }
+    await mountWithCleanup(MainComponentsContainer);
+    getService("dialog").add(CustomDialog, {}, { onClose: () => expect.step("close") });
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(1);
+    await contains(".my-input").click(); // inside => no click away
+    expect(".o_dialog").toHaveCount(1);
+    expect.verifySteps([]);
+    // e.g. selecting the text of the input and releasing on the backdrop
+    await pointerDown(".my-input");
+    await pointerUp(".modal-dialog");
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(1);
+    expect.verifySteps([]);
+    await contains(".modal-dialog").click(); // click away
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(0);
+    expect.verifySteps(["close"]);
+});
+
+test.tags("desktop");
+test("dialog is not closed on click away by default", async () => {
+    class CustomDialog extends Component {
+        static components = { Dialog };
+        static template = xml`<Dialog>Hello!</Dialog>`;
+    }
+    await mountWithCleanup(MainComponentsContainer);
+    getService("dialog").add(CustomDialog, {}, { onClose: () => expect.step("close") });
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(1);
+    await contains(".modal-dialog").click();
+    await animationFrame();
+    expect(".o_dialog").toHaveCount(1);
+    expect.verifySteps([]);
 });
