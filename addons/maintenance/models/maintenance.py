@@ -223,8 +223,8 @@ class MaintenanceEquipment(models.Model):
         """ Read group customization in order to display all the categories in
             the kanban view, even if they are empty.
         """
-        # bypass permissions, but search with restrictions only
-        search_domain = self.env['ir.access']._get_restriction_domain_for(categories._name, 'read')
+        # bypass permissions, but search with company restriction only
+        search_domain = [] if self.env.su else [('company_id', 'in', self.env.companies.ids)]
         category_ids = categories.sudo()._search(search_domain, order=categories._order)
         return categories.browse(category_ids)
 
