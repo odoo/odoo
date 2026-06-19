@@ -59,3 +59,8 @@ class CalendarEvent(models.Model):
             for event in self:
                 if event.applicant_id.id == applicant_id:
                     event.is_highlighted = True
+
+    def _sync_linked_document(self):
+        super()._sync_linked_document()
+
+        self._sync_linked_model_field('hr.applicant', 'applicant_id')
