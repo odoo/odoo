@@ -5,7 +5,7 @@
         <field name="model">res.company</field>
         <field name="inherit_id" ref="base.view_company_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='vat']" position="after">
+            <xpath expr="//div[@name='identifiers']" position="after">
                 <field name="l10n_es_edi_verifactu_special_vat_regime"
                        invisible="country_code != 'ES'"/>
             </xpath>

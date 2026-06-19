@@ -37,7 +37,7 @@
         <field name="inherit_id" ref="base.view_company_form"/>
         <field name="arch" type="xml">
         <data>
-            <xpath expr="//field[@name='vat']" position="after">
+            <xpath expr="//div[@name='identifiers']" position="after">
                 <field name="l10n_it_codice_fiscale" invisible="country_code != 'IT'"/>
                 <field name="l10n_it_tax_system" invisible="country_code != 'IT'"/>
             </xpath>

@@ -6,7 +6,7 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="l10n_latam_base.view_partner_latam_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='vat']/.." position="after">
+            <xpath expr="//div[@name='identifiers']" position="after">
                 <field name="l10n_ar_afip_responsibility_type_id"
                        invisible="'AR' not in fiscal_country_codes"
                        options="{'no_open': True, 'no_create': True}"
