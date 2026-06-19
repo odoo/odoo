@@ -100,8 +100,7 @@ const clearbitSuggestions = [
     },
 ];
 
-onRpc("res.partner", "autocomplete_by_name", () => iapSuggestions);
-onRpc("res.partner", "autocomplete_by_vat", () => iapSuggestions);
+onRpc("res.partner", "autocomplete_by_field", () => iapSuggestions);
 onRpc("res.partner", "enrich_by_duns", ({ args }) => ({
     name: iapSuggestions.filter((sugg) => sugg.duns === args[0])[0].name,
     vat: "BE0477472701",

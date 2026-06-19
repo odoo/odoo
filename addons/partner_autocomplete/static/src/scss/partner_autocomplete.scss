@@ -2,3 +2,9 @@
 .o_form_view .o_form_editable .oe_title .o_field_field_partner_autocomplete {
 	width: 100%;
 }
+
+.o_inner_group>.o_cell:has(> .o_field_widget.o_field_additional_identifiers_list_partner_autocomplete),
+.o_field_widget.o_field_additional_identifiers_list_partner_autocomplete,
+.o_additional_identifiers_list_partner_autocomplete {
+    display: contents;
+}

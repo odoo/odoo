@@ -76,7 +76,7 @@ export class PartnerAutoCompleteMany2one extends Component {
                     	if (shouldSearchWorldWide){
 							queryCountryId = 0;
 						}
-                        const suggestions = await this.partnerAutocomplete.autocomplete(request, queryCountryId);
+                        const suggestions = await this.partnerAutocomplete.autocomplete("name", request, queryCountryId);
                         return suggestions.map((suggestion) => ({
                             cssClass: "partner_autocomplete_dropdown_many2one",
                             data: suggestion,
