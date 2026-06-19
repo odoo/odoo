@@ -14,6 +14,7 @@ from unittest.mock import patch
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 from odoo.sql_db import Cursor
 from odoo.tests import Form, HttpCase, users, tagged
 from odoo.tools import mute_logger
@@ -268,34 +269,40 @@ class TestMassMailValues(MassMailCommon):
             }
         ])
 
-        # check that adding mailing_filter_id updates domain correctly
-        mailing.mailing_filter_id = filter_2
+        # check that adding mailing_filter_ids updates domain correctly
+        mailing.mailing_filter_ids = filter_2
         self.assertEqual(literal_eval(mailing.mailing_domain), literal_eval(filter_2.mailing_domain))
 
         # cannot set a filter linked to another model
         with self.assertRaises(ValidationError):
-            mailing.mailing_filter_id = filter_1
+            mailing.mailing_filter_ids = filter_1
 
         # resetting model should reset domain, even if filter was chosen previously
         mailing.mailing_model_id = self.env['ir.model']._get('discuss.channel').id
         self.assertEqual(literal_eval(mailing.mailing_domain), [])
 
         # changing the filter should update the mailing domain correctly
-        mailing.mailing_filter_id = filter_1
+        mailing.mailing_filter_ids = filter_1
         self.assertEqual(literal_eval(mailing.mailing_domain), literal_eval(filter_1.mailing_domain))
 
-        # changing the domain should not empty the mailing_filter_id
-        mailing.mailing_domain = "[('email', 'ilike', 'info_be@odoo.com')]"
-        self.assertEqual(mailing.mailing_filter_id, filter_1, "Filter should not be unset even if domain is changed")
+        # can set multiple filters and the mailing_domain should be the union of corresponding domains
+        mailing.mailing_model_id = self.env['ir.model']._get('res.partner').id
+        mailing.mailing_filter_ids = filter_2 | filter_3
+        filters_domain = Domain.OR([literal_eval(filter_2.mailing_domain), literal_eval(filter_3.mailing_domain)])
+        self.assertEqual(mailing.mailing_domain, repr(filters_domain))
+
+        # cannot set filters that are not all linked to the same mailing domain
+        with self.assertRaises(ValidationError):
+            mailing.mailing_filter_ids = filter_1 | filter_3
 
         # deleting the filter record should not delete the domain on mailing
         mailing.mailing_model_id = self.env['ir.model']._get('res.partner').id
-        mailing.mailing_filter_id = filter_3
+        mailing.mailing_filter_ids = filter_3
         filter_3_domain = filter_3.mailing_domain
         self.assertEqual(literal_eval(mailing.mailing_domain), literal_eval(filter_3_domain))
         filter_3.unlink()  # delete the filter record
-        self.assertFalse(mailing.mailing_filter_id, "Should unset filter if it is deleted")
-        self.assertEqual(literal_eval(mailing.mailing_domain), literal_eval(filter_3_domain), "Should still have the same domain")
+        self.assertFalse(mailing.mailing_filter_ids, "Should unset filter if it is deleted")
+        self.assertNotEqual(literal_eval(mailing.mailing_domain), literal_eval(filter_3_domain), "Deleting a dynamic list should unset its domain from the mailing")
 
     @users('user_marketing')
     def test_mailing_computed_fields_default(self):

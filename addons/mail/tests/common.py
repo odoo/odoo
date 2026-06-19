@@ -8,6 +8,7 @@ import json
 import re
 import logging
 import time
+import werkzeug
 
 from ast import literal_eval
 from contextlib import contextmanager
@@ -32,7 +33,7 @@ from odoo.addons.mail.models.mail_notification import MailNotification
 from odoo.addons.mail.models.res_users import ResUsers
 from odoo.addons.mail.tools.discuss import Store
 from odoo.tests import common, RecordCapturer, new_test_user
-from odoo.tools import LazyTranslate, mute_logger
+from odoo.tools import LazyTranslate, mute_logger, mail as mail_lib
 from odoo.tools.mail import email_normalize, email_split_and_format_normalize, formataddr
 from odoo.tools.misc import formatLang, format_date, format_datetime, format_amount
 from odoo.tools.translate import code_translations
@@ -449,18 +450,37 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
 
         return sent_email
 
-    def _find_sent_email_wemail(self, email_to):
+    def _find_linked_trace_id_in_email(self, email):
+        """Search for a link in the given email and identify the linked trace id from that link
+
+        :param email: the email in which to look for the link and the corresponding trace id
+
+        :return the trace id.
+        """
+        res = re.findall(mail_lib.HTML_TAG_URL_REGEX, email['body'])
+        if (res):
+            _, link_url, _, _ = res[0]
+            if '/r/' in link_url:  # shortened link, like 'http://localhost:8069/r/LBG/m/53'
+                parsed_url = werkzeug.urls.url_parse(link_url)
+                path_items = parsed_url.path.split('/')
+                _, trace_id = path_items[2], int(path_items[4])
+                return trace_id
+
+    def _find_sent_email_wemail(self, email_to, trace_id=None):
         """ Find a sent email with a given list of recipients. Email should match
         exactly the recipients.
 
         :param email-to: a list of emails that will be compared to email_to
           of sent emails (also a list of emails);
+        :param trace_id: (optional) filter emails in which the links are linked
+          to that trace;
 
         :return email: an email which is a dictionary mapping values given to
           ``build_email``;
         """
         for sent_email in self._mails:
-            if set(sent_email['email_to']) == set([email_to]):
+            if set(sent_email['email_to']) == {email_to} and \
+                 (trace_id is None or self._find_linked_trace_id_in_email(sent_email) == trace_id):
                 break
         else:
             debug_info = '\n'.join(

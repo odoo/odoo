@@ -1,17 +1,19 @@
-import { props } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { DomainField, domainField, domainFieldProps } from "@web/views/fields/domain/domain_field";
 import { MassMailingDomainSelector } from "./mass_mailing_domain_selector";
+import {
+    domainSavableField,
+    DomainSavableField,
+} from "../domain_savable_field/domain_savable_field";
 
 /**
  * Domain field that toggles `use_exclusion_list` instead of
  * changing the domain to include archived records.
+ *
+ * Also provides the possibility to save a crafted domain
+ * by the user as a dynamic list (`mailing.filter`).
  */
-export class MassMailingDomainField extends DomainField {
+export class MassMailingDomainField extends DomainSavableField {
     static template = "mass_mailing.MassMailingDomainField";
-    props = props({
-        ...domainFieldProps,
-    });
     static components = {
         DomainSelector: MassMailingDomainSelector,
     };
@@ -22,7 +24,7 @@ export class MassMailingDomainField extends DomainField {
 }
 
 export const massMailingDomainField = {
-    ...domainField,
+    ...domainSavableField,
     component: MassMailingDomainField,
 };
 

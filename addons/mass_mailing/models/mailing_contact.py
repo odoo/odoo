@@ -9,6 +9,7 @@ from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import clean_context
+from odoo.tools.float_utils import float_round
 
 MAX_FROM_PARTNERS = 500
 
@@ -54,6 +55,16 @@ class MailingContact(models.Model):
         compute='_compute_opt_out', search='_search_opt_out',
         help='Opt out flag for a specific mailing list. '
              'This field should not be used in a view without a unique and active mailing list context.')
+    mailing_count = fields.Integer('Number of Mailing', compute='_compute_statistics')
+    received_ratio = fields.Float('Received Ratio', compute='_compute_statistics')
+    opened_ratio = fields.Float('Opened Ratio', compute='_compute_statistics')
+    replied_ratio = fields.Float('Replied Ratio', compute='_compute_statistics')
+    clicks_ratio = fields.Float('Clicks Ratio', compute="_compute_clicks_ratio")
+    # Datetimes that mirror the onces in mailing_trace for the corresponding contact.
+    # They get updated from the mailing.trace model.
+    last_opened_datetime = fields.Datetime('Last Opened On')
+    last_clicked_datetime = fields.Datetime('Last Clicked On')
+    last_replied_datetime = fields.Datetime('Last Replied On')
 
     partner_id = fields.Many2one('res.partner', string='Contact', index='btree_not_null')
 
@@ -108,6 +119,44 @@ class MailingContact(models.Model):
         ):
             return self.env.context['default_list_ids'][0]
         return None
+
+    def _compute_clicks_ratio(self):
+        grouped_traces = dict(self.env['mailing.trace'].sudo()._read_group(
+            domain=[('model', '=', 'mailing.contact'), ('res_id', 'in', self.ids)],
+            groupby=[('res_id')],
+            aggregates=[('id:count_distinct')]
+        ))
+        grouped_clicks = dict(self.env['link.tracker.click'].sudo()._read_group(
+            domain=[('mailing_trace_id.model', '=', 'mailing.contact'), ('mailing_trace_id.res_id', 'in', self.ids)],
+            groupby=[('mailing_trace_id.res_id')],
+            aggregates=[('mailing_trace_id:count_distinct')]
+        ))
+        for contact in self:
+            contact.clicks_ratio = float_round(100 * grouped_clicks.get(contact.id, 0) / grouped_traces.get(contact.id, 1), precision_digits=2)
+
+    def _compute_statistics(self):
+        """ Compute the mailing statistics for the mailing contact """
+        result = self.env["mailing.trace"].sudo()._read_group(
+            [('model', '=', 'mailing.contact'), ('res_id', 'in', self.ids)],
+            ['res_id', 'trace_status'],
+            ['__count'])
+
+        result_per_contact = defaultdict(lambda: defaultdict(int))
+        for res_id, trace_status, count in result:
+            result_per_contact[res_id][trace_status] = count
+
+        for contact in self:
+            line = result_per_contact[contact.id]
+            expected = sum(line.values())
+            delivered = line['sent'] + line['open'] + line['reply']
+            opened = line['open'] + line['reply']
+            failed = line['error'] + line['bounce']
+            total = (expected - line['cancel']) or 1
+            total_no_error = (expected - line['cancel'] - failed) or 1
+            contact.mailing_count = delivered
+            contact.received_ratio = float_round(100.0 * delivered / total, precision_digits=2)
+            contact.opened_ratio = float_round(100.0 * opened / total_no_error, precision_digits=2)
+            contact.replied_ratio = float_round(100.0 * line['reply'] / total_no_error, precision_digits=2)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -195,7 +244,7 @@ class MailingContact(models.Model):
         return action
 
     def action_open_base_import(self):
-        """Open the base import wizard to import mailing list contacts with a xlsx file."""
+        """Open the base import wizard to import mailing contacts with a xlsx file."""
 
         return {
             'type': 'ir.actions.client',
@@ -207,10 +256,37 @@ class MailingContact(models.Model):
             },
         }
 
+    def action_view_mailings(self):
+        action = self.env["ir.actions.actions"]._for_xml_id('mass_mailing.mailing_mailing_action_mail')
+        traces_grouped = dict(self.env['mailing.trace']._read_group(
+            [('model', '=', 'mailing.contact'), ('res_id', 'in', self.ids), ('sent_datetime', '!=', False)],
+            ['mass_mailing_id'],
+            ['__count']
+        ))
+        mailing_ids = [m.id for m in traces_grouped]
+        action['domain'] = [('id', 'in', mailing_ids)]
+        return action
+
+    def action_view_received(self):
+        domain = Domain.AND([Domain('model', '=', 'mailing.contact'), Domain('res_id', 'in', self.ids)])
+        return self.env['mailing.trace'].with_context({'search_default_filter_delivered': 1, 'search_default_group_sent_date': 1})._action_view_mailing_statistics_filtered(domain, 'delivered')
+
+    def action_view_opened(self):
+        domain = Domain.AND([Domain('model', '=', 'mailing.contact'), Domain('res_id', 'in', self.ids)])
+        return self.env['mailing.trace'].with_context({'search_default_filter_opened': 1})._action_view_mailing_statistics_filtered(domain, 'open')
+
+    def action_view_replied(self):
+        domain = Domain.AND([Domain('model', '=', 'mailing.contact'), Domain('res_id', 'in', self.ids)])
+        return self.env['mailing.trace'].with_context({'search_default_filter_replied': 1})._action_view_mailing_statistics_filtered(domain, 'reply')
+
+    def action_view_clicked(self):
+        domain = [('mailing_trace_id.model', '=', 'mailing.contact'), ('mailing_trace_id.res_id', 'in', self.ids)]
+        return self.env['link.tracker.click']._action_view_mailing_statistics(domain)
+
     @api.model
     def get_import_templates(self):
         return [{
-            'label': _('Template for Mailing List Contacts'),
+            'label': _('Template for Mailing Contacts'),
             'template': '/mass_mailing/static/xls/mailing_contact.xls'
         }]
 

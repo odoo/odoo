@@ -24,6 +24,7 @@
                 <group>
                     <filter string="State" name="state" domain="[]" context="{'group_by': 'trace_status'}"/>
                     <filter string="Opened On" name="group_open_date" domain="[('trace_status', 'in', ['open', 'reply'])]" context="{'group_by': 'open_datetime:day'}"/>
+                    <filter string="Delivered On" name="group_sent_date" domain="[('trace_status', 'in', ['sent', 'open', 'reply'])]" context="{'group_by': 'sent_datetime:day'}"/>
                     <filter string="Clicked On" name="group_click_date" domain="[('links_click_datetime', '!=', False)]" context="{'group_by': 'links_click_datetime:month'}"/>
                     <filter string="Replied On" name="group_reply_date" domain="[('trace_status', '=', 'reply')]" context="{'group_by': 'reply_datetime:day'}"/>
                     <filter string="Last State Update" name="state_update" domain="[]" context="{'group_by': 'write_date'}"/>

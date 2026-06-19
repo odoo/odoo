@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from markupsafe import Markup
+
+from odoo import api, fields, models, _
+from odoo.fields import Domain
 
 
 class MailingTrace(models.Model):
@@ -72,8 +75,8 @@ class MailingTrace(models.Model):
     medium_id = fields.Many2one(related='mass_mailing_id.medium_id')
     source_id = fields.Many2one(related='mass_mailing_id.source_id')
     # document
-    model = fields.Char(string='Document model', required=True)
-    res_id = fields.Many2oneReference(string='Document ID', model_field='model')
+    model = fields.Char(string='Document model', required=True, index=True)
+    res_id = fields.Many2oneReference(string='Document ID', model_field='model', index=True)
     # campaign data
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mailing', index=True, ondelete='cascade')
     campaign_id = fields.Many2one(
@@ -159,16 +162,34 @@ class MailingTrace(models.Model):
         that are not already opened or replied. """
         traces = self + (self.search(domain) if domain else self.env['mailing.trace'])
         traces.filtered(lambda t: t.trace_status not in ('open', 'reply')).write({'trace_status': 'open', 'open_datetime': fields.Datetime.now()})
+        if contact_traces := traces.filtered(lambda trace: trace.model == 'mailing.contact'):
+            # Apply side effects on `mailing.contact`
+            contacts = self.env['mailing.contact'].search([('id', 'in', contact_traces.mapped('res_id'))])
+            contacts.write({'last_opened_datetime': fields.Datetime.now()})
         return traces
 
     def set_clicked(self, domain=None):
         traces = self + (self.search(domain) if domain else self.env['mailing.trace'])
         traces.write({'links_click_datetime': fields.Datetime.now()})
+        if contact_traces := traces.filtered(lambda trace: trace.model == 'mailing.contact'):
+            # Apply side effects on `mailing.contact`
+            contacts = self.env['mailing.contact'].search([('id', 'in', contact_traces.mapped('res_id'))])
+            contacts.write({
+                'last_clicked_datetime': fields.Datetime.now(),
+                'last_opened_datetime': fields.Datetime.now()}
+            )
         return traces
 
     def set_replied(self, domain=None):
         traces = self + (self.search(domain) if domain else self.env['mailing.trace'])
         traces.write({'trace_status': 'reply', 'reply_datetime': fields.Datetime.now()})
+        if contact_traces := traces.filtered(lambda trace: trace.model == 'mailing.contact'):
+            # Apply side effects on `mailing.contact`
+            contacts = self.env['mailing.contact'].search([('id', 'in', contact_traces.mapped('res_id'))])
+            contacts.write({
+                'last_replied_datetime': fields.Datetime.now(),
+                'last_opened_datetime': fields.Datetime.now()
+            })
         return traces
 
     def set_bounced(self, domain=None, bounce_message=False):
@@ -189,3 +210,66 @@ class MailingTrace(models.Model):
         traces = self + (self.search(domain) if domain else self.env['mailing.trace'])
         traces.write({'trace_status': 'cancel'})
         return traces
+
+    def _action_view_mailing_statistics_filtered(self, domain: Domain, view_filter: str):
+        """Display the mailing statistics for the given domain and KPI
+
+        :param domain: the base domain
+        :param view_filter: the KPI to which the statistics are related. Supported filters
+        are: `reply`, `bounce`, `open`, `delivered`, and `sent`
+        Note: if `search_default_filter_name` is passed in the context, the filter is not
+        passed in the domain of the view."""
+        helper_header = None
+        helper_message = None
+        context = {
+            **self.env.context,
+            'create': False,
+            'graph_mode': 'bar',
+            'stacked': True,
+        }
+        if view_filter == 'reply':
+            action_name = _('Mailing Statistics')
+            if not self.env.context.get('search_default_filter_replied'):
+                domain &= Domain('trace_status', '=', 'reply')
+            context = {**context, 'search_default_group_reply_date': True}
+            helper_header = _("No Recipient replied to your mailing yet!")
+            helper_message = _("To track how many replies this mailing gets, make sure "
+                               "its reply-to address belongs to this database.")
+        elif view_filter == 'bounce':
+            action_name = _('Mailing Statistics')
+            if not self.env.context.get('search_default_filter_bounced'):
+                domain &= Domain('trace_status', '=', 'bounce')
+            helper_header = _("No Recipient address bounced yet!")
+            helper_message = _("Bounce happens when a mailing cannot be delivered (fake address, "
+                               "server issues, ...). Check each record to see what went wrong.")
+        elif view_filter == 'open':
+            action_name = _('Mailing Statistics')
+            if not self.env.context.get('search_default_filter_opened'):
+                domain &= Domain('trace_status', 'in', ('open', 'reply'))
+            context = {**context, 'search_default_group_open_date': True}
+            helper_header = _("No Recipient opened your mailing yet!")
+            helper_message = _("Come back once your mailing has been sent to track who opened your mailing.")
+        elif view_filter == 'delivered':
+            action_name = _('Mailing Statistics')
+            if not self.env.context.get('search_default_filter_delivered'):
+                domain &= Domain('trace_status', 'in', ('sent', 'open', 'reply'))
+            helper_header = _("No Recipient received your mailing yet!")
+            helper_message = _("Wait until your mailing has been sent to check how many recipients you managed to reach.")
+        elif view_filter == 'sent':
+            action_name = _('Mailing Statistics')
+            if not self.env.context.get('search_default_filter_sent'):
+                domain &= Domain('sent_datetime', '!=', False)
+
+        action = {
+            'name': action_name,
+            'type': 'ir.actions.act_window',
+            'view_mode': 'graph,list',
+            'res_model': 'mailing.trace',
+            'domain': domain,
+            'context': context,
+        }
+        if helper_header and helper_message:
+            action['help'] = Markup('<p class="o_view_nocontent_smiling_face">%s</p><p>%s</p>') % (
+                helper_header, helper_message,
+            )
+        return action
