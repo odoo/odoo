@@ -79,29 +79,32 @@
 
     <!-- Added by another template so that it can be disabled if needed -->
     <template id="footer_language_selector" inherit_id="portal.frontend_layout" name="Footer Language Selector">
-        <xpath expr="//*[hasclass('o_footer_copyright_name')]" position="after">
+        <t id="language_selector_hook" position="after">
             <t id="language_selector_call"
                 t-call="portal.language_selector"
                 _div_classes="(_div_classes or '') + ' dropup'"/>
-        </xpath>
+        </t>
     </template>
 
     <template id="language_selector" name="Language Selector">
         <t t-set="language_selector_visible" t-value="len(frontend_languages) &gt; 1"/>
         <div t-attf-class="js_language_selector #{_div_classes} d-print-none" t-if="language_selector_visible">
             <t t-set="active_lang" t-value="frontend_languages[lang]"/>
-            <button t-attf-class="border-0 dropdown-toggle #{_btn_class or 'btn btn-sm btn-outline-secondary'}" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <button t-attf-class="border-0 dropdown-toggle #{_btn_class or 'btn btn-sm btn-secondary'}" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <span t-if="not no_text"
                         t-attf-class="#{_txt_class}"
                         t-out="active_lang.name.split('/').pop()"/>
                 <span t-elif="codes" class="align-middle" t-out="active_lang.url_code.split('_').pop(0).upper()"/>
             </button>
             <div t-attf-class="dropdown-menu #{_dropdown_menu_class}" role="menu">
-                <t t-foreach="frontend_languages.values()" t-as="lg">
-                    <a class="dropdown-item" t-att-href="url_localized(lang_code=lg.code, prefetch_langs=True, force_default_lang=True)"
-                    t-attf-class="dropdown-item js_change_lang #{active_lang == lg and 'active'}"
-                    t-att-data-url_code="lg.url_code" t-att-title="lg.name.split('/').pop()"
-                    role="menuitem">
+                <t t-foreach="frontend_languages.values()" t-as="lg" t-if="lg != active_lang">
+                    <a
+                        class="dropdown-item js_change_lang-item"
+                        t-att-href="url_localized(lang_code=lg.code, prefetch_langs=True, force_default_lang=True)"
+                        t-att-data-url_code="lg.url_code"
+                        t-att-title="lg.name.split('/').pop()"
+                        role="menuitem"
+                    >
                         <span t-if="not no_text" t-out="lg.name.split('/').pop()" t-attf-class="#{_txt_class}"/>
                         <span t-elif="codes" t-out="lg.url_code.split('_').pop(0).upper()" t-attf-class="align-middle #{_txt_class}"/>
                     </a>

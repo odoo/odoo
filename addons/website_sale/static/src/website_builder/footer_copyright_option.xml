@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="website_sale.FooterCopyrightOption" t-inherit="website.FooterCopyrightOption" t-inherit-mode="extension">
+        <xpath expr="//*[contains(@id, 'footer_language_selector_opt')]/BuilderSelectItem[2]" position="attributes">
+            <attribute name="actionParam">{ views: ['portal.footer_language_selector', 'website_sale.footer_pricelist_selector_with_language_selector'] }</attribute>
+        </xpath>
+    </t>
+
+</templates>

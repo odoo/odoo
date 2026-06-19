@@ -101,7 +101,7 @@ class Website(main.Website):
         website=True,
     )
     def get_selectable_pricelists(self):
-        website = self.env["website"].get_current_website()
+        website = self.env.website
         selectable_pricelists = website.get_pricelist_available(show_visible=True)
         all_countries = self.env["res.country"].browse(self.env["res.country"]._cached_data()["id"])
 

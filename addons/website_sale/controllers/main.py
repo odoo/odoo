@@ -1077,7 +1077,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
     @route(
         '/shop/change_pricelist/<model("product.pricelist"):pricelist>',
         type="http",
-        methods=["POST"],
+        methods=["GET"],
         auth="public",
         website=True,
         sitemap=False,
@@ -2094,7 +2094,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     @staticmethod
     def _populate_currency_and_pricelist(kwargs):
-        kwargs.update({"currency_id": request.env.website.currency_id.id, "pricelist_id": request.pricelist.id})
+        kwargs.update({
+            "currency_id": request.env.website.currency_id.id,
+            "pricelist_id": request.pricelist.id,
+        })
 
     @staticmethod
     def _validate_and_get_category(category):

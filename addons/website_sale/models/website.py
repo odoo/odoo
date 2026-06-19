@@ -1229,3 +1229,20 @@ class Website(models.Model):
         :rtype: float
         """
         return product.qty_available - product.outgoing_qty
+
+    def _prepare_pricelist_selector_values(self):
+        self.ensure_one()
+        selectable_pricelists = self.get_pricelist_available(show_visible=True)
+        all_countries = self.env["res.country"].browse(self.env["res.country"]._cached_data()["id"])
+        first_pricelist_by_currency = {pl.currency_id: pl for pl in reversed(selectable_pricelists)}
+        default_pricelist = first_pricelist_by_currency.get(
+            self.company_id.currency_id, self.pricelist_id
+        )
+
+        return {
+            "currencies": first_pricelist_by_currency,
+            "countries": {
+                country: first_pricelist_by_currency.get(country.currency_id, default_pricelist)
+                for country in all_countries
+            },
+        }
