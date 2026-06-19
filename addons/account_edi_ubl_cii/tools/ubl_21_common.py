@@ -89,6 +89,7 @@ Address = {
     'cbc:PostalZone': {},
     'cbc:CountrySubentity': {},
     'cbc:CountrySubentityCode': {},
+    'cbc:District': {},
     'cac:AddressLine': {
         'cbc:Line': {},
     },
