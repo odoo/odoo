@@ -15,7 +15,7 @@ class BankTag extends Component {
         "allowOutPayment?",
         "color",
         "onClick",
-        "onDelete",
+        "onDelete?",
         "crossTooltip",
         "onClick",
         "text",
