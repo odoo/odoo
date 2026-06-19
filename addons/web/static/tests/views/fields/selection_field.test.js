@@ -561,3 +561,20 @@ test("SelectionField hotkeys in form view", async () => {
     expect(".o_field_widget[name='product_id'] input").toHaveValue("xphone");
     expect(".o_field_widget[name='product_id'] input").toBeFocused();
 });
+
+test.tags("desktop");
+test("required SelectionField value is not cleared when input is emptied and blurred", async () => {
+    Partner._records[0].color = "red";
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `<form><field name="color" required="1" /></form>`,
+    });
+
+    await contains(".o_field_widget[name='color'] input").edit("", { confirm: "blur" });
+    await animationFrame();
+
+    expect(".o_field_widget[name='color'] input").toHaveValue("Red");
+});
