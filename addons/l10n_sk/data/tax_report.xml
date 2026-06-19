@@ -382,11 +382,27 @@ line 1 (sk_01) and its VAT label,
                         <field name="expression_ids">
                             <record id="sk_vat_exempt_14_base" model="account.report.expression">
                                 <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">sk_14._14_goods_base + sk_14._14_services_base + sk_14._14_triangular_base</field>
+                            </record>
+                            <record id="sk_vat_exempt_14_goods_base" model="account.report.expression">
+                                <field name="label">_14_goods_base</field>
                                 <field name="engine">tax_tags</field>
-                                <field name="formula">-14</field>
+                                <field name="formula">-14_G</field>
+                            </record>
+                            <record id="sk_vat_exempt_14_services_base" model="account.report.expression">
+                                <field name="label">_14_services_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-14_S</field>
+                            </record>
+                            <record id="sk_vat_exempt_14_triangular_base" model="account.report.expression">
+                                <field name="label">_14_triangular_base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-14_T</field>
                             </record>
                         </field>
                     </record>
+
                     <record id="sk_vat_exempt_15" model="account.report.line">
                         <field name="name">15 - Supply of goods and services, acquisition of goods (§ 46,47,48 para. 8)</field>
                         <field name="name@sk">15 - Dodanie tovarov a služieb, nadobudnutie tovaru (§ 46, 47, 48 ods. 8)</field>
