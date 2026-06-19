@@ -11,7 +11,7 @@ class ProductImage(models.Model):
     _name = "product.image"
     _description = "Product Image"
     _inherit = ["image.mixin"]
-    _order = "sequence, id"
+    _order = "has_attribute_value desc, sequence, id"
 
     name = fields.Char(string="Name", required=True)
     sequence = fields.Integer(default=10)
@@ -21,13 +21,17 @@ class ProductImage(models.Model):
     product_tmpl_id = fields.Many2one(
         string="Product Template", comodel_name="product.template", ondelete="cascade", index=True
     )
-    product_variant_id = fields.Many2one(
-        string="Product Variant", comodel_name="product.product", ondelete="cascade", index=True
-    )
+
     video_url = fields.Char(string="Video URL", help="URL of a video for showcasing your product.")
 
     can_image_1024_be_zoomed = fields.Boolean(
         string="Can Image 1024 be zoomed", compute="_compute_can_image_1024_be_zoomed", store=True
+    )
+
+    attribute_value_ids = fields.Many2many("product.template.attribute.value")
+    has_attribute_value = fields.Boolean(compute="_compute_has_attribute_value", store=True)
+    image_type = fields.Selection(
+        selection=[("primary", "Primary"), ("secondary", "Secondary")], default=False
     )
 
     # === COMPUTE METHODS ===#
@@ -38,6 +42,11 @@ class ProductImage(models.Model):
             image.can_image_1024_be_zoomed = image.image_1920 and is_image_size_above(
                 image.image_1920, image.image_1024
             )
+
+    @api.depends("attribute_value_ids")
+    def _compute_has_attribute_value(self):
+        for image in self:
+            image.has_attribute_value = bool(image.attribute_value_ids)
 
     # === CONSTRAINT METHODS ===#
 
@@ -56,24 +65,13 @@ class ProductImage(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        """
-        We don't want the default_product_tmpl_id from the context
-        to be applied if we have a product_variant_id set to avoid
-        having the variant images to show also as template images.
-        But we want it if we don't have a product_variant_id set.
-        """
-        context_without_template = self.with_context({
-            k: v for k, v in self.env.context.items() if k != "default_product_tmpl_id"
-        })
-        normal_vals = []
-        variant_vals_list = []
+        images = super().create(vals_list)
+        images.product_tmpl_id._update_images_type()
+        return images
 
-        for vals in vals_list:
-            if vals.get("product_variant_id") and "default_product_tmpl_id" in self.env.context:
-                variant_vals_list.append(vals)
-            else:
-                normal_vals.append(vals)
+    def write(self, vals):
+        res = super().write(vals)
 
-        return super().create(normal_vals) + super(ProductImage, context_without_template).create(
-            variant_vals_list
-        )
+        if {"sequence", "attribute_value_ids", "image_1920", "video_url"} & vals.keys():
+            self.product_tmpl_id._update_images_type()
+        return res
