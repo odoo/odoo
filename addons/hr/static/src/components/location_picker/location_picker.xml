@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr.LocationPicker" owl="1">
+        <div class="o_hr_location_picker d-flex flex-column gap-3">
+            <t t-if="!this.state.shouldLoadMap">
+                <div class="d-flex flex-column justify-content-center align-items-center my-3">
+                    <i class="fa fa-map text-muted fs-1 my-2"></i>
+                    <strong class="fs-2">There was an error loading the map</strong>
+                </div>
+            </t>
+            <t t-elif="this.state.geoPermission === 'denied' and this.state.selectedLocation === null">
+                <div class="d-flex flex-column justify-content-center align-items-center my-3">
+                    <i class="fa fa-map-marker text-muted fs-1 my-2"></i>
+                    <strong class="fs-2">Unable to access Location</strong>
+                </div>
+            </t>
+            <t t-else="">
+                <t t-call="hr.LocationPicker.searchbar"/>
+                <div class="o_hr_location_picker_body d-flex flex-column">
+                    <div class="o_workplace_map_container w-100 p-2">
+                        <div class="o_workplace_map w-100 h-100 rounded-3" t-custom-ref="map"></div>
+                    </div>
+                    <footer class="modal-footer justify-content-md-start flex-wrap gap-1 w-100">
+                        <button type="button" class="btn btn-primary" t-on-click="this.onSaveLocation">Save &amp; Close</button>
+                        <button type="button" class="btn btn-secondary me-2" t-on-click="this.onDiscardLocation">Discard</button>
+                    </footer>
+                </div>
+            </t>
+        </div>
+    </t>
+
+    <t t-name="hr.LocationPicker.searchbar">
+        <form role="search" class="input-group p-3 border-bottom" t-on-submit.prevent="this.onSearchLocation">
+            <input
+                class="search-query form-control oe_search_box border-0 text-bg-light"
+                placeholder="Search an address"
+                t-model.proxy="this.state.locationSearch"/>
+            <button
+                type="submit"
+                aria-label="Search"
+                title="Search"
+                class="btn btn-primary me-2">
+                <i class="oi oi-search"/>
+            </button>
+            <button type="button" class="btn btn-outline-secondary fs-3" t-on-click="this.useCurrentLocation" aria-label="Use current location">
+                <i class="fa fa-location-arrow me-1"/>
+                <span class="d-none d-sm-inline">
+                    Use current location
+                </span>
+                <span class="d-inline d-sm-none ms-1">
+                    Location
+                </span>
+            </button>
+        </form>
+    </t>
+</templates>
