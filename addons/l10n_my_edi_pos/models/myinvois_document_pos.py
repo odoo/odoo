@@ -140,36 +140,51 @@ class MyInvoisDocumentPoS(models.Model):
     @api.model
     def _separate_orders_in_lines(self, pos_order_ids):
         """
-        Separate the orders in self into lines as represented in a consolidated invoice, taking care of splitting when
+        Separate the given orders into lines as represented in a consolidated invoice, taking care of splitting when
         needed.
 
         There is no requirement asking to split per sequence (and thus config), but we still do so to make it easier to
         submit per PoS if wanted.
 
         :param pos_order_ids: The orders to separate.
-        :return: A list of pos_order record sets, with one record set representing what would go in one line in the xml.
+        :return: A dict of pos orders per config, for each config having a list of recordsets each representing a single line in the xml.
         """
         lines_per_config = {}
-        # We start by gathering the sessions involved in this process, and loop on their orders.
-        sorted_order = pos_order_ids.sorted(reverse=True)
-        all_orders_per_config = sorted_order.session_id.order_ids.sorted(reverse=True).grouped('config_id')
+        # We start by gathering the configs involved in this process, and loop on their orders.
+        all_orders_per_session = pos_order_ids.session_id.order_ids.sorted(
+            "date_order"
+        ).grouped("config_id")
+
         # During the loop, we want to gather "lines".
-        # One line can be comprised of any number of orders as long as they are continuous.
-        continuous_orders = self.env['pos.order']
-        for config, orders in all_orders_per_config.items():
+        # One line can be comprised of any number of orders as long as they are continuous and of the same type.
+        continuous_orders = self.env["pos.order"]
+        current_is_refund = None
+        last_seq = None
+        for config, orders in all_orders_per_session.items():
             config_lines = []
             for order in orders:
                 if continuous_orders and order not in pos_order_ids:
                     config_lines.append(continuous_orders)
-                    continuous_orders = self.env['pos.order']
+                    continuous_orders = self.env["pos.order"]
+                    current_is_refund = None
+                    last_seq = None
                 elif order in pos_order_ids:
+                    order_is_refund = bool(order.refunded_order_id)
+                    suffix = (order.name or "").rsplit('/', 1)[-1]
+                    current_seq = int(suffix.split(' ', 1)[0])
+                    seq_broken = (last_seq is not None and current_seq is not None and current_seq != last_seq + 1)
+                    if continuous_orders and (order_is_refund != current_is_refund or seq_broken):
+                        config_lines.append(continuous_orders)
+                        continuous_orders = self.env["pos.order"]
                     continuous_orders |= order
-
-            # We should group by POS config, as this is where the sequence is expected to be continuous.
+                    current_is_refund = order_is_refund
+                    last_seq = current_seq
             if continuous_orders:
                 config_lines.append(continuous_orders)
-                continuous_orders = self.env['pos.order']
-            lines_per_config[config] = config_lines
+                continuous_orders = self.env["pos.order"]
+                current_is_refund = None
+                last_seq = None
+            lines_per_config.setdefault(config, []).extend(config_lines)
 
         return lines_per_config
 
