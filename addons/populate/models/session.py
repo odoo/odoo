@@ -188,7 +188,10 @@ class Session(models.Model):
                         vals['record_count'] = write_target_counts[ref][model_name]
                 else:
                     existing = self.env[model_name].with_context(active_test=False).search_count([])
-                    from_creates = write_target_counts[None][model_name]
+                    from_creates = sum(
+                        counts_by_model.get(model_name, 0)
+                        for counts_by_model in write_target_counts.values()
+                    )
                     total = existing + from_creates
                     if total > 0:
                         vals['record_count'] = total
