@@ -36,12 +36,13 @@ class CalendarRecurrence(models.Model):
                 vals += [{
                     'name': event.name,
                     'google_id': event.google_id,
+                    'calendar_id': event.calendar_id.id,
                     'start': event.start,
                     'stop': event.stop,
                     'active': False,
                     'need_sync': True,
                 }]
-                event.with_user(event._get_event_user())._google_delete(google_service, event.google_id)
+                event.with_user(event._get_event_user())._google_delete(google_service, event._get_google_calendar_path(), event.google_id)
                 event.google_id = False
         self.env['calendar.event'].with_context(skip_contact_description=True).create(vals)
 
@@ -82,15 +83,15 @@ class CalendarRecurrence(models.Model):
             'need_sync': True,
         })
 
-    def _write_from_google(self, gevent, vals):
+    def _write_from_google(self, gevent, vals, calendar):
         current_rrule = self.rrule
         current_parsed_rrule = self._rrule_parse(current_rrule, self.dtstart)
         # event_tz is written on event in Google but on recurrence in Odoo
         vals['event_tz'] = gevent.start.get('timeZone')
-        super()._write_from_google(gevent, vals)
+        super()._write_from_google(gevent, vals, calendar)
 
         base_event_time_fields = ['start', 'stop', 'allday']
-        new_event_values = self.env["calendar.event"]._odoo_values(gevent)
+        new_event_values = self.env["calendar.event"]._odoo_values(gevent, calendar)
         new_parsed_rrule = self._rrule_parse(self.rrule, self.dtstart)
         # We update the attendee status for all events in the recurrence
         google_attendees = gevent.attendees or []
@@ -170,11 +171,11 @@ class CalendarRecurrence(models.Model):
             _logger.info(log_msg)
             detached_events.unlink()
 
-    def _create_from_google(self, gevents, vals_list):
+    def _create_from_google(self, gevents, calendar, vals_list):
         attendee_values = {}
         for gevent, vals in zip(gevents, vals_list):
             base_values = dict(
-                self.env['calendar.event']._odoo_values(gevent),  # FIXME default reminders
+                self.env['calendar.event']._odoo_values(gevent, calendar),  # FIXME default reminders
                 need_sync=False,
             )
             # If we convert a single event into a recurrency on Google, we should reuse this event on Odoo
@@ -192,7 +193,7 @@ class CalendarRecurrence(models.Model):
             vals['event_tz'] = gevent.start.get('timeZone')
             attendee_values[base_event.id] = {'attendee_ids': base_values.get('attendee_ids')}
 
-        recurrence = super(CalendarRecurrence, self.with_context(dont_notify=True))._create_from_google(gevents, vals_list)
+        recurrence = super(CalendarRecurrence, self.with_context(dont_notify=True))._create_from_google(gevents, calendar, vals_list)
         generic_values_creation = {
             rec.id: attendee_values[rec.base_event_id.id]
             for rec in recurrence if attendee_values.get(rec.base_event_id.id)
@@ -208,10 +209,11 @@ class CalendarRecurrence(models.Model):
         return Domain('calendar_event_ids.user_id', '=', self.env.user.id) & Domain('rrule', '!=', False)
 
     @api.model
-    def _odoo_values(self, google_recurrence, default_reminders=()):
+    def _odoo_values(self, google_recurrence, calendar, default_reminders=()):
         return {
             'rrule': google_recurrence.rrule,
             'google_id': google_recurrence.id,
+            'calendar_id': calendar.id,
         }
 
     def _google_values(self):
@@ -248,8 +250,9 @@ class CalendarRecurrence(models.Model):
             return event._get_event_user()
         return self.env.user
 
-    def _is_google_insertion_blocked(self, sender_user):
+    def _get_event_owner(self):
         self.ensure_one()
-        has_base_event = self.base_event_id
-        has_different_owner = self.base_event_id.user_id and self.base_event_id.user_id != sender_user
-        return has_base_event and has_different_owner
+        event = self._get_first_event()
+        if event:
+            return event._get_event_owner()
+        return False

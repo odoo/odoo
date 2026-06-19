@@ -23,6 +23,8 @@ class TestSyncOdoo2GoogleMail(TestTokenAccess, TestSyncGoogle, MailCommon):
         user_root = self.env.ref('base.user_root')
         organizer1.google_calendar_token = 'abc'
         organizer2.google_calendar_token = False
+        organizer1.primary_calendar.google_id = 'primary_calendar'
+        organizer2.primary_calendar.google_id = 'primary_calendar2'
         event_values = {
             'name': "Event",
             'start': datetime(2020, 1, 15, 8, 0),

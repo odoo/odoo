@@ -48,6 +48,10 @@ class GoogleCalendarController(CalendarController):
                 }
             # If App authorized, and user access accepted, We launch the synchronization
             try:
+                request.env.user.sudo()._sync_google_calendars(GoogleCal)
+                # Commit calendar changes so that the @after_commit calls to the Google API are performed before
+                # continuing with event sync.
+                request.env.cr.commit()
                 need_refresh = request.env.user.sudo()._sync_google_calendar(GoogleCal)
             except HTTPError as e:
                 _logger.error("Google Calendar synchronization failed. %s", e)

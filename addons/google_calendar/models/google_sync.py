@@ -3,7 +3,7 @@ import logging
 from contextlib import contextmanager
 from functools import wraps
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 from odoo.modules.registry import Registry
 from odoo.sql_db import BaseCursor
 
