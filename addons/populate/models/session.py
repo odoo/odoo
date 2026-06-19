@@ -10,6 +10,7 @@ import secrets
 import sys
 import time
 from abc import ABC, abstractmethod
+from ast import literal_eval
 from collections import defaultdict
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from contextlib import contextmanager
@@ -27,6 +28,7 @@ from psycopg2.errors import (
 
 from odoo import SUPERUSER_ID, api, fields, models, modules
 from odoo.exceptions import ConcurrencyError, LockError, UserError, ValidationError
+from odoo.fields import Domain
 from odoo.http.retrying import retrying
 from odoo.modules.registry import Registry
 from odoo.tools import SQL, config, str2bool
@@ -168,7 +170,7 @@ class Session(models.Model):
                 factor = scaling_factor if model.get('scale', True) else 1
                 vals['record_count'] = math.floor(model['count'] * factor)
 
-            vals.update(**{k: v for k, v in model.items() if k in ('type', 'ref', 'parallel', 'context')})
+            vals.update(**{k: v for k, v in model.items() if k in ('type', 'ref', 'parallel', 'context', 'domain')})
 
             defaults = self.env['populate.job'].default_get(['type', 'record_count'])
             is_create = vals.get('type', defaults['type']) == 'create'
@@ -187,7 +189,8 @@ class Session(models.Model):
                     else:
                         vals['record_count'] = write_target_counts[ref][model_name]
                 else:
-                    existing = self.env[model_name].with_context(active_test=False).search_count([])
+                    domain = Domain(literal_eval(vals['domain'])) if vals.get('domain') else Domain.TRUE
+                    existing = self.env[model_name].with_context(active_test=False).search_count(domain)
                     from_creates = sum(
                         counts_by_model.get(model_name, 0)
                         for counts_by_model in write_target_counts.values()

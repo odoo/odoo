@@ -58,6 +58,25 @@ class TestSessionCreation(TransactionCase):
         self.assertEqual(job.session_id, session)
 
     @mute_logger('odoo.sql_db')
+    def test_create_job_with_domain_fails(self):
+        blueprint = self.env['populate.blueprint'].create({
+            'name': 'Create Domain Blueprint',
+            'definition_json': [{
+                'name': 'test_populate.product',
+                'count': 1,
+                'domain': "[('category', '=', 'books')]",
+                'fields': {
+                    'name': {'generator': 'textual.char'},
+                },
+            }],
+        })
+
+        with self.assertRaises(IntegrityError):
+            self.env['populate.session'].create({
+                'blueprint_id': blueprint.id,
+            })
+
+    @mute_logger('odoo.sql_db')
     def test_blueprint_constraint_validation(self):
         with self.assertRaises(IntegrityError):
             self.env['populate.blueprint'].create({
