@@ -24,8 +24,8 @@ class MrpWorkorder(models.Model):
     def _read_group_workcenter_id(self, workcenters, domain):
         workcenter_ids = self.env.context.get('default_workcenter_id')
         if not workcenter_ids:
-            # bypass permissions, but search with restrictions only
-            search_domain = self.env['ir.access']._get_restriction_domain_for(workcenters._name, 'read')
+            # bypass permissions, but search with company only
+            search_domain = [] if self.env.su else [('company_id', 'in', self.env.companies.ids)]
             workcenter_ids = workcenters.sudo()._search(search_domain, order=workcenters._order)
         return workcenters.browse(workcenter_ids)
 
