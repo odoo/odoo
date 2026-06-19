@@ -25,7 +25,7 @@ export function showProductColumn(fieldName = "product_id") {
     ];
 }
 
-export function addSectionFromProductCatalog(fieldName = "product_id") {
+export function addSectionFromProductCatalog() {
     return [
         {
             content: "Click Catalog Button",
@@ -77,7 +77,9 @@ export function addSectionFromProductCatalog(fieldName = "product_id") {
         },
         {
             content: "Ensure Product is second row",
-            trigger: `tbody tr:nth-child(2) .o_field_widget[name=${fieldName}]:contains("Test Product")`,
+            trigger:
+                "tbody tr:nth-child(2) .o_field_product_label_section_and_note_cell:contains(Test Product)," +
+                "tbody tr:nth-child(2) div[name=account_label_text_readonly]:contains(Test Product)",
         },
     ];
 }

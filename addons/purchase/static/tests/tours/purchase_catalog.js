@@ -6,7 +6,7 @@ registry.category("web_tour.tours").add("test_add_section_from_product_catalog_o
     steps: () => [
         ...purchaseForm.createNewPO(),
         ...purchaseForm.selectVendor("Test Vendor"),
-        ...addSectionFromProductCatalog("product_template_id"),
+        ...addSectionFromProductCatalog(),
     ],
 });
 
