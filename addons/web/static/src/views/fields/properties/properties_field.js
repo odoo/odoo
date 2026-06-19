@@ -712,8 +712,8 @@ export class PropertiesField extends Component {
             definition_changed: true,
         });
         this.initialValues[newName] = { name: newName, type: "char" };
+        await this.props.record.update({ [this.props.name]: propertiesDefinitions });
         this.openPropertyDefinition = newName;
-        this.props.record.update({ [this.props.name]: propertiesDefinitions });
     }
 
     /**
