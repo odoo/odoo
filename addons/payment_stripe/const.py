@@ -27,6 +27,7 @@ DEFAULT_PAYMENT_METHOD_CODES = {
 
 # Mapping of payment method codes to Stripe codes.
 PAYMENT_METHODS_MAPPING = {
+    "pre_authorized_direct_debit": "acss_debit",
     "ach_direct_debit": "us_bank_account",
     "bacs_direct_debit": "bacs_debit",
     "becs_direct_debit": "au_becs_debit",
