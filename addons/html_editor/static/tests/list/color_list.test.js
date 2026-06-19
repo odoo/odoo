@@ -250,6 +250,27 @@ test("remove color from list item", async () => {
     });
 });
 
+test("should remove color from partially selected list item around a link", async () => {
+    // The link keeps its own color, and the FEFFs around it hold no color.
+    await testEditor({
+        contentBefore: '<ol><li style="color: rgb(255, 0, 0);">a[b<a href="#">c</a>d]e</li></ol>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter:
+            '<ol><li style="color: rgb(255, 0, 0);">a<font class="o_default_color">[b</font>' +
+            '<a href="#">c</a><font class="o_default_color">d]</font>e</li></ol>',
+    });
+});
+
+test("should remove color and background color from partially selected list item", async () => {
+    await testEditor({
+        contentBefore:
+            '<ol><li style="color: rgb(255, 0, 0);">a<font style="background-color: rgb(0, 0, 255);">[b]</font>c</li></ol>',
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter:
+            '<ol><li style="color: rgb(255, 0, 0);">a<font class="o_default_color">[b]</font>c</li></ol>',
+    });
+});
+
 test("should remove color from partially selected list item", async () => {
     await testEditor({
         contentBefore: '<ol><li style="color: rgb(255, 0, 0);">ab[cd]ef</li></ol>',

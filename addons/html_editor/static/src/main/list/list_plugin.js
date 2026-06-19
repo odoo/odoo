@@ -1196,24 +1196,6 @@ export class ListPlugin extends Plugin {
                         list.classList.add("o_default_color");
                     }
                 }
-            } else if (
-                color === "" &&
-                (listItem.style.color ||
-                    [...listItem.classList].some((cls) => TEXT_CLASSES_REGEX.test(cls)))
-            ) {
-                const textNodes = targetedNodes.filter(
-                    (n) => isVisibleTextNode(n) && closestElement(n, "li") === listItem
-                );
-                // Remove inline color from partial selection by
-                // wrapping in font with default color.
-                for (const node of textNodes) {
-                    const font = this.document.createElement("font");
-                    font.classList.add("o_default_color");
-                    node.before(font);
-                    cursors.update(callbacksForCursorUpdate.before(node, font));
-                    font.append(node);
-                    cursors.update(callbacksForCursorUpdate.append(font, node));
-                }
             }
         }
         cursors.restore();
