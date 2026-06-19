@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_l10n_eg_edi_activity_type_list" model="ir.ui.view">
+        <field name="name">l10n_eg_edi.activity.type.list</field>
+        <field name="model">l10n_eg_edi.activity.type</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="code"/>
+                <field name="name"/>
+            </list>
+        </field>
+    </record>
+    <record id="view_l10n_eg_edi_activity_type_search" model="ir.ui.view">
+        <field name="name">l10n_eg_edi.activity.type.search</field>
+        <field name="model">l10n_eg_edi.activity.type</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code"/>
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+</odoo>
