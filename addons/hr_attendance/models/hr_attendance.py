@@ -85,6 +85,8 @@ class HrAttendance(models.Model):
         default=lambda self: self.env.company.attendance_work_entry_type_id,
     )
 
+    active = fields.Boolean(default=True)
+
     # time rule engine output fields
     is_time_rule_output = fields.Boolean(default=False, index=True)
     time_rule_id = fields.Many2one('hr.time.rule', index=True)
@@ -195,11 +197,13 @@ class HrAttendance(models.Model):
         """Verify attendance records don't overlap; skip time rule engine output records."""
         if self.env.context.get('skip_time_rules'):
             return
-        for attendance in self.filtered(lambda a: not a.is_time_rule_output):
+        # archived sources and remainder children are managed by the time rule engine; skip them
+        for attendance in self.filtered(lambda a: not a.is_time_rule_output and not a.source_attendance_id and a.active):
             src_domain = [
                 ('employee_id', '=', attendance.employee_id.id),
                 ('id', '!=', attendance.id),
                 ('is_time_rule_output', '=', False),
+                ('source_attendance_id', '=', False),
             ]
             last_before_check_in = self.env['hr.attendance'].search(
                 src_domain + [('check_in', '<=', attendance.check_in)],
@@ -718,22 +722,27 @@ class HrAttendance(models.Model):
             if not source_attendances:
                 continue
 
-            self._restore_source_attendance_bounds(source_attendances)
-
-            rule_ids = rules.ids
-            self.env['hr.attendance'].sudo().search([
-                ('source_attendance_id', 'in', source_attendances.ids),
-                ('time_rule_id', 'in', rule_ids),
-            ]).with_context(skip_time_rules=True).unlink()
-
-            self.env['hr.attendance'].sudo().search([
-                ('is_time_rule_output', '=', True),
-                ('source_attendance_id', '=', False),
-                ('employee_id', 'in', source_attendances.employee_id.ids),
-                ('check_in', '<', end_dt.replace(tzinfo=None)),
-                ('check_out', '>', start_dt.replace(tzinfo=None)),
-                ('time_rule_id', 'in', rule_ids),
-            ]).with_context(skip_time_rules=True).unlink()
+            # week rules don't archive sources; they just emit output records and delete them on rerun
+            is_aggregate = bool(rules) and all(r.quantity_period == 'week' for r in rules)
+            if is_aggregate:
+                self.env['hr.attendance'].sudo().search([
+                    ('source_attendance_id', 'in', source_attendances.ids),
+                    ('is_time_rule_output', '=', True),
+                    ('time_rule_id', 'in', rules.ids),
+                ]).with_context(skip_time_rules=True).unlink()
+            else:
+                # day rules own archive+create; delete all children then restore sources with no excess
+                self.env['hr.attendance'].sudo().search([
+                    ('source_attendance_id', 'in', source_attendances.ids),
+                ]).with_context(skip_time_rules=True).unlink()
+                archived = source_attendances.filtered(lambda a: not a.active)
+                if archived:
+                    still_has_children = self.env['hr.attendance'].sudo().search([
+                        ('source_attendance_id', 'in', archived.ids),
+                    ]).mapped('source_attendance_id')
+                    to_restore = archived - still_has_children
+                    if to_restore:
+                        to_restore.with_context(skip_time_rules=True, tracking_disable=True).write({'active': True})
 
             excess, deficit = rules._evaluate_rules(source_attendances, start_dt, end_dt)
             for emp, by_att in excess.items():
@@ -754,7 +763,7 @@ class HrAttendance(models.Model):
         return merged
 
     def _get_source_attendances_for_time_rules(self, employees, start_dt, end_dt):
-        return self.env['hr.attendance'].sudo().search([
+        return self.env['hr.attendance'].sudo().with_context(active_test=False).search([
             ('is_time_rule_output', '=', False),
             ('source_attendance_id', '=', False),
             ('employee_id', 'in', employees.ids),
@@ -762,38 +771,6 @@ class HrAttendance(models.Model):
             ('check_out', '>=', start_dt.replace(tzinfo=None)),
             ('check_out', '!=', False),
         ])
-
-    def _restore_source_attendance_bounds(self, source_attendances):
-        """Expand each source attendance to cover the bounding box of itself + its excess outputs.
-
-        Deficit outputs (undertime) represent absent time outside the source's worked range
-        and must not influence the restored bounds.
-        """
-        children = self.env['hr.attendance'].sudo().search([
-            ('source_attendance_id', 'in', source_attendances.ids),
-            ('time_rule_id.threshold_operator', '!=', 'less_than'),
-        ])
-        if not children:
-            return
-        bounds = defaultdict(lambda: [None, None])
-        for child in children:
-            src_id = child.source_attendance_id.id
-            if bounds[src_id][0] is None or child.check_in < bounds[src_id][0]:
-                bounds[src_id][0] = child.check_in
-            if bounds[src_id][1] is None or child.check_out > bounds[src_id][1]:
-                bounds[src_id][1] = child.check_out
-        auto_ctx = dict(skip_time_rules=True, tracking_disable=True)
-        for src in source_attendances:
-            if src.id not in bounds:
-                continue
-            new_in, new_out = bounds[src.id]
-            restored_in = min(src.check_in, new_in) if new_in else src.check_in
-            restored_out = max(src.check_out, new_out) if new_out else src.check_out
-            if restored_in != src.check_in or restored_out != src.check_out:
-                src.with_context(**auto_ctx).write({
-                    'check_in': restored_in,
-                    'check_out': restored_out,
-                })
 
     @api.model_create_multi
     def create(self, vals_list):

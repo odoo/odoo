@@ -242,6 +242,7 @@ class HrLeave(models.Model):
     # warning message
     dashboard_warning_message = fields.Char(compute='_compute_dashboard_warning_message')
 
+    active = fields.Boolean(default=True)
     time_rule_id = fields.Many2one('hr.time.rule', string="Time Rule", copy=False, index=True)
     source_leave_id = fields.Many2one('hr.leave', string="Source Leave", copy=False, index=True)
     is_time_rule_output = fields.Boolean(
@@ -1312,9 +1313,9 @@ class HrLeave(models.Model):
         """Return validated source leaves for the given employees and date range.
 
         Called from _process_time_rules_for after weekly scope expansion.
-        Override to pre-process source leaves before time rule evaluation.
+        Override to filter or pre-process source leaves before time rule evaluation.
         """
-        source_leaves = self.env['hr.leave'].sudo().search([
+        return self.env['hr.leave'].sudo().with_context(active_test=False).search([
             ('is_time_rule_output', '=', False),
             ('source_leave_id', '=', False),
             ('employee_id', 'in', employees.ids),
@@ -1322,57 +1323,6 @@ class HrLeave(models.Model):
             ('date_to', '>=', start_dt.replace(tzinfo=None)),
             ('state', '=', 'validate'),
         ])
-        # reset sources shrunk by a previous time rule run by taking
-        # the bounding box over the source and all its children.
-        children = self.env['hr.leave'].sudo().search([
-            ('source_leave_id', 'in', source_leaves.ids),
-        ])
-        self._restore_source_leave_bounds(source_leaves, children)
-        return source_leaves
-
-    def _restore_source_leave_bounds(self, source_leaves, children):
-        """Expand each source leave to the bounding box of itself and its children.
-
-        Override to adjust which leaves are restored and how, e.g. to merge with
-        attendance-time synchronisation so each leave is written at most once.
-        """
-        # deficit outputs extend beyond the source's original range
-        restore_children = children.filtered(
-            lambda c: not c.time_rule_id or c.time_rule_id.threshold_operator != 'less_than'
-        )
-        if not restore_children:
-            return
-        bounds = defaultdict(lambda: [None, None])
-        for child in restore_children:
-            src_id = child.source_leave_id.id
-            if bounds[src_id][0] is None or child.date_from < bounds[src_id][0]:
-                bounds[src_id][0] = child.date_from
-            if bounds[src_id][1] is None or child.date_to > bounds[src_id][1]:
-                bounds[src_id][1] = child.date_to
-        auto_ctx = dict(
-            skip_time_rules=True,
-            leave_fast_create=True,
-            leave_skip_date_check=True,
-            leave_skip_state_check=True,
-            tracking_disable=True,
-            mail_activity_automation_skip=True,
-        )
-        writes = defaultdict(list)
-        for source in source_leaves:
-            if source.id not in bounds:
-                continue
-            new_df = min(source.date_from, bounds[source.id][0])
-            new_dt = max(source.date_to, bounds[source.id][1])
-            if new_df == source.date_from and new_dt == source.date_to:
-                continue
-            writes[new_df, new_dt].append(source.id)
-        for (new_df, new_dt), ids in writes.items():
-            self.env['hr.leave'].sudo().browse(ids).with_context(**auto_ctx).write({
-                'date_from': new_df,
-                'date_to': new_dt,
-                'request_date_from': new_df.date(),
-                'request_date_to': new_dt.date(),
-            })
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)

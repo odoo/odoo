@@ -681,6 +681,69 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(output_after.worked_hours, 4.0, places=5,
                                msg="Extended overtime should be 4h")
 
+    def test_source_unarchived_when_excess_clears(self):
+        """Shrinking check_out so excess drops to zero restores the source attendance to active."""
+        att = self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 18),  # 10h -> 2h excess -> att archived
+        })
+        att.invalidate_recordset()
+        self.assertFalse(att.active, "Source should be archived after excess detected")
+
+        att.write({'check_out': datetime(2022, 12, 12, 16)})  # shrink to 8h -> no excess
+
+        att.invalidate_recordset()
+        self.assertTrue(att.active, "Source must be unarchived when excess drops to zero")
+        output_atts = self.env['hr.attendance'].search([
+            ('source_attendance_id', '=', att.id),
+        ])
+        self.assertFalse(output_atts, "No children should exist when there is no excess")
+
+    def test_weekly_output_cleared_when_week_excess_drops(self):
+        """Reducing Mon so the weekly total drops to the threshold removes the weekly output.
+
+        Week rules do not archive source attendances; they only create output records.
+        When excess clears, the output is deleted and the source remains active throughout.
+        """
+        self.time_rule.active = False
+        weekly_rule = self.env['hr.time.rule'].create({
+            'name': 'Weekly OT',
+            'working_hours_mode': 'week',
+            'expected_hours': 40.0,
+            'work_entry_type_id': self.overtime_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+        # Mon–Fri: Mon 10h, Tue–Fri 8h each -> 42h total -> 2h weekly excess
+        mon = self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 18),  # 10h
+        })
+        for day in range(13, 17):
+            self.env['hr.attendance'].create({
+                'employee_id': self.cal_emp.id,
+                'check_in': datetime(2022, 12, day, 8),
+                'check_out': datetime(2022, 12, day, 16),  # 8h
+            })
+        weekly_outputs = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('is_time_rule_output', '=', True),
+            ('time_rule_id', '=', weekly_rule.id),
+        ])
+        self.assertEqual(len(weekly_outputs), 1, "2h weekly output should exist")
+        self.assertAlmostEqual(weekly_outputs.worked_hours, 2.0, places=5)
+
+        # Reduce Mon to 8h -> week total drops to 40h -> no excess -> output deleted
+        mon.write({'check_out': datetime(2022, 12, 12, 16)})
+
+        weekly_outputs = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('is_time_rule_output', '=', True),
+            ('time_rule_id', '=', weekly_rule.id),
+        ])
+        self.assertFalse(weekly_outputs, "Weekly output must be deleted when excess drops to zero")
+
     def test_time_rule_recompute_scoped_to_date_range(self):
         """Processing one day's attendance does not delete another day's output attendances."""
         # Day A: 14h -> 6h overtime output
@@ -708,7 +771,7 @@ class TestTimeRulePipeline(TransactionCase):
                         "Day A output attendance must not be deleted by Day B recompute")
 
     def test_source_attendance_split_and_remainder(self):
-        """After time rule fires the source attendance is trimmed and output links back."""
+        """After time rule fires the source is archived and children cover its full span."""
         att = self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 12, 6),
@@ -721,12 +784,18 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertEqual(len(output_atts), 1, "One output attendance for the excess")
         self.assertEqual(output_atts.time_rule_id, self.time_rule)
 
+        remainder_atts = self.env['hr.attendance'].with_context(active_test=False).search([
+            ('source_attendance_id', '=', att.id),
+            ('is_time_rule_output', '=', False),
+        ])
+
         att.invalidate_recordset()
-        source_dur = (att.check_out - att.check_in).total_seconds() / 3600
+        self.assertFalse(att.active, "Source attendance must be archived after time rule fires")
         output_dur = output_atts.worked_hours
+        remainder_dur = sum(r.worked_hours for r in remainder_atts)
         self.assertAlmostEqual(output_dur, 6.0, places=5, msg="Output covers the 6h excess")
-        self.assertAlmostEqual(source_dur + output_dur, 14.0, places=5,
-                               msg="Source + output must total the original attendance duration")
+        self.assertAlmostEqual(remainder_dur + output_dur, 14.0, places=5,
+                               msg="Remainder + output must total the original attendance duration")
 
     def test_deficit_rule(self):
         """threshold_operator='less_than': output attendance created for unworked schedule gap."""
@@ -960,7 +1029,7 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertFalse(output_atts, "0.5h deficit < 1h employee_tolerance -> no output")
 
     def test_timing_window_creates_remainder_attendance(self):
-        """Output cut from the middle of an attendance splits the source into head + tail."""
+        """Output cut from the middle of an attendance archives source; head+tail become remainders."""
         self.time_rule.active = False
         self.env['hr.time.rule'].create({
             'name': 'Lunch Premium',
@@ -986,24 +1055,22 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertEqual(len(output_atts), 1, "One output attendance for the lunch window")
         self.assertAlmostEqual(output_atts.worked_hours, 1.0, places=5, msg="1h lunch excess")
 
-        # Tail remainder attendance: [13:00-20:00] = 7h
-        tail_atts = self.env['hr.attendance'].search([
+        # Both head [8:00-12:00] and tail [13:00-20:00] become remainder children
+        remainder_atts = self.env['hr.attendance'].search([
             ('source_attendance_id', '=', att.id),
             ('is_time_rule_output', '=', False),
         ])
-        self.assertEqual(len(tail_atts), 1, "Tail remainder attendance for [13:00-20:00]")
-        self.assertAlmostEqual(tail_atts.worked_hours, 7.0, places=5,
-                               msg="7h tail [13:00-20:00]")
+        self.assertEqual(len(remainder_atts), 2, "Head [8:00-12:00] and tail [13:00-20:00] remainders")
+        remainder_hours = sorted(r.worked_hours for r in remainder_atts)
+        self.assertAlmostEqual(remainder_hours[0], 4.0, places=5, msg="Head remainder [8:00-12:00] = 4h")
+        self.assertAlmostEqual(remainder_hours[1], 7.0, places=5, msg="Tail remainder [13:00-20:00] = 7h")
 
-        # Source trimmed to head [8:00-12:00] = 4h
+        # Source is archived; its bounds are unchanged
         att.invalidate_recordset()
-        self.assertAlmostEqual(
-            (att.check_out - att.check_in).total_seconds() / 3600,
-            4.0, places=5, msg="Source trimmed to head [8:00-12:00]",
-        )
+        self.assertFalse(att.active, "Source attendance must be archived after time rule fires")
 
     def test_source_zeroed_when_entire_attendance_is_excess(self):
-        """When excess covers the entire source attendance, check_out is set to check_in."""
+        """When excess covers the entire source attendance, it is archived with no remainder."""
         # Saturday: no schedule -> expected_duration=0 -> all 6h = excess -> no remainder
         att = self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
@@ -1011,8 +1078,13 @@ class TestTimeRulePipeline(TransactionCase):
             'check_out': datetime(2022, 12, 10, 17),
         })
         att.invalidate_recordset()
-        self.assertEqual(att.check_out, att.check_in,
-                         "Source attendance must be zeroed (check_out = check_in) when entirely excess")
+        self.assertFalse(att.active,
+                         "Source attendance must be archived when entirely excess")
+        remainder_atts = self.env['hr.attendance'].search([
+            ('source_attendance_id', '=', att.id),
+            ('is_time_rule_output', '=', False),
+        ])
+        self.assertFalse(remainder_atts, "No remainder when entire attendance is excess")
         output_atts = self.env['hr.attendance'].search([
             ('source_attendance_id', '=', att.id),
             ('is_time_rule_output', '=', True),
