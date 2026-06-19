@@ -73,6 +73,7 @@ class GoogleCalendarService:
     def insert_calendar(self, values, token, timeout=TIMEOUT):
         url = "/calendar/v3/calendars"
         headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
+        _logger.info("insert_calendar - values: %s", json.dumps(values))
         _, google_values, _ = self.google_service._do_request(url, json.dumps(values), headers=headers, method='POST', timeout=timeout)
         return google_values
 
@@ -80,6 +81,7 @@ class GoogleCalendarService:
     def patch_calendar(self, calendar, values, token, timeout=TIMEOUT):
         url = "/calendar/v3/calendars/%s" % calendar
         headers = {'Content-type': 'application/json', 'Authorization': 'Bearer %s' % token}
+        _logger.info("patch_calendar - values: %s", json.dumps(values))
         self.google_service._do_request(url, json.dumps(values), headers=headers, method='PATCH', timeout=timeout)
 
     @requires_auth_token
@@ -87,11 +89,12 @@ class GoogleCalendarService:
         url = "/calendar/v3/calendars/%s" % calendar
         headers = {'Content-type': 'application/json'}
         params = {'access_token': token}
+        _logger.info("delete_calendar - calendar: %s", calendar.id)
         self.google_service._do_request(url, params=params, headers=headers, method='DELETE', timeout=timeout)
 
     @requires_auth_token
     def get_events(self, sync_token=None, token=None, event_id=None, calendar=None, search_params=None, timeout=TIMEOUT):
-        url = f"/calendar/v3/calendars/{calendar.get_google_path()}/events"
+        url = f"/calendar/v3/calendars/{calendar.get_google_path() if calendar else 'primary'}/events"
         headers = {'Content-type': 'application/json'}
         params = {'access_token': token}
         if search_params:

@@ -42,19 +42,22 @@ class GoogleCalendarController(CalendarController):
             # Checking that user have already accepted Odoo to access his calendar !
             if not GoogleCal.is_authorized(request.env.user):
                 url = GoogleCal._google_authentication_url(from_url=kw.get('fromurl'))
+                _logger.info("User %s: Google Calendar synchronization needs user authorization. Redirecting to %s", self.env.user.login, url)
                 return {
                     "status": "need_auth",
                     "url": url
                 }
             # If App authorized, and user access accepted, We launch the synchronization
             try:
+                _logger.info("User %s: Google Calendar synchronization started", self.env.user.login)
                 request.env.user.sudo()._sync_google_calendars(GoogleCal)
                 # Commit calendar changes so that the @after_commit calls to the Google API are performed before
                 # continuing with event sync.
                 request.env.cr.commit()
+                _logger.info("User %s: Commited calendar changes, starting event synchronization", self.env.user.login)
                 need_refresh = request.env.user.sudo()._sync_google_calendar(GoogleCal)
             except HTTPError as e:
-                _logger.error("Google Calendar synchronization failed. %s", e)
+                _logger.error("User %s: Google Calendar synchronization failed. %s", self.env.user, e)
                 return {"status": "sync_failed"}
 
             # If synchronization has been stopped or paused

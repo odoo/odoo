@@ -131,6 +131,7 @@ class GoogleEventSync(models.AbstractModel):
             records_to_sync = self
         cancelled_records = self - records_to_sync
 
+        _logger.info("User %s: Syncing events Odoo2Google. Number of events to sync %s", self.env.user.login, len(records_to_sync))
         updated_records = records_to_sync.filtered('google_id')
         new_records = records_to_sync - updated_records
         for record in cancelled_records:

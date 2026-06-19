@@ -16,6 +16,7 @@ patch(AttendeeCalendarController.prototype, {
 
     async onGoogleSyncCalendar() {
         const syncResult = await this.model.syncGoogleCalendar();
+        console.log("Finished google sync request with result:", syncResult);
         if (syncResult.status === "need_auth") {
             window.location.assign(syncResult.url);
         } else if (syncResult.status === "need_config_from_admin") {

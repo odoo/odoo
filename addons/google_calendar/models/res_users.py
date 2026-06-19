@@ -82,6 +82,7 @@ class ResUsers(models.Model):
         # Local calendars, which have not yet been synchronized with Google or need to be updated
         # FRBIN TODO: chcek what writer access can do, might need to restrict to owner (Google 403: `You need to have owner access to this calendar`)
         calendars_to_sync = self.writable_calendar_ids.filtered(lambda c: c.need_sync or (not c.google_id and not c.is_primary))
+        _logger.info("User %s, Calendar sync - Odoo2Google : %s", self.env.user.login, calendars_to_sync)
         calendars_to_sync.with_user(self)._sync_calendars_odoo2google(calendar_service)
 
     def _is_cancelled(self, event, active_events):
@@ -197,6 +198,7 @@ class ResUsers(models.Model):
         full_sync = not bool(calendar.google_sync_token)
         with google_calendar_token(self) as token:
             try:
+                _logger.info("Calendar event sync - fetching events for calendar: %s", calendar.get_google_path())
                 if not event_id:
                     events, next_sync_token, default_reminders = calendar_service.get_events(calendar.google_sync_token, token=token, calendar=calendar)
                 else:
