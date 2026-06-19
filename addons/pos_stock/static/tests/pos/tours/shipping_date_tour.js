@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add("test_pos_order_shipping_date", {
             Dialog.discard(),
             PaymentScreen.clickValidate(),
             Dialog.confirm(),
-            PartnerList.clickPartner("Partner Full"),
+            PartnerList.clickPartner("APartner Full"),
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 is_shipping_date: true,
