@@ -139,6 +139,7 @@
             "website_sale/static/src/js/cart_notification/cart_notification_container/cart_notification_container.xml",
             "website_sale/static/src/js/cart_notification/warning_notification/warning_notification.js",
             "website_sale/static/src/js/cart_notification/warning_notification/warning_notification.xml",
+            "website_sale/static/src/js/delivery_availability/*",
             "sale/static/src/js/badge_extra_price/*",
             "sale/static/src/js/combo_configurator_dialog/*",
             "sale/static/src/js/models/*",

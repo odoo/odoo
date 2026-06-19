@@ -26,4 +26,23 @@
         </div>
     </template>
 
+    <template
+        id="website_sale_collect.delivery_availability_widget"
+        inherit_id="website_sale.delivery_availability_widget"
+    >
+        <t t-set="props" position="after">
+            <t t-set="nothing" t-value="props.update({
+                'productId': product_variant.id,
+                'zipCode': zip_code,
+                'countryCode': country_code,
+                'showSelectStoreButton': show_select_store_button,
+                'selectedLocationData': selected_location_data or {},
+                'inStoreStockData': combination_info.get('in_store_stock_data', {}),
+                'deliveryMethodId': delivery_method and delivery_method.id,
+                'deliveryMethodType': delivery_method and delivery_method.delivery_type,
+                'deliveryMethodName': delivery_method and delivery_method.name,
+            })"/>
+        </t>
+    </template>
+
 </odoo>
