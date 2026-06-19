@@ -89,7 +89,8 @@ class IrModuleModule(models.Model):
 
                     if module.state == 'to upgrade' and request:
                         Website = self.env['website']
-                        websites_to_update = self.env.website if self.env.website in websites_to_update else Website
+                        website = request.env.website
+                        websites_to_update = website if website in websites_to_update else Website
 
                     for website in websites_to_update:
                         module._theme_load(website)
@@ -407,7 +408,8 @@ class IrModuleModule(models.Model):
             :return: dict with the next action to execute
         """
         self.ensure_one()
-        website = self.env.website
+        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
+        website.ensure_one()
 
         self._theme_remove(website)
 
@@ -416,8 +418,8 @@ class IrModuleModule(models.Model):
 
         # this will install 'self' if it is not installed yet
         if request:
-            request.update_context(apply_new_theme=True)
-        self._theme_upgrade_upstream()
+            request.update_context(website_id=website.id, apply_new_theme=True)
+        self.with_context(website_id=website.id, apply_new_theme=True)._theme_upgrade_upstream()
 
         result = website.button_go_website()
         return result
