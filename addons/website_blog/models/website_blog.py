@@ -7,6 +7,7 @@ from odoo.tools import html_escape
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
 
+from odoo.addons.portal.controllers.thread import PortalWebClientController
 from odoo.addons.website.tools import images_from_html, text_from_html
 
 
@@ -431,3 +432,7 @@ class BlogPost(models.Model):
             path = current_blog.website_url if current_blog else '/blog'
             schemas.append(self._build_collectionpage_jsonld_vals(name, path, self))
         return schemas
+
+    def message_counter(self):
+        self.ensure_one()
+        return self.env['mail.message'].search_count(PortalWebClientController._get_portal_message_fetch_domain(self))
