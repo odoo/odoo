@@ -165,6 +165,14 @@ class SaleOrderLine(models.Model):
                 datum['analytic_distribution'] = False
         return data
 
+    def action_view_sale_order(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
+        action['views'] = [(False, 'form')]
+        action['res_id'] = self.order_id.id
+        action['context'] = {'create': False}
+        return action
+
     ###########################################
     # Service : Project and task generation
     ###########################################

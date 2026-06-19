@@ -532,8 +532,17 @@ class ProjectProject(models.Model):
 
     def action_real_margin(self):
         self.ensure_one()
+        embedded_action_context = self.env.context.get('from_embedded_action', False)
         action = self.env['ir.actions.act_window']._for_xml_id('sale_project.action_analytic_reporting_inherit_sale_project')
         action['views'] = [(self.env.ref('sale_project.view_account_analytic_line_inherit_sale_project_pivot_single').id, 'pivot')]
-        action['display_name'] = self.env._("%(name)s's Real Margins", name=self.name)
+        action['display_name'] = self.env._("%(name)s's Margins", name=self.name)
         action['domain'] = [('account_id', 'in', self.account_id.ids)]
+        action['context'] = {
+            **ast.literal_eval(action.get('context', '{}')),
+            'from_embedded_action': embedded_action_context,
+            **({
+                'search_default_month': 0,
+                'pivot_column_groupby': ['date:month'],
+            } if embedded_action_context else {}),
+        }
         return action
