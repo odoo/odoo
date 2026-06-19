@@ -1453,3 +1453,44 @@ test("Prevents loss of value due to debounce when changing state (rendering)", a
     await runAllTimers();
     expect(".o_select_menu-choices .o-dropdown-item").toHaveCount(2);
 });
+
+test("Filter is preserved when choices rerender before the debounced search runs", async () => {
+    class MyParent extends Component {
+        static props = ["*"];
+        static components = { SelectMenu };
+        static template = xml`
+            <SelectMenu
+                value="this.state.value"
+                choices="this.state.choices"
+            />
+        `;
+        setup() {
+            this.state = proxy({
+                choices: [
+                    { label: "Jeremy Doku", value: "doku" },
+                    { label: "Kevin De Bruyne", value: "de_bruyne" },
+                ],
+                value: "",
+            });
+        }
+    }
+    const parent = await mountSingleApp(MyParent);
+    await open();
+    // Type "ku" — debounce is queued but has not fired yet
+    await press("k");
+    await press("u");
+    // New players are called up before the debounce fires
+    parent.state.choices = [
+        { label: "Jeremy Doku", value: "doku" },
+        { label: "Kevin De Bruyne", value: "de_bruyne" },
+        { label: "Thibaut Courtois", value: "courtois" },
+        { label: "Romelu Lukaku", value: "lukaku" },
+        { label: "Leandro Trossard", value: "trossard" },
+    ];
+    await animationFrame();
+    // Filter must stay on "ku": only Doku and Lukaku match
+    expect(".o_select_menu-choices span.o-dropdown-item").toHaveCount(2);
+    await animationFrame();
+    // Filter must stay on "ku": only Doku and Lukaku match
+    expect(".o_select_menu-choices span.o-dropdown-item").toHaveCount(2);
+});
