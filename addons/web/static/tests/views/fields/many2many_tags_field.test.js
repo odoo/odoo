@@ -2134,6 +2134,44 @@ test("Many2ManyTagsField with on_tag_click option overrides color edition", asyn
     expect(".o_form_status_indicator_buttons").not.toBeVisible();
 });
 
+test("Many2ManyTagsField: editing tags via dialog on dirty record", async () => {
+    PartnerType._views = {
+        form: `<form><field name="name"/></form>`,
+    };
+    Partner._records[0].timmy = [12];
+    Partner._fields.timmy.onChange = () => {};
+
+    onRpc("get_formview_id", () => false);
+    onRpc("web_save", () => expect.step("web_save"));
+    onRpc("web_read", () => expect.step("web_read"));
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <field name="name"/>
+                <field name="timmy" widget="many2many_tags" options="{'on_tag_click': 'open_form'}"/>
+            </form>`,
+        resId: 1,
+    });
+
+    expect.verifySteps(["web_read"]);
+
+    await contains(".o_field_widget[name=name] input").edit("new name");
+
+    await contains(".o_tag.badge").click();
+    expect(".o_dialog").toHaveCount(1);
+
+    expect.verifySteps(["web_save", "web_read"]); // save main record, read the dialog
+
+    await contains(".o_dialog .o_field_widget[name=name] input").edit("gold edited");
+    await clickSave();
+
+    expect(".o_dialog").toHaveCount(0);
+    expect.verifySteps(["web_save", "web_read"]); // save dialog, reload main record
+});
+
 test.tags("mobile");
 test("Many2ManyTagsField placeholder should be correct on mobile", async () => {
     await mountView({

@@ -438,55 +438,6 @@ test("[Offline] many2one autopopulated", async () => {
     expect(queryAllTexts(`.o-autocomplete.dropdown li`)).toEqual(["first record", "aaa"]);
 });
 
-test("editing a many2one (with form view opened with external button)", async () => {
-    expect.assertions(4);
-    Partner._views = {
-        form: `
-            <form>
-                <field name="foo" />
-            </form>`,
-    };
-
-    onRpc("get_formview_id", () => false);
-    onRpc("web_save", () => {
-        expect.step("web_save");
-    });
-    onRpc("read", ({ args, model, kwargs }) => {
-        if (model === "partner" && args[0][0] === 4) {
-            expect.step(`read partner: ${args[1]}`);
-            expect(kwargs.context.blip).toBe(10);
-            expect(kwargs.context.blop).toBe(3);
-        }
-    });
-
-    await mountViewInDialog({
-        type: "form",
-        resModel: "partner",
-        resId: 1,
-        arch: `
-            <form>
-                <sheet>
-                    <field name="int_field" />
-                    <field name="trululu" context="{'blip': int_field, 'blop': 3}"/>
-                </sheet>
-            </form>`,
-    });
-
-    // click on the external button (should do an RPC)
-    await contains(".o_external_button", { visible: false }).click();
-
-    await contains(".o_dialog:not(.o_inactive_modal) .o_field_widget[name='foo'] input").edit(
-        "brandon"
-    );
-
-    // save and close modal
-    await contains(".modal:eq(1) .o_form_button_save").click();
-    expect.verifySteps(["web_save", "read partner: display_name"]);
-    // save form
-    await clickSave();
-    expect.verifySteps([]);
-});
-
 test("many2ones in form views with show_address", async () => {
     onRpc("web_read", ({ kwargs }) => {
         if (kwargs.specification.trululu.context.show_address) {
@@ -796,61 +747,6 @@ test("using a many2one widget must take into account the decorations", async () 
 
     expect(".o_list_many2one a.text-danger").toHaveCount(1);
     expect(".o_data_row").toHaveCount(3);
-});
-
-test("onchanges on many2ones trigger when editing record in form view", async () => {
-    expect.assertions(2);
-    Partner._onChanges = {
-        user_id: () => {},
-    };
-    Users._fields.other_field = fields.Char({ string: "Other Field" });
-    Users._views = {
-        form: `
-            <form>
-                <field name="other_field" />
-            </form>`,
-    };
-    onRpc("get_formview_id", () => false);
-    onRpc("onchange", ({ args }) => {
-        expect(args[1].user_id).toBe(1);
-    });
-    onRpc(({ method }) => {
-        expect.step(method);
-    });
-
-    await mountViewInDialog({
-        type: "form",
-        resModel: "partner",
-        resId: 1,
-        arch: `
-                <form>
-                    <sheet>
-                        <group>
-                            <field name="user_id"/>
-                        </group>
-                    </sheet>
-                </form>`,
-    });
-
-    // open the many2one in form view and change something
-    await contains(".o_external_button", { visible: false }).click();
-    await contains(
-        ".o_dialog:not(.o_inactive_modal) .o_field_widget[name='other_field'] input"
-    ).edit("wood");
-
-    // TODISCUSS ? Same record, don't change the display name (opti ?)
-    // save the modal and make sure an onchange is triggered
-    await contains(".modal:eq(1) .o_form_button_save").click();
-    expect.verifySteps([
-        "get_views",
-        "web_read",
-        "get_formview_id",
-        "get_views",
-        "web_read",
-        "web_save",
-        "read",
-        "onchange",
-    ]);
 });
 
 test("edit many2one before onchange is finished should not reset the value", async () => {
@@ -3988,14 +3884,13 @@ test("external_button opens a new tab when middle clicked or ctrl+click", async 
     expect.verifySteps(["opened in a new window"]);
 });
 
-test("keep changes when editing related record in a dialog", async () => {
+test("save before editing related record in a dialog, then reload", async () => {
     Partner._views = {
         [["form", 98]]: '<form><field name="int_field"/></form>',
     };
     onRpc("get_formview_id", () => 98);
-    onRpc("web_save", () => {
-        expect.step("web_save");
-    });
+    onRpc("web_save", () => expect.step("web_save"));
+    onRpc("web_read", () => expect.step("web_read"));
     await mountViewInDialog({
         type: "form",
         resModel: "partner",
@@ -4003,12 +3898,12 @@ test("keep changes when editing related record in a dialog", async () => {
     });
     expect(".modal").toHaveCount(1);
 
-    await contains(".o_field_widget[name=foo] input").edit("some value", { confirm: false });
-    await runAllTimers();
+    await contains(".o_field_widget[name=foo] input").edit("some value");
     await selectFieldDropdownItem("trululu", "first record");
     expect(".o_field_widget .o_external_button .oi-launch").toHaveCount(1);
     await contains(".o_field_widget .o_external_button", { visible: false }).click();
     expect(".modal").toHaveCount(2);
+    expect.verifySteps(["web_save", "web_read"]); // save main record, read dialog
 
     await contains(".o_dialog:not(.o_inactive_modal) .o_field_widget[name=int_field] input").edit(
         "5464"
@@ -4019,7 +3914,7 @@ test("keep changes when editing related record in a dialog", async () => {
 
     expect(".modal").toHaveCount(1);
     expect(".o_field_widget[name=foo] input").toHaveValue("some value");
-    expect.verifySteps(["web_save"]);
+    expect.verifySteps(["web_save", "web_read"]); // save dialog, reload main record
 });
 
 test("create and edit, save and then discard", async () => {
