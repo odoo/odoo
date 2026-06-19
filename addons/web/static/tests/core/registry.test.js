@@ -1,8 +1,8 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { Component } from "@odoo/owl";
-import { serverState } from "@web/../tests/web_test_helpers";
+import { restoreRegistry, serverState } from "@web/../tests/web_test_helpers";
 
-import { Registry } from "@web/core/registry";
+import { Registry, registry } from "@web/core/registry";
 
 describe.current.tags("headless");
 
@@ -203,5 +203,21 @@ test("only validate in debug", async () => {
     registry.addValidation(schema);
     expect(() => registry.add("jean", { name: 50 })).not.toThrow({
         message: "There is no validation if not in debug mode",
+    });
+});
+
+describe("cleanup between tests", () => {
+    test("removes sub-registries created during a test", () => {
+        registry.category("dynamic_subregistry").add("key", "value");
+        restoreRegistry(registry);
+        expect(() =>
+            registry.category("dynamic_subregistry").add("key", "value")
+        ).not.toThrow();
+    });
+
+    test("keeps sub-registries that existed before the test", () => {
+        expect("services" in registry.subRegistries).toBe(true);
+        restoreRegistry(registry);
+        expect("services" in registry.subRegistries).toBe(true);
     });
 });
