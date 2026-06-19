@@ -25,6 +25,8 @@ class AccountMoveSend(models.AbstractModel):
     @api.model
     def _get_default_sending_methods(self, move) -> set:
         """ By default, we use the sending method set on the partner or email. """
+        if move.is_purchase_document() and not move.is_self_billing:
+            return set()
         return {move.commercial_partner_id.with_company(move.company_id).invoice_sending_method or 'email'}
 
     @api.model
