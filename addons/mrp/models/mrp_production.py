@@ -1417,12 +1417,19 @@ class MrpProduction(models.Model):
 
             new_qty = move.product_uom.round((self.qty_producing - self.qty_produced) * move.unit_factor)
             if move.has_tracking != 'none':
-                qty_waiting = 0
+                relevant_orig_ids = set()
+                qty_available = 0
                 for move_orig in move.move_orig_ids:
-                    if move_orig.state not in ('draft', 'done', 'cancel'):
-                        qty_waiting += move_orig.product_uom._compute_quantity(move_orig.quantity, move.product_uom)
-                if not move.product_uom.is_zero(qty_waiting):
-                    new_qty = min(new_qty, move.product_uom_qty - qty_waiting)
+                    if move_orig.state not in ('draft', 'cancel'):
+                        relevant_orig_ids.add(move_orig.id)
+                    if move_orig.state == 'done':
+                        qty_available += move_orig.product_uom._compute_quantity(move_orig.quantity, move.product_uom)
+                qty_taken = 0
+                for move_sibling in move.move_orig_ids.move_dest_ids - move:
+                    if move_sibling.state == 'done':
+                        qty_taken += move_sibling.product_uom._compute_quantity(move_sibling.quantity, move.product_uom)
+                if relevant_orig_ids and move.product_uom.compare(qty_available, qty_taken) >= 0:
+                    new_qty = min(new_qty, qty_available - qty_taken)
             move._set_quantity_done(new_qty)
             if (not move.manual_consumption or pick_manual_consumption_moves) \
                     and move.quantity \
