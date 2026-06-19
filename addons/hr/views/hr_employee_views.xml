@@ -113,8 +113,6 @@
                                 context="{'default_create_employee': True}"/>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action"
                             groups="hr.group_hr_user" invisible="not active or not id" context="{'sort_by_responsible': True}"/>
-                        <button name="action_cancel_departure" string="Cancel End of Collaboration" type="object"
-                            groups="hr.group_hr_user" invisible="not id or not departure_id or departure_apply_date"/>
                         <field name="version_id" widget="versions_timeline" context="{'version_revision': version_revision}" invisible="not id" options="{'clickable': True}" readonly="False"/>
                         <field name="version_revision" invisible="1"/>
                     </header>
@@ -435,7 +433,14 @@
                                     <group readonly="1">
                                         <field name="departure_reason_id" readonly="1"
                                                options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
-                                        <field name="dismissal_date" readonly="1"/>
+                                        <label for="dismissal_date"/>
+                                        <div class="o_row">
+                                            <field name="dismissal_date" readonly="1"/>
+                                            <button name="action_cancel_departure" string="Cancel End of Collaboration"
+                                                    type="object" class="btn btn-link p-0 ms-2 text-decoration-none"
+                                                    groups="hr.group_hr_user"
+                                                    invisible="not id or not departure_id or departure_apply_date"/>
+                                        </div>
                                     </group>
                                     <group>
                                         <field name="departure_description" string="Reason"
