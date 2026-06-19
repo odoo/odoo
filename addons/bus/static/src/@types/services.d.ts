@@ -1,5 +1,5 @@
 declare module "services" {
-    import { busParametersService } from "@bus/bus_parameters_service";
+    import { busParametersService } from "@bus/bus_parameters_plugin";
     import { outdatedPageWatcherService } from "@bus/outdated_page_watcher_service";
     import { busMonitoringservice } from "@bus/services/bus_monitoring_service";
     import { busService } from "@bus/services/bus_service";
