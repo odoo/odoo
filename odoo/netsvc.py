@@ -11,6 +11,7 @@ import threading
 import tomllib
 import traceback
 import warnings
+from unittest import mock
 
 from . import release, tools
 from .logging import *  # noqa: F403
@@ -156,6 +157,16 @@ def init_logger():
     for logconfig_item in logging_configurations:
         _logger.debug('logger level set: "%s"', logconfig_item)
 
+    if tools.config['syslog']:
+        # temporarily restore normal to skip useless stracktrace
+        with mock.patch.object(warnings, "showwarning", showwarning):
+            warnings.warn_explicit(
+                "The --syslog option is deprecated since Odoo 20, "
+                "switch to --log-config and configure a syslog handler.",
+                category=DeprecationWarning,
+                filename='<argv>',
+                lineno=1,
+            )
 
 DEFAULT_LOG_CONFIGURATION = [
     ':INFO',
