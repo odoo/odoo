@@ -342,6 +342,7 @@ class TestAllocations(TestHrHolidaysCommon):
         allocation = allocation_form.save()
         self.assertTrue(allocation)
 
+    @freeze_time('2026-01-01 12:00:00')
     def test_hr_leave_allocation_balance(self):
         """
             This test makes sure that the time off balance showed on the time off management kanban card is correct
