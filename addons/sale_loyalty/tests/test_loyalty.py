@@ -1211,3 +1211,64 @@ class TestLoyalty(TestSaleCouponCommon):
         sale_order._update_programs_and_rewards()
         claimable_rewards = sale_order._get_claimable_rewards()
         self.assertFalse(claimable_rewards.get(self.ewallet))
+
+    def test_specific_product_discount_round_globally(self):
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        product_a = self.env['product.product'].create([
+            {
+                'name': 'Product A',
+                'list_price': 11.5,
+                'sale_ok': True,
+                'taxes_id': [Command.set(self.tax_15pc_excl.ids)],
+            },
+        ])
+
+        # Create a coupon and a ewallet
+        coupon_program = self.env['loyalty.program'].create([
+            {
+                'name': 'Coupon Program',
+                'program_type': 'coupons',
+                'trigger': 'with_code',
+                'applies_on': 'both',
+                'reward_ids': [Command.create({
+                        'reward_type': 'discount',
+                        'discount': 100.0,
+                        'discount_applicability': 'specific',
+                        'discount_product_domain': '[("name", "=", "Product A")]',
+                })],
+            },
+        ])
+
+        coupon_partner = self.env['loyalty.card'].create([
+            {
+                'program_id': coupon_program.id,
+                'partner_id': self.partner.id,
+                'points': 1,
+                'code': '5555',
+            },
+        ])
+
+        # Create the order
+        order = self.env['sale.order'].with_user(self.user_salemanager).create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                    Command.create({
+                        'product_id': product_a.id,
+                    }),
+                    Command.create({
+                        'product_id': product_a.id,
+                    }),
+            ]
+        })
+
+        self.assertEqual(order.amount_total, 26.45)
+        self.assertEqual(order.amount_untaxed, 23.0)
+        self.assertEqual(order.amount_tax, 3.45)
+
+        # Apply the coupon
+        self._apply_promo_code(order, coupon_partner.code)
+
+        self.assertEqual(order.amount_total, 0.0)
+        self.assertEqual(order.amount_untaxed, 0.0)
+        self.assertEqual(order.amount_tax, 0.0)
+        self.assertEqual(order.reward_amount, -23.0)
