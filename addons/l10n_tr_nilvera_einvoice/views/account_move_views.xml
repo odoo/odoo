@@ -131,6 +131,10 @@
                         string="Fetch Nilvera PDF"
                         type="object"
                         invisible="move_type not in ['out_invoice', 'out_refund'] or l10n_tr_nilvera_send_status != 'succeed'"/>
+                <button name="button_cancel_earchive"
+                        string="Request Nilvera Cancellation"
+                        type="object"
+                        invisible="state != 'posted' or move_type != 'out_invoice' or l10n_tr_nilvera_send_status in ['error', 'not_sent'] or l10n_tr_nilvera_customer_status != 'earchive'"/>
             </xpath>
             <xpath expr="//group[@name='sale_info_group']/field[@name='ref']" position="attributes">
                 <attribute name="required">country_code == 'TR' and not reversed_entry_id and move_type == 'out_refund'</attribute>

@@ -56,9 +56,13 @@ class AccountMove(models.Model):
         help="This is the unique identifier (UUID) used to link this Odoo document with the Nilvera system. \n"
         "This record ensures every new document has its own unique ID for tracking.",
     )
-
+    l10n_tr_nilvera_customer_status = fields.Selection(
+        related='partner_id.l10n_tr_nilvera_customer_status',
+        readonly=True,
+    )
     l10n_tr_nilvera_send_status = fields.Selection(
         selection=[
+            ('cancelled', 'Cancelled'),
             ('error', "Error"),
             ('not_sent', "Not sent"),
             ('sent', "Sent and waiting response"),
@@ -250,6 +254,9 @@ class AccountMove(models.Model):
             return self.env['account.edi.xml.ubl.tr']
         return super()._get_ubl_cii_builder_from_xml_tree(tree)
 
+    def button_cancel_earchive(self):
+        self._l10n_tr_nilvera_cancel_earchive()
+
     def button_draft(self):
         # EXTENDS account
         for move in self.filtered(lambda move: move.l10n_tr_nilvera_uuid and move.move_type in {'out_invoice', 'in_invoice'}):
@@ -258,6 +265,27 @@ class AccountMove(models.Model):
             elif move.l10n_tr_nilvera_send_status not in {"not_sent", "commercial_rejected"}:
                 raise UserError(_("You cannot reset to draft an entry that has been sent/received from Nilvera."))
         super().button_draft()
+
+    def _l10n_tr_nilvera_cancel_earchive(self):
+        """ Attempts to cancel sent e-Archive moves on Nilvera. """
+        self.ensure_one()
+        if (
+                not self.l10n_tr_nilvera_uuid
+                or self.l10n_tr_nilvera_customer_status != 'earchive'
+                or self.l10n_tr_nilvera_send_status in {'error', 'not_sent'}
+                or self.move_type != 'out_invoice'
+        ):
+            raise UserError(self.env._("Only e-Archive invoices that have been sent successfully to Nilvera can be cancelled."))
+
+        with _get_nilvera_client(self.env._, self.env.company) as client:
+            client.request(
+                "PUT",
+                endpoint=f'/earchive/Invoices/{self.l10n_tr_nilvera_uuid}/Cancel',
+            )
+
+            self.state = 'cancel'
+            self.l10n_tr_nilvera_send_status = 'cancelled'
+            self.message_post(body=_("Cancellation request created on Nilvera."))
 
     def _l10n_tr_nilvera_einvoice_check_invalid_invoice_reference(self):
         invalid_moves = self.env["account.move"]
