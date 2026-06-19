@@ -983,7 +983,7 @@ class StockWarehouse(models.Model):
                 'use_existing_lots': False,
                 'sequence': max_sequence + 1,
                 'company_id': self.company_id.id,
-                'auto_show_reception_report': True,
+                'auto_show_allocation_report': True,
             }, 'out_type_id': {
                 'name': _('Delivery Orders'),
                 'code': 'outgoing',

@@ -98,7 +98,7 @@
                                         <span><field name="reservation_days_before" style="width: 23px;"/> days before/</span>
                                         <span><field name="reservation_days_before_priority" style="width: 23px;"/> days before when starred</span>
                                     </div>
-                                    <field name="auto_show_reception_report" invisible="code not in ['incoming', 'internal']"/>
+                                    <field name="auto_show_allocation_report" invisible="code not in ['incoming', 'internal']"/>
                                 </group>
                                 <group>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
@@ -128,7 +128,7 @@
                                     <div class="o_row" name="default_location_dest_id_div">
                                         <field name="default_location_dest_id" options="{'no_create': True}" required="1"/>
                                     </div>
-                                    <field name="allocated_location_id" options="{'no_create': True}" placeholder="None" invisible="not auto_show_reception_report"/>
+                                    <field name="allocated_location_id" options="{'no_create': True}" placeholder="None" invisible="not auto_show_allocation_report"/>
                                 </group>
                             </group>
                         </page>
@@ -155,8 +155,8 @@
                                         <label for="lot_label_format" string="Print label as:" invisible="not auto_print_lot_labels" class="fw-bold"/>
                                         <field name="lot_label_format" invisible="not auto_print_lot_labels"/>
                                     </div>
-                                    <field name="auto_print_reception_report" string="Reception Report" invisible="not auto_show_reception_report"/>
-                                    <field name="auto_print_reception_report_labels" string="Reception Report Labels" invisible="not auto_show_reception_report"/>
+                                    <field name="auto_print_reception_report" string="Reception Report" invisible="not auto_show_allocation_report"/>
+                                    <field name="auto_print_reception_report_labels" string="Reception Report Labels" invisible="not auto_show_allocation_report"/>
                                     <field name="auto_print_packages" string="Package Content" groups="stock.group_tracking_lot"/>
                                 </group>
                                 <group string='Print on "Put in Pack"' groups="stock.group_tracking_lot">
