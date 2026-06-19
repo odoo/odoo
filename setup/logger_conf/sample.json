@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "formatters": {
+    "singledb": {
+      "class": "odoo.logging.ColoredFormatter",
+      "format": "%(asctime)s\t%(levelname)s\t%(dbname)s\t%(message)s",
+      "datefmt": "%Y-%m-%dT%H:%M:%S"
+    },
+    "json": {
+      "class": "odoo.logging.JSONFormatter"
+    }
+  },
+  "handlers": {
+    "console": {
+      "class": "logging.StreamHandler",
+      "formatter": "singledb",
+      "level": "INFO",
+      "stream": "ext://sys.stderr"
+    },
+    "json": {
+      "class": "logging.handlers.WatchedFileHandler",
+      "formatter": "json",
+      "filename": "odoo.log"
+    },
+    "buffer": {
+      "class": "logging.handlers.MemoryHandler",
+      "target": "json",
+      "capacity": 10000
+    },
+    "db": {
+      "class": "odoo.logging.PostgreSQLHandler",
+      "log_db": "%d",
+      "level": "RUNBOT"
+    }
+  },
+  "root": {
+    "handlers": ["console", "buffer", "db"],
+    "level": "DEBUG"
+  },
+  "loggers": {
+    "odoo.sql_db": {"level": "INFO"},
+    "werkzeug": {"level":  "WARNING"}
+  }
+}
