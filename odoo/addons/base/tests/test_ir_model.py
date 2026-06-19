@@ -184,7 +184,7 @@ class TestXMLID(TransactionCase):
             self.assertEqual((value._name, value.id), self.env.cr.fetchone(), message)
 
         xmlid = 'base.test_xmlid'
-        records = self.env['ir.model.data'].search([], limit=6)
+        records = self.env['ir.model.data'].search([], limit=7)
         with self.assertQueryCount(1):
             self.env['ir.model.data']._update_xmlids([
                 {'xml_id': xmlid, 'record': records[0]},
@@ -202,6 +202,15 @@ class TestXMLID(TransactionCase):
                 {'xml_id': xmlid, 'record': records[2]},
             ])
         assert_xmlid(xmlid, records[2], f'The xmlid {xmlid} should have been updated with record {records[1]}')
+
+        # _update_xmlids should invalidate ir.model.data
+        xmlid_split = xmlid.split('.')
+        xmlid_record = records.search([('module', '=', xmlid_split[0]), ('name', '=', xmlid_split[1])]).ensure_one()
+        self.assertEqual(xmlid_record.res_id, records[2].id)
+        self.env['ir.model.data']._update_xmlids([
+            {'xml_id': xmlid, 'record': records[6]},
+        ])
+        self.assertEqual(xmlid_record.res_id, records[6].id)
 
         # noupdate case
         # note: this part is mainly there to avoid breaking the current behaviour, not asserting that it makes sence
