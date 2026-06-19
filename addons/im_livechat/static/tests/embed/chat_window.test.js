@@ -29,7 +29,7 @@ test("internal users can upload file to temporary thread", async () => {
     const pyEnv = await startServer();
     await loadDefaultEmbedConfig();
     const [partnerUser] = pyEnv["res.users"].search_read([["id", "=", serverState.partnerId]]);
-    await start({ authenticateAs: partnerUser });
+    await start({ authenticateAs: partnerUser, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
     const file = new File(["hello, world"], "text.txt", { type: "text/plain" });
     await contains(".o-mail-Composer");
@@ -37,7 +37,9 @@ test("internal users can upload file to temporary thread", async () => {
     await contains(".dropdown-item:contains('Attach files')");
     await inputFiles(".o-mail-Composer .o_input_file", [file]);
     await contains(".o-mail-AttachmentContainer:not(.o-isUploading):contains(text.txt) .fa-check");
+    const subscribed = waitUntilSubscribe();
     await triggerHotkey("Enter");
+    await subscribed;
     await contains(".o-mail-Message .o-mail-AttachmentContainer:contains(text.txt)");
 });
 
@@ -45,11 +47,12 @@ test("The name of the conversation changes based on the agents' names", async ()
     const pyEnv = await startServer();
     await loadDefaultEmbedConfig();
     pyEnv["res.partner"].write(serverState.partnerId, { user_livechat_username: "MitchellOp" });
-    await start({ authenticateAs: false });
+    await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow-header", { text: "MitchellOp" });
+    const subscribed = waitUntilSubscribe();
     await postLivechatMessage("Hello World!");
-    await waitUntilSubscribe();
+    await subscribed;
     const [channelId] = pyEnv["discuss.channel"].search([
         ["channel_type", "=", "livechat"],
         [
@@ -88,10 +91,12 @@ test("Portal users should not be able to start a call", async () => {
         user_ids: [joelUid],
     });
     pyEnv["res.partner"].write(serverState.partnerId, { user_livechat_username: "MitchellOp" });
-    await start({ authenticateAs: { login: "joel", password: "joel" } });
+    await start({ authenticateAs: { login: "joel", password: "joel" }, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow-header:text('MitchellOp')");
+    const subscribed = waitUntilSubscribe();
     await postLivechatMessage("Hello MitchellOp!");
+    await subscribed;
     await contains(".o-mail-Message[data-persistent]:contains('Hello MitchellOp!')");
     await contains(".o-mail-ChatWindow-header .o-mail-ActionList-button", { count: 2 });
     await contains(".o-mail-ChatWindow-header .o-mail-ActionList-button[title='Fold']");
@@ -123,7 +128,7 @@ test("avatar url contains access token for non-internal users", async () => {
     await loadDefaultEmbedConfig();
     pyEnv["res.partner"].write(serverState.partnerId, { user_livechat_username: "MitchellOp" });
     const [partner] = pyEnv["res.partner"].search_read([["id", "=", serverState.partnerId]]);
-    await start({ authenticateAs: false });
+    await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
     await contains(
         `.o-mail-ChatWindow-threadAvatar img[data-src="${getOrigin()}/web/image/res.partner/${
@@ -139,7 +144,9 @@ test("avatar url contains access token for non-internal users", async () => {
             deserializeDateTime(partner.write_date).ts
         }"]`
     );
+    const subscribed = waitUntilSubscribe();
     await postLivechatMessage("Hello World!");
+    await subscribed;
     const guestId = pyEnv.cookie.get("dgid");
     const [guest] = pyEnv["mail.guest"].read(guestId);
     await contains(
@@ -157,10 +164,12 @@ test("can close confirm livechat with keyboard", async () => {
             expect.step(route);
         }
     });
-    await start({ authenticateAs: false });
+    await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow");
+    const subscribed = waitUntilSubscribe();
     await postLivechatMessage("Hello");
+    await subscribed;
     await contains(".o-mail-Thread:not([data-transient])");
     await triggerHotkey("Escape");
     await contains(
@@ -189,10 +198,12 @@ test("Should not show IM status of agents", async () => {
     });
     pyEnv["res.partner"].create({ name: "Joel", user_ids: [joelUid] });
     pyEnv["res.partner"].write(serverState.partnerId, { user_livechat_username: "MitchellOp" });
-    await start({ authenticateAs: { login: "joel", password: "joel" } });
+    await start({ authenticateAs: { login: "joel", password: "joel" }, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow-header:text('MitchellOp')");
+    const subscribed = waitUntilSubscribe();
     await postLivechatMessage("Hello MitchellOp!");
+    await subscribed;
     await contains(".o-mail-Message[data-persistent]:contains('Hello MitchellOp!')");
     await click(".o-mail-ChatWindow-header");
     await contains(".o-mail-ChatBubble");

@@ -203,7 +203,7 @@ test("Category fold is crosstab synced", async () => {
     pyEnv["discuss.channel"].create({ name: "General" });
     setDiscussSidebarCategoryFoldState("channels", true);
     const env1 = await start({ asTab: true });
-    const env2 = await start({ asTab: true });
+    const env2 = await start({ asTab: true, waitUntilSubscribe: false });
     await openDiscuss(undefined, { target: env1 });
     await openDiscuss(undefined, { target: env2 });
     await contains(
@@ -1047,7 +1047,7 @@ test("Update channel data via bus notification", async () => {
         create_uid: serverState.userId,
     });
     const env1 = await start({ asTab: true });
-    const env2 = await start({ asTab: true });
+    const env2 = await start({ asTab: true, waitUntilSubscribe: false });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     await contains(`${env1.selector} .o-mail-DiscussSidebarChannel-itemName:text('Sales')`);
@@ -1138,7 +1138,7 @@ test("Sidebar compact is crosstab synced", async () => {
         name: "General",
     });
     const env1 = await start({ asTab: true });
-    const env2 = await start({ asTab: true });
+    const env2 = await start({ asTab: true, waitUntilSubscribe: false });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(channelId, { target: env2 });
     await contains(`${env1.selector} .o-mail-DiscussSidebar:not(.o-compact)`);

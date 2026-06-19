@@ -417,8 +417,6 @@ test("Scheduled message with attachments", async () => {
 });
 
 test("widget mail_composer_attachment_selector: edit attachment of scheduled message", async () => {
-    expect.assertions(1);
-
     const { promise: isUploaded, resolve: resolveUpload } = Promise.withResolvers();
     patchWithCleanup(MailComposerAttachmentSelector.prototype, {
         async onFileUploaded() {

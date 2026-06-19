@@ -78,13 +78,14 @@ test("focus on unread livechat marks it as read", async () => {
     await loadDefaultEmbedConfig();
     const userId = serverState.userId;
     listenStoreFetch(["init_messaging", "init_livechat"]);
-    await start({ authenticateAs: false });
+    await start({ authenticateAs: false, waitUntilSubscribe: false });
     await waitStoreFetch(["init_messaging", "init_livechat"]);
     await click(".o-livechat-LivechatButton");
-    await postLivechatMessage("Hello World!");
     // Wait for bus subscription to be done after persisting the thread:
     // presence of the message is not enough (temporary message).
-    await waitUntilSubscribe();
+    const subscribed = waitUntilSubscribe();
+    await postLivechatMessage("Hello World!");
+    await subscribed;
     await contains(".o-mail-Message-content", { text: "Hello World!" });
     const [channelId] = pyEnv["discuss.channel"].search([
         ["channel_type", "=", "livechat"],

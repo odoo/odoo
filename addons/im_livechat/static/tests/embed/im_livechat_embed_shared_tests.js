@@ -1,3 +1,4 @@
+import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 import {
     loadDefaultEmbedConfig,
     postLivechatMessage,
@@ -11,13 +12,15 @@ import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 export async function openClosePersistedChannel() {
     await startServer();
     await loadDefaultEmbedConfig();
-    const env = await start({ authenticateAs: false });
+    const env = await start({ authenticateAs: false, waitUntilSubscribe: false });
     patchWithCleanup(user, _makeUser({ user_companies: undefined }));
     env.services.bus_service.subscribe("discuss.channel/new_message", () =>
         expect.step("discuss.channel/new_message")
     );
     await click(".o-livechat-LivechatButton");
+    const subscribed = waitUntilSubscribe();
     await postLivechatMessage("How can I help?");
+    await subscribed;
     await contains(".o-mail-Thread:not([data-transient])");
     await contains(".o-mail-Message-content", { text: "How can I help?" });
     await expect.waitForSteps(["discuss.channel/new_message"]);

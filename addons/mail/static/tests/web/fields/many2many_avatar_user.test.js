@@ -264,7 +264,6 @@ test("avatar_user widget displays the appropriate user image in kanban view", as
             </kanban>
         `,
     });
-    await start();
     await contains(
         `.o_m2o_avatar > img[data-src="/web/image/res.users/${userId}/avatar_128?unique=1676282400000"]`
     );

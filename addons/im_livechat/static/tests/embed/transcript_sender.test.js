@@ -1,3 +1,5 @@
+import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
+
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
@@ -16,9 +18,11 @@ test("send", async () => {
     onRpcBefore("/im_livechat/email_livechat_transcript", () => expect.step(`send_transcript`));
     const partnerId = pyEnv["res.partner"].create({ email: "paul@example.com", name: "Paul" });
     pyEnv["res.users"].create({ partner_id: partnerId, login: "paul", password: "paul" });
-    await start({ authenticateAs: { login: "paul", password: "paul" } });
+    await start({ authenticateAs: { login: "paul", password: "paul" }, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
+    const subscribed = waitUntilSubscribe();
     await postLivechatMessage("Hello World!");
+    await subscribed;
     await contains(".o-mail-Thread:not([data-transient])");
     await click(".o-mail-ChatWindow-header [title*='Close']");
     await click(".o-livechat-CloseConfirmation-leave");
@@ -37,9 +41,11 @@ test("send failed", async () => {
     });
     const partnerId = pyEnv["res.partner"].create({ email: "paul@example.com", name: "Paul" });
     pyEnv["res.users"].create({ partner_id: partnerId, login: "paul", password: "paul" });
-    await start({ authenticateAs: { login: "paul", password: "paul" } });
+    await start({ authenticateAs: { login: "paul", password: "paul" }, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
+    const subscribed = waitUntilSubscribe();
     await postLivechatMessage("Hello World!");
+    await subscribed;
     await contains(".o-mail-Thread:not([data-transient])");
     await click(".o-mail-ChatWindow-header [title*='Close']");
     await click(".o-livechat-CloseConfirmation-leave");

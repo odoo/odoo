@@ -46,6 +46,6 @@ test("rule received in init", async () => {
             store.add({ livechat_rule: autopopupRuleId });
         },
     });
-    await start({ authenticateAs: false });
+    await start({ authenticateAs: false, waitUntilSubscribe: false });
     await contains(".o-mail-ChatWindow");
 });

@@ -269,7 +269,7 @@ test("chat bubbles are synced between tabs", async () => {
     });
     setupChatHub({ folded: [channelId] });
     const tab1 = await start({ asTab: true });
-    const tab2 = await start({ asTab: true });
+    const tab2 = await start({ asTab: true, waitUntilSubscribe: false });
     await contains(`${tab1.selector} .o-mail-ChatBubble`);
     await contains(`${tab2.selector} .o-mail-ChatBubble`);
     await runAllTimers(); // Wait for bus service to fully load
@@ -401,7 +401,7 @@ test("Compact chat hub is crosstab synced", async () => {
     const channelIds = pyEnv["discuss.channel"].create([{ name: "ch-1" }, { name: "ch-2" }]);
     setupChatHub({ folded: channelIds });
     const env1 = await start({ asTab: true });
-    const env2 = await start({ asTab: true });
+    const env2 = await start({ asTab: true, waitUntilSubscribe: false });
     await contains(`${env1.selector} .o-mail-ChatBubble`, { count: 2 });
     await contains(`${env2.selector} .o-mail-ChatBubble`, { count: 2 });
     await hover(`${env1.selector} .o-mail-ChatBubble:eq(0)`);

@@ -138,7 +138,7 @@ test.skip("Fold state of chat window is sync among browser tabs", async () => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({ name: "General" });
     const env1 = await start({ asTab: true });
-    const env2 = await start({ asTab: true });
+    const env2 = await start({ asTab: true, waitUntilSubscribe: false });
     await click(`${env1.selector} .o_menu_systray i[aria-label='Messages']`);
     await click(`${env1.selector} .o-mail-NotificationItem`);
     await contains(`${env2.selector} .o-mail-ChatWindow-header`);
@@ -996,7 +996,7 @@ test("Ctrl+k opens the @ command palette", async () => {
     ]);
     setupChatHub({ opened: channelId });
     await start();
-    await focus(".o-mail-ChatWindow:text('General')");
+    await focus(".o-mail-ChatWindow:has(:text('General'))");
     triggerHotkey("control+k");
     await contains(".o_command_palette_search:text('@')");
 });
