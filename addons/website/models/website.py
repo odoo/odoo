@@ -801,9 +801,11 @@ class Website(models.CachedModel):
 
     @api.model
     def configurator_skip(self):
+        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
+        website.ensure_one()
         theme = self.env["ir.module.module"].search([("name", "=", "theme_default")])
-        self.env.website.configurator_done = True
-        return theme.button_choose_theme()
+        website.configurator_done = True
+        return theme.with_context(website_id=website.id).button_choose_theme()
 
     @api.model
     def configurator_missing_industry(self, unknown_industry):
@@ -838,6 +840,7 @@ class Website(models.CachedModel):
     @api.model
     def configurator_apply(self, **kwargs):
         website = self.get_current_website(fallback=True)
+        self = self.with_context(website_id=website.id)  # noqa: PLW0642
         skip_ai = kwargs.get('skip_ai')  # Used by design-themes tooling
         theme_name = kwargs['theme_name']
         theme = self.env['ir.module.module'].search([('name', '=', theme_name)])
@@ -914,7 +917,7 @@ class Website(models.CachedModel):
 
         # Extension hook: allows installed modules to perform additional setup
         # steps on the generated website.
-        self.env['website'].configurator_addons_apply(**kwargs)
+        website.configurator_addons_apply(**kwargs)
 
         # Refresh the environment of the website to use addon overrides.
         website = self.env['website'].browse(website.id)
@@ -960,7 +963,7 @@ class Website(models.CachedModel):
         industry = kwargs['industry_name']
 
         IrQweb = self.env['ir.qweb'].with_context(website_id=website.id, lang=website.default_lang_id.code)
-        text_generation_target_lang = self.get_current_website(fallback=True).default_lang_id.code
+        text_generation_target_lang = website.default_lang_id.code
         # If the target language is not English, we need a good translation
         # coverage. But if the target lang is en_XX it's ok to have en_US text.
         text_must_be_translated_for_openai = not text_generation_target_lang.startswith('en_')

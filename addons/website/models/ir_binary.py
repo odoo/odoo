@@ -10,8 +10,9 @@ class IrBinary(models.AbstractModel):
     ):
         record = None
         if xmlid:
-            if self.env.website.theme_id:
-                domain = [('key', '=', xmlid), ('website_id', '=', self.env.website.id)]
+            website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
+            if website.theme_id:
+                domain = [('key', '=', xmlid), ('website_id', '=', website.id)]
                 Attachment = self.env['ir.attachment']
                 if self.env.user.share:
                     domain.append(('public', '=', True))

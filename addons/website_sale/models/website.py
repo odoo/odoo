@@ -367,7 +367,7 @@ class Website(models.Model):
         """
         res = super().configurator_apply(**kwargs)
 
-        website = self.env.website
+        website = self.env["website"].browse(res["website_id"])
         website_settings = {}
         category_settings = {}
         views_to_disable = []
