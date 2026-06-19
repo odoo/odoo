@@ -78,9 +78,9 @@ export class Whatsapp extends Interaction {
     sendMessage() {
         const inputEl = this.chatbox.querySelector(".s_whatsapp_user_message");
         const messageText = inputEl.value.trim() || "";
-        const whatsappUrl = `https://wa.me/${this.companyNumber}?text=${encodeURIComponent(
-            messageText
-        )}`;
+        const whatsappUrl = `whatsapp://send/?phone=${this.companyNumber}&text=${
+            encodeURIComponent(messageText)
+        }&type=phone_number&app_absent=0`;
         browser.open(whatsappUrl, "_blank");
     }
 
