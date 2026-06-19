@@ -998,9 +998,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
             'consumption': 'flexible',
             'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 2.0})],
         })
-        lot = self.env['stock.lot'].create({'name': 'LOT001', 'product_id': component.id})
-        self.env['stock.quant']._update_available_quantity(component, self.stock_location, 10.0, lot_id=lot)
-
+        lots = self.env['stock.lot'].create([{'name': f'LOT00{i + 1}', 'product_id': component.id} for i in range(2)])
         mo = self.env['mrp.production'].create({
             'product_id': final_product.id,
             'bom_id': bom.id,
@@ -1012,6 +1010,7 @@ class TestMrpProductionBackorder(TestMrpCommon):
         # Reserve and partially validate the PBM picking
         pbm_picking = mo.picking_ids
         pbm_picking.move_ids.quantity = 6.0
+        pbm_picking.move_ids.move_line_ids.lot_id = lots[0]
         Form.from_action(self.env, pbm_picking.button_validate()).save().process()
 
         # Produce 1 unit (consumes 2 components), then create a backorder
@@ -1024,7 +1023,10 @@ class TestMrpProductionBackorder(TestMrpCommon):
         with Form(backorder) as backorder_form:
             backorder_form.qty_producing = 3
         self.assertEqual(backorder.move_raw_ids.quantity, 4.0)
-        backorder.picking_ids[-1].button_validate()
+        pbm_picking_bo = backorder.picking_ids[-1]
+        pbm_picking_bo.move_ids.quantity = 4.0
+        pbm_picking_bo.move_ids.move_line_ids.lot_id = lots[1]
+        pbm_picking_bo.button_validate()
         with Form(backorder) as backorder_form:
             backorder_form.qty_producing = 4
         self.assertEqual(backorder.move_raw_ids.quantity, 8.0)
