@@ -166,6 +166,16 @@ class MrpWorkorder(models.Model):
                 workorder.write({'state': 'blocked'})
 
     def set_state(self, state):
+        if state in ('done', 'progress'):
+            to_check = self.filtered(lambda wo: wo.state != state and wo.production_state != 'done')
+            if any(wo.working_state == 'blocked' for wo in to_check):
+                message = (
+                    self.env._("Please unblock the work center to validate the work order.")
+                    if state == 'done'
+                    else self.env._("Please unblock the work center to start the work order.")
+                )
+                return to_check._action_open_unblock_workcenter_wizard(message)
+
         ids_to_update = []
         for wo in self:
             if wo.state == state or wo.production_state == 'done':
@@ -183,9 +193,9 @@ class MrpWorkorder(models.Model):
         if state == 'cancel':
             wo_to_update.action_cancel()
         elif state == 'done':
-            wo_to_update.action_mark_as_done()
+            return wo_to_update.action_mark_as_done()
         elif state == 'progress':
-            wo_to_update.button_start()
+            return wo_to_update.button_start()
         else:
             wo_to_update.write({'state': state})
 
@@ -639,9 +649,23 @@ class MrpWorkorder(models.Model):
             total += duration * (workorder.costs_hour or workorder.workcenter_id.costs_hour)
         return total
 
+    def _action_open_unblock_workcenter_wizard(self, message):
+        workcenters = self.workcenter_id.filtered(lambda wc: wc.working_state == 'blocked')
+        return {
+            'name': _('Invalid Operation'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'mrp.workcenter.unblock',
+            'views': [(False, 'form')],
+            'target': 'new',
+            'context': {
+                'default_workcenter_ids': workcenters.ids,
+                'default_message': message,
+            },
+        }
+
     def button_start(self, raise_on_invalid_state=False):
         if any(wo.working_state == 'blocked' for wo in self):
-            raise UserError(_('Please unblock the work center to start the work order.'))
+            return self._action_open_unblock_workcenter_wizard(self.env._('Please unblock the work center to start the work order.'))
         for wo in self:
             if any(not time.date_end for time in wo.time_ids.filtered(lambda t: t.user_id.id == self.env.user.id)):
                 continue
@@ -918,10 +942,13 @@ class MrpWorkorder(models.Model):
         return sum(self.time_ids.mapped('duration')) + self.get_working_duration()
 
     def action_mark_as_done(self):
+        if any(wo.working_state == 'blocked' for wo in self):
+            return self._action_open_unblock_workcenter_wizard(self.env._('Please unblock the work center to validate the work order.'))
+        self.button_finish()
+        self._set_default_time_log()
+
+    def _set_default_time_log(self):
         for wo in self:
-            if wo.working_state == 'blocked':
-                raise UserError(_('Please unblock the work center to validate the work order'))
-            wo.button_finish()
             if wo.duration == 0.0:
                 wo.duration = wo.duration_expected
                 wo.duration_percent = 100

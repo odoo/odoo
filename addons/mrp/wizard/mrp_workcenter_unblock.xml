@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_workcenter_unblock_view_form" model="ir.ui.view">
+        <field name="name">mrp.workcenter.unblock.form</field>
+        <field name="model">mrp.workcenter.unblock</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="message" nolabel="1" readonly="1"/>
+                <footer>
+                    <button name="action_unblock"
+                            type="object"
+                            string="Unblock Work Center"
+                            class="btn-primary"
+                            data-hotkey="q"/>
+                    <button string="Discard"
+                            class="btn-secondary"
+                            special="cancel"
+                            data-hotkey="x"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
