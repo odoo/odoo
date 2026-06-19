@@ -16,6 +16,7 @@
         "im_livechat",
         "mail",
         "mail_bot",
+        "microsoft_calendar",
         "project_todo",
         "website_livechat",
         "website_sale",
