@@ -1,5 +1,8 @@
 import { registry } from "@web/core/registry";
 
+const themeSelectionCard =
+    ".o_theme_selection_screen:not(.o_wsale_configurator_screen) .theme_preview .button_area";
+
 registry.category("web_tour.tours").add("configurator_flow", {
     steps: () => [
         {
@@ -51,6 +54,17 @@ registry.category("web_tour.tours").add("configurator_flow", {
             trigger: "button.o_configurator_next:not(:disabled)",
             run: "click",
         },
+        {
+            content: "Wait for theme selection or shop page style",
+            trigger: `.o_configurator_screen:contains(online catalog) .button_area, ${themeSelectionCard}`,
+            timeout: 60000,
+        },
+        {
+            content: "Choose a theme",
+            trigger: themeSelectionCard,
+            run: "click",
+            isActive: [themeSelectionCard],
+        },
         // Online catalog screen
         {
             content: "Choose a shop page style",
@@ -69,7 +83,7 @@ registry.category("web_tour.tours").add("configurator_flow", {
             expectUnloadPage: true,
         },
         {
-            content: "Wait until the configurator is finished",
+            content: "Wait for the editor to load after redirect",
             trigger: ":iframe [data-view-xmlid='website.homepage']",
             timeout: 30000,
         },

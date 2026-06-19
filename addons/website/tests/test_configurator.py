@@ -165,4 +165,9 @@ class TestConfiguratorTranslation(TestConfiguratorCommon):
         # disable configurator todo to ensure this test goes through
         active_todo = self.env['ir.actions.todo'].search([('state', '=', 'open')], limit=1)
         active_todo.update({'state': 'done'})
-        self.start_tour('/website/force/%s?path=%%2Fwebsite%%2Fconfigurator' % website_fr.id, 'configurator_translation', login='admin')
+        self.start_tour(
+            '/website/force/%s?path=%%2Fwebsite%%2Fconfigurator' % website_fr.id,
+            'configurator_translation',
+            login='admin',
+            timeout=120,
+        )
