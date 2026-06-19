@@ -382,8 +382,46 @@ line 1 (sk_01) and its VAT label,
                         <field name="expression_ids">
                             <record id="sk_vat_exempt_14_base" model="account.report.expression">
                                 <field name="label">base</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">-14</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">sk_14_goods.base + sk_14_services.base + sk_14_triangular.base</field>
+                            </record>
+                        </field>
+                        <field name="children_ids">
+                            <record id="sk_vat_exempt_14_goods" model="account.report.line">
+                                <field name="name">Goods (§ 43 para. 1)</field>
+                                <field name="name@sk">Tovar (§ 43 ods. 1)</field>
+                                <field name="code">sk_14_goods</field>
+                                <field name="expression_ids">
+                                    <record id="sk_vat_exempt_14_goods_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-14_G</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_vat_exempt_14_services" model="account.report.line">
+                                <field name="name">Services (§ 43 para. 4)</field>
+                                <field name="name@sk">Služba (§ 43 ods. 4)</field>
+                                <field name="code">sk_14_services</field>
+                                <field name="expression_ids">
+                                    <record id="sk_vat_exempt_14_services_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-14_S</field>
+                                    </record>
+                                </field>
+                            </record>
+                            <record id="sk_vat_exempt_14_triangular" model="account.report.line">
+                                <field name="name">Triangular (§ 43 para. 1 - first customer)</field>
+                                <field name="name@sk">Trojuholníkový (§ 43 ods. 1 - prvý zákazník)</field>
+                                <field name="code">sk_14_triangular</field>
+                                <field name="expression_ids">
+                                    <record id="sk_vat_exempt_14_triangular_base" model="account.report.expression">
+                                        <field name="label">base</field>
+                                        <field name="engine">tax_tags</field>
+                                        <field name="formula">-14_T</field>
+                                    </record>
+                                </field>
                             </record>
                         </field>
                     </record>
