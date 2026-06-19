@@ -101,12 +101,6 @@
     --KanbanRecord-width: #{$o-kanban-default-record-width}; 
     --KanbanRecord--small-width: #{$o-kanban-small-record-width};
 
-    // TODO AAB: rename/remove
-    --KanbanRecord-padding-v: #{$o-kanban-inside-vgutter};
-    --KanbanRecord-padding-h: #{$o-kanban-inside-hgutter};
-    --KanbanRecord__image-width: #{$o-kanban-image-width};
-    --KanbanRecord__image--fill-width: #{$o-kanban-image-fill-width};
-
     --KanbanColumn__highlight-background: #{tint-color($o-action, 90%)};
     --KanbanColumn__highlight-border: #{$o-action};
     --KanbanColumn__highlight-selected: #d1ecf1;
@@ -144,7 +138,7 @@
 
     @include media-only(print) {
         @include media-breakpoint-down(md) {
-            --KanbanRecord-padding-h: #{$o-kanban-inside-hgutter * 2};
+            --Card-padding-h: #{$o-kanban-inside-hgutter * 2};
         }
     }
 
