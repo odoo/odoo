@@ -20,10 +20,7 @@ export const useVivaApp = (validateCallback) => {
      *
      * @param {Object} pm - The payment method object.
      */
-    const use = (pm) => {
-        const isAndroid = navigator.userAgent.toLowerCase().includes("android");
-        return isAndroid && pm.use_payment_terminal === "viva_com";
-    };
+    const use = (pm) => isMobile() && pm.use_payment_terminal === "viva_com";
 
     /**
      * Since we have a new router, the vivawallet callback URL will directly
@@ -148,15 +145,19 @@ export const useVivaApp = (validateCallback) => {
         }
     };
 
+    const isMobile = () => {
+        const ua = navigator.userAgent.toLowerCase();
+        return ua.includes("android") || ua.includes("iphone") || ua.includes("ipad");
+    };
+
     const isIntegrated = (line) => {
         if (!line) {
             return false;
         }
-        const isAndroid = navigator.userAgent.toLowerCase().includes("android");
         const usingApp = window.localStorage.getItem("vivawallet_app_answer") === "true";
         const isVivaMethod = line.payment_method_id.use_payment_terminal === "viva_com";
 
-        return isAndroid && usingApp && isVivaMethod;
+        return isMobile() && usingApp && isVivaMethod;
     };
 
     const resetIntegration = (line) => {
