@@ -16,7 +16,16 @@ import { useBackButton, useForwardRefToParent } from "@web/core/utils/hooks";
  */
 function useEarlyExternalListener(target, eventName, handler, eventParams) {
     target.addEventListener(eventName, handler, eventParams);
-    onWillDestroy(() => target.removeEventListener(eventName, handler, eventParams));
+    onWillDestroy(() => {
+        try {
+            target.removeEventListener(eventName, handler, eventParams);
+        } catch (e) {
+            // If iframe source became CORS it can result in a SecurityError.
+            if (e.name !== "SecurityError") {
+                throw e;
+            }
+        }
+    });
 }
 
 /**
@@ -25,10 +34,11 @@ function useEarlyExternalListener(target, eventName, handler, eventParams) {
  *
  * This also handles the case where an iframe is clicked.
  *
+ * @param {Popover} popover
  * @param {(node?: Node) => any} callback
  * @param {Window} targetWindow
  */
-function useClickAway(callback, targetWindow = window) {
+function useClickAway(popover, callback, targetWindow = window) {
     function blurHandler(ev) {
         const target = ev.relatedTarget || targetWindow.document.activeElement;
         if (target?.tagName === "IFRAME") {
@@ -47,6 +57,33 @@ function useClickAway(callback, targetWindow = window) {
     useEarlyExternalListener(targetWindow, "pointerdown", pointerDownHandler, { capture: true });
     useEarlyExternalListener(targetWindow, "blur", blurHandler, { capture: true });
     useEarlyExternalListener(targetWindow, "popstate", navigationHandler, { capture: true });
+    for (const iframeEl of document.querySelectorAll("iframe")) {
+        try {
+            useEarlyExternalListener(
+                iframeEl.contentWindow,
+                "pointerdown",
+                () => {
+                    const popupEl = popover.popoverRef.el;
+                    let checkEl = iframeEl.parentElement;
+                    while (checkEl) {
+                        if (checkEl === popupEl) {
+                            // Ignore iframes within popup
+                            return;
+                        }
+                        checkEl = checkEl.parentElement;
+                    }
+                    callback(iframeEl);
+                },
+                { capture: true, once: true }
+            );
+        } catch (e) {
+            // In some browsers, if an iframe is loaded from a different
+            // domain accessing it results in a SecurityError.
+            if (e.name !== "SecurityError") {
+                throw e;
+            }
+        }
+    }
 }
 
 const POPOVERS = new WeakMap();
@@ -133,7 +170,7 @@ export class Popover extends Component {
 
         if (this.props.target.isConnected) {
             const targetWindow = this.props.target.ownerDocument.defaultView || window;
-            useClickAway(this.onClickAway.bind(this), targetWindow);
+            useClickAway(this, this.onClickAway.bind(this), targetWindow);
 
             if (this.props.closeOnEscape) {
                 useHotkey("escape", () => this.props.close());
