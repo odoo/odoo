@@ -115,9 +115,10 @@ export class Many2ManyTagsField extends Component {
                 create: false,
                 write: true,
             },
-            onRecordSaved: (record) => {
+            onRecordSaved: async (record) => {
                 const records = this.props.record.data[this.props.name].records;
-                return records.find((r) => r.resId === record.resId).load();
+                await records.find((r) => r.resId === record.resId).load();
+                return this.props.record.update({ [this.props.name]: [] }); // trigger the onchange
             },
         });
 
