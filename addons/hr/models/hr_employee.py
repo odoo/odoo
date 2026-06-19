@@ -173,6 +173,7 @@ class HrEmployee(models.Model):
     birthday = fields.Date('Birthday', groups="hr.group_hr_user", tracking=True)
     birthday_public_display = fields.Boolean('Show Birthday To Employees', groups="hr.group_hr_user", default=False)
     birthday_public_display_string = fields.Char("Public Date of Birth", compute="_compute_birthday_public_display_string", default="hidden")
+    age = fields.Integer('Age', groups='hr.group_hr_user', compute='_compute_age')
 
     # For birthday group by month
     birthday_month = fields.Selection(
@@ -568,6 +569,11 @@ class HrEmployee(models.Model):
     def _compute_birthday_month(self):
         for employee in self:
             employee.birthday_month = str(employee.birthday.month) if employee.birthday else '0'
+
+    @api.depends('birthday')
+    def _compute_age(self):
+        for employee in self:
+            employee.age = employee._get_age()
 
     @api.model
     def _get_certificate_selection(self):
