@@ -20,7 +20,7 @@ defineLivechatModels();
 test("open/close temporary channel", async () => {
     await startServer();
     await loadDefaultEmbedConfig();
-    await start({ authenticateAs: false });
+    await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow");
     await contains(".o-livechat-LivechatButton", { count: 0 });
@@ -40,7 +40,7 @@ test("livechat not available", async () => {
             store.add({ livechat_available: false });
         },
     });
-    await start({ authenticateAs: false });
+    await start({ authenticateAs: false, waitUntilSubscribe: false });
     await contains(".o-mail-ChatHub");
     await contains(".o-livechat-LivechatButton", { count: 0 });
 });
@@ -60,7 +60,7 @@ test("clicking on notification opens the chat", async () => {
             store.add({ livechat_rule: btnAndTextRuleId });
         },
     });
-    await start({ authenticateAs: false });
+    await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton-notification", {
         text: "Need help? Chat with us.",
     });

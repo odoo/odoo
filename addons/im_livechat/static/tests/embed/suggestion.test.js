@@ -12,7 +12,7 @@ defineLivechatModels();
 
 test("Visitor cannot use @ mentions in livechat", async () => {
     await loadDefaultEmbedConfig();
-    await start({ authenticateAs: false });
+    await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Message", { text: "Hello, how may I help you?" });
     patchWithCleanup(SuggestionService.prototype, {

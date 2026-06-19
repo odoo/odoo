@@ -32,7 +32,7 @@ test("Session is reset after failing to persist the channel", async () => {
             return false;
         }
     });
-    await start({ authenticateAs: false });
+    await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
     await postLivechatMessage("Hello World!");
     await contains(".o_notification", {
@@ -47,10 +47,12 @@ test("Session is reset after failing to persist the channel", async () => {
 test("Fold state is saved", async () => {
     await startServer();
     await loadDefaultEmbedConfig();
-    await start({ authenticateAs: false });
+    await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Thread");
+    const subscribed = waitUntilSubscribe();
     await postLivechatMessage("Hello World!");
+    await subscribed;
     await contains(".o-mail-Thread:not([data-transient])");
     assertChatHub({ opened: [1] });
     await click(".o-mail-ChatWindow-header");
@@ -65,12 +67,13 @@ test("Seen message is saved on the server", async () => {
     const pyEnv = await startServer();
     await loadDefaultEmbedConfig();
     const userId = serverState.userId;
-    await start({ authenticateAs: false });
+    await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Thread");
+    const subscribed = waitUntilSubscribe();
     await postLivechatMessage("Hello, I need help!");
+    await subscribed;
     await contains(".o-mail-Message", { text: "Hello, I need help!" });
-    await waitUntilSubscribe();
     const initialSeenMessageId = Object.values(
         getService("mail.store")["discuss.channel"].records
     ).at(-1).self_member_id.seen_message_id?.id;

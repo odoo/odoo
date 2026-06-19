@@ -1696,7 +1696,7 @@ test("Toggle bookmark should update bookmark counter on all tabs", async () => {
         message_type: "comment",
     });
     const env1 = await start({ asTab: true });
-    const env2 = await start({ asTab: true });
+    const env2 = await start({ asTab: true, waitUntilSubscribe: false });
     await openDiscuss(channelId, { target: env1 });
     await openDiscuss(undefined, { target: env2 });
     await contains(`${env1.selector} .o-mail-Message`);

@@ -1440,4 +1440,4 @@ test("preserve message link formatting in messaging menu", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await contains(`.o-mail-NotificationItem-text a[href="https://odoo.com/"]`);
-})
+});

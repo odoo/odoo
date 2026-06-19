@@ -1,4 +1,8 @@
-import { addBusMessageHandler, busModels } from "@bus/../tests/bus_test_helpers";
+import {
+    addBusMessageHandler,
+    busModels,
+    waitUntilSubscribe,
+} from "@bus/../tests/bus_test_helpers";
 import {
     after,
     before,
@@ -44,6 +48,7 @@ export { SIZES } from "@web/core/ui/ui_service";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 
 import { SoundEffects } from "@mail/core/common/sound_effects_service";
+import { Store } from "@mail/core/common/store_service";
 import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
 import { Network, Rtc } from "@mail/discuss/call/common/rtc_service";
 import { DiscussAppCategory } from "@mail/discuss/core/public_web/discuss_app/discuss_app_category_model";
@@ -341,6 +346,7 @@ let discussAsTabId = 0;
  *  asTab?: boolean;
  *  authenticateAs?: any | { login: string; password: string; };
  *  env?: Partial<OdooEnv>;
+ *  waitUntilSubscribe?: boolean;
  * }} [options]
  */
 export async function start(options) {
@@ -407,7 +413,11 @@ export async function start(options) {
     });
     // Note that loading the emojis cannot be called before setting up the env because
     // it depends on translations being loaded.
-    await Promise.all([mountWithCleanup(WebClient, { env, target }), emojiLoader.load()]);
+    await Promise.all([
+        options?.waitUntilSubscribe === false ? Promise.resolve() : waitUntilSubscribe(),
+        mountWithCleanup(WebClient, { env, target }),
+        emojiLoader.load(),
+    ]);
     const storeService = env.services["mail.store"];
     const popoutService = env.services["mail.popout"];
     after(() => {
@@ -906,6 +916,15 @@ export function assertChatHub({ opened = [], folded = [] }) {
 export const STORE_FETCH_ROUTES = ["/mail/store"];
 
 /**
+ * In-flight store fetches, keyed by name, each holding a FIFO queue of the `DataResponse` promises
+ * returned by `Store.fetchStoreData`. That promise resolves once the requested data has actually been
+ * applied to the store (after the RPC insert for auto-resolve fetches, or once the awaited data lands
+ * for `requestData` fetches), so `waitStoreFetch` can await it to be sure the response was processed and
+ * not just that the request was sent. Populated by `listenStoreFetch`, consumed by `waitStoreFetch`.
+ */
+const storeFetchQueues = new Map();
+
+/**
  * Prepares listeners for the various ways a store fetch could be triggered. It is important to call
  * this method before the RPC are done (typically before the start() of the test) to not miss any of
  * them. Each intercepted fetch should have a corresponding waitStoreFetch in the test.
@@ -918,6 +937,16 @@ export const STORE_FETCH_ROUTES = ["/mail/store"];
  *  and the specific params should be logged in expect.step. By default only the name is logged.
  */
 export function listenStoreFetch(nameOrNames = [], { logParams = [], onRpc: onRpcOverride } = {}) {
+    storeFetchQueues.clear();
+    patchWithCleanup(Store.prototype, {
+        fetchStoreData(name) {
+            const promise = super.fetchStoreData(...arguments);
+            const queue = storeFetchQueues.get(name) ?? [];
+            queue.push(promise);
+            storeFetchQueues.set(name, queue);
+            return promise;
+        },
+    });
     async function registerStep(request, name, params) {
         const res = await onRpcOverride?.(request);
         if (logParams.includes(name)) {
@@ -984,6 +1013,20 @@ export async function waitStoreFetch(
         ],
         { ignoreOrder, timeout }
     );
+    /**
+     * The expect.step above is logged when the RPC request is intercepted, not when its response is
+     * applied to the store. Await the corresponding `DataResponse` promise(s) so the fetched data is
+     * actually in the store before resolving, otherwise a late response could still land (and clobber
+     * concurrent bus updates) after the test moved on. Awaiting all the promises queued so far for the
+     * name (and emptying the queue) consumes them without assuming a 1:1 mapping between fetches and
+     * waitStoreFetch calls: a fetch that no test awaits (e.g. one that is expected to fail) is settled
+     * here too. `allSettled` is used so an expected fetch failure does not reject this helper.
+     */
+    const names = (typeof nameOrNames === "string" ? [nameOrNames] : nameOrNames).map(
+        (nameOrNameAndParams) =>
+            typeof nameOrNameAndParams === "string" ? nameOrNameAndParams : nameOrNameAndParams[0]
+    );
+    await Promise.allSettled(names.flatMap((name) => storeFetchQueues.get(name)?.splice(0) ?? []));
     /**
      * Extra tick necessary to ensure the RPC is fully processed before resolving.
      * This is necessary because the expect.step in onRpc is not synchronous with the moment

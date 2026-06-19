@@ -86,7 +86,7 @@ test("editing livechat note is synced between tabs", async () => {
         livechat_note: "<p>Initial note</p>",
     });
     const tab1 = await start({ asTab: true });
-    const tab2 = await start({ asTab: true });
+    const tab2 = await start({ asTab: true, waitUntilSubscribe: false });
     await openDiscuss(channelId, { target: tab1 });
     await openDiscuss(channelId, { target: tab2 });
     await contains(`${tab1.selector} .o-livechat-ChannelInfoList textarea`, {
@@ -158,7 +158,7 @@ test("editing livechat status is synced between tabs", async () => {
         livechat_status: "in_progress",
     });
     const tab1 = await start({ asTab: true });
-    const tab2 = await start({ asTab: true });
+    const tab2 = await start({ asTab: true, waitUntilSubscribe: false });
     await openDiscuss(channelId, { target: tab1 });
     await openDiscuss(channelId, { target: tab2 });
     await contains(`${tab1.selector} .o-livechat-ChannelInfoList button.active`, {

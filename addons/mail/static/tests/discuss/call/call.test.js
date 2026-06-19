@@ -425,7 +425,7 @@ test("join/leave sounds are only played on main tab", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     listenStoreFetch("channels_as_member");
     const env1 = await start({ asTab: true });
-    const env2 = await start({ asTab: true });
+    const env2 = await start({ asTab: true, waitUntilSubscribe: false });
     patchWithCleanup(env1.services["mail.sound_effects"], {
         play(name) {
             expect.step(`tab1 - play - ${name}`);
