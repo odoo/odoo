@@ -2,6 +2,8 @@
  *         Common Steps
  *******************************/
 
+import { postMessage } from "@im_livechat/../tests/tours/livechat_tour_utils";
+
 export const start = [
     {
         content: "click on livechat widget",
@@ -12,16 +14,7 @@ export const start = [
         trigger:
             ".o-livechat-root:shadow .o-mail-ChatWindow:contains(El Deboulonnator) .o-mail-Thread[data-transient]",
     },
-    {
-        content: "Say hello!",
-        trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-        run: "edit Hello Sir!",
-    },
-    {
-        content: "Send the message",
-        trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-        run: "press Enter",
-    },
+    ...postMessage("Hello Sir!"),
     {
         content: "Verify the message has been sent",
         trigger:

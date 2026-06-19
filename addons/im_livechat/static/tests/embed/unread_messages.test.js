@@ -3,17 +3,16 @@ import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
+    postLivechatMessage,
 } from "@im_livechat/../tests/livechat_test_helpers";
 import {
     click,
     contains,
     focus,
-    insertText,
     listenStoreFetch,
     setupChatHub,
     start,
     startServer,
-    triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
@@ -82,8 +81,7 @@ test("focus on unread livechat marks it as read", async () => {
     await start({ authenticateAs: false });
     await waitStoreFetch(["init_messaging", "init_livechat"]);
     await click(".o-livechat-LivechatButton");
-    await insertText(".o-mail-Composer-input", "Hello World!");
-    await triggerHotkey("Enter");
+    await postLivechatMessage("Hello World!");
     // Wait for bus subscription to be done after persisting the thread:
     // presence of the message is not enough (temporary message).
     await waitUntilSubscribe();

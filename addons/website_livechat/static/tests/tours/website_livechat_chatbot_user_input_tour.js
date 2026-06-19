@@ -1,5 +1,12 @@
-import { registry } from "@web/core/registry";
+import {
+    editComposer,
+    LIVECHAT_COMPOSER,
+    postMessage,
+    waitForMessage,
+} from "@im_livechat/../tests/tours/livechat_tour_utils";
+
 import { rpcBus } from "@web/core/network/rpc";
+import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_livechat.chatbot_user_input_saved_on_last_step", {
     steps: () => [
@@ -7,26 +14,12 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_user_input_sav
             trigger: ".o-livechat-root:shadow .o-livechat-LivechatButton",
             run: "click",
         },
+        waitForMessage("Enter your phone number"),
+        ...postMessage("+919876543210"),
+        waitForMessage("Enter your email address"),
+        editComposer("test@example.com"),
         {
-            trigger: ".o-livechat-root:shadow .o-mail-Message:contains(Enter your phone number)",
-        },
-        {
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-            run: "edit +919876543210",
-        },
-        {
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-            run: "press Enter",
-        },
-        {
-            trigger: ".o-livechat-root:shadow .o-mail-Message:contains(Enter your email address)",
-        },
-        {
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-            run: "edit test@example.com",
-        },
-        {
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
+            trigger: `${LIVECHAT_COMPOSER}:enabled`,
             async run(helpers) {
                 // We wait for the request to complete to ensure the final user input is persisted in the database before moving forward.
                 let requestId;
@@ -48,7 +41,8 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_user_input_sav
             },
         },
         {
-            trigger: ".o-livechat-root:shadow span:contains(This live chat conversation has ended.)",
+            trigger:
+                ".o-livechat-root:shadow span:contains(This live chat conversation has ended.)",
         },
     ],
 });

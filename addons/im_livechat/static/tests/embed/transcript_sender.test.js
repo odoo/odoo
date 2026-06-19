@@ -1,16 +1,9 @@
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
+    postLivechatMessage,
 } from "@im_livechat/../tests/livechat_test_helpers";
-import {
-    click,
-    contains,
-    insertText,
-    onRpcBefore,
-    start,
-    startServer,
-    triggerHotkey,
-} from "@mail/../tests/mail_test_helpers";
+import { click, contains, onRpcBefore, start, startServer } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { onRpc } from "@web/../tests/web_test_helpers";
 
@@ -25,8 +18,7 @@ test("send", async () => {
     pyEnv["res.users"].create({ partner_id: partnerId, login: "paul", password: "paul" });
     await start({ authenticateAs: { login: "paul", password: "paul" } });
     await click(".o-livechat-LivechatButton");
-    await insertText(".o-mail-Composer-input", "Hello World!");
-    triggerHotkey("Enter");
+    await postLivechatMessage("Hello World!");
     await contains(".o-mail-Thread:not([data-transient])");
     await click(".o-mail-ChatWindow-header [title*='Close']");
     await click(".o-livechat-CloseConfirmation-leave");
@@ -47,8 +39,7 @@ test("send failed", async () => {
     pyEnv["res.users"].create({ partner_id: partnerId, login: "paul", password: "paul" });
     await start({ authenticateAs: { login: "paul", password: "paul" } });
     await click(".o-livechat-LivechatButton");
-    await insertText(".o-mail-Composer-input", "Hello World!");
-    triggerHotkey("Enter");
+    await postLivechatMessage("Hello World!");
     await contains(".o-mail-Thread:not([data-transient])");
     await click(".o-mail-ChatWindow-header [title*='Close']");
     await click(".o-livechat-CloseConfirmation-leave");

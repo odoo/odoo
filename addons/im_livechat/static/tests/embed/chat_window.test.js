@@ -2,13 +2,13 @@ import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
+    postLivechatMessage,
 } from "@im_livechat/../tests/livechat_test_helpers";
 import {
     assertChatBubbleAndWindowImStatus,
     click,
     contains,
     inputFiles,
-    insertText,
     mockGetMedia,
     onRpcBefore,
     start,
@@ -48,8 +48,7 @@ test("The name of the conversation changes based on the agents' names", async ()
     await start({ authenticateAs: false });
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow-header", { text: "MitchellOp" });
-    await insertText(".o-mail-Composer-input", "Hello World!");
-    await triggerHotkey("Enter");
+    await postLivechatMessage("Hello World!");
     await waitUntilSubscribe();
     const [channelId] = pyEnv["discuss.channel"].search([
         ["channel_type", "=", "livechat"],
@@ -92,8 +91,7 @@ test("Portal users should not be able to start a call", async () => {
     await start({ authenticateAs: { login: "joel", password: "joel" } });
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow-header:text('MitchellOp')");
-    await insertText(".o-mail-Composer-input", "Hello MitchellOp!");
-    await triggerHotkey("Enter");
+    await postLivechatMessage("Hello MitchellOp!");
     await contains(".o-mail-Message[data-persistent]:contains('Hello MitchellOp!')");
     await contains(".o-mail-ChatWindow-header .o-mail-ActionList-button", { count: 2 });
     await contains(".o-mail-ChatWindow-header .o-mail-ActionList-button[title='Fold']");
@@ -141,8 +139,7 @@ test("avatar url contains access token for non-internal users", async () => {
             deserializeDateTime(partner.write_date).ts
         }"]`
     );
-    await insertText(".o-mail-Composer-input", "Hello World!");
-    triggerHotkey("Enter");
+    await postLivechatMessage("Hello World!");
     const guestId = pyEnv.cookie.get("dgid");
     const [guest] = pyEnv["mail.guest"].read(guestId);
     await contains(
@@ -163,8 +160,7 @@ test("can close confirm livechat with keyboard", async () => {
     await start({ authenticateAs: false });
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow");
-    await insertText(".o-mail-Composer-input", "Hello");
-    await triggerHotkey("Enter");
+    await postLivechatMessage("Hello");
     await contains(".o-mail-Thread:not([data-transient])");
     await triggerHotkey("Escape");
     await contains(
@@ -196,8 +192,7 @@ test("Should not show IM status of agents", async () => {
     await start({ authenticateAs: { login: "joel", password: "joel" } });
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-ChatWindow-header:text('MitchellOp')");
-    await insertText(".o-mail-Composer-input", "Hello MitchellOp!");
-    await triggerHotkey("Enter");
+    await postLivechatMessage("Hello MitchellOp!");
     await contains(".o-mail-Message[data-persistent]:contains('Hello MitchellOp!')");
     await click(".o-mail-ChatWindow-header");
     await contains(".o-mail-ChatBubble");

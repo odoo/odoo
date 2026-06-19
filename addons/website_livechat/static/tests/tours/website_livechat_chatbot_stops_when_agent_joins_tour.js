@@ -1,3 +1,5 @@
+import { postMessage, waitForMessage } from "@im_livechat/../tests/tours/livechat_tour_utils";
+
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_livechat.chatbot_stop_when_agent_joins_tour", {
@@ -6,28 +8,10 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_stop_when_agen
             trigger: ".o-livechat-root:shadow .o-livechat-LivechatButton",
             run: "click",
         },
-        {
-            trigger: ".o-livechat-root:shadow .o-mail-Message:contains(Enter your phone number)",
-        },
-        {
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-            run: "edit +919876543210",
-        },
-        {
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-            run: "press Enter",
-        },
-        {
-            trigger: ".o-livechat-root:shadow .o-mail-Message:contains(Enter your email address)",
-        },
-        {
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-            run: "edit test@example.com",
-        },
-        {
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-            run: "press Enter",
-        },
+        waitForMessage("Enter your phone number"),
+        ...postMessage("+919876543210"),
+        waitForMessage("Enter your email address"),
+        ...postMessage("test@example.com"),
         {
             trigger: ".o-livechat-root:shadow button:contains(Try again)",
             run: "click",
@@ -38,16 +22,7 @@ registry.category("web_tour.tours").add("website_livechat.chatbot_stop_when_agen
         {
             trigger: ".o-livechat-root:shadow .o-mail-ChatWindow:not(:has(button:contains(retry)))",
         },
-        {
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input:enabled",
-            run: "edit hello agent",
-        },
-        {
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-            run: "press Enter",
-        },
-        {
-            trigger: ".o-livechat-root:shadow .o-mail-Message:contains(hello agent)",
-        },
+        ...postMessage("hello agent"),
+        waitForMessage("hello agent"),
     ],
 });

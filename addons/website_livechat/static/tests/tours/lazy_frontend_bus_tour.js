@@ -1,5 +1,7 @@
 import { WORKER_STATE } from "@bus/services/worker_service";
 
+import { editComposer } from "@im_livechat/../tests/tours/livechat_tour_utils";
+
 import { whenReady } from "@odoo/owl";
 
 import { patch } from "@web/core/utils/patch";
@@ -40,10 +42,7 @@ registry.category("web_tour.tours").add("website_livechat.lazy_frontend_bus", {
             trigger: ".o-livechat-root:shadow .o-livechat-LivechatButton",
             run: "click",
         },
-        {
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-            run: "edit Hello, I need help!",
-        },
+        editComposer("Hello, I need help!"),
         {
             trigger: "body:not(.o-bus-service-started):not(.o-worker-service-started)",
         },

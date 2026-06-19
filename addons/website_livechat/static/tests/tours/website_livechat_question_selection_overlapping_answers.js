@@ -1,3 +1,5 @@
+import { waitForMessage } from "@im_livechat/../tests/tours/livechat_tour_utils";
+
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_livechat.question_selection_overlapping_answers", {
@@ -6,37 +8,42 @@ registry.category("web_tour.tours").add("website_livechat.question_selection_ove
             trigger: ".o-livechat-root:shadow .o-livechat-LivechatButton",
             run: "click",
         },
-        { trigger: ".o-livechat-root:shadow .o-mail-Message:contains(Choose an option)" },
+        waitForMessage("Choose an option"),
         {
             trigger: ".o-livechat-root:shadow li button:eq(0)",
             run: "click",
         },
-        { trigger: ".o-livechat-root:shadow .o-mail-Message:contains(You selected not X)" },
+        waitForMessage("You selected not X"),
         {
             trigger: ".o-livechat-root:shadow button[title='Restart Conversation']",
             run: "click",
         },
-        { trigger: ".o-livechat-root:shadow .o-mail-Message:contains(Choose an option)" },
+        waitForMessage("Choose an option", { index: 1 }),
         {
             trigger: ".o-livechat-root:shadow li button:eq(1)",
             run: "click",
         },
-        { trigger: ".o-livechat-root:shadow .o-mail-Message:contains(You selected X)" },
+        waitForMessage("You selected X"),
         {
             trigger: ".o-livechat-root:shadow button[title='Restart Conversation']",
             run: "click",
         },
-        { trigger: ".o-livechat-root:shadow .o-mail-Message:contains(Choose an option)" },
+        waitForMessage("Choose an option", { index: 2 }),
         {
             trigger: ".o-livechat-root:shadow li button:eq(2)",
             run: "click",
         },
-        { trigger: ".o-livechat-root:shadow .o-mail-Message:contains(You selected maybe X)" },
-        { trigger: ".o-livechat-root:shadow span:contains(This live chat conversation has ended.)" },
+        waitForMessage("You selected maybe X"),
+        {
+            trigger:
+                ".o-livechat-root:shadow span:contains(This live chat conversation has ended.)",
+        },
         {
             trigger: ".o-livechat-root:shadow .o-mail-ChatWindow-header [title*=Close]",
             run: "click",
         },
-        { trigger: ".o-livechat-root:shadow p:contains(Did we correctly answer your question?)" },
+        {
+            trigger: ".o-livechat-root:shadow p:contains(Did we correctly answer your question?)",
+        },
     ],
 });
