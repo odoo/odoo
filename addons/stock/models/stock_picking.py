@@ -78,9 +78,9 @@ class StockPickingType(models.Model):
         help="How products in transfers of this operation type should be reserved.")
     reservation_days_before = fields.Integer('Days', help="Maximum number of days before scheduled date that products should be reserved.")
     reservation_days_before_priority = fields.Integer('Days when starred', help="Maximum number of days before scheduled date that priority picking products should be reserved.")
-    auto_show_reception_report = fields.Boolean(
+    auto_show_allocation_report = fields.Boolean(
         "Show Allocation",
-        help="If this checkbox is ticked, Odoo will automatically show the reception report (if there are moves to allocate to) when validating.")
+        help="If this checkbox is ticked, Odoo will automatically show the allocation report (if there are moves to allocate to) when validating.")
     auto_print_delivery_slip = fields.Boolean(
         "Auto Print Delivery Slip",
         help="If this checkbox is ticked, Odoo will automatically print the delivery slip of a picking when it is validated.")
@@ -1000,7 +1000,7 @@ class StockPicking(models.Model):
     def _compute_show_allocation(self):
         self.show_allocation = False
         for picking in self:
-            if picking.picking_type_id.auto_show_reception_report:
+            if picking.picking_type_id.auto_show_allocation_report:
                 picking.show_allocation = picking._get_show_allocation(picking.picking_type_id)
 
     @api.depends('picking_type_id', 'partner_id')
@@ -1622,7 +1622,7 @@ class StockPicking(models.Model):
             pickings_to_backorder.with_context(cancel_backorder=False)._action_done()
         report_actions = self._get_autoprint_report_actions()
         another_action = False
-        pickings_show_report = self.filtered(lambda p: p.picking_type_id.auto_show_reception_report)
+        pickings_show_report = self.filtered(lambda p: p.picking_type_id.auto_show_allocation_report)
         moves = pickings_show_report.move_ids.filtered(lambda m: m.product_id.is_storable and m.state != 'cancel' and m.quantity and not m.move_dest_ids)
         if moves:
             # don't show reception report if all already assigned/nothing to assign
@@ -2280,7 +2280,7 @@ class StockPicking(models.Model):
         pickings_to_print_reception_report = self.env['stock.picking']
         moves_to_print_label = self.env['stock.move']
         for picking in self:
-            if not picking.picking_type_id.auto_show_reception_report or not picking.move_ids.move_dest_ids:
+            if not picking.picking_type_id.auto_show_allocation_report or not picking.move_ids.move_dest_ids:
                 continue
             if picking.picking_type_id.auto_print_reception_report:
                 pickings_to_print_reception_report |= picking

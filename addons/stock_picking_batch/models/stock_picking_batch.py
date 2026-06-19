@@ -144,7 +144,7 @@ class StockPickingBatch(models.Model):
     def _compute_show_allocation(self):
         self.show_allocation = False
         for batch in self:
-            if batch.picking_type_id.auto_show_reception_report:
+            if batch.picking_type_id.auto_show_allocation_report:
                 batch.show_allocation = batch.picking_ids._get_show_allocation(batch.picking_type_id)
 
     @api.depends('picking_ids', 'picking_ids.state')

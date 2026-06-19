@@ -761,7 +761,7 @@ class MrpProduction(models.Model):
     def _compute_show_allocation(self):
         self.show_allocation = False
         for mo in self:
-            if not mo.picking_type_id.auto_show_reception_report:
+            if not mo.picking_type_id.auto_show_allocation_report:
                 continue
             moves = mo.move_finished_ids.filtered(lambda m: m.product_id.is_storable and m.state != 'cancel')
             if moves:
@@ -2378,7 +2378,7 @@ class MrpProduction(models.Model):
                     'target': 'main',
                 }
             else:
-                mos_to_show = self.filtered(lambda mo: mo.picking_type_id.auto_show_reception_report)
+                mos_to_show = self.filtered(lambda mo: mo.picking_type_id.auto_show_allocation_report)
                 has_lines_to_assign = any(
                     (m.product_id.is_storable and m.state != 'cancel' and m.picked and not m.move_dest_ids)
                     for m in mos_to_show.move_finished_ids
@@ -3075,7 +3075,7 @@ class MrpProduction(models.Model):
         orders_for_reception_report = self.env['mrp.production']
         print_label_move_ids = set()
         for order in self:
-            if not order.picking_type_id.auto_show_reception_report or order.picking_type_id.code != 'mrp_operation' or not order.move_finished_ids.move_dest_ids:
+            if not order.picking_type_id.auto_show_allocation_report or order.picking_type_id.code != 'mrp_operation' or not order.move_finished_ids.move_dest_ids:
                 continue
             if order.picking_type_id.auto_print_mrp_reception_report:
                 orders_for_reception_report |= order

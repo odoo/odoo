@@ -2155,11 +2155,17 @@ class TestReports(TestReportsCommon):
         picking_in.button_validate()
         self.assertEqual(picking_out.move_ids.mapped('quantity'), [3.0])
         self.allocation_report.action_assign(picking_in.move_ids.ids, picking_out.move_ids.ids, 1.0)
-        self.assertEqual(picking_out.move_ids.mapped('quantity'), [1.0, 2.0])
+        self.assertRecordValues(picking_out.move_ids, [
+            {'quantity': 2.0, 'procure_method': 'make_to_stock'},
+            {'quantity': 1.0, 'procure_method': 'make_to_order'},
+        ])
         self.allocation_report.action_unassign(picking_in.move_ids.ids, picking_out.move_ids.ids, 1)
         self.assertEqual(picking_out.move_ids.mapped('quantity'), [3.0])
         self.allocation_report.action_assign(picking_in.move_ids.ids, picking_out.move_ids.ids, 1.0)
-        self.assertEqual(picking_out.move_ids.mapped('quantity'), [1.0, 2.0])
+        self.assertRecordValues(picking_out.move_ids, [
+            {'quantity': 2.0, 'procure_method': 'make_to_stock'},
+            {'quantity': 1.0, 'procure_method': 'make_to_order'},
+        ])
 
     def test_aggregated_quantities_partial_and_over_delivery(self):
         """

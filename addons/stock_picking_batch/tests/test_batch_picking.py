@@ -722,7 +722,7 @@ class TestBatchPicking(TransactionCase):
         - Should be added to the batch
         """
         self.env['stock.picking.type'].browse(self.picking_type_in).write({
-            'auto_show_reception_report': True,
+            'auto_show_allocation_report': True,
             'auto_batch': True,
             'batch_group_by_partner': True,
         })
