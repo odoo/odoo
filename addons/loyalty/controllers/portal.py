@@ -8,8 +8,8 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 
 class CustomerPortalLoyalty(CustomerPortal):
-    def _prepare_home_portal_values(self, counters):
-        values = super()._prepare_home_portal_values(counters)
+    def _prepare_home_portal_values(self, counters, limits):
+        values = super()._prepare_home_portal_values(counters, limits)
         if not counters:
             # we want those data to be added to the /my/home page only, and always computed
             values["cards_per_programs"] = dict(

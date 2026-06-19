@@ -274,7 +274,7 @@
                 <div t-att-class="'alert-link' if bg_color else ''">
                     <div t-attf-class="fs-5 lh-1 #{'d-flex gap-2 align-items-center' if placeholder_count or count else ''}">
                     <t t-out="count"/>
-                        <span t-if="entry.placeholder_count and not force_show" t-att-class="'fw-bold' if show_count else 'd-none'" t-att-data-placeholder_count="entry.placeholder_count"/>
+                        <span t-if="entry.placeholder_count and not force_show" t-att-class="'fw-bold' if show_count else 'd-none'" t-att-data-placeholder_count="entry.placeholder_count" t-att-data-counter_limit="None if show_count else 1"/>
                         <h5 class="mb-0" t-field="entry.name"/>
                     </div>
                     <div class="opacity-75">

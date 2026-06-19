@@ -16,13 +16,13 @@ from odoo.addons.portal.controllers.portal import CustomerPortal, pager as porta
 
 class ProjectCustomerPortal(CustomerPortal):
 
-    def _prepare_home_portal_values(self, counters):
-        values = super()._prepare_home_portal_values(counters)
+    def _prepare_home_portal_values(self, counters, limits):
+        values = super()._prepare_home_portal_values(counters, limits)
         if 'project_count' in counters:
-            values['project_count'] = request.env['project.project'].search_count([]) \
+            values['project_count'] = request.env['project.project'].search_count([], limit=limits['project_count']) \
                 if request.env['project.project'].has_access('read') else 0
         if 'task_count' in counters:
-            values['task_count'] = request.env['project.task'].search_count([('project_id', '!=', False)])\
+            values['task_count'] = request.env['project.task'].search_count([('project_id', '!=', False)], limit=limits['task_count'])\
                 if request.env['project.task'].has_access('read') else 0
         return values
 

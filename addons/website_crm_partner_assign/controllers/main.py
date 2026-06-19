@@ -33,18 +33,18 @@ class WebsiteAccount(CustomerPortal):
             ('type', '=', 'opportunity')
         ]
 
-    def _prepare_home_portal_values(self, counters):
-        values = super()._prepare_home_portal_values(counters)
+    def _prepare_home_portal_values(self, counters, limits):
+        values = super()._prepare_home_portal_values(counters, limits)
         CrmLead = request.env['crm.lead']
         if 'lead_count' in counters:
             values['lead_count'] = (
-                CrmLead.search_count(self.get_domain_my_lead(request.env.user))
+                CrmLead.search_count(self.get_domain_my_lead(request.env.user), limit=limits['lead_count'])
                 if CrmLead.has_access('read')
                 else 0
             )
         if 'opp_count' in counters:
             values['opp_count'] = (
-                CrmLead.search_count(self.get_domain_my_opp(request.env.user))
+                CrmLead.search_count(self.get_domain_my_opp(request.env.user), limit=limits['opp_count'])
                 if CrmLead.has_access('read')
                 else 0
             )
