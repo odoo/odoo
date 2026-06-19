@@ -1106,6 +1106,7 @@ SERVICES_MAPPING = {
     "notification": ['NotificationPlugin', '@web/core/notifications/notification_plugin'],
     "mobile": ['MobilePlugin', '@web_mobile/js/mobile_plugin'],
     "overlay": ['OverlayPlugin', '@web/core/overlay/overlay_plugin'],
+    "presence": ['PresencePlugin', '@bus/services/presence_plugin'],
     "sortable": ['SortablePlugin', '@web/core/util/sortable_plugin'],
 }
 
