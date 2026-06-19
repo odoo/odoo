@@ -312,6 +312,15 @@ class TestSubjobs(PopulateTestCase):
                 },
                 {
                     'name': 'test_populate.customer',
+                    'count': 10,
+                    'ref': 'referenced_customers',
+                    'fields': {
+                        'name': {'generator': 'textual.char', 'length': 10},
+                        'email': {'generator': 'textual.char', 'length': 15},
+                    },
+                },
+                {
+                    'name': 'test_populate.customer',
                     'type': 'write',
                     'fields': {
                         'is_vip': {'eval': 'True'},
@@ -325,8 +334,12 @@ class TestSubjobs(PopulateTestCase):
         })
 
         write_job = session.job_ids.filtered(lambda j: j.type == 'write')
-        self.assertEqual(write_job.record_count, len(existing) + 20,
-                         "Write job without ref should count existing records + records from preceding create jobs")
+        self.assertEqual(
+            write_job.record_count,
+            len(existing) + 30,
+            "Write job without ref should count existing records "
+            "+ all preceding create jobs (with refs or not) for the model",
+        )
 
     def test_write_job_creates_subjobs_when_large(self):
         create_count = 25000  # > MAX_RECORD_COMMIT_SIZE (10000)
