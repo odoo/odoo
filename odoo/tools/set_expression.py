@@ -153,6 +153,10 @@ class SetDefinitions:
             return Leaf(UnknownId(ref), ref)
         return self.__leaves[ref]
 
+    def get_all_ids(self) -> list[int]:
+        """ Return all ids known in the definition."""
+        return [id_ for id_ in self.__leaves if isinstance(id_, int)]
+
     def get_superset_ids(self, ids: Iterable[int]) -> list[int]:
         """ Returns the supersets matching the provided list of ids.
 
