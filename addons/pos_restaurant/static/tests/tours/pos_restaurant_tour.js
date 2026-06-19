@@ -695,7 +695,7 @@ registry.category("web_tour.tours").add("test_preset_delivery_restaurant", {
             Dialog.confirm("Open Register"),
             Dialog.isNot(),
             FloorScreen.clickTable("2"),
-            ProductScreen.clickCustomer("Partner Full"),
+            ProductScreen.clickCustomer("APartner Full"),
             ProductScreen.clickDisplayedProduct("Coca-Cola", true),
             ProductScreen.clickControlButton("Cancel Order"),
             Dialog.cancel({ title: "Existing orderlines" }),

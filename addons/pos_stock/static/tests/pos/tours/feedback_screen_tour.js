@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add("StockFeedbackScreenTour", {
             OfflineUtil.setOfflineMode(),
             ProductScreen.addOrderline("Letter Tray", "10", "5"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Partner Full"),
+            ProductScreen.clickCustomer("APartner Full"),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.validateButtonIsHighlighted(true),
