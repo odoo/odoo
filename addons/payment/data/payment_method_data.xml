@@ -734,6 +734,20 @@
         />
     </record>
 
+    <record id="payment_method_bkash" model="payment.method">
+        <field name="name">bKash</field>
+        <field name="code">bkash</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="bytes" file="payment/static/img/bkash.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
+    </record>
+
     <record id="payment_method_blik" model="payment.method">
         <field name="name">BLIK</field>
         <field name="code">blik</field>
@@ -2185,6 +2199,20 @@
                          ref('base.EUR'),
                      ])]"
         />
+    </record>
+
+    <record id="payment_method_nagad" model="payment.method">
+        <field name="name">Nagad</field>
+        <field name="code">nagad</field>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="bytes" file="payment/static/img/nagad.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
     </record>
 
     <record id="payment_method_nuvei_local" model="payment.method">
