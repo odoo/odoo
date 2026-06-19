@@ -9,6 +9,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { TableDragDrop } from "./table_drag_drop";
 import { registry } from "@web/core/registry";
 import { getRowIndex } from "@html_editor/utils/table";
+import { closestBlock } from "@html_editor/utils/blocks";
 
 /**
  * This plugin only contains the table ui feature (table picker, menus, ...).
@@ -26,7 +27,9 @@ export class TableUIPlugin extends Plugin {
                 description: _t("Insert a table"),
                 icon: "fa-table",
                 run: this.openPickerOrInsertTable.bind(this),
-                isAvailable: isHtmlContentSupported,
+                isAvailable: (selection) =>
+                    isHtmlContentSupported(selection) &&
+                    closestBlock(selection.anchorNode)?.isContentEditable,
             },
         ],
         powerbox_items: [
