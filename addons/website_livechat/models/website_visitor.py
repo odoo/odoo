@@ -71,7 +71,6 @@ class WebsiteVisitor(models.Model):
         for website in self.mapped('website_id'):
             if not website.channel_id:
                 raise UserError(_('No Livechat Channel allows you to send a chat request for website %s.', website.name))
-        self.website_id.channel_id.write({'user_ids': [(4, self.env.user.id)]})
         # Create chat_requests and linked discuss_channels
         discuss_channel_vals_list = []
         for visitor in self:
