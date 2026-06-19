@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
-import logging
+
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
@@ -49,7 +49,7 @@ class SaleOrder(models.Model):
             return ['name', 'partner_id.name']
         return ['name']
 
-    #=== FIELDS ===#
+    # === FIELDS ===#
 
     name = fields.Char(
         string="Order Reference",
@@ -328,7 +328,7 @@ class SaleOrder(models.Model):
 
     _date_order_id_idx = models.Index("(date_order desc, id desc)")
 
-    #=== COMPUTE METHODS ===#
+    # === COMPUTE METHODS ===#
 
     @api.depends('partner_id')
     @api.depends_context('sale_show_partner_name')
@@ -843,7 +843,7 @@ class SaleOrder(models.Model):
                     warnings.add(line.product_id.display_name + ' - ' + product_msg)
             order.sale_warning_text = '\n'.join(warnings)
 
-    #=== CONSTRAINT METHODS ===#
+    # === CONSTRAINT METHODS ===#
 
     @api.constrains('company_id', 'order_line')
     def _check_order_line_company_id(self):
@@ -868,7 +868,7 @@ class SaleOrder(models.Model):
             if order.require_payment and not (0 < order.prepayment_percent <= 1.0):
                 raise ValidationError(_("Prepayment percentage must be a valid percentage."))
 
-    #=== ONCHANGE METHODS ===#
+    # === ONCHANGE METHODS ===#
 
     def onchange(self, values, field_names, fields_spec):
         self_with_context = self
@@ -998,7 +998,7 @@ class SaleOrder(models.Model):
                     'discount': line.discount,
                 })
 
-    #=== CRUD METHODS ===#
+    # === CRUD METHODS ===#
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1042,7 +1042,7 @@ class SaleOrder(models.Model):
             raise UserError(_("You cannot change the pricelist of a confirmed order !"))
         return super().write(vals)
 
-    #=== ACTION METHODS ===#
+    # === ACTION METHODS ===#
 
     @api.readonly
     def action_open_discount_wizard(self):
@@ -1952,7 +1952,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return f'{self.type_name} {self.name}'
 
-    #=== CORE METHODS OVERRIDES ===#
+    # === CORE METHODS OVERRIDES ===#
 
     @api.model
     def get_empty_list_help(self, help_message):
@@ -1974,7 +1974,7 @@ class SaleOrder(models.Model):
         upselling_orders = filtered_self.filtered(lambda so: so.invoice_status == 'upselling')
         upselling_orders._create_upsell_activity()
 
-    #=== BUSINESS METHODS ===#
+    # === BUSINESS METHODS ===#
 
     def _create_upsell_activity(self):
         if not self:
@@ -2254,7 +2254,7 @@ class SaleOrder(models.Model):
                 or (self.state == 'sale' and document.attached_on_sale == 'sale_order')
         )
 
-    #=== TOOLING ===#
+    # === TOOLING ===#
 
     def _is_readonly(self):
         """ Return Whether the sale order is read-only or not based on the state or the lock status.
