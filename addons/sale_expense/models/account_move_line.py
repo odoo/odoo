@@ -33,7 +33,12 @@ class AccountMoveLine(models.Model):
         # Add expense quantity to sales order line and update the sales order price because it will be charged to the customer in the end.
         res = super()._sale_prepare_sale_line_values(order, price)
         if self.expense_id:
-            res['product_uom_qty'] = self.expense_id.quantity
+            res.update({
+                'product_uom_qty': 1,
+                'qty_delivered': 1,
+                'price_unit': self.expense_id.untaxed_amount_currency,
+                'tax_id': self.expense_id.tax_ids.ids,
+            })
         return res
 
     def _sale_create_reinvoice_sale_line(self):
