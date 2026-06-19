@@ -9,10 +9,10 @@ const threadPatch = {
     setup() {
         super.setup(...arguments);
         useLayoutEffect(
-            (loadNewer, mountedAndLoaded) => {
+            (loadNewer, isThreadLoadedAndPatched) => {
                 if (
                     loadNewer ||
-                    !mountedAndLoaded ||
+                    !isThreadLoadedAndPatched ||
                     !this.channel?.self_member_id ||
                     !this.scrollableRef()
                 ) {
@@ -23,7 +23,11 @@ const threadPatch = {
                     this.channel.self_member_id.hideUnreadBanner = true;
                 }
             },
-            () => [this.props.thread.loadNewer, this.state.mountedAndLoaded, this.state.scrollTop]
+            () => [
+                this.props.thread.loadNewer,
+                this.isThreadLoadedAndPatched(),
+                this.state.scrollTop,
+            ]
         );
     },
     /** @override */

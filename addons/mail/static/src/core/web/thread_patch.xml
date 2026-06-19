@@ -3,7 +3,7 @@
     <t t-inherit="mail.Thread" t-inherit-mode="extension">
         <xpath expr="//*[@name='empty-message']" position="replace">
             <t t-if="this.props.thread.isEmpty and this.props.thread.model === 'mail.box'">
-                <t t-if="this.props.thread.id === 'inbox' and this.state.mountedAndLoaded">
+                <t t-if="this.props.thread.id === 'inbox' and this.isThreadLoadedAndPatched()">
                     <div class="align-items-center text-center">
                         <h4 class="mb-3 o-fw-600">You're all caught up!</h4>
                         New messages will appear here.

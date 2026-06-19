@@ -773,7 +773,7 @@ test("Open chat window of new inviter", async () => {
         username: "Newbie",
         partnerId,
     });
-    await contains(".o-mail-ChatWindow:text('Newbie')");
+    await contains(".o-mail-ChatWindow:has(:text('Newbie'))");
     await contains(
         ".o_notification:text('Newbie just connected for the first time. Wish them luck!')"
     );
@@ -912,14 +912,14 @@ test("Chat window should be closed when leaving the channel", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await contains(".o-mail-ChatWindow:text('general')");
+    await contains(".o-mail-ChatWindow:has(:text('general'))");
     await insertText(".o-mail-Composer-input", "/leave");
     await contains(".o-mail-NavigableList-active strong:text('leave')");
     triggerHotkey("Enter");
     await contains(".o-mail-Composer-input", { value: "/leave " });
     triggerHotkey("Enter");
     await click("button:text(Leave Conversation)");
-    await contains(".o-mail-ChatWindow:text('general')", { count: 0 });
+    await contains(".o-mail-ChatWindow:has(:text('general'))", { count: 0 });
 });
 
 test("Chat window should be closed when leaving a chat", async () => {
@@ -936,13 +936,13 @@ test("Chat window should be closed when leaving a chat", async () => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await contains(".o-mail-ChatWindow:text('Demo')");
+    await contains(".o-mail-ChatWindow:has(:text('Demo'))");
     await insertText(".o-mail-Composer-input", "/leave");
     await contains(".o-mail-NavigableList-active strong:text('leave')");
     triggerHotkey("Enter");
     await contains(".o-mail-Composer-input", { value: "/leave " });
     triggerHotkey("Enter");
-    await contains(".o-mail-ChatWindow:text('Demo')", { count: 0 });
+    await contains(".o-mail-ChatWindow:has(:text('Demo'))", { count: 0 });
 });
 
 test.tags("focus required");

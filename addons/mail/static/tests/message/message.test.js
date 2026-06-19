@@ -311,10 +311,12 @@ async function canEditMessageCommentInChatter({ isMacOS = false } = {}) {
     await contains(".o-mail-Message-content:text('edited again (edited)')");
 }
 
+test.tags("focus required");
 test("Can edit message comment in chatter", async () => {
     await canEditMessageCommentInChatter();
 });
 
+test.tags("focus required");
 test("Can edit message comment in chatter (MacOS)", async () => {
     await canEditMessageCommentInChatter({ isMacOS: true });
 });
@@ -364,6 +366,7 @@ test("Reply to inbox message with full composer shows a notification", async () 
     await expect.waitForSteps(["notification"]); // only notif from 'Send', not 'Discard'
 });
 
+test.tags("focus required");
 test("Basic list of edit message actions in chatter", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
