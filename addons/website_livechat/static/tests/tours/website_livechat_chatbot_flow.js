@@ -1,15 +1,12 @@
 import { patch } from "@web/core/utils/patch";
 import { registry } from "@web/core/registry";
 import { Chatbot } from "@im_livechat/core/common/chatbot_model";
-
-const trigger = `.o-livechat-root:shadow .o-mail-Composer-input`;
-const waitForMessage = (text, index = 0) => ({
-    trigger: `.o-livechat-root:shadow .o-mail-Message:has(:text("${text}")):eq(${index})`,
-});
-const postMessage = (text) => ({
-    trigger,
-    run: `edit ${text} && press Enter`,
-});
+import {
+    editComposer,
+    LIVECHAT_COMPOSER,
+    postMessage,
+    waitForMessage,
+} from "@im_livechat/../tests/tours/livechat_tour_utils";
 
 let chatbotDelayProcessingDef;
 
@@ -47,34 +44,31 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                     ".o-livechat-root:shadow .o-mail-ChatWindow .o-mail-Message:has(.o-mail-Message-actions [title='Add a Reaction']):text('I\\'d like to buy the software')",
             },
             waitForMessage("Can you give us your email please?"),
-            postMessage("No, you won't get my email!"),
+            ...postMessage("No, you won't get my email!"),
             waitForMessage(
                 "'No, you won't get my email!' does not look like a valid email. Can you please try again?"
             ),
-            postMessage("okfine@fakeemail.com"),
+            ...postMessage("okfine@fakeemail.com"),
             waitForMessage("Your email is validated, thank you!"),
             waitForMessage("Can you give us your phone number please?"),
-            postMessage("123456"),
+            ...postMessage("123456"),
             waitForMessage(
                 "'123456' does not look like a valid phone number. Can you please try again?"
             ),
-            postMessage("+919876543210"),
+            ...postMessage("+919876543210"),
             waitForMessage("Your phone number is validated. thank you!"),
             waitForMessage("Would you mind providing your website address?"),
-            postMessage("https://www.fakeaddress.com"),
+            ...postMessage("https://www.fakeaddress.com"),
             waitForMessage("Great, do you want to leave any feedback for us to improve?"),
-            postMessage("Yes, actually, I'm glad you asked!"),
-            postMessage("I think it's outrageous that you ask for all my personal information!"),
-            postMessage("I will be sure to take this to your manager!"),
-            {
-                // Only type — do not submit: this simulates the user still composing in the
-                // multi-line step so the chatbot keeps waiting instead of advancing.
-                trigger,
-                run: "edit I want to say...",
-            },
+            ...postMessage("Yes, actually, I'm glad you asked!"),
+            ...postMessage("I think it's outrageous that you ask for all my personal information!"),
+            ...postMessage("I will be sure to take this to your manager!"),
+            // Only type, do not submit: this simulates the user still composing in the
+            // multi-line step so the chatbot keeps waiting instead of advancing.
+            editComposer("I want to say..."),
             {
                 // Simulate that the user is typing, so the chatbot shouldn't go to the next step
-                trigger,
+                trigger: `${LIVECHAT_COMPOSER}:enabled`,
                 async run({ edit }) {
                     chatbotDelayProcessingDef = Promise.withResolvers();
                     let failTimeout = setTimeout(() => {
@@ -103,9 +97,9 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                 run: "click",
             },
             waitForMessage("Restarting conversation..."),
-            waitForMessage("Hello! I'm a bot!", 1),
-            waitForMessage("I help lost visitors find their way.", 1),
-            waitForMessage("How can I help you?", 1),
+            waitForMessage("Hello! I'm a bot!", { index: 1 }),
+            waitForMessage("I help lost visitors find their way.", { index: 1 }),
+            waitForMessage("How can I help you?", { index: 1 }),
             {
                 trigger: '.o-livechat-root:shadow button:text("Pricing Question")',
                 run: "click",
@@ -114,11 +108,13 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
                 "For any pricing question, feel free ton contact us at pricing@mycompany.com"
             ),
             waitForMessage("We will reach back to you as soon as we can!"),
-            waitForMessage("Would you mind providing your website address?", 1),
-            postMessage("no"),
-            waitForMessage("Great, do you want to leave any feedback for us to improve?", 1),
-            postMessage("no, nothing so say"),
-            waitForMessage("Ok bye!", 1),
+            waitForMessage("Would you mind providing your website address?", { index: 1 }),
+            ...postMessage("no"),
+            waitForMessage("Great, do you want to leave any feedback for us to improve?", {
+                index: 1,
+            }),
+            ...postMessage("no, nothing so say"),
+            waitForMessage("Ok bye!", { index: 1 }),
             {
                 trigger:
                     ".o-livechat-root:shadow .o-mail-ChatWindow-header [title='Restart Conversation']",

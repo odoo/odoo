@@ -1,3 +1,5 @@
+import { postMessage, waitForMessage } from "@im_livechat/../tests/tours/livechat_tour_utils";
+
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add("website_livechat_user_known_after_reload", {
@@ -6,14 +8,7 @@ registry.category("web_tour.tours").add("website_livechat_user_known_after_reloa
             trigger: ".o-livechat-root:shadow .o-livechat-LivechatButton",
             run: "click",
         },
-        {
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-            run: "edit Hello, I need help!",
-        },
-        {
-            trigger: ".o-livechat-root:shadow .o-mail-Composer-input",
-            run: "press Enter",
-        },
+        ...postMessage("Hello, I need help!"),
         {
             trigger:
                 ".o-livechat-root:shadow .o-mail-Thread:not([data-transient]) .o-mail-Message:contains('Hello, I need help!').o-selfAuthored ",
@@ -22,9 +17,6 @@ registry.category("web_tour.tours").add("website_livechat_user_known_after_reloa
             },
             expectUnloadPage: true,
         },
-        {
-            trigger:
-                ".o-livechat-root:shadow .o-mail-Message:contains('Hello, I need help!').o-selfAuthored ",
-        },
+        waitForMessage("Hello, I need help!", { selfAuthored: true }),
     ],
 });

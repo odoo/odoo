@@ -1,6 +1,7 @@
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
+    postLivechatMessage,
 } from "@im_livechat/../tests/livechat_test_helpers";
 import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
 import {
@@ -143,8 +144,7 @@ test("do not create new thread when operator answers to visitor", async () => {
     await start({
         authenticateAs: pyEnv["res.users"].search_read([["id", "=", serverState.userId]])[0],
     });
-    await insertText(".o-mail-Composer-input", "Hello!");
-    await triggerHotkey("Enter");
+    await postLivechatMessage("Hello!");
     await contains(".o-mail-Message", { text: "Hello!" });
     await expect.waitForSteps(["/mail/message/post"]);
 });

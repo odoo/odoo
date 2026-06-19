@@ -1,6 +1,11 @@
 import { IrWebSocket } from "@im_livechat/../tests/mock_server/mock_models/ir_websocket";
 
-import { mailModels, startServer } from "@mail/../tests/mail_test_helpers";
+import {
+    insertText,
+    mailModels,
+    startServer,
+    triggerHotkey,
+} from "@mail/../tests/mail_test_helpers";
 import {
     defineModels,
     serverState,
@@ -21,6 +26,21 @@ import { session } from "@web/session";
 
 export function defineLivechatModels() {
     return defineModels(livechatModels);
+}
+
+/**
+ * Type `text` into the livechat composer once it is enabled, then send it.
+ *
+ * Gating on `:enabled` mirrors real user interaction: the composer is disabled
+ * while a chatbot step is being processed, and `insertText` would otherwise
+ * write into it regardless. Use this instead of a raw `insertText` + Enter so
+ * tests never answer a step the chatbot has not settled on yet.
+ *
+ * @param {string} text
+ */
+export async function postLivechatMessage(text) {
+    await insertText(".o-mail-Composer-input:enabled", text);
+    await triggerHotkey("Enter");
 }
 
 export const livechatModels = {

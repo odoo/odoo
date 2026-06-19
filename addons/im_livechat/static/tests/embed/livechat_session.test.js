@@ -2,17 +2,16 @@ import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 import {
     defineLivechatModels,
     loadDefaultEmbedConfig,
+    postLivechatMessage,
 } from "@im_livechat/../tests/livechat_test_helpers";
 import {
     assertChatHub,
     click,
     contains,
     focus,
-    insertText,
     onRpcBefore,
     start,
     startServer,
-    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { advanceTime } from "@odoo/hoot-mock";
@@ -35,8 +34,7 @@ test("Session is reset after failing to persist the channel", async () => {
     });
     await start({ authenticateAs: false });
     await click(".o-livechat-LivechatButton");
-    await insertText(".o-mail-Composer-input", "Hello World!");
-    triggerHotkey("Enter");
+    await postLivechatMessage("Hello World!");
     await contains(".o_notification", {
         text: "No available collaborator, please try again later.",
     });
@@ -52,8 +50,7 @@ test("Fold state is saved", async () => {
     await start({ authenticateAs: false });
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Thread");
-    await insertText(".o-mail-Composer-input", "Hello World!");
-    triggerHotkey("Enter");
+    await postLivechatMessage("Hello World!");
     await contains(".o-mail-Thread:not([data-transient])");
     assertChatHub({ opened: [1] });
     await click(".o-mail-ChatWindow-header");
@@ -71,8 +68,7 @@ test("Seen message is saved on the server", async () => {
     await start({ authenticateAs: false });
     await click(".o-livechat-LivechatButton");
     await contains(".o-mail-Thread");
-    await insertText(".o-mail-Composer-input", "Hello, I need help!");
-    triggerHotkey("Enter");
+    await postLivechatMessage("Hello, I need help!");
     await contains(".o-mail-Message", { text: "Hello, I need help!" });
     await waitUntilSubscribe();
     const initialSeenMessageId = Object.values(
