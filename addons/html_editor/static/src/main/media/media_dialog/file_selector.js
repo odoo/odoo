@@ -416,7 +416,7 @@ export class FileSelector extends Component {
             await this.props.save();
         }
         if (this.props.onAttachmentChange) {
-            this.props.onAttachmentChange(attachment);
+            await this.props.onAttachmentChange(attachment);
         }
     }
 

@@ -73,7 +73,7 @@ export class HtmlComposerMessageField extends HtmlMailField {
                 return;
             }
             await this.commitChanges();
-            this.props.record.data.attachment_ids.linkTo(attachment.id, attachment);
+            await this.props.record.data.attachment_ids.linkTo(attachment.id, attachment);
         };
         config.thread = this.env.services["mail.store"]?.["mail.thread"].get({
             model: this.props.record.data.model,
