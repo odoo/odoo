@@ -12,13 +12,21 @@ const EPSON_ERRORS = {
     EPTR_AUTOMATICAL: _t(
         "Continuous printing of high-density printing caused a printing error. Please retry later"
     ),
+    EPTR_BATTERY_LOW: _t("The printer battery has run out, please charge or connect to power"),
     EPTR_COVER_OPEN: _t("Printer cover is open, please close it before printing"),
     EPTR_CUTTER: _t("The cutter has a foreign matter, please check the cutter mechanism"),
     EPTR_MECHANICAL: _t("Mechanical error, please check the printer"),
     EPTR_REC_EMPTY: _t("The paper is empty, please load paper into the printer"),
-    EPTR_UNRECOVERABLE: _t("Low voltage unrecoverable error occured, please check the printer"),
+    EPTR_UNRECOVERABLE: _t("Unrecoverable error occurred, please check the printer"),
+    ERROR_WAIT_EJECT: _t("Waiting for paper removal, please remove the ejected paper"),
     EX_BADPORT: _t("The device is not connected, please check the printer power / connection"),
-    EX_TIMEOUT: _t("Timeout occured, please try again"),
+    EX_SPOOLER: _t("The print queue is full, please try again later"),
+    EX_TIMEOUT: _t("Timeout occurred, please try again"),
+    JobNotFound: _t("The specified print job was not found"),
+    PrintSystemError: _t("A printing system error occurred, please check the printer"),
+    RequestEntityTooLarge: _t("The print data is too large for the printer"),
+    SchemaError: _t("Invalid print request syntax, please contact support"),
+    TooManyRequests: _t("Too many print requests sent to the printer, please try again later"),
 };
 
 export class TestEPos extends Component {
