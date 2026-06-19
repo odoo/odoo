@@ -9743,12 +9743,6 @@ test(`display tooltips for buttons (debug = true)`, async () => {
 });
 
 test(`reload event is handled only once`, async () => {
-    // In this test, several form controllers are nested (all of them are
-    // opened in dialogs). When the users clicks on save in the last
-    // opened dialog, a 'reload' event is triggered up to reload the (direct)
-    // parent view. If this event isn't stopPropagated by the first controller
-    // catching it, it will crash when the other one will try to handle it,
-    // as this one doesn't know at all the dataPointID to reload.
     Partner._views = {
         form: `<form><field name="name"/><field name="parent_id"/></form>`,
     };
@@ -9783,7 +9777,7 @@ test(`reload event is handled only once`, async () => {
     await contains(`.o_dialog:eq(2) footer .o_form_button_save`).click();
     expect.verifySteps([
         "web_save",
-        "read", // reload the name (first dialog)
+        "web_read", // reload the first dialog
     ]);
     expect(`.o_dialog:eq(1) .o_field_widget[name="parent_id"] input`).toHaveValue("new name");
 });

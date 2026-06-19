@@ -107,10 +107,7 @@ export class Many2ManyTagsField extends Component {
                 create: false,
                 write: true,
             },
-            onRecordSaved: (record) => {
-                const records = this.props.record.data[this.props.name].records;
-                return records.find((r) => r.resId === record.resId).load();
-            },
+            onRecordSaved: () => this.props.record.load(),
         });
 
         this.update = (recordlist) => {
@@ -168,16 +165,19 @@ export class Many2ManyTagsField extends Component {
         };
     }
 
-    onTagClick(ev, record) {
+    async onTagClick(ev, record) {
         if (!this.props.record.isInEdition) {
             return;
         }
         if (this.props.onTagClick === "open_form") {
-            return this.openMany2xRecord({
-                resId: record.resId,
-                context: this.props.context,
-                title: _t("Edit: %s", record.data.display_name),
-            });
+            const saved = await this.props.record.save();
+            if (saved) {
+                return this.openMany2xRecord({
+                    resId: record.resId,
+                    context: this.props.context,
+                    title: _t("Edit: %s", record.data.display_name),
+                });
+            }
         }
         if (this.props.onTagClick !== "edit_color" || !this.props.colorField) {
             return;

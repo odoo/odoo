@@ -13068,7 +13068,7 @@ test(`editable list view: m2m tags in grouped list`, async () => {
 });
 
 test.tags("desktop");
-test(`editable list: edit many2one from external link`, async () => {
+test(`multi editable list: edit many2one from external link`, async () => {
     Bar._views = {
         form: `<form><field name="name"/></form>`,
     };
@@ -13096,16 +13096,10 @@ test(`editable list: edit many2one from external link`, async () => {
     expect(`.modal[role='dialog']`).toHaveCount(2);
     expect(`.o_selected_row`).toHaveCount(1, { message: "in edit mode" });
 
-    // Change the M2O value in the Form dialog (will open a confirmation dialog)
+    // Change the M2O value in the Form dialog
     await contains(`.modal:eq(1) input`).edit("OOF");
     await contains(`.modal:eq(1) .o_form_button_save`).click();
-    expect(`.modal[role='dialog']`).toHaveCount(3);
-    expect(`.modal:eq(2) .o_field_widget[name=m2o]`).toHaveText("OOF", {
-        message: "Value of the m2o should be updated in the confirmation dialog",
-    });
-
-    // Close the confirmation dialog
-    await contains(`.modal:eq(2) .btn-primary`).click();
+    await contains(".o_dialog .o_control_panel").click();
     expect(`.o_data_cell:eq(0)`).toHaveText("OOF", {
         message: "Value of the m2o should be updated in the list",
     });
