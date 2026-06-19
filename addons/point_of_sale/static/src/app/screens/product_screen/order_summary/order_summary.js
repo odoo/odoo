@@ -375,6 +375,7 @@ export class OrderSummary extends Component {
                 }
             }
             const data = selectedLine.serializeForORM({ keepCommands: true });
+            delete data.id;
             delete data.uuid;
             newLine = this.pos.models["pos.order.line"].create(
                 {

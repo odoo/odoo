@@ -115,6 +115,7 @@ test("getPreparationChanges", async () => {
     expect(changes.quantity).toBe(firstLineOriginalQty + secondLineOriginalQty);
     const firstOrderlineChange = changes.addedQuantity[0];
     expect(firstOrderlineChange).toEqual({
+        uuid: firstLine.uuid,
         basic_name: firstLine.getProduct().name,
         product_id: firstLine.getProduct().id,
         attribute_value_names: firstLine.attribute_value_ids.map((a) => a.name),
@@ -139,6 +140,7 @@ test("getPreparationChanges", async () => {
     expect(noteUpdate.note).toBe("Internal line note");
     const secondOrderlineChange = secondChanges.addedQuantity[0];
     expect(secondOrderlineChange).toEqual({
+        uuid: secondLine.uuid,
         basic_name: secondLine.getProduct().name,
         product_id: secondLine.getProduct().id,
         attribute_value_names: secondLine.attribute_value_ids.map((a) => a.name),
@@ -156,10 +158,14 @@ test("getPreparationChanges", async () => {
     order.updateLastOrderChange();
     const firstLineProduct = firstLine.getProduct();
     const firstLineAttributes = firstLine.attribute_value_ids.map((a) => a.name);
+    const removedPrepLineUuid = store.models["pos.prep.line"].find(
+        (l) => l.pos_order_line_id?.id == firstLine.id
+    )?.uuid;
     order.removeOrderline(firstLine);
     const deleteLineChanges = order.getChanges();
     const deleteOrderlineChange = deleteLineChanges.removedQuantity[0];
     expect(deleteOrderlineChange).toEqual({
+        uuid: removedPrepLineUuid,
         basic_name: firstLineProduct.name,
         product_id: firstLineProduct.id,
         attribute_value_names: firstLineAttributes,
