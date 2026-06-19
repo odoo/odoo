@@ -364,3 +364,116 @@ class KsefApiService:
             return {'xml_content': response.content}
         except KSeFRateLimitError as e:
             return {'error': {'retry_after': e.retry_after, 'message': str(e)}}
+
+    # ------------------------------------------------------------------
+    # Asynchronous invoice export (batch download of vendor bills)
+    # ------------------------------------------------------------------
+
+    def export_invoices(self, date_from, date_to=None, subject_type='Subject2'):
+        """
+        Initiates an asynchronous export of invoices matching the given criteria.
+
+        A fresh symmetric key/IV pair is generated and stored on the company so
+        that the resulting encrypted package can be decrypted later (potentially
+        in a subsequent cron run). The export reference number is also persisted.
+
+        :return: dict with either {'reference_number': ...} or {'error': {...}}
+        """
+        export_key = os.urandom(32)
+        export_iv = os.urandom(16)
+
+        ksef_public_key_pem = self._get_public_keys().get('symmetric')
+        public_key = serialization.load_pem_public_key(ksef_public_key_pem.encode('utf-8'))
+        encrypted_symmetric_key = public_key.encrypt(
+            export_key,
+            padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None),
+        )
+
+        date_range = {
+            'dateType': 'PermanentStorage',
+            'from': date_from.isoformat(),
+            'restrictToPermanentStorageHwmDate': True,
+        }
+        if date_to:
+            date_range['to'] = date_to.isoformat()
+
+        request_body = {
+            'encryption': {
+                'encryptedSymmetricKey': base64.b64encode(encrypted_symmetric_key).decode('utf-8'),
+                'initializationVector': base64.b64encode(export_iv).decode('utf-8'),
+            },
+            'filters': {
+                'subjectType': subject_type,
+                'dateRange': date_range,
+            },
+        }
+
+        endpoint = f"{self.api_url}/invoices/exports"
+        headers = {'Content-Type': 'application/json'}
+        try:
+            response = self._make_request('POST', endpoint, json=request_body, headers=headers)
+        except KSeFRateLimitError as e:
+            return {'error': {'retry_after': e.retry_after, 'message': str(e)}}
+
+        reference_number = response.json().get('referenceNumber')
+        self.company.sudo().write({
+            'l10n_pl_edi_bills_export_ref': reference_number,
+            'l10n_pl_edi_export_key': base64.b64encode(export_key),
+            'l10n_pl_edi_export_iv': base64.b64encode(export_iv),
+        })
+        return {'reference_number': reference_number}
+
+    def get_export_status(self, reference_number):
+        """
+        Gets the status of a previously initiated invoice export.
+        Returns the raw JSON payload (status code, package, parts, HWM dates...).
+        """
+        endpoint = f"{self.api_url}/invoices/exports/{reference_number}"
+        try:
+            response = self._make_request('GET', endpoint)
+            return response.json()
+        except KSeFRateLimitError as e:
+            return {'error': {'retry_after': e.retry_after, 'message': str(e)}}
+
+    def download_package_part(self, part):
+        """
+        Downloads a single encrypted package part from the storage URL returned
+        in the export status. The storage URL is pre-signed, so the KSeF access
+        token must NOT be sent along with the request.
+        """
+        method = part.get('method', 'GET')
+        url = part['url']
+        response = requests.request(method, url, timeout=TIMEOUT)
+        response.raise_for_status()
+        return response.content
+
+    def decrypt_export_package(self, parts):
+        """
+        Downloads every encrypted package part, decrypts them with the stored
+        export key/IV (AES-256-CBC, PKCS#7) and merges them back into the
+        original ZIP archive bytes.
+        """
+        company_sudo = self.company.sudo()
+        export_key = base64.b64decode(company_sudo.l10n_pl_edi_export_key) if company_sudo.l10n_pl_edi_export_key else None
+        export_iv = base64.b64decode(company_sudo.l10n_pl_edi_export_iv) if company_sudo.l10n_pl_edi_export_iv else None
+        if not export_key or not export_iv:
+            raise UserError(self.env._("Missing KSeF export encryption key. Please restart the export."))
+
+        encrypted_archive = b''
+        for part in sorted(parts, key=lambda p: p.get('ordinalNumber', 0)):
+            encrypted_archive += self.download_package_part(part)
+
+        cipher = Cipher(algorithms.AES(export_key), modes.CBC(export_iv))
+        decryptor = cipher.decryptor()
+        padded_data = decryptor.update(encrypted_archive) + decryptor.finalize()
+        unpadder = sym_padding.PKCS7(128).unpadder()
+        return unpadder.update(padded_data) + unpadder.finalize()
+
+    def clear_export_state(self):
+        """Clears the in-flight export reference and its encryption material."""
+        self.company.sudo().write(dict.fromkeys([
+            'l10n_pl_edi_bills_export_ref',
+            'l10n_pl_edi_export_key',
+            'l10n_pl_edi_export_iv',
+        ], False))
+

@@ -34,6 +34,22 @@ class ResConfigSettings(models.TransientModel):
         for config in self:
             config.l10n_pl_edi_certificate = config.company_id.l10n_pl_edi_certificate
 
+    def action_l10n_pl_edi_download_bills(self):
+        """Manually triggers the incremental download of vendor bills from KSeF."""
+        self.ensure_one()
+        if not self.company_id.sudo().l10n_pl_edi_access_token:
+            raise UserError(self.env._("Please authenticate with KSeF before downloading bills."))
+        self.env['account.move'].with_company(self.company_id)._l10n_pl_edi_download_bills_from_ksef()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'type': 'success',
+                'message': self.env._("KSeF bills synchronization has been started. New bills will appear shortly."),
+                'next': {'type': 'ir.actions.act_window_close'},
+            },
+        }
+
     @api.onchange('l10n_pl_edi_register')
     def _l10n_pl_edi_reset(self):
         # UI-only feedback; do not write to company here
