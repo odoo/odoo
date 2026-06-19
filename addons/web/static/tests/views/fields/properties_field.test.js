@@ -2878,3 +2878,44 @@ test("properties: no parent document set", async () => {
         message: "The edit definition button must not be in the view",
     });
 });
+
+test.tags("desktop");
+test("properties: Create a property with an onchange methods", async () => {
+    expect.errors(0);
+    for (const record of Partner._records) {
+        record.properties = {};
+    }
+    ResCompany._records[0].definitions = [];
+    Partner._onChanges.properties = () => {};
+    onRpc("onchange", async () => {
+        expect.step("on_change_called");
+        await new Promise((resolve) => setTimeout(resolve, 100));
+    });
+
+    onRpc("has_access", () => true);
+    patchWithCleanup(PropertiesField.prototype, {
+        onPropertyCreate() {
+            expect.step("onPropertyCreate");
+            return super.onPropertyCreate(...arguments);
+        },
+        _openPropertyDefinition() {
+            expect.step("_openPropertyDefinition");
+            return super._openPropertyDefinition(...arguments);
+        },
+    });
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="company_id"/>
+                <field name="properties"/>
+            </form>`,
+        actionMenus: {},
+    });
+    await toggleActionMenu();
+    await contains(".o_popover span .fa-cogs").click();
+    await runAllTimers();
+    expect.verifySteps(["onPropertyCreate", "on_change_called", "_openPropertyDefinition"]);
+});
