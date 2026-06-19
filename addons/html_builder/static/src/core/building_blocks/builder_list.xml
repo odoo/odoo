@@ -4,7 +4,7 @@
 <t t-name="html_builder.BuilderList">
     <BuilderComponent><SortableContainer setupLayoutEffect.bind="this.setupSortable">
         <div class="w-100 p-2 py-0">
-            <t t-set="isMany2X" t-value="this.allRecords and this.allRecords.length"/>
+            <t t-set="isMany2X" t-value="this.allRecords() and this.allRecords().length"/>
             <t t-if="this.state.value?.length > 2">
                 <div class="o_we_table_wrapper" t-att-class="{ no_scrollbar: !this.props.withScrollbar }" t-on-scroll="this.onTableScroll">
                     <table t-custom-ref="table">
