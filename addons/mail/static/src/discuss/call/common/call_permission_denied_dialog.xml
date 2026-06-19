@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="discuss.CallPermissionDeniedDialog">
-        <PermissionPromptDialog title="''" size="'md'" close="this.props.close" illustrationPosition="'left'" contentClass="'o-discuss-CallPermissionDeniedDialog'">
+        <PermissionPromptDialog closeOnClickAway="true" title="''" size="'md'" close="this.props.close" illustrationPosition="'left'" contentClass="'o-discuss-CallPermissionDeniedDialog'">
             <t t-set-slot="illustration">
                 <t t-call="discuss.CallPermissionDeniedDialog.illustrationAnimated"/>
             </t>
