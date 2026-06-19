@@ -932,8 +932,12 @@ class DiscussChannel(models.Model):
             author_history.response_time_hour = (
                 fields.Datetime.now() - author_history.create_date
             ).total_seconds() / 3600
-        if not self.livechat_end_dt and author_history.livechat_member_type == "agent":
-            self.livechat_failure = "no_failure"
+        if (
+            not self.livechat_end_dt
+            and author_history.livechat_member_type == "agent"
+            and self.livechat_failure != "no_failure"
+        ):
+            self._update_field_concurrency_safe("livechat_failure", "no_failure")
         return super()._message_post_after_hook(message)
 
     def _chatbot_restart(self, chatbot_script):

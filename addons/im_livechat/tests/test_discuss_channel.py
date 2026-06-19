@@ -2,6 +2,7 @@ import json
 from datetime import timedelta
 from freezegun import freeze_time
 from markupsafe import Markup
+from unittest.mock import patch
 
 from odoo import Command, fields
 from odoo.tests import new_test_user, users
@@ -39,6 +40,56 @@ class TestDiscussChannel(TestImLivechatCommon, TestGetOperatorCommon, MailCase):
             body="I am here to help!",
             message_type="comment",
             subtype_xmlid="mail.mt_comment",
+        )
+        self.assertEqual(chat.livechat_failure, "no_failure")
+
+    def test_agent_message_updates_livechat_failure_concurrency_safe(self):
+        """An agent message sets ``livechat_failure`` to ``"no_failure"``, and the
+        write goes through the concurrency-safe path (separate cursor + advisory
+        lock) when posting under ``mail_post_check_concurrency`` so parallel posts
+        on a busy channel no longer crash with a Postgres SerializationFailure
+        (could not serialize access due to concurrent update). A redundant agent
+        message must not write the field again.
+        """
+        data = self.make_jsonrpc_request(
+            "/im_livechat/get_session", {"channel_id": self.livechat_channel.id}
+        )
+        chat = self.env["discuss.channel"].browse(data["channel_id"])
+        agent_user = chat.livechat_agent_partner_ids.mapped("main_user_id")
+        self.assertEqual(chat.livechat_failure, "no_answer")
+        # First agent message moves the failure to "no_failure" through the
+        # concurrency-safe path used by the message post controller.
+        chat.with_user(agent_user).with_context(mail_post_check_concurrency=True).message_post(
+            body="I am here to help!",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+        # The value is written in a separate cursor, so refresh the main cache.
+        chat.invalidate_recordset(["livechat_failure", "livechat_outcome"])
+        self.assertEqual(chat.livechat_failure, "no_failure")
+        self.assertEqual(chat.livechat_outcome, "no_failure")
+        # A second agent message must not write livechat_failure again: it is
+        # already "no_failure", so re-assigning it would emit a redundant UPDATE
+        # and bring back the concurrency error.
+        DiscussChannel = type(chat)
+        original_write = DiscussChannel.write
+        failure_writes = []
+
+        def tracking_write(records, vals):
+            if "livechat_failure" in vals:
+                failure_writes.append(vals["livechat_failure"])
+            return original_write(records, vals)
+
+        with patch.object(DiscussChannel, "write", tracking_write):
+            chat.with_user(agent_user).message_post(
+                body="Anything else?",
+                message_type="comment",
+                subtype_xmlid="mail.mt_comment",
+            )
+        self.assertEqual(
+            failure_writes,
+            [],
+            "a redundant agent message should not re-write livechat_failure",
         )
         self.assertEqual(chat.livechat_failure, "no_failure")
 
