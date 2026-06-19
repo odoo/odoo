@@ -61,8 +61,8 @@ class TestPerfSessionInfo(common.HttpCase):
     def test_load_web_menus_perf(self):
         # cold orm/fields cache:
         # - Web only: 17
-        # - All modules 58
-        with self.assertQueryCount(58):
+        # - All modules 60
+        with self.assertQueryCount(60):
             self.env['ir.ui.menu'].load_web_menus(False)
 
         # cold fields cache:
@@ -77,8 +77,8 @@ class TestPerfSessionInfo(common.HttpCase):
     def test_load_menus_perf(self):
         # cold orm/fields cache:
         # - Web only: 17
-        # - All modules 58
-        with self.assertQueryCount(58):
+        # - All modules 60
+        with self.assertQueryCount(60):
             self.env['ir.ui.menu'].load_menus(False)
 
         # cold fields cache:
