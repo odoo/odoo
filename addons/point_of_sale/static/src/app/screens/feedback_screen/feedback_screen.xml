@@ -2,22 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.FeedbackScreen">
         <div t-custom-ref="feedback-screen" class="feedback-screen bg-100 fixed-top w-100 h-100 d-flex flex-column align-items-center justify-content-center" t-on-click="() => this.onClick()">
-            <div style="width: 115px; height: 115px;">
-                <t t-if="!this.loading()">
-                    <t t-call="point_of_sale.ValidationAnimation"/>
-                </t>
-            </div>
-
-            <div class="amount-paid fw-bolder mt-2">
-                <t t-if="this.loading()">Processing...</t>
-                <t t-else="">Amount Paid</t>
-            </div>
-
-            <div class="amount-container">
-                <div t-custom-ref="amount" class="amount lh-sm">
-                    <PriceFormatter price="this.env.utils.formatCurrency(this.currentOrder.totalDue)"/>
-                </div>
-            </div>
+            <FeedbackPaymentSummary formattedAmount="this.env.utils.formatCurrency(this.currentOrder.totalDue)" loading="this.loading()"/>
             <div t-if="!this.ui.isSmall" class="desktop-format w-75 d-flex gap-3 flex-row align-items-center justify-content-around p-2">
                 <button t-if="this.pos.canEditPayment(this.currentOrder)" t-att-disabled="this.loading()" class="button btn btn-secondary btn-lg lh-lg text-truncate flex-basis-25 py-3 rounded-3 edit-order-payment" t-on-click.stop="() => this.clickEditPayment()"><i class="fa fa-chevron-left" role="img" aria-label="Back"></i> Back</button>
                 <button t-if="this.canPrintReceipt" t-att-disabled="this.loading() || this.currentOrder.state == 'draft'" class="print-ticket-button button btn btn-secondary btn-lg lh-lg text-truncate flex-basis-25 py-3 rounded-3" t-on-click.stop="() => this.clickPrint()"><i class="fa fa-print" role="img" aria-label="Print"></i> Print</button>

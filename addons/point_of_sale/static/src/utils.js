@@ -227,6 +227,10 @@ export function getTimeUtil(date) {
     return Time.from(date).toString();
 }
 
+export function getColorScheme() {
+    return cookie.get("pos_color_scheme") || "light";
+}
+
 /**
  * Generates a QR code as a data URL in SVG format for a given URL.
  *
@@ -255,7 +259,7 @@ export function generateQRCodeDataUrl(
     const tempDiv = document.createElement("div");
     let themeOptions = {};
     if (useThemeQr) {
-        const colorScheme = cookie.get("pos_color_scheme") || "light";
+        const colorScheme = getColorScheme();
         themeOptions = {
             colorDark: colorScheme === "light" ? "black" : "white",
             colorLight: "transparent",

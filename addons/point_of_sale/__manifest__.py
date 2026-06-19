@@ -251,6 +251,12 @@
             "point_of_sale/static/src/app/hooks/time_hook.js",
             "point_of_sale/static/src/app/pos_app.scss",
             "point_of_sale/static/src/app/screens/login_screen/login_screen.scss",
+            "point_of_sale/static/src/app/components/price_formatter/**/*",
+            "point_of_sale/static/src/app/components/validation_animation/**/*",
+            "point_of_sale/static/src/app/components/feedback_payment_summary/**/*",
+        ],
+        'point_of_sale.customer_display_assets_dark': [
+            ('include', 'point_of_sale.customer_display_assets'),
         ],
         'point_of_sale.customer_display_assets_test': [
             ('include', 'point_of_sale.base_tests'),

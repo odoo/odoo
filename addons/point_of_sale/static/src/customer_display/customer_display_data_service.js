@@ -10,14 +10,26 @@ export const CustomerDisplayDataService = {
     },
     async setup(env, { bus_service }) {
         const data = proxy({});
-        new BroadcastChannel("UPDATE_CUSTOMER_DISPLAY").onmessage = (event) => {
-            Object.assign(data, event.data);
+
+        const currentTheme = new URLSearchParams(location.search).get("theme") || "light";
+
+        const _processDisplayUpdate = (payload) => {
+            const { displayTheme: posTheme } = payload;
+            if (posTheme && currentTheme !== posTheme) {
+                const searchParams = new URLSearchParams(location.search);
+                searchParams.set("theme", posTheme);
+                // Reload page to apply the new theme
+                location.search = searchParams.toString();
+                return;
+            }
+            Object.assign(data, payload);
         };
+
+        new BroadcastChannel("UPDATE_CUSTOMER_DISPLAY").onmessage = (event) =>
+            _processDisplayUpdate(event.data);
         getOnNotified(bus_service, session.access_token)(
             `UPDATE_CUSTOMER_DISPLAY-${session.device_uuid}`,
-            (payload) => {
-                Object.assign(data, payload);
-            }
+            _processDisplayUpdate
         );
         return data;
     },

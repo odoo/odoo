@@ -20,5 +20,6 @@ class PosCustomerDisplay(http.Controller):
                     **pos_config_sudo._get_customer_display_data(),
                     'device_uuid': device_uuid,
                 },
+                'theme': kw.get('theme', 'light')
             },
         )
