@@ -54,7 +54,7 @@ export class DynamicSnippet extends Interaction {
 
     start() {
         // Re-render on media breakpoint change
-        this.registerCleanup(listenSizeChange(this.render.bind(this)));
+        this.registerCleanup(listenSizeChange(this.protectSyncAfterAsync(this.render.bind(this))));
         this.render();
     }
 
