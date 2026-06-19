@@ -2,7 +2,6 @@ import { proxy } from "@odoo/owl";
 import { AttendeeCalendarModel } from "@calendar/views/attendee_calendar/attendee_calendar_model";
 import { rpc } from "@web/core/network/rpc";
 import { patch } from "@web/core/utils/patch";
-import { user } from "@web/core/user";
 
 patch(AttendeeCalendarModel, {
     services: [...AttendeeCalendarModel.services],
@@ -51,11 +50,7 @@ patch(AttendeeCalendarModel.prototype, {
         this.state.microsoftPendingSync = true;
         const params = new URLSearchParams(window.location.search);
         if (params.get("auth_success")) {
-            await this.orm.call(
-                "res.users",
-                "restart_microsoft_synchronization",
-                [[user.userId]],
-            );
+            await this.orm.call("res.users", "restart_microsoft_synchronization");
         }
 
         const result = await rpc(
