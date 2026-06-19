@@ -183,11 +183,12 @@
                 hide_date="True"/>
         </span>
         <t t-if="is_view_active('website_blog.opt_blog_post_comment')">
-            <span t-if="blog_post.message_ids" class="text-nowrap o_not_editable">|
+            <t t-set="comments" t-value="blog_post.message_counter()"/>
+            <span t-if="comments" class="text-nowrap o_not_editable">|
             <i class="fa fa-comment ms-1 text-muted"/>
             <a href="#discussion">
-                <t t-out="len(blog_post.message_ids)"/>
-                <t t-if="len(blog_post.message_ids) > 1">Comments</t>
+                <t t-out="comments"/>
+                <t t-if="comments > 1">Comments</t>
                 <t t-else="">Comment</t>
             </a>
             </span>
