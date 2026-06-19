@@ -83,6 +83,16 @@ class ResPartner(models.Model):
         return iap_data
 
     @api.model
+    def autocomplete_by_field(self, fieldName, query, query_country_id, timeout=15):
+        match fieldName:
+            case "name":
+                return self.autocomplete_by_name(query, query_country_id)
+            case "duns":
+                return self.autocomplete_by_duns(query, query_country_id)
+            case _:
+                return self.autocomplete_by_vat(query, query_country_id)
+
+    @api.model
     def autocomplete_by_name(self, query, query_country_id, timeout=15):
         if query_country_id is False:  # If it's 0, we purposely do not want to filter on the country
             query_country_id = self.env.company.country_id.id
@@ -136,6 +146,22 @@ class ResPartner(models.Model):
                         'country_code': vies_result['countryCode'],
                     })]
             return []
+
+    @api.model
+    def autocomplete_by_duns(self, duns, query_country_id, timeout=15):
+        query_country_id = query_country_id or self.env.company.country_id.id
+        query_country_code = self.env['res.country'].browse(query_country_id).code
+        response, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_by_duns', {
+            'query': duns,
+            'query_country_code': query_country_code,
+        }, timeout=timeout)
+        if not response or response.get("error"):
+            return []
+
+        results = []
+        for suggestion in response.get("data"):
+            results.append(self._format_data_company(suggestion))
+        return results
 
     @api.model
     def _process_enriched_response(self, response, error):
