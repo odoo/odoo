@@ -6,7 +6,7 @@ from odoo.tests import Form, tagged
 from odoo.tests.common import new_test_user
 
 
-@tagged('post_install', 'post_install_l10n', '-at_install')
+@tagged('post_install', 'post_install_l10n', '-at_install', "supplier_info")
 class TestProduct(AccountTestInvoicingCommon):
 
     @classmethod
@@ -139,3 +139,110 @@ class TestProduct(AccountTestInvoicingCommon):
         self.assertFalse(Product._retrieve_product(name='Wireless bluetooth speaker'))
         self.assertEqual(product_A, Product._retrieve_product(name='Network Cable'))
         self.assertEqual(product_A, Product._retrieve_product(name='network cables'))  # case insensitive exact match
+
+    def test_supplierinfo_vendor_price(self):
+        """
+        Test that vendor prices are assigned correctly from 'supplier.info' records
+        """
+
+        vendor = self.env['res.partner'].create({
+            'name': 'Vendor',
+        })
+        attribute = self.env['product.attribute'].create({
+            'name': 'Color',
+            'value_ids': [
+                Command.create({'name': 'Red'}),
+                Command.create({'name': 'Blue'}),
+            ]
+        })
+        (
+            attribute_red,
+            attribute_blue,
+        ) = attribute.value_ids
+
+        product_tmpl_cube = self.env['product.template'].create({
+            'name': 'Cube',
+            'attribute_line_ids': [Command.create({
+                'attribute_id': attribute.id,
+                'value_ids': [Command.set([
+                    attribute_red.id,
+                    attribute_blue.id,
+                ])],
+            })],
+            'standard_price': 10.0,
+        })
+        product_tmpl_ball = self.env['product.template'].create({
+            'name': 'Ball',
+            'attribute_line_ids': [Command.create({
+                'attribute_id': attribute.id,
+                'value_ids': [Command.set([
+                    attribute_red.id,
+                    attribute_blue.id,
+                ])],
+            })],
+            'standard_price': 20.0,
+        })
+        product_cube_red = product_tmpl_cube.product_variant_ids.filtered(
+            lambda pp: pp.product_template_attribute_value_ids.product_attribute_value_id == attribute_red
+        )
+        product_cube_red.standard_price = 100.0
+        product_cube_blue = product_tmpl_cube.product_variant_ids.filtered(
+            lambda pp: pp.product_template_attribute_value_ids.product_attribute_value_id == attribute_blue
+        )
+        product_cube_blue.standard_price = 200.0
+        product_ball_red = product_tmpl_ball.product_variant_ids.filtered(
+            lambda pp: pp.product_template_attribute_value_ids.product_attribute_value_id == attribute_red
+        )
+        product_ball_red.standard_price = 300.0
+        product_ball_blue = product_tmpl_ball.product_variant_ids.filtered(
+            lambda pp: pp.product_template_attribute_value_ids.product_attribute_value_id == attribute_blue
+        )
+        product_ball_blue.standard_price = 400.0
+
+        self.env['product.supplierinfo'].with_company(self.company).create({
+            'partner_id': vendor.id,
+            'product_tmpl_id': product_tmpl_cube.id,
+            'price': 101.0
+        })
+        self.env['product.supplierinfo'].with_company(self.company).create({
+            'partner_id': vendor.id,
+            'product_id': product_cube_blue.id,
+            'price': 202.0
+        })
+        self.env['product.supplierinfo'].with_company(self.company).create({
+            'partner_id': vendor.id,
+            'product_id': product_ball_red.id,
+            'price': 303.0
+        })
+
+        move_form = Form(self.env['account.move'].with_context({'default_move_type': 'in_invoice'}))
+        move_form.partner_id = vendor
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = product_cube_red
+            line_form.quantity = 1
+        move_form.save()
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = product_cube_blue
+            line_form.quantity = 1
+        move_form.save()
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = product_ball_red
+            line_form.quantity = 1
+        move_form.save()
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = product_ball_blue
+            line_form.quantity = 1
+        bill = move_form.save()
+
+        # 1) Assert that a vendor price set for a product template is applied correctly to a product variant
+        # belonging to this template when there is no price set for this variant specifically
+        self.assertEqual(bill.invoice_line_ids[0].balance, 101.0)
+        # 2) Assert that a vendor price set for a product variant is applied correctly to it when there is
+        # a different price set for the template it belongs to
+        self.assertEqual(bill.invoice_line_ids[1].balance, 202.0)
+        # 3) Assert that a vendor price set for a product variant is applied correctly in the absence of any
+        # vendor price set for the template
+        self.assertEqual(bill.invoice_line_ids[2].balance, 303.0)
+        # 4) Assert that a vendor price set for a product variant is not incorrectly applied to other product variants
+        # sharing the same template when there is no vendor price set for them specifically
+        self.assertEqual(bill.invoice_line_ids[3].balance, 400.0)
