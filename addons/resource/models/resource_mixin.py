@@ -90,7 +90,7 @@ class ResourceMixin(models.AbstractModel):
     def _get_hours_per_day_batch(self, date_from=None):
         return {resource.id: resource.hours_per_day for resource in self}
 
-    def _get_work_days_data_batch(self, from_datetime, to_datetime, compute_leaves=True, calendar=None, domain=None):
+    def _get_work_days_data_batch(self, from_datetime, to_datetime, compute_leaves=True, calendar=None, domain=None, is_half_day=False):
         """
             By default the resource calendar is used, but it can be
             changed using the `calendar` argument.
@@ -126,7 +126,7 @@ class ResourceMixin(models.AbstractModel):
                 intervals = calendar._attendance_intervals_batch(from_datetime, to_datetime, resources_per_tz)
 
             for calendar_resource in calendar_resources:
-                result[calendar_resource.id] = calendar._get_attendance_intervals_days_data(intervals[calendar_resource.id])
+                result[calendar_resource.id] = calendar._get_attendance_intervals_days_data(intervals[calendar_resource.id], is_half_day)
 
         # convert "resource: result" into "employee: result"
         return {mapped_employees[r.id]: result[r.id] for r in resources}

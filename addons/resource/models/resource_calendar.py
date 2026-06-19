@@ -559,7 +559,7 @@ class ResourceCalendar(models.Model):
         if len(Intervals(result)) != len(result):
             raise ValidationError(self.env._("Attendances can't overlap."))
 
-    def _get_attendance_intervals_days_data(self, attendance_intervals):
+    def _get_attendance_intervals_days_data(self, attendance_intervals, is_half_day=False):
         """
         helper function to compute duration of `intervals` that have
         'resource.calendar.attendance' records as payload (3rd element in tuple).
@@ -580,7 +580,7 @@ class ResourceCalendar(models.Model):
             day_hours[start.date()] += interval_hours
 
         for day, hours in day_hours.items():
-            if len(self) == 1 and self._is_duration_based_on_date(day):
+            if len(self) == 1 and self._is_duration_based_on_date(day) and not is_half_day:
                 hours_per_day = self._get_duration_based_work_hours_on_date(day)
                 day_days[start.date()] += hours / hours_per_day if hours_per_day else 0
             else:
