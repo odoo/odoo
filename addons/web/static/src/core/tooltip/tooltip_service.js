@@ -116,8 +116,10 @@ export const tooltipService = {
             }
 
             target = el;
-            // Prevent title from showing on a parent at the same time
-            target.title = "";
+            // Prevent title from showing on a parent at the same time (break the title scope heritage)
+            if (!target.title) {
+                target.title = "";
+            }
             const timeoutDelay = isHelpNode(el) ? 0 : delay;
             openTooltipTimeout = browser.setTimeout(() => {
                 // verify that the element is still in the DOM
@@ -180,7 +182,28 @@ export const tooltipService = {
          * @param {MouseEvent} ev a "mouseenter" event
          */
         function onMouseenter(ev) {
-            openElementsTooltip(ev.target);
+            if (elementsWithTooltips.has(ev.target)) {
+                openElementsTooltip(ev.target);
+                return;
+            }
+            const target = ev.target?.closest(TOOLTIP_SELECTOR_WITH_TITLE);
+            if (!target) {
+                return;
+            }
+            if (target.title?.length) {
+                // If we have a title attribute on a node, we should close the currently displayed tooltip
+                // to avoid showing the tooltip and the title at the same time.
+                if (openTooltipTimeout) {
+                    cleanup();
+                }
+                // If the title and tooltip are shown at the same time, remove the title and open the tooltip.
+                if (target.dataset.tooltipTemplate || target.dataset.tooltip) {
+                    target.title = "";
+                    openElementsTooltip(target);
+                }
+            } else {
+                openElementsTooltip(target);
+            }
         }
 
         /**
