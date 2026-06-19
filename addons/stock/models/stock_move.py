@@ -683,10 +683,12 @@ Please change the quantity done or the rounding precision in your settings.""",
         'picking_code',
     )
     def _compute_show_info(self):
+        transit = self.env.ref('stock.stock_location_inter_company', raise_if_not_found=False)
         for move in self:
-            move.show_quant = move.picking_code != 'incoming'\
+            move.show_quant = (move.picking_code != 'incoming' or move.location_id == transit)\
                            and move.product_id.is_storable
             move.show_lots_text = move.has_tracking != 'none'\
+                and not move.show_quant\
                 and move.picking_type_id.use_create_lots\
                 and not move.picking_type_id.use_existing_lots\
                 and move.state != 'done' \
