@@ -1100,6 +1100,8 @@ export function makeActionManager(env, router = _router) {
             }
             actionDialogProps.header = action.context.header ?? actionDialogProps.header;
             actionDialogProps.footer = action.context.footer ?? actionDialogProps.footer;
+            actionDialogProps.closeOnClickAway =
+                action.context.closeOnClickAway ?? actionDialogProps.closeOnClickAway;
             const onClose = dialog?.onClose;
             delete dialog?.onClose;
             removeDialogFn = dialogService.add(ActionDialog, actionDialogProps, {

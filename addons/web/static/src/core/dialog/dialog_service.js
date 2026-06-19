@@ -69,7 +69,10 @@ export const dialogService = {
                 DialogWrapper,
                 {
                     subComponent: dialogClass,
-                    subProps: markRaw({ ...props, close }),
+                    subProps: markRaw({
+                        ...props,
+                        close,
+                    }),
                     subEnv,
                 },
                 {

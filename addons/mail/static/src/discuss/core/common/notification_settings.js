@@ -12,7 +12,7 @@ import { useHover } from "@mail/utils/common/hooks";
 class NotificationDialog extends Component {
     static components = { Dialog, DiscussNotificationSettingsClientAction };
     static template = xml`
-        <Dialog size="'md'" footer="false">
+        <Dialog closeOnClickAway="true" size="'md'" footer="false">
             <DiscussNotificationSettingsClientAction/>
         </Dialog>
     `;

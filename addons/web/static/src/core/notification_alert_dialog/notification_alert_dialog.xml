@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.NotificationAlertDialog">
-        <PermissionPromptDialog title.translate="Want to stay updated with notifications?" size="'sm'" close="this.props.close">
+        <PermissionPromptDialog closeOnClickAway="this.props.closeOnClickAway" title.translate="Want to stay updated with notifications?" size="'sm'" close="this.props.close">
             <t t-set-slot="illustration">
                 <t t-call="web.NotificationAlertDialog.illustrationAnimated"/>
             </t>

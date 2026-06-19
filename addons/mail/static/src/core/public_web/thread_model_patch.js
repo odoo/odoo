@@ -45,6 +45,7 @@ const threadModelPatch = {
         await new Promise((resolve) => {
             this.store.env.services.dialog.add(ConfirmationDialog, {
                 body: body,
+                closeOnClickAway: true,
                 confirmLabel: _t("Leave Conversation"),
                 confirm: resolve,
                 cancel: () => {},

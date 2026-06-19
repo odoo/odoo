@@ -7,6 +7,7 @@ const SLIDERS_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" hei
 export const notificationAlertDialogProps = {
     animateMouse: t.any().optional(true),
     close: t.any(),
+    closeOnClickAway: t.boolean().optional(),
 };
 
 export class NotificationAlertDialog extends Component {
