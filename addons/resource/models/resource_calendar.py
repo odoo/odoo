@@ -873,6 +873,8 @@ class ResourceCalendar(models.Model):
 
     def _get_duration_based_work_hours_on_date(self, date):
         attendances_per_week_type = self.attendance_ids.filtered(lambda a: int(a.dayofweek) == date.weekday()).grouped('week_type')
+        if not attendances_per_week_type:
+            return 0
         week_type = False
         if self.two_weeks_calendar:
             week_type = str(self.env['resource.calendar.attendance'].get_week_type(date))
