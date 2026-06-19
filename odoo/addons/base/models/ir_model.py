@@ -2303,6 +2303,7 @@ class IrModelData(models.Model):
         """
         if not data_list:
             return
+        self.flush_model()
 
         rows = tools.OrderedSet()
         for data in data_list:
@@ -2316,19 +2317,20 @@ class IrModelData(models.Model):
             query = self._build_update_xmlids_query(sub_rows, update)
             try:
                 self.env.cr.execute(query, [arg for row in sub_rows for arg in row])
-                result = self.env.cr.fetchall()
-                if result:
-                    for module, name, model, res_id, create_date, write_date in result:
-                        # small optimisation: during install a lot of xmlid are created/updated.
-                        # Instead of clearing the cache, set the correct value in the cache to avoid a bunch of query
-                        self._xmlid_lookup.__cache__.add_value(self, f"{module}.{name}", cache_value=(model, res_id))
-                        if create_date != write_date:
-                            # something was updated, notify other workers
-                            # it is possible that create_date and write_date
-                            # have the same value after an update if it was
-                            # created in the same transaction, no need to invalidate other worker cache
-                            # cache in this case.
-                            self.env.transaction.invalidate_ormcache()
+                result = self.env.cr.dictfetchall()
+                for row in result:
+                    # small optimisation: during install a lot of xmlid are created/updated.
+                    # Instead of clearing the cache, set the correct value in the cache to avoid a bunch of query
+                    self._xmlid_lookup.__cache__.add_value(self, f"{row['module']}.{row['name']}", cache_value=(row['model'], row['res_id']))
+                    if row['create_date'] != row['write_date']:
+                        # something was updated, notify other workers
+                        # it is possible that create_date and write_date
+                        # have the same value after an update if it was
+                        # created in the same transaction, no need to invalidate other worker cache
+                        # cache in this case.
+                        self.env.transaction.invalidate_ormcache()
+                    id_ = row.pop('id')
+                    self.browse(id_)._update_cache(row)
 
             except Exception:
                 _logger.error("Failed to insert ir_model_data\n%s", "\n".join(str(row) for row in sub_rows))
@@ -2364,7 +2366,7 @@ class IrModelData(models.Model):
             DO UPDATE SET (model, res_id, write_date) =
                 (EXCLUDED.model, EXCLUDED.res_id, now() at time zone 'UTC')
                 WHERE (ir_model_data.res_id != EXCLUDED.res_id OR ir_model_data.model != EXCLUDED.model) {and_where}
-            RETURNING module, name, model, res_id, create_date, write_date
+            RETURNING id, module, name, model, res_id, create_date, write_date
         """.format(
             row_names=row_names,
             row_placeholder=row_placeholders,
