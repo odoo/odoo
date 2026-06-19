@@ -26,6 +26,7 @@ export class TimeOffCalendarRenderer extends CalendarRenderer {
 
 export class TimeOffDashboardCalendarRenderer extends TimeOffCalendarRenderer {
     get showDashboard() {
-        return !this.env.isSmall;
+        const isManagementRelated = this.props?.model?.meta?.context?.is_management_related ?? false;
+        return !this.env.isSmall && !isManagementRelated;
     }
 }
