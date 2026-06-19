@@ -217,6 +217,11 @@ class PaymentProvider(models.Model):
         :rtype: str
         """
         self.ensure_one()
+        if not self.paymob_account_country_id:
+            raise ValidationError(
+                self.env._("The account country is not set.")
+            )
+
         api_prefix = const.API_MAPPING[self.paymob_account_country_id.code]
         return f"https://{api_prefix}.paymob.com"
 
