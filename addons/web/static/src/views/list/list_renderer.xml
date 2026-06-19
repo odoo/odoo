@@ -77,7 +77,7 @@
                         <th t-if="this.hasActionsColumn" t-on-keydown="(ev) => this.onCellKeydown(ev)" class="o_list_controller o_list_actions_header w-print-0 p-print-0 position-sticky end-0 z-2 ps-2">
                             <div t-if="this.displayOptionalFields or this.hasOptionalOpenFormViewColumn" class="o_optional_columns_dropdown d-print-none text-center border-top-0">
                                 <Dropdown position="'bottom-end'" menuRef="this.optionalColumnsDropdownRef">
-                                    <button class="btn p-0" tabindex="-1" data-available-offline="">
+                                    <button class="btn p-0" tabindex="-1" data-available-offline="" t-attf-class="{{this.hasInvalidOptionalFields ? 'o_invalid_optional_columns_button' : ''}}">
                                         <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-settings-adjust"/>
                                     </button>
 
@@ -88,7 +88,7 @@
                                                 <div class="fw-bold" t-out="group.displayName"/>
                                             </DropdownItem>
                                             <t t-foreach="group.optionalFields" t-as="field" t-key="field_index">
-                                                <DropdownItem closingMode="'none'" onSelected="() => this.toggleOptionalField(field.name)">
+                                                <DropdownItem closingMode="'none'" onSelected="() => this.toggleOptionalField(field.name)" class="this.getOptionalDropdownItemClass(field)">
                                                     <CheckBox
                                                         onChange="() => this.toggleOptionalField(field.name)"
                                                         value="field.value"
