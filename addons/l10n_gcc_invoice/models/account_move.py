@@ -32,6 +32,7 @@ class AccountMove(models.Model):
 
         return num2words(number, lang=lang).title()
 
+    # TODO: Remove in master
     def _load_narration_translation(self):
         # Workaround to have the english/arabic version of the payment terms
         # in the report
@@ -53,17 +54,6 @@ class AccountMove(models.Model):
             for move in moves_to_fix
         ], dirty=True)
         moves_to_fix.modified(['narration'])
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        moves = super().create(vals_list)
-        moves._load_narration_translation()
-        return moves
-
-    def _compute_narration(self):
-        super()._compute_narration()
-        # Only update translations of real records
-        self.filtered('id')._load_narration_translation()
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
