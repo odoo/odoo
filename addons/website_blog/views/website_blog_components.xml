@@ -178,7 +178,36 @@
             <t t-if="len(blog_post.message_ids) > 1">Comments</t>
             <t t-else="">Comment</t>
         </span>
+<<<<<<< e264fedcb3dbc4d2e2d3511ff86f4dd104e63228
     </a>
+||||||| 77039cb4f2a386418db83d361973bcae1f238b8f
+        <t t-if="is_view_active('website_blog.opt_blog_post_comment')">
+            <span t-if="blog_post.message_ids" class="text-nowrap o_not_editable">|
+            <i class="fa fa-comment ms-1 text-muted"/>
+            <a href="#discussion">
+                <t t-out="len(blog_post.message_ids)"/>
+                <t t-if="len(blog_post.message_ids) > 1">Comments</t>
+                <t t-else="">Comment</t>
+            </a>
+            </span>
+            <span t-else="">| No comments yet</span>
+        </t>
+    </div>
+=======
+        <t t-if="is_view_active('website_blog.opt_blog_post_comment')">
+            <t t-set="comments" t-value="blog_post.message_counter()"/>
+            <span t-if="comments" class="text-nowrap o_not_editable">|
+            <i class="fa fa-comment ms-1 text-muted"/>
+            <a href="#discussion">
+                <t t-out="comments"/>
+                <t t-if="comments > 1">Comments</t>
+                <t t-else="">Comment</t>
+            </a>
+            </span>
+            <span t-else="">| No comments yet</span>
+        </t>
+    </div>
+>>>>>>> 616c8e6ade45a208c7a05e060edb6479148f875d
 </template>
 
 <!-- TODO: Remove me -->
