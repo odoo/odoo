@@ -1,7 +1,8 @@
 import { useComponent, useEnv, useRef, useSubEnv } from "@web/owl2/utils";
-// import { isElement, isTextNode } from "@html_editor/utils/dom_info";
+import { isElement, isTextNode } from "@html_editor/utils/dom_info";
 import {
     onMounted,
+    onPatched,
     onWillDestroy,
     onWillStart,
     onWillUpdateProps,
@@ -1051,34 +1052,44 @@ export function useApplyVisibility(refName) {
 }
 
 export function useVisibilityObserver(contentName, callback) {
-    // const contentRef = useRef(contentName);
-    // const applyVisibility = () => {
-    //     const hasContent = [...contentRef.el.childNodes].some(
-    //         (el) =>
-    //             (isTextNode(el) && el.textContent !== "") ||
-    //             (isElement(el) && !el.classList.contains("d-none"))
-    //     );
-    //     callback(hasContent);
-    // };
-    // const observer = new MutationObserver(applyVisibility);
-    // useLayoutEffect(
-    //     (contentEl) => {
-    //         if (!contentEl) {
-    //             return;
-    //         }
-    //         applyVisibility();
-    //         observer.observe(contentEl, {
-    //             subtree: true,
-    //             attributes: true,
-    //             childList: true,
-    //             attributeFilter: ["class"],
-    //         });
-    //         return () => {
-    //             observer.disconnect();
-    //         };
-    //     },
-    //     () => [contentRef.el]
-    // );
+    const contentRef = useRef(contentName);
+    const applyVisibility = () => {
+        const hasContent = [...contentRef.el.childNodes].some(
+            (el) =>
+                (isTextNode(el) && el.textContent !== "") ||
+                (isElement(el) && !el.classList.contains("d-none"))
+        );
+        callback(hasContent);
+    };
+    const observer = new MutationObserver(applyVisibility);
+    let observedEl = null;
+    const updateObserver = () => {
+        const contentEl = contentRef.el;
+        if (contentEl === observedEl) {
+            return;
+        }
+        observer.disconnect();
+        observedEl = contentEl;
+        if (!contentEl) {
+            return;
+        }
+        applyVisibility();
+        observer.observe(contentEl, {
+            subtree: true,
+            attributes: true,
+            childList: true,
+            attributeFilter: ["class"],
+        });
+    };
+    // `useLayoutEffect` is deprecated in OWL3. The original effect re-ran
+    // whenever `contentRef.el` changed, reading layout/DOM synchronously before
+    // paint to toggle visibility without a flash. `onMounted`/`onPatched` keep
+    // that synchronous timing (unlike `useEffect`, which fires after paint),
+    // and the `observedEl` guard reproduces the `() => [contentRef.el]`
+    // dependency by only re-observing when the element actually changes.
+    onMounted(updateObserver);
+    onPatched(updateObserver);
+    onWillDestroy(() => observer.disconnect());
 }
 
 export function useInputDebouncedCommit(ref) {
