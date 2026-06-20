@@ -1,4 +1,4 @@
-import { onRendered, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { onRendered, useRef } from "@web/owl2/utils";
 import { onMounted, props, proxy, t } from "@odoo/owl";
 import { Dialog, dialogProps } from "@web/core/dialog/dialog";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -56,14 +56,14 @@ export class ProductImageViewer extends Dialog {
 
         // Not using a t-on-click on purpose because we want to be able to cancel the drag
         // when we go outside of the window.
-        useLayoutEffect(
-            (document) => {
-                const onGlobalClick = this.onGlobalClick.bind(this);
-                document.addEventListener("click", onGlobalClick);
-                return () => {document.removeEventListener("click", onGlobalClick)};
-            },
-            () => [document],
-        );
+        // useLayoutEffect(
+        //     (document) => {
+        //         const onGlobalClick = this.onGlobalClick.bind(this);
+        //         document.addEventListener("click", onGlobalClick);
+        //         return () => {document.removeEventListener("click", onGlobalClick)};
+        //     },
+        //     () => [document],
+        // );
         onMounted(() => {
             document.querySelector(
                 '.o_wsale_image_viewer_carousel li:last-of-type img'
