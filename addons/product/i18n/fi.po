@@ -39,7 +39,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2026-05-16 14:33+0000\n"
+"PO-Revision-Date: 2026-06-20 13:57+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-3/"
 "product/fi/>\n"
@@ -48,7 +48,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_variant_count
@@ -806,6 +806,14 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Saatavilla oleva määrä (lasketaan kaavalla Saatavilla oleva määrä - varattu "
+"määrä - poistettava määrä)\n"
+"Jos kontekstissa on vain yksi Varastopaikka, tämä kattaa tavarat, jotka on "
+"varastoitu kyseiseen paikkaan tai sen alisteisiin paikkoihin.\n"
+"Jos kontekstissa on vain yksi varasto, tämä kattaa tavarat, jotka on "
+"varastoitu tämän varaston varastopaikkaan tai sen alisteisiin paikkoihin.\n"
+"Muussa tapauksessa tämä kattaa tavarat, jotka on varastoitu kaikkiin tyypin "
+"\"sisäinen\" varastopaikkoihin."
 
 #. module: product
 #. odoo-javascript
@@ -1328,6 +1336,15 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Tuotteiden nykyinen määrä.\n"
+"Yhden varastosijainnin kontekstissa tämä sisältää kyseiseen sijaintiin tai "
+"sen alisijainteihin varastoidut tuotteet.\n"
+"Yhden varaston kontekstissa tämä sisältää kyseisen varaston "
+"varastosijaintiin tai sen alisijainteihin varastoidut tuotteet.\n"
+"säilytetään tämän myymälän varaston varastosijainnissa tai sen "
+"alisijainneissa.\n"
+"Muussa tapauksessa tämä koskee tavaroita, joita säilytetään missä tahansa "
+"sisäisen tyypin varastosijainnissa."
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_custom
@@ -1842,6 +1859,13 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location with 'internal' "
 "type."
 msgstr ""
+"Ennustettu määrä (lasketaan kaavalla Saatavilla oleva määrä - Lähtevät + "
+"Saapuvat - Poistettavat määrät) \n"
+"Jos käytössä on yksi varastopaikka, tämä sisältää siellä ja sen alisteisissa "
+"sijainneissa olevat tuotteet.\n"
+"Jos käytössä on yksi varasto, tämä sisältää varaston varastopaikassa ja sen "
+"alapaikoissa olevat tuotteet.\n"
+"Muussa tapauksessa tämä sisältää kaikki tyypin 'sisäinen' varastopaikat."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_product_tree_view
@@ -3567,7 +3591,7 @@ msgstr "Määrä"
 #. odoo-python
 #: code:addons/product/controllers/pricelist_report.py:0
 msgid "Quantity (%s UoM)"
-msgstr "Määrä (mittayksikkönä %s)"
+msgstr "Määrä (%s mittayksikköä)"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__qty_available
@@ -3821,7 +3845,7 @@ msgstr "Valitse"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__sequence
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__sequence
 msgid "Sequence"
-msgstr "Järjestys"
+msgstr "Sekvenssi"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_template__type__service
@@ -4393,7 +4417,7 @@ msgstr "Poikkeusaktiviteetin tyyppi tietueella."
 #: code:addons/product/controllers/pricelist_report.py:0
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "UOM"
-msgstr "mittayksikkö"
+msgstr "Mittayksikkö"
 
 #. module: product
 #: model:res.groups,name:product.group_show_uom_price

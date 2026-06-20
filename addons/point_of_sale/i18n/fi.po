@@ -42,8 +42,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:36+0000\n"
-"PO-Revision-Date: 2026-05-16 14:34+0000\n"
+"POT-Creation-Date: 2026-06-19 17:36+0000\n"
+"PO-Revision-Date: 2026-06-20 14:12+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-3/"
 "point_of_sale/fi/>\n"
@@ -52,7 +52,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -327,6 +327,36 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
+"                    <t t-set=\"client_name\" t-"
+"value=\"object.partner_id.name\"/>\n"
+"                    <t t-set=\"store_name\" t-"
+"value=\"object.config_id.name\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
+"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
+"user.lang\"/>\n"
+"                    <div>\n"
+"                        <t t-if=\"client_name\">Hei <t t-"
+"out=\"client_name\">Asiakkaan nimi</t>,</t>\n"
+"                        <t t-else=\"\">Hei,</t>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Kiitos ostoksestasi <t t-"
+"out=\"store_name\">Myymälän nimi</t>!</div>\n"
+"                    <div>Löydät liitteenä kuitin ostoksestasi <span><t t-"
+"out=\"format_datetime(dt=object.date_order, tz=tz, dt_format=&quot;EEEE d "
+"MMMM&quot;,                          lang_code=lg) or ''\">päivämäärä</t> <t "
+"t-out=\"format_time(time=object.date_order, tz=tz, "
+"time_format='short',                          lang_code=lg)\">aika</t>.</"
+"span>\n"
+"                    </div>\n"
+"                    <br/>\n"
+"                    <div>Ystävällisin terveisin,</div>\n"
+"                    <br/>\n"
+"                    <t t-out=\"store_name\">Myymälän nimi</t>\n"
+"                </div>\n"
+"            "
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
@@ -563,12 +593,6 @@ msgstr "Tämän niminen huomautus on jo olemassa"
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_payment_unique_uuid
 msgid "A payment with this uuid already exists"
 msgstr "Tällä uuid:lla oleva maksu on jo olemassa"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.js:0
-msgid "A request is still being processed in the background. Please wait."
-msgstr "Pyyntöä käsitellään yhä taustalla. Odota hetki."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -7652,6 +7676,12 @@ msgid "Proceed Anyway"
 msgstr "Jatka joka tapauksessa"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/screens/feedback_screen/feedback_screen.xml:0
+msgid "Processing..."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_product_template
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__product_id
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_product_template_snooze__product_template_id
@@ -8680,7 +8710,7 @@ msgstr "Lähetetty asiakkaille, kuitti liitteenä"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_note__sequence
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__sequence
 msgid "Sequence"
-msgstr "Järjestys"
+msgstr "Sekvenssi"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__sequence_number
@@ -11728,6 +11758,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
+
+#~ msgid "A request is still being processed in the background. Please wait."
+#~ msgstr "Pyyntöä käsitellään yhä taustalla. Odota hetki."
 
 #~ msgid "Connect device to your PoS"
 #~ msgstr "Yhdistä laite Kassajärjestelmääsi"
