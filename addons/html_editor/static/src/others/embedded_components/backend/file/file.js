@@ -1,5 +1,5 @@
 import { proxy } from "@odoo/owl";
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import {
     applyObjectPropertyDifference,
     getEmbeddedProps,
@@ -20,15 +20,15 @@ export class EmbeddedFileComponent extends ReadonlyEmbeddedFileComponent {
             editFileName: false,
         });
         this.nameInput = useRef("nameInput");
-        useLayoutEffect(
-            () => {
-                if (this.localState.editFileName) {
-                    this.nameInput.el.focus();
-                    this.nameInput.el.select();
-                }
-            },
-            () => [this.localState.editFileName]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         if (this.localState.editFileName) {
+        //             this.nameInput.el.focus();
+        //             this.nameInput.el.select();
+        //         }
+        //     },
+        //     () => [this.localState.editFileName]
+        // );
     }
 
     onBlurNameInput(ev) {
