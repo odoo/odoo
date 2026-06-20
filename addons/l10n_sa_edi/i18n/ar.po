@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 18:28+0000\n"
+"POT-Creation-Date: 2026-06-19 18:17+0000\n"
 "PO-Revision-Date: 2026-01-17 12:51+0000\n"
 "Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-s19-1-l10n/"
@@ -75,11 +75,6 @@ msgstr ""
 "3. بمجرد أن تتم تهيئة دفتر اليومية، يمكنك البدء في استخدام الوضع المحدد."
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__700
-msgid "700 Number"
-msgstr "700 رقم"
-
-#. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/certificate.py:0
 msgid ""
@@ -91,6 +86,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
 msgid "<i class=\"fa fa-warning me-2\"/> Warning"
 msgstr "تحذير <i class=\"fa fa-warning me-2\"/> "
+
+#. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_move_form
+msgid ""
+"<span class=\"o_form_label mx-3 oe_edit_only text-center\" style=\"width: "
+"6ch;\" invisible=\"state != 'draft' and not "
+"l10n_sa_edi_transaction_type_ids\">with</span>"
+msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
@@ -112,6 +115,11 @@ msgstr ""
 msgid ""
 "<span class=\"o_form_label\">Simulation</span> - Unique testing environment"
 msgstr "<span class=\"o_form_label\">المحاكاة</span> - بيئة تجريبية فريدة"
+
+#. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.l10n_sa_edi_report_invoice_document
+msgid "<strong>Supply End Date</strong>"
+msgstr ""
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
@@ -179,6 +187,11 @@ msgid "Building Number"
 msgstr "رقم المبنى"
 
 #. module: l10n_sa_edi
+#: model:ir.model.constraint,message:l10n_sa_edi.constraint_res_partner_check_l10n_sa_edi_building_number
+msgid "Building Number must contain 4 numeric digits."
+msgstr ""
+
+#. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_account_journal__l10n_sa_compliance_csid_json
 msgid "CCSID JSON"
 msgstr "CCSID JSON"
@@ -217,9 +230,9 @@ msgid "Clearance and reporting seem to have been mixed up. "
 msgstr "يبدو أنه قد حدث لبس بين إجراءات التخليص وإعداد التقارير."
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__crn
-msgid "Commercial Registration Number"
-msgstr "رقم التسجيل التجاري"
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_transaction_type__code
+msgid "Code"
+msgstr ""
 
 #. module: l10n_sa_edi
 #. odoo-python
@@ -255,7 +268,9 @@ msgstr ""
 "بصيغة json"
 
 #. module: l10n_sa_edi
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_bank_statement_line__l10n_sa_compliance_checks_passed
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_account_journal__l10n_sa_compliance_checks_passed
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move__l10n_sa_compliance_checks_passed
 msgid "Compliance Checks Done"
 msgstr "فحوصات الامتثال المنجزة"
 
@@ -311,6 +326,7 @@ msgstr "Create a Customer"
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_document__create_uid
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_log__create_uid
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_otp_wizard__create_uid
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_transaction_type__create_uid
 msgid "Created by"
 msgstr "أنشئ بواسطة"
 
@@ -318,12 +334,22 @@ msgstr "أنشئ بواسطة"
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_document__create_date
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_log__create_date
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_otp_wizard__create_date
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_transaction_type__create_date
 msgid "Created on"
 msgstr "أنشئ في"
 
 #. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_move_form
 msgid "Date"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model:ir.model.fields,help:l10n_sa_edi.field_account_bank_statement_line__l10n_sa_edi_supply_end_date
+#: model:ir.model.fields,help:l10n_sa_edi.field_account_move__l10n_sa_edi_supply_end_date
+#: model:ir.model.fields,help:l10n_sa_edi.field_zatca_mixin__l10n_sa_edi_supply_end_date
+msgid ""
+"Date when the supply of goods or services is completed, mainly used for "
+"continuous supplies."
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -344,6 +370,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_document__display_name
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_log__display_name
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_otp_wizard__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_transaction_type__display_name
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__display_name
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_partner__display_name
@@ -432,24 +459,28 @@ msgid "Error: This invoice is blocked due to %s. Please check it."
 msgstr "خطأ: هذه الفاتورة محظورة بسبب %s. يرجى التحقق من ذلك."
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_tax__l10n_sa_exemption_reason_code
-msgid "Exemption Reason Code"
-msgstr "كود سبب الإعفاء"
-
-#. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_account_journal__l10n_sa_production_csid_validity
 msgid "Expiration date"
 msgstr "تاريخ انتهاء الصلاحية"
 
 #. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_move_form
-msgid "File"
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__l10n_sa_edi_transaction_type__code__export
+#: model:l10n_sa_edi.transaction.type,name:l10n_sa_edi.transaction_type_export
+msgid "Export"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__gcc
-msgid "GCC ID"
-msgstr "معرّف مجلس التعاون الخليجي"
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_move_send.py:0
+msgid ""
+"Export Transaction Type with the Simplified Invoice Type is not permitted as "
+"per ZATCA rules."
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_move_form
+msgid "File"
+msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_journal__l10n_sa_latest_submission_hash
@@ -471,6 +502,7 @@ msgstr "تشفير آخر فاتورة مرسلة ليتم إرساله كتشف
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_document__id
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_log__id
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_otp_wizard__id
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_transaction_type__id
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__id
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_config_settings__id
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_partner__id
@@ -478,12 +510,6 @@ msgstr "تشفير آخر فاتورة مرسلة ليتم إرساله كتشف
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_zatca_ubl_mixin__id
 msgid "ID"
 msgstr "المعرف"
-
-#. module: l10n_sa_edi
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_company_form
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_partner_form
-msgid "Identification Number"
-msgstr "رقم التعريف"
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__l10n_sa_edi_additional_identification_number
@@ -503,6 +529,7 @@ msgstr "خطة التعريف"
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/certificate.py:0
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_document__res_model
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_move_form
 msgid "Invoice Type"
 msgstr ""
 
@@ -555,11 +582,6 @@ msgstr ""
 #: code:addons/l10n_sa_edi/models/account_journal.py:0
 msgid "Invoice submission to ZATCA returned errors"
 msgstr "حدثت أخطاء عند إرسال الفواتير إلى زاتكا"
-
-#. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__iqa
-msgid "Iqama Number"
-msgstr "رقم إقامة "
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_res_company__l10n_sa_edi_is_production
@@ -662,6 +684,12 @@ msgid "L10N Sa Edi Plot Identification"
 msgstr "L10N Sa Edi تعريف قطعة الأرض"
 
 #. module: l10n_sa_edi
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_bank_statement_line__l10n_sa_is_csid_ready
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move__l10n_sa_is_csid_ready
+msgid "L10N Sa Is Csid Ready"
+msgstr ""
+
+#. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_account_bank_statement_line__l10n_sa_is_test
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move__l10n_sa_is_test
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_zatca_mixin__l10n_sa_is_test
@@ -669,9 +697,15 @@ msgid "L10N Sa Is Test"
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_tax__l10n_sa_show_exemption_reason
+msgid "L10N Sa Show Exemption Reason"
+msgstr ""
+
+#. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_document__write_uid
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_log__write_uid
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_otp_wizard__write_uid
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_transaction_type__write_uid
 msgid "Last Updated by"
 msgstr "آخر تحديث بواسطة"
 
@@ -679,6 +713,7 @@ msgstr "آخر تحديث بواسطة"
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_document__write_date
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_log__write_date
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_otp_wizard__write_date
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_transaction_type__write_date
 msgid "Last Updated on"
 msgstr "آخر تحديث في"
 
@@ -688,24 +723,14 @@ msgid "Latest Submission Hash"
 msgstr "تشفير آخر عملية إرسال"
 
 #. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_move_form
+msgid "Leave empty if not applicable"
+msgstr ""
+
+#. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/certificate.py:0
 msgid "Locality Name"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__mls
-msgid "MHRSD License"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__sag
-msgid "MISA License"
-msgstr ""
-
-#. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__mom
-msgid "MOMRAH License"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -715,13 +740,9 @@ msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_document__name
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_l10n_sa_edi_transaction_type__name
 msgid "Name"
 msgstr ""
-
-#. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__nat
-msgid "National ID"
-msgstr "الهوية الوطنية"
 
 #. module: l10n_sa_edi
 #. odoo-python
@@ -729,6 +750,12 @@ msgstr "الهوية الوطنية"
 msgid ""
 "No Private Key was generated for these companies. A Private Key is mandatory "
 "in order to generate Certificate Signing Requests (CSR)."
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__l10n_sa_edi_transaction_type__code__nominal
+#: model:l10n_sa_edi.transaction.type,name:l10n_sa_edi.transaction_type_nominal
+msgid "Nominal"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -808,11 +835,6 @@ msgid "Other"
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__oth
-msgid "Other ID"
-msgstr "معرف آخر"
-
-#. module: l10n_sa_edi
 #: model:ir.model.fields,field_description:l10n_sa_edi.field_account_journal__l10n_sa_production_csid_certificate_id
 msgid "PCSID Certificate"
 msgstr "شهادة PCSID"
@@ -849,11 +871,6 @@ msgstr ""
 #: code:addons/l10n_sa_edi/models/certificate.py:0
 msgid "Partner Industry Name"
 msgstr ""
-
-#. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__pas
-msgid "Passport ID"
-msgstr "معرف جواز السفر"
 
 #. module: l10n_sa_edi
 #. odoo-python
@@ -939,14 +956,6 @@ msgid "Please set the following on %(company_name)s: %(fields)s"
 msgstr "يُرجى تعيين ما يلي في %(company_name)s: %(fields)s"
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_partner__l10n_sa_edi_plot_identification
-#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_users__l10n_sa_edi_plot_identification
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.sa_partner_address_form
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_company_form
-msgid "Plot Identification"
-msgstr "معرّف قطعة الأرض"
-
-#. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_move_form
 msgid "Process"
 msgstr ""
@@ -1012,6 +1021,19 @@ msgid "Saudi Arabia Electronic Invoicing"
 msgstr "الفوترة الإلكترونية في المملكة العربية السعودية"
 
 #. module: l10n_sa_edi
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_partner__l10n_sa_edi_plot_identification
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_res_users__l10n_sa_edi_plot_identification
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.sa_partner_address_form
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_company_form
+msgid "Secondary Number"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model:ir.model.constraint,message:l10n_sa_edi.constraint_res_partner_check_l10n_sa_edi_plot_number
+msgid "Secondary Number must contain 4 numeric digits."
+msgstr ""
+
+#. module: l10n_sa_edi
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.res_config_settings_view_form
 msgid "Set whether the system should use the Production API"
 msgstr "قم بإعداد ما إذا كان على النظام استخدام الواجهة البرمجية للإنتاج أم لا"
@@ -1043,7 +1065,9 @@ msgstr ""
 "مرة أخرى."
 
 #. module: l10n_sa_edi
+#: model:ir.model.fields,help:l10n_sa_edi.field_account_bank_statement_line__l10n_sa_compliance_checks_passed
 #: model:ir.model.fields,help:l10n_sa_edi.field_account_journal__l10n_sa_compliance_checks_passed
+#: model:ir.model.fields,help:l10n_sa_edi.field_account_move__l10n_sa_compliance_checks_passed
 msgid "Specifies if the Compliance Checks have been completed successfully"
 msgstr "يحدد ما إذا كان قد تم إكمال فحوصات الامتثال بنجاح أم لا"
 
@@ -1093,14 +1117,30 @@ msgid "Success: Journal is onboarded and valid until"
 msgstr "تم بنجاح: تمت تهيئة دفتر اليومية وهو صالح حتى"
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields,help:l10n_sa_edi.field_account_tax__l10n_sa_exemption_reason_code
-msgid "Tax Exemption Reason Code (ZATCA)"
-msgstr "كود سبب الإعفاء (زاتكا)"
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__l10n_sa_edi_transaction_type__code__summary
+#: model:l10n_sa_edi.transaction.type,name:l10n_sa_edi.transaction_type_summary
+msgid "Summary"
+msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__res_partner__l10n_sa_edi_additional_identification_scheme__tin
-msgid "Tax Identification Number"
-msgstr "رقم التعريف الضريبي"
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_move.py:0
+msgid ""
+"Supply Date cannot be greater than the Supply End Date. Please adapt it."
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_bank_statement_line__l10n_sa_edi_supply_end_date
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move__l10n_sa_edi_supply_end_date
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_zatca_mixin__l10n_sa_edi_supply_end_date
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_move_form
+msgid "Supply End Date"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_tax__ubl_cii_tax_exemption_reason_code
+msgid "Tax Exemption Reason Code"
+msgstr ""
 
 #. module: l10n_sa_edi
 #: model:ir.model.fields,help:l10n_sa_edi.field_l10n_sa_edi_document__l10n_sa_edi_chain_head_id
@@ -1167,6 +1207,13 @@ msgid "The private key used to generate the CSR and obtain certificates"
 msgstr "المفتاح الخاص المستخدَم لإنشاء CSR والحصول على الشهادات"
 
 #. module: l10n_sa_edi
+#: model:ir.model.fields,help:l10n_sa_edi.field_account_tax__ubl_cii_tax_exemption_reason_code
+msgid ""
+"The reason why the amount is exempted from VAT or why no VAT is being "
+"charged, used for electronic invoicing purposes."
+msgstr ""
+
+#. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/l10n_sa_edi_document.py:0
 msgid "This document is being processed already."
@@ -1188,6 +1235,25 @@ msgstr "إلى زاتكا"
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_move_send.py:0
 msgid "To ZATCA (Testing)"
+msgstr ""
+
+#. module: l10n_sa_edi
+#. odoo-python
+#: code:addons/l10n_sa_edi/models/account_move.py:0
+msgid ""
+"To issue the selected Invoice and Transaction Type, please fill in the "
+"'Supply End Date' by going to Other Info > Supply End Date."
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi.view_move_form
+msgid "Transaction Type"
+msgstr ""
+
+#. module: l10n_sa_edi
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_bank_statement_line__l10n_sa_edi_transaction_type_ids
+#: model:ir.model.fields,field_description:l10n_sa_edi.field_account_move__l10n_sa_edi_transaction_type_ids
+msgid "Transaction type"
 msgstr ""
 
 #. module: l10n_sa_edi
@@ -1235,7 +1301,7 @@ msgstr ""
 "الواجهة البرمجية لـCCSID"
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-29
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-sa-29
 msgid ""
 "VATEX-SA-29 Financial services mentioned in Article 29 of the VAT "
 "Regulations."
@@ -1244,14 +1310,14 @@ msgstr ""
 "المضافة."
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-29-7
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-sa-29-7
 msgid ""
 "VATEX-SA-29-7 Life insurance services mentioned in Article 29 of the VAT "
 "Regulations."
 msgstr ""
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-30
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-sa-30
 msgid ""
 "VATEX-SA-30 Real estate transactions mentioned in Article 30 of the VAT "
 "Regulations."
@@ -1260,27 +1326,27 @@ msgstr ""
 "المضافة."
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-32
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-sa-32
 msgid "VATEX-SA-32 Export of goods."
 msgstr "VATEX-SA-32 تصدير البضائع."
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-33
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-sa-33
 msgid "VATEX-SA-33 Export of Services."
 msgstr "VATEX-SA-33 تصدير الخدمات."
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-34-1
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-sa-34-1
 msgid "VATEX-SA-34-1 The international transport of Goods."
 msgstr "VATEX-SA-34-1 الشحن الدولي للبضائع."
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-34-2
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-sa-34-2
 msgid "VATEX-SA-34-2 The international transport of Passengers."
 msgstr "VATEX-SA-34-2 المواصلات الدولية للركاب."
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-34-3
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-sa-34-3
 msgid ""
 "VATEX-SA-34-3 Services directly connected and incidental to a Supply of "
 "international passenger transport."
@@ -1288,12 +1354,12 @@ msgstr ""
 "VATEX-SA-34-3 الخدمات المتصلة مباشرة وعرضاً بوسيلة مواصلات الركاب الدولية."
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-34-4
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-sa-34-4
 msgid "VATEX-SA-34-4 Supply of a qualifying means of transport."
 msgstr "VATEX-SA-34-4 التزويد بوسائل نقل مؤهلة."
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-34-5
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-sa-34-5
 msgid ""
 "VATEX-SA-34-5 Any services relating to Goods or passenger transportation, as "
 "defined in article twenty five of these Regulations."
@@ -1302,27 +1368,27 @@ msgstr ""
 "خمسة وعشرين في تلك اللوائح."
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-35
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-sa-35
 msgid "VATEX-SA-35 Medicines and medical equipment."
 msgstr "VATEX-SA-35 الأدوية والمعدات الطبية."
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-36
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-sa-36
 msgid "VATEX-SA-36 Qualifying metals."
 msgstr "VATEX-SA-36 المعادن المؤهلة."
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-edu
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-sa-edu
 msgid "VATEX-SA-EDU Private education to citizen."
 msgstr "VATEX-SA-EDU تعليم خاص للمواطن."
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-hea
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-sa-hea
 msgid "VATEX-SA-HEA Private healthcare to citizen."
 msgstr "VATEX-SA-HEA رعاية صحية خاصة للمواطن."
 
 #. module: l10n_sa_edi
-#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__l10n_sa_exemption_reason_code__vatex-sa-oos
+#: model:ir.model.fields.selection,name:l10n_sa_edi.selection__account_tax__ubl_cii_tax_exemption_reason_code__vatex-sa-oos
 msgid "VATEX-SA-OOS Not subject to VAT."
 msgstr "VATEX-SA-OOS غير خاضعة لضريبة القيمة المضافة. "
 
@@ -1335,6 +1401,7 @@ msgstr ""
 #. module: l10n_sa_edi
 #. odoo-python
 #: code:addons/l10n_sa_edi/models/account_move.py:0
+#: code:addons/l10n_sa_edi/models/account_move_send.py:0
 msgid "View Invoices"
 msgstr ""
 
@@ -1462,6 +1529,11 @@ msgid "ZATCA Test"
 msgstr ""
 
 #. module: l10n_sa_edi
+#: model:ir.model,name:l10n_sa_edi.model_l10n_sa_edi_transaction_type
+msgid "ZATCA Transaction Type"
+msgstr ""
+
+#. module: l10n_sa_edi
 #: model:ir.model,name:l10n_sa_edi.model_zatca_ubl_mixin
 msgid "ZATCA UBL Mixin"
 msgstr ""
@@ -1518,3 +1590,39 @@ msgstr "urn:oasis:names:specification:ubl:signature:1"
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi.export_sa_zatca_ubl_extensions
 msgid "urn:oasis:names:specification:ubl:signature:Invoice"
 msgstr "urn:oasis:names:specification:ubl:signature:Invoice"
+
+#~ msgid "700 Number"
+#~ msgstr "700 رقم"
+
+#~ msgid "Commercial Registration Number"
+#~ msgstr "رقم التسجيل التجاري"
+
+#~ msgid "Exemption Reason Code"
+#~ msgstr "كود سبب الإعفاء"
+
+#~ msgid "GCC ID"
+#~ msgstr "معرّف مجلس التعاون الخليجي"
+
+#~ msgid "Identification Number"
+#~ msgstr "رقم التعريف"
+
+#~ msgid "Iqama Number"
+#~ msgstr "رقم إقامة "
+
+#~ msgid "National ID"
+#~ msgstr "الهوية الوطنية"
+
+#~ msgid "Other ID"
+#~ msgstr "معرف آخر"
+
+#~ msgid "Passport ID"
+#~ msgstr "معرف جواز السفر"
+
+#~ msgid "Plot Identification"
+#~ msgstr "معرّف قطعة الأرض"
+
+#~ msgid "Tax Exemption Reason Code (ZATCA)"
+#~ msgstr "كود سبب الإعفاء (زاتكا)"
+
+#~ msgid "Tax Identification Number"
+#~ msgstr "رقم التعريف الضريبي"
