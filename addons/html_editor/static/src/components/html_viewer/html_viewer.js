@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import {
     Component,
     markup,
@@ -64,12 +64,12 @@ export class HtmlViewer extends Component {
             });
         } else {
             this.readonlyElementRef = useRef("readonlyContent");
-            useLayoutEffect(
-                () => {
-                    this.processReadonlyContent(this.readonlyElementRef.el);
-                },
-                () => [this.props.config.value.toString(), this.readonlyElementRef?.el]
-            );
+            // useLayoutEffect(
+            //     () => {
+            //         this.processReadonlyContent(this.readonlyElementRef.el);
+            //     },
+            //     () => [this.props.config.value.toString(), this.readonlyElementRef?.el]
+            // );
         }
 
         if (this.props.config.cssAssetId) {
@@ -87,14 +87,14 @@ export class HtmlViewer extends Component {
                 }
                 return result;
             });
-            useLayoutEffect(
-                () => {
-                    if (this.readonlyElementRef?.el) {
-                        this.mountComponents();
-                    }
-                },
-                () => [this.props.config.value.toString(), this.readonlyElementRef?.el]
-            );
+            // useLayoutEffect(
+            //     () => {
+            //         if (this.readonlyElementRef?.el) {
+            //             this.mountComponents();
+            //         }
+            //     },
+            //     () => [this.props.config.value.toString(), this.readonlyElementRef?.el]
+            // );
             this.tocManager = new TableOfContentManager(this.readonlyElementRef);
         }
     }
