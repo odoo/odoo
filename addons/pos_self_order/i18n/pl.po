@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:39+0000\n"
-"PO-Revision-Date: 2026-04-14 14:26+0000\n"
+"PO-Revision-Date: 2026-06-20 22:09+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Polish <https://translate.odoo.com/projects/odoo-s18-3/"
 "pos_self_order/pl/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.6.1\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
@@ -198,8 +198,8 @@ msgid ""
 "Access rights of this user will be used when visiting self order website "
 "when no session is open."
 msgstr ""
-"Prawa dostępu tego użytkownika będą użyte podczas odwiedzania strony "
-"samodzielnego zamawiania, kiedy żadna sesja nie jest otwarta."
+"Prawa dostępu tego użytkownika będą wykorzystywane podczas odwiedzania "
+"strony samodzielnego zamawiania, kiedy żadna sesja nie jest otwarta."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__status__active
@@ -391,12 +391,12 @@ msgstr "Zamknij sesję"
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 msgid "Combo"
-msgstr "Kombinacja"
+msgstr "Combo"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order_line__combo_id
 msgid "Combo reference"
-msgstr "Referencja kombo"
+msgstr "Referencja combo"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_res_config_settings
@@ -519,7 +519,7 @@ msgstr "Dostawa"
 #. module: pos_self_order
 #: model:mail.template,name:pos_self_order.delivery_email_template
 msgid "Delivery: Confirmation order for self"
-msgstr "Dostawa: Potwierdzenie zamówienia w trybie samodzielnym"
+msgstr "Dostawa: Potwierdzenie zamówienia dla siebie"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_config__self_ordering_mode__nothing
@@ -615,8 +615,8 @@ msgstr "Szablony wiadomości"
 msgid ""
 "Enable QR menu in the Restaurant settings to get QR codes for free on tables."
 msgstr ""
-"Aktywuj menu OR w ustawieniach restauracji, aby otrzymać darmowe kody QR na "
-"stoliki."
+"Włącz menu QR w ustawieniach restauracji, aby uzyskać bezpłatne kody QR na "
+"stolikach."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -848,12 +848,13 @@ msgstr "Data ostatniej aktualizacji"
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Let your customers order using their mobile or a kiosk."
 msgstr ""
-"Pozwól swoim klientom zamawiać przy użyciu swojego telefonu lub kiosku."
+"Pozwól swoim klientom samodzielnie składać zamówienia przy użyciu telefonu "
+"lub kiosku."
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__light
 msgid "Light"
-msgstr "Światło"
+msgstr "Light"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_category__pos_config_ids
@@ -888,7 +889,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Meal"
-msgstr "Danie"
+msgstr "Posiłek"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_menu_item
@@ -898,7 +899,7 @@ msgstr "Menu mobilne"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Mobile self-order & Kiosk"
-msgstr "Mobilne Samodzielne Zamawianie i kiosk"
+msgstr "Mobilne samodzielne zamawianie i kiosk"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -964,7 +965,7 @@ msgstr "Nie znaleziono żadnego zamówienia"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "No, thanks"
-msgstr "Nie, dzięki"
+msgstr "Nie, dziękuję"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1043,7 +1044,7 @@ msgstr "Brak w magazynie"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
 msgid "Paid"
-msgstr "Zapłacona"
+msgstr "Opłacone"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1114,12 +1115,12 @@ msgstr "Konfiguracja punktu sprzedaży"
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_order_line
 msgid "Point of Sale Order Lines"
-msgstr "Linie zamówień w punktach sprzedaży"
+msgstr "Pozycje zamówienia punktu sprzedaży"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_order
 msgid "Point of Sale Orders"
-msgstr "Zamówienia Punktu Sprzedaży"
+msgstr "Zamówienia punktu sprzedaży"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_payment_method
@@ -1230,12 +1231,12 @@ msgstr "Zresetuj kody QR"
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_restaurant_floor
 msgid "Restaurant Floor"
-msgstr "Sala restauracyjna "
+msgstr "Sala restauracyjna"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_restaurant_table
 msgid "Restaurant Table"
-msgstr "Stolik w restauracji "
+msgstr "Stolik w restauracji"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1304,7 +1305,7 @@ msgstr "Wybór"
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "Self Order"
-msgstr "Samodzielne zamawianie"
+msgstr "Samodzielne zamówienie"
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_config__self_ordering_image_brand
@@ -1361,13 +1362,13 @@ msgstr "URL Samodzielnego Zamawiania"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
 msgid "Self-Order T"
-msgstr "Samodzielne zamawianie T"
+msgstr "Samodzielne zamówienie T"
 
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.js:0
 msgid "Self-Order T %s"
-msgstr "Samodzielne zamawianie T %s"
+msgstr "Samodzielne zamówienie T %s"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1390,7 +1391,7 @@ msgstr "Sekwencja"
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_preset__service_at
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "Service at"
-msgstr "Usługa przy"
+msgstr "Obsługa przy"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1478,7 +1479,7 @@ msgstr "Weź tracker i wprowadź jego numer"
 #. module: pos_self_order
 #: model:mail.template,name:pos_self_order.takeout_email_template
 msgid "Takeout: Confirmation order for self"
-msgstr "Na wynos: Potwierdzenie samodzielnego zamówienia"
+msgstr "Na wynos: Potwierdzenie zamówienia dla siebie"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1503,8 +1504,7 @@ msgstr "Dziękujemy!"
 #. odoo-python
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "The Self-Order default user must be a POS user"
-msgstr ""
-"Domyślny użytkownik Samodzielnego Zamawiania musi być użytkownikiem POS"
+msgstr "Domyślny użytkownik Samodzielnego Zamawiania musi być użytkownikiem POS"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1564,7 +1564,7 @@ msgstr "Bez kategorii"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "Validate your selection"
-msgstr "Potwierdź swój wybór"
+msgstr "Zatwierdź swój wybór"
 
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_self_order_custom_link__style__warning
@@ -1617,7 +1617,7 @@ msgstr "Gdzie chcesz zjeść?"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/timeout_popup/timeout_popup.xml:0
 msgid "Would you like to continue?"
-msgstr "Chcesz kontynuować?"
+msgstr "Czy chcesz kontynuować?"
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -1628,7 +1628,7 @@ msgstr "Tak"
 #. odoo-python
 #: code:addons/pos_self_order/controllers/orders.py:0
 msgid "You are not authorized to remove this order"
-msgstr "Nie masz uprawnień, aby usunąć to zamówienie"
+msgstr "Nie masz uprawnień do usunięcia tego zamówienia."
 
 #. module: pos_self_order
 #. odoo-python
@@ -1653,7 +1653,7 @@ msgstr "Twoje zamówienie"
 #. odoo-python
 #: code:addons/pos_self_order/controllers/orders.py:0
 msgid "Your order does not exist or has been removed"
-msgstr "Twoje zamówienie nie istnieje lub zostało usunięte"
+msgstr "Twoje zamówienie nie istnieje lub zostało usunięte."
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1694,7 +1694,7 @@ msgstr "Kod pocztowy"
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
 msgid "a"
-msgstr ""
+msgstr " "
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1746,7 +1746,7 @@ msgstr "jest"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "no longer available. Please go back and edit your order."
-msgstr "nie jest już dostępne. Wróć i edytuj swoje zamówienie."
+msgstr "nie jest już dostępny. Proszę wrócić i edytować zamówienie."
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
@@ -1758,7 +1758,7 @@ msgstr "odoo"
 #: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #~ msgid "Select your address"
 #~ msgstr "Wybierz swój adres"
