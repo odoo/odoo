@@ -944,8 +944,9 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertFalse(output_atts,
                          "10h worked < 12h reference baseline -> no overtime output")
 
-    def test_overlapping_rules_sequence_priority(self):
-        """When two rules both fire for the same excess interval, lowest sequence wins."""
+    def test_sequential_rules_second_rule_finds_no_excess(self):
+        """Sequential pipeline: R2 with the same schedule threshold sees 0h excess after R1.
+        """
         second_ot_type = self.env['hr.work.entry.type'].create({
             'name': 'Double Overtime', 'code': 'DBLOVT',
         })
@@ -964,11 +965,165 @@ class TestTimeRulePipeline(TransactionCase):
             ('employee_id', '=', self.cal_emp.id),
             ('is_time_rule_output', '=', True),
         ])
-        self.assertEqual(len(output_atts), 1, "Overlapping rules must produce one merged output")
+        self.assertEqual(len(output_atts), 1, "Only R1 should produce output; R2 sees 0h excess after R1 fires")
         self.assertEqual(
             output_atts.work_entry_type_id, self.overtime_type,
-            "Lower sequence (cls.time_rule) must determine the output work entry type",
+            "The single output must be R1's overtime record",
         )
+
+    def test_sequential_r2_targets_r1_excess(self):
+        """R2 with condition=[OT] fires on the OT intervals produced by R1.
+
+        R1 classifies the 6h excess above the 8h schedule as OT.
+        R2 then targets that OT with a fixed 3h threshold and reclassifies
+        the top 3h as DoubleOT.  Both rules produce distinct output records
+        from the same source attendance.
+        """
+        double_ot_type = self.env['hr.work.entry.type'].create({
+            'name': 'Double Overtime', 'code': 'DBLOT2',
+        })
+        self.env['hr.time.rule'].create({
+            'name': 'Double OT Rule',
+            'sequence': self.time_rule.sequence + 10,
+            'working_hours_mode': 'day',
+            'expected_hours': 3.0,
+            'work_entry_type_id': double_ot_type.id,
+            'condition_work_entry_type_ids': [self.overtime_type.id],
+        })
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 6),
+            'check_out': datetime(2022, 12, 12, 20),  # 14h -> 6h OT -> top 3h DoubleOT
+        })
+        output_atts = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('is_time_rule_output', '=', True),
+        ], order='check_in')
+        self.assertEqual(len(output_atts), 2, "R1 produces OT(3h); R2 reclassifies the top 3h as DoubleOT")
+        ot_att = output_atts.filtered(lambda a: a.work_entry_type_id == self.overtime_type)
+        dbl_att = output_atts.filtered(lambda a: a.work_entry_type_id == double_ot_type)
+        self.assertTrue(ot_att, "R1 must produce an OT output record")
+        self.assertTrue(dbl_att, "R2 must produce a DoubleOT output record")
+        ot_hours = (ot_att.check_out - ot_att.check_in).total_seconds() / 3600
+        dbl_hours = (dbl_att.check_out - dbl_att.check_in).total_seconds() / 3600
+        self.assertAlmostEqual(ot_hours, 3.0, places=4, msg="OT output must be 3h (6h excess - 3h threshold)")
+        self.assertAlmostEqual(dbl_hours, 3.0, places=4, msg="DoubleOT output must be 3h (top 3h of the 6h excess)")
+
+    def test_sequential_no_threshold_r2_classifies_att_remainder(self):
+        """R2 with no threshold fires on all remaining ATT after R1 takes the excess.
+
+        R1 classifies the 6h excess as OT.  R2 (no threshold, condition=[ATT])
+        then reclassifies the entire 8h ATT remainder as DBLOVT.  The original
+        source is fully covered by the two outputs so no ATT remainder is written.
+        """
+        dblovt_type = self.env['hr.work.entry.type'].create({
+            'name': 'Double Overtime Alt', 'code': 'DBLA',
+        })
+        self.env['hr.time.rule'].create({
+            'name': 'Remainder Reclassify Rule',
+            'sequence': self.time_rule.sequence + 10,
+            'working_hours_mode': 'day',
+            # expected_hours=0 (default for 'day' mode) → no threshold
+            'work_entry_type_id': dblovt_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 6),
+            'check_out': datetime(2022, 12, 12, 20),  # 14h -> 6h OT + 8h DBLOVT
+        })
+        output_atts = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('is_time_rule_output', '=', True),
+        ])
+        self.assertEqual(len(output_atts), 2, "R1 produces OT(6h); R2 produces DBLOVT(8h) for the remaining ATT")
+        ot_att = output_atts.filtered(lambda a: a.work_entry_type_id == self.overtime_type)
+        dblovt_att = output_atts.filtered(lambda a: a.work_entry_type_id == dblovt_type)
+        self.assertTrue(ot_att, "R1 must produce an OT output record")
+        self.assertTrue(dblovt_att, "R2 must produce a DBLOVT output record for the ATT remainder")
+        ot_hours = (ot_att.check_out - ot_att.check_in).total_seconds() / 3600
+        dblovt_hours = (dblovt_att.check_out - dblovt_att.check_in).total_seconds() / 3600
+        self.assertAlmostEqual(ot_hours, 6.0, places=4, msg="OT must be 6h (14h worked - 8h schedule)")
+        self.assertAlmostEqual(dblovt_hours, 8.0, places=4, msg="DBLOVT must cover the full 8h ATT remainder")
+        remainder_atts = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('is_time_rule_output', '=', False),
+            ('active', '=', True),
+        ])
+        self.assertFalse(remainder_atts, "Source fully consumed by outputs; no ATT remainder record expected")
+
+    def test_sequential_pipeline_chained_thresholds(self):
+        """Core sequential pipeline scenario with two chained ATT thresholds.
+
+        R1 (>7h fixed, condition=[ATT] → OT1) fires first:
+          ATT(10h) → ATT(7h) remainder + OT1(3h)
+
+        R2 (>5h fixed, condition=[ATT] → OT2) fires next on the ATT(7h) remainder;
+        OT1 is invisible to R2 because it no longer matches condition=[ATT]:
+          ATT(7h) → ATT(5h) remainder + OT2(2h)
+
+        Final pipeline: ATT(5h) + OT2(2h) + OT1(3h)
+        The pp annotation step (R3 on Sundays) is Belgium-specific and not tested here.
+        """
+        ot1_type = self.env['hr.work.entry.type'].create({'name': 'OT1', 'code': 'CCOT1'})
+        ot2_type = self.env['hr.work.entry.type'].create({'name': 'OT2', 'code': 'CCOT2'})
+        self.time_rule.active = False
+
+        self.env['hr.time.rule'].create({
+            'name': 'R1 >7h',
+            'sequence': 10,
+            'working_hours_mode': 'day',
+            'expected_hours': 7.0,
+            'work_entry_type_id': ot1_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+        self.env['hr.time.rule'].create({
+            'name': 'R2 >5h',
+            'sequence': 20,
+            'working_hours_mode': 'day',
+            'expected_hours': 5.0,
+            'work_entry_type_id': ot2_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+
+        # Sunday 08:00-18:00 UTC = 10h ATT
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 11, 8),
+            'check_out': datetime(2022, 12, 11, 18),
+        })
+
+        output_atts = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('is_time_rule_output', '=', True),
+        ])
+        self.assertEqual(len(output_atts), 2, "R1→OT1(3h) and R2→OT2(2h); two output records")
+
+        ot1_att = output_atts.filtered(lambda a: a.work_entry_type_id == ot1_type)
+        ot2_att = output_atts.filtered(lambda a: a.work_entry_type_id == ot2_type)
+        self.assertTrue(ot1_att, "R1 must produce an OT1 record")
+        self.assertTrue(ot2_att, "R2 must produce an OT2 record")
+
+        ot1_hours = (ot1_att.check_out - ot1_att.check_in).total_seconds() / 3600
+        ot2_hours = (ot2_att.check_out - ot2_att.check_in).total_seconds() / 3600
+        self.assertAlmostEqual(ot1_hours, 3.0, places=4,
+                               msg="OT1 = 10h worked - 7h threshold")
+        self.assertAlmostEqual(ot2_hours, 2.0, places=4,
+                               msg="OT2 = 7h ATT remainder - 5h threshold")
+
+        remainder_atts = self.env['hr.attendance'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('is_time_rule_output', '=', False),
+            ('active', '=', True),
+        ])
+        self.assertEqual(len(remainder_atts), 1, "Exactly one ATT remainder record")
+        rem_hours = (remainder_atts.check_out - remainder_atts.check_in).total_seconds() / 3600
+        self.assertAlmostEqual(rem_hours, 5.0, places=4,
+                               msg="ATT remainder = 10h - 3h(OT1) - 2h(OT2) = 5h")
+
+        # OT1 and OT2 must not overlap and must be contiguous with the remainder
+        self.assertLessEqual(ot2_att.check_out, ot1_att.check_in,
+                             "OT2 must end where OT1 begins (no gap between the two excess bands)")
 
     def test_rule_skips_excluded_weekday(self):
         """Rule with apply_saturday=False does not fire on Saturday attendance."""

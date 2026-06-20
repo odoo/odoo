@@ -3,6 +3,10 @@ import { CalendarController } from "@web/views/calendar/calendar_controller";
 
 export class AttendanceCalendarController extends CalendarController {
 
+    get editRecordDefaultDisplayText() {
+        return _t("New Attendance");
+    }
+
     getQuickCreateFormViewProps(record) {
         const props = super.getQuickCreateFormViewProps(record);
         props.title = _t("Create");

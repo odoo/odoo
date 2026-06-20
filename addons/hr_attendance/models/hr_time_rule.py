@@ -30,7 +30,7 @@ class HrTimeRule(models.Model):
             'source_attendance_id': source_attendance.id,
         }
 
-    def _get_output_attendance_vals(self, employee, rule, check_in, check_out, source_attendance=None):
+    def _get_output_attendance_vals(self, employee, rule, check_in, check_out, source_attendance=None, accumulated_pp=frozenset()):
         return {
             'employee_id': employee.id,
             'work_entry_type_id': rule.work_entry_type_id.id,
@@ -58,8 +58,8 @@ class HrTimeRule(models.Model):
             tz = ZoneInfo(employee._get_tz())
             for source_att, intervals in by_source.items():
                 # day-rule intervals: archive source + create remainder + create outputs
-                day_ivs = [(s, e, r) for s, e, r in intervals if r.quantity_period != 'week']
-                day_output_intervals = self._resolve_output_intervals(day_ivs)
+                day_ivs_with_pp = [(s, e, r, pp) for s, e, r, pp in intervals if r.quantity_period != 'week']
+                day_output_intervals = self._resolve_output_intervals([(s, e, r) for s, e, r, _pp in day_ivs_with_pp])
                 if day_output_intervals:
                     archive_source_ids.append(source_att.id)
                     src_start = source_att.check_in.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
@@ -71,29 +71,37 @@ class HrTimeRule(models.Model):
                             s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
                             e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
                         ))
-                    for s, e, rule in day_output_intervals:
-                        ci = s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-                        co = e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-                        att_create_vals.append(self._get_output_attendance_vals(employee, rule, ci, co, source_att))
+                    for seg_s, seg_e, rule in day_output_intervals:
+                        acc_pp = frozenset().union(*(
+                            orig_pp for orig_s, orig_e, orig_r, orig_pp in day_ivs_with_pp
+                            if orig_r == rule and orig_s <= seg_s and orig_e >= seg_e
+                        ))
+                        ci = seg_s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                        co = seg_e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                        att_create_vals.append(self._get_output_attendance_vals(employee, rule, ci, co, source_att, accumulated_pp=acc_pp))
 
                 # week-rule intervals: source stays active, just emit the output record
-                week_ivs = [(s, e, r) for s, e, r in intervals if r.quantity_period == 'week']
-                for s, e, rule in self._resolve_output_intervals(week_ivs):
-                    ci = s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-                    co = e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-                    att_create_vals.append(self._get_output_attendance_vals(employee, rule, ci, co, source_att))
+                week_ivs_with_pp = [(s, e, r, pp) for s, e, r, pp in intervals if r.quantity_period == 'week']
+                for seg_s, seg_e, rule in self._resolve_output_intervals([(s, e, r) for s, e, r, _pp in week_ivs_with_pp]):
+                    acc_pp = frozenset().union(*(
+                        orig_pp for orig_s, orig_e, orig_r, orig_pp in week_ivs_with_pp
+                        if orig_r == rule and orig_s <= seg_s and orig_e >= seg_e
+                    ))
+                    ci = seg_s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                    co = seg_e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                    att_create_vals.append(self._get_output_attendance_vals(employee, rule, ci, co, source_att, accumulated_pp=acc_pp))
 
         for employee, by_source in deficit.items():
             tz = ZoneInfo(employee._get_tz())
             for source_att, intervals in by_source.items():
                 effective_rule = min(
-                    (rule for _, _, rule in intervals if rule.work_entry_type_id),
+                    (rule for _, _, rule, _pp in intervals if rule.work_entry_type_id),
                     key=lambda r: r.sequence,
                     default=None,
                 )
                 if not effective_rule:
                     continue
-                for s, e, rule in intervals:
+                for s, e, rule, _pp in intervals:
                     if rule != effective_rule or e <= s:
                         continue
                     ci = s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
