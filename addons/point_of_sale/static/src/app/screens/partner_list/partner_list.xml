@@ -17,8 +17,7 @@
                     icon="{type: 'fa', value: 'fa-search'}"
                     t-on-enter="() => this.searchPartner()"
                     autofocus="true"
-                    debounceMillis="300"
-                    getRef.bind="(ref) => this.searchInputRef = ref" />
+                    debounceMillis="300" /> <!-- 200~300ms is industry standard for Software UI debounce -->
             </t>
             <div class="h-100">
                 <t t-set="initialPartners" t-value="getPartners(this.state.initialPartners)"/>
