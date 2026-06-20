@@ -39,7 +39,6 @@ class ResPartner(models.Model):
              " specified transactions, correspondence, and so on.\n"
              "Thus, PAN acts as an identifier for the person with the tax department."
     )
-    l10n_in_tan = fields.Char("TAN")
 
     display_pan_warning = fields.Boolean(string="Display pan warning", compute="_compute_display_pan_warning")
     l10n_in_gst_state_warning = fields.Char(compute="_compute_l10n_in_gst_state_warning")
@@ -118,7 +117,7 @@ class ResPartner(models.Model):
         if pan.is_valid(identifier):
             self.l10n_in_pan_entity_id = self._l10n_in_search_create_pan_entity_from_vat(self.vat).id
         elif re.match(r'^[A-Z]{4}[0-9]{5}[A-Z]{1}$', identifier):
-            self.l10n_in_tan = identifier
+            self._set_additional_identifier('IN_TAN', identifier)
 
     def _l10n_in_search_create_pan_entity_from_vat(self, vat):
         pan_number = vat[2:12].upper()
@@ -229,7 +228,7 @@ class ResPartner(models.Model):
 
     @api.model
     def _commercial_fields(self):
-        return super()._commercial_fields() + ['l10n_in_gst_treatment', 'l10n_in_pan_entity_id', 'l10n_in_tan']
+        return super()._commercial_fields() + ['l10n_in_gst_treatment', 'l10n_in_pan_entity_id']
 
     def check_vat_in(self, vat):
         """

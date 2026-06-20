@@ -53,8 +53,8 @@ class ResConfigSettings(models.TransientModel):
         readonly=False
     )
     l10n_in_tan = fields.Char(
-        related='company_id.l10n_in_tan',
-        readonly=False
+        compute='_compute_l10n_in_tan',
+        inverse='_inverse_l10n_in_tan',
     )
 
     # GST settings
@@ -192,3 +192,11 @@ class ResConfigSettings(models.TransientModel):
             if gsp_before != config.l10n_in_gsp:
                 config._l10n_in_gsp_provider_changed()
             return
+
+    def _compute_l10n_in_tan(self):
+        for record in self:
+            record.l10n_in_tan = record.company_id.partner_id._get_additional_identifier('IN_TAN')
+
+    def _inverse_l10n_in_tan(self):
+        for record in self:
+            record.company_id.partner_id._set_additional_identifier('IN_TAN', record.l10n_in_tan)

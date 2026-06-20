@@ -388,11 +388,13 @@ class AccountMove(models.Model):
         month_start_date, month_end_date = get_month(self.date)
         company_fiscalyear_dates = self.company_id.sudo().compute_fiscalyear_dates(self.date)
         fiscalyear_start_date, fiscalyear_end_date = company_fiscalyear_dates['date_from'], company_fiscalyear_dates['date_to']
+        current_tan = self.company_id.partner_id._get_additional_identifier('IN_TAN')
+
         default_domain = [
             ('account_id.l10n_in_tds_tcs_section_id', '=', section_alert.id),
             ('move_id.move_type', '!=', 'entry'),
             ('company_id.l10n_in_tds_feature', '!=', False),
-            ('company_id.l10n_in_tan', '=', self.company_id.l10n_in_tan),
+            ('company_id', 'child_of', self.company_id.root_id.id),
             ('parent_state', '=', 'posted')
         ]
         if commercial_partner_id.l10n_in_pan_entity_id:
@@ -412,10 +414,12 @@ class AccountMove(models.Model):
                        COALESCE(sum(account_move_line.price_total * am.invoice_currency_rate), 0) as price_total
                   FROM %s
                   JOIN account_move AS am ON am.id = account_move_line.move_id
-                 WHERE %s
+                  JOIN res_company AS rc ON rc.id = account_move_line.company_id
+                  JOIN res_partner AS rp ON rp.id = rc.partner_id
+                  WHERE %s AND rp.additional_identifiers->>'IN_TAN' IS NOT DISTINCT FROM %s
                 """,
                 query.from_clause,
-                query.where_clause)
+                query.where_clause, current_tan)
             )
             aggregate_result[frequency] = result[0]
         return aggregate_result
