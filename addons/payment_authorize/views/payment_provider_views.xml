@@ -16,14 +16,14 @@
                 <field
                     string="API Transaction Key"
                     name="authorize_transaction_key"
-                    password="True"
+                    widget="password"
                     invisible="code != 'authorize'"
                     required="is_live"
                 />
                 <field
                     string="API Signature Key"
                     name="authorize_signature_key"
-                    password="True"
+                    widget="password"
                     invisible="code != 'authorize'"
                     required="is_live"
                 />
@@ -50,7 +50,7 @@
                     class="o_row"
                     invisible="not (authorize_login and authorize_transaction_key and authorize_signature_key) or code != 'authorize'"
                 >
-                    <field string="Webhook ID" name="authorize_webhook_id"/>
+                    <field string="Webhook ID" name="authorize_webhook_id" widget="password"/>
                     <button
                         string="Generate Your Webhook"
                         type="object"
