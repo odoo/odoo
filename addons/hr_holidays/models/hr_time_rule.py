@@ -26,7 +26,7 @@ class HrTimeRule(models.Model):
             'state': 'validate',
         }
 
-    def _get_output_leave_vals(self, employee, rule, date_from, date_to, source_leave, all_rules=None):
+    def _get_output_leave_vals(self, employee, rule, date_from, date_to, source_leave, all_rules=None, accumulated_pp=frozenset()):
         return {
             'employee_id': employee.id,
             'work_entry_type_id': rule.work_entry_type_id.id,
@@ -40,7 +40,7 @@ class HrTimeRule(models.Model):
             'state': 'validate',
         }
 
-    def _get_output_leave_merge_key(self, all_rules):
+    def _get_output_leave_merge_key(self, all_rules, accumulated_pp=frozenset()):
         """Hashable key controlling when consecutive excess slices are merged into one leave.
 
         Override to add extra discriminators (e.g. premium pay rule sets in Belgium).
@@ -68,7 +68,7 @@ class HrTimeRule(models.Model):
             tz = ZoneInfo(employee._get_tz())
             for source_leave, intervals in by_source.items():
                 by_period = defaultdict(list)
-                for start, stop, rule in intervals:
+                for start, stop, rule, _pp in intervals:
                     if rule.quantity_period == 'week':
                         ws = int(rule.week_start or '0')
                         days_to_end = ((ws - 1) % 7 - start.weekday()) % 7
@@ -108,9 +108,15 @@ class HrTimeRule(models.Model):
         for employee, by_source in excess.items():
             tz = ZoneInfo(employee._get_tz())
             for source_leave, intervals in by_source.items():
-                slices = list(_record_overlap_intervals(intervals))
+                # build (start, stop) -> accumulated pp before stripping pp for overlap resolution
+                pp_by_range = {}
+                for s, e, _r, pp in intervals:
+                    key = (s, e)
+                    pp_by_range[key] = pp_by_range.get(key, frozenset()) | pp
+
+                slices = list(_record_overlap_intervals([(s, e, r) for s, e, r, _pp in intervals]))
                 output_slices = [
-                    (start, stop, rules)
+                    (start, stop, rules, pp_by_range.get((start, stop), frozenset()))
                     for start, stop, rules in slices
                     if stop > start and rules.filtered('work_entry_type_id')
                 ]
@@ -123,7 +129,7 @@ class HrTimeRule(models.Model):
                 src_stop = source_leave.date_to.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
                 src_iv = Intervals([(src_start, src_stop, self.env['resource.calendar'])])
                 out_iv = Intervals(
-                    [(s, e, self.env['resource.calendar']) for s, e, _ in output_slices],
+                    [(s, e, self.env['resource.calendar']) for s, e, *_ in output_slices],
                     keep_distinct=True,
                 )
                 for seg_start, seg_stop, _ in src_iv - out_iv:
@@ -134,7 +140,7 @@ class HrTimeRule(models.Model):
                     )
 
                 alloc_create_vals = []
-                for start_local, stop_local, rules in output_slices:
+                for start_local, stop_local, rules, _pp in output_slices:
                     alloc_rules = rules.filtered(
                         lambda r: r.leave_compensation_rate > 0 and r.allocation_type_id
                     )
@@ -163,20 +169,24 @@ class HrTimeRule(models.Model):
                     new_allocs.action_approve()
 
                 merged_slices = []
-                for start, stop, rules in output_slices:
+                for start, stop, rules, pp in output_slices:
                     effective = rules.sorted('sequence').filtered('work_entry_type_id')[:1]
-                    merge_key = effective._get_output_leave_merge_key(rules)
-                    if merged_slices and merged_slices[-1][1] == start and merged_slices[-1][4] == merge_key:
+                    merge_key = effective._get_output_leave_merge_key(rules, accumulated_pp=pp)
+                    if merged_slices and merged_slices[-1][1] == start and merged_slices[-1][5] == merge_key:
                         merged_slices[-1][1] = stop
                         merged_slices[-1][2] |= rules
+                        merged_slices[-1][4] |= pp
                     else:
-                        merged_slices.append([start, stop, rules, effective, merge_key])
+                        merged_slices.append([start, stop, rules, effective, pp, merge_key])
 
-                for start_local, stop_local, all_rules, rule, _merge_key in merged_slices:
+                for start_local, stop_local, all_rules, rule, accumulated_pp, _merge_key in merged_slices:
                     date_from = start_local.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
                     date_to = stop_local.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
                     leave_create_vals.append(
-                        self._get_output_leave_vals(employee, rule, date_from, date_to, source_leave, all_rules=all_rules)
+                        self._get_output_leave_vals(
+                            employee, rule, date_from, date_to, source_leave,
+                            all_rules=all_rules, accumulated_pp=accumulated_pp,
+                        )
                     )
 
         if archive_source_ids:

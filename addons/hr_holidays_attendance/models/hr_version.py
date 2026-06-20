@@ -84,6 +84,7 @@ class HrVersion(models.Model):
             emp_atts = attendances.filtered(lambda a: a.employee_id == version.employee_id)
 
             raw_att = []  # (check_in, check_out, wet) for priority resolution
+            att_by_range = {}  # (check_in, check_out) -> hr.attendance record
             for att in emp_atts:
                 check_in = att.check_in.replace(tzinfo=UTC)
                 check_out = att.check_out.replace(tzinfo=UTC)
@@ -101,6 +102,7 @@ class HrVersion(models.Model):
                 if check_out > check_in:
                     wet = att.work_entry_type_id or self.env['hr.work.entry.type'].browse(default_wet_id)
                     raw_att.append((check_in, check_out, wet))
+                    att_by_range[(check_in, check_out)] = att
                     # deficit outputs do not represent actual attendance for wt-leave clipping
                     if not att.is_time_rule_output or att.source_attendance_id:
                         att_coverage_raw[rid].append((check_in, check_out, dummy))
@@ -108,6 +110,8 @@ class HrVersion(models.Model):
             # priority-resolve attendance intervals against wt-leave intervals (best sequence wins)
             combined = raw_att + wt_iv_by_rid.get(rid, [])
             for seg_start, seg_stop, wet in self._resolve_attendance_intervals(combined):
+                att = att_by_range.get((seg_start, seg_stop))
+                extra = version._get_more_vals_attendance_interval((seg_start, seg_stop, att)) if att else []
                 attendance_vals.append({
                     'date_start': seg_start.replace(tzinfo=None),
                     'date_stop': seg_stop.replace(tzinfo=None),
@@ -116,6 +120,7 @@ class HrVersion(models.Model):
                     'version_id': version,
                     'company_id': version.company_id,
                     '_from_attendance': True,
+                    **dict(extra),
                 })
 
         base_vals = super(HrVersion, self.with_context(

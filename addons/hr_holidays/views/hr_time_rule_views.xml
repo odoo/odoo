@@ -11,7 +11,7 @@
                         <h1><field name="name" placeholder="e.g. Exceed 8h per day"/></h1>
                     </div>
                     <group>
-                        <field name="country_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_company"/>
+                        <field name="country_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_company" readonly="company_id"/>
                         <field name="company_id" groups="base.group_multi_company"/>
                     </group>
 

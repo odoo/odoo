@@ -84,6 +84,31 @@ def _trim_hours_from_start(intervals, hours):
     return result
 
 
+def _split_by_window(intervals, window):
+    """Partition pipeline 6-tuples (s, e, wet, pp, src, cls_rule) by a rule window.
+
+    Returns (inside, outside)
+    portions that fall within / outside window.
+    The window is an Intervals object (sorted, non-overlapping segments).
+    """
+    inside = []
+    outside = []
+    win_segs = [(ws, we) for ws, we, _ in window]
+    for s, e, w, pp, src, cls_rule in intervals:
+        prev = s
+        for ws, we in win_segs:
+            cs = max(s, ws)
+            ce = min(e, we)
+            if cs < ce:
+                if prev < cs:
+                    outside.append((prev, cs, w, pp, src, cls_rule))
+                inside.append((cs, ce, w, pp, src, cls_rule))
+                prev = ce
+        if prev < e:
+            outside.append((prev, e, w, pp, src, cls_rule))
+    return inside, outside
+
+
 class HrTimeRule(models.Model):
     _name = 'hr.time.rule'
     _description = "Time Rule"
@@ -93,7 +118,7 @@ class HrTimeRule(models.Model):
     active = fields.Boolean(default=True)
     sequence = fields.Integer(default=10)
 
-    country_id = fields.Many2one('res.country', index="btree_not_null",)
+    country_id = fields.Many2one('res.country', compute='_compute_country_id', store=True, readonly=False, index="btree_not_null")
     country_code = fields.Char(related='country_id.code')
     company_id = fields.Many2one('res.company')
     employee_domain = fields.Char(string="Employees", default='[]')
@@ -208,17 +233,6 @@ class HrTimeRule(models.Model):
         "A time rule must apply on at least one day or on public holidays.",
     )
 
-    @api.constrains('country_id', 'company_id')
-    def _check_company_country(self):
-        for rule in self:
-            if rule.country_id and rule.company_id and rule.company_id.country_id != rule.country_id:
-                raise ValidationError(self.env._(
-                    "Rule '%(name)s': the company country (%(company_country)s) does not match the rule country (%(country)s).",
-                    name=rule.name,
-                    company_country=rule.company_id.country_id.name,
-                    country=rule.country_id.name,
-                ))
-
     @api.constrains('expected_hours', 'calendar_source', 'quantity_period')
     def _check_quantity_condition(self):
         for rule in self:
@@ -234,6 +248,12 @@ class HrTimeRule(models.Model):
                     "Rule '%(name)s': a working-hours condition requires a period (day or week).",
                     name=rule.name,
                 ))
+
+    @api.depends('company_id')
+    def _compute_country_id(self):
+        for rule in self:
+            if rule.company_id:
+                rule.country_id = rule.company_id.country_id
 
     @api.depends('country_id', 'company_id')
     def _compute_country_work_entry_type_ids(self):
@@ -481,8 +501,23 @@ class HrTimeRule(models.Model):
         stop = record.date_to.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
         return start, stop
 
-    def _evaluate_period(self, start, stop, record_intervals, schedule):
+    def _get_pp_frozenset(self):
+        """Return frozenset of premium pay IDs to attach when this rule classifies an interval."""
         self.ensure_one()
+        return frozenset()
+
+    def _evaluate_period(self, start, stop, record_intervals, schedule):
+        """Evaluate one time period against this rule's threshold.
+
+        record_intervals: list of (start, stop, source) 3-tuples extracted from the
+            pipeline for this period.
+
+        Returns (excess_by_source, deficit_by_source) where each value is a list of
+        (start, stop, rule, frozenset_pp) 4-tuples.  frozenset_pp is populated by
+        _get_pp_frozenset(); Belgium overrides that to return actual salary rule IDs.
+        """
+        self.ensure_one()
+        pp = self._get_pp_frozenset()
         period_window = Intervals([(start, stop, self.env['resource.calendar'])])
         intervals_by_source = defaultdict(Intervals)
 
@@ -514,9 +549,9 @@ class HrTimeRule(models.Model):
                 extra_outside = sum_intervals(total_worked) - sum_intervals(total_worked & schedule & period_window)
                 if extra_outside > 0:
                     gap = _trim_hours_from_start(gap, extra_outside)
-                return {}, {last_source: [(s, e, self) for s, e, _ in gap]}
+                return {}, {last_source: [(s, e, self, pp) for s, e, _ in gap]}
             else:
-                return {}, {last_source: [(stop - timedelta(hours=deficit_amount), stop, self)]}
+                return {}, {last_source: [(stop - timedelta(hours=deficit_amount), stop, self, pp)]}
 
         if float_compare(excess_amount, self.employer_tolerance, 5) != 1:
             return {}, {}
@@ -537,17 +572,18 @@ class HrTimeRule(models.Model):
                 excess_duration = interval_duration - remaining_expected if remaining_expected else interval_duration
                 excess_start = r_stop - timedelta(hours=excess_duration)
                 remaining_expected = 0
-                excess_by_source[source].append((excess_start, r_stop, self))
+                excess_by_source[source].append((excess_start, r_stop, self, pp))
                 remaining_excess -= excess_duration
                 if remaining_excess <= 0:
                     return excess_by_source, {}
         return excess_by_source, {}
 
     def _evaluate_rules(self, records, start_dt, end_dt):
-        """Evaluate all rules against a recordset of time records.
+        """Evaluate all rules sequentially against a recordset of time records.
 
-        records must have: employee_id, date_from, date_to, work_entry_type_id.
-        Returns (excess, deficit) keyed by employee then source record.
+        Each rule fires in sequence order and sees all current pipeline intervals —
+        both original and those classified by prior rules. Returns (excess, deficit)
+        keyed by employee then source record, with 4-tuple (s, e, rule, pp) values.
         """
         excess = defaultdict(lambda: defaultdict(list))
         deficit = defaultdict(lambda: defaultdict(list))
@@ -560,65 +596,110 @@ class HrTimeRule(models.Model):
         min_date = min(r.date_from for r in records).date()
         max_date = max(r.date_to for r in records).date()
 
-        record_intervals_by_employee = defaultdict(list)
+        # pipeline: (start, stop, current_wet, pp, source, classifying_rule)
+        # classifying_rule=None means the interval is still in its original state
+        pipeline_by_emp = defaultdict(list)
         for record in records.sorted('date_from'):
             start_local, stop_local = self._get_record_interval_local(record)
-            record_intervals_by_employee[record.employee_id].append((start_local, stop_local, record))
+            pipeline_by_emp[record.employee_id].append(
+                (start_local, stop_local, record.work_entry_type_id, frozenset(), record, None)
+            )
 
         for rule in self:
             work_intervals = work_intervals_by_calendar[rule._get_schedule_calendar().id or False]
-            rule_intervals = rule._build_rule_day_intervals(min_date, max_date, employees, work_intervals)
+            rule_window_by_emp = rule._build_rule_day_intervals(min_date, max_date, employees, work_intervals)
+            condition_wets = rule.condition_work_entry_type_ids
             has_threshold = bool(rule.calendar_source or rule.expected_hours)
 
             for employee in rule._get_applicable_employees(employees):
-                emp_raw = [
-                    (s, e, rec) for s, e, rec in record_intervals_by_employee[employee]
-                    if rec.work_entry_type_id in rule.condition_work_entry_type_ids
-                ]
-                if not emp_raw:
+                emp_pipeline = pipeline_by_emp[employee]
+                rule_window = rule_window_by_emp[employee]
+
+                # split pipeline into intervals whose current WET matches the rule condition
+                matching = [iv for iv in emp_pipeline if iv[2] in condition_wets]
+                non_matching = [iv for iv in emp_pipeline if iv[2] not in condition_wets]
+                if not matching:
                     continue
-                clipped = Intervals(emp_raw, keep_distinct=True) & rule_intervals[employee]
-                if not clipped:
+
+                # clip matching intervals to the rule's timing window
+                inside, outside = _split_by_window(matching, rule_window)
+                if not inside:
                     continue
 
                 if not has_threshold:
-                    by_source = defaultdict(list)
-                    for start, stop, source in clipped:
-                        by_source[source].append((start, stop, rule))
-                    for source, items in by_source.items():
-                        excess[employee][source].extend(items)
-                else:
-                    schedule = work_intervals['schedule'][employee] - work_intervals['leave'][employee] - work_intervals['public_leave'][employee]
-                    fully_flex = work_intervals['fully_flexible'][employee]
-                    period = rule.quantity_period or 'day'
+                    if not rule.work_entry_type_id:
+                        continue
+                    rule_pp = rule._get_pp_frozenset()
+                    pipeline_by_emp[employee] = non_matching + outside + [
+                        (s, e, rule.work_entry_type_id, pp | rule_pp, src, rule)
+                        for s, e, _wet, pp, src, _cr in inside
+                    ]
+                    continue
 
-                    by_period = defaultdict(list)
-                    for start, stop, source in clipped:
-                        day = start.date()
-                        if period == 'week':
-                            week_start = int(rule.week_start or '0')
-                            end_weekday = (week_start - 1) % 7
-                            days_to_end = (end_weekday - day.weekday()) % 7
-                            period_key = day + relativedelta(days=days_to_end)
-                        else:
-                            period_key = day
-                        by_period[period_key].append((start, stop, source))
+                schedule = (
+                    work_intervals['schedule'][employee]
+                    - work_intervals['leave'][employee]
+                    - work_intervals['public_leave'][employee]
+                )
+                fully_flex = work_intervals['fully_flexible'][employee]
+                period = rule.quantity_period or 'day'
 
-                    for period_date, period_items in sorted(by_period.items()):
-                        period_stop = datetime.combine(period_date, datetime.max.time())
-                        period_start = (
-                            datetime.combine(period_date, datetime.min.time()) - relativedelta(days=6)
-                            if period == 'week' else
-                            datetime.combine(period_date, datetime.min.time())
-                        )
-                        period_window = Intervals([(period_start, period_stop, self.env['resource.calendar'])])
-                        if not (period_window - fully_flex):
-                            continue
-                        schedule_in_window = schedule & rule_intervals[employee] & period_window
-                        ex, df = rule._evaluate_period(period_start, period_stop, period_items, schedule_in_window)
-                        for source, items in ex.items():
-                            excess[employee][source].extend(items)
-                        for source, items in df.items():
-                            deficit[employee][source].extend(items)
+                by_period = defaultdict(list)
+                for s, e, _wet, _pp, src, _cr in inside:
+                    day = s.date()
+                    if period == 'week':
+                        week_start_int = int(rule.week_start or '0')
+                        end_weekday = (week_start_int - 1) % 7
+                        days_to_end = (end_weekday - day.weekday()) % 7
+                        period_key = day + relativedelta(days=days_to_end)
+                    else:
+                        period_key = day
+                    by_period[period_key].append((s, e, src))
+
+                all_excess = defaultdict(list)
+                for period_date, period_items in sorted(by_period.items()):
+                    period_stop = datetime.combine(period_date, datetime.max.time())
+                    period_start = (
+                        datetime.combine(period_date, datetime.min.time()) - relativedelta(days=6)
+                        if period == 'week' else
+                        datetime.combine(period_date, datetime.min.time())
+                    )
+                    period_window_iv = Intervals([(period_start, period_stop, self.env['resource.calendar'])])
+                    if not (period_window_iv - fully_flex):
+                        continue
+                    schedule_in_window = schedule & rule_window & period_window_iv
+                    ex, df = rule._evaluate_period(period_start, period_stop, period_items, schedule_in_window)
+                    for source, items in df.items():
+                        deficit[employee][source].extend(items)
+                    for source, items in ex.items():
+                        all_excess[source].extend(items)
+
+                if not all_excess:
+                    continue
+
+                # split inside intervals at excess boundaries, reclassifying the excess portions
+                new_inside = []
+                for iv_start, iv_end, wet, acc_pp, source, cls_rule in inside:
+                    if source not in all_excess:
+                        new_inside.append((iv_start, iv_end, wet, acc_pp, source, cls_rule))
+                        continue
+                    cursor = iv_start
+                    for exc_start, exc_end, exc_rule, rule_pp in all_excess[source]:
+                        clip_start = max(cursor, exc_start)
+                        clip_end = min(iv_end, exc_end)
+                        if cursor < clip_start:
+                            new_inside.append((cursor, clip_start, wet, acc_pp, source, cls_rule))
+                        if clip_start < clip_end:
+                            new_inside.append((clip_start, clip_end, exc_rule.work_entry_type_id, acc_pp | rule_pp, source, exc_rule))
+                        cursor = max(cursor, clip_end)
+                    if cursor < iv_end:
+                        new_inside.append((cursor, iv_end, wet, acc_pp, source, cls_rule))
+                pipeline_by_emp[employee] = non_matching + outside + new_inside
+
+        # extract final excess: pipeline intervals where a rule has classified them
+        for employee, emp_pipeline in pipeline_by_emp.items():
+            for iv_start, iv_end, _wet, acc_pp, source, cls_rule in emp_pipeline:
+                if cls_rule is not None and iv_end > iv_start:
+                    excess[employee][source].append((iv_start, iv_end, cls_rule, acc_pp))
 
         return excess, deficit
