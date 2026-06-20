@@ -25,7 +25,6 @@ class PaymentProvider(models.Model):
         help="The site identifier code associated with the merchant account.",
         required_if_provider="nuvei",
         copy=False,
-        groups="base.group_system",
     )
     nuvei_secret_key = fields.Char(
         string="Nuvei Secret Key",

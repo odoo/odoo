@@ -39,9 +39,17 @@ class PaymentProvider(models.Model):
         groups="base.group_system",
     )
     paymob_hmac_key = fields.Char(
-        string="Paymob HMAC Key", required_if_provider="paymob", copy=False
+        string="Paymob HMAC Key",
+        required_if_provider="paymob",
+        copy=False,
+        groups="base.group_system",
     )
-    paymob_api_key = fields.Char(string="Paymob API Key", required_if_provider="paymob", copy=False)
+    paymob_api_key = fields.Char(
+        string="Paymob API Key",
+        required_if_provider="paymob",
+        copy=False,
+        groups="base.group_system",
+    )
 
     # === CONSTRAINT METHODS === #
 

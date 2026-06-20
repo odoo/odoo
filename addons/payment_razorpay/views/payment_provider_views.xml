@@ -50,7 +50,7 @@
                     name="razorpay_key_secret"
                     invisible="code != 'razorpay' or razorpay_is_oauth_supported and (not razorpay_key_id or not razorpay_key_secret)"
                     readonly="razorpay_account_id"
-                    password="True"
+                    widget="password"
                 />
                 <label for="razorpay_webhook_secret" invisible="code != 'razorpay'"/>
                 <div invisible="code != 'razorpay'" class="o_row">
@@ -58,7 +58,7 @@
                         string="Webhook Secret"
                         name="razorpay_webhook_secret"
                         readonly="razorpay_is_oauth_supported"
-                        password="True"
+                        widget="password"
                     />
                     <button
                         string="Generate your webhook"

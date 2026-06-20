@@ -32,11 +32,11 @@
                     name="stripe_secret_key"
                     invisible="code != 'stripe'"
                     required="is_live"
-                    password="True"
+                    widget="password"
                 />
                 <label for="stripe_webhook_secret" invisible="code != 'stripe'"/>
                 <div name="stripe_webhook" invisible="code != 'stripe'" class="o_row" col="2">
-                    <field name="stripe_webhook_secret" password="True"/>
+                    <field name="stripe_webhook_secret" widget="password"/>
                     <button
                         string="Generate your webhook"
                         type="object"
