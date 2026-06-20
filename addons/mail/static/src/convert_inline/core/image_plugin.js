@@ -18,7 +18,7 @@ export class ImagePlugin extends Plugin {
      */
     loadImages(root) {
         const promises = [];
-        for (const img of root.querySelectorAll("img")) {
+        for (const img of root.querySelectorAll('img[src]:not([src=""])')) {
             const src = getImageSrc(img);
             if (src) {
                 promises.push(loadImage(src, img));
