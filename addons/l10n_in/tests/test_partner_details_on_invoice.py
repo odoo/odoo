@@ -131,5 +131,5 @@ class TestReports(L10nInTestInvoicingCommon):
         })
         self.assertRecordValues(gov_partner, [{
             'l10n_in_pan_entity_id': False,
-            'l10n_in_tan': 'DELN10357E',
+            'additional_identifiers': {'IN_TAN': 'DELN10357E'},
         }])

@@ -683,6 +683,13 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
         'validation_function': ie_ppsn.validate,
         'countries': ['IE'],
     },
+    'IN_TAN': {
+        'sequence': 20,
+        'label': _lt('TAN'),
+        'help': _lt('Indian Tax Deduction and Collection Account Number.'),
+        'placeholder': 'RTKT06334E',
+        'countries': ['IN'],
+    },
     # Note: 'IT_CODICE' skipped for now, will need a refactor in itself.
     'JP_EN': {
         'sequence': 10,

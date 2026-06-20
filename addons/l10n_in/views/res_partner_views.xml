@@ -14,7 +14,6 @@
             </xpath>
             <xpath expr="//div[@id='vat_div']" position="after">
                 <field name="l10n_in_pan_entity_id" invisible="country_code != 'IN'" readonly="parent_id"/>
-                <field name="l10n_in_tan" invisible="country_code != 'IN' or not l10n_in_pan_entity_id" readonly="parent_id"/>
             </xpath>
             <xpath expr="//sheet" position="before">
                 <div class="alert alert-warning" role="alert"
