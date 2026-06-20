@@ -14,7 +14,9 @@ class TestKpiProvider(TransactionCase):
         # Clean things for the test
         cls.env['account.payment'].search([]).action_cancel()
         moves_to_unlink = cls.env['account.move'].search([])
-        moves_to_unlink.deferred_move_ids._unlink_or_reverse()
+        # This field is only present in account_accountant
+        if 'deferred_move_ids' in moves_to_unlink._fields:
+            moves_to_unlink.deferred_move_ids._unlink_or_reverse()
         moves_to_unlink = moves_to_unlink.exists()
         moves_to_unlink.filtered(lambda m: m.state != 'draft').button_draft()
         moves_to_unlink._unlink_or_reverse()
@@ -109,6 +111,7 @@ class TestKpiProvider(TransactionCase):
 
         self.assertEqual(bank_statement.line_ids.move_id.state, 'posted')
         self.assertFalse(bank_statement.line_ids.is_reconciled)
+        bank_statement.line_ids.flush_recordset()
         self.assertCountEqual(self.env['kpi.provider'].get_account_kpi_summary(), [
             {'id': 'account_journal_type.bank', 'name': 'Bank', 'type': 'integer', 'value': 1},
         ])
