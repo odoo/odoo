@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:36+0000\n"
-"PO-Revision-Date: 2026-06-12 17:36+0000\n"
+"POT-Creation-Date: 2026-06-19 17:37+0000\n"
+"PO-Revision-Date: 2026-06-19 17:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -264,6 +264,12 @@ msgid "Cash on Delivery"
 msgstr ""
 
 #. module: delivery
+#. odoo-python
+#: code:addons/delivery/models/payment_provider.py:0
+msgid "Cash on delivery not allowed by selected delivery method"
+msgstr ""
+
+#. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__company_id
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__company_id
 #: model:ir.model.fields,field_description:delivery.field_delivery_note_wizard__company_id
@@ -364,7 +370,6 @@ msgid "Define a new delivery method"
 msgstr ""
 
 #. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model:product.category,name:delivery.product_category_deliveries
 msgid "Deliveries"
@@ -400,6 +405,7 @@ msgid "Delivery Method Selection Wizard"
 msgstr ""
 
 #. module: delivery
+#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_provider_module_kanban
 msgid "Delivery Methods"
 msgstr ""
@@ -509,8 +515,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__display_name
 #: model:ir.model.fields,field_description:delivery.field_ir_http__display_name
 #: model:ir.model.fields,field_description:delivery.field_ir_module_module__display_name
+#: model:ir.model.fields,field_description:delivery.field_payment_method__display_name
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__display_name
-#: model:ir.model.fields,field_description:delivery.field_payment_transaction__display_name
 #: model:ir.model.fields,field_description:delivery.field_product_category__display_name
 #: model:ir.model.fields,field_description:delivery.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:delivery.field_res_partner__display_name
@@ -623,8 +629,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__id
 #: model:ir.model.fields,field_description:delivery.field_ir_http__id
 #: model:ir.model.fields,field_description:delivery.field_ir_module_module__id
+#: model:ir.model.fields,field_description:delivery.field_payment_method__id
 #: model:ir.model.fields,field_description:delivery.field_payment_provider__id
-#: model:ir.model.fields,field_description:delivery.field_payment_transaction__id
 #: model:ir.model.fields,field_description:delivery.field_product_category__id
 #: model:ir.model.fields,field_description:delivery.field_res_config_settings__id
 #: model:ir.model.fields,field_description:delivery.field_res_partner__id
@@ -813,13 +819,13 @@ msgid "Order reference"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_payment_provider
-msgid "Payment Provider"
+#: model:ir.model,name:delivery.model_payment_method
+msgid "Payment Method"
 msgstr ""
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_payment_transaction
-msgid "Payment Transaction"
+#: model:ir.model,name:delivery.model_payment_provider
+msgid "Payment Provider"
 msgstr ""
 
 #. module: delivery
@@ -1021,7 +1027,7 @@ msgid "The Poste"
 msgstr ""
 
 #. module: delivery
-#: model_terms:payment.provider,pending_msg:delivery.payment_provider_cod
+#: model_terms:payment.provider,done_msg:delivery.payment_provider_cod
 msgid "The delivery staff will collect payment upon delivery."
 msgstr ""
 
@@ -1212,8 +1218,8 @@ msgid "Your payment has been cancelled."
 msgstr ""
 
 #. module: delivery
-#: model_terms:payment.provider,done_msg:delivery.payment_provider_cod
-msgid "Your payment has been processed."
+#: model_terms:payment.provider,pending_msg:delivery.payment_provider_cod
+msgid "Your payment has been processed but is waiting for approval."
 msgstr ""
 
 #. module: delivery
@@ -1224,12 +1230,6 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_prefix_ids
 msgid "Zip Prefixes"
-msgstr ""
-
-#. module: delivery
-#. odoo-python
-#: code:addons/delivery/models/payment_provider.py:0
-msgid "cash on delivery not allowed by selected delivery method"
 msgstr ""
 
 #. module: delivery

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-12 17:37+0000\n"
-"PO-Revision-Date: 2026-06-12 17:37+0000\n"
+"POT-Creation-Date: 2026-06-19 17:38+0000\n"
+"PO-Revision-Date: 2026-06-19 17:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -154,11 +154,11 @@ msgid ""
 "                                    <table width=\"100%\" style=\"max-width: 590px; font-size: 14px; border-collapse: collapse;\" role=\"presentation\">\n"
 "                                        <tr>\n"
 "                                            <td width=\"24%\" style=\"max-width: 120px; padding: 0 10px 10px 0; vertical-align: top;\">\n"
-"                                                <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" t-attf-style=\"width: 64px; height: {{object.website_id and object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: cover; object-position: center;\" alt=\"Product image\"/>\n"
+"                                                <img t-if=\"line.product_id\" t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" t-attf-style=\"width: 64px; height: {{object.website_id and object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: cover; object-position: center;\" alt=\"Product image\"/>\n"
 "                                            </td>\n"
 "                                            <td align=\"left\" style=\"vertical-align: top; padding-bottom: 22px;\">\n"
 "                                                <h3 t-attf-style=\"mso-line-height-rule:exactly; margin:0; font-size: 14px; {{'margin-bottom: 6px;' if line.product_type == 'combo' else ''}}\">\n"
-"                                                    <strong t-out=\"line.product_id.name or ''\" t-attf-style=\"color: #{color};\">Taking care of Trees Course</strong>\n"
+"                                                    <strong t-out=\"line.product_id.name or line.name\" t-attf-style=\"color: #{color};\">Taking care of Trees Course</strong>\n"
 "                                                    <span t-if=\"line.product_id.product_template_attribute_value_ids\" style=\"opacity: 0.5;\">\n"
 "                                                        <t t-out=\"', '.join(line.product_id.product_template_attribute_value_ids.mapped('name'))\"/>\n"
 "                                                    </span>\n"
@@ -817,22 +817,17 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Add a note"
+msgid "Add Line"
 msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Add a product"
+msgid "Add Note"
 msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Add a section"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Add note"
+msgid "Add Section"
 msgstr ""
 
 #. module: sale
@@ -845,16 +840,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_list/product_list.js:0
 msgid "Add optional products"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Add product"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Add section"
 msgstr ""
 
 #. module: sale
@@ -1052,8 +1037,9 @@ msgid "Authorized Transactions"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__automatic_invoice
-msgid "Automatic Invoice"
+#: model:ir.model.fields,field_description:sale.field_res_company__sale_automatic_invoice
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__sale_automatic_invoice
+msgid "Automatic Invoicing"
 msgstr ""
 
 #. module: sale
@@ -1417,6 +1403,11 @@ msgid "Consolidated Billing"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__consolidation_currency_id
+msgid "Consolidation Currency"
+msgstr ""
+
+#. module: sale
 #: model:ir.model,name:sale.model_res_partner
 msgid "Contact"
 msgstr ""
@@ -1707,6 +1698,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__delivery
+#: model:ir.model.fields.selection,name:sale.selection__res_company__sale_invoice_policy__delivery
+#: model:ir.model.fields.selection,name:sale.selection__sale_order_line__invoice_policy__delivery
 msgid "Delivered quantities"
 msgstr ""
 
@@ -2053,7 +2046,7 @@ msgstr ""
 
 #. module: sale
 #. odoo-javascript
-#: code:addons/sale/static/src/js/sale_product_field.js:0
+#: code:addons/sale/static/src/js/sale_product_mixin.js:0
 msgid "Edit Configuration"
 msgstr ""
 
@@ -2579,16 +2572,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__delivery
-msgid "Invoice what is delivered"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__order
-msgid "Invoice what is ordered"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced_at_date
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoiced"
@@ -2653,7 +2636,9 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
+#: model:ir.model.fields,field_description:sale.field_res_company__sale_invoice_policy
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__sale_invoice_policy
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_policy
 msgid "Invoicing Policy"
 msgstr ""
 
@@ -2698,6 +2683,11 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__is_product_archived
 msgid "Is Product Archived"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__mandatory_product
+msgid "Is Product Mandatory"
 msgstr ""
 
 #. module: sale
@@ -2844,6 +2834,11 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Sales & teams targets and commissions"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__sale_order_mandatory_product
+msgid "Mandatory Product"
 msgstr ""
 
 #. module: sale
@@ -3262,6 +3257,11 @@ msgid "Order Invoice Status"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_report__line_name
+msgid "Order Line Name"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Order Lines"
@@ -3301,6 +3301,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__order
+#: model:ir.model.fields.selection,name:sale.selection__res_company__sale_invoice_policy__order
+#: model:ir.model.fields.selection,name:sale.selection__sale_order_line__invoice_policy__order
 msgid "Ordered quantities"
 msgstr ""
 
@@ -3478,6 +3480,11 @@ msgstr ""
 #: code:addons/sale/models/res_company.py:0
 #: code:addons/sale/models/sale_order.py:0
 msgid "Prepayment percentage must be a valid percentage."
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Prevent selling without a linked product"
 msgstr ""
 
 #. module: sale
@@ -3815,6 +3822,11 @@ msgstr ""
 #. module: sale
 #: model:portal.entry,name:sale.portal_quotations_to_review
 msgid "Quotations to review"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__consolidation_rate
+msgid "Rate"
 msgstr ""
 
 #. module: sale
@@ -4479,14 +4491,6 @@ msgstr ""
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
-msgid ""
-"Some order lines are missing a product, you need to correct them before "
-"going further."
-msgstr ""
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
 msgid "Some orders are not in a state requiring confirmation."
 msgstr ""
 
@@ -4788,7 +4792,8 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
+#: model:ir.model.fields,help:sale.field_res_company__sale_automatic_invoice
+#: model:ir.model.fields,help:sale.field_res_config_settings__sale_automatic_invoice
 msgid ""
 "The invoice is generated automatically and available in the customer portal when the transaction is confirmed by the payment provider.\n"
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment provider.\n"
@@ -5351,16 +5356,6 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 msgid "Warning on Sales Orders and Invoices"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,help:sale.field_sale_order__website_message_ids
-msgid "Website communication history"
 msgstr ""
 
 #. module: sale
