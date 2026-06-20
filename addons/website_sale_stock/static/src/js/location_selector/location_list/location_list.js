@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { Location } from '@website_sale_stock/js/location_selector/location/location';
 import { Component, onMounted } from '@odoo/owl';
 
@@ -46,16 +45,16 @@ export class LocationList extends Component {
         });
 
         // Focus on the location on the list when clicking on the map marker.
-        useLayoutEffect(
-            (locations, selectedLocationId) => {
-                const selectedLocation = locations.find(
-                    l => String(l.id) === selectedLocationId
-                );
-                if (selectedLocation) {
-                    document.getElementById(`location-${selectedLocation.id}`).focus();
-                }
-            },
-            () => [this.props.locations, this.props.selectedLocationId]
-        );
+        // useLayoutEffect(
+        //     (locations, selectedLocationId) => {
+        //         const selectedLocation = locations.find(
+        //             l => String(l.id) === selectedLocationId
+        //         );
+        //         if (selectedLocation) {
+        //             document.getElementById(`location-${selectedLocation.id}`).focus();
+        //         }
+        //     },
+        //     () => [this.props.locations, this.props.selectedLocationId]
+        // );
     }
 }
