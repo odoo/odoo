@@ -1,4 +1,3 @@
-import { useLayoutEffect } from '@web/owl2/utils';
 import { Component, onMounted, onWillUnmount, props, proxy, t } from '@odoo/owl';
 import { browser } from '@web/core/browser/browser';
 import { Dialog } from '@web/core/dialog/dialog';
@@ -49,15 +48,15 @@ export class LocationSelectorDialog extends Component {
         onWillUnmount(() => browser.removeEventListener('resize', this.debouncedOnResize));
 
         // Fetch new locations when the zip code is updated.
-        useLayoutEffect(
-            () => {
-                this._loadLocations()
-                return () => {
-                    this.state.locations = []
-                };
-            },
-            () => [this.state.zipCode]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         this._loadLocations()
+        //         return () => {
+        //             this.state.locations = []
+        //         };
+        //     },
+        //     () => [this.state.zipCode]
+        // );
     }
 
     get locations() { return this.state.locations; }
