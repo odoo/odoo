@@ -157,6 +157,7 @@
             'mass_mailing/static/src/action/**/*',
             'mass_mailing/static/src/components/**/*',
             'mass_mailing/static/src/views/mailing_preview_form_view.js',
+            'mass_mailing/static/src/views/mailing_preview_form_view.xml',
             'mass_mailing/static/src/views/format_utils.js',
             'mass_mailing/static/src/views/fields/**/*',
             'mass_mailing/static/src/views/mailing_filter*/**/*.js',
@@ -169,9 +170,14 @@
             'mass_mailing/static/src/scss/mass_mailing_mobile.scss',
             'mass_mailing/static/src/scss/mass_mailing_mobile_preview.scss',
             'mass_mailing/static/src/js/tours/**/*',
+            # Don't include dark mode files in light mode
+            ('remove', 'mass_mailing/static/src/**/*.dark.scss'),
         ],
         'web.assets_backend_lazy': [
             'mass_mailing/static/src/views/mass_mailing_subscription_graph_renderer.js',
+        ],
+        'web.assets_web_dark': [
+            'mass_mailing/static/src/**/*.dark.scss',
         ],
         'mass_mailing.assets_mail_themes': [
             'mass_mailing/static/src/scss/themes/**/*',
@@ -189,6 +195,7 @@
             'mass_mailing/static/tests/mass_mailing_link_plugin.test.js',
         ],
     },
+    'post_init_hook': '_update_demo_data',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

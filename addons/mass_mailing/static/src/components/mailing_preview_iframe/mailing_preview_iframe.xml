@@ -3,10 +3,56 @@
 <templates xml:space="preserve">
 
     <t t-name="mass_mailing.MailingPreviewIframe">
-        <div class="o_mass_mailing_iframe_wrapper">
-            <div t-att-class="{'o_is_mobile': this.state.isMobileMode}"
-                 t-attf-style="overflow: hidden;#{!this.state.isMobileMode? 'height:60vh;' : ''}">
+        <div class="o_mass_mailing_iframe_wrapper mailing_preview_iframe">
+            <!-- Mobile container has fixed width -->
+            <div class="o_mass_mailing_preview_container overflow-hidden"
+                t-att-class="{'o_is_mobile o_mass_mailing_preview_transparent_form': this.state.isMobileMode}">
+                <div t-if="this.state.isMobileMode" class="o_is_mobile_header px-2 pb-1">
+                    <!-- "Mobile Header" (placed in the padding) -->
+                    <div class="position-relative">
+                        <div class="position-absolute d-flex justify-content-end p-2 column-gap-2 bottom-0 end-0">
+                            <MailingPreviewDisplayModeToggle t-props="{
+                                record: this.props.record,
+                                readonly: this.props.readonly,
+                            }"/>
+                            <button class="btn-close pe-2" type="button" title="Close" aria-label="close" tabindex="-1" data-available-offline=""
+                                t-on-click="() => this.onCloseButtonClick()"/>
+                        </div>
+                    </div>
+
+                    <!-- "Mail Header" (from/to/subject fields, recipient selector ; placed above the iframe -->
+                    <div class="p-1 fw-bold fs-3" t-out="this.props.record.data.subject"/>
+                    <div class="d-flex small justify-content-start">
+                        <div class="o_mass_mailing_preview_avatar d-flex align-items-center">
+                            <img class="w-100" src="/mail/static/src/img/smiley/avatar.jpg"/>
+                        </div>
+                        <div class="o_mass_mailing_preview_from_to d-flex ps-2 flex-column justify-content-evenly overflow-hidden flex-shrink-1">
+                            <div class="text-truncate" t-out="this.props.record.data.email_from"/>
+                            <div class="text-truncate text-muted"
+                                t-if="this.props.record.data.preview_record_ref"
+                                t-out="'To ' + this.props.record.data.preview_record_ref.displayName"/>
+                        </div>
+                        <div class="o_mass_mailing_preview_pager d-flex align-items-center ms-auto flex-grow-1">
+                            <MailPreviewRecordField t-props="{
+                                name: 'preview_record_ref',
+                                record: this.props.record,
+                                canCreate: false,
+                                canOpen: false,
+                                hideModel: true,
+                                hideRecordSelector: true,
+                            }"/>
+                        </div>
+                    </div>
+                </div>
                 <iframe t-custom-ref="iframeRef" t-att-sandbox="this.isBrowserSafari ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"/>
+                <div t-if="this.state.isMobileMode" class="o_is_mobile_footer">
+                    <!-- 
+                    Mobile Footer
+                    Has additional padding in which to display the bottom of the phone background image,
+                    as the header inserts additional space not accounted for by the image we use
+                    -->
+                    <div class="o_is_mobile_footer_padding"/>
+                </div>
             </div>
         </div>
     </t>

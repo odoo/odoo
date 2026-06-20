@@ -922,6 +922,7 @@ export async function toInline(element, cssRules) {
     attachmentThumbnailToLinkImg(element);
     fontToImg(element);
     await svgToPng(element);
+    await waitUntilImagesLoaded(element);
 
     // Fix img-fluid for Outlook.
     for (const image of element.querySelectorAll("img.img-fluid")) {
@@ -949,6 +950,8 @@ export async function toInline(element, cssRules) {
     formatTables(element);
     normalizeColors(element);
     responsiveToStaticForOutlook(element);
+
+    await waitUntilImagesLoaded(element);
     // Fix Outlook image rendering bug.
     for (const attributeName of ["width", "height"]) {
         const images = element.querySelectorAll("img");
@@ -2172,6 +2175,9 @@ function correctBorderAttributes(style) {
 function waitUntilImagesLoaded(root) {
     const promises = [];
     for (const img of root.querySelectorAll('img[src]:not([src=""])')) {
+        if (img.complete) {
+            continue;
+        }
         const src = getImageSrc(img);
         if (src) {
             promises.push(loadImage(src));

@@ -223,6 +223,7 @@ class MailingMailing(models.Model):
     bounced = fields.Integer(compute="_compute_statistics")
     failed = fields.Integer(compute="_compute_statistics")
     received_ratio = fields.Float(compute="_compute_statistics", string='Received Ratio')
+    canceled_ratio = fields.Float(compute="_compute_statistics", string='Cancelled Ratio')
     opened_ratio = fields.Float(compute="_compute_statistics", string='Opened Ratio')
     replied_ratio = fields.Float(compute="_compute_statistics", string='Replied Ratio')
     bounced_ratio = fields.Float(compute="_compute_statistics", string='Bounced Ratio')
@@ -359,9 +360,11 @@ class MailingMailing(models.Model):
                 'clicked': line['links_click_datetime'],
                 'sent': line['sent_datetime'],
             }
+            expected = values['expected'] or 1
             total = (values['expected'] - values['canceled']) or 1
             total_no_error = (values['expected'] - values['canceled'] - values['failed']) or 1
             total_sent = (values['expected'] - values['canceled'] - values['failed'] + values['bounced']) or 1
+            values['canceled_ratio'] = float_round(100.0 * values['canceled'] / expected, precision_digits=2)
             values['received_ratio'] = float_round(100.0 * values['delivered'] / total, precision_digits=2)
             values['opened_ratio'] = float_round(100.0 * values['opened'] / total_no_error, precision_digits=2)
             values['replied_ratio'] = float_round(100.0 * values['replied'] / total_no_error, precision_digits=2)
@@ -638,12 +641,35 @@ class MailingMailing(models.Model):
 
     def action_preview(self):
         self.ensure_one()
-        ctx = dict(self.env.context, default_mass_mailing_id=self.id, dialog_size='extra-large')
+        ctx = dict(
+            self.env.context,
+            default_mass_mailing_id=self.id,
+            dialog_size='extra-large',
+            header=False,
+        )
         return {
-            'name': _('Preview & Test'),
+            'name': _('Preview Mailing'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'views': [(self.env.ref('mass_mailing.view_mail_mass_mailing_test_form').id, 'form')],
+            'res_model': 'mailing.mailing.test',
+            'target': 'new',
+            'context': ctx,
+        }
+
+    def action_test(self):
+        self.ensure_one()
+        ctx = dict(
+            self.env.context,
+            default_mass_mailing_id=self.id,
+            dialog_size='medium',
+        )
+        return {
+            'name': _('Test Mailing'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'mailing.mailing.test',
+            'views': [(self.env.ref('mass_mailing.view_mail_mass_mailing_test_send_test_form').id, 'form')],
             'target': 'new',
             'context': ctx,
         }
@@ -726,16 +752,25 @@ class MailingMailing(models.Model):
     def action_view_traces_sent(self):
         return self._action_view_traces_filtered('sent')
 
-    def _action_view_traces_filtered(self, view_filter):
+    def action_view_traces(self):
+        action = self._action_view_traces()
+        action['context']['search_default_state'] = True
+        return action
+
+    def _action_view_traces(self):
         action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_trace_action")
-        action['name'] = _('Sent Mailings')
         action['context'] = {'search_default_mass_mailing_id': self.id,}
-        filter_key = 'search_default_filter_%s' % (view_filter)
-        action['context'][filter_key] = True
         action['views'] = [
             (self.env.ref('mass_mailing.mailing_trace_view_tree_mail').id, 'list'),
             (self.env.ref('mass_mailing.mailing_trace_view_form').id, 'form')
         ]
+        return action
+
+    def _action_view_traces_filtered(self, view_filter):
+        action = self._action_view_traces()
+        action['name'] = _('Sent Mailings')
+        filter_key = 'search_default_filter_%s' % (view_filter)
+        action['context'][filter_key] = True
         return action
 
     def action_view_clicked(self):
