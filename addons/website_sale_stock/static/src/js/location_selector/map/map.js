@@ -1,6 +1,6 @@
 /*global L*/
 
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { Component } from '@odoo/owl';
 import { renderToString } from '@web/core/utils/render';
 
@@ -46,53 +46,53 @@ export class Map extends Component {
         this.mapRef = useRef('map');
 
         // Create the map.
-        useLayoutEffect(
-            () => {
-                this.leafletMap = L.map(this.mapRef.el, {
-                    zoom: 13,
-                });
-                this.leafletMap.attributionControl.setPrefix(
-                    '<a href="https://leafletjs.com" title="A JavaScript library for interactive maps">Leaflet</a>'
-                );
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    maxZoom: 19,
-                    attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>"
-                }).addTo(this.leafletMap);
-                return () => {
-                    this.leafletMap.remove();
-                }
-            },
-            () => []
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         this.leafletMap = L.map(this.mapRef.el, {
+        //             zoom: 13,
+        //         });
+        //         this.leafletMap.attributionControl.setPrefix(
+        //             '<a href="https://leafletjs.com" title="A JavaScript library for interactive maps">Leaflet</a>'
+        //         );
+        //         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        //             maxZoom: 19,
+        //             attribution: "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>"
+        //         }).addTo(this.leafletMap);
+        //         return () => {
+        //             this.leafletMap.remove();
+        //         }
+        //     },
+        //     () => []
+        // );
 
         // Update the size of the map.
-        useLayoutEffect(
-            (locations) => {
-                this.leafletMap.invalidateSize();
-            },
-            () => [this.props.locations]
-        );
+        // useLayoutEffect(
+        //     (locations) => {
+        //         this.leafletMap.invalidateSize();
+        //     },
+        //     () => [this.props.locations]
+        // );
 
         // Update the markers and center the map on the selected location.
-        useLayoutEffect(
-            (locations, selectedLocationId) => {
-                this.addMarkers(locations);
-                const selectedLocation = locations.find(
-                    l => String(l.id) === selectedLocationId
-                );
-                if (selectedLocation) {
-                    // Center the Map.
-                    this.leafletMap.panTo(
-                        [selectedLocation.latitude, selectedLocation.longitude],
-                        { animate: true }
-                    );
-                }
-                return () => {
-                    this.removeMarkers();
-                };
-            },
-            () => [this.props.locations, this.props.selectedLocationId]
-        );
+        // useLayoutEffect(
+        //     (locations, selectedLocationId) => {
+        //         this.addMarkers(locations);
+        //         const selectedLocation = locations.find(
+        //             l => String(l.id) === selectedLocationId
+        //         );
+        //         if (selectedLocation) {
+        //             // Center the Map.
+        //             this.leafletMap.panTo(
+        //                 [selectedLocation.latitude, selectedLocation.longitude],
+        //                 { animate: true }
+        //             );
+        //         }
+        //         return () => {
+        //             this.removeMarkers();
+        //         };
+        //     },
+        //     () => [this.props.locations, this.props.selectedLocationId]
+        // );
     }
 
     /**
