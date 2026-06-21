@@ -420,9 +420,7 @@ class AccountMove(models.Model):
 
     def _cron_l10n_pl_edi_check_invoice_status(self):
         """get all moves that are in state sent run action_update_invoice_status on all of them"""
-        to_update_moves = self.env['account.move'].search([*self.env['account.move']._check_company_domain(self.env.company), ('l10n_pl_edi_status', '=', 'sent')])
-        for move in to_update_moves:
-            self.env['res.company']._with_locked_records(move)
+        for move in self.env['account.move'].search([('l10n_pl_edi_status', '=', 'sent')]):
             move.action_l10n_pl_edi_update_invoice_status()
 
     def button_draft(self):
