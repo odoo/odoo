@@ -94,7 +94,7 @@
                                 <field name="worked_hours" string="Worked Time" widget="float_time"/>
                             </group>
                         </group>
-                        <separator string="Check In"/>
+                        <separator string="Check In" name="check_in_separator"/>
                         <group name="check_in_group" colspan="2">
                             <group>
                                 <group>
@@ -160,6 +160,56 @@
                 </sheet>
                 <chatter/>
             </form>
+        </field>
+    </record>
+
+    <record id="hr_attendance_my_form_view" model="ir.ui.view">
+        <field name="name">hr.attendance.my.form</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance_view_form"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="string">Attendance</attribute>
+            </xpath>
+            <xpath expr="//field[@id='employee_no_officer']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//field[@id='employee_no_manager']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//field[@id='employee_manager']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//separator[@name='check_in_separator']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//group[@name='check_in_group']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//separator[@name='check_out_separator']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//group[@name='check_out_group']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_attendance_my_calendar_view" model="ir.ui.view">
+        <field name="name">hr.attendance.my.calendar</field>
+        <field name="model">hr.attendance</field>
+        <field name="arch" type="xml">
+            <calendar string="My Attendances"
+                js_class="attendance_calendar_view"
+                date_start="check_in"
+                date_stop="check_out"
+                mode="week"
+                quick_create="0"
+                event_open_popup="true"
+                form_view_id="%(hr_attendance.hr_attendance_my_form_view)d">
+                <field name="worked_hours" widget="float_time"/>
+            </calendar>
         </field>
     </record>
 
@@ -260,6 +310,14 @@
         <field name="search_view_id" ref="hr_attendance_view_filter"/>
         <field name="help">
         </field>
+    </record>
+
+    <record id="hr_attendance_my_action" model="ir.actions.act_window">
+        <field name="name">My Attendances</field>
+        <field name="res_model">hr.attendance</field>
+        <field name="view_mode">calendar,list,pivot,graph</field>
+        <field name="view_id" ref="hr_attendance_my_calendar_view"/>
+        <field name="domain">[('employee_id.user_id', '=', uid)]</field>
     </record>
 
     <record id="hr_attendance_reporting" model="ir.actions.act_window">
@@ -384,16 +442,26 @@
         parent="menu_hr_attendance_reporting"
         sequence="10"/>
 
-    <menuitem id="menu_hr_attendance_overview" name="Overview" parent="menu_hr_attendance_root" sequence="5" groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer"/>
+    <menuitem id="menu_hr_attendance_view_dashboard" name="Dashboard" action="hr_attendance_action" parent="menu_hr_attendance_root" sequence="1" groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer"/>
 
-    <menuitem id="menu_hr_attendance_view_dashboard" name="Dashboard" action="hr_attendance_action" parent="menu_hr_attendance_overview" sequence="1"/>
+    <menuitem id="menu_hr_attendance_my_attendances" name="My Attendances" parent="menu_hr_attendance_root" sequence="4" groups="hr_attendance.group_hr_attendance_own" action="hr_attendance_my_action"/>
 
-    <menuitem id="menu_hr_attendance_employee" name="Employees" parent="menu_hr_attendance_overview" action="hr.open_view_employee_list_my" groups="hr_attendance.group_hr_attendance_officer" sequence="2"/>
+    <menuitem id="menu_hr_attendance_view_attendances_management" name="Management" parent="menu_hr_attendance_root" sequence="6" groups="hr_attendance.group_hr_attendance_user"/>
 
-    <menuitem id="menu_hr_attendance_view_attendances_management" name="Management" parent="menu_hr_attendance_root" sequence="6" groups="hr_attendance.group_hr_attendance_officer" action="hr_attendance_management_action"/>
+    <menuitem id="menu_hr_attendance_employee" name="Employees" parent="menu_hr_attendance_view_attendances_management" action="hr.open_view_employee_list_my" groups="hr_attendance.group_hr_attendance_officer" sequence="1"/>
+
+    <menuitem id="menu_hr_attendance_management_list" name="Attendances" parent="menu_hr_attendance_view_attendances_management" action="hr_attendance_management_action" sequence="2"/>
 
     <menuitem id="menu_hr_attendance_configuration" name="Configuration" parent="menu_hr_attendance_root" sequence="99" groups="hr_attendance.group_hr_attendance_manager"/>
 
     <menuitem id="menu_hr_attendance_onboarding" name="Onboarding" action="action_try_kiosk" parent="menu_hr_attendance_configuration" sequence="100" groups="hr.group_hr_user"/>
+
+    <menuitem
+        id="menu_hr_attendance_time_rules"
+        name="Time Rules"
+        parent="menu_hr_attendance_configuration"
+        action="hr_work_entry.hr_time_rule_action"
+        groups="hr_attendance.group_hr_attendance_manager"
+        sequence="5"/>
 
 </odoo>

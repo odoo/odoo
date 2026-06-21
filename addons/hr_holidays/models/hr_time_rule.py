@@ -4,7 +4,7 @@ from collections import defaultdict
 from datetime import UTC, timedelta
 from zoneinfo import ZoneInfo
 
-from odoo import models
+from odoo import fields, models
 from odoo.tools.intervals import Intervals
 
 from odoo.addons.hr_work_entry.models.hr_time_rule import _record_overlap_intervals
@@ -12,6 +12,16 @@ from odoo.addons.hr_work_entry.models.hr_time_rule import _record_overlap_interv
 
 class HrTimeRule(models.Model):
     _inherit = 'hr.time.rule'
+
+    work_entry_type_id = fields.Many2one(
+        domain="[('id', 'in', country_work_entry_type_ids), ('requires_allocation', '=', False)]",
+    )
+    leave_compensation_rate = fields.Float("Allocate %", default=0.0)
+    allocation_type_id = fields.Many2one(
+        'hr.work.entry.type',
+        string="Allocate to",
+        domain="[('requires_allocation', '=', True), ('id', 'in', country_work_entry_type_ids)]",
+    )
 
     def _get_remainder_leave_vals(self, employee, source_leave, date_from, date_to):
         return {

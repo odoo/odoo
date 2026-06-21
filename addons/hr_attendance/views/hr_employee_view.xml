@@ -16,6 +16,7 @@
             <button name="action_open_versions" position="before">
                 <field name="attendance_state" invisible="1"/>
                 <field name="hours_last_month" groups="hr_attendance.group_hr_attendance_officer" invisible="1"/>
+                <field name="hours_last_month_display" invisible="1"/>
                 <button name="action_open_last_month_attendances"
                         class="oe_stat_button"
                         icon="fa-clock-o"
@@ -24,16 +25,7 @@
                         help="Worked hours this month">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
-                            <field name="hours_last_month" widget="float_time"/>
-                            <span class="o_stat_value text-success" invisible="hours_last_month_overtime &lt;= 0 or not display_extra_hours">
-                                (+<field name="hours_last_month_overtime" widget="float_time"/>)
-                            </span>
-                            <span class="o_stat_value text-danger" invisible="hours_last_month_overtime &gt;= 0 or not display_extra_hours">
-                                (<field name="hours_last_month_overtime" widget="float_time"/>)
-                            </span>
-                        </span>
-                        <span class="o_stat_text">
-                            Monthly Hours
+                            <field name="hours_last_month_display"/>
                         </span>
                     </div>
                 </button>

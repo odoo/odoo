@@ -1,146 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="hr_time_rule_view_form" model="ir.ui.view">
-        <field name="name">hr.time.rule.form</field>
+    <record id="hr_time_rule_view_form_inherit_hr_holidays" model="ir.ui.view">
+        <field name="name">hr.time.rule.form.inherit.hr.holidays</field>
         <field name="model">hr.time.rule</field>
+        <field name="inherit_id" ref="hr_work_entry.hr_time_rule_view_form"/>
         <field name="arch" type="xml">
-            <form>
-                <sheet>
-                    <div class="oe_title">
-                        <h1><field name="name" placeholder="e.g. Exceed 8h per day"/></h1>
-                    </div>
-                    <group>
-                        <field name="country_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_company" readonly="company_id"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
-                    </group>
-
-                    <notebook>
-                        <page string="Details">
-
-                            <group string="Conditions" style="grid-template-columns: max-content 1fr; row-gap: 20px;">
-
-                                <span class="o_form_label">Employees</span>
-                                <field name="employee_domain" widget="domain" options="{'model': 'hr.employee'}" nolabel="1"/>
-
-                                <span class="o_form_label">Working Hours</span>
-                                <div>
-                                    <span class="d-flex gap-1 align-items-baseline">
-                                        <field name="threshold_operator" nolabel="1"
-                                            class="o_hr_narrow_field me-2" invisible="not working_hours_mode"/>
-                                        <field name="expected_hours" widget="float_time" nolabel="1" style="width:8ch"
-                                            invisible="calendar_source"/>
-                                        <field name="working_hours_mode" nolabel="1" style="width:25ch"/>
-                                    </span>
-                                    <span class="d-flex gap-3">
-                                        <span class="text-muted me-2" invisible="not calendar_source">based on</span>
-                                        <span class="align-items-end">
-                                            <field name="calendar_source" nolabel="1"
-                                                invisible="not calendar_source"
-                                                style="width:25ch"
-                                                options="{'horizontal': True}"/>
-                                            <field name="resource_calendar_id" nolabel="1"
-                                                invisible="calendar_source != 'reference'"
-                                                class="o_hr_narrow_field ms-2"
-                                                domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]"
-                                                placeholder="Company default schedule"/>
-                                        </span>
-                                    </span>
-                                    <span class="d-flex gap-1 align-items-baseline" invisible="quantity_period != 'week'">
-                                        <span class="text-muted me-2">week starts on</span>
-                                        <field name="week_start" nolabel="1" style="width:12ch"/>
-                                    </span>
-                                </div>
-                                <!-- Work Days -->
-                                <span class="o_form_label">Work Days</span>
-                                <div>
-                                    <div class="d-flex gap-3 align-items-center">
-                                        <div class="d-flex gap-1 align-items-center"><field name="apply_monday" nolabel="1"/><label for="apply_monday" string="Mon"/></div>
-                                        <div class="d-flex gap-1 align-items-center"><field name="apply_tuesday" nolabel="1"/><label for="apply_tuesday" string="Tue"/></div>
-                                        <div class="d-flex gap-1 align-items-center"><field name="apply_wednesday" nolabel="1"/><label for="apply_wednesday" string="Wed"/></div>
-                                        <div class="d-flex gap-1 align-items-center"><field name="apply_thursday" nolabel="1"/><label for="apply_thursday" string="Thu"/></div>
-                                        <div class="d-flex gap-1 align-items-center"><field name="apply_friday" nolabel="1"/><label for="apply_friday" string="Fri"/></div>
-                                        <div class="d-flex gap-1 align-items-center"><field name="apply_saturday" nolabel="1"/><label for="apply_saturday" string="Sat"/></div>
-                                        <div class="d-flex gap-1 align-items-center"><field name="apply_sunday" nolabel="1"/><label for="apply_sunday" string="Sun"/></div>
-                                    </div>
-                                    <div class="d-flex gap-1 align-items-center mt-1">
-                                        <field name="apply_on_public_holidays" nolabel="1"/>
-                                        <label for="apply_on_public_holidays" string="Public Holidays"/>
-                                    </div>
-                                    <div class="d-flex gap-1 align-items-baseline mt-1">
-                                        <span class="text-muted me-2">from</span>
-                                        <field name="timing_start" widget="float_time" nolabel="1" style="width:8ch"/>
-                                        <span class="text-muted ms-2 me-2">to</span>
-                                        <field name="timing_stop" widget="float_time" nolabel="1" style="width:8ch"/>
-                                        <span class="text-muted ms-2">hours</span>
-                                    </div>
-                                </div>
-
-                                <!-- Time Type (input filter) -->
-                                <span class="o_form_label">Time Type</span>
-                                <field name="condition_work_entry_type_ids" widget="many2many_tags"
-                                    nolabel="1"
-                                    placeholder="All types"/>
-                            </group>
-
-                            <separator string="Effect"/>
-                            <group style="grid-template-columns: max-content 1fr; row-gap: 12px;">
-                                <span class="o_form_label"
-                                    invisible="threshold_operator == 'less_than'">Set Excess to</span>
-                                <span class="o_form_label"
-                                    invisible="threshold_operator != 'less_than'">Set Deficit to</span>
-                                <div>
-                                    <field name="work_entry_type_id" nolabel="1"
-                                        options="{'no_create': True}"
-                                        placeholder="Don't split"/>
-                                    <field name="country_work_entry_type_ids" invisible="1"/>
-                                </div>
-
-                                <span class="o_form_label"
-                                    invisible="threshold_operator == 'less_than'">Allocate</span>
-                                <span class="o_form_label"
-                                    invisible="threshold_operator != 'less_than'">Take</span>
-                                <div class="d-flex gap-1 align-items-center">
-                                    <field name="leave_compensation_rate" widget="percentage" nolabel="1" style="width:8ch"/>
-                                    <span class="text-muted" invisible="not leave_compensation_rate">% to</span>
-                                    <field name="allocation_type_id" nolabel="1"
-                                        invisible="not leave_compensation_rate"
-                                        placeholder="Choose Time Off Type"/>
-                                </div>
-                            </group>
-                        </page>
-                    </notebook>
-                </sheet>
-            </form>
+            <xpath expr="//group[contains(@style,'row-gap: 12px')]" position="inside">
+                <span class="o_form_label"
+                    invisible="threshold_operator == 'less_than'">Allocate</span>
+                <span class="o_form_label"
+                    invisible="threshold_operator != 'less_than'">Take</span>
+                <div class="d-flex gap-1 align-items-center">
+                    <field name="leave_compensation_rate" widget="percentage" nolabel="1" style="width:8ch"/>
+                    <span class="text-muted" invisible="not leave_compensation_rate">% to</span>
+                    <field name="allocation_type_id" nolabel="1"
+                        invisible="not leave_compensation_rate"
+                        placeholder="Choose Time Off Type"/>
+                </div>
+            </xpath>
         </field>
-    </record>
-
-    <record id="hr_time_rule_view_list" model="ir.ui.view">
-        <field name="name">hr.time.rule.list</field>
-        <field name="model">hr.time.rule</field>
-        <field name="arch" type="xml">
-            <list>
-                <field name="sequence" widget="handle"/>
-                <field name="name"/>
-                <field name="condition_work_entry_type_ids" widget="many2many_tags" string="Applies To" optional="show"/>
-                <field name="work_entry_type_id" string="Outputs" optional="show"/>
-                <field name="country_id" optional="hide" groups="base.group_multi_company"/>
-                <field name="active" widget="boolean_toggle" optional="hide"/>
-            </list>
-        </field>
-    </record>
-
-    <record id="hr_time_rule_action" model="ir.actions.act_window">
-        <field name="name">Time Rules</field>
-        <field name="res_model">hr.time.rule</field>
-        <field name="view_mode">list,form</field>
     </record>
 
     <menuitem
         id="menu_hr_holidays_time_rules"
         name="Time Rules"
         parent="hr_holidays.menu_hr_holidays_configuration"
-        action="hr_time_rule_action"
+        action="hr_work_entry.hr_time_rule_action"
         groups="hr_holidays.group_hr_holidays_manager"
         sequence="5"/>
 

@@ -193,7 +193,7 @@ class HrTimeRule(models.Model):
     work_entry_type_id = fields.Many2one(
         'hr.work.entry.type',
         string="Set Excess to",
-        domain="[('id', 'in', country_work_entry_type_ids), ('requires_allocation', '=', False)]",
+        domain="[('id', 'in', country_work_entry_type_ids)]",
         index="btree_not_null",
     )
     country_work_entry_type_ids = fields.Many2many(
@@ -206,13 +206,6 @@ class HrTimeRule(models.Model):
         compute='_compute_amount_rate',
         store=True,
         readonly=False,
-    )
-
-    leave_compensation_rate = fields.Float("Allocate %", default=0.0)
-    allocation_type_id = fields.Many2one(
-        'hr.work.entry.type',
-        string="Allocate to",
-        domain="[('requires_allocation', '=', True), ('id', 'in', country_work_entry_type_ids)]",
     )
 
     _timing_start_is_hour = models.Constraint(

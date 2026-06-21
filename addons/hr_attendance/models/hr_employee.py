@@ -160,7 +160,7 @@ class HrEmployee(models.Model):
                 )
                 hours = sum(att.worked_hours or 0 for att in current_month_attendances)
                 employee.hours_last_month = round(hours, 2)
-                employee.hours_last_month_display = "%g" % employee.hours_last_month
+                employee.hours_last_month_display = _("%g h in %s") % (employee.hours_last_month, now_tz.strftime('%b'))
                 employee.hours_last_month_overtime = 0.0
 
     def _compute_hours_today(self):
@@ -300,15 +300,18 @@ class HrEmployee(models.Model):
 
     def action_open_last_month_attendances(self):
         self.ensure_one()
+        now = fields.Datetime.now()
+        tz = ZoneInfo(self.tz or 'UTC')
+        now_tz = now.replace(tzinfo=datetime.UTC).astimezone(tz)
+        month_start = now_tz.replace(day=1, hour=0, minute=0, second=0, microsecond=0).astimezone(datetime.UTC).replace(tzinfo=None)
+        month_end = (now_tz + relativedelta(months=1)).replace(day=1, hour=0, minute=0, second=0, microsecond=0).astimezone(datetime.UTC).replace(tzinfo=None)
         return {
             "type": "ir.actions.act_window",
             "name": _("Attendances This Month"),
             "res_model": "hr.attendance",
-            "views": [[self.env.ref('hr_attendance.hr_attendance_employee_calendar_view').id, "calendar"]],
-            "context": {
-                "display_extra_hours": self.display_extra_hours,
-            },
-            "domain": [('employee_id', '=', self.id)]
+            "views": [[False, "list"]],
+            "domain": [('employee_id', '=', self.id), ('check_in', '>=', month_start), ('check_in', '<', month_end)],
+            "context": {"group_by": ["check_in:week"]},
         }
 
     @api.depends("user_id.im_status", "attendance_state")
