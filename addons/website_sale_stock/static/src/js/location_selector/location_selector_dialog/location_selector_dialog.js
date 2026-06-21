@@ -48,13 +48,15 @@ export class LocationSelectorDialog extends Component {
         onWillUnmount(() => browser.removeEventListener('resize', this.debouncedOnResize));
 
         // Fetch new locations when the zip code is updated.
-        useEffect(() => {
-            void this.state.zipCode;
-            this._loadLocations();
-            return () => {
-                this.state.locations = [];
-            };
-        });
+        useEffect(
+            () => {
+                this._loadLocations();
+                return () => {
+                    this.state.locations = [];
+                };
+            },
+            () => [this.state.zipCode]
+        );
     }
 
     get locations() { return this.state.locations; }
