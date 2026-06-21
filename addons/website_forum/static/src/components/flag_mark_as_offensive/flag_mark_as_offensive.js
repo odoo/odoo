@@ -1,5 +1,4 @@
-import { useLayoutEffect } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, useEffect } from "@odoo/owl";
 import { useChildRef } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
 
@@ -20,16 +19,14 @@ export class FlagMarkAsOffensiveDialog extends Component {
             this.props.close();
         };
 
-        useLayoutEffect(
-            (discardButton) => {
-                if (discardButton) {
-                    discardButton.addEventListener("click", onClickDiscard);
-                    return () => {
-                        discardButton.removeEventListener("click", onClickDiscard);
-                    };
-                }
-            },
-            () => [this.modalRef.el?.querySelector(".btn-link")]
-        );
+        useEffect(() => {
+            const discardButton = this.modalRef.el?.querySelector(".btn-link");
+            if (discardButton) {
+                discardButton.addEventListener("click", onClickDiscard);
+                return () => {
+                    discardButton.removeEventListener("click", onClickDiscard);
+                };
+            }
+        });
     }
 }
