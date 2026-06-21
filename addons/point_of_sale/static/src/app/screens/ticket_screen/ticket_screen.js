@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { parseDate, parseDateTime, serializeDate, serializeDateTime } from "@web/core/l10n/dates";
@@ -94,16 +93,16 @@ export class TicketScreen extends Component {
 
         this.orderTimers = proxy({});
 
-        useLayoutEffect(
-            () => this.updateOrderTimers(),
-            () => [
-                this.state.filter,
-                this.state.page,
-                this.state.search,
-                this.state.selectedPreset,
-                this.state.nbrByPage,
-            ]
-        );
+        // useLayoutEffect(
+        //     () => this.updateOrderTimers(),
+        //     () => [
+        //         this.state.filter,
+        //         this.state.page,
+        //         this.state.search,
+        //         this.state.selectedPreset,
+        //         this.state.nbrByPage,
+        //     ]
+        // );
 
         onMounted(() => {
             this._timersInterval = setInterval(this.updateOrderTimers.bind(this), 60_000);
