@@ -57,8 +57,7 @@ class HrEmployee(models.Model):
 
     def _has_attendance_check_in_ability(self):
         self.ensure_one()
-        has_attendance_check_in_ability = super()._has_attendance_check_in_ability()
-        has_attendance_check_in_ability = has_attendance_check_in_ability and self.attendance_based
+        has_attendance_check_in_ability = self.company_id.attendance_from_systray and self.attendance_based
         return has_attendance_check_in_ability
 
     def get_attendace_data_by_employee(self, date_start, date_stop):
@@ -110,10 +109,6 @@ class HrEmployee(models.Model):
 
         return res
 
-    def _has_attendance_check_in_ability(self):
-        self.ensure_one()
-        return self.company_id.attendance_from_systray
-
     @api.depends('parent_id')
     def _compute_attendance_manager(self):
         for employee in self:
@@ -160,7 +155,7 @@ class HrEmployee(models.Model):
                 )
                 hours = sum(att.worked_hours or 0 for att in current_month_attendances)
                 employee.hours_last_month = round(hours, 2)
-                employee.hours_last_month_display = _("%g h in %s") % (employee.hours_last_month, now_tz.strftime('%b'))
+                employee.hours_last_month_display = self.env._("%(hours)g h in %(month)s") % {'hours': employee.hours_last_month, 'month': now_tz.strftime('%b')}
                 employee.hours_last_month_overtime = 0.0
 
     def _compute_hours_today(self):

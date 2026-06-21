@@ -9,6 +9,9 @@
             <xpath expr="//form" position="inside">
                 <app data-string="Attendances" string="Attendances" name="hr_attendance" groups="hr_attendance.group_hr_attendance_manager">
                     <block title="Attendance Rules &amp; Enforcement">
+                        <setting string="Attendance Validation" company_dependent="1" help="When enabled, attendance records must be validated by an officer before they count toward work entries and time rules.">
+                            <field name="attendance_validation"/>
+                        </setting>
                         <setting string="Automatic Check-Out" company_dependent="1" help="Automatically check out employees based on their working schedule with an additional tolerance, or at a specific time each day. Does not apply to employees with a flexible working schedule.">
                             <field name="auto_check_out"/>
                             <div invisible="not auto_check_out">

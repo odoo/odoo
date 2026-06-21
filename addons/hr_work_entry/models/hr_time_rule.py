@@ -658,7 +658,7 @@ class HrTimeRule(models.Model):
                         datetime.combine(period_date, datetime.min.time())
                     )
                     period_window_iv = Intervals([(period_start, period_stop, self.env['resource.calendar'])])
-                    if not (period_window_iv - fully_flex):
+                    if rule.calendar_source and not (period_window_iv - fully_flex):
                         continue
                     schedule_in_window = schedule & rule_window & period_window_iv
                     ex, df = rule._evaluate_period(period_start, period_stop, period_items, schedule_in_window)

@@ -17,6 +17,11 @@
                 <field name="check_in"/>
                 <field name="check_out" options="{}"/>
                 <field name="worked_hours" string="Worked Hours" widget="float_time"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'validated'"
+                       decoration-warning="state == 'draft'"
+                       decoration-danger="state == 'refused'"
+                       optional="show"/>
                 <field name="in_mode" string="Input Mode (In)" optional="hidden"/>
                 <field name="out_mode" string="Input Mode (Out)" optional="hidden"/>
                 <field name="in_latitude" string="Latitude (In)" optional="hidden"/>
@@ -59,6 +64,19 @@
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
             <form string="Employee attendances" duplicate="false">
+                <header>
+                    <button name="action_validate" string="Validate" type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft'"
+                            groups="hr_attendance.group_hr_attendance_officer"/>
+                    <button name="action_refuse" string="Refuse" type="object"
+                            invisible="state not in ('draft', 'validated')"
+                            groups="hr_attendance.group_hr_attendance_officer"/>
+                    <button name="action_reset_to_draft" string="Reset to Draft" type="object"
+                            invisible="state != 'refused'"
+                            groups="hr_attendance.group_hr_attendance_officer"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,validated"/>
+                </header>
                 <sheet>
                     <group>
                         <group colspan="2">
@@ -248,6 +266,10 @@
                 <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id', '=', uid)]" />
                 <filter string="My Team" name="myteam" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
                 <separator/>
+                <filter string="Draft" name="state_draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Validated" name="state_validated" domain="[('state', '=', 'validated')]"/>
+                <filter string="Refused" name="state_refused" domain="[('state', '=', 'refused')]"/>
+                <separator/>
                 <filter string="At Work" name="nocheckout" domain="[('check_out', '=', False)]" />
                 <filter string="Errors" name="errors"
                         domain="['|', ('worked_hours', '&gt;=', 16), '&amp;', ('check_out', '=', False), ('check_in', '&lt;=', '-1d')]"/>
@@ -352,6 +374,10 @@
                 <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id', '=', uid)]" />
                 <filter string="My Team" name="myteam" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
                 <separator/>
+                <filter string="To Validate" name="to_approve" domain="[('state', '=', 'draft')]"/>
+                <filter string="Validated" name="state_validated" domain="[('state', '=', 'validated')]"/>
+                <filter string="Refused" name="state_refused" domain="[('state', '=', 'refused')]"/>
+                <separator/>
                 <filter string="Date" name="check_in_filter" date="check_in"/>
                 <separator/>
                 <filter
@@ -379,6 +405,23 @@
                 <field name="check_in" readonly="1"/>
                 <field name="check_out" readonly="1"/>
                 <field name="worked_hours" readonly="1" string="Worked Time" widget="float_time"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'validated'"
+                       decoration-warning="state == 'draft'"
+                       decoration-danger="state == 'refused'"
+                       readonly="1"/>
+                <button name="action_validate" string="Validate" type="object"
+                        icon="fa-check"
+                        invisible="state != 'draft'"
+                        groups="hr_attendance.group_hr_attendance_officer"/>
+                <button name="action_refuse" string="Refuse" type="object"
+                        icon="fa-times"
+                        invisible="state not in ('draft', 'validated')"
+                        groups="hr_attendance.group_hr_attendance_officer"/>
+                <button name="action_reset_to_draft" string="Reset to Draft" type="object"
+                        icon="fa-undo"
+                        invisible="state != 'refused'"
+                        groups="hr_attendance.group_hr_attendance_officer"/>
             </list>
         </field>
     </record>
@@ -451,6 +494,26 @@
     <menuitem id="menu_hr_attendance_employee" name="Employees" parent="menu_hr_attendance_view_attendances_management" action="hr.open_view_employee_list_my" groups="hr_attendance.group_hr_attendance_officer" sequence="1"/>
 
     <menuitem id="menu_hr_attendance_management_list" name="Attendances" parent="menu_hr_attendance_view_attendances_management" action="hr_attendance_management_action" sequence="2"/>
+
+    <record id="action_attendance_validate" model="ir.actions.server">
+        <field name="name">Validate</field>
+        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field name="binding_model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.action_validate()</field>
+        <field name="group_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_officer'))]"/>
+    </record>
+
+    <record id="action_attendance_refuse" model="ir.actions.server">
+        <field name="name">Refuse</field>
+        <field name="model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field name="binding_model_id" ref="hr_attendance.model_hr_attendance"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">records.action_refuse()</field>
+        <field name="group_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_officer'))]"/>
+    </record>
 
     <menuitem id="menu_hr_attendance_configuration" name="Configuration" parent="menu_hr_attendance_root" sequence="99" groups="hr_attendance.group_hr_attendance_manager"/>
 

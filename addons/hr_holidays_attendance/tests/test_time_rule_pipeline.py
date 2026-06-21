@@ -1967,3 +1967,59 @@ class TestTimeRulePipeline(TransactionCase):
             attendance.check_in, datetime(2024, 1, 1, 8, 0),
             "Source attendance check_in must be unchanged",
         )
+
+    def test_two_quantity_rules_priority(self):
+        """Two quantity rules with different thresholds: higher-priority rule wins overlapping excess.
+
+        Rule 1 (seq=20): reclassifies all attended hours to type1 (> 0h / any-hours rule).
+        Rule 2 (seq=10): > 4h/day threshold, reclassifies excess to type2 (higher priority).
+
+        Employee works 3h then takes a break, then works 2h = 5h total:
+        - Rule 2 fires first (higher priority, seq=10): 1h above 4h → type2
+        - Rule 1 fires next (seq=20): remaining 4h still tagged as att_type → type1
+        Expected: 4h at type1, 1h at type2.
+        """
+        self.time_rule.write({'active': False})
+
+        type1 = self.env['hr.work.entry.type'].create({'name': 'OT Base', 'code': 'TSTOTP1'})
+        type2 = self.env['hr.work.entry.type'].create({'name': 'OT Premium', 'code': 'TSTOTP2'})
+
+        # seq=10 → fires first; expected_hours=4 (has_threshold=True) → excess above 4h → type2
+        self.env['hr.time.rule'].create({
+            'name': 'Above 4h',
+            'working_hours_mode': 'day',
+            'expected_hours': 4,
+            'work_entry_type_id': type2.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+            'sequence': 10,
+        })
+        # seq=20 → fires second; expected_hours=0 (has_threshold=False) → reclassifies remaining att_type → type1
+        self.env['hr.time.rule'].create({
+            'name': 'Any OT',
+            'working_hours_mode': 'day',
+            'expected_hours': 0,
+            'work_entry_type_id': type1.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+            'sequence': 20,
+        })
+
+        att1 = self.env['hr.attendance'].create({
+            'employee_id': self.flex_emp.id,
+            'check_in': datetime(2022, 12, 12, 8),
+            'check_out': datetime(2022, 12, 12, 11),  # 3h
+        })
+        att2 = self.env['hr.attendance'].create({
+            'employee_id': self.flex_emp.id,
+            'check_in': datetime(2022, 12, 12, 12),
+            'check_out': datetime(2022, 12, 12, 14),  # 2h
+        })
+
+        outputs = att1.overtime_attendance_ids | att2.overtime_attendance_ids
+        type1_hours = sum(a.worked_hours for a in outputs if a.work_entry_type_id == type1)
+        type2_hours = sum(a.worked_hours for a in outputs if a.work_entry_type_id == type2)
+
+        self.assertAlmostEqual(type1_hours, 4.0, places=5,
+            msg="4h should be classified by 'Any OT' rule (hours at or below the 4h mark)")
+        self.assertAlmostEqual(type2_hours, 1.0, places=5,
+            msg="1h should be classified by 'Above 4h' rule (the hour exceeding the threshold)")
+

@@ -42,6 +42,7 @@ class ResCompany(models.Model):
     auto_check_out_tolerance = fields.Float(default=2, export_string_translation=False)
     auto_check_out_specific_time = fields.Float(default=20.0, export_string_translation=False)
     absence_management = fields.Boolean(string="Absence Management", default=False)
+    attendance_validation = fields.Boolean(string="Attendance Validation", default=False)
     attendance_work_entry_type_id = fields.Many2one(
         'hr.work.entry.type',
         string="Attendance Work Entry Type",

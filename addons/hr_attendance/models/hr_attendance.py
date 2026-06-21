@@ -87,6 +87,12 @@ class HrAttendance(models.Model):
 
     active = fields.Boolean(default=True)
 
+    state = fields.Selection([
+        ('draft', 'Draft'),
+        ('validated', 'Validated'),
+        ('refused', 'Refused'),
+    ], string='Status', default='draft', index=True, tracking=True, readonly=True, copy=False)
+
     # time rule engine output fields
     is_time_rule_output = fields.Boolean(default=False, index=True)
     time_rule_id = fields.Many2one('hr.time.rule', index=True)
@@ -272,7 +278,7 @@ class HrAttendance(models.Model):
         if not self.env.context.get('skip_time_rules') and any(
             f in vals for f in ('employee_id', 'check_in', 'check_out', 'work_entry_type_id')
         ):
-            self._process_time_rules()
+            self.filtered(lambda a: a.state == 'validated')._process_time_rules()
         return result
 
     def unlink(self):
@@ -548,7 +554,8 @@ class HrAttendance(models.Model):
                 'work_entry_type_id': emp.company_id.attendance_work_entry_type_id.id,
                 'in_mode': 'technical',
                 'out_mode': 'technical',
-                'employee_id': emp.id
+                'employee_id': emp.id,
+                'state': 'validated',
             })
 
         technical_attendances = self.env['hr.attendance'].create(technical_attendances_vals)
@@ -766,6 +773,7 @@ class HrAttendance(models.Model):
         return self.env['hr.attendance'].sudo().with_context(active_test=False).search([
             ('is_time_rule_output', '=', False),
             ('source_attendance_id', '=', False),
+            ('state', '=', 'validated'),
             ('employee_id', 'in', employees.ids),
             ('check_in', '<=', end_dt.replace(tzinfo=None)),
             ('check_out', '>=', start_dt.replace(tzinfo=None)),
@@ -774,9 +782,39 @@ class HrAttendance(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            if 'state' not in vals:
+                if vals.get('is_time_rule_output') or vals.get('source_attendance_id'):
+                    # system-generated records always auto-validate
+                    vals['state'] = 'validated'
+                else:
+                    company = self.env.company
+                    if vals.get('employee_id'):
+                        employee = self.env['hr.employee'].browse(vals['employee_id'])
+                        company = employee.company_id or company
+                    vals['state'] = 'draft' if company.attendance_validation else 'validated'
         res = super().create(vals_list)
-        res.filtered(lambda a: not self.env.context.get('skip_time_rules'))._process_time_rules()
+        if not self.env.context.get('skip_time_rules'):
+            res.filtered(lambda a: a.state == 'validated')._process_time_rules()
         return res
+
+    def action_validate(self):
+        self.write({'state': 'validated'})
+        self.filtered(lambda a: a.check_out)._process_time_rules()
+
+    def action_refuse(self):
+        self.write({'state': 'refused'})
+        to_cleanup = self.filtered(lambda a: a.check_in and a.check_out and not a.is_time_rule_output)
+        if to_cleanup:
+            to_cleanup.sudo().mapped('overtime_attendance_ids').with_context(skip_time_rules=True).unlink()
+            archived = to_cleanup.sudo().filtered(lambda a: not a.active)
+            if archived:
+                archived.with_context(skip_time_rules=True, tracking_disable=True).write({'active': True})
+            affected = [(a.employee_id, a.check_in, a.check_out) for a in to_cleanup]
+            self._process_time_rules_for(affected)
+
+    def action_reset_to_draft(self):
+        self.write({'state': 'draft'})
 
     @api.ondelete(at_uninstall=False)
     def _unlink_output_attendances(self):
