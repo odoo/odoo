@@ -4,23 +4,44 @@
         <field name="model">sale.phonebook.status.wizard</field>
         <field name="arch" type="xml">
             <form string="Đổi trạng thái">
+                <sheet>
+                    <!-- Cảnh báo thân thiện khi chuyển sang trạng thái callback -->
+                    <div class="alert alert-warning text-center" role="alert" 
+                         invisible="status != 'callback'">
+                        <i class="fa fa-exclamation-triangle me-1"/> 
+                        Bạn đã chọn trạng thái <strong>Hẹn gọi lại</strong>. Vui lòng cập nhật mốc thời gian cụ thể bên dưới!
+                    </div>
 
-                <group>
-                    <field name="status"/>
-                </group>
+                    <group>
+                        <!-- Ẩn ID liên kết đến bản ghi gốc -->
+                        <field name="phonebook_id" invisible="1"/>
+                        
+                        <group>
+                            <!-- Trạng thái hiện tại hoặc trạng thái mới muốn chuyển -->
+                            <field name="status" string="Trạng thái"/>
+                            
+                            <!-- Chỉ hiển thị và bắt buộc nhập thời gian hẹn khi status là 'callback' -->
+                            <field name="schedule_callback" 
+                                   string="Thời gian hẹn gọi lại" 
+                                   placeholder="Chọn ngày và giờ gọi lại..."
+                                   invisible="status != 'callback'"
+                                   required="status == 'callback'"/>
+                        </group>
+                    </group>
+                </sheet>
 
+                <!-- Thanh chứa nút bấm hành động dưới chân Pop-up -->
                 <footer>
-
-                    <button name="action_confirm"
-                            type="object"
-                            string="Xác nhận"
-                            class="btn-primary"/>
-
-                    <button string="Hủy"
-                            special="cancel"/>
-
+                    <button string="Xác nhận" 
+                            name="action_confirm" 
+                            type="object" 
+                            class="btn-primary" 
+                            data-hotkey="q"/>
+                    <button string="Hủy" 
+                            class="btn-secondary" 
+                            special="cancel" 
+                            data-hotkey="z"/>
                 </footer>
-
             </form>
         </field>
     </record>
@@ -66,64 +87,77 @@
                 <templates>
                     <t t-name="card">
 
-                        <div class="oe_kanban_card rounded-4 shadow-sm p-3">
-                            <!-- Header -->
-                            <div class="d-flex justify-content-between align-items-start mb-2 w-100">
-    
-                                <div class="flex-grow-1 me-2">
-                                    <div class="fw-semibold text-dark fs-6">
+                        <!-- Header -->
+                        <div class="d-flex justify-content-between align-items-start mb-2 w-100">
+                            <div class="flex-grow-1 me-2">
+                                <!-- Tên khách hàng - Nổi bật hơn -->
+
+                                <div class="mb-2">
+                                    <!-- Dòng 1: Tên khách hàng (Cho phép xuống dòng nếu quá dài, không sợ đè vào lịch hẹn) -->
+                                    <div class="fw-bold text-dark fs-6 mb-1 pe-5">
                                         <field name="name"/>
                                     </div>
-
-                                    <div class="fw-bold fs-4 text-primary">
-                                        <field name="phone" widget="phone"/>
-                                    </div>
-                                    <div class="mt-1" t-if="record.source.raw_value and !record.is_hot.raw_value">
-                                        <span class="badge bg-secondary-subtle text-secondary border text-wrap text-start" style="max-width: 100%;">
-                                            <i class="fa fa-folder-open me-1" title="Nguồn Data"/>
-                                            <field name="is_hot" invisible="1"/>
-                                            <field name="source"/>
+                                    
+                                    <!-- Dòng 2: Badge hiển thị lịch hẹn gọi lại tách biệt, rất rõ ràng và dễ nhìn -->
+                                    <div t-if="record.status.raw_value == 'callback' and record.schedule_callback.raw_value" class="mb-1">
+                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1" style="font-size: 0.75rem;">
+                                            <i class="fa fa-clock-o me-1"/> Hẹn gọi lại: <field name="schedule_callback"/>
                                         </span>
                                     </div>
                                 </div>
 
-                                <div class="flex-shrink-0">
-                                    <field name="status" widget="badge"/>
+                                <!-- Số điện thoại kèm widget mặc định -->
+                                <div class="fw-bold fs-4 text-primary">
+                                    <field name="phone" widget="phone"/>
                                 </div>
-
-                            </div>
-                            
-
-                            <!-- Note -->
-                            <div class="bg-light rounded-3 px-2 py-2 small text-secondary mb-3">
-
-                                <div class="fw-semibold text-dark mb-1">
-                                    Ghi chú
+                                
+                                <!-- Nguồn Data: Đã sửa điều kiện t-if để LUÔN HIỂN THỊ rõ ràng, đổi màu tương phản cao -->
+                                <div class="mt-2" t-if="record.source.raw_value">
+                                    <span t-attf-class="badge border text-wrap text-start px-2 py-1 #{record.is_hot.raw_value ? 'bg-danger text-white border-danger' : 'bg-dark-subtle text-dark border-secondary'}" style="max-width: 100%; font-size: 0.75rem;">
+                                        <i class="fa fa-folder-open me-1" title="Nguồn Data"/>
+                                        <field name="is_hot" invisible="1"/>
+                                        <field name="source"/>
+                                    </span>
                                 </div>
-
-                                <field name="note_preview"/>
-
                             </div>
 
-                            <!-- Action -->
-                            <footer>
-                                <div class="d-flex flex-column flex-md-row w-100 gap-2 mt-2">
-                                    <button name="action_open_status_wizard"
-                                            type="object"
-                                            string="Đổi trạng thái"
-                                            icon="fa-history"
-                                            class="btn btn-secondary btn-sm flex-grow-1 w-100"/>
-
-                                    <button name="action_convert_to_customer" 
-                                            type="object" 
-                                            string="Khách hàng"
-                                            icon="fa-user-plus"
-                                            class="btn btn-primary btn-sm flex-grow-1 w-100"
-                                            invisible="status == 'invalid'"/>
-                                </div>
-                            </footer>
-
+                            <!-- Trạng thái Badge gốc -->
+                            <div class="flex-shrink-0">
+                                <field name="status" widget="badge"/>
+                            </div>
                         </div>
+                        
+                        <!-- Note: Tối ưu khoảng trống và hiển thị nội dung tinh tế hơn -->
+                        <div class="bg-light rounded-3 px-2 py-2 small text-secondary mb-3 border-start border-2 border-muted" t-if="record.note_preview.raw_value">
+                            <div class="fw-semibold text-dark mb-1" style="font-size: 0.8rem;">
+                                <i class="fa fa-pencil me-1 text-muted"/> Ghi chú
+                            </div>
+                            <div class="text-dark-50 text-truncate-2">
+                                <field name="note_preview"/>
+                            </div>
+                        </div>
+                        <!-- Trường hợp rỗng (Empty State cho Ghi chú nội bộ card): Nếu không có ghi chú, hiển thị dòng gợi ý nhẹ nhàng thay vì để khoảng trắng vô nghĩa -->
+                        <div class="bg-light rounded-3 px-2 py-2 small text-muted mb-3 text-center border border-dashed" t-if="!record.note_preview.raw_value">
+                            <span class="fst-italic" style="font-size: 0.75rem;"><i class="fa fa-comment-o me-1"/> Chưa có ghi chú...</span>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <footer>
+                            <div class="d-flex flex-column flex-md-row w-100 gap-2 mt-2">
+                                <button name="action_open_status_wizard"
+                                        type="object"
+                                        string="Đổi trạng thái"
+                                        icon="fa-history"
+                                        class="btn btn-secondary btn-sm flex-grow-1 w-100"/>
+
+                                <button name="action_convert_to_customer" 
+                                        type="object" 
+                                        string="Khách hàng"
+                                        icon="fa-user-plus"
+                                        class="btn btn-primary btn-sm flex-grow-1 w-100"
+                                        invisible="status in ('invalid', 'new')"/>
+                            </div>
+                        </footer>
 
                     </t>
                 </templates>
@@ -214,6 +248,7 @@
                                 <field name="source" readonly="True"/>
                             </group>
                             <group string="Lịch sử tương tác">
+                                <field name="schedule_callback" invisible="status != 'callback'"/>
                                 <field name="given_at" readonly="True"/>
                                 <field name="last_interaction_at" readonly="True"/>
                                 <field name="salesperson_id" readonly="True" groups="ht_crm.group_ht_sales_leader"/>
