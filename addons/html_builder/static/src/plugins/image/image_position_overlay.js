@@ -1,6 +1,15 @@
-import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useExternalListener, useRef } from "@web/owl2/utils";
 import { scrollTo } from "@html_builder/utils/scrolling";
-import { Component, onMounted, onWillStart, onWillUnmount, props, t, useListener } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onPatched,
+    onWillStart,
+    onWillUnmount,
+    props,
+    t,
+    useListener,
+} from "@odoo/owl";
 
 export class ImagePositionOverlay extends Component {
     static template = "html_builder.ImagePositionOverlay";
@@ -73,9 +82,14 @@ export class ImagePositionOverlay extends Component {
             this.reloadSavePoint = this.props.history?.makeSavePoint() ?? (() => {});
             this.dimensionOverlay();
             this.props.targetEl.classList.add("o_we_image_positioning");
+            this.tooltip = window.Tooltip.getOrCreateInstance(this.draggerRef.el, {
+                trigger: "manual",
+                container: this.overlayRef.el,
+            });
+            this.tooltip.show();
         });
 
-        useLayoutEffect(() => {
+        onPatched(() => {
             this.tooltip = window.Tooltip.getOrCreateInstance(this.draggerRef.el, {
                 trigger: "manual",
                 container: this.overlayRef.el,
