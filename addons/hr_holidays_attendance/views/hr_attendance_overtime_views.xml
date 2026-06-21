@@ -9,10 +9,10 @@
             <sheet position="inside">
                 <notebook invisible="not overtime_attendance_ids"
                     groups="hr.group_hr_manager,hr_attendance.group_hr_attendance_own">
-                    <page string="Overtime Entries">
+                    <page string="Rules Outputs">
                         <field name="overtime_attendance_ids" readonly="1">
                             <list>
-                                <field name="work_entry_type_id" readonly="1"/>
+                                <field string="Time type" name="work_entry_type_id" readonly="1"/>
                                 <field name="check_in" readonly="1"/>
                                 <field name="check_out" readonly="1"/>
                                 <field name="worked_hours" widget="float_time" readonly="1"/>

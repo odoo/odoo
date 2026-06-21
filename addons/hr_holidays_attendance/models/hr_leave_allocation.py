@@ -20,6 +20,7 @@ class HrLeaveAllocation(models.Model):
             ('employee_id', '=', self.employee_id.id),
             ('check_in', '<', end_dt),
             ('check_out', '>', start_dt),
+            ('state', '=', 'validated'),
         ])
 
         attendance_intervals = []

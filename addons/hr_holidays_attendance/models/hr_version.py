@@ -58,6 +58,7 @@ class HrVersion(models.Model):
             ('check_in', '<=', end_dt.replace(tzinfo=None)),
             ('check_out', '>=', start_dt.replace(tzinfo=None)),
             ('check_out', '!=', False),
+            ('state', '=', 'validated'),
         ])
 
         knocked_raw = defaultdict(list)
