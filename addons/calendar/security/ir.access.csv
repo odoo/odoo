@@ -3,7 +3,9 @@ access_calendar_attendee_employee,calendar.attendee_employee,calendar.attendee,b
 access_calendar_attendee_employee_delete_wizard,calendar.attendee_employee_delete_wizard,calendar.popover.delete.wizard,base.group_user,crud,
 access_calendar_alarm,calendar.alarm,calendar.alarm,base.group_user,crud,
 calendar_event_rule_my,Own events,calendar.event,base.group_portal,r,"[('partner_ids', 'in', user.partner_id.id)]"
-calendar_event_rule_employee,All Calendar Event for employees,calendar.event,base.group_user,crud,
+calendar_event_rule_employee,All Calendar Event for employees,calendar.event,base.group_user,cru,
+calendar_event_rule_employee_access_unlink,Deletable Calendar Event for employees,calendar.event,base.group_user,d,"['|', ('user_id', '=', user.id), ('partner_ids', 'in', user.partner_id.id)]"
+calendar_event_rule_system_access_unlink,Deletable Calendar Event for system users,calendar.event,base.group_system,d,
 calendar_event_rule_private,Private events,calendar.event,,cud,"['|', ('privacy', '!=', 'private'), '&', ('privacy', '=', 'private'), '|', ('user_id', '=', user.id), ('partner_ids', 'in', user.partner_id.id)]"
 access_calendar_event_type_all,calendar.event.type.all,calendar.event.type,base.group_user,r,
 access_calendar_event_type_manager,calendar.event.type.manager,calendar.event.type,base.group_system,crud,
