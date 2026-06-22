@@ -1,7 +1,6 @@
 from odoo import fields
 
 from odoo.addons.account.demo.account_demo import file_read
-from odoo.addons.account_peppol.models.res_partner import ResPartner
 
 DEMO_PRIVATE_KEY = 'account_peppol/tools/private_key.pem'
 
@@ -77,14 +76,6 @@ def _mock_get_peppol_verification_state(func, self, routing_identifier, invoice_
     return 'valid'
 
 
-def _mock_button_verify_partner_endpoint(func, self, company=None):
-    self.ensure_one()
-    company = company or self.env.company
-    edi_format = self._get_peppol_edi_format()
-    state = _mock_get_peppol_verification_state(ResPartner._get_peppol_verification_state, self, self.routing_identifier, edi_format)
-    self.with_company(company).peppol_verification_state = state
-
-
 def _mock_l10n_fr_pdp_update_pilot_phase(func, self, value):
     self.sudo().l10n_fr_pdp_pilot_phase = value
     if value:
@@ -99,7 +90,6 @@ def _mock_button_trigger_authentication(func, self):
 
 
 _demo_behaviour = {
-    'button_account_peppol_check_partner_endpoint': _mock_button_verify_partner_endpoint,
     '_register_proxy_user': _mock_register_proxy_user,  # account_edi_proxy_client.user
     '_pdp_register_receiver': _mock_pdp_register_receiver,  # account_edi_proxy_client.user
     '_call_peppol_proxy': _mock_call_peppol_proxy,  # account_edi_proxy_client.user
