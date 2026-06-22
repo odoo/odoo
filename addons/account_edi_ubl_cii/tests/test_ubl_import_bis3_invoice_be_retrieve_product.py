@@ -18,6 +18,10 @@ class TestUblImportBis3InvoiceBERetrieveProduct(TestUblImportBis3InvoiceBE):
         }])
 
     def test_partial_import_product_name(self):
+        # enable predict_bill_product
+        if self.env['ir.module.module']._get('account_accountant').state == 'installed':
+            self.company_data['company'].predict_bill_product = True
+
         product = self._create_product(name='important product1')
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_product_name')
         self.assertRecordValues(invoice.invoice_line_ids, [
