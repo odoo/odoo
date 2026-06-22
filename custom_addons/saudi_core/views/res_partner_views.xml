@@ -1,0 +1,23 @@
+<odoo>
+    <record id="view_partner_saudi_form" model="ir.ui.view">
+        <field name="name">res.partner.saudi.form</field>
+        <field name="model">res.partner</field>
+        <field name="priority">15</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group string="Saudi Details" colspan="2">
+                        <field name="saudi_national_id"/>
+                        <field name="saudi_iqama"/>
+                        <field name="building_number"/>
+                        <field name="street_name"/>
+                        <field name="district"/>
+                        <field name="city"/>
+                        <field name="postal_code"/>
+                        <field name="additional_number"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
