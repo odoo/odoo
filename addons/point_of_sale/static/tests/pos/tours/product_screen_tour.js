@@ -1338,3 +1338,16 @@ registry.category("web_tour.tours").add("test_customer_search_prefilled_on_creat
             PartnerList.selectFormDiscard(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_default_fiscal_position_allowed", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.checkFiscalPosition("Allowed"),
+            ProductScreen.clickControlButtonMore(),
+            Chrome.endTour(),
+        ].flat(),
+});
