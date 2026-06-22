@@ -24,7 +24,7 @@ import { ListCogMenu } from "./list_cog_menu";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { OfflineActionHelper } from "@web/views/offline_action_helper";
 import { SelectionBox } from "@web/views/view_components/selection_box";
-import { useExportRecords, useDeleteRecords } from "@web/views/view_hook";
+import { useExportRecords } from "@web/views/view_hook";
 
 import { Component, onWillPatch, onWillStart, props, proxy, t } from "@odoo/owl";
 
@@ -188,7 +188,6 @@ export class ListController extends Component {
         this.exportRecords = useExportRecords(this.env, this.props.context, () =>
             this.getExportableFields()
         );
-        this.deleteRecordsWithConfirmation = useDeleteRecords(this.model);
     }
 
     get modelParams() {
@@ -316,7 +315,7 @@ export class ListController extends Component {
     }
 
     onDeleteSelectedRecords() {
-        this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps);
+        this.model.root.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps, null, this.archiveEnabled);
     }
 
     /**

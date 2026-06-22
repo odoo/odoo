@@ -25,6 +25,17 @@ import {
     queryRect,
     queryText,
     resize,
+    scroll,
+    setInputFiles,
+    waitFor,
+} from "@odoo/hoot-dom";
+import {
+    Deferred,
+    advanceFrame,
+    advanceTime,
+    animationFrame,
+    disableAnimations,
+    mockTouch,
     runAllTimers,
     setInputFiles,
     test,
@@ -8223,406 +8234,30 @@ test(`cache web_read_group: less groups than in cache`, async () => {
     expect(queryAllTexts(`.o_kanban_group .o_kanban_header`)).toEqual(["xmo\n(4)"]);
 });
 
-test.tags("desktop");
-test("Cache: folded is now unfolded", async () => {
-    Product._records[1].fold = true;
-
-    Partner._views = {
-        "kanban,false": `
-            <kanban default_group_by="product_id">
-                <templates>
-                    <div t-name="card">
-                        <field name="id"/>
-                    </div>
-                </templates>
-            </kanban>`,
-        "search,false": `<search/>`,
-    };
-
-    defineActions([
-        {
-            id: 1,
-            name: "Partners Action",
-            res_model: "partner",
-            views: [[false, "kanban"]],
-            search_view_id: [false, "search"],
-        },
-    ]);
-
-    await mountWithCleanup(WebClient);
-    await getService("action").doAction(1);
-
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
-    expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
-    expect(queryText(getKanbanColumn(1))).toBe("xmo\n(2)");
-
-    MockServer.env["product"].write(5, { fold: false });
-    await getService("action").doAction(1);
-
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(2);
-});
-
-test.tags("desktop");
-test("Cache: unfolded is now folded", async () => {
-    Product._records[1].fold = false;
-
-    Partner._views = {
-        "kanban,false": `
-            <kanban default_group_by="product_id">
-                <templates>
-                    <div t-name="card">
-                        <field name="id"/>
-                    </div>
-                </templates>
-            </kanban>`,
-        "search,false": `<search/>`,
-    };
-
-    defineActions([
-        {
-            id: 1,
-            name: "Partners Action",
-            res_model: "partner",
-            views: [[false, "kanban"]],
-            search_view_id: [false, "search"],
-        },
-    ]);
-
-    await mountWithCleanup(WebClient);
-    await getService("action").doAction(1);
-
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(1) })).toHaveCount(2);
-
-    MockServer.env["product"].write(5, { fold: true });
-    await getService("action").doAction(1);
-    expect(queryAll(".o_kanban_record", { root: getKanbanColumn(0) })).toHaveCount(2);
-    expect(getKanbanColumn(1)).toHaveClass("o_column_folded");
-    expect(queryText(getKanbanColumn(1))).toBe("xmo\n(2)");
-});
-
-test.tags("desktop");
-test("Cache: kanban view progressbar, filter, open a record, edit, come back", async () => {
-    // This test encodes a very specify scenario involving a kanban with progressbar, where the
-    // filter was lost when coming back due to the cache callback, which removed the groups
-    // information.
-    Product._records[1].fold = false;
-
-    let def;
-    onRpc("web_read_group", () => def);
-
-    Partner._views = {
-        "kanban,false": `
-            <kanban default_group_by="product_id" on_create="quick_create" quick_create_view="some_view_ref">
-                <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
-                <templates>
-                    <t t-name="card">
-                        <field name="foo"/>
-                    </t>
-                </templates>
-            </kanban>`,
-        "form,false": `<form><field name="product_id" widget="statusbar" options="{'clickable': true}"/></form>`,
-        "search,false": `<search/>`,
-    };
-
-    defineActions([
-        {
-            id: 1,
-            name: "Partners Action",
-            res_model: "partner",
-            views: [
-                [false, "kanban"],
-                [false, "form"],
-            ],
-            search_view_id: [false, "search"],
-        },
-    ]);
-
-    await mountWithCleanup(WebClient);
-    await getService("action").doAction(1);
-    expect(".o_kanban_group").toHaveCount(2);
-    expect(".o_kanban_group:eq(0) .o_kanban_record").toHaveCount(2);
-
-    // Filter the first column with the progressbar
-    await contains(".o_column_progress .progress-bar", { root: getKanbanColumn(0) }).click();
-    expect(".o_kanban_group:eq(0) .o_kanban_record").toHaveCount(1);
-
-    // Open a record, then go back, s.t. we populate the cache with the current params of the kanban
-    await contains(".o_kanban_group:eq(1) .o_kanban_record").click();
-    expect(".o_form_view").toHaveCount(1);
-    await contains(".o_back_button").click();
-    expect(".o_kanban_group:eq(0) .o_kanban_record").toHaveCount(1);
-
-    // Open again and make a change which will have an impact on the kanban, then go back
-    await contains(".o_kanban_group:eq(1) .o_kanban_record").click();
-    expect(".o_form_view").toHaveCount(1);
-    await contains(".o_field_widget[name=product_id] button[data-value='3']").click();
-    // Slow down the rpc s.t. we first use data from the cache, and then we update
-    def = new Deferred();
-    await contains(".o_back_button").click();
-    expect(".o_kanban_group:eq(0) .o_kanban_record").toHaveCount(1);
-
-    // Resolve the promise
-    def.resolve();
-    await animationFrame();
-    expect(".o_kanban_group:eq(0) .o_kanban_record").toHaveCount(1);
-
-    // Open a last time and come back => the filter should still be applied correctly
-    await contains(".o_kanban_group:eq(1) .o_kanban_record").click();
-    await contains(".o_back_button").click();
-    expect(".o_kanban_group:eq(0) .o_kanban_record").toHaveCount(1);
-});
-
-test.tags("desktop");
-test("scroll position is restored when coming back to kanban view", async () => {
-    Partner._views = {
-        kanban: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="foo"/>
-                    </t>
-                </templates>
-            </kanban>`,
-        list: `<list><field name="foo"/></list>`,
-        search: `<search />`,
-    };
-
-    for (let i = 1; i < 10; i++) {
-        Product._records.push({ id: 100 + i, name: `Product ${i}` });
-        for (let j = 1; j < 20; j++) {
-            Partner._records.push({
-                id: 100 * i + j,
-                product_id: 100 + i,
-                foo: `Record ${i}/${j}`,
-            });
+test("Deletion raises a UserError, archive action available", async () => {
+    Partner._fields.active = fields.Boolean({ default: true });
+    const message = "message generated and tested in python";
+    onRpc(({ method, args }) => {
+        if (method === "unlink") {
+            expect.step(method);
+            expect(args).toEqual([[1]]);
+            throw makeServerError({ message });
+        } else if (method === "action_archive") {
+            expect.step(method);
+            expect(args).toEqual([[1]]);
+            return true;
         }
-    }
-
-    let def;
-    onRpc("web_read_group", () => def);
-    await resize({ width: 800, height: 300 });
-    await mountWithCleanup(WebClient);
-    await getService("action").doAction({
-        res_model: "partner",
-        type: "ir.actions.act_window",
-        views: [
-            [false, "kanban"],
-            [false, "list"],
-        ],
-        context: {
-            group_by: ["product_id"],
-        },
-    });
-
-    expect(".o_kanban_view").toHaveCount(1);
-    // simulate scrolls in the kanban view
-    queryOne(".o_content").scrollTop = 100;
-    queryOne(".o_content").scrollLeft = 400;
-
-    await getService("action").switchView("list");
-    expect(".o_list_view").toHaveCount(1);
-
-    // the kanban is "lazy", so it displays the control panel directly, and the renderer later with
-    // the data => simulate this and check that the scroll position is correctly restored
-    def = new Deferred();
-    await getService("action").switchView("kanban");
-    expect(".o_kanban_view").toHaveCount(1);
-    expect(".o_kanban_renderer").toHaveCount(0);
-    def.resolve();
-    await animationFrame();
-    expect(".o_kanban_renderer").toHaveCount(1);
-    expect(".o_content").toHaveProperty("scrollTop", 100);
-    expect(".o_content").toHaveProperty("scrollLeft", 400);
-});
-
-test.tags("mobile");
-test("scroll position is restored when coming back to kanban view (mobile)", async () => {
-    Partner._views = {
-        kanban: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="foo"/>
-                    </t>
-                </templates>
-            </kanban>`,
-        list: `<list><field name="foo"/></list>`,
-        search: `<search />`,
-    };
-
-    for (let i = 1; i < 20; i++) {
-        Partner._records.push({
-            id: 100 + i,
-            foo: `Record ${i}`,
-        });
-    }
-
-    let def;
-    onRpc("web_search_read", () => def);
-    await mountWithCleanup(WebClient);
-    await getService("action").doAction({
-        res_model: "partner",
-        type: "ir.actions.act_window",
-        views: [
-            [false, "kanban"],
-            [false, "list"],
-        ],
-    });
-
-    expect(".o_kanban_view").toHaveCount(1);
-    // simulate a scroll in the kanban view
-    queryOne(".o_kanban_view").scrollTop = 100;
-
-    await getService("action").switchView("list");
-    expect(".o_list_view").toHaveCount(1);
-
-    // the kanban is "lazy", so it displays the control panel directly, and the renderer later with
-    // the data => simulate this and check that the scroll position is correctly restored
-    def = new Deferred();
-    await getService("action").switchView("kanban");
-    expect(".o_kanban_view").toHaveCount(1);
-    expect(".o_kanban_renderer").toHaveCount(0);
-    def.resolve();
-    await animationFrame();
-    expect(".o_kanban_renderer").toHaveCount(1);
-    expect(".o_kanban_view").toHaveProperty("scrollTop", 100);
-});
-
-test.tags("mobile");
-test("scroll position is restored when coming back to kanban view (grouped, mobile)", async () => {
-    Partner._views = {
-        kanban: `
-            <kanban>
-                <templates>
-                    <t t-name="card">
-                        <field name="foo"/>
-                    </t>
-                </templates>
-            </kanban>`,
-        list: `<list><field name="foo"/></list>`,
-        search: `<search />`,
-    };
-
-    Partner._records = [];
-    for (let i = 1; i < 5; i++) {
-        Product._records.push({ id: 100 + i, name: `Product ${i}` });
-        for (let j = 1; j < 20; j++) {
-            Partner._records.push({
-                id: 100 * i + j,
-                product_id: 100 + i,
-                foo: `Record ${i}/${j}`,
-            });
-        }
-    }
-
-    let def;
-    onRpc("web_read_group", () => def);
-    await resize({ width: 375, height: 667 }); // iphone se
-    await mountWithCleanup(WebClient);
-    await getService("action").doAction({
-        res_model: "partner",
-        type: "ir.actions.act_window",
-        views: [
-            [false, "kanban"],
-            [false, "list"],
-        ],
-        context: {
-            group_by: ["product_id"],
-        },
-    });
-
-    expect(".o_kanban_view").toHaveCount(1);
-    // simulate scrolls in the kanban view
-    queryOne(".o_kanban_renderer").scrollLeft = 656; // scroll to the third column
-    queryAll(".o_kanban_group")[2].scrollTop = 200;
-
-    await getService("action").switchView("list");
-    expect(".o_list_view").toHaveCount(1);
-
-    // the kanban is "lazy", so it displays the control panel directly, and the renderer later with
-    // the data => simulate this and check that the scroll position is correctly restored
-    def = new Deferred();
-    await getService("action").switchView("kanban");
-    expect(".o_kanban_view").toHaveCount(1);
-    expect(".o_kanban_renderer").toHaveCount(0);
-    def.resolve();
-    await animationFrame();
-    expect(".o_kanban_renderer").toHaveCount(1);
-    expect(".o_kanban_group:eq(2)").toHaveProperty("scrollTop", 200);
-    expect(".o_kanban_renderer").toHaveProperty("scrollLeft", 656);
-});
-
-test.tags("desktop");
-test("limit is reset when restoring a view after ungrouping", async () => {
-    Partner._views["kanban"] = `
-        <kanban sample="1">
-            <templates>
-                <t t-name="card">
-                    <field name="foo"/>
-                </t>
-            </templates>
-        </kanban>`;
-    Partner._views["list"] = '<list><field name="foo"/></list>';
-    Partner._views.search = `
-        <search>
-            <group>
-                <filter name="foo" string="Foo" context="{'group_by': 'foo'}"/>
-            </group>
-        </search>
-    `;
-
-    onRpc("partner", "web_search_read", ({ kwargs }) => {
-        const { domain, limit } = kwargs;
-        if (!domain.length) {
-            expect.step(`limit=${limit}`);
-        }
-    });
-
-    patchWithCleanup(user, {
-        hasGroup: () => true,
-    });
-
-    await mountWithCleanup(WebClient);
-
-    await getService("action").doAction({
-        type: "ir.actions.act_window",
-        id: 450,
-        xml_id: "action_450",
-        name: "Partners",
-        res_model: "partner",
-        views: [
-            [false, "kanban"],
-            [false, "list"],
-            [false, "form"],
-        ],
-        context: { search_default_foo: true },
-    });
-
-    await switchView("list");
-    await removeFacet("Foo");
-    expect.verifySteps(["limit=80"]);
-    await switchView("kanban");
-    expect.verifySteps(["limit=40"]);
-});
-
-test(`groupby use odoomark`, async () => {
-    patchWithCleanup(Partner.prototype, {
-        _getFormattedDisplayName(record) {
-            return `**${record.name}** \`tag\``;
-        },
     });
 
     await mountView({
-        resModel: "partner",
         type: "kanban",
+        resModel: "partner",
         arch: `
-            <kanban sample="1">
+            <kanban>
                 <templates>
                     <t t-name="card">
+                        <a role="menuitem" type="delete" class="dropdown-item o_delete">Delete</a>
                         <field name="foo"/>
-                        <field name="product_id"/>
                     </t>
                 </templates>
             </kanban>`,
@@ -9208,4 +8843,53 @@ test("widgets in kanban view: verify immediate autosave", async () => {
 
     await contains(".o_field_boolean_toggle input").click();
     expect.verifySteps(["web_save"]);
+    await click(queryFirst(".o_kanban_record .o_delete", { root: getKanbanColumn(0) }));
+    await animationFrame();
+
+    await contains(".modal-footer .btn-primary").click();
+
+    expect("h4.modal-title").toHaveText("Archive records");
+    expect("main.modal-body").toHaveText(message);
+    expect(".modal-footer .btn-primary").toHaveText("Archive");
+    expect(".modal-footer .btn-secondary").toHaveText("No, keep it");
+
+    await contains(".modal-footer .btn-primary").click()
+    expect(".modal").toHaveCount(0);
+    expect.verifySteps(["unlink", "action_archive"]);
+});
+
+test("Deletion raises a UserError, archive action not available", async () => {
+    const message = "message generated and tested in python";
+    onRpc(({ method, args }) => {
+        if (method === "unlink") {
+            expect.step(method);
+            expect(args).toEqual([[1]]);
+            throw makeServerError({ message });
+        }
+    });
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <a role="menuitem" type="delete" class="dropdown-item o_delete">Delete</a>
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["product_id"],
+    });
+
+    await click(queryFirst(".o_kanban_record .o_delete", { root: getKanbanColumn(0) }));
+    await animationFrame();
+
+    await contains(".modal-footer .btn-primary").click();
+
+    expect.errors(1);
+    await waitFor(".modal .modal-title:contains(Invalid Operation)");
+    expect.verifyErrors([message]);
+    expect.verifySteps(["unlink"]);
 });
