@@ -1092,14 +1092,9 @@ ${issueStrings}`);
       }
     }
     const missingKeys = [];
-    const requiredKeys = [];
     for (const key of keys) {
-      const isOptional = isOptionalType(shape[key]);
-      if (!isOptional) {
-        requiredKeys.push(key);
-      }
       if (context.value[key] === void 0) {
-        if (!isOptional) {
+        if (!isOptionalType(shape[key])) {
           missingKeys.push(key);
         }
         continue;
@@ -1111,10 +1106,7 @@ ${issueStrings}`);
     if (missingKeys.length) {
       context.addIssue({
         message: "object value has missing keys",
-        missingKeys,
-        // only required keys are expected to be present (optional keys still
-        // appear in the unknown-keys issue below: they are known to the schema)
-        expectedKeys: requiredKeys
+        missingKeys
       });
     }
     if (isStrict) {
@@ -1127,8 +1119,7 @@ ${issueStrings}`);
       if (unknownKeys.length) {
         context.addIssue({
           message: "object value has unknown keys",
-          unknownKeys,
-          expectedKeys: keys
+          unknownKeys
         });
       }
     }
@@ -1576,7 +1567,7 @@ ${issueStrings}`);
   }
 
   // ../owl-runtime/dist/owl-runtime.es.js
-  var version = "3.0.0-alpha.36";
+  var version = "3.0.0-alpha.38";
   var fibersInError = /* @__PURE__ */ new WeakMap();
   var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
   function invokeErrorHandlers(node, error, finalize, markFibers) {
@@ -1666,7 +1657,7 @@ ${issueStrings}`);
       return false;
     }
   };
-  var txt = document.createTextNode("");
+  var txt = globalThis.document?.createTextNode("");
   var VToggler = class {
     key;
     child;
@@ -3472,6 +3463,11 @@ ${issueStrings}`);
     willPatch = [];
     patched = [];
     signalComputation;
+    // t-ref signals bound to an element hosted by this component, mapped to their
+    // atom (so the element can be read without subscribing). Swept by isConnected
+    // after each patch and after this subtree is removed, to unset a ref pointing
+    // at a bulk-removed element (slot host, enclosing t-if) — see sweepRefs.
+    trackedRefs = null;
     constructor(C, props2, app, parent, parentKey) {
       super(app);
       this.parent = parent;
@@ -3580,9 +3576,15 @@ ${issueStrings}`);
     }
     destroy() {
       let shouldRemove = this.status === STATUS.MOUNTED;
-      this._destroy();
+      removalDepth++;
+      try {
+        this._destroy();
+      } finally {
+        removalDepth--;
+      }
       if (shouldRemove) {
         this.bdom.remove();
+        sweepRemovedRefs();
       }
     }
     _destroy() {
@@ -3592,11 +3594,41 @@ ${issueStrings}`);
           cb.call(component);
         }
       }
+      if (removalDepth && this.trackedRefs) {
+        (removed ||= []).push(this);
+      }
       for (let childKey in this.children) {
         this.children[childKey]._destroy();
       }
       this.finalize((e) => handleError({ error: e, node: this }));
       disposeComputation(this.signalComputation);
+    }
+    /**
+     * Unset any tracked t-ref whose element is no longer in the document, and stop
+     * tracking it (createRef re-registers it on the next render if the element
+     * comes back). `isConnected` is the discriminator: a ref the block's own
+     * remove() failed to clear (bulk removal) points at a detached element and is
+     * cleared, while a ref a surviving sibling just took over (t-if/t-else with a
+     * shared signal) points at a still-connected element and is left alone.
+     *
+     * Called after this component's dom settles: at the tail of `_patch` (before
+     * user `onPatched`), so an element removed in place is caught, and — for the
+     * nodes collected during `_destroy` — after a removed subtree is detached.
+     */
+    sweepRefs() {
+      const refs = this.trackedRefs;
+      if (!refs) {
+        return;
+      }
+      for (const [ref2, atom] of refs) {
+        const el = atom.value;
+        if (!el) {
+          refs.delete(ref2);
+        } else if (!el.isConnected) {
+          ref2.set(null);
+          refs.delete(ref2);
+        }
+      }
     }
     /**
      * Finds a child that has dom that is not yet updated, and update it. This
@@ -3613,7 +3645,14 @@ ${issueStrings}`);
           child.updateDom();
         }
       } else {
-        this.bdom.patch(this.fiber.bdom, false);
+        removalDepth++;
+        try {
+          this.bdom.patch(this.fiber.bdom, false);
+        } finally {
+          removalDepth--;
+        }
+        this.sweepRefs();
+        sweepRemovedRefs();
         this.fiber.appliedToDom = true;
         this.fiber = null;
       }
@@ -3640,6 +3679,14 @@ ${issueStrings}`);
     moveBeforeVNode(other, afterNode) {
       this.bdom.moveBeforeVNode(other ? other.bdom : null, afterNode);
     }
+    /**
+     * Register a t-ref signal bound to an element this component hosts, so its
+     * lifecycle can clear it (see sweepRefs / _destroy). Idempotent — re-tracking
+     * the same signal on each render just refreshes its atom.
+     */
+    trackRef(ref2, atom) {
+      (this.trackedRefs ||= /* @__PURE__ */ new Map()).set(ref2, atom);
+    }
     patch() {
       if (this.fiber && this.fiber.parent) {
         this._patch();
@@ -3653,7 +3700,14 @@ ${issueStrings}`);
       }
       const fiber = this.fiber;
       this.children = fiber.childrenMap;
-      this.bdom.patch(fiber.bdom, hasChildren);
+      removalDepth++;
+      try {
+        this.bdom.patch(fiber.bdom, hasChildren);
+      } finally {
+        removalDepth--;
+      }
+      this.sweepRefs();
+      sweepRemovedRefs();
       fiber.appliedToDom = true;
       this.fiber = null;
     }
@@ -3664,6 +3718,17 @@ ${issueStrings}`);
       this.bdom.remove();
     }
   };
+  var removalDepth = 0;
+  var removed = null;
+  function sweepRemovedRefs() {
+    if (removalDepth === 0 && removed) {
+      const nodes = removed;
+      removed = null;
+      for (let i = 0; i < nodes.length; i++) {
+        nodes[i].sweepRefs();
+      }
+    }
+  }
   function getComponentScope() {
     const scope = useScope();
     if (!(scope instanceof ComponentNode)) {
@@ -3865,7 +3930,7 @@ ${issueStrings}`);
     }
     return toggler(safeKey, block);
   }
-  function createRef(ref2) {
+  function createRef(ref2, node) {
     if (!ref2) {
       throw new OwlError(`Ref is undefined or null`);
     }
@@ -3880,6 +3945,9 @@ ${issueStrings}`);
       remove2 = atom ? (prevEl) => {
         if (atom.value === prevEl) ref2.set(null);
       } : () => ref2.set(null);
+      if (atom) {
+        node.trackRef(ref2, atom);
+      }
     } else {
       throw new OwlError(
         `Ref should implement either a 'set' function or 'add' and 'delete' functions`
@@ -4631,8 +4699,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-06-12T11:02:40.056Z",
-    hash: "79873da1",
+    date: "2026-06-22T09:47:19.845Z",
+    hash: "7eb36a97",
     url: "https://github.com/odoo/owl"
   };
 
@@ -6163,7 +6231,7 @@ ${code}`;
       if (ast.ref) {
         const refExpr = compileExpr(ast.ref);
         this.helpers.add("createRef");
-        const setRefStr = `createRef(${refExpr})`;
+        const setRefStr = `createRef(${refExpr}, node)`;
         const idx = block.insertData(setRefStr, "ref");
         attrs["block-ref"] = String(idx);
       }
