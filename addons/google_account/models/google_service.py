@@ -66,6 +66,7 @@ class GoogleService(models.AbstractModel):
 
 
         encoded_params = urls.url_encode(params)
+        _logger.info("Authorizing google calendar with: %s?%s", GOOGLE_AUTH_ENDPOINT, encoded_params)
         return "%s?%s" % (GOOGLE_AUTH_ENDPOINT, encoded_params)
 
     @api.model

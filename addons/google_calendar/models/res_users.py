@@ -51,6 +51,7 @@ class ResUsers(models.Model):
 
     def _sync_google_calendar(self, calendar_service: GoogleCalendarService):
         self.ensure_one()
+        _logger.info("Calendar sync - Google2Odoo started")
         results = self._sync_request(calendar_service)
         if not results:
             return False
@@ -75,6 +76,7 @@ class ResUsers(models.Model):
         synced_events = self.env['calendar.event']._sync_google2odoo(events - recurrences, events_write_dates, default_reminders=default_reminders)
 
         # Odoo -> Google
+        _logger.info("Calendar sync - Odoo2Google started")
         recurrences = self.env['calendar.recurrence']._get_records_to_sync(full_sync=full_sync)
         recurrences -= synced_recurrences
         recurrences.with_context(send_updates=send_updates)._sync_odoo2google(calendar_service)
@@ -120,6 +122,8 @@ class ResUsers(models.Model):
         full_sync = not bool(self.sudo().google_calendar_sync_token)
         with google_calendar_token(self) as token:
             try:
+                _logger.info("Getting events from Google. Calendar access token: %s  Calendar sync token: %s", token,
+                             self.res_users_settings_id.sudo().google_calendar_sync_token)
                 if not event_id:
                     events, next_sync_token, default_reminders = calendar_service.get_events(self.res_users_settings_id.sudo().google_calendar_sync_token, token=token)
                 else:

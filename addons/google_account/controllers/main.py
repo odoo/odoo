@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
+import json, logging
 from urllib.parse import urlencode
 from werkzeug.exceptions import BadRequest
 
 from odoo import http
 from odoo.http import request
+
+_logger = logging.getLogger(__name__)
 
 
 class GoogleAuth(http.Controller):
@@ -17,6 +19,7 @@ class GoogleAuth(http.Controller):
         state = json.loads(kw.get('state', '{}'))
         service = state.get('s')
         url_return = state.get('f')
+        _logger.info("Google Auth callback for service <%s> with url_return <%s> and code %s", service, url_return, kw.get('code'))
         if (not service or (kw.get('code') and not url_return)):
             raise BadRequest()
 
@@ -27,6 +30,7 @@ class GoogleAuth(http.Controller):
                 service,
                 redirect_uri=f'{base_url}/google_account/authentication'
             )
+            _logger.info("Google Auth callback returned with access_token %s, refresh_token %s, ttl %s", access_token, refresh_token, ttl)
             service_field = 'res_users_settings_id'
             if service_field in request.env.user:
                 request.env.user[service_field]._set_google_auth_tokens(access_token, refresh_token, ttl)
