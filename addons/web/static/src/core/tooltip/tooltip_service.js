@@ -52,7 +52,6 @@ export const tooltipService = {
         let closeTooltip;
         let showTimer;
         let target = null;
-        const elementsWithTooltips = new WeakMap();
 
         /**
          * Detect if the current node is the `sup` tooltip node
@@ -153,9 +152,7 @@ export const tooltipService = {
             if (element && element === target) {
                 return;
             }
-            if (elementsWithTooltips.has(el)) {
-                openTooltip(el, elementsWithTooltips.get(el));
-            } else if (element) {
+            if (element) {
                 const dataset = element.dataset;
                 const params = {
                     tooltip: titleTooltip
@@ -182,10 +179,6 @@ export const tooltipService = {
          * @param {MouseEvent} ev a "mouseenter" event
          */
         function onMouseenter(ev) {
-            if (elementsWithTooltips.has(ev.target)) {
-                openElementsTooltip(ev.target);
-                return;
-            }
             const target = ev.target?.closest(TOOLTIP_SELECTOR_WITH_TITLE);
             if (!target) {
                 return;
@@ -273,18 +266,6 @@ export const tooltipService = {
             document.body.addEventListener("mouseleave", cleanupTooltip, { capture: true });
             document.body.addEventListener("click", onClick, { capture: true });
         });
-
-        return {
-            add(el, params) {
-                elementsWithTooltips.set(el, params);
-                return () => {
-                    elementsWithTooltips.delete(el);
-                    if (target === el) {
-                        cleanup();
-                    }
-                };
-            },
-        };
     },
 };
 

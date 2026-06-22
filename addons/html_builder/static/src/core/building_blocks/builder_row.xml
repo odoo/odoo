@@ -32,8 +32,7 @@
                     class="hb-row-label"
                     t-att-class="{'hb-row-label-actionable': this.props.slots.collapse, 'bg-transparent': !this.props.label.trim()}"
                     t-attf-class="#{this.props.extraLabelClass || ''}"
-                    t-on-pointerover="this.openTooltip"
-                    t-on-pointerleave="this.closeTooltip"
+                    t-on-pointerover="this.appendTooltip"
                     t-on-click="this.toggleCollapseContent"
                     >
                     <div class="d-inline-flex align-items-center mw-100" t-custom-ref="label-wrapper">

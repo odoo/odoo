@@ -367,6 +367,7 @@ describe("HTML builder tests", () => {
         });
         await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
+        await animationFrame();
         await hover("[data-label='Supercalifragilisticexpalidocious'] .text-truncate");
         await advanceTime(OPEN_DELAY);
         await waitFor(".o-tooltip");
@@ -384,6 +385,7 @@ describe("HTML builder tests", () => {
         });
         await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
         await contains(":iframe .test-options-target").click();
+        await animationFrame();
         await hover("[data-label='Supercalifragilisticexpalidocious'] .hb-row-label div");
         await advanceTime(OPEN_DELAY);
         await waitFor(".o-tooltip");
