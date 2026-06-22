@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
-    <template id="address_form_fields" inherit_id="portal.address_form_fields">
+    <template id="address_form_fields" inherit_id="portal_address_extended.address_extended_form_fields">
         <div id="div_city_id" position="after">
             <t t-if="res_company.country_id.code == 'PE'">
                 <div
