@@ -6,6 +6,7 @@
         <BuilderRow label.translate="Position" level="2">
             <BuilderSelect action="'backgroundType'" preview="false">
                 <BuilderSelectItem actionValue="'cover'">Cover</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'zoom'" id="'background_zoom_opt'">Zoom</BuilderSelectItem>
                 <BuilderSelectItem actionValue="'repeat-pattern'" id="'background_repeat_opt'">Repeat pattern</BuilderSelectItem>
             </BuilderSelect>
             <BuilderButton icon="'fa-arrows-alt'" title.translate="Background Position" preview="false" action="'backgroundPositionOverlay'"/>
@@ -18,6 +19,9 @@
                 <BuilderNumberInput actionParam="'height'" placeholder.translate="auto" unit="'px'" min="1" default="null"/>
             </BuilderRow>
         </BuilderContext>
+        <BuilderRow t-if="this.isActiveItem('background_zoom_opt')" label.translate="Zoom Level" level="3">
+            <BuilderRange action="'backgroundZoomSlider'" min="101" max="300" step="1" unit="'%'" withNumberInput="true"/>
+        </BuilderRow>
     </t>
 </t>
 
