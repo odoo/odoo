@@ -458,6 +458,26 @@ class TestVirtualAvailable(TestStockCommon):
         ).qty_available
         self.assertEqual(qty_parent, 5, "Parent location should have 5 units total at past date")
 
+    def test_changing_track_with_values_on_product(self):
+        """
+        Test that product can't change tracking inventory with products still in stock
+        """
+        product = self.env['product.product'].create({
+            'name': 'Test still in stock',
+            'type': 'consu',
+            'is_storable': True,
+            'tracking': 'none',
+        })
+        self.assertEqual(product.qty_available, 0.0)
+
+        with Form(product) as product_form:
+            product_form.qty_available = 10.0
+        self.assertEqual(product.qty_available, 10.0)
+
+        with Form(product) as product_form:
+            product_form.tracking = False
+
+        self.assertEqual(product.tracking, 'none')
 
 @tagged('post_install', '-at_install')
 class TestProductPostInstall(TestStockCommon):
