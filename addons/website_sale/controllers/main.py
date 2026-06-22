@@ -393,16 +393,15 @@ class WebsiteSale(payment_portal.PaymentPortal):
             options, post, search, website
         )
 
-        filter_by_price_enabled = website.is_view_active("website_sale.filter_products_price")
+        search_term = fuzzy_search_term if fuzzy_search_term else search
+        product_domain = self._get_shop_domain(search_term, category, attribute_value_dict)
+
+        filter_by_price_enabled = website.is_view_active('website_sale.filter_products_price')
         if filter_by_price_enabled:
             # TODO Find an alternative way to obtain the domain through the search metadata.
-            Product = request.env["product.template"]
-            search_term = fuzzy_search_term if fuzzy_search_term else search
-            domain = self._get_shop_domain(search_term, category, attribute_value_dict)
-
             # This is ~4 times more efficient than a search for the cheapest and most expensive
             # products
-            query = Product._search(domain)
+            query = request.env['product.template']._search(product_domain)
             sql = query.select(
                 SQL(
                     "COALESCE(MIN(list_price), 0) * %(conversion_rate)s, COALESCE(MAX(list_price), 0) * %(conversion_rate)s",  # noqa: E501
@@ -451,8 +450,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
             Domain("parent_id", "=", False) & Domain("not_in_shop", "=", False) & website_domain
         )
         if search:
+            # using a sub-query is more efficient than using a query in the shape of "ids in (...)"
+            # when there are 100k product ids to match.
+            product_query = request.env['product.template']._search(product_domain)
             search_categories = Category.search(
-                Domain("product_tmpl_ids", "in", search_product.ids) & website_domain
+                Domain('product_tmpl_ids', 'in', product_query)
             ).parents_and_self
             categs_domain &= Domain("id", "in", search_categories.ids)
         else:
@@ -510,10 +512,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         ProductAttributeValue = request.env["product.attribute.value"]
         pavs_per_attribute = defaultdict(lambda: ProductAttributeValue)
         if products:
-            search_term = fuzzy_search_term if fuzzy_search_term else search
-            product_query = request.env["product.template"]._search(
-                self._get_shop_domain(search_term, category, attribute_value_dict)
-            )
+            product_query = request.env['product.template']._search(product_domain)
             grouped_pavs = ProductAttributeValue._read_group(
                 domain=[
                     ("pav_attribute_line_ids.product_tmpl_id", "in", product_query),
