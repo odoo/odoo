@@ -662,8 +662,11 @@ export class PosOrder extends PosOrderAccounting {
         );
 
         if (newPartner) {
-            newPartnerFiscalPosition =
-                this.findFiscalPosition(newPartner.fiscal_position_id) || defaultFiscalPosition;
+            const partnerFiscalPosition = this.findFiscalPosition(newPartner.fiscal_position_id);
+            const isFpAllowed =
+                partnerFiscalPosition &&
+                this.config.fiscal_position_ids.some((fp) => fp.id === partnerFiscalPosition.id);
+            newPartnerFiscalPosition = isFpAllowed ? partnerFiscalPosition : defaultFiscalPosition;
             newPartnerPricelist =
                 this.config.available_pricelist_ids.find(
                     (pricelist) => pricelist.id === newPartner.property_product_pricelist?.id
