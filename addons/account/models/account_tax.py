@@ -3158,9 +3158,9 @@ class AccountTax(models.Model):
         :return: The dict returned by '_prepare_tax_lines' with 'tax_lines_to_update' adjusted.
         """
 
-        # Track base lines values.
+        # Track base lines taxes values.
 
-        def track_base_lines_values(base_lines):
+        def track_base_lines_taxes_values(base_lines):
             base_line_tracked_values = defaultdict(lambda: {
                 'base_lines': [],
                 'amounts': [],
@@ -3208,16 +3208,24 @@ class AccountTax(models.Model):
                 values['analytic_distributions'].append(base_line['analytic_distribution'])
             return base_line_tracked_values
 
-        old_base_line_tracked_values = track_base_lines_values(old_base_lines)
-        new_base_line_tracked_values = track_base_lines_values(new_base_lines)
+        old_base_line_tracked_taxes_values = track_base_lines_taxes_values(old_base_lines)
+        new_base_line_tracked_taxes_values = track_base_lines_taxes_values(new_base_lines)
 
         # Determine the sub groups that have to be recomputed from base lines.
         tax_keys_recompute_amounts = set()
         tax_keys_recompute_rates = set()
-        for key in new_base_line_tracked_values.keys() | old_base_line_tracked_values.keys():
-            new_values = new_base_line_tracked_values.get(key, {})
-            old_values = old_base_line_tracked_values.get(key, {})
+        base_keys_recompute_amounts = set()
+        for key in new_base_line_tracked_taxes_values.keys() | old_base_line_tracked_taxes_values.keys():
+            new_values = new_base_line_tracked_taxes_values.get(key, {})
+            old_values = old_base_line_tracked_taxes_values.get(key, {})
+            amounts_has_changed = new_values.get('amounts', []) != old_values.get('amounts', [])
+            rates_has_changed = new_values.get('rates', set()).symmetric_difference(old_values.get('rates', set()))
             for base_line in new_values.get('base_lines', []):
+
+                if amounts_has_changed or rates_has_changed:
+                    base_line_key = dict(base_line.get('grouping_key') or self._prepare_base_line_grouping_key(base_line))
+                    base_keys_recompute_amounts.add(frozendict(base_line_key))
+
                 tax_details = base_line['tax_details']
                 for tax_data in tax_details['taxes_data']:
                     for tax_rep_data in tax_data['tax_reps_data']:
@@ -3228,17 +3236,33 @@ class AccountTax(models.Model):
                         old_analytic_distributions = old_values.get('analytic_distributions', [])
                         if (tax_rep_data['tax_rep'].tax_id.analytic or not tax_rep_data['tax_rep'].use_in_tax_closing) and new_analytic_distributions != old_analytic_distributions:
                             for analytic_distribution in set(
-                                    [frozendict(x) if x else False for x in new_analytic_distributions]
-                                    + [frozendict(x) if x else False for x in old_analytic_distributions]
+                                [frozendict(x) if x else False for x in new_analytic_distributions]
+                                + [frozendict(x) if x else False for x in old_analytic_distributions]
                             ):
                                 tax_keys_recompute_amounts.add(frozendict({
                                     **tax_rep_grouping_key,
                                     'analytic_distribution': analytic_distribution,
                                 }))
-                        elif new_values.get('amounts', []) != old_values.get('amounts', []):
+                        elif amounts_has_changed:
                             tax_keys_recompute_amounts.add(tax_rep_grouping_key)
-                        elif new_values.get('rates', set()).symmetric_difference(old_values.get('rates', set())):
+                        elif rates_has_changed:
                             tax_keys_recompute_rates.add(tax_rep_grouping_key)
+
+        # Track base lines values.
+
+        def track_base_lines_values(base_lines):
+            base_line_tracked_values = defaultdict(list)
+            for base_line in base_lines:
+                base_line_key = dict(base_line.get('grouping_key') or self._prepare_base_line_grouping_key(base_line))
+                if (
+                    (amount_currency := base_line.get('amount_currency')) is not None
+                    and (balance := base_line.get('balance')) is not None
+                ):
+                    base_line_tracked_values[frozendict(base_line_key)].append((amount_currency, balance, base_line['tax_ids']))
+            return base_line_tracked_values
+
+        old_base_line_tracked_values = track_base_lines_values(old_base_lines)
+        new_base_line_tracked_values = track_base_lines_values(new_base_lines)
 
         # Track tax lines values.
 
@@ -3258,13 +3282,28 @@ class AccountTax(models.Model):
             tax_lines=new_tax_lines,
         )
 
-        # Determine the sub groups that have to be recomputed from tax lines.
+        # Preserve the base amounts.
+        base_line_protected_keys = set()
+        for key in new_base_line_tracked_values.keys() | old_base_line_tracked_values.keys():
+            if new_base_line_tracked_values.get(key) and new_base_line_tracked_values.get(key) != old_base_line_tracked_values.get(key):
+                base_line_protected_keys.add(key)
+
+        base_lines_to_update = []
+        for base_line, to_update in tax_results['base_lines_to_update']:
+            grouping_key = frozendict(dict(base_line.get('grouping_key') or self._prepare_base_line_grouping_key(base_line)))
+            if grouping_key in base_line_protected_keys:
+                continue
+            if grouping_key in base_keys_recompute_amounts:
+                base_lines_to_update.append((base_line, to_update))
+
+        tax_results['base_lines_to_update'] = base_lines_to_update
+
+        # Preserve the tax amounts if possible.
         tax_line_protected_keys = set()
         for key in new_tax_line_tracked_values.keys() | old_tax_line_tracked_values.keys():
             if new_tax_line_tracked_values.get(key) and new_tax_line_tracked_values.get(key) != old_tax_line_tracked_values.get(key):
                 tax_line_protected_keys.add(key)
 
-        # Preserve the tax amounts if possible.
         tax_lines_to_update = []
         for tax_line_vals, grouping_key, to_update in tax_results['tax_lines_to_update']:
             if grouping_key in tax_line_protected_keys:

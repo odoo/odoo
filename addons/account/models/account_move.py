@@ -3087,53 +3087,54 @@ class AccountMove(models.Model):
 
             old_base_lines = moves_base_lines_tax_lines_before.get(move, {}).get('base_lines', [])
             old_tax_lines = moves_base_lines_tax_lines_before.get(move, {}).get('tax_lines', [])
-            tax_lines = get_tax_lines(move)
-            base_lines = get_base_lines(move)
-            move_tax_lines_values_before = tax_lines_values_before.get(move, {})
-            move_base_lines_values_before = base_lines_values_before.get(move, {})
-            if (
-                move.is_invoice(include_receipts=True)
-                and (
-                    field_has_changed(moves_values_before, move, 'currency_id')
-                    or field_has_changed(moves_values_before, move, 'move_type')
-                )
-            ):
-                # Changing the type of an invoice using 'switch to refund' feature or just changing the currency.
-                round_from_tax_lines = False
-            elif any(line not in base_lines for line, values in move_base_lines_values_before.items() if values['tax_ids']):
-                # Removed a base line affecting the taxes.
-                round_from_tax_lines = any_field_has_changed(move_tax_lines_values_before, tax_lines)
-            elif changed_lines := list(get_changed_lines(move_base_lines_values_before, base_lines)):
-                # A base line has been modified.
-                round_from_tax_lines = (
-                    # The changed lines don't affect the taxes.
-                    all(
-                        not line.tax_ids and not move_base_lines_values_before.get(line, {}).get('tax_ids')
-                        for line in changed_lines
-                    )
-                    # Keep the tax lines amounts if an amount has been manually computed.
-                    or (
-                        list(move_tax_lines_values_before) != list(tax_lines)
-                        or any(
-                            self.env.is_protected(line._fields[fname], line)
-                            for line in tax_lines
-                            for fname in move_tax_lines_values_before[line]
-                        )
-                    )
-                )
-
-                # If the move has been created with all lines including the tax ones and the balance/amount_currency are provided on
-                # base lines, we don't need to recompute anything.
-                if (
-                    round_from_tax_lines
-                    and any(line[field] for line in changed_lines for field in ('amount_currency', 'balance'))
-                ):
-                    continue
-            elif field_has_changed(moves_values_before, move, 'invoice_currency_rate'):
-                # Changing the rate should preserve the tax amounts in foreign currency but reapply the currency rate.
-                round_from_tax_lines = 'reapply_currency_rate'
-            else:
-                continue
+            round_from_tax_lines = False
+            # tax_lines = get_tax_lines(move)
+            # base_lines = get_base_lines(move)
+            # move_tax_lines_values_before = tax_lines_values_before.get(move, {})
+            # move_base_lines_values_before = base_lines_values_before.get(move, {})
+            # if (
+            #     move.is_invoice(include_receipts=True)
+            #     and (
+            #         field_has_changed(moves_values_before, move, 'currency_id')
+            #         or field_has_changed(moves_values_before, move, 'move_type')
+            #     )
+            # ):
+            #     # Changing the type of an invoice using 'switch to refund' feature or just changing the currency.
+            #     round_from_tax_lines = False
+            # elif any(line not in base_lines for line, values in move_base_lines_values_before.items() if values['tax_ids']):
+            #     # Removed a base line affecting the taxes.
+            #     round_from_tax_lines = any_field_has_changed(move_tax_lines_values_before, tax_lines)
+            # elif changed_lines := list(get_changed_lines(move_base_lines_values_before, base_lines)):
+            #     # A base line has been modified.
+            #     round_from_tax_lines = (
+            #         # The changed lines don't affect the taxes.
+            #         all(
+            #             not line.tax_ids and not move_base_lines_values_before.get(line, {}).get('tax_ids')
+            #             for line in changed_lines
+            #         )
+            #         # Keep the tax lines amounts if an amount has been manually computed.
+            #         or (
+            #             list(move_tax_lines_values_before) != list(tax_lines)
+            #             or any(
+            #                 self.env.is_protected(line._fields[fname], line)
+            #                 for line in tax_lines
+            #                 for fname in move_tax_lines_values_before[line]
+            #             )
+            #         )
+            #     )
+            #
+            #     # If the move has been created with all lines including the tax ones and the balance/amount_currency are provided on
+            #     # base lines, we don't need to recompute anything.
+            #     if (
+            #         round_from_tax_lines
+            #         and any(line[field] for line in changed_lines for field in ('amount_currency', 'balance'))
+            #     ):
+            #         continue
+            # elif field_has_changed(moves_values_before, move, 'invoice_currency_rate'):
+            #     # Changing the rate should preserve the tax amounts in foreign currency but reapply the currency rate.
+            #     round_from_tax_lines = 'reapply_currency_rate'
+            # else:
+            #     continue
 
             new_base_lines, new_tax_lines = move._get_rounded_base_and_tax_lines(round_from_tax_lines=round_from_tax_lines)
             AccountTax._add_accounting_data_in_base_lines_tax_details(
