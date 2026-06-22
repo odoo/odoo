@@ -147,11 +147,11 @@ class IrRule(models.Model):
                 continue
             domain = (rule.domain_force or '').strip()
             try:
-                domain = ast.literal_eval(domain) if domain else Domain.TRUE
+                domain = Domain(ast.literal_eval(domain)) if domain else Domain.TRUE
+                domain = domain.optimize(env[rule.model_name])
             except ValueError:
-                domains[rule] = domain
-            else:
-                domains[rule] = Domain(domain).optimize(env[rule.model_name])
+                _logger.debug("_get_all_rules: failed to evaluate domain", exc_info=True)
+            domains[rule] = domain
 
         return frozendict({
             model_name: tuple(
