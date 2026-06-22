@@ -294,11 +294,10 @@ class IrAccess(models.Model):
                 continue
             domain = (access.domain or "").strip()
             try:
-                domain = ast.literal_eval(domain) if domain else Domain.TRUE
+                domain = Domain(ast.literal_eval(domain)) if domain else Domain.TRUE
+                domain = domain.optimize(env[model_name])
             except ValueError:
-                pass
-            else:
-                domain = Domain(domain).optimize(env[model_name])
+                _logger.debug("_get_all_access: failed to evaluate domain", exc_info=True)
             info = AccessInfo(access.id, access.group_id.id, access.operation, domain)
             result[model_name].append(info)
 
