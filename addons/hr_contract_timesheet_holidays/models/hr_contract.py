@@ -1,7 +1,6 @@
 from dateutil.relativedelta import relativedelta
 from itertools import groupby
 from odoo import api, fields, models
-from odoo.osv import expression
 
 
 class HrContract(models.Model):
@@ -60,21 +59,29 @@ class HrContract(models.Model):
             ]
             employee_intervals[emp_id] = intervals
 
-        timesheets_to_remove = self.env['account.analytic.line']
-        for emp in employees:
-            domain = expression.AND([
-                        [('project_id', '!=', False)],
-                        [('employee_id', '=', emp.id)],
-                        [('global_leave_id', '!=', False)],
-                        expression.AND([
-                            expression.OR([
-                                [('date', '<', start)],
-                                [('date', '>', end)]
-                            ]) for start, end in employee_intervals[emp.id]
-                        ])
-                    ])
-            timesheets_to_remove |= timesheets_to_remove.sudo().search(domain)
+        timesheet_groups = self.env['account.analytic.line']._read_group(
+            [
+                ('project_id', '!=', False),
+                ('employee_id', 'in', employees.ids),
+                ('global_leave_id', '!=', False),
+                ('date', '>=', fields.Date.today()),
+                ('date', '<=', fields.Date.today() + relativedelta(years=1)),
+            ],
+            ['employee_id'],
+            ['id:recordset'],
+        )
 
+        timesheets_to_remove = self.env['account.analytic.line']
+
+        for employee, timesheets in timesheet_groups:
+            intervals = employee_intervals.get(employee.id, [])
+
+            for timesheet in timesheets:
+                if not any(
+                    start <= timesheet.date <= (end or timesheet.date)
+                    for start, end in intervals
+                ):
+                    timesheets_to_remove |= timesheet
         if timesheets_to_remove:
             timesheets_to_remove.write({'global_leave_id': False})
             timesheets_to_remove.unlink()

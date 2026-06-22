@@ -1,4 +1,6 @@
 from datetime import datetime
+from freezegun import freeze_time
+
 from odoo.addons.hr_holidays.tests.test_global_leaves import TestGlobalLeaves
 from odoo.tests import tagged
 
@@ -45,6 +47,7 @@ class TestEmployeeContractTimesheets(TestGlobalLeaves):
             'wage': 100,
         })
 
+    @freeze_time('2025-03-01')
     def test_overlapping_contracts(self):
         """ Testing timesheet allocation for overlapping contracts, we should consider
             all timesheets created for the employee during the contract period """
@@ -55,12 +58,13 @@ class TestEmployeeContractTimesheets(TestGlobalLeaves):
             state='close'
         )
 
-        timesheets = self.env['account.analytic.line'].search_count([
+        timesheet_count = self.env['account.analytic.line'].search_count([
             ('employee_id', '=', self.employee_emp.id),
             ('global_leave_id', 'in', self.global_leaves.ids),
         ])
-        self.assertEqual(timesheets, 1, "public holidays should have generated timesheets.")
+        self.assertEqual(timesheet_count, 2, "public holidays should have generated timesheets.")
 
+    @freeze_time('2025-03-01')
     def test_no_contract_end_date(self):
         """ Test if open-ended contract includes all future public holiday timesheets """
         self.contract.write({
@@ -75,6 +79,7 @@ class TestEmployeeContractTimesheets(TestGlobalLeaves):
 
         self.assertEqual(timesheets, 3, "All holidays should be counted as the contract is open-ended.")
 
+    @freeze_time('2025-03-01')
     def test_contract_with_end_date(self):
         """ Test that only holidays within contract period are considered """
         self.contract.write({
@@ -88,6 +93,7 @@ class TestEmployeeContractTimesheets(TestGlobalLeaves):
         ])
         self.assertEqual(timesheets, 1, "Only the holiday on April 10 should be counted.")
 
+    @freeze_time('2025-03-01')
     def test_changing_employee_start_date(self):
         """Test timesheet behavior when employee start date changes."""
         self.contract.write({
@@ -109,6 +115,7 @@ class TestEmployeeContractTimesheets(TestGlobalLeaves):
         ])
         self.assertEqual(updated_count, 3, "Timesheets should be updated to include all holidays before the new start date")
 
+    @freeze_time('2025-03-01')
     def test_extending_contract(self):
         """ Test that extending a contract regenerates timesheets for future holidays """
         self.contract.write({
@@ -116,11 +123,11 @@ class TestEmployeeContractTimesheets(TestGlobalLeaves):
             'date_end': datetime(2025, 3, 30),
         })
 
-        initial_count = self.env['account.analytic.line'].search_count([
+        timesheet_count = self.env['account.analytic.line'].search_count([
             ('employee_id', '=', self.employee_emp.id),
             ('global_leave_id', 'in', self.global_leaves.ids)
         ])
-        self.assertEqual(initial_count, 1, "The timesheets should be created for the holidays within the contract period.")
+        self.assertEqual(timesheet_count, 1, "The timesheets should be created for the holidays within the contract period.")
 
         # Extend the contract to include May
         self.contract.write({'date_end': datetime(2025, 5, 31)})
@@ -130,6 +137,7 @@ class TestEmployeeContractTimesheets(TestGlobalLeaves):
         ])
         self.assertEqual(updated_count, 3, "The timesheets should be updated to include the new holiday.")
 
+    @freeze_time('2025-03-01')
     def test_create_public_holidays_inside_contract_period(self):
         """ Test that public holidays are created correctly """
         out_side_contract_leave = self.env['resource.calendar.leaves'].create([{
