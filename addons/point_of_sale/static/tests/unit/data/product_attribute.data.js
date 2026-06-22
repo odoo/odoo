@@ -97,5 +97,11 @@ export class ProductAttribute extends models.ServerModel {
             display_type: "radio",
             create_variant: "dynamic",
         },
+        {
+            id: 13,
+            name: "Toppings",
+            display_type: "multi",
+            create_variant: "no_variant",
+        },
     ];
 }
