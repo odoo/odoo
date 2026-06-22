@@ -401,6 +401,14 @@ export class PosOrder extends PosOrderAccounting {
                 if (newQty >= 0) {
                     comboRemainingFree[cLine.combo_item_id.combo_id.id] = newQty;
                     childLineFree.push({ ...baseData, qty: cLine.qty, parentQty: pLine.qty });
+                } else if (comboRemainingFree[cLine.combo_item_id.combo_id.id] > 0) {
+                    childLineFree.push({
+                        ...baseData,
+                        qty: comboRemainingFree[cLine.combo_item_id.combo_id.id],
+                        parentQty: pLine.qty,
+                    });
+                    childLineExtra.push({ ...baseData, qty: -newQty });
+                    comboRemainingFree[cLine.combo_item_id.combo_id.id] = newQty;
                 } else {
                     childLineExtra.push({ ...baseData, qty: cLine.qty });
                 }

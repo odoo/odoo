@@ -237,7 +237,7 @@ registry.category("web_tour.tours").add("ProductComboMaxFreeQtyTour", {
 
             Dialog.confirm(),
             inLeftSide([
-                ...ProductScreen.selectedOrderlineHasDirect("Office Combo", "1", "151.97"),
+                ...ProductScreen.selectedOrderlineHasDirect("Office Combo", "1", "151.98"),
             ]),
             ProductScreen.totalAmountIs("151.98"),
             ProductScreen.clickPayButton(),
@@ -367,5 +367,22 @@ registry.category("web_tour.tours").add("test_combo_price_unchanged_with_lot_tra
                 },
             ]),
             ProductScreen.totalAmountIs("8.05"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_combo_product_merged", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Single Product Combo Product"),
+            combo.select("Combo Product"),
+            combo.select("Combo Product"),
+            combo.select("Combo Product"),
+            combo.select("Combo Product"),
+            combo.select("Combo Product"),
+            combo.select("Combo Product"),
+            Dialog.confirm(),
+            inLeftSide([...ProductScreen.orderComboLineHas("Combo Product", 6)]),
         ].flat(),
 });
