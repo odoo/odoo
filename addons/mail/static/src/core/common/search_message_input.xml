@@ -6,7 +6,7 @@
                 search="this.props.messageSearch"
                 accesskey="'Q'"
                 autofocus="true"
-                onClear="() => this.clear()"
+                onClear="() => this.props.messageSearch.reset()"
                 placeholder="this.inputPlaceholder"
             />
             <Dropdown t-if="this.env.inChatter">
@@ -22,7 +22,7 @@
                     </t>
                 </t>
             </Dropdown>
-            <button t-if="this.env.inChatter" class="btn btn-outline-secondary ms-2" t-on-click="() => this.onClickClose()" aria-label="Close button">
+            <button t-if="this.env.inChatter" class="btn btn-outline-secondary ms-2" t-on-click="() => this.props.closeSearch?.()" aria-label="Close button">
                 <i class="o_searchview_icon oi oi-close cursor-pointer" role="img" aria-label="Close search" title="Close"/>
             </button>
         </div>

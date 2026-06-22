@@ -4,12 +4,14 @@ import {
     defineMailModels,
     editInput,
     insertText,
+    listenStoreFetch,
     openDiscuss,
     patchUiSize,
     scroll,
     SIZES,
     start,
     startServer,
+    waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { expect, mockTouch, mockUserAgent, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
@@ -327,4 +329,21 @@ test("Close message search panel when navigating back on mobile", async () => {
     await contains(".o-mail-SearchMessagesPanel");
     history.back();
     await contains(".o-mail-SearchMessagesPanel", { count: 0 });
+});
+
+test.tags("desktop");
+test("Search should trigger a single store fetch", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", "This is a message");
+    await click(".o-sendMessageActive:enabled");
+    await contains(".o-mail-Message");
+    await click("button[title='Search Messages']");
+    await contains(".o-mail-SearchMessageInput");
+    listenStoreFetch("/discuss/channel/messages");
+    await insertText(".o-mail-SearchInput input", "message");
+    await waitStoreFetch("/discuss/channel/messages");
+    await waitStoreFetch();
 });
