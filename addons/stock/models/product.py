@@ -511,11 +511,18 @@ class ProductProduct(models.Model):
 
     @api.onchange('tracking')
     def _onchange_tracking(self):
-        if any(product.tracking in ['lot', 'serial'] and product.qty_available > 0 for product in self):
-            return {
-                'warning': {
-                    'title': _('Warning!'),
-                    'message': _("You have product(s) in stock that have no lot/serial number. You can assign lot/serial numbers by doing an inventory adjustment.")}}
+        for product in self:
+            if product.tracking in ['lot', 'serial'] and product.qty_available > 0:
+                return {
+                    'warning': {
+                        'title': _('Warning!'),
+                        'message': _("You have product(s) in stock that have no lot/serial number. You can assign lot/serial numbers by doing an inventory adjustment.")}}
+            elif not product.tracking and product.qty_available != 0:
+                product.tracking = 'none'
+                return {
+                    'warning': {
+                        'title': _('Warning!'),
+                        'message': _("You have product(s) in stock. Set the quantity of the product(s) to zero before disabling tracking.")}}
 
     @api.model
     def view_header_get(self, view_id, view_type):
