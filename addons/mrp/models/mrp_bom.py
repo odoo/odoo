@@ -595,7 +595,7 @@ class MrpBom(models.Model):
             Cases:
                 - no_variant:
                     1. attribute present on the line
-                        => need to be at least one attribute value matching between the one passed as args and the ones one the line
+                        => Every attribute on the line must have at least one of its values match with a value passed as args.
                     2. attribute not present on the line
                         => valid if the line has no attribute value selected for that attribute
                 - always and dynamic: match_all_variant_values()
@@ -613,20 +613,9 @@ class MrpBom(models.Model):
         if not never_attribute_values:
             return True
 
-        bom_values_by_attribute = no_variant_bom_attributes.grouped('attribute_id')
-        never_values_by_attribute = never_attribute_values.grouped('attribute_id')
+        never_attribute_valid = len((no_variant_bom_attributes & never_attribute_values).attribute_id) == len(no_variant_bom_attributes.attribute_id)
 
-        # Or if there is no overlap between given line values attributes and the ones on on the bom
-        if not any(never_att_id in no_variant_bom_attributes.attribute_id.ids for never_att_id in never_attribute_values.attribute_id.ids):
-            return True
-
-        # Check that at least one variant attribute is correct
-        for attribute, values in bom_values_by_attribute.items():
-            if never_values_by_attribute.get(attribute) and any(val.id in never_values_by_attribute[attribute].ids for val in values):
-                return not other_attribute_valid
-
-        # None were found, so we skip the line
-        return True
+        return not (other_attribute_valid and never_attribute_valid)
 
     # -------------------------------------------------------------------------
     # REPLENISHMENT WIZARD
