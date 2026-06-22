@@ -3,7 +3,7 @@
 
 from odoo import Command
 from .common import TestCommonSaleTimesheet
-from odoo.tests import tagged, Form
+from odoo.tests import tagged, Form, mute_logger
 
 
 @tagged('post_install', '-at_install')
@@ -230,3 +230,17 @@ class TestProject(TestCommonSaleTimesheet):
         new_project = wizard._create_project_from_template()
 
         self.assertEqual(new_project.company_id, self.partner_b.company_id)
+
+    @mute_logger('odoo.domains')
+    def test_compute_last_sol_of_customer_domain_hashable(self):
+        """Changing the project on a new task (e.g. via a contact form's task_ids
+        field added through Studio) should not crash with 'unhashable type: list'.
+        """
+        new_partner = self.env['res.partner'].new({'name': 'New Partner'})
+        task = self.env['project.task'].new({
+            'name': 'Test Task',
+            'project_id': self.project_global.id,
+            'partner_id': new_partner.id,
+        })
+        # Should not raise TypeError: unhashable type: 'list'
+        self.assertFalse(task.last_sol_of_customer)
