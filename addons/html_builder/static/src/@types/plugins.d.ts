@@ -6,14 +6,16 @@ declare module "plugins" {
     import { CachedModelShared } from "@html_builder/core/cached_model_plugin";
     import { CloneShared, on_cloned_handlers, on_will_clone_handlers } from "@html_builder/core/clone_plugin";
     import { CustomizeTabShared } from "@html_builder/core/customize_tab_plugin";
+    import { DirtMarkShared } from "@html_builder/core/dirt_mark_plugin";
     import { DisableSnippetsShared } from "@html_builder/core/disable_snippets_plugin";
+    import { dirt_marks } from "@html_builder/core/dirt_mark_plugin";
     import { dropzone_selectors, DropZoneShared, is_valid_for_sibling_dropzone_predicates } from "@html_builder/core/drop_zone_plugin";
     import { on_replicated_handlers } from "@html_builder/core/field_change_replication_plugin";
     import { MediaWebsiteShared } from "@html_builder/core/media_website_plugin";
     import { OperationShared } from "@html_builder/core/operation_plugin";
     import { get_overlay_buttons, OverlayButtonsShared, should_show_overlay_buttons_of_ancestor_predicates } from "@html_builder/core/overlay_buttons/overlay_buttons_plugin";
     import { is_node_empty_predicates, is_unremovable_selectors, on_removed_handlers, on_will_remove_handlers, RemoveShared } from "@html_builder/core/remove_plugin";
-    import { on_saved_handlers, on_will_save_handlers, dirty_els_providers, on_will_save_element_handlers, save_elements_overrides, on_ready_to_save_document_handlers, SaveShared } from "@html_builder/core/save_plugin";
+    import { has_unsaved_data_predicates, on_saved_handlers, on_will_save_handlers, on_ready_to_save_document_handlers, SaveShared } from "@html_builder/core/save_plugin";
     import { submit_button_selectors } from "@html_builder/core/save_snippet_plugin";
     import { after_setup_editor_overrides, on_will_setup_editor_handlers, savable_selectors, SetupEditorShared } from "@html_builder/core/setup_editor_plugin";
     import { on_target_hidden_handlers, on_target_shown_handlers, VisibilityShared } from "@html_builder/core/visibility_plugin";
@@ -48,6 +50,7 @@ declare module "plugins" {
         cachedModel: CachedModelShared;
         clone: CloneShared;
         customizeTab: CustomizeTabShared;
+        dirtMark: DirtMarkShared,
         disableSnippets: DisableSnippetsShared;
         dropzone: DropZoneShared;
         media_website: MediaWebsiteShared;
@@ -99,18 +102,17 @@ declare module "plugins" {
         on_will_remove_handlers: on_will_remove_handlers;
         on_will_restore_containers_handlers: on_will_restore_containers_handlers;
         on_will_save_handlers: on_will_save_handlers;
-        on_will_save_element_handlers: on_will_save_element_handlers;
         on_will_setup_editor_handlers: on_will_setup_editor_handlers;
         on_ready_to_save_document_handlers: on_ready_to_save_document_handlers;
 
         // Overrides
         after_setup_editor_overrides: after_setup_editor_overrides;
         apply_custom_css_style_overrides: apply_custom_css_style_overrides;
-        save_elements_overrides: save_elements_overrides;
 
         // Predicates
         should_keep_overlay_options_predicates: should_keep_overlay_options_predicates;
         should_show_overlay_buttons_of_ancestor_predicates: should_show_overlay_buttons_of_ancestor_predicates;
+        has_unsaved_data_predicates: has_unsaved_data_predicates
         is_draggable_predicates: is_draggable_predicates;
         is_element_in_invisible_panel_predicates: is_element_in_invisible_panel_predicates;
         is_node_empty_predicates: is_node_empty_predicates;
@@ -128,7 +130,6 @@ declare module "plugins" {
         background_shape_target_providers: background_shape_target_providers;
         clone_disabled_reason_providers: clone_disabled_reason_providers;
         default_shape_providers: default_shape_providers;
-        dirty_els_providers: dirty_els_providers;
         image_shape_groups_providers: image_shape_groups_providers;
         options_container_top_buttons_providers: options_container_top_buttons_providers;
         remove_disabled_reason_providers: remove_disabled_reason_providers;
@@ -145,6 +146,7 @@ declare module "plugins" {
         content_editable_selectors: content_editable_selectors;
         content_not_editable_selectors: content_not_editable_selectors;
         dropzone_selectors: dropzone_selectors;
+        dirt_marks: dirt_marks;
         elements_to_options_title_components: elements_to_options_title_components;
         fontCssVariables: fontCssVariables;
         get_overlay_buttons: get_overlay_buttons;

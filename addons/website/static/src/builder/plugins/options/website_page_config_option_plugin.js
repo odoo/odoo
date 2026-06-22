@@ -14,7 +14,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class WebsitePageConfigOptionPlugin extends Plugin {
     static id = "websitePageConfigOptionPlugin";
-    static dependencies = ["history", "visibility", "builderActions"];
+    static dependencies = ["history", "visibility", "builderActions", "dirtMark"];
     static shared = [
         "setDirty",
         "setFooterVisible",
@@ -33,7 +33,7 @@ export class WebsitePageConfigOptionPlugin extends Plugin {
         },
         on_target_shown_handlers: this.onTargetVisibilityToggle.bind(this, true),
         on_target_hidden_handlers: this.onTargetVisibilityToggle.bind(this, false),
-        on_ready_to_save_document_handlers: this.onSave.bind(this),
+        dirt_marks: { id: "page-config", saveAll: this.onSave.bind(this) },
     };
 
     /**
@@ -93,18 +93,11 @@ export class WebsitePageConfigOptionPlugin extends Plugin {
         return matchingClass || rgbaToHex(el.style.getPropertyValue(attribute));
     }
 
-    setDirty(isPreviewing) {
-        if (isPreviewing) {
-            return;
-        }
-        this.isDirty = true;
+    setDirty(el) {
+        this.dependencies.dirtMark.setDirty("page-config", el);
     }
 
-    onSave() {
-        if (!this.isDirty) {
-            return;
-        }
-
+    async onSave(dirtys) {
         const pageOptions = {
             footer_visible: () => !this.getFooterVisibility(),
         };
@@ -139,7 +132,8 @@ export class WebsitePageConfigOptionPlugin extends Plugin {
         }
 
         const mainObject = this.services.website.currentWebsite.metadata.mainObject;
-        return Promise.all([this.services.orm.write(mainObject.model, [mainObject.id], args)]);
+        await this.services.orm.write(mainObject.model, [mainObject.id], args);
+        dirtys.forEach(({ setClean }) => setClean());
     }
 
     doesPageOptionExist(pageOptionName) {
@@ -268,14 +262,14 @@ export class BaseWebsitePageConfigAction extends BuilderAction {
 }
 export class SetWebsiteHeaderVisibilityAction extends BaseWebsitePageConfigAction {
     static id = "setWebsiteHeaderVisibility";
-    apply({ editingElement, value: headerPositionValue, isPreviewing }) {
+    apply({ editingElement, value: headerPositionValue }) {
         const lastValue = this.websitePageConfig.getVisibilityItem("header");
         this.domObserver.applyCustomMutation({
             apply: () => this.headerVisibilityHandlers[headerPositionValue](),
             revert: () => this.headerVisibilityHandlers[lastValue](),
         });
 
-        this.websitePageConfig.setDirty(isPreviewing);
+        this.websitePageConfig.setDirty(editingElement);
     }
     isApplied({ editingElement, value }) {
         return this.websitePageConfig.getVisibilityItem("header") === value;
@@ -286,13 +280,13 @@ export class SetWebsiteBreadcrumbVisibilityAction extends BaseWebsitePageConfigA
     isApplied({ value }) {
         return this.websitePageConfig.getVisibilityItem("breadcrumb") === value;
     }
-    apply({ value, isPreviewing }) {
+    apply({ editingElement, value }) {
         const lastValue = this.websitePageConfig.getVisibilityItem("breadcrumb");
         this.domObserver.applyCustomMutation({
             apply: () => this.breadcrumbVisibilityHandlers[value](),
             revert: () => this.breadcrumbVisibilityHandlers[lastValue](),
         });
-        this.websitePageConfig.setDirty(isPreviewing);
+        this.websitePageConfig.setDirty(editingElement);
     }
 }
 export class SetWebsiteFooterVisibleAction extends BaseWebsitePageConfigAction {
@@ -300,20 +294,20 @@ export class SetWebsiteFooterVisibleAction extends BaseWebsitePageConfigAction {
     isApplied({ editingElement }) {
         return !this.websitePageConfig.getFooterVisibility();
     }
-    apply({ editingElement, isPreviewing }) {
+    apply({ editingElement }) {
         this.websitePageConfig.setFooterVisible(true);
-        this.websitePageConfig.setDirty(isPreviewing);
+        this.websitePageConfig.setDirty(editingElement);
     }
-    clean({ editingElement, isPreviewing }) {
+    clean({ editingElement }) {
         this.websitePageConfig.setFooterVisible(false);
-        this.websitePageConfig.setDirty(isPreviewing);
+        this.websitePageConfig.setDirty(editingElement);
     }
 }
 
 export class SetPageWebsiteDirtyAction extends BaseWebsitePageConfigAction {
     static id = "setPageWebsiteDirty";
-    apply({ editingElement, isPreviewing }) {
-        this.websitePageConfig.setDirty(isPreviewing);
+    apply({ editingElement }) {
+        this.websitePageConfig.setDirty(editingElement);
     }
 }
 
