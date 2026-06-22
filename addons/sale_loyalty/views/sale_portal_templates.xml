@@ -20,29 +20,48 @@
 
     <template id="sale_purchased_gift_card">
         <t t-set="gift_cards" t-value="order.coupon_point_ids.filtered(lambda pe: pe.coupon_id.program_id.program_type == 'gift_card').coupon_id"/>
-        <div class="card mt-3 " t-if="gift_cards and order.state in ('sale', 'done')">
+        <div class="card mt-3" t-if="gift_cards and order.state in ('sale', 'done')">
             <div class="card-body">
-                <span t-if="not hide_intro">You will find below your gift cards code. An email has been sent with it. You can use it starting right now.</span>
-                <table class="table text-center table-borderless">
-                    <thead>
-                        <tr>
-                            <th class="fw-normal">Gift Card Code</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <t t-foreach="range(len(gift_cards))" t-as="gift_card_idx">
-                            <t t-set="gift_card" t-value="gift_cards[gift_card_idx]"/>
-                            <td class="o_purchased_gift_card">
-                                Gift #<t t-out="gift_card_idx + 1"/>
-                                (<span t-out="gift_card._format_points(order._get_real_points_for_coupon(gift_card, post_confirm=True))"/>)
-                                <strong t-out="gift_card.code"/>
-                                <button class="btn btn-sm btn-secondary copy-to-clipboard" t-att-data-clipboard-text="gift_card.code">
-                                    <span class="fa fa-clipboard"/> Copy
-                                </button>
-                            </td>
-                        </t>
-                    </tbody>
-                </table>
+                <h6 t-if="not hide_intro" class="mb-3">
+                    Your gift card<t t-if="len(gift_cards) > 1">s are</t><t t-else=""> is</t> ready to use
+                </h6>
+                <div class="o_purchased_gift_cards">
+                    <t t-foreach="gift_cards" t-as="gift_card">
+                        <span class="o_purchased_gift_card_label text-muted">
+                            Gift card <t t-out="gift_card_index + 1"/>:
+                            <t t-out="gift_card._format_points(order._get_real_points_for_coupon(gift_card, post_confirm=True))"/>
+                        </span>
+                        <div class="o_purchased_gift_card d-flex align-items-center justify-content-between gap-3 rounded px-3 py-2">
+                            <strong class="h6 mb-0 text-muted text-nowrap" t-out="gift_card.code"/>
+                            <button
+                                type="button"
+                                class="btn border-0 p-0 copy-to-clipboard"
+                                t-att-data-clipboard-text="gift_card.code"
+                                title="Copy code"
+                                aria-label="Copy code"
+                            >
+                                <i class="fa fa-clone"/>
+                            </button>
+                        </div>
+                        <form class="o_gift_card_send_form">
+                            <input
+                                type="hidden"
+                                name="code"
+                                t-att-value="gift_card.code"
+                            />
+                            <div class="input-group h-100">
+                                <input
+                                    name="email"
+                                    class="form-control"
+                                    type="email"
+                                    placeholder="Email Address"
+                                    required="required"
+                                />
+                                <button type="submit" class="btn btn-primary text-nowrap">Send as gift</button>
+                            </div>
+                        </form>
+                    </t>
+                </div>
             </div>
         </div>
     </template>

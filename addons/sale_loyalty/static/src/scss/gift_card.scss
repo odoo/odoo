@@ -1,0 +1,19 @@
+.o_purchased_gift_cards {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    column-gap: map-get($spacers, 3);
+    row-gap: map-get($spacers, 1);
+
+    @include media-breakpoint-down(md) {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: map-get($spacers, 2);
+    }
+
+    .o_purchased_gift_card_label {
+        grid-column: 1 / -1;
+    }
+
+    .o_purchased_gift_card {
+        border: $border-width dashed $border-color;
+    }
+}
