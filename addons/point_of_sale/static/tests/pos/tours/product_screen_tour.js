@@ -1276,3 +1276,16 @@ registry.category("web_tour.tours").add("test_orderline_merge_with_higher_price_
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_default_fiscal_position_allowed", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("Partner Test 1"),
+            ProductScreen.checkFiscalPosition("Allowed"),
+            ProductScreen.clickControlButtonMore(),
+            Chrome.endTour(),
+        ].flat(),
+});
