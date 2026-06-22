@@ -26,8 +26,8 @@ export class WorkerPlugin extends Plugin {
 
     startWorker() {
         this._state = WORKER_STATE.INITIALIZING;
-        let workerURL = `${this.params.serverURL}/bus/websocket_worker_bundle?v=${session.websocket_worker_version}`;
-        if (this.params.serverURL !== window.origin) {
+        let workerURL = `${this.params.serverURL()}/bus/websocket_worker_bundle?v=${session.websocket_worker_version}`;
+        if (this.params.serverURL() !== window.origin) {
             // Worker service can be loaded from a different origin than the
             // bundle URL. The Worker expects an URL from this origin, give
             // it a base64 URL that will then load the bundle via "importScripts"

@@ -11,6 +11,7 @@ import {
     WebsocketWorker,
     WORKER_STATE,
 } from "@bus/workers/websocket_worker";
+import { signal } from "@odoo/owl";
 import { advanceTime, describe, expect, test } from "@odoo/hoot";
 import { manuallyDispatchProgrammaticEvent, runAllTimers } from "@odoo/hoot-dom";
 import { mockWebSocket } from "@odoo/hoot-mock";
@@ -244,13 +245,13 @@ test("websocket reconnects upon user log in", async () => {
 });
 
 test("websocket connects with URL corresponding to given serverURL", async () => {
-    const serverURL = "http://random-website.com";
+    const serverURL = signal("http://random-website.com");
     mockService("bus.parameters", { serverURL });
     await makeMockEnv();
     mockWebSocket((ws) => expect.step(ws.url));
     startBusService();
     await expect.waitForSteps([
-        `${serverURL.replace("http", "ws")}/websocket?version=${session.websocket_worker_version}`,
+        `${serverURL().replace("http", "ws")}/websocket?version=${session.websocket_worker_version}`,
     ]);
 });
 
