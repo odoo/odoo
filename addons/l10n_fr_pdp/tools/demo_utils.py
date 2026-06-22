@@ -68,7 +68,7 @@ def _mock_pdp_annuaire_lookup_participant(func, self, edi_identification):
 
 
 def _mock_get_peppol_verification_state(func, self, routing_identifier, invoice_edi_format, process_type='billing', partner=None):
-    if (routing_identifier or '').partition(':')[0] != '0225':
+    if (routing_identifier or '').partition(':')[0] != '0225' or self.env.company._get_peppol_proxy_type() != 'pdp':
         return func(self, routing_identifier, invoice_edi_format, process_type=process_type)
     if not invoice_edi_format:
         return 'not_valid'

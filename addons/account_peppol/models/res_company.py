@@ -132,6 +132,13 @@ class ResCompany(models.Model):
         if not phonenumbers.is_valid_number(phone_nbr):
             raise ValidationError(error_message)
 
+    def _peppol_is_french_company(self):
+        self.ensure_one()
+        return (
+            self.account_fiscal_country_id.code in {'FR', 'GP', 'MQ', 'RE'}
+            or self.routing_scheme in {'0225', '0009', '9957', '0002'}
+        )
+
     # -------------------------------------------------------------------------
     # CONSTRAINTS
     # -------------------------------------------------------------------------
