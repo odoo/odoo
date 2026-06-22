@@ -4,12 +4,13 @@ from urllib.parse import parse_qs
 
 from odoo.exceptions import UserError
 from odoo.tests import tagged
+from odoo.addons.mail.tests.common import MailCommon
 
 from .common import TestL10nFrPdpCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
+class TestL10nFrPdpPartner(TestL10nFrPdpCommon, MailCommon):
 
     def test_compute_pdp_identifier(self):
         partner = self.env["res.partner"].create({
@@ -204,3 +205,21 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             'pdp_verification_display_state': 'pdp_valid',
             'invoice_sending_method': False,
         }])
+
+    def test_track_pdp_verification_display_state(self):
+        partner = self.partner_a
+        messages_before = partner.message_ids
+
+        partner.button_account_peppol_check_partner_endpoint()
+        self.env.cr.precommit.run()
+
+        message = partner.message_ids - messages_before
+        self.assertEqual(len(message), 1)
+        self.assertMessageFields(message, {
+            'tracking_values': [(
+                'pdp_verification_display_state',
+                'selection',
+                'Not verified yet',
+                'Partner is not in the annuaire',
+            )],
+        })

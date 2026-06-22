@@ -148,6 +148,35 @@ class ResPartner(models.Model):
         else:
             return f'peppol_{state}'
 
+    def _track_add(self, initial_values, end_values=None, fields_info=None, author=None, body=None):
+        if any('peppol_verification_state' in values for values in initial_values.values()):
+            initial_values = dict(initial_values)
+            end_values = dict(end_values or {})
+            for partner in self:
+                initial = initial_values.get(partner.id, {})
+                if (
+                    'peppol_verification_state' not in initial
+                    or partner._get_pdp_receiver_identification_info()[0] != 'pdp'
+                ):
+                    continue
+
+                end = end_values.get(partner.id, {})
+                old_display_state = partner._get_pdp_display_verification_state(initial['peppol_verification_state'])
+                new_display_state = partner._get_pdp_display_verification_state(
+                    end.get('peppol_verification_state', partner.peppol_verification_state)
+                )
+                initial_values[partner.id] = {
+                    **initial,
+                    'pdp_verification_display_state': old_display_state,
+                }
+                end_values[partner.id] = {
+                    **end,
+                    'pdp_verification_display_state': new_display_state,
+                }
+                initial_values[partner.id].pop('peppol_verification_state')
+                end_values[partner.id].pop('peppol_verification_state', None)
+        return super()._track_add(initial_values, end_values=end_values, fields_info=fields_info, author=author, body=body)
+
     def _get_suggested_peppol_edi_format(self):
         # EXTENDS 'account_edi_ubl_cidd`
         self.ensure_one()
