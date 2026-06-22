@@ -26,7 +26,9 @@
             <div t-attf-class="#{two_columns and 'col-lg-12' or 'col-lg-5'}" t-if="Object.keys(widget.get('rating_card_values') || {}).length > 0">
                 <p t-if="!two_columns" class="text-center"><strong>Average</strong></p>
                 <div t-attf-class="o_website_rating_avg #{two_columns and 'mb-2' or 'text-center'}">
-                    <h1><t t-esc="widget.get('rating_card_values')['avg']"/></h1>
+                    <span class="h1">
+                        <t t-esc="widget.get('rating_card_values')['avg']"/>
+                    </span>
                     <t t-call="portal_rating.rating_stars_static">
                         <t t-set="val" t-value="widget.get('rating_card_values')['avg'] || 0"/>
                     </t>
