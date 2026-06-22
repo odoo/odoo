@@ -137,10 +137,7 @@ test("CallDebrief: timeline-media synchronization", async () => {
     // Move playhead -> Seeks audio
     // Clicking the timeline defaults to center (50%). Total duration 180s -> 90s (01:30).
     await click(".o-CallDebriefTimeline");
-    await animationFrame();
-
-    // Manually trigger loadeddata to ensure the seek callback runs immediately
-    queryOne("audio").dispatchEvent(new Event("loadeddata"));
+    // One animationFrame: OWL renders new <audio> (segment 2) and useEffect sets currentTime=30
     await animationFrame();
 
     const timestampText = queryOne(".o-CallDebriefTimeline-timestamp").innerText;
