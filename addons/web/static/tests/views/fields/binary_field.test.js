@@ -1,6 +1,6 @@
 import { after, expect, test } from "@odoo/hoot";
 import { click, queryOne, queryValue, setInputFiles, waitFor } from "@odoo/hoot-dom";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     clickSave,
     contains,
@@ -82,7 +82,7 @@ test("BinaryField is correctly rendered (readonly)", async () => {
 
     // Testing the download button in the field
     // We must avoid the browser to download the file effectively
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     const downloadOnClick = (ev) => {
         const target = ev.target;
         if (target.tagName === "A" && "download" in target.attributes) {
@@ -95,7 +95,7 @@ test("BinaryField is correctly rendered (readonly)", async () => {
     after(() => document.removeEventListener("click", downloadOnClick));
 
     await contains(`.o_field_widget[name="document"] a`).click();
-    await deferred;
+    await deferred.promise;
     expect.verifySteps(["/web/content"]);
 });
 
@@ -183,7 +183,7 @@ test("BinaryField is correctly rendered", async () => {
 
     // Testing the download button in the field
     // We must avoid the browser to download the file effectively
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     const downloadOnClick = (ev) => {
         const target = ev.target;
         if (target.tagName === "A" && "download" in target.attributes) {
@@ -196,7 +196,7 @@ test("BinaryField is correctly rendered", async () => {
     after(() => document.removeEventListener("click", downloadOnClick));
 
     await click(`.fa-download`);
-    await deferred;
+    await deferred.promise;
     expect.verifySteps(["/web/content"]);
 
     await click(`.o_field_binary .o_clear_file_button`);
@@ -551,7 +551,7 @@ test("Binary field in list view doesn't open the record when clicked", async () 
     });
 
     expect(`.o_data_row .o_data_cell`).toHaveText("coucou.txt");
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     const downloadOnClick = (ev) => {
         const target = ev.target;
         if (target.tagName === "A" && "download" in target.attributes) {
@@ -563,7 +563,7 @@ test("Binary field in list view doesn't open the record when clicked", async () 
     document.addEventListener("click", downloadOnClick);
     after(() => document.removeEventListener("click", downloadOnClick));
     await contains(".o_field_widget[name='document'] .o_form_uri").click();
-    await deferred;
+    await deferred.promise;
     expect.verifySteps(["/web/content"]);
 
     await contains(`.o_data_row .o_data_cell:eq(1)`).click();

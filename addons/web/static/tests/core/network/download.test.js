@@ -1,5 +1,5 @@
 import { after, describe, expect, test } from "@odoo/hoot";
-import { Deferred, mockFetch } from "@odoo/hoot-mock";
+import { mockFetch } from "@odoo/hoot-mock";
 import { allowTranslations } from "@web/../tests/web_test_helpers";
 
 import { download, parse } from "@web/core/network/download";
@@ -88,7 +88,7 @@ test("handles success download", async () => {
         return new Blob(["some plain text file"], { type: "text/plain" });
     });
 
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
 
     // This part asserts the implementation detail in question
     const downloadOnClick = (ev) => {
@@ -108,6 +108,6 @@ test("handles success download", async () => {
 
     expect("a[download]").toHaveCount(0); // link will be added by download
     download({ data: { someKey: "someValue" }, url: "/some_url" });
-    await deferred;
+    await deferred.promise;
     expect.verifySteps(["fetching file", "file downloaded"]);
 });

@@ -1,7 +1,7 @@
 import { onRendered } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockDate } from "@odoo/hoot-mock";
+import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import {
     contains,
     defineModels,
@@ -2521,7 +2521,7 @@ test("change mode, stacked, or order via the graph buttons does not reload datap
 
 test("concurrent reloads: add a filter, and directly toggle a measure", async () => {
     let def;
-    onRpc("formatted_read_group", () => def);
+    onRpc("formatted_read_group", () => def?.promise);
     const view = await mountView({
         type: "graph",
         resModel: "foo",
@@ -2543,7 +2543,7 @@ test("concurrent reloads: add a filter, and directly toggle a measure", async ()
     });
 
     // Set a domain (this reload is delayed)
-    def = new Deferred();
+    def = Promise.withResolvers();
     await toggleSearchBarMenu();
     await toggleMenuItem("My Filter");
 
@@ -2572,7 +2572,7 @@ test("concurrent reloads: add a filter, and directly toggle a measure", async ()
 
 test("change graph mode while loading a filter", async () => {
     let def;
-    onRpc("formatted_read_group", () => def);
+    onRpc("formatted_read_group", () => def?.promise);
     const view = await mountView({
         type: "graph",
         resModel: "foo",
@@ -2595,7 +2595,7 @@ test("change graph mode while loading a filter", async () => {
     checkModeIs(view, "line");
 
     // Set a domain (this reload is delayed)
-    def = new Deferred();
+    def = Promise.withResolvers();
     await toggleSearchBarMenu();
     await toggleMenuItem("My Filter");
 
@@ -2626,7 +2626,7 @@ test("change graph mode while loading a filter", async () => {
 
 test("only process most recent data for concurrent groupby", async () => {
     let def;
-    onRpc(() => def);
+    onRpc(() => def?.promise);
     const view = await mountView({
         type: "graph",
         resModel: "foo",
@@ -2647,7 +2647,7 @@ test("only process most recent data for concurrent groupby", async () => {
     checkLabels(view, ["xphone", "xpad"]);
     checkDatasets(view, "data", { data: [82, 157] });
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     await toggleSearchBarMenu();
     await toggleMenuItem("Color");
     await toggleMenuItem("Color");
@@ -2995,8 +2995,8 @@ test("display the field's falsy_value_label for false group, if defined", async 
 
 test.tags("desktop");
 test("graph views make their control panel available directly", async () => {
-    const def = new Deferred();
-    onRpc("formatted_read_group", () => def);
+    const def = Promise.withResolvers();
+    onRpc("formatted_read_group", () => def?.promise);
     await mountView({
         type: "graph",
         resModel: "foo",
@@ -3112,7 +3112,7 @@ test("monetary chart rendering with a single foreign currency", async () => {
                 ],
                 __count: 1,
                 "currency_id:array_agg_distinct": [1],
-                "amount:sum_currency": 400 * 0.8,  // in eur
+                "amount:sum_currency": 400 * 0.8, // in eur
                 "amount:sum": 400,
             },
         ];

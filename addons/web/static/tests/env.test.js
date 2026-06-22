@@ -1,7 +1,12 @@
 import { after, beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
-import { Deferred, tick } from "@odoo/hoot-mock";
+import { tick } from "@odoo/hoot-mock";
 import { App, Component, signal, xml } from "@odoo/owl";
-import { allowTranslations, clearRegistry, makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    allowTranslations,
+    clearRegistry,
+    makeMockEnv,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
 
 import { registry } from "@web/core/registry";
 import { services } from "@web/core/services";
@@ -21,8 +26,8 @@ beforeEach(() => {
     // ideally, should not be done like this, we should simply start odoo with
     // the services that we want. but for now, it will do
     patchWithCleanup(services, {
-        _items: signal.Array([])
-    })
+        _items: signal.Array([]),
+    });
 });
 
 /**
@@ -58,10 +63,10 @@ test(`crashing async service start causes startService to crash`, async () => {
 });
 
 test(`can start an asynchronous service`, async () => {
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     registerService("test", [], async () => {
         expect.step("before");
-        const result = await deferred;
+        const result = await deferred.promise;
         expect.step("after");
         return result;
     });
@@ -99,16 +104,16 @@ test(`get an object containing dependencies as second arg`, async () => {
 });
 
 test(`can start two sequentially dependant asynchronous services`, async () => {
-    const deferred2 = new Deferred();
+    const deferred2 = Promise.withResolvers();
     registerService("test2", ["test1"], () => {
         expect.step("test2");
-        return deferred2;
+        return deferred2.promise;
     });
 
-    const deferred1 = new Deferred();
+    const deferred1 = Promise.withResolvers();
     registerService("test1", [], () => {
         expect.step("test1");
-        return deferred1;
+        return deferred1.promise;
     });
 
     registerService("test3", ["test2"], () => {
@@ -131,16 +136,16 @@ test(`can start two sequentially dependant asynchronous services`, async () => {
 });
 
 test(`can start two independant asynchronous services in parallel`, async () => {
-    const deferred1 = new Deferred();
+    const deferred1 = Promise.withResolvers();
     registerService("test1", [], () => {
         expect.step("test1");
-        return deferred1;
+        return deferred1.promise;
     });
 
-    const deferred2 = new Deferred();
+    const deferred2 = Promise.withResolvers();
     registerService("test2", [], () => {
         expect.step("test2");
-        return deferred2;
+        return deferred2.promise;
     });
 
     registerService("test3", ["test1", "test2"], () => {
@@ -247,7 +252,7 @@ test(`mountComponent: can pass props to the root component`, async () => {
 });
 
 test(`env.isReady is resolved after services are loaded`, async () => {
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
 
     registerService("test", [], async (env) => {
         expect.step("before");
@@ -255,7 +260,7 @@ test(`env.isReady is resolved after services are loaded`, async () => {
             expect.step("env ready");
         });
 
-        const result = await deferred;
+        const result = await deferred.promise;
         expect.step("after");
         return result;
     });

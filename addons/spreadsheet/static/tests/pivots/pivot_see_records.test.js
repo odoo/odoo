@@ -1,4 +1,4 @@
-import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import { describe, expect, test } from "@odoo/hoot";
 import {
     defineSpreadsheetActions,
@@ -385,12 +385,12 @@ test("See records is not visible if the pivot is not loaded, even if the cell ha
         `,
         mockRPC: async function (route, args) {
             if (deferred && args.method === "read_group" && args.model === "partner") {
-                await deferred;
+                await deferred.promise;
             }
         },
     });
     setCellContent(model, "A1", '=IFERROR(PIVOT.VALUE("1","probability"), 42)');
-    deferred = new Deferred();
+    deferred = Promise.withResolvers();
     model.dispatch("REFRESH_ALL_DATA_SOURCES");
     const action = cellMenuRegistry.getAll().find((item) => item.id === "pivot_see_records");
     expect(action.isVisible(env)).toBe(false);

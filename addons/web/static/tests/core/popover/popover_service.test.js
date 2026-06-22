@@ -4,7 +4,6 @@ import { getService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { animationFrame } from "@odoo/hoot-mock";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { click, press } from "@odoo/hoot-dom";
-import { Deferred } from "@web/core/utils/concurrency";
 
 let target;
 
@@ -54,13 +53,13 @@ test("close on click away", async () => {
 });
 
 test("close on click away when loading", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     class Comp extends Component {
         static template = xml`<div id="comp">in popover</div>`;
         static props = ["*"];
         setup() {
             onWillStart(async () => {
-                await def;
+                await def.promise;
             });
         }
     }

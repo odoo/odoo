@@ -1,6 +1,5 @@
 import {
     advanceTime,
-    Deferred,
     describe,
     expect,
     freezeTime,
@@ -48,7 +47,7 @@ test("RamCache: can cache a simple call", async () => {
 });
 
 test("RamCache: ram is set with promises, timestamp and expires", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     const rpcCache = new RPCCache(
         "mockRpc",
         1,
@@ -59,8 +58,8 @@ test("RamCache: ram is set with promises, timestamp and expires", async () => {
     const timestamp = Date.now();
     // If two identical calls are made in succession, only one fallback will be made.
     // The second call will get the result of the first call (or a promise if the first call is not yet finish).
-    const promFirst = rpcCache.read("table", "key", () => def);
-    const promsSecond = rpcCache.read("table", "key", () => def);
+    const promFirst = rpcCache.read("table", "key", () => def.promise);
+    const promsSecond = rpcCache.read("table", "key", () => def.promise);
 
     // Only one record in cache
     expect(Object.keys(rpcCache.ramCache.ram.table).length).toBe(1);
@@ -123,7 +122,7 @@ test("PersistentCache: can cache a simple call", async () => {
     // simulate a reload (clear ramCache)
     rpcCache.ramCache.invalidate();
     expect(rpcCache.ramCache.ram).toEqual({});
-    const def = new Deferred();
+    const def = Promise.withResolvers();
 
     // we return the disk cache value.
     await advanceTime(500);
@@ -134,7 +133,7 @@ test("PersistentCache: can cache a simple call", async () => {
             "key",
             () => {
                 expect.step("Fallback");
-                return Promise.resolve(def);
+                return Promise.resolve(def.promise);
             },
             { type: "disk" }
         )
@@ -278,7 +277,7 @@ test("IndexedDB Crypt: can cache a simple call", async () => {
     // simulate a reload (clear ramCache)
     rpcCache.ramCache.invalidate();
     expect(rpcCache.ramCache.ram).toEqual({});
-    const def = new Deferred();
+    const def = Promise.withResolvers();
 
     // we return the disk cache value - decrypted.
     expect(
@@ -287,7 +286,7 @@ test("IndexedDB Crypt: can cache a simple call", async () => {
             "key",
             () => {
                 expect.step("Fallback");
-                return Promise.resolve(def);
+                return Promise.resolve(def.promise);
             },
             { type: "disk" }
         )
@@ -313,7 +312,7 @@ test("update callback - Ram Value", async () => {
         value: { test: 123 },
     });
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
 
     // we return the RAM cache value.
     expect(
@@ -322,7 +321,7 @@ test("update callback - Ram Value", async () => {
             "key",
             () => {
                 expect.step("Fallback");
-                return Promise.resolve(def);
+                return Promise.resolve(def.promise);
             },
             {
                 update: "always",
@@ -373,7 +372,7 @@ test("update callback - Disk Value", async () => {
     // simulate a reload (clear ramCache)
     rpcCache.ramCache.invalidate();
     expect(rpcCache.ramCache.ram).toEqual({});
-    const def = new Deferred();
+    const def = Promise.withResolvers();
 
     // we return the Disk cache value.
     expect(
@@ -382,7 +381,7 @@ test("update callback - Disk Value", async () => {
             "key",
             () => {
                 expect.step("Fallback");
-                return Promise.resolve(def);
+                return Promise.resolve(def.promise);
             },
             {
                 type: "disk",
@@ -454,8 +453,8 @@ test("Ram value shouldn't change (update the Ram response)", async () => {
         value: { test: 123 },
     });
 
-    const def = new Deferred();
-    res = await rpcCache.read("table", "key", () => def);
+    const def = Promise.withResolvers();
+    res = await rpcCache.read("table", "key", () => def.promise);
 
     // res came from the RAM
     expect(res).toEqual({ test: 123 });
@@ -496,8 +495,8 @@ test("Ram value shouldn't change (update the IndexedDB response)", async () => {
     rpcCache.ramCache.invalidate();
     expect(rpcCache.ramCache.ram).toEqual({});
 
-    const def = new Deferred();
-    res = await rpcCache.read("table", "key", () => def, { type: "disk" });
+    const def = Promise.withResolvers();
+    res = await rpcCache.read("table", "key", () => def.promise, { type: "disk" });
 
     // res came from IndexedDB
     expect(res).toEqual({ test: 123 });
@@ -528,8 +527,8 @@ test("Changing the result shouldn't force the call to callback with hasChanged (
     });
 
     // read the RAM Value !
-    const def = new Deferred();
-    res = await rpcCache.read("table", "key", () => def, {
+    const def = Promise.withResolvers();
+    res = await rpcCache.read("table", "key", () => def.promise, {
         callback: (_result, hasChanged) => {
             if (hasChanged) {
                 expect.step("callback with hasChanged shouldn't be called");
@@ -582,8 +581,8 @@ test("Changing the result shouldn't force the call to callback with hasChanged (
     expect(rpcCache.ramCache.ram).toEqual({});
 
     // read the IndexedDB Value !
-    const def = new Deferred();
-    res = await rpcCache.read("table", "key", () => def, {
+    const def = Promise.withResolvers();
+    res = await rpcCache.read("table", "key", () => def.promise, {
         type: "disk",
         update: "always",
         callback: (_res, hasChanged) => {
@@ -614,9 +613,9 @@ test("RamCache (no update): consecutive calls (success)", async () => {
         "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
     );
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     rpcCache
-        .read("table", "key", () => def)
+        .read("table", "key", () => def.promise)
         .then((r) => {
             expect.step(`first prom resolved with ${r}`);
         });
@@ -641,9 +640,9 @@ test("RamCache (no update): consecutive calls and rejected promise", async () =>
         "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
     );
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     rpcCache
-        .read("table", "key", () => def)
+        .read("table", "key", () => def.promise)
         .catch((e) => {
             expect.step(`first prom rejected ${e.message}`);
         });
@@ -665,11 +664,11 @@ test("RamCache: pending request and call to invalidate", async () => {
         "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
     );
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     rpcCache
         .read("table", "key", () => {
             expect.step("fallback first call");
-            return def;
+            return def.promise;
         })
         .then((r) => {
             expect.step(`first prom resolved with ${r}`);
@@ -719,14 +718,14 @@ test("RamCache: pending request and call to invalidate, update callbacks", async
     expect.verifySteps(["first call: fallback"]);
 
     // read cache again, with update callback
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     rpcCache
         .read(
             "table",
             "key",
             () => {
                 expect.step("second call: fallback");
-                return def;
+                return def.promise;
             },
             {
                 callback: (newValue) => expect.step(`second call: callback ${newValue}`),
@@ -782,11 +781,11 @@ test("RamCache: pending request and call to invalidate, update callbacks in erro
         "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
     );
 
-    const defs = [new Deferred(), new Deferred()];
+    const defs = [Promise.withResolvers(), Promise.withResolvers()];
     rpcCache
         .read("table", "key", () => {
             expect.step("first call: fallback (error)");
-            return defs[0]; // will be rejected
+            return defs[0].promise; // will be rejected
         })
         .catch((e) => expect.step(`first call: rejected with ${e}`));
 
@@ -795,7 +794,7 @@ test("RamCache: pending request and call to invalidate, update callbacks in erro
     rpcCache
         .read("table", "key", () => {
             expect.step("second call: fallback");
-            return defs[1];
+            return defs[1].promise;
         })
         .then((r) => expect.step(`second call: resolved with ${r}`));
     await tick();
@@ -842,7 +841,7 @@ test("DiskCache: multiple consecutive calls, empty cache", async () => {
         1,
         "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
     );
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     let id = 0;
     const rpcCacheRead = () => {
         rpcCache.read(
@@ -850,7 +849,7 @@ test("DiskCache: multiple consecutive calls, empty cache", async () => {
             "key",
             () => {
                 expect.step("fallback");
-                return def;
+                return def.promise;
             },
             {
                 callback: () => {
@@ -880,7 +879,7 @@ test("DiskCache: multiple consecutive calls, value already in disk cache", async
         1,
         "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
     );
-    const def = new Deferred();
+    const def = Promise.withResolvers();
 
     // fill the cache
     await rpcCache.read("table", "key", () => Promise.resolve({ test: 123 }), {
@@ -905,7 +904,7 @@ test("DiskCache: multiple consecutive calls, value already in disk cache", async
             "key",
             () => {
                 expect.step(`fallback ${id}`);
-                return def;
+                return def.promise;
             },
             {
                 type: "disk",
@@ -951,7 +950,7 @@ test("DiskCache: multiple consecutive calls, fallback fails", async () => {
         1,
         "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
     );
-    const def = new Deferred();
+    const def = Promise.withResolvers();
 
     // fill the cache
     await rpcCache.read("table", "key", () => Promise.resolve({ test: 123 }), {
@@ -976,7 +975,7 @@ test("DiskCache: multiple consecutive calls, fallback fails", async () => {
             "key",
             () => {
                 expect.step(`fallback ${id}`);
-                return def;
+                return def.promise;
             },
             {
                 type: "disk",
@@ -1019,7 +1018,7 @@ test("DiskCache: multiple consecutive calls, empty cache, fallback fails", async
         1,
         "85472d41873cdb504b7c7dfecdb8993d90db142c4c03e6d94c4ae37a7771dc5b"
     );
-    const def = new Deferred();
+    const def = Promise.withResolvers();
 
     const rpcCacheRead = (id) =>
         rpcCache.read(
@@ -1027,7 +1026,7 @@ test("DiskCache: multiple consecutive calls, empty cache, fallback fails", async
             "key",
             () => {
                 expect.step(`fallback ${id}`);
-                return def;
+                return def.promise;
             },
             {
                 type: "disk",
@@ -1133,13 +1132,13 @@ test("RamCache: entry expired, fallback executed, cache refilled with new timest
     await advanceTime(maxAge + 10); // expire data
 
     const new_timestamp = Date.now();
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     const res = rpcCache.read(
         "table",
         "key",
         () => {
             expect.step("Fallback");
-            return def;
+            return def.promise;
         },
         { maxAge }
     );

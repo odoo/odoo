@@ -7,7 +7,6 @@ import {
     onRpc,
 } from "@web/../tests/web_test_helpers";
 import { animationFrame, tick, waitFor, waitUntil } from "@odoo/hoot-dom";
-import { Deferred } from "@odoo/hoot-mock";
 import { expect } from "@odoo/hoot";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { patch } from "@web/core/utils/patch";
@@ -92,7 +91,7 @@ export const mountPosDialog = async (component, props) => {
     patchDialogComponent(component);
     const dialog = getService("dialog");
     const root = await mountWithCleanup(MainComponentsContainer);
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
 
     const getComponentInstance = (root) => {
         const flattenedChildren = (comp, acc = {}) => {
@@ -114,7 +113,7 @@ export const mountPosDialog = async (component, props) => {
             deferred.resolve(dialogComponent.component);
         },
     });
-    return await deferred;
+    return await deferred.promise;
 };
 
 export const patchDialogComponent = (component) => {

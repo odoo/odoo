@@ -37,7 +37,6 @@ import { unformat } from "./_helpers/format";
 import { getContent, setSelection } from "./_helpers/selection";
 import { commit, deleteBackward, deleteForward, redo, undo } from "./_helpers/user_actions";
 import { makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { Deferred } from "@web/core/utils/concurrency";
 import { Plugin } from "@html_editor/plugin";
 import { cleanHints, processThroughCleanForSave } from "./_helpers/dispatch";
 import { expectElementCount } from "./_helpers/ui_expectations";
@@ -746,8 +745,8 @@ describe("Mount processing", () => {
     });
 
     test("Host child nodes are removed synchronously with the insertion of owl rendered nodes during mount", async () => {
-        const asyncControl = new Deferred();
-        asyncControl.then(() => {
+        const asyncControl = Promise.withResolvers();
+        asyncControl.promise.then(() => {
             expect.step("minimal asynchronous time");
         });
         patchWithCleanup(App.prototype, {
@@ -773,7 +772,7 @@ describe("Mount processing", () => {
                 return root;
             },
         });
-        const delayedWillStart = new Deferred();
+        const delayedWillStart = Promise.withResolvers();
         class LabeledCounter extends Counter {
             static template = xml`
                 <span t-custom-ref="root" class="counter" t-on-click="this.increment">
@@ -787,7 +786,7 @@ describe("Mount processing", () => {
             setup() {
                 onWillStart(async () => {
                     expect.step("willstart");
-                    await delayedWillStart;
+                    await delayedWillStart.promise;
                 });
                 onMounted(() => {
                     this.props.label.dataset.oeProtected = "false";

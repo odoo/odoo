@@ -11,7 +11,6 @@ import {
     startServer,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
-import { Deferred } from "@odoo/hoot-mock";
 import { onRpc, pagerNext, pagerPrevious } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -256,8 +255,8 @@ test("attachment should be uploaded on the correct record when using the pager n
         resIds: [partnerId_1, partnerId_2],
     });
     // First upload
-    let uploadDeferred = new Deferred();
-    onRpc("/mail/attachment/upload", () => uploadDeferred);
+    let uploadDeferred = Promise.withResolvers();
+    onRpc("/mail/attachment/upload", () => uploadDeferred.promise);
     await click(".o-mail-Chatter-attachFiles");
     let uploadPromise = inputFiles(".o_input_file", [new File(["image"], "A.jpeg")]);
     await pagerNext();
@@ -268,7 +267,7 @@ test("attachment should be uploaded on the correct record when using the pager n
     await click("button[aria-label='Attach files']", { text: "1" });
     await contains(".o-mail-AttachmentCard", { text: "A.jpeg" });
     // Second upload
-    uploadDeferred = new Deferred();
+    uploadDeferred = Promise.withResolvers();
     await click("button[aria-label='Attach files']");
     await click("button", { text: "Attach files" });
     uploadPromise = inputFiles(".o_input_file", [new File(["image"], "B.jpeg")]);

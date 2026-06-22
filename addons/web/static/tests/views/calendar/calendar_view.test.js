@@ -1,7 +1,6 @@
 import { onRendered } from "@web/owl2/utils";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import {
-    Deferred,
     advanceTime,
     animationFrame,
     click,
@@ -3743,11 +3742,11 @@ test(`set event as all day when field is datetime (without all_day mapping)`, as
 });
 
 test(`quickcreate avoid double event creation`, async () => {
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
 
     onRpc("create", async () => {
         expect.step("create");
-        await deferred;
+        await deferred.promise;
     });
     await mountView({
         resModel: "event",
@@ -4912,12 +4911,12 @@ test(`click outside the popup should close it`, async () => {
 });
 
 test(`fields are added in the right order in popover`, async () => {
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     class DeferredWidget extends Component {
         static template = xml``;
         static props = ["*"];
         setup() {
-            onWillStart(() => deferred);
+            onWillStart(() => deferred.promise);
         }
     }
     registry.category("fields").add("deferred_widget", { component: DeferredWidget });

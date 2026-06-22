@@ -1,5 +1,5 @@
 import { beforeEach, expect, onError, test } from "@odoo/hoot";
-import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import { clearRegistry, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { registry } from "@web/core/registry";
@@ -135,12 +135,12 @@ test("MainComponentsContainer re-renders when the registry changes", async () =>
 });
 
 test("Should be possible to add a new component when MainComponentContainer is not mounted yet", async () => {
-    const defer = new Deferred();
+    const defer = Promise.withResolvers();
     patchWithCleanup(MainComponentsContainer.prototype, {
         setup() {
             super.setup();
             onWillStart(async () => {
-                await defer;
+                await defer.promise;
             });
         },
     });

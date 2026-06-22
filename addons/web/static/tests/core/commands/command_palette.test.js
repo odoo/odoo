@@ -1,6 +1,5 @@
 import { expect, getFixture, test } from "@odoo/hoot";
 import {
-    Deferred,
     advanceTime,
     animationFrame,
     click,
@@ -447,10 +446,10 @@ test("multi provider with the same namespace", async () => {
 
 test("check the concurrency during a research", async () => {
     await mountWithCleanup(MainComponentsContainer);
-    const imSearchDef = new Deferred();
+    const imSearchDef = Promise.withResolvers();
     const provide = async (env, options) => {
         if (options.searchValue) {
-            await imSearchDef;
+            await imSearchDef.promise;
         }
         return [
             {
@@ -1518,14 +1517,14 @@ test("checks that href is correctly used", async () => {
 });
 
 test("searchValue must not change without edition", async () => {
-    const provideDef = new Deferred();
+    const provideDef = Promise.withResolvers();
 
     await mountWithCleanup(MainComponentsContainer);
     const providers = [
         {
             provide: async (env, { searchValue }) => {
                 if (searchValue === "abc") {
-                    await provideDef;
+                    await provideDef.promise;
                 }
                 return [
                     {
@@ -1560,7 +1559,7 @@ test("searchValue must not change without edition", async () => {
 });
 
 test("display spinner while loading results from providers", async () => {
-    const provideDef = new Deferred();
+    const provideDef = Promise.withResolvers();
     await mountWithCleanup(MainComponentsContainer);
     getService("dialog").add(CommandPalette, {
         config: {
@@ -1568,7 +1567,7 @@ test("display spinner while loading results from providers", async () => {
                 {
                     namespace: "?",
                     provide: async (env, { searchValue }) => {
-                        await provideDef;
+                        await provideDef.promise;
                         return [];
                     },
                 },

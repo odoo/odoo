@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     contains,
     defineActions,
@@ -179,10 +179,10 @@ test("web client is not deadlocked when a view crashes", async () => {
     expect.assertions(4);
     expect.errors(1);
 
-    const readOnFirstRecordDef = new Deferred();
+    const readOnFirstRecordDef = Promise.withResolvers();
     onRpc("web_read", ({ args }) => {
         if (args[0][0] === 1) {
-            return readOnFirstRecordDef;
+            return readOnFirstRecordDef.promise;
         }
     });
     await mountWithCleanup(WebClient);

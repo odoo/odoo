@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryFirst } from "@odoo/hoot-dom";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     clickSave,
     contains,
@@ -516,14 +516,14 @@ test("input field: change value before pending onchange returns", async () => {
     });
 
     let def;
-    onRpc("onchange", () => def);
+    onRpc("onchange", () => def?.promise);
 
     await contains(".o_field_x2many_list_row_add button").click();
     expect(".o_field_widget[name='name'] input").toHaveValue("My little Name Value", {
         message: "should contain the default value",
     });
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o-autocomplete--input").click();
     await contains(".o-autocomplete--dropdown-item").click();
     await fieldInput("name").edit("tralala", { confirm: false });
@@ -546,7 +546,7 @@ test("input field: change value before pending onchange returns (2)", async () =
         }
     };
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     await mountView({
         type: "form",
         resModel: "res.partner",
@@ -560,7 +560,7 @@ test("input field: change value before pending onchange returns (2)", async () =
         </form>`,
     });
 
-    onRpc("onchange", () => def);
+    onRpc("onchange", () => def?.promise);
 
     expect(".o_field_widget[name='name'] input").toHaveValue("yop", {
         message: "should contain the correct value",
@@ -608,14 +608,14 @@ test("input field: change value before pending onchange returns (with fieldDebou
         </form>`,
     });
 
-    onRpc("onchange", () => def);
+    onRpc("onchange", () => def?.promise);
 
     await contains(".o_field_x2many_list_row_add button").click();
     expect(".o_field_widget[name='name'] input").toHaveValue("My little Name Value", {
         message: "should contain the default value",
     });
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o-autocomplete--input").click();
     await contains(".o-autocomplete--dropdown-item").click();
     await fieldInput("name").edit("tralala", { confirm: false });
@@ -662,9 +662,9 @@ test("input field: change value before pending onchange renaming", async () => {
         </form>`,
     });
 
-    onRpc("onchange", () => def);
+    onRpc("onchange", () => def?.promise);
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
 
     expect(".o_field_widget[name='name'] input").toHaveValue("yop", {
         message: "should contain the correct value",
@@ -903,7 +903,7 @@ test("edit a char field should display the status indicator buttons without flic
         obj.display_name = "cc";
     };
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     await mountView({
         type: "form",
         resModel: "res.partner",
@@ -919,7 +919,7 @@ test("edit a char field should display the status indicator buttons without flic
     });
     onRpc("onchange", () => {
         expect.step("onchange");
-        return def;
+        return def.promise;
     });
     expect(".o_form_status_indicator_buttons").not.toBeVisible({
         message: "form view is not dirty",
@@ -995,7 +995,7 @@ test("translating a char field inside one2many saves the parent record", async (
     expect.verifySteps(["partner.type"]);
 });
 
-test("translation dialog opens in editable list when the required field is set", async () =>{
+test("translation dialog opens in editable list when the required field is set", async () => {
     Partner._fields.name.translate = true;
     Partner._fields.name.required = true;
 

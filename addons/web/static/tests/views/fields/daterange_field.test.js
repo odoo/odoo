@@ -2,7 +2,6 @@ import { after, beforeEach, expect, runAllTimers, test } from "@odoo/hoot";
 import {
     animationFrame,
     click,
-    Deferred,
     edit,
     pointerDown,
     press,
@@ -1337,9 +1336,9 @@ test.tags("desktop");
 test("date values are selected eagerly and do not flicker", async () => {
     Partner._onChanges.datetime = () => {};
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("onchange", async () => {
-        await def;
+        await def.promise;
         expect.step("onchange");
     });
 

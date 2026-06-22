@@ -1,6 +1,6 @@
 /* eslint no-restricted-syntax: 0 */
 import { after, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import { Component, markup, xml } from "@odoo/owl";
 import {
     defineParams,
@@ -149,9 +149,9 @@ test("[cache] read from cache, and don't wait to render", async () => {
         multi_lang: false,
         hash: "30b70a0e",
     });
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("/web/webclient/translations", async (request) => {
-        await def;
+        await def.promise;
         expect.step(`hash: ${new URL(request.url).searchParams.get("hash")}`);
     });
     TestComponent._template = `<div id="main" t-translation-context="web">Hello</div>`;
@@ -182,9 +182,9 @@ test("[cache] update the cache if hash are different - template", async () => {
         multi_lang: false,
         hash: "30b",
     });
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("/web/webclient/translations", async (request) => {
-        await def;
+        await def.promise;
         expect.step(`hash: ${new URL(request.url).searchParams.get("hash")}`);
     });
     TestComponent._template = `<div id="main" t-translation-context="web">Hello</div>`;
@@ -245,9 +245,9 @@ test("[cache] update the cache if hash are different - js", async () => {
         multi_lang: false,
         hash: "30b",
     });
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("/web/webclient/translations", async (request) => {
-        await def;
+        await def.promise;
         expect.step(`hash: ${new URL(request.url).searchParams.get("hash")}`);
     });
     class MyTestComponent extends Component {

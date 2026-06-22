@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, waitFor } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import {
     MockServer,
@@ -765,7 +765,7 @@ test("A deleted form view can be shown when history back", async () => {
 test.tags("desktop");
 test("there is no flickering when switching between views", async () => {
     let def;
-    onRpc(() => def);
+    onRpc(() => def?.promise);
     Partner._views.list = `<list>
                                 <field name="display_name"/>
                                 <field name="foo"/>
@@ -775,7 +775,7 @@ test("there is no flickering when switching between views", async () => {
     await getService("action").doAction(3);
 
     // switch to kanban view
-    def = new Deferred();
+    def = Promise.withResolvers();
     await switchView("kanban");
     expect(".o_list_view").toHaveCount(0, { message: "shouldn't display the list anymore" });
     expect(".o_kanban_view").toHaveCount(1, { message: "should display an empty kanban" });
@@ -787,7 +787,7 @@ test("there is no flickering when switching between views", async () => {
     expect(".o_kanban_view .o_kanban_record:not(.o_kanban_ghost)").toHaveCount(5);
 
     // switch back to list view
-    def = new Deferred();
+    def = Promise.withResolvers();
     await switchView("list");
     expect(".o_kanban_view").toHaveCount(0, { message: "shouldn't display the kanban anymore" });
     expect(".o_list_view").toHaveCount(1, { message: "should display an empty list view" });
@@ -803,7 +803,7 @@ test("there is no flickering when switching between views", async () => {
     expect(".o_list_view table .o_data_row").toHaveCount(5);
 
     // open a record in form view
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o_list_view .o_data_cell").click();
     expect(".o_list_view").toHaveCount(1, { message: "should still display the list view" });
     expect(".o_form_view").toHaveCount(0, { message: "shouldn't display the form view yet" });
@@ -819,7 +819,7 @@ test("there is no flickering when switching between views", async () => {
     ]);
 
     // go back to list view using the breadcrumbs
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o_control_panel .breadcrumb a").click();
     expect(".o_form_view").toHaveCount(0, { message: "shouldn't display the form anymore" });
     expect(".o_list_view").toHaveCount(1, { message: "should display an empty list" });
@@ -837,7 +837,7 @@ test("there is no flickering when switching between views", async () => {
 test.tags("desktop");
 test("there is no flickering when reloading a view", async () => {
     let def;
-    onRpc(() => def);
+    onRpc(() => def?.promise);
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
@@ -846,7 +846,7 @@ test("there is no flickering when reloading a view", async () => {
 
     MockServer.env["partner"].create([{ foo: "a new record" }]);
     // reload the list view
-    def = new Deferred();
+    def = Promise.withResolvers();
     await switchView("list");
     expect(".o_list_view .o_data_row").toHaveCount(5);
 
@@ -860,7 +860,7 @@ test("there is no flickering when reloading a view", async () => {
     expect(".o_kanban_view .o_kanban_record:not(.o_kanban_ghost)").toHaveCount(6);
 
     MockServer.env["partner"].create([{ foo: "yet another record" }]);
-    def = new Deferred();
+    def = Promise.withResolvers();
     await switchView("kanban");
     expect(".o_kanban_view .o_kanban_record:not(.o_kanban_ghost)").toHaveCount(6);
 
@@ -1017,9 +1017,9 @@ test("execute_action of type object: disable buttons (2)", async () => {
         },
     ]);
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     // delay the opening of the dialog
-    onRpc("onchange", () => def);
+    onRpc("onchange", () => def?.promise);
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
@@ -1051,9 +1051,9 @@ test("view button: block ui attribute", async () => {
                 </header>
             </form>`;
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     // delay the action
-    onRpc("onchange", () => def);
+    onRpc("onchange", () => def?.promise);
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
@@ -1187,9 +1187,9 @@ test("execute smart button and back", async () => {
 test.tags("desktop");
 test("execute smart button and fails on desktop", async () => {
     expect.errors(1);
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("web_search_read", async () => {
-        await def;
+        await def?.promise;
         throw makeServerError({ message: "Oups" });
     });
     stepAllNetworkCalls();
@@ -1225,9 +1225,9 @@ test("execute smart button and fails on desktop", async () => {
 test.tags("mobile");
 test("execute smart button and fails on mobile", async () => {
     expect.errors(1);
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("web_search_read", async () => {
-        await def;
+        await def?.promise;
         throw makeServerError({ message: "Oups" });
     });
     stepAllNetworkCalls();
@@ -1264,7 +1264,7 @@ test("execute smart button and fails on mobile", async () => {
 test.tags("desktop");
 test("requests for execute_action of type object: disable buttons", async () => {
     let def = undefined;
-    onRpc("web_read", () => def); // block the 'read' call
+    onRpc("web_read", () => def?.promise); // block the 'read' call
     onRpc("/web/dataset/call_button/*", () => false);
 
     await mountWithCleanup(WebClient);
@@ -1274,7 +1274,7 @@ test("requests for execute_action of type object: disable buttons", async () => 
     await contains(".o_list_view .o_data_cell").click();
 
     // click on 'Call method' button (should call an Object method)
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o_form_view button:contains(Call method)").click();
 
     // Buttons should be disabled
@@ -2258,11 +2258,11 @@ test("search view should keep focus during do_search", async () => {
     // over and over again seamlessly.
     // Verifying the input's value is a lot trickier than verifying the search_read
     // because of how native events are handled in tests
-    const searchPromise = new Deferred();
+    const searchPromise = Promise.withResolvers();
     onRpc("web_search_read", async ({ kwargs }) => {
         expect.step("search_read " + kwargs.domain);
         if (JSON.stringify(kwargs.domain) === JSON.stringify([["foo", "ilike", "m"]])) {
-            await searchPromise;
+            await searchPromise?.promise;
         }
     });
 

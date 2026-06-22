@@ -9,7 +9,7 @@ import {
     queryOne,
     scroll,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     clickKanbanLoadMore,
     contains,
@@ -734,8 +734,8 @@ test("kanban with progressbars: correctly update env when archiving records", as
 });
 
 test("kanban with progressbars: slow read_progress_bar", async () => {
-    const def = new Deferred();
-    onRpc("read_progress_bar", () => def);
+    const def = Promise.withResolvers();
+    onRpc("read_progress_bar", () => def?.promise);
 
     await mountView({
         type: "kanban",
@@ -1372,7 +1372,7 @@ test("progress bar with aggregates: Archive all in a column", async () => {
     ];
 
     let def;
-    onRpc("web_read_group", () => def);
+    onRpc("web_read_group", () => def?.promise);
 
     await mountView({
         type: "kanban",
@@ -1400,7 +1400,7 @@ test("progress bar with aggregates: Archive all in a column", async () => {
     await contains(".o_cp_action_menus button").click();
     await contains(".o_menu_item:contains(Archive)").click();
     expect(".o_dialog").toHaveCount(1);
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".modal-footer .btn-primary").click();
     expect(getKanbanColumnTooltips(1)).toEqual(["2 yop", "1 gnap", "1 blip"]);
     expect(getKanbanCounters()).toEqual(["268", "15"]);
@@ -2042,7 +2042,7 @@ test("load more button shouldn't be visible when unfiltering column", async () =
     Partner._records.push({ id: 5, state: "abc", bar: true });
 
     let def;
-    onRpc("web_search_read", () => def);
+    onRpc("web_search_read", () => def?.promise);
 
     await mountView({
         type: "kanban",
@@ -2069,7 +2069,7 @@ test("load more button shouldn't be visible when unfiltering column", async () =
     // Filtered state: 2 columns, the "No" column contains 1 record, The "Yes" column contains 2 records
     expect(getKanbanCounters()).toEqual(["1", "2"]);
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     // UnFiltered the "Yes" column
     await contains(getKanbanProgressBars(1)[0]).click();
     expect(".o_kanban_load_more").toHaveCount(0, {
@@ -2237,7 +2237,7 @@ test("scroll on group unfold and progressbar click", async () => {
 
 test("searchbar filters are displayed directly (with progressbar)", async () => {
     let def;
-    onRpc("read_progress_bar", () => def);
+    onRpc("read_progress_bar", () => def?.promise);
 
     await mountView({
         type: "kanban",
@@ -2261,7 +2261,7 @@ test("searchbar filters are displayed directly (with progressbar)", async () => 
     expect(getFacetTexts()).toEqual([]);
 
     // toggle a filter, and slow down the read_progress_bar rpc
-    def = new Deferred();
+    def = Promise.withResolvers();
     await toggleSearchBarMenu();
     await toggleMenuItem("Some Filter");
 
@@ -2274,7 +2274,7 @@ test("searchbar filters are displayed directly (with progressbar)", async () => 
 
 test("Correct values for progress bar with toggling filter and slow RPC", async () => {
     let def;
-    onRpc("read_progress_bar", () => def);
+    onRpc("read_progress_bar", () => def?.promise);
 
     await mountView({
         type: "kanban",
@@ -2300,7 +2300,7 @@ test("Correct values for progress bar with toggling filter and slow RPC", async 
     expect(getKanbanProgressBars(1).map((pb) => pb.style.width)).toEqual(["50%", "50%"]);
 
     // toggle a filter, and slow down the read_progress_bar rpc
-    def = new Deferred();
+    def = Promise.withResolvers();
     await toggleSearchBarMenu();
     await toggleMenuItem("Some Filter");
     // abc: 1, ghi: 1

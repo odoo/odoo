@@ -9,7 +9,7 @@ import { READONLY_MAIN_EMBEDDINGS } from "@html_editor/others/embedded_component
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { canRenderAsHTML } from "@html_editor/utils/sanitize";
 import { Wysiwyg } from "@html_editor/wysiwyg";
-import { beforeEach, describe, expect, test } from "@odoo/hoot";
+import { beforeEach, describe, expect, microTick, test } from "@odoo/hoot";
 import {
     click,
     press,
@@ -22,7 +22,7 @@ import {
     manuallyDispatchProgrammaticEvent,
     advanceTime,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockSendBeacon, tick } from "@odoo/hoot-mock";
+import { animationFrame, mockSendBeacon, tick } from "@odoo/hoot-mock";
 import { onWillDestroy, proxy, signal, xml } from "@odoo/owl";
 import {
     clickSave,
@@ -705,13 +705,13 @@ test("blurring an inner contenteditable field by clicking outside should trigger
 
 test.tags("focus required");
 test("edit html field and blur multiple time should apply 1 onchange", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     Partner._onChanges = {
         txt() {},
     };
     onRpc("partner", "onchange", async ({ args }) => {
         expect.step(`onchange: ${args[1].txt}`);
-        await def;
+        await def.promise;
     });
     await mountView({
         type: "form",
@@ -741,7 +741,7 @@ test("edit html field and blur multiple time should apply 1 onchange", async () 
 
 test.tags("focus required");
 test("edit an html field during an onchange", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     Partner._onChanges = {
         txt(record) {
             record.txt = "<p>New Value</p>";
@@ -749,7 +749,7 @@ test("edit an html field during an onchange", async () => {
     };
     onRpc("partner", "onchange", async ({ args }) => {
         expect.step(`onchange: ${args[1].txt}`);
-        await def;
+        await def.promise;
     });
     await mountView({
         type: "form",
@@ -2358,7 +2358,7 @@ describe("save image", () => {
                 .replace(/(?:\s|(?:\r\n))+/g, " ")
                 .replace(/\s?(<|>)\s?/g, "$1");
         // Promise to resolve when we want the response of the modify_image RPC.
-        const modifyImagePromise = new Deferred();
+        const modifyImagePromise = Promise.withResolvers();
         let writeCount = 0;
         let modifyImageCount = 0;
         // Valid base64 encoded image in its transitory modified state.
@@ -2377,7 +2377,7 @@ describe("save image", () => {
                 const { params } = await request.json();
                 expect(params.res_model).toBe("partner");
                 expect(params.res_id).toBe(1);
-                await modifyImagePromise;
+                await modifyImagePromise.promise;
                 modifyImageCount++;
                 const res = { original: newImageSrc };
                 return res;
@@ -2397,12 +2397,13 @@ describe("save image", () => {
         });
 
         // Simulate an urgent save without any image in the content.
-        sendBeaconDef = new Deferred();
+        sendBeaconDef = Promise.withResolvers();
         setSelectionInHtmlField(".test_target");
         await insertText(htmlEditor, "a");
         htmlEditor.shared.history.commit();
         await formController.beforeUnload();
-        await sendBeaconDef;
+        await sendBeaconDef.promise;
+        await microTick();
 
         // Replace the empty paragraph with a paragrah containing an unsaved
         // modified image
@@ -2413,19 +2414,19 @@ describe("save image", () => {
 
         // Simulate an urgent save before the end of the RPC roundtrip for the
         // image.
-        sendBeaconDef = new Deferred();
+        sendBeaconDef = Promise.withResolvers();
         await formController.beforeUnload();
-        await sendBeaconDef;
+        await sendBeaconDef.promise;
 
         // Resolve the image modification (simulate end of RPC roundtrip).
         modifyImagePromise.resolve();
-        await modifyImagePromise;
+        await modifyImagePromise.promise;
         await animationFrame();
 
         // Simulate the last urgent save, with the modified image.
-        sendBeaconDef = new Deferred();
+        sendBeaconDef = Promise.withResolvers();
         await formController.beforeUnload();
-        await sendBeaconDef;
+        await sendBeaconDef.promise;
     });
 
     test("Pasted/dropped images are converted to attachments on save", async () => {
@@ -2484,12 +2485,12 @@ describe("save image", () => {
             },
         ];
 
-        const def = new Deferred();
+        const def = Promise.withResolvers();
         onRpc("/html_editor/attachment/add_data", async (request) => {
             const { params } = await request.json();
             const { res_id, res_model } = params;
             expect.step(`add_data-start: ${res_model} ${res_id}`);
-            await def;
+            await def.promise;
             expect.step(`add_data-end: ${res_model} ${res_id}`);
             return {
                 image_src: "/test_image_url.png",
@@ -2553,12 +2554,12 @@ describe("save image", () => {
             },
         ];
 
-        const def = new Deferred();
+        const def = Promise.withResolvers();
         onRpc("/html_editor/attachment/add_data", async (request) => {
             const { params } = await request.json();
             const { res_id, res_model } = params;
             expect.step(`add_data-start: ${res_model} ${res_id}`);
-            await def;
+            await def.promise;
             expect.step(`add_data-end: ${res_model} ${res_id}`);
             return {
                 image_src: "/test_image_url.png",

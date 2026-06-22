@@ -12,7 +12,7 @@ import {
     queryOne,
     resize,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
+import { animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
 import { Component, onMounted, onPatched, xml, proxy } from "@odoo/owl";
 
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
@@ -116,13 +116,13 @@ test("can be rendered", async () => {
 });
 
 test("can be toggled", async () => {
-    const beforeOpenProm = new Deferred();
+    const beforeOpenProm = Promise.withResolvers();
     class Parent extends SimpleDropdown {
         setup() {
             this.dropdownProps = {
                 beforeOpen: () => {
                     expect.step("beforeOpen");
-                    return beforeOpenProm;
+                    return beforeOpenProm.promise;
                 },
             };
         }
@@ -730,14 +730,14 @@ test("date picker inside does not close when a click occurs in date picker", asy
 });
 
 test("onOpened callback props called after the menu has been mounted", async () => {
-    const beforeOpenProm = new Deferred();
+    const beforeOpenProm = Promise.withResolvers();
 
     class Parent extends SimpleDropdown {
         setup() {
             this.dropdownProps = {
                 beforeOpen: () => {
                     expect.step("beforeOpened");
-                    return beforeOpenProm;
+                    return beforeOpenProm.promise;
                 },
                 onOpened: () => {
                     expect.step("onOpened");

@@ -1,5 +1,4 @@
 import {
-    Deferred,
     animationFrame,
     click,
     edit,
@@ -92,8 +91,8 @@ test("toggle datepicker on mobile", async () => {
 
 test("datepicker is automatically closed after selecting a value", async () => {
     Partner._onChanges.date = () => {};
-    const def = new Deferred();
-    onRpc("onchange", () => def);
+    const def = Promise.withResolvers();
+    onRpc("onchange", () => def.promise);
 
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
 

@@ -20,7 +20,6 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { RPCError } from "@web/core/network/rpc";
-import { Deferred } from "@web/core/utils/concurrency";
 import { range } from "@web/core/utils/numbers";
 import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_filter";
 
@@ -253,11 +252,11 @@ test("share dashboard from dashboard view", async function () {
             expect(url).toBe("localhost:8069/share/url/132465");
         },
     });
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     await createSpreadsheetDashboard({
         mockRPC: async function (route, args) {
             if (args.method === "action_get_share_url") {
-                await def;
+                await def.promise;
                 expect.step("dashboard_shared");
                 expect(args.model).toBe("spreadsheet.dashboard.share");
                 return "localhost:8069/share/url/132465";

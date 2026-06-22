@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 
 import {
     clickSave,
@@ -754,14 +754,14 @@ test("automatically uses currency_field if defined", async () => {
 });
 
 test("monetary field with pending onchange", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     Partner._onChanges = {
         async name(record) {
             record.float_field = 132;
         },
     };
     onRpc("onchange", async () => {
-        await def;
+        await def.promise;
     });
     await mountView({
         type: "form",

@@ -1,4 +1,4 @@
-import { describe, expect, test, beforeEach, Deferred, animationFrame } from "@odoo/hoot";
+import { describe, expect, test, beforeEach, animationFrame } from "@odoo/hoot";
 import { waitFor, waitForNone, click, queryOne } from "@odoo/hoot-dom";
 import {
     defineWebsiteModels,
@@ -432,12 +432,12 @@ describe("EditMenuDialog", () => {
 
             await contains("a:contains('Add Menu Item')").click();
 
-            const deferred = new Deferred();
+            const deferred = Promise.withResolvers();
             onRpc("/website/check_existing_link", async (request) => {
                 const { params } = await request.json();
                 expect(params.link).toEqual("/top-menu-url");
                 expect.step("check existing");
-                await deferred;
+                await deferred.promise;
                 return false;
             });
 

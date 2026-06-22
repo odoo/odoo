@@ -14,7 +14,6 @@ import {
     queryAllTexts,
     queryFirst,
     animationFrame,
-    Deferred,
     mockTimeZone,
     mockTouch,
     runAllTimers,
@@ -679,10 +678,10 @@ test(`duplicate fields rendered properly (one2many)`, async () => {
 });
 
 test(`attributes are transferred on async widgets`, async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     class AsyncField extends CharField {
         willStart() {
-            return def;
+            return def?.promise;
         }
     }
     fieldsRegistry.add("asyncwidget", { component: AsyncField });
@@ -1191,7 +1190,11 @@ test(`Form and subview with _view_ref contexts`, async () => {
     await contains(`.o_field_widget[name="product_id"] .o_external_button`, {
         visible: false,
     }).click();
-    expect.verifySteps(["get_record_default_action", "product get_views", "partner.type get_views"]);
+    expect.verifySteps([
+        "get_record_default_action",
+        "product get_views",
+        "partner.type get_views",
+    ]);
 });
 
 test(`Form and subsubview with only _view_ref contexts`, async () => {
@@ -3634,7 +3637,7 @@ test(`disable buttons until reload data from server`, async () => {
     let def = null;
     onRpc("web_save", async ({ args }) => {
         args[1].foo = "apple";
-        await def;
+        await def?.promise;
     });
     await mountView({
         resModel: "partner",
@@ -3643,7 +3646,7 @@ test(`disable buttons until reload data from server`, async () => {
         resId: 2,
     });
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(`.o_field_widget[name=foo] input`).edit("tralala");
     await contains(`.o_form_button_save`).click();
 
@@ -5294,7 +5297,7 @@ test(`discard changes on a new (dirty) form view`, async () => {
 });
 
 test(`discard has to wait for changes in each field`, async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     class CustomField extends Component {
         static template = xml`<input t-custom-ref="input" t-att-value="this.value" t-on-blur="this.onBlur" t-on-input="this.onInput" />`;
         static props = {
@@ -5314,7 +5317,7 @@ test(`discard has to wait for changes in each field`, async () => {
 
         async updateValue() {
             const value = this.input.el.value;
-            await def;
+            await def?.promise;
             await this.props.record.update({ [this.props.name]: `update value: ${value}` });
         }
 
@@ -6690,8 +6693,8 @@ test(`properly apply onchange on one2many fields direct click`, async () => {
         `,
     };
 
-    const deferred = new Deferred();
-    onRpc("onchange", () => deferred);
+    const deferred = Promise.withResolvers();
+    onRpc("onchange", () => deferred?.promise);
     await mountView({
         resModel: "partner",
         type: "form",
@@ -7021,9 +7024,9 @@ test(`rpc complete after destroying parent`, async () => {
         },
     ]);
 
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     onRpc("update_module", async () => {
-        await deferred;
+        await deferred?.promise;
         return { type: "ir.actions.act_window_close" };
     });
     await mountWithCleanup(WebClient);
@@ -7050,9 +7053,9 @@ test(`onchanges that complete after discarding`, async () => {
         },
     };
 
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     onRpc("onchange", async () => {
-        await deferred;
+        await deferred?.promise;
         expect.step("onchange is done");
     });
     await mountView({
@@ -7078,9 +7081,9 @@ test(`onchanges that complete after discarding`, async () => {
 });
 
 test(`discarding before save returns`, async () => {
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     onRpc("web_save", async () => {
-        await deferred;
+        await deferred?.promise;
     });
     const view = await mountView({
         resModel: "partner",
@@ -9210,10 +9213,10 @@ test(`translate event correctly handled with multiple controllers`, async () => 
 
 test.tags("desktop");
 test(`buttons are disabled until status bar action is resolved`, async () => {
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     mockService("action", {
         async doActionButton() {
-            await deferred;
+            await deferred?.promise;
         },
     });
 
@@ -9353,9 +9356,9 @@ test(`buttons with "confirm" attribute: click twice on "Ok"`, async () => {
 });
 
 test(`multiple clicks on save should reload only once`, async () => {
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
 
-    onRpc("web_save", () => deferred);
+    onRpc("web_save", () => deferred?.promise);
     onRpc(({ method }) => expect.step(method));
     await mountView({
         resModel: "partner",
@@ -10394,7 +10397,7 @@ test(`save record with onchange on one2many with required field`, async () => {
     };
 
     let onchangeDeferred = undefined;
-    onRpc("onchange", () => onchangeDeferred);
+    onRpc("onchange", () => onchangeDeferred?.promise);
     onRpc("web_save", ({ args }) => {
         expect.step("web_save");
         expect(args[1].child_ids[0][2].foo).toBe("foo value");
@@ -10419,7 +10422,7 @@ test(`save record with onchange on one2many with required field`, async () => {
     expect(`.o_field_widget[name=name] input`).toHaveValue("");
     expect(`.o_field_widget[name=foo] input`).toHaveValue("");
 
-    onchangeDeferred = new Deferred();
+    onchangeDeferred = Promise.withResolvers();
     await contains(`.o_field_widget[name=name] input`).edit("some value");
     await contains(`.o_form_button_save`).click();
     expect.verifySteps([]);
@@ -10459,17 +10462,17 @@ test(`leave the form view while saving`, async () => {
     ]);
 
     let onchangeDeferred = undefined;
-    onRpc("onchange", () => onchangeDeferred);
+    onRpc("onchange", () => onchangeDeferred?.promise);
 
-    const createDeferred = new Deferred();
-    onRpc("web_save", () => createDeferred);
+    const createDeferred = Promise.withResolvers();
+    onRpc("web_save", () => createDeferred?.promise);
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
     await contains(`.o_control_panel_main_buttons button.o_list_button_add`).click();
 
     // edit foo to trigger a delayed onchange
-    onchangeDeferred = new Deferred();
+    onchangeDeferred = Promise.withResolvers();
     await contains(`.o_field_widget[name=foo] input`).edit("trigger onchange");
     expect(`.o_field_widget[name=name] input`).toHaveValue("default");
 
@@ -10521,9 +10524,9 @@ test(`leave the form twice (clicking on the breadcrumb) should save only once`, 
             `,
     };
 
-    const writeDeferred = new Deferred();
+    const writeDeferred = Promise.withResolvers();
     onRpc("web_save", async () => {
-        await writeDeferred;
+        await writeDeferred?.promise;
         expect.step("web_save");
     });
 
@@ -12371,8 +12374,8 @@ test(`commitChanges with a field input removed during an update`, async () => {
         foo() {},
     };
 
-    const onchangeDeferred = new Deferred();
-    onRpc("onchange", () => onchangeDeferred);
+    const onchangeDeferred = Promise.withResolvers();
+    onRpc("onchange", () => onchangeDeferred?.promise);
     onRpc("web_save", ({ args }) => {
         expect(args[1]).toEqual({ child_ids: [[1, 1, { foo: "new foo" }]] });
     });
@@ -12738,10 +12741,10 @@ test(`field with special data (with persistent Cache)`, async () => {
     }
     widgetsRegistry.add("my_widget", { component: MyWidget });
 
-    let def = new Deferred();
+    let def = Promise.withResolvers();
     onRpc("get_special_data", ({ args }) => {
         expect.step(`get_special_data ${args[0]}`);
-        return def;
+        return def?.promise;
     });
 
     defineActions([
@@ -12782,7 +12785,7 @@ test(`field with special data (with persistent Cache)`, async () => {
     expect(`.o_last_breadcrumb_item`).toHaveText("Christine");
 
     //Came back to the model with the special data
-    def = new Deferred();
+    def = Promise.withResolvers();
     await getService("action").doAction(1);
     expect(`.o_last_breadcrumb_item`).toHaveText("second record");
     expect(`.my_widget`).toHaveText("MyWidget 1");
@@ -13097,10 +13100,10 @@ test(`CogMenu dropdown's open/close state shouldn't be modified after 'onchange'
     Partner._onChanges = {
         name() {},
     };
-    const onchangeDef = new Deferred();
+    const onchangeDef = Promise.withResolvers();
     onRpc("partner", "onchange", ({ args }) => {
         if (args[2][0] === "name") {
-            return onchangeDef;
+            return onchangeDef?.promise;
         }
     });
 
@@ -13380,7 +13383,7 @@ test(`open x2many with non inline form view, delayed get_views, form destroyed`,
     let def;
     onRpc("get_views", async () => {
         expect.step("get_views");
-        await def;
+        await def?.promise;
     });
 
     const form = await mountView({
@@ -13398,7 +13401,7 @@ test(`open x2many with non inline form view, delayed get_views, form destroyed`,
     });
 
     // click on an x2many record to open it in dialog (get_views delayed)
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o_data_row .o_data_cell").click();
     expect(".o_dialog").toHaveCount(0);
 
@@ -13501,7 +13504,7 @@ test(`cached web_read`, async () => {
     let def = null;
     onRpc("web_read", async () => {
         expect.step("web_read");
-        return def;
+        return def?.promise;
     });
 
     Partner._views = {
@@ -13537,7 +13540,7 @@ test(`cached web_read`, async () => {
     expect(`.o_field_char input`).toHaveValue("blip");
     expect(`.o_last_breadcrumb_item`).toHaveText("second record");
 
-    def = new Deferred();
+    def = Promise.withResolvers();
 
     // Come back to the first action
     getService("action").doAction(1);
@@ -13583,12 +13586,12 @@ test("onchange callback arriving after web_save does not crash", async () => {
     ]);
 
     let onchangeCallCount = 0;
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("onchange", async () => {
         onchangeCallCount++;
         expect.step("onchange");
         if (onchangeCallCount > 1) {
-            return def;
+            return def.promise;
         }
         return { value: { foo: "blap" } };
     });
@@ -13629,7 +13632,7 @@ test(`cached web_read: don't cache if action have cache:false`, async () => {
     let def = null;
     onRpc("web_read", async () => {
         expect.step("web_read");
-        return def;
+        return def?.promise;
     });
 
     Partner._views = {
@@ -13666,7 +13669,7 @@ test(`cached web_read: don't cache if action have cache:false`, async () => {
     expect(`.o_field_char input`).toHaveValue("blip");
     expect(`.o_last_breadcrumb_item`).toHaveText("second record");
 
-    def = new Deferred();
+    def = Promise.withResolvers();
 
     // Come back to the first action
     getService("action").doAction(1);
@@ -13687,7 +13690,7 @@ test(`cached web_read - don't loose changes`, async () => {
     let def = null;
     onRpc("web_read", async () => {
         expect.step("web_read");
-        return def;
+        return def?.promise;
     });
 
     Partner._views = {
@@ -13723,7 +13726,7 @@ test(`cached web_read - don't loose changes`, async () => {
     expect(`.o_field_char input`).toHaveValue("blip");
     expect(`.o_last_breadcrumb_item`).toHaveText("second record");
 
-    def = new Deferred();
+    def = Promise.withResolvers();
 
     // Come back to the first action
     getService("action").doAction(1);
@@ -13749,7 +13752,7 @@ test(`cached onchange - don't loose changes`, async () => {
     let def = null;
     onRpc("onchange", async () => {
         expect.step("onchange");
-        return def;
+        return def?.promise;
     });
 
     Partner._views = {
@@ -13784,7 +13787,7 @@ test(`cached onchange - don't loose changes`, async () => {
     expect(`.o_field_char input`).toHaveValue("blip");
     expect(`.o_last_breadcrumb_item`).toHaveText("second record");
 
-    def = new Deferred();
+    def = Promise.withResolvers();
 
     // Come back to the first action
     getService("action").doAction(1);

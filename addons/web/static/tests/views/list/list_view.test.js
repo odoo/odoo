@@ -3,7 +3,6 @@ import {
     animationFrame,
     clear,
     click,
-    Deferred,
     edit,
     expect,
     getFixture,
@@ -1224,7 +1223,7 @@ test(`list view with adjacent buttons and optional field`, async () => {
 
 test(`wait the view reload before closing the dialog (save)`, async () => {
     let searchReadDef;
-    onRpc("web_search_read", () => searchReadDef);
+    onRpc("web_search_read", () => searchReadDef?.promise);
     Foo._views = {
         form: `<form><field name="foo"/></form>`,
     };
@@ -1248,7 +1247,7 @@ test(`wait the view reload before closing the dialog (save)`, async () => {
             </list>
         `,
     });
-    searchReadDef = new Deferred();
+    searchReadDef = Promise.withResolvers();
     await contains(`tbody .o_list_button button:eq(0)`).click();
     expect(`.o_dialog`).toHaveCount(1);
     await contains(`.o_form_renderer .o_field_widget[name='foo'] input`).edit("plop");
@@ -1265,7 +1264,7 @@ test(`wait the view reload before closing the dialog (save)`, async () => {
 
 test(`wait the view reload before closing the dialog (cancel)`, async () => {
     let searchReadDef;
-    onRpc("web_search_read", () => searchReadDef);
+    onRpc("web_search_read", () => searchReadDef?.promise);
     Foo._views = {
         form: `<form><field name="foo"/></form>`,
     };
@@ -1289,7 +1288,7 @@ test(`wait the view reload before closing the dialog (cancel)`, async () => {
             </list>
         `,
     });
-    searchReadDef = new Deferred();
+    searchReadDef = Promise.withResolvers();
     await contains(`tbody .o_list_button button:eq(0)`).click();
     expect(`.o_dialog`).toHaveCount(1);
     await contains(`.o_form_renderer .o_field_widget[name='foo'] input`).edit("plop");
@@ -1586,10 +1585,10 @@ test(`list view: give a context dependent on the current context to a header but
 });
 
 test(`list view: action button executes action on click: buttons are disabled and re-enabled`, async () => {
-    const executeActionDef = new Deferred();
+    const executeActionDef = Promise.withResolvers();
     mockService("action", {
         async doActionButton() {
-            await executeActionDef;
+            await executeActionDef?.promise;
         },
     });
 
@@ -1618,11 +1617,11 @@ test(`list view: action button executes action on click: buttons are disabled an
 });
 
 test(`list view: buttons handler is called once on double click`, async () => {
-    const executeActionDef = new Deferred();
+    const executeActionDef = Promise.withResolvers();
     mockService("action", {
         async doActionButton() {
             expect.step("execute_action");
-            await executeActionDef;
+            await executeActionDef?.promise;
         },
     });
 
@@ -2892,7 +2891,7 @@ test(`grouped list rendering with groupby non m2o field`, async () => {
 test.tags("desktop");
 test(`grouped list with (disabled) pager inside group`, async () => {
     let def;
-    onRpc("web_search_read", () => def);
+    onRpc("web_search_read", () => def?.promise);
 
     await mountView({
         resModel: "foo",
@@ -2916,7 +2915,7 @@ test(`grouped list with (disabled) pager inside group`, async () => {
     expect(".o_group_header:eq(1) .o_pager_counter").toHaveCount(0);
     expect(".o_group_header:eq(1) .o_pager_buttons").toHaveCount(0);
 
-    def = new Deferred();
+    def = Promise.withResolvers();
 
     await contains(".o_group_header .o_pager_next:enabled").click();
     await animationFrame();
@@ -6834,8 +6833,8 @@ test(`pager, ungrouped, reload while fetching count`, async () => {
     patchWithCleanup(RelationalModel, { DEFAULT_COUNT_LIMIT: 3 });
 
     stepAllNetworkCalls();
-    const deferred = new Deferred();
-    onRpc("search_count", () => deferred);
+    const deferred = Promise.withResolvers();
+    onRpc("search_count", () => deferred?.promise);
 
     await mountView({
         type: "list",
@@ -6879,7 +6878,7 @@ test(`pager, ungrouped, next and fetch count simultaneously`, async () => {
 
     stepAllNetworkCalls();
     let deferred;
-    onRpc("web_search_read", () => deferred);
+    onRpc("web_search_read", () => deferred?.promise);
 
     await mountView({
         resModel: "foo",
@@ -6897,7 +6896,7 @@ test(`pager, ungrouped, next and fetch count simultaneously`, async () => {
         "has_group",
     ]);
 
-    deferred = new Deferred();
+    deferred = Promise.withResolvers();
     await contains(`.o_pager_next`).click(); // this request will be pending
     expect(`.o_pager_value`).toHaveText("1-2");
     expect(`.o_pager_limit`).toHaveText("5+");
@@ -9644,10 +9643,10 @@ test(`pressing tab on last cell of editable list view`, async () => {
 test.tags("desktop");
 test(`navigation with tab and read completes after default_get`, async () => {
     stepAllNetworkCalls();
-    const onchangePromise = new Deferred();
-    const readPromise = new Deferred();
-    onRpc("onchange", () => onchangePromise);
-    onRpc("web_save", () => readPromise);
+    const onchangePromise = Promise.withResolvers();
+    const readPromise = Promise.withResolvers();
+    onRpc("onchange", () => onchangePromise?.promise);
+    onRpc("web_save", () => readPromise?.promise);
 
     await mountView({
         resModel: "foo",
@@ -11337,10 +11336,10 @@ test(`editable list with handle widget with slow network`, async () => {
     Foo._records[2].int_field = 2;
     Foo._records[3].int_field = 3;
 
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     onRpc("web_resequence", async ({ args, kwargs }) => {
         expect.step(["web_resequence", args[0], kwargs.field_name, kwargs.offset]);
-        await deferred;
+        await deferred?.promise;
     });
 
     await mountView({
@@ -11391,8 +11390,8 @@ test(`multiple clicks on Add do not create invalid rows`, async () => {
         m2o() {},
     };
 
-    const deferred = new Deferred();
-    onRpc("onchange", () => deferred);
+    const deferred = Promise.withResolvers();
+    onRpc("onchange", () => deferred?.promise);
 
     await mountView({
         resModel: "foo",
@@ -12443,7 +12442,7 @@ test(`editable list view: clicking on "Discard changes" in multi edition`, async
 
 test.tags("desktop");
 test(`discard has to wait for changes in each field in multi edit`, async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
 
     class CustomField extends Component {
         static template = xml`<input t-custom-ref="input" t-att-value="this.value" t-on-blur="this.onBlur" t-on-input="this.onInput"/>`;
@@ -12467,7 +12466,7 @@ test(`discard has to wait for changes in each field in multi edit`, async () => 
                 return;
             }
             const value = this.input.el.value;
-            await def;
+            await def?.promise;
             await this.props.record.update({ [this.props.name]: `update value: ${value}` });
         }
 
@@ -13300,10 +13299,10 @@ test(`use the limit attribute in arch`, async () => {
 
 test(`concurrent reloads finishing in inverse order`, async () => {
     let blockSearchRead = false;
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     onRpc("web_search_read", () => {
         if (blockSearchRead) {
-            return deferred;
+            return deferred?.promise;
         }
     });
 
@@ -15070,8 +15069,8 @@ test(`keyboard navigation with Many2One field`, async () => {
 
 test.tags("desktop");
 test(`multi-edit records with ENTER does not crash`, async () => {
-    const deferred = new Deferred();
-    onRpc("write", () => deferred);
+    const deferred = Promise.withResolvers();
+    onRpc("write", () => deferred?.promise);
 
     await mountView({
         resModel: "foo",
@@ -15895,14 +15894,14 @@ test(`selection is kept when optional fields are toggled`, async () => {
 });
 
 test(`list view with optional fields and async rendering`, async () => {
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     const charField = registry.category("fields").get("char");
     class AsyncCharField extends charField.component {
         setup() {
             super.setup();
             onWillStart(() => {
                 expect.step("onWillStart");
-                return deferred;
+                return deferred?.promise;
             });
         }
     }
@@ -16568,7 +16567,7 @@ test(`Auto save: save on closing tab/browser`, async () => {
 });
 
 test(`Auto save: save on closing tab/browser (pending changes)`, async () => {
-    const sendBeaconDeferred = new Deferred();
+    const sendBeaconDeferred = Promise.withResolvers();
     mockSendBeacon((_, blob) => {
         expect.step("sendBeacon");
         blob.text().then((r) => {
@@ -16590,7 +16589,7 @@ test(`Auto save: save on closing tab/browser (pending changes)`, async () => {
     await contains(`.o_data_cell [name=foo] input`).edit("test", { confirm: false });
 
     const [event] = await unload();
-    await sendBeaconDeferred;
+    await sendBeaconDeferred?.promise;
     expect.verifySteps(["sendBeacon"]);
     expect(event.defaultPrevented).toBe(false);
 });
@@ -16625,10 +16624,10 @@ test(`Auto save: save on closing tab/browser (onchanges + pending changes)`, asy
         },
     };
 
-    const deferred = new Deferred();
-    onRpc("foo", "onchange", () => deferred);
+    const deferred = Promise.withResolvers();
+    onRpc("foo", "onchange", () => deferred?.promise);
 
-    const sendBeaconDeferred = new Deferred();
+    const sendBeaconDeferred = Promise.withResolvers();
     mockSendBeacon((_, blob) => {
         expect.step("sendBeacon");
         blob.text().then((r) => {
@@ -16655,7 +16654,7 @@ test(`Auto save: save on closing tab/browser (onchanges + pending changes)`, asy
     await contains(`.o_data_cell [name="int_field"] input`).edit("2021", { confirm: "blur" });
 
     await unload();
-    await sendBeaconDeferred;
+    await sendBeaconDeferred?.promise;
     expect.verifySteps(["sendBeacon"]);
 });
 
@@ -16666,10 +16665,10 @@ test(`Auto save: save on closing tab/browser (onchanges)`, async () => {
         },
     };
 
-    const deferred = new Deferred();
-    onRpc("foo", "onchange", () => deferred);
+    const deferred = Promise.withResolvers();
+    onRpc("foo", "onchange", () => deferred?.promise);
 
-    const sendBeaconDeferred = new Deferred();
+    const sendBeaconDeferred = Promise.withResolvers();
     mockSendBeacon((_, blob) => {
         expect.step("sendBeacon");
         blob.text().then((r) => {
@@ -16697,7 +16696,7 @@ test(`Auto save: save on closing tab/browser (onchanges)`, async () => {
     await contains(`.o_data_cell [name="foo"] input`).edit("test", { confirm: "blur" });
 
     await unload();
-    await sendBeaconDeferred;
+    await sendBeaconDeferred?.promise;
     expect.verifySteps(["sendBeacon"]);
 });
 
@@ -17062,7 +17061,7 @@ test(`edit a field with a slow onchange in a new row`, async () => {
     Foo._records = [];
 
     let deferred;
-    onRpc("onchange", () => deferred);
+    onRpc("onchange", () => deferred?.promise);
     stepAllNetworkCalls();
 
     await mountView({
@@ -17083,7 +17082,7 @@ test(`edit a field with a slow onchange in a new row`, async () => {
     expect.verifySteps(["onchange"]);
 
     // we want to add a delay to simulate an onchange
-    deferred = new Deferred();
+    deferred = Promise.withResolvers();
 
     // write something in the field
     await contains(`[name=int_field] input`).edit("14", { confirm: false });
@@ -18584,7 +18583,7 @@ test(`restore order from state when using default order`, async () => {
 });
 
 test(`x2many onchange, check result`, async () => {
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     Foo._onChanges = {
         m2m() {},
     };
@@ -18594,7 +18593,7 @@ test(`x2many onchange, check result`, async () => {
     };
     onRpc("onchange", async () => {
         expect.step("onchange");
-        await deferred;
+        await deferred?.promise;
         return { value: { m2o: [3, "Value 3"] } };
     });
     await mountView({
@@ -18746,8 +18745,8 @@ test(`search nested many2one field with early option selection`, async () => {
     }
     defineModels([Parent]);
 
-    const deferred = new Deferred();
-    onRpc("web_name_search", () => deferred);
+    const deferred = Promise.withResolvers();
+    onRpc("web_name_search", () => deferred?.promise);
 
     await mountView({
         resModel: "parent",
@@ -19291,8 +19290,8 @@ test(`hide pager in the list view with sample data`, async () => {
 
 test.tags("desktop");
 test("list views make their control panel available directly", async () => {
-    const def = new Deferred();
-    onRpc("web_search_read", () => def);
+    const def = Promise.withResolvers();
+    onRpc("web_search_read", () => def?.promise);
     await mountView({
         arch: `<list><field name="foo"/></list>`,
         resModel: "foo",
@@ -19311,7 +19310,7 @@ test("list views make their control panel available directly", async () => {
 
 test.tags("desktop");
 test("interact with search view while list is loading", async () => {
-    onRpc("web_search_read", () => new Deferred());
+    onRpc("web_search_read", () => new Promise(() => {}));
     await mountView({
         arch: `<list><field name="foo"/></list>`,
         searchViewArch: `
@@ -19333,7 +19332,7 @@ test("interact with search view while list is loading", async () => {
 });
 
 test("click on New while list is loading", async () => {
-    onRpc("web_search_read", () => new Deferred());
+    onRpc("web_search_read", () => new Promise(() => {}));
     await mountView({
         arch: `<list><field name="foo"/></list>`,
         resModel: "foo",
@@ -19350,8 +19349,8 @@ test("click on New while list is loading", async () => {
 });
 
 test("click on New while list is loading (editable)", async () => {
-    const def = new Deferred();
-    onRpc("web_search_read", () => def);
+    const def = Promise.withResolvers();
+    onRpc("web_search_read", () => def?.promise);
     await mountView({
         arch: `<list editable="top"><field name="foo"/></list>`,
         resModel: "foo",
@@ -19576,7 +19575,7 @@ test(`list with custom cog action that has a confirmation target="new" action`, 
 
 test(`cache web_search_read`, async () => {
     let searchReadDef;
-    onRpc("web_search_read", () => searchReadDef);
+    onRpc("web_search_read", () => searchReadDef?.promise);
 
     Foo._views = {
         "list,false": `<list><field name="foo"/></list>`,
@@ -19605,7 +19604,7 @@ test(`cache web_search_read`, async () => {
 
     await contains(`.o_data_row .o_data_cell`).click(); // Open the first record
 
-    searchReadDef = new Deferred();
+    searchReadDef = Promise.withResolvers();
     await contains(`.breadcrumb-item a, .o_back_button`).click();
 
     // Cached values !
@@ -19648,9 +19647,9 @@ test(`cache web_search_read`, async () => {
 });
 
 test(`cache web_search_read (onUpdate called after another load)`, async () => {
-    const searchReadDefs = [null, new Deferred(), new Deferred()];
+    const searchReadDefs = [null, Promise.withResolvers(), Promise.withResolvers()];
     let webSearchReadCount = 0;
-    onRpc("web_search_read", () => searchReadDefs[webSearchReadCount++]);
+    onRpc("web_search_read", () => searchReadDefs[webSearchReadCount++]?.promise);
 
     Foo._views = {
         "list,false": `<list><field name="foo"/></list>`,
@@ -19705,7 +19704,7 @@ test(`cache web_search_read (onUpdate called after another load)`, async () => {
 
 test(`cache web_read_group (no change)`, async () => {
     let def;
-    onRpc("web_read_group", () => def);
+    onRpc("web_read_group", () => def?.promise);
 
     Foo._views = {
         "list,false": `<list default_group_by="bar"><field name="foo"/></list>`,
@@ -19748,7 +19747,7 @@ test(`cache web_read_group (no change)`, async () => {
     expect(`.o_kanban_view`).toHaveCount(1);
 
     // execute again action 1, but web_read_group is delayed
-    def = new Deferred();
+    def = Promise.withResolvers();
     await getService("action").doAction(1);
     expect(`.o_list_view`).toHaveCount(1);
     expect(`.o_group_header`).toHaveCount(2);
@@ -19764,7 +19763,7 @@ test(`cache web_read_group (no change)`, async () => {
 
 test(`cache web_read_group (change)`, async () => {
     let def;
-    onRpc("web_read_group", () => def);
+    onRpc("web_read_group", () => def?.promise);
 
     Foo._views = {
         "list,false": `<list default_group_by="int_field"><field name="foo"/></list>`,
@@ -19810,7 +19809,7 @@ test(`cache web_read_group (change)`, async () => {
     expect(`.o_kanban_view`).toHaveCount(1);
 
     // execute again action 1, but web_read_group is delayed
-    def = new Deferred();
+    def = Promise.withResolvers();
     await getService("action").doAction(1);
     expect(`.o_list_view`).toHaveCount(1);
     expect(`.o_group_header`).toHaveCount(4);
@@ -19826,7 +19825,7 @@ test(`cache web_read_group (change)`, async () => {
 
 test(`cache web_read_group (with sample data, no change)`, async () => {
     let def;
-    onRpc("web_read_group", () => def);
+    onRpc("web_read_group", () => def?.promise);
 
     Foo._records = [];
     Foo._views = {
@@ -19868,7 +19867,7 @@ test(`cache web_read_group (with sample data, no change)`, async () => {
     expect(`.o_kanban_view`).toHaveCount(1);
 
     // execute again action 1, but web_read_group is delayed
-    def = new Deferred();
+    def = Promise.withResolvers();
     await getService("action").doAction(1);
     expect(`.o_list_view .o_view_sample_data`).toHaveCount(1);
 
@@ -19880,7 +19879,7 @@ test(`cache web_read_group (with sample data, no change)`, async () => {
 
 test(`cache web_read_group (with sample data, change)`, async () => {
     let def;
-    onRpc("web_read_group", () => def);
+    onRpc("web_read_group", () => def?.promise);
 
     Foo._records = [];
     Foo._views = {
@@ -19925,7 +19924,7 @@ test(`cache web_read_group (with sample data, change)`, async () => {
     expect(`.o_kanban_view`).toHaveCount(1);
 
     // execute again action 1, but web_read_group is delayed
-    def = new Deferred();
+    def = Promise.withResolvers();
     await getService("action").doAction(1);
     expect(`.o_list_view .o_view_sample_data`).toHaveCount(1);
 
@@ -19944,7 +19943,7 @@ test(`cache web_read_group (switch view, go back)`, async () => {
     let def;
     onRpc("web_read_group", () => {
         expect.step("web_read_group");
-        return def;
+        return def?.promise;
     });
 
     Foo._views = {
@@ -19984,7 +19983,7 @@ test(`cache web_read_group (switch view, go back)`, async () => {
     expect.verifySteps([]);
 
     // go back to list, but slow down the web_read_group
-    def = new Deferred();
+    def = Promise.withResolvers();
     await getService("action").switchView("list");
     expect(`.o_list_view`).toHaveCount(1);
     expect(`.o_group_header`).toHaveCount(4);
@@ -20067,7 +20066,7 @@ test(`[Offline] cache web_search_read: browsing with pager online/offline`, asyn
     let searchReadDef;
     onRpc("web_search_read", () => {
         expect.step("web_search_read");
-        return searchReadDef;
+        return searchReadDef?.promise;
     });
 
     await mountView({
@@ -20083,7 +20082,7 @@ test(`[Offline] cache web_search_read: browsing with pager online/offline`, asyn
     expect.verifySteps(["web_search_read", "web_search_read"]);
 
     // simulate a slow network => do not use data from cache
-    searchReadDef = new Deferred();
+    searchReadDef = Promise.withResolvers();
     await contains(".o_pager_next").click();
     expect(queryAllTexts(`.o_list_char`)).toEqual(["gnap", "blip"]); // still display page 2
     expect.verifySteps(["web_search_read"]);
@@ -20263,7 +20262,7 @@ test(`[Offline] cache web_search_read: enable filter online/offline`, async () =
     let searchReadDef;
     onRpc("web_search_read", () => {
         expect.step("web_search_read");
-        return searchReadDef;
+        return searchReadDef?.promise;
     });
 
     await mountView({
@@ -20285,7 +20284,7 @@ test(`[Offline] cache web_search_read: enable filter online/offline`, async () =
     expect.verifySteps(["web_search_read", "web_search_read"]);
 
     // simulate a slow network => do not use data from cache
-    searchReadDef = new Deferred();
+    searchReadDef = Promise.withResolvers();
     await toggleMenuItem("My filter");
     expect(queryAllTexts(`.o_list_char`)).toEqual(["blip", "blip"]); // still display filtered records
     expect.verifySteps(["web_search_read"]);
@@ -20500,7 +20499,7 @@ test("scroll position is restored when coming back to list view", async () => {
     }
 
     let def;
-    onRpc("web_search_read", () => def);
+    onRpc("web_search_read", () => def?.promise);
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
         res_model: "foo",
@@ -20523,7 +20522,7 @@ test("scroll position is restored when coming back to list view", async () => {
 
     // the list is "lazy", so it displays the control panel directly, and the renderer later with
     // the data => simulate this and check that the scroll position is correctly restored
-    def = new Deferred();
+    def = Promise.withResolvers();
     await getService("action").switchView("list");
     expect(".o_list_view").toHaveCount(1);
     expect(".o_list_renderer").toHaveCount(0);

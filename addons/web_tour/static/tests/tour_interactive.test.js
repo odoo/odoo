@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { after, beforeEach, describe, expect, test } from "@odoo/hoot";
-import { queryFirst, waitFor, press, Deferred, waitForNone } from "@odoo/hoot-dom";
+import { queryFirst, waitFor, press, waitForNone } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
 import { Component, onMounted, onPatched, proxy, xml } from "@odoo/owl";
 import {
@@ -627,7 +627,7 @@ test("Tour don't backward when dropdown loading", async () => {
         ],
     });
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     let makeItLag = false;
     await mountWithCleanup(WebClient);
 
@@ -639,7 +639,7 @@ test("Tour don't backward when dropdown loading", async () => {
 
     onRpc("product", "web_name_search", async () => {
         if (makeItLag) {
-            await def;
+            await def.promise;
         }
     });
 

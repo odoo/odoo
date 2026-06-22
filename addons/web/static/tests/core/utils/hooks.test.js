@@ -1,7 +1,7 @@
 import { render } from "@web/owl2/utils";
 import { describe, destroy, expect, getFixture, mockUserAgent, test } from "@odoo/hoot";
 import { click, queryOne } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockTouch } from "@odoo/hoot-mock";
+import { animationFrame, mockTouch } from "@odoo/hoot-mock";
 import {
     contains,
     getService,
@@ -342,7 +342,7 @@ describe("useService", () => {
         useServiceProtectMethodHandling.fn = useServiceProtectMethodHandling.original;
         const state = proxy({ child: true });
         let nbCalls = 0;
-        let def = new Deferred();
+        let def = Promise.withResolvers();
         let objectService;
         let functionService;
 
@@ -373,7 +373,7 @@ describe("useService", () => {
                 return {
                     async asyncMethod() {
                         nbCalls++;
-                        await def;
+                        await def.promise;
                         return this;
                     },
                 };
@@ -386,7 +386,7 @@ describe("useService", () => {
             start() {
                 return async function asyncFunc() {
                     nbCalls++;
-                    await def;
+                    await def.promise;
                     return this;
                 };
             },
@@ -403,7 +403,7 @@ describe("useService", () => {
         expect(nbCalls).toBe(4);
 
         // Functions that were called before the component is destroyed but resolved after never resolve
-        def = new Deferred();
+        def = Promise.withResolvers();
         objectService.asyncMethod().then(() => expect.step("resolved"));
         objectService.asyncMethod.call("boundThis").then(() => expect.step("resolved"));
         functionService().then(() => expect.step("resolved"));

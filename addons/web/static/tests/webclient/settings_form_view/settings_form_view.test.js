@@ -9,7 +9,7 @@ import {
     resize,
     unload,
 } from "@odoo/hoot-dom";
-import { animationFrame, Deferred, mockSendBeacon, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, mockSendBeacon, runAllTimers } from "@odoo/hoot-mock";
 import {
     clickModalButton,
     clickSave,
@@ -1662,7 +1662,7 @@ test("execute action from settings view with several actions in the breadcrumb",
 
     let def;
     onRpc("web_save", async () => {
-        await def; // slow down reload of settings view
+        await def.promise; // slow down reload of settings view
     });
 
     await mountWithCleanup(WebClient);
@@ -1673,7 +1673,7 @@ test("execute action from settings view with several actions in the breadcrumb",
     await getService("action").doAction(2);
     expect(".o_breadcrumb").toHaveText("First action\nSettings");
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     await click('button[name="3"]');
     await animationFrame();
     expect(".o_breadcrumb").toHaveText("First action\nSettings");
@@ -2042,7 +2042,7 @@ test("BinaryField is correctly rendered in Settings form view", async () => {
 
     // Testing the download button in the field
     // We must avoid the browser to download the file effectively
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     const onDownloadClick = (ev) => {
         if (ev.target.tagName === "A" && "download" in ev.target.attributes) {
             ev.preventDefault();
@@ -2051,7 +2051,7 @@ test("BinaryField is correctly rendered in Settings form view", async () => {
     };
     after(on(document, "click", onDownloadClick));
     await click(".fa-download");
-    await def;
+    await def.promise;
 
     await click(".o_field_binary .o_clear_file_button");
     await animationFrame();

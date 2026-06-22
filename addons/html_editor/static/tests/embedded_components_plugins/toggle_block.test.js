@@ -19,7 +19,6 @@ import {
 } from "@html_editor/others/embedded_components/core/toggle_block/toggle_block";
 import { onMounted } from "@odoo/owl";
 import { animationFrame, press, queryOne, tick, waitFor } from "@odoo/hoot-dom";
-import { Deferred } from "@odoo/hoot-mock";
 import { browser } from "@web/core/browser/browser";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { EmbeddedComponentPlugin } from "@html_editor/others/embedded_component_plugin";
@@ -38,7 +37,7 @@ function getConfig(components) {
 }
 
 beforeEach(() => {
-    embeddedToggleMountedPromise = new Deferred();
+    embeddedToggleMountedPromise = Promise.withResolvers();
     patchWithCleanup(EmbeddedToggleBlockComponent.prototype, {
         setup() {
             super.setup();
@@ -70,7 +69,7 @@ describe("deleteBackward applied to toggle", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         deleteBackward(editor);
         expect(getContent(el)).toBe(
             unformat(`
@@ -114,7 +113,7 @@ describe("deleteBackward applied to toggle", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         deleteBackward(editor);
         expect(getContent(el)).toBe(
             unformat(`
@@ -158,7 +157,7 @@ describe("deleteBackward applied to toggle", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         deleteBackward(editor);
         expect(getContent(el)).toBe(
             unformat(`
@@ -184,7 +183,7 @@ describe("deleteBackward applied to toggle", () => {
             `),
             { config: getConfig([toggleBlockEmbedding]) }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         deleteBackward(editor);
         expect("[data-embedded-editable='title']").toHaveInnerHTML(`
             <p>HelloWorldGood</p>
@@ -205,7 +204,7 @@ describe("deleteBackward applied to toggle", () => {
             `),
             { config: getConfig([toggleBlockEmbedding]) }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         deleteBackward(editor);
         expect("[data-embedded-editable='content'").toHaveInnerHTML(`
             <p>Good</p>
@@ -230,7 +229,7 @@ describe("deleteBackward applied to toggle", () => {
             `),
             { config: getConfig([toggleBlockEmbedding]) }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         await press(["CTRL", "A"]); // select all
         deleteBackward(editor);
         expect(getContent(el)).toBe(
@@ -260,7 +259,7 @@ describe("deleteBackward applied to toggle", () => {
             `),
             { config: getConfig([toggleBlockEmbedding]) }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         await press(["shift", "arrowup"]);
         expect(getContent(el)).toBe(
             unformat(`
@@ -368,7 +367,7 @@ describe("deleteForward applied to toggle", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         deleteForward(editor);
         expect(getContent(el)).toBe(
             unformat(`
@@ -411,7 +410,7 @@ describe("deleteForward applied to toggle", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         deleteForward(editor);
         expect(getContent(el)).toBe(
             unformat(`
@@ -444,7 +443,7 @@ describe("deleteForward applied to toggle", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         deleteForward(editor);
         expect(getContent(el)).toBe(
             unformat(`
@@ -493,7 +492,7 @@ describe("deleteForward applied to toggle", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         deleteForward(editor);
         expect(getContent(el)).toBe(
             unformat(`
@@ -544,7 +543,7 @@ describe("deleteForward applied to toggle", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         deleteForward(editor);
         expect(getContent(el)).toBe(
             unformat(`
@@ -586,7 +585,7 @@ describe("deleteForward applied to toggle", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         deleteForward(editor);
         expect(getContent(el)).toBe(
             unformat(`
@@ -630,7 +629,7 @@ describe("deleteForward applied to toggle", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         deleteForward(editor);
         expect(getContent(el)).toBe(
             unformat(`
@@ -678,15 +677,15 @@ describe("Enter applied to toggle title", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         patchWithCleanup(ToggleBlockPlugin.prototype, {
             getUniqueIdentifier() {
                 return "2";
             },
         });
-        embeddedToggleMountedPromise = new Deferred();
+        embeddedToggleMountedPromise = Promise.withResolvers();
         splitBlock(editor);
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
@@ -746,15 +745,15 @@ describe("Enter applied to toggle title", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         patchWithCleanup(ToggleBlockPlugin.prototype, {
             getUniqueIdentifier() {
                 return "2";
             },
         });
-        embeddedToggleMountedPromise = new Deferred();
+        embeddedToggleMountedPromise = Promise.withResolvers();
         splitBlock(editor);
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         expect(getContent(el)).toBe(
             unformat(`
             <p data-selection-placeholder=""><br></p>
@@ -815,7 +814,7 @@ describe("Enter applied to toggle title", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         splitBlock(editor);
         expect(getContent(el)).toBe(
             unformat(`
@@ -859,7 +858,7 @@ describe("Enter applied to toggle title", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         splitBlock(editor);
         expect(getContent(el)).toBe(
             unformat(`
@@ -886,7 +885,7 @@ describe("Enter applied to toggle title", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         splitBlock(editor);
         expect(getContent(el)).toBe(
             unformat(`
@@ -912,7 +911,7 @@ describe("Enter applied to toggle title", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         splitBlock(editor);
         expect(getContent(el)).toBe(
             unformat(`
@@ -948,7 +947,7 @@ describe("Tab applied to toggle title", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         await keydownTab(editor);
         await animationFrame();
         expect(getContent(el)).toBe(
@@ -1019,7 +1018,7 @@ describe("Tab applied to toggle title", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         await keydownTab(editor);
         await animationFrame();
         expect(getContent(el)).toBe(
@@ -1091,7 +1090,7 @@ describe("Shift+Tab applied to toggle title", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         await keydownShiftTab(editor);
         await animationFrame();
         expect(getContent(el)).toBe(
@@ -1155,7 +1154,7 @@ describe("Hide and show toggle content", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         expect(
             queryOne("[data-embedded-editable='content']").parentElement.matches(".d-none")
         ).toBe(true);
@@ -1187,7 +1186,7 @@ describe("Hide and show toggle content", () => {
         el.style.minHeight = "600px";
         const powerButtons = queryOne(".o_we_power_buttons");
         const p = el.lastChild;
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         expect(
             queryOne("[data-embedded-editable='content']").parentElement.matches(".d-none")
         ).toBe(true);
@@ -1227,7 +1226,7 @@ describe("Insert (paste, drop) inside toggle title", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         expect("[data-embedded-editable='title']").toHaveInnerHTML(`
             <div class="o-paragraph">HelloWorld</div>
         `);
@@ -1281,7 +1280,7 @@ describe("hint", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         expect("[data-embedded-editable='title']").toHaveInnerHTML(
             '<p o-we-hint-text="Toggle title" class="o-we-hint"><br></p>'
         );
@@ -1318,7 +1317,7 @@ describe("Toggle block: Switch Direction", () => {
                 config: getConfig([toggleBlockEmbedding]),
             }
         );
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         switchDirection(editor);
         expect(getContent(el)).toBe(
             unformat(
@@ -1368,9 +1367,9 @@ describe("Toggle block: Switch Direction", () => {
                 return "2";
             },
         });
-        embeddedToggleMountedPromise = new Deferred();
+        embeddedToggleMountedPromise = Promise.withResolvers();
         splitBlock(editor);
-        await embeddedToggleMountedPromise;
+        await embeddedToggleMountedPromise.promise;
         expect(getContent(el)).toBe(
             unformat(
                 `

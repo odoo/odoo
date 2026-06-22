@@ -8,7 +8,7 @@ import {
     queryOne,
     scroll,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import {
     clickFieldDropdown,
@@ -861,10 +861,10 @@ test("edit many2one before onchange is finished should not reset the value", asy
     };
     onRpc("onchange", () => {
         expect.step("onchange");
-        return def;
+        return def?.promise;
     });
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     await mountView({
         type: "form",
         resModel: "partner",
@@ -1637,11 +1637,11 @@ test("standalone many2one field", async () => {
 test("form: quick create then save directly", async () => {
     expect.assertions(3);
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     const newRecordId = 5; // with the current records, the created record will be assigned id 5
     onRpc("name_create", async () => {
         expect.step("name_create");
-        await def;
+        await def.promise;
     });
     onRpc("web_save", ({ args }) => {
         expect.step("web_save");
@@ -1690,12 +1690,12 @@ test("form: quick create for field that returns false after name_create call", a
 
 test("list: quick create then save directly", async () => {
     expect.assertions(8);
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     const newRecordId = 5;
 
     onRpc("name_create", async () => {
         expect.step("name_create");
-        await def;
+        await def.promise;
     });
     onRpc("web_save", ({ args }) => {
         expect.step("web_save");
@@ -1739,11 +1739,11 @@ test("list: quick create then save directly", async () => {
 test("list in form: quick create then save directly", async () => {
     expect.assertions(4);
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     const newRecordId = 5; // with the current records, the created record will be assigned id 5
     onRpc("name_create", async () => {
         expect.step("name_create");
-        await def;
+        await def.promise;
     });
     onRpc("web_save", ({ args }) => {
         expect.step("web_save");
@@ -1880,10 +1880,10 @@ test("list in form: quick create then add a new line directly", async () => {
         trululu: () => {},
     };
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     const newRecordId = 5; // with the current records, the created record will be assigned id 5
     onRpc("name_create", async () => {
-        await def;
+        await def.promise;
     });
     onRpc("web_save", ({ args }) => {
         expect(args[1].p[0][2].trululu).toBe(newRecordId);
@@ -2384,7 +2384,7 @@ test("list in form: call button in sub view", async () => {
             </form>`,
     };
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     mockService("action", {
         doActionButton(params) {
             const { name, resModel, resId, resIds } = params;
@@ -2392,7 +2392,7 @@ test("list in form: call button in sub view", async () => {
             expect(resModel).toBe("product");
             expect(resId).toBe(37);
             expect(resIds).toEqual([37]);
-            return def.then(() => {
+            return def.promise.then(() => {
                 params.onClose();
             });
         },
@@ -3177,9 +3177,9 @@ test("select a value by pressing TAB on a many2one with onchange", async () => {
         trululu: () => {},
     };
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
 
-    onRpc("onchange", () => def);
+    onRpc("onchange", () => def.promise);
 
     await mountView({
         type: "form",
@@ -3291,9 +3291,9 @@ test("many2one in editable list + onchange, with enter", async () => {
         },
     };
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
 
-    onRpc("onchange", () => def);
+    onRpc("onchange", () => def?.promise);
     onRpc(({ method }) => {
         expect.step(method);
     });
@@ -3336,8 +3336,8 @@ test("many2one in editable list + onchange, with enter, part 2", async () => {
         },
     };
 
-    const def = new Deferred();
-    onRpc("onchange", () => def);
+    const def = Promise.withResolvers();
+    onRpc("onchange", () => def?.promise);
     onRpc(({ method }) => {
         expect.step(method);
     });

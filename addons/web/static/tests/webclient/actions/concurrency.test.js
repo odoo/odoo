@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAll, queryAllTexts, runAllTimers } from "@odoo/hoot-dom";
-import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import { Component, onWillStart, xml } from "@odoo/owl";
 import {
     contains,
@@ -127,9 +127,9 @@ defineActions([
 ]);
 
 test("drop previous actions if possible", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     stepAllNetworkCalls();
-    onRpc("/web/action/load", () => def);
+    onRpc("/web/action/load", () => def?.promise);
 
     await mountWithCleanup(WebClient);
     getService("action").doAction(4);
@@ -151,8 +151,8 @@ test("drop previous actions if possible", async () => {
 
 test.tags("desktop");
 test("handle switching view and switching back on slow network", async () => {
-    const def = new Deferred();
-    const defs = [null, def, null];
+    const def = Promise.withResolvers();
+    const defs = [null, def?.promise, null];
     stepAllNetworkCalls();
     onRpc("web_search_read", () => defs.shift());
 
@@ -184,7 +184,7 @@ test("handle switching view and switching back on slow network", async () => {
 test.tags("desktop");
 test("clicking quickly on breadcrumbs...", async () => {
     let def;
-    onRpc("web_read", () => def);
+    onRpc("web_read", () => def?.promise);
 
     await mountWithCleanup(WebClient);
     // create a situation with 3 breadcrumbs: kanban/form/list
@@ -194,7 +194,7 @@ test("clicking quickly on breadcrumbs...", async () => {
 
     // now, the next read operations will be promise (this is the read
     // operation for the form view reload)
-    def = new Deferred();
+    def = Promise.withResolvers();
     // click on the breadcrumbs for the form view, then on the kanban view
     // before the form view is fully reloaded
     await contains(queryAll(".o_control_panel .breadcrumb-item")[1]).click();
@@ -222,7 +222,7 @@ test("execute a new action while loading a lazy-loaded controller", async () => 
     redirect("/odoo/action-77/2?cids=1");
 
     let def;
-    onRpc("partner", "search_read", () => def);
+    onRpc("partner", "search_read", () => def?.promise);
     stepAllNetworkCalls();
 
     await mountWithCleanup(WebClient);
@@ -230,7 +230,7 @@ test("execute a new action while loading a lazy-loaded controller", async () => 
     expect(".o_form_view").toHaveCount(1, { message: "should display the form view of action 4" });
 
     // click to go back to Kanban (this request is blocked)
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o_control_panel .breadcrumb a").click();
     expect(".o_form_view").toHaveCount(1, {
         message: "should still display the form view of action 4",
@@ -265,9 +265,9 @@ test("execute a new action while loading a lazy-loaded controller", async () => 
 
 test.tags("desktop");
 test("execute a new action while handling a call_button", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("/web/dataset/call_button/*", async () => {
-        await def;
+        await def?.promise;
         return {
             name: "Partners Action 1",
             res_model: "partner",
@@ -328,14 +328,14 @@ test("execute a new action while switching to another controller", async () => {
     // except at the very end, which should always be the final action's list's 'search_read'.
     let def;
     stepAllNetworkCalls();
-    onRpc("web_read", () => def);
+    onRpc("web_read", () => def?.promise);
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
     expect(".o_list_view").toHaveCount(1, { message: "should display the list view of action 3" });
 
     // switch to the form view (this request is blocked)
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o_list_view .o_data_cell").click();
     expect(".o_list_view").toHaveCount(1, {
         message: "should still display the list view of action 3",
@@ -373,9 +373,9 @@ test("execute a new action while switching to another controller", async () => {
 });
 
 test("execute a new action while loading views", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     stepAllNetworkCalls();
-    onRpc("get_views", () => def);
+    onRpc("get_views", () => def?.promise);
 
     await mountWithCleanup(WebClient);
     // execute a first action (its 'get_views' RPC is blocked)
@@ -411,9 +411,9 @@ test("execute a new action while loading views", async () => {
 
 test.tags("desktop");
 test("execute a new action while loading data of default view", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     stepAllNetworkCalls();
-    onRpc("web_read", () => def);
+    onRpc("web_read", () => def?.promise);
 
     await mountWithCleanup(WebClient);
     // execute a first action (its 'web_read' RPC is blocked)
@@ -455,7 +455,7 @@ test("execute a new action while loading data of default view", async () => {
 test.tags("desktop");
 test("open a record while reloading the list view", async () => {
     let def;
-    onRpc("search_read", () => def);
+    onRpc("search_read", () => def?.promise);
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
@@ -465,7 +465,7 @@ test("open a record while reloading the list view", async () => {
     expect(".o_control_panel .o_list_button_add").toHaveCount(1);
 
     // reload (the search_read RPC will be blocked)
-    def = new Deferred();
+    def = Promise.withResolvers();
     await switchView("calendar");
     expect(".o_list_view .o_data_row").toHaveCount(2);
     expect(".o_control_panel .o_list_button_add").toHaveCount(1);
@@ -485,12 +485,12 @@ test("open a record while reloading the list view", async () => {
 });
 
 test("properly drop client actions after new action is initiated", async () => {
-    const slowWillStartDef = new Deferred();
+    const slowWillStartDef = Promise.withResolvers();
     class ClientAction extends Component {
         static template = xml`<div class="client_action">ClientAction</div>`;
         static props = ["*"];
         setup() {
-            onWillStart(() => slowWillStartDef);
+            onWillStart(() => slowWillStartDef?.promise);
         }
     }
     actionRegistry.add("slowAction", ClientAction);
@@ -512,7 +512,7 @@ test("properly drop client actions after new action is initiated", async () => {
 test.tags("desktop");
 test("restoring a controller when doing an action -- load_action slow", async () => {
     let def;
-    onRpc("/web/action/load", () => def);
+    onRpc("/web/action/load", () => def?.promise);
     stepAllNetworkCalls();
 
     await mountWithCleanup(WebClient);
@@ -522,7 +522,7 @@ test("restoring a controller when doing an action -- load_action slow", async ()
     await contains(".o_list_view .o_data_cell").click();
     expect(".o_form_view").toHaveCount(1);
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     getService("action").doAction(4, { clearBreadcrumbs: true });
     await animationFrame();
     expect(".o_form_view").toHaveCount(1, { message: "should still contain the form view" });
@@ -549,14 +549,14 @@ test("restoring a controller when doing an action -- load_action slow", async ()
 test.tags("desktop");
 test("switching when doing an action -- load_action slow", async () => {
     let def;
-    onRpc("/web/action/load", () => def);
+    onRpc("/web/action/load", () => def?.promise);
     stepAllNetworkCalls();
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
     expect(".o_list_view").toHaveCount(1);
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     getService("action").doAction(4, { clearBreadcrumbs: true });
     await animationFrame();
     expect(".o_list_view").toHaveCount(1, { message: "should still contain the list view" });
@@ -582,14 +582,14 @@ test("switching when doing an action -- load_action slow", async () => {
 test.tags("desktop");
 test("switching when doing an action -- get_views slow", async () => {
     let def;
-    onRpc("get_views", () => def);
+    onRpc("get_views", () => def?.promise);
     stepAllNetworkCalls();
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
     expect(".o_list_view").toHaveCount(1);
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     getService("action").doAction(4);
     await animationFrame();
     expect(".o_list_view").toHaveCount(1, { message: "should still contain the list view" });
@@ -615,8 +615,8 @@ test("switching when doing an action -- get_views slow", async () => {
 
 test.tags("desktop");
 test("switching when doing an action -- search_read slow", async () => {
-    const def = new Deferred();
-    onRpc("search_read", () => def);
+    const def = Promise.withResolvers();
+    onRpc("search_read", () => def?.promise);
     stepAllNetworkCalls();
 
     await mountWithCleanup(WebClient);
@@ -650,8 +650,8 @@ test("switching when doing an action -- search_read slow", async () => {
 
 test.tags("desktop");
 test("click multiple times to open a record", async () => {
-    const def = new Deferred();
-    onRpc("web_read", () => def);
+    const def = Promise.withResolvers();
+    onRpc("web_read", () => def?.promise);
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(3);
@@ -672,8 +672,8 @@ test("click multiple times to open a record", async () => {
 });
 
 test("dialog will only open once for two rapid actions with the target new", async () => {
-    const def = new Deferred();
-    onRpc("onchange", () => def);
+    const def = Promise.withResolvers();
+    onRpc("onchange", () => def?.promise);
 
     await mountWithCleanup(WebClient);
     getService("action").doAction(5);
@@ -716,7 +716,7 @@ test("local state, global state, and race conditions", async () => {
             useSetupAction({
                 getLocalState: () => ({ fromId: this.id }),
             });
-            onWillStart(() => def);
+            onWillStart(() => def?.promise);
         }
     }
 
@@ -742,7 +742,7 @@ test("local state, global state, and race conditions", async () => {
     expect(isItemSelected("Foo")).toBe(true);
 
     // reload twice by clicking on toy view switcher
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o_control_panel .o_switch_view.o_toy").click();
     await contains(".o_control_panel .o_switch_view.o_toy").click();
 
@@ -765,7 +765,7 @@ test("local state, global state, and race conditions", async () => {
 test.tags("desktop");
 test("doing browser back temporarily disables the UI", async () => {
     let def;
-    onRpc("partner", "web_search_read", () => def);
+    onRpc("partner", "web_search_read", () => def?.promise);
     await mountWithCleanup(WebClient);
 
     await getService("action").doAction(4);
@@ -787,7 +787,7 @@ test("doing browser back temporarily disables the UI", async () => {
         ],
     });
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     browser.history.back();
     expect(document.body.style.pointerEvents).toBe("none");
     // await contains(".o_control_panel .breadcrumb-item").click(); todo JUM: click on breadcrumb
