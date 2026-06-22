@@ -16,6 +16,7 @@ patch(TicketScreen.prototype, {
         }
     },
 
+    // TODO: remove in master (20.0)
     _onUpdateSelectedOrderline() {
         const selectedOrderlineId = this.getSelectedOrderlineId();
         const orderline = this.getSelectedOrder().lines.find(
@@ -28,5 +29,21 @@ patch(TicketScreen.prototype, {
             });
         }
         return super._onUpdateSelectedOrderline(...arguments);
+    },
+
+    onClickOrderline(orderline) {
+        if (
+            this.getSelectedOrder()?.finalized &&
+            this.getSelectedOrderlineId() == orderline.id &&
+            orderline.product_id.id === this.pos.config.discount_product_id?.id
+        ) {
+            {
+                return this.dialog.add(AlertDialog, {
+                    title: _t("Oh snap !"),
+                    body: _t("You cannot edit a discount line."),
+                });
+            }
+        }
+        return super.onClickOrderline(...arguments);
     },
 });

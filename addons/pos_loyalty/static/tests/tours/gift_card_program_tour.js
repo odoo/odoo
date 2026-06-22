@@ -7,6 +7,8 @@ import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_sc
 import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
 import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedback_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
+import * as Notification from "@point_of_sale/../tests/generic_helpers/notification_util";
+import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("GiftCardProgramTour1", {
     steps: () =>
@@ -30,7 +32,7 @@ registry.category("web_tour.tours").add("GiftCardProgramTour2", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("GiftCardWithRefundtTour", {
+registry.category("web_tour.tours").add("GiftCardWithRefundTour", {
     steps: () =>
         [
             Chrome.startPoS(),
@@ -54,6 +56,29 @@ registry.category("web_tour.tours").add("GiftCardWithRefundtTour", {
             ProductScreen.addOrderline("Gift Card", "1"),
             ProductScreen.selectedOrderlineHas("Gift Card", "1"),
             PosLoyalty.orderTotalIs("0.0"),
+            PosLoyalty.finalizeOrder("Cash", "0"),
+            ...ProductScreen.clickRefund(),
+            TicketScreen.selectOrder("002"),
+            Order.hasLine({
+                withClass: ".selected",
+                productName: "Gift Card",
+                run: "click",
+            }),
+            Order.hasLine({
+                withClass: ".selected",
+                productName: "Gift Card",
+                run: "click",
+            }),
+            Notification.has(
+                "Refunding a top up or reward product for an eWallet or gift card program is not allowed."
+            ),
+            negateStep(
+                ...Order.hasLine({
+                    withClass: ".selected",
+                    productName: "Gift Card",
+                    refundQty: "2",
+                })
+            ),
         ].flat(),
 });
 
