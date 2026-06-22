@@ -2514,6 +2514,12 @@ $ribbon-padding: 100px;
 #website_cookies_bar {
     min-height: 0px;
     height: 0px;
+
+    .modal-sm {
+        .row {
+            @include row-cols(1);
+        }
+    }
 }
 
 .modal[id^='o_search_modal'] {
