@@ -1,12 +1,16 @@
 import { Plugin } from "@html_editor/plugin";
 import { selectElements } from "@html_editor/utils/dom_traversal";
+import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 
 /** @typedef {import("plugins").CSSSelector} CSSSelector */
 /**
  * @typedef {CSSSelector[]} content_editable_selectors
  * @typedef {CSSSelector[]} content_not_editable_selectors
+ * @typedef {CSSSelector[]} force_content_not_editable_selectors
  */
+
+export const FORCE_CONTENT_NOT_EDITABLE_CLASS = "o_force_not_editable";
 
 export class BuilderContentEditablePlugin extends Plugin {
     static id = "builderContentEditablePlugin";
@@ -16,6 +20,7 @@ export class BuilderContentEditablePlugin extends Plugin {
             "section:has(> .o_container_small, > .container, > .container-fluid)",
             ".o_not_editable",
             "[data-oe-field='arch']:empty",
+            `.${FORCE_CONTENT_NOT_EDITABLE_CLASS}`,
         ],
         content_editable_selectors: [
             "section > .o_container_small",
@@ -27,10 +32,17 @@ export class BuilderContentEditablePlugin extends Plugin {
         content_editable_providers: this.getContentEditableEls.bind(this),
         content_not_editable_providers: this.getContentNotEditableEls.bind(this),
         contenteditable_to_remove_selector: "[contenteditable]",
+        // Should run before ContentEditablePlugin.normalize (sequence 5) to
+        // set `contenteditable=false`.
+        normalize_handlers: withSequence(1, this.normalizeForceContentNotEditable.bind(this)),
+        clean_for_save_handlers: this.cleanForSave.bind(this),
     };
 
     setup() {
         this.editable.setAttribute("contenteditable", false);
+        this.forceContentNotEditableSelector = this.getResource(
+            "force_content_not_editable_selectors"
+        ).join(",");
     }
 
     getContentEditableEls(rootEl) {
@@ -56,11 +68,29 @@ export class BuilderContentEditablePlugin extends Plugin {
             }
             return !notEditableEl.closest("[data-snippet]");
         };
+        if (contentEditableEl.closest(`.${FORCE_CONTENT_NOT_EDITABLE_CLASS}`)) {
+            return false;
+        }
         return (
             !contentEditableEl.matches("input, [data-oe-readonly]") &&
             contentEditableEl.closest(".o_editable") &&
             !isDescendantOfNotEditableNotSnippet(contentEditableEl)
         );
+    }
+
+    normalizeForceContentNotEditable(root) {
+        if (!this.forceContentNotEditableSelector || root.nodeType !== Node.ELEMENT_NODE) {
+            return;
+        }
+        for (const el of selectElements(root, this.forceContentNotEditableSelector)) {
+            el.classList.add(FORCE_CONTENT_NOT_EDITABLE_CLASS);
+        }
+    }
+
+    cleanForSave({ root }) {
+        for (const el of selectElements(root, this.forceContentNotEditableSelector)) {
+            el.classList.remove(FORCE_CONTENT_NOT_EDITABLE_CLASS);
+        }
     }
 }
 registry
