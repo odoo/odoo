@@ -2,3 +2,4 @@
 
 from . import res_partner_grade
 from . import website
+from . import res_partner
