@@ -1,7 +1,7 @@
 import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 
-import { status, onWillUnmount, toRaw, onMounted, onPatched, proxy } from "@odoo/owl";
+import { status, onWillUnmount, t, toRaw, onMounted, onPatched, proxy } from "@odoo/owl";
 import { router } from "@web/core/browser/router";
 
 /**
@@ -26,6 +26,14 @@ import { router } from "@web/core/browser/router";
 // -----------------------------------------------------------------------------
 // useAutofocus
 // -----------------------------------------------------------------------------
+
+/** Params accepted by {@link useAutofocus}. */
+export const autofocusParamsType = t.object({
+    mobile: t.boolean().optional(),
+    ref: t.signal(t.instanceOf(HTMLElement)).optional(),
+    refName: t.string().optional(),
+    selectAll: t.boolean().optional(),
+});
 
 /**
  * Focus an element referenced by a t-ref="autofocus" in the active component

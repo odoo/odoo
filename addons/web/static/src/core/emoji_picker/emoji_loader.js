@@ -1,23 +1,23 @@
-import { signal, useScope } from "@odoo/owl";
+import { signal, t, useScope } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 
-/**
- * @typedef {{
- *  category: EmojiCategory;
- *  codepoints: string;
- *  emoticons: string[];
- *  keywords: string[];
- *  name: string;
- *  shortcodes: string[];
- * }} Emoji
- *
- * @typedef {{
- *  displayName: string;
- *  name: string;
- *  sortId: number;
- *  title: string;
- * }} EmojiCategory
- */
+export const emojiCategoryType = t.object({
+    displayName: t.string(),
+    name: t.string(),
+    sortId: t.number(),
+    title: t.string(),
+});
+/** @typedef {import("@odoo/owl").StripType<typeof emojiCategoryType>} EmojiCategory */
+
+export const emojiType = t.object({
+    category: emojiCategoryType,
+    codepoints: t.string(),
+    emoticons: t.array(t.string()),
+    keywords: t.array(t.string()),
+    name: t.string(),
+    shortcodes: t.array(t.string()),
+});
+/** @typedef {import("@odoo/owl").StripType<typeof emojiType>} Emoji */
 
 /**
  * @returns {{ categories: EmojiCategory[], emojis: Emoji[] }}

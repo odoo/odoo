@@ -256,7 +256,7 @@ export class UseHoverOverlay extends Component {
                 _contains: types.array(
                     types.function([types.instanceOf(EventTarget)], types.boolean())
                 ),
-                addTarget: types.function([types.object()], types.function([])),
+                addTarget: types.function([types.object({ ref: types.any() })], types.function([])),
             }),
         });
         this.root = useRef("root");
@@ -492,27 +492,33 @@ export function useMessageScrolling({
     return state;
 }
 
+export class MessageSelectionState {
+    selectedMessageId;
+    data = new Set();
+
+    clearSelected() {
+        this.data.delete(this.selectedMessageId);
+    }
+
+    /** @param {import("models").Message} message */
+    isSelected(message) {
+        return this.data.has(message.id);
+    }
+
+    /** @param {import("models").Message} message */
+    setSelected(message) {
+        this.clearSelected();
+        this.data.add(message.id);
+        this.selectedMessageId = message.id;
+    }
+
+    get size() {
+        return this.data.size;
+    }
+}
+
 export function useMessageSelection() {
-    let selectedMessageId;
-    const data = proxy(new Set());
-    return {
-        clearSelected() {
-            data.delete(selectedMessageId);
-        },
-        /** @param {import("models").Message} message */
-        isSelected(message) {
-            return data.has(message.id);
-        },
-        /** @param {import("models").Message} message */
-        setSelected(message) {
-            this.clearSelected();
-            data.add(message.id);
-            selectedMessageId = message.id;
-        },
-        get size() {
-            return data.size;
-        },
-    };
+    return proxy(new MessageSelectionState());
 }
 
 export function useMicrophoneVolume() {

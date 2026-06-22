@@ -18,6 +18,7 @@ import { renderToElement } from "@web/core/utils/render";
 import { nbsp } from "@web/core/utils/strings";
 
 import { Component, computed, props, proxy, signal, t, useEffect } from "@odoo/owl";
+import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -31,42 +32,16 @@ import { getOrigin, url } from "@web/core/utils/urls";
 import { useMessageActions } from "./message_actions";
 import { discussComponentRegistry } from "./discuss_component_registry";
 import { NotificationMessage } from "./notification_message";
-import { useForwardRefsToParent, useLongPress } from "@mail/utils/common/hooks";
+import {
+    MessageSelectionState,
+    useForwardRefsToParent,
+    useLongPress,
+} from "@mail/utils/common/hooks";
 import { ActionList } from "@mail/core/common/action_list";
 import { loadCssFromBundle } from "@mail/utils/common/misc";
 import { MessageContextMenu } from "@mail/core/common/message_context_menu";
 import { Priority } from "@mail/core/common/priority";
 
-export const messageProps = {
-    asCard: t.any().optional(),
-    hasActions: t.any().optional(true),
-    onParentMessageClick: t.any().optional(),
-    message: t.any(),
-    messageSelection: t.any().optional(),
-    messageRefs: t.any().optional(),
-    previousMessage: t.any().optional(),
-    squashed: t.any().optional(),
-    thread: t.any().optional(),
-    messageSearch: t.any().optional(),
-    className: t.any().optional(),
-    showDates: t.any().optional(true),
-    isFirstMessage: t.any().optional(),
-    isReadOnly: t.any().optional(),
-};
-
-/**
- * @typedef {Object} Props
- * @property {boolean} [hasActions=true]
- * @property {boolean} [highlighted]
- * @property {function} [onParentMessageClick]
- * @property {import("models").Message} message
- * @property {boolean} [squashed]
- * @property {import("models").Thread} [thread]
- * @property {ReturnType<import('@mail/utils/common/hooks').useMessageSelection>} [messageSelection]
- * @property {ReturnType<import('@mail/core/common/message_search_hook').useMessageSearch>} [messageSearch]
- * @property {String} [className]
- * @extends {Component<Props, Env>}
- */
 export class Message extends Component {
     // This is the darken version of #71639e
     static SHADOW_LINK_COLOR = "#66598f";
@@ -90,7 +65,6 @@ export class Message extends Component {
         NotificationMessage,
         Priority,
     };
-    props = props(messageProps);
     static template = "mail.Message";
 
     /**
@@ -104,6 +78,22 @@ export class Message extends Component {
         super.setup();
         this.nbsp = nbsp;
         this.store = useService("mail.store");
+        this.props = props({
+            asCard: t.boolean().optional(),
+            className: t.string().optional(),
+            hasActions: t.boolean().optional(true),
+            isFirstMessage: t.boolean().optional(),
+            isReadOnly: t.boolean().optional(),
+            message: t.instanceOf(this.store["mail.message"].Class),
+            messageRefs: t.instanceOf(Map).optional(),
+            messageSearch: t.instanceOf(MessageSearchState).optional(),
+            messageSelection: t.instanceOf(MessageSelectionState).optional(),
+            onParentMessageClick: t.function([]).optional(),
+            previousMessage: t.instanceOf(this.store["mail.message"].Class).optional(),
+            showDates: t.boolean().optional(true),
+            squashed: t.boolean().optional(),
+            thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
+        });
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = proxy({
             isHovered: false,

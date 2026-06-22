@@ -4,36 +4,30 @@ import { ActivityMarkAsDone } from "@mail/core/web/activity_markasdone_popover";
 import { computeDelay } from "@mail/utils/common/dates";
 import { toggleFn } from "@mail/utils/common/signal";
 
-import { Component, signal } from "@odoo/owl";
+import { Component, props, signal, t } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
 
-/**
- * @typedef {Object} Props
- * @property {import("models").Activity} activity
- * @property {function} [onActivityChanged]
- * @property {function} [onClickDoneAndScheduleNext]
- * @property {function} onClickEditActivityButton
- * @extends {Component<Props, Env>}
- */
 export class ActivityListPopoverItem extends Component {
     static components = { ActivityMailTemplate, ActivityMarkAsDone, FileUploader };
-    static props = [
-        "activity",
-        "onActivityChanged?",
-        "onClickDoneAndScheduleNext?",
-        "onClickEditActivityButton?",
-    ];
     static template = "mail.ActivityListPopoverItem";
 
     setup() {
         super.setup();
+        this.store = useService("mail.store");
+        this.props = props({
+            activity: t.instanceOf(this.store["mail.activity"].Class),
+            onActivityChanged: t.function([]).optional(),
+            onClickDoneAndScheduleNext: t.function([]).optional(),
+            onClickEditActivityButton: t.function([]).optional(),
+        });
         this.hasMarkDoneView = signal(false);
         this.toggleFn = toggleFn;
         if (this.props.activity.activity_category === "upload_file") {
             this.attachmentUploader = useAttachmentUploader(
-                this.env.services["mail.store"]["mail.thread"].insert({
+                this.store["mail.thread"].insert({
                     model: this.props.activity.res_model,
                     id: this.props.activity.res_id,
                 })

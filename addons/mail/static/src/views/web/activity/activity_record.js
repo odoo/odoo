@@ -55,7 +55,11 @@ export class ActivityRecord extends Component {
 
     setup() {
         this.props = props({
-            archInfo: types.object(),
+            archInfo: types.object({
+                fieldNodes: types.record(),
+                templateDocs: types.record(),
+                title: types.string(),
+            }),
             openRecord: types.function([
                 types.instanceOf(Record),
                 types.object({ newWindow: types.boolean().optional() }),

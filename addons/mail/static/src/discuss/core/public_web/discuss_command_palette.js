@@ -1,4 +1,4 @@
-import { Component, props, proxy, types } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -21,8 +21,8 @@ class CreateChannelDialog extends Component {
     setup() {
         super.setup();
         this.props = props({
-            close: types.function([types.instanceOf(MouseEvent)]),
-            name: types.string().optional(),
+            close: t.function([t.instanceOf(MouseEvent)]),
+            name: t.string().optional(),
         });
         this.store = useService("mail.store");
         this.orm = useService("orm");
@@ -64,24 +64,24 @@ export class DiscussCommand extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.props = props({
-            action: types
+            action: t
                 .object({
-                    icon: types.string().optional(),
-                    searchValueSuffix: types.boolean().optional(),
+                    icon: t.string().optional(),
+                    searchValueSuffix: t.boolean().optional(),
                 })
                 .optional(),
-            channel: types.instanceOf(this.store["discuss.channel"].Class).optional(),
-            counter: types.number().optional(),
-            executeCommand: types.function(),
-            name: types.string(),
-            persona: types
+            channel: t.instanceOf(this.store["discuss.channel"].Class).optional(),
+            counter: t.number().optional(),
+            executeCommand: t.function([]),
+            name: t.string(),
+            persona: t
                 .or([
-                    types.instanceOf(this.store["res.partner"].Class),
-                    types.instanceOf(this.store["mail.guest"].Class),
+                    t.instanceOf(this.store["res.partner"].Class),
+                    t.instanceOf(this.store["mail.guest"].Class),
                 ])
                 .optional(),
-            searchValue: types.string(),
-            slots: types.object(),
+            searchValue: t.string(),
+            slots: t.object().optional(),
         });
     }
 

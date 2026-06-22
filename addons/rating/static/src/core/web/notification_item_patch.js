@@ -1,4 +1,16 @@
-import { notificationItemProps } from "@mail/core/public_web/notification_item";
-import { t } from "@odoo/owl";
+import { NotificationItem } from "@mail/core/public_web/notification_item";
 
-Object.assign(notificationItemProps, { rating: t.any().optional() });
+import { props, t } from "@odoo/owl";
+
+import { patch } from "@web/core/utils/patch";
+
+/** @type {NotificationItem} */
+const notificationItemPatch = {
+    setup() {
+        super.setup(...arguments);
+        this.ratingProps = props({
+            rating: t.instanceOf(this.store["rating.rating"].Class).optional(),
+        });
+    },
+};
+patch(NotificationItem.prototype, notificationItemPatch);

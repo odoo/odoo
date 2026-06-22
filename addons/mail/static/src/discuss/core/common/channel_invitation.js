@@ -41,7 +41,17 @@ export class ChannelInvitation extends Component {
             channel: t.instanceOf(this.store["discuss.channel"].Class).optional(),
             className: t.string().optional(),
             close: t.function([]).optional(),
-            state: t.object().optional(),
+            state: t
+                .object({
+                    searchStr: t.string().optional(),
+                    selectablePartners: t
+                        .array(t.instanceOf(this.store["res.partner"].Class))
+                        .optional(),
+                    selectedPartners: t
+                        .array(t.instanceOf(this.store["res.partner"].Class))
+                        .optional(),
+                })
+                .optional(),
         });
         this.rtc = useService("discuss.rtc");
         this.notification = useService("notification");

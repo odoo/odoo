@@ -15,7 +15,7 @@ export class ChannelActionDialog extends Component {
         this.props = props({
             contentClass: t.string().optional(),
             contentComponent: t.component(),
-            contentProps: t.object(),
+            contentProps: t.record(),
             title: t.string(),
         });
     }

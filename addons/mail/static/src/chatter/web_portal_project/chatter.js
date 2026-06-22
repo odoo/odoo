@@ -10,24 +10,18 @@ import { router } from "@web/core/browser/router";
 import { useService } from "@web/core/utils/hooks";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 
-export const chatterProps = {
-    composer: t.any().optional(true),
-    threadId: t.any().optional(false),
-    threadModel: t.any(),
-    twoColumns: t.any().optional(false),
-};
-
-/**
- * @typedef {Object} Props
- * @extends {Component<Props, Env>}
- */
 export class Chatter extends Component {
     static template = "mail.Chatter";
     static components = { Thread, Composer };
-    props = props(chatterProps);
 
     setup() {
         this.store = useService("mail.store");
+        this.props = props({
+            composer: t.boolean().optional(true),
+            threadId: t.or([t.number(), t.literal(false)]).optional(false),
+            threadModel: t.string(),
+            twoColumns: t.boolean().optional(false),
+        });
         this.state = proxy({
             jumpThreadPresent: 0,
             /** @type {import("models").Thread} */

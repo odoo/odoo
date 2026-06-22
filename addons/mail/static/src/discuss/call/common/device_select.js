@@ -1,4 +1,4 @@
-import { Component, onWillDestroy, onWillStart, props, proxy, signal, types } from "@odoo/owl";
+import { Component, onWillDestroy, onWillStart, props, proxy, signal, t } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -16,11 +16,16 @@ export class DeviceSelect extends Component {
     setup() {
         super.setup();
         this.props = props({
-            icon: types.string().optional(),
-            kind: types.selection(["audioinput", "videoinput", "audiooutput"]),
-            label: types.string().optional(),
-            menuClass: types.string().optional(),
-            permissionDialogConfiguration: types.object().optional(),
+            icon: t.string().optional(),
+            kind: t.selection(["audioinput", "videoinput", "audiooutput"]),
+            label: t.string().optional(),
+            menuClass: t.string().optional(),
+            permissionDialogConfiguration: t
+                .object({
+                    props: t.record().optional(),
+                    options: t.record().optional(),
+                })
+                .optional(),
         });
         this.store = useService("mail.store");
         this.notification = useService("notification");

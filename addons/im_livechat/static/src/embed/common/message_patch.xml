@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.Message" t-inherit-mode="extension">
         <xpath expr="//*[@t-custom-ref='messageContent']" position="replace">
-            <div t-if="this.props.isTypingMessage">
+            <div t-if="this.livechatProps.isTypingMessage">
                 <img height="30" t-att-src="this.url('/im_livechat/static/src/img/chatbot_is_typing.gif')"/>
             </div>
             <t t-else="">$0</t>

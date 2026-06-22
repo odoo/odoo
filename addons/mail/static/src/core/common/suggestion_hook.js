@@ -6,7 +6,8 @@ import {
     generateRoleMentionElement,
     generateSpecialMentionElement,
 } from "@mail/utils/common/format";
-import { proxy, status } from "@odoo/owl";
+import { proxy, status, t } from "@odoo/owl";
+import { emojiType } from "@web/core/emoji_picker/emoji_loader";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
 import { useSearch } from "@mail/utils/common/hooks";
@@ -23,24 +24,27 @@ export const SUGGESTION_DELIMITERS = Object.freeze({
     CHANNEL_COMMAND: "/",
 });
 
-/**
- * @typedef {Object} Option
- * @property {string} [buttonClass]
- * @property {string} [classList]
- * @property {number} [group]
- * @property {boolean} [isSpecial]
- * @property {string} [label]
- * @property {string} [optionTemplate]
- * @property {string} [title]
- * @property {boolean} [unselectable]
- * @property {import("models").ResRole} [role]
- * @property {import("models").ResPartner} [partner]
- * @property {import("models").Thread} [thread]
- * @property {import("models").CannedResponse} [cannedResponse]
- * @property {import("@web/core/emoji_picker/emoji_picker").Emoji} [emoji]
- * @property {string} [help]
- * @property {string} [source]
- */
+/** @param {import("models").Store} store */
+export const optionType = (store) =>
+    t.object({
+        buttonClass: t.string().optional(),
+        cannedResponse: t.instanceOf(store["mail.canned.response"].Class).optional(),
+        classList: t.string().optional(),
+        emoji: emojiType.optional(),
+        group: t.any().optional(),
+        help: t.string().optional(),
+        isSpecial: t.boolean().optional(),
+        label: t.string().optional(),
+        optionTemplate: t.string().optional(),
+        partner: t.instanceOf(store["res.partner"].Class).optional(),
+        role: t.instanceOf(store["res.role"].Class).optional(),
+        source: t.string().optional(),
+        thread: t.instanceOf(store["mail.thread"].Class).optional(),
+        title: t.string().optional(),
+        unselectable: t.boolean().optional(),
+    });
+
+/** @typedef {import("@odoo/owl").StripType<ReturnType<typeof optionType>>} Option */
 
 /**
  * @typedef {import("models").ResPartner
@@ -330,7 +334,8 @@ export function mapSuggestionsToOptions(type, suggestions, { thread } = {}) {
                         label:
                             thread?.getPersonaName(suggestion) ||
                             suggestion.displayName ||
-                            suggestion.email,
+                            suggestion.email ||
+                            "",
                         partner: suggestion,
                         thread,
                         classList,

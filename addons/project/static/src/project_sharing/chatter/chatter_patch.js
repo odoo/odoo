@@ -1,6 +1,7 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { t } from "@odoo/owl";
-import { Chatter, chatterProps } from "@mail/chatter/web_portal_project/chatter";
+import { Chatter } from "@mail/chatter/web_portal_project/chatter";
+
+import { props, t } from "@odoo/owl";
 
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
@@ -8,14 +9,19 @@ import { useService } from "@web/core/utils/hooks";
 patch(Chatter.prototype, {
     setup() {
         super.setup(...arguments);
+        this.projectSharingProps = props({
+            displayFollowButton: t.boolean(),
+            isFollower: t.boolean(),
+            projectSharingId: t.number().optional(),
+        });
         Object.assign(this.state, {
-            isFollower: this.props.isFollower,
+            isFollower: this.projectSharingProps.isFollower,
         });
         this.orm = useService("orm");
         useSubEnv({
-            // 'inFrontendPortalChatter' is specific to the frontend portal chatters 
+            // 'inFrontendPortalChatter' is specific to the frontend portal chatters
             // and should not be set to 'true' in the project sharing chatter environment.
-            projectSharingId: this.props.projectSharingId,
+            projectSharingId: this.projectSharingProps.projectSharingId,
         });
     },
 
@@ -34,10 +40,4 @@ patch(Chatter.prototype, {
         super.onPostCallback();
         this.state.isFollower = true;
     },
-});
-Object.assign(chatterProps, {
-    token: t.any(),
-    projectSharingId: t.any(),
-    isFollower: t.any(),
-    displayFollowButton: t.any(),
 });

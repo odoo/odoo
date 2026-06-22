@@ -1,14 +1,14 @@
 import { Message } from "@mail/core/common/message";
 
+import { props, t } from "@odoo/owl";
+
 import { patch } from "@web/core/utils/patch";
 import { url } from "@web/core/utils/urls";
-import { t } from "@odoo/owl";
-
-Message.props.isTypingMessage = t.any().optional();
 
 patch(Message.prototype, {
     setup() {
         super.setup();
+        this.livechatProps = props({ isTypingMessage: t.boolean().optional() });
         this.url = url;
     },
 

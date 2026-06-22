@@ -27,9 +27,10 @@ export class PortalChatterService {
         const props = {
             resId: parseInt(chatterEl.getAttribute("data-res_id")),
             resModel: chatterEl.getAttribute("data-res_model"),
-            composer:
+            composer: Boolean(
                 parseInt(chatterEl.getAttribute("data-allow_composer")) &&
-                (chatterEl.getAttribute("data-token") || !session.is_public),
+                    (chatterEl.getAttribute("data-token") || !session.is_public)
+            ),
             twoColumns: chatterEl.getAttribute("data-two_columns") === "true" ? true : false,
             displayRating: chatterEl.getAttribute("data-display_rating") === "True" ? true : false,
         };
