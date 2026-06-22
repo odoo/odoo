@@ -6,13 +6,14 @@ from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 import requests.exceptions
+from lxml import etree
 from psycopg2 import OperationalError
 from werkzeug.urls import url_quote_plus, url_encode
 
 from odoo import _, api, fields, models
 from odoo.addons.certificate.tools import CertificateAdapter
 from odoo.exceptions import UserError
-from odoo.tools import float_repr, float_round, frozendict, zeep
+from odoo.tools import float_repr, float_round, frozendict, zeep, BinaryBytes
 
 import odoo.release
 
@@ -139,6 +140,14 @@ class L10nEsEdiVerifactuDocument(models.Model):
     json_attachment_filename = fields.Char(
         string="JSON Filename",
         compute='_compute_json_attachment_filename',
+    )
+    xml_attachment_raw = fields.Binary(
+        string="XML",
+        compute='_compute_xml_attachment',
+    )
+    xml_attachment_filename = fields.Char(
+        string="XML Filename",
+        compute='_compute_xml_attachment',
     )
     errors = fields.Html(
         string="Errors",
@@ -1214,3 +1223,31 @@ class L10nEsEdiVerifactuDocument(models.Model):
                 except UserError as error:
                     _logger.error("Error while canceling journal entry %(name)s (id %(record_id)s) after Veri*Factu cancellation:\n%(error)s",
                                   record_id=invoice.id, name=invoice.name, error=error)
+
+    @api.depends('json_attachment_id', 'chain_index', 'document_type')
+    def _compute_xml_attachment(self):
+        for document in self:
+            document_type = 'anulacion' if document.document_type == 'cancellation' else 'alta'
+            document.xml_attachment_filename = f"verifactu_registro_{document.chain_index}_{document_type}.xml"
+            if not document.json_attachment_id:
+                document.xml_attachment_raw = False
+                continue
+            try:
+                document_dict = document._get_document_dict()
+                batch_dict = document.with_company(document.company_id)._get_batch_dict([document_dict])
+                create_message, _ = _get_zeep_operation(document.company_id, 'registration_xml')
+                xml_node = create_message(batch_dict['Cabecera'], batch_dict['RegistroFactura'])
+                document.xml_attachment_raw = BinaryBytes(
+                    etree.tostring(xml_node, encoding='utf-8', xml_declaration=True, pretty_print=True)
+                )
+            except (zeep.exceptions.Error, requests.exceptions.RequestException) as error:
+                _logger.error("Could not generate Veri*Factu XML for document %s: %s", document.id, error)
+                document.xml_attachment_raw = False
+
+    def action_download_xml(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/web/content/{self._name}/{self.id}/xml_attachment_raw/{self.xml_attachment_filename}?download=true',
+            'target': 'self',
+        }
