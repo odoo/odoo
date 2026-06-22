@@ -17,6 +17,7 @@ patch(TicketScreen.prototype, {
             this.pos.updateRewards();
         }
     },
+    // TODO: remove in master (20.0)
     _onUpdateSelectedOrderline() {
         const order = this.getSelectedOrder();
         if (!order) {
@@ -53,5 +54,18 @@ patch(TicketScreen.prototype, {
                 ["gift_card", "ewallet"].includes(program.program_type) &&
                 program.trigger_product_ids.map((p) => p.id).includes(orderline.product_id.id)
         );
+    },
+    onClickOrderline(orderline) {
+        if (
+            this.getSelectedOrder()?.finalized &&
+            this.getSelectedOrderlineId() == orderline.id &&
+            this._isEWalletGiftCard(orderline)
+        ) {
+            {
+                this._showNotAllowedRefundNotification();
+                return;
+            }
+        }
+        return super.onClickOrderline(...arguments);
     },
 });
