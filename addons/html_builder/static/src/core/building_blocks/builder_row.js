@@ -111,10 +111,11 @@ export class BuilderRow extends Component {
         this.tooltip = useService("tooltip");
 
         useLayoutEffect(() => refreshSublevelLines(this.rootRef.el));
+        this.level = this.props.level ?? this.env.builderLevel ?? 0;
     }
 
     getLevelClass() {
-        return this.props.level ? `hb-row-sublevel hb-row-sublevel-${this.props.level}` : "";
+        return this.level ? `hb-row-sublevel hb-row-sublevel-${this.level}` : "";
     }
 
     onRowContentClick() {

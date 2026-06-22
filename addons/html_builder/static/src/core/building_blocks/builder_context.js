@@ -1,4 +1,5 @@
 import { Component, xml } from "@odoo/owl";
+import { useSubEnv } from "@web/owl2/utils";
 import { basicContainerBuilderComponentProps, useBuilderComponent } from "../utils";
 import { BuilderComponent } from "./builder_component";
 
@@ -11,6 +12,7 @@ export class BuilderContext extends Component {
     static props = {
         ...basicContainerBuilderComponentProps,
         slots: { type: Object },
+        level: { type: Number, optional: true },
     };
     static components = {
         BuilderComponent,
@@ -18,5 +20,8 @@ export class BuilderContext extends Component {
 
     setup() {
         useBuilderComponent();
+        useSubEnv({
+            builderLevel: this.props.level || 0,
+        });
     }
 }
