@@ -152,26 +152,18 @@
                                     <field name="work_email" widget="email" placeholder="e.g. johndoe@example.com" string="Work Email"/>
                                 </div>
                                 <label for="work_phone" class="d-md-none"/>
-                                <div class="d-flex align-items-start w-md-50 gap-2">
-                                    <div class="d-none d-md-flex flex-shrink-0 align-items-center me-2">
-                                        <i class="fa fa-phone" title="Work Phone"/>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <field name="work_phone_sanitized" invisible="1"/>
-                                        <field name="work_phone_formatted" invisible="1"/>
-                                        <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"/>
-                                    </div>
+                                <div class="d-flex align-items-baseline w-md-50 gap-2">
+                                    <i class="d-none d-md-inline-flex fa fa-phone" title="Work Phone"/>
+                                    <field name="work_phone_sanitized" invisible="1"/>
+                                    <field name="work_phone_formatted" invisible="1"/>
+                                    <field name="work_phone" widget="phone" placeholder="Work Phone" string="Work Phone"/>
                                 </div>
                                 <label for="mobile_phone" class="d-md-none"/>
-                                <div class="d-flex align-items-start w-md-50 gap-2">
-                                    <div class="d-none d-md-flex flex-shrink-0 align-items-center me-2">
-                                        <i class="fa fa-mobile" title="Work Mobile"/>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <field name="mobile_phone_sanitized" invisible="1"/>
-                                        <field name="mobile_phone_formatted" invisible="1"/>
-                                        <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"/>
-                                    </div>
+                                <div class="d-flex align-items-baseline w-md-50 gap-2">
+                                    <i class="d-none d-md-inline-flex fa fa-mobile" title="Work Mobile"/>
+                                    <field name="mobile_phone_sanitized" invisible="1"/>
+                                    <field name="mobile_phone_formatted" invisible="1"/>
+                                    <field name="mobile_phone" widget="phone" placeholder="Work Mobile" string="Work Mobile"/>
                                 </div>
                                 <label for="category_ids" class="d-md-none"/>
                                 <div class="d-flex align-items-baseline w-md-50 gap-2">
@@ -281,17 +273,17 @@
                                                 </span>
                                                 <button
                                                     title="Trust Bank Account"
-                                                    class="pt-0"
-                                                    icon="fa-toggle-off fa-lg"
-                                                    type="object"
-                                                    name="action_toggle_primary_bank_account_trust"
+                                                    class="pt-0" 
+                                                    icon="fa-toggle-off fa-lg"  
+                                                    type="object" 
+                                                    name="action_toggle_primary_bank_account_trust" 
                                                     invisible="is_trusted_bank_account"/>
-                                                <button
+                                                <button 
                                                     title="Untrust Bank Account"
-                                                    class="button-on pt-0"
-                                                    icon="fa-toggle-on fa-lg"
-                                                    type="object"
-                                                    name="action_toggle_primary_bank_account_trust"
+                                                    class="button-on pt-0" 
+                                                    icon="fa-toggle-on fa-lg"   
+                                                    type="object" 
+                                                    name="action_toggle_primary_bank_account_trust" 
                                                     invisible="not is_trusted_bank_account"/>
                                             </div>
                                         </div>
@@ -346,7 +338,7 @@
                                             <field name="private_street" placeholder="Street..." class="o_address_street"/>
                                             <field name="private_street2" placeholder="Street 2..." class="o_address_street"/>
                                             <field name="private_city" placeholder="City" class="o_address_city"/>
-                                            <field name="private_state_id" class="o_address_state" placeholder="State"
+                                            <field name="private_state_id" class="o_address_state" placeholder="State" 
                                                 options='{"no_open": True, "no_create": True}' context="{'default_country_id': private_country_id}"
                                                 domain="[('id', 'in', allowed_country_state_ids)]"/>
                                             <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
@@ -658,7 +650,6 @@
                     <field name="company_id"/>
                     <field name="work_phone_sanitized"/>
                     <field name="work_phone_formatted"/>
-                    <field name="work_phone"/>
                     <templates>
                         <t t-name="card" class="flex-row">
                             <aside class="o_card_aside_full">
@@ -694,7 +685,7 @@
                                 </div>
                                 <div t-if="record.work_phone.raw_value" class="text-truncate">
                                     <i class="fa fa-fw me-2 fa-phone text-primary" title="Phone"/>
-                                    <t t-out="record.work_phone_formatted.value || record.work_phone.value"/>
+                                    <field name="work_phone"/>
                                 </div>
                                 <div t-if="record.first_contract_date.raw_value" groups="hr.group_hr_manager" t-att-class="{'text-danger': record.contract_date_end.raw_value &lt; luxon.DateTime.now().toISO()}">
                                     <i class="fa fa-fw me-2 fa-briefcase text-primary" title="Contract"/>
