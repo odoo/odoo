@@ -2,6 +2,12 @@
 <odoo>
     <template id="report_delivery_document" inherit_id="stock.report_delivery_document">
         <xpath expr="//t[@t-set='address']" position="after">
+            <t t-set="din5008_document_title">
+                <span t-if="o and o._name == 'stock.picking'">
+                    <t t-out="o.picking_type_id._get_code_report_name()"/>
+                    <span t-field="o.name"/>
+                </span>
+            </t>
             <t t-set="din5008_address_block">
                 <tr t-if="o and o._name=='stock.picking' and o.partner_id">
                     <td class="shipping_address">
