@@ -54,6 +54,15 @@ class Counter(Generator):
 
         self.null_ratio = 0
 
+        # When we need to generate a globally unique sequence in multi-worker mode,
+        # we split the sequence into distinct strides to avoid a de-facto serialization,
+        # that would happen from the `unique` value retry mechanism.
+        if self.unique and self.job and self.job.parent_id and self.job.session_id.is_parallel:
+            sibling_ids = self.job.parent_id.child_ids.ids
+            sibling_index = sibling_ids.index(self.job.id)
+            start += step * sibling_index
+            step *= len(sibling_ids)
+
         self.counter = (
             cycle(range(start, end, step))
             if end is not None

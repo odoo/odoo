@@ -1,3 +1,5 @@
+from unittest.mock import MagicMock
+
 from odoo.tests import TransactionCase
 
 from odoo.addons.populate.generators import Counter, Cycle, Eval
@@ -50,6 +52,30 @@ class TestCounterGenerator(TransactionCase):
     def test_counter_null_ratio_is_zero(self):
         generator = Counter(field=self.stock_field, env=self.env)
         self.assertEqual(generator.null_ratio, 0)
+
+    def test_unique_counter_subjobs_use_disjoint_strides(self):
+        job_a = MagicMock()
+        job_a.id = 1
+        job_b = MagicMock()
+        job_b.id = 2
+
+        parent = MagicMock()
+        parent.child_ids.ids = [job_a.id, job_b.id]
+        session = MagicMock()
+        session.is_parallel = True
+
+        job_a.env = self.env
+        job_a.session_id = session
+        job_a.parent_id = parent
+        job_b.env = self.env
+        job_b.session_id = session
+        job_b.parent_id = parent
+
+        generator_a = Counter(field=self.stock_field, env=None, job=job_a, start=10.0, step=5.0, unique=True)
+        generator_b = Counter(field=self.stock_field, env=None, job=job_b, start=10.0, step=5.0, unique=True)
+
+        self.assertEqual([generator_a.next({}) for _ in range(4)], [10, 20, 30, 40])
+        self.assertEqual([generator_b.next({}) for _ in range(4)], [15, 25, 35, 45])
 
 
 class TestCycleGenerator(TransactionCase):
