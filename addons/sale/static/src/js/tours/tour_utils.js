@@ -1,13 +1,29 @@
 export function createNewSalesOrder() {
     return [
         {
-            trigger: '.o_sale_order',
-        }, {
+            trigger: ".o_list_view",
+        },
+        {
             content: "Create new order",
             trigger: '.o_list_button_add',
-            run: 'click',
+            run: async function ({ anchor, queryFirst }) {
+                // sale_management adds dropdown to the button if there are accessible templates
+                // we need this util to work out of the box without needing to care about templates
+                if (anchor.classList.contains("dropdown")) {
+                    anchor.click();
+                    await new Promise((resolve) =>
+                        requestAnimationFrame(() => setTimeout(resolve))
+                    );
+                    const newQuotationButton = queryFirst(
+                        "div.o_popover:has(.o_sale_management_template) > button.o-dropdown-item:not(.o_sale_management_template)"
+                    );
+                    newQuotationButton?.click();
+                } else {
+                    anchor.click();
+                }
+            },
         },
-    ]
+    ];
 }
 
 export function selectCustomer(customerName) {
