@@ -3545,14 +3545,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         # unreconcile
         debit_aml = invoice.line_ids.filtered('debit')
         debit_aml.remove_move_reconcile()
-        # check caba move reverse is same as caba move with only debit/credit inverted
-        reversed_caba_move = self.env['account.move'].search([('reversed_entry_id', '=', caba_move.id)])
-        for value in expected_values:
-            value.update({
-                'debit': value['credit'],
-                'credit': value['debit'],
-            })
-        self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
+        # unlocked caba moves should get deleted upon unreconciliation
+        self.assertFalse(caba_move.exists())
 
     def test_out_invoice_with_down_payment_caba(self):
         tax_waiting_account = self.env['account.account'].create({
@@ -3729,9 +3723,40 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         # But ideally, they shouldn't exist since no cash was involved.
         tax_lines = (invoice + credit_note).line_ids.filtered(lambda l: l.account_id == tax_waiting_account)
         invoice_tax_matching, refund_tax_matching = tax_lines.mapped('matching_number')
-        self.assertNotEqual(invoice_tax_matching, refund_tax_matching)
-        self.assertTrue(all([invoice_tax_matching, refund_tax_matching, invoice_receivable_matching, refund_receivable_matching]))
+        self.assertEqual(invoice_tax_matching, refund_tax_matching)
 
+    def test_non_payment_caba_refund(self):
+        """ Reversing a move with a CABA tax that has not been paid should not
+        create a CABA move.
+        """
+        self.env.company.tax_exigibility = True
+        tax_waiting_account = self.env['account.account'].create({
+            'name': 'TAX_WAIT',
+            'code': 'TWAIT',
+            'account_type': 'liability_current',
+        })
+        caba_tax = self.env['account.tax'].create({
+            'name': 'cash basis 10%',
+            'type_tax_use': 'sale',
+            'amount': 10,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': tax_waiting_account.id,
+        })
+        invoice = self._create_invoice(
+            move_type='out_invoice',
+            partner_id=self.partner_a.id,
+            invoice_line_ids=[
+                self._prepare_invoice_line(price_unit=1000.0, tax_ids=caba_tax.ids),
+            ],
+            post=True,
+        )
+        credit_note = invoice._reverse_moves()
+        credit_note.action_post()
+        cash_basis_moves = self.env['account.move'].search([
+            ('company_id', '=', invoice.company_id.id),
+            ('journal_id', '=', invoice.company_id.tax_cash_basis_journal_id.id),
+        ])
+        self.assertFalse(cash_basis_moves)
 
     def test_tax_grid_remove_tax(self):
         # Add a tag to tax_sale_a

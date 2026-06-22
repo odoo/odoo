@@ -383,6 +383,7 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
                 caba_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', bill.id)])
                 self.assertEqual(caba_move.date, fields.Date.from_string(caba_date))
 
+    @freezegun.freeze_time('2026-02-14')
     def test_invoice_credit_note_caba_move_date_computation(self):
         self.env.company.tax_exigibility = True
 
@@ -394,31 +395,24 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
         })
         tax = self.percent_tax(10.0, tax_exigibility='on_payment', cash_basis_transition_account_id=tax_waiting_account.id)
 
-        for invoice_date, refund_date, lock_date, caba_date in [
-            ('2026-01-31', '2026-02-14', None, '2026-02-14'),
-            ('2026-01-31', '2026-02-14', '2026-01-31', '2026-02-14'),
-            ('2026-01-31', '2026-02-14', '2026-02-28', '2026-03-01'),
+        for invoice_date, lock_date, expected_caba_date in [
+            ('2026-01-31', None, '2026-02-14'),  # No lock
+            ('2026-01-31', '2026-01-31', '2026-02-14'),  # Payment after lock date
+            ('2026-01-31', '2026-02-28', '2026-03-01'),  # Payment before lock date
         ]:
-            with self.subTest(invoice_date=invoice_date, refund_date=refund_date, lock_date=lock_date, caba_date=caba_date):
+            with self.subTest(invoice_date=invoice_date, lock_date=lock_date, expected_caba_date=expected_caba_date):
                 self._set_lock_date(None)
                 invoice = self._create_invoice_with_date(
                     'out_invoice', invoice_date,
                     currency_id=self.other_currency.id,
                     invoice_line_ids=[{'tax_ids': [Command.set(tax.ids)]}],
                 )
-                refund = self._create_invoice_with_date(
-                    'out_refund', refund_date,
-                    currency_id=self.other_currency.id,
-                    invoice_line_ids=[{'tax_ids': [Command.set(tax.ids)]}],
-                )
-                (invoice + refund).action_post()
+                invoice.action_post()
 
                 self._set_lock_date(lock_date)
 
-                (invoice + refund).line_ids\
-                    .filtered(lambda x: x.account_id.account_type == 'asset_receivable')\
-                    .reconcile()
+                self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+                })._create_payments()
 
-                for move in (invoice, refund):
-                    caba_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', move.id)])
-                    self.assertEqual(caba_move.date, fields.Date.from_string(caba_date))
+                caba_move = self.env['account.move'].search([('tax_cash_basis_origin_move_id', '=', invoice.id)])
+                self.assertEqual(caba_move.date, fields.Date.from_string(expected_caba_date))
