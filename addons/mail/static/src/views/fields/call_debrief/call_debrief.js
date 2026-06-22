@@ -54,8 +54,8 @@ export class CallDebrief extends Component {
             isMuted: false,
             feedback: { icon: "", text: "", id: Date.now() },
         });
-
-        this.onMediaLoadedCallback = null;
+        // Defer seeking when switching media segments
+        this._pendingSeek = null;
 
         // Tracks active record ID to bypass this.props update lag during async paging
         this.activeResId = this.props.record.resId;
@@ -101,6 +101,20 @@ export class CallDebrief extends Component {
                 media.playbackRate = this.state.playbackRate;
                 media.volume = this.state.volume;
                 media.muted = this.state.isMuted;
+            }
+        });
+        useEffect(() => {
+            const media = this.mediaPlayer();
+            const pendingSeek = this._pendingSeek;
+            if (media && pendingSeek) {
+                // Apply deferred seek on the freshly mounted element.
+                // Note: setting currentTime before loadeddata is valid
+                media.currentTime = pendingSeek.time;
+                if (pendingSeek.autoplay) {
+                    media.play().catch(() => {});
+                }
+                this._pendingSeek = null;
+                this.isSwitchingSegment = false;
             }
         });
     }
@@ -274,20 +288,14 @@ export class CallDebrief extends Component {
     /**
      * Applies the target segment, timeline position, and play state to the <video>/<audio> element.
      */
-    _alignMediaElement(targetSegment, relativeTime, autoplay, originalOptions) {
+    _alignMediaElement(targetSegment, relativeTime, autoplay) {
         if (this.state.currentSegment !== targetSegment) {
+            // Switching to a different segment: OWL will unmount the old element and
+            // mount a new one. Store the seek so useEffect can apply it once the new
+            // element exists in the DOM (after the next render).
             this.isSwitchingSegment = true;
+            this._pendingSeek = { time: relativeTime, autoplay };
             this.state.currentSegment = targetSegment;
-            this.onMediaLoadedCallback = () => {
-                this.isSwitchingSegment = false;
-                const mediaPlayer = this.mediaPlayer();
-                if (mediaPlayer) {
-                    mediaPlayer.currentTime = relativeTime;
-                    if (autoplay) {
-                        mediaPlayer.play().catch(() => {});
-                    }
-                }
-            };
         } else {
             const mediaPlayer = this.mediaPlayer();
             if (mediaPlayer) {
@@ -297,7 +305,7 @@ export class CallDebrief extends Component {
                 }
             } else {
                 // We must defer seeking if the media element hasn't been rendered or loaded yet.
-                this.onMediaLoadedCallback = () => this.setPlaybackTime(originalOptions);
+                this._pendingSeek = { time: relativeTime, autoplay };
             }
         }
     }
@@ -344,7 +352,7 @@ export class CallDebrief extends Component {
         }
 
         const relativeTime = Math.max(0, this.state.currentTime - targetSegment.startSec);
-        this._alignMediaElement(targetSegment, relativeTime, autoplay, options);
+        this._alignMediaElement(targetSegment, relativeTime, autoplay);
     }
 
     /**
@@ -378,8 +386,9 @@ export class CallDebrief extends Component {
             return;
         }
 
-        const globalTime = this.state.currentSegment.startSec + mediaTime;
-        this.state.currentTime = globalTime;
+        // Updating absolute time out of:
+        // |---call start until media start---|----media own timestamp----|
+        this.state.currentTime = this.state.currentSegment.startSec + mediaTime;
     }
 
     /**
@@ -413,13 +422,6 @@ export class CallDebrief extends Component {
         } else {
             this._pause(false);
             this.isSwitchingSegment = false;
-        }
-    }
-
-    _onMediaLoaded() {
-        if (this.onMediaLoadedCallback) {
-            this.onMediaLoadedCallback();
-            this.onMediaLoadedCallback = null;
         }
     }
 
