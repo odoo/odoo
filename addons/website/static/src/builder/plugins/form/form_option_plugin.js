@@ -187,6 +187,7 @@ export class FormOptionPlugin extends Plugin {
             SetDependencyValueListAction,
             SetCustomErrorMessageAction,
             SetRequirementComparatorAction,
+            SetDateRequirementComparatorAction,
             SetMultipleFilesAction,
             ToggleAllowEmptyAction,
             SetEmptyPlaceholderAction,
@@ -1670,6 +1671,21 @@ export class SetRequirementComparatorAction extends BuilderAction {
         } else {
             delete fieldEl.dataset.customError;
             delete fieldEl.dataset.errorMessage;
+        }
+    }
+}
+
+export class SetDateRequirementComparatorAction extends SetRequirementComparatorAction {
+    static id = "setDateRequirementComparator";
+    apply(context) {
+        super.apply(context);
+        const fieldEl = context.editingElement;
+        if (RANGE_COMPARATORS.includes(fieldEl.dataset.requirementComparator)) {
+            if (fieldEl.dataset.requirementCondition === "today") {
+                delete fieldEl.dataset.requirementCondition;
+            }
+        } else {
+            delete fieldEl.dataset.requirementBetween;
         }
     }
 }

@@ -347,7 +347,7 @@
                 t-elif="this.domStateCurrentFieldInput.hasDateTimePicker"
                 preview="false"
                 dataAttributeAction="'requirementComparator'"
-                action="'setRequirementComparator'">
+                action="'setDateRequirementComparator'">
             <BuilderSelectItem id="'no_requirement_opt'" dataAttributeActionValue="''">None</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'after'">Is date after</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'before'">Is date before</BuilderSelectItem>
@@ -372,12 +372,14 @@
         <BuilderDateTimePicker id="'require_condition_additional_datetime_1'"
             placeholder.translate="Enter requirement conditions"
             dataAttributeAction="'requirementCondition'"
+            allowRelativeDate="!this.isRangeComparator"
             type="'datetime'"/>
     </BuilderRow>
     <BuilderRow label="this.dateRequirementConditionLabel" level="1" t-elif="this.domStateCurrentFieldInput.isFormDate and this.domState.elDataset.requirementComparator">
         <BuilderDateTimePicker id="'require_condition_additional_date'"
             placeholder.translate="Enter requirement conditions"
             dataAttributeAction="'requirementCondition'"
+            allowRelativeDate="!this.isRangeComparator"
             type="'date'"/>
     </BuilderRow>
     <BuilderRow label.translate="End date" level="1" t-if="this.domStateCurrentFieldInput.isFormDateTime and this.isRangeComparator">
