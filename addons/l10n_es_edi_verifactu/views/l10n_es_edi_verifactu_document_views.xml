@@ -14,6 +14,11 @@
                                 <field name="document_type"/>
                                 <field name="json_attachment_filename" invisible="1"/>  <!-- needed as `filename` attribute below -->
                                 <field name="json_attachment_raw" widget="binary" filename="json_attachment_filename"/>
+                                <button name="action_download_xml"
+                                        class="btn btn-primary"
+                                        string="Download XML"
+                                        type="object"
+                                        invisible="not json_attachment_id"/>
                             </group>
                             <group name="right_column">
                                 <field name="chain_index"/>
