@@ -1,0 +1,56 @@
+.o_field_widget[name="order_line"] {
+
+    table tbody {
+        counter-reset: sale_line_counter;
+    }
+
+    tr.o_data_row:not(.o_is_line_section, .o_is_line_subsection, .o_is_line_note, .text-muted, .d-none) {
+        td:has(.o_line_number) {
+            position: relative;
+            box-sizing: border-box;
+            vertical-align: top;
+            text-align: left;
+
+            &::before {
+                content: counter(sale_line_counter);
+                counter-increment: sale_line_counter;
+            }
+        }
+    }
+
+    &:has(.o_line_number):not(.d-none) {
+
+        tr.o_data_row:not(.d-none) {
+
+            &.o_is_line_section,
+            &.o_is_line_subsection,
+            &.o_is_line_note {
+                td.o_handle_cell + td {
+                    position: relative;
+                    padding-left: 41.8px !important;
+                }
+            }
+
+            &.o_is_line_section,
+            &.o_is_line_subsection:not(.text-muted),
+            &.o_is_line_note:not(.text-muted) {
+                td.o_handle_cell + td {
+                    &::before {
+                        content: counter(sale_line_counter);
+                        counter-increment: sale_line_counter;
+
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+
+                        box-sizing: border-box;
+                        width: 29px;
+                        padding: 8px 4.8px;
+
+                        font-style: normal !important;
+                    }
+                }
+            }
+        }
+    }
+}
