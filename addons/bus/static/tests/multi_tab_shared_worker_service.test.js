@@ -1,11 +1,14 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { multiTabSharedWorkerService } from "@bus/multi_tab_shared_worker_service";
+import { MultiTabSharedWorkerPlugin } from "@bus/multi_tab_shared_worker_plugin";
 import { makeMockEnv, patchWithCleanup, restoreRegistry } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
+import { plugin } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 
 registry.category("services").remove("multi_tab");
-registry.category("services").add("multi_tab", multiTabSharedWorkerService);
+registry.category("services").add("multi_tab", {
+    start() { return plugin(MultiTabSharedWorkerPlugin); }
+});
 describe.current.tags("desktop");
 
 test("main tab service(election worker) elects new main on pagehide", async () => {

@@ -1,10 +1,24 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { multiTabFallbackService } from "@bus/multi_tab_fallback_service";
-import { multiTabSharedWorkerService } from "@bus/multi_tab_shared_worker_service";
+import { MultiTabFallbackPlugin } from "./multi_tab_fallback_plugin";
+import { MultiTabSharedWorkerPlugin } from "./multi_tab_shared_worker_plugin";
+import { plugin } from "@odoo/owl";
+import { services } from "@web/core/services";
 
-export const multiTabService = browser.SharedWorker
-    ? multiTabSharedWorkerService
-    : multiTabFallbackService;
+const Base = browser.SharedWorker ? MultiTabSharedWorkerPlugin : MultiTabFallbackPlugin;
 
-registry.category("services").add("multi_tab", multiTabService);
+export class MultiTabPlugin extends Base {}
+
+services.add(MultiTabPlugin);
+
+/**
+ * -----------------------------------------------------------------------------
+ * @todo owl3 migration
+ * temporary - to remove when all use of the multi_tab service are removed
+ * -----------------------------------------------------------------------------
+ */
+registry.category("services").add("multi_tab", {
+    start() {
+        return plugin(MultiTabPlugin);
+    },
+});
