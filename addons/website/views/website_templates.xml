@@ -2262,6 +2262,7 @@
     </xpath>
     <xpath expr="//*[contains(@t-attf-class, 'js_change_lang')]/span" position="before">
         <t t-if="flags" t-call="website.lang_flag">
+            <t t-if="no_text and not codes" t-set="flag_lang_alt" t-value="lg.name.split('/').pop()"/>
             <t t-set="flag_image_url" t-value="lg.flag_image_url"/>
         </t>
     </xpath>
