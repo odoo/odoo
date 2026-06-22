@@ -245,6 +245,11 @@ class ThreadedServer(CommonServer):
         # Variable keeping track of the number of calls to the signal handler defined
         # below. This variable is monitored by ``quit_on_signals()``.
         self.quit_signals_received = 0
+        # True only while run()'s signal wait-loop is active. A SIGHUP that
+        # arrives before the loop (start/preload/cron_spawn) or during teardown
+        # must not raise KeyboardInterrupt: that would escape run() and kill the
+        # process (130/129) instead of restarting cleanly.
+        self.running = False
 
         self.stop_event = threading.Event()
         self.limits_reached_threads = set()
@@ -265,10 +270,22 @@ class ThreadedServer(CommonServer):
             sys.stderr.flush()
             os._exit(0)
         elif sig == signal.SIGHUP:
+            if self.quit_signals_received:
+                # A shutdown or phoenix restart is already pending. One file
+                # change can emit several FS events, so a duplicate SIGHUP may
+                # land during the teardown/_reexec path, which runs outside the
+                # wait-loop's try/except; raising there would escape run(). The
+                # pending restart reloads fresh code anyway.
+                return
             # restart on kill -HUP
             global server_phoenix  # noqa: PLW0603
             server_phoenix = True
             self.quit_signals_received += 1
+            if not self.running:
+                # SIGHUP during the startup section, before the wait-loop: don't
+                # raise (it would escape run()). quit_signals_received is now set,
+                # so the loop exits at once when reached and the restart proceeds.
+                return
             # interrupt run() to start shutdown
             raise KeyboardInterrupt()
 
@@ -573,6 +590,10 @@ class ThreadedServer(CommonServer):
         # Wait for a first signal to be handled. (time.sleep will be interrupted
         # by the signal handler)
         try:
+            # Arm the SIGHUP-raises-KeyboardInterrupt path only now, from inside
+            # the try that catches it; setting it before the try would leave a
+            # one-statement window where the raise escapes run().
+            self.running = True
             while self.quit_signals_received == 0:
                 self.process_limit()
                 if self.limit_reached_time:
@@ -600,6 +621,8 @@ class ThreadedServer(CommonServer):
                     time.sleep(SLEEP_INTERVAL)
         except KeyboardInterrupt:
             pass
+        finally:
+            self.running = False
 
         self.stop()
         return rc
@@ -1485,6 +1508,13 @@ def _reexec(updated_modules=None):
                 rc = subprocess.Popen(args, env=env, pass_fds=pass_fds).wait()
             sys.exit(rc)
 
+    if os.name == 'posix':
+        # execve resets caught signal handlers to their default disposition
+        # (SIGHUP terminates -> exit 129) but preserves SIG_IGN, so a SIGHUP that
+        # lands before the re-exec'd process reinstalls its handler would kill it.
+        # The reload loads fresh code, so dropping SIGHUPs across the gap is safe.
+        # Guard on posix: signal.SIGHUP is a shim (-1) on nt and would raise here.
+        signal.signal(signal.SIGHUP, signal.SIG_IGN)
     # We should keep the LISTEN_* environment variabled in order to support socket activation on reexec
     os.execve(sys.executable, args, os.environ)
 
