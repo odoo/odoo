@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="project_project_view_form_simplified_inherit_timesheet" model="ir.ui.view">
-            <field name="name">project.project.view.form.simplified.inherit.timesheet</field>
-            <field name="model">project.project</field>
-            <field name="inherit_id" ref="project.project_project_view_form_simplified"/>
-            <field name="priority">24</field>
-            <field name="arch" type="xml">
-                <xpath expr="//div[hasclass('o_settings_container')]" position="inside">
-                    <setting string="Timesheets" help="Log time on tasks">
-                        <field name="allow_timesheets"/>
-                    </setting>
-                </xpath>
-            </field>
-        </record>
-
         <record id="project_invoice_form" model="ir.ui.view">
             <field name="name">Inherit project form : Invoicing Data</field>
             <field name="model">project.project</field>

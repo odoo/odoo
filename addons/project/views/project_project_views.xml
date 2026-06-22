@@ -390,17 +390,18 @@
                         </h1>
                     </div>
                     <field name="user_id" invisible="1"/>
-                    <div class="row o_settings_container"/>
-                    <div class="o_wrap_cell">
-                        <label for="alias_name" string="Create tasks by email:"/>
-                        <div name="alias_def" class="d-flex align-items-baseline gap-2">
-                            <field name="alias_id" invisible="1"/>
-                            <field name="alias_name" class="flex-basis-md-25" placeholder="e.g. office-party"/>
-                            <span>@</span>
-                            <field name="alias_domain_id" placeholder="e.g. mycompany.com"
-                                   options="{'no_create': True, 'no_open': True}"/>
-                        </div>
-                    </div>
+                    <group>
+                        <group>
+                            <field name="date" required="date_start" invisible="1"/>
+                            <field name="date_start" required="date" string="Planned Date" widget="daterange" options='{"end_date_field": "date", "always_range": True}'/>
+                            <label for="alias_name" string="Project's Email"/>
+                            <div name="alias_def" class="d-flex align-items-baseline gap-2">
+                                <field name="alias_name" placeholder="e.g. office-party"/>
+                                <span>@</span>
+                                <field name="alias_domain_id" placeholder="e.g. mycompany.com" options="{'no_create': True, 'no_open': True}"/>
+                            </div>
+                        </group>
+                    </group>
                 </form>
             </field>
         </record>
@@ -421,7 +422,7 @@
         </record>
 
         <record id="open_create_project" model="ir.actions.act_window">
-            <field name="name">Create a Project</field>
+            <field name="name">Create Project</field>
             <field name="res_model">project.project</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="project_project_view_form_simplified_footer"/>
@@ -589,7 +590,7 @@
                 </xpath>
             </field>
         </record>
-    
+
         <record id="project_kanban_view_group_stage" model="ir.ui.view">
             <field name="name">project.project.kanban.group.stage</field>
             <field name="model">project.project</field>
