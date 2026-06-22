@@ -1,7 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import BinaryBytes
 from odoo.addons.l10n_in_ewaybill.tools.ewaybill_api import EWayBillApi, EWayBillError
 
 
@@ -56,7 +59,7 @@ class L10nInEwaybill(models.Model):
         irn_ewaybill = self.filtered('is_process_through_irn')
         for ewaybill in irn_ewaybill:
             ewaybill_json = ewaybill._ewaybill_generate_irn_json()
-            ewaybill.content = ewaybill_json
+            ewaybill.content = BinaryBytes(json.dumps(ewaybill_json).encode())
         super(L10nInEwaybill, self - irn_ewaybill)._compute_content()
 
     def action_generate_ewaybill(self):
