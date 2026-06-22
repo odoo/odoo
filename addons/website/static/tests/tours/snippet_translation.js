@@ -10,6 +10,7 @@ import {
     testSwitchWebsite,
 } from "@website/js/tours/tour_utils";
 import { stepUtils } from "@web_tour/tour_utils";
+import { registry } from "@web/core/registry";
 
 registerWebsitePreviewTour("snippet_translation", {}, () => [
     stepUtils.goToUrl(getClientActionUrl()),
@@ -35,12 +36,35 @@ registerWebsitePreviewTour("snippet_translation", {}, () => [
         trigger: '.btn[data-action="save"]:contains("Save in fu_GB")',
     },
 ]);
-registerWebsitePreviewTour(
-    "snippet_translation_changing_lang",
+
+const switchTo = (lang) => [
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
+        content: `Switch to ${lang}`,
+        trigger: `:iframe .js_change_lang[data-url_code='${lang}']`,
+        // After clicking a language link, the iframe navigates to a new document.
+        // We must wait for the old contentDocument to be replaced and the new
+        // one to be fully loaded before proceeding, otherwise the next steps
+        // may run against the old (unloading) or partially loaded document.
+        async run({ anchor, click }) {
+            const iframe = anchor.ownerDocument.defaultView.frameElement;
+            const oldDoc = iframe.contentDocument;
+            await click(anchor);
+            while (!iframe.contentDocument || iframe.contentDocument === oldDoc) {
+                await new Promise((r) => setTimeout(r, 50));
+            }
+            while (iframe.contentDocument.readyState !== "complete") {
+                await new Promise((r) => setTimeout(r, 50));
+            }
+        },
     },
-    () => [
+    {
+        content: `Wait until ${lang} is applied`,
+        trigger: `:iframe html[lang*="${lang}"]`,
+    },
+];
+
+registry.category("web_tour.tours").add("snippet_translation_changing_lang", {
+    steps: () => [
         stepUtils.goToUrl(getClientActionUrl()),
         stepUtils.waitIframeIsReady(),
         {
@@ -48,29 +72,13 @@ registerWebsitePreviewTour(
             trigger: ":iframe .js_language_selector button",
             run: "click",
         },
-        {
-            content: "Select the language to Parseltongue",
-            trigger: ":iframe .js_language_selector .js_change_lang[data-url_code=pa_GB]",
-            run: "click",
-        },
-        {
-            content: "Wait the language has changed.",
-            trigger: ":iframe header.o_top_fixed_element nav li:contains(parseltongue)",
-        },
+        ...switchTo("pa_GB"),
         {
             content: "Open dropdown language selector",
             trigger: ":iframe .js_language_selector button",
             run: "click",
         },
-        {
-            content: "Select the language to English",
-            trigger: ":iframe .js_language_selector .js_change_lang[data-url_code=en]",
-            run: "click",
-        },
-        {
-            content: "Wait the language has changed.",
-            trigger: ":iframe nav li:contains(english)",
-        },
+        ...switchTo("en"),
         {
             content: "Open Edit dropdown",
             trigger: ".o_edit_website_container button",
@@ -94,8 +102,9 @@ registerWebsitePreviewTour(
             trigger:
                 ':iframe .s_cover .btn-outline-secondary:contains("Contact us in Parseltongue")',
         },
-    ]
-);
+    ],
+});
+
 registerWebsitePreviewTour("snippet_translation_switching_website", {}, () => [
     stepUtils.goToUrl(getClientActionUrl()),
     ...clickOnEditAndWaitEditModeInTranslatedPage(),
