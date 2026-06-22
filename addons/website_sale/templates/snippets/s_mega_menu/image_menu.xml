@@ -17,13 +17,13 @@
                         t-as="category"
                     >
                         <div class="col-12 col-lg-4 py-2 text-center">
-                            <h4>
+                            <p class="h4">
                                 <a
                                     t-att-href="category.website_url"
                                     class="nav-link p-0 text-black"
                                     t-out="category.name"
                                 />
-                            </h4>
+                            </p>
                             <nav class="nav flex-column">
                                 <t t-foreach="category.child_id.filtered('has_published_products')"
                                    t-as="sub_category">
