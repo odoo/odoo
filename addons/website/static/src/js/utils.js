@@ -1,10 +1,7 @@
-import { appTranslateFn } from "@web/core/l10n/translation";
-import { App, Component } from "@odoo/owl";
-import { getTemplate } from "@web/core/templates";
-import { UrlAutoComplete } from "@website/components/autocomplete_with_pages/url_autocomplete";
 import * as urlUtils from "@html_editor/utils/url";
-import { patch } from "@web/core/utils/patch";
 import { rpc } from "@web/core/network/rpc";
+import { patch } from "@web/core/utils/patch";
+import { UrlAutoComplete } from "@website/components/autocomplete_with_pages/url_autocomplete";
 
 /**
  * Allows to load anchors from a page.
@@ -60,31 +57,26 @@ function loadAnchors(url, body) {
 /**
  * Allows the given input to propose existing website URLs.
  *
+ * @param {import("@odoo/owl").App} app
  * @param {HTMLInputElement} input
+ * @param {any} [options]
  */
-function autocompleteWithPages(input, options = {}, env = undefined) {
-    const owlApp = new App({
-        env: env || Component.env,
-        dev: env ? env.debug : Component.env.debug,
-        getTemplate,
-        translatableAttributes: ["data-tooltip"],
-        translateFn: appTranslateFn,
-    });
-
+function autocompleteWithPages(app, input, options = {}) {
     const container = document.createElement("div");
     container.classList.add("ui-widget", "ui-autocomplete", "ui-widget-content", "border-0");
     document.body.appendChild(container);
-    owlApp
-        .createRoot(UrlAutoComplete, {
-            props: {
-                options,
-                loadAnchors,
-                targetDropdown: input,
-            },
-        })
-        .mount(container);
+
+    const root = app.createRoot(UrlAutoComplete, {
+        props: {
+            options,
+            loadAnchors,
+            targetDropdown: input,
+        },
+    });
+    root.mount(container);
+
     return () => {
-        owlApp.destroy();
+        root.destroy();
         container.remove();
     };
 }

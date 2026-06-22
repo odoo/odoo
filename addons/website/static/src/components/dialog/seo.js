@@ -11,7 +11,7 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import { MediaDialog } from "@html_editor/main/media/media_dialog/media_dialog";
 import { getMimetype } from "@html_editor/utils/image";
 import { WebsiteDialog } from "./dialog";
-import { Component, onMounted, onWillStart, proxy } from "@odoo/owl";
+import { Component, onMounted, onWillStart, proxy, useApp } from "@odoo/owl";
 import wUtils from "@website/js/utils";
 
 // This replaces \b, because accents(e.g. à, é) are not seen as word boundaries.
@@ -687,6 +687,7 @@ export class BrokenLink extends Component {
             checkingLink: false,
         });
 
+        const app = useApp();
         useLayoutEffect(
             (input) => {
                 if (!input) {
@@ -700,9 +701,9 @@ export class BrokenLink extends Component {
                     },
                 };
                 const unmountAutocompleteWithPages = wUtils.autocompleteWithPages(
+                    app,
                     input,
-                    options,
-                    this.env
+                    options
                 );
                 return () => unmountAutocompleteWithPages();
             },

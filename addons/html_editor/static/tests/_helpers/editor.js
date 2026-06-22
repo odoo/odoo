@@ -1,7 +1,7 @@
 import { Wysiwyg } from "@html_editor/wysiwyg";
 import { destroy, expect, getFixture } from "@odoo/hoot";
 import { queryOne } from "@odoo/hoot-dom";
-import { Component, markup, onWillDestroy, xml } from "@odoo/owl";
+import { Component, markup, onWillDestroy, useApp, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { getContent, getSelection, setContent, setSelection } from "./selection";
 import { animationFrame, tick } from "@odoo/hoot-mock";
@@ -32,6 +32,8 @@ class TestEditor extends Component {
         <Wysiwyg t-props="this.wysiwygProps" />`;
     static components = { Wysiwyg };
     static props = ["wysiwygProps", "content", "styleContent?", "onMounted?", "onWillDestroy?"];
+
+    app = useApp();
 
     setup() {
         const props = this.props;
@@ -70,7 +72,7 @@ class TestEditor extends Component {
         }
         if (this.wysiwygProps.config.Plugins?.includes(EmbeddedComponentPlugin)) {
             this.wysiwygProps.config.embeddedComponentInfo = {
-                app: this.__owl__.app,
+                app: this.app,
                 env: this.env,
             };
         }
