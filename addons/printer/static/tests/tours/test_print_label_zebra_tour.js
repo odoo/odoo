@@ -45,7 +45,6 @@ registry.category("web_tour.tours").add("print_label_zebra_tour", {
             {
                 content: "Check printer has been selected before clicking 'Print'",
                 trigger: ".o_tag_badge_text:contains('Test Zebra Printer')",
-                run: () => {},
             },
             {
                 content: "Click 'Print'",
