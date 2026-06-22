@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { press, queryAllTexts, queryFirst } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 
 import {
     Command,
@@ -1434,12 +1434,12 @@ test("many2many concurrency edition", async () => {
         search: '<search><field name="name" string="Name"/></search>',
     };
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     let firstOnChange = false;
     onRpc("onchange", async () => {
         if (!firstOnChange) {
             firstOnChange = true;
-            await def;
+            await def.promise;
         }
     });
 

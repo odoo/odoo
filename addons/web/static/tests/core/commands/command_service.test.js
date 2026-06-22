@@ -1,12 +1,6 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { keyDown, press, queryAllTexts } from "@odoo/hoot-dom";
-import {
-    Deferred,
-    advanceFrame,
-    advanceTime,
-    animationFrame,
-    mockUserAgent,
-} from "@odoo/hoot-mock";
+import { advanceFrame, advanceTime, animationFrame, mockUserAgent } from "@odoo/hoot-mock";
 import {
     contains,
     getService,
@@ -1064,15 +1058,15 @@ test("uses openPalette to modify the config used by the command palette", async 
 });
 
 test("ensure that calling openPalette multiple times successfully loads the last config for the command palette", async () => {
-    const providePromise1 = new Deferred();
-    const providePromise2 = new Deferred();
+    const providePromise1 = Promise.withResolvers();
+    const providePromise2 = Promise.withResolvers();
     const action = () => {};
 
     await mountWithCleanup(TestComponent);
 
     const provide = [
         async () => {
-            await providePromise1;
+            await providePromise1.promise;
             return [
                 {
                     name: "Command1",
@@ -1081,7 +1075,7 @@ test("ensure that calling openPalette multiple times successfully loads the last
             ];
         },
         async () => {
-            await providePromise2;
+            await providePromise2.promise;
             return [
                 {
                     name: "Command2",

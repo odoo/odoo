@@ -7,7 +7,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { setInputFiles } from "@odoo/hoot-dom";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import { FileInput } from "@web/core/file_input/file_input";
 import { session } from "@web/session";
 
@@ -121,9 +121,7 @@ test("uploading the same file twice triggers the onChange twice", async () => {
                 expect.step(files[0].name);
             },
         },
-        mockPost: (_, params) => {
-            return JSON.stringify([{ name: params.ufile[0].name }]);
-        },
+        mockPost: (_, params) => JSON.stringify([{ name: params.ufile[0].name }]),
     });
 
     const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
@@ -147,9 +145,7 @@ test("uploading a file that is too heavy will send a notification", async () => 
                 expect.step(files[0].name);
             },
         },
-        mockPost: (_, params) => {
-            return JSON.stringify([{ name: params.ufile[0].name }]);
-        },
+        mockPost: (_, params) => JSON.stringify([{ name: params.ufile[0].name }]),
         mockAdd: (message) => {
             expect.step("notification");
             // Message is a bit weird because values (2 and 4 bytes) are simplified to 2 decimals in regards to megabytes
@@ -167,11 +163,11 @@ test("uploading a file that is too heavy will send a notification", async () => 
 });
 
 test("Upload button is disabled if attachment upload is not finished", async () => {
-    const uploadedPromise = new Deferred();
+    const uploadedPromise = Promise.withResolvers();
     await createFileInput({
         mockPost: async (route) => {
             if (route === "/web/binary/upload_attachment") {
-                await uploadedPromise;
+                await uploadedPromise.promise;
             }
             return "[]";
         },
@@ -202,9 +198,7 @@ test("support preprocessing of files via props", async () => {
                 return files;
             },
         },
-        mockPost: (route, params) => {
-            return JSON.stringify([{ name: params.ufile[0].name }]);
-        },
+        mockPost: (route, params) => JSON.stringify([{ name: params.ufile[0].name }]),
     });
 
     await contains(".o_file_input input", { visible: false }).click();

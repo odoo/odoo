@@ -1,5 +1,4 @@
 import {
-    Deferred,
     advanceFrame,
     advanceTime,
     after,
@@ -4730,10 +4729,10 @@ test("group_by_tooltip option when grouping on a many2one", async () => {
 
 test.tags("desktop");
 test("asynchronous tooltips when grouped", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("read", () => {
         expect.step("read: product");
-        return def;
+        return def?.promise;
     });
     await mountView({
         type: "kanban",
@@ -4858,10 +4857,10 @@ test.tags("desktop");
 test("resequence a record twice", async () => {
     Partner._records = [];
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("web_resequence", () => {
         expect.step("resequence");
-        return def;
+        return def?.promise;
     });
     await mountView({
         type: "kanban",
@@ -4952,11 +4951,11 @@ test("grouped kanban: clear groupby when reloading", async () => {
     // in this test, we simulate that clearing the domain is slow, so that
     // clearing the groupby does not corrupt the data handled while
     // reloading the kanban view.
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("web_read_group", async function ({ kwargs, parent }) {
         const result = parent();
         if (kwargs.domain.length === 0 && kwargs.groupby && kwargs.groupby[0] === "bar") {
-            await def; // delay 1st update
+            await def?.promise; // delay 1st update
         }
         return result;
     });
@@ -5418,11 +5417,11 @@ test("open file explorer if no cover image", async () => {
         relation: "ir.attachment",
     });
 
-    const uploadedPromise = new Deferred();
+    const uploadedPromise = Promise.withResolvers();
     await createFileInput({
         mockPost: async (route) => {
             if (route === "/web/binary/upload_attachment") {
-                await uploadedPromise;
+                await uploadedPromise?.promise;
             }
             return "[]";
         },
@@ -5994,10 +5993,10 @@ test("keep focus in cp when pressing arrowdown and no kanban card", async () => 
 
 test.tags("desktop");
 test("no leak of TransactionInProgress (grouped case)", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("web_resequence", () => {
         expect.step("resequence");
-        return def;
+        return def?.promise;
     });
 
     await mountView({
@@ -6065,10 +6064,10 @@ test("no leak of TransactionInProgress (grouped case)", async () => {
 
 test.tags("desktop");
 test("no leak of TransactionInProgress (not grouped case)", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("web_resequence", () => {
         expect.step("resequence");
-        return def;
+        return def?.promise;
     });
 
     await mountView({
@@ -6276,8 +6275,8 @@ test("no content helper, all groups folded with (unloaded) records", async () =>
 
 test.tags("desktop");
 test("Move multiple records in different columns simultaneously", async () => {
-    const def = new Deferred();
-    onRpc("read", () => def);
+    const def = Promise.withResolvers();
+    onRpc("read", () => def?.promise);
 
     await mountView({
         type: "kanban",
@@ -6405,10 +6404,10 @@ test("attribute default_order", async () => {
 test.tags("desktop");
 test("d&d records grouped by m2o with m2o displayed in records", async () => {
     const readIds = [[2], [1, 3, 2]];
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("read", ({ method, args }) => {
         expect(args[0]).toEqual(readIds[1]);
-        return def;
+        return def?.promise;
     });
     stepAllNetworkCalls();
 
@@ -6453,8 +6452,8 @@ test("rerenders only once after resequencing records", async () => {
     // record remains where it has been dropped, once again after saving/reloading the record as
     // we rebuild record.data, and finally after the call to resequence, to re-enable the resequence
     // feature on the record (canResequence props).
-    let saveDef = new Deferred();
-    let resequenceDef = new Deferred();
+    let saveDef = Promise.withResolvers();
+    let resequenceDef = Promise.withResolvers();
     const renderCounts = {};
     patchWithCleanup(KanbanRecord.prototype, {
         setup() {
@@ -6467,8 +6466,8 @@ test("rerenders only once after resequencing records", async () => {
         },
     });
 
-    onRpc("web_save", () => saveDef);
-    onRpc("web_resequence", () => resequenceDef);
+    onRpc("web_save", () => saveDef?.promise);
+    onRpc("web_resequence", () => resequenceDef?.promise);
     stepAllNetworkCalls();
 
     await mountView({
@@ -6505,8 +6504,8 @@ test("rerenders only once after resequencing records", async () => {
     expect(renderCounts).toEqual({ 1: 4, 2: 1, 3: 1, 4: 1 });
 
     // drag gnap to the second column
-    saveDef = new Deferred();
-    resequenceDef = new Deferred();
+    saveDef = Promise.withResolvers();
+    resequenceDef = Promise.withResolvers();
     await contains(".o_kanban_group:first-child .o_kanban_record").dragAndDrop(
         ".o_kanban_group:nth-child(2)"
     );
@@ -6758,7 +6757,7 @@ test("Kanban: no reset of the groupby when a non-empty column is deleted", async
 test.tags("desktop");
 test("searchbar filters are displayed directly", async () => {
     let def;
-    onRpc("web_search_read", () => def);
+    onRpc("web_search_read", () => def?.promise);
 
     await mountView({
         type: "kanban",
@@ -6780,7 +6779,7 @@ test("searchbar filters are displayed directly", async () => {
     expect(getFacetTexts()).toEqual([]);
 
     // toggle a filter, and slow down the web_search_read rpc
-    def = new Deferred();
+    def = Promise.withResolvers();
     await toggleSearchBarMenu();
     await toggleMenuItem("Some Filter");
     expect(getFacetTexts()).toEqual(["Some Filter"]);
@@ -7437,11 +7436,11 @@ test("drag and drop records and quickly open a record", async () => {
             <field name="foo"/>
         </form>`;
 
-    const defs = [new Deferred(), new Deferred()];
+    const defs = [Promise.withResolvers(), Promise.withResolvers()];
     let saveCount = 0;
     onRpc("web_save", () => {
         expect.step("web_save");
-        return defs[saveCount++];
+        return defs[saveCount++].promise;
     });
 
     await mountWithCleanup(WebClient);
@@ -7573,8 +7572,8 @@ test("hide pager in the kanban view with sample data", async () => {
 
 test.tags("desktop");
 test("kanban views make their control panel available directly", async () => {
-    const def = new Deferred();
-    onRpc("web_search_read", () => def);
+    const def = Promise.withResolvers();
+    onRpc("web_search_read", () => def?.promise);
     await mountView({
         arch: `
             <kanban>
@@ -7600,8 +7599,8 @@ test("kanban views make their control panel available directly", async () => {
 
 test.tags("desktop");
 test("interact with search view while kanban is loading", async () => {
-    const defs = [new Deferred()];
-    onRpc("web_search_read", () => defs.pop());
+    const defs = [Promise.withResolvers()];
+    onRpc("web_search_read", () => defs.pop()?.promise);
     await mountView({
         arch: `
             <kanban>
@@ -7631,7 +7630,7 @@ test("interact with search view while kanban is loading", async () => {
 });
 
 test("click on New while kanban is loading", async () => {
-    onRpc("web_search_read", () => new Deferred());
+    onRpc("web_search_read", () => new Promise(() => {}));
     await mountView({
         arch: `
             <kanban>
@@ -7738,7 +7737,7 @@ test(`kanban with custom cog action that has a confirmation target="new" action`
 
 test(`cache web_read_group (no change)`, async () => {
     let def;
-    onRpc("web_read_group", () => def);
+    onRpc("web_read_group", () => def?.promise);
 
     Partner._views = {
         "list,false": `<list><field name="foo"/></list>`,
@@ -7781,7 +7780,7 @@ test(`cache web_read_group (no change)`, async () => {
     expect(`.o_list_view`).toHaveCount(1);
 
     // execute again action 1, but web_read_group is delayed
-    def = new Deferred();
+    def = Promise.withResolvers();
     await getService("action").doAction(1);
     expect(`.o_kanban_view`).toHaveCount(1);
     expect(`.o_kanban_group`).toHaveCount(2);
@@ -7797,7 +7796,7 @@ test(`cache web_read_group (no change)`, async () => {
 
 test(`cache web_read_group (change)`, async () => {
     let def;
-    onRpc("web_read_group", () => def);
+    onRpc("web_read_group", () => def?.promise);
 
     Partner._views = {
         "list,false": `<list><field name="foo"/></list>`,
@@ -7848,7 +7847,7 @@ test(`cache web_read_group (change)`, async () => {
     expect(`.o_list_view`).toHaveCount(1);
 
     // execute again action 1, but web_read_group is delayed
-    def = new Deferred();
+    def = Promise.withResolvers();
     await getService("action").doAction(1);
     expect(`.o_kanban_view`).toHaveCount(1);
     expect(`.o_kanban_group`).toHaveCount(4);
@@ -7875,7 +7874,7 @@ test(`cache web_read_group (change)`, async () => {
 
 test(`cache web_read_group (no data, no change)`, async () => {
     let def;
-    onRpc("web_read_group", () => def);
+    onRpc("web_read_group", () => def?.promise);
 
     Partner._records = [];
     Partner._views = {
@@ -7918,7 +7917,7 @@ test(`cache web_read_group (no data, no change)`, async () => {
     expect(`.o_list_view`).toHaveCount(1);
 
     // execute again action 1, but web_read_group is delayed
-    def = new Deferred();
+    def = Promise.withResolvers();
     await getService("action").doAction(1);
     expect(`.o_kanban_view .o_column_quick_create`).toHaveCount(1);
     expect(`.o_kanban_view .o_kanban_group_nocontent`).toHaveCount(1);
@@ -7932,7 +7931,7 @@ test(`cache web_read_group (no data, no change)`, async () => {
 
 test(`cache web_read_group (no data, change)`, async () => {
     let def;
-    onRpc("web_read_group", () => def);
+    onRpc("web_read_group", () => def?.promise);
 
     Partner._records = [];
     Partner._views = {
@@ -7978,7 +7977,7 @@ test(`cache web_read_group (no data, change)`, async () => {
     expect(`.o_list_view`).toHaveCount(1);
 
     // execute again action 1, but web_read_group is delayed
-    def = new Deferred();
+    def = Promise.withResolvers();
     await getService("action").doAction(1);
     expect(`.o_kanban_view .o_column_quick_create`).toHaveCount(1);
     expect(`.o_kanban_view .o_kanban_group_nocontent`).toHaveCount(1);
@@ -8012,7 +8011,7 @@ test(`cache web_read_group (group_expand: groups, then no group)`, async () => {
                 length: 1,
             };
         } else {
-            await def;
+            await def?.promise;
             return { groups: [], length: 0 };
         }
     });
@@ -8061,7 +8060,7 @@ test(`cache web_read_group (group_expand: groups, then no group)`, async () => {
     withGroups = false;
 
     // execute again action 1, but web_read_group is delayed
-    def = new Deferred();
+    def = Promise.withResolvers();
     await getService("action").doAction(1);
     expect(`.o_kanban_view .o_view_sample_data`).toHaveCount(1);
     expect(`.o_kanban_view .o_kanban_group`).toHaveCount(1);
@@ -8094,7 +8093,7 @@ test(`cache web_read_group (group_expand: groups, then more groups)`, async () =
         },
     ];
     onRpc("web_read_group", async () => {
-        await def;
+        await def?.promise;
         return {
             groups,
             length: groups.length,
@@ -8150,7 +8149,7 @@ test(`cache web_read_group (group_expand: groups, then more groups)`, async () =
     });
 
     // execute again action 1, but web_read_group is delayed
-    def = new Deferred();
+    def = Promise.withResolvers();
     await getService("action").doAction(1);
     expect(`.o_kanban_view .o_view_sample_data`).toHaveCount(1);
     expect(`.o_kanban_view .o_kanban_group`).toHaveCount(1);
@@ -8166,7 +8165,7 @@ test(`cache web_read_group: less groups than in cache`, async () => {
     // this test simulates that we are on a grouped kanban and the rpc returns less groups than we
     // got from the cache. Those missing groups should be properly removed from the UI on update.
     let def;
-    onRpc("web_read_group", () => def);
+    onRpc("web_read_group", () => def?.promise);
 
     Partner._views = {
         "list,false": `<list><field name="foo"/></list>`,
@@ -8211,7 +8210,7 @@ test(`cache web_read_group: less groups than in cache`, async () => {
     MockServer.env.partner.write([1, 3], { product_id: 5 });
 
     // execute again action 1, but web_read_group is delayed
-    def = new Deferred();
+    def = Promise.withResolvers();
     await getService("action").doAction(1);
     expect(`.o_kanban_view .o_kanban_group`).toHaveCount(2);
     expect(queryAllTexts(`.o_kanban_group .o_kanban_header`)).toEqual(["hello\n(2)", "xmo\n(2)"]);
@@ -8310,7 +8309,7 @@ test("Cache: kanban view progressbar, filter, open a record, edit, come back", a
     Product._records[1].fold = false;
 
     let def;
-    onRpc("web_read_group", () => def);
+    onRpc("web_read_group", () => def?.promise);
 
     Partner._views = {
         "kanban,false": `
@@ -8359,7 +8358,7 @@ test("Cache: kanban view progressbar, filter, open a record, edit, come back", a
     expect(".o_form_view").toHaveCount(1);
     await contains(".o_field_widget[name=product_id] button[data-value='3']").click();
     // Slow down the rpc s.t. we first use data from the cache, and then we update
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o_back_button").click();
     expect(".o_kanban_group:eq(0) .o_kanban_record").toHaveCount(1);
 
@@ -8401,7 +8400,7 @@ test("scroll position is restored when coming back to kanban view", async () => 
     }
 
     let def;
-    onRpc("web_read_group", () => def);
+    onRpc("web_read_group", () => def?.promise);
     await resize({ width: 800, height: 300 });
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
@@ -8426,7 +8425,7 @@ test("scroll position is restored when coming back to kanban view", async () => 
 
     // the kanban is "lazy", so it displays the control panel directly, and the renderer later with
     // the data => simulate this and check that the scroll position is correctly restored
-    def = new Deferred();
+    def = Promise.withResolvers();
     await getService("action").switchView("kanban");
     expect(".o_kanban_view").toHaveCount(1);
     expect(".o_kanban_renderer").toHaveCount(0);
@@ -8460,7 +8459,7 @@ test("scroll position is restored when coming back to kanban view (mobile)", asy
     }
 
     let def;
-    onRpc("web_search_read", () => def);
+    onRpc("web_search_read", () => def?.promise);
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
         res_model: "partner",
@@ -8480,7 +8479,7 @@ test("scroll position is restored when coming back to kanban view (mobile)", asy
 
     // the kanban is "lazy", so it displays the control panel directly, and the renderer later with
     // the data => simulate this and check that the scroll position is correctly restored
-    def = new Deferred();
+    def = Promise.withResolvers();
     await getService("action").switchView("kanban");
     expect(".o_kanban_view").toHaveCount(1);
     expect(".o_kanban_renderer").toHaveCount(0);
@@ -8518,7 +8517,7 @@ test("scroll position is restored when coming back to kanban view (grouped, mobi
     }
 
     let def;
-    onRpc("web_read_group", () => def);
+    onRpc("web_read_group", () => def?.promise);
     await resize({ width: 375, height: 667 }); // iphone se
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
@@ -8543,7 +8542,7 @@ test("scroll position is restored when coming back to kanban view (grouped, mobi
 
     // the kanban is "lazy", so it displays the control panel directly, and the renderer later with
     // the data => simulate this and check that the scroll position is correctly restored
-    def = new Deferred();
+    def = Promise.withResolvers();
     await getService("action").switchView("kanban");
     expect(".o_kanban_view").toHaveCount(1);
     expect(".o_kanban_renderer").toHaveCount(0);

@@ -1,6 +1,6 @@
 import { describe, destroy, expect, getFixture, test } from "@odoo/hoot";
 import { click, tick } from "@odoo/hoot-dom";
-import { Deferred, advanceTime, animationFrame, microTick, runAllTimers } from "@odoo/hoot-mock";
+import { advanceTime, animationFrame, microTick, runAllTimers } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 
@@ -198,10 +198,10 @@ describe("debounce", () => {
     });
 
     test("debounce on an async function", async () => {
-        const imSearchDef = new Deferred();
+        const imSearchDef = Promise.withResolvers();
         const myFunc = () => {
             expect.step("myFunc");
-            return imSearchDef;
+            return imSearchDef.promise;
         };
         const myDebouncedFunc = debounce(myFunc, 3000);
         myDebouncedFunc().then(() => {
@@ -362,7 +362,7 @@ describe("throttleForAnimation", () => {
 
 describe("throttleForAnimationScrollEvent", () => {
     test("scroll loses target", async () => {
-        let throttled = new Deferred();
+        let throttled = Promise.withResolvers();
         const throttledFn = throttleForAnimation((val, targetEl) => {
             // In Chrome, the currentTarget of scroll events is lost after the
             // event was handled, it is therefore null here.
@@ -380,7 +380,7 @@ describe("throttleForAnimationScrollEvent", () => {
         el.style = "position: absolute; overflow: scroll; height: 100px; width: 100px;";
         const childEl = document.createElement("div");
         childEl.style = "height: 200px; width: 200px;";
-        let scrolled = new Deferred();
+        let scrolled = Promise.withResolvers();
         el.appendChild(childEl);
         el.addEventListener("scroll", (ev) => {
             expect.step("before scroll");
@@ -391,8 +391,8 @@ describe("throttleForAnimationScrollEvent", () => {
         getFixture().appendChild(el);
         el.scrollBy(1, 1);
         el.scrollBy(2, 2);
-        await scrolled;
-        await throttled;
+        await scrolled.promise;
+        await throttled.promise;
 
         expect.verifySteps([
             "before scroll",
@@ -400,16 +400,16 @@ describe("throttleForAnimationScrollEvent", () => {
             "after scroll",
         ]);
 
-        throttled = new Deferred();
-        scrolled = new Deferred();
+        throttled = Promise.withResolvers();
+        scrolled = Promise.withResolvers();
         el.scrollBy(3, 3);
-        await scrolled;
+        await scrolled.promise;
         expect.verifySteps([
             "before scroll",
             // Further call is delayed.
             "after scroll",
         ]);
-        await throttled;
+        await throttled.promise;
         expect.verifySteps(["throttled function called with null in event, but DIV in parameter"]);
         el.remove();
     });

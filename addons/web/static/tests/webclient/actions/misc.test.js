@@ -1,6 +1,6 @@
 import { expect, getFixture, test } from "@odoo/hoot";
 import { queryOne, scroll, waitFor } from "@odoo/hoot-dom";
-import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import { Component, onWillStart, xml } from "@odoo/owl";
 import {
     contains,
@@ -751,7 +751,7 @@ test("action is removed while waiting for another action with selectMenu", async
         static props = ["*"];
 
         setup() {
-            onWillStart(() => def);
+            onWillStart(() => def?.promise);
         }
     }
     actionRegistry.add("slow_client_action", SlowClientAction);
@@ -779,7 +779,7 @@ test("action is removed while waiting for another action with selectMenu", async
     expect(".o_kanban_view").toHaveCount(1);
 
     // select app in navbar menu
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o_navbar_apps_menu .dropdown-toggle").click();
     const appsMenu = getDropdownMenu(".o_navbar_apps_menu");
     await contains(".o_app:contains(App1)", { root: appsMenu }).click();

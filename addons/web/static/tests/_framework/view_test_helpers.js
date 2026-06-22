@@ -3,7 +3,6 @@ import {
     after,
     animationFrame,
     click,
-    Deferred,
     expect,
     formatXml,
     getFixture,
@@ -221,7 +220,7 @@ export async function mountViewInDialog(params) {
     const container = await mountWithCleanup(MainComponentsContainer, {
         env: params.env,
     });
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     getService("dialog").add(ViewDialog, {
         viewEnv: { config: params.config },
         viewProps: parseViewProps(params),
@@ -229,7 +228,7 @@ export async function mountViewInDialog(params) {
             deferred.resolve();
         },
     });
-    await deferred;
+    await deferred.promise;
     return container;
 }
 

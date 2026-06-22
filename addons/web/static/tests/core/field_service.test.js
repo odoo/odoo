@@ -10,7 +10,7 @@ import {
     onRpc,
 } from "@web/../tests/web_test_helpers";
 
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import { Component, xml, proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
@@ -402,9 +402,9 @@ test("async method loadFields is protected", async () => {
         }
     }
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc(async () => {
-        await def;
+        await def.promise;
     });
     const parent = await mountWithCleanup(Parent);
 

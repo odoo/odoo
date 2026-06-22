@@ -1,5 +1,5 @@
 import { expect, test, describe, destroy } from "@odoo/hoot";
-import { tick, Deferred } from "@odoo/hoot-mock";
+import { tick } from "@odoo/hoot-mock";
 import { press } from "@odoo/hoot-dom";
 import { mountWithCleanup, contains, makeDialogMockEnv } from "@web/../tests/web_test_helpers";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
@@ -261,7 +261,7 @@ test("can't click twice on 'Cancel'", async () => {
 });
 
 test("can't cancel (with escape) after confirm", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     const env = await makeDialogMockEnv();
     await mountWithCleanup(ConfirmationDialog, {
         env,
@@ -273,7 +273,7 @@ test("can't cancel (with escape) after confirm", async () => {
             },
             confirm: () => {
                 expect.step("Confirm action");
-                return def;
+                return def.promise;
             },
             cancel: () => {
                 throw new Error("should not cancel");
@@ -291,7 +291,7 @@ test("can't cancel (with escape) after confirm", async () => {
 });
 
 test("wait for confirm callback before closing", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     const env = await makeDialogMockEnv();
     await mountWithCleanup(ConfirmationDialog, {
         env,
@@ -303,7 +303,7 @@ test("wait for confirm callback before closing", async () => {
             },
             confirm: () => {
                 expect.step("Confirm action");
-                return def;
+                return def.promise;
             },
         },
     });

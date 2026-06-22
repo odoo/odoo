@@ -1,6 +1,6 @@
 import { expect, getFixture, test } from "@odoo/hoot";
 import { click, hover, press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
-import { animationFrame, Deferred, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 
 import {
     clickFieldDropdown,
@@ -1661,7 +1661,7 @@ test("save a record with an empty many2many_tags required", async () => {
 test("set a required many2many_tags and save directly", async () => {
     let def;
     onRpc("web_read", async () => {
-        await def;
+        await def.promise;
     });
     await mountView({
         type: "form",
@@ -1671,7 +1671,7 @@ test("set a required many2many_tags and save directly", async () => {
 
     expect(".o_tag").toHaveCount(0);
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     await clickFieldDropdown("timmy");
     await clickFieldDropdownItem("timmy", "gold");
     expect(".o_tag").toHaveCount(0);
@@ -2207,7 +2207,7 @@ test("Many2ManyTagsField: press backspace multiple times to remove tag", async (
     Partner._records[0].timmy = [12, 14];
     Partner._fields.timmy.onChange = () => {};
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("onchange", ({ args }) => {
         expect.step(`onchange ${JSON.stringify(args[1].timmy)}`);
     });

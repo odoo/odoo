@@ -13,7 +13,6 @@ import {
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { getActiveHotkey, hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { useActiveElement } from "@web/core/ui/ui_service";
-import { Deferred } from "@web/core/utils/concurrency";
 
 const getOverlays = () => queryAllTexts(".o_web_hotkey_overlay");
 
@@ -766,10 +765,10 @@ test("within iframes", async () => {
     // Append an iframe to target and wait until it is fully loaded.
     const iframe = document.createElement("iframe");
     iframe.srcdoc = "<button>Hello world!</button>";
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     iframe.onload = def.resolve;
     getFixture().appendChild(iframe);
-    await def;
+    await def.promise;
 
     // Dispatch an hotkey from within the iframe
     await contains("iframe:iframe button").focus();

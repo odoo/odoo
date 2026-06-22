@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { click, edit, press, queryAllTexts, runAllTimers, waitFor } from "@odoo/hoot-dom";
-import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import {
     clickSave,
     contains,
@@ -316,8 +316,8 @@ test("Buttons are set as disabled on click", async () => {
         </form>
     `;
 
-    const def = new Deferred();
-    onRpc("web_save", async () => await def);
+    const def = Promise.withResolvers();
+    onRpc("web_save", async () => await def.promise);
     await mountWithCleanup(WebClient);
     getService("dialog").add(FormViewDialog, {
         resModel: "partner",

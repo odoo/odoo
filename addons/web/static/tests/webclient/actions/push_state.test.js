@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryAllTexts } from "@odoo/hoot-dom";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import { Component, onMounted, xml } from "@odoo/owl";
 import {
     contains,
@@ -410,8 +410,8 @@ test(`properly push state`, async () => {
 });
 
 test(`push state after action is loaded, not before`, async () => {
-    const def = new Deferred();
-    onRpc("get_views", () => def);
+    const def = Promise.withResolvers();
+    onRpc("get_views", () => def?.promise);
 
     await mountWithCleanup(WebClient);
     expect(browser.location.href).toBe("http://example.com/odoo");

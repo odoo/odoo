@@ -1,6 +1,6 @@
 import { expect, getFixture, test } from "@odoo/hoot";
 import { queryAllTexts, scroll } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockDate } from "@odoo/hoot-mock";
+import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import { SELECTORS } from "@web/../tests/core/domain_selector/domain_selector_helpers";
 import {
@@ -589,8 +589,8 @@ test("domain field: does not wait for the count to render", async function () {
         },
     ];
 
-    const def = new Deferred();
-    onRpc("search_count", () => def);
+    const def = Promise.withResolvers();
+    onRpc("search_count", () => def.promise);
 
     await mountView({
         type: "form",
@@ -934,9 +934,9 @@ test("invalid value in domain field with 'inDialog' options", async function () 
 test("edit domain button is available even while loading records count", async function () {
     Partner._fields.name.default = "[]";
     serverState.debug = "1";
-    const searchCountDeffered = new Deferred();
+    const searchCountDeffered = Promise.withResolvers();
     onRpc("/web/domain/validate", () => true);
-    onRpc("search_count", () => searchCountDeffered);
+    onRpc("search_count", () => searchCountDeffered.promise);
     await mountView({
         type: "form",
         resModel: "partner",
@@ -1168,9 +1168,9 @@ test("folded domain field with any operator", async function () {
 
 test("foldable domain, search_count delayed", async function () {
     Partner._records[0].foo = '[("id", "=", 1)]';
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("search_count", async () => {
-        await def;
+        await def.promise;
     });
 
     await mountView({

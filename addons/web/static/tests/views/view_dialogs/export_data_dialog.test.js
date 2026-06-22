@@ -8,7 +8,7 @@ import {
     queryFirst,
     select,
 } from "@odoo/hoot-dom";
-import { animationFrame, Deferred, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import {
     contains,
     defineModels,
@@ -453,10 +453,10 @@ test("Export dialog: compatible and export type options", async () => {
         { tag: "wow", label: "WOW" },
     ]);
     let checkpoint;
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("/web/export/get_fields", async () => {
         if (checkpoint) {
-            await def;
+            await def.promise;
         }
         checkpoint = true;
         return fetchedFields.root;
@@ -1129,7 +1129,7 @@ test("Export dialog: search in debug", async () => {
 test("Export dialog: disable button during export", async () => {
     let def;
     patchWithCleanup(download, {
-        _download: () => (def = new Deferred()),
+        _download: () => (def = Promise.withResolvers()).promise,
     });
     onRpc("/web/export/formats", () => [{ tag: "xls", label: "Excel" }]);
     onRpc("/web/export/get_fields", () => fetchedFields.root);

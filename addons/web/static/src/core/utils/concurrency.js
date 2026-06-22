@@ -103,13 +103,12 @@ export class Mutex {
                 };
             });
         }
-        const always = () => {
-            return Promise.resolve(action()).finally(() => {
+        const always = () =>
+            Promise.resolve(action()).finally(() => {
                 if (--this._queueSize === 0) {
                     this._unlock();
                 }
             });
-        };
         this._lock = this._lock.then(always, always);
         return this._lock;
     }
@@ -173,22 +172,5 @@ export class Race {
      */
     getCurrentProm() {
         return this.currentProm;
-    }
-}
-
-/**
- * @deprecated Use Promise.withResolvers() instead.
- *
- * Deferred is basically a resolvable/rejectable extension of Promise.
- */
-export class Deferred extends Promise {
-    constructor() {
-        let resolve;
-        let reject;
-        const prom = new Promise((res, rej) => {
-            resolve = res;
-            reject = rej;
-        });
-        return Object.assign(prom, { resolve, reject });
     }
 }

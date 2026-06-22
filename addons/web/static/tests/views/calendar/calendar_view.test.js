@@ -1,7 +1,6 @@
 import { onRendered } from "@web/owl2/utils";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import {
-    Deferred,
     advanceTime,
     animationFrame,
     click,
@@ -2661,7 +2660,9 @@ test(`string is used as label when provided`, async () => {
             </calendar>
         `,
     });
-    expect(`.o_calendar_filter[data-name="attendee_ids"] .o_cw_filter_label`).toHaveText("Custom Label");
+    expect(`.o_calendar_filter[data-name="attendee_ids"] .o_cw_filter_label`).toHaveText(
+        "Custom Label"
+    );
 });
 
 test.tags("desktop");
@@ -2675,7 +2676,9 @@ test(`filter label falls back to field name when string is absent`, async () => 
             </calendar>
         `,
     });
-    expect(`.o_calendar_filter[data-name="attendee_ids"] .o_cw_filter_label`).toHaveText("Attendees");
+    expect(`.o_calendar_filter[data-name="attendee_ids"] .o_cw_filter_label`).toHaveText(
+        "Attendees"
+    );
 });
 
 test(`Colors: cycling through available colors`, async () => {
@@ -3739,11 +3742,11 @@ test(`set event as all day when field is datetime (without all_day mapping)`, as
 });
 
 test(`quickcreate avoid double event creation`, async () => {
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
 
     onRpc("create", async () => {
         expect.step("create");
-        await deferred;
+        await deferred.promise;
     });
     await mountView({
         resModel: "event",
@@ -4908,12 +4911,12 @@ test(`click outside the popup should close it`, async () => {
 });
 
 test(`fields are added in the right order in popover`, async () => {
-    const deferred = new Deferred();
+    const deferred = Promise.withResolvers();
     class DeferredWidget extends Component {
         static template = xml``;
         static props = ["*"];
         setup() {
-            onWillStart(() => deferred);
+            onWillStart(() => deferred.promise);
         }
     }
     registry.category("fields").add("deferred_widget", { component: DeferredWidget });

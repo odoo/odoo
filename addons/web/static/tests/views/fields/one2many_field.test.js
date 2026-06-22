@@ -8,7 +8,7 @@ import {
     queryFirst,
     queryOne,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
 
 import { Component, onWillDestroy, onWillStart, xml, proxy } from "@odoo/owl";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
@@ -574,8 +574,8 @@ test("O2M modal buttons are disabled on click", async () => {
                 <field name="parent_id"/>
             </form>`,
     };
-    const def = new Deferred();
-    onRpc("web_save", () => def);
+    const def = Promise.withResolvers();
+    onRpc("web_save", () => def.promise);
     await mountView({
         type: "form",
         resModel: "partner",
@@ -617,12 +617,12 @@ test("clicking twice on a record in a one2many will open it once", async () => {
             </form>`,
     };
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     let firstRead = true;
     onRpc("turtle", "web_read", async ({ model }) => {
         expect.step("web_read turtle");
         if (!firstRead) {
-            await def;
+            await def.promise;
         }
         firstRead = false;
     });
@@ -765,9 +765,9 @@ test("one2many wait for the onchange of the resequenced finish before save", asy
             obj.p = [[1, 2, { qux: 99 }]];
         },
     };
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("onchange", async () => {
-        await def;
+        await def.promise;
         expect.step("onchange");
     });
     onRpc("web_save", (args) => {
@@ -2931,11 +2931,11 @@ test("open a record in a one2many kanban with an x2m in the form", async () => {
             </form>`,
     };
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("web_read", async (args) => {
         if (args.args[0][0] === 2) {
             expect.step("web_read: 2");
-            await def;
+            await def.promise;
         }
     });
     await mountView({
@@ -7346,7 +7346,7 @@ test("one2many list editable: add new line before onchange returns", async () =>
     };
 
     let def;
-    onRpc("onchange", () => def);
+    onRpc("onchange", () => def?.promise);
     await mountView({
         type: "form",
         resModel: "partner",
@@ -7362,7 +7362,7 @@ test("one2many list editable: add new line before onchange returns", async () =>
 
     // add a first line but hold the onchange back
     await contains(".o_field_x2many_list_row_add button").click();
-    def = new Deferred();
+    def = Promise.withResolvers();
     expect(".o_data_row").toHaveCount(1);
     await clickFieldDropdown("turtle_trululu");
     await press("Enter");
@@ -7389,7 +7389,7 @@ test("editable list: multiple clicks on Add an item do not create invalid rows",
     };
 
     let def;
-    onRpc("onchange", () => def);
+    onRpc("onchange", () => def?.promise);
     await mountView({
         type: "form",
         resModel: "partner",
@@ -7402,7 +7402,7 @@ test("editable list: multiple clicks on Add an item do not create invalid rows",
                 </field>
             </form>`,
     });
-    def = new Deferred();
+    def = Promise.withResolvers();
     // click twice to add a new line
     await contains(".o_field_x2many_list_row_add button").click();
     await contains(".o_field_x2many_list_row_add button").click();
@@ -7435,7 +7435,7 @@ test("editable list: value reset by an onchange", async () => {
     };
 
     let def;
-    onRpc("onchange", () => def);
+    onRpc("onchange", () => def?.promise);
     await mountView({
         type: "form",
         resModel: "partner",
@@ -7453,7 +7453,7 @@ test("editable list: value reset by an onchange", async () => {
     // trigger the two _onChanges
     await contains(".o_field_x2many_list_row_add button").click();
     await contains(".o_data_row .o_field_widget input").edit("a name", { confirm: false });
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o_field_datetime .o_input").edit("04/27/2022 14:08:52", { confirm: "blur" });
 
     // resolve the onchange promise
@@ -8020,7 +8020,7 @@ test("one2many field: change value before pending onchange returns", async () =>
         int_field: function () {},
     };
     let def;
-    onRpc("onchange", () => def);
+    onRpc("onchange", () => def?.promise);
     await mountView({
         type: "form",
         resModel: "partner",
@@ -8036,7 +8036,7 @@ test("one2many field: change value before pending onchange returns", async () =>
     });
 
     await contains(".o_field_x2many_list_row_add button").click();
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o_field_widget[name=int_field] input").edit("44", { confirm: false });
 
     // set trululu before onchange
@@ -8059,7 +8059,7 @@ test("focus is correctly reset after an onchange in an x2many", async () => {
     };
 
     let def;
-    onRpc("onchange", () => def);
+    onRpc("onchange", () => def?.promise);
     await mountView({
         type: "form",
         resModel: "partner",
@@ -8078,7 +8078,7 @@ test("focus is correctly reset after an onchange in an x2many", async () => {
 
     await contains(".o_field_x2many_list_row_add button").click();
 
-    def = new Deferred();
+    def = Promise.withResolvers();
 
     contains("[name=int_field] input").edit("44", { confirm: false });
 
@@ -9736,7 +9736,7 @@ test("one2many with onchange, required field, shortcut enter", async () => {
     };
 
     let def;
-    onRpc("onchange", () => def);
+    onRpc("onchange", () => def?.promise);
     onRpc((args) => {
         expect.step(args.method);
     });
@@ -9761,7 +9761,7 @@ test("one2many with onchange, required field, shortcut enter", async () => {
     expect.verifySteps(["onchange"]);
 
     // we want to add a delay to simulate an onchange
-    def = new Deferred();
+    def = Promise.withResolvers();
 
     // write something in the field, edit will confirm with enter
     await contains("[name=turtle_foo] input").edit("hello");
@@ -9790,7 +9790,7 @@ test("edit a field with a slow onchange in one2many", async () => {
     };
 
     let def;
-    onRpc("onchange", () => def);
+    onRpc("onchange", () => def?.promise);
     onRpc((args) => {
         expect.step(args.method);
     });
@@ -9815,7 +9815,7 @@ test("edit a field with a slow onchange in one2many", async () => {
     expect.verifySteps(["onchange"]);
 
     // we want to add a delay to simulate an onchange
-    def = new Deferred();
+    def = Promise.withResolvers();
 
     // write something in the field
     await contains("[name=turtle_foo] input").edit("hello", { confirm: false });
@@ -10274,11 +10274,11 @@ test("one2many reset by onchange (of another field) while being edited", async (
     // to the one2many. After a while, we unlock the name_create, which triggers the onchange
     // and resets the one2many. At the end, we want the row to be in edition.
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     Partner._onChanges = {
         trululu: () => {},
     };
-    onRpc("name_create", () => def);
+    onRpc("name_create", () => def.promise);
     await mountView({
         type: "form",
         resModel: "partner",
@@ -11136,10 +11136,10 @@ test("onchange on unloaded record clearing posterious change", async () => {
 test("quickly switch between pages in one2many list", async () => {
     Partner._records[0].turtles = [1, 2, 3];
 
-    const readDefs = [null, new Deferred(), null];
+    const readDefs = [null, Promise.withResolvers(), null];
     onRpc("web_read", async (args) => {
         const recordID = args.args[0][0];
-        await readDefs[recordID - 1];
+        await readDefs[recordID - 1]?.promise;
     });
     await mountView({
         type: "form",
@@ -12832,7 +12832,7 @@ test("field in list but not in fetched form", async () => {
 });
 
 test("pressing tab before an onchange is resolved", async () => {
-    const onchangeGetPromise = new Deferred();
+    const onchangeGetPromise = Promise.withResolvers();
 
     Partner._onChanges = {
         name: (obj) => {
@@ -12841,7 +12841,7 @@ test("pressing tab before an onchange is resolved", async () => {
     };
     onRpc("product", "onchange", async (args) => {
         if (args.args[2] === "name") {
-            await onchangeGetPromise;
+            await onchangeGetPromise.promise;
         }
     });
     await mountView({
@@ -12880,7 +12880,7 @@ test("add a row to an x2many and ask canBeRemoved twice", async () => {
     // removed after the save, and as a consequence they were saved twice (i.e. the row was
     // created twice).
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     Partner._views = {
         list: `<list><field name="int_field"/></list>`,
         form: `
@@ -12899,7 +12899,7 @@ test("add a row to an x2many and ask canBeRemoved twice", async () => {
             p: [[0, args.args[1].p[0][1], { name: "a name" }]],
         });
     });
-    onRpc("web_search_read", () => def);
+    onRpc("web_search_read", () => def.promise);
 
     const actions = [
         {
@@ -12952,10 +12952,10 @@ test("one2many: save a record before the onchange is complete in a form dialog",
             </form>`,
     };
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("onchange", async (args) => {
         if (args.args[2].length === 1 && args.args[2][0] === "name") {
-            await def;
+            await def.promise;
         }
     });
     await mountView({

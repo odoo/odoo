@@ -17,8 +17,6 @@ export const advanceTime = _hootDom.advanceTime;
 export const animationFrame = _hootDom.animationFrame;
 /** @deprecated use `import { cancelAllTimers } from "@odoo/hoot";` */
 export const cancelAllTimers = _hootDom.cancelAllTimers;
-/** @deprecated use `import { Deferred } from "@odoo/hoot";` */
-export const Deferred = _hootDom.Deferred;
 /** @deprecated use `import { delay } from "@odoo/hoot";` */
 export const delay = _hootDom.delay;
 /** @deprecated use `import { freezeTime } from "@odoo/hoot";` */

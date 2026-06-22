@@ -1,7 +1,6 @@
 import { expect, resize, test } from "@odoo/hoot";
 import {
     click,
-    Deferred,
     edit,
     press,
     queryAll,
@@ -1125,7 +1124,7 @@ test("cache: update current status if it changed", async () => {
 
     onRpc("has_group", () => true);
     let def;
-    onRpc("web_read", () => def);
+    onRpc("web_read", () => def?.promise);
     await mountWithCleanup(WebClient);
     await getService("action").doAction({
         id: 1,
@@ -1161,7 +1160,7 @@ test("cache: update current status if it changed", async () => {
     // re-open last record and use to pager to reach the record we just moved
     await contains(".o_kanban_record:contains(third record)").click();
     await pagerPrevious();
-    def = new Deferred();
+    def = Promise.withResolvers();
     await pagerPrevious();
     // retrieved from the cache => former value
     expect(".o_last_breadcrumb_item").toHaveText("second record");

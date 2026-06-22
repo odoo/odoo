@@ -1,6 +1,6 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { click, edit, press, queryAllValues, queryFirst, select } from "@odoo/hoot-dom";
-import { animationFrame, Deferred, runAllTimers } from "@odoo/hoot-mock";
+import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import {
     clickSave,
     contains,
@@ -928,9 +928,9 @@ test("model selector is displayed only when it should be", async () => {
 test("reference field should await fetch model before render", async () => {
     Partner._records[0].model_id = 20;
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     onRpc("ir.model", "read", async () => {
-        await def;
+        await def.promise;
     });
     mountView({
         type: "form",

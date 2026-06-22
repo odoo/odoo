@@ -2,7 +2,7 @@ import { setupEditor } from "@html_editor/../tests/_helpers/editor";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { expect, test } from "@odoo/hoot";
-import { animationFrame, click, Deferred, press, waitFor } from "@odoo/hoot-dom";
+import { animationFrame, click, press, waitFor } from "@odoo/hoot-dom";
 import { contains, makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
 
 test("Unsplash is inserted in the Media Dialog", async () => {
@@ -15,7 +15,7 @@ test("Unsplash is inserted in the Media Dialog", async () => {
         public: true,
     };
     onRpc("ir.attachment", "search_read", () => [imageRecord]);
-    const fetchDef = new Deferred();
+    const fetchDef = Promise.withResolvers();
     onRpc("/web_unsplash/fetch_images", () => {
         expect.step("fetch_images");
         fetchDef.resolve();
@@ -55,7 +55,7 @@ test("Unsplash is inserted in the Media Dialog", async () => {
     await animationFrame();
     expect(".o_select_media_dialog").toHaveCount(1);
     contains("input.o_we_search").edit("cat");
-    await fetchDef;
+    await fetchDef.promise;
     expect.verifySteps(["fetch_images"]);
     await waitFor("img[title='Username']");
     await click(".o_button_area[aria-label='Username']");
@@ -73,7 +73,7 @@ test("Unsplash error is displayed when there is no key", async () => {
         public: true,
     };
     onRpc("ir.attachment", "search_read", () => [imageRecord]);
-    const fetchDef = new Deferred();
+    const fetchDef = Promise.withResolvers();
     onRpc("/web_unsplash/fetch_images", () => {
         fetchDef.resolve();
         return {
@@ -90,7 +90,7 @@ test("Unsplash error is displayed when there is no key", async () => {
     await animationFrame();
     expect(".o_select_media_dialog").toHaveCount(1);
     contains("input.o_we_search").edit("cat");
-    await fetchDef;
+    await fetchDef.promise;
     await waitFor(".unsplash_error");
     expect(".unsplash_error").toHaveCount(1);
 });

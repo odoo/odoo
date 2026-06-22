@@ -1,4 +1,4 @@
-import { Deferred, expect, test } from "@odoo/hoot";
+import { expect, test } from "@odoo/hoot";
 import { animationFrame, edit, getActiveElement, press } from "@odoo/hoot-dom";
 import {
     contains,
@@ -376,10 +376,10 @@ test("editable list save flushes pending dropdown pick before web_save", async (
         savedVals = args[1];
     });
 
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     patchWithCleanup(AnalyticDistribution.prototype, {
         async commitChanges() {
-            await def;
+            await def.promise;
             return super.commitChanges();
         },
     });

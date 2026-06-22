@@ -13,7 +13,7 @@ import {
     queryFirst,
     runAllTimers,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame, mockTimeZone, mockTouch } from "@odoo/hoot-mock";
+import { animationFrame, mockTimeZone, mockTouch } from "@odoo/hoot-mock";
 import { Component, onWillUpdateProps, xml } from "@odoo/owl";
 import {
     SELECTORS,
@@ -795,8 +795,8 @@ test("reference fields are supported in search view", async () => {
 });
 
 test("expand an asynchronous menu and change the selected item with the mouse during expansion", async () => {
-    const def = new Deferred();
-    onRpc("name_search", () => def);
+    const def = Promise.withResolvers();
+    onRpc("name_search", () => def.promise);
     await mountWithSearch(SearchBar, {
         resModel: "partner",
         searchMenuTypes: [],
@@ -818,8 +818,8 @@ test("expand an asynchronous menu and change the selected item with the mouse du
 });
 
 test("expand an asynchronous menu and change the selected item with the arrow during expansion", async () => {
-    const def = new Deferred();
-    onRpc("name_search", () => def);
+    const def = Promise.withResolvers();
+    onRpc("name_search", () => def.promise);
     await mountWithSearch(SearchBar, {
         resModel: "partner",
         searchMenuTypes: [],
@@ -966,8 +966,8 @@ test("check kwargs of a rpc call with a domain", async () => {
 });
 
 test("should wait label promises for many2one search defaults", async () => {
-    const def = new Deferred();
-    onRpc("read", () => def);
+    const def = Promise.withResolvers();
+    onRpc("read", () => def.promise);
 
     mountWithSearch(SearchBar, {
         resModel: "partner",
@@ -986,8 +986,8 @@ test("should wait label promises for many2one search defaults", async () => {
 
 test("should wait label promises for many2many search defaults", async () => {
     Partner._fields.m2m = fields.Many2many({ relation: "partner" });
-    const def = new Deferred();
-    onRpc("read", () => def);
+    const def = Promise.withResolvers();
+    onRpc("read", () => def.promise);
 
     mountWithSearch(SearchBar, {
         resModel: "partner",
@@ -1976,8 +1976,8 @@ test("single name_search call and no flicker when holding ArrowRight", async fun
 
 test.tags("desktop");
 test("no crash when search component is destroyed with input", async () => {
-    const def = new Deferred();
-    onRpc("web_read", () => def);
+    const def = Promise.withResolvers();
+    onRpc("web_read", () => def.promise);
     defineWebModels();
     await mountWebClient();
     await getService("action").doAction(1);

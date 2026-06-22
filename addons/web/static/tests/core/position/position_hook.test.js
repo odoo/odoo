@@ -7,7 +7,7 @@ import {
     resize,
     scroll,
 } from "@odoo/hoot-dom";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import { Component, onMounted, xml } from "@odoo/owl";
 import { defineParams, defineStyle, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
@@ -388,11 +388,11 @@ test("iframe: popper is outside, target inside", async () => {
         margin: "25px",
     });
     iframe.srcdoc = `<div id="target" style="background-color: tomato; width: 50px; height: 50px"/>`;
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     iframe.onload = () => def.resolve();
     const container = queryOne("#container");
     container.appendChild(iframe);
-    await def;
+    await def.promise;
 
     const iframeBody = iframe.contentDocument.body;
     Object.assign(iframeBody.style, {
@@ -476,11 +476,11 @@ test("iframe: popper is outside, target and container inside", async () => {
         margin: "100px",
     });
     iframe.srcdoc = `<div id="inner-container"><div id="target" style="background-color: green; width: 50px; height: 500px; top: 50px"/></div>`;
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     iframe.onload = () => def.resolve();
     const container = queryOne("#container");
     container.appendChild(iframe);
-    await def;
+    await def.promise;
 
     const innerContainer = queryOne(":iframe #inner-container");
     Object.assign(innerContainer.style, {
@@ -536,10 +536,10 @@ test("iframe: both popper and target inside", async () => {
         margin: "25px",
     });
     iframe.srcdoc = `<div id="inner-container" />`;
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     iframe.onload = () => def.resolve();
     queryOne("#container").appendChild(iframe);
-    await def;
+    await def.promise;
 
     const iframeBody = iframe.contentDocument.body;
     Object.assign(iframeBody.style, {
@@ -616,13 +616,13 @@ test("iframe: both popper and target inside", async () => {
 test("iframe: default container is the popper owner's document", async () => {
     expect.assertions(1);
     // Prepare an outer iframe, that will hold the popper element
-    let def = new Deferred();
+    let def = Promise.withResolvers();
     const outerIframe = document.createElement("iframe");
     Object.assign(outerIframe.style, { height: "450px", width: "450px" });
     outerIframe.onload = () => def.resolve();
     getFixture().prepend(outerIframe);
     // registerCleanup(() => outerIframe.remove());
-    await def;
+    await def.promise;
     Object.assign(outerIframe.contentDocument.body.style, {
         display: "flex",
         alignItems: "center",
@@ -633,7 +633,7 @@ test("iframe: default container is the popper owner's document", async () => {
         margin: "0",
     });
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     const iframeSheet = outerIframe.contentDocument.createElement("style");
     iframeSheet.onload = () => def.resolve();
     iframeSheet.textContent = `
@@ -644,10 +644,10 @@ test("iframe: default container is the popper owner's document", async () => {
             }
         `;
     outerIframe.contentDocument.head.appendChild(iframeSheet);
-    await def; // wait for the iframe's stylesheet to be loaded
+    await def.promise; // wait for the iframe's stylesheet to be loaded
 
     // Prepare the inner iframe, that will hold the target element
-    def = new Deferred();
+    def = Promise.withResolvers();
     const innerIframe = document.createElement("iframe");
     innerIframe.srcdoc = `<div id="target" />`;
     Object.assign(innerIframe.style, {
@@ -657,7 +657,7 @@ test("iframe: default container is the popper owner's document", async () => {
     });
     innerIframe.onload = () => def.resolve();
     outerIframe.contentDocument.body.appendChild(innerIframe);
-    await def;
+    await def.promise;
     Object.assign(innerIframe.contentDocument.body.style, {
         display: "flex",
         alignItems: "center",

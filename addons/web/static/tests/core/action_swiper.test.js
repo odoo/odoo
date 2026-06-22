@@ -14,13 +14,12 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { browser } from "@web/core/browser/browser";
-import { Deferred } from "@web/core/utils/concurrency";
 
 beforeEach(() => {
     mockTouch(true);
     patchWithCleanup(ActionSwiper, {
-       animationLength: 0, 
-    })
+        animationLength: 0,
+    });
 });
 
 // Tests marked as will fail on browsers that don't support
@@ -47,8 +46,8 @@ test("render only its target on non-touch devices", async () => {
     mockTouch(false);
     // mockTouch(false) don't work well with hasTouch() because browser.ontouchstart is null
     patchWithCleanup(browser, {
-        ontouchstart: undefined
-    })
+        ontouchstart: undefined,
+    });
     class Parent extends Component {
         static props = ["*"];
         static components = { ActionSwiper };
@@ -618,8 +617,8 @@ test("preventing swipe on scrollable areas when language is rtl", async () => {
 });
 
 test("an async action is awaited before being executed", async () => {
-const prom = new Deferred();
-    
+    const prom = Promise.withResolvers();
+
     class Parent extends Component {
         static props = [];
         static components = { ActionSwiper };
@@ -636,8 +635,8 @@ const prom = new Deferred();
             `;
 
         async onRightSwipe() {
-            expect.step("action started")
-            await prom;
+            expect.step("action started");
+            await prom.promise;
             expect.step("action done");
         }
     }

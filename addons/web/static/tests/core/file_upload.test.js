@@ -7,7 +7,7 @@ import {
     onRpc,
 } from "@web/../tests/web_test_helpers";
 
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { animationFrame } from "@odoo/hoot-mock";
 import { FileUploadProgressContainer } from "@web/core/file_upload/file_upload_progress_container";
 import { FileUploadProgressRecord } from "@web/core/file_upload/file_upload_progress_record";
 import { useService } from "@web/core/utils/hooks";
@@ -40,7 +40,7 @@ class Parent extends Component {
     }
 }
 
-onRpc("/test/", () => new Deferred());
+onRpc("/test/", () => new Promise(() => {}));
 
 test("can be rendered", async () => {
     await mountWithCleanup(Parent);

@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import {
-    Deferred,
     advanceTime,
     animationFrame,
     describe,
@@ -47,22 +46,6 @@ describe(parseUrl(import.meta.url), () => {
         await advanceTime(10_000);
 
         expect.verifySteps([]);
-    });
-
-    test("Deferred", async () => {
-        const def = new Deferred();
-
-        def.then(() => expect.step("resolved"));
-
-        expect.step("before");
-
-        def.resolve(14);
-
-        expect.step("after");
-
-        await expect(def).resolves.toBe(14);
-
-        expect.verifySteps(["before", "after", "resolved"]);
     });
 
     test("tick", async () => {

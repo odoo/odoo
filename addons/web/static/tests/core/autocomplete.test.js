@@ -1,6 +1,5 @@
 import { expect, test } from "@odoo/hoot";
 import {
-    Deferred,
     animationFrame,
     hover,
     isInViewPort,
@@ -358,14 +357,14 @@ test("click out after clearing input", async () => {
 test("open twice should not display previous results", async () => {
     const ITEMS = [item("AB"), item("AC"), item("BC")];
 
-    let def = new Deferred();
+    let def = Promise.withResolvers();
     class Parent extends Component {
         static components = { AutoComplete };
         static template = xml`<AutoComplete value="''" sources="this.sources"/>`;
         static props = [];
 
         sources = buildSources(async (request) => {
-            await def;
+            await def.promise;
             return ITEMS.filter((option) => option.label.includes(request));
         });
     }
@@ -384,7 +383,7 @@ test("open twice should not display previous results", async () => {
     expect(".o-autocomplete--dropdown-item").toHaveCount(3);
     expect(".fa-spin").toHaveCount(0);
 
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o-autocomplete input").fill("A", { confirm: false });
     await runAllTimers();
     expect(".o-autocomplete--dropdown-item").toHaveCount(1);
@@ -398,7 +397,7 @@ test("open twice should not display previous results", async () => {
     expect(".o-autocomplete .dropdown-menu").toHaveCount(0);
 
     // re-open the dropdown -> should not display the previous results
-    def = new Deferred();
+    def = Promise.withResolvers();
     await contains(".o-autocomplete input").click();
     await runAllTimers();
     expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
@@ -985,7 +984,7 @@ test("items are selected only when the mouse moves, not just on enter", async ()
 });
 
 test("do not attempt to scroll if element is null", async () => {
-    const def = new Deferred();
+    const def = Promise.withResolvers();
     class Parent extends Component {
         static template = xml`<AutoComplete value="''" sources="this.sources" />`;
         static components = { AutoComplete };
@@ -993,7 +992,7 @@ test("do not attempt to scroll if element is null", async () => {
 
         sources = [
             buildSources(async () => {
-                await def;
+                await def.promise;
                 return [item("delayed one"), item("delayed two"), item("delayed three")];
             }),
             buildSources(Array.from(Array(20)).map((_, index) => item(`item ${index}`))),

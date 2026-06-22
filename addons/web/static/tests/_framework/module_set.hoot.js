@@ -1,7 +1,6 @@
 // ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
 
 import {
-    Deferred,
     delay,
     describe,
     dryRun,
@@ -135,12 +134,12 @@ async function fetchDependencies(addons) {
     for (const addon of addons) {
         if (!dependencyCache[addon] && !DEFAULT_ADDONS.includes(addon)) {
             addonsToFetch.push(addon);
-            dependencyCache[addon] = new Deferred();
+            dependencyCache[addon] = Promise.withResolvers();
         }
     }
     if (addonsToFetch.length) {
         if (!dependencyBatch.length) {
-            dependencyBatchPromise = Deferred.resolve().then(() => {
+            dependencyBatchPromise = Promise.resolve().then(() => {
                 const module_names = [...new Set(dependencyBatch)];
                 dependencyBatch = [];
                 return unmockedOrm("ir.module.module.dependency", "all_dependencies", [], {
@@ -151,7 +150,7 @@ async function fetchDependencies(addons) {
         dependencyBatch.push(...addonsToFetch);
         dependencyBatchPromise.then((allDependencies) => {
             for (const [moduleName, dependencyNames] of Object.entries(allDependencies)) {
-                dependencyCache[moduleName] ||= new Deferred();
+                dependencyCache[moduleName] ||= Promise.withResolvers();
                 dependencyCache[moduleName].resolve();
 
                 dependencies[moduleName] = dependencyNames.filter(
@@ -163,7 +162,7 @@ async function fetchDependencies(addons) {
         });
     }
 
-    await Promise.all([...addons].map((addon) => dependencyCache[addon]));
+    await Promise.all([...addons].map((addon) => dependencyCache[addon]?.promise));
 
     return getDependencies(addons);
 }
@@ -541,7 +540,7 @@ const TEMPLATE_MODULE_NAME = "@web/core/templates";
 
 /** @type {Record<string, string[]} */
 const dependencies = {};
-/** @type {Record<string, Deferred} */
+/** @type {Record<string, PromiseWithResolvers>} */
 const dependencyCache = {};
 /** @type {Record<string, Promise<Response>} */
 const globalFetchCache = Object.create(null);
@@ -646,7 +645,7 @@ export async function runTests(options) {
     }
 
     // Sort modules to accelerate loading time
-    /** @type {Record<string, Deferred>} */
+    /** @type {Record<string, PromiseWithResolvers>} */
     const defs = {};
     /** @type {string[]} */
     const testModuleNames = [];
@@ -658,14 +657,16 @@ export async function runTests(options) {
         }
 
         // Register module dependencies
-        const [modDef, ...depDefs] = [name, ...deps].map((dep) => (defs[dep] ||= new Deferred()));
-        Promise.all(depDefs).then(() => {
+        const [modDef, ...depDefs] = [name, ...deps].map(
+            (dep) => (defs[dep] ||= Promise.withResolvers())
+        );
+        Promise.all(depDefs.map((d) => d.promise)).then(() => {
             sortedModuleNames.push(name);
             modDef.resolve();
         });
     }
 
-    await Promise.all(Object.values(defs));
+    await Promise.all(Object.values(defs).map((d) => d.promise));
 
     // Dry run
     const { suites } = await dryRun(() => describeDrySuite(fileSuffix, testModuleNames));

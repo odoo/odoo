@@ -4,7 +4,7 @@ import { queryOne } from "@odoo/hoot-dom";
 import { Component, markup, onWillDestroy, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { getContent, getSelection, setContent, setSelection } from "./selection";
-import { Deferred, animationFrame, tick } from "@odoo/hoot-mock";
+import { animationFrame, tick } from "@odoo/hoot-mock";
 import { processThroughCleanForSave } from "./dispatch";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 import { toExplicitString } from "@web/../lib/hoot/hoot_utils";
@@ -193,7 +193,7 @@ export async function testEditor(config) {
         };
     }
     delete config.props?.mobile;
-    const willBeDestroyed = new Deferred();
+    const willBeDestroyed = Promise.withResolvers();
     config.onWillDestroy = () => willBeDestroyed.resolve();
     const { el, editor, editorComponent } = await setupEditor(
         reverseSelection ? reverseTextualSelection(contentBefore) : contentBefore,
@@ -270,7 +270,7 @@ export async function testEditor(config) {
         await compareFunction(content, innerHTML, "Value from editor.getContent()", editor);
     }
     destroy(editorComponent);
-    await willBeDestroyed;
+    await willBeDestroyed.promise;
 
     if (
         testInBothDirections &&

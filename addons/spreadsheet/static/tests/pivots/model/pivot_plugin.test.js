@@ -1,4 +1,4 @@
-import { describe, expect, test, Deferred } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, mockDate } from "@odoo/hoot-mock";
 import {
     defineSpreadsheetActions,
@@ -626,8 +626,8 @@ test("concurrently load the same pivot twice", async function () {
 });
 
 test("display loading while data is not fully available", async function () {
-    const metadataPromise = new Deferred();
-    const dataPromise = new Deferred();
+    const metadataPromise = Promise.withResolvers();
+    const dataPromise = Promise.withResolvers();
     const spreadsheetData = {
         sheets: [
             {
@@ -652,11 +652,11 @@ test("display loading while data is not fully available", async function () {
     };
     onRpc("partner", "fields_get", async ({ method, model }) => {
         expect.step(`${model}/${method}`);
-        await metadataPromise;
+        await metadataPromise.promise;
     });
     onRpc("partner", "formatted_read_grouping_sets", async ({ kwargs, method, model }) => {
         expect.step(`${model}/${method}`);
-        await dataPromise;
+        await dataPromise.promise;
     });
     onRpc("product", "read", () => {
         throw new Error("should not be called because data is put in cache");

@@ -8,7 +8,6 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-dom";
-import { Deferred } from "@odoo/hoot-mock";
 import { onRpc, pagerNext, pagerPrevious } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -38,10 +37,10 @@ test("base rendering follow, edit subscription and unfollow button", async () =>
 test("following during a slow RPC should not reload another record opened via the pager", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([{}, {}]);
-    const subscribeDeferred = new Deferred();
+    const subscribeDeferred = Promise.withResolvers();
     onRpc("/mail/thread/subscribe", async () => {
         expect.step("subscribe");
-        await subscribeDeferred;
+        await subscribeDeferred.promise;
     });
     onRpc("res.partner", "web_read", ({ args }) => expect.step(`read ${args[0][0]}`));
     await start();
