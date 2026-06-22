@@ -1,6 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
+from datetime import timedelta
+
+from freezegun import freeze_time
+
 from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
@@ -70,47 +74,46 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         self.product_standard_auto.invoice_policy = 'order'
         self.product_standard_auto.standard_price = 10.0
 
-        # Create and confirm a sale order for 2@12
-        sale_order = self._so_deliver(self.product_standard_auto, 2, 12, picking=False)
+        with freeze_time(fields.Datetime.now()) as frozen:
+            sale_order = self._so_deliver(self.product_standard_auto, 2, 12, picking=False)
 
-        # Deliver one.
-        sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
-        Form.from_action(self.env, sale_order.picking_ids.button_validate()).save().process()
+            frozen.tick(timedelta(seconds=1))
+            sale_order.picking_ids.move_ids.write({'quantity': 1, 'picked': True})
+            Form.from_action(self.env, sale_order.picking_ids.button_validate()).save().process()
 
-        # Invoice 1
-        invoice = sale_order._create_invoices()
-        invoice.invoice_line_ids[0].quantity = 1
-        invoice.action_post()
+            frozen.tick(timedelta(seconds=1))
+            invoice = sale_order._create_invoices()
+            invoice.invoice_line_ids[0].quantity = 1
+            invoice.action_post()
 
-        # Check the resulting accounting entries
-        amls = invoice.line_ids
-        self.assertEqual(len(amls), 4)
-        stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.account_stock_valuation)
-        self.assertEqual(stock_out_aml.debit, 0)
-        self.assertEqual(stock_out_aml.credit, 10)
-        cogs_aml = amls.filtered(lambda aml: aml.account_id == self.account_expense)
-        self.assertEqual(cogs_aml.debit, 10)
-        self.assertEqual(cogs_aml.credit, 0)
-        receivable_aml = amls.filtered(lambda aml: aml.account_id == self.account_receivable)
-        self.assertEqual(receivable_aml.debit, 12)
-        self.assertEqual(receivable_aml.credit, 0)
-        income_aml = amls.filtered(lambda aml: aml.account_id == self.account_income)
-        self.assertEqual(income_aml.debit, 0)
-        self.assertEqual(income_aml.credit, 12)
+            amls = invoice.line_ids
+            self.assertEqual(len(amls), 4)
+            stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.account_stock_valuation)
+            self.assertEqual(stock_out_aml.debit, 0)
+            self.assertEqual(stock_out_aml.credit, 10)
+            cogs_aml = amls.filtered(lambda aml: aml.account_id == self.account_expense)
+            self.assertEqual(cogs_aml.debit, 10)
+            self.assertEqual(cogs_aml.credit, 0)
+            receivable_aml = amls.filtered(lambda aml: aml.account_id == self.account_receivable)
+            self.assertEqual(receivable_aml.debit, 12)
+            self.assertEqual(receivable_aml.credit, 0)
+            income_aml = amls.filtered(lambda aml: aml.account_id == self.account_income)
+            self.assertEqual(income_aml.debit, 0)
+            self.assertEqual(income_aml.credit, 12)
 
-        # change the standard price to 14
-        self.product_standard_auto.standard_price = 14.0
+            frozen.tick(timedelta(seconds=1))
+            self.product_standard_auto.standard_price = 14.0
 
-        # deliver the backorder
-        sale_order.picking_ids[0].move_ids.write({'quantity': 1, 'picked': True})
-        sale_order.picking_ids[0].button_validate()
+            frozen.tick(timedelta(seconds=1))
+            sale_order.picking_ids[0].move_ids.write({'quantity': 1, 'picked': True})
+            sale_order.picking_ids[0].button_validate()
 
-        # change the standard price to 16
-        self.product_standard_auto.standard_price = 16.0
+            frozen.tick(timedelta(seconds=1))
+            self.product_standard_auto.standard_price = 16.0
 
-        # invoice 2
-        invoice2 = sale_order._create_invoices()
-        invoice2.action_post()
+            frozen.tick(timedelta(seconds=1))
+            invoice2 = sale_order._create_invoices()
+            invoice2.action_post()
         amls = invoice2.line_ids
         self.assertEqual(len(amls), 4)
         stock_out_aml = amls.filtered(lambda aml: aml.account_id == self.account_stock_valuation)

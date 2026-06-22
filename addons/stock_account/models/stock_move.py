@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from datetime import timedelta
 
 from odoo import api, fields, models, _, Command
 from odoo.fields import Domain
@@ -138,6 +139,21 @@ class StockMove(models.Model):
             else:
                 move.remaining_value = move.remaining_qty * move.standard_price
 
+    def write(self, vals):
+        """ Editing the done date of a valued move (to the past or the future) shifts the
+        on-hand context of every move in between, so the valuation has to be replayed
+        from the earliest impacted date.
+        """
+        recompute_date = None
+        if vals.get('date'):
+            new_date = fields.Datetime.to_datetime(vals['date'])
+            impacted_moves = self.filtered(lambda m: (m.is_in or m.is_out) and m.date != new_date)
+            recompute_date = min([*impacted_moves.mapped('date'), new_date]) if impacted_moves else False
+        res = super().write(vals)
+        if recompute_date:
+            impacted_moves._set_value(recompute_date=recompute_date)
+        return res
+
     def _read_group_select(self, table, aggregate_spec):
         if aggregate_spec in (
             "remaining_qty:sum",
@@ -192,6 +208,7 @@ class StockMove(models.Model):
         # Use _is_out() instead of is_out since the move is not done
         # It's called before action_done since we need the current fifo
         # stack. Limitation when validating at same time out and ins
+        self = self.sudo()
         moves_out = self.filtered(lambda m: m._is_out())
         moves_out._set_value()
         moves = super()._action_done(cancel_backorder=cancel_backorder)
@@ -295,19 +312,40 @@ class StockMove(models.Model):
         else:
             return self.product_id.standard_price
 
-    def _set_value(self, correction_quantity=None):
+    def _set_value(self, recompute_date=None, skip_check=False):
         """Set the value of the move.
 
-        :param correction_quantity: if set, it means that the quantity of the move has been
-            changed by this amount (can be positive or negative). In that case, we just update
-            the value of the move based on the ratio of extra_quantity / quantity. It only applies
-            on out_move since their value is computed during action_done, and it's used to get a
-            more accurate value for COGS. In case of in move correction, you have to call _set_value
-            without arguments.
+        :param recompute_date: if provided, valuation runs in correction mode. The given
+            moves changed position in the valuation timeline (their date moved, or the
+            quantity of one of their lines was edited), which shifts the on-hand context of
+            every later move. The valuation of every impacted product is therefore replayed
+            from ``recompute_date`` (the earliest impacted date among the moves) through
+        :param skip_check: internal flag set while replaying, to only refresh in-move
+            values without re-triggering the replay detection below (which would loop).
         """
+        moves_already_sold = self.filtered(lambda m: m.is_in and m.remaining_qty != m._get_valued_qty())
+        if not recompute_date and not skip_check and moves_already_sold:
+            recompute_date = min(self.mapped('date'))
+            for move in moves_already_sold:
+                product = move.product_id.with_company(move.company_id)
+                if product.cost_method != 'fifo':
+                    continue
+                oversold_stack = product._run_fifo_get_stack(at_date=move.date - timedelta(seconds=1), allow_negative=True)[0]
+                oversold_moves = self.env['stock.move'].concat(oversold_stack).filtered(lambda m: m.is_out)
+                if oversold_moves:
+                    recompute_date = min(recompute_date, *oversold_moves.mapped('date'))
+            self._set_value(recompute_date=recompute_date)
+            return
+
+        if recompute_date and any(m.remaining_qty != m._get_valued_qty() or m.is_out for m in self):
+            self.filtered(lambda m: m.is_in)._set_value(skip_check=True)
+            self.product_id._correct_inventory_valuation(recompute_date)
+            return
+
+        self = self.sorted(key=lambda m: (m.date, m.id))  # noqa: PLW0642
         products_to_recompute = set()
         lots_to_recompute = set()
-        fifo_qty_processed = defaultdict(float)
+        fifo_qty_already_processed = defaultdict(float)
 
         for move in self:
             move = move.with_company(move.company_id)
@@ -319,34 +357,38 @@ class StockMove(models.Model):
                             "A lot/serial number is required for product '%s' as it has lot valuation enabled.",
                             move.product_id.display_name))
                     lots_to_recompute.update(move.move_line_ids.lot_id.ids)
-            if move.is_in:
+            if move.is_in or move.is_dropship:
                 move.value = move.sudo()._get_value()
                 continue
             # Outgoing moves
             if not move._is_out():
                 continue
-            if correction_quantity:
-                previous_qty = move.quantity - correction_quantity
-                if previous_qty:
-                    ratio = correction_quantity / previous_qty
-                    move.value += ratio * move.value
-                    continue
-            if move.product_id.lot_valuated:
-                value = 0.0
-                for move_line in move.move_line_ids:
-                    if move_line.lot_id:
-                        value += move_line.lot_id.standard_price * move_line.quantity_product_uom
-                    else:
-                        value += move.product_id.standard_price * move_line.quantity_product_uom
-                move.value = - value
-                continue
-
             if move.product_id.cost_method == 'fifo':
-                valued_qty = move._get_valued_qty()
-                move.value = - move.product_id.with_context(fifo_qty_already_processed=fifo_qty_processed[move.product_id])._get_fifo_value(valued_qty)
-                fifo_qty_processed[move.product_id] += valued_qty
+                if not move.product_id.lot_valuated:
+                    valued_qty = move._get_valued_qty()
+                    move.value = - move.product_id.with_context(fifo_qty_already_processed=fifo_qty_already_processed[move.product_id])._get_fifo_value(valued_qty)
+                    fifo_qty_already_processed[move.product_id] += valued_qty
+                else:
+                    value = 0.0
+                    for move_line in move.move_line_ids:
+                        ml_qty = move_line.quantity_product_uom
+                        if move_line.lot_id:
+                            product = move.product_id.with_context(
+                                fifo_qty_already_processed=fifo_qty_already_processed[move_line.lot_id])
+                            value += product._get_fifo_value(ml_qty, lot=move_line.lot_id)
+                            fifo_qty_already_processed[move_line.lot_id] += ml_qty
+                        else:
+                            value += move.product_id.standard_price * ml_qty
+                    move.value = - value
             else:
-                move.value = - move.product_id.standard_price * move._get_valued_qty()
+                if not move.product_id.lot_valuated:
+                    move.value = - move.product_id.standard_price * move._get_valued_qty()
+                else:
+                    value = 0.0
+                    for move_line in move.move_line_ids:
+                        price = move_line.lot_id.standard_price if move_line.lot_id else move.product_id.standard_price
+                        value += price * move_line.quantity_product_uom
+                    move.value = - value
 
         # Recompute the standard price
         self.env['product.product'].browse(products_to_recompute)._update_standard_price()

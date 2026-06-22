@@ -51,6 +51,8 @@ class AccountMove(models.Model):
         # Unlink the COGS lines generated during the 'post' method.
         with self.env.protecting(self.env['account.move']._get_protected_vals({}, self)):
             self.mapped('line_ids').filtered(lambda line: line.display_type == 'cogs').unlink()
+
+        self.line_ids._get_stock_moves().filtered(lambda m: m.is_in or m.is_dropship)._set_value()
         return res
 
     def button_cancel(self):
@@ -61,6 +63,8 @@ class AccountMove(models.Model):
         # In most cases it shouldn't be necessary since they should be unlinked with 'button_draft'.
         # However, since it can be called in RPC, better be safe.
         self.mapped('line_ids').filtered(lambda line: line.display_type == 'cogs').unlink()
+
+        self.line_ids._get_stock_moves().filtered(lambda m: m.is_in or m.is_dropship)._set_value()
         return res
 
     # -------------------------------------------------------------------------

@@ -49,6 +49,20 @@ class TestPurchaseStockValuation(PurchaseTestCommon):
         self._create_bill(purchase_order=po, price_unit=30)
         self.assertEqual(move_in.value, 150)
 
+    def test_move_value_bill_reset_to_draft(self):
+        po = self._create_purchase(self.product_avco, 5, 10)
+        move_in = self._receive(po)
+        self.assertEqual(move_in.value, 50)
+
+        bill = self._create_bill(purchase_order=po, price_unit=20)
+        self.assertEqual(move_in.value, 100)
+
+        bill.button_draft()
+        self.assertEqual(move_in.value, 50)
+
+        bill.action_post()
+        self.assertEqual(move_in.value, 100)
+
     def test_move_value_extra_quantity(self):
         po = self._create_purchase(self.product_avco, 5, 10)
         move_in = self._receive(po, 7)
