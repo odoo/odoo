@@ -67,7 +67,7 @@ class AccountMove(models.Model):
             ('waiting', "Waiting"),
             ('unknown', "Unknown"),
             ('commercial_approved', "Approved"),
-            ('commercial_answered_automatically', "Approved"),
+            ('commercial_answered_automatically', "Approved Automatically"),
             ('commercial_rejected', "Rejected"),
         ],
         string="Nilvera Status",
@@ -82,7 +82,7 @@ class AccountMove(models.Model):
              "- Successful: GİB has accepted the invoice. \n"
              "- Error: The submission failed (check chatter for details). \n"
              "- Approved: Commercial Invoice is approved by recipient.\n"
-             "- Approved: Commercial Invoice is automatically approved after 8 days without a response.\n"
+             "- Approved Automatically: Commercial Invoice is automatically approved after 8 days without a response.\n"
              "- Rejected: Commercial Invoice is rejected by recipient.",
     )
     l10n_tr_gib_invoice_scenario = fields.Selection(
@@ -449,6 +449,7 @@ class AccountMove(models.Model):
                     nilvera_status = response.get('InvoiceStatus', {}).get('Code') or response.get('StatusCode')
                     if nilvera_status in dict(invoice._fields['l10n_tr_nilvera_send_status'].selection):
                         if nilvera_status == 'error':
+                            invoice.l10n_tr_nilvera_send_status = nilvera_status
                             invoice.message_post(
                                 body=Markup(
                                     "%s<br/>%s - %s<br/>"

@@ -36,13 +36,13 @@
                 <button name="action_send_edispatch_xml"
                         type="object"
                         class="btn-primary"
-                        invisible="country_code != 'TR' or state in ['done', 'cancel'] or picking_type_code != 'outgoing'"
+                        invisible="country_code != 'TR' or state != 'done' or l10n_tr_nilvera_send_status != 'not_sent' or picking_type_code != 'outgoing'"
                         string="Send GİB e-Dispatch (XML)"
                         />
                 <button name="button_l10n_tr_nilvera_update_data_from_xml"
                         type="object"
                         class="btn-primary"
-                        invisible="country_code != 'TR' or state in ['done', 'cancel'] or picking_type_code != 'incoming'"
+                        invisible="country_code != 'TR' or state == 'done' or picking_type_code != 'incoming'"
                         string="Update From GİB e-Dispatch (XML)" />
             </xpath>
             <field name="origin" position="after">
