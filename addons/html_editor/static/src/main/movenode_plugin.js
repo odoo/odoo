@@ -1,9 +1,7 @@
 import { useNativeDraggable } from "@html_editor/utils/drag_and_drop";
 import { childNodeIndex, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
-import { htmlEscape, xml } from "@odoo/owl";
 import { Plugin } from "../plugin";
 import { closestElement } from "../utils/dom_traversal";
-import { _t } from "@web/core/l10n/translation";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { getDeepestPosition, isContentEditable } from "@html_editor/utils/dom_info";
 import { removeStyle } from "@html_editor/utils/dom";
@@ -299,18 +297,7 @@ export class MoveNodePlugin extends Plugin {
         this.moveWidget.style.height = `${WIDGET_MOVE_SIZE}px`;
         this.moveWidget.style.top = `${anchorY - containerRect.y - moveWidgetOffsetTop}px`;
         this.moveWidget.style.left = `${moveWidgetLeftPos - containerRect.x}px`;
-
-        const dragToMoveTooltip = htmlEscape(_t("Drag to move"));
-        const clickToSelectTooltip = htmlEscape(_t("Click to select"));
-        this.services.tooltip.add(this.moveWidget, {
-            template: xml`
-                <div class="o-tooltip tooltip-inner text-start px-3">
-                    ${dragToMoveTooltip}<br/>
-                    ${clickToSelectTooltip}
-                </div>`,
-            arrow: true,
-        });
-
+        this.moveWidget.dataset.tooltipTemplate = `html_editor.MoveNodePluginTooltip`;
         this.addDomListener(this.moveWidget, "click", () => {
             const isNodeContentEditable = isContentEditable(movableElement);
             const [anchorNode, anchorOffset] = isNodeContentEditable
