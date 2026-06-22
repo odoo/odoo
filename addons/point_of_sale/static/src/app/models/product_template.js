@@ -41,7 +41,8 @@ export class ProductTemplate extends ProductTemplateAccounting {
             (l) =>
                 l.active !== false &&
                 (l.product_template_value_ids.length > 1 ||
-                    l.product_template_value_ids.some((v) => v.is_custom))
+                    l.product_template_value_ids.some((v) => v.is_custom) ||
+                    l.attribute_id.display_type === "multi")
         );
     }
 
