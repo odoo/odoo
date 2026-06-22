@@ -40,7 +40,8 @@ export class ProductTemplate extends ProductTemplateAccounting {
         return this.attribute_line_ids.find(
             (l) =>
                 l.product_template_value_ids.length > 1 ||
-                l.product_template_value_ids.some((v) => v.is_custom)
+                l.product_template_value_ids.some((v) => v.is_custom) ||
+                l.attribute_id.display_type === "multi"
         );
     }
 

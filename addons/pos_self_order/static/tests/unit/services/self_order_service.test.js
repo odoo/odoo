@@ -548,3 +548,20 @@ test("product with single 'is_custom' attr is not configurable in 'kiosk' mode",
     expect(ptv[0].is_custom).toBe(true);
     expect(!!store.isProductConfigurable(product)).toBe(false);
 });
+
+test("product with single 'multi' display_type attr with single choice is configurable in both mode", async () => {
+    const store = await setupSelfPosEnv();
+    const product = store.models["product.template"].get(52);
+    const line = product.attribute_line_ids[0];
+    const ptv = line.product_template_value_ids;
+    expect(ptv.length).toBe(1);
+    expect(ptv[0].is_custom).toBe(false);
+    expect(line.attribute_id.display_type).toBe("multi");
+
+    // Kiosk mode
+    expect(!!store.isProductConfigurable(product)).toBe(true);
+
+    // Mobile mode
+    store.self_ordering_mode = "mobile";
+    expect(!!store.isProductConfigurable(product)).toBe(true);
+});

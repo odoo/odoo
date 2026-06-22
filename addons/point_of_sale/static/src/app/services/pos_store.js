@@ -790,7 +790,14 @@ export class PosStore extends WithLazyGetterTrap {
                     : values.filter((value) => attrValueIds.has(value.id))
             );
         }
-        if (attributeLinesValues.some((values) => values.length > 1 || values[0].is_custom)) {
+        if (
+            attributeLinesValues.some(
+                (values) =>
+                    values.length > 1 ||
+                    values[0].is_custom ||
+                    values[0].attribute_id.display_type === "multi"
+            )
+        ) {
             return await makeAwaitable(this.dialog, ProductConfiguratorPopup, {
                 productTemplate: pTemplate,
                 hideAlwaysVariants: opts.hideAlwaysVariants,
