@@ -1,32 +1,36 @@
-from odoo import api, models, fields
+from odoo import models,fields
 from odoo.exceptions import UserError
 
 class EstatePropertyOffer(models.Model):
     _name = "estate.property.offer"
-    _description = "Offers on estate properties"
+    _description = "Estate Property Offers"
 
     price = fields.Float()
-    partner_id = fields.Many2one("res.partner", required=True)
-    property_id = fields.Many2one("estate.property", required=True)
-    state = fields.Selection(selection=[("accepted", "Accepted"), ("refused", "Refused")])
+    partner_id = fields.Many2one('res.partner', required=True)
+    property_id = fields.Many2one('estate.property', required=True)
+    status = fields.Selection(selection=[('accepted','Accepted'),('refused','Refused')])
 
-    _check_offer_price = models.Constraint("CHECK(price > 0)", "The offer price must be strictly positive")
-
-    def accept_offer(self):
+    def accept_property(self):
         for record in self:
-            if record.state == "refused":
-                raise UserError("You cannot accept a refused offer")
-            elif record.property_id.state == "offer_accepted":
-                raise UserError("this property already has an accepted offer")
-            else:
-                record.state = "accepted"
-                record.property_id.buyer_id = record.partner_id
-                record.property_id.state = "offer_accepted"
-                record.property_id.selling_price = record.price
+            if record.property_id.offer_ids.filtered(lambda x:x.status == "accepted"):
+                raise UserError("An offer has already been accepted for this property!")
+            record.status = 'accepted'
+            record.property_id.write({
+                "buyer_id" : record.partner_id.id,
+                "selling_price" : record.price,
+                "state" : "offer_accepted"
+            })
+    
 
-    def refuse_offer(self):
+    def refuse_property(self):
         for record in self:
-            if record.state == "accepted":
-                raise UserError("You cannot refuse an accepted offer")
+            if record.status == 'accepted':
+                raise UserError("Accepted properties cannot be refused!")
             else:
-                record.state = "refused"
+                record.status = 'refused'
+
+    
+    _check_offer_price = models.Constraint(
+        'CHECK(price > 0)',
+        'The offer price must be strictly positive'
+    )

@@ -4,12 +4,13 @@
         <field name="name">estate.property.offer.list</field>
         <field name="model">estate.property.offer</field>
         <field name="arch" type="xml">
-            <list editable="bottom" decoration-success="state == 'accepted'" decoration-danger="state == 'refused'">
-                <field name = "price" />
-                <field name = "partner_id" />
-                <button name = "accept_offer" string= "Accept" type = "object" icon="fa-check" invisible = "state in ('accepted','refused')"/>
-                <button name = "refuse_offer" string = "Refuse" type = "object" icon="fa-times" invisible = "state in ('accepted','refused')"/>
-                <field name = "state" />
+            <list editable="bottom"
+            decoration-success="status == 'accepted'"
+            decoration-danger="status == 'refused'">
+                <field name="price"/>
+                <field name="partner_id"/>
+                <button name="accept_property" string="Accept" type="object" icon="fa-check" invisible="status in ('accepted','refused')"/>
+                <button name="refuse_property" string="Refuse" type="object" icon="fa-times" invisible="status in ('accepted','refused')"/>
             </list>
         </field>
     </record>
@@ -20,10 +21,12 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                   <group>
-                        <field name = "price" />
-                        <field name = "partner_id" />
-                   </group>
+                    <h1>
+                        <field name="partner_id"/>
+                    </h1>
+                    <group>
+                        <field name="price"/>
+                    </group>
                 </sheet>
             </form>
         </field>

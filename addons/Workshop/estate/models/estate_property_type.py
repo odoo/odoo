@@ -1,12 +1,13 @@
-from odoo import api, models, fields
+from odoo import models,fields,api
 
 class EstatePropertyType(models.Model):
     _name = "estate.property.type"
-    _description = "property types"
+    _description = "Estate Property Types"
 
-    name = fields.Char(required=True) 
+    name = fields.Char(required=True)
+    property_ids = fields.One2many("estate.property","property_type_id")
 
-    _unique_type_name = models.Constraint("UNIQUE(name)", "A property type must be unique")
-    _check_name_not_empty = models.Constraint("CHECK(name != '')", "A property type name cannot be empty")
-
-    property_ids = fields.One2many("estate.property", "property_type_id")
+    _unique_type_name = models.Constraint(
+        'UNIQUE(name)',
+        'A property type must be unique'
+    )

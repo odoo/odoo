@@ -1,13 +1,13 @@
-from odoo import api, models, fields
+from odoo import models,fields
 
 class EstatePropertyTag(models.Model):
     _name = "estate.property.tag"
-    _description = "property tags"
+    _description = "Estate Property Tags"
 
-    # name = fields.Char()
     name = fields.Char(required=True)
-    color = fields.Integer("color")
+    color = fields.Integer("Color")
 
-    _unique_tag_name = models.Constraint("UNIQUE(name)", "A property tag must be unique")
-
-    _check_name_not_empty = models.Constraint("CHECK(name != '')", "A property tag name cannot be empty")
+    _unique_tag_name = models.Constraint(
+        'UNIQUE(name)',
+        'A property tag must be unique'
+    )
