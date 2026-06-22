@@ -32,6 +32,13 @@
             <field name="is_published" eval="True"/>
         </record>
 
+        <record id="base.us" model="res.country">
+            <field name="tax_display">tax_excluded</field>
+        </record>
+        <record id="base.ca" model="res.country">
+            <field name="tax_display">tax_excluded</field>
+        </record>
+
     </data>
 
     <function model="ir.model.fields" name="formbuilder_whitelist">

@@ -629,11 +629,12 @@ form: module.record_id""" % (xml_id,)
             except ParseError:
                 raise
             except ValidationError as err:
-                msg = "while parsing {file}:{viewline}\n{err}\n\nView error context:\n{context}\n".format(
+                msg = "while parsing {file}:{viewline}\n{err}\n\nView error context:\n{context}\n{view}".format(
                     file=rec.getroottree().docinfo.URL,
                     viewline=rec.sourceline,
-                    context=pprint.pformat(getattr(err, 'context', None) or '-no context-'),
+                    context=pprint.pformat(getattr(err, "context", None) or "-no context-"),
                     err=err.args[0],
+                    view=etree.tostring(rec, encoding="unicode").rstrip(),
                 )
                 _logger.debug(msg, exc_info=True)
                 raise ParseError(msg) from None  # Restart with "--log-handler odoo.tools.convert:DEBUG" for complete traceback

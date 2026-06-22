@@ -23,6 +23,7 @@ CART_SESSION_CACHE_KEY = "sale_order_id"
 FISCAL_POSITION_SESSION_CACHE_KEY = "fiscal_position_id"
 PRICELIST_SESSION_CACHE_KEY = "website_sale_current_pl"
 PRICELIST_SELECTED_SESSION_CACHE_KEY = "website_sale_selected_pl_id"
+PRICELIST_SELECTED_COUNTRY_SESSION_CACHE_KEY = "website_sale_selected_pl_country_id"
 
 
 class Website(models.Model):
@@ -261,13 +262,6 @@ class Website(models.Model):
         string="Categories", comodel_name="product.public.category"
     )
 
-    currency_id = fields.Many2one(
-        string="Default Currency",
-        comodel_name="res.currency",
-        compute="_compute_currency_id",
-        compute_sql="_compute_sql_currency_id",
-        compute_sudo=True,
-    )
     pricelist_ids = fields.One2many(
         string="Price list available for this Ecommerce/Website",
         comodel_name="product.pricelist",
@@ -286,6 +280,28 @@ class Website(models.Model):
         check_company=True,
     )
 
+    # Session dependant
+    pricelist_id = fields.Many2one(
+        comodel_name="product.pricelist", compute="_compute_session_info", compute_sudo=True
+    )
+    currency_id = fields.Many2one(
+        string="Default Currency",
+        comodel_name="res.currency",
+        compute="_compute_session_info",
+        compute_sql="_compute_sql_currency_id",
+        compute_sudo=True,
+    )
+    country_id = fields.Many2one(
+        comodel_name="res.country",
+        compute="_compute_session_info",
+        compute_sudo=True,
+        inverse="_inverse_country_id",
+    )
+    tax_display = fields.Selection(
+        selection=[("tax_excluded", "Tax Excluded"), ("tax_included", "Tax Included")],
+        compute="_compute_tax_display",
+    )
+
     # === COMPUTE METHODS ===#
 
     def _compute_pricelist_ids(self):
@@ -297,11 +313,22 @@ class Website(models.Model):
             )
 
     @api.depends("company_id")
-    def _compute_currency_id(self):
+    def _compute_session_info(self):
+        session_pricelist = self.env["product.pricelist"].browse(
+            request and hasattr(request, "pricelist") and request.pricelist.id
+        )
+        session_country = self.env["res.country"].browse(
+            request and request.session.get(PRICELIST_SELECTED_COUNTRY_SESSION_CACHE_KEY)
+        )
         for website in self:
-            website.currency_id = (
-                request and hasattr(request, "pricelist") and request.pricelist.currency_id
-            ) or website.company_id.sudo().currency_id
+            website.pricelist_id = session_pricelist
+            website.country_id = session_country or website.company_id.country_id
+            website.currency_id = session_pricelist.currency_id or website.company_id.currency_id
+
+    def _inverse_country_id(self):
+        self.ensure_one()
+        if request:
+            request.session[PRICELIST_SELECTED_COUNTRY_SESSION_CACHE_KEY] = self.country_id.id
 
     def _compute_sql_currency_id(self, table):  # noqa: ARG002
         msg = "website.currency_id is not searchable"
@@ -317,6 +344,13 @@ class Website(models.Model):
     def _compute_show_line_subtotals_tax_selection(self):
         for website in self:
             website.show_line_subtotals_tax_selection = "tax_excluded"
+
+    @api.depends("country_id", "show_line_subtotals_tax_selection")
+    def _compute_tax_display(self):
+        for website in self:
+            website.tax_display = (
+                website.country_id.tax_display or website.show_line_subtotals_tax_selection
+            )
 
     # === SELECTION METHODS ===#
 
@@ -1156,3 +1190,20 @@ class Website(models.Model):
         :rtype: float
         """
         return product.qty_available - product.outgoing_qty
+
+    def _prepare_pricelist_selector_values(self):
+        self.ensure_one()
+        selectable_pricelists = self.get_pricelist_available(show_visible=True)
+        all_countries = self.env["res.country"].browse(self.env["res.country"]._cached_data()["id"])
+        first_pricelist_by_currency = {pl.currency_id: pl for pl in reversed(selectable_pricelists)}
+        default_pricelist = first_pricelist_by_currency.get(
+            self.company_id.currency_id, self.pricelist_id
+        )
+
+        return {
+            "currencies": first_pricelist_by_currency,
+            "countries": {
+                country: first_pricelist_by_currency.get(country.currency_id, default_pricelist)
+                for country in all_countries
+            },
+        }

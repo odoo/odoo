@@ -73,18 +73,12 @@
                                 </li>
                             </ol>
                             <div class="d-flex d-md-none gap-2 ms-auto">
-                                <t t-call="website_sale.pricelist_list"/>
                                 <t t-call="website.website_search_box_input"
                                     search_type.f="products"
                                     placeholder="placeholder"
                                     _simple_button_layout="True"
                                     _simple_button_classes.f="o_wsale_product_search_mobile_btn d-none btn-{{navClass}}"/>
                             </div>
-                        </div>
-                        <div
-                            class="o_wsale_product_top_bar_desktop d-none d-md-inline-flex flex-wrap gap-2 w-auto mb-lg-auto"
-                        >
-                            <t t-call="website_sale.pricelist_list"/>
                         </div>
                     </div>
                     <div
@@ -144,6 +138,11 @@
                                         class="o_wsale_product_details_content_section o_wsale_product_details_content_section_cta mb-4"
                                     >
                                         <t t-call="website_sale.cta_wrapper"/>
+                                        <h1>Hello world <t t-out="str(combination_info.get('show_delivery_availability'))"/></h1>
+                                        <t
+                                            t-if="combination_info.get('show_delivery_availability')"
+                                            t-call="website_sale.delivery_availability_widget"
+                                        />
                                     </div>
 
                                     <div
@@ -196,6 +195,17 @@
                 <div class="oe_structure oe_empty oe_structure_not_nearest mt16" id="oe_structure_website_sale_product_2" data-editor-message.translate="Drag blocks here to add them on all products"/>
             </div>
         </t>
+    </template>
+
+    <template id="website_sale.delivery_availability_widget">
+        <t t-set="props" t-value="{
+            'deliveryStockData': combination_info.get('delivery_stock_data', {}),
+        }"/>
+        <owl-component
+            name="website_sale.DeliveryAvailability"
+            t-att-props="json.dumps(props)"
+            t-attf-class="d-flex o_not_editable mb-4 #{'w-100' if not is_50_pc else 'w-100 w-sm-75'}"
+        />
     </template>
 
     <template id="website_sale.variants">
@@ -954,7 +964,7 @@
 
     <template id="website_sale.tax_indication" active="False">
         <small
-            t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+            t-if="website.tax_display == 'tax_excluded'"
             class="text-muted text-nowrap"
         >
             (Tax excluded)

@@ -821,7 +821,7 @@ class ProductTemplate(models.Model):
 
         if (
             self.type == "combo"
-            and website.show_line_subtotals_tax_selection == "tax_included"
+            and website.tax_display == "tax_included"
             and not all(
                 tax.price_include
                 for tax in self.sudo().combo_ids.combo_item_ids.product_id.taxes_id
@@ -959,6 +959,7 @@ class ProductTemplate(models.Model):
             "is_storable": True,
             "allow_out_of_stock_order": product_or_template.allow_out_of_stock_order,
             "available_threshold": product_or_template.available_threshold,
+            "show_delivery_availability": True,  # Enable the Delivery Availability widget.
         })
         if product_or_template.is_product_variant:
             product_sudo = product_or_template.sudo()
@@ -994,6 +995,34 @@ class ProductTemplate(models.Model):
                 "stock_notification_email": stock_notification_email,
                 "is_in_wishlist": product_sudo._is_in_wishlist(),
             })
+
+            # Prepare the delivery stock data.
+            DeliveryCarrier = self.env["delivery.carrier"].sudo()
+            available_delivery_methods_sudo = DeliveryCarrier.search([
+                "|",
+                ("website_id", "=", website.id),
+                ("website_id", "=", False),
+                ("website_published", "=", True),
+                ("delivery_type", "!=", "in_store"),
+            ])
+            product_tags = product_or_template.all_product_tag_ids
+            valid_delivery_methods = available_delivery_methods_sudo.filtered(
+                lambda dm: not (dm.excluded_tag_ids & product_tags)
+            )
+            in_stock = free_qty > 0 or product_or_template.allow_out_of_stock_order
+            show_quantity = (
+                product_or_template.show_availability
+                and in_stock
+                and product_or_template.available_threshold >= free_qty
+            )
+            if valid_delivery_methods:
+                combination_info["delivery_stock_data"] = {
+                    "in_stock": in_stock,
+                    "show_quantity": show_quantity,
+                    "quantity": free_qty,
+                }
+            else:
+                combination_info["delivery_stock_data"] = {}
         else:
             combination_info.update({"free_qty": 0, "cart_qty": 0})
 
@@ -1060,9 +1089,7 @@ class ProductTemplate(models.Model):
         )
 
         if not tax_display:
-            show_tax = (
-                website or self.env.website
-            ).show_line_subtotals_tax_selection
+            show_tax = (website or self.env.website).tax_display
             tax_display = "total_excluded" if show_tax == "tax_excluded" else "total_included"
 
         return tax_details[tax_display]
@@ -1665,9 +1692,7 @@ class ProductTemplate(models.Model):
             product_or_template, date, currency, pricelist, **kwargs
         )
 
-        if (
-            website := self.env.website
-        ) and product_or_template.is_product_variant:
+        if (website := self.env.website) and product_or_template.is_product_variant:
             max_quantity = product_or_template._get_max_quantity(website, request.cart, **kwargs)
             if max_quantity is not None:
                 if uom:
