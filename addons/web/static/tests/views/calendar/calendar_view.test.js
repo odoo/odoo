@@ -2661,7 +2661,9 @@ test(`string is used as label when provided`, async () => {
             </calendar>
         `,
     });
-    expect(`.o_calendar_filter[data-name="attendee_ids"] .o_cw_filter_label`).toHaveText("Custom Label");
+    expect(`.o_calendar_filter[data-name="attendee_ids"] .o_cw_filter_label`).toHaveText(
+        "Custom Label"
+    );
 });
 
 test.tags("desktop");
@@ -2675,7 +2677,9 @@ test(`filter label falls back to field name when string is absent`, async () => 
             </calendar>
         `,
     });
-    expect(`.o_calendar_filter[data-name="attendee_ids"] .o_cw_filter_label`).toHaveText("Attendees");
+    expect(`.o_calendar_filter[data-name="attendee_ids"] .o_cw_filter_label`).toHaveText(
+        "Attendees"
+    );
 });
 
 test(`Colors: cycling through available colors`, async () => {
@@ -6247,12 +6251,13 @@ test(`drag and drop events from side panel to schedule them`, async () => {
         });
         expect.step("fetch events to schedule");
     });
-    onRpc("event", "write", ({ args }) => {
+    onRpc("event", "write", ({ args, kwargs }) => {
         expect(args[0][0]).toBe(8);
         expect(args[1]).toEqual({
             start: serializeDateTime(expectedDate),
             stop: serializeDateTime(expectedDate.plus({ hours: 1 })),
         });
+        expect(kwargs.context.from_custom_context).toBe(true);
         expect.step("write");
     });
 
@@ -6264,6 +6269,7 @@ test(`drag and drop events from side panel to schedule them`, async () => {
                 <filter name="user_id" avatar_field="image"/>
             </calendar>
         `,
+        context: { from_custom_context: true },
     });
     expect(".o_event_to_schedule_draggable").toHaveCount(2);
     const { drop, moveTo } = await contains(".o_event_to_schedule_draggable:first").drag();
@@ -6352,12 +6358,13 @@ test(`drag and drop to unschedule`, async () => {
     onRpc("event", "web_search_read", () => {
         expect.step("fetch events to schedule");
     });
-    onRpc("event", "write", ({ args }) => {
+    onRpc("event", "write", ({ args, kwargs }) => {
         expect(args[0][0]).toBe(2);
         expect(args[1]).toEqual({
             start: false,
             stop: false,
         });
+        expect(kwargs.context.from_custom_context).toBe(true);
         expect.step("write");
     });
     await mountView({
@@ -6368,6 +6375,7 @@ test(`drag and drop to unschedule`, async () => {
                 <filter name="user_id" avatar_field="image"/>
             </calendar>
         `,
+        context: { from_custom_context: true },
     });
     expect(".o_calendar_unschedule_zone").toHaveCount(0);
     expect(".o_calendar_sidepanel h5").toBeVisible();
@@ -6383,4 +6391,27 @@ test(`drag and drop to unschedule`, async () => {
     expect(".o_event_to_schedule_draggable").toHaveText("event 2");
     expect(".o_calendar_sidepanel h5").toBeVisible();
     expect(".o_calendar_sidepanel h5").toHaveText("1 to schedule");
+});
+
+test.tags("desktop");
+test(`show display name of event in edit mode`, async () => {
+    Event._records.push({
+        id: 8,
+        name: "event 8",
+        start: false,
+        stop: false,
+    });
+
+    await mountView({
+        resModel: "event",
+        type: "calendar",
+        arch: `
+            <calendar schedule="1" date_start="start" date_stop="stop" event_open_popup="1"/>
+        `,
+    });
+    expect(".o_event_to_schedule_draggable span").toHaveText("event 8");
+    await contains(".o_event_to_schedule_draggable").click();
+    expect(".modal-content .modal-title").toHaveText("Open: event 8", {
+        message: "The title of the edit modal should contain the display name of the event",
+    });
 });
