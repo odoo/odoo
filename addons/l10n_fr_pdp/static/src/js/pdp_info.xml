@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="l10n_fr_pdp.WhatIsPdp">
+        <div class="modal-content shadow">
+            <div class="modal-body p-5">
+                <h2 class="fw-bold mb-1 text-center">What is electronic invoicing and why is it great?</h2>
+                <ul class="d-grid gap-4 my-4 list-unstyled small">
+                    <li class="d-flex gap-4">
+                        <div>
+                            <h5 class="mb-0">E-Invoicing will be mandatory starting September 1 2026</h5>
+                            Starting in September 2026 all French companies need to be able to receive electronic invoices
+                        </div>
+                    </li>
+                    <li class="d-flex gap-4">
+                        <div>
+                            <h5 class="mb-0">The e-invoicing network</h5>
+                            PEPPOL is the secure standard for e-invoices used in EU and across the world.
+                        </div>
+                    </li>
+                    <li class="d-flex gap-4">
+                        <div>
+                            <h5 class="mb-0">Fully automated</h5>
+                            Electronic Invoicing allows for complete automation of sending and receiving e-invoices.
+                        </div>
+                    </li>
+                    <li class="d-flex gap-4">
+                        <div>
+                            <h5 class="mb-0">Free on Odoo</h5>
+                            Create, send and receive e-invoices for free.
+                        </div>
+                    </li>
+                </ul>
+                <button class="btn btn-lg btn-primary mt-3 w-100" t-on-click="activate" t-out="closeButtonLabel()"/>
+            </div>
+        </div>
+    </t>
+
+</templates>
