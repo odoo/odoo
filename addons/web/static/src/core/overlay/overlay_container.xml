@@ -3,7 +3,7 @@
 
     <t t-name="web.OverlayContainer">
         <div class="o-overlay-container" t-ref="this.root">
-            <t t-foreach="this.sortedOverlays()" t-as="overlay" t-key="overlay.id">
+            <t t-foreach="this.overlayPlugin.overlays.items()" t-as="overlay" t-key="overlay.id">
                 <ErrorHandler t-if="this.isVisible(overlay)" onError="(error) => this.handleError(overlay, error)">
                     <OverlayItem scope="overlay.scope" component="overlay.component" props="overlay.props"/>
                 </ErrorHandler>

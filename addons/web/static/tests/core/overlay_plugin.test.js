@@ -3,6 +3,7 @@ import { animationFrame } from "@odoo/hoot-mock";
 import {
     Component,
     Plugin,
+    effect,
     providePlugins,
     useConfig,
     usePlugin,
@@ -19,6 +20,7 @@ import {
 
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useService } from "@web/core/utils/hooks";
+import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
 
 test("simple case", async () => {
     await mountWithCleanup(MainComponentsContainer);
@@ -31,7 +33,7 @@ test("simple case", async () => {
         props = useProps();
     }
 
-    const remove = getService("overlay").add(MyComp, {});
+    const remove = getService(OverlayPlugin).add(MyComp, {});
     await animationFrame();
     expect(".o-overlay-container .overlayed").toHaveCount(1);
 
@@ -55,7 +57,7 @@ test("shadow DOM overlays are visible when registered before main component is m
 
     assignTestEnv({ rootId: "my-root-id" });
     await makeTestApp();
-    getService("overlay").add(MyComp, {}, { rootId: "my-root-id" });
+    getService(OverlayPlugin).add(MyComp, {}, { rootId: "my-root-id" });
     await mountWithCleanup(MainComponentsContainer, {
         target: root.shadowRoot,
     });
@@ -72,7 +74,7 @@ test("onRemove callback", async () => {
     }
 
     const onRemove = () => expect.step("onRemove");
-    const remove = getService("overlay").add(MyComp, {}, { onRemove });
+    const remove = getService(OverlayPlugin).add(MyComp, {}, { onRemove });
 
     expect.verifySteps([]);
     remove();
@@ -88,9 +90,9 @@ test("multiple overlays", async () => {
         props = useProps();
     }
 
-    const remove1 = getService("overlay").add(MyComp, { className: "o1" });
-    const remove2 = getService("overlay").add(MyComp, { className: "o2" });
-    const remove3 = getService("overlay").add(MyComp, { className: "o3" });
+    const remove1 = getService(OverlayPlugin).add(MyComp, { className: "o1" });
+    const remove2 = getService(OverlayPlugin).add(MyComp, { className: "o2" });
+    const remove3 = getService(OverlayPlugin).add(MyComp, { className: "o3" });
     await animationFrame();
     expect(".overlayed").toHaveCount(3);
     expect(".o-overlay-container :nth-child(1) .overlayed").toHaveClass("o1");
@@ -122,9 +124,9 @@ test("sequence", async () => {
         props = useProps();
     }
 
-    const remove1 = getService("overlay").add(MyComp, { className: "o1" }, { sequence: 50 });
-    const remove2 = getService("overlay").add(MyComp, { className: "o2" }, { sequence: 60 });
-    const remove3 = getService("overlay").add(MyComp, { className: "o3" }, { sequence: 40 });
+    const remove1 = getService(OverlayPlugin).add(MyComp, { className: "o1" }, { sequence: 50 });
+    const remove2 = getService(OverlayPlugin).add(MyComp, { className: "o2" }, { sequence: 60 });
+    const remove3 = getService(OverlayPlugin).add(MyComp, { className: "o3" }, { sequence: 40 });
     await animationFrame();
     expect(".overlayed").toHaveCount(3);
     expect(".o-overlay-container :nth-child(1) .overlayed").toHaveClass("o3");
@@ -176,4 +178,40 @@ test("allow scope as option", async () => {
     await mountWithCleanup(Parent);
     expect(".o-overlay-container li:nth-child(1)").toHaveText("A=foo");
     expect(".o-overlay-container li:nth-child(2)").toHaveText("B=bar");
+});
+
+test("add() does not leak as a reactive dependency into an unrelated caller's effect", async () => {
+    await mountWithCleanup(MainComponentsContainer);
+    class MyComp extends Component {
+        static template = xml`
+            <div class="overlayed"></div>
+        `;
+        props = useProps();
+    }
+    class OtherComp extends Component {
+        static template = xml``;
+        props = useProps();
+    }
+
+    const plugin = getService(OverlayPlugin);
+
+    let runCount = 0;
+    const cleanup = effect(() => {
+        runCount++;
+        plugin.add(MyComp, {});
+    });
+    await animationFrame();
+    expect(runCount).toBe(1);
+    expect(".o-overlay-container .overlayed").toHaveCount(1);
+
+    const removeOther = plugin.add(OtherComp, {});
+    await animationFrame();
+    expect(runCount).toBe(1);
+    expect(".o-overlay-container .overlayed").toHaveCount(1);
+
+    removeOther();
+    await animationFrame();
+    expect(runCount).toBe(1);
+
+    cleanup();
 });
