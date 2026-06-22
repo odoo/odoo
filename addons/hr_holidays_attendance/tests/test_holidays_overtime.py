@@ -78,6 +78,7 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
 
         cls.ruleset = cls.env['hr.attendance.overtime.ruleset'].create({
             'name': 'Ruleset schedule quantity',
+            'company_id': cls.company.id,
             'rule_ids': [
                 Command.create({
                     'name': 'Rule schedule quantity',
@@ -130,6 +131,19 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
 
             self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
             self.assertEqual(self.employee.total_overtime, 8, 'Should have 8 hours of overtime')
+
+    def test_check_negative_overtime(self):
+        self.company.absence_management = True
+        self.new_attendance(check_in=datetime(2026, 6, 19, 10), check_out=datetime(2026, 6, 19, 16))
+        self.assertEqual(self.employee.total_overtime, -2.0)
+        overtime_data = self.employee.get_attendace_data_by_employee(
+            datetime(2026, 6, 1), datetime(2026, 6, 30)
+        )[self.employee.id]
+        self.assertDictEqual(overtime_data, {
+            'worked_hours': 6.0,
+            'overtime_hours': -2.0,
+            'unspent_compensable_overtime': -2.0,
+        })
 
     def test_leave_adjust_overtime(self):
         self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
