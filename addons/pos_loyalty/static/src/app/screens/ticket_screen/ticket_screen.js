@@ -58,4 +58,17 @@ patch(TicketScreen.prototype, {
         await super.onDoRefund(...arguments);
         await this.pos.updatePrograms();
     },
+    onClickOrderline(orderline) {
+        if (
+            this.getSelectedOrder()?.finalized &&
+            this.getSelectedOrderlineId() == orderline.id &&
+            this._isEWalletGiftCard(orderline)
+        ) {
+            {
+                this._showNotAllowedRefundNotification();
+                return;
+            }
+        }
+        return super.onClickOrderline(...arguments);
+    },
 });
