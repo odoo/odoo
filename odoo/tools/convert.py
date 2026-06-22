@@ -26,6 +26,7 @@ import odoo
 from .config import config
 from .misc import file_open, file_path, SKIPPED_ELEMENT_TYPES
 from odoo.exceptions import ValidationError
+from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES
 
 from .safe_eval import safe_eval as s_eval, pytz, time
 
@@ -169,7 +170,9 @@ def _eval_xml(self, node, env):
     elif node.tag == "function":
         model_str = node.get('model')
         model = env[model_str]
-        method_name = node.get('name')
+        method_name = node.get('name') or ''
+        if '__' in method_name or method_name in _UNSAFE_ATTRIBUTES:
+            raise NameError(f'Access to forbidden name {method_name!r}')
         # determine arguments
         args = []
         kwargs = {}
