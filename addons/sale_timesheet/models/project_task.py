@@ -61,13 +61,14 @@ class ProjectTask(models.Model):
     def _compute_last_sol_of_customer(self):
         sol_per_domain = dict()
         for task in self:
-            domain = tuple(task._get_last_sol_of_customer_domain())
+            domain = task._get_last_sol_of_customer_domain()
             if not domain:
                 task.last_sol_of_customer = False
                 continue
-            if domain not in sol_per_domain:
-                sol_per_domain[domain] = self.env['sale.order.line'].search(domain, limit=1)
-            task.last_sol_of_customer = sol_per_domain[domain]
+            domain_key = repr(domain)
+            if domain_key not in sol_per_domain:
+                sol_per_domain[domain_key] = self.env['sale.order.line'].search(domain, limit=1)
+            task.last_sol_of_customer = sol_per_domain[domain_key]
 
     def _inverse_partner_id(self):
         super()._inverse_partner_id()
@@ -102,7 +103,7 @@ class ProjectTask(models.Model):
             SaleOrderLine._domain_sale_line_service(),
             [
                 ('company_id', '=?', self.company_id.id),
-                ('order_partner_id', 'child_of', self.partner_id.commercial_partner_id.id),
+                ('order_partner_id', 'child_of', self.partner_id.commercial_partner_id._origin.id),
                 ('remaining_hours', '>', 0),
             ],
         ])
