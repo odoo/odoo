@@ -512,7 +512,9 @@ class AccountMoveSend(models.AbstractModel):
                 continue
 
             try:
-                move.journal_id._notify_invoice_subscribers(
+                move.journal_id.with_context(
+                    einvoice_notification_author_id=move_data.get('author_partner_id')
+                )._notify_invoice_subscribers(
                     invoice=move,
                     mail_params={
                         'attachment_ids': [

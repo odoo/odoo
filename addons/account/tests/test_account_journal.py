@@ -253,6 +253,48 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
             self.assertEqual(res.status_code, 403)
             self.assertEqual(journal.incoming_einvoice_notification_email, email)
 
+    def test_journal_notifications_exclude_sender_and_salesperson(self):
+        salesperson_user = new_test_user(
+            self.env,
+            login='salesperson_user',
+            name='Salesperson',
+            email='salesperson@example.com',
+            groups='account.group_account_invoice',
+        )
+        sender_partner = self.env['res.partner'].create({
+            'name': 'Account Man',
+            'email': 'accountman@example.com',
+        })
+        subscriber_email = 'external_subscriber@example.com'
+
+        journal = self.company_data['default_journal_sale']
+        journal.incoming_einvoice_notification_email = f"{salesperson_user.email}, {subscriber_email}, {sender_partner.email}"
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'journal_id': journal.id,
+            'partner_id': self.partner_a.id,
+            'invoice_user_id': salesperson_user.id,
+            'invoice_line_ids': [Command.create({
+                'name': 'Test product layout line',
+                'price_unit': 100.0,
+            })]
+        })
+        invoice.action_post()
+
+        with patch('odoo.addons.mail.models.mail_template.MailTemplate.send_mail') as mock_send_mail:
+            journal.with_context(einvoice_notification_author_id=sender_partner.id)._notify_invoice_subscribers(invoice)
+
+            sent_emails_to = []
+            for list in mock_send_mail.call_args_list:
+                email_values = list[1].get('email_values', {})
+                if 'email_to' in email_values:
+                    sent_emails_to.append(email_values['email_to'])
+
+        self.assertIn(subscriber_email, sent_emails_to)
+        self.assertNotIn(salesperson_user.email, sent_emails_to)
+        self.assertNotIn(sender_partner.email, sent_emails_to)
+
 
 @tagged('post_install', '-at_install', 'mail_alias')
 class TestAccountJournalAlias(AccountTestInvoicingCommon, MailCommon):
