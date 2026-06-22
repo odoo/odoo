@@ -3,6 +3,7 @@ import logging
 from odoo import api, fields, models, modules
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 
+from odoo.addons.l10n_fr_pdp.models.res_company import PDP_identifier_re
 from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
 from odoo.addons.iap.tools import iap_tools
 
@@ -28,6 +29,7 @@ class PdpRegistration(models.TransientModel):
         inverse="_inverse_pdp_identifier",
         readonly=False,
         required=True,
+        help="The identifier starts with the SIREN, the part after the SIREN is optional. The expected format of the identifier is: SIREN, SIREN_SIRET, SIREN_SIRET_CodeRoutage or SIREN_SuffixeAdressage",
     )
     pdp_pilot_phase = fields.Boolean(
         related='company_id.l10n_fr_pdp_pilot_phase',
@@ -99,10 +101,11 @@ class PdpRegistration(models.TransientModel):
         for record in self:
             record.company_id.pdp_identifier = record.pdp_identifier
 
-    @api.depends('company_id.company_registry')
+    @api.depends('pdp_identifier')
     def _compute_siren_number(self):
         for wizard in self:
-            wizard.siren_number = wizard.company_id.partner_id._l10n_fr_pdp_get_siren()
+            match = PDP_identifier_re.match(wizard.pdp_identifier or '')
+            wizard.siren_number = match and match.group(1)
 
     @api.depends('company_id.account_edi_proxy_client_ids')
     def _compute_edi_user_id(self):
@@ -199,6 +202,7 @@ class PdpRegistration(models.TransientModel):
         return self._get_records_action(
             name=self.env._("Send via French electronic invoicing"),
             target='new',
+            view_mode='form',
         )
 
     # -------------------------------------------------------------------------
@@ -245,7 +249,7 @@ class PdpRegistration(models.TransientModel):
                 'message': self.env._("Identity verified."),
                 'type': 'success',
                 'sticky': True,
-                'next': self._action_open_pdp_form(),
+                'next': self.button_register_pdp_participant(),
             }
         elif self.pdp_kyc_status == 'fail':
             return {
@@ -281,7 +285,7 @@ class PdpRegistration(models.TransientModel):
 
     def button_refresh_authentication(self):
         self.ensure_one()
-        self.company_id._refresh_pdp_authentication_status()
+        self.company_id._refresh_pdp_authentication_status(send_bus=False)
         return self._display_status_notification()
 
     def button_open_authentication_link(self):
