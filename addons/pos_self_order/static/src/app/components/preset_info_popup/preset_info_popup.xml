@@ -16,12 +16,12 @@
                         type="text"
                         class="form-control form-control-lg"
                         placeholder="Name"
-                        t-custom-model="this.state.name"/>
+                        t-model.proxy="this.state.name"/>
                     <input t-if="this.preset.needsEmail || this.preset.needsPartner"
                         type="text"
                         class="form-control form-control-lg"
                         placeholder="Email"
-                        t-custom-model="this.state.email"/>
+                        t-model.proxy="this.state.email"/>
                     <t t-if="this.preset.needsName || this.preset.needsPartner">
                         <div class="input-group">
                             <div class="position-relative w-25 me-3">
@@ -30,7 +30,7 @@
                                     <span>+<t t-out="this.state.phoneCode"/></span>
                                 </div>
                                 <select class="position-absolute top-0 start-0 w-100 h-100 opacity-0"
-                                        t-custom-model.number="this.state.phoneCode">
+                                        t-model.proxy.number="this.state.phoneCode">
                                     <option t-foreach="this.selfOrder.models['res.country'].getAll()" t-as="c" t-key="c.id" t-att-value="c.phone_code">
                                         <t t-out="this.flagEmoji(c.code)"/> +<t t-out="c.phone_code"/> <t t-out="c.name"/>
                                     </option>
@@ -39,7 +39,7 @@
                             <input type="tel"
                                 class="form-control form-control-lg"
                                 placeholder="Phone"
-                                t-custom-model="this.state.phoneLocal" />
+                                t-model.proxy="this.state.phoneLocal" />
                         </div>
                         <p t-if="!this.checkPhoneFormat()" class="text-danger">Enter a valid phone number</p>
                     </t>
@@ -69,7 +69,7 @@
                             <input type="text"
                                 class="form-control form-control-lg"
                                 placeholder="Address"
-                                t-custom-model="this.state.street"/>
+                                t-model.proxy="this.state.street"/>
                         </t>
                     </t>
                 </div>

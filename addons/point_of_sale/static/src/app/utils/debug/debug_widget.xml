@@ -20,7 +20,7 @@
                     <span class="input-group-text">Barcode</span>
                     <input type="text"
                         class="form-control ean"
-                        t-custom-model="this.state.barcodeInput"
+                        t-model.proxy="this.state.barcodeInput"
                         t-att-disabled="!this.barcodeReader"
                         t-attf-placeholder="{{ !this.barcodeReader ? 'No nomenclature' : '' }}"
                         t-on-keydown="this.onBarcodeInputKeydown"
