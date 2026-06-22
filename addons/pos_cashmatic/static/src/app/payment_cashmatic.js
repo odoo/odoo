@@ -12,7 +12,8 @@ export class PaymentCashmatic extends PaymentInterface {
             this.payment_method_id.cashmatic_ip,
             this.payment_method_id.cashmatic_username,
             this.payment_method_id.cashmatic_password,
-            this.payment_method_id.cashmatic_use_lna
+            this.payment_method_id,
+            this.pos.lnaFallback
         );
     }
 

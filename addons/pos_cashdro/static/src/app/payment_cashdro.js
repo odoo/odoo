@@ -13,7 +13,8 @@ export class PaymentCashdro extends PaymentInterface {
             this.payment_method_id.cashdro_ip,
             this.payment_method_id.cashdro_username,
             this.payment_method_id.cashdro_password,
-            this.payment_method_id.cashdro_use_lna
+            this.payment_method_id,
+            this.pos.lnaFallback
         );
 
         this.resumePaymentInProgress();

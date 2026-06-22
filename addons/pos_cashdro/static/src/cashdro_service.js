@@ -46,14 +46,16 @@ export class CashdroService {
      * @param {string} ip
      * @param {string} username
      * @param {string} password
-     * @param {boolean} [forceHttp]
+     * @param {object} pm
+     * @param {boolean} [lnaFallback]
      */
-    connect(ip, username, password, forceHttp = false) {
+    connect(ip, username, password, pm, lnaFallback = false) {
         this._resetState();
         this.ip = ip;
         this.username = username;
         this.password = password;
-        this.forceHttp = forceHttp;
+        this.pm = pm;
+        this.lnaFallback = lnaFallback;
     }
 
     /**
@@ -95,7 +97,7 @@ export class CashdroService {
         this.ip = null;
         this.username = null;
         this.password = null;
-        this.forceHttp = false;
+        this.pm = null;
         this.state = reactive({ amountInserted: 0 });
     }
 
@@ -123,7 +125,20 @@ export class CashdroService {
      * @returns {Promise<Record<string, unknown>>}
      */
     async _sendRequest(operation, params = {}) {
-        const protocol = this.forceHttp ? "http:" : window.location.protocol;
+        try {
+            return await this._fetchRequest(operation, params, this.pm.cashdro_use_lna);
+        } catch (error) {
+            if (!this.lnaFallback || !this.pm.cashdro_use_lna) {
+                throw error;
+            }
+            const result = await this._fetchRequest(operation, params, false);
+            this.pm.cashdro_use_lna = false;
+            return result;
+        }
+    }
+
+    async _fetchRequest(operation, params, forceHttp) {
+        const protocol = forceHttp ? "http:" : window.location.protocol;
         const queryParams = new URLSearchParams({
             operation,
             name: this.username,
@@ -135,7 +150,7 @@ export class CashdroService {
 
         try {
             const response = await fetch(url, {
-                targetAddressSpace: this.forceHttp ? "local" : undefined,
+                targetAddressSpace: forceHttp ? "local" : undefined,
                 signal: AbortSignal.timeout(10000),
             });
 

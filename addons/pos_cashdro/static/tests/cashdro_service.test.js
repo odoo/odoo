@@ -71,20 +71,20 @@ describe("connect", () => {
 
     test("resets state", () => {
         const cashdroService = new CashdroService();
-        cashdroService.forceHttp = true;
+        cashdroService.lnaFallback = true;
         cashdroService.ip = "oldIp";
 
         cashdroService.connect("mock-ip", "mockUser", "mockPassword");
 
         expect(cashdroService.ip).toBe("mock-ip");
-        expect(cashdroService.forceHttp).toBe(false);
+        expect(cashdroService.lnaFallback).toBe(false);
     });
 });
 
 describe("sendPaymentRequest", () => {
     test("works correctly for successful payment", async () => {
         const cashdroService = new CashdroService();
-        cashdroService.connect("mock-ip", "mockUser", "mockPassword");
+        cashdroService.connect("mock-ip", "mockUser", "mockPassword", { cashdro_use_lna: false });
         mockCashdroRequest(
             "startOperation",
             {
@@ -109,7 +109,7 @@ describe("sendPaymentRequest", () => {
 
     test("throws error if Cashdro returns error", async () => {
         const cashdroService = new CashdroService();
-        cashdroService.connect("mock-ip", "mockUser", "mockPassword");
+        cashdroService.connect("mock-ip", "mockUser", "mockPassword", { cashdro_use_lna: false });
         mockCashdroRequest(
             "startOperation",
             {
@@ -130,7 +130,7 @@ describe("sendPaymentRequest", () => {
 describe("waitForPaymentCompletion", () => {
     test("polls payment status until complete", async () => {
         const cashdroService = new CashdroService();
-        cashdroService.connect("mock-ip", "mockUser", "mockPassword");
+        cashdroService.connect("mock-ip", "mockUser", "mockPassword", { cashdro_use_lna: false });
 
         mockCashdroRequest(
             "askOperation",
@@ -161,7 +161,7 @@ describe("waitForPaymentCompletion", () => {
 describe("cancelPayment", () => {
     test("works correctly for successful cancellation", async () => {
         const cashdroService = new CashdroService();
-        cashdroService.connect("mock-ip", "mockUser", "mockPassword");
+        cashdroService.connect("mock-ip", "mockUser", "mockPassword", { cashdro_use_lna: false });
         mockCashdroRequest("finishOperation", {
             name: "mockUser",
             password: "mockPassword",
@@ -176,7 +176,7 @@ describe("cancelPayment", () => {
 
     test("throws error if Cashdro returns error", async () => {
         const cashdroService = new CashdroService();
-        cashdroService.connect("mock-ip", "mockUser", "mockPassword");
+        cashdroService.connect("mock-ip", "mockUser", "mockPassword", { cashdro_use_lna: false });
         mockCashdroRequest(
             "finishOperation",
             {

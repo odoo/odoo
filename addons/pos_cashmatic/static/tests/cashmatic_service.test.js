@@ -66,7 +66,7 @@ describe("connect", () => {
     });
     test("renewOrLogin", async () => {
         const cashmaticService = new CashmaticService();
-        cashmaticService.connect("mock-ip", "mockUser", "mockPassword");
+        cashmaticService.connect("mock-ip", "mockUser", "mockPassword", { cashdro_use_lna: false });
 
         mockCashmaticRequest(POST_REQUESTS.renewToken, "No error");
         mockCashmaticRequest(POST_REQUESTS.login, "No error", {
@@ -88,7 +88,7 @@ describe("connect", () => {
 describe("sendPaymentRequest", () => {
     test("works correctly for successful payment", async () => {
         const cashmaticService = new CashmaticService();
-        cashmaticService.connect("mock-ip", "mockUser", "mockPassword");
+        cashmaticService.connect("mock-ip", "mockUser", "mockPassword", { cashdro_use_lna: false });
 
         mockCashmaticRequest(POST_REQUESTS.renewToken, "No error", {
             token: "cashmaticRenewedToken",
@@ -106,7 +106,7 @@ describe("sendPaymentRequest", () => {
 
     test("returns notDispensed amount when cash cannot be fully dispensed", async () => {
         const cashmaticService = new CashmaticService();
-        cashmaticService.connect("mock-ip", "mockUser", "mockPassword");
+        cashmaticService.connect("mock-ip", "mockUser", "mockPassword", { cashdro_use_lna: false });
 
         mockCashmaticRequest(POST_REQUESTS.renewToken, "No error", {
             token: "cashmaticRenewedToken",
@@ -122,7 +122,7 @@ describe("sendPaymentRequest", () => {
 
     test("Cancel payment", async () => {
         const cashmaticService = new CashmaticService();
-        cashmaticService.connect("mock-ip", "mockUser", "mockPassword");
+        cashmaticService.connect("mock-ip", "mockUser", "mockPassword", { cashdro_use_lna: false });
 
         mockCashmaticRequest(POST_REQUESTS.renewToken, "No error", {
             token: "cashmaticRenewedToken",
