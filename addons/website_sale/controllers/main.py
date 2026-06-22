@@ -425,9 +425,18 @@ class WebsiteSale(payment_portal.PaymentPortal):
         Category = request.env['product.public.category']
         categs_domain = Domain('parent_id', '=', False) & website_domain
         if search:
-            search_categories = Category.search(
-                Domain('product_tmpl_ids', 'in', search_product.ids) & website_domain
-            ).parents_and_self
+            # using a sub-query is more efficient than using an query in the shape of "ids in (...)"
+            # when there are 100k product ids to match.
+            # because of how the set of products search_product is obtained, we cannot use `_search`
+            # to build our sub-query, hence the approach below.
+            search_term = fuzzy_search_term if fuzzy_search_term else search
+            product_domain = self._get_shop_domain(search_term, category, attribute_value_dict)
+            categories_grouped = request.env['product.template']._read_group(
+                domain=product_domain,
+                groupby=['public_categ_ids']
+            )
+            search_category_ids = [c.id for c, in categories_grouped if c]
+            search_categories = Category.browse(search_category_ids).parents_and_self
             categs_domain &= Domain('id', 'in', search_categories.ids)
         else:
             search_categories = Category
