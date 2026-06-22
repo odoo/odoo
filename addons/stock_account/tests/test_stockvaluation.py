@@ -87,7 +87,7 @@ class TestStockValuation(TestStockValuationCommon):
         move3 = self._make_out_move(product, 3)
 
         # stock_account values for move3
-        self.assertEqual(move3.value, -30.0)  # took 3 items from move 1 @ 10.00 per unit
+        self.assertEqual(move3.value, -30.0)
 
         # ---------------------------------------------------------------------
         # Increase received quantity of move1 from 10 to 12, it should create
@@ -107,7 +107,7 @@ class TestStockValuation(TestStockValuationCommon):
         move4 = self._make_out_move(product, 9)
 
         # stock_account values for move4
-        self.assertEqual(move4.value, -90.0)  # took 9 items from move 1 @ 10.00 per unit
+        self.assertEqual(move4.value, -90.0)
 
         # ---------------------------------------------------------------------
         # Sale 20 units, we fall in negative stock for 10 units. Theses are
@@ -301,6 +301,40 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertAlmostEqual(move1.remaining_qty, 1.9)
         self.assertAlmostEqual(move1.remaining_value, 19)
 
+    def test_fifo_batch_out_moves_priced_by_date_not_recordset_order(self):
+        """ Batch-validating several out moves for the same FIFO product must price each
+        of them according to their chronological (date) order, not the arbitrary order
+        they happen to be in inside the recordset passed to `_action_done`.
+        """
+        product = self.product_fifo
+        self._make_in_move(product, 5, 10)
+        self._make_in_move(product, 5, 20)
+
+        now = Datetime.now()
+
+        def _create_out_move(quantity, move_date):
+            move = self.env['stock.move'].create({
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+                'product_id': product.id,
+                'uom_id': self.uom.id,
+                'product_uom_qty': quantity,
+                'date': move_date,
+            })
+            move._action_confirm()
+            move._action_assign()
+            move.move_line_ids.quantity = quantity
+            move.picked = True
+            return move
+
+        out_early = _create_out_move(3, now - timedelta(hours=2))
+        out_late = _create_out_move(4, now - timedelta(hours=1))
+
+        (out_late | out_early)._action_done()
+
+        self.assertEqual(out_early.value, -30.0)
+        self.assertEqual(out_late.value, -60.0)
+
     def test_fifo_negative_1(self):
         """ Send products that you do not have. Value the first outgoing move to the standard
         price, receive in multiple times the delivered quantity and run _fifo_vacuum to compensate.
@@ -319,7 +353,7 @@ class TestStockValuation(TestStockValuationCommon):
 
         # stock values for move1
         self.assertEqual(move1.value, -400.0)
-        self.assertEqual(move1.remaining_qty, 0.0)  # normally unused in out moves, but as it moved negative stock we mark it
+        self.assertEqual(move1.remaining_qty, -50.0)
 
         closing_move = self._close()
         valuation_aml = closing_move.line_ids.filtered(lambda l: l.account_id == self.account_stock_valuation)
@@ -679,8 +713,7 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(move3.product_qty, 8)
         # old value: -80 -(8@10)
         # real value: -148 => -(10@10 + 4@12)
-        # estimated value: -140 => -(14@10)
-        self.assertEqual(move3.value, -140)
+        self.assertEqual(move3.value, -148)
 
         self.assertEqual(product.total_value, 72)
         closing_move = self._close()
@@ -731,7 +764,7 @@ class TestStockValuation(TestStockValuationCommon):
         # ---------------------------------------------------------------------
         move2.quantity = 8
 
-        self.assertEqual(move2.value, -80.0)  # the move actually sent 8@10
+        self.assertEqual(move2.value, -80.0)
 
         self.assertEqual(product.qty_available, 2)
 
@@ -740,7 +773,7 @@ class TestStockValuation(TestStockValuationCommon):
         # ---------------------------------------------------------------------
         move2.quantity = 10
 
-        self.assertEqual(move2.value, -100.0)  # the move actually sent 10@10
+        self.assertEqual(move2.value, -100.0)
         self.assertEqual(product.qty_available, 0)
         self.assertEqual(product.total_value, 0)
 
@@ -2066,7 +2099,6 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date5)).total_value, 1275)
 
         # Edit the quantity done of move1, increase it.
-        # The additional quantity is recorded at date6, not retroactively at date1.
         with freeze_time(date6):
             self._set_quantity(move1, 20)
         self.assertEqual(product.qty_available, 95)

@@ -1,7 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
 from unittest import skip
 
+from freezegun import freeze_time
+
+from odoo import fields
 from odoo.fields import Command
 from odoo.tests import Form, tagged
 
@@ -146,18 +150,19 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
         self.variant_2 = self.product_template._get_variant_for_combination(self.pt_attr1_v2)
 
         def create_simple_bom_for_product(product, name, price):
-            component = self.env['product.product'].create({
-                'name': 'Component ' + name,
-                'is_storable': True,
-                'uom_id': self.uom_unit.id,
-                'categ_id': self.stock_account_product_categ.id,
-                'standard_price': price
-            })
-            self.env['stock.quant'].sudo().create({
-                'product_id': component.id,
-                'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
-                'quantity': 10.0,
-            })
+            with freeze_time(fields.Datetime.now() - timedelta(seconds=10)):
+                component = self.env['product.product'].create({
+                    'name': 'Component ' + name,
+                    'is_storable': True,
+                    'uom_id': self.uom_unit.id,
+                    'categ_id': self.stock_account_product_categ.id,
+                    'standard_price': price
+                })
+                self.env['stock.quant'].sudo().create({
+                    'product_id': component.id,
+                    'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
+                    'quantity': 10.0,
+                })
             bom = self.env['mrp.bom'].create({
                 'product_tmpl_id': self.product_template.id,
                 'product_id': product.id,
@@ -186,17 +191,14 @@ class TestSaleMRPAngloSaxonValuation(TestSaleCommon, ValuationReconciliationTest
                 })],
                 'company_id': self.company_data['company'].id,
             }
-            so = self.env['sale.order'].create(so_vals)
-            # Validate the SO
-            so.action_confirm()
-            # Deliver the three finished products
-            pick = so.picking_ids
-            # To check the products on the picking
-            pick.button_validate()
-            # Create the invoice
-            so._create_invoices()
-            invoice = so.invoice_ids
-            invoice.action_post()
+            with freeze_time(fields.Datetime.now()):
+                so = self.env['sale.order'].create(so_vals)
+                so.action_confirm()
+                pick = so.picking_ids
+                pick.button_validate()
+                so._create_invoices()
+                invoice = so.invoice_ids
+                invoice.action_post()
             return invoice
 
         # Create a SO for variant 1

@@ -92,5 +92,6 @@ class ProductValue(models.Model):
 
         res = super().create(vals_list)
         if move_ids:
-            self.env['stock.move'].browse(move_ids)._set_value()
+            moves = self.env['stock.move'].browse(move_ids)
+            moves._set_value(recompute_date=min(moves.mapped('date')))
         return res
