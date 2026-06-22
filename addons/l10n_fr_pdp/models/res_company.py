@@ -266,7 +266,7 @@ class ResCompany(models.Model):
         self.ensure_one()
         return ENDPOINT if self._get_peppol_edi_mode() == 'prod' else TEST_ENDPOINT
 
-    def _refresh_pdp_authentication_status(self):
+    def _refresh_pdp_authentication_status(self, send_bus=True):
         self.ensure_one()
         base_url = self._pdp_get_iap_url()
         response = iap_tools.iap_jsonrpc(f'{base_url}/api/signaturit_id_authentication/1/kyc_status', params={
@@ -275,6 +275,10 @@ class ResCompany(models.Model):
         kyc_status = response.get('kyc_status')
         if kyc_status in {'success', 'fail'}:
             self.pdp_kyc_status = kyc_status
+            if self.env['account.move']._can_commit():
+                self.env.cr.commit()
+            if not send_bus:  # If called manually from the wizard we do not need the JS to handle it
+                return
             # We are getting the last registration wizard creator to send him the notification.
             # If we don't have any wizard, the user will get the new screen when he will continue the flow.
             pdp_registration = self.env['pdp.registration'].search([('pdp_authentication_uuid', '=', self.pdp_authentication_uuid)], order='id DESC', limit=1)
