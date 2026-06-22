@@ -3186,7 +3186,11 @@ class MrpProduction(models.Model):
         return super()._get_product_catalog_domain() & Domain('type', '=', 'consu')
 
     def _get_action_add_from_catalog_extra_context(self):
-        return {**super()._get_action_add_from_catalog_extra_context(), 'display_stock': True}
+        return {
+            **super()._get_action_add_from_catalog_extra_context(),
+            'display_stock': True,
+            'hide_product_type_filters': True,  # Only goods are displayed
+        }
 
     def _catalog_create_new_line(self, child_field, product, quantity, uom, **kwargs):
         # Trigger the necessary business flows on production updates (see `write` override above)
