@@ -562,8 +562,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             Domain("parent_id", "=", False) & Domain("not_in_shop", "=", False) & website_domain
         )
         if search:
+            # using a sub-query is more efficient than using a query in the shape of "ids in (...)"
+            # when there are 100k product ids to match.
             search_categories = Category.search(
-                Domain("product_tmpl_ids", "in", search_product.ids) & website_domain
+                Domain('product_tmpl_ids', 'in', shop_query)
             ).parents_and_self
             categs_domain &= Domain("id", "in", search_categories.ids)
         else:
