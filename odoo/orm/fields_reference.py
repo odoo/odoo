@@ -1,8 +1,10 @@
 
+import warnings
 from collections import defaultdict
 from operator import attrgetter
 
 from odoo.tools import OrderedSet, unique
+from odoo.tools.misc import SENTINEL
 from odoo.tools.sql import pg_varchar
 
 from .fields import Field
@@ -75,6 +77,11 @@ class Many2oneReference(Integer):
     _related_model_field = property(attrgetter('model_field'))
 
     _description_model_field = property(attrgetter('model_field'))
+
+    def _get_attrs(self, model_class, name):
+        if self._args__.get('aggregator', SENTINEL) is None:
+            warnings.warn(f"Redundant aggregator=None on {self}", stacklevel=1)
+        return super()._get_attrs(model_class, name)
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: id or None
