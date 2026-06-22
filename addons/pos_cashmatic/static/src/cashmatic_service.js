@@ -13,18 +13,32 @@ export const POST_REQUESTS = {
 };
 
 export class CashmaticService {
-    connect(ip, username, password, forceHttp = false) {
+    connect(ip, username, password, pm, lnaFallback = false) {
         this.ip = ip;
         this.username = username;
         this.password = password;
-        this.forceHttp = forceHttp;
+        this.pm = pm;
+        this.lnaFallback = lnaFallback;
         this.token = null;
         this.state = reactive({ amountInserted: 0, amountDispensed: 0 });
     }
 
     async _sendRequest(operation, params) {
-        const protocol = this.forceHttp ? "http:" : window.location.protocol;
-        const port = this.forceHttp ? HTTP_PORT : HTTPS_PORT;
+        try {
+            return await this._fetchRequest(operation, params, this.pm.cashmatic_use_lna);
+        } catch (error) {
+            if (!this.lnaFallback || !this.pm.cashmatic_use_lna) {
+                throw error;
+            }
+            const result = await this._fetchRequest(operation, params, false);
+            this.pm.cashmatic_use_lna = false;
+            return result;
+        }
+    }
+
+    async _fetchRequest(operation, params, forceHttp) {
+        const protocol = forceHttp ? "http:" : window.location.protocol;
+        const port = forceHttp ? HTTP_PORT : HTTPS_PORT;
         const url = `${protocol}//${this.ip}:${port}${operation}`;
         const response = await fetch(url, {
             method: "POST",
@@ -33,7 +47,7 @@ export class CashmaticService {
                 Authorization: `Bearer ${this.token}`,
             },
             body: JSON.stringify(params),
-            targetAddressSpace: this.forceHttp ? "local" : undefined,
+            targetAddressSpace: forceHttp ? "local" : undefined,
         });
 
         if (!response.ok) {

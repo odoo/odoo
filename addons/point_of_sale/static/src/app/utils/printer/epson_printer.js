@@ -25,9 +25,10 @@ function ePOSPrint(children) {
  * Sends print request to ePos printer that is directly connected to the local network.
  */
 export class EpsonPrinter extends BasePrinter {
-    setup({ ip }) {
+    setup({ ip, lnaFallback = false }) {
         super.setup(...arguments);
 
+        this.lnaFallback = lnaFallback;
         const protocol = odoo.use_lna ? "http:" : window.location.protocol;
         this.url = protocol + "//" + ip;
         this.address = this.url + "/cgi-bin/epos/service.cgi?devid=local_printer";
@@ -69,6 +70,23 @@ export class EpsonPrinter extends BasePrinter {
      * @override
      */
     async sendPrintingJob(img) {
+        let result = await this._fetchPrintingJob(img);
+        if (result.result || !this.lnaTargetAddressSpace || !this.lnaFallback) {
+            return result;
+        }
+        const previousAddress = this.address;
+        const previousLnaTargetAddressSpace = this.lnaTargetAddressSpace;
+        this.address = this.address.replace(/^http:/, window.location.protocol);
+        this.lnaTargetAddressSpace = undefined;
+        result = await this._fetchPrintingJob(img);
+        if (!result.result) {
+            this.address = previousAddress;
+            this.lnaTargetAddressSpace = previousLnaTargetAddressSpace;
+        }
+        return result;
+    }
+
+    async _fetchPrintingJob(img) {
         const params = {
             method: "POST",
             body: img,
