@@ -173,7 +173,6 @@ TIN_METADATA = {
         'countries': ['ES'],
     },
     'FI_VAT': {
-        'scheme': '0213',
         'placeholder': 'FI12345671',
         'category': 'VAT',
         'countries': ['FI', 'AX'],
@@ -384,7 +383,6 @@ TIN_METADATA = {
         'countries': ['SA'],
     },
     'SE_VAT': {
-        'scheme': '9955',
         'placeholder': 'SE123456789701',
         'category': 'VAT',
         'countries': ['SE'],
