@@ -3,7 +3,7 @@
 
 <t t-name="html_builder.BuilderDateTimePicker">
     <BuilderComponent>
-        <div t-custom-ref="root" class="w-100">
+        <div t-custom-ref="root" class="w-100 d-flex gap-1">
             <BuilderTextInputBase
                     t-props="this.textInputBaseProps"
                     commit="this.commit"
@@ -11,6 +11,14 @@
                     onFocus.bind="this.onFocus"
                     value="this.displayValue"
             />
+            <button t-if="this.props.allowRelativeDate"
+                    t-attf-class="btn btn-secondary {{ this.isToday ? 'active' : '' }}"
+                    title="Set today as a relative date"
+                    aria-label="Set today as a relative date"
+                    t-on-click="this.toggleToday"
+                    t-att-disabled="this.props.disabled">
+                <i class="fa fa-calendar-check-o" role="img"/>
+            </button>
         </div>
     </BuilderComponent>
 </t>

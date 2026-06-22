@@ -15,6 +15,7 @@ export const textInputBasePassthroughProps = {
     prefix: { type: String, optional: true },
     prefixIcon: { type: String, optional: true },
     selectTextOnFocus: { type: Boolean, optional: true },
+    disabled: { type: Boolean, optional: true },
 };
 
 // Abstract Component

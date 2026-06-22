@@ -1,6 +1,6 @@
 import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { expect, test, describe } from "@odoo/hoot";
-import { queryOne } from "@odoo/hoot-dom";
+import { queryOne, waitFor } from "@odoo/hoot-dom";
 import { xml } from "@odoo/owl";
 import { contains } from "@web/../tests/web_test_helpers";
 const { DateTime } = luxon;
@@ -189,4 +189,31 @@ test("edit a date with the datetime picker should correctly apply the mutation",
     await contains(":iframe .test-options-target").click();
     expect(".we-bg-options-container input").toHaveValue("04/09/2019 16:36");
     expect(":iframe .test-options-target").toHaveAttribute("data-date", "1554824160");
+});
+
+test("toggles today as a relative date", async () => {
+    addBuilderOption({
+        selector: ".test-options-target",
+        template: xml`<BuilderDateTimePicker type="'date'" dataAttributeAction="'date'" allowRelativeDate="true"/>`,
+    });
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+    const inputSelector = ".we-bg-options-container input.o-hb-input-base";
+    const todayButtonSelector = ".we-bg-options-container button:has(.fa-calendar-check-o)";
+
+    await contains(inputSelector).edit("01/01/2025");
+    await waitFor(":iframe .test-options-target[data-date]");
+    const dateTimestamp = queryOne(":iframe .test-options-target").dataset.date;
+    expect(inputSelector).toHaveValue("01/01/2025");
+
+    await contains(todayButtonSelector).click();
+    await waitFor(":iframe .test-options-target[data-date='today']");
+    await waitFor(`${inputSelector}:disabled`);
+    expect(inputSelector).toHaveValue("Today");
+    expect(todayButtonSelector).toHaveClass("active");
+
+    await contains(todayButtonSelector).click();
+    await waitFor(`:iframe .test-options-target[data-date='${dateTimestamp}']`);
+    await waitFor(`${inputSelector}:not(:disabled)`);
+    expect(inputSelector).toHaveValue("01/01/2025");
 });

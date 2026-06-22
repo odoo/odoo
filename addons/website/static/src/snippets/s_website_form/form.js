@@ -227,6 +227,20 @@ export class Form extends Interaction {
         }
     }
 
+    get today() {
+        return DateTime.now();
+    }
+
+    resolveDateCondition(value, isDateTime) {
+        if (!value) {
+            return undefined;
+        }
+        if (value === "today") {
+            return isDateTime ? this.today.startOf("minute") : this.today.startOf("day");
+        }
+        return DateTime.fromSeconds(parseInt(value));
+    }
+
     prepareDateFields() {
         for (const fieldEl of this.dateFieldEls) {
             const inputEl = fieldEl.querySelector("input");
@@ -899,12 +913,10 @@ export class Form extends Interaction {
                 return value.name === "";
         }
 
-        let format = "";
+        const isDateTime = value.includes(":");
+        const format = isDateTime ? localization.dateTimeFormat : localization.dateFormat;
         const xYearAgo = new Date();
-        if (value.includes(":")) {
-            format = localization.dateTimeFormat;
-        } else {
-            format = localization.dateFormat;
+        if (!isDateTime) {
             xYearAgo.setHours(0, 0, 0, 0);
         }
         // Date & Date Time comparison requires formatting the value
@@ -913,7 +925,8 @@ export class Form extends Interaction {
         // conditions to be broken.
         value = dateTime.isValid ? dateTime.toUnixInteger() : NaN;
 
-        comparable = parseInt(comparable);
+        const comparableDate = this.resolveDateCondition(comparable, isDateTime);
+        comparable = comparableDate ? comparableDate.toUnixInteger() : NaN;
         between = parseInt(between) || "";
         switch (comparator) {
             case "dateEqual":
@@ -1237,7 +1250,9 @@ export class Form extends Interaction {
 
         if (["date", "datetime"].includes(type)) {
             const format = type === "date" ? localization.dateFormat : localization.dateTimeFormat;
-            const start = formatDate(DateTime.fromSeconds(parseInt(condition)), { format });
+            const start = formatDate(this.resolveDateCondition(condition, type === "datetime"), {
+                format,
+            });
             const end = formatDate(DateTime.fromSeconds(parseInt(between)), { format });
 
             const dateMessages = {
