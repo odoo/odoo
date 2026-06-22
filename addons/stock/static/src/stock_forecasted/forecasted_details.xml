@@ -81,7 +81,7 @@
                                 class="fw-bold"/>
                         </td>
                         <td class="p-0 text-center border-start-0">
-                            <t t-if="this.displayReserve(line)">
+                            <t t-if="this.displayReserve(line, line_index)">
                                 <a t-if="line.reservation"
                                     href="#"
                                     name="unreserve_link"
