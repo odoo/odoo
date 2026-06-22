@@ -1023,7 +1023,7 @@ class TestTimeRulePipeline(TransactionCase):
             'name': 'Remainder Reclassify Rule',
             'sequence': self.time_rule.sequence + 10,
             'working_hours_mode': 'day',
-            # expected_hours=0 (default for 'day' mode) → no threshold
+            # expected_hours=0 (default for 'day' mode) -> no threshold
             'work_entry_type_id': dblovt_type.id,
             'condition_work_entry_type_ids': [self.att_type.id],
         })
@@ -1055,12 +1055,12 @@ class TestTimeRulePipeline(TransactionCase):
     def test_sequential_pipeline_chained_thresholds(self):
         """Core sequential pipeline scenario with two chained ATT thresholds.
 
-        R1 (>7h fixed, condition=[ATT] → OT1) fires first:
-          ATT(10h) → ATT(7h) remainder + OT1(3h)
+        R1 (>7h fixed, condition=[ATT] -> OT1) fires first:
+          ATT(10h) -> ATT(7h) remainder + OT1(3h)
 
-        R2 (>5h fixed, condition=[ATT] → OT2) fires next on the ATT(7h) remainder;
+        R2 (>5h fixed, condition=[ATT] -> OT2) fires next on the ATT(7h) remainder;
         OT1 is invisible to R2 because it no longer matches condition=[ATT]:
-          ATT(7h) → ATT(5h) remainder + OT2(2h)
+          ATT(7h) -> ATT(5h) remainder + OT2(2h)
 
         Final pipeline: ATT(5h) + OT2(2h) + OT1(3h)
         The pp annotation step (R3 on Sundays) is Belgium-specific and not tested here.
@@ -1097,7 +1097,7 @@ class TestTimeRulePipeline(TransactionCase):
             ('employee_id', '=', self.cal_emp.id),
             ('is_time_rule_output', '=', True),
         ])
-        self.assertEqual(len(output_atts), 2, "R1→OT1(3h) and R2→OT2(2h); two output records")
+        self.assertEqual(len(output_atts), 2, "R1->OT1(3h) and R2->OT2(2h); two output records")
 
         ot1_att = output_atts.filtered(lambda a: a.work_entry_type_id == ot1_type)
         ot2_att = output_atts.filtered(lambda a: a.work_entry_type_id == ot2_type)
@@ -1426,7 +1426,7 @@ class TestTimeRulePipeline(TransactionCase):
 
     def test_multiple_deficit_rules_least_consequent_wins(self):
         """When two deficit rules apply to the same day, the one with the smaller
-        deficit (closest to zero) wins — the other is suppressed via sequence priority.
+        deficit (closest to zero) wins , the other is suppressed via sequence priority.
 
         Rules: deficit-A expects 8h (sequence 10), deficit-B expects 10h (sequence 20).
         Employee works 5h -> deficit-A = 3h, deficit-B = 5h.
@@ -1555,7 +1555,7 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(self.cal_emp.total_overtime, 6.0, places=5,
                                msg="6h on Saturday -> 6h OT output -> total_overtime=6")
 
-    @unittest.skip("cross-trigger (absence leave validated → time rule re-evaluate) not yet implemented")
+    @unittest.skip("cross-trigger (absence leave validated -> time rule re-evaluate) not yet implemented")
     def test_overtime_fires_when_absence_leave_approved(self):
         """Approving an absence leave on a worked day triggers overtime; refusing clears it."""
         pass
@@ -1915,12 +1915,12 @@ class TestTimeRulePipeline(TransactionCase):
     def test_auto_check_out_employee_time_off(self):
         """Auto-check-out respects personal time-off; excess becomes a time-rule output.
 
-        Schedule: Mon 8-12 + 13-17 (8h). Personal leave 15:00-17:00 → effective 6h.
+        Schedule: Mon 8-12 + 13-17 (8h). Personal leave 15:00-17:00 -> effective 6h.
         Check-in 08:00 UTC, cron fires at 17:06 UTC:
-          current_duration = 9.1h, tolerance = 0.1h → 9.0 > 6.0 → triggers
-          excess = 9.1 - 6.1 = 3.0h → check_out = 17:06 - 3h = 14:06
+          current_duration = 9.1h, tolerance = 0.1h -> 9.0 > 6.0 -> triggers
+          excess = 9.1 - 6.1 = 3.0h -> check_out = 17:06 - 3h = 14:06
         Then time rule fires on the written attendance (8:00-14:06 = 6.1h vs 6h schedule):
-          0.1h excess → source trimmed to 8:00-14:00, output att 14:00-14:06 created.
+          0.1h excess -> source trimmed to 8:00-14:00, output att 14:00-14:06 created.
         """
         Attendance = self.env['hr.attendance']
         company = self.env.company
@@ -1943,6 +1943,11 @@ class TestTimeRulePipeline(TransactionCase):
 
         with freeze_time('2024-01-01 17:06:00'):
             Attendance._cron_auto_check_out()
+
+        # Auto-checkout happened today (Jan 1); time rules are deferred to the next
+        # morning's daily cron, which targets yesterday.
+        with freeze_time('2024-01-02 01:00:00'):
+            Attendance._cron_process_day_time_rules()
 
         output_atts = Attendance.search([
             ('employee_id', '=', self.cal_emp.id),
@@ -1975,8 +1980,8 @@ class TestTimeRulePipeline(TransactionCase):
         Rule 2 (seq=10): > 4h/day threshold, reclassifies excess to type2 (higher priority).
 
         Employee works 3h then takes a break, then works 2h = 5h total:
-        - Rule 2 fires first (higher priority, seq=10): 1h above 4h → type2
-        - Rule 1 fires next (seq=20): remaining 4h still tagged as att_type → type1
+        - Rule 2 fires first (higher priority, seq=10): 1h above 4h -> type2
+        - Rule 1 fires next (seq=20): remaining 4h still tagged as att_type -> type1
         Expected: 4h at type1, 1h at type2.
         """
         self.time_rule.write({'active': False})
@@ -1984,7 +1989,7 @@ class TestTimeRulePipeline(TransactionCase):
         type1 = self.env['hr.work.entry.type'].create({'name': 'OT Base', 'code': 'TSTOTP1'})
         type2 = self.env['hr.work.entry.type'].create({'name': 'OT Premium', 'code': 'TSTOTP2'})
 
-        # seq=10 → fires first; expected_hours=4 (has_threshold=True) → excess above 4h → type2
+        # seq=10 -> fires first; expected_hours=4 (has_threshold=True) -> excess above 4h -> type2
         self.env['hr.time.rule'].create({
             'name': 'Above 4h',
             'working_hours_mode': 'day',
@@ -1993,7 +1998,7 @@ class TestTimeRulePipeline(TransactionCase):
             'condition_work_entry_type_ids': [self.att_type.id],
             'sequence': 10,
         })
-        # seq=20 → fires second; expected_hours=0 (has_threshold=False) → reclassifies remaining att_type → type1
+        # seq=20 -> fires second; expected_hours=0 (has_threshold=False) -> reclassifies remaining att_type -> type1
         self.env['hr.time.rule'].create({
             'name': 'Any OT',
             'working_hours_mode': 'day',
@@ -2022,4 +2027,159 @@ class TestTimeRulePipeline(TransactionCase):
             msg="4h should be classified by 'Any OT' rule (hours at or below the 4h mark)")
         self.assertAlmostEqual(type2_hours, 1.0, places=5,
             msg="1h should be classified by 'Above 4h' rule (the hour exceeding the threshold)")
+
+
+@tagged('-at_install', 'post_install', 'work_entry_pipeline')
+class TestTimeRuleCronBehavior(TransactionCase):
+    """
+    Attendances recorded today are not processed immediately, the daily cron handles them the next morning.
+    Past-dated attendances (retroactive entry or modification) re-trigger immediately so outputs stay consistent.
+    Day and week crons are independent: each fires only its own rule period and leaves the other's outputs untouched.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.calendar = cls.env['resource.calendar'].create({
+            'name': '40h/week (cron tests)',
+            'attendance_ids': [
+                (0, 0, {'dayofweek': wd, 'hour_from': h, 'hour_to': h + 4})
+                for wd in ['0', '1', '2', '3', '4']
+                for h in [8, 13]
+            ],
+        })
+        cls.env.company.resource_calendar_id = cls.calendar
+        cls.att_type = cls.env.company._get_default_attendance_work_entry_type()
+        cls.env.company.attendance_work_entry_type_id = cls.att_type
+
+        cls.env['hr.time.rule'].search([]).write({'active': False})
+
+        cls.day_ot_type = cls.env['hr.work.entry.type'].create({
+            'name': 'Daily OT (cron)', 'code': 'CRNDAYOT', 'requires_allocation': False,
+        })
+        cls.week_ot_type = cls.env['hr.work.entry.type'].create({
+            'name': 'Weekly OT (cron)', 'code': 'CRNWKOT', 'requires_allocation': False,
+        })
+
+        cls.emp = cls.env['hr.employee'].create({
+            'name': 'Cron Test Employee',
+            'tz': 'UTC',
+            'attendance_based': False,
+            'date_version': '2020-01-01',
+            'contract_date_start': '2020-01-01',
+            'wage': 3500,
+        })
+
+    def _outputs_for(self, att_id, ot_type=None):
+        domain = [('source_attendance_id', '=', att_id), ('is_time_rule_output', '=', True)]
+        if ot_type:
+            domain.append(('work_entry_type_id', '=', ot_type.id))
+        return self.env['hr.attendance'].search(domain)
+
+    def test_today_attendance_deferred_to_day_cron(self):
+        """Attendance for today produces no output until the daily cron runs the next morning."""
+        rule = self.env['hr.time.rule'].create({
+            'name': 'All hours -> daily OT',
+            'working_hours_mode': 'day',
+            'expected_hours': 0,
+            'work_entry_type_id': self.day_ot_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+        try:
+            with freeze_time('2022-12-12'):
+                att = self.env['hr.attendance'].create({
+                    'employee_id': self.emp.id,
+                    'check_in': datetime(2022, 12, 12, 8),
+                    'check_out': datetime(2022, 12, 12, 14),  # 6h
+                })
+                # Dec 12 is "today" , output deferred to the nightly cron.
+                self.assertFalse(
+                    self._outputs_for(att.id),
+                    "No output expected while attendance date is still today",
+                )
+
+            with freeze_time('2022-12-13'):
+                # Cron runs next morning and targets Dec 12 (yesterday).
+                self.env['hr.attendance']._cron_process_day_time_rules()
+
+            outputs = self._outputs_for(att.id)
+            self.assertTrue(outputs, "Day cron should have created a daily OT output")
+            self.assertAlmostEqual(
+                sum(o.worked_hours for o in outputs), 6.0, places=5,
+                msg="All 6h reclassified to daily OT",
+            )
+        finally:
+            rule.write({'active': False})
+
+    def test_day_and_week_cron_independence(self):
+        day_rule = self.env['hr.time.rule'].create({
+            'name': 'Daily > 4h',
+            'working_hours_mode': 'day',
+            'expected_hours': 4,
+            'work_entry_type_id': self.day_ot_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+        week_rule = self.env['hr.time.rule'].create({
+            'name': 'Weekly > 5h',
+            'working_hours_mode': 'week',
+            'expected_hours': 5,
+            'work_entry_type_id': self.week_ot_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+        try:
+            with freeze_time('2022-12-12'):
+                att = self.env['hr.attendance'].create({
+                    'employee_id': self.emp.id,
+                    'check_in': datetime(2022, 12, 12, 8),
+                    'check_out': datetime(2022, 12, 12, 14),  # 6h
+                })
+                self.assertFalse(self._outputs_for(att.id), "Today , still deferred")
+
+            with freeze_time('2022-12-13'):
+                self.env['hr.attendance']._cron_process_day_time_rules()
+
+            day_h = sum(o.worked_hours for o in self._outputs_for(att.id, self.day_ot_type))
+            week_h = sum(o.worked_hours for o in self._outputs_for(att.id, self.week_ot_type))
+            self.assertAlmostEqual(day_h, 2.0, places=5, msg="2h daily OT after day cron")
+            self.assertAlmostEqual(week_h, 0.0, places=5, msg="Week rules not yet processed")
+
+            with freeze_time('2022-12-19'):
+                # Mon 2022-12-19: week cron processes Mon 12 – Sun 18.
+                self.env['hr.attendance']._cron_process_week_time_rules()
+
+            day_h = sum(o.worked_hours for o in self._outputs_for(att.id, self.day_ot_type))
+            week_h = sum(o.worked_hours for o in self._outputs_for(att.id, self.week_ot_type))
+            self.assertAlmostEqual(day_h, 2.0, places=5,
+                msg="Day OT preserved , week cron must not remove it")
+            self.assertAlmostEqual(week_h, 1.0, places=5,
+                msg="1h weekly OT added by week cron (6h − 5h threshold)")
+        finally:
+            day_rule.write({'active': False})
+            week_rule.write({'active': False})
+
+    def test_retroactive_attendance_triggers_immediate_reprocess(self):
+        """An attendance created for a past date triggers immediate output generation.
+        """
+        rule = self.env['hr.time.rule'].create({
+            'name': 'All hours -> daily OT (retro)',
+            'working_hours_mode': 'day',
+            'expected_hours': 0,
+            'work_entry_type_id': self.day_ot_type.id,
+            'condition_work_entry_type_ids': [self.att_type.id],
+        })
+        try:
+            # date.today() is well past 2022-12-12 -> create() triggers immediately
+            att = self.env['hr.attendance'].create({
+                'employee_id': self.emp.id,
+                'check_in': datetime(2022, 12, 12, 8),
+                'check_out': datetime(2022, 12, 12, 14),  # 6h
+            })
+            outputs = self._outputs_for(att.id)
+            self.assertTrue(outputs, "Past-date attendance should produce output immediately")
+            self.assertAlmostEqual(
+                sum(o.worked_hours for o in outputs), 6.0, places=5,
+            )
+        finally:
+            rule.write({'active': False})
 

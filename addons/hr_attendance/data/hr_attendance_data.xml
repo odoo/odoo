@@ -18,5 +18,23 @@
             <field name="interval_number">4</field>
             <field name="interval_type">hours</field>
         </record>
+
+        <record id="hr_attendance_day_time_rules_cron" model="ir.cron">
+            <field name="name">Attendance: Process daily time rules</field>
+            <field name="model_id" ref="model_hr_attendance"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_process_day_time_rules()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+        </record>
+
+        <record id="hr_attendance_week_time_rules_cron" model="ir.cron">
+            <field name="name">Attendance: Process weekly time rules</field>
+            <field name="model_id" ref="model_hr_attendance"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_process_week_time_rules()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+        </record>
     </data>
 </odoo>
