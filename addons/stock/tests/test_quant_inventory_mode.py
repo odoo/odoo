@@ -375,3 +375,24 @@ class TestEditableQuant(TransactionCase):
         quant.flush_recordset()
         quant._unlink_zero_quants()
         self.assertFalse(quant.exists(), "After unlinking zero quants, the quant should be deleted")
+
+    def test_revert_inventory_package_quant(self):
+        """
+        Test Reverting an inventory move line restores the package quant
+        quantity with no negative quants.
+        """
+        package = self.env['stock.package'].create({})
+        quant = self.Quant.create({
+            'product_id': self.product.id,
+            'location_id': self.stock.id,
+            'inventory_quantity': 1,
+            'package_id': package.id,
+        })
+        quant.action_apply_inventory()
+        quant.inventory_quantity = 0
+        quant.action_apply_inventory()
+        domain = quant.action_view_stock_moves()['domain'] + [('is_inventory', '=', True)]
+        self.env['stock.move.line'].search(domain, limit=1).action_revert()
+        self.assertRecordValues(package.quant_ids, [{"quantity": 1}])
+        self.env['stock.move.line'].search(domain, limit=1, order='id asc').action_revert()
+        self.assertFalse(package.quant_ids, 'Reverting creation adjustment should remove the product from the package.')
