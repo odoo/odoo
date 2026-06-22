@@ -161,22 +161,26 @@ export class BuilderSelectionRestrictionPlugin extends Plugin {
 
     /**
      * Returns the element in which the selection should be restricted (by
-     * default, the closest `div` element).
+     * default, the closest `div` element, or the closest [contenteditable=true]
+     * if the div is not editable).
      *
      * @param {Node} anchorNode the current selection anchorNode
      * @returns {HTMLElement}
      */
     getRestrictingElement(anchorNode) {
-        const closestDivEl = closestElement(anchorNode, "div");
+        let restrictingEl = closestElement(anchorNode, "div");
+        if (!restrictingEl.isContentEditable) {
+            restrictingEl = closestElement(anchorNode, "[contenteditable=true]") ?? restrictingEl;
+        }
 
-        if (!closestDivEl) {
+        if (!restrictingEl) {
             console.warn(
-                "The anchordeNode of the selection is not inside a <div> element, the selection restriction plugin might not work properly",
+                "The anchordeNode of the selection is not inside a <div> or a [contenteditable=true] element, the selection restriction plugin might not work properly",
                 anchorNode
             );
             return closestElement(anchorNode);
         }
-        return closestDivEl;
+        return restrictingEl;
     }
 
     /**
