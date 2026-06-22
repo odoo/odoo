@@ -36,6 +36,11 @@ class Stage(models.Model):
 
     name = fields.Char('Stage Name', required=True, translate=True)
     sequence = fields.Integer('Sequence', default=1, help="Used to order stages. Lower is better.")
+    image_1920 = fields.Image('Stage Image', max_width=1920, max_height=1920)
+    image_1024 = fields.Image('Stage Image 1024', related='image_1920', max_width=1024, max_height=1024, store=True)
+    image_512 = fields.Image('Stage Image 512', related='image_1920', max_width=512, max_height=512, store=True)
+    image_256 = fields.Image('Stage Image 256', related='image_1920', max_width=256, max_height=256, store=True)
+    image_128 = fields.Image('Stage Image 128', related='image_1920', max_width=128, max_height=128, store=True)
     is_won = fields.Boolean('Is Won Stage?')
     requirements = fields.Text('Requirements', help="Enter here the internal requirements for this stage (ex: Offer sent to customer). It will appear as a tooltip over the stage's name.")
     team_id = fields.Many2one('crm.team', string='Sales Team', ondelete="set null",

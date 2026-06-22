@@ -21,6 +21,7 @@
         <field name="arch" type="xml">
             <list string="Stages" multi_edit="1">
                 <field name="sequence" widget="handle"/>
+                <field name="image_128" widget="image" class="oe_avatar" options='{"preview_image": "image_1920"}'/>
                 <field name="name" readonly="1"/>
                 <field name="is_won"/>
                 <field name="team_id"/>
@@ -35,11 +36,16 @@
         <field name="arch" type="xml">
             <form string="Stage">
                 <sheet>
-                    <div class="oe_title">
-                        <label for="name"/>
-                        <h1>
-                            <field name="name" placeholder="e.g. Negotiation"/>
-                        </h1>
+                    <div class="oe_title row align-items-center">
+                        <div class="col-auto">
+                            <field name="image_128" widget="image" class="oe_avatar" options='{"preview_image": "image_1920"}'/>
+                        </div>
+                        <div class="col">
+                            <label for="name"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. Negotiation"/>
+                            </h1>
+                        </div>
                     </div>
                     <group>
                         <group>
