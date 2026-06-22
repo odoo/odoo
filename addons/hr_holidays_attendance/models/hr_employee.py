@@ -47,5 +47,5 @@ class HrEmployee(models.Model):
             attendance_data[employee_id]["unspent_compensable_overtime"] = 0
         unspent_overtime = self._get_deductible_employee_overtime()
         for employee in unspent_overtime:
-            attendance_data[employee.id]["unspent_compensable_overtime"] += max(0, unspent_overtime[employee])
+            attendance_data[employee.id]["unspent_compensable_overtime"] += unspent_overtime[employee]
         return attendance_data
