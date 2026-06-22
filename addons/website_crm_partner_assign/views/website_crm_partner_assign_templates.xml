@@ -192,10 +192,10 @@
 </template>
 
 <template id="search_setting" inherit_id="website_partnership.search_setting">
-    <xpath expr="//div[@id='search_input_group']" position="before">
+    <xpath expr="//t[@t-call='website.website_search_box_input']"  position="inside">
         <input t-if="country_all" type="hidden" name="country_all" value="True" />
     </xpath>
-    <xpath expr="//input[@id='search_input_text']" position="before">
+    <xpath expr="//t[@t-call='website.website_search_box_input']"  position="inside">
         <input type="hidden" t-if='current_industry' name="industry" t-att-value='slug(current_industry)'/>
     </xpath>
 </template>
