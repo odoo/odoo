@@ -139,6 +139,17 @@ class ResPartner(models.Model):
         else:
             return f'peppol_{state}'
 
+    def _log_verification_state_update(self, old_value, new_value):
+        self.ensure_one()
+        if not self.l10n_fr_is_pdp:
+            super()._log_verification_state_update(old_value, new_value)
+            return
+
+        self._track_add(
+            initial_values={self.id: {'pdp_verification_display_state': self._get_pdp_display_verification_state(old_value)}},
+            end_values={self.id: {'pdp_verification_display_state': self._get_pdp_display_verification_state(new_value)}},
+        )
+
     def _get_suggested_peppol_edi_format(self):
         # EXTENDS 'account_edi_ubl_cidd`
         self.ensure_one()
