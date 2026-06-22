@@ -5,6 +5,7 @@
 }
 
 .ui-autocomplete.o_website_ui_autocomplete {
+    --dropdown-padding-y: 0px;
     max-width: 400px;
     font-size: $o-we-sidebar-font-size;
     border: none;
@@ -12,7 +13,6 @@
     box-shadow: $o-we-sidebar-content-field-dropdown-shadow;
     > li {
         border-bottom: $o-we-sidebar-content-field-border-width solid lighten($o-we-sidebar-content-field-dropdown-border-color, 15%);
-        border-radius: $o-we-sidebar-content-field-border-radius;
         background-color: $o-we-sidebar-content-field-clickable-bg;
         > .dropdown-item,
         > .dropdown-item:focus,
