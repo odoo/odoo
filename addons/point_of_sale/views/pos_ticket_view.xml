@@ -36,7 +36,7 @@
                                 <strong>Amounting to:</strong> <t t-out="format_amount(env, pos_order.amount_total, pos_order.currency_id)"/>
                             </div>
                         </div>
-                        <t t-if="user_is_connected">
+                        <t t-if="user_is_connected and not has_order_partner">
                             <div class="row mt-4">
                                 <div class="col-12">
                                     <h4>Billing address:</h4>
@@ -119,7 +119,7 @@
                         </t>
                         <div class="row mt-4">
                             <div class="col-12 col-md-4" id="get_my_invoice">
-                                <t t-if="user_is_connected and not partner_address">
+                                <t t-if="user_is_connected and not partner_address and not has_order_partner">
                                     <button class="btn btn-primary btn-lg lh-lg w-100" disabled="True">Get my invoice</button>
                                 </t>
                                 <t t-else="">
