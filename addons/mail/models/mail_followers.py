@@ -25,9 +25,9 @@ class MailFollowers(models.Model):
     # However, followers of unlinked models are deleted by models themselves
     # (see 'ir.model' inheritance).
     res_model = fields.Char(
-        'Related Document Model Name', required=True, index=True)
+        'Related Document Model Name', required=True)
     res_id = fields.Many2oneReference(
-        'Related Document ID', index=True, help='Id of the followed resource', model_field='res_model')
+        'Related Document ID', help='Id of the followed resource', model_field='res_model')
     partner_id = fields.Many2one(
         'res.partner', string='Related Partner', index=True, ondelete='cascade', required=True)
     subtype_ids = fields.Many2many(
@@ -38,9 +38,10 @@ class MailFollowers(models.Model):
     is_active = fields.Boolean('Is Active', related='partner_id.active')
 
     _mail_followers_res_partner_res_model_id_uniq = models.Constraint(
-        'unique(res_model,res_id,partner_id)',
+        'unique(partner_id,res_model,res_id)',
         'Error, a partner cannot follow twice the same object.',
     )
+    _res_model_res_id_idx = models.Index('(res_model, res_id)')
 
     @api.depends("partner_id")
     def _compute_display_name(self):
