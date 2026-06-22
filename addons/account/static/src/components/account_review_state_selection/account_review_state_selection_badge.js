@@ -53,14 +53,16 @@ export class AccountReviewStateSelectionBadge extends Component {
             editableOptions.push(false);
         }
 
-        for (let [key, value] of Object.entries(this.props.options)) {
-            if (
-                [true, undefined].includes(value.can_edit)
-                || (typeof value.can_edit == 'string' && (await Promise.all(
-                    value.can_edit.split(",").map(group => user.hasGroup(group))
-                )).some(Boolean))
-            ) {
-                editableOptions.push(key === 'false' ? false : key);
+        if (!this.props.record.model.useSampleModel && await user.checkAccessRight(this.props.record.resModel, "write", this.props.record.resId)) {
+            for (let [key, value] of Object.entries(this.props.options)) {
+                if (
+                    [true, undefined].includes(value.can_edit)
+                    || (typeof value.can_edit == 'string' && (await Promise.all(
+                        value.can_edit.split(",").map(group => user.hasGroup(group))
+                    )).some(Boolean))
+                ) {
+                    editableOptions.push(key === 'false' ? false : key);
+                }
             }
         }
 
