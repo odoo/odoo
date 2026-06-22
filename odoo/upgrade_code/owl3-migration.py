@@ -1117,6 +1117,7 @@ SERVICES_MAPPING = {
     "frequent_emoji": ['FrequentEmojiPlugin', '@web/core/emoji_picker/frequent_emoji_plugin'],
     "notification": ['NotificationPlugin', '@web/core/notifications/notification_plugin'],
     "mobile": ['MobilePlugin', '@web_mobile/js/mobile_plugin'],
+    "multi_tab": ['MultiTabPlugin', '@bus/multi_tab_plugin'],
     "overlay": ['OverlayPlugin', '@web/core/overlay/overlay_plugin'],
     "presence": ['PresencePlugin', '@bus/services/presence_plugin'],
     "sortable": ['SortablePlugin', '@web/core/util/sortable_plugin'],
