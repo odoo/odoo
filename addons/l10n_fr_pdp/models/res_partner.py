@@ -148,6 +148,17 @@ class ResPartner(models.Model):
         else:
             return f'peppol_{state}'
 
+    def _log_verification_state_update(self, old_value, new_value):
+        self.ensure_one()
+        if self._get_pdp_receiver_identification_info()[0] != 'pdp':
+            super()._log_verification_state_update(old_value, new_value)
+            return
+
+        self._track_add(
+            initial_values={self.id: {'pdp_verification_display_state': self._get_pdp_display_verification_state(old_value)}},
+            end_values={self.id: {'pdp_verification_display_state': self._get_pdp_display_verification_state(new_value)}},
+        )
+
     def _get_suggested_peppol_edi_format(self):
         # EXTENDS 'account_edi_ubl_cidd`
         self.ensure_one()
@@ -215,7 +226,3 @@ class ResPartner(models.Model):
         if peppol_eas == '0225':
             proxy_type = 'pdp'
         return proxy_type, identifier
-
-    @handle_demo
-    def button_account_peppol_check_partner_endpoint(self, company=None):
-        return super().button_account_peppol_check_partner_endpoint(company=company)
