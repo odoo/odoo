@@ -162,11 +162,20 @@ class PeppolRegistration(models.TransientModel):
     def _compute_peppol_warnings(self):
         for wizard in self:
             peppol_warnings = {}
-            if all((
-                wizard.peppol_eas,
-                wizard.peppol_endpoint,
-                not wizard.selected_company_id._check_peppol_endpoint_number(warning=True),
-            )):
+            if wizard.company_id._peppol_is_french_company():
+                pdp_module = self.env['ir.module.module']._get('l10n_fr_pdp')
+                if pdp_module and pdp_module.state != 'installed':
+                    peppol_warnings['company_french_warning'] = {
+                        'level': 'warning',
+                        'message': self.env._("To use the Approved Platform for French E-Invoicing install the module"),
+                        'action_text': self.env._("France - E-Invoicing (Approved Platform)"),
+                        'action': pdp_module.sudo()._get_records_action(),
+                    }
+            if (
+                wizard.peppol_eas
+                and wizard.peppol_endpoint
+                and not wizard.selected_company_id._check_peppol_endpoint_number(warning=True)
+            ):
                 peppol_warnings['company_peppol_endpoint_warning'] = {
                     'level': 'warning',
                     'message': _("The endpoint number might not be correct. "
