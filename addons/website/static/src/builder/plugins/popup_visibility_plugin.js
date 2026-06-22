@@ -1,6 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 
 /**
  * @typedef { Object } PopupVisibilityShared
@@ -17,6 +18,7 @@ export class PopupVisibilityPlugin extends Plugin {
     resources = {
         target_show: this.onTargetShow.bind(this),
         target_hide: this.onTargetHide.bind(this),
+        before_save_handlers: this.beforeSave.bind(this),
         clean_for_save_handlers: this.cleanForSave.bind(this),
         on_restore_containers_handlers: this.hidePopupsWithoutTarget.bind(this),
         on_reveal_target_handlers: this.hidePopupsWithoutTarget.bind(this),
@@ -82,6 +84,18 @@ export class PopupVisibilityPlugin extends Plugin {
         // clone of it. Instead, hide it manually (see `cleanForSave`).
         if (targetEl.matches(".s_popup") && !isCleaning) {
             this.window.Modal.getOrCreateInstance(targetEl.querySelector(".modal")).hide();
+        }
+    }
+
+    beforeSave(rootEl = this.editable) {
+        for (const popupEl of selectElements(rootEl, ".s_popup")) {
+            const modelContent = popupEl.querySelector(".modal-content");
+            const hasOnlyCloseButton = [...modelContent.children].every((childEl) =>
+                childEl.classList.contains("s_popup_close")
+            );
+            if (hasOnlyCloseButton) {
+                popupEl.remove();
+            }
         }
     }
 
