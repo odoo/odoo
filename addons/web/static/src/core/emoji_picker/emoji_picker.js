@@ -1,3 +1,4 @@
+import { FrequentEmojiPlugin } from "@web/core/emoji_picker/frequent_emoji_plugin";
 import { markEventHandled } from "@web/core/utils/misc";
 import { useComponent, useLayoutEffect, useRef } from "@web/owl2/utils";
 
@@ -9,6 +10,7 @@ import {
     onWillPatch,
     onWillStart,
     onWillUnmount,
+    plugin,
     proxy,
     useListener,
     xml,
@@ -73,7 +75,7 @@ export class EmojiPicker extends Component {
             /** @type {Emoji | undefined} */
             hoveredEmoji: undefined,
         });
-        this.frequentEmojiService = useService("frequent_emoji");
+        this.frequentEmojiService = plugin(FrequentEmojiPlugin);
         const loadEmoji = useLoadEmoji();
         useAutofocus();
         onWillStart(async () => {
@@ -226,7 +228,7 @@ export class EmojiPicker extends Component {
     }
 
     get recentEmojis() {
-        const recent = Object.entries(this.frequentEmojiService.all)
+        const recent = Object.entries(this.frequentEmojiService.all())
             .sort(([, usage_1], [, usage_2]) => usage_2 - usage_1)
             .map(([codepoints]) => emojiLoader.map.get(codepoints));
         if (this.searchTerm && recent.length > 0) {
