@@ -73,4 +73,36 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_expense_id': 'chart_cz_504000',
                 'account_stock_variation_id': 'chart_cz_583000',
             },
+            'chart_cz_021000': {
+                'asset_depreciation_account_id': 'chart_cz_081000',
+                'asset_expense_account_id': 'chart_cz_551000'
+            },
+            'chart_cz_022100': {
+                'asset_depreciation_account_id': 'chart_cz_082100',
+                'asset_expense_account_id': 'chart_cz_551000'
+            },
+            'chart_cz_022200': {
+                'asset_depreciation_account_id': 'chart_cz_082200',
+                'asset_expense_account_id': 'chart_cz_551000'
+            },
+            'chart_cz_022300': {
+                'asset_depreciation_account_id': 'chart_cz_082300',
+                'asset_expense_account_id': 'chart_cz_551000'
+            },
+            'chart_cz_022400': {
+                'asset_depreciation_account_id': 'chart_cz_082400',
+                'asset_expense_account_id': 'chart_cz_551000'
+            },
+            'chart_cz_022500': {
+                'asset_depreciation_account_id': 'chart_cz_082500',
+                'asset_expense_account_id': 'chart_cz_551000'
+            },
+            'chart_cz_022510': {
+                'asset_depreciation_account_id': 'chart_cz_082510',
+                'asset_expense_account_id': 'chart_cz_551000'
+            },
+            'chart_cz_022900': {
+                'asset_depreciation_account_id': 'chart_cz_082900',
+                'asset_expense_account_id': 'chart_cz_551000'
+            },
         }
