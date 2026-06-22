@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 from markupsafe import Markup
 
 from odoo import _, api, fields, models, tools
-from odoo.exceptions import UserError
+from odoo.exceptions import MissingError, UserError
 from odoo.fields import Domain
 from odoo.tools import email_split, format_list, html2plaintext, is_html_empty
 from odoo.tools.mimetypes import get_extension
@@ -933,8 +933,24 @@ class DiscussChannel(models.Model):
                 fields.Datetime.now() - author_history.create_date
             ).total_seconds() / 3600
         if not self.livechat_end_dt and author_history.livechat_member_type == "agent":
-            self.livechat_failure = "no_failure"
+            self._update_livechat_failure("no_failure")
         return super()._message_post_after_hook(message)
+
+    def _update_livechat_failure(self, failure):
+        """Write livechat_failure in a separate cursor when called from a concurrent-safe
+        message post flow, to avoid serialization failures against the separate cursor
+        used by _update_last_interest_dt for the same channel row."""
+        if not self.env.context.get("mail_post_check_concurrency"):
+            self.livechat_failure = failure
+            return
+        for channel in self:
+            with self.env.registry.cursor() as cr:
+                try:
+                    channel.with_env(self.env(cr=cr)).livechat_failure = failure
+                except MissingError:
+                    # when the channel is created in the outer transaction it is not yet visible
+                    # by the inner transaction and there can be no concurrency issue
+                    channel.livechat_failure = failure
 
     def _chatbot_restart(self, chatbot_script):
         # sudo: discuss.channel - visitor can clear current step to restart the script
