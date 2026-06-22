@@ -2997,6 +2997,7 @@ class AccountEdiUBL(models.AbstractModel):
         if (
             line_extension_amount is not None
             and not invoiced_quantity
+            and subtotal
         ):
             price_unit = subtotal
             quantity = 1.0
@@ -3043,7 +3044,7 @@ class AccountEdiUBL(models.AbstractModel):
             discount_amount = total_allowances
 
             # Combine with the price level.
-            if not currency.is_zero(price_subtotal):
+            if not currency.is_zero(price_subtotal) and not currency.is_zero(subtotal):
                 price_unit = price_subtotal / price_quantity
                 quantity = price_quantity
                 discount_amount += price_discount_amount
