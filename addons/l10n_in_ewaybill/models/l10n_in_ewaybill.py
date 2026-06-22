@@ -130,7 +130,7 @@ class L10nInEwaybill(models.Model):
         ("error", "Error")],
         string="Blocking Level", readonly=True)
 
-    content = fields.Json(compute='_compute_content')
+    content = fields.Binary(compute='_compute_content')
     cancel_reason = fields.Selection(selection=[
         ("1", "Duplicate"),
         ("2", "Data Entry Mistake"),
@@ -257,7 +257,7 @@ class L10nInEwaybill(models.Model):
                 ewaybill_json = ewaybill._ewaybill_generate_direct_json()
             else:
                 ewaybill_json = {}
-            ewaybill.content = ewaybill_json
+            ewaybill.content = BinaryBytes(json.dumps(ewaybill_json).encode())
 
     @api.depends('name', 'state')
     def _compute_display_name(self):
