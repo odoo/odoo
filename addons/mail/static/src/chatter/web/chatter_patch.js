@@ -297,7 +297,7 @@ const chatterPatch = {
     },
 
     closeSearch() {
-        this.messageSearch.clear();
+        this.messageSearch.reset();
         this.state.isSearchOpen = false;
     },
 

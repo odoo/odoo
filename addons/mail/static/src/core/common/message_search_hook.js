@@ -1,6 +1,6 @@
 import { SearchState } from "@mail/utils/common/hooks";
 import { getInnerHtml } from "@mail/utils/common/html";
-import { effect, onMounted, onWillDestroy, onWillUnmount, proxy } from "@odoo/owl";
+import { proxy } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { createDocumentFragmentFromContent } from "@web/core/utils/html";
 import { escapeRegExp } from "@web/core/utils/strings";
@@ -83,18 +83,6 @@ export class MessageSearchState extends SearchState {
         this.store = useService("mail.store");
         this.thread = initialThread;
         this.fetch = this.fetchMessages.bind(this);
-        let disposeEffect = () => {};
-        onMounted(() => {
-            disposeEffect = effect(() => {
-                if (this.isActive) {
-                    this.run();
-                } else if (this.searched) {
-                    this.clear();
-                }
-            });
-        });
-        onWillDestroy(disposeEffect);
-        onWillUnmount(() => this.clear());
     }
 
     get isActive() {
@@ -137,13 +125,13 @@ export class MessageSearchState extends SearchState {
         this.run();
     }
 
-    clear() {
+    reset() {
+        super.reset();
         this.is_notification = undefined;
         this.messages = [];
         this.searched = false;
         this.count = 0;
         this.hasMore = false;
-        this.reset();
     }
 
     /**

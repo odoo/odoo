@@ -38,15 +38,6 @@ export class SearchMessageInput extends Component {
         );
     }
 
-    clear() {
-        this.props.messageSearch.clear();
-    }
-
-    onClickClose() {
-        this.clear();
-        this.props.closeSearch?.();
-    }
-
     /** @param {SearchFilter} searchFilter */
     onChangeSearchFilter(searchFilter) {
         if (searchFilter.is_notification !== this.props.messageSearch.is_notification) {
