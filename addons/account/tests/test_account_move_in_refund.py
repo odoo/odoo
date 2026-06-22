@@ -1124,14 +1124,8 @@ class TestAccountMoveInRefundOnchanges(AccountTestInvoicingCommon):
         # unreconcile
         debit_aml = invoice.line_ids.filtered('debit')
         debit_aml.remove_move_reconcile()
-        # check caba move reverse is same as caba move with only debit/credit inverted
-        reversed_caba_move = self.env['account.move'].search([('reversed_entry_id', '=', caba_move.id)])
-        for value in expected_values:
-            value.update({
-                'debit': value['credit'],
-                'credit': value['debit'],
-            })
-        self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
+        # unlocked caba moves should get deleted upon unreconciliation
+        self.assertFalse(caba_move.exists())
 
     def test_in_refund_with_down_payment_caba(self):
         tax_waiting_account = self.env['account.account'].create({
