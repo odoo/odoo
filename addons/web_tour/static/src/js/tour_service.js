@@ -27,13 +27,19 @@ const stepSchema = {
     trigger: t.string(),
     id: t.string().optional(),
     isActive: t.array(t.string()).optional(),
-    run: t.or([t.string(), t.function(), t.boolean()]).optional(),
+    run: t
+        .customValidator(
+            t.or([t.string(), t.function()]),
+            (fn) => typeof fn === "string" || !/\{\s*\}$/.test(fn.toString().trim()),
+            "run must be a string or a non-empty function"
+        )
+        .optional(),
+    expectUnloadPage: t.boolean().optional(),
 };
 
 const stepSchemaAuto = {
     ...stepSchema,
-    content: t.string().optional(),
-    expectUnloadPage: t.boolean().optional(),
+    content: t.customValidator(t.string(), (value) => !(value instanceof String)).optional(),
     timeout: t.customValidator(t.number(), (value) => value >= 0 && value <= 60000).optional(),
     tooltipPosition: t
         .customValidator(t.string(), (value) => ["top", "bottom", "left", "right"].includes(value))
@@ -42,15 +48,14 @@ const stepSchemaAuto = {
 
 const stepSchemaOnboarding = {
     ...stepSchema,
-    content: t.or([t.string(), t.object()]).optional(), //allow object(_t && markup)
+    content: t.or([t.string()]).optional(),
+    timeout: t.customValidator(t.number(), (value) => value >= 0 && value <= 60000).optional(),
     tooltipPosition: t
         .customValidator(t.string(), (value) => ["top", "bottom", "left", "right"].includes(value))
         .optional(),
 };
 
 const stepSchemaDebug = {
-    ...stepSchemaAuto,
-    ...stepSchemaOnboarding,
     pause: t.boolean().optional(),
     break: t.boolean().optional(),
 };
@@ -159,43 +164,71 @@ export class TourService {
     }
 
     /**
-     * @param {string} name The name of the tour
+     * Fetches and prepares a tour by name.
+     *
+     * In "manual" mode, the tour is loaded from the database and steps are
+     * presented interactively: the user must perform the actions themselves in
+     * the DOM (clicks, fills, etc.) while tooltips guide them.
+     *
+     * In "auto" mode, the tour is loaded from the client-side registry and
+     * driven automatically by macro.js, which replays every step without any
+     * user interaction. This is the mode used on runbot for automated testing.
+     *
+     * @param {string} name - The name of the tour.
+     * @param {Object} options
+     * @param {"auto"|"manual"} options.mode
+     * @param {boolean} [options.debug]
+     * @param {boolean} [options.onboarding] - In "auto" mode, also fetch the tour from the
+     *   database and set isOnboarding to true. Use this when running an onboarding tour
+     *   automatically (e.g. from a test).
      */
     async getTour(name, options) {
+        let tour, baseSchema;
         // Onboarding tour (come from database (.xml files))
-        if (options.mode === "manual") {
-            const tour = await this.orm.call("web_tour.tour", "get_tour_json_by_name", [name]);
-            if (!tour) {
+        if (options.mode === "manual" || options.onboarding) {
+            const dbTour = await this.orm.call("web_tour.tour", "get_tour_json_by_name", [name]);
+            if (!dbTour) {
                 console.error(`Tour '${name}' is not found in the database.`);
                 return;
             }
-            if (!tour.steps.length && tourRegistry.contains(tour.name)) {
-                tour.steps = tourRegistry.get(tour.name).steps;
+            if (!dbTour.steps?.length && tourRegistry.contains(dbTour.name)) {
+                dbTour.steps = tourRegistry.get(dbTour.name).steps;
             }
-            return {
-                ...tour,
+            tour = {
+                ...dbTour,
                 steps:
-                    typeof tour.steps === "function"
-                        ? tour.steps()
-                        : Array.isArray(tour.steps)
-                          ? tour.steps
-                          : [],
+                    typeof dbTour.steps === "function"
+                        ? dbTour.steps()
+                        : Array.isArray(dbTour.steps)
+                        ? dbTour.steps
+                        : [],
             };
+            baseSchema = stepSchemaOnboarding;
         }
         // Automatic tour (come from registry)
         else {
             await this.waitUntilTourRegistered(name);
-            const tour = tourRegistry.get(name, null);
-            if (!tour) {
+            const registryTour = tourRegistry.get(name, null);
+            if (!registryTour) {
                 console.error(`Tour '${name}' is not found in registry 'web_tour.tours'.`);
                 return;
             }
-            return {
-                ...tour,
+            tour = {
+                ...registryTour,
                 name,
-                steps: tour.steps(),
+                steps: registryTour.steps(),
             };
+            baseSchema = stepSchemaAuto;
         }
+        const schema = options.debug ? { ...baseSchema, ...stepSchemaDebug } : baseSchema;
+        for (const step of tour.steps) {
+            try {
+                assertType(step, t.strictObject(schema), "Error in schema for TourStep");
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+        return tour;
     }
 
     /**
@@ -226,16 +259,14 @@ export class TourService {
         return tourRegistry.contains(name);
     }
 
-    async resumeTour() {
+    async resumeTour(tour = null) {
         const tourName = tourState.getCurrentTour();
         const tourConfig = tourState.getCurrentConfig();
-        const tour = await this.getTour(tourName, tourConfig);
-        if (!tour || !tour.steps.length) {
+        tour ??= await this.getTour(tourName, tourConfig);
+        if (!tour || !tour.steps?.length) {
             tourState.clear();
             return;
         }
-
-        tour.steps.forEach((step) => this.validateStep(step));
 
         if (tourConfig.mode === "auto") {
             if (!odoo.loader.modules.get("@web_tour/js/tour_automatic/tour_automatic")) {
@@ -297,11 +328,16 @@ export class TourService {
      * @param {number} [options.showPointerDuration=0] - Duration to show the pointer on each step.
      * @param {boolean} [options.debug=false] - Enables debug mode for the tour.
      * @param {boolean} [options.redirect=true] - Whether to redirect to `tour.url` if necessary.
+     * @param {boolean} [options.onboarding=false] - In "auto" mode, treat the tour as an onboarding
+     *   tour: fetch it from the database and set isOnboarding to true.
      */
     async startTour(name, options = {}) {
         this.removePointer();
         this.removeTourRecorder();
         const tour = await this.getTour(name, options);
+        if (!tour) {
+            return;
+        }
 
         if (!session.is_public && !this.toursEnabled && options.mode === "manual") {
             this.toursEnabled = await this.orm.call("res.users", "switch_tour_enabled", [
@@ -315,6 +351,7 @@ export class TourService {
             showPointerDuration: 0,
             debug: false,
             redirect: true,
+            onboarding: false,
             allowDelayToRemove: tour.undeterministicTour_doNotCopy,
             ...options,
         };
@@ -326,7 +363,7 @@ export class TourService {
         if (tourConfig.mode === "manual" && tour.url && tourConfig.redirect) {
             redirect(tour.url);
         } else {
-            await this.resumeTour();
+            await this.resumeTour(tour);
         }
     }
 
@@ -335,24 +372,6 @@ export class TourService {
             await this.addTourRecorderToOverlay();
         }
         browser.localStorage.setItem(TOUR_RECORDER_ACTIVE_LOCAL_STORAGE_KEY, "1");
-    }
-
-    /**
-     * Validate a step according to {@link stepSchema}.
-     * @param {Object} step - The step object to validate.
-     */
-    validateStep(step) {
-        const tourConfig = tourState.getCurrentConfig();
-        const schema = tourConfig.debug
-            ? t.strictObject(stepSchemaDebug)
-            : tourConfig.mode === "auto"
-            ? t.strictObject(stepSchemaAuto)
-            : t.strictObject(stepSchemaOnboarding);
-        try {
-            assertType(step, schema, "Error in schema for TourStep");
-        } catch (error) {
-            console.error(error.message);
-        }
     }
 }
 

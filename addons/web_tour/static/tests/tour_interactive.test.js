@@ -3,7 +3,7 @@
 import { after, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryFirst, waitFor, press, Deferred, waitForNone } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
-import { Component, onMounted, onPatched, proxy, xml } from "@odoo/owl";
+import { Component, markup, onMounted, onPatched, proxy, xml } from "@odoo/owl";
 import {
     contains,
     getService,
@@ -91,6 +91,37 @@ beforeEach(() => {
 
 after(() => {
     TourInteractive.observer.disconnect();
+});
+
+test("content markup is accepted for tour come from database", async () => {
+    Tour._records = [{ name: "tour_with_markup" }];
+    patchWithCleanup(session, { tour_enabled: true });
+    patchWithCleanup(console, {
+        error: (msg) => expect.step(msg),
+    });
+    class Root extends Component {
+        static components = { Counter };
+        static template = xml/*html*/ `
+                <t>
+                    <Counter />
+                </t>
+            `;
+        static props = ["*"];
+    }
+
+    await mountWithCleanup(Root);
+    registry.category("web_tour.tours").add("tour_with_markup", {
+        steps: () => [
+            {
+                content: markup("<b>content</b>"),
+                trigger: "button.inc",
+                run: "click",
+            },
+        ],
+    });
+    await getService("tour_service").startTour("tour_with_markup", { mode: "manual" });
+    await animationFrame();
+    expect.verifySteps([]);
 });
 
 test("registering test tour after service is started doesn't auto-start the tour", async () => {

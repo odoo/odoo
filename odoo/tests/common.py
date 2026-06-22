@@ -2925,6 +2925,7 @@ class HttpCase(TransactionCase):
         options = {
             'stepDelay': step_delay or 0,
             'debug': kwargs.get('debug', False),
+            'onboarding': kwargs.pop('onboarding', False),
         }
         code = kwargs.pop('code', f"odoo.startTour({tour_name!r}, {json.dumps(options)})")
         ready = kwargs.pop('ready', f"odoo.isTourReady({tour_name!r})")

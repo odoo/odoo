@@ -2,7 +2,7 @@
 
 import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, queryFirst } from "@odoo/hoot-dom";
-import { Component, xml } from "@odoo/owl";
+import { Component, markup, xml } from "@odoo/owl";
 import {
     getService,
     makeMockEnv,
@@ -14,6 +14,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { Macro } from "@web/core/macro";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { _t } from "@web/core/l10n/translation";
 
 describe.current.tags("desktop");
 
@@ -103,8 +104,8 @@ test("Step Tour validity", async () => {
       "id",
       "isActive",
       "run",
-      "content",
       "expectUnloadPage",
+      "content",
       "timeout",
       "tooltipPosition"
     ]
@@ -129,8 +130,8 @@ test("Step Tour validity", async () => {
       "id",
       "isActive",
       "run",
-      "content",
       "expectUnloadPage",
+      "content",
       "timeout",
       "tooltipPosition"
     ]
@@ -154,16 +155,90 @@ test("Step Tour validity", async () => {
         "received": "[Known object]",
         "path": "run",
         "message": "value is not a function"
-      },
-      {
-        "received": "[Known object]",
-        "path": "run",
-        "message": "value is not a boolean"
       }
     ]
   }
 ]`,
     ]);
+});
+
+test("content markup is rejected for tour come from registry", async () => {
+    patchWithCleanup(console, {
+        error: (msg) => expect.step(msg),
+    });
+    tourRegistry.add("tour_markup_auto", {
+        steps: () => [{ trigger: "button", content: markup("some <b>content</b>") }],
+    });
+    const expectedError = `Error in schema for TourStep\n${JSON.stringify(
+        [
+            {
+                received: "[Instance of Markup]",
+                path: "content",
+                message: "value does not match custom validation",
+            },
+        ],
+        null,
+        2
+    )}`;
+    await makeMockEnv({});
+    await getService("tour_service").startTour("tour_markup_auto");
+    await animationFrame();
+    expect.verifySteps([expectedError]);
+});
+
+test("translated content is rejected for tour come from registry", async () => {
+    patchWithCleanup(console, {
+        error: (msg) => expect.step(msg),
+    });
+    // _t() must be evaluated before makeMockEnv loads translations,
+    // otherwise it returns a primitive string indistinguishable from a plain string.
+    const content = _t("some content");
+    tourRegistry.add("tour_t_auto", {
+        steps: () => [{ trigger: "button", content }],
+    });
+    const expectedError = `Error in schema for TourStep\n${JSON.stringify(
+        [
+            {
+                received: "[Instance of TranslatedString]",
+                path: "content",
+                message: "value does not match custom validation",
+            },
+        ],
+        null,
+        2
+    )}`;
+    await makeMockEnv({});
+    await getService("tour_service").startTour("tour_t_auto");
+    await animationFrame();
+    expect.verifySteps([expectedError]);
+});
+
+test("empty run function is rejected", async () => {
+    patchWithCleanup(console, {
+        error: (msg) => expect.step(msg),
+    });
+    tourRegistry.add("tour_reject_empty_run", {
+        steps: () => [
+            { trigger: "button", run: () => {} },
+            { trigger: "button", run: function () {} },
+            { trigger: "button", run() {} },
+        ],
+    });
+    const expectedError = `Error in schema for TourStep\n${JSON.stringify(
+        [
+            {
+                received: "run",
+                path: "run",
+                message: "run must be a string or a non-empty function",
+            },
+        ],
+        null,
+        2
+    )}`;
+    await makeMockEnv({});
+    await getService("tour_service").startTour("tour_reject_empty_run");
+    await animationFrame();
+    expect.verifySteps([expectedError, expectedError, expectedError]);
 });
 
 test("a tour with invalid step trigger", async () => {
