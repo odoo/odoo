@@ -52,7 +52,8 @@ class WebsiteMenu(models.Model):
         for menu in self:
             if menu.is_mega_menu:
                 if not menu.mega_menu_content:
-                    menu.mega_menu_content = (menu.website_id or self.env.website).with_context(inherit_branding=False)._render_template('website.s_mega_menu_odoo_menu')
+                    website = menu.website_id or self.env.website
+                    menu.mega_menu_content = website.with_context(inherit_branding=False)._render_template('website.s_mega_menu_odoo_menu')
             else:
                 menu.mega_menu_content = False
                 menu.mega_menu_classes = False
@@ -180,47 +181,57 @@ class WebsiteMenu(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        ''' In case a menu without a website_id is trying to be created, we duplicate
-            it for every website.
-            Note: Particularly useful when installing a module that adds a menu like
-                  /shop. So every website has the shop menu.
-                  Be careful to return correct record for ir.model.data xml_id in case
-                  of default main menus creation.
-        '''
         self.env.transaction.invalidate_ormcache('templates')
-        # Only used when creating website_data.xml default menu
-        menus = self.env['website.menu']
-        for vals in vals_list:
-            if vals.get('url') == '/default-main-menu':
-                menus |= super().create(vals)
-                continue
-            if 'website_id' in vals:
-                menus |= super().create(vals)
-                continue
-            elif self.env.context.get('website_id'):
-                vals['website_id'] = self.env.context.get('website_id')
-                menus |= super().create(vals)
-                continue
-            else:
-                # if creating a default menu, we should also save it as such
-                default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
-                # create for every site
-                w_vals = []
-                for website in self.env["website"].search([]):
-                    parent_id = vals.get("parent_id")
-                    if not parent_id or (default_menu and parent_id == default_menu.id):
-                        parent_id = website.menu_id.id
-                    w_vals.append({
-                        **vals,
-                        'website_id': website.id,
-                        'parent_id': parent_id,
-                    })
-                new_menu = super().create(w_vals)[-1:]  # take the last record
-                if default_menu and vals.get('parent_id') == default_menu.id:
-                    new_menu = super().create(vals)
-                menus |= new_menu
-        # Only one record per vals is returned but multiple could have been created
+        return super().create(vals_list)
+
+    def _load_records(self, data_list, update=False):
+        menus = super()._load_records(data_list, update)
+        menus._copy_menu_hierarchy()
         return menus
+
+    def _copy_menu_hierarchy(self, websites=None):
+        """Copy template menus (menus with no `website_id`) onto each
+        website in `websites` (default: all websites).
+        Duplicated menus receive an xml_id of the form:
+        `<module_name>.<website_id>_<template_xmlid_name>`.
+        These xml_ids are used to lookup website-specific parent menus
+        thereby enabling multi-level menu creation.
+        """
+        template_menus = self.filtered(lambda m: not m.website_id)
+        if not template_menus:
+            return
+        websites = websites or self.env['website'].search([])
+
+        external_ids = template_menus.get_external_id()
+        model_data = []
+        # All template menus (including those created manually) need to be copied.
+        # Assign an xml_id (website.menu_{unnamed_menu.id}) to template menus that don't have one
+        for unnamed_menu in template_menus.filtered(lambda m: not external_ids.get(m.id)):
+            xml_id = f'website.menu_{unnamed_menu.id}'
+            external_ids[unnamed_menu.id] = xml_id
+            model_data.append({
+                'xml_id': xml_id,
+                'record': unnamed_menu,
+                'noupdate': True,
+            })
+        self.env['ir.model.data']._update_xmlids(model_data)
+        parent_external_ids = template_menus.parent_id.get_external_id()
+
+        data = []
+        for menu, menu_vals in zip(template_menus, template_menus.copy_data()):
+            for website in websites:
+                site_xmlid = website._website_xmlid(external_ids[menu.id])
+                if self.env.ref(site_xmlid, raise_if_not_found=False):
+                    continue
+                values = {**menu_vals, 'website_id': website.id}
+                if menu.parent_id:
+                    parent_xmlid = parent_external_ids[menu.parent_id.id]
+                    parent = self.env.ref(website._website_xmlid(parent_xmlid), raise_if_not_found=False)
+                    values['parent_id'] = parent.id if parent else False
+                data.append({'xml_id': site_xmlid, 'values': values, 'noupdate': True})
+
+        super()._load_records(data)  # super to avoid unexpected recursion
+        template_menus.child_id._copy_menu_hierarchy(websites)
 
     def write(self, vals):
         if any(self._ids):
@@ -234,13 +245,13 @@ class WebsiteMenu(models.Model):
 
     def unlink(self):
         self.env.transaction.invalidate_ormcache('templates')
-        default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
-        menus_to_remove = self
-        for menu in self.filtered(lambda m: default_menu and m.parent_id.id == default_menu.id):
-            menus_to_remove |= self.env['website.menu'].search([('url', '=', menu.url),
-                                                                ('website_id', '!=', False),
-                                                                ('id', '!=', menu.id)])
-        return super(WebsiteMenu, menus_to_remove).unlink()
+        external_ids = self.filtered(lambda m: not m.website_id).get_external_id().values()
+        copies_to_remove = self.env['website.menu']
+        for website in self.env['website'].search([]):
+            for id in external_ids:
+                if copy := self.env.ref(website._website_xmlid(id), raise_if_not_found=False):
+                    copies_to_remove += copy
+        return super(WebsiteMenu, self + copies_to_remove).unlink()
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_master_tags(self):
