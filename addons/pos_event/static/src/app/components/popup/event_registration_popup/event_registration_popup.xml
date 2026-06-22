@@ -6,13 +6,13 @@
                 <t t-out="question.title"/>
                 <span t-if="question.is_mandatory_answer" class="text-danger">*</span>
             </span>
-            <select t-if="question.question_type === 'simple_choice'" t-custom-model="stateObject[question.id]" class="form-select">
+            <select t-if="question.question_type === 'simple_choice'" t-model.proxy="stateObject[question.id]" class="form-select">
                 <option value="">--- Select ---</option>
                 <option t-foreach="question.answer_ids" t-as="choice" t-key="choice.id" t-att-value="choice.id">
                     <t t-out="choice.name"/>
                 </option>
             </select>
-            <input t-else="" class="form-control flex-grow-1" t-att-class="this.getValidationClass(question, stateObject, this.ticketIndex)" t-custom-model="stateObject[question.id]"
+            <input t-else="" class="form-control flex-grow-1" t-att-class="this.getValidationClass(question, stateObject, this.ticketIndex)" t-model.proxy="stateObject[question.id]"
                 t-on-blur="() => this.markTouched(question.id, this.ticketIndex)"/>
         </div>
     </t>
