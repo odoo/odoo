@@ -46,18 +46,18 @@
                                     class="col-lg-3 o_light_label"/>
                                 <field name="l10n_tr_nilvera_purchase_journal_id"/>
                             </div>
-                            <div class="mt16" invisible="not l10n_tr_nilvera_api_key">
-                                <a href="https://portal.nilvera.com/" target="_new" invisible="l10n_tr_nilvera_use_test_env">
+                            <div class="mt16">
+                                <a href="https://portal.nilvera.com/" target="_new" invisible="not l10n_tr_nilvera_api_key or l10n_tr_nilvera_use_test_env">
                                     <i title="Go to Nilvera portal" role="img" aria-label="Go to Nilvera portal"
                                         class="fa fa-external-link-square fa-fw"/>
                                     Nilvera portal
                                 </a>
-                                <a href="https://portaltest.nilvera.com/" target="_new" invisible="not l10n_tr_nilvera_use_test_env">
+                                <a href="https://portaltest.nilvera.com/" target="_new" invisible="not l10n_tr_nilvera_api_key or not l10n_tr_nilvera_use_test_env">
                                     <i title="Go to Nilvera portal" role="img" aria-label="Go to Nilvera portal"
                                     class="fa fa-external-link-square fa-fw"/>
                                     Nilvera portal (Test)
                                 </a>
-                                <button name="nilvera_ping" type="object" class="btn-link">
+                                <button name="nilvera_ping" type="object" class="btn-link" invisible="not l10n_tr_nilvera_api_key">
                                     <i title="Test connection" role="img" aria-label="Test connection" class="fa fa-plug fa-fw"/>
                                     Test connection
                                 </button>
