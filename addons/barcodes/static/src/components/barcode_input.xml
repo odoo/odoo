@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="barcodes.BarcodeInput">
-        <div class="input-group o_barcode_input_container d-flex py-2 px-5 gap-2">
+        <div class="input-group o_barcode_input_container d-flex flex-column flex-sm-row py-2 px-5 gap-2">
             <input
                 id="manual_barcode"
                 t-custom-model="this.state.barcode"
                 type="text"
                 name="barcode"
-                class="form-control border-0 border-bottom rounded-0"
+                class="form-control border-0 border-bottom rounded-0 w-100 w-sm-auto"
                 t-custom-ref="this.barcodeManual"
                 t-att-placeholder="this.props.placeholder"
                 t-on-keydown="this._onKeydown"
             />
             <button
-                class="input-group-text rounded-0"
+                class="input-group-text rounded-0 w-auto d-flex justify-content-center w-auto"
                 t-att-disabled="!this.state.barcode"
                 t-on-click.prevent="(ev) => this.props.onSubmit(this.state.barcode)">
                 Apply
