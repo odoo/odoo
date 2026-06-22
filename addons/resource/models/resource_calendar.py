@@ -261,7 +261,7 @@ class ResourceCalendar(models.Model):
 
         domain = Domain(domain or Domain.TRUE)
         if self:
-            attendances_per_day = self._get_attendances_by_date(start.date(), end.date(), domain)
+            attendances_per_day = self._get_attendances_by_date(start.date(), end.date(), domain | Domain('duration_based', '=', True))
         else:
             attendances_per_day = defaultdict(lambda: self.env['resource.calendar.attendance'])
 

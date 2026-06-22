@@ -167,6 +167,37 @@ class TestResourceCalendar(TransactionCase):
         self.assertEqual(calendar.hours_per_day, 7)
         self.assertEqual(calendar.hours_per_week, 21)
 
+    def test_attendance_intervals_duration_based_domain_filter(self):
+        calendar = self.env['resource.calendar'].create({
+            'name': 'Test calendar',
+            'attendance_ids': [(5, 0, 0),
+                (0, 0, {'dayofweek': '0', 'duration_hours': 2}),
+                (0, 0, {'dayofweek': '0', 'duration_hours': 4}),
+                (0, 0, {'dayofweek': '0', 'duration_hours': 6}),
+            ]
+        })
+        att_2h, att_4h, att_6h = sorted(calendar.attendance_ids, key=lambda att: att.duration_hours)
+
+        start_dt = datetime(2026, 1, 5, 0, 0, 0, tzinfo=UTC)
+        end_dt = datetime(2026, 1, 5, 23, 59, 59, tzinfo=UTC)
+
+        intervals = calendar._attendance_intervals_batch(start_dt, end_dt, domain=[('duration_hours', '>', 3)])[False]
+
+        intervals_by_attendance = {att: (start, end) for start, end, att in intervals}
+        self.assertEqual(len(intervals_by_attendance), 2, "Only the 4h and 6h attendances match the domain; the 2h one is filtered out")
+        self.assertNotIn(att_2h, intervals_by_attendance, "The 2h attendance is filtered out by the domain")
+
+        self.assertEqual(
+            intervals_by_attendance[att_4h],
+            (datetime(2026, 1, 5, 8, 0, tzinfo=UTC), datetime(2026, 1, 5, 12, 0, tzinfo=UTC)),
+            "The 4h interval must stay at 08:00-12:00 (after the filtered-out 2h line)",
+        )
+        self.assertEqual(
+            intervals_by_attendance[att_6h],
+            (datetime(2026, 1, 5, 12, 0, tzinfo=UTC), datetime(2026, 1, 5, 18, 0, tzinfo=UTC)),
+            "The 6h interval must stay at 12:00-18:00",
+        )
+
     def test_duration_based_average_hours(self):
         """Checks that the average hours for days and weeks are correctly computed when the option Define Amount of
         Hours per Day has been checked. In 19.2, for an attendance to be duration based, we simply create an attendance
