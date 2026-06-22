@@ -295,7 +295,7 @@ class PdpRegistration(models.TransientModel):
         self.ensure_one()
         base_url = self.company_id._pdp_get_iap_url()
         response = iap_tools.iap_jsonrpc(f'{base_url}/api/id_authentication/1/get_authentication_hash', params={
-            'db_uuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+            'db_uuid': self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
             'vat': self.siren_number,
             'auth_email': self.contact_email,
             'object_uuid': self.pdp_authentication_uuid,
