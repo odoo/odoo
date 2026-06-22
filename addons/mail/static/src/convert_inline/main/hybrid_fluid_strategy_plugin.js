@@ -65,18 +65,23 @@ export class HybridFluidStrategyPlugin extends Plugin {
 
     applyDescendantBackground(layout, { emailNode }) {
         const facts = emailNode.analysis.facts;
-        const { useTableStrategy, acceptDescendantBackground } = facts;
-        if (!useTableStrategy || !acceptDescendantBackground) {
+        const { useHybridFluidTableStrategy, acceptDescendantBackground, tableStrategyReport } =
+            facts;
+        if (!useHybridFluidTableStrategy || !acceptDescendantBackground || !tableStrategyReport) {
             return;
         }
+        const { styleInfo } = facts.tableStrategyReport.descendantBackground;
+        layout.setAttributes({ style: styleInfo });
     }
 
     applyDescendantBorder(layout, { emailNode }) {
         const facts = emailNode.analysis.facts;
-        const { useTableStrategy, acceptDescendantBorder } = facts;
-        if (!useTableStrategy || !acceptDescendantBorder) {
+        const { useHybridFluidTableStrategy, acceptDescendantBorder, tableStrategyReport } = facts;
+        if (!useHybridFluidTableStrategy || !acceptDescendantBorder || !tableStrategyReport) {
             return;
         }
+        const { styleInfo } = facts.tableStrategyReport.descendantBorder;
+        layout.setAttributes({ style: styleInfo });
     }
 
     applyTableSpacing(layout, { emailNode }) {

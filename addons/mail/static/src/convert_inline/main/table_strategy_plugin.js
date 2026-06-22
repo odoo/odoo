@@ -187,6 +187,21 @@ export class TableStrategyPlugin extends Plugin {
         );
     }
 
+    /**
+     * TODO EGGMAIL: move explanation to where it fits best:
+     * Summary of the algorithm:
+     * - element_layout_analysis_processors | addBottomUpConstraintsForTables
+     *   for every reference element, during the first render tree phase,
+     *   identify if there is a border/background on every element.
+     * - if there is, create a tableStrategyReport that is propagated towards
+     *   ancestors as a constraintsForAncestors
+     *   this report should include cleanup functions that will be called when
+     *   the report is accepted AND is stopped from propagating
+     * - stop propagation if
+     *   - the ancestor has its own tableStrategyReport
+     *   - the ancestor returns true to accept_table_strategy_report_overrides
+     *     and manually stops propagating the tableStrategyReport
+     */
     addBottomUpConstraintsForTables({ layout, analysis }, { referenceNode, parentEmailNode }) {
         if (referenceNode.nodeType !== Node.ELEMENT_NODE) {
             return;
