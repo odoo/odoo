@@ -2413,6 +2413,9 @@ class AccountMoveLine(models.Model):
     # -------------------------------------------------------------------------
     # RECONCILIATION
     # -------------------------------------------------------------------------
+    @api.model
+    def is_payment(self, aml):
+        return aml.move_id.origin_payment_id or aml.move_id.statement_line_id
 
     def _get_reconciliation_aml_field_value(self, field, shadowed_aml_values):
         self.ensure_one()
@@ -2435,13 +2438,10 @@ class AccountMoveLine(models.Model):
             * rate:     The rate applied regarding the company's currency.
         """
 
-        def is_payment(aml):
-            return aml.move_id.origin_payment_id or aml.move_id.statement_line_id
-
         def get_odoo_rate(aml, other_aml, currency):
             if forced_rate := self.env.context.get('forced_rate_from_register_payment'):
                 return forced_rate
-            if other_aml and not is_payment(aml) and is_payment(other_aml):
+            if other_aml and not self.is_payment(aml) and self.is_payment(other_aml):
                 return get_accounting_rate(other_aml, currency)
             if aml.move_id.is_invoice(include_receipts=True):
                 exchange_rate_date = aml.move_id.invoice_date

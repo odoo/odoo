@@ -124,22 +124,19 @@ class AccountPartialReconcile(models.Model):
         # if the move is draft and can be removed, there is no need to update the matching number
         all_reconciled = self.debit_move_id + self.credit_move_id
 
+        # Reverse or unlink CABA/exchange move entries.
+        if moves_to_reverse:
+            default_values_list = [{
+                'date': move._get_accounting_date(move.date, move._affect_tax_report()),
+                'ref': move.env._('Reversal of: %s', move.name),
+            } for move in moves_to_reverse]
+            moves_to_reverse._unlink_or_reverse(default_values_list=default_values_list)
+
         # Unlink partials before doing anything else to avoid 'Record has already been deleted' due to the recursion.
         res = super().unlink()
 
         # Remove the matching numbers before reversing the moves to avoid trying to remove the full twice.
         full_to_unlink.unlink()
-
-        # Reverse or unlink CABA/exchange move entries.
-        if moves_to_reverse:
-            not_draft_moves = moves_to_reverse.filtered(lambda m: m.state != 'draft')
-            draft_moves = moves_to_reverse - not_draft_moves
-            default_values_list = [{
-                'date': move._get_accounting_date(move.date, move._affect_tax_report()),
-                'ref': move.env._('Reversal of: %s', move.name),
-            } for move in not_draft_moves]
-            not_draft_moves._reverse_moves(default_values_list, cancel=True)
-            draft_moves.unlink()
 
         all_reconciled = all_reconciled.exists()
         self._update_matching_number(all_reconciled)
@@ -241,7 +238,7 @@ class AccountPartialReconcile(models.Model):
                         * partial:          The account.partial.reconcile record.
                         * percentage:       The reconciled percentage represented by the partial.
                         * payment_rate:     The applied rate of this partial.
-                        * settlement_date:  The date at which the reconciled amount has been paid. Used as
+                        * payment_date:     The date at which the reconciled amount has been paid. Used as
                                             accounting date of the cash basis entry.
         '''
         tax_cash_basis_values_per_move = {}
@@ -261,6 +258,10 @@ class AccountPartialReconcile(models.Model):
 
                 # Nothing to process on the move.
                 if not move_values:
+                    continue
+
+                # No payment, no CABA
+                if not self.env['account.move.line'].is_payment((move + counterpart_move).line_ids):
                     continue
 
                 # Check the cash basis configuration only when at least one cash basis tax entry need to be created.
@@ -292,17 +293,7 @@ class AccountPartialReconcile(models.Model):
                     source_line = partial.credit_move_id
                     counterpart_line = partial.debit_move_id
 
-                if partial.debit_move_id.move_id.is_invoice(include_receipts=True) and partial.credit_move_id.move_id.is_invoice(include_receipts=True):
-                    # Will match when reconciling a refund with an invoice.
-                    # In this case, we want to use the rate of each businness document to compute its cash basis entry,
-                    # not the rate of what it's reconciled with.
-                    rate_amount = source_line.balance
-                    rate_amount_currency = source_line.amount_currency
-                    payment_date = move.date
-                    settlement_date = partial.max_date
-                else:
-                    payment_date = counterpart_line.date
-                    settlement_date = payment_date
+                payment_date = counterpart_line.date
 
                 if move_values['currency'] == move.company_id.currency_id:
                     # Ignore the exchange difference.
@@ -343,7 +334,7 @@ class AccountPartialReconcile(models.Model):
                     'percentage': percentage,
                     'payment_rate': payment_rate,
                     'both_move_posted': partial.debit_move_id.move_id.state == 'posted' and partial.credit_move_id.move_id.state == 'posted',
-                    'settlement_date': settlement_date,
+                    'payment_date': payment_date,
                     'counterpart_move': counterpart_move,
                 }
 
@@ -544,7 +535,7 @@ class AccountPartialReconcile(models.Model):
                 # Init the journal entry.
                 journal = partial.company_id.tax_cash_basis_journal_id
                 lock_date = move.company_id._get_user_fiscal_lock_date(journal)
-                move_date = max(partial_values['settlement_date'], lock_date + timedelta(days=1))
+                move_date = max(partial_values['payment_date'], lock_date + timedelta(days=1))
                 move_vals = {
                     'move_type': 'entry',
                     'date': move_date,
