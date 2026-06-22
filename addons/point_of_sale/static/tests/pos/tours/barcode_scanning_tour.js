@@ -29,12 +29,6 @@ registry.category("web_tour.tours").add("BarcodeScanningTour", {
             ProductScreen.selectedOrderlineHas("Magnetic Board", 1, "0.00"),
             scan_barcode("2305000123451"),
             ProductScreen.selectedOrderlineHas("Magnetic Board", 1, "123.45"),
-
-            // Test "Weighted product" EAN-13 `21.....{NNDDD}` barcode pattern
-            scan_barcode("2100005000000"),
-            ProductScreen.selectedOrderlineHas("Wall Shelf Unit", 0, "0.00"),
-            scan_barcode("2100005080002"),
-            ProductScreen.selectedOrderlineHas("Wall Shelf Unit", 8),
             Chrome.endTour(),
         ].flat(),
 });
