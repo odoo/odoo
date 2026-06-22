@@ -12,7 +12,7 @@ class TestUi(odoo.tests.HttpCase):
         cls.env.ref('base.group_user').sudo().implied_ids |= cls.env.ref('project.group_project_milestone')
 
     def test_01_project_tour(self):
-        self.start_tour("/odoo", 'project_tour', login="admin")
+        self.start_tour("/odoo", 'project_tour', login="admin", onboarding=True)
 
     def test_project_task_history(self):
         """This tour will check that the history works properly."""

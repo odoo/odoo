@@ -14,4 +14,4 @@ class TestProjectUpdateUi(HttpCase):
         self.env.ref('base.group_user').implied_ids |= self.env.ref('project.group_project_milestone')
 
         self.start_tour("/odoo", 'project_update_tour', login="admin")
-        self.start_tour("/odoo", 'project_tour', login="admin")
+        self.start_tour("/odoo", 'project_tour', login="admin", onboarding=True)

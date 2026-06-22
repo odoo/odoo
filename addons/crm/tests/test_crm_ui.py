@@ -14,7 +14,7 @@ class TestUi(HttpCase, TestCrmCommon):
             'phone': '(355)-687-3262',
             'vat': '012345678',
         })
-        self.start_tour("/odoo", 'crm_tour', login="admin")
+        self.start_tour("/odoo", 'crm_tour', login="admin", onboarding=True)
 
     def test_02_crm_tour_rainbowman(self):
         # we create a new user to make sure they get the 'Congrats on your first deal!'

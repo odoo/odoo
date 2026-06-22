@@ -49,7 +49,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
             'mimetype': 'image/png',
         })
 
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'blog', login='admin')
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'blog', login='admin', onboarding=True)
 
     def test_blog_post_tags(self):
         self.start_tour(self.env['website'].get_client_action_url('/blog'), 'blog_tags', login='admin')

@@ -62,7 +62,7 @@ class TestUi(AccountTestInvoicingHttpCommon):
             ('state', '=', 'draft'),
         ]).unlink()
 
-        self.start_tour("/odoo", 'account_tour', login="admin")
+        self.start_tour("/odoo", 'account_tour', login="admin", onboarding=True)
 
     def test_01_account_tax_groups_tour(self):
         self.env.ref('base.user_admin').write({

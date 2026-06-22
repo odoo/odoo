@@ -76,6 +76,7 @@ class TestSaleProcess(HttpCaseWithUserDemo, WebsiteSaleCommon, HttpCaseWithWebsi
             self.env["website"].get_client_action_url("/shop"),
             "website_sale.onboarding_tour",
             login="admin",
+            onboarding=True,
         )
 
     def test_01_cart_update_check(self):
