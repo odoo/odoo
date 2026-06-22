@@ -1,0 +1,26 @@
+.s_popup {
+    .modal-content {
+        // Empty popup NOT during drag & drop
+        &.oe_structure:not(:has(> :not(.s_popup_close))) {
+            &:after {
+                @extend %o-editor-messages;
+                content: attr(data-editor-message);
+                font-size: 20px;
+                padding: 112px 0px;
+                margin: 20px $-editor-messages-margin-x;
+                border-radius: $border-radius-lg;
+            }
+        }
+
+        // Empty popup during drag & drop
+        &.oe_structure:not(:has(> :not(.s_popup_close):not(.oe_drop_zone))) {
+            > .oe_drop_zone.oe_insert:not(.oe_vertical):not(.oe_sanitized_drop_zone) {
+                @extend %o-editor-messages;
+                height: auto;
+                width: 100% - 2 * $-editor-messages-margin-x;
+                padding: 112px 0;
+                margin: 20px $-editor-messages-margin-x;
+            }
+        }
+    }
+}
