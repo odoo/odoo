@@ -2961,15 +2961,13 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
     # CATALOG
     # -------------------------------------------------------------------------
-    def action_add_from_catalog(self):
-        res = super().action_add_from_catalog()
-        res['search_view_id'] = [self.env.ref('account.product_view_search_catalog').id, 'search']
-        return res
 
     def _get_action_add_from_catalog_extra_context(self):
         res = super()._get_action_add_from_catalog_extra_context()
-        if self.is_purchase_document() and self.partner_id:
-            res['search_default_seller_ids'] = self.partner_id.name
+        if self.is_purchase_document():
+            res['is_purchase_document'] = True
+            if self.partner_id:
+                res['search_default_seller_ids'] = self.partner_id.name
 
         res['product_catalog_digits'] = self.line_ids._fields['price_unit'].get_digits(self.env)
         return res

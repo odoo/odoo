@@ -213,9 +213,6 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="product.product_view_search_catalog"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='product_tmpl_id']" position="after">
-                    <field name="seller_ids" string="Vendor"/>
-                </xpath>
                 <xpath expr="//filter[@name='favorites']" position="after">
                     <separator/>
                     <filter string="In the Order"

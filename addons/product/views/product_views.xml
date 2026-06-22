@@ -816,6 +816,7 @@ action = {
                 <field name="product_template_attribute_value_ids"
                        groups="product.group_product_variant"/>
                 <field name="product_tmpl_id" string="Product Template"/>
+                <field name="seller_ids" string="Vendor" invisible="not context.get('is_purchase_document', False)"/>
                 <!-- Filter -->
                 <filter string="Favorites" name="favorites" domain="[('is_favorite', '=', True)]"/>
                 <separator/>
