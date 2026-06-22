@@ -109,14 +109,17 @@ const chatterPatch = {
                                 return;
                             }
                         }
-                        Promise.all(
+                        if (!await this.canUpload()) {
+                            return;
+                        }
+                        await Promise.all(
                             files.map((file) => this.attachmentUploader.uploadFile(file))
-                        ).then(() => {
-                            if (this.props.hasParentReloadOnAttachmentsChanged) {
-                                this.reloadParentView();
-                            }
-                        });
+                        )
+                        if (this.props.hasParentReloadOnAttachmentsChanged) {
+                            this.reloadParentView();
+                        }
                         this.state.isAttachmentBoxOpened = true;
+                        await this.postUpload();
                     }
                 },
             },
@@ -411,6 +414,10 @@ const chatterPatch = {
         }
         return this.uploadHandlers.get(threadLocalId);
     },
+
+    // Methods overridable
+    async canUpload() { return true },
+    async postUpload() {},
 
     async reloadParentView() {
         await this.props.saveRecord?.();
