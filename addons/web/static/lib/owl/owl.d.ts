@@ -169,6 +169,7 @@ export type Type<T> = T & {
 	 * a function type must use the factory form.
 	 */
 	optional(value: T extends Function ? () => T : T | (() => T)): WithDefault<T>;
+	type: T;
 };
 export type IsAny<T> = 0 extends 1 & T ? true : false;
 export type HasDefault<T> = IsAny<T> extends true ? false : T extends {
@@ -239,9 +240,9 @@ declare function arrayType<T>(elementType: T): Type<StripBrands<T>[]>;
 declare function constructorType<T extends Constructor>(constructor: T): Type<T>;
 declare function customValidator<T>(type: T, validator: (value: StripBrands<T>) => boolean, errorMessage?: string): Type<StripBrands<T>>;
 declare function functionType(): Type<(...parameters: any[]) => any>;
-declare function functionType<const P extends any[]>(parameters: P): Type<(...parameters: StripBrandsAll<P>) => void>;
-declare function functionType<const P extends any[], R>(): Type<(...parameters: P) => R>;
-declare function functionType<const P extends any[], R>(parameters: P, result: R): Type<(...parameters: StripBrandsAll<P>) => StripBrands<R>>;
+declare function functionType<const P extends unknown[]>(parameters: P): Type<(...parameters: StripBrandsAll<P>) => void>;
+declare function functionType<const P extends unknown[], R>(): Type<(...parameters: P) => R>;
+declare function functionType<const P extends unknown[], R>(parameters: P, result: R): Type<(...parameters: StripBrandsAll<P>) => StripBrands<R>>;
 declare function instanceType<T extends Constructor>(constructor: T): Type<InstanceType<T>>;
 declare function intersection<T extends any[]>(types: T): Type<UnionToIntersection<StripBrands<T[number]>>>;
 export type LiteralTypes = number | string | boolean | null | undefined;
@@ -257,8 +258,8 @@ declare function promiseType(): Type<Promise<void>>;
 declare function promiseType<T>(type: T): Type<Promise<StripBrands<T>>>;
 declare function recordType(): Type<Record<PropertyKey, any>>;
 declare function recordType<V>(valueType: V): Type<Record<PropertyKey, StripBrands<V>>>;
-declare function tuple<const T extends any[]>(types: T): Type<StripBrandsAll<T>>;
-declare function union<T extends any[]>(types: T): Type<StripBrands<T[number]>>;
+declare function tuple<const T extends unknown[]>(types: T): Type<StripBrandsAll<T>>;
+declare function union<T extends unknown[]>(types: T): Type<StripBrands<T[number]>>;
 declare function reactiveValueType(): Type<ReactiveValue<any>>;
 declare function reactiveValueType<T>(): Type<ReactiveValue<T>>;
 declare function reactiveValueType<T>(type: T): Type<ReactiveValue<StripBrands<T>>>;
@@ -638,6 +639,11 @@ declare class ComponentNode extends Scope implements VNode<ComponentNode> {
 	willPatch: LifecycleHook[];
 	patched: LifecycleHook[];
 	signalComputation: ComputationAtom;
+	trackedRefs: Map<{
+		set(v: null): void;
+	}, {
+		value: HTMLElement | null;
+	}> | null;
 	constructor(C: ComponentConstructor, props: Record<string, any>, app: App, parent: ComponentNode | null, parentKey: string | null);
 	decorate(f: Function, hookName: string): Function;
 	initiateRender(fiber: Fiber | MountFiber): Promise<void>;
@@ -646,6 +652,19 @@ declare class ComponentNode extends Scope implements VNode<ComponentNode> {
 	_cancel(): void;
 	destroy(): void;
 	_destroy(): void;
+	/**
+	 * Unset any tracked t-ref whose element is no longer in the document, and stop
+	 * tracking it (createRef re-registers it on the next render if the element
+	 * comes back). `isConnected` is the discriminator: a ref the block's own
+	 * remove() failed to clear (bulk removal) points at a detached element and is
+	 * cleared, while a ref a surviving sibling just took over (t-if/t-else with a
+	 * shared signal) points at a still-connected element and is left alone.
+	 *
+	 * Called after this component's dom settles: at the tail of `_patch` (before
+	 * user `onPatched`), so an element removed in place is caught, and — for the
+	 * nodes collected during `_destroy` — after a removed subtree is detached.
+	 */
+	sweepRefs(): void;
 	/**
 	 * Finds a child that has dom that is not yet updated, and update it. This
 	 * method is meant to be used only in the context of repatching the dom after
@@ -656,6 +675,16 @@ declare class ComponentNode extends Scope implements VNode<ComponentNode> {
 	mount(parent: HTMLElement, anchor: ChildNode): void;
 	moveBeforeDOMNode(node: Node | null, parent?: HTMLElement): void;
 	moveBeforeVNode(other: ComponentNode | null, afterNode: Node | null): void;
+	/**
+	 * Register a t-ref signal bound to an element this component hosts, so its
+	 * lifecycle can clear it (see sweepRefs / _destroy). Idempotent — re-tracking
+	 * the same signal on each render just refreshes its atom.
+	 */
+	trackRef(ref: {
+		set(v: null): void;
+	}, atom: {
+		value: HTMLElement | null;
+	}): void;
 	patch(): void;
 	_patch(): void;
 	beforeRemove(): void;
@@ -810,7 +839,7 @@ export declare class Portal extends Component {
 		slots: {
 			default: any;
 		};
-		target: any;
+		target: string | HTMLElement | ReactiveValue<HTMLElement, HTMLElement>;
 	}>;
 	setup(): void;
 }

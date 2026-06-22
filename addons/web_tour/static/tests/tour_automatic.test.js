@@ -97,16 +97,6 @@ test("Step Tour validity", async () => {
       "Belgium",
       "wins",
       "EURO2024"
-    ],
-    "expectedKeys": [
-      "trigger",
-      "id",
-      "isActive",
-      "run",
-      "content",
-      "expectUnloadPage",
-      "timeout",
-      "tooltipPosition"
     ]
   }
 ]`,
@@ -123,16 +113,6 @@ test("Step Tour validity", async () => {
     "unknownKeys": [
       "my_title",
       "doku"
-    ],
-    "expectedKeys": [
-      "trigger",
-      "id",
-      "isActive",
-      "run",
-      "content",
-      "expectUnloadPage",
-      "timeout",
-      "tooltipPosition"
     ]
   }
 ]`,
