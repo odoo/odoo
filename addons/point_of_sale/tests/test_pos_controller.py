@@ -68,6 +68,9 @@ class TestPoSController(TestPointOfSaleHttpCommon):
         self.partner_1 = self.env['res.partner'].create({
             'name': 'Valid Lelitre',
             'email': 'valid.lelitre@agrolait.com',
+            'street': 'Aroma Circle',
+            'city': 'Palanpur',
+            'country_id': self.env.company.country_id.id,
         })
         self.partner_1_user = mail_new_test_user(
             self.env,
@@ -75,6 +78,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
             login='partner_1',
             email=self.partner_1.email,
             groups='base.group_portal',
+            partner_id=self.partner_1.id
         )
         self.authenticate('partner_1', 'partner_1')
 
@@ -85,7 +89,7 @@ class TestPoSController(TestPointOfSaleHttpCommon):
             'taxes_id': False,
         })
         self.main_pos_config.open_ui()
-        self.pos_order = self.env['pos.order'].create({
+        self.pos_order_1 = self.env['pos.order'].create({
             'session_id': self.main_pos_config.current_session_id.id,
             'company_id': self.env.company.id,
             'access_token': '1234567890',
@@ -105,8 +109,37 @@ class TestPoSController(TestPointOfSaleHttpCommon):
             'amount_return': 10.0,
         })
         self.main_pos_config.current_session_id.close_session_from_ui()
-        res = self.url_open(f'/pos/ticket/validate?access_token={self.pos_order.access_token}', timeout=30000)
-        self.assertTrue(self.pos_order.is_invoiced, "The pos order should have an invoice")
+        res = self.url_open(f'/pos/ticket/validate?access_token={self.pos_order_1.access_token}', timeout=30000)
+        # Invoice is not created because user does not contains required field phone
+        self.assertIn('The Phone must be filled in your details.', res.content.decode('utf-8'))
+        self.assertFalse(self.pos_order_1.is_invoiced, "The pos order should have an invoice")
+        self.assertFalse("my/invoices" in res.url)
+
+        self.partner_1.phone = '+1 (555) 555-5555'
+        self.pos_order_2 = self.env['pos.order'].create({
+            'session_id': self.main_pos_config.current_session_id.id,
+            'company_id': self.env.company.id,
+            'access_token': '1234567891',
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product1.id,
+                'price_unit': 10,
+                'discount': 0.0,
+                'qty': 1.0,
+                'tax_ids': False,
+                'price_subtotal': 10,
+                'price_subtotal_incl': 10,
+            })],
+            'amount_tax': 10,
+            'amount_total': 10,
+            'amount_paid': 10.0,
+            'amount_return': 10.0,
+        })
+        self.main_pos_config.current_session_id.close_session_from_ui()
+        res = self.url_open(f'/pos/ticket/validate?access_token={self.pos_order_2.access_token}', timeout=30000)
+        # Invoice will be created because user contains all required fields
+        self.assertNotIn('The Phone must be filled in your details.', res.content.decode('utf-8'))
+        self.assertTrue(self.pos_order_2.is_invoiced, "The pos order should have an invoice")
         self.assertTrue("my/invoices" in res.url)
 
     def test_qr_code_receipt_user_updated(self):
@@ -124,7 +157,9 @@ class TestPoSController(TestPointOfSaleHttpCommon):
             'taxes_id': False,
         })
         self.main_pos_config.open_ui()
-        self.pos_order = self.env['pos.order'].create({
+
+        # Invoice will be directly created if the public user and order has a partner
+        self.pos_order_1 = self.env['pos.order'].create({
             'session_id': self.main_pos_config.current_session_id.id,
             'company_id': self.env.company.id,
             'partner_id': self.partner_1.id,
@@ -145,19 +180,47 @@ class TestPoSController(TestPointOfSaleHttpCommon):
             'amount_return': 10.0,
         })
         self.main_pos_config.current_session_id.close_session_from_ui()
+        res = self.url_open(f'/pos/ticket/validate?access_token={self.pos_order_1.access_token}', timeout=30000)
+        self.assertTrue(self.pos_order_1.is_invoiced, "The pos order should have an invoice")
+        self.assertTrue("my/invoices" in res.url)
+
+        # Order without a customer should create a new partner using the submitted form data by public user.
+        self.pos_order_2 = self.env['pos.order'].create({
+            'session_id': self.main_pos_config.current_session_id.id,
+            'company_id': self.env.company.id,
+            'access_token': '1234567891',
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product1.id,
+                'price_unit': 10,
+                'discount': 0.0,
+                'qty': 1.0,
+                'tax_ids': False,
+                'price_subtotal': 10,
+                'price_subtotal_incl': 10,
+            })],
+            'amount_tax': 10,
+            'amount_total': 10,
+            'amount_paid': 10.0,
+            'amount_return': 10.0,
+        })
+        self.main_pos_config.current_session_id.close_session_from_ui()
         get_invoice_data = {
-            'access_token': self.pos_order.access_token,
-            'name': 'New Name',
-            'email': "test@test.com",
-            'vat': 'VAT_TEST_NUMBER_123',
-            'street': "Test street",
-            'city': "Test City",
+            'access_token': self.pos_order_2.access_token,
+            'name': 'New Customer',
+            'email': 'test@test.com',
+            'vat': 'VAT_TEST_NUMBER_124',
+            'street': 'Test street',
+            'city': 'Test City',
             'zipcode': '12345',
             'country_id': self.company.country_id.id,
-            'phone': "123456789",
+            'phone': '123456789',
             'csrf_token': odoo.http.Request.csrf_token(self)
         }
-        self.url_open(f'/pos/ticket/validate?access_token={self.pos_order.access_token}', data=get_invoice_data, timeout=30000)
-        self.assertEqual(self.partner_1.vat, 'VAT_TEST_NUMBER_123')
-        self.assertEqual(self.partner_1.name, 'New Name')
-        self.assertEqual(self.partner_1.zip, '12345')
+        self.url_open(f'/pos/ticket/validate?access_token={self.pos_order_2.access_token}', data=get_invoice_data, timeout=30000)
+        partner_2 = self.pos_order_2.partner_id
+        self.assertEqual(partner_2.name, 'New Customer')
+        self.assertEqual(partner_2.email, 'test@test.com')
+        self.assertEqual(partner_2.phone, '123456789')
+        self.assertEqual(partner_2.vat, 'VAT_TEST_NUMBER_124')
+        self.assertEqual(partner_2.zip, '12345')
