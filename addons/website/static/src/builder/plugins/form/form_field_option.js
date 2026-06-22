@@ -35,6 +35,7 @@ export class FormFieldOption extends BaseOptionComponent {
             dependencyEl: null,
             valueList: null,
         });
+        this.previousRequirementCondition = {};
         this.domState = useDomState((el) => {
             const modelName = getModelName(el.closest("form"));
             const fieldName = getFieldName(el);

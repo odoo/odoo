@@ -72,6 +72,10 @@ export class Form extends Interaction {
             },
     };
 
+    get today() {
+        return DateTime.now();
+    }
+
     setup() {
         this.isHidden = false;
         this.datepickerInitialized = false;
@@ -897,12 +901,10 @@ export class Form extends Interaction {
                 return value.name === "";
         }
 
-        let format = "";
+        const isDateTime = value.includes(":");
+        const format = isDateTime ? localization.dateTimeFormat : localization.dateFormat;
         const xYearAgo = new Date();
-        if (value.includes(":")) {
-            format = localization.dateTimeFormat;
-        } else {
-            format = localization.dateFormat;
+        if (!isDateTime) {
             xYearAgo.setHours(0, 0, 0, 0);
         }
         // Date & Date Time comparison requires formatting the value
@@ -911,7 +913,12 @@ export class Form extends Interaction {
         // conditions to be broken.
         value = dateTime.isValid ? dateTime.toUnixInteger() : NaN;
 
-        comparable = parseInt(comparable);
+        if (comparable === "today") {
+            const today = this.today;
+            comparable = (isDateTime ? today : today.startOf("day")).toUnixInteger();
+        } else {
+            comparable = parseInt(comparable);
+        }
         between = parseInt(between) || "";
         switch (comparator) {
             case "dateEqual":
@@ -1235,6 +1242,10 @@ export class Form extends Interaction {
 
         if (["date", "datetime"].includes(type)) {
             const format = type === "date" ? localization.dateFormat : localization.dateTimeFormat;
+            if (condition === "today") {
+                const today = this.today;
+                condition = (type === "date" ? today.startOf("day") : today).toUnixInteger();
+            }
             const start = formatDate(DateTime.fromSeconds(parseInt(condition)), { format });
             const end = formatDate(DateTime.fromSeconds(parseInt(between)), { format });
 

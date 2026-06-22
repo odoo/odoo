@@ -180,6 +180,8 @@ export class FormOptionPlugin extends Plugin {
             SetCustomErrorMessageAction,
             SetRequirementComparatorAction,
             SetDateRequirementBoundAction,
+            SetDateRequirementComparatorAction,
+            ToggleTodayRequirementAction,
             SetMultipleFilesAction,
             ToggleAllowEmptyAction,
             SetEmptyPlaceholderAction,
@@ -1601,6 +1603,50 @@ export class SetDateRequirementBoundAction extends DataAttributeAction {
                 { type: "warning" }
             );
         }
+    }
+}
+
+
+export class SetDateRequirementComparatorAction extends SetRequirementComparatorAction {
+    static id = "setDateRequirementComparator";
+    apply(context) {
+        super.apply(context);
+        const fieldEl = context.editingElement;
+        if (RANGE_COMPARATORS.includes(fieldEl.dataset.requirementComparator)) {
+            if (fieldEl.dataset.requirementCondition === "today") {
+                delete fieldEl.dataset.requirementCondition;
+            }
+        } else {
+            delete fieldEl.dataset.requirementBetween;
+        }
+    }
+}
+
+export class ToggleTodayRequirementAction extends BuilderAction {
+    static id = "toggleTodayRequirement";
+
+    setup() {
+        this.preview = false;
+    }
+
+    apply({ editingElement: fieldEl, params }) {
+        if (fieldEl.dataset.requirementCondition !== "today") {
+            params.previousCondition = fieldEl.dataset.requirementCondition;
+        }
+        fieldEl.dataset.requirementCondition = "today";
+    }
+
+    clean({ editingElement: fieldEl, params }) {
+        const previousValue = params.previousCondition;
+        if (previousValue) {
+            fieldEl.dataset.requirementCondition = previousValue;
+        } else {
+            delete fieldEl.dataset.requirementCondition;
+        }
+    }
+
+    isApplied({ editingElement: fieldEl }) {
+        return fieldEl.dataset.requirementCondition === "today";
     }
 }
 
