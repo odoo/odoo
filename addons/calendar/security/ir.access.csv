@@ -4,7 +4,9 @@ access_calendar_attendee_employee_archive_or_unlink_wizard,calendar.attendee_emp
 access_calendar_attendee_employee_multi_archive_or_unlink_wizard,calendar.attendee_employee_multi_archive_or_unlink_wizard,calendar.event.multi.archive.or.unlink.wizard,base.group_user,crud,
 access_calendar_alarm,calendar.alarm,calendar.alarm,base.group_user,crud,
 calendar_event_rule_my,Own events,calendar.event,base.group_portal,r,"[('partner_ids', 'in', user.partner_id.id)]"
-calendar_event_rule_employee,All Calendar Event for employees,calendar.event,base.group_user,crud,
+calendar_event_rule_employee,All Calendar Event for employees,calendar.event,base.group_user,cru,
+calendar_event_rule_employee_access_unlink,Deletable Calendar Event for employees,calendar.event,base.group_user,d,"['|', ('user_id', '=', user.id), ('partner_ids', 'in', user.partner_id.id)]"
+calendar_event_rule_system_access_unlink,Deletable Calendar Event for system users,calendar.event,base.group_system,d,
 calendar_event_rule_private,Private events,calendar.event,,cud,"['|', '|', '|', '|', ('effective_privacy', 'in', ['public', 'confidential']), ('user_id', '=', user.id), '|', ('create_uid', '=', user.id), ('partner_ids', 'in', user.partner_id.id), ('calendar_id.calendar_user_ids', 'any', [('user_id', '=', user.id), ('access_role', '=', 'owner')]), '&', ('effective_privacy', '=', 'members_only'), ('calendar_id.calendar_user_ids', 'any', [('user_id', '=', user.id), ('access_role', '=', 'writer')])]"
 calendar_calendar_rule_system,Calendar: system,calendar.calendar,base.group_system,crud,
 calendar_calendar_rule_users_create_and_read,Calendar: create and read,calendar.calendar,base.group_user,cr,
