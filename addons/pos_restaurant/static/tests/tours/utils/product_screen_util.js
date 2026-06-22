@@ -36,7 +36,6 @@ export function OrderButtonContain(data) {
             isActive: ["desktop"],
             content: "check order button not contain data",
             trigger: `.product-screen .submit-order:contains("${data}")`,
-            run: function () {}, // it's a check
         },
     ];
     return steps;

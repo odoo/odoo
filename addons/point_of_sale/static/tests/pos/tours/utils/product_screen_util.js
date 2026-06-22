@@ -459,7 +459,6 @@ export function checkFiscalPosition(name) {
         {
             content: `check fiscal position '${name}' is selected`,
             trigger: `.o_fiscal_position_button:contains("${name}")`,
-            run: () => {},
         },
         Dialog.cancel(),
     ];
