@@ -820,10 +820,18 @@ action = {
                 <!-- Filter -->
                 <filter string="Favorites" name="favorites" domain="[('is_favorite', '=', True)]"/>
                 <separator/>
-                <filter string="Services" name="services" domain="[('type', '=', 'service')]"/>
-                <filter string="Goods"
-                        name="goods"
-                        domain="[('type', '=', 'consu')]"/>
+                <filter
+                    string="Services"
+                    name="services"
+                    domain="[('type', '=', 'service')]"
+                    invisible="context.get('hide_product_type_filters')"
+                />
+                <filter
+                    string="Goods"
+                    name="goods"
+                    domain="[('type', '=', 'consu')]"
+                    invisible="context.get('hide_product_type_filters')"
+                />
                 <!-- Group By -->
                 <group>
                     <filter string="Product Type" name="type" context="{'group_by':'type'}"/>

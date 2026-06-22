@@ -773,7 +773,11 @@ class RepairOrder(models.Model):
         return super()._get_product_catalog_domain() & catalog_domain
 
     def _get_action_add_from_catalog_extra_context(self):
-        return {**super()._get_action_add_from_catalog_extra_context(), 'display_stock': True}
+        return {
+            **super()._get_action_add_from_catalog_extra_context(),
+            'display_stock': True,
+            'hide_product_type_filters': True,  # Only goods/services are displayed
+        }
 
     def _catalog_prepare_new_line_vals(self, child_field, *args, **kwargs) -> dict:
         res = super()._catalog_prepare_new_line_vals(child_field, *args, **kwargs)
