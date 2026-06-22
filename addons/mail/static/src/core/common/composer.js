@@ -30,6 +30,7 @@ import {
     signal,
     t,
     useListener,
+    useApp,
 } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
@@ -106,6 +107,8 @@ export class Composer extends Component {
         Wysiwyg,
     };
     static template = "mail.Composer";
+
+    app = useApp();
 
     setup() {
         super.setup();
@@ -432,7 +435,7 @@ export class Composer extends Component {
                 onInput: this.onInput.bind(this),
                 onKeydown: this.onKeydown.bind(this),
             },
-            embeddedComponentInfo: { app: this.__owl__.app, env: this.env },
+            embeddedComponentInfo: { app: this.app, env: this.env },
             resources: {
                 embedded_components: [syntaxHighlightingEmbedding],
             },

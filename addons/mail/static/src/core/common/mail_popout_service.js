@@ -1,13 +1,9 @@
-import { App, Component, props, types, xml } from "@odoo/owl";
-
+import { Component, props, types, useApp, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
-import { appTranslateFn } from "@web/core/l10n/translation";
 import { OverlayContainer } from "@web/core/overlay/overlay_container";
 import { registry } from "@web/core/registry";
-import { getTemplate } from "@web/core/templates";
 import { useService } from "@web/core/utils/hooks";
-import { customDirectives, globalValues } from "@web/env";
 
 const DEFAULT_ID = Symbol("default");
 
@@ -36,7 +32,14 @@ export const mailPopoutService = {
 
     start(env) {
         /**
-         * @type {Map<any, { externalWindow: Window|null, hooks: { beforePopout?: Function, afterPopoutClosed?: Function, app: App } }>}
+         * @type {Map<any, {
+         *  externalWindow: Window | null;
+         *  hooks: {
+         *      beforePopout?: Function;
+         *      afterPopoutClosed?: Function;
+         *  };
+         *  root?: import("@odoo/owl").Root;
+         * }>}
          */
         const popouts = new Map();
 
@@ -44,7 +47,7 @@ export const mailPopoutService = {
          * Reset the external window to its initial state:
          * - Reset the external window header from main window (for appropriate title and other meta data)
          * - clear the external window's document body
-         * - destroy the current app mounted on the window
+         * - destroy the current root mounted on the window
          * @param {any} id - The ID of the popout instance to reset
          * @param {Object} [options]
          * @param {Boolean} [options.useAlternativeAssets]
@@ -64,9 +67,9 @@ export const mailPopoutService = {
                 }
                 doc.body = doc.createElement("body");
             }
-            if (popout.app) {
-                popout.app.destroy();
-                popout.app = null;
+            if (popout.root) {
+                popout.root.destroy();
+                delete popout.root;
             }
         }
 
@@ -141,20 +144,11 @@ export const mailPopoutService = {
                 pipWindow: externalWindow,
                 rootId: id,
             });
-            popout.app = new App({
-                name: "Popout",
-                customDirectives,
-                getTemplate,
-                globalValues,
-                translatableAttributes: ["data-tooltip"],
-                translateFn: appTranslateFn,
+            popout.root = app.createRoot(OverlayWrapper, {
+                env: rootEnv,
+                props: { component, componentProps: props },
             });
-            popout.app
-                .createRoot(OverlayWrapper, {
-                    env: rootEnv,
-                    props: { component, componentProps: props },
-                })
-                .mount(externalWindow.document.body);
+            popout.root.mount(externalWindow.document.body);
             env.services.hotkey.registerWindow(externalWindow);
             return externalWindow;
         }
@@ -179,13 +173,8 @@ export const mailPopoutService = {
                 pollClosedWindow(id);
             }
             reset(id);
-            popout.app = new App({
-                name: "Popout",
-                getTemplate,
-                translatableAttributes: ["data-tooltip"],
-                translateFn: appTranslateFn,
-            });
-            popout.app.createRoot(component, { env, props }).mount(externalWindow.document.body);
+            popout.root = app.createRoot(component, { props });
+            popout.root.mount(externalWindow.document.body);
             return externalWindow;
         }
 
@@ -268,6 +257,8 @@ export const mailPopoutService = {
                 },
             };
         }
+
+        const app = useApp();
 
         return Object.assign(createManager(), { createManager, resetAll });
     },

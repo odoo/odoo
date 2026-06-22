@@ -3,7 +3,7 @@ import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import wUtils from "@website/js/utils";
 import { WebsiteDialog } from "./dialog";
-import { Component, onWillStart, useEffect, proxy } from "@odoo/owl";
+import { Component, onWillStart, useEffect, proxy, useApp } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { isEmail } from "@web/core/utils/strings";
@@ -91,6 +91,7 @@ export class MenuDialog extends Component {
         const debouncedUpdatePageNotFound = useDebounced(updatePageNotFound, 500);
         useEffect(() => debouncedUpdatePageNotFound(this.state.url));
 
+        const app = useApp();
         useLayoutEffect(
             (input) => {
                 if (!input) {
@@ -108,9 +109,9 @@ export class MenuDialog extends Component {
                     },
                 };
                 const unmountAutocompleteWithPages = wUtils.autocompleteWithPages(
+                    app,
                     input,
-                    options,
-                    this.env
+                    options
                 );
                 return () => unmountAutocompleteWithPages();
             },

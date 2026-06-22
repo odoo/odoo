@@ -15,7 +15,7 @@ import {
 } from "@html_editor/others/embedded_components/embedding_sets";
 import { normalizeHTML } from "@html_editor/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
-import { Component, markup, props, status, proxy, t } from "@odoo/owl";
+import { Component, markup, props, status, proxy, t, useApp } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -64,12 +64,14 @@ export const htmlFieldProps = {
 
 export class HtmlField extends Component {
     static template = "html_editor.HtmlField";
-    props = props(htmlFieldProps);
     static components = {
         Wysiwyg,
         HtmlViewer,
         TranslationButton,
     };
+
+    app = useApp();
+    props = props(htmlFieldProps);
 
     setup() {
         this.htmlUpgradeManager = new HtmlUpgradeManager();
@@ -341,7 +343,7 @@ export class HtmlField extends Component {
 
         if (this.props.embeddedComponents) {
             config.resources.embedded_components = [...MAIN_EMBEDDINGS];
-            config.embeddedComponentInfo = { app: this.__owl__.app, env: this.env };
+            config.embeddedComponentInfo = { app: this.app, env: this.env };
         }
 
         const { sanitize_tags, sanitize } = this.props.record.fields[this.props.name];

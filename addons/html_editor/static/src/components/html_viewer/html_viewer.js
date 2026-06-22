@@ -9,6 +9,7 @@ import {
     props,
     proxy,
     t,
+    useApp,
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
@@ -21,6 +22,8 @@ import { browser } from "@web/core/browser/browser";
 
 export class HtmlViewer extends Component {
     static template = "html_editor.HtmlViewer";
+
+    app = useApp();
     props = props({
         config: t.object(),
         migrateHTML: t.boolean().optional(true),
@@ -290,13 +293,7 @@ export class HtmlViewer extends Component {
             env,
             props,
         });
-        const { root, mountPromise } = mountComponent(
-            this.__owl__.app,
-            Component,
-            host,
-            props,
-            env
-        );
+        const { root, mountPromise } = mountComponent(this.app, Component, host, props, env);
         // Don't show mounting errors as they will happen often when the host
         // is disconnected from the DOM because of a patch
         mountPromise.catch();

@@ -17,7 +17,7 @@ import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { renderToElement } from "@web/core/utils/render";
 import { nbsp } from "@web/core/utils/strings";
 
-import { Component, computed, props, proxy, signal, t, useEffect } from "@odoo/owl";
+import { Component, computed, props, proxy, signal, t, useApp, useEffect } from "@odoo/owl";
 import { MessageSearchState } from "@mail/core/common/message_search_hook";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
@@ -66,6 +66,8 @@ export class Message extends Component {
         Priority,
     };
     static template = "mail.Message";
+
+    app = useApp();
 
     /**
      * @type {boolean} Whether the right-click drodpown is being closed.
@@ -193,8 +195,8 @@ export class Message extends Component {
                     "span",
                     this.message.showTranslation
                         ? this.message.richTranslationValue
-                        : this.props.messageSearch?.highlight(this.message.richBody) ??
-                              this.message.richBody
+                        : (this.props.messageSearch?.highlight(this.message.richBody) ??
+                              this.message.richBody)
                 );
                 const roots = this.prepareMessageBody(bodyEl) ?? [];
                 shadowRoot.appendChild(bodyEl);
@@ -210,7 +212,7 @@ export class Message extends Component {
             () => {
                 const roots = this.isEditing
                     ? []
-                    : this.prepareMessageBody(this.messageBody.el) ?? [];
+                    : (this.prepareMessageBody(this.messageBody.el) ?? []);
                 return () => {
                     for (const root of roots) {
                         root.destroy();
@@ -250,8 +252,8 @@ export class Message extends Component {
                           ? "left-end"
                           : "left-start"
                       : this.message.threadAsNewest
-                      ? "right-end"
-                      : "right-start",
+                        ? "right-end"
+                        : "right-start",
                   name: this.expandText,
               })
             : undefined;
@@ -539,7 +541,7 @@ export class Message extends Component {
             // so value becomes empty and highlighting loses the original code text.
             const props = getProps(el);
             const { root, mountPromise } = mountComponent(
-                this.__owl__.app,
+                this.app,
                 Component,
                 el,
                 props,

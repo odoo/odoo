@@ -1,7 +1,6 @@
 import { markEventHandled } from "@web/core/utils/misc";
-import { useComponent, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import {
-    App,
     Component,
     computed,
     onMounted,
@@ -10,6 +9,7 @@ import {
     onWillStart,
     onWillUnmount,
     proxy,
+    useApp,
     useListener,
     signal,
     types as t,
@@ -18,9 +18,8 @@ import {
 } from "@odoo/owl";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
-import { _t, appTranslateFn } from "@web/core/l10n/translation";
+import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { getTemplate } from "@web/core/templates";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { range } from "@web/core/utils/numbers";
 import { fuzzyLookup } from "@web/core/utils/search";
@@ -457,7 +456,7 @@ export class EmojiPicker extends Component {
  * @param {import("@web/core/popover/popover_service").PopoverServiceAddOptions} [options]
  */
 export function usePicker(PickerComponent, ref, props, options = {}) {
-    const component = useComponent();
+    const app = useApp();
     const targets = [];
     const state = proxy({ isOpen: false });
     const ui = useService("ui");
@@ -509,24 +508,17 @@ export function usePicker(PickerComponent, ref, props, options = {}) {
             };
             if (ref?.el) {
                 pickerMobileProps.close = () => remove();
-                const app = new App({
-                    name: "Popout",
-                    getTemplate,
-                    translatableAttributes: ["data-tooltip"],
-                    translateFn: appTranslateFn,
-                });
-                app.createRoot(PickerMobile, {
-                    env: component.env,
+                const root = app.createRoot(PickerMobile, {
                     props: pickerMobileProps,
-                }).mount(ref.el);
+                });
                 remove = () => {
                     state.isOpen = false;
                     props.onClose?.();
-                    app.destroy();
+                    root.destroy();
                 };
+                root.mount(ref.el);
             } else {
                 remove = dialog.add(PickerMobileInDialog, pickerMobileProps, {
-                    context: component,
                     onClose: () => {
                         state.isOpen = false;
                         props.onClose?.();

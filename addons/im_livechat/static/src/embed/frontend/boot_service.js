@@ -1,11 +1,8 @@
 import { makeRoot, makeShadow } from "@im_livechat/embed/common/boot_helpers";
 import { canLoadLivechat } from "@im_livechat/embed/common/misc";
 import { LivechatRoot } from "@im_livechat/embed/frontend/livechat_root";
-import { App } from "@odoo/owl";
-import { appTranslateFn } from "@web/core/l10n/translation";
-
+import { onWillDestroy, useApp } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { getTemplate } from "@web/core/templates";
 
 export const livechatBootService = {
     dependencies: ["mail.store"],
@@ -22,21 +19,19 @@ export const livechatBootService = {
             return;
         }
         const target = this.getTarget();
-        const root = makeRoot(target);
-        makeShadow(root).then((shadow) => {
+        const rootEl = makeRoot(target);
+        const app = useApp();
+        let root;
+        makeShadow(rootEl).then((shadow) => {
             env.services["discuss.rtc"].rootEl = shadow;
-            const app = new App({
-                getTemplate,
-                translatableAttributes: ["data-tooltip"],
-                translateFn: appTranslateFn,
-                dev: env.debug,
-            });
-            app.createRoot(LivechatRoot, {
+            root = app.createRoot(LivechatRoot, {
                 env: Object.assign(Object.create(env), {
-                    rootId: root.getAttribute("id"),
+                    rootId: rootEl.getAttribute("id"),
                 }),
-            }).mount(shadow);
+            });
+            return root.mount(shadow);
         });
+        onWillDestroy(() => root?.destroy());
     },
 };
 registry.category("services").add("im_livechat.boot", livechatBootService);
