@@ -53,7 +53,7 @@ class ProjectTemplateCreateWizard(models.TransientModel):
         if not view:
             return {}
         return {
-            'name': self.env._('Create a Project from Template %s', self.env.context.get('template_name')),
+            'name': self.env._('Create Project (Template: %s)', self.env.context.get('template_name')),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'views': [(view.id, 'form')],
