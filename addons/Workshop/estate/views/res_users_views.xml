@@ -4,7 +4,21 @@
         <field name="model">res.users</field>
         <field name="inherit_id" ref="base.view_users_form"/>
         <field name="arch" type="xml">
-            
+            <xpath expr= "//form/sheet/notebook" position="inside" >
+                <page string = "Real Estate Properties" >
+                    <field name= "property_ids">
+                        <list>
+                            <field name= "name" />
+                            <field name= "property_type_id" />
+                            <field name= "tag_ids" widget="many2many_tags" />
+                            <field name= "bedrooms" />
+                            <field name= "living_area" />
+                            <field name= "expected_price" />
+                            <field name= "selling_price" />
+                        </list>
+                    </field>
+                </page>
+            </xpath>
         </field>
     </record>
 </odoo>
