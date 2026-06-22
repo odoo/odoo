@@ -6,11 +6,10 @@ from unittest.mock import Mock, patch
 from werkzeug.urls import url_parse
 
 from odoo.addons.http_routing.tests.common import MockRequest
-from odoo.tests import tagged, common
+from odoo.tests import common
 from odoo.exceptions import UserError
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install, fails post install
 class TestMenu(common.TransactionCase):
     def setUp(self):
         super(TestMenu, self).setUp()
@@ -20,16 +19,16 @@ class TestMenu(common.TransactionCase):
         Menu = self.env['website.menu']
         total_menu_items = Menu.search_count([])
 
-        self.menu_root = Menu.create({
+        menu_root = Menu.create({
             'name': 'Root',
         })
 
-        self.menu_child = Menu.create({
+        Menu.create({
             'name': 'Child',
-            'parent_id': self.menu_root.id,
+            'parent_id': menu_root.id,
         })
-
-        self.assertEqual(total_menu_items + self.nb_website * 2, Menu.search_count([]), "Creating a menu without a website_id should create this menu for every website_id")
+        menu_root._copy_menu_hierarchy()  # simulate _load_records
+        self.assertEqual(total_menu_items + (self.nb_website + 1) * 2, Menu.search_count([]), "Creating a menu without a website_id should create this menu for every website_id and as a template")
 
     def test_02_menu_count(self):
         Menu = self.env['website.menu']
@@ -66,13 +65,13 @@ class TestMenu(common.TransactionCase):
         Menu.create({
             'name': 'Sub Default Menu',
             'parent_id': default_menu.id,
-        })
+        })._copy_menu_hierarchy()
         self.assertEqual(total_menu_items + 1 + self.nb_website, Menu.search_count([]), "Creating a default child menu should create it as such and copy it on every website")
 
         # Ensure new website got a top menu
-        total_menus = Menu.search_count([])
-        Website.create({'name': 'new website'})
-        self.assertEqual(total_menus + 3, Menu.search_count([]), "New website's bootstraping should have duplicate default menu tree (Top/Home/Sub Default Menu)")
+        template_menu_count = Menu.search_count([('website_id', '=', False)])
+        new_website = Website.create({'name': 'new website'})
+        self.assertEqual(template_menu_count, Menu.search_count([('website_id', '=', new_website.id)]), "New website's bootstraping should have duplicate default menu tree")
 
     def test_04_specific_menu_translation(self):
         IrModuleModule = self.env['ir.module.module']
@@ -92,6 +91,7 @@ class TestMenu(common.TransactionCase):
             'name': 'Menu in english',
             'url': 'turlututu',
         })
+        template_menu._copy_menu_hierarchy()
         new_menus = Menu.search([]) - existing_menus
         specific1, specific2 = new_menus.with_context(lang='fr_FR') - template_menu
 
@@ -310,6 +310,67 @@ class TestMenu(common.TransactionCase):
         # which should raise a UserError because a main_menu had child.
         with self.assertRaises(UserError):
             self.main_menu.parent_id = self.another_menu.id
+
+    def test_08_default_multilevel_menu_for_new_website(self):
+        Website = self.env['website']
+        Menu = self.env['website.menu']
+        default_menu = self.env.ref('website.main_menu')
+
+        # use _load_records to ensure menus are copied to all websites
+        Menu._load_records([{
+            'xml_id': 'website.test_module_menu',
+            'values': {
+                'name': 'Module Menu',
+                'parent_id': default_menu.id,
+            }
+        }])
+        Menu._load_records([{
+            'xml_id': 'website.grand_child_menu',
+            'values': {
+                'name': 'Grand Child Menu',
+                'parent_id': self.env.ref('website.test_module_menu').id,
+            }
+        }])
+
+        all_websites = self.env['website'].search([])
+        template_menus = Menu.search([('website_id', '=', False)])
+        external_ids = template_menus.get_external_id()
+        for template_menu in template_menus:
+            # website_helpdesk creates website specific menus manually, throwing off counts
+            # check all template menus by external id instead
+            for website in all_websites:
+                self.assertTrue(
+                    self.env.ref(website._website_xmlid(external_ids.get(template_menu.id)), raise_if_not_found=False),
+                    "All default menus should be copied to every website",
+                )
+
+        # Ensure new website gets the complete default menu structure
+        new_website = Website.create({'name': 'new website'})
+        self.assertEqual(Menu.search_count([('website_id', '=', False)]), Menu.search_count([('website_id', '=', new_website.id)]), "New website's bootstraping should have a duplicate default menu tree")
+
+        # Integrity checks
+        for menu in template_menus:
+            if menu.parent_id:
+                self.assertEqual(
+                    menu.parent_id.website_id, menu.website_id,
+                    f"{menu.display_name} has a parent on website {menu.parent_id.website_id.name}",
+                )
+
+        new_website.invalidate_recordset(['menu_id'])
+        for website in Website.search([]):
+            top = website.menu_id
+            self.assertTrue(top and not top.parent_id, f"{website.name} root menu issue")
+            sub = top.child_id.filtered(lambda m: m.name == 'Module Menu')
+            self.assertEqual(len(sub), 1, f"website {website.name} missing 'Module Menu'")
+            self.assertEqual(
+                sub.child_id.mapped('name'), ['Grand Child Menu'],
+                f"Grand child menu mismatch on website {website.name}",
+            )
+
+        self.assertFalse(
+            Menu.search([('website_id', '=', False)]).parent_id.website_id,
+            "a template menu must not be a child of a website-specific menu",
+        )
 
 
 class TestMenuHttp(common.HttpCase):
