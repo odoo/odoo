@@ -3,14 +3,13 @@ import { browser } from "@web/core/browser/browser";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { OverlayContainer } from "@web/core/overlay/overlay_container";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
 
 const DEFAULT_ID = Symbol("default");
 
 class OverlayWrapper extends Component {
     static template = xml`
         <t t-component="this.props.component" t-props="this.props.componentProps"/>
-        <OverlayContainer overlays="this.overlayService.overlays"/>
+        <OverlayContainer/>
     `;
     static components = { OverlayContainer };
     props = useProps({
@@ -18,7 +17,6 @@ class OverlayWrapper extends Component {
         componentProps: types.object(),
     });
     setup() {
-        this.overlayService = useService("overlay");
         useOwnDebugContext();
     }
 }

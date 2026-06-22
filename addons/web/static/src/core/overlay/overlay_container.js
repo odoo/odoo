@@ -1,7 +1,18 @@
-import { Component, computed, onWillDestroy, signal, t, useProps, useScope } from "@odoo/owl";
-import { sortBy } from "@web/core/utils/arrays";
-import { ErrorHandler } from "@web/core/utils/components";
+import {
+    Component,
+    onWillDestroy,
+    Plugin,
+    signal,
+    t,
+    usePlugin,
+    useProps,
+    useScope,
+} from "@odoo/owl";
 import { useChildSubEnv } from "@web/owl2/utils";
+import { ErrorHandler } from "@web/core/utils/components";
+import { services } from "@web/core/services";
+import { registry } from "@web/core/registry";
+import { OverlayPlugin } from "@web/core/overlay/overlay_plugin";
 
 const OVERLAY_ITEMS = [];
 export const OVERLAY_SYMBOL = Symbol("Overlay");
@@ -50,13 +61,8 @@ export class OverlayContainer extends Component {
     static template = "web.OverlayContainer";
     static components = { ErrorHandler, OverlayItem };
 
-    overlays = useProps.static("overlays", t.object());
-
+    overlayPlugin = usePlugin(OverlayPlugin);
     root = signal.ref();
-
-    sortedOverlays = computed(() =>
-        sortBy(Object.values(this.overlays), (overlay) => overlay.sequence)
-    );
 
     isVisible(overlay) {
         return overlay.rootId === this.env?.rootId;
@@ -69,3 +75,17 @@ export class OverlayContainer extends Component {
         });
     }
 }
+
+export class OverlayManagerPlugin extends Plugin {
+    setup() {
+        registry
+            .category("main_components")
+            .add(OverlayContainer.name, { Component: OverlayContainer });
+
+        onWillDestroy(() => {
+            registry.category("main_components").remove(OverlayContainer.name);
+        });
+    }
+}
+
+services.add(OverlayManagerPlugin);
