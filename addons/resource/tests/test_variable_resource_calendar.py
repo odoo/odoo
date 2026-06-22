@@ -50,6 +50,34 @@ class TestVariableResourceCalendar(TransactionCase):
         self.assertEqual(intervals._items[0][0:2], (datetime(2025, 11, 10, 8, 0, tzinfo=tz), datetime(2025, 11, 10, 12, 0, tzinfo=tz)))
         self.assertEqual(intervals._items[-1][0:2], (datetime(2025, 11, 20, 13, 0, tzinfo=tz), datetime(2025, 11, 20, 17, 0, tzinfo=tz)))
 
+    def test_attendance_intervals_duration_based_domain_filter(self):
+        self.variable_calendar.attendance_ids = [(5, 0, 0)] + [
+            (0, 0, {'date': date(2026, 1, 5), 'duration_hours': hours, 'hour_from': 0, 'hour_to': 0})
+            for hours in [2, 4, 6]
+        ]
+        att_2h, att_4h, att_6h = sorted(self.variable_calendar.attendance_ids, key=lambda a: a.duration_hours)
+
+        tz = ZoneInfo('UTC')
+        start_dt = datetime(2026, 1, 5, 0, 0, 0, tzinfo=tz)
+        end_dt = datetime(2026, 1, 5, 23, 59, 59, tzinfo=tz)
+
+        intervals = self.variable_calendar._attendance_intervals_batch(start_dt, end_dt, domain=[('duration_hours', '>', 3)])[False]
+
+        intervals_by_attendance = {att: (start, end) for start, end, att in intervals}
+        self.assertEqual(len(intervals_by_attendance), 2, "Only the 4h and 6h attendances match the domain; the 2h one is filtered out")
+        self.assertNotIn(att_2h, intervals_by_attendance, "The 2h attendance is filtered out by the domain")
+
+        self.assertEqual(
+            intervals_by_attendance[att_4h],
+            (datetime(2026, 1, 5, 8, 0, tzinfo=tz), datetime(2026, 1, 5, 12, 0, tzinfo=tz)),
+            "The 4h interval must stay at 08:00-12:00 (after the filtered-out 2h line)",
+        )
+        self.assertEqual(
+            intervals_by_attendance[att_6h],
+            (datetime(2026, 1, 5, 12, 0, tzinfo=tz), datetime(2026, 1, 5, 18, 0, tzinfo=tz)),
+            "The 6h interval must stay at 12:00-18:00",
+        )
+
     def test_dayofweek_compute(self):
         """Test that the dayofweek is correctly computed based on the date"""
         attendance = self.env['resource.calendar.attendance'].create({
