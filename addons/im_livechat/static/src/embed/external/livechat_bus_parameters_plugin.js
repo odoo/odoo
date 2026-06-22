@@ -7,7 +7,7 @@ export class LivechatBusParametersPlugin extends Plugin {
     setup() {
         const busParameters = usePlugin(BusParametersPlugin);
         const serverURL = session.livechatData.serverUrl.replace(/\/+$/, "");
-        busParameters.serverURL = serverURL;
+        busParameters.serverURL.set(serverURL);
     }
 }
 
