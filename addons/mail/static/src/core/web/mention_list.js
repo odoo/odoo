@@ -4,7 +4,11 @@ import { useService } from "@web/core/utils/hooks";
 
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { SearchInput } from "@mail/core/common/search_input";
-import { mapSuggestionsToOptions, SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
+import {
+    mapSuggestionsToOptions,
+    optionType,
+    SUGGESTION_DELIMITERS,
+} from "@mail/core/common/suggestion_hook";
 import { useSearch } from "@mail/utils/common/hooks";
 
 export class MentionList extends Component {
@@ -16,9 +20,9 @@ export class MentionList extends Component {
         this.orm = useService("orm");
         this.store = useService("mail.store");
         this.props = props({
-            close: t.function([]).optional(() => () => {}),
+            close: t.function([]).optional(() => {}),
             composerType: t.string(),
-            onSelect: t.function(),
+            onSelect: t.function([t.instanceOf(Event), optionType(this.store), t.record()]),
             thread: t.instanceOf(this.store["mail.thread"].Class).optional(),
             type: t.string(),
         });

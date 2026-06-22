@@ -3,6 +3,8 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
 
+import { props, types } from "@odoo/owl";
+
 const { DateTime } = luxon;
 
 export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopoverItem {
@@ -12,10 +14,13 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
         DropdownItem,
     };
     static template = "calendar.AttendeeCalendarActivityListPopoverItem";
-    static props = [...ActivityListPopoverItem.props, "onRemoveActivityItem", "onViewMeeting"];
 
     setup() {
         super.setup(...arguments);
+        this.calendarProps = props({
+            onRemoveActivityItem: types.function([types.number()]),
+            onViewMeeting: types.function([types.instanceOf(this.store["calendar.event"].Class)]),
+        });
         this.action = useService("action");
         this.orm = useService("orm");
         const today = DateTime.now().startOf("day");
@@ -58,7 +63,7 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
      */
     onClickDone() {
         this.props.activity.remove();
-        this.props.onRemoveActivityItem(this.props.activity.id);
+        this.calendarProps.onRemoveActivityItem(this.props.activity.id);
     }
 
     /**
@@ -82,7 +87,7 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
     async onFileUploaded(data) {
         await super.onFileUploaded(data);
         this.props.activity.remove();
-        this.props.onRemoveActivityItem(this.props.activity.id);
+        this.calendarProps.onRemoveActivityItem(this.props.activity.id);
     }
 
     /**
@@ -101,7 +106,7 @@ export class AttendeeCalendarActivityListPopoverItem extends ActivityListPopover
             resId: this.props.activity.id,
             onClose: () => {
                 this.props.activity.remove();
-                this.props.onRemoveActivityItem(this.props.activity.id);
+                this.calendarProps.onRemoveActivityItem(this.props.activity.id);
                 this.props.onActivityChanged?.();
             },
         });

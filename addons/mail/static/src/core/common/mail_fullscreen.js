@@ -12,7 +12,7 @@ export class MailFullscreen extends Component {
         super.setup();
         this.props = props({
             component: t.component(),
-            props: t.object().optional(),
+            props: t.record().optional(),
         });
         this.fullscreen = useService("mail.fullscreen");
     }

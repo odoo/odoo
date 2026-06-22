@@ -14,7 +14,7 @@ export class NotificationMessage extends Component {
         this.store = useService("mail.store");
         this.props = props({
             message: t.instanceOf(this.store["mail.message"].Class),
-            messageRefs: t.object().optional(),
+            messageRefs: t.instanceOf(Map).optional(),
             thread: t.instanceOf(this.store["mail.thread"].Class),
         });
     }

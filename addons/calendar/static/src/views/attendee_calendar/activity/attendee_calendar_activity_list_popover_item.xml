@@ -54,7 +54,7 @@
             <button t-if="this.hasViewMeetingButton"
                 title="View Meeting" aria-label="View Meeting"
                 class="o-mail-ActivityListPopoverItem-viewmeetingbtn btn btn-sm btn-success btn-link"
-                t-on-click="() => this.props.onViewMeeting(this.props.activity.calendar_event_id)">
+                t-on-click="() => this.calendarProps.onViewMeeting(this.props.activity.calendar_event_id)">
                 <i class="fa fa-eye"/>
             </button>
         </xpath>

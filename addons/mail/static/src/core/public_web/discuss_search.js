@@ -1,5 +1,5 @@
 import { useHover } from "@mail/utils/common/hooks";
-import { Component, props, types } from "@odoo/owl";
+import { Component, props, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
@@ -11,7 +11,7 @@ export class DiscussSearch extends Component {
 
     setup() {
         super.setup();
-        this.props = props({ class: types.or([types.string(), types.object()]).optional() });
+        this.props = props({ class: t.or([t.string(), t.record(t.boolean())]).optional() });
         this.store = useService("mail.store");
         this.command = useService("command");
         this.ui = useService("ui");

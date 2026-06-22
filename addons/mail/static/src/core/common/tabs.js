@@ -10,7 +10,7 @@ export class Tabs extends Component {
         this.props = props({
             direction: t.selection(["h", "v"]).optional("v"),
             initialTabId: t.or([t.string(), t.number()]).optional(),
-            ref: t.function().optional(),
+            ref: t.function([t.object({ el: t.any().optional() })]).optional(),
         });
         this.activeHeaderId = signal(this.props.initialTabId);
         this.headerRefs = useChildRefs();
@@ -53,7 +53,7 @@ export class InternalTabHeader extends Component {
     setup() {
         super.setup(...arguments);
         this.props = props({
-            headerRefs: t.object(),
+            headerRefs: t.instanceOf(Map),
             id: t.or([t.string(), t.number()]),
             title: t.string().optional(),
         });

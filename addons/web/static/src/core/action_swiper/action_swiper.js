@@ -13,6 +13,12 @@ const isScrollSwipable = (scrollables) => ({
     ).length,
 });
 
+export const onSwipeType = t.object({
+    action: t.function().optional(),
+    bgColor: t.string().optional(),
+    icon: t.string().optional(),
+    slot: t.object().optional(),
+});
 /**
  * Action Swiper
  *
@@ -25,22 +31,8 @@ const isScrollSwipable = (scrollables) => ({
 export class ActionSwiper extends Component {
     static template = "web.ActionSwiper";
     props = props({
-        onLeftSwipe: t
-            .object({
-                action: t.function().optional(),
-                icon: t.string().optional(),
-                bgColor: t.string().optional(),
-                slot: t.object().optional(),
-            })
-            .optional(),
-        onRightSwipe: t
-            .object({
-                action: t.function().optional(),
-                icon: t.string().optional(),
-                bgColor: t.string().optional(),
-                slot: t.object().optional(),
-            })
-            .optional(),
+        onLeftSwipe: onSwipeType.optional(),
+        onRightSwipe: onSwipeType.optional(),
         enabledDuration: t.number().optional(),
         slots: t.object(),
         animationType: t.string().optional("bounce"),

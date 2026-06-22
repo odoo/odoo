@@ -1,5 +1,6 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
+import { optionType } from "@mail/core/common/suggestion_hook";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
 
@@ -14,13 +15,15 @@ export class NavigableList extends Component {
     static template = "mail.NavigableList";
     setup() {
         super.setup();
+        this.store = useService("mail.store");
+        const option = optionType(this.store);
         this.props = props({
             anchorRef: t.signal(t.instanceOf(HTMLElement)).optional(),
             class: t.string().optional(),
             closeOnSelect: t.boolean().optional(true),
             isLoading: t.boolean().optional(false),
-            onSelect: t.function([t.instanceOf(Event), t.object(), t.object()]),
-            options: t.array(t.object()),
+            onSelect: t.function([t.instanceOf(Event), option, t.record()]),
+            options: t.array(option),
             optionTemplate: t.string().optional(),
             position: t.string().optional("bottom"),
             rememberPosition: t.boolean().optional(),

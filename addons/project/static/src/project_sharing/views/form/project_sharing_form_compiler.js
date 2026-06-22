@@ -13,9 +13,7 @@ import { FormCompiler } from "@web/views/form/form_compiler";
  */
 function compileChatter(node, params) {
     const chatterContainerXml = createElement("Chatter");
-    const parentURLQuery = new URLSearchParams(window.parent.location.search);
     setAttributes(chatterContainerXml, {
-        token: `'${parentURLQuery.get("access_token")}'` || "",
         threadModel: params.resModel,
         threadId: params.resId,
         projectSharingId: params.projectSharingId,

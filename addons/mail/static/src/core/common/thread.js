@@ -41,21 +41,8 @@ export const PRESENT_VIEWPORT_THRESHOLD = 1;
  * @property {import("@odoo/owl").Signal<HTMLElement>} [scrollRef]
  * @extends {Component<Props, Env>}
  */
-export const threadProps = {
-    autofocus: t.any().optional(),
-    showDates: t.any().optional(true),
-    jumpPresent: t.any().optional(0),
-    jumpToNewMessage: t.any().optional(),
-    thread: t.any(),
-    order: t.any().optional("asc"),
-    scrollRef: t.any().optional(),
-    showEmptyMessage: t.any().optional(true),
-    showJumpPresent: t.any().optional(true),
-};
-
 export class Thread extends Component {
     static components = { Message, NotificationMessage, Transition, DateSection };
-    props = props(threadProps);
     static template = "mail.Thread";
 
     /** @type {Promise|undefined} */
@@ -77,6 +64,17 @@ export class Thread extends Component {
             () => this.scrollToHighlighted()
         );
         this.store = useService("mail.store");
+        this.props = props({
+            autofocus: t.or([t.number(), t.boolean()]).optional(),
+            jumpPresent: t.number().optional(0),
+            jumpToNewMessage: t.number().optional(),
+            order: t.selection(["asc", "desc"]).optional("asc"),
+            scrollRef: t.signal(t.instanceOf(HTMLElement)).optional(),
+            showDates: t.boolean().optional(true),
+            showEmptyMessage: t.boolean().optional(true),
+            showJumpPresent: t.boolean().optional(true),
+            thread: t.instanceOf(this.store["mail.thread"].Class),
+        });
         this.ui = useService("ui");
         this.state = proxy({
             isReplyingTo: false,

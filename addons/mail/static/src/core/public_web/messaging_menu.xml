@@ -17,7 +17,7 @@
                     datetime="message?.datetime"
                     iconSrc="this.store.DEFAULT_AVATAR"
                     important="true"
-                    hasMarkAsReadButton="1"
+                    hasMarkAsReadButton="true"
                     muted="0"
                     onClick="(isMarkAsRead) => this.onClickInboxMsg(isMarkAsRead, message)"
                     onSwipeRight="this.hasTouch() ? { action: () => message.setDone(), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"

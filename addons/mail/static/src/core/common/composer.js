@@ -71,8 +71,18 @@ export const COMPOSER_TYPES = {
     MESSAGE: "message",
 };
 class FullComposerRecoveryPopover extends Component {
-    static props = ["composer", "onClickFullRecover", "onClickTextRecover", "close?"];
     static template = "mail.FullComposerRecoveryPopover";
+
+    setup() {
+        super.setup(...arguments);
+        this.store = useService("mail.store");
+        this.props = props({
+            close: t.function([]).optional(),
+            composer: t.instanceOf(this.store["Composer"].Class),
+            onClickFullRecover: t.function([]),
+            onClickTextRecover: t.function([]),
+        });
+    }
 
     onClickFullRecover() {
         this.props.onClickFullRecover();
@@ -85,36 +95,6 @@ class FullComposerRecoveryPopover extends Component {
     }
 }
 
-export const composerProps = {
-    composer: t.any(),
-    autofocus: t.any().optional(0),
-    onCloseFullComposerCallback: t.any().optional(),
-    onDiscardCallback: t.any().optional(),
-    onPostCallback: t.any().optional(),
-    mode: t.any().optional("normal"),
-    placeholder: t.any().optional(),
-    dropzoneRef: t.any().optional(),
-    className: t.any().optional(""),
-    sidebar: t.any().optional(true),
-    type: t.any().optional(),
-    showFullComposer: t.any().optional(true),
-    allowUpload: t.any().optional(true),
-    disabled: t.any().optional(),
-};
-
-/**
- * @typedef {Object} Props
- * @property {import("models").Composer} composer
- * @property {'compact'|'normal'|'extended'} [mode] default: 'normal'
- * @property {'message'|'note'|false} [type] default: false
- * @property {string} [placeholder]
- * @property {string} [className]
- * @property {function} [onDiscardCallback]
- * @property {function} [onPostCallback]
- * @property {number} [autofocus]
- * @property {import("@odoo/owl").Signal<HTMLElement>} [dropzoneRef]
- * @extends {Component<Props, Env>}
- */
 export class Composer extends Component {
     static components = {
         ActionList,
@@ -125,7 +105,6 @@ export class Composer extends Component {
         NavigableList,
         Wysiwyg,
     };
-    props = props(composerProps);
     static template = "mail.Composer";
 
     setup() {
@@ -136,6 +115,22 @@ export class Composer extends Component {
         this.isMobileOS = isMobileOS();
         this.isIosPwa = isIOS() && isDisplayStandalone();
         this.store = useService("mail.store");
+        this.props = props({
+            allowUpload: t.boolean().optional(true),
+            autofocus: t.or([t.number(), t.boolean()]).optional(0),
+            className: t.string().optional(""),
+            composer: t.instanceOf(this.store["Composer"].Class),
+            disabled: t.boolean().optional(),
+            dropzoneRef: t.signal(t.instanceOf(HTMLElement)).optional(),
+            mode: t.selection(["compact", "normal", "extended"]).optional("normal"),
+            onCloseFullComposerCallback: t.function([t.boolean()]).optional(),
+            onDiscardCallback: t.function([t.instanceOf(Event)]).optional(),
+            onPostCallback: t.function([]).optional(),
+            placeholder: t.string().optional(),
+            sidebar: t.boolean().optional(true),
+            showFullComposer: t.boolean().optional(true),
+            type: t.or([t.selection(["message", "note"]), t.literal(false)]).optional(),
+        });
         this.composerActions = useComposerActions(this.composerActionsParams);
         this.EDIT_CLICK_TYPE = EDIT_CLICK_TYPE;
         this.OR_PRESS_SEND_KEYBIND = _t("or press %(send_keybind)s", {
