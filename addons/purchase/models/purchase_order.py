@@ -1282,6 +1282,7 @@ class PurchaseOrder(models.Model):
             **super()._get_action_add_from_catalog_extra_context(),
             'precision': self.env['decimal.precision'].precision_get('Product Unit'),
             'product_catalog_digits': self.order_line._fields['price_unit'].get_digits(self.env),
+            'is_purchase_document': True,
             'search_default_seller_ids': self.partner_id.name,
             'partner_id': self.partner_id.id,
         }
