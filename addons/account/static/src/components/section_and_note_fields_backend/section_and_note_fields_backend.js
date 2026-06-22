@@ -2,7 +2,6 @@ import { Component, computed, onPatched, props, t } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { x2ManyCommands } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
-import { CharField } from "@web/views/fields/char/char_field";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { ListTextField, TextField } from "@web/views/fields/text/text_field";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
@@ -561,15 +560,13 @@ export class SectionAndNoteText extends Component {
     static props = { ...standardFieldProps };
 
     get componentToUse() {
-        return this.props.record.data.display_type === "line_section" ? CharField : TextField;
+        return TextField;
     }
 }
 
 export class ListSectionAndNoteText extends SectionAndNoteText {
     get componentToUse() {
-        return this.props.record.data.display_type !== "line_section"
-            ? ListTextField
-            : super.componentToUse;
+        return ListTextField;
     }
 }
 
