@@ -80,6 +80,8 @@ BTREE_INDEX_IGNORE_MODELS = {  # model._name
 # str(field): name of <SQL object (index/constraint)> that's covering
 BTREE_INDEX_IGNORE_FIELDS = {
     'ir.attachment.res_id': 'ir_attachment_res_idx',  # usually accessed with `res_model` in the domain
+    'mail.followers.res_id': 'mail_followers_res_model_res_id_idx',  # usually accessed with `res_model` in the domain
+    'mail.followers.partner_id': 'mail_followers_mail_followers_res_partner_res_model_id_uniq',
     'mail.message.res_id': 'mail_message_model_res_id_idx',  # usually accessed with `model` in the domain
     'mail.presence.guest_id': 'mail_presence_guest_unique',
     'mail.presence.user_id': 'mail_presence_user_unique',
