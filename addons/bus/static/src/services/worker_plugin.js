@@ -1,6 +1,9 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
+import { plugin, Plugin } from "@odoo/owl";
+import { BusParametersPlugin } from "@bus/bus_parameters_plugin";
+import { services } from "@web/core/services";
 
 export const WORKER_STATE = Object.freeze({
     UNINITIALIZED: "UNINITIALIZED",
@@ -9,12 +12,13 @@ export const WORKER_STATE = Object.freeze({
     FAILED: "FAILED",
 });
 
-export class WorkerService {
-    constructor(env, services) {
-        this.params = services["bus.parameters"];
-        this.worker = null;
-        this.isUsingSharedWorker = Boolean(browser.SharedWorker);
-        this._state = WORKER_STATE.UNINITIALIZED;
+export class WorkerPlugin extends Plugin {
+    params = plugin(BusParametersPlugin);
+    worker = null;
+    isUsingSharedWorker = Boolean(browser.SharedWorker);
+    _state = WORKER_STATE.UNINITIALIZED;
+
+    setup() {
         const promWithResolvers = Promise.withResolvers();
         this.workerInitPromise = promWithResolvers.promise;
         this._resolveWorkerInit = promWithResolvers.resolve;
@@ -128,11 +132,16 @@ export class WorkerService {
     }
 }
 
-export const workerService = {
-    dependencies: ["bus.parameters"],
-    start(env, services) {
-        return new WorkerService(env, services);
-    },
-};
+services.add(WorkerPlugin);
 
-registry.category("services").add("worker_service", workerService);
+/**
+ * -----------------------------------------------------------------------------
+ * @todo owl3 migration
+ * temporary - to remove when all use of the worker_service service are removed
+ * -----------------------------------------------------------------------------
+ */
+registry.category("services").add("worker_service", {
+    start() {
+        return plugin(WorkerPlugin);
+    }
+});
