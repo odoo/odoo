@@ -4,7 +4,7 @@
 <t t-name="html_builder.BuilderMany2Many">
     <BuilderComponent>
 	    <BasicMany2Many
-	        model="this.state.searchModel"
+	        model="this.searchModel()"
 	        limit="this.props.limit"
 	        domain="this.props.domain"
 	        fields="this.props.fields"
