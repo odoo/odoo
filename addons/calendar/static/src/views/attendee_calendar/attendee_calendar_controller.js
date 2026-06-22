@@ -59,6 +59,8 @@ export class AttendeeCalendarController extends CalendarController {
             size: "md",
             context: { ...props.context, ...this.props.context },
             onRecordSave: async (record) => {
+                // first ask fields for their changes, in case user was still typing
+                await record.getChanges();
                 const updates = {
                     ...(!record.data.name && { name: _t("(No Title)") }),
                     ...(record.data.allday && { show_as: "free" }),
