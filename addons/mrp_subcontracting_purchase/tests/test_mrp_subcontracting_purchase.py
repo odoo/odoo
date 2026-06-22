@@ -1181,3 +1181,66 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.assertEqual(scrap.state, 'done')
         resupply.move_ids.invalidate_recordset(['forecast_availability'])
         self.assertRecordValues(resupply.move_ids, [{'forecast_availability': -1.0}, {'forecast_availability': -1.0}])
+
+    def test_subcontract_add_comp_no_product_price_change(self):
+        """ Create a PO for subcontracted product, modify the component quantity
+            on the receipt then validate it, confirm the bill.
+            Check that no correction svl was created
+        """
+        product_category_all = self.product_category
+        product_category_all.property_cost_method = 'average'
+        product_category_all.property_valuation = 'real_time'
+        resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        self.finished.bom_ids.consumption = 'flexible'
+        self.comp1.write({'route_ids': [Command.link(resupply_sub_on_order_route.id)]})
+
+        purchase_comps = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [
+                Command.create({
+                    'name': self.comp1.name,
+                    'product_id': self.comp1.id,
+                    'product_uom_qty': 1,
+                    'product_uom_id': self.finished.uom_id.id,
+                    'price_unit': 10,
+                }),
+            ],
+        })
+        # recieving comp products will set their invetory valuation (creates SVLs)
+        purchase_comps.button_confirm()
+        purchase_comps.picking_ids.move_ids.picked = True
+        purchase_comps.picking_ids.button_validate()
+
+        purchase = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [Command.create({
+                'name': self.finished.name,
+                'product_id': self.finished.id,
+                'product_uom_qty': 1,
+                'product_uom_id': self.finished.uom_id.id,
+                'price_unit': 100,
+            })],
+        })
+        # validate subcontractor resupply
+        purchase.button_confirm()
+        resupply_picks = purchase._get_subcontracting_resupplies()
+        resupply_picks.move_ids.picked = True
+        resupply_picks.button_validate()
+
+        # receive subcontracted product and record more quantity
+        receipt = purchase.picking_ids
+        action = receipt.action_record_components()
+        mo = self.env['mrp.production'].browse(action['res_id'])
+        mo_form = Form(mo.with_context(**action['context']), view=action['view_id'])
+        mo_form.qty_producing = 2
+        mo_form.save().subcontracting_record_component()
+        receipt.button_validate()
+
+        # create bill
+        purchase.action_create_invoice()
+        prev_svl = self.env['stock.valuation.layer'].search([])
+        bill = purchase.invoice_ids
+        bill.invoice_date = Date.today()
+        bill.action_post()
+        new_svl = self.env['stock.valuation.layer'].search([]) - prev_svl
+        self.assertEqual(len(new_svl), 0)
