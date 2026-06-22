@@ -2,7 +2,7 @@
 
 from calendar import monthrange
 from collections import defaultdict
-from datetime import UTC, datetime, time, timedelta
+from datetime import UTC, date, datetime, time, timedelta
 from random import randint
 from zoneinfo import ZoneInfo
 
@@ -278,7 +278,10 @@ class HrAttendance(models.Model):
         if not self.env.context.get('skip_time_rules') and any(
             f in vals for f in ('employee_id', 'check_in', 'check_out', 'work_entry_type_id')
         ):
-            self.filtered(lambda a: a.state == 'validated')._process_time_rules()
+            today = date.today()
+            self.filtered(
+                lambda a: a.state == 'validated' and a.check_in and a.check_in.date() < today
+            )._process_time_rules()
         return result
 
     def unlink(self):
@@ -663,6 +666,49 @@ class HrAttendance(models.Model):
             ON hr_attendance (check_in, check_out, employee_id);
         """)
 
+    @api.model
+    def _cron_process_day_time_rules(self):
+        """Daily cron: process day-based time rules for yesterday's validated attendances."""
+        yesterday = date.today() - timedelta(days=1)
+        start = datetime.combine(yesterday, time.min)
+        end = datetime.combine(yesterday, time.max)
+        sources = self.sudo().with_context(active_test=False).search([
+            ('check_in', '<=', end),
+            ('check_out', '>=', start),
+            ('check_out', '!=', False),
+            ('state', '=', 'validated'),
+            ('is_time_rule_output', '=', False),
+            ('source_attendance_id', '=', False),
+        ])
+        if not sources:
+            return
+        affected = [(a.employee_id, a.check_in, a.check_out) for a in sources]
+        self._process_time_rules_for(affected, rule_period='day')
+
+    @api.model
+    def _cron_process_week_time_rules(self):
+        """Weekly cron: process week-based time rules for the Mon-Sun that just ended.
+
+        Schedule this cron to run every Monday; it will process the previous week.
+        """
+        today = date.today()
+        week_end = today - timedelta(days=1)
+        week_start = week_end - timedelta(days=6)
+        start = datetime.combine(week_start, time.min)
+        end = datetime.combine(week_end, time.max)
+        sources = self.sudo().with_context(active_test=False).search([
+            ('check_in', '<=', end),
+            ('check_out', '>=', start),
+            ('check_out', '!=', False),
+            ('state', '=', 'validated'),
+            ('is_time_rule_output', '=', False),
+            ('source_attendance_id', '=', False),
+        ])
+        if not sources:
+            return
+        affected = [(a.employee_id, a.check_in, a.check_out) for a in sources]
+        self._process_time_rules_for(affected, rule_period='week')
+
     def _process_time_rules(self):
         """Recompute time rule output attendances for employees/dates affected by self."""
         source = self.filtered(lambda a: not a.is_time_rule_output and a.check_in and a.check_out)
@@ -671,7 +717,7 @@ class HrAttendance(models.Model):
         affected = [(a.employee_id, a.check_in, a.check_out) for a in source]
         self._process_time_rules_for(affected)
 
-    def _process_time_rules_for(self, affected):
+    def _process_time_rules_for(self, affected, rule_period=None):
         if not affected:
             return
 
@@ -683,8 +729,18 @@ class HrAttendance(models.Model):
         if not rules:
             return
 
-        day_rules = rules.filtered(lambda r: r.quantity_period != 'week')
-        week_rules = rules.filtered(lambda r: r.quantity_period == 'week')
+        if rule_period == 'day':
+            day_rules = rules.filtered(lambda r: r.quantity_period != 'week')
+            week_rules = rules.browse()
+        elif rule_period == 'week':
+            day_rules = rules.browse()
+            week_rules = rules.filtered(lambda r: r.quantity_period == 'week')
+        else:
+            day_rules = rules.filtered(lambda r: r.quantity_period != 'week')
+            week_rules = rules.filtered(lambda r: r.quantity_period == 'week')
+
+        if not day_rules and not week_rules:
+            return
 
         day_rules_ranges = defaultdict(lambda: [None, None])
         for employee, check_in, check_out in affected:
@@ -795,12 +851,18 @@ class HrAttendance(models.Model):
                     vals['state'] = 'draft' if company.attendance_validation else 'validated'
         res = super().create(vals_list)
         if not self.env.context.get('skip_time_rules'):
-            res.filtered(lambda a: a.state == 'validated')._process_time_rules()
+            today = date.today()
+            res.filtered(
+                lambda a: a.state == 'validated' and a.check_in and a.check_in.date() < today
+            )._process_time_rules()
         return res
 
     def action_validate(self):
         self.write({'state': 'validated'})
-        self.filtered(lambda a: a.check_out)._process_time_rules()
+        today = date.today()
+        self.filtered(
+            lambda a: a.check_out and a.check_in and a.check_in.date() < today
+        )._process_time_rules()
 
     def action_refuse(self):
         self.write({'state': 'refused'})
