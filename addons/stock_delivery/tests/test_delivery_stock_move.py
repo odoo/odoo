@@ -5,6 +5,7 @@ import datetime
 from odoo import fields
 from odoo.fields import Command
 from odoo.tests import Form, freeze_time, tagged
+from odoo.tools import mute_logger
 
 from odoo.addons.sale.tests.common import TestSaleCommon
 
@@ -42,6 +43,9 @@ class TestStockMoveInvoice(TestSaleCommon):
             'product_id': cls.product_delivery_normal.id,
         })
 
+    # Mute translate warnings since they appear only in tests.
+    # In production, language is taken from the http request
+    @mute_logger('odoo.tools.translate')
     def test_01_delivery_stock_move(self):
         # Test if the stored fields of stock moves are computed with invoice before delivery flow
         self.sale_prepaid = self.SaleOrder.create({
@@ -99,6 +103,9 @@ class TestStockMoveInvoice(TestSaleCommon):
         self.picking = self.sale_prepaid.picking_ids._action_done()
         self.assertEqual(moves[0].move_line_ids.sale_price, 1725.0, 'wrong shipping value')
 
+    # Mute translate warnings since they appear only in tests.
+    # In production, language is taken from the http request
+    @mute_logger('odoo.tools.translate')
     def test_02_delivery_stock_move(self):
         # Test if SN product shipment line has the correct amount
         self.product_cable_management_box.write({
@@ -149,6 +156,9 @@ class TestStockMoveInvoice(TestSaleCommon):
         self.picking = self.sale_prepaid.picking_ids._action_done()
         self.assertEqual(moves[0].move_line_ids[0].sale_price, 862.5, 'wrong shipping value')
 
+    # Mute translate warnings since they appear only in tests.
+    # In production, language is taken from the http request
+    @mute_logger('odoo.tools.translate')
     def test_03_invoiced_status(self):
         super_product = self.env['product.product'].create({
             'name': 'Super Product',
@@ -194,6 +204,9 @@ class TestStockMoveInvoice(TestSaleCommon):
 
         self.assertEqual(so.invoice_status, 'no', 'The status should still be "Nothing To Invoice"')
 
+    # Mute translate warnings since they appear only in tests.
+    # In production, language is taken from the http request
+    @mute_logger('odoo.tools.translate')
     def test_delivery_carrier_from_confirmed_so(self):
         """Test if adding delivery method in sale order after confirmation
            will add it in pickings too"""

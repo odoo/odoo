@@ -4,6 +4,7 @@ from odoo import Command
 from odoo.addons.stock.tests.test_packing import TestPackingCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged, Form
+from odoo.tools import mute_logger
 from unittest.mock import patch
 
 
@@ -177,6 +178,9 @@ class TestPackingDelivery(TestPackingCommon):
         picking_ship.button_validate()
         self.assertEqual(picking_ship.state, 'done')
 
+    # Mute translate warnings since they appear only in tests.
+    # In production, language is taken from the http request
+    @mute_logger('odoo.tools.translate')
     def test_multistep_delivery_tracking(self):
         # Create and confirm the SO
         so = self.env['sale.order'].create({

@@ -2,6 +2,7 @@
 
 from odoo.exceptions import UserError
 from odoo.tests import common, Form
+from odoo.tools import mute_logger
 
 @common.tagged('post_install', '-at_install')
 class TestDeliveryCost(common.TransactionCase):
@@ -27,6 +28,9 @@ class TestDeliveryCost(common.TransactionCase):
             'free_over': False,
         })
 
+    # Mute translate warnings since they appear only in tests.
+    # In production, language is taken from the http request
+    @mute_logger('odoo.tools.translate')
     def test_delivery_real_cost(self):
         """Ensure that the price is correctly set on the delivery line in the case of a Back Order
         """
@@ -82,6 +86,9 @@ class TestDeliveryCost(common.TransactionCase):
         self.assertEqual(len(new_delivery_line), 1)
         self.assertEqual(new_delivery_line.price_unit, bo.carrier_price)
 
+    # Mute translate warnings since they appear only in tests.
+    # In production, language is taken from the http request
+    @mute_logger('odoo.tools.translate')
     def test_delivery_real_cost_locked_so(self):
         """Real shipping cost must be pushed onto the delivery line after
         shipping when the SO is locked, while a regular write on the same

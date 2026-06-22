@@ -3,6 +3,7 @@
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import Form, common
+from odoo.tools import mute_logger
 
 
 @common.tagged("post_install", "-at_install")
@@ -55,6 +56,9 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
             "order_line": [Command.create({"product_id": cls.product_4.id})],
         })
 
+    # Mute translate warnings since they appear only in tests.
+    # In production, language is taken from the http request
+    @mute_logger('odoo.tools.translate')
     def test_delivery_cost_gift_card(self):
         """Test that the order amount used to trigger the free delivery doesn't consider gift
         cards.
@@ -97,6 +101,9 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
 
         self.assertEqual(order.order_line.filtered("is_delivery").price_total, 0)
 
+    # Mute translate warnings since they appear only in tests.
+    # In production, language is taken from the http request
+    @mute_logger('odoo.tools.translate')
     def test_free_delivery_cost_with_ewallet(self):
         """Automatic free shipping of a delivery method should not be affected by the
         use of an ewallet when paying.
@@ -140,6 +147,9 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
 
         self.assertEqual(order.order_line.filtered("is_delivery").price_total, 0)
 
+    # Mute translate warnings since they appear only in tests.
+    # In production, language is taken from the http request
+    @mute_logger('odoo.tools.translate')
     def test_delivery_cost_discounts(self):
         """Make sure discounts aren't taken into account for free delivery."""
         discount90 = self.env["loyalty.program"].create({
@@ -181,6 +191,9 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
             order.order_line.filtered("is_delivery").price_unit, self.product_delivery.list_price
         )
 
+    # Mute translate warnings since they appear only in tests.
+    # In production, language is taken from the http request
+    @mute_logger('odoo.tools.translate')
     def test_discount_percentage_ignores_delivery_lines(self):
         """Check that percentage discounts ignore shipping costs."""
         self.delivery_carrier.free_over = False

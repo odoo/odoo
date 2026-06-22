@@ -2,6 +2,7 @@
 
 from odoo.fields import Command
 from odoo.tests import Form, tagged
+from odoo.tools import mute_logger
 
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
 
@@ -50,7 +51,9 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
 
     # Test a free shipping reward + some expected behavior
     # (automatic line addition or removal)
-
+    # Mute translate warnings since they appear only in tests.
+    # In production, language is taken from the http request
+    @mute_logger('odoo.tools.translate')
     def test_free_shipping_reward(self):
         # Test case 1: The minimum amount is not reached, the reward should
         # not be created
@@ -144,6 +147,9 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         self._auto_rewards(order, program)
         self.assertEqual(len(order.order_line.ids), 3)
 
+    # Mute translate warnings since they appear only in tests.
+    # In production, language is taken from the http request
+    @mute_logger('odoo.tools.translate')
     def test_shipping_cost(self):
         """Free delivery should not be taken into account when checking for minimum required
         threshold.
@@ -230,6 +236,9 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             len(order.order_line.ids), 4, "We should get both rewards regardless of applying order."
         )
 
+    # Mute translate warnings since they appear only in tests.
+    # In production, language is taken from the http request
+    @mute_logger('odoo.tools.translate')
     def test_shipping_cost_numbers(self):
         """Free delivery should not be taken into account when checking for minimum required
         threshold.
@@ -367,6 +376,9 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         # Check if there is an error in the sequence
         # via `_apply_program_reward` in `_claim_reward` method
 
+    # Mute translate warnings since they appear only in tests.
+    # In production, language is taken from the http request
+    @mute_logger('odoo.tools.translate')
     def test_nothing_delivered_nothing_to_invoice(self):
         program = self.env["loyalty.program"].create({
             "name": "10% reduction on all orders",
@@ -449,6 +461,9 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         )
         self.assertEqual(len(order.order_line.ids), 2, err_msg)
 
+    # Mute translate warnings since they appear only in tests.
+    # In production, language is taken from the http request
+    @mute_logger('odoo.tools.translate')
     def test_free_shipping_should_be_removed_when_rules_are_not_met(self):
         p_1 = self.env["loyalty.program"].create({
             "name": "Free shipping if > 872 tax excl",
