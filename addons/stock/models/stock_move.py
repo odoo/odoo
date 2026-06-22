@@ -532,9 +532,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             if not warehouse:  # No prediction possible if no warehouse.
                 continue
             moves = self.browse(moves_ids)
-            moves_per_location = defaultdict(lambda: self.env['stock.move'])
-            for move in moves:
-                moves_per_location[move.location_id] |= move
+            moves_per_location = moves.grouped('location_id')
             for location, mvs in moves_per_location.items():
                 forecast_info = mvs._get_forecast_availability_outgoing(warehouse, location)
                 for move in mvs:
