@@ -530,6 +530,48 @@ def keep_query(*keep_params, **additional_params):
     return werkzeug.urls.url_encode(params)
 
 
+def parse_CSS_style_properties(value):
+    # directly adapted from https://github.com/odoo/owl/commit/e032e7e9ec6e6ec8838ca664b22428c0d8fc26df
+    i, len_val = 0, len(value)
+    while i < len_val:
+        start = i
+        depth = 0
+        quote = None
+        while i < len_val:
+            c = value[i]
+            if quote:
+                if c == "\\":
+                    i += 2
+                    continue
+                if c == quote:
+                    quote = None
+            elif c in ("'", '"'):
+                quote = c
+            elif c == "(":
+                depth += 1
+            elif c == ")":
+                if depth > 0:
+                    depth -= 1
+            elif c == ";" and depth == 0:
+                break
+            i += 1
+
+        part = value[start:i]
+        i += 1
+        if not part:
+            continue
+        colonIdx = part.find(":")
+        if colonIdx == -1:
+            continue
+        if prop := part[0:colonIdx]:
+            yield prop, part[colonIdx + 1:].strip()
+
+
+def parse_classes(string):
+    for cls in string.split():
+        yield cls, True
+
+
 ####################################
 ###             QWeb             ###
 ####################################
@@ -2030,6 +2072,8 @@ class IrQweb(models.AbstractModel):
                 code.append(indent_code(f'attrs[{key!r}] = {ns_definition!r}', level))
 
         self._pre_processing_att(el.attrib)
+        # Extract class, styles and dynamic variations from el to merge them
+        mergeable_attributes = self._compile_mergeable_attributes(el, compile_context, level)
 
         # Compile the static attributes of the given element.
         #
@@ -2071,10 +2115,12 @@ class IrQweb(models.AbstractModel):
                         attrs.update(dict(atts_value))
                     """, level))
 
+        for merge_code in mergeable_attributes:
+            code.append(indent_code(merge_code, level))
+
         if code:
             code = [indent_code("attrs = {}", level)] + code
             compile_context['qweb_attrs_created'] = True
-
         return code
 
     def _compile_directive_tag_open(self, el, compile_context, level):
@@ -2823,6 +2869,49 @@ class IrQweb(models.AbstractModel):
 
         return code
 
+    def _compile_mergeable_attributes(self, el, compile_context, level):
+        """
+        For attributes class, styles and their respective dynamic counterparts
+        creates and returns the necessary code that merges all those values together
+
+        The compiled template would end up looking like:
+
+        |  attrs["class"] = self._merge_class(
+        |    value_of_class,
+        |    value_of_t-tattf-class,
+        |    value_of_t-tatt-class,
+        |    attrs.get('class')
+        |  )
+        """
+        codes = []
+        for raw_attr in ("class", "style"):
+            variations = [v for v in enumerate((raw_attr, f"t-attf-{raw_attr}", f"t-att-{raw_attr}")) if v[1] in el.attrib]
+            if len(variations) == 1 and variations[0][1] == raw_attr and "t-att" not in el.attrib:
+                continue
+            values = None
+            for index, variation in variations:
+                if variation in el.attrib:
+                    arg = el.attrib.pop(variation)
+                    if values is None:
+                        values = ["None"] * 3
+                    if variation.startswith("t-att-"):
+                        arg = self._compile_expr(arg)
+                    elif variation.startswith("t-attf-"):
+                        arg = self._compile_format(arg)
+                    else:
+                        match raw_attr:
+                            case "class":
+                                arg = repr(dict(parse_classes(arg)))
+                            case "style":
+                                arg = repr(dict(parse_CSS_style_properties(arg)))
+                    values[index] = arg
+            if values is None:
+                continue
+            if "t-att" in el.attrib:
+                values.append(f"attrs.get({raw_attr!r})")
+            codes.append(f"attrs[{raw_attr!r}] = self._merge_{raw_attr}({", ".join(values)})")
+        return codes
+
     # methods called by the compiled function at rendering time.
 
     def _debug_trace(self, debugger, values):
@@ -3034,6 +3123,46 @@ class IrQweb(models.AbstractModel):
             return ('link', attributes)
 
         return None
+
+    def _merge_attribute(self, parse, stringify, static_val=None, t_attf_val=None, t_att_val=None, from_attrs=None):
+        truthy_values = tuple(enum for enum in enumerate((static_val, t_attf_val, t_att_val, from_attrs)) if enum[1])
+        if not truthy_values:
+            return
+        if len(truthy_values) == 1:
+            index, value = truthy_values[0]
+            if index == 1:
+                return value
+            if isinstance(value, dict):
+                return stringify(value)
+            return value
+        obj = static_val if static_val is not None else {}
+        if t_attf_val:
+            obj.update(parse(t_attf_val))
+        if from_attrs:
+            if isinstance(from_attrs, dict):
+                obj.update(from_attrs)
+            else:
+                obj.update(parse(from_attrs))
+        if t_att_val:
+            if isinstance(t_att_val, dict):
+                obj.update(t_att_val)
+            else:
+                obj.update(parse(t_att_val))
+        return stringify(obj)
+
+    def _merge_class(self, static_val=None, t_attf_val=None, t_att_val=None, from_attrs=None):
+        return self._merge_attribute(
+            parse_classes,
+            lambda o: " ".join(k for k, v in o.items() if v) or None,
+            static_val, t_attf_val, t_att_val, from_attrs
+        )
+
+    def _merge_style(self, static_val=None, t_attf_val=None, t_att_val=None, from_attrs=None):
+        return self._merge_attribute(
+            parse_CSS_style_properties,
+            lambda o: "".join(f"{k}:{v};" for k, v in o.items() if v) or None,
+            static_val, t_attf_val, t_att_val, from_attrs
+        )
 
     def _generate_asset_links(self, bundle, css=True, js=True, binary=False, debug_assets=False, assets_params=None, rtl=False, autoprefix=False):
         asset_bundle = self._get_asset_bundle(bundle, css=css, js=js, binary=binary, debug_assets=debug_assets, rtl=rtl, assets_params=assets_params, autoprefix=autoprefix)

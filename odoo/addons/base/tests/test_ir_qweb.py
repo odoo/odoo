@@ -1036,6 +1036,112 @@ class TestQWebBasic(TransactionCase):
         rendered = self.env['ir.qweb']._render(t.id)
         self.assertEqual(etree.fromstring(rendered), etree.fromstring(result))
 
+    def test_concat_classes(self):
+        tpl = etree.fromstring("""
+            <div class="default a" />
+        """)
+        result = """<div class="default a" />"""
+        rendered = self.env['ir.qweb']._render(tpl)
+        self.assertEqual(etree.fromstring(rendered), etree.fromstring(result))
+
+        # no duplicates + keep order
+        tpl = etree.fromstring("""
+            <div class="default" t-att-class="'att-class'" t-attf-class="fclass default fclass" />
+        """)
+        result = """<div class="default fclass att-class" />"""
+        rendered = self.env['ir.qweb']._render(tpl)
+        self.assertEqual(etree.fromstring(rendered), etree.fromstring(result))
+
+        tpl = etree.fromstring("""
+            <div class="default" t-att-class="{'a b': True, 'c': True}" t-attf-class="fclass\nfklass" />
+        """)
+        result = """<div class="default fclass fklass a b c" />"""
+        rendered = self.env['ir.qweb']._render(tpl)
+        self.assertEqual(etree.fromstring(rendered), etree.fromstring(result))
+
+        tpl = etree.fromstring("""
+            <div class="default" t-att-class="{'default': None}" t-attf-class="fclass" />
+        """)
+        result = """<div class="fclass" />"""
+        rendered = self.env['ir.qweb']._render(tpl)
+        self.assertEqual(etree.fromstring(rendered), etree.fromstring(result))
+
+        tpl = etree.fromstring("""
+            <div t-att-class="{'default': None}" class="default" />
+        """)
+        result = """<div />"""
+        rendered = self.env['ir.qweb']._render(tpl)
+        self.assertEqual(etree.fromstring(rendered), etree.fromstring(result))
+
+        tpl = etree.fromstring("""
+            <div t-att="atts" class="default" />
+        """)
+        result = """<div class="default some-class" />"""
+        rendered = self.env['ir.qweb']._render(tpl,
+            {"atts": {"class": {"some-class": True}}}
+        )
+        self.assertEqual(etree.fromstring(rendered), etree.fromstring(result))
+
+    def test_concat_styles(self):
+        tpl = etree.fromstring("""
+            <div style="color: blue" />
+        """)
+        result = """<div style="color: blue" />"""
+        rendered = self.env['ir.qweb']._render(tpl)
+        self.assertEqual(etree.fromstring(rendered), etree.fromstring(result))
+
+        # no duplicates + keep order
+        tpl = etree.fromstring("""
+            <div style="color: blue" t-att-style="'font-size: 12px'" t-attf-style="--tt: 12vh;color:blue" />
+        """)
+        result = """<div style="color:blue;--tt:12vh;font-size:12px;" />"""
+        rendered = self.env['ir.qweb']._render(tpl)
+        self.assertEqual(etree.fromstring(rendered), etree.fromstring(result))
+
+        # no duplicates + keep order even if value changes
+        tpl = etree.fromstring("""
+            <div style="color: blue" t-att-style="'font-size: 12px'" t-attf-style="--tt: 12vh;color:red" />
+        """)
+        result = """<div style="color:red;--tt:12vh;font-size:12px;" />"""
+        rendered = self.env['ir.qweb']._render(tpl)
+        self.assertEqual(etree.fromstring(rendered), etree.fromstring(result))
+
+        tpl = etree.fromstring("""
+            <div style="color: blue" t-att-style="{'font-size': '12px', 'margin': False}" />
+        """)
+        result = """<div style="color:blue;font-size:12px;" />"""
+        rendered = self.env['ir.qweb']._render(tpl)
+        self.assertEqual(etree.fromstring(rendered), etree.fromstring(result))
+
+        tpl = etree.fromstring("""
+            <div style="color:blue;" t-att-style="{'color': None}" />
+        """)
+        result = """<div />"""
+        rendered = self.env['ir.qweb']._render(tpl)
+        self.assertEqual(etree.fromstring(rendered), etree.fromstring(result))
+
+        tpl = etree.fromstring("""
+            <div t-att-style="{'color': None}" style="color:blue" />
+        """)
+        result = """<div />"""
+        rendered = self.env['ir.qweb']._render(tpl)
+        self.assertEqual(etree.fromstring(rendered), etree.fromstring(result))
+
+        tpl = etree.fromstring("""
+            <div t-att-style="{'color': None}" style="color:blue" t-att="atts"/>
+        """)
+        result = """<div style="font-size:18px;" />"""
+        rendered = self.env['ir.qweb']._render(tpl, {"atts": {"style": "font-size:18px;"}})
+        self.assertEqual(etree.fromstring(rendered), etree.fromstring(result))
+
+        data_uri = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg=="
+        tpl = etree.fromstring("""
+            <div t-att-style="style" style="color:blue;background-image: linear-gradient(black, white);"/>
+        """)
+        result = """<div style="color:blue;background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z9DwHwAGBQKA3H7sNwAAAABJRU5ErkJggg==);" />"""
+        rendered = self.env['ir.qweb']._render(tpl, {"style": f"background-image: url({data_uri})"})
+        self.assertEqual(etree.fromstring(rendered), etree.fromstring(result))
+
     def test_set_1(self):
         t = self.env['ir.ui.view'].create({
             'name': 'test',
