@@ -1120,6 +1120,7 @@ SERVICES_MAPPING = {
     "overlay": ['OverlayPlugin', '@web/core/overlay/overlay_plugin'],
     "presence": ['PresencePlugin', '@bus/services/presence_plugin'],
     "sortable": ['SortablePlugin', '@web/core/util/sortable_plugin'],
+    "worker_service": ['WorkerPlugin', '@bus/services/worker_plugin'],
 }
 
 

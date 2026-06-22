@@ -1,4 +1,4 @@
-import { WORKER_STATE } from "@bus/services/worker_service";
+import { WORKER_STATE } from "@bus/services/worker_plugin";
 
 import { editComposer } from "@im_livechat/../tests/tours/livechat_tour_utils";
 
@@ -24,7 +24,7 @@ registry.category("web_tour.tours").add("website_livechat.lazy_frontend_bus", {
                     },
                 });
                 const workerService = odoo.__WOWL_DEBUG__.root.env.services.worker_service;
-                if (workerService._state !== WORKER_STATE.UNINITIALIZED) {
+                if (workerService.state !== WORKER_STATE.UNINITIALIZED) {
                     throw new Error("The worker service should not be started at page load.");
                 }
                 patch(workerService, {
