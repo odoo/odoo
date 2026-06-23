@@ -54,6 +54,50 @@ class StockPicking(models.Model):
 
             pickings |= positive_picking
         if negative_lines:
+            refunded_orders = negative_lines.mapped('refunded_orderline_id.order_id')
+            if len(refunded_orders) == 1:
+                refunded_order = refunded_orders[0]
+                refundable_lines = refunded_order.lines.filtered(
+                    lambda l: l.product_id.type == 'consu' and not l.product_uom_id.is_zero(l.qty)
+                )
+                is_full_refund = all(
+                    float_is_zero(
+                        line.qty - line.refunded_qty,
+                        precision_rounding=line.product_uom_id.rounding,
+                    )
+                    for line in refundable_lines
+                )
+                pickings_to_cancel = refunded_order.picking_ids.filtered(lambda p: p.state not in ('done', 'cancel'))
+                has_done_pickings = refunded_order.picking_ids.filtered(lambda p: p.state == 'done')
+
+                if is_full_refund and pickings_to_cancel and not has_done_pickings:
+                    # Full refund before delivery: cancel the picking
+                    pickings_to_cancel.action_cancel()
+                    return pickings
+                elif not is_full_refund and pickings_to_cancel and not has_done_pickings:
+                    # Partial refund before delivery: reduce the picking quantities
+                    moves_to_reassign = self.env['stock.move']
+                    for negative_line in negative_lines:
+                        refunded_line = negative_line.refunded_orderline_id
+                        moves = pickings_to_cancel.move_ids.filtered(
+                            lambda m: m.product_id == refunded_line.product_id
+                            and m.never_product_template_attribute_value_ids == refunded_line.attribute_value_ids
+                        )
+                        cancel_qty = abs(negative_line.qty)
+                        for move in moves:
+                            new_qty = max(0, move.product_uom_qty - cancel_qty)
+                            if float_is_zero(new_qty, precision_rounding=move.product_uom.rounding):
+                                move._action_cancel()
+                                move.unlink()
+                            else:
+                                move.product_uom_qty = new_qty
+                                moves_to_reassign |= move
+                    # Lowering the demand unreserves the move (chained moves then fall
+                    # back to 'waiting'); re-reserve so the picking stays 'ready'.
+                    moves_to_reassign._action_assign()
+                    self.env.flush_all()
+                    # Skip creating a return picking since nothing was delivered
+                    return pickings
             if picking_type.return_picking_type_id:
                 return_picking_type = picking_type.return_picking_type_id
                 return_location_id = return_picking_type.default_location_dest_id.id
