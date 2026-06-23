@@ -326,7 +326,7 @@
 
                     <t t-set="current_tx" t-value="sale_order.get_portal_last_transaction()"/>
                     <!-- hide state header when invoice is posted for current transaction. -->
-                    <t t-if="current_tx and not (current_tx.state == 'done' and len(current_tx.invoice_ids) == 1 and current_tx.invoice_ids.state == 'posted')">
+                    <t t-if="current_tx and not (len(current_tx.invoice_ids) == 1 and current_tx.invoice_ids.state == 'posted')">
                         <t t-call="payment.state_header" tx="current_tx"/>
                     </t>
 

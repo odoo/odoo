@@ -19,7 +19,6 @@ class PaymentTransaction(models.Model):
             order
             and order.website_id
             and self.provider_id.custom_mode == "on_site"
-            and self.state == "pending"
         ):
             if (
                 commitment_date := order.commitment_date
