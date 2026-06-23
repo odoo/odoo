@@ -425,7 +425,7 @@ export class PosOrderline extends Base {
             tax_ids: this.tax_ids,
             product_id: product,
             product_uom_id: product_uom,
-            is_refund: this.qty * priceUnit < 0,
+            is_refund: this.is_refund(),
             ...customValues,
         };
         if (order.fiscal_position_id) {
@@ -438,7 +438,17 @@ export class PosOrderline extends Base {
         return values;
     }
 
+<<<<<<< e097899f8b93d0b9e4a14ed2eb78e8ca21d57252
     setUnitPrice(price) {
+||||||| 7e6004233fc9c8f946e7f8a1ad6f1adf51f76049
+    set_unit_price(price) {
+=======
+    is_refund() {
+        return this.qty * this.price_unit < 0;
+    }
+
+    set_unit_price(price) {
+>>>>>>> 54b528f207d5df200b9eda78d7f3d9d2161e9ac8
         const parsed_price = !isNaN(price)
             ? price
             : isNaN(parseFloat(price))

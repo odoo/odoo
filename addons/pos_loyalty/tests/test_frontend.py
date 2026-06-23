@@ -3434,3 +3434,106 @@ class TestUi(TestPointOfSaleHttpCommon):
             login="pos_user",
         )
         self.assertEqual(len(gift_card_program.coupon_ids), 2)
+<<<<<<< e097899f8b93d0b9e4a14ed2eb78e8ca21d57252
+||||||| 7e6004233fc9c8f946e7f8a1ad6f1adf51f76049
+
+    def test_ewallet_tax_included_invoice(self):
+        LoyaltyProgram = self.env['loyalty.program']
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        self.env.ref('loyalty.ewallet_product_50').write({'active': True})
+        ewallet_program = self.create_programs([('arbitrary_name', 'ewallet')])['arbitrary_name']
+        partner_aaa = self.env['res.partner'].create({'name': 'AAAA'})
+        self.env['loyalty.card'].create({
+            'partner_id': partner_aaa.id,
+            'program_id': ewallet_program.id,
+            'points': 50,
+        })
+        tax_inc = self.env['account.tax'].create({
+            'name': 'Included',
+            'amount': 10,
+            'price_include_override': 'tax_included',
+        })
+        self.whiteboard_pen.write({
+            'lst_price': 10.0,
+            'taxes_id': [Command.set(tax_inc.ids)],
+        })
+        self.main_pos_config.open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_ewallet_tax_included_invoice', login="pos_user")
+        invoice = self.env['pos.order'].search([('session_id', '=', self.main_pos_config.current_session_id.id)], limit=1).account_move
+        self.assertEqual(invoice.move_type, 'out_invoice')
+        self.assertEqual(invoice.line_ids[0].quantity, 1)
+        self.assertEqual(invoice.line_ids[1].quantity, 1)
+=======
+
+    def test_ewallet_tax_included_invoice(self):
+        LoyaltyProgram = self.env['loyalty.program']
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        self.env.ref('loyalty.ewallet_product_50').write({'active': True})
+        ewallet_program = self.create_programs([('arbitrary_name', 'ewallet')])['arbitrary_name']
+        partner_aaa = self.env['res.partner'].create({'name': 'AAAA'})
+        self.env['loyalty.card'].create({
+            'partner_id': partner_aaa.id,
+            'program_id': ewallet_program.id,
+            'points': 50,
+        })
+        tax_inc = self.env['account.tax'].create({
+            'name': 'Included',
+            'amount': 10,
+            'price_include_override': 'tax_included',
+        })
+        self.whiteboard_pen.write({
+            'lst_price': 10.0,
+            'taxes_id': [Command.set(tax_inc.ids)],
+        })
+        self.main_pos_config.open_ui()
+        self.start_tour(f"/pos/ui?config_id={self.main_pos_config.id}", 'test_ewallet_tax_included_invoice', login="pos_user")
+        invoice = self.env['pos.order'].search([('session_id', '=', self.main_pos_config.current_session_id.id)], limit=1).account_move
+        self.assertEqual(invoice.move_type, 'out_invoice')
+        self.assertEqual(invoice.line_ids[0].quantity, 1)
+        self.assertEqual(invoice.line_ids[1].quantity, 1)
+
+    def test_reward_line_tax_grouping_key(self):
+        """
+        This test make sure that taxes are correctly computed when using the "round_globally" rounding method and some specific prices that
+        can result in rounding issues.
+        """
+        self.company.tax_calculation_rounding_method = 'round_globally'
+        self.env['loyalty.program'].search([]).write({'pos_ok': False})
+        self.loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Coupon Program - Pricelist',
+            'program_type': 'coupons',
+            'trigger': 'auto',
+            'applies_on': 'current',
+            'pos_ok': True,
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+            'rule_ids': [Command.create({
+                'reward_point_mode': 'order',
+                'reward_point_amount': 1,
+                'minimum_amount': 0,
+            })],
+            'reward_ids': [Command.create({
+                'reward_type': 'discount',
+                'required_points': 1,
+                'discount': 10,
+                'discount_mode': 'percent',
+                'discount_applicability': 'order',
+            })],
+        })
+
+        self.product = self.env["product.product"].create(
+            {
+                "name": "Test Product 1",
+                "is_storable": True,
+                "list_price": 76.01,
+                "available_in_pos": True,
+                "taxes_id": [Command.create({
+                    "name": "Test Tax 1",
+                    "amount_type": "percent",
+                    "amount": 21.0})]
+            }
+        )
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+
+        self.start_pos_tour("test_reward_line_tax_grouping_key", pos_config=self.main_pos_config)
+>>>>>>> 54b528f207d5df200b9eda78d7f3d9d2161e9ac8
