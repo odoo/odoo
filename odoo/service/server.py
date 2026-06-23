@@ -920,6 +920,8 @@ class GeventServer(CommonServer):
             super().stop()
 
     def run(self, preload, stop):
+        if rc := preload_registries(preload):
+            return rc
         self.start()
         self.stop()
         self.logger.info("Stopped")
