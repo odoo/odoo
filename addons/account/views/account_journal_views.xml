@@ -197,6 +197,9 @@
                                         <field name="invoice_reference_type"/>
                                         <field name="invoice_reference_model" invisible="invoice_reference_type == 'none'"/>
                                     </group>
+                                    <group string="Dashboard" groups="base.group_no_one" invisible="type not in ('sale', 'purchase')">
+                                        <field name="disable_dashboard_graph"/>
+                                    </group>
                                 </group>
                             </page>
                         </notebook>

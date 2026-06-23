@@ -1,0 +1,93 @@
+.o_account_dashboard_kpis_wrapper {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: map-get($spacers, 2);
+    align-items: start;
+    flex: 0 0 100%;
+    max-width: 100%;
+    padding-block: map-get($spacers, 2) map-get($spacers, 1);
+    padding-inline: map-get($spacers, 2);
+    margin-block-end: map-get($spacers, 2);
+    border: $border-width solid $border-color;
+    border-radius: $border-radius-sm;
+    background-color: $o-view-background-color;
+
+    @include media-breakpoint-up(md) {
+        flex-basis: calc(100% - var(--KanbanRecord-margin-h) * 2);
+        max-width: calc(100% - var(--KanbanRecord-margin-h) * 2);
+        margin-inline: var(--KanbanRecord-margin-h);
+    }
+}
+
+.o_account_dashboard_kpis {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: map-get($spacers, 2);
+    width: 100%;
+    padding: map-get($spacers, 2);
+}
+
+.o_account_dashboard_kpis_close {
+    margin-block-start: map-get($spacers, 1);
+    margin-inline-end: map-get($spacers, 1);
+}
+
+.o_account_dashboard_kpi_card {
+    display: flex;
+    flex-direction: column;
+    min-height: 4.5rem;
+    padding: map-get($spacers, 2) map-get($spacers, 3);
+    border: $border-width solid $border-color;
+    border-radius: $border-radius-sm;
+    background-color: $o-view-background-color;
+    box-shadow: 0 .125rem .25rem rgba($black, .075);
+
+    &:not(:disabled):hover {
+        border-color: $o-brand-primary;
+        background-color: mix($o-brand-primary, $o-view-background-color, 5%);
+    }
+
+    &:disabled {
+        opacity: .65;
+        cursor: default;
+    }
+}
+
+.o_account_dashboard_kpi_content {
+    display: flex;
+    flex-direction: column;
+}
+
+.o_account_dashboard_kpi_name {
+    font-size: 1.125rem;
+    font-weight: $font-weight-semibold;
+    color: $text-muted;
+}
+
+.o_account_dashboard_kpi_value {
+    margin-top: map-get($spacers, 1);
+    font-size: $h4-font-size;
+    font-weight: $font-weight-semibold;
+    line-height: 1.15;
+    color: $headings-color;
+}
+
+.o_account_dashboard_kpi_values {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: map-get($spacers, 3);
+    margin-top: map-get($spacers, 2);
+    font-size: $font-size-sm;
+    color: $text-muted;
+}
+
+.o_account_dashboard_kpi_value_item {
+    display: flex;
+    flex-direction: column;
+    gap: map-get($spacers, 1);
+}
+
+.o_account_dashboard_kpi_value_amount {
+    color: $headings-color;
+    font-weight: $font-weight-semibold;
+}
