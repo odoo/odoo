@@ -213,7 +213,7 @@
                                         </div>
                                     </div>
                                     <!-- DYNAMIC LISTS -->
-                                    <div class="col-md-auto flex-grow-1" invisible="not mailing_model_id or mailing_on_mailing_list">
+                                    <div class="col-md-auto" invisible="not mailing_model_id or mailing_on_mailing_list">
                                         <label for="mailing_filter_ids" string="Dynamic Lists:" class="oe_edit_only pe-3"/>
                                         <field name="mailing_filter_ids" widget="mailing_many2many_tags"
                                             placeholder="Select dynamic lists..." class="o_field_many2many_tags oe_inline mb-0"
@@ -230,10 +230,10 @@
                                             <span>Recipients</span>
                                         </div>
                                     </div>
-                                </div>
-                                <div invisible="mailing_model_real == 'mailing.contact'" class="o_mass_mailing_use_exclusion_list col-md-auto">
-                                    <field name="use_exclusion_list" string="Use Exclusion List" readonly="state != 'draft'"/>
-                                    <label for="use_exclusion_list" class="ps-2" string="Exclude Blacklisted Recipients"/>
+                                    <div invisible="mailing_model_real == 'mailing.contact'" class="o_mass_mailing_use_exclusion_list col-md-auto">
+                                        <field name="use_exclusion_list" string="Use Exclusion List" readonly="state != 'draft'"/>
+                                        <label for="use_exclusion_list" class="ps-2" string="Exclude Blacklisted Recipients"/>
+                                    </div>
                                 </div>
                             </div>
                             <label for="mailing_domain" string="Domain" invisible="not mailing_model_id or mailing_on_mailing_list or mailing_filter_ids"/>
