@@ -612,7 +612,7 @@ class AccountChartTemplate(models.AbstractModel):
                             'quantity': 1,
                             'account_id': 'p2112',
                             'price_unit': 69132.78,
-                            'tax_ids': [Command.set(['sgst_purchase_18'])],
+                            'tax_ids': [Command.set(['sgst_purchase_18', 'tds_10_us_393_1_6_iii_b'])],
                         }),
                     ],
                 },
@@ -717,14 +717,11 @@ class AccountChartTemplate(models.AbstractModel):
                     _logger.exception('Error while posting demo data')
             if (bill := self.ref('demo_bill_with_tds_entry')).state == 'posted':
                 try:
-                    self.env['l10n_in.withhold.wizard'].with_context(
+                    wizard = self.env['account.payment.register'].with_context(
                         active_model='account.move',
                         active_ids=bill.ids,
-                    ).create({
-                        'tax_id': self.ref('tds_10_us_393_1_6_iii_b').id,
-                        'base': bill.amount_untaxed,
-                        'date': bill.invoice_date,
-                    }).action_create_and_post_withhold()
+                    ).create({})
+                    wizard._create_payments()
                 except (UserError, ValidationError):
                     _logger.exception('Error while creating TDS Entry for demo data')
         else:

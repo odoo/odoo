@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_register_form" model="ir.ui.view">
+        <field name="name">account.payment.register.form</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="l10n_account_withholding_tax.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <field name="withhold" position="attributes">
+                <attribute name="invisible" separator="or" add="can_group_payments"/>
+            </field>
+        </field>
+    </record>
+</odoo>
