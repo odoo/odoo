@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates id="template" xml:space="preserve">
-    <t t-name="l10n_vn_edi_viettel_pos.PaymentScreenButtons" t-inherit="point_of_sale.PaymentScreenButtons" t-inherit-mode="extension">
-        <xpath expr="//button[hasclass('js_invoice')]" position="attributes">
-            <attribute name="t-att-disabled">!pos.isVietnamCompany() &amp;&amp; currentOrder.lines[0]?.refunded_orderline_id?.order_id?.isToInvoice()</attribute>
-        </xpath>
-    </t>
-</templates>
