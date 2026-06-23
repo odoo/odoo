@@ -11,7 +11,7 @@ try:
     from cryptography.hazmat.primitives.asymmetric.types import PrivateKeyTypes
     from cryptography.hazmat.primitives.serialization import Encoding, load_pem_private_key
     from cryptography.hazmat.primitives.asymmetric import padding
-    from cryptography.x509 import Certificate, load_pem_x509_certificate
+    from cryptography.x509 import Certificate, load_pem_x509_certificates
 except ImportError:
     # cryptography 41.0.7 and above is supported
     hashes = None
@@ -20,7 +20,7 @@ except ImportError:
     load_pem_private_key = None
     padding = None
     Certificate = None
-    load_pem_x509_certificate = None
+    load_pem_x509_certificates = None
 
 from odoo import _
 from odoo.addons.base.models.res_company import ResCompany
@@ -43,7 +43,7 @@ class PdfSigner:
     """
 
     def __init__(self, stream: io.BytesIO, company: Optional[ResCompany] = None, signing_time=None) -> None:
-        self.signing_time = signing_time
+        self.signing_time = signing_time or datetime.datetime.now(datetime.timezone.utc)
         self.company = company
         if not 'clone_document_from_reader' in dir(PdfWriter):
             _logger.info("PDF signature is supported by Python 3.12 and above")
@@ -60,7 +60,7 @@ class PdfSigner:
         Returns:
             Optional[io.BytesIO]: the resulting output stream after the signature has been performed, or None in case of error
         """
-        if not self.company or not load_pem_x509_certificate:
+        if not self.company or not load_pem_x509_certificates:
             return
 
         dummy, sig_field_value = self._setup_form(visible_signature, field_name,  signer)
@@ -72,20 +72,25 @@ class PdfSigner:
         self.writer.write_stream(out_stream)
         return out_stream
 
-    def _load_key_and_certificate(self) -> tuple[Optional[PrivateKeyTypes], Optional[Certificate]]:
+    def _load_key_and_certificates(self) -> tuple[PrivateKeyTypes | None, Certificate | None, list[Certificate] | None]:
         """Loads the private key
 
         Returns:
             Optional[PrivateKeyTypes]: a private key object, or None if the key couldn't be loaded.
         """
-        if "signing_certificate_id" not in self.company._fields \
-            or not self.company.signing_certificate_id.pem_certificate:
-            return None, None
+        certificate = self.company.signing_certificate_id if "signing_certificate_id" in self.company._fields else None
+        if not (certificate and certificate.pem_certificate and certificate.private_key_id and certificate.private_key_id.content):
+            return None, None, None
 
-        certificate = self.company.signing_certificate_id
         cert_bytes = base64.decodebytes(certificate.pem_certificate)
         private_key_bytes = base64.decodebytes(certificate.private_key_id.content)
-        return load_pem_private_key(private_key_bytes, None), load_pem_x509_certificate(cert_bytes)
+
+        all_certs = load_pem_x509_certificates(cert_bytes)
+        leaf_cert = all_certs[0]
+        cert_chain = all_certs[1:]
+        private_key = load_pem_private_key(private_key_bytes, None)
+
+        return private_key, leaf_cert, cert_chain
 
     def _setup_form(self, visible_signature: bool, field_name: str, signer: Optional[ResUsers] = None) -> tuple[DictionaryObject, DictionaryObject] | None:
         """Creates the /AcroForm and populates it with the appropriate field for the signature
@@ -239,7 +244,7 @@ class PdfSigner:
             NameObject("/Type"): NameObject("/Sig"),
             NameObject("/Filter"): NameObject("/Adobe.PPKLite"),
             NameObject("/SubFilter"): NameObject("/adbe.pkcs7.detached"),
-            NameObject("/M"): create_string_object(datetime.datetime.now(datetime.timezone.utc).strftime("D:%Y%m%d%H%M%S")),
+            NameObject("/M"): create_string_object(self.signing_time.strftime("D:%Y%m%d%H%M%SZ")),
         })
 
         # Here we add the reference to be written in a specific order. This is needed
@@ -253,10 +258,10 @@ class PdfSigner:
         })
 
         # Definition of the fields array linked to the form (/AcroForm)
-        if "/Fields" not in self.writer._root_object:
+        if "/Fields" not in form:
             fields = ArrayObject()
         else:
-            fields = self.writer._root_object["/Fields"].get_object()
+            fields = form["/Fields"].get_object()
         fields.append(signature_field_ref)
         form.update({
             NameObject("/Fields"): fields
@@ -264,8 +269,11 @@ class PdfSigner:
 
         # The signature field reference is added to the annotations array
         if "/Annots" not in page:
-            page[NameObject("/Annots")] = ArrayObject()
-        page[NameObject("/Annots")].append(signature_field_ref)
+            annotations = ArrayObject()
+        else:
+            annotations = page["/Annots"].get_object()
+        annotations.append(signature_field_ref)
+        page[NameObject("/Annots")] = annotations
 
         return signature_field, signature_field_value
 
@@ -280,11 +288,19 @@ class PdfSigner:
         Returns:
             cms.ContentInfo: a CMS object containing the information of the signature
         """
-        private_key, certificate = self._load_key_and_certificate()
-        if private_key == None or certificate == None:
+        private_key, leaf_cert, cert_chain = self._load_key_and_certificates()
+        if private_key is None or leaf_cert is None:
             return None
         cert = x509.Certificate.load(
-            certificate.public_bytes(encoding=Encoding.DER))
+            leaf_cert.public_bytes(encoding=Encoding.DER))
+        all_certificates = [cert]
+        if cert_chain:
+            for intermediate_cert in cert_chain:
+                all_certificates.append(
+                    x509.Certificate.load(
+                        intermediate_cert.public_bytes(encoding=Encoding.DER)
+                    )
+                )
         encap_content_info = {
             'content_type': 'data',
             'content': None
@@ -297,7 +313,7 @@ class PdfSigner:
             }),
             cms.CMSAttribute({
                 'type': 'signing_time',
-                'values': [cms.Time({'utc_time': core.UTCTime(self.signing_time or datetime.datetime.now(datetime.timezone.utc))})]
+                'values': [cms.Time({'utc_time': core.UTCTime(self.signing_time)})]
             }),
             cms.CMSAttribute({
                 'type': 'cms_algorithm_protection',
@@ -345,7 +361,7 @@ class PdfSigner:
             'version': 'v1',
             'digest_algorithms': [algos.DigestAlgorithm({'algorithm': 'sha256'})],
             'encap_content_info': encap_content_info,
-            'certificates': [cert],
+            'certificates': all_certificates,
             'signer_infos': [signer_info]
         }
 
@@ -368,27 +384,27 @@ class PdfSigner:
 
         # Computing the start and end position of the /Contents <signature> field
         # to exclude the content of <> (aka the actual signature) from the byte range
-        placeholder_start = contents_field_pos + 9
-        placeholder_end = placeholder_start + len(b"\0" * 8192) * 2 + 2
+        placeholder_start = pdf_data.find(b"<0000", contents_field_pos) + 1
+        placeholder_end = pdf_data.find(b">", placeholder_start)
 
-        # Replacing the placeholder byte range with the actual range
-        # that will be used to compute the document digest
-        placeholder_byte_range = sig_field_value.get("/ByteRange")
+        byte_range = [0, 0, 0, 0]
+        while True:
+            sig_field_value.update({
+                NameObject("/ByteRange"): self._create_number_array_object(byte_range)
+            })
 
-        # Here the byte range represents an array [index, length, index, length, ...]
-        # where 'index' represents the index of a byte, and length the number of bytes to take
-        # This array indicates the bytes that are used when computing the digest of the document
-        byte_range = [0, placeholder_start,
-                      placeholder_end, abs(len(pdf_data) - placeholder_end)]
+            pdf_data = self._get_document_data()
 
-        byte_range = self._correct_byte_range(
-            placeholder_byte_range, byte_range, len(pdf_data))
+            val1 = 0
+            val2 = placeholder_start - 1  # The index of the '<'
+            val3 = placeholder_end + 1  # The index after the '>'
+            val4 = len(pdf_data) - val3
 
-        sig_field_value.update({
-            NameObject("/ByteRange"): self._create_number_array_object(byte_range)
-        })
+            new_byte_range = [val1, val2, val3, val4]
+            if new_byte_range == byte_range:
+                break
 
-        pdf_data = self._get_document_data()
+            byte_range = new_byte_range
 
         digest = self._compute_digest_from_byte_range(pdf_data, byte_range)
 
@@ -410,37 +426,6 @@ class PdfSigner:
         output_stream = io.BytesIO()
         self.writer.write_stream(output_stream)
         return output_stream.getvalue()
-
-
-    def _correct_byte_range(self, old_range: list[int], new_range: list[int], base_pdf_len: int) -> list[int]:
-        """Corrects the last value of the new byte range
-
-        This function corrects the initial byte range (old_range) which was computed for document containing
-        the placeholder values for the /ByteRange and /Contents fields. This is needed because when updating
-        /ByteRange, the length of the document will change as the byte range will take more bytes of the
-        document, resulting in an invalid byte range.
-
-        Args:
-            old_range (list[int]): the previous byte range
-            new_range (list[int]): the new byte range
-            base_pdf_len (int): the base length of the pdf, before insertion of the actual byte range
-
-        Returns:
-            list[int]: the corrected byte range
-        """
-        # Computing the difference of length of the strings of the old and new byte ranges.
-        # Used to determine if a re-computation of the range is needed or not
-        current_len = len(str(old_range))
-        corrected_len = len(str(new_range))
-        diff = corrected_len - current_len
-
-        if diff == 0:
-            return new_range
-
-        corrected_range = new_range.copy()
-        corrected_range[-1] = abs((base_pdf_len + diff) - new_range[-2])
-        return self._correct_byte_range(new_range, corrected_range, base_pdf_len)
-
 
     def _compute_digest_from_byte_range(self, data: bytes, byte_range: list[int]) -> bytes:
         """Computes the digest of the data from a byte range. Uses SHA256 algorithm to compute the hash.
