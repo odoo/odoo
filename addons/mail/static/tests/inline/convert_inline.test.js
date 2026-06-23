@@ -1596,3 +1596,45 @@ describe("Should not convert blacklisted class to inline styles", () => {
         expect(editable.querySelector("img.ms-auto").style.display).toBe("block");
     });
 });
+
+describe("Clean dynamic placeholders", () => {
+    beforeEach(() => {
+        editable = document.createElement("div");
+    });
+
+    test("strip editor metadata and keep the demo label as fallback content", async () => {
+        editable.innerHTML = `<p>Hello <t t-out="object.name" data-oe-expression-readable="Name" data-oe-demo="Customer"></t></p>`;
+        await toInline(editable, []);
+        const placeholder = editable.querySelector("t");
+        expect(placeholder.getAttributeNames()).toEqual(["t-out"]);
+        expect(placeholder.textContent).toBe("Customer");
+    });
+
+    test("keep the existing content of a placeholder", async () => {
+        editable.innerHTML = `<p><t t-out="object.name" data-oe-expression-readable="Name" data-oe-demo="Customer">Edited</t></p>`;
+        await toInline(editable, []);
+        const placeholder = editable.querySelector("t");
+        expect(placeholder.getAttributeNames()).toEqual(["t-out"]);
+        expect(placeholder.textContent).toBe("Edited");
+    });
+
+    test("handle t-field and t-esc placeholders", async () => {
+        editable.innerHTML =
+            `<p><span t-field="object.name" data-oe-demo="A"></span>` +
+            `<span t-esc="object.name" data-oe-expression-readable="B"></span></p>`;
+        await toInline(editable, []);
+        const [field, esc] = editable.querySelectorAll("span");
+        expect(field.getAttributeNames()).toEqual(["t-field"]);
+        expect(field.textContent).toBe("A");
+        expect(esc.getAttributeNames()).toEqual(["t-esc"]);
+        expect(esc.textContent).toBe("");
+    });
+
+    test("leave elements that are not QWeb placeholders untouched", async () => {
+        editable.innerHTML = `<p data-oe-demo="keep" data-oe-expression-readable="keep">text</p>`;
+        await toInline(editable, []);
+        const paragraph = editable.querySelector("p");
+        expect(paragraph.getAttribute("data-oe-demo")).toBe("keep");
+        expect(paragraph.getAttribute("data-oe-expression-readable")).toBe("keep");
+    });
+});
