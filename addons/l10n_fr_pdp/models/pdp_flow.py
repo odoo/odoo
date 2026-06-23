@@ -475,7 +475,7 @@ class PdpFlow(models.Model):
         self.ensure_one()
         if self.state in FLOW_SENT_STATES_SELECTION:
             return self.sent_move_ids
-        return self.env['account.move'].search_fetch(
+        moves = self.env['account.move'].search_fetch(
                 domain=[
                     ('company_id', '=', self.company_id.id),
                     ('date', '>=', self.period_start),
@@ -487,6 +487,11 @@ class PdpFlow(models.Model):
                 field_names=['l10n_fr_pdp_status'],
                 order='id',
             )
+        # To prevent computing all moves linked to a partner when a change is made to a partner,
+        # the l10n_fr_pdp_has_error compute does not depends on all fields that might influance it's value.
+        # This triggers a compute on moves that matter.
+        moves._compute_l10n_fr_pdp_has_error()
+        return moves
 
     # -------------------------------------------------------------------------
     # Actions
