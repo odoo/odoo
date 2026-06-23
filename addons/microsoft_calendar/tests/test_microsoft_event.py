@@ -368,6 +368,58 @@ class TestMicrosoftEvent(TestCommon):
         self.assertNotIn(self.simple_event, synced_events)
         self.assertIn(self.simple_event, not_synced_events)
 
+    @patch_api
+    def test_single_event_turned_recurrent_in_outlook_no_duplicate(self):
+        """ Sync a single event, then turn it into a recurrence in Outlook. """
+
+        master_id = 'AAAKROSMOZ0001=='
+        master_uid = '040000008200E00074C5B7101A82E0080000000099VULKANIA00000000000000DEADBEEF'
+        future = (datetime.now() + relativedelta(days=1)).isoformat()
+
+        # arrange
+        single = [{
+            '@odata.type': '#microsoft.graph.event',
+            '@odata.etag': 'W/"SINGLE"',
+            'type': 'singleInstance',
+            'subject': 'Bouftou',
+            'isCancelled': False,
+            'id': master_id,
+            'iCalUId': master_uid,
+            'start': {'dateTime': '2021-09-01T10:00:00.0000000', 'timeZone': 'UTC'},
+            'end': {'dateTime': '2021-09-01T10:30:00.0000000', 'timeZone': 'UTC'},
+            'location': {'displayName': ''},
+        }]
+        self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(single))
+        odoo_single = self.env['calendar.event'].search([('microsoft_id', '=', f'{master_id}:{master_uid}')])
+        self.assertEqual(len(odoo_single), 1, "The single event should have been created")
+        self.assertFalse(odoo_single.recurrence_id)
+
+        # act
+        recurrent = [
+            {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"MASTER"', 'createdDateTime': '2021-09-01T07:03:49.1444085Z', 'lastModifiedDateTime': future, 'changeKey': 'MASTER', 'categories': [], 'originalStartTimeZone': 'UTC', 'originalEndTimeZone': 'UTC', 'iCalUId': master_uid, 'reminderMinutesBeforeStart': 15, 'isReminderOn': True, 'hasAttachments': False, 'subject': 'Bouftou', 'bodyPreview': '', 'importance': 'normal', 'sensitivity': 'normal', 'isAllDay': False, 'isCancelled': False, 'isOrganizer': True, 'responseRequested': True, 'seriesMasterId': None, 'showAs': 'busy', 'type': 'seriesMaster', 'AllowNewTimeProposals': True, 'IsDraft': False, 'id': master_id, 'responseStatus': {'response': 'organizer', 'time': '0001-01-01T00:00:00Z'}, 'body': {'contentType': 'html', 'content': ''}, 'start': {'dateTime': '2021-09-01T10:00:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2021-09-01T10:30:00.0000000', 'timeZone': 'UTC'}, 'location': {'displayName': '', 'locationType': 'default', 'uniqueIdType': 'unknown', 'address': {}, 'coordinates': {}}, 'locations': [], 'recurrence': {'pattern': {'type': 'daily', 'interval': 1, 'month': 0, 'dayOfMonth': 0, 'firstDayOfWeek': 'sunday', 'index': 'first'}, 'range': {'type': 'endDate', 'startDate': '2021-09-01', 'endDate': '2021-09-03', 'recurrenceTimeZone': 'UTC', 'numberOfOccurrences': 0}}, 'attendees': [], 'organizer': {'emailAddress': {'name': 'Kerubim', 'address': 'kerubim@test.com'}}},
+            {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"OCC1"', 'seriesMasterId': master_id, 'type': 'occurrence', 'id': 'OCC0001', 'start': {'dateTime': '2021-09-01T10:00:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2021-09-01T10:30:00.0000000', 'timeZone': 'UTC'}},
+            {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"OCC2"', 'seriesMasterId': master_id, 'type': 'occurrence', 'id': 'OCC0002', 'start': {'dateTime': '2021-09-02T10:00:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2021-09-02T10:30:00.0000000', 'timeZone': 'UTC'}},
+            {'@odata.type': '#microsoft.graph.event', '@odata.etag': 'W/"OCC3"', 'seriesMasterId': master_id, 'type': 'occurrence', 'id': 'OCC0003', 'start': {'dateTime': '2021-09-03T10:00:00.0000000', 'timeZone': 'UTC'}, 'end': {'dateTime': '2021-09-03T10:30:00.0000000', 'timeZone': 'UTC'}},
+        ]
+        self.env['calendar.event']._sync_microsoft2odoo(MicrosoftEvent(recurrent))
+
+        # assert
+        recurrence = self.env['calendar.recurrence'].search([('microsoft_id', '=', f'{master_id}:{master_uid}')])
+        self.assertTrue(recurrence, "It should have created a recurrence")
+        self.assertEqual(len(recurrence.calendar_event_ids), 3, "It should have created 3 occurrences")
+
+        # The former single event must not survive as an orphan duplicate.
+        leftover_single = self.env['calendar.event'].search([
+            ('ms_universal_event_id', '=', master_uid),
+            ('recurrence_id', '=', False),
+        ])
+        self.assertFalse(
+            leftover_single,
+            "The single event turned recurrent must not remain as a duplicate next to the recurrence",
+        )
+        first_slot = self.env['calendar.event'].search([('start', '=', datetime(2021, 9, 1, 10, 0))])
+        self.assertEqual(len(first_slot), 1, "Only the recurrence occurrence should remain on the first slot")
+
     def test_microsoft_event_readonly(self):
         event = MicrosoftEvent()
         with self.assertRaises(TypeError):
