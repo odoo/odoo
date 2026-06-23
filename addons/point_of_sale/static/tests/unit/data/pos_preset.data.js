@@ -65,5 +65,21 @@ export class PosPreset extends models.ServerModel {
             identification: "address",
             use_timing: false,
         },
+        {
+            id: 5,
+            name: "Take Out",
+            pricelist_id: false,
+            fiscal_position_id: false,
+            is_return: false,
+            color: 0,
+            has_image: false,
+            write_date: "2025-07-03 14:34:07",
+            identification: "none",
+            use_timing: true,
+            slots_per_interval: 5,
+            interval_time: 20,
+            attendance_ids: [1, 2, 3, 4, 4, 5, 6, 7, 8, 9, 10],
+            resource_calendar_id: 1,
+        },
     ];
 }

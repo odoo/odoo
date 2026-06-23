@@ -1,10 +1,9 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, whenReady } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { OdooLogo } from "@point_of_sale/app/components/odoo_logo/odoo_logo";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { session } from "@web/session";
 import { useService } from "@web/core/utils/hooks";
-import { mountComponent } from "@web/env";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { useTime } from "@point_of_sale/app/hooks/time_hook";
 import { FeedbackPaymentSummary } from "@point_of_sale/app/components/feedback_payment_summary/feedback_payment_summary";
@@ -43,5 +42,3 @@ export class CustomerDisplay extends Component {
         return `/web/image/pos.config/${this.session.config_id}/logo`;
     }
 }
-
-whenReady(() => mountComponent(CustomerDisplay, document.body));

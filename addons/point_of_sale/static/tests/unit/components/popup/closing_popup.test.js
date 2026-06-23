@@ -1,8 +1,9 @@
 import { test, expect } from "@odoo/hoot";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
+import { localization } from "@web/core/l10n/localization";
 
 definePosModels();
 
@@ -70,4 +71,24 @@ test("validPms includes bank/cash methods with more than one payment", async () 
     });
 
     expect(popup.validPms.map((pm) => pm.id)).toEqual([10, 11]);
+});
+
+test("AutofillCashCount: cash count autofill parses formatted amount with comma decimal separator", async () => {
+    await setupPosEnv();
+    patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: "." });
+
+    const popup = await mountWithCleanup(ClosePosPopup, {
+        props: getProps({
+            default_cash_details: {
+                id: 1,
+                name: "Cash",
+                amount: 123456,
+                opening: 0,
+                moves: [],
+                payment_amount: 123456,
+            },
+        }),
+    });
+
+    expect(popup.state.payments[1].counted).toBe("123.456,00");
 });

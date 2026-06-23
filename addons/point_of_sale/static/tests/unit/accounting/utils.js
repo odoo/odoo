@@ -64,3 +64,62 @@ export const prepareRoundingVals = (store, roundingAmount, roundingMethod, onlyC
 
     return { config, cashPm, cardPm };
 };
+
+export const getSingleProductOrder = async (
+    store,
+    productName,
+    price,
+    taxes = [],
+    options = {}
+) => {
+    const order = store.addNewOrder();
+    const product = store.models["product.template"].get(15);
+    product.update({
+        name: productName,
+        display_name: productName,
+        list_price: price,
+        taxes_id: taxes,
+    });
+    product.product_variant_ids[0].update({
+        display_name: productName,
+        lst_price: price,
+    });
+    order.pricelist_id = false;
+
+    await store.addLineToOrder({ product_tmpl_id: product }, order);
+    if (options.isRefund) {
+        order.is_refund = true;
+        order.lines.map((line) => line.setQuantity(-line.qty));
+    }
+    return order;
+};
+
+export const createTax = (store, name, amount, priceIncluded) =>
+    store.models["account.tax"].create({
+        name,
+        price_include: priceIncluded,
+        price_include_override: priceIncluded ? "tax_included" : "tax_excluded",
+        include_base_amount: false,
+        is_base_affected: true,
+        has_negative_factor: false,
+        amount_type: "percent",
+        children_tax_ids: [],
+        amount,
+        company_id: store.company,
+        sequence: 1,
+        tax_group_id: store.models["account.tax.group"].get(1),
+        fiscal_position_ids: [],
+    });
+
+export const createFiscalPosition = (store, name, taxIds = [], taxMap = {}) =>
+    store.models["account.fiscal.position"].create({
+        name,
+        display_name: name,
+        tax_ids: taxIds,
+        tax_map: taxMap,
+    });
+
+export const setFiscalPosition = (order, fiscalPosition) => {
+    order.fiscal_position_id = fiscalPosition;
+    order.triggerRecomputeAllPrices();
+};
