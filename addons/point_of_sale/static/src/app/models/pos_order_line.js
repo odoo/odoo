@@ -415,7 +415,7 @@ export class PosOrderline extends Base {
             product_id: product,
             rate: 1.0,
             product_uom_id: product_uom,
-            is_refund: this.qty * priceUnit < 0,
+            is_refund: this.isRefund(),
             ...customValues,
         };
         if (order.fiscal_position_id) {
@@ -426,6 +426,10 @@ export class PosOrderline extends Base {
             );
         }
         return values;
+    }
+
+    isRefund() {
+        return this.qty * this.price_unit < 0;
     }
 
     setUnitPrice(price) {

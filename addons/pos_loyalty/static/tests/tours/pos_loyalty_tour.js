@@ -774,3 +774,14 @@ registry.category("web_tour.tours").add("test_race_conditions_update_program", {
             },
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_reward_line_tax_grouping_key", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Test Product 1", "1.00"),
+            ProductScreen.totalAmountIs("82.78"),
+            ProductScreen.checkTaxAmount("14.37"),
+        ].flat(),
+});
