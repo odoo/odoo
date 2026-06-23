@@ -6,12 +6,25 @@ export class Loom extends AbstractThirdPartyVideo {
     static name = "Loom";
 
     static urlMatcher =
-        /^https:\/\/(?:www\.)?loom\.com\/(?:embed|share)\/(?<id>[0-9a-z]+)\\?(?:[?&]([0-9a-zA-Z]+)=([0-9a-zA-Z_-]+))*$/i;
+        /^https:\/\/(?:www\.)?loom\.com\/(?:embed|share)\/(?<id>[0-9a-z]+)\\?(?:[?&]([0-9a-zA-Z_]+)=([0-9a-zA-Z_-]+))*$/i;
 
     static optionsConfig = {
         startFrom: { default: 0, type: Number, params: ["t"] },
         autoplay: { default: false, type: BooleanInt, params: ["autoplay"] },
         muted: { default: false, type: BooleanInt, params: ["muted"] },
+        hideControls: {
+            default: false,
+            type: BooleanInt,
+            params: ["hideEmbedTopBar"],
+            linkedParams: ["hide_share", "hide_title", "hide_owner", "hide_speed"],
+            reversed: true,
+        },
+        hideFullscreen: {
+            default: false,
+            type: BooleanInt,
+            params: ["fullscreen"],
+            reversed: true,
+        },
     };
     /**
      * Returns the embed url for a loom video.
@@ -38,6 +51,7 @@ export class Loom extends AbstractThirdPartyVideo {
         base: "https://www.loom.com/share/e5b8c04bca094dd8a5507925ab887002",
         embed: "https://www.loom.com/embed/e5b8c04bca094dd8a5507925ab887002",
         Params: "loom.com/share/e5b8c04bca094dd8a5507925ab887002?autoplay=1&t=62",
-        embedParams: "https://www.loom.com/embed/e5b8c04bca094dd8a5507925ab887002?autoplay=1&t=62s",
+        embedParams:
+            "https://www.loom.com/embed/e5b8c04bca094dd8a5507925ab887002?autoplay=1&t=62s&hide_share=1&hideEmbedTopBar=0&hide_title=0&hide_owner=1&hide_speed=1&fullscreen=1",
     };
 }

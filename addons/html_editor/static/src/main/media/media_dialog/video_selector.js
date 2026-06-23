@@ -287,6 +287,8 @@ export class VideoSelector extends Component {
         const forcedOptions = {};
         const platformClass = PLATFORMS[this.state.platform];
         if (this.props.isForBgVideo) {
+            forcedOptions.hideControls = true;
+            forcedOptions.hideFullscreen = true;
             if (platformClass.optionsConfig.autoplay) {
                 forcedOptions.autoplay = true;
             }
