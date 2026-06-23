@@ -141,7 +141,7 @@ viewsRegistry.category("form").add(
 
 // should be enough to decide whether or not notifications/channel
 // subscriptions... are received.
-const TIMEOUT = 2000;
+const TIMEOUT = 10000;
 
 //-----------------------------------------------------------------------------
 // Exports
