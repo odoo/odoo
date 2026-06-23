@@ -2,7 +2,15 @@ import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embeddi
 import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { isZwnbsp } from "@html_editor/utils/dom_info";
 import { describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click, press, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
+import {
+    animationFrame,
+    click,
+    manuallyDispatchProgrammaticEvent,
+    press,
+    queryAll,
+    queryOne,
+    waitFor,
+} from "@odoo/hoot-dom";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
@@ -413,4 +421,22 @@ test("Should delete the file box", async () => {
     expect(getContent(el)).toBe(
         `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
+});
+
+test("Edit embedded file name using input", async () => {
+    const { editor } = await setupEditor("<p>[]<br></p>", {
+        config: configWithEmbeddedFile,
+    });
+    const mockedUpload = patchUpload(editor);
+    await insertText(editor, "/file");
+    await waitFor(".o-we-powerbox");
+    await press("Enter");
+    await mockedUpload;
+    await expectElementCount(".o_file_name_container", 1);
+    await click(".o_file_name_container");
+    const fileInput = queryOne(".o_file_box input");
+    fileInput.value = "test.txt";
+    await manuallyDispatchProgrammaticEvent(fileInput, "keydown", { key: "Enter" });
+    await animationFrame();
+    expect(".o_file_name").toHaveText("test.txt");
 });
