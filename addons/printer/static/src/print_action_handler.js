@@ -98,6 +98,10 @@ export async function printJobs(printer, jobs, { notification }) {
     }
 }
 
+const printerTypeRegistry = registry.category("printer.type.handlers");
+printerTypeRegistry.add("epos", (printer, _duplex, jobs, services) => printJobs(printer, jobs, services));
+printerTypeRegistry.add("zpl", (printer, _duplex, jobs, services) => printJobs(printer, jobs, services));
+
 async function printActionHandler(action, options, { services }) {
     const printersCache = services.report_printers_cache;
     const { report_id, jobs } = action.context;
@@ -112,7 +116,8 @@ async function printActionHandler(action, options, { services }) {
     }
 
     for (const printer of printerSettings.selectedPrinters) {
-        await printJobs(printer, jobs, services);
+        const handler = printerTypeRegistry.get(printer.type);
+        await handler?.(printer, printerSettings.duplex, jobs, services);
     }
     options.onClose?.();
     return true;
