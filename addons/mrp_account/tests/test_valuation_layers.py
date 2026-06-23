@@ -380,6 +380,45 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
         self._make_out_move(self.product1, 1)
         self.assertEqual(self.product1.value_svl, 15)
 
+    def test_avco_vacuum_revaluation_finished_product(self):
+        """Receiving a PO after an MO consumed components into negative stock
+        should revalue the finished product, not only the component."""
+        self.component.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.bom.write({
+            'consumption': 'flexible',
+            'bom_line_ids': [(1, self.bom.bom_line_ids.id, {'product_qty': 10})],
+        })
+
+        self._make_in_move(self.component, 5, unit_cost=5)
+
+        mo = self._make_mo(self.bom, 1)
+        self._produce(mo)
+        mo.move_raw_ids.quantity = 10
+        mo.move_raw_ids.picked = True
+        mo.button_mark_done()
+
+        self.assertEqual(self.product1.value_svl, 50)
+        self.assertEqual(self.product1.quantity_svl, 1)
+        finished_move = mo.move_finished_ids.filtered(lambda m: m.product_id == self.product1)
+        self.assertEqual(sum(finished_move.stock_valuation_layer_ids.mapped('value')), 50)
+
+        self._make_in_move(self.component, 5, unit_cost=10)
+
+        component_vacuum_svls = mo.move_raw_ids.stock_valuation_layer_ids.filtered(
+            lambda s: not s.quantity and s.stock_valuation_layer_id
+        )
+        self.assertEqual(len(component_vacuum_svls), 1)
+        self.assertEqual(component_vacuum_svls.value, -25)
+
+        finished_vacuum_svls = finished_move.stock_valuation_layer_ids.filtered(
+            lambda s: not s.quantity and s.stock_valuation_layer_id
+        )
+        self.assertEqual(len(finished_vacuum_svls), 1)
+        self.assertEqual(finished_vacuum_svls.value, 25)
+        self.assertEqual(self.product1.value_svl, 75)
+        self.assertEqual(self.product1.quantity_svl, 1)
+
     def test_validate_draft_kit(self):
         """
         Create a draft receipt, add a kit to its move lines and directly

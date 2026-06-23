@@ -532,7 +532,7 @@ class ProductProduct(models.Model):
                 if product.valuation == 'real_time':
                     current_real_time_svls |= svl_to_vacuum
             real_time_svls_to_vacuum |= current_real_time_svls
-        ValuationLayer.create(new_svl_vals_manual)
+        manual_vacuum_svls = ValuationLayer.create(new_svl_vals_manual)
         vacuum_svls = ValuationLayer.create(new_svl_vals_real_time)
 
         # If some negative stock were fixed, we need to recompute the standard price.
@@ -546,6 +546,10 @@ class ProductProduct(models.Model):
 
         vacuum_svls._validate_accounting_entries()
         self._create_fifo_vacuum_anglo_saxon_expense_entries(zip(vacuum_svls, real_time_svls_to_vacuum))
+        self._post_fifo_vacuum(manual_vacuum_svls | vacuum_svls)
+
+    def _post_fifo_vacuum(self, vacuum_svls):
+        return
 
     @api.model
     def _create_fifo_vacuum_anglo_saxon_expense_entries(self, vacuum_pairs):

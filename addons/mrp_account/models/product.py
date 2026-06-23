@@ -3,7 +3,7 @@
 
 from odoo import fields, models
 from odoo.osv import expression
-from odoo.tools import float_round, groupby
+from odoo.tools import float_compare, float_is_zero, float_round, groupby
 
 
 class ProductTemplate(models.Model):
@@ -31,6 +31,55 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _name = 'product.product'
     _inherit = 'product.product'
+
+    def _post_fifo_vacuum(self, vacuum_svls):
+        super()._post_fifo_vacuum(vacuum_svls)
+        mo_vacuum_svls = vacuum_svls.filtered(
+            lambda s: s.stock_move_id.raw_material_production_id.state == 'done'
+        )
+        if not mo_vacuum_svls:
+            return
+        new_svl_vals = []
+        for component_vacuum_svl in mo_vacuum_svls:
+            mo = component_vacuum_svl.stock_move_id.raw_material_production_id
+            finished_moves = mo.move_finished_ids.filtered(
+                lambda m: m.state == 'done' and m.product_id == mo.product_id
+            )
+            if not finished_moves:
+                continue
+            correction = -component_vacuum_svl.value
+            if component_vacuum_svl.currency_id.is_zero(correction):
+                continue
+            total_qty = sum(finished_moves.mapped('quantity'))
+            for finished_move in finished_moves:
+                move_correction = correction * finished_move.quantity / total_qty if total_qty else correction
+                move_correction = component_vacuum_svl.currency_id.round(move_correction)
+                if component_vacuum_svl.currency_id.is_zero(move_correction):
+                    continue
+                base_svl = finished_move.stock_valuation_layer_ids.filtered(
+                    lambda s: not s.stock_valuation_layer_id
+                    and float_compare(s.quantity, 0, precision_rounding=s.product_id.uom_id.rounding) > 0
+                )[:1]
+                if base_svl:
+                    move_qty = finished_move.product_uom._compute_quantity(
+                        finished_move.quantity, finished_move.product_id.uom_id)
+                    remaining_qty = sum(finished_move.stock_valuation_layer_ids.mapped('remaining_qty'))
+                    if not float_is_zero(remaining_qty, precision_rounding=finished_move.product_id.uom_id.rounding) and not float_is_zero(move_qty, precision_rounding=finished_move.product_uom.rounding):
+                        base_svl.sudo().remaining_value += move_correction * remaining_qty / move_qty
+                new_svl_vals.append({
+                    'product_id': finished_move.product_id.id,
+                    'value': move_correction,
+                    'unit_cost': 0,
+                    'quantity': 0,
+                    'remaining_qty': 0,
+                    'stock_move_id': finished_move.id,
+                    'company_id': finished_move.company_id.id,
+                    'description': component_vacuum_svl.description,
+                    'stock_valuation_layer_id': base_svl.id if base_svl else False,
+                })
+        if new_svl_vals:
+            finished_vacuum_svls = self.env['stock.valuation.layer'].sudo().create(new_svl_vals)
+            finished_vacuum_svls._validate_accounting_entries()
 
     def button_bom_cost(self):
         self.ensure_one()
