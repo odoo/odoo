@@ -34,7 +34,7 @@ export class HrEmployee extends models.ServerModel {
         const employeeRoles = {
             2: "manager",
             3: "cashier",
-            4: "minimal",
+            4: "restrictive",
         };
         records.forEach((emp) => {
             emp._role = employeeRoles[emp.id] || "manager";

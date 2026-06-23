@@ -76,9 +76,9 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         })
 
         cls.main_pos_config.write({
-            'basic_employee_ids': [Command.link(cls.emp1.id), Command.link(cls.emp2.id), Command.link(cls.emp3.id)],
-            'minimal_employee_ids': [Command.link(cls.emp4.id)],
-            'advanced_employee_ids': [Command.link(cls.manager1.id), Command.link(cls.manager2.id)]
+            'cashier_employee_ids': [Command.link(cls.emp1.id), Command.link(cls.emp2.id), Command.link(cls.emp3.id)],
+            'restrictive_employee_ids': [Command.link(cls.emp4.id)],
+            'manager_employee_ids': [Command.link(cls.manager1.id), Command.link(cls.manager2.id)]
         })
 
 
@@ -91,7 +91,7 @@ class TestUi(TestPosHrHttpCommon):
             ]
         })
         self.main_pos_config.update({
-            'advanced_employee_ids': [(6, 0, self.admin.ids)],
+            'manager_employee_ids': [(6, 0, self.admin.ids)],
         })
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_pos_tour("PosHrTour", login="pos_admin")
@@ -117,10 +117,10 @@ class TestUi(TestPosHrHttpCommon):
             login="pos_admin",
         )
 
-    def test_basic_user_cannot_close_session(self):
+    def test_cashier_user_cannot_close_session(self):
         # open a session, the /pos/ui controller will redirect to it
-        self.main_pos_config.advanced_employee_ids = []
-        self.main_pos_config.basic_employee_ids = [
+        self.main_pos_config.manager_employee_ids = []
+        self.main_pos_config.cashier_employee_ids = [
             Command.link(self.emp3.id),
         ]
         self.main_pos_config.with_user(self.pos_admin).open_ui()
@@ -131,9 +131,9 @@ class TestUi(TestPosHrHttpCommon):
             login="pos_user",
         )
 
-    def test_basic_user_can_change_price(self):
-        self.main_pos_config.advanced_employee_ids = []
-        self.main_pos_config.basic_employee_ids = [
+    def test_cashier_user_can_change_price(self):
+        self.main_pos_config.manager_employee_ids = []
+        self.main_pos_config.cashier_employee_ids = [
             Command.link(self.emp3.id),
             Command.link(self.admin.id)
         ]
@@ -144,7 +144,7 @@ class TestUi(TestPosHrHttpCommon):
 
         self.start_tour(
             "/pos/ui?config_id=%d" % self.main_pos_config.id,
-            "test_basic_user_can_change_price",
+            "test_cashier_user_can_change_price",
             login="pos_user",
         )
 
@@ -152,7 +152,7 @@ class TestUi(TestPosHrHttpCommon):
         """When changes in employee rights (advanced/basic/minimal) should
         be reflected directly and not read from the cache."""
 
-        self.main_pos_config.advanced_employee_ids = self.pos_admin.employee_id
+        self.main_pos_config.manager_employee_ids = self.pos_admin.employee_id
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour(
             "/pos/ui?config_id=%d" % self.main_pos_config.id,
@@ -180,13 +180,13 @@ class TestUi(TestPosHrHttpCommon):
         self.assertEqual(order.cashier, "Test Employee 3")
         self.assertEqual(order.employee_id.display_name, "Test Employee 3")
 
-    def test_minimal_employee_refund(self):
-        minimal_emp = self.env['hr.employee'].create({
-            'name': 'Minimal Employee',
+    def test_restrictive_employee_refund(self):
+        restrictive_emp = self.env['hr.employee'].create({
+            'name': 'Restrictive Employee',
             "company_id": self.env.company.id,
         })
         self.main_pos_config.update({
-            'minimal_employee_ids': [(6, 0, minimal_emp.ids)],
+            'restrictive_employee_ids': [(6, 0, restrictive_emp.ids)],
         })
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         current_session = self.main_pos_config.current_session_id
@@ -216,7 +216,7 @@ class TestUi(TestPosHrHttpCommon):
             'payment_method_id': self.bank_payment_method.id
         })
         order_payment.with_context(**payment_context).check()
-        self.start_pos_tour("test_minimal_employee_refund", login="pos_admin")
+        self.start_pos_tour("test_restrictive_employee_refund", login="pos_admin")
 
     def test_cost_and_margin_visibility(self):
         self.product_a.available_in_pos = True
@@ -236,7 +236,7 @@ class TestUi(TestPosHrHttpCommon):
         self.env['pos.config'].create({
             'name': 'My cute pos config',
             'module_pos_hr': True,
-            'advanced_employee_ids': [(6, 0, self.emp2.ids)]
+            'manager_employee_ids': [(6, 0, self.emp2.ids)]
         })
 
     def test_go_backend(self):

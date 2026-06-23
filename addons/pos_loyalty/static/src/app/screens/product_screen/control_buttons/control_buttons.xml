@@ -26,7 +26,7 @@
                 btnClasses="'btn-secondary '"
                 onClick="() => this.clickPromoCode()">
             </t>
-            <t t-if="this.pos.models['loyalty.program'].length and this.pos.cashier._role !== 'minimal'" t-call="point_of_sale.controlButton"
+            <t t-if="this.pos.models['loyalty.program'].length and this.pos.cashier._role !== 'restrictive'" t-call="point_of_sale.controlButton"
                 iconClasses="'fa fa-star'"
                 btnText.translate="Reward"
                 btnClasses="'btn-secondary ' + (this.state.nbrRewards ? ' highlight' : 'disabled')"
@@ -35,7 +35,7 @@
             </t>
         </xpath>
         <xpath expr="//t[@t-if='this.props.showRemainingButtons']/div/t[@name='o_pricelist_button']" position="before">
-             <t t-if="this.pos.models['loyalty.program'].some((p) => ['coupons', 'promotion'].includes(p.program_type)) and this.pos.cashier._role !== 'minimal'" t-call="point_of_sale.controlButton"
+             <t t-if="this.pos.models['loyalty.program'].some((p) => ['coupons', 'promotion'].includes(p.program_type)) and this.pos.cashier._role !== 'restrictive'" t-call="point_of_sale.controlButton"
                  iconClasses="'fa fa-star'"
                  btnText.translate="Reset Programs"
                  btnClasses="'btn-secondary '"
