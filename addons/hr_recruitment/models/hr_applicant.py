@@ -258,6 +258,7 @@ class HrApplicant(models.Model):
                         email_normalized: {'lang': self.env.lang}
                     },
                 )
+                applicant._track_record(applicant.partner_id, ['name', 'email', 'phone'], body="Contact has been updated")
             if applicant.partner_name and applicant.partner_name != applicant.partner_id.name:
                 applicant.partner_id.name = applicant.partner_name
             if email_normalized and email_normalized != applicant.partner_id.email:
