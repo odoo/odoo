@@ -2,8 +2,8 @@ import {
     clickOnSave,
     clickOnEditAndWaitEditMode,
     clickOnExtraMenuItem,
-    registerWebsitePreviewTour,
     insertSnippet,
+    switchToLang,
 } from "@website/js/tours/tour_utils";
 import { registry } from "@web/core/registry";
 
@@ -40,17 +40,6 @@ const closeErrorDialog = [
         trigger: "body:not(:has(.modal))",
     },
 ];
-const switchTo = (lang) => [
-    {
-        content: `Switch to ${lang}`,
-        trigger: `:iframe .js_change_lang[data-url_code='${lang}']`,
-        run: "click",
-    },
-    {
-        content: `Wait until ${lang} is applied`,
-        trigger: `:iframe html[lang*="${lang}"]`,
-    },
-];
 const goToMenuItem = [
     clickOnExtraMenuItem({}, true),
     {
@@ -81,10 +70,10 @@ registry.category("web_tour.tours").add("test_restricted_editor_only", {
             },
         },
         ...clickOnSave(),
-        ...switchTo("fr"),
+        ...switchToLang("fr"),
         ...translate,
         ...closeErrorDialog,
-        ...switchTo("en"),
+        ...switchToLang("en"),
         // Model item
         {
             trigger: ":iframe body:contains(welcome to your)",
@@ -104,20 +93,14 @@ registry.category("web_tour.tours").add("test_restricted_editor_only", {
             },
         },
         ...clickOnSave(),
-        ...switchTo("fr"),
+        ...switchToLang("fr"),
         ...translate,
         ...closeErrorDialog,
     ],
 });
 
-registerWebsitePreviewTour(
-    "test_restricted_editor_test_admin",
-    {
-        // Remove this key to make the tour fail with error:
-        // "Element has not been found." at step "Open Edit menu"
-        undeterministicTour_doNotCopy: true,
-    },
-    () => [
+registry.category("web_tour.tours").add("test_restricted_editor_test_admin", {
+    steps: () => [
         // Home
         checkNoTranslate,
         ...clickOnEditAndWaitEditMode(),
@@ -126,10 +109,10 @@ registerWebsitePreviewTour(
             trigger: "#snippet_groups .o_snippet[name='Intro'].o_disabled",
         },
         ...clickOnSave(),
-        ...switchTo("fr"),
+        ...switchToLang("fr"),
         ...translate,
         ...closeErrorDialog,
-        ...switchTo("en"),
+        ...switchToLang("en"),
         // Model item
         ...goToMenuItem,
         checkNoTranslate,
@@ -145,7 +128,7 @@ registerWebsitePreviewTour(
             run: "editor New value",
         },
         ...clickOnSave(),
-        ...switchTo("fr"),
+        ...switchToLang("fr"),
         ...translate,
         {
             content: "Close the dialog",
@@ -172,8 +155,8 @@ registerWebsitePreviewTour(
             run: "editor potentiel.",
         },
         ...clickOnSave(),
-    ]
-);
+    ],
+});
 
 registry.category("web_tour.tours").add("test_restricted_editor_tester", {
     steps: () => [

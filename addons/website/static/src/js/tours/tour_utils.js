@@ -561,6 +561,34 @@ export function switchWebsite(websiteId, websiteName) {
     ];
 }
 
+export function switchToLang(lang) {
+    return [
+        {
+            content: `Switch to ${lang}`,
+            trigger: `:iframe .js_change_lang[data-url_code^='${lang}']`,
+            // After clicking a language link, the iframe navigates to a new document.
+            // We must wait for the old contentDocument to be replaced and the new
+            // one to be fully loaded before proceeding, otherwise the next steps
+            // may run against the old (unloading) or partially loaded document.
+            async run({ anchor, click }) {
+                const iframe = anchor.ownerDocument.defaultView.frameElement;
+                const oldDoc = iframe.contentDocument;
+                await click(anchor);
+                while (!iframe.contentDocument || iframe.contentDocument === oldDoc) {
+                    await new Promise((r) => setTimeout(r, 50));
+                }
+                while (iframe.contentDocument.readyState !== "complete") {
+                    await new Promise((r) => setTimeout(r, 50));
+                }
+            },
+        },
+        {
+            content: `Wait until ${lang} is applied`,
+            trigger: `:iframe html[lang^="${lang}"]`,
+        },
+    ];
+}
+
 /**
  * Switches to a different website by clicking on the website switcher.
  * This function can only be used during test tours as it requires
