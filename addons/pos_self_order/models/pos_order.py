@@ -58,28 +58,31 @@ class PosOrder(models.Model):
     def remove_from_ui(self, server_ids):
         order_ids = self.env['pos.order'].browse(server_ids)
         order_ids.state = 'cancel'
-        self._send_notification(order_ids)
+        order_ids._notify_update_to_all_pos_devices()
         return super().remove_from_ui(server_ids)
 
-    @api.model
-    def sync_from_ui(self, orders):
-        result = super().sync_from_ui(orders)
-        order_ids = self.browse([order['id'] for order in result['pos.order'] if order.get('id')])
-        self._send_notification(order_ids)
+    def _notify_update_to_all_pos_devices(self):
+        result = super()._notify_update_to_all_pos_devices()
+        for config in self.config_id:
+            config._notify('ORDER_STATE_CHANGED', {})
+
+        kiosk_orders = self.filtered(lambda o: o.source == 'kiosk')
+        if kiosk_orders:
+            sessions = self.env['pos.session'].search([(
+                'state', '!=', 'closed',
+            )])
+            # we can remove order config, it was already notified in the super call
+            configs = sessions.config_id - self.config_id
+            for config in configs:
+                config.notify_synchronisation(
+                    config.current_session_id.id,
+                    self.env.context.get('device_identifier', 0),
+                )
+
         return result
 
-    def action_pos_order_cancel(self):
-        orders = super().action_pos_order_cancel()
-        success_orders_ids = [o['id'] for o in orders['pos.order'] if o['state'] == 'cancel']
-        orders_ids = self.browse(success_orders_ids)
-        self._send_notification(orders_ids)
-        return orders
-
     def _send_notification(self, order_ids):
-        config_ids = order_ids.config_id
-        for config in config_ids:
-            config.notify_synchronisation(config.current_session_id.id, self.env.context.get('device_identifier', 0))
-            config._notify('ORDER_STATE_CHANGED', {})
+        pass  # TODO: remove in master
 
     def _send_self_order_receipt(self):
         self.ensure_one()
@@ -116,7 +119,7 @@ class PosOrder(models.Model):
         })
         if payment_result == 'Success':
             self._send_self_order_receipt()
-            self._send_order()
+            self._notify_update_to_all_pos_devices()
 
     def _load_pos_self_data_fields(self, config):
         return ['id', 'uuid', 'name', 'display_name', 'access_token', 'last_order_preparation_change', 'date_order', 'amount_total', 'amount_paid', 'amount_return', 'user_id', 'amount_tax', 'lines', 'pricelist_id', 'company_id', 'country_code', 'sequence_number', 'session_id',
