@@ -152,7 +152,6 @@ class MailingMailingTest(models.TransientModel):
                     (Markup("<br/>") + mail_sudo.failure_reason)
                 )
 
-        success_count = len(mails_sudo.filtered(lambda m: m.state == 'sent'))
         # manually delete the emails since we passed 'auto_delete: False'
         mails_sudo.unlink()
 
@@ -160,26 +159,3 @@ class MailingMailingTest(models.TransientModel):
             self.mass_mailing_id._message_log(body=Markup('<ul>%s</ul>') % Markup().join(
                 [Markup('<li>%s</li>') % notification_message for notification_message in notification_messages]
             ))
-
-        total = len(valid_emails) + len(invalid_candidates)
-        failed_count = total - success_count
-        if failed_count > 0:
-            notif_message = _(
-                'Test email sent to %(success)s recipient(s), could not send to %(failed)s.',
-                success=success_count, failed=failed_count,
-            )
-        else:
-            notif_message = _(
-                'Test email sent to %(success)s recipient(s).',
-                success=success_count,
-            )
-
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'type': 'info',
-                'message': notif_message,
-                'next': {'type': 'ir.actions.act_window_close'},
-            },
-        }
