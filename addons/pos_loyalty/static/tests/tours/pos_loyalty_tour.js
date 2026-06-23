@@ -583,7 +583,7 @@ registry.category("web_tour.tours").add("PosLoyaltyPromocodePricelist", {
             Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Test Product 1", "1"),
             PosLoyalty.enterCode("hellopromo"),
-            PosLoyalty.orderTotalIs("25.87"),
+            PosLoyalty.orderTotalIs("25.88"),
         ].flat(),
 });
 
@@ -873,7 +873,22 @@ registry.category("web_tour.tours").add("test_discount_count_sale_report", {
             ProductScreen.addOrderline("Test Product 1", "1"),
             ProductScreen.totalAmountIs("57.50"),
             ProductScreen.clickNumpad("%", "5"),
-            ProductScreen.totalAmountIs("54.62"),
-            PosLoyalty.finalizeOrder("Cash", "54.62"),
+            ProductScreen.totalAmountIs("54.63"),
+            PosLoyalty.finalizeOrder("Cash", "54.63"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_reward_line_tax_grouping_key", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Test Product 1", "1.00"),
+            ProductScreen.totalAmountIs("82.78"),
+            ProductScreen.checkTaxAmount("14.37"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.isShown(),
         ].flat(),
 });

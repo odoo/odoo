@@ -101,4 +101,7 @@ patch(PosOrderline.prototype, {
         }
         return super.isServiceFeeApplicable?.() ?? true;
     },
+    isRefund() {
+        return super.isRefund(...arguments) && !this.is_reward_line;
+    },
 });
