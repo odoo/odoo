@@ -7,6 +7,8 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
+from odoo.orm.fields import Field
+from odoo.tools import SQL
 
 FIGURE_TYPE_SELECTION_VALUES = [
     ('monetary', "Monetary"),
@@ -51,7 +53,16 @@ class AccountReport(models.Model):
 
     name = fields.Char(string="Name", required=True, translate=True)
     sequence = fields.Integer(string="Sequence")
-    active = fields.Boolean(string="Active", default=True)
+    active = fields.Boolean(tracking=True, compute="_compute_active", compute_sql="_compute_sql_active", inverse="_inverse_active", compute_sudo=False)
+    active_fallback = fields.Boolean(default=True)
+    # In this case we need a selection field because in DB a False boolean is just not set, in this case we need a differenciation of Null an False
+    active_selection = fields.Selection(
+        selection=[
+            ('False', "False"),
+            ('True', "True")
+        ],
+        required=False,
+        company_dependent=True)
     line_ids = fields.One2many(string="Lines", comodel_name='account.report.line', inverse_name='report_id')
     groupby = fields.Char(
         string="Group By",
@@ -347,6 +358,19 @@ class AccountReport(models.Model):
 
             old_report.column_ids.copy({'report_id': new_report.id})
         return new_reports
+
+    @api.depends_context('company')
+    def _compute_active(self):
+        for record in self:
+            record.active = record.active_selection == 'True' if record.active_selection else record.active_fallback
+    
+    def _compute_sql_active(self, table):
+        return SQL("COALESCE(COALESCE(%(active_selection)s = 'True', %(active_selection)s = 'False'), %(active_fallback)s)", active_selection = table.active_selection, active_fallback=table.active_fallback)
+
+    @api.onchange('active')
+    def _inverse_active(self):
+        for record in self:
+            record.active_selection = str(record.active)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_no_variant(self):
