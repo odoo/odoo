@@ -571,7 +571,17 @@ Please change the quantity done or the rounding precision in your settings.""",
         for warehouse, moves_ids in outgoing_unreserved_moves_per_warehouse.items():
             if not warehouse:  # No prediction possible if no warehouse.
                 continue
+<<<<<<< 6a84d3e519892be333552e2e0ebf8da87e0a760c
             moves_per_location = self.browse(moves_ids).grouped('location_id')
+||||||| 6d1d4b53d7af14d2b1988907184276fa0aa6ba35
+            moves = self.browse(moves_ids)
+            moves_per_location = defaultdict(lambda: self.env['stock.move'])
+            for move in moves:
+                moves_per_location[move.location_id] |= move
+=======
+            moves = self.browse(moves_ids)
+            moves_per_location = moves.grouped('location_id')
+>>>>>>> 1fc6d68e48fe5fc3339cac399b9ac9a55159e9dc
             for location, mvs in moves_per_location.items():
                 forecast_info = mvs._get_forecast_availability_outgoing(warehouse, location)
                 for move in mvs:
