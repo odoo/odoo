@@ -30,6 +30,16 @@ class SaleOrder(models.Model):
         compute_sudo=True,  # Need access to `transaction_ids`
     )
 
+    @api.depends_context("skip_pending_delivery_payment")
+    def _compute_amount_paid(self):
+        super()._compute_amount_paid()
+
+        if self.env.context.get("skip_pending_delivery_payment"):
+            for order in self:
+                order.amount_paid -= sum(
+                    order.transaction_ids._filtered_pending_delivery_payment().mapped("amount")
+                )
+
     @api.depends("order_line")
     def _compute_is_service_products(self):
         for so in self:
@@ -54,6 +64,7 @@ class SaleOrder(models.Model):
         "order_line.price_total",
         "amount_paid",
         "transaction_ids.state",
+        "transaction_ids.payment_id",
     )
     def _compute_amount_on_delivery(self):
         """Compute the amount to collect on the next delivery.
@@ -64,7 +75,7 @@ class SaleOrder(models.Model):
         """
         orders_pending_delivery_payment = self.filtered(
             lambda order: order.transaction_ids._filtered_pending_delivery_payment()
-        )
+        ).with_context(skip_pending_delivery_payment=True)
         (self - orders_pending_delivery_payment).amount_on_delivery = 0
 
         # Use `_prepare_qty_delivered` because `qty_delivered` is stored and cannot depend on the

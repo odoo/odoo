@@ -65,7 +65,7 @@ class TestPayOnDelivery(CashOnDeliveryCommon):
         self.assertEqual(self.cod_tx.state, "cancel", msg="Canceled in favor of its children")
         self.assertRecordValues(self.cod_tx.child_transaction_ids, [
             {"state": "done", "amount": amount_on_delivery},
-            {"state": "pending", "amount": amount_total - amount_on_delivery},
+            {"state": "done", "amount": amount_total - amount_on_delivery},
         ])  # fmt: skip
 
     def test_confirm_order_with_decreased_total(self):

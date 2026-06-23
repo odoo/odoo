@@ -84,7 +84,7 @@ class TestPayOnDelivery(CashOnDeliveryCommon):
         self.assertEqual(self.cod_tx.state, 'cancel', msg="Should be splitted")
         self.assertRecordValues(self.cod_tx.child_transaction_ids, [
             {'state': 'done', 'amount': amount_on_delivery},
-            {'state': 'pending', 'amount': self.sale_order.amount_total - amount_on_delivery},
+            {'state': 'done', 'amount': self.sale_order.amount_total - amount_on_delivery},
         ])  # fmt: skip
 
     def test_no_followup_if_no_backorder(self):
@@ -129,17 +129,17 @@ class TestPayOnDelivery(CashOnDeliveryCommon):
         wizard = self.assert_opens_wizard(self.env, orders.picking_ids.button_validate())
         self.assertEqual(wizard.order_id, order1)
         # Should not have confirmed the transactions yet
-        self.assertRecordValues(cod_txs, [{'state': 'pending'}, {'state': 'pending'}])
+        self.assertEqual(len(cod_txs.payment_id), 0)
 
         # 2. Click "Confirm Payment" which should open the second "Pay on Delivery" wizard
         wizard = self.assert_opens_wizard(wizard.env, wizard.action_confirm_payment())
         self.assertEqual(wizard.order_id, order2)
         # Should not have confirmed the transactions yet
-        self.assertRecordValues(cod_txs, [{'state': 'pending'}, {'state': 'pending'}])
+        self.assertEqual(len(cod_txs.payment_id), 0)
 
         # 3. Click "Confirm Payment" for the final time
         action = wizard.action_confirm_payment()
 
         self.assertIs(action, True, msg="Last order without COD doesn't need payment confirmation")
         # Should confirm all the transactions at the end
-        self.assertRecordValues(cod_txs, [{'state': 'done'}, {'state': 'done'}])
+        self.assertEqual(len(cod_txs.payment_id), 2)

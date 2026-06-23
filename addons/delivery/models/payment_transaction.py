@@ -15,7 +15,8 @@ class PaymentTransaction(models.Model):
     def _filtered_pending_delivery_payment(self):
         """Filter transactions waiting for a payment to be confirmed on delivery."""
         return self.filtered_domain(
-            self._get_paid_on_delivery_domain() & Domain("state", "=", "pending")
+            self._get_paid_on_delivery_domain()
+            & Domain([("state", "=", "done"), ("payment_id", "=", False)])
         )
 
     def _get_paid_on_delivery_domain(self):
@@ -23,8 +24,8 @@ class PaymentTransaction(models.Model):
         return Domain("payment_method_id.code", "in", pms_on_delivery)
 
     def _confirm_payment_on_delivery(self, *, orders_not_to_followup=None):
-        """Confirm transactions created using a "Pay on Delivery" payment method, and trigger the
-        post process cron.
+        """Confirm a payment was collected for a transaction using a "Pay on Delivery" payment
+        method, and create the account.payment records.
 
         If the order's `amount_on_delivery` to be collected is lower than the remaining balance,
         the last transaction is split into two new transactions: 1. to confirm the
@@ -61,9 +62,11 @@ class PaymentTransaction(models.Model):
                     )
                 )
 
-            # Cancel all the other pending transactions linked to the same SO.
+            # Cancel all the other transactions pending delivery and linked to the same SO.
             if old_txs := pending_delivery_txs - last_tx:
-                old_txs.with_context(payment_safe_write=True)._set_canceled_in_favor_of(last_tx)
+                old_txs.with_context(payment_safe_write=True)._set_canceled_in_favor_of(
+                    last_tx, extra_allowed_states=("done",)
+                ).is_post_processed = True  # Not sure about this...
 
             delivered_tx, followup_tx = last_tx._split_on_delivered_amount(
                 skip_followup=order in orders_not_to_followup
@@ -71,10 +74,9 @@ class PaymentTransaction(models.Model):
             delivered_txs |= delivered_tx
             followup_txs |= followup_tx
 
-        delivered_txs.with_context(payment_safe_write=True)._set_done()
-        followup_txs.with_context(payment_safe_write=True)._set_pending()
-        if delivered_txs:
-            self.env.ref("payment.cron_post_process_payment_tx")._trigger()
+            delivered_tx.with_company(delivered_tx.company_id).with_context(
+                payment_safe_write=True
+            )._create_payment(log_action=True)
 
         return delivered_txs
 
@@ -113,7 +115,9 @@ class PaymentTransaction(models.Model):
         split_vals = self._prepare_delivery_transaction_split_vals(skip_followup=skip_followup)
 
         txs = self.create(split_vals)
-        self.with_context(payment_safe_write=True)._set_canceled_in_favor_of(txs)
+        self.with_context(payment_safe_write=True)._set_canceled_in_favor_of(
+            txs, extra_allowed_states=("done",)
+        ).is_post_processed = True  # Not sure about this...
 
         return txs[:1], txs[1:]
 
@@ -124,6 +128,8 @@ class PaymentTransaction(models.Model):
         base_vals = self.copy_data({
             "source_transaction_id": source_tx.id,
             "sale_order_ids": [Command.set(order.ids)],
+            "state": "done",
+            "is_post_processed": True,
         })[0]
 
         def compute_reference(idx_):
@@ -141,10 +147,11 @@ class PaymentTransaction(models.Model):
 
         return split_vals
 
-    def _set_canceled_in_favor_of(self, favored_txs):
-        self._set_canceled(
+    def _set_canceled_in_favor_of(self, favored_txs, extra_allowed_states=()):
+        return self._set_canceled(
             state_message=self.env._(
                 "Canceled in favor of %(favored_txs)s.",
                 favored_txs=", ".join(favored_txs.mapped("display_name")),
-            )
+            ),
+            extra_allowed_states=extra_allowed_states,
         )
