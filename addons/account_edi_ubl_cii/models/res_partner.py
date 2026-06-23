@@ -135,6 +135,23 @@ class ResPartner(models.Model):
     )
     available_peppol_eas = fields.Json(compute='_compute_available_peppol_eas')
 
+    @api.constrains('peppol_eas')
+    def _check_peppol_eas(self):
+        deprecated_eas = {
+            '0037': "0216",
+            '0213': "0216",
+            '9955': "0007",
+            '0193': "0208",
+        }
+        for partner in self:
+            eas_code = partner.peppol_eas
+            if eas_code in deprecated_eas:
+                raise ValidationError(_(
+                    "Peppol EAS code %(eas_code)s is deprecated and can no longer be used. Please use %(fallback)s instead.",
+                    eas_code=eas_code,
+                    fallback=deprecated_eas[eas_code],
+                ))
+
     @api.constrains('peppol_endpoint')
     def _check_peppol_fields(self):
         for partner in self:
