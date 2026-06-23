@@ -417,11 +417,13 @@ class ResPartner(models.Model):
     @api.depends_context("uid")
     @api.depends("user_ids.active", "user_ids.share")
     def _compute_main_user_id(self):
-        for partner in self:
-            if self.env.user.partner_id == partner:
-                partner.main_user_id = self.env.user
-                continue
-            users = partner.user_ids.filtered(lambda u: u.active).with_prefetch(self.user_ids.ids)
+        partners = self
+        if partner := partners & self.env.user.partner_id:
+            partner.main_user_id = self.env.user
+            partners -= partner
+        active_users = partners.user_ids.filtered('active')
+        for partner in partners:
+            users = partner.user_ids & active_users
             # Special case for OdooBot as its user might be archived.
             if not users and partner.id == self.env["ir.model.data"]._xmlid_to_res_id("base.partner_root"):
                 partner.main_user_id = self.env["ir.model.data"]._xmlid_to_res_id("base.user_root")
