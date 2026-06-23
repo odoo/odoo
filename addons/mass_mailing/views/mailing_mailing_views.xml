@@ -224,7 +224,7 @@
                                             options="{'no_quick_create': True, 'on_tag_click': 'open_form', 'color_field': 'color'}"
                                             readonly="state in ('sending', 'done')"/>
                                         <div
-                                            invisible="not mailing_filter_ids" 
+                                            invisible="not mailing_filter_ids or state == 'done'" 
                                             class="o_mass_mailing_recipients_count d-inline-flex align-items-baseline gap-1 text-nowrap ms-2 text-muted">
                                             <field name="recipients_count" class="lh-1"/>
                                             <span>Recipients</span>
