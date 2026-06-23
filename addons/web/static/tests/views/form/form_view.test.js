@@ -13,6 +13,9 @@ import {
     queryAllAttributes,
     queryAllTexts,
     queryFirst,
+    waitFor,
+} from "@odoo/hoot-dom";
+import {
     animationFrame,
     Deferred,
     mockTimeZone,
@@ -13685,7 +13688,6 @@ test(`cached web_read: don't cache if action have cache:false`, async () => {
 
 test(`cached web_read - don't loose changes`, async () => {
     let def = null;
-    onRpc("web_read", async () => {
         expect.step("web_read");
         return def;
     });
@@ -13856,9 +13858,22 @@ test(`Do not mix dependencies across multiple widgets in multiple views`, async 
 
     Partner._records[1].child_ids = [1];
 
+test("Deletion raises a UserError, archive action available", async () => {
+    Partner._fields.active = fields.Boolean({ default: true });
+    onRpc(({ method, args }) => {
+        if (method === "unlink") {
+            expect.step(method);
+            expect(args).toEqual([[1]]);
+            throw makeServerError({ message });
+        } else if (method === "action_archive") {
+            expect.step(method);
+            expect(args).toEqual([[1]]);
+            return true;
+        }
+    });
+
     await mountView({
         resModel: "partner",
-        type: "form",
         arch: `
             <form>
                 <field name="foo" widget="my_widget"/>
@@ -13930,6 +13945,37 @@ test.tags("desktop");
 test("related field tooltip in debug mode", async () => {
     serverState.debug = "1";
     Partner._fields.related_product_name = fields.Char({ related: "product_id.name" });
+                <field name="foo"/>
+            </form>
+        `,
+        resId: 1,
+        actionMenus: {},
+    });
+
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+
+    await contains(".modal-footer .btn-primary").click()
+
+    expect("h4.modal-title").toHaveText("Archive records");
+    expect("main.modal-body").toHaveText(message);
+    expect(".modal-footer .btn-primary").toHaveText("Archive");
+    expect(".modal-footer .btn-secondary").toHaveText("No, keep it");
+
+    await contains(".modal-footer .btn-primary").click()
+    expect.verifySteps(["unlink", "action_archive"]);
+    expect(".modal").toHaveCount(0);
+});
+
+test("Deletion raises a UserError, archive action not available", async () => {
+    const message = "message generated and tested in python";
+    onRpc(({ method, args }) => {
+        if (method === "unlink") {
+            expect.step(method);
+            expect(args).toEqual([[1]]);
+            throw makeServerError({ message });
+        }
+    });
 
     await mountView({
         resModel: "partner",
@@ -13946,4 +13992,20 @@ test("related field tooltip in debug mode", async () => {
     await runAllTimers();
     expect(`.o-tooltip--technical > li[data-item="related"]`).toHaveCount(1);
     expect(`.o-tooltip--technical > li[data-item="related"]`).toHaveText("Related:product_id.name");
+                <field name="display_name"/>
+            </form>
+        `,
+        resId: 1,
+        actionMenus: {},
+    });
+
+    await toggleActionMenu();
+    await toggleMenuItem("Delete");
+
+    await contains(".modal-footer .btn-primary").click()
+
+    expect.verifySteps(["unlink"]);
+    expect.errors(1);
+    await waitFor(".modal .modal-title:contains(Invalid Operation)");
+    expect.verifyErrors([message]);
 });

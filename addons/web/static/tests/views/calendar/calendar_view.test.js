@@ -12,6 +12,7 @@ import {
     queryOne,
     queryRect,
     runAllTimers,
+    waitFor,
 } from "@odoo/hoot-dom";
 import { mockDate, mockTimeZone, mockTouch } from "@odoo/hoot-mock";
 import { Component, onMounted, onPatched, onWillStart, xml } from "@odoo/owl";
@@ -6254,11 +6255,25 @@ test(`drag and drop events from side panel to schedule them`, async () => {
             stop: serializeDateTime(expectedDate.plus({ hours: 1 })),
         });
         expect.step("write");
+test("Deletion raises a UserError, archive action available", async () => {
+    Event._fields.active = fields.Boolean({ default: true });
+    const message = "message generated and tested in python";
+    onRpc(({ method, args }) => {
+        if (method === "unlink") {
+            expect.step(method);
+            expect(args).toEqual([[4]]);
+            throw makeServerError({ message });
+        } else if (method === "action_archive") {
+            expect.step(method);
+            expect(args).toEqual([[4]]);
+            return true;
+        }
     });
 
     await mountView({
         resModel: "event",
         type: "calendar",
+<<<<<<< HEAD
         arch: `
             <calendar schedule="1" date_start="start" date_stop="stop" mode="week" color="partner_id">
                 <filter name="user_id" avatar_field="image"/>
@@ -6301,11 +6316,40 @@ test(`load more events to schedule`, async () => {
     onRpc("event", "web_search_read", ({ kwargs }) => {
         expect(kwargs.limit).toBe(expectedLimit);
         expect.step("fetch events to schedule");
+=======
+        arch: `<calendar event_open_popup="1" date_start="start" mode="month"/>`,
+    });
+
+    await clickEvent(4);
+    await contains(`.o_cw_popover_delete`).click();
+
+    await contains(".modal-footer .btn-primary").click()
+
+    expect("h4.modal-title").toHaveText("Archive records");
+    expect("main.modal-body").toHaveText(message);
+    expect(".modal-footer .btn-primary").toHaveText("Archive");
+    expect(".modal-footer .btn-secondary").toHaveText("No, keep it");
+
+    await contains(".modal-footer .btn-primary").click()
+    expect.verifySteps(["unlink", "action_archive"]);
+    expect(".modal").toHaveCount(0);
+});
+
+test("Deletion raises a UserError, archive action not available", async () => {
+    const message = "message generated and tested in python";
+    onRpc(({ method, args }) => {
+        if (method === "unlink") {
+            expect.step(method);
+            expect(args).toEqual([[4]]);
+            throw makeServerError({ message });
+        }
+>>>>>>> 5c57fc25a795 ([IMP] web: Archive button in deletion error dialog)
     });
 
     await mountView({
         resModel: "event",
         type: "calendar",
+<<<<<<< HEAD
         arch: `
             <calendar schedule="1" date_start="start" date_stop="stop" mode="week" color="partner_id">
                 <filter name="user_id" avatar_field="image"/>
@@ -6383,4 +6427,17 @@ test(`drag and drop to unschedule`, async () => {
     expect(".o_event_to_schedule_draggable").toHaveText("event 2");
     expect(".o_calendar_sidepanel h5").toBeVisible();
     expect(".o_calendar_sidepanel h5").toHaveText("1 to schedule");
+=======
+        arch: `<calendar event_open_popup="1" date_start="start" mode="month"/>`,
+    });
+
+    await clickEvent(4);
+    await contains(`.o_cw_popover_delete`).click();
+    await contains(".modal-footer .btn-primary").click()
+    expect.verifySteps(["unlink"]);
+
+    expect.errors(1);
+    await waitFor(".modal .modal-title:contains(Invalid Operation)");
+    expect.verifyErrors([message]);
+>>>>>>> 5c57fc25a795 ([IMP] web: Archive button in deletion error dialog)
 });
