@@ -63,21 +63,19 @@ class PaymentProvider(models.Model):
                  environment, and SDK region.
         :rtype: dict
         """
-        configs = {
-            "enabled": {
+        if self.is_live:
+            return {
                 "api_url": "https://openapi-hk.qfapi.com",
                 "sdk_url": "https://cdn-hk.qfapi.com/qfpay_element/qfpay.js",
                 "sdk_env": "prod",
                 "sdk_region": "hk",
-            },
-            "test": {
-                "api_url": "https://openapi-int.qfapi.com",
-                "sdk_url": "https://cdn-int.qfapi.com/qfpay_element/qfpay.js",
-                "sdk_env": "qa",
-                "sdk_region": "qa",
-            },
+            }
+        return {
+            "api_url": "https://openapi-int.qfapi.com",
+            "sdk_url": "https://cdn-int.qfapi.com/qfpay_element/qfpay.js",
+            "sdk_env": "qa",
+            "sdk_region": "qa",
         }
-        return configs[self.state]
 
     def _qfpay_get_inline_form_values(self, pm_code):
         """Return a serialized JSON of the required values to render the inline form.

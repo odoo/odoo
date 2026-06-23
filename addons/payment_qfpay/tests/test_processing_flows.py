@@ -25,19 +25,18 @@ class TestProcessingFlows(QFPayCommon, PaymentHttpCommon):
                 return_value=self.webhook_data,
             ),
             patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
-            ) as process_mock,
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
         ):
             self._make_http_get_request(url, params={"out_trade_no": tx.reference})
 
-        self.assertEqual(process_mock.call_count, 1)
-        self.assertEqual(process_mock.call_args.args[0], "qfpay")
+        self.assertEqual(record_mock.call_count, 1)
 
     @mute_logger("odoo.addons.payment_qfpay.controllers.main")
     def test_redirect_notification_skips_query_for_final_transaction(self):
         """Test that return notifications do not query already finalized transactions."""
         tx = self._create_transaction("direct")
-        tx._set_done()
+        tx.with_context(payment_safe_write=True)._set_done()
         url = self._build_url(const.PAYMENT_RETURN_ROUTE)
 
         with patch(
@@ -57,8 +56,8 @@ class TestProcessingFlows(QFPayCommon, PaymentHttpCommon):
         with (
             patch("odoo.addons.payment.utils.verify_signature") as signature_check_mock,
             patch(
-                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._process"
-            ) as process_mock,
+                "odoo.addons.payment.models.payment_transaction.PaymentTransaction._record"
+            ) as record_mock,
         ):
             self.url_open(
                 url,
@@ -68,5 +67,4 @@ class TestProcessingFlows(QFPayCommon, PaymentHttpCommon):
             )
 
         self.assertEqual(signature_check_mock.call_count, 1)
-        self.assertEqual(process_mock.call_count, 1)
-        self.assertEqual(process_mock.call_args.args[0], "qfpay")
+        self.assertEqual(record_mock.call_count, 1)

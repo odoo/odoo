@@ -97,10 +97,7 @@ class PaymentTransaction(models.Model):
             return None
 
         records = result.get("data") or []
-        payment_data = next(
-            (item for item in records if item.get("out_trade_no") == self.reference),
-            records[0] if records else None,
-        )
+        payment_data = records[0] if records else None
         if not payment_data:
             _logger.info("QFPay: No transaction data returned for %s", self.reference)
         return payment_data
@@ -135,7 +132,7 @@ class PaymentTransaction(models.Model):
 
         # Update the payment method.
         payment_method_code = payment_data.get("pay_type")
-        payment_method = self.env["payment.method"]._get_from_code(
+        payment_method = self.provider_id._get_pm_from_code(
             payment_method_code, mapping=const.PAYMENT_METHODS_MAPPING
         )
         self.payment_method_id = payment_method or self.payment_method_id
@@ -149,7 +146,11 @@ class PaymentTransaction(models.Model):
         elif response_code in const.PAYMENT_STATUS_MAPPING["cancel"]:
             self._set_canceled()
         else:
-            response_message = payment_data.get("resperr") or payment_data.get("respmsg")
+            response_message = (
+                payment_data.get("resperr")
+                or payment_data.get("respmsg")
+                or payment_data.get("errmsg")
+            )
             self._set_error(
                 self.env._(
                     "QFPay: An error occurred "
