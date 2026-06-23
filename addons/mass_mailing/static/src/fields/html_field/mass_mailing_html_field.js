@@ -14,6 +14,10 @@ import { useChildRef, useService } from "@web/core/utils/hooks";
 import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 import { useRecordObserver } from "@web/model/relational_model/utils";
+import { _t } from "@web/core/l10n/translation";
+import { user } from "@web/core/user";
+
+const { DateTime } = luxon;
 
 export class MassMailingHtmlField extends HtmlField {
     static template = "mass_mailing.HtmlField";
@@ -376,6 +380,21 @@ export class MassMailingHtmlField extends HtmlField {
                     return this.editor.shared.operation.getUnlockedDef();
                 }
             });
+        } else {
+            // urgent save: check for a mailing subject, set it if absent
+            // so it doesn't prevent the mailing content from being saved
+            if (!this.props.record.data.subject) {
+                const dtnow_formatted = DateTime.now().toLocaleString(
+                    {
+                        ...DateTime.DATETIME_MED,
+                        year: undefined,
+                    },
+                    { locale: user.lang }
+                );
+                await this.props.record.update({
+                    subject: _t("My New Mailing ") + dtnow_formatted,
+                });
+            }
         }
         return super.commitChanges(...arguments);
     }
