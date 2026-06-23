@@ -1,8 +1,18 @@
 from collections import defaultdict
 
+<<<<<<< e264fedcb3dbc4d2e2d3511ff86f4dd104e63228
 from odoo import Command, _, api, fields, models
 from odoo.tools import float_compare, split_every
 from odoo.tools.constants import IN_MAX
+||||||| b63d211be4bfeea6acfa439b628fa13d3a556091
+from odoo import api, fields, models
+from odoo.tools import float_compare, float_is_zero, split_every
+from odoo.tools.constants import PREFETCH_MAX
+=======
+from odoo import api, fields, models
+from odoo.tools import split_every
+from odoo.tools.constants import PREFETCH_MAX
+>>>>>>> 18aa2fe07c92c6a28d83e4a6a9e07ccf408cd2fc
 
 
 class PosSession(models.Model):
@@ -76,6 +86,7 @@ class PosSession(models.Model):
             pickings = self.env['stock.picking']._create_picking_from_pos_order_lines(location_dest_id, lines, picking_type)
             pickings.write({'pos_session_id': self.id, 'origin': self.name})
 
+<<<<<<< e264fedcb3dbc4d2e2d3511ff86f4dd104e63228
     def _get_rounding_difference_vals(self, amount, amount_converted):
         if self.config_id.cash_rounding:
             partial_args = {
@@ -90,6 +101,59 @@ class PosSession(models.Model):
                 partial_args['account_id'] = self.config_id.rounding_method.profit_account_id.id
                 return self._credit_amounts(partial_args, amount, amount_converted)
         return None
+||||||| b63d211be4bfeea6acfa439b628fa13d3a556091
+    def _get_account_move_data(self, bank_payment_method_diffs):
+        data = super()._get_account_move_data(bank_payment_method_diffs)
+        data = self._create_stock_valuation_lines(data)
+        return data
+
+    def _get_rounding_difference_vals(self, amount, amount_converted):
+        if self.config_id.cash_rounding:
+            partial_args = {
+                'name': 'Rounding line',
+                'move_id': self.move_id.id,
+            }
+            if float_compare(0.0, amount, precision_rounding=self.currency_id.rounding) > 0:    # loss
+                partial_args['account_id'] = self.config_id.rounding_method.loss_account_id.id
+                return self._debit_amounts(partial_args, -amount, -amount_converted)
+
+            if float_compare(0.0, amount, precision_rounding=self.currency_id.rounding) < 0:   # profit
+                partial_args['account_id'] = self.config_id.rounding_method.profit_account_id.id
+                return self._credit_amounts(partial_args, amount, amount_converted)
+
+    def _create_non_reconciliable_move_lines(self, data):
+        data = super()._create_non_reconciliable_move_lines(data)
+        stock_expense = data.get('stock_expense')
+        rounding_difference = data.get('rounding_difference')
+        MoveLine = data.get('MoveLine')
+        rounding_vals = []
+
+        if not float_is_zero(rounding_difference['amount'], precision_rounding=self.currency_id.rounding) or not float_is_zero(rounding_difference['amount_converted'], precision_rounding=self.currency_id.rounding):
+            rounding_vals = [self._get_rounding_difference_vals(rounding_difference['amount'], rounding_difference['amount_converted'])]
+
+        MoveLine.create(
+            [self._get_stock_expense_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in stock_expense.items()]
+            + rounding_vals
+        )
+
+        return data
+=======
+    def _get_account_move_data(self, bank_payment_method_diffs):
+        data = super()._get_account_move_data(bank_payment_method_diffs)
+        data = self._create_stock_valuation_lines(data)
+        return data
+
+    def _create_non_reconciliable_move_lines(self, data):
+        data = super()._create_non_reconciliable_move_lines(data)
+        stock_expense = data.get('stock_expense')
+        MoveLine = data.get('MoveLine')
+
+        MoveLine.create(
+            [self._get_stock_expense_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in stock_expense.items()]
+        )
+
+        return data
+>>>>>>> 18aa2fe07c92c6a28d83e4a6a9e07ccf408cd2fc
 
     def _create_stock_valuation_lines(self, data):
         MoveLine = data.get('MoveLine')
