@@ -1,10 +1,10 @@
 import {
     Component,
+    computed,
     onMounted,
     onWillUnmount,
     onWillUpdateProps,
     props,
-    signal,
     types,
 } from "@odoo/owl";
 
@@ -26,7 +26,12 @@ class AbstractAttachmentView extends Component {
         this.store = useService("mail.store");
         this.uiService = useService("ui");
         this.iframeViewerPdfRef = useRef("iframeViewerPdf");
-        this.thread = signal(null, { type: types.instanceOf(this.store["mail.thread"].Class) });
+        this.thread = computed(() =>
+            this.store["mail.thread"].insert({
+                id: this.props.threadId,
+                model: this.props.threadModel,
+            })
+        );
         useLayoutEffect(
             (el) => {
                 if (el) {
@@ -35,8 +40,6 @@ class AbstractAttachmentView extends Component {
             },
             () => [this.iframeViewerPdfRef.el]
         );
-        this.updateFromProps(this.props);
-        onWillUpdateProps((props) => this.updateFromProps(props));
     }
 
     onClickNext() {
@@ -54,15 +57,6 @@ class AbstractAttachmentView extends Component {
         );
         this.thread().setMainAttachmentFromIndex(
             index <= 0 ? this.thread().attachmentsInWebClientView.length - 1 : index - 1
-        );
-    }
-
-    updateFromProps(props) {
-        this.thread.set(
-            this.store["mail.thread"].insert({
-                id: props.threadId,
-                model: props.threadModel,
-            })
         );
     }
 
