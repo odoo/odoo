@@ -14,19 +14,12 @@ import {
     triggerEvents,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { Store } from "@mail/../tests/mock_server/store";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { press, queryFirst } from "@odoo/hoot-dom";
 import { mockDate, tick } from "@odoo/hoot-mock";
-import {
-    Command,
-    getService,
-    makeKwArgs,
-    onRpc,
-    serverState,
-    withUser,
-} from "@web/../tests/web_test_helpers";
+import { Command, getService, onRpc, serverState, withUser } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
 import { range } from "@web/core/utils/numbers";
@@ -611,10 +604,11 @@ test("[text composer] Opening thread with needaction messages should mark all me
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
         message_id: messageId,
-        store_data: new mailDataHelpers.Store(
-            pyEnv["mail.message"].browse(messageId),
-            makeKwArgs({ for_current_user: true, inbox_fields: true })
-        ).get_result(),
+        store_data: new Store()
+            .add(pyEnv["mail.message"].browse(messageId), "_store_message_fields", {
+                fields_params: { inbox_fields: true },
+            })
+            .as_dict(),
     });
     await contains("button:has(:text('Inbox'))", { contains: [".badge:text('1')"] });
     await click("button:has(:text('General'))");
@@ -668,10 +662,11 @@ test("Opening thread with needaction messages should mark all messages of thread
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
         message_id: messageId,
-        store_data: new mailDataHelpers.Store(
-            pyEnv["mail.message"].browse(messageId),
-            makeKwArgs({ for_current_user: true, inbox_fields: true })
-        ).get_result(),
+        store_data: new Store()
+            .add(pyEnv["mail.message"].browse(messageId), "_store_message_fields", {
+                fields_params: { inbox_fields: true },
+            })
+            .as_dict(),
     });
     await contains("button:has(:text('Inbox'))", { contains: [".badge:text('1')"] });
     await click("button:has(:text('General'))");

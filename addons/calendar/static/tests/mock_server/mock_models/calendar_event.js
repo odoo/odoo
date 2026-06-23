@@ -1,4 +1,3 @@
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { models, fields, serverState } from "@web/../tests/web_test_helpers";
 
 export class CalendarEvent extends models.ServerModel {
@@ -18,7 +17,8 @@ export class CalendarEvent extends models.ServerModel {
         return 3.25;
     }
 
-    _store_calendar_event_fields() {
-        return ["start", "stop", mailDataHelpers.Store.many("partner_ids", ["name"])];
+    _store_calendar_event_fields(res) {
+        res.extend(["name", "start", "stop", "location"]);
+        res.many("partner_ids", ["name"]);
     }
 }

@@ -37,7 +37,7 @@ test("livechat not available", async () => {
     patchWithCleanup(mailDataHelpers, {
         _process_request_for_all(store) {
             super._process_request_for_all(...arguments);
-            store.add({ livechat_available: false });
+            store.add_global_values({ livechat_available: false });
         },
     });
     await start({ authenticateAs: false, waitUntilSubscribe: false });
@@ -57,7 +57,7 @@ test("clicking on notification opens the chat", async () => {
             store.add(pyEnv["im_livechat.channel.rule"].browse(btnAndTextRuleId), {
                 action: "display_button_and_text",
             });
-            store.add({ livechat_rule: btnAndTextRuleId });
+            store.add_global_values({ livechat_rule: btnAndTextRuleId });
         },
     });
     await start({ authenticateAs: false, waitUntilSubscribe: false });

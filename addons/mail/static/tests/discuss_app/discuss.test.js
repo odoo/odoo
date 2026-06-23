@@ -25,7 +25,7 @@ import {
     getChannelCommandsForThread,
 } from "@mail/../tests/mail_test_helpers";
 import { htmlInsertText } from "@mail/../tests/mail_test_helpers_html";
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { Store } from "@mail/../tests/mock_server/store";
 
 import { describe, expect, test } from "@odoo/hoot";
 import {
@@ -44,7 +44,6 @@ import { rpc } from "@web/core/network/rpc";
 import {
     Command,
     getService,
-    makeKwArgs,
     mockService,
     onRpc,
     patchWithCleanup,
@@ -561,10 +560,11 @@ test("receive new needaction messages", async () => {
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
         message_id: messageId_1,
-        store_data: new mailDataHelpers.Store(
-            pyEnv["mail.message"].browse(messageId_1),
-            makeKwArgs({ for_current_user: true, inbox_fields: true })
-        ).get_result(),
+        store_data: new Store()
+            .add(pyEnv["mail.message"].browse(messageId_1), "_store_message_fields", {
+                fields_params: { inbox_fields: true },
+            })
+            .as_dict(),
     });
     await contains("button:has(:text('Inbox'))", { contains: [".badge:text('1')"] });
     await contains(".o-mail-Message");
@@ -585,10 +585,11 @@ test("receive new needaction messages", async () => {
     });
     pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
         message_id: messageId_2,
-        store_data: new mailDataHelpers.Store(
-            pyEnv["mail.message"].browse(messageId_2),
-            makeKwArgs({ for_current_user: true, inbox_fields: true })
-        ).get_result(),
+        store_data: new Store()
+            .add(pyEnv["mail.message"].browse(messageId_2), "_store_message_fields", {
+                fields_params: { inbox_fields: true },
+            })
+            .as_dict(),
     });
     await contains("button:has(:text('Inbox'))", { contains: [".badge:text('2')"] });
     await contains(".o-mail-Message", { count: 2 });
@@ -619,10 +620,11 @@ test("receive a message that is not linked to thread", async () => {
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
         message_id: messageId_1,
-        store_data: new mailDataHelpers.Store(
-            pyEnv["mail.message"].browse(messageId_1),
-            makeKwArgs({ for_current_user: true, inbox_fields: true })
-        ).get_result(),
+        store_data: new Store()
+            .add(pyEnv["mail.message"].browse(messageId_1), "_store_message_fields", {
+                fields_params: { inbox_fields: true },
+            })
+            .as_dict(),
     });
     await contains("button:has(:text('Inbox'))", { contains: [".badge:text('1')"] });
     await contains(".o-mail-Message");

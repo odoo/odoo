@@ -1,6 +1,4 @@
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
-
-import { fields, getKwArgs, makeKwArgs, models, serverState } from "@web/../tests/web_test_helpers";
+import { fields, getKwArgs, models, serverState } from "@web/../tests/web_test_helpers";
 import { Domain } from "@web/core/domain";
 import { deserializeDate, serializeDate, today } from "@web/core/l10n/dates";
 import { sortBy, unique } from "@web/core/utils/arrays";
@@ -38,72 +36,40 @@ export class MailActivity extends models.ServerModel {
         };
     }
 
-    /** @param {number[]} ids */
-    _to_store(store, fields) {
+    _store_activity_fields(res) {
         /** @type {import("mock_models").MailActivityType} */
         const MailActivityType = this.env["mail.activity.type"];
         /** @type {import("mock_models").MailTemplate} */
         const MailTemplate = this.env["mail.template"];
-        store._add_record_fields(
-            this,
-            fields.filter((f) => !["activity_type_id"].includes(f))
-        );
-
-        for (const activity of this) {
-            const [data] = this._read_format(
-                activity.id,
-                ["activity_type_id", "summary"].filter((f) => fields.includes(f))
-            );
-            // simulate computes
-            const activityType = data.activity_type_id
-                ? MailActivityType.find((r) => r.id === data.activity_type_id[0])
-                : false;
-            if (activityType) {
-                data.display_name = activityType.name;
-                data.icon = activityType.icon;
-                data.mail_template_ids = activityType.mail_template_ids.map((template_id) => {
-                    const [template] = MailTemplate.browse(template_id);
-                    return {
-                        id: template.id,
-                        name: template.name,
-                    };
-                });
+        res.attr("activity_category");
+        res.one("activity_type_id", ["name"]);
+        res.extend(["can_write", "create_date"]);
+        res.one("create_uid", (r) => r.one("partner_id", ["name"]));
+        res.extend(["date_deadline", "date_done"]);
+        // mock: display_name / icon / mail_template_ids are derived from the activity type
+        res.attr("display_name", (a) => {
+            if (a.summary) {
+                return a.summary;
             }
-            if (data.summary) {
-                data.display_name = data.summary;
-            }
-            store._add_record_fields(this.browse(activity.id), data);
-        }
-    }
-
-    get _to_store_defaults() {
-        return [
-            "activity_category",
-            "activity_type_id",
-            mailDataHelpers.Store.many(
-                "attachment_ids",
-                makeKwArgs({
-                    fields: ["name"],
-                })
-            ),
-            "can_write",
-            "chaining_type",
-            "create_date",
-            "create_uid",
-            "date_deadline",
-            "date_done",
-            mailDataHelpers.Store.attr("note", (activity) => ["markup", activity.note]),
-            "res_id",
-            "res_model",
-            "state",
-            "summary",
-            mailDataHelpers.Store.one(
-                "user_id",
-                makeKwArgs({
-                    fields: [mailDataHelpers.Store.one("partner_id")],
-                })
-            ),
-        ];
+            const [type] = a.activity_type_id ? MailActivityType.browse(a.activity_type_id) : [];
+            return type ? type.name : a.display_name;
+        });
+        res.attr("icon", (a) => {
+            const [type] = a.activity_type_id ? MailActivityType.browse(a.activity_type_id) : [];
+            return type ? type.icon : a.icon;
+        });
+        res.attr("note", (a) => ["markup", a.note]);
+        res.extend(["res_id", "res_model", "state", "summary"]);
+        res.one("user_id", (r) => r.one("partner_id", "_store_partner_fields"));
+        res.many("attachment_ids", ["name"]);
+        res.many("mail_template_ids", ["name"], {
+            value: (a) => {
+                const [type] = a.activity_type_id
+                    ? MailActivityType.browse(a.activity_type_id)
+                    : [];
+                return MailTemplate.browse(type ? type.mail_template_ids : []);
+            },
+        });
     }
 
     /**

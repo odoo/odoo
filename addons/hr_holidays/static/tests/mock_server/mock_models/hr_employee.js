@@ -20,7 +20,13 @@ export class HrEmployee extends hrModels.HrEmployee {
         },
     ];
 
-    _get_store_avatar_card_fields() {
-        return [...super._get_store_avatar_card_fields(...arguments), "leave_date_to"];
+    _store_avatar_card_fields(res) {
+        super._store_avatar_card_fields(res);
+        res.attr("leave_date_to");
+    }
+
+    _store_im_status_fields(res) {
+        super._store_im_status_fields(res);
+        res.attr("leave_date_to");
     }
 }

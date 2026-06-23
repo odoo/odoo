@@ -251,8 +251,10 @@ test("list activity widget: batch selection from list", async (assert) => {
     await click(".o-mail-ActivityListPopover button");
     await wizardOpened;
     expect(scheduleWizardContext).toEqual({
-        active_ids: [matildeId, marioId],
-        active_id: matildeId,
+        // res.partner is ordered "complete_name ASC" so Mario sorts before Matilde, and active_id
+        // is the first selected record (resIds[0]).
+        active_ids: [marioId, matildeId],
+        active_id: marioId,
         active_model: "res.partner",
     });
     // But when clicking on the clock of one of the non-selected row, it applies to only that row
@@ -281,8 +283,10 @@ test("list activity widget: batch selection from list", async (assert) => {
     await click(".o-mail-ActivityListPopover button");
     await wizardOpened;
     expect(scheduleWizardContext).toEqual({
-        active_ids: [matildeId, marioId],
-        active_id: matildeId,
+        // res.partner is ordered "complete_name ASC" so Mario sorts before Matilde, and active_id
+        // is the first selected record (resIds[0]).
+        active_ids: [marioId, matildeId],
+        active_id: marioId,
         active_model: "res.partner",
     });
     await expect.waitForSteps(["do_action_activity", "do_action_activity", "do_action_activity"]);

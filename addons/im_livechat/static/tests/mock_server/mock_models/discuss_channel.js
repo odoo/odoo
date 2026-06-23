@@ -1,9 +1,11 @@
 import { mailModels } from "@mail/../tests/mail_test_helpers";
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { Store } from "@mail/../tests/mock_server/store";
 
 import { fields, getKwArgs, makeKwArgs, serverState } from "@web/../tests/web_test_helpers";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { ensureArray } from "@web/core/utils/arrays";
+
+const isLivechatChannel = (channel) => channel.channel_type === "livechat";
 
 export class DiscussChannel extends mailModels.DiscussChannel {
     livechat_channel_id = fields.Many2one({ relation: "im_livechat.channel", string: "Channel" }); // FIXME: somehow not fetched properly
@@ -30,9 +32,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                 BusBus._sendone(
                     channel,
                     "mail.record/insert",
-                    new mailDataHelpers.Store()
-                        .add(this.browse(channel_id), makeKwArgs({ fields: ["livechat_end_dt"] }))
-                        .get_result()
+                    new Store().add(this.browse(channel_id), ["livechat_end_dt"]).as_dict()
                 );
             }
         }
@@ -73,61 +73,59 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         ];
     }
 
-    /**
-     * @override
-     * @type {typeof mailModels.DiscussChannel["prototype"]["_to_store"]}
-     */
-    _to_store(store) {
+    _store_channel_fields(res) {
+        super._store_channel_fields(res);
+
+        /** @type {import("mock_models").ImLivechatExpertise} */
+        const ImLivechatExpertise = this.env["im_livechat.expertise"];
+        /** @type {import("mock_models").LivechatChannel} */
+        const LivechatChannel = this.env["im_livechat.channel"];
+        /** @type {import("mock_models").LivechatChannelMemberHistory} */
+        const LivechatChannelMemberHistory = this.env["im_livechat.channel.member.history"];
         /** @type {import("mock_models").ResCountry} */
         const ResCountry = this.env["res.country"];
+        /** @type {import("mock_models").ResLang} */
+        const ResLang = this.env["res.lang"];
 
-        super._to_store(...arguments);
-        for (const channel of this) {
-            const channelInfo = {};
-            const [country] = ResCountry.browse(channel.country_id);
-            channelInfo["country_id"] = country
-                ? {
-                      code: country.code,
-                      id: country.id,
-                      name: country.name,
-                  }
-                : false;
-            channelInfo["livechat_channel_member_history_ids"] = mailDataHelpers.Store.many(
-                this.env["im_livechat.channel.member.history"].browse(
-                    channel.livechat_channel_member_history_ids
-                ),
-                makeKwArgs({
-                    fields: [
-                        "channel_id",
-                        mailDataHelpers.Store.one("guest_id", makeKwArgs({ fields: ["name"] })),
-                        "livechat_member_type",
-                        mailDataHelpers.Store.one("partner_id", makeKwArgs({ fields: ["name"] })),
-                    ],
-                })
+        res.one("country_id", ["code", "name"], {
+            predicate: isLivechatChannel,
+            value: (channel) => ResCountry.browse(channel.country_id),
+        });
+        res.attr("livechat_end_dt", undefined, { predicate: isLivechatChannel });
+        // sudo - visitor can access to the channel member history of an accessible channel
+        res.many("livechat_channel_member_history_ids", "_store_member_history_fields", {
+            predicate: isLivechatChannel,
+            sudo: true,
+            value: (channel) =>
+                LivechatChannelMemberHistory.browse(channel.livechat_channel_member_history_ids),
+        });
+        if (res.is_for_internal_users()) {
+            res.one("livechat_channel_id", ["name"], {
+                predicate: isLivechatChannel,
+                sudo: true,
+                value: (channel) => LivechatChannel.browse(channel.livechat_channel_id),
+            });
+            res.attr("description", undefined, { predicate: isLivechatChannel });
+            res.one("livechat_lang_id", ["name", "code"], {
+                predicate: isLivechatChannel,
+                value: (channel) => ResLang.browse(channel.livechat_lang_id),
+            });
+            res.attr(
+                "livechat_note",
+                (channel) => ["markup", channel.livechat_note], // mock: html fields must be markup-wrapped
+                { predicate: isLivechatChannel }
             );
-            // add the last message date
-            if (channel.channel_type === "livechat") {
-                channelInfo["livechat_looking_for_help_since_dt"] =
-                    channel.livechat_looking_for_help_since_dt;
-                channelInfo["livechat_end_dt"] = channel.livechat_end_dt;
-                channelInfo["livechat_lang_id"] = mailDataHelpers.Store.one(
-                    this.env["res.lang"].browse(channel.livechat_lang_id),
-                    makeKwArgs({ fields: ["name", "code"] })
-                );
-                channelInfo["livechat_note"] = ["markup", channel.livechat_note];
-                channelInfo["livechat_status"] = channel.livechat_status;
-                channelInfo["livechat_expertise_ids"] = mailDataHelpers.Store.many(
-                    this.env["im_livechat.expertise"].browse(channel.livechat_expertise_ids),
-                    makeKwArgs({ fields: ["name", "color"] })
-                );
-                channelInfo.livechat_channel_id = mailDataHelpers.Store.one(
-                    this.env["im_livechat.channel"].browse(channel.livechat_channel_id),
-                    makeKwArgs({ fields: ["name"] })
-                );
-            }
-            store._add_record_fields(this.browse(channel.id), channelInfo);
+            res.attr("livechat_status", undefined, { predicate: isLivechatChannel });
+            res.attr("livechat_looking_for_help_since_dt", undefined, {
+                predicate: isLivechatChannel,
+            });
+            res.many("livechat_expertise_ids", ["name", "color"], {
+                predicate: isLivechatChannel,
+                value: (channel) => ImLivechatExpertise.browse(channel.livechat_expertise_ids),
+            });
         }
     }
+
     _close_livechat_session(channel_id) {
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
@@ -140,9 +138,7 @@ export class DiscussChannel extends mailModels.DiscussChannel {
         BusBus._sendone(
             channel,
             "mail.record/insert",
-            new mailDataHelpers.Store()
-                .add(this.browse(channel_id), makeKwArgs({ fields: ["livechat_end_dt"] }))
-                .get_result()
+            new Store().add(this.browse(channel_id), ["livechat_end_dt"]).as_dict()
         );
         if (channel.message_ids.length === 0) {
             return;
@@ -204,19 +200,38 @@ export class DiscussChannel extends mailModels.DiscussChannel {
                     : false;
         }
         const result = super.write(idOrIds, values);
+        if ("livechat_expertise_ids" in values) {
+            // The generic write sync only sends the raw expertise ids; resend them as records so a
+            // newly-created expertise reaches the client (mirrors python's bus.sync of the field).
+            const ImLivechatExpertise = this.env["im_livechat.expertise"];
+            this.env["bus.bus"]._sendmany(
+                this.browse(ensureArray(idOrIds)).map((channel) => [
+                    channel,
+                    "mail.record/insert",
+                    new Store()
+                        .add(this.browse(channel.id), (res) =>
+                            res.many("livechat_expertise_ids", ["name", "color"], {
+                                value: ImLivechatExpertise.browse(channel.livechat_expertise_ids),
+                            })
+                        )
+                        .as_dict(),
+                ])
+            );
+        }
         const needHelpAfter = [];
         for (const channel of this._filter([["livechat_status", "=", "need_help"]])) {
             needHelpAfter.push(channel.id);
         }
-        const updatedChannelIds = [
-            ...needHelpBefore.filter((id) => !needHelpAfter.includes(id)),
-            ...needHelpAfter.filter((id) => !needHelpBefore.includes(id)),
-        ];
-        if (updatedChannelIds.length) {
+        const becameNeedHelp = needHelpAfter.filter((id) => !needHelpBefore.includes(id));
+        const stoppedNeedHelp = needHelpBefore.filter((id) => !needHelpAfter.includes(id));
+        if (becameNeedHelp.length || stoppedNeedHelp.length) {
             this.env["bus.bus"]._sendone(
                 [this.env["res.groups"].browse(serverState.groupLivechatId), "LOOKING_FOR_HELP"],
                 "mail.record/insert",
-                new mailDataHelpers.Store().add(this.browse(updatedChannelIds)).get_result()
+                new Store()
+                    .add(this.browse(becameNeedHelp), "_store_channel_fields")
+                    .add(this.browse(stoppedNeedHelp), ["livechat_status"])
+                    .as_dict()
             );
         }
 

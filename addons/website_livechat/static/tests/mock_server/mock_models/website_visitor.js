@@ -1,6 +1,6 @@
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { Store } from "@mail/../tests/mock_server/store";
 
-import { Command, makeKwArgs, serverState } from "@web/../tests/web_test_helpers";
+import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { websiteModels } from "@website/../tests/helpers";
 
 export class WebsiteVisitor extends websiteModels.WebsiteVisitor {
@@ -59,40 +59,39 @@ export class WebsiteVisitor extends websiteModels.WebsiteVisitor {
             BusBus._sendone(
                 partner,
                 "mail.record/insert",
-                new mailDataHelpers.Store(channel)
-                    .add(channel, { open_chat_window: true })
-                    .get_result()
+                new Store().add(channel, "_store_open_chat_window_fields").as_dict()
             );
         }
     }
 
-    _to_store(store) {
-        super._to_store(store);
+    _store_visitor_history_fields(res) {
         /** @type {import("mock_models").WebsiteTrack} */
         const WebsiteTrack = this.env["website.track"];
-        for (const visitor of this) {
-            const visitor_model = this.browse(visitor.id);
-            const [data] = this._read_format(visitor.id, []);
-            const track_records = WebsiteTrack.search_read(
-                [
-                    ["page_id", "!=", false],
-                    ["visitor_id", "=", visitor.id],
-                ],
-                { limit: 3 }
-            );
-            data.last_track_ids = mailDataHelpers.Store.many(
-                WebsiteTrack.browse(track_records.map((t) => t.id)),
-                makeKwArgs({
-                    fields: [mailDataHelpers.Store.one("page_id", ["name"]), "visit_datetime"],
-                    sort: (a, b) => {
-                        if (a.visit_datetime === b.visit_datetime) {
-                            return a.id - b.id;
-                        }
-                        return a.visit_datetime < b.visit_datetime ? 1 : -1;
-                    },
-                })
-            );
-            store._add_record_fields(visitor_model, data);
-        }
+
+        res.many(
+            "last_track_ids",
+            (trackRes) => {
+                trackRes.one("page_id", ["name"]);
+                trackRes.attr("visit_datetime");
+            },
+            {
+                sort: (a, b) => {
+                    if (a.visit_datetime === b.visit_datetime) {
+                        return a.id - b.id;
+                    }
+                    return a.visit_datetime < b.visit_datetime ? 1 : -1;
+                },
+                value: (visitor) =>
+                    WebsiteTrack.browse(
+                        WebsiteTrack.search_read(
+                            [
+                                ["page_id", "!=", false],
+                                ["visitor_id", "=", visitor.id],
+                            ],
+                            { limit: 3 }
+                        ).map((t) => t.id)
+                    ),
+            }
+        );
     }
 }

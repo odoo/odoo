@@ -17,6 +17,18 @@ export class LivechatChannelMemberHistory extends models.ServerModel {
     member_id = fields.Many2one({ relation: "discuss.channel.member" });
     partner_id = fields.Many2one({ relation: "res.partner" });
 
+    _store_member_history_fields(res) {
+        res.attr("channel_id");
+        res.one("guest_id", ["name"], { predicate: (r) => !r.partner_id });
+        res.attr("livechat_member_type");
+        res.attr("member_id");
+        // sudo: res.partner - reading partner of an accessible channel member history is acceptable
+        res.one("partner_id", "_store_livechat_member_fields", {
+            predicate: (r) => !r.guest_id,
+            sudo: true,
+        });
+    }
+
     create(values) {
         const idOrIds = super.create(values);
         // Update of the livechat_channel_member_history_ids field in discuss.channel

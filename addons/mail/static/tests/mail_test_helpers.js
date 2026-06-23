@@ -48,17 +48,13 @@ export { SIZES } from "@web/core/ui/ui_service";
 import { IndexedDB } from "@web/core/utils/indexed_db";
 
 import { SoundEffects } from "@mail/core/common/sound_effects_service";
-import { Store } from "@mail/core/common/store_service";
+import { Store as StoreService } from "@mail/core/common/store_service";
 import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
 import { Network, Rtc } from "@mail/discuss/call/common/rtc_service";
 import { DiscussAppCategory } from "@mail/discuss/core/public_web/discuss_app/discuss_app_category_model";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
 import { LocalStorageEntry } from "@mail/utils/common/local_storage";
-import {
-    DISCUSS_ACTION_ID,
-    authenticateGuest,
-    mailDataHelpers,
-} from "./mock_server/mail_mock_server";
+import { DISCUSS_ACTION_ID, authenticateGuest } from "./mock_server/mail_mock_server";
 import { Base } from "./mock_server/mock_models/base";
 import { DiscussCallHistory } from "./mock_server/mock_models/discuss_call_history";
 import { DiscussCategory } from "./mock_server/mock_models/discuss_category";
@@ -96,6 +92,7 @@ import { ResRole } from "./mock_server/mock_models/res_role";
 import { ResUsers } from "./mock_server/mock_models/res_users";
 import { ResUsersSettings } from "./mock_server/mock_models/res_users_settings";
 import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_settings_volumes";
+import { Store } from "./mock_server/store";
 
 export * from "./mail_test_helpers_contains";
 
@@ -383,10 +380,10 @@ export async function start(options) {
     if ("res.users" in pyEnv) {
         /** @type {import("mock_models").ResUsers} */
         const ResUsers = pyEnv["res.users"];
-        const store = new mailDataHelpers.Store();
+        const store = new Store();
         ResUsers._init_store_data(store);
         patchWithCleanup(session, {
-            storeData: store.get_result(),
+            storeData: store.as_dict(),
         });
         registerDebugInfo("session.storeData", session.storeData);
     }
@@ -938,7 +935,7 @@ const storeFetchQueues = new Map();
  */
 export function listenStoreFetch(nameOrNames = [], { logParams = [], onRpc: onRpcOverride } = {}) {
     storeFetchQueues.clear();
-    patchWithCleanup(Store.prototype, {
+    patchWithCleanup(StoreService.prototype, {
         fetchStoreData(name) {
             const promise = super.fetchStoreData(...arguments);
             const queue = storeFetchQueues.get(name) ?? [];
@@ -1185,11 +1182,11 @@ export async function assertChatBubbleAndWindowImStatus(conversationName, count)
 export function sendPresenceUpdate(modelName, id, newPresence) {
     const env = MockServer.env;
     env[modelName].write(id, { im_status: newPresence });
-    const store = new mailDataHelpers.Store().add(env[modelName].browse(id), {
+    const store = new Store().add(env[modelName].browse(id), {
         presence_status: newPresence,
         im_status: newPresence,
     });
-    env["bus.bus"]._sendone(serverState.userId, "mail.record/insert", store.get_result());
+    env["bus.bus"]._sendone(serverState.userId, "mail.record/insert", store.as_dict());
 }
 
 export async function setIndexedDB(table, key, value) {

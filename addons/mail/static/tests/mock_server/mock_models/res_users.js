@@ -1,6 +1,6 @@
-import { DISCUSS_ACTION_ID, mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { DISCUSS_ACTION_ID } from "@mail/../tests/mock_server/mail_mock_server";
 
-import { fields, makeKwArgs, serverState, webModels } from "@web/../tests/web_test_helpers";
+import { fields, serverState, webModels } from "@web/../tests/web_test_helpers";
 import { serializeDate, today } from "@web/core/l10n/dates";
 
 export class ResUsers extends webModels.ResUsers {
@@ -36,54 +36,47 @@ export class ResUsers extends webModels.ResUsers {
         const ResUsersSettings = this.env["res.users.settings"];
         /** @type {import("mock_models").MailMessageSubtype} */
         const MailMessageSubtype = this.env["mail.message.subtype"];
-        store.add({
-            action_discuss_id: DISCUSS_ACTION_ID,
-            channel_types_with_seen_infos: DiscussChannel._types_allowing_seen_infos(),
-            hasGifPickerFeature: true,
-            hasLinkPreviewFeature: true,
-            hasMessageTranslationFeature: true,
-            mt_comment: MailMessageSubtype._filter([["subtype_xmlid", "=", "mail.mt_comment"]])[0]
-                .id,
-            mt_note: MailMessageSubtype._filter([["subtype_xmlid", "=", "mail.mt_note"]])[0].id,
-            odoobot: mailDataHelpers.Store.one(ResPartner.browse(serverState.odoobotId)),
+        store.add_global_values((res) => {
+            res.attr("action_discuss_id", DISCUSS_ACTION_ID);
+            res.attr("channel_types_with_seen_infos", DiscussChannel._types_allowing_seen_infos());
+            res.attr("hasGifPickerFeature", true);
+            res.attr("hasLinkPreviewFeature", true);
+            res.attr("hasMessageTranslationFeature", true);
+            res.attr(
+                "mt_comment",
+                MailMessageSubtype._filter([["subtype_xmlid", "=", "mail.mt_comment"]])[0].id
+            );
+            res.attr(
+                "mt_note",
+                MailMessageSubtype._filter([["subtype_xmlid", "=", "mail.mt_note"]])[0].id
+            );
+            res.one("odoobot", "_store_partner_fields", {
+                value: ResPartner.browse(serverState.odoobotId),
+            });
+            if (!this._is_public(this.env.uid)) {
+                const userSettings = ResUsersSettings._find_or_create_for_user(this.env.uid);
+                res.one("self_user", "_store_init_fields", {
+                    value: ResUsers.browse(this.env.user.id),
+                });
+                res.attr("settings", ResUsersSettings.res_users_settings_format(userSettings.id));
+            } else if (this.env.cookie.get("dgid")) {
+                res.one(
+                    "self_guest",
+                    (r) => {
+                        r.from_method("_store_avatar_fields");
+                        r.from_method("_store_im_status_fields");
+                    },
+                    { value: MailGuest.browse(this.env.cookie.get("dgid")) }
+                );
+            }
         });
-        if (!this._is_public(this.env.uid)) {
-            const userSettings = ResUsersSettings._find_or_create_for_user(this.env.uid);
-            store.add({
-                self_user: mailDataHelpers.Store.one(
-                    ResUsers.browse(this.env.user.id),
-                    makeKwArgs({
-                        fields: [
-                            mailDataHelpers.Store.one(
-                                "partner_id",
-                                makeKwArgs({
-                                    fields: [
-                                        "active",
-                                        "avatar_128",
-                                        "is_admin",
-                                        mailDataHelpers.Store.one("main_user_id", ["partner_id"]),
-                                        "name",
-                                        "tz",
-                                        "user",
-                                        ...ResPartner._get_store_im_status_fields(),
-                                    ],
-                                })
-                            ),
-                            "notification_type",
-                            "signature",
-                        ],
-                    })
-                ),
-                settings: ResUsersSettings.res_users_settings_format(userSettings.id),
-            });
-        } else if (this.env.cookie.get("dgid")) {
-            store.add({
-                self_guest: mailDataHelpers.Store.one(
-                    MailGuest.browse(this.env.cookie.get("dgid")),
-                    makeKwArgs({ fields: ["avatar_128", "name"] })
-                ),
-            });
-        }
+    }
+
+    /** mock simplification: admin is the user matching the authenticated admin session */
+    _is_admin() {
+        const users = this.env["res.users"].search([["login", "=", "admin"]]);
+        const adminId = Number.isInteger(users?.[0]) ? users?.[0] : users?.[0]?.id;
+        return this.env.cookie.get("authenticated_user_sid") === adminId;
     }
     systray_get_activities() {
         /** @type {import("mock_models").MailActivity} */
@@ -129,7 +122,7 @@ export class ResUsers extends webModels.ResUsers {
 
     /**
      * @param {number[]} ids
-     * @param {import("@mail/../tests/mock_server/mail_mock_server").mailDataHelpers.Store} store
+     * @param {import("@mail/../tests/mock_server/store").Store} store
      **/
     _init_messaging(ids, store) {
         /** @type {import("mock_models").DiscussChannel} */
@@ -150,7 +143,7 @@ export class ResUsers extends webModels.ResUsers {
             ["partner_id", "=", user.partner_id],
         ]);
         const bus_last_id = this.env["bus.bus"].lastBusNotificationId;
-        store.add({
+        store.add_global_values({
             inbox: {
                 counter: ResPartner._get_needaction_count(user.partner_id),
                 counter_bus_id: bus_last_id,
@@ -216,31 +209,40 @@ export class ResUsers extends webModels.ResUsers {
         return Object.values(userActivitiesByModelName);
     }
 
-    _get_store_avatar_card_fields({ add_partner = true, ...args } = {}) {
-        const res = ["share"];
-        if (add_partner) {
-            res.push(
-                mailDataHelpers.Store.one(
-                    "partner_id",
-                    this.env["res.partner"]._get_store_avatar_card_fields({
-                        ...args,
-                        add_user: false,
-                    })
-                )
-            );
-        }
-        return res;
+    _store_avatar_card_fields(res) {
+        res.attr("share");
+        res.one("partner_id", "_store_avatar_card_fields");
+        res.attr("is_public", (u) => this._is_public(u.id));
+        res.from_method("_store_im_status_fields", { internal: true });
     }
 
-    _get_store_im_status_fields() {
-        return [
-            "im_status",
-            mailDataHelpers.Store.attr("im_status_access_token", (p) => p.id),
-            "partner_id",
-        ];
+    _store_im_status_fields(res) {
+        res.attr("im_status");
+        res.attr("im_status_access_token", (p) => p.id); // mock: token is the record id
+        res.one("partner_id", "_store_im_status_fields");
     }
 
-    get _to_store_defaults() {
-        return [mailDataHelpers.Store.one("partner_id")];
+    _store_manual_im_status_fields(res) {
+        res.attr("im_status");
+    }
+
+    _store_main_user_fields(res) {
+        res.extend(["active", "partner_id", "share"]);
+    }
+
+    _store_init_fields(res) {
+        res.one("partner_id", (r) => {
+            r.records._compute_main_user_id(); // compute not automatically triggering
+            r.extend(["active", "name", "tz"]);
+            r.one("main_user_id", ["partner_id"]);
+            r.from_method("_store_avatar_fields");
+        });
+        res.attr("is_admin", () => this._is_admin());
+        res.extend(["notification_type", "share", "signature"]);
+        res.from_method("_store_im_status_fields");
+    }
+
+    _store_user_fields(res) {
+        res.one("partner_id", "_store_partner_fields");
     }
 }

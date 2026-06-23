@@ -15,9 +15,9 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { Store } from "@mail/../tests/mock_server/store";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
-import { Store } from "@mail/model/store";
+import { Store as StoreModel } from "@mail/model/store";
 import { toRawValue } from "@mail/utils/common/local_storage";
 
 import { describe, expect, mockPermission, test } from "@odoo/hoot";
@@ -25,7 +25,6 @@ import { mockUserAgent } from "@odoo/hoot-mock";
 import {
     Command,
     getService,
-    makeKwArgs,
     mockService,
     patchWithCleanup,
     serverState,
@@ -103,7 +102,7 @@ test("rendering with chat push notification default permissions", async () => {
 test("can quickly dismiss 'Turn on notification' suggestion", async () => {
     mockPermission("notifications", "prompt");
     const IS_NOTIFICATION_PERMISSION_LS = makeRecordFieldLocalId(
-        Store.localId(),
+        StoreModel.localId(),
         "isNotificationPermissionDismissed"
     );
     await start();
@@ -1197,10 +1196,11 @@ test("messaging menu should show new needaction messages from chatter", async ()
     const [partner] = pyEnv["res.partner"].read(serverState.partnerId);
     pyEnv["bus.bus"]._sendone(partner, "mail.message/inbox", {
         message_id: messageId,
-        store_data: new mailDataHelpers.Store(
-            pyEnv["mail.message"].browse(messageId),
-            makeKwArgs({ for_current_user: true, inbox_fields: true })
-        ).get_result(),
+        store_data: new Store()
+            .add(pyEnv["mail.message"].browse(messageId), "_store_message_fields", {
+                fields_params: { inbox_fields: true },
+            })
+            .as_dict(),
     });
     await contains(".o-mail-NotificationItem-text:text('Frodo Baggins: @Mitchel Admin')");
 });
