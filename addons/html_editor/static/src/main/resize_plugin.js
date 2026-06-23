@@ -7,10 +7,10 @@ export class ResizePlugin extends Plugin {
     static dependencies = ["history"];
 
     setup() {
-        // Set up mouse event listeners for resize interactions.
-        this.addDomListener(this.editable, "mousemove", this.onMouseMove);
-        this.addDomListener(this.editable, "mousedown", this.onMouseDown);
-        this.addDomListener(this.editable, "mouseleave", this.onMouseLeave);
+        // Set up pointer event listeners for resize interactions.
+        this.addDomListener(this.editable, "pointermove", this.onPointerMove);
+        this.addDomListener(this.editable, "pointerdown", this.onPointerDown);
+        this.addDomListener(this.editable, "pointerleave", this.onPointerLeave);
 
         // Load resizing parameters from plugin resources.
         this.resizingParameters = this.getResource("resizing_parameters");
@@ -77,12 +77,12 @@ export class ResizePlugin extends Plugin {
     }
 
     /**
-     * Handle mouse down events to initiate resize operations.
+     * Handle pointer down events to initiate resize operations.
      *
-     * @param {MouseEvent} ev - The mouse down event
+     * @param {PointerEvent} ev - The pointer down event
      * @returns {void}
      */
-    onMouseDown(ev) {
+    onPointerDown(ev) {
         // Start resize if hovering a resizable element edge.
         if (!this.activeHover) {
             return;
@@ -128,25 +128,25 @@ export class ResizePlugin extends Plugin {
             this.isResizingElement = false;
             this.updateResizeCursor(false);
             this.dependencies.history.commit();
-            this.document.removeEventListener("mousemove", handleResize);
-            this.document.removeEventListener("mouseup", endResizeOperation);
-            this.document.removeEventListener("mouseleave", endResizeOperation);
+            this.document.removeEventListener("pointermove", handleResize);
+            this.document.removeEventListener("pointerup", endResizeOperation, true);
+            this.document.removeEventListener("pointerleave", endResizeOperation);
         };
 
         // Set up global event listeners for resize operation.
-        this.document.addEventListener("mousemove", handleResize);
-        this.document.addEventListener("mouseup", endResizeOperation);
-        this.document.addEventListener("mouseleave", endResizeOperation);
+        this.document.addEventListener("pointermove", handleResize);
+        this.document.addEventListener("pointerup", endResizeOperation, true);
+        this.document.addEventListener("pointerleave", endResizeOperation);
     }
 
     /**
-     * Handle mouse move events to detect hover over resizable element edges.
+     * Handle pointer move events to detect hover over resizable element edges.
      *
-     * @param {MouseEvent} ev - The mouse move event
+     * @param {PointerEvent} ev - The pointer move event
      * @returns {void}
      */
-    onMouseMove(ev) {
-        // Ignore mouse movements during an active resize or when the mouse
+    onPointerMove(ev) {
+        // Ignore pointer movements during an active resize or when the pointer
         // is still over the same element.
         if (this.isResizingElement) {
             return;
@@ -202,7 +202,7 @@ export class ResizePlugin extends Plugin {
      *
      * @returns {void}
      */
-    onMouseLeave() {
+    onPointerLeave() {
         if (this.isResizingElement) {
             return;
         }
@@ -212,9 +212,9 @@ export class ResizePlugin extends Plugin {
     }
 
     /**
-     * Handle the actual resize operation during mouse movement.
+     * Handle the actual resize operation during pointer movement.
      *
-     * @param {MouseEvent} ev - The mouse move event during resize
+     * @param {PointerEvent} ev - The pointer move event during resize
      * @param {'col'|'row'} direction - The resize direction
      * @param {Object} resizingParameter - The resizing parameter object
      * @param {HTMLElement} item - The primary element being resized

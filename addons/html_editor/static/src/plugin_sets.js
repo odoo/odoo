@@ -185,4 +185,4 @@ export const EXTRA_PLUGINS = [
     QWebPlugin,
 ];
 
-export const TOUCH_EXCLUDED_PLUGINS = [MoveNodePlugin];
+export const TOUCH_EXCLUDED_PLUGINS = [MoveNodePlugin, ResizePlugin];

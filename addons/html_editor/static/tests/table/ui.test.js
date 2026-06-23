@@ -139,6 +139,7 @@ test("should display the resizeCursor if the table element isContentEditable=tru
     expect(".o_col_resize").toHaveCount(1);
 });
 
+test.tags("desktop");
 test("should not display the resizeCursor if the table element isContentEditable=false", async () => {
     const { el } = await setupEditor(`
         <table contenteditable="false"><tbody><tr>

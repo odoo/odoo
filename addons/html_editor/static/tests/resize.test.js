@@ -32,26 +32,26 @@ describe("table resize", () => {
             const heightBefore = targetRect.height;
             const dragDelta = heightBefore / 2;
 
-            // Trigger resize via mouse hover
-            manuallyDispatchProgrammaticEvent(targetRow, "mousemove", {
+            // Trigger resize via pointer hover
+            manuallyDispatchProgrammaticEvent(targetRow, "pointermove", {
                 clientX: startX,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(targetRow, "mousedown", {
+            manuallyDispatchProgrammaticEvent(targetRow, "pointerdown", {
                 clientX: startX,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(targetRow, "mousemove", {
+            manuallyDispatchProgrammaticEvent(targetRow, "pointermove", {
                 clientX: startX,
                 clientY: startY + dragDelta,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(targetRow, "mouseup", {
+            manuallyDispatchProgrammaticEvent(targetRow, "pointerup", {
                 clientX: startX,
                 clientY: startY + dragDelta,
             });
@@ -97,26 +97,26 @@ describe("table resize", () => {
             const heightBefore = parseFloat(row1.style.height);
             const dragDelta = heightBefore / 2;
 
-            // Trigger resize via mouse hover
-            manuallyDispatchProgrammaticEvent(row1, "mousemove", {
+            // Trigger resize via pointer hover
+            manuallyDispatchProgrammaticEvent(row1, "pointermove", {
                 clientX: startX,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(row1, "mousedown", {
+            manuallyDispatchProgrammaticEvent(row1, "pointerdown", {
                 clientX: startX,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(document, "mousemove", {
+            manuallyDispatchProgrammaticEvent(document, "pointermove", {
                 clientX: startX,
                 clientY: startY + dragDelta,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(document, "mouseup", {
+            manuallyDispatchProgrammaticEvent(document, "pointerup", {
                 clientX: startX,
                 clientY: startY + dragDelta,
             });
@@ -168,26 +168,26 @@ describe("table resize", () => {
             const heightBefore = parseFloat(row3.style.height);
             const dragDelta = heightBefore / 2;
 
-            // Trigger resize via mouse hover
-            manuallyDispatchProgrammaticEvent(row3, "mousemove", {
+            // Trigger resize via pointer hover
+            manuallyDispatchProgrammaticEvent(row3, "pointermove", {
                 clientX: startX,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(row3, "mousedown", {
+            manuallyDispatchProgrammaticEvent(row3, "pointerdown", {
                 clientX: startX,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(document, "mousemove", {
+            manuallyDispatchProgrammaticEvent(row3, "pointermove", {
                 clientX: startX,
                 clientY: startY - dragDelta,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(document, "mouseup", {
+            manuallyDispatchProgrammaticEvent(row3, "pointerup", {
                 clientX: startX,
                 clientY: startY - dragDelta,
             });
@@ -246,25 +246,114 @@ describe("table resize", () => {
             const dragDelta = columnWidthBefore / 2;
 
             // Trigger resize
-            manuallyDispatchProgrammaticEvent(targetCell, "mousemove", {
+            manuallyDispatchProgrammaticEvent(targetCell, "pointermove", {
                 clientX: startX,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(targetCell, "mousedown", {
+            manuallyDispatchProgrammaticEvent(targetCell, "pointerdown", {
                 clientX: startX,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(document, "mousemove", {
+            manuallyDispatchProgrammaticEvent(targetCell, "pointermove", {
                 clientX: startX + dragDelta,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(document, "mouseup", {
+            manuallyDispatchProgrammaticEvent(targetCell, "pointerup", {
+                clientX: startX + dragDelta,
+                clientY: startY,
+            });
+            await animationFrame();
+
+            // Table width remains unchanged
+            expect(table.offsetWidth).toBe(tableWidthBefore);
+
+            // Column widths updated correctly
+            const column1After = parseFloat(column1.style.width);
+            const column2After = parseFloat(column2.style.width);
+
+            expect(Math.abs(column1After - (columnWidthBefore + dragDelta)) <= TOLERANCE).toBe(
+                true
+            );
+            expect(Math.abs(column2After - (columnWidthBefore - dragDelta)) <= TOLERANCE).toBe(
+                true
+            );
+
+            // Width should be applied to <col> elements, not <td> elements
+            columns.forEach((col) => expect(col.style.width).not.toBe(""));
+            table.querySelectorAll("td").forEach((td) => expect(td.style.width).toBe(""));
+        });
+
+        test.tags("desktop");
+
+        test("expand table first column by dragging right edge outward without initial colgroup", async () => {
+            const { el } = await setupEditor(
+                unformat(`
+                    <table class="table table-bordered o_table" style="width: 1200px;">
+                        <tbody>
+                            <tr>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                            <tr>
+                                <td><p><br></p></td>
+                                <td><p><br></p></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `)
+            );
+
+            const table = el.querySelector("table");
+
+            const secondRow = table.rows[1];
+            const targetCell = secondRow.cells[0];
+
+            const targetRect = targetCell.getBoundingClientRect();
+            const startX = targetRect.right;
+            const startY = targetRect.top + targetRect.height / 2;
+
+            // There is no colgroup initially.
+            let columns = table.querySelectorAll("col");
+            expect(columns.length).toBe(0);
+
+            const columnWidthBefore = parseFloat(getComputedStyle(targetCell).width);
+            const tableWidthBefore = table.offsetWidth;
+            const dragDelta = columnWidthBefore / 2;
+
+            // Trigger resize
+            manuallyDispatchProgrammaticEvent(targetCell, "pointermove", {
+                clientX: startX,
+                clientY: startY,
+            });
+            await animationFrame();
+
+            manuallyDispatchProgrammaticEvent(targetCell, "pointerdown", {
+                clientX: startX,
+                clientY: startY,
+            });
+            await animationFrame();
+
+            columns = table.querySelectorAll("col");
+            expect(columns.length).toBe(2);
+
+            const column1 = columns[0];
+            const column2 = columns[1];
+
+            manuallyDispatchProgrammaticEvent(targetCell, "pointermove", {
+                clientX: startX + dragDelta,
+                clientY: startY,
+            });
+            await animationFrame();
+
+            // Dispatch pointerup on the cell to ensure selection staging is
+            // skipped without triggering the staged mutations warning.
+            manuallyDispatchProgrammaticEvent(targetCell, "pointerup", {
                 clientX: startX + dragDelta,
                 clientY: startY,
             });
@@ -329,26 +418,26 @@ describe("table resize", () => {
             const tableWidthBefore = table.offsetWidth;
             const dragDelta = columnWidthBefore / 2;
 
-            // Trigger resize via mouse hover
-            manuallyDispatchProgrammaticEvent(targetCell, "mousemove", {
+            // Trigger resize via pointer hover
+            manuallyDispatchProgrammaticEvent(targetCell, "pointermove", {
                 clientX: startX,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(targetCell, "mousedown", {
+            manuallyDispatchProgrammaticEvent(targetCell, "pointerdown", {
                 clientX: startX,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(document, "mousemove", {
+            manuallyDispatchProgrammaticEvent(targetCell, "pointermove", {
                 clientX: startX + dragDelta,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(document, "mouseup", {
+            manuallyDispatchProgrammaticEvent(targetCell, "pointerup", {
                 clientX: startX + dragDelta,
                 clientY: startY,
             });
@@ -416,26 +505,26 @@ describe("table resize", () => {
             const tableWidthBefore = table.offsetWidth;
             const dragDelta = columnWidthBefore / 2;
 
-            // Trigger resize via mouse hover
-            manuallyDispatchProgrammaticEvent(targetCell, "mousemove", {
+            // Trigger resize via pointer hover
+            manuallyDispatchProgrammaticEvent(targetCell, "pointermove", {
                 clientX: startX,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(targetCell, "mousedown", {
+            manuallyDispatchProgrammaticEvent(targetCell, "pointerdown", {
                 clientX: startX,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(document, "mousemove", {
+            manuallyDispatchProgrammaticEvent(targetCell, "pointermove", {
                 clientX: startX + dragDelta,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(document, "mouseup", {
+            manuallyDispatchProgrammaticEvent(targetCell, "pointerup", {
                 clientX: startX + dragDelta,
                 clientY: startY,
             });
@@ -498,26 +587,26 @@ describe("table resize", () => {
             const tableWidthBefore = table.offsetWidth;
             const dragDelta = columnWidthBefore / 2;
 
-            // Trigger resize via mouse hover
-            manuallyDispatchProgrammaticEvent(targetCell, "mousemove", {
+            // Trigger resize via pointer hover
+            manuallyDispatchProgrammaticEvent(targetCell, "pointermove", {
                 clientX: startX,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(targetCell, "mousedown", {
+            manuallyDispatchProgrammaticEvent(targetCell, "pointerdown", {
                 clientX: startX,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(targetCell, "mousemove", {
+            manuallyDispatchProgrammaticEvent(targetCell, "pointermove", {
                 clientX: startX - dragDelta,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(targetCell, "mouseup", {
+            manuallyDispatchProgrammaticEvent(targetCell, "pointerup", {
                 clientX: startX - dragDelta,
                 clientY: startY,
             });
@@ -583,26 +672,26 @@ describe("table resize", () => {
             const tableWidthBefore = table.offsetWidth;
             const dragDelta = columnWidthBefore / 2;
 
-            // Trigger resize via mouse hover
-            manuallyDispatchProgrammaticEvent(targetCell, "mousemove", {
+            // Trigger resize via pointer hover
+            manuallyDispatchProgrammaticEvent(targetCell, "pointermove", {
                 clientX: startX,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(targetCell, "mousedown", {
+            manuallyDispatchProgrammaticEvent(targetCell, "pointerdown", {
                 clientX: startX,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(targetCell, "mousemove", {
+            manuallyDispatchProgrammaticEvent(targetCell, "pointermove", {
                 clientX: startX + dragDelta,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(targetCell, "mouseup", {
+            manuallyDispatchProgrammaticEvent(targetCell, "pointerup", {
                 clientX: startX + dragDelta,
                 clientY: startY,
             });
@@ -661,26 +750,26 @@ describe("table resize", () => {
             const tableWidthBefore = table.offsetWidth;
             const dragDelta = columnWidthBefore / 2;
 
-            // Trigger resize via mouse hover
-            manuallyDispatchProgrammaticEvent(targetCell, "mousemove", {
+            // Trigger resize via pointer hover
+            manuallyDispatchProgrammaticEvent(targetCell, "pointermove", {
                 clientX: startX,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(targetCell, "mousedown", {
+            manuallyDispatchProgrammaticEvent(targetCell, "pointerdown", {
                 clientX: startX,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(targetCell, "mousemove", {
+            manuallyDispatchProgrammaticEvent(targetCell, "pointermove", {
                 clientX: startX - dragDelta,
                 clientY: startY,
             });
             await animationFrame();
 
-            manuallyDispatchProgrammaticEvent(targetCell, "mouseup", {
+            manuallyDispatchProgrammaticEvent(targetCell, "pointerup", {
                 clientX: startX - dragDelta,
                 clientY: startY,
             });
@@ -744,8 +833,8 @@ describe("column resize", () => {
         const rowWidthBefore = row.offsetWidth;
         const dragDelta = colWidthBefore / 4;
 
-        // Trigger resize via mouse hover
-        manuallyDispatchProgrammaticEvent(col1, "mousemove", {
+        // Trigger resize via pointer hover
+        manuallyDispatchProgrammaticEvent(col1, "pointermove", {
             clientX: startX,
             clientY: startY,
         });
@@ -753,19 +842,19 @@ describe("column resize", () => {
 
         expect(col1).toHaveClass("o_resize_handle");
 
-        manuallyDispatchProgrammaticEvent(col1, "mousedown", {
+        manuallyDispatchProgrammaticEvent(col1, "pointerdown", {
             clientX: startX,
             clientY: startY,
         });
         await animationFrame();
 
-        manuallyDispatchProgrammaticEvent(document, "mousemove", {
+        manuallyDispatchProgrammaticEvent(document, "pointermove", {
             clientX: startX + dragDelta,
             clientY: startY,
         });
         await animationFrame();
 
-        manuallyDispatchProgrammaticEvent(document, "mouseup", {
+        manuallyDispatchProgrammaticEvent(document, "pointerup", {
             clientX: startX + dragDelta,
             clientY: startY,
         });
@@ -824,8 +913,8 @@ describe("column resize", () => {
         const rowWidthBefore = row.offsetWidth;
         const dragDelta = colWidthBefore / 4;
 
-        // Trigger resize via mouse hover
-        manuallyDispatchProgrammaticEvent(col1, "mousemove", {
+        // Trigger resize via pointer hover
+        manuallyDispatchProgrammaticEvent(col1, "pointermove", {
             clientX: startX,
             clientY: startY,
         });
@@ -833,19 +922,19 @@ describe("column resize", () => {
 
         expect(col1).toHaveClass("o_resize_handle");
 
-        manuallyDispatchProgrammaticEvent(col1, "mousedown", {
+        manuallyDispatchProgrammaticEvent(col1, "pointerdown", {
             clientX: startX,
             clientY: startY,
         });
         await animationFrame();
 
-        manuallyDispatchProgrammaticEvent(document, "mousemove", {
+        manuallyDispatchProgrammaticEvent(document, "pointermove", {
             clientX: startX + dragDelta,
             clientY: startY,
         });
         await animationFrame();
 
-        manuallyDispatchProgrammaticEvent(document, "mouseup", {
+        manuallyDispatchProgrammaticEvent(document, "pointerup", {
             clientX: startX + dragDelta,
             clientY: startY,
         });
@@ -909,8 +998,8 @@ describe("column resize", () => {
         const rowWidthBefore = row.offsetWidth;
         const dragDelta = colWidthBefore / 4;
 
-        // Trigger resize via mouse hover
-        manuallyDispatchProgrammaticEvent(col4, "mousemove", {
+        // Trigger resize via pointer hover
+        manuallyDispatchProgrammaticEvent(col4, "pointermove", {
             clientX: startX,
             clientY: startY,
         });
@@ -918,19 +1007,19 @@ describe("column resize", () => {
 
         expect(col4).toHaveClass("o_resize_handle");
 
-        manuallyDispatchProgrammaticEvent(col4, "mousedown", {
+        manuallyDispatchProgrammaticEvent(col4, "pointerdown", {
             clientX: startX,
             clientY: startY,
         });
         await animationFrame();
 
-        manuallyDispatchProgrammaticEvent(document, "mousemove", {
+        manuallyDispatchProgrammaticEvent(document, "pointermove", {
             clientX: startX + dragDelta,
             clientY: startY,
         });
         await animationFrame();
 
-        manuallyDispatchProgrammaticEvent(document, "mouseup", {
+        manuallyDispatchProgrammaticEvent(document, "pointerup", {
             clientX: startX + dragDelta,
             clientY: startY,
         });
@@ -988,8 +1077,8 @@ describe("column resize", () => {
         const rowWidthBefore = row.offsetWidth;
         const dragDelta = columnWidthBefore / 4;
 
-        // Trigger resize via mouse hover
-        manuallyDispatchProgrammaticEvent(targetColumn, "mousemove", {
+        // Trigger resize via pointer hover
+        manuallyDispatchProgrammaticEvent(targetColumn, "pointermove", {
             clientX: startX,
             clientY: startY,
         });
@@ -997,19 +1086,19 @@ describe("column resize", () => {
 
         expect(targetColumn).toHaveClass("o_resize_handle");
 
-        manuallyDispatchProgrammaticEvent(targetColumn, "mousedown", {
+        manuallyDispatchProgrammaticEvent(targetColumn, "pointerdown", {
             clientX: startX,
             clientY: startY,
         });
         await animationFrame();
 
-        manuallyDispatchProgrammaticEvent(targetColumn, "mousemove", {
+        manuallyDispatchProgrammaticEvent(targetColumn, "pointermove", {
             clientX: startX - dragDelta,
             clientY: startY,
         });
         await animationFrame();
 
-        manuallyDispatchProgrammaticEvent(targetColumn, "mouseup", {
+        manuallyDispatchProgrammaticEvent(targetColumn, "pointerup", {
             clientX: startX - dragDelta,
             clientY: startY,
         });
