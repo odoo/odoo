@@ -4,6 +4,7 @@ from . import (
     test_abandoned_cart,
     test_add_to_cart_snippet,
     test_address,
+    test_auto_unpublish,
     test_cart,
     test_cart_notification,
     test_cart_payment,

@@ -3,6 +3,7 @@
 from . import (
     delivery_carrier,
     product_product,
+    product_template,
     res_config_settings,
     res_partner,
     sale_order,
