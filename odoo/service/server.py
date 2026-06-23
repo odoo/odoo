@@ -785,6 +785,8 @@ class GeventServer(CommonServer):
         gevent.shutdown()
 
     def run(self, preload, stop):
+        if rc := preload_registries(preload):
+            return rc
         self.start()
         self.stop()
 
