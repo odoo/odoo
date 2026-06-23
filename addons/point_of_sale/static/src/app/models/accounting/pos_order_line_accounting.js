@@ -167,6 +167,10 @@ export class PosOrderlineAccounting extends Base {
         return this.price_unit * (1 - this.getDiscount() / 100);
     }
 
+    isRefund() {
+        return this.qty * this.price_unit < 0;
+    }
+
     /**
      * Prepare extra values for the base line used in taxes computation.
      */
@@ -186,7 +190,7 @@ export class PosOrderlineAccounting extends Base {
             product_uom_id: product.uom_id,
             product_id: product,
             rate: 1.0,
-            is_refund: this.qty * priceUnit < 0,
+            is_refund: this.isRefund(),
             ...customValues,
         };
         if (order?.fiscal_position_id && product !== this.config.discount_product_id) {
