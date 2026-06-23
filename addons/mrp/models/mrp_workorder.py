@@ -485,7 +485,13 @@ class MrpWorkorder(models.Model):
 
     @api.onchange('date_finished')
     def _onchange_date_finished(self):
-        if self.date_start and self.date_finished and self.workcenter_id:
+        # Only recompute the duration when the end date was edited on its own. When
+        # it was just derived from a start date change (date_finished already equals
+        # the planned end for the current duration), keep the duration: recomputing
+        # it from the dates would drift it, as plan_hours and get_work_duration_data
+        # are not exact inverses around non-working periods.
+        if self.date_start and self.date_finished and self.workcenter_id \
+                and self.date_finished != self._calculate_date_finished():
             self.duration_expected = self._calculate_duration_expected()
         if not self.date_finished and self.date_start:
             raise UserError(_("It is not possible to unplan one single Work Order. "
