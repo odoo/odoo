@@ -377,7 +377,7 @@ class PosOrderLine(models.Model):
             account = fiscal_position.map_account(account)
 
         is_refund_order = line.order_id.is_refund or line.order_id.amount_total < 0.0
-        is_refund_line = line.qty * line.price_unit < 0
+        is_refund_line = line.isRefund()
 
         lang = line.order_id.partner_id.lang or self.env.user.lang
         product_name = line.product_id.with_context(lang=lang).display_name
@@ -440,3 +440,6 @@ class PosOrderLine(models.Model):
         if not self.combo_line_ids:
             return get_total(self)
         return sum(get_total(cl) for cl in self.combo_line_ids)
+
+    def isRefund(self):
+        return self.qty * self.price_unit < 0
