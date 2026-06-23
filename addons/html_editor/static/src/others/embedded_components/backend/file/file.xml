@@ -5,7 +5,7 @@
         <xpath expr="//span[hasclass('o_file_name_container')]" position="after">
             <input t-attf-class="rounded border-0 mx-2 #{ this.localState.editFileName ? '' : 'd-none'}"
                 t-custom-ref="nameInput" type="text" maxLength="100" t-att-placeholder="this.fileModel.filename"
-                t-on-blur="this.onBlurNameInput" t-on-input.stop="" t-on-keydown.stop="onKeydownNameInput"
+                t-on-blur="this.onBlurNameInput" t-on-input.stop="" t-on-keydown.stop="this.onKeydownNameInput"
                 t-att-value="this.fileModel.filename"/>
         </xpath>
         <xpath expr="//span[hasclass('o_file_name_container')]" position="attributes">
