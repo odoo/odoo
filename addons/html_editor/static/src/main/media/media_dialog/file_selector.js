@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
@@ -138,14 +137,14 @@ export class FileSelectorControlPanel extends Component {
 
         const urlInputRef = this.urlInputRef;
 
-        useLayoutEffect(
-            () => {
-                if (this.state.showUrlInput) {
-                    urlInputRef().focus();
-                }
-            },
-            () => [this.state.showUrlInput]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         if (this.state.showUrlInput) {
+        //             urlInputRef().focus();
+        //         }
+        //     },
+        //     () => [this.state.showUrlInput]
+        // );
     }
 
     get showSearchServiceSelect() {
@@ -237,16 +236,16 @@ export class FileSelector extends Component {
             this.debouncedOnScroll
         );
 
-        useLayoutEffect(
-            () => {
-                // Updating the scroll button each time the attachments change.
-                // Hiding the "Load more" button to prevent it from flickering.
-                this.loadMoreButtonRef().classList.add("o_hide_loading");
-                this.state.canScrollAttachments = false;
-                this.debouncedScrollUpdate();
-            },
-            () => [this.allAttachments.length]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         // Updating the scroll button each time the attachments change.
+        //         // Hiding the "Load more" button to prevent it from flickering.
+        //         this.loadMoreButtonRef().classList.add("o_hide_loading");
+        //         this.state.canScrollAttachments = false;
+        //         this.debouncedScrollUpdate();
+        //     },
+        //     () => [this.allAttachments.length]
+        // );
     }
 
     get canLoadMore() {
