@@ -7,6 +7,7 @@ class EstateProperty(models.Model):
     _name = "estate.property"
     _description = "Estate Properties"
 
+    _inherit = ["mail.activity.mixin", "mail.thread"]
 
     name = fields.Char(required=True)
     description = fields.Text()
