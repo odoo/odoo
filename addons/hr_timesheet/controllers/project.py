@@ -10,13 +10,6 @@ from odoo.addons.project.controllers.portal import CustomerPortal
 
 class ProjectCustomerPortal(CustomerPortal):
 
-    def _get_project_sharing_company(self, project):
-        company = project.company_id
-        if not company:
-            timesheet = request.env['account.analytic.line'].sudo().search([('project_id', '=', project.id)], limit=1)
-            company = timesheet.company_id or request.env.user.company_id
-        return company
-
     def _prepare_project_sharing_session_info(self, project, task=None):
         session_info = super()._prepare_project_sharing_session_info(project, task)
         company = request.env['res.company'].sudo().browse(session_info['user_companies']['current_company'])
