@@ -49,7 +49,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
 						l.date_from as date_from,
 						l.date_to as date_to
                     FROM hr_leave l
-                    WHERE l.state IN ('validate', 'validate1')
+                    WHERE l.state IN ('validate', 'validate1') AND l.active IS True AND l.time_rule_id IS NULL
                 ),
 
                 /* Base allocations with overlap group detection */
@@ -237,7 +237,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
                     FROM hr_leave as request
                     JOIN hr_employee as employee ON (request.employee_id = employee.id)
                     LEFT JOIN hr_version v ON v.id = employee.current_version_id
-                    WHERE request.state IN ('confirm', 'validate', 'validate1')
+                    WHERE request.state IN ('confirm', 'validate', 'validate1') AND request.active IS True AND request.time_rule_id IS NULL
                 ) leaves
             );
         """)

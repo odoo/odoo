@@ -245,14 +245,19 @@ class HrLeave(models.Model):
     active = fields.Boolean(default=True)
     time_rule_id = fields.Many2one('hr.time.rule', string="Time Rule", copy=False, index=True)
     source_leave_id = fields.Many2one('hr.leave', string="Source Leave", copy=False, index=True)
-    is_time_rule_output = fields.Boolean(
-        compute='_compute_is_time_rule_output', store=True, index=True,
-    )
+    output_leave_ids = fields.One2many('hr.leave', 'source_leave_id')
+    is_time_rule_output = fields.Boolean(compute='_compute_is_time_rule_output', search='_search_is_time_rule_output')
 
     @api.depends('time_rule_id')
     def _compute_is_time_rule_output(self):
         for leave in self:
             leave.is_time_rule_output = bool(leave.time_rule_id)
+
+    @api.model
+    def _search_is_time_rule_output(self, operator, value):
+        if (operator == '=' and value) or (operator == '!=' and not value):
+            return [('time_rule_id', '!=', False)]
+        return [('time_rule_id', '=', False)]
 
     _date_check2 = models.Constraint(
         'CHECK ((date_from <= date_to))',
@@ -1115,7 +1120,10 @@ class HrLeave(models.Model):
         if self.env.context.get('leave_fast_create'):
             holidays._create_resource_leave()
         if not self.env.context.get('skip_time_rules'):
-            holidays._process_time_rules()
+            today = fields.Date.today()
+            past = holidays.filtered(lambda l: not l.is_time_rule_output and l.date_to and l.date_to.date() < today)
+            if past:
+                past._process_time_rules()
         return holidays
 
     def write(self, vals):
@@ -1180,10 +1188,6 @@ class HrLeave(models.Model):
                 if employee_id:
                     holiday.add_follower(employee_id)
 
-        time_rule_fields = {'date_from', 'date_to', 'employee_id', 'work_entry_type_id', 'state'}
-        if not self.env.context.get('skip_time_rules') and time_rule_fields.intersection(values):
-            self._process_time_rules()
-
         return result
 
     @api.ondelete(at_uninstall=False)
@@ -1215,6 +1219,42 @@ class HrLeave(models.Model):
             self._process_time_rules_for(affected)
         return res
 
+    @api.model
+    def _cron_process_day_time_rules(self):
+        """Daily cron: process day-based time rules for yesterday's validated leaves."""
+        yesterday = date.today() - timedelta(days=1)
+        start = datetime.combine(yesterday, time.min)
+        end = datetime.combine(yesterday, time.max)
+        sources = self.sudo().search([
+            ('date_from', '<=', end),
+            ('date_to', '>=', start),
+            ('state', '=', 'validate'),
+            ('time_rule_id', '=', False),
+        ])
+        if not sources:
+            return
+        affected = [(l.employee_id, l.date_from, l.date_to) for l in sources]
+        self._process_time_rules_for(affected, rule_period='day')
+
+    @api.model
+    def _cron_process_week_time_rules(self):
+        """Weekly cron: process week-based time rules for the Mon-Sun that just ended."""
+        today = date.today()
+        week_end = today - timedelta(days=1)
+        week_start = week_end - timedelta(days=6)
+        start = datetime.combine(week_start, time.min)
+        end = datetime.combine(week_end, time.max)
+        sources = self.sudo().search([
+            ('date_from', '<=', end),
+            ('date_to', '>=', start),
+            ('state', '=', 'validate'),
+            ('time_rule_id', '=', False),
+        ])
+        if not sources:
+            return
+        affected = [(l.employee_id, l.date_from, l.date_to) for l in sources]
+        self._process_time_rules_for(affected, rule_period='week')
+
     def _process_time_rules(self):
         """Recompute time rule outputs for employees/dates affected by self."""
         source = self.filtered(lambda l: not l.is_time_rule_output and l.date_from and l.date_to)
@@ -1223,7 +1263,7 @@ class HrLeave(models.Model):
         affected = [(l.employee_id, l.date_from, l.date_to) for l in source]
         self._process_time_rules_for(affected)
 
-    def _process_time_rules_for(self, affected):
+    def _process_time_rules_for(self, affected, rule_period=None):
         """Recompute time rule outputs for the given (employee, date_from, date_to) tuples.
         """
         if not affected:
@@ -1236,9 +1276,19 @@ class HrLeave(models.Model):
         ])
         if not rules:
             return
-        # process daily rules and weekly rules separately as each type has a different scope of leaves to process
-        day_rules = rules.filtered(lambda r: r.quantity_period != 'week')
-        week_rules = rules.filtered(lambda r: r.quantity_period == 'week')
+
+        if rule_period == 'day':
+            day_rules = rules.filtered(lambda r: r.quantity_period != 'week')
+            week_rules = rules.browse()
+        elif rule_period == 'week':
+            day_rules = rules.browse()
+            week_rules = rules.filtered(lambda r: r.quantity_period == 'week')
+        else:
+            day_rules = rules.filtered(lambda r: r.quantity_period != 'week')
+            week_rules = rules.filtered(lambda r: r.quantity_period == 'week')
+
+        if not day_rules and not week_rules:
+            return
 
         day_rules_ranges = defaultdict(lambda: [None, None])
         for employee, date_from, date_to in affected:
@@ -1277,6 +1327,17 @@ class HrLeave(models.Model):
             end_dt = datetime.combine(date_to, time.max).replace(tzinfo=UTC)
             by_range[start_dt, end_dt].append(employee)
 
+        auto_ctx = dict(
+            skip_time_rules=True,
+            leave_fast_create=True,
+            leave_skip_date_check=True,
+            leave_skip_state_check=True,
+            tracking_disable=True,
+            mail_activity_automation_skip=True,
+            skip_leave_version_check=True,
+            skip_create_resource_leave=True,
+        )
+
         for (start_dt, end_dt), employees in by_range.items():
             employee_rs = self.env['hr.employee'].browse([e.id for e in employees])
             all_source_leaves = self._get_source_leaves_for_time_rules(employee_rs, start_dt, end_dt)
@@ -1284,12 +1345,28 @@ class HrLeave(models.Model):
             if not all_source_leaves:
                 continue
 
-            self.env['hr.leave'].sudo().search([
+            # collect max child date_to before deletion so we can restore source date_to
+            all_children = self.env['hr.leave'].sudo().search([
                 ('source_leave_id', 'in', all_source_leaves.ids),
-                '|',
-                ('time_rule_id', '=', False),
-                ('time_rule_id', 'in', rules.ids),
-            ]).with_context(skip_time_rules=True).unlink()
+            ])
+            max_child_dt = {}
+            for child in all_children:
+                sid = child.source_leave_id.id
+                if child.date_to and (sid not in max_child_dt or child.date_to > max_child_dt[sid]):
+                    max_child_dt[sid] = child.date_to
+
+            all_children.with_context(skip_time_rules=True).unlink()
+
+            for src in all_source_leaves:
+                original_dt = max(src.date_to, max_child_dt.get(src.id, src.date_to))
+                if not src.active or original_dt != src.date_to:
+                    src.with_context(**auto_ctx).write({
+                        'active': True,
+                        'date_to': original_dt,
+                        'request_date_to': original_dt.date(),
+                    })
+
+            all_source_leaves._create_resource_leave()
 
             excess, deficit = rules._evaluate_rules(all_source_leaves, start_dt, end_dt)
             for emp, by_leave in excess.items():
@@ -1316,7 +1393,7 @@ class HrLeave(models.Model):
         Override to filter or pre-process source leaves before time rule evaluation.
         """
         return self.env['hr.leave'].sudo().with_context(active_test=False).search([
-            ('is_time_rule_output', '=', False),
+            ('time_rule_id', '=', False),
             ('source_leave_id', '=', False),
             ('employee_id', 'in', employees.ids),
             ('date_from', '<=', end_dt.replace(tzinfo=None)),
@@ -1358,9 +1435,10 @@ class HrLeave(models.Model):
         :returns: created `resource.calendar.leaves`
         """
         self.env['resource.calendar.leaves'].sudo().search([('holiday_id', 'in', self.ids)]).unlink()
-        # skip zero-duration leaves (zeroed-out source leaves replaced by outputs)
-        active = self.filtered(lambda l: l.date_from != l.date_to)
-        vals_list = [leave._prepare_resource_leave_vals() for leave in active]
+        vals_list = [
+            leave._prepare_resource_leave_vals()
+            for leave in self.filtered(lambda l: l.active and l.date_from and l.date_to and l.date_from != l.date_to)
+        ]
         return self.env['resource.calendar.leaves'].sudo().create(vals_list)
 
     def _remove_resource_leave(self):
@@ -1603,7 +1681,10 @@ class HrLeave(models.Model):
             self.filtered(lambda holiday: holiday.validation_type != 'no_validation').activity_update()
 
         if not self.env.context.get('skip_time_rules'):
-            self.filtered(lambda l: not l.is_time_rule_output)._process_time_rules()
+            today = fields.Date.today()
+            past = self.filtered(lambda l: not l.is_time_rule_output and l.date_to and l.date_to.date() < today)
+            if past:
+                past._process_time_rules()
 
         return True
 
@@ -1626,6 +1707,38 @@ class HrLeave(models.Model):
                     partner_ids=holiday.employee_id.user_id.partner_id.ids)
 
         self.activity_update()
+        to_cleanup = self.filtered(
+            lambda l: l.date_from and l.date_to and not l.is_time_rule_output and not l.source_leave_id
+        )
+        if to_cleanup:
+            auto_ctx = dict(
+                skip_time_rules=True,
+                leave_fast_create=True,
+                leave_skip_date_check=True,
+                leave_skip_state_check=True,
+                tracking_disable=True,
+                mail_activity_automation_skip=True,
+                skip_leave_version_check=True,
+                skip_create_resource_leave=True,
+            )
+            all_children = to_cleanup.sudo().output_leave_ids
+            max_child_dt = {}
+            for child in all_children:
+                sid = child.source_leave_id.id
+                if child.date_to and (sid not in max_child_dt or child.date_to > max_child_dt[sid]):
+                    max_child_dt[sid] = child.date_to
+            all_children.with_context(skip_time_rules=True).unlink()
+            affected = []
+            for src in to_cleanup.sudo():
+                original_dt = max(src.date_to, max_child_dt.get(src.id, src.date_to))
+                affected.append((src.employee_id, src.date_from, original_dt))
+                if not src.active or original_dt != src.date_to:
+                    src.with_context(**auto_ctx).write({
+                        'active': True,
+                        'date_to': original_dt,
+                        'request_date_to': original_dt.date(),
+                    })
+            self._process_time_rules_for(affected)
         return True
 
     def _notify_manager(self):

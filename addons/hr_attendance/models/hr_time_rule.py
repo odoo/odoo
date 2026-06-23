@@ -36,7 +36,6 @@ class HrTimeRule(models.Model):
             'work_entry_type_id': rule.work_entry_type_id.id,
             'check_in': check_in,
             'check_out': check_out,
-            'is_time_rule_output': True,
             'source_attendance_id': source_attendance.id if source_attendance else False,
             'time_rule_id': rule.id,
         }
@@ -57,20 +56,42 @@ class HrTimeRule(models.Model):
         for employee, by_source in excess.items():
             tz = ZoneInfo(employee._get_tz())
             for source_att, intervals in by_source.items():
-                # day-rule intervals: archive source + create remainder + create outputs
+                # day-rule intervals: shrink source to first non-OT segment (archive if zero), then
+                # create remainders for subsequent non-OT gaps, and outputs for OT segments
                 day_ivs_with_pp = [(s, e, r, pp) for s, e, r, pp in intervals if r.quantity_period != 'week']
                 day_output_intervals = self._resolve_output_intervals([(s, e, r) for s, e, r, _pp in day_ivs_with_pp])
                 if day_output_intervals:
-                    archive_source_ids.append(source_att.id)
                     src_start = source_att.check_in.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
                     src_stop = source_att.check_out.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
                     out_union = Intervals([(s, e, dummy) for s, e, _ in day_output_intervals], keep_distinct=True)
-                    for s, e, _ in Intervals([(src_start, src_stop, dummy)]) - out_union:
-                        att_create_vals.append(self._get_remainder_attendance_vals(
-                            employee, source_att,
-                            s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
-                            e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
-                        ))
+                    remainder_segments = list(Intervals([(src_start, src_stop, dummy)]) - out_union)
+
+                    min_out_start_utc = min(
+                        seg_s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                        for seg_s, _, _ in day_output_intervals
+                    )
+                    if min_out_start_utc <= source_att.check_in:
+                        # OT covers the very start → archive source; all remainder segments become records
+                        archive_source_ids.append(source_att.id)
+                        for s, e, _ in remainder_segments:
+                            att_create_vals.append(self._get_remainder_attendance_vals(
+                                employee, source_att,
+                                s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
+                                e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
+                            ))
+                    else:
+                        # OT starts after check_in → shrink source check_out to first OT start;
+                        # source itself is the first non-OT segment, so skip remainder_segments[0]
+                        Attendance.browse([source_att.id]).with_context(**auto_ctx).write(
+                            {'check_out': min_out_start_utc}
+                        )
+                        for s, e, _ in remainder_segments[1:]:
+                            att_create_vals.append(self._get_remainder_attendance_vals(
+                                employee, source_att,
+                                s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
+                                e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None),
+                            ))
+
                     for seg_s, seg_e, rule in day_output_intervals:
                         acc_pp = frozenset().union(*(
                             orig_pp for orig_s, orig_e, orig_r, orig_pp in day_ivs_with_pp

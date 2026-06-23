@@ -41,7 +41,7 @@ class HrAttendance(http.Controller):
                 'display_systray': employee.company_id.attendance_from_systray,
                 'device_tracking_enabled': employee.company_id.attendance_device_tracking,
                 'capture_check_in_image': employee.company_id.attendance_capture_check_in,
-                'has_attendance_check_in_ability': employee._has_attendance_check_in_ability(),
+                'has_attendance_check_in_ability': employee.attendance_based,
             }
         return response
 

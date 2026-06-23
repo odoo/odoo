@@ -681,20 +681,22 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertAlmostEqual(output_after.worked_hours, 4.0, places=5,
                                msg="Extended overtime should be 4h")
 
-    def test_source_unarchived_when_excess_clears(self):
-        """Shrinking check_out so excess drops to zero restores the source attendance to active."""
+    def test_source_output_cleared_when_excess_drops(self):
+        """Shrinking check_out so excess drops to zero removes the output child."""
         att = self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 12, 8),
-            'check_out': datetime(2022, 12, 12, 18),  # 10h -> 2h excess -> att archived
+            'check_out': datetime(2022, 12, 12, 18),  # 10h -> 2h excess -> source shrunk, output child created
         })
         att.invalidate_recordset()
-        self.assertFalse(att.active, "Source should be archived after excess detected")
+        # source is shrunk to 16:00 (OT starts after check_in); it stays active
+        self.assertTrue(att.active, "Source stays active when OT starts after check_in")
+        self.assertEqual(att.check_out, datetime(2022, 12, 12, 16), "Source shrunk to first OT start")
 
-        att.write({'check_out': datetime(2022, 12, 12, 16)})  # shrink to 8h -> no excess
+        att.write({'check_out': datetime(2022, 12, 12, 16)})  # no-op value; triggers re-evaluation with user intent
 
         att.invalidate_recordset()
-        self.assertTrue(att.active, "Source must be unarchived when excess drops to zero")
+        self.assertTrue(att.active, "Source remains active after excess clears")
         output_atts = self.env['hr.attendance'].search([
             ('source_attendance_id', '=', att.id),
         ])
@@ -771,7 +773,7 @@ class TestTimeRulePipeline(TransactionCase):
                         "Day A output attendance must not be deleted by Day B recompute")
 
     def test_source_attendance_split_and_remainder(self):
-        """After time rule fires the source is archived and children cover its full span."""
+        """After time rule fires the source is shrunk to the non-OT portion; output child covers the excess."""
         att = self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 12, 6),
@@ -784,18 +786,13 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertEqual(len(output_atts), 1, "One output attendance for the excess")
         self.assertEqual(output_atts.time_rule_id, self.time_rule)
 
-        remainder_atts = self.env['hr.attendance'].with_context(active_test=False).search([
-            ('source_attendance_id', '=', att.id),
-            ('is_time_rule_output', '=', False),
-        ])
-
         att.invalidate_recordset()
-        self.assertFalse(att.active, "Source attendance must be archived after time rule fires")
+        # source stays active but is shrunk to [06:00-14:00]; OT covers [14:00-20:00]
+        self.assertTrue(att.active, "Source stays active; only its check_out is shrunk")
         output_dur = output_atts.worked_hours
-        remainder_dur = sum(r.worked_hours for r in remainder_atts)
         self.assertAlmostEqual(output_dur, 6.0, places=5, msg="Output covers the 6h excess")
-        self.assertAlmostEqual(remainder_dur + output_dur, 14.0, places=5,
-                               msg="Remainder + output must total the original attendance duration")
+        self.assertAlmostEqual(att.worked_hours + output_dur, 14.0, places=5,
+                               msg="Shrunk source + output must total the original attendance duration")
 
     def test_deficit_rule(self):
         """threshold_operator='less_than': output attendance created for unworked schedule gap."""
@@ -1184,7 +1181,7 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertFalse(output_atts, "0.5h deficit < 1h employee_tolerance -> no output")
 
     def test_timing_window_creates_remainder_attendance(self):
-        """Output cut from the middle of an attendance archives source; head+tail become remainders."""
+        """Output cut from the middle of an attendance: source shrunk to head, tail becomes a remainder child."""
         self.time_rule.active = False
         self.env['hr.time.rule'].create({
             'name': 'Lunch Premium',
@@ -1210,19 +1207,17 @@ class TestTimeRulePipeline(TransactionCase):
         self.assertEqual(len(output_atts), 1, "One output attendance for the lunch window")
         self.assertAlmostEqual(output_atts.worked_hours, 1.0, places=5, msg="1h lunch excess")
 
-        # Both head [8:00-12:00] and tail [13:00-20:00] become remainder children
+        # Source is shrunk to [8:00-12:00] (head); tail [13:00-20:00] becomes a remainder child
+        att.invalidate_recordset()
+        self.assertTrue(att.active, "Source stays active; it is shrunk to the head segment")
+        self.assertEqual(att.check_out, datetime(2022, 12, 12, 12), "Source shrunk to first OT start")
+
         remainder_atts = self.env['hr.attendance'].search([
             ('source_attendance_id', '=', att.id),
             ('is_time_rule_output', '=', False),
         ])
-        self.assertEqual(len(remainder_atts), 2, "Head [8:00-12:00] and tail [13:00-20:00] remainders")
-        remainder_hours = sorted(r.worked_hours for r in remainder_atts)
-        self.assertAlmostEqual(remainder_hours[0], 4.0, places=5, msg="Head remainder [8:00-12:00] = 4h")
-        self.assertAlmostEqual(remainder_hours[1], 7.0, places=5, msg="Tail remainder [13:00-20:00] = 7h")
-
-        # Source is archived; its bounds are unchanged
-        att.invalidate_recordset()
-        self.assertFalse(att.active, "Source attendance must be archived after time rule fires")
+        self.assertEqual(len(remainder_atts), 1, "Only the tail [13:00-20:00] is a remainder child; head is the source")
+        self.assertAlmostEqual(remainder_atts.worked_hours, 7.0, places=5, msg="Tail remainder [13:00-20:00] = 7h")
 
     def test_source_zeroed_when_entire_attendance_is_excess(self):
         """When excess covers the entire source attendance, it is archived with no remainder."""

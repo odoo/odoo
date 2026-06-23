@@ -12,6 +12,7 @@
                 string="Employee attendances"
                 decoration-success="color == 10"
                 decoration-danger="color == 1"
+                decoration-it="is_time_rule_output"
                 duplicate="false">
                 <field name="employee_id" widget="many2one_avatar_employee"/>
                 <field name="check_in"/>
@@ -34,6 +35,7 @@
                 <field name="write_uid" optional="hidden"/>
                 <field name="write_date" optional="hidden"/>
                 <field name="color" column_invisible="1"/>
+                <field name="is_time_rule_output" column_invisible="1"/>
             </list>
         </field>
     </record>

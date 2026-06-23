@@ -94,7 +94,7 @@ class HrAttendance(models.Model):
     ], string='Status', default='draft', index=True, tracking=True, readonly=True, copy=False)
 
     # time rule engine output fields
-    is_time_rule_output = fields.Boolean(default=False, index=True)
+    is_time_rule_output = fields.Boolean(compute='_compute_is_time_rule_output', search='_search_is_time_rule_output')
     time_rule_id = fields.Many2one('hr.time.rule', index=True)
     source_attendance_id = fields.Many2one('hr.attendance', ondelete='cascade', index=True)
     overtime_attendance_ids = fields.One2many('hr.attendance', 'source_attendance_id')
@@ -170,6 +170,33 @@ class HrAttendance(models.Model):
                 attendance.worked_hours = attendance._get_worked_hours_in_range(attendance.check_in, attendance.check_out)
             else:
                 attendance.worked_hours = False
+
+    @api.depends('time_rule_id')
+    def _compute_is_time_rule_output(self):
+        for att in self:
+            att.is_time_rule_output = bool(att.time_rule_id)
+
+    @api.model
+    def _search_is_time_rule_output(self, operator, value):
+        if operator == 'in':
+            has_true = True in value
+            has_false = False in value
+            if has_true and not has_false:
+                return [('time_rule_id', '!=', False)]
+            if has_false and not has_true:
+                return [('time_rule_id', '=', False)]
+            return []
+        if operator == 'not in':
+            has_true = True in value
+            has_false = False in value
+            if has_true and not has_false:
+                return [('time_rule_id', '=', False)]
+            if has_false and not has_true:
+                return [('time_rule_id', '!=', False)]
+            return [('id', '=', False)]
+        if (operator == '=' and value) or (operator == '!=' and not value):
+            return [('time_rule_id', '!=', False)]
+        return [('time_rule_id', '=', False)]
 
     def _get_worked_hours_in_range(self, start_dt, end_dt):
         """Returns the amount of hours worked because of this attendance during the
@@ -281,7 +308,7 @@ class HrAttendance(models.Model):
             today = date.today()
             self.filtered(
                 lambda a: a.state == 'validated' and a.check_in and a.check_in.date() < today
-            )._process_time_rules()
+            ).with_context(source_bounds_from_write=True)._process_time_rules()
         return result
 
     def unlink(self):
@@ -768,6 +795,23 @@ class HrAttendance(models.Model):
         (day_rules | week_rules)._apply_attendance_output(merged_excess, merged_deficit)
 
     def _collect_time_rule_outputs(self, rules, ranges_by_employee):
+        def _max_span_check_out(children):
+            """Return {source_id: max_check_out} for children that extend the source's own span.
+
+            Deficit output records start *after* the source ends (they represent unworked schedule
+            gaps), so they must not be used to infer the original source check_out.
+            """
+            result = {}
+            for child in children:
+                src = child.source_attendance_id
+                # deficit outputs have a time_rule_id and start past the source's current check_out;
+                # using their check_out would incorrectly inflate the source's restored span
+                if child.time_rule_id and child.check_in > src.check_out:
+                    continue
+                sid = src.id
+                if child.check_out and (sid not in result or child.check_out > result[sid]):
+                    result[sid] = child.check_out
+            return result
         all_excess = defaultdict(lambda: defaultdict(list))
         all_deficit = defaultdict(lambda: defaultdict(list))
         if not rules:
@@ -785,29 +829,49 @@ class HrAttendance(models.Model):
             if not source_attendances:
                 continue
 
-            # week rules don't archive sources; they just emit output records and delete them on rerun
             is_aggregate = bool(rules) and all(r.quantity_period == 'week' for r in rules)
+            auto_ctx = dict(skip_time_rules=True, tracking_disable=True)
+            sources_to_revert = {}
+
             if is_aggregate:
+                # week rules emit output records and delete them on rerun; sources are not archived
                 self.env['hr.attendance'].sudo().search([
                     ('source_attendance_id', 'in', source_attendances.ids),
                     ('is_time_rule_output', '=', True),
                     ('time_rule_id', 'in', rules.ids),
                 ]).with_context(skip_time_rules=True).unlink()
-            else:
-                # day rules own archive+create; delete all children then restore sources with no excess
-                self.env['hr.attendance'].sudo().search([
+                # day-rule outputs may have shrunk source check_out; temporarily restore full span
+                # so weekly totals are computed against the original attendance duration
+                remaining = self.env['hr.attendance'].sudo().search([
                     ('source_attendance_id', 'in', source_attendances.ids),
-                ]).with_context(skip_time_rules=True).unlink()
-                archived = source_attendances.filtered(lambda a: not a.active)
-                if archived:
-                    still_has_children = self.env['hr.attendance'].sudo().search([
-                        ('source_attendance_id', 'in', archived.ids),
-                    ]).mapped('source_attendance_id')
-                    to_restore = archived - still_has_children
-                    if to_restore:
-                        to_restore.with_context(skip_time_rules=True, tracking_disable=True).write({'active': True})
+                ])
+                max_child_co = _max_span_check_out(remaining)
+                for src in source_attendances:
+                    effective_co = max(src.check_out, max_child_co.get(src.id, src.check_out))
+                    if effective_co != src.check_out:
+                        sources_to_revert[src.id] = src.check_out
+                        src.with_context(**auto_ctx).write({'check_out': effective_co})
+            else:
+                # day rules: collect child bounds before deletion so we can restore source check_out
+                all_children = self.env['hr.attendance'].sudo().search([
+                    ('source_attendance_id', 'in', source_attendances.ids),
+                ])
+                max_child_co = _max_span_check_out(all_children)
+                all_children.with_context(skip_time_rules=True).unlink()
+                # restore original check_out and unarchive
+                # skip restore when user explicitly wrote a new check_out (don't override their intent)
+                from_write = self.env.context.get('source_bounds_from_write')
+                for src in source_attendances:
+                    original_co = src.check_out if from_write else max(src.check_out, max_child_co.get(src.id, src.check_out))
+                    if not src.active or original_co != src.check_out:
+                        src.with_context(**auto_ctx).write({'active': True, 'check_out': original_co})
 
             excess, deficit = rules._evaluate_rules(source_attendances, start_dt, end_dt)
+
+            # revert any temporary check_out restoration done for weekly evaluation
+            for src in source_attendances:
+                if src.id in sources_to_revert:
+                    src.with_context(**auto_ctx).write({'check_out': sources_to_revert[src.id]})
             for emp, by_att in excess.items():
                 for att, items in by_att.items():
                     all_excess[emp][att].extend(items)
@@ -840,8 +904,8 @@ class HrAttendance(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             if 'state' not in vals:
-                if vals.get('is_time_rule_output') or vals.get('source_attendance_id'):
-                    # system-generated records always auto-validate
+                if vals.get('time_rule_id') or vals.get('source_attendance_id'):
+                    # system-generated records (outputs and remainders) always auto-validate
                     vals['state'] = 'validated'
                 else:
                     company = self.env.company
@@ -866,12 +930,20 @@ class HrAttendance(models.Model):
 
     def action_refuse(self):
         self.write({'state': 'refused'})
-        to_cleanup = self.filtered(lambda a: a.check_in and a.check_out and not a.is_time_rule_output)
+        to_cleanup = self.filtered(lambda a: a.check_in and a.check_out and not a.is_time_rule_output and not a.source_attendance_id)
         if to_cleanup:
-            to_cleanup.sudo().mapped('overtime_attendance_ids').with_context(skip_time_rules=True).unlink()
-            archived = to_cleanup.sudo().filtered(lambda a: not a.active)
-            if archived:
-                archived.with_context(skip_time_rules=True, tracking_disable=True).write({'active': True})
+            all_children = to_cleanup.sudo().mapped('overtime_attendance_ids')
+            max_child_co = {}
+            for child in all_children:
+                sid = child.source_attendance_id.id
+                if child.check_out and (sid not in max_child_co or child.check_out > max_child_co[sid]):
+                    max_child_co[sid] = child.check_out
+            all_children.with_context(skip_time_rules=True).unlink()
+            auto_ctx = dict(skip_time_rules=True, tracking_disable=True)
+            for src in to_cleanup.sudo():
+                original_co = max(src.check_out, max_child_co.get(src.id, src.check_out))
+                if not src.active or original_co != src.check_out:
+                    src.with_context(**auto_ctx).write({'active': True, 'check_out': original_co})
             affected = [(a.employee_id, a.check_in, a.check_out) for a in to_cleanup]
             self._process_time_rules_for(affected)
 
