@@ -219,20 +219,10 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
 
     def _refresh_pdp_fields(self, move):
         self.env.flush_all()
-        move.company_id.invalidate_recordset([
-            'account_peppol_edi_user',
-            'l10n_fr_f10_enable_reporting',
-        ])
         move.company_id._compute_account_peppol_edi_user()
         move.company_id._compute_l10n_fr_f10_enable_reporting()
-        move.invalidate_recordset([
-            'l10n_fr_pdp_has_error',
-            'l10n_fr_pdp_flow_10_report_type',
-            'l10n_fr_pdp_flow_10_operation_type',
-            'l10n_fr_pdp_last_flow_id',
-            'l10n_fr_pdp_status',
-            'l10n_fr_pdp_error_message',
-        ])
+        move._compute_l10n_fr_pdp_has_error()
+        move._compute_l10n_fr_pdp_status()
 
     def _correct_partner(self, invoice):
         invoice.partner_id.street = 'Mainstreet'
@@ -1143,11 +1133,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
 
         self._correct_partner(invalid_invoice)
         self._refresh_pdp_fields(invalid_invoice)
-        invalid_invoice.invalidate_recordset([
-            'l10n_fr_pdp_has_error',
-            'l10n_fr_pdp_status',
-            'l10n_fr_pdp_last_flow_id',
-        ])
+        invalid_invoice._compute_l10n_fr_pdp_status()
         self.assertEqual(invalid_invoice.l10n_fr_pdp_status, 'pending')
         self.assertEqual(rectificative_flow.error_moves_count, 0)
 
