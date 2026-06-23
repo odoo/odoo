@@ -771,6 +771,10 @@ class IrAttachment(models.Model):
                 vals['raw'] = attachment.raw
         return vals_list
 
+    def _remove(self):
+        """Unlink or remove the link of the attachments from their records. Meant to be overridden."""
+        self.unlink()
+
     def unlink(self):
         # First delete in the database, *then* in the filesystem if the
         # database allowed it. Helps avoid errors when concurrent transactions

@@ -77,10 +77,6 @@ class IrAttachment(models.Model):
                 with contextlib.suppress(AccessError):
                     related_record._message_set_main_attachment_id(attachment, force=force)
 
-    def _remove(self):
-        """Unlink or remove the link of the attachments from their records. Meant to be overridden."""
-        self.unlink()
-
     def _remove_and_notify(self):
         message_ids = self.mail_message_ids.ids
         now = fields.Datetime.now()
@@ -100,7 +96,7 @@ class IrAttachment(models.Model):
                     ),
                 },
             )
-        self._remove()
+        self.with_context(remove_from_chatter=True)._remove()
 
     def _store_ownership_fields(self, res: Store.FieldList):
         res.attr("ownership_token", lambda a: a._get_ownership_token())
