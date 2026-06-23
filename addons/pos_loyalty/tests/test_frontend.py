@@ -3782,3 +3782,4 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_user).open_ui()
 
         self.start_pos_tour("test_reward_line_tax_grouping_key", pos_config=self.main_pos_config)
+        self.main_pos_config.current_session_id.action_pos_session_closing_control()
