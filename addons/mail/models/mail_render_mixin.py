@@ -13,6 +13,7 @@ from markupsafe import Markup, escape
 
 from odoo import _, api, fields, models, tools
 from odoo.addons.base.models.ir_qweb import QWebError
+from odoo.addons.base.models.ir_ui_view import MOVABLE_BRANDING
 from odoo.exceptions import UserError, AccessError
 from odoo.tools import urls
 from odoo.tools.mail import is_html_empty, prepend_html_content, html_normalize
@@ -301,6 +302,12 @@ class MailRenderMixin(models.AbstractModel):
         if template_src:
             try:
                 node = html.fragment_fromstring(template_src, create_parent='div')
+                # Strip editor metadata attributes (e.g. data-oe-expression-readable,
+                # data-oe-demo) added by the email editor before the safety check.
+                for el in node.iter():
+                    for attr in list(el.attrib):
+                        if attr.startswith('data-oe-') and attr not in MOVABLE_BRANDING:
+                            del el.attrib[attr]
                 self.env["ir.qweb"].with_context(raise_on_forbidden_code_for_model=model)._generate_code(node)
             except PermissionError:
                 return True
@@ -472,6 +479,14 @@ class MailRenderMixin(models.AbstractModel):
 
         Supporting only QWeb allowed expressions, no custom variable in that mode.
         """
+        if template_src and 'data-oe-' in template_src:
+            wrapper = html.fragment_fromstring(f'<div>{template_src}</div>')
+            for el in wrapper.iter():
+                for attr in list(el.attrib):
+                    if attr.startswith('data-oe-') and attr not in MOVABLE_BRANDING:
+                        del el.attrib[attr]
+            template_src = html.tostring(wrapper, encoding='unicode')[5:-6]
+
         result = {}
         for record in render_res_ids(self.env[model], res_ids, result):
             def replace(match):

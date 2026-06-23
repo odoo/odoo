@@ -332,6 +332,49 @@ class TestMailTemplate(MailCommon):
         rendered = mail_template._render_field('email_to', record.ids)[record.id]
         self.assertIn(self.user_admin.name, rendered)
 
+    def test_mail_template_acl_editor_metadata_attributes(self):
+        """Test that extra data-oe-* attributes added by the 19.2 email editor
+        do not cause allowed expressions to be treated as unsafe.
+        """
+        model = self.env['ir.model']._get_id('res.partner')
+        record = self.env['res.partner'].search([('name', '!=', False)], limit=1)
+
+        editor_body = (
+            '<t data-oe-expression-readable="%(label)s" '
+            't-out="%(name)s" data-oe-demo="%(label)s"></t>'
+        )
+
+        for expr, label in (
+            ('object.name', 'Name'),
+            ('object.partner_id.name', 'Contact Name'),
+        ):
+            body = editor_body % {'name': expr, 'label': label}
+            with self.subTest(expr=expr):
+                # The expression must be considered safe
+                self.assertFalse(
+                    self.env['mail.render.mixin']._has_unsafe_expression_template_qweb(body, 'res.partner'),
+                    "Editor metadata attributes must not make an allowed expression unsafe",
+                )
+
+                # A non-template-editor employee should be able to render
+                # the template without an AccessError
+                employee_template = self.env['mail.template'].with_user(self.user_employee).create({
+                    'body_html': body,
+                    'model_id': model,
+                })
+
+                o_render = self.env['mail.render.mixin']._render_template_qweb_regex
+                with patch('odoo.addons.mail.models.mail_render_mixin.MailRenderMixin._render_template_qweb_regex', side_effect=o_render) as regex_render:
+                    rendered = employee_template._render_field('body_html', record.ids)[record.id]
+                    self.assertTrue(regex_render.called, "Regex renderer must be used for safe expressions")
+                self.assertNotIn('t-out', rendered)
+                # Only assert the value when the field path is valid on the record
+                # (e.g. object.partner_id.name is not meaningful on res.partner)
+                if label == 'Name':
+                    field_val = str(record[expr.split('.')[1]])
+                    self.assertIn(field_val, rendered,
+                        f"Rendered output must contain the field value for {expr!r}")
+
     def test_mail_template_acl_translation(self):
         ''' Test that a user that doesn't have the group_mail_template_editor cannot create / edit
         translation with dynamic code if he cannot write dynamic code on the related record itself.
