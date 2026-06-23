@@ -1,17 +1,28 @@
+import { registry } from "@web/core/registry";
 import {
     changeOptionInPopover,
     clickOnEditAndWaitEditMode,
     clickOnSave,
     clickOnSnippet,
-    registerWebsitePreviewTour,
+    waitForEditMode,
 } from "@website/js/tours/tour_utils";
 
-registerWebsitePreviewTour(
-    "website_page_options",
-    {
-        edition: true,
-    },
-    () => [
+function waitForWebsiteColorOperation() {
+    return [
+        {
+            content: "Wait for website color operation to start",
+            trigger: ":iframe .o_loading_screen",
+        },
+        {
+            content: "Wait for website color operation to complete",
+            trigger: ":iframe body:not(:has(.o_loading_screen))",
+        },
+    ];
+}
+
+registry.category("web_tour.tours").add("website_page_options", {
+    steps: () => [
+        waitForEditMode,
         ...clickOnSnippet({ id: "o_header_standard", name: "Header" }),
         ...changeOptionInPopover("Header", "Header Position", "Over the content"),
         // It's important to test saving right after changing that option only as
@@ -107,8 +118,8 @@ registerWebsitePreviewTour(
             content: "Check that the footer is hidden",
             trigger: ":iframe #wrapwrap:has(.o_footer.d-none.o_snippet_invisible)",
         },
-    ]
-);
+    ],
+});
 
 const breadcrumb = { id: "o_page_breadcrumb", name: "Breadcrumb" };
 let selectedGradient = null;
@@ -134,12 +145,8 @@ function openBackgroundColorPicker(type, selector) {
     ];
 }
 
-registerWebsitePreviewTour(
-    "website_page_breadcrumb",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    },
-    () => [
+registry.category("web_tour.tours").add("website_page_breadcrumb", {
+    steps: () => [
         {
             content: "Open the Site Menu",
             trigger: "button[data-menu-xmlid='website.menu_site']",
@@ -198,12 +205,13 @@ registerWebsitePreviewTour(
             trigger: ".o_cc_preview_wrapper button[data-color='o_cc4']",
             run: "click",
         },
+        ...waitForWebsiteColorOperation(),
         ...clickOnSave(),
         {
             content: "Verify that the breadcrumb background color matches Preset 4",
             trigger: ":iframe nav[aria-label='breadcrumb']",
             run() {
-                const occBg = getComputedStyle(document.documentElement)
+                const occBg = getComputedStyle(this.anchor.ownerDocument.documentElement)
                     .getPropertyValue("--o-cc4-bg")
                     .trim();
                 const breadcrumbBgPreset = getComputedStyle(this.anchor)
@@ -224,6 +232,7 @@ registerWebsitePreviewTour(
             trigger: ".popover button[data-color='600']",
             run: "click",
         },
+        ...waitForWebsiteColorOperation(),
         ...clickOnSave(),
         {
             content: "Verify that the breadcrumb background color is black-600",
@@ -248,6 +257,7 @@ registerWebsitePreviewTour(
                 await click();
             },
         },
+        ...waitForWebsiteColorOperation(),
         {
             content: "Verify that the breadcrumb background gradient is applied correctly",
             trigger: ":iframe nav[aria-label='breadcrumb']",
@@ -261,6 +271,14 @@ registerWebsitePreviewTour(
             },
         },
         ...changeOptionInPopover("Breadcrumb", "Breadcrumb Position", "Over the content"),
+        {
+            content: "Wait for popover to close",
+            trigger: "body:not(:has(.o_popover))",
+        },
+        {
+            content: `Wait for Breadcrumb Position to reflect Over the content`,
+            trigger: `.o_customize_tab [data-label='Breadcrumb Position'] .dropdown-toggle:contains(Over the content)`,
+        },
         ...clickOnSave(),
         {
             content: "Verify that the breadcrumb is positioned over the content",
@@ -273,6 +291,10 @@ registerWebsitePreviewTour(
             content: "Set the breadcrumb background color to black-600",
             trigger: ".popover button[data-color='600']",
             run: "click",
+        },
+        {
+            content: "Wait for black-600 to be applied to the breadcrumb outer div",
+            trigger: ":iframe .o_page_breadcrumb.bg-600",
         },
         ...clickOnSave(),
         {
@@ -287,6 +309,10 @@ registerWebsitePreviewTour(
             trigger: ".popover button[data-color='#FF0000']",
             run: "click",
         },
+        {
+            content: "Wait for red text color to be applied to the breadcrumb",
+            trigger: ':iframe .o_page_breadcrumb[style*="rgb(255, 0, 0)"]',
+        },
         ...clickOnSave(),
         {
             content: "Verify that the breadcrumb text color is red",
@@ -295,10 +321,14 @@ registerWebsitePreviewTour(
         ...clickOnEditAndWaitEditMode(),
         ...clickOnSnippet(breadcrumb),
         ...changeOptionInPopover("Breadcrumb", "Breadcrumb Position", "Hidden"),
+        {
+            content: "Wait for breadcrumb to be hidden",
+            trigger: ":iframe main:has(.o_page_breadcrumb.d-none)",
+        },
         ...clickOnSave(),
         {
             content: "Verify that the breadcrumb is hidden",
             trigger: ":iframe main:has(div.o_page_breadcrumb.d-none.o_snippet_invisible)",
         },
-    ]
-);
+    ],
+});
