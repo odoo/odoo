@@ -5,13 +5,16 @@ const cannedResponseButtonSelector = "button[title='Insert a Canned response']";
 registry.category("web_tour.tours").add("portal_composer_actions_tour_internal_user", {
     steps: () => [
         {
+            trigger: `#chatterRoot:shadow .o-mail-Composer-html:focus`,
+        },
+        {
             trigger: `#chatterRoot:shadow .o-mail-Composer ${cannedResponseButtonSelector}`,
             run: "click",
         },
         {
             content:
                 "Clicking on the canned response button should insert the '::' into the composer.",
-            trigger: "#chatterRoot:shadow .o-mail-Composer-input:value(::)",
+            trigger: "#chatterRoot:shadow .o-mail-Composer-html:text('::')",
         },
         {
             trigger:

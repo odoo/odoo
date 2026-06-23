@@ -5,7 +5,6 @@ import {
     defineMailModels,
     dragenterFiles,
     dropFiles,
-    insertText,
     listenStoreFetch,
     makeMockRtcNetwork,
     mockBrowserFullscreen,
@@ -21,6 +20,7 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { Store } from "@mail/../tests/mock_server/store";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import {
@@ -1572,7 +1572,7 @@ test("Access to Pinned Messages from Meeting Chat", async () => {
     await contains(".o-mail-MeetingReadyBanner");
     await click("[title='Chat']");
     await contains(".o-mail-ActionPanel-header:has(:text('In call messages'))");
-    await insertText(".o-mail-Meeting .o-mail-Composer-input", "hey");
+    await insertTextInComposer(".o-mail-Meeting .o-mail-Composer", "hey");
     await click(".o-mail-Meeting .o-mail-Composer button[title='Send']:enabled");
     await click(".o-mail-Meeting .o-mail-Message [title='Expand']");
     await click(".dropdown-item:text('Pin')");

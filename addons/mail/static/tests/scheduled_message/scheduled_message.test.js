@@ -2,11 +2,11 @@ import {
     click,
     contains,
     defineMailModels,
-    insertText,
     openFormView,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { SCHEDULED_MESSAGE_TRUNCATE_THRESHOLD } from "@mail/chatter/web/scheduled_message";
 import { mockService, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -303,7 +303,7 @@ test("New scheduled message is loaded when sending a message", async () => {
     });
     await click(".o-mail-Chatter-logNote");
     await contains(".o-mail-Composer");
-    await insertText(".o-mail-Composer-input", "Bloups");
+    await insertTextInComposer(".o-mail-Composer", "Bloups");
     await click(".o-mail-Composer button:text('Log')");
     await contains(".o-mail-ScheduledMessagesList");
     await contains(".o-mail-Message-author:text('Julien Dragoul')");

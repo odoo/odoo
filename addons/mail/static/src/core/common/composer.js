@@ -430,7 +430,6 @@ export class Composer extends Component {
     }
 
     get wysiwygConfig() {
-        window.aku = this;
         return {
             content: this.props.composer.composerHtml,
             placeholder: this.placeholder,

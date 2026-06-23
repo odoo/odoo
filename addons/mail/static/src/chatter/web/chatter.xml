@@ -61,7 +61,7 @@
                 <Composer composer="this.state.thread.composer"
                     autofocus="true" className="this.state.composerType === 'message' ? '' : 'pt-4'" mode="'extended'"
                     onPostCallback.bind="this.onPostCallback" onCloseFullComposerCallback.bind="this.onCloseFullComposerCallback"
-                    dropzoneRef="this.rootRef" thread="this.state.thread" type="this.state.composerType" t-key="this.thread().id"
+                    dropzoneRef="this.rootRef" thread="this.state.thread" type="this.state.composerType" t-key="this.state.composerType + '_' this.thread().id"
                     withMessageFields="true"
                 />
             </t>

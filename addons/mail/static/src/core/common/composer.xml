@@ -60,16 +60,9 @@
                         <t t-if="this.moreActions" t-call="mail.Composer.moreActions"/>
                     </div>
                     <div class="position-relative flex-grow-1 min-w-0">
-                        <t t-set="inputClasses" t-value="{
-                            'o-mail-Composer-inputStyle form-control border-0 o-rounded-bubble': true,
-                            'o-mobile': this.isMobileOS,
-                            'ps-2': partitionedActions.other.length === 0,
-                            'text-muted': this.props.composer.restoredFromFullComposer,
-                        }"/>
                         <Wysiwyg class="'w-100 min-w-0 text-break overflow-auto'" config="this.wysiwygConfig" onLoad.bind="this.onLoadWysiwyg"/>
                         <!-- <t t-else="">
                                 <textarea class="o-mail-Composer-input o-mail-Composer-bg shadow-none overflow-auto o-scrollbar-thin o-discuss-text-body user-select-auto"
-                                t-att-class="inputClasses"
                                 t-custom-ref="textarea"
                                 t-on-keydown="this.onKeydown"
                                 t-on-focusin="this.onFocusin"
@@ -90,7 +83,6 @@
                             -->
                             <!-- <textarea
                                 class="o-mail-Composer-fake position-absolute overflow-hidden"
-                                t-att-class="inputClasses"
                                 t-att-value="this.props.composer.composerText"
                                 t-custom-ref="fakeTextarea"
                                 disabled="1"

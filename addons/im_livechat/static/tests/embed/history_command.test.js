@@ -21,7 +21,7 @@ test("Handle livechat history command", async () => {
     });
     await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
-    await contains(".o-mail-Composer-input").edit("Hello World!", { confirm: false });
+    await contains(".o-mail-Composer-html").edit("Hello World!", { confirm: false });
     const subscribed = waitUntilSubscribe();
     await press("Enter");
     await subscribed;

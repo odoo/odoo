@@ -9,7 +9,6 @@ import { expirableStorage } from "@im_livechat/core/common/expirable_storage";
 import {
     click,
     contains,
-    insertText,
     listenStoreFetch,
     onRpcBefore,
     setupChatHub,
@@ -20,6 +19,10 @@ import {
     userContext,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
+import {
+    containsTextInComposer,
+    insertTextInComposer,
+} from "@mail/../tests/mail_test_helpers_composer";
 import { describe, expect, test } from "@odoo/hoot";
 import { Command, onRpc, serverState } from "@web/../tests/web_test_helpers";
 
@@ -102,7 +105,7 @@ test("Only necessary requests are made when creating a new chat", async () => {
             persisted: false,
         })}`,
     ]);
-    await insertText(".o-mail-Composer-input", "Hello!");
+    await insertTextInComposer(".o-mail-Composer", "Hello!");
     await expect.waitForSteps([]);
     const subscribed = waitUntilSubscribe();
     await triggerHotkey("Enter");
@@ -170,15 +173,15 @@ test("Only create one channel when posting multiple messages", async () => {
     await start({ authenticateAs: false, waitUntilSubscribe: false });
     await click(".o-livechat-LivechatButton");
     await expect.waitForSteps(["/im_livechat/get_session"]);
-    await insertText(".o-mail-Composer-input", "1");
+    await insertTextInComposer(".o-mail-Composer", "1");
     await click(".o-sendMessageActive");
-    await contains(".o-mail-Composer-input", { value: "" });
-    await insertText(".o-mail-Composer-input", "2");
+    await containsTextInComposer(".o-mail-Composer", "");
+    await insertTextInComposer(".o-mail-Composer", "2");
     await click(".o-sendMessageActive");
-    await contains(".o-mail-Composer-input", { value: "" });
-    await insertText(".o-mail-Composer-input", "3");
+    await containsTextInComposer(".o-mail-Composer", "");
+    await insertTextInComposer(".o-mail-Composer", "3");
     await click(".o-sendMessageActive");
-    await contains(".o-mail-Composer-input", { value: "" });
+    await containsTextInComposer(".o-mail-Composer", "");
     await expect.waitForSteps([]);
     const subscribed = waitUntilSubscribe();
     getSessionResolvers.resolve();

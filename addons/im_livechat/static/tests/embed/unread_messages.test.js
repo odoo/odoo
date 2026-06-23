@@ -95,7 +95,7 @@ test("focus on unread livechat marks it as read", async () => {
             pyEnv["discuss.channel.member"].search([["guest_id", "=", pyEnv.cookie.get("dgid")]]),
         ],
     ]);
-    queryFirst(".o-mail-Composer-input").blur();
+    queryFirst(".o-mail-Composer-html").blur();
     // send after init_messaging because bus subscription is done after init_messaging
     await withUser(userId, () =>
         rpc("/mail/message/post", {
@@ -106,6 +106,6 @@ test("focus on unread livechat marks it as read", async () => {
     );
     await contains(".o-mail-ChatWindow-counter", { text: "1" });
     await contains(".o-mail-Message", { text: "Are you there?" });
-    await focus(".o-mail-Composer-input");
+    await focus(".o-mail-Composer-html");
     await contains(".o-mail-ChatWindow-counter", { count: 0 });
 });

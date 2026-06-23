@@ -210,17 +210,17 @@ describe("Remove attachments", () => {
         await openFormView("res.partner", serverState.partnerId);
         await click("button:text('Log note')");
         await click("button[title='Open Full Composer']");
-        await waitFor(".odoo-editor-editable");
-        const anchorNode = queryOne(".odoo-editor-editable div.o-paragraph");
+        await waitFor(".modal .odoo-editor-editable");
+        const anchorNode = queryOne(".modal .odoo-editor-editable div.o-paragraph");
         setSelection({ anchorNode, anchorOffset: 0 });
         await insertText(htmlEditor, "/file");
         await press("Enter");
         await expect.waitForSteps(["File Uploaded"]);
         await waitFor("[name='attachment_ids'] a:contains('file.txt')");
-        await waitFor(".odoo-editor-editable .o_file_box:has(a:contains('file.txt'))");
+        await waitFor(".modal .odoo-editor-editable .o_file_box:has(a:contains('file.txt'))");
         await click("[name='attachment_ids'] button:has(i.fa-times)");
         await waitForNone("[name='attachment_ids'] a:contains('file.txt')");
-        await waitForNone(".odoo-editor-editable .o_file_box:has(a:contains('file.txt'))");
+        await waitForNone(".modal .odoo-editor-editable .o_file_box:has(a:contains('file.txt'))");
     });
 
     test("should remove image from html editor if removed from attachment list", async () => {
@@ -255,8 +255,8 @@ describe("Remove attachments", () => {
         await openFormView("res.partner", serverState.partnerId);
         await click("button:text('Log note')");
         await click("button[title='Open Full Composer']");
-        await waitFor(".odoo-editor-editable");
-        const anchorNode = queryOne(".odoo-editor-editable div.o-paragraph");
+        await waitFor(".modal .odoo-editor-editable");
+        const anchorNode = queryOne(".modal .odoo-editor-editable div.o-paragraph");
         setSelection({ anchorNode, anchorOffset: 0 });
         await insertText(htmlEditor, "/image");
         await press("Enter");
@@ -268,9 +268,9 @@ describe("Remove attachments", () => {
         manuallyDispatchProgrammaticEvent(fileInput, "change");
         await expect.waitForSteps(["Image Uploaded"]);
         await waitFor("[name='attachment_ids'] a:contains('test.jpg')");
-        await waitFor(".odoo-editor-editable img[data-attachment-id='1']");
+        await waitFor(".modal .odoo-editor-editable img[data-attachment-id='1']");
         await click("[name='attachment_ids'] button:has(i.fa-times)");
         await waitForNone("[name='attachment_ids'] a:contains('test.jpg')");
-        await waitForNone(".odoo-editor-editable img[data-attachment-id='1']");
+        await waitForNone(".modal .odoo-editor-editable img[data-attachment-id='1']");
     });
 });

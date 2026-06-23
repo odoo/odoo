@@ -1,11 +1,5 @@
-import {
-    click,
-    contains,
-    insertText,
-    openDiscuss,
-    start,
-    startServer,
-} from "@mail/../tests/mail_test_helpers";
+import { click, contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, test } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
@@ -114,7 +108,7 @@ test("livechats are sorted by last activity time in the sidebar: most recent at 
         text: "Visitor 12",
     });
     await click(".o-mail-DiscussSidebarChannel", { text: "Visitor 11" });
-    await insertText(".o-mail-Composer-input", "Blabla");
+    await insertTextInComposer(".o-mail-Composer", "Blabla");
     await press("Enter");
     await contains(":nth-child(1 of .o-mail-DiscussSidebarChannel-container)", {
         text: "Visitor 11",
@@ -170,7 +164,7 @@ test("Conversation description works in livechat", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-input:focus");
+    await contains(".o-mail-Composer-html:focus");
     await contains(
         "input.o-mail-DiscussContent-threadDescription:value(Yup, that customer again...)"
     );

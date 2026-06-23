@@ -44,7 +44,7 @@
     }
 
     &:not(.o-focused) {
-        .o-mail-Composer-input::placeholder {
+        .o-we-hint {
             opacity: 50%;
         }
         .o-mail-Composer-mainActions button:not(.active) {
@@ -104,7 +104,7 @@
     background-color: var(--mail-Composer-bg, $o-view-background-color);
 }
 
-.o-mail-Composer-inputStyle, .o-mail-Composer-html {
+.o-mail-Composer-html {
     padding-top: 10px; // carefully crafted to have the text in the middle in chat window
     padding-bottom: 10px;
     padding-left: map-get($spacers, 1);
@@ -140,7 +140,7 @@
     }
 }
 
-.o-mail-Composer-input, .o-mail-Composer-html {
+.o-mail-Composer-html {
     max-height: Min(400px, 60vh);
     resize: none;
 
@@ -165,7 +165,7 @@
         max-height: Min(400px, 30vh);
     }
 
-    &::placeholder {
+    .o-we-hint {
         opacity: 40%;
 
         .o-mail-Composer.o-focused & {
@@ -197,12 +197,8 @@
 .o-mail-Composer-inputContainer {
     --border-color: #{rgba($dark, .15)};
 
-    &:has(textarea:focus) {
-        --border-color: #{rgba($o-component-active-border, var(--mail-Composer-focusedOpacity, .65))};
-    }
-
     &:has(.o-mail-Composer-html:focus) {
-        --border-color: #{$o-component-active-border};
+        --border-color: #{rgba($o-component-active-border, var(--mail-Composer-focusedOpacity, .65))};
     }
 }
 

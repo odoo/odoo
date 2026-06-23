@@ -2,7 +2,6 @@ import {
     click,
     contains,
     defineMailModels,
-    insertText,
     listenStoreFetch,
     openDiscuss,
     openFormView,
@@ -10,6 +9,7 @@ import {
     startServer,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 
 import { describe, expect, test } from "@odoo/hoot";
 import { press } from "@odoo/hoot-dom";
@@ -129,7 +129,7 @@ test("Posting a message in discuss app should not open a chat window after leavi
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "test https://www.odoo.com/");
+    await insertTextInComposer(".o-mail-Composer", "test https://www.odoo.com/");
     await press("Enter");
     // leaving discuss.
     await openFormView("res.partner", partnerId);

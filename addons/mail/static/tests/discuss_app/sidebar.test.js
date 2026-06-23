@@ -14,6 +14,7 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { toRawValue } from "@mail/utils/common/local_storage";
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
 import { makeRecordFieldLocalId } from "@mail/model/misc";
@@ -335,7 +336,7 @@ test("sidebar: open pinned channel", async () => {
     await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel-itemName:text('General')");
-    await contains(".o-mail-Composer-input[placeholder='Message #General…']");
+    await contains(".o-mail-Composer [o-we-hint-text='Message #General…']");
     await contains(".o-mail-DiscussContent-threadName", { value: "General" });
 });
 
@@ -839,7 +840,8 @@ test("chat should be sorted by last activity time", async () => {
     });
     await click(".o-mail-DiscussSidebarChannel:text('Demo')");
     // post a new message on the last channel
-    await insertText(".o-mail-Composer-input[placeholder='Message Demo…']", "Blabla");
+    await contains(".o-mail-Composer [o-we-hint-text='Message Demo…']");
+    await insertTextInComposer(".o-mail-Composer", "Blabla");
     await press("Enter");
     await contains(".o-mail-Message:has(:text('Blabla'))");
     await contains(".o-mail-DiscussSidebarChannel:text('Demo')", {

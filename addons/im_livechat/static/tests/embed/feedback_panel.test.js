@@ -74,7 +74,7 @@ test("Last operator leaving ends the livechat", async () => {
         ])
     );
     await contains("span", { text: "This live chat conversation has ended." });
-    await contains(".o-mail-Composer-input", { count: 0 });
+    await contains(".o-mail-Composer-html", { count: 0 });
     await click("[title*='Close Chat Window']");
     await contains("p", { text: "Did we correctly answer your question?" }); // shows immediately feedback
 });

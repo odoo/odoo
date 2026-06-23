@@ -77,7 +77,7 @@ test("Seen message is saved on the server", async () => {
     const initialSeenMessageId = Object.values(
         getService("mail.store")["discuss.channel"].records
     ).at(-1).self_member_id.seen_message_id?.id;
-    queryFirst(".o-mail-Composer-input").blur();
+    queryFirst(".o-mail-Composer-html").blur();
     await withUser(userId, () =>
         rpc("/mail/message/post", {
             post_data: {
@@ -91,7 +91,7 @@ test("Seen message is saved on the server", async () => {
     );
     await contains(".o-mail-Thread-newMessage");
     await contains(".o-mail-ChatWindow-counter", { text: "1" });
-    await focus(".o-mail-Composer-input");
+    await focus(".o-mail-Composer-html");
     await contains(".o-mail-ChatWindow-counter", { count: 0 });
     const guestId = pyEnv.cookie.get("dgid");
     const [member] = pyEnv["discuss.channel.member"].search_read([
