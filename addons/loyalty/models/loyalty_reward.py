@@ -317,6 +317,12 @@ class LoyaltyReward(models.Model):
                 self.discount_line_product_id.action_archive()
         return res
 
+    def update_field_translations(self, field_name, translations, source_lang=''):
+        res = super().update_field_translations(field_name, translations, source_lang=source_lang)
+        if field_name == 'description' and self.discount_line_product_id:
+            self.discount_line_product_id.update_field_translations('name', translations, source_lang=source_lang)
+        return res
+
     def unlink(self):
         programs = self.program_id
         res = super().unlink()
