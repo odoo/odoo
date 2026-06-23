@@ -17,17 +17,22 @@
             <field name="model">discuss.call.history</field>
             <field name="arch" type="xml">
                 <form string="Call History">
-                    <group class="oe_form_field">
-                        <field name="channel_id"/>
-                        <field name="start_dt"/>
-                        <field name="end_dt"/>
-                        <field name="duration_hour" widget="float_time" options="{'show_seconds': true}"/>
-                    </group>
-                    <field name="artifact_ids"
-                        widget="call_debrief"
-                        options="{'callStartDateField': 'start_dt', 'callEndDateField': 'end_dt'}"
-                        invisible="not artifact_ids"
-                    />
+                    <sheet>
+                        <group class="oe_form_field">
+                            <field name="channel_id"/>
+                            <field name="start_dt"/>
+                            <field name="end_dt"/>
+                            <field name="duration_hour" widget="float_time" options="{'show_seconds': true}"/>
+                        </group>
+                        <notebook invisible="not artifact_ids">
+                            <page name="Call Debrief">
+                                <field name="artifact_ids"
+                                    widget="call_debrief"
+                                    options="{'callStartDateField': 'start_dt', 'callEndDateField': 'end_dt'}"
+                                />
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
