@@ -1186,6 +1186,29 @@ class TestBoM(TestMrpCommon):
         # Total quantity of components is 4, so shouldn't be able to produce a single one.
         self.assertEqual(report_values['lines']['producible_qty'], 0)
 
+    def test_bom_report_producible_qty_repeated_component(self):
+        """producible_qty must stay correct when the same component is used on
+        several BoM lines (those lines get merged in the BoM Overview)."""
+        location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(self.product_2, location, 8.0)
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_3.product_tmpl_id.id,
+            'product_qty': 1,
+            'bom_line_ids': [
+                Command.create({
+                    'product_id': self.product_2.id,
+                    'product_qty': 2,
+                }),
+                Command.create({
+                    'product_id': self.product_2.id,
+                    'product_qty': 2,
+                })
+            ]
+        })
+        # 4 units of product_2 per unit of product_3, 8 in stock => 2 producible.
+        report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom.id, searchQty=1)
+        self.assertEqual(report_values['lines']['producible_qty'], 2)
+
     def test_bom_report_same_component(self):
         """ Test report bom structure with duplicated components.
         """
