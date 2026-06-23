@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
@@ -135,14 +135,14 @@ export class FileSelectorControlPanel extends Component {
         this.fileInput = useRef("file-input");
         const urlInputRef = useRef("urlInput");
 
-        useLayoutEffect(
-            () => {
-                if (this.state.showUrlInput) {
-                    urlInputRef.el.focus();
-                }
-            },
-            () => [this.state.showUrlInput]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         if (this.state.showUrlInput) {
+        //             urlInputRef.el.focus();
+        //         }
+        //     },
+        //     () => [this.state.showUrlInput]
+        // );
     }
 
     get showSearchServiceSelect() {
@@ -226,28 +226,28 @@ export class FileSelector extends Component {
         this.debouncedOnScroll = useDebounced(this.updateScroll, 15);
         this.debouncedScrollUpdate = useDebounced(this.updateScroll, 500);
 
-        useLayoutEffect(
-            (modalEl) => {
-                if (modalEl) {
-                    modalEl.addEventListener("scroll", this.debouncedOnScroll);
-                    return () => {
-                        modalEl.removeEventListener("scroll", this.debouncedOnScroll);
-                    };
-                }
-            },
-            () => [this.props.modalRef.el?.querySelector("main.modal-body")]
-        );
+        // useLayoutEffect(
+        //     (modalEl) => {
+        //         if (modalEl) {
+        //             modalEl.addEventListener("scroll", this.debouncedOnScroll);
+        //             return () => {
+        //                 modalEl.removeEventListener("scroll", this.debouncedOnScroll);
+        //             };
+        //         }
+        //     },
+        //     () => [this.props.modalRef.el?.querySelector("main.modal-body")]
+        // );
 
-        useLayoutEffect(
-            () => {
-                // Updating the scroll button each time the attachments change.
-                // Hiding the "Load more" button to prevent it from flickering.
-                this.loadMoreButtonRef.el.classList.add("o_hide_loading");
-                this.state.canScrollAttachments = false;
-                this.debouncedScrollUpdate();
-            },
-            () => [this.allAttachments.length]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         // Updating the scroll button each time the attachments change.
+        //         // Hiding the "Load more" button to prevent it from flickering.
+        //         this.loadMoreButtonRef.el.classList.add("o_hide_loading");
+        //         this.state.canScrollAttachments = false;
+        //         this.debouncedScrollUpdate();
+        //     },
+        //     () => [this.allAttachments.length]
+        // );
     }
 
     get canLoadMore() {
