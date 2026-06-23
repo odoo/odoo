@@ -73,6 +73,11 @@ class ResConfigSettings(models.TransientModel):
     default_allow_out_of_stock_order = fields.Boolean(
         string="Continue selling when out-of-stock", default=True, default_model="product.template"
     )
+    website_sale_unpublish_out_of_stock = fields.Boolean(
+        string="Unpublish Out-of-Stock Products",
+        related="website_id.website_sale_unpublish_out_of_stock",
+        readonly=False,
+    )
     default_available_threshold = fields.Float(
         string="Show Threshold", default=5.0, default_model="product.template"
     )

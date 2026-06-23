@@ -8,7 +8,7 @@ from odoo.http import request
 
 
 class ProductProduct(models.Model):
-    _name = 'product.product'
+    _name = "product.product"
     _inherit = ["product.product", "website.structured_data.mixin"]
     _mail_post_access = "read"
 
@@ -135,14 +135,11 @@ class ProductProduct(models.Model):
         # Use sudo to access cross-company taxes.
         price = self._apply_taxes_to_price(product_price, website.currency_id, website=website)
 
-        offer = {
-            "@type": "Offer",
-            "price": price,
-            "priceCurrency": website.currency_id.name,
-        }
+        offer = {"@type": "Offer", "price": price, "priceCurrency": website.currency_id.name}
         if self.is_product_variant and self.is_storable:
             offer["availability"] = (
-                "https://schema.org/OutOfStock" if self._is_sold_out()
+                "https://schema.org/OutOfStock"
+                if self._is_sold_out()
                 else "https://schema.org/InStock"
             )
 
@@ -201,7 +198,10 @@ class ProductProduct(models.Model):
                 ("product_id", "in", self.ids),
                 ("order_id", "any", [("website_id", "!=", False)]),
             ]).unlink()
-        return super().write(vals)
+        res = super().write(vals)
+        if "qty_available" in vals:
+            self.mapped("product_tmpl_id").filtered("is_storable")._sync_website_published_state()
+        return res
 
     def _is_in_wishlist(self):
         if not self:

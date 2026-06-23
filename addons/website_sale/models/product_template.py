@@ -176,6 +176,9 @@ class ProductTemplate(models.Model):
     available_threshold = fields.Float(string="Show Threshold", default=5.0)
     show_availability = fields.Boolean(string="Show availability Qty", default=False)
     out_of_stock_message = fields.Html(string="Out-of-Stock Message", translate=html_translate)
+    # Set when the system auto-unpublishes due to OOS. If set on a published product,
+    # the merchant manually republished while OOS so we skip auto-unpublish until stock is back.
+    auto_unpublished_date = fields.Datetime(string="Auto-Unpublished Date", copy=False)
 
     # === INDEXES === #
 
@@ -284,6 +287,7 @@ class ProductTemplate(models.Model):
                 "suggest_accessory_products": not vals.get("accessory_product_ids"),
                 "suggest_alternative_products": not vals.get("alternative_product_ids"),
             })
+        records.filtered("is_storable")._sync_website_published_state()
         return records
 
     def write(self, vals):
@@ -301,7 +305,45 @@ class ProductTemplate(models.Model):
                     else v
                 ),
             )
-        return super().write(vals)
+        res = super().write(vals)
+        if "is_storable" in vals or "allow_out_of_stock_order" in vals:
+            self._sync_website_published_state()
+        return res
+
+    def _sync_website_published_state(self):
+        """Unpublish or republish products based on stock availability."""
+        if not self:
+            return
+        websites = (
+            self.env["website"].sudo().search([("website_sale_unpublish_out_of_stock", "=", True)])
+        )
+        if not websites:
+            return
+
+        non_storable = self.sudo().filtered(lambda t: not t.is_storable and t.auto_unpublished_date)
+        if non_storable:
+            non_storable.write({"is_published": True, "auto_unpublished_date": False})
+
+        for website in websites:
+            templates = self.sudo().filtered(
+                lambda t, w=website: t.is_storable and (not t.website_id or t.website_id == w)
+            )
+            for template in templates:
+                variants = template.product_variant_ids.filtered("active")
+                if not variants:
+                    continue
+                all_sold_out = all(
+                    variant.with_context(website_id=website.id)._is_sold_out()
+                    for variant in variants
+                )
+                if all_sold_out:
+                    if template.is_published and not template.auto_unpublished_date:
+                        template.write({
+                            "is_published": False,
+                            "auto_unpublished_date": fields.Datetime.now(),
+                        })
+                elif template.auto_unpublished_date:
+                    template.write({"is_published": True, "auto_unpublished_date": False})
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_not_donation_product(self):
@@ -1060,9 +1102,7 @@ class ProductTemplate(models.Model):
         )
 
         if not tax_display:
-            show_tax = (
-                website or self.env.website
-            ).show_line_subtotals_tax_selection
+            show_tax = (website or self.env.website).show_line_subtotals_tax_selection
             tax_display = "total_excluded" if show_tax == "tax_excluded" else "total_included"
 
         return tax_details[tax_display]
@@ -1494,7 +1534,7 @@ class ProductTemplate(models.Model):
             schemas.append(self._prepare_jsonld_vals())
         elif self:
             category = self.env["product.public.category"].browse(
-                self.env.context.get("shop_category_id"),
+                self.env.context.get("shop_category_id")
             )
             if category:
                 list_path = category.website_url
@@ -1521,7 +1561,7 @@ class ProductTemplate(models.Model):
             category = self.public_categ_ids[:1]
         else:
             category = self.env["product.public.category"].browse(
-                self.env.context.get("shop_category_id"),
+                self.env.context.get("shop_category_id")
             )
         if category:
             for cat in category.parents_and_self:
@@ -1683,9 +1723,7 @@ class ProductTemplate(models.Model):
             product_or_template, date, currency, pricelist, **kwargs
         )
 
-        if (
-            website := self.env.website
-        ) and product_or_template.is_product_variant:
+        if (website := self.env.website) and product_or_template.is_product_variant:
             max_quantity = product_or_template._get_max_quantity(website, request.cart, **kwargs)
             if max_quantity is not None:
                 if uom:
