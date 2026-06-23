@@ -231,7 +231,6 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'l10n_fr_pdp_flow_10_operation_type',
             'l10n_fr_pdp_last_flow_id',
             'l10n_fr_pdp_status',
-            'l10n_fr_pdp_error_message',
         ])
 
     def _correct_partner(self, invoice):
@@ -497,6 +496,20 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         }])
         self.assertTrue(invoice.l10n_fr_pdp_last_flow_id)
 
+    def test_b2c_invoice_not_sent_is_pending(self):
+        invoice = self._create_reporting_invoice(
+            partner=self.b2c_customer,
+            sent=False,
+        )
+
+        self.assertFalse(invoice.is_move_sent)
+        self.assertRecordValues(invoice, [{
+            'l10n_fr_pdp_flow_10_report_type': 'transaction',
+            'l10n_fr_pdp_flow_10_operation_type': 'sale',
+            'l10n_fr_pdp_has_error': False,
+            'l10n_fr_pdp_status': 'pending',
+        }])
+
     def test_b2bi_invoice_creates_transaction_flow_payload(self):
         invoice = self._create_reporting_invoice(partner=self.b2bi_customer)
 
@@ -535,6 +548,20 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         xml = self._build_flow_xml(invoice.l10n_fr_pdp_last_flow_id)
         invoice_node = xml.find('./TransactionsReport/Invoice')
         self.assertEqual(invoice_node.findtext('TaxDueDateTypeCode'), '5')
+
+    def test_b2bi_invoice_not_sent_is_pending(self):
+        invoice = self._create_reporting_invoice(
+            partner=self.b2bi_customer,
+            sent=False,
+        )
+
+        self.assertFalse(invoice.is_move_sent)
+        self.assertRecordValues(invoice, [{
+            'l10n_fr_pdp_flow_10_report_type': 'transaction',
+            'l10n_fr_pdp_flow_10_operation_type': 'sale',
+            'l10n_fr_pdp_has_error': False,
+            'l10n_fr_pdp_status': 'pending',
+        }])
 
     def test_domestic_b2b_invoice_stays_out_of_scope(self):
         invoice = self._create_reporting_invoice(
@@ -1025,6 +1052,25 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'state': 'ready',
         }])
         self.assertFalse(flow.payload_id)
+
+    def test_valid_move_does_not_inherit_flow_error_status(self):
+        invalid_invoice = self._create_reporting_invoice(
+            partner=self.b2bi_invalid_customer,
+            invoice_date='2025-09-03',
+        )
+        valid_invoice = self._create_reporting_invoice(
+            partner=self.b2bi_customer,
+            invoice_date='2025-09-03',
+        )
+        flow = valid_invoice.l10n_fr_pdp_last_flow_id
+        self.assertEqual(flow, invalid_invoice.l10n_fr_pdp_last_flow_id)
+
+        (valid_invoice | invalid_invoice).invalidate_recordset(['l10n_fr_pdp_status'])
+
+        self.assertRecordValues(valid_invoice | invalid_invoice, [
+            {'l10n_fr_pdp_status': 'pending'},
+            {'l10n_fr_pdp_status': 'error'},
+        ])
 
     def test_transaction_flow_with_errors_sends_valid_moves_on_due_date(self):
         valid_invoice = self._create_reporting_invoice(
