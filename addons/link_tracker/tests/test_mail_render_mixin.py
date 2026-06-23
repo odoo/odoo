@@ -38,13 +38,14 @@ class TestMailRenderMixin(common.HttpCase):
             """,
             '<a href="https://test_escaped.com" title="title" fake="fake"> test_escaped &lt; &gt; </a>',
             '<a href="https://url_with_params.com?a=b&c=d">label</a>',
-            '<a href="#"></a>',
+            '<a href="#anchor">jump to section</a>',
             '<a href="mailto:afunemail@somewhere.com">email label</a>',
             '<a href="https://www.odoo.com?test=%20+3&amp;this=that">THERE > there</a>',
             '<a >Without href</a>'
         ]
 
-        self.env["mail.render.mixin"]._shorten_links("".join(test_links), {})
+        shortened = self.env["mail.render.mixin"]._shorten_links("".join(test_links), {})
+        self.assertIn('href="#anchor"', shortened)
 
         trackers_to_find = [
             [("url", "=", "https://gitlab.com"), ("label", "=", "test_label")],
@@ -63,12 +64,12 @@ class TestMailRenderMixin(common.HttpCase):
                 ("url", "=", "https://url_with_params.com?a=b&c=d"),
                 ("label", "=", "label"),
             ],
-            [("url", "=", self.base_url + '#')],
             [("url", "=", "https://www.odoo.com?test=%20+3&this=that"), ("label", "=", "THERE > there")],  # lxml unescaped
         ]
         trackers_to_fail = [
             [("url", "=", "https://test_542152qsdqsd.com"), ("label", "ilike", "_")],
             [("url", "ilike", "%mailto:afunemail@somewhere.com")],
+            [("url", "=", self.base_url + '#anchor')],
             [("label", '=', 'Without href')]
         ]
 
