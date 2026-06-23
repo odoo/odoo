@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { Component, onWillUnmount, proxy } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
@@ -46,14 +45,14 @@ export class ProductInfoBanner extends Component {
             }
         }, 500);
 
-        useLayoutEffect(
-            () => {
-                if (this.props.productTemplate) {
-                    debouncedFetchStocks(this.props.product, this.props.productTemplate);
-                }
-            },
-            () => [this.props.product]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         if (this.props.productTemplate) {
+        //             debouncedFetchStocks(this.props.product, this.props.productTemplate);
+        //         }
+        //     },
+        //     () => [this.props.product]
+        // );
         onWillUnmount(() => debouncedFetchStocks.cancel());
     }
 
