@@ -4,7 +4,11 @@ import { useAttachmentUploader } from "@mail/core/common/attachment_uploader_hoo
 import { useCustomDropzone } from "@web/core/dropzone/dropzone_hook";
 import { MailAttachmentDropzone } from "@mail/core/common/mail_attachment_dropzone";
 import { NavigableList } from "@mail/core/common/navigable_list";
-import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
+import {
+    MAIL_HTML_PLUGINS,
+    MAIL_HTML_PLUGINS_SMALL_UI,
+    MAIL_TEXT_PLUGINS,
+} from "@mail/core/common/plugin/plugin_sets";
 import { mapSuggestionsToOptions, useSuggestion } from "@mail/core/common/suggestion_hook";
 import { propComputed, useSelection } from "@mail/utils/common/hooks";
 import { generatePartnerMentionElement, trimEmptyBlocksAround } from "@mail/utils/common/format";
@@ -426,11 +430,16 @@ export class Composer extends Component {
     }
 
     get wysiwygConfig() {
+        window.aku = this;
         return {
             content: this.props.composer.composerHtml,
             placeholder: this.placeholder,
             baseContainers: ["DIV", "P"],
-            Plugins: this.ui.isSmall ? MAIL_SMALL_UI_PLUGINS : MAIL_PLUGINS,
+            Plugins: !this.composerService.htmlEnabled
+                ? MAIL_TEXT_PLUGINS
+                : this.ui.isSmall
+                ? MAIL_HTML_PLUGINS_SMALL_UI
+                : MAIL_HTML_PLUGINS,
             composerPluginDependencies: {
                 onBeforePaste: (selection, ev) => this.onPaste(ev),
                 onFocusin: this.onFocusin.bind(this),

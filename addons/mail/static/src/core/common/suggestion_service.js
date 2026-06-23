@@ -32,15 +32,7 @@ export class SuggestionService {
      * @returns {Array<[SuggestionDelimiter, number, number]>}
      */
     getSupportedDelimiters(thread, env) {
-        const delimiters = [
-            [SUGGESTION_DELIMITERS.PARTNER],
-            [SUGGESTION_DELIMITERS.CANNED_RESPONSE],
-        ];
-        // the emoji plugin handles the emoji suggestions already
-        if (!this.composer.htmlEnabled) {
-            delimiters.push([SUGGESTION_DELIMITERS.EMOJI, undefined, 2]);
-        }
-        return delimiters;
+        return [[SUGGESTION_DELIMITERS.PARTNER], [SUGGESTION_DELIMITERS.CANNED_RESPONSE]];
     }
 
     /**
