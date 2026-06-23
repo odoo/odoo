@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 
 
@@ -14,6 +14,23 @@ class StockLocation(models.Model):
         help="Expense account used to re-qualify products removed from stock and sent to this location")
     is_valued_internal = fields.Boolean('Is valued inside the company', compute="_compute_is_valued", search="_search_is_valued")
     is_valued_external = fields.Boolean('Is valued outside the company', compute="_compute_is_valued")
+
+    def write(self, vals):
+        if 'usage' in vals:
+            valued_usages = {'internal', 'transit'}
+            changing = self.filtered(lambda l: (l.usage in valued_usages) != (vals['usage'] in valued_usages))
+        else:
+            changing = self.env['stock.location']
+        res = super().write(vals)
+        if changing:
+            moves = self.env['stock.move'].search([
+                ('state', '=', 'done'),
+                '|',
+                ('location_id', 'in', changing.ids),
+                ('location_dest_id', 'in', changing.ids),
+            ], order='date asc')
+            moves._set_value()
+        return res
 
     def _search_is_valued(self, operator, value):
         if operator not in ['=', '!=']:

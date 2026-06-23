@@ -68,7 +68,7 @@ class StockMove(models.Model):
         for move in self:
             move.standard_price = move.product_id.with_company(move.company_id).standard_price
 
-    @api.depends('state', 'move_line_ids')
+    @api.depends('state', 'move_line_ids', 'move_line_ids.location_id.usage', 'move_line_ids.location_dest_id.usage')
     def _compute_is_in(self):
         for move in self:
             if move.state != 'done':
