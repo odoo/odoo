@@ -12,7 +12,7 @@ import threading
 import time
 from collections import defaultdict, deque
 from collections.abc import Buffer
-from contextlib import contextmanager, suppress
+from contextlib import ExitStack, contextmanager, suppress
 from enum import IntEnum
 from itertools import count
 from queue import PriorityQueue
@@ -61,9 +61,13 @@ def acquire_cursor(db):
             # Yield before trying to acquire the cursor to let other
             # greenlets release their cursor.
             time.sleep(0)
-            with suppress(PoolError), Registry(db).cursor() as cr:
-                yield cr
-                return
+            with ExitStack() as stack:
+                cr = None
+                with suppress(PoolError):
+                    cr = stack.enter_context(Registry(db).cursor())
+                if cr is not None:
+                    yield cr
+                    return
             time.sleep(delay + random.uniform(0, JITTER_ON_POOL_ERROR))
             delay *= 1.5
         raise PoolError('Failed to acquire cursor after %s retries' % MAX_TRY_ON_POOL_ERROR)
