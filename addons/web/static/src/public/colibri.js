@@ -54,8 +54,7 @@ export class Colibri {
             return;
         }
         this.isReady = true;
-        const content = this.interaction.dynamicContent;
-        this.startInteraction(content);
+        this.startInteraction(this.interaction.dynamicContent);
     }
 
     addListener(nodes, event, fn, options) {
@@ -251,19 +250,19 @@ export class Colibri {
     }
 
     getNodes(sel) {
-        const selectors = this.interaction.dynamicSelectors;
-        if (sel in selectors) {
-            const elems = selectors[sel]();
-            if (elems) {
-                if (elems.nodeName && ["FORM", "SELECT"].includes(elems.nodeName)) {
-                    return [elems];
-                }
-                return elems[Symbol.iterator] ? elems : [elems];
-            } else {
-                return [];
-            }
+        const dynamicSelectors = this.interaction.dynamicSelectors;
+        if (!(sel in dynamicSelectors)) {
+            return Array.from(this.interaction.el.querySelectorAll(sel));
         }
-        return this.interaction.el.querySelectorAll(sel);
+        const elems = dynamicSelectors[sel]();
+        if (!elems) {
+            return [];
+        }
+        // Specific condition because forms and selects are iterable.
+        if (elems.nodeName && ["FORM", "SELECT"].includes(elems.nodeName)) {
+            return [elems];
+        }
+        return elems[Symbol.iterator] ? Array.from(elems) : [elems];
     }
 
     processContent(content) {

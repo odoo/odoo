@@ -36,6 +36,11 @@ const TemplateTestDoubleSpan = `
         <span>span2</span>
     </div>`;
 
+const TemplateTestButton = `
+    <div class="test">
+        <button>button</button>
+    </div>`;
+
 const TemplateTestDoubleButton = `
     <div class="test">
         <button>button1</button>
@@ -209,6 +214,167 @@ describe("adding listeners", () => {
         expect(clicked).toBe(1);
         expect("span").toHaveAttribute("x", "1");
     });
+
+    test("events triggered before interaction is ready are buffered and replayed", async () => {
+        let clicked = 0;
+        const def = Promise.withResolvers();
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                button: { "t-on-click": () => clicked++ },
+            };
+            willStart() {
+                expect.step("willStart");
+                return def.promise;
+            }
+            start() {
+                expect.step("start");
+            }
+        }
+        await startInteraction(Test, TemplateTestButton, { waitForStart: false });
+        expect.verifySteps(["willStart"]);
+        expect(clicked).toBe(0);
+        await click("button");
+        expect(clicked).toBe(0);
+        def.resolve();
+        expect.verifySteps([]);
+        await animationFrame();
+        expect.verifySteps(["start"]);
+        expect(clicked).toBe(1);
+    });
+
+    test("events triggered before interaction is ready are buffered and replayed for dynamicSelector", async () => {
+        let clicked = 0;
+        const def = Promise.withResolvers();
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicSelectors = {
+                _button: () => this.el.querySelectorAll("button"),
+            };
+            dynamicContent = {
+                _button: { "t-on-click": () => clicked++ },
+            };
+            willStart() {
+                expect.step("willStart");
+                return def.promise;
+            }
+            start() {
+                expect.step("start");
+            }
+        }
+        await startInteraction(Test, TemplateTestButton, { waitForStart: false });
+        expect.verifySteps(["willStart"]);
+        await click("button");
+        expect(clicked).toBe(0);
+        def.resolve();
+        await animationFrame();
+        expect.verifySteps(["start"]);
+        expect(clicked).toBe(1);
+    });
+
+    test("clicks buffered by the interaction service add a loading effect on buttons", async () => {
+        const def = Promise.withResolvers();
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                button: { "t-on-click": () => {} },
+            };
+            willStart() {
+                expect.step("willStart");
+                return def.promise;
+            }
+            start() {
+                expect.step("start");
+            }
+        }
+        await startInteraction(Test, TemplateTestButton, { waitForStart: false });
+        expect.verifySteps(["willStart"]);
+        await click("button");
+        await animationFrame();
+        expect("button").toHaveClass("pe-none");
+        expect("button span").toHaveCount(1);
+        def.resolve();
+        expect.verifySteps([]);
+        await animationFrame();
+        expect.verifySteps(["start"]);
+        expect("button").not.toHaveClass("pe-none");
+        expect("button span").not.toHaveCount();
+    });
+
+    test("buffered clicks work when the target is a child of the button", async () => {
+        let clicked = 0;
+        const def = Promise.withResolvers();
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                button: { "t-on-click": () => clicked++ },
+            };
+            willStart() {
+                expect.step("willStart");
+                return def.promise;
+            }
+            start() {
+                expect.step("start");
+            }
+        }
+        await startInteraction(
+            Test,
+            `<div class="test">
+                <button><span>button</span></button>
+            </div>`,
+            { waitForStart: false }
+        );
+        expect.verifySteps(["willStart"]);
+        expect(clicked).toBe(0);
+        await click("span");
+        expect(clicked).toBe(0);
+        def.resolve();
+        expect.verifySteps([]);
+        await animationFrame();
+        expect.verifySteps(["start"]);
+        expect(clicked).toBe(1);
+    });
+
+    test("buffered events triggered before interaction is ready are not replayed if the selector doesn't match anymore", async () => {
+        let clicked = 0;
+        const def = Promise.withResolvers();
+        class Test extends Interaction {
+            static selector = ".test";
+            dynamicContent = {
+                ".running": {
+                    "t-on-click": () => clicked++,
+                },
+            };
+            async willStart() {
+                expect.step("willStart");
+                def.promise.then(() => {
+                    expect.step(
+                        "bufferedClicks: " +
+                            this.services["public.interactions"].bufferedClicks.size
+                    );
+                    this.el.querySelector(".running").classList.remove("running");
+                });
+                return def.promise;
+            }
+            start() {
+                expect.step("start");
+            }
+        }
+        await startInteraction(
+            Test,
+            `<div class="test">
+                <button class="running">coucou</button>
+            </div>`,
+            { waitForStart: false }
+        );
+        expect.verifySteps(["willStart"]);
+        await click(".running");
+        expect(clicked).toBe(0);
+        def.resolve();
+        await animationFrame();
+        expect.verifySteps(["bufferedClicks: 1", "start"]);
+        expect(clicked).toBe(0);
+    });
 });
 
 describe("using selectors", () => {
@@ -338,7 +504,9 @@ describe("using selectors", () => {
             };
         }
         await startInteraction(Test, TemplateTest);
-        expect.verifySteps(["check"]);
+        // "check" appears twice: calls to `getNodes` from `getInitialButtons`
+        // and `processContent`.
+        expect.verifySteps(["check", "check"]);
         expect(clicked).toBe(0);
     });
 
