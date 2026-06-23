@@ -110,6 +110,10 @@
                     <label for="recurrence_update" class="me-2">Edit recurring event</label>
                     <field name="recurrence_update" widget="radio" options="{'horizontal': True}"/>
                 </div>
+                <div class="alert alert-warning" role="alert" invisible="not invalid_email_partner_ids">
+                    <span>The following attendees do not have an email address set. They will not be invited to the event.</span>
+                    <field name="invalid_email_partner_ids" widget="many2many_tags"/>
+                </div>
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <field name="active" invisible="1"/>
@@ -312,7 +316,11 @@
                     <span class="me-1">Not available at the selected time:</span>
                     <field name="unavailable_partner_ids" widget="many2many_tags"/>
                 </div>
-                <field name="invalid_email_partner_ids" invisible="1"/> <!--used in many2many_attendees widget-->
+                <div class="alert alert-warning border-0 d-flex flex-wrap m-0 mb-3" role="alert"
+                    invisible="not invalid_email_partner_ids">
+                    <span class="w-100 mb-1">The following attendees do not have an email address set. They will not be invited to the event.</span>
+                    <field name="invalid_email_partner_ids" widget="many2many_tags"/>
+                </div>
                 <div class="o_outlined d-flex align-items-baseline mb-3 gap-2">
                     <i class="fa fa-tag" title="Booking Name"/>
                     <field name="name" nolabel="1" class="w-100"
