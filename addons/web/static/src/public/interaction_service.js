@@ -1,8 +1,10 @@
 import { Scope, useApp, useScope } from "@odoo/owl";
 import { registry } from "@web/core/registry";
+import { addLoadingEffect, isClickable } from "@web/core/utils/ui";
 import { Colibri } from "./colibri";
 import { Interaction } from "./interaction";
-import { PairSet } from "./utils";
+import lazyloader from "./lazyloader";
+import { BUTTON_HANDLER_SELECTOR, PairSet } from "./utils";
 
 /**
  * Website Core
@@ -27,6 +29,8 @@ import { PairSet } from "./utils";
  * It provides full access to Owl features, but is rendered browser side.
  *
  */
+const waitForInteractionsSetup = Promise.withResolvers();
+lazyloader.registerPageReadinessDelay(waitForInteractionsSetup.promise);
 
 class InteractionScope extends Scope {}
 
@@ -41,6 +45,7 @@ class InteractionService {
         this.Interactions = [];
         this.el = el;
         this.isActive = false;
+        this.initialSetupDone = false;
         // relation el <--> Interaction
         this.activeInteractions = new PairSet();
         this.env = env;
@@ -49,6 +54,9 @@ class InteractionService {
         this.owlApp = useApp();
         this.proms = [];
         this.registry = null;
+        this.shouldBuffer = false;
+        this.bufferedClicks = new Map();
+        this.bufferTargets = new Map();
     }
 
     /**
@@ -59,7 +67,12 @@ class InteractionService {
      */
     activate(Interactions, target) {
         this.Interactions = Interactions;
-        const startProm = this.scope.ready.then(() => this.startInteractions(target));
+        const startProm = this.scope.ready.then(async () => {
+            const allInteractionsStarted = this.startInteractions(target);
+            this.retriggerBufferedClicks();
+            await allInteractionsStarted;
+            this.shouldBuffer = false;
+        });
         this.proms.push(startProm);
     }
 
@@ -135,6 +148,11 @@ class InteractionService {
                 this._startInteraction(_el, I, proms);
             }
         }
+        if (!this.initialSetupDone) {
+            waitForInteractionsSetup.resolve();
+            this.shouldBuffer = true;
+            this.initialSetupDone = true;
+        }
         if (el === this.el) {
             this.isActive = true;
         }
@@ -153,6 +171,7 @@ class InteractionService {
                 const interaction = new Colibri(this, I, el);
                 this.interactions.push(interaction);
                 proms.push(interaction.start());
+                this.registerBufferedClicks(interaction);
             } catch (e) {
                 this.proms.push(Promise.reject(e));
             }
@@ -180,6 +199,7 @@ class InteractionService {
         for (const interaction of this.interactions.slice().reverse()) {
             if (this.shouldStop(el, interaction)) {
                 try {
+                    this.unbufferClicks(el, interaction);
                     interaction.destroy();
                 } catch (error) {
                     errors.push([interaction.interaction.constructor.name, error]);
@@ -216,6 +236,110 @@ class InteractionService {
     get isReady() {
         const proms = this.proms.slice();
         return Promise.all(proms);
+    }
+
+    /**************************** BUFFERING CLICKS ****************************/
+    /**
+     * Buffers clicks made before interactions are started to be replayed after.
+     *
+     * @param {Object} interaction - Colibri instance
+     */
+    registerBufferedClicks(interaction) {
+        const btnEls = [];
+        const dynamicContent = interaction.interaction.dynamicContent;
+        for (const sel in dynamicContent) {
+            const hasClickListener = Object.keys(dynamicContent[sel]).some((directive) =>
+                directive.startsWith("t-on-click")
+            );
+            if (hasClickListener) {
+                const nodes = interaction.getNodes(sel);
+                btnEls.push(
+                    ...nodes.filter(
+                        (node) => node.nodeType === 1 && node.matches(BUTTON_HANDLER_SELECTOR)
+                    )
+                );
+            }
+        }
+        for (const btnEl of new Set(btnEls)) {
+            this.setInteractionsPerBufferTarget(btnEl, interaction.startResolvers.promise);
+            if (!this.bufferedClicks.has(btnEl) && !this.bufferTargets.get(btnEl).handler) {
+                const handler = (ev) => {
+                    if (!this.shouldBuffer) {
+                        return;
+                    }
+                    ev.preventDefault();
+                    ev.stopImmediatePropagation();
+                    const restore = addLoadingEffect(btnEl);
+                    this.bufferedClicks.set(btnEl, { event: ev, restore });
+                };
+                btnEl.addEventListener("click", handler, { capture: true, once: true });
+                this.bufferTargets.get(btnEl).handler = handler;
+            }
+        }
+    }
+
+    setInteractionsPerBufferTarget(el, interactionStartPromise) {
+        if (!this.bufferTargets.has(el)) {
+            this.bufferTargets.set(el, {
+                interactionStarts: new Set([interactionStartPromise]),
+                handler: undefined,
+            });
+        } else {
+            this.bufferTargets.get(el).interactionStarts.add(interactionStartPromise);
+        }
+    }
+
+    /**
+     * Dispatches a click event on all buffered clicks targets.
+     */
+    retriggerBufferedClicks() {
+        for (const [btnEl, { interactionStarts }] of this.bufferTargets.entries()) {
+            const startProms = new Set(interactionStarts);
+            for (const interaction of this.interactions) {
+                if (interaction.el.contains(btnEl)) {
+                    startProms.add(interaction.startResolvers.promise);
+                }
+            }
+            Promise.allSettled(startProms).then(() => {
+                if (!this.bufferedClicks.has(btnEl)) {
+                    return;
+                }
+                const { event, restore } = this.bufferedClicks.get(btnEl);
+                restore();
+                if (isClickable(btnEl)) {
+                    event.target.dispatchEvent(new event.constructor(event.type, event));
+                }
+                this.bufferedClicks.delete(btnEl);
+            });
+        }
+    }
+
+    /**
+     * Removes elements from clicks to be retriggered.
+     *
+     * @param {HTMLElement} el - root stopped
+     * @param {Object} interaction - Colibri instance
+     */
+    unbufferClicks(el, interaction) {
+        for (const [btnEl, { interactionStarts, handler }] of this.bufferTargets.entries()) {
+            if (el === btnEl || el.contains(btnEl)) {
+                if (!interactionStarts.has(interaction.startResolvers.promise)) {
+                    continue;
+                }
+                interactionStarts.delete(interaction.startResolvers.promise);
+                interaction.startResolvers.promise.catch(() => {});
+                interaction.startResolvers.reject();
+                if (!interactionStarts.size) {
+                    if (!this.bufferedClicks.get(btnEl)) {
+                        btnEl.removeEventListener("click", handler, { capture: true, once: true });
+                    } else {
+                        this.bufferedClicks.get(btnEl).restore();
+                        this.bufferedClicks.delete(btnEl);
+                    }
+                    this.bufferTargets.delete(btnEl);
+                }
+            }
+        }
     }
 }
 
