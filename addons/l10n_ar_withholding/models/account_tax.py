@@ -79,3 +79,15 @@ class AccountTax(models.Model):
                     tax.l10n_ar_withholding_payment_type = False
                     tax.l10n_ar_tax_type = False
                 tax.type_tax_use = 'none'
+
+    def _prepare_base_line_tax_repartition_grouping_key(self, base_line, base_line_grouping_key, tax_data, tax_rep_data):
+        """ Override to keep withholding lines with a 0% tax.
+        These lines are important for the Argentinian localization and as the withholding table is not editable,
+        if they are removed, then there's no way to re-add them afterwards.
+        """
+        res = super()._prepare_base_line_tax_repartition_grouping_key(base_line, base_line_grouping_key, tax_data, tax_rep_data)
+        record = base_line['record']
+        if isinstance(record, models.Model) and record._name == "account.move.line":
+            if any(tax.country_code == 'AR' and tax.l10n_ar_type_tax_use in ('supplier', 'customer') for tax in record.tax_ids):
+                res["__keep_zero_line"] = True
+        return res
