@@ -472,6 +472,11 @@ class TestAPI(ThreadRecipients):
                 'customer_id': self.user_root.partner_id.id,
                 'name': 'Root',
             },
+            # do not propose root email
+            {
+                'email_from': self.user_root.partner_id.email,
+                'name': 'Root Email',
+            },
             # do not propose alias domain emails
             {
                 'email_from': self.mail_alias_domain.catchall_email,
@@ -513,6 +518,8 @@ class TestAPI(ThreadRecipients):
             {'email_cc': '', 'email_to': '', 'partner_ids': []},
             # should be nobody to suggest (no root !)
             {'email_cc': '', 'email_to': '', 'partner_ids': []},
+            # root email shouldn't show up
+            {'email_cc': '', 'email_to': '', 'partner_ids': []},
             # alias domain email is not ok
             {'email_cc': '', 'email_to': '', 'partner_ids': []},
             # partner with alias email is not ok
@@ -527,6 +534,41 @@ class TestAPI(ThreadRecipients):
             {'email_cc': '', 'email_to': '', 'partner_ids': [self.test_partner_archived.id]},
             # active based on archived user is ok, customer
             {'email_cc': '', 'email_to': '', 'partner_ids': [self.partner_employee_archived.id]},
+        ]
+        defaults = tickets._message_get_default_recipients()
+        for ticket, expected in zip(tickets, expected_all, strict=True):
+            with self.subTest(ticket_name=ticket.name):
+                self.assertDictEqual(defaults[ticket.id], expected)
+
+        # with an active partner matching its email, root email should no longer be banned
+        partner_matching_root = self.env['res.partner'].create({
+            'name': 'EmailMatchingRoot',
+            'email': self.user_root.partner_id.email,
+        })
+        tickets = self.env['mail.test.ticket.mc'].create([
+            # Propose customer matching root
+            {
+                'customer_id': partner_matching_root.id,
+                'name': 'Customer Matching Root Email',
+            },
+            # Propose email matching root
+            {
+                'email_from': self.user_root.partner_id.email,
+                'name': 'Root Email',
+            },
+            # Propose root partner
+            {
+                'customer_id': self.user_root.partner_id.id,
+                'name': 'Root Partner',
+            },
+        ])
+        expected_all = [
+            # Customer matching root should show up
+            {'email_cc': '', 'email_to': '', 'partner_ids': partner_matching_root.ids},
+            # Email matching root should be allowed
+            {'email_cc': '', 'email_to': self.user_root.partner_id.email, 'partner_ids': []},
+            # Root partner should show up
+            {'email_cc': '', 'email_to': '', 'partner_ids': self.user_root.partner_id.ids},
         ]
         defaults = tickets._message_get_default_recipients()
         for ticket, expected in zip(tickets, expected_all, strict=True):
