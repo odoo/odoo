@@ -3,8 +3,9 @@
 import gc
 import json
 from collections import defaultdict
+from psycopg2.pool import PoolError
 from threading import Event
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 from weakref import WeakSet
 
 try:
@@ -20,6 +21,7 @@ from odoo.addons.bus.models.bus import dispatch
 from odoo.addons.bus.models.ir_websocket import IrWebsocket
 from odoo.addons.bus.tests.common import WebsocketCase
 from odoo.addons.bus.websocket import (
+    acquire_cursor,
     CloseCode,
     Websocket,
     WebsocketConnectionHandler,
@@ -265,3 +267,20 @@ class TestWebsocketCaryall(WebsocketCase):
         )
         with self.assertRaises(ws._exceptions.WebSocketTimeoutException):
             websocket.recv()
+
+    @patch('odoo.addons.bus.websocket.Registry')
+    def test_propagates_caller_pool_error(self, mock_registry):
+        fake_cursor = MagicMock()
+        cr_ctx_manager = mock_registry.return_value.cursor.return_value
+        cr_ctx_manager.__enter__.return_value = fake_cursor
+        cr_ctx_manager.__exit__.return_value = False
+
+        with self.assertRaises(PoolError) as cm:
+            with acquire_cursor(None) as cr:
+                self.assertIs(cr, fake_cursor)
+                raise PoolError("from_caller")
+
+        # Ensure the caller pool error propagated, not the "Failed to acquire cursor
+        # after..." raised by the acquire_cursor fn.
+        self.assertEqual(str(cm.exception), "from_caller")
+        mock_registry.return_value.cursor.assert_called_once()  # Ensure acquire_cursor didn't retry either.
