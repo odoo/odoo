@@ -31,20 +31,12 @@ class StockPutInPack(models.TransientModel):
 
             wizard.shipping_weight = total_weight
 
-    @api.onchange('package_type_id', 'result_package_id', 'shipping_weight')
-    def _onchange_package_type_weight(self):
-        max_weight = self.package_type_id.max_weight if self.package_type_id else self.result_package_id.package_type_id.max_weight
-        if self.package_carrier_type and max_weight and self.shipping_weight > max_weight:
-            if self.package_type_id:
-                message = self.env._('The weight of your package is higher than the maximum weight authorized for this package type. Please choose another package type.')
-            else:
-                message = self.env._('The weight of your package is higher than the maximum weight authorized for its package type. Please choose another package.')
-            return {
-                'warning': {
-                    'title': self.env._('Package too heavy!'),
-                    'message': message,
-                }
-            }
+    @api.onchange('shipping_weight')
+    def _onchange_shipping_weight(self):
+        self._check_package_weight()
+
+    def _get_weight_to_check(self):
+        return self.shipping_weight or self.weight
 
     def _get_put_in_pack_context(self):
         context = super()._get_put_in_pack_context()

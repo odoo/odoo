@@ -8,7 +8,8 @@ class StockPackage(models.Model):
 
     @api.depends('contained_quant_ids', 'package_type_id')
     def _compute_weight(self):
-        packages_weight = self.sudo()._get_weight(self.env.context.get('picking_id'))
+        picking_id = self.env.context.get('picking_id')
+        packages_weight = self.sudo()._get_weight(picking_id, include_quants=bool(picking_id))
         for package in self:
             package.weight = packages_weight[package]
 
