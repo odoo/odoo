@@ -1,10 +1,10 @@
-import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useExternalListener, useRef } from "@web/owl2/utils";
 import { Component, props, proxy, t } from "@odoo/owl";
 import { CustomColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { isCSSColor, isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
 import { cookie } from "@web/core/browser/cookie";
-import { POSITION_BUS } from "@web/core/position/position_hook";
+// import { POSITION_BUS } from "@web/core/position/position_hook";
 import { registry } from "@web/core/registry";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -93,13 +93,13 @@ export class ColorPicker extends Component {
             currentColorPreview: undefined,
         });
         this.usedCustomColors = this.props.getUsedCustomColors();
-        useLayoutEffect(
-            () => {
-                // Recompute the positioning of the popover if any.
-                this.env[POSITION_BUS]?.trigger("update");
-            },
-            () => [this.state.activeTab]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         // Recompute the positioning of the popover if any.
+        //         this.env[POSITION_BUS]?.trigger("update");
+        //     },
+        //     () => [this.state.activeTab]
+        // );
         const documents = [
             window.top,
             ...Array.from(window.top.frames).filter((frame) => {
@@ -370,29 +370,29 @@ export function useColorPicker(refName, props, options = {}) {
     }
 
     const colorPicker = usePopover(ColorPicker, options);
-    const root = useRef(refName);
+    // const root = useRef(refName);
 
-    function onClick() {
-        if (colorPicker.isOpen) {
-            colorPicker.close();
-        } else {
-            colorPicker.open(root.el, props);
-            options.onOpen?.();
-        }
-    }
+    // function onClick() {
+    //     if (colorPicker.isOpen) {
+    //         colorPicker.close();
+    //     } else {
+    //         colorPicker.open(root.el, props);
+    //         options.onOpen?.();
+    //     }
+    // }
 
-    useLayoutEffect(
-        (el) => {
-            if (!el) {
-                return;
-            }
-            el.addEventListener("click", onClick);
-            return () => {
-                el.removeEventListener("click", onClick);
-            };
-        },
-        () => [root.el]
-    );
+    // useLayoutEffect(
+    //     (el) => {
+    //         if (!el) {
+    //             return;
+    //         }
+    //         el.addEventListener("click", onClick);
+    //         return () => {
+    //             el.removeEventListener("click", onClick);
+    //         };
+    //     },
+    //     () => [root.el]
+    // );
 
     return colorPicker;
 }
