@@ -2,13 +2,24 @@ import { BackgroundOption } from "@html_builder/plugins/background_option/backgr
 import { addBuilderOption } from "@html_builder/../tests/helpers";
 import { Plugin } from "@html_editor/plugin";
 import { t } from "@odoo/owl";
-import { expect, test } from "@odoo/hoot";
+import {
+    advanceTime,
+    click,
+    edit,
+    expect,
+    mockFetch,
+    queryAttribute,
+    test,
+    waitForNone,
+} from "@odoo/hoot";
 import { animationFrame, queryOne, scroll, waitFor } from "@odoo/hoot-dom";
 import { contains } from "@web/../tests/web_test_helpers";
+import { PLATFORMS } from "@html_editor/main/media/media_dialog/video_selector";
 import {
     addPlugin,
     defineWebsiteModels,
     setupWebsiteBuilder,
+    setupWebsiteBuilderWithSnippet,
     toggleMobilePreview,
 } from "@website/../tests/builder/website_helpers";
 import { patchDragImage } from "@website/../tests/builder/image_test_helpers";
@@ -724,3 +735,37 @@ test("Change the background position when multiple background layer is applied",
     expect(section).toHaveStyle("background-size: 100px, cover");
     expect("[data-action-value='repeat-pattern']").toHaveClass("active");
 });
+
+for (const [platform, platformClass] of Object.entries(PLATFORMS)) {
+    if ("hideControls" in platformClass.optionsConfig) {
+        test(`background video applies hideControls & hideFullscreen options to video selector ${platform}`, async () => {
+            await setupWebsiteBuilderWithSnippet("s_cover");
+            const videoUrl = platformClass.exampleUrls.base;
+
+            mockFetch(() => '{"data": "mockFetch api result data"}');
+
+            await contains(":iframe .s_cover").click();
+            await contains('[data-container-title="Cover"]').click();
+            await contains('[data-action-id="toggleBgVideo"]').click();
+
+            await click("#o_video_text");
+            await edit(videoUrl);
+
+            await advanceTime(100);
+
+            await contains("div.modal .modal-footer button.btn-primary").click();
+            await waitForNone(`div.modal`);
+
+            const videoSrc = queryAttribute(":iframe .o_background_video", "data-bg-video-src");
+            for (const paramName of platformClass.optionsConfig.hideControls.params) {
+                expect(videoSrc).toMatch(`${paramName}=0`);
+            }
+
+            if (platformClass.optionsConfig.hideControls?.linkedParams?.length) {
+                for (const paramName of platformClass.optionsConfig.hideControls.linkedParams) {
+                    expect(videoSrc).toMatch(`${paramName}=0`);
+                }
+            }
+        });
+    }
+}

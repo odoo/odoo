@@ -12,6 +12,13 @@ export class Vimeo extends AbstractThirdPartyVideo {
         startFrom: { default: 0, type: Number },
         autoplay: { default: false, type: BooleanInt, params: ["autoplay"] },
         muted: { default: false, type: BooleanInt, params: ["muted"] },
+        hideControls: { default: false, type: BooleanInt, params: ["controls"], reversed: true },
+        hideFullscreen: {
+            default: false,
+            type: BooleanInt,
+            params: ["fullscreen"],
+            reversed: true,
+        },
     };
     /**
      * Returns the embed url for a vimeo video.
@@ -63,6 +70,7 @@ export class Vimeo extends AbstractThirdPartyVideo {
         embed: "https://player.vimeo.com/video/395399735",
         embedUnlisted: "https://player.vimeo.com/video/795669787?h=0763fdb816",
         params: "vimeo.com/395399735?autoplay=1#t=62",
-        embedParams: "https://player.vimeo.com/video/395399735?autoplay=1#t=62",
+        embedParams:
+            "https://player.vimeo.com/video/395399735?controls=0&fullscreen=1&autoplay=1#t=62",
     };
 }
