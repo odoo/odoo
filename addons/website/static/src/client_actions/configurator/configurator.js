@@ -77,6 +77,17 @@ export const CUSTOM_BG_COLOR_ATTRS = ["menu", "footer"];
 
 const MAX_NBR_DISPLAY_MAIN_THEMES = 6;
 const DESKTOP_PREVIEW_WIDTH = 1440;
+const PREVIEW_IMAGE_LIST = [
+    "landscape_md_2",
+    "landscape_md_6",
+    "landscape_md_8",
+    "portrait_lg_1",
+    "ultrawide_lg_4",
+    "ultrawide_lg_3",
+    "set_2_square_md_1",
+    "set_2_square_md_3",
+    "set_2_square_md_5",
+];
 
 function getUserLanguageName() {
     const locale = user.lang || "en-US";
@@ -322,9 +333,33 @@ export class DescriptionScreen extends Component {
     }
 
     get previewImages() {
-        return Object.values(this.state.images || {})
-            .slice(0, 10)
-            .map((url, slot) => ({ url, slot }));
+        const images = this.state.images || {};
+        const fallbackImageUrls = [];
+        const previewImageUrls = [];
+        const websitePrefix = "website.";
+        let fallbackImageIndex = 0;
+
+        for (const [imageKey, imageUrl] of Object.entries(images)) {
+            const imageName = imageKey.startsWith(websitePrefix)
+                ? imageKey.slice(websitePrefix.length)
+                : imageKey;
+            if (!PREVIEW_IMAGE_LIST.includes(imageName)) {
+                fallbackImageUrls.push(imageUrl);
+            }
+        }
+
+        for (const imageName of PREVIEW_IMAGE_LIST) {
+            let imageUrl = images[`${websitePrefix}${imageName}`] || images[imageName];
+            if (!imageUrl) {
+                imageUrl = fallbackImageUrls[fallbackImageIndex];
+                fallbackImageIndex++;
+            }
+            if (imageUrl) {
+                previewImageUrls.push(imageUrl);
+            }
+        }
+
+        return previewImageUrls.map((url, slot) => ({ url, slot }));
     }
 
     _splitToSet(string) {
