@@ -9,9 +9,6 @@
     'data': [
         'views/mailing_mailing_views.xml',
     ],
-    'demo': [
-        'demo/mailing_mailing.xml',
-    ],
     'assets': {
         'web.assets_backend': [
             'mass_mailing_crm/static/src/**/*',
