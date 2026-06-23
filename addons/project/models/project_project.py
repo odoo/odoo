@@ -118,7 +118,8 @@ class ProjectProject(models.Model):
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks', export_string_translation=False,
                                domain="[('is_closed', '=', False)]")
     color = fields.Integer(string='Color Index', export_string_translation=False)
-    user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, tracking=True, falsy_value_label=_lt("👤 Unassigned"))
+    user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, tracking=True, falsy_value_label=_lt("👤 Unassigned"),
+        domain="[('share', '=', False), '|', ('company_id', '=?', company_id), ('company_ids', 'in', company_id)]")
     alias_id = fields.Many2one(help="Internal email associated with this project. Incoming emails are automatically synchronized "
                                     "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     privacy_visibility = fields.Selection([
@@ -206,6 +207,8 @@ class ProjectProject(models.Model):
                 order=f"sequence asc, {self.env['project.project.stage']._order}",
                 limit=1,
             ).id
+        if self.company_id and self.user_id and self.company_id not in self.user_id.company_ids:
+            self.user_id = False
 
     @api.depends('next_milestone_id')
     def _compute_next_milestone_info(self):
@@ -759,6 +762,16 @@ class ProjectProject(models.Model):
                 analytic_account.id for [analytic_account] in projects_read_group
             ])
             analytic_account_to_update.write({'name': self.name})
+
+        if vals.get('company_id'):
+            for project in self:
+                if project.company_id and project.user_id and project.company_id not in project.user_id.company_ids:
+                    project.user_id = False
+                for task in project.task_ids:
+                    task.user_ids = task.user_ids.filtered(
+                        lambda user: project.company_id in user.company_ids
+                    )
+
         return res
 
     def unlink(self):
