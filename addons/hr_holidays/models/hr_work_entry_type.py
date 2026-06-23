@@ -672,7 +672,7 @@ class HrWorkEntryType(models.Model):
         return None, 0
 
     def _get_carried_over_days_expiration_data(self, allocations, target_date):
-        accrual_allocations = allocations.filtered(lambda alloc: alloc.allocation_type == 'accrual')
+        accrual_allocations = allocations.filtered(lambda alloc: alloc.accrual_plan_id)
         updated_alloc_data = accrual_allocations.sudo()._process_accrual_plans(target_date)
         carried_over_days_expiration_data = {}
         for allocation in accrual_allocations:

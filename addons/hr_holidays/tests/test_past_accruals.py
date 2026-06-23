@@ -8,10 +8,10 @@ from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
 @tagged('post_install', '-at_install', 'accruals')
-class TestAccrualAllocations(TestHrHolidaysCommon):
+class TestAccrualAllocationss(TestHrHolidaysCommon):
     @classmethod
     def setUpClass(cls):
-        super(TestAccrualAllocations, cls).setUpClass()
+        super(TestAccrualAllocationss, cls).setUpClass()
         cls.work_entry_type = cls.env['hr.work.entry.type'].create({
             'name': 'Accrual Time Off',
             'code': 'Accrual Time Off',
@@ -67,7 +67,5 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'number_of_days': 0,
             })
 
-            allocations_data = allocation._process_accrual_plans()
-            allocation._update_accrual_from_data(allocations_data, log=False)
-
+            allocation._update_accrual()
             self.assertEqual(allocation.number_of_days, 0)

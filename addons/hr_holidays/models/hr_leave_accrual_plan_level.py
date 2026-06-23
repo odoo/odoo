@@ -299,7 +299,7 @@ class HrLeaveAccrualLevel(models.Model):
 
     def _get_next_date(self, last_call):
         """
-        Returns the next date with the given last call
+        Returns the next date with the given last call (last_call not included)
         """
         self.ensure_one()
         if self.frequency in self._get_hourly_frequencies() + ['daily']:
@@ -399,4 +399,5 @@ class HrLeaveAccrualLevel(models.Model):
         return self.accrual_plan_id.action_create_accrual_plan_level()
 
     def _get_start_date(self, date_from):
+        self.ensure_one()
         return date_from + get_timedelta(self.start_count, self.start_type)

@@ -103,9 +103,10 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
             if not self.duration:
                 for date_to, allocation in accrual_allocations.grouped('date_to').items():
                     date_to = min(date_to, date.today()) if date_to else False
-                    update_vals = allocation._get_initialize_accrual_plan_values(self.date_from)
+                    update_vals = allocation._get_initialize_accrual_plan_values()
+                    update_vals['date_from'] = self.date_from
                     allocation.update(update_vals)
-                    allocation._process_accrual_plans(date_to)
+                    allocation._update_accrual(date_to)
             allocations.filtered(lambda c: c.validation_type not in ('no_validation', 'hr')).action_approve()
             if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
                 allocations.filtered(lambda c: c.validation_type == 'hr').action_approve()
