@@ -272,6 +272,27 @@ class HrLeave(models.Model):
                 leave.request_hour_from = hour_from
                 leave.request_hour_to = hour_to
 
+    @api.onchange('request_date_from', 'request_date_to')
+    def _onchange_request_dates(self):
+        for leave in self:
+            if not (leave.request_unit_hours and leave.employee_id and leave.request_date_from and leave.request_date_to):
+                continue
+
+            should_update_hours = not (leave.request_hour_from and leave.request_hour_to)
+            if not should_update_hours and leave._origin and leave._origin.request_date_from and leave._origin.request_date_to:
+                origin_hour_from, origin_hour_to = leave._origin._get_hour_from_to(
+                    leave._origin.request_date_from, leave._origin.request_date_to)
+                should_update_hours = (
+                    float_compare(leave.request_hour_from, origin_hour_from, precision_digits=2) == 0
+                    and float_compare(leave.request_hour_to, origin_hour_to, precision_digits=2) == 0
+                )
+            elif not should_update_hours and not leave._origin:
+                should_update_hours = True
+
+            if should_update_hours:
+                leave.request_hour_from, leave.request_hour_to = leave._get_hour_from_to(
+                    leave.request_date_from, leave.request_date_to)
+
     @api.depends('employee_id', 'leave_type_request_unit', 'request_date_from', 'request_date_to',
             'request_hour_from', 'request_hour_to', 'request_date_from_period', 'request_date_to_period', 'state')
     def _compute_dashboard_warning_message(self):
