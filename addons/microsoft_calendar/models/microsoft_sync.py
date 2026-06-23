@@ -227,6 +227,7 @@ class MicrosoftSync(models.AbstractModel):
         updated_events = self.env['calendar.event']
 
         # --- create new recurrences and associated events ---
+        former_single_uids = []
         for recurrent_master in recurrent_masters:
             new_calendar_recurrence = dict(
                 self.env['calendar.recurrence']._microsoft_to_odoo_values(recurrent_master, default_values, with_ids=True),
@@ -255,6 +256,19 @@ class MicrosoftSync(models.AbstractModel):
             new_recurrence_odoo = self.env['calendar.recurrence'].with_context(dont_notify=True).create(new_calendar_recurrence)
             new_recurrence_odoo.base_event_id = new_recurrence_odoo.calendar_event_ids[0] if new_recurrence_odoo.calendar_event_ids else False
             new_recurrence |= new_recurrence_odoo
+            former_single_uids.append(new_calendar_recurrence['ms_universal_event_id'])
+
+        # Outlook can turn an existing single event into a recurring one in place:
+        # the seriesMaster then keeps the iCalUId of the former single event. Those
+        # single events are now represented by the recurrences, so remove them to
+        # avoid leaving duplicates next to the recurrences' first occurrences.
+        duplicate_singles = self.env['calendar.event'].search([
+            ('ms_universal_event_id', 'in', former_single_uids),
+            ('recurrence_id', '=', False),
+        ])
+        if duplicate_singles:
+            duplicate_singles.microsoft_id = False
+            duplicate_singles.with_context(dont_notify=True).unlink()
 
         # --- update events in existing recurrences ---
         # Important note:
