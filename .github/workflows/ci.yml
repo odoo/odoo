@@ -1,0 +1,110 @@
+name: CI
+
+# CI IDIXUS CRM — pendant du hook pre-commit local :
+#   1. ruff (formatage via ruff.toml + lint) sur les addons idixus_*
+#   2. tests Odoo des modules idixus_* (PostgreSQL en service)
+# Tant qu'aucun addon idixus_* n'existe, les jobs passent en "skip" (verts).
+
+on:
+  push:
+    branches: [19.0]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ruff:
+    name: Ruff (format + lint)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install ruff
+        run: pip install "ruff>=0.15.0"
+      - name: Ruff format --check + lint (addons idixus_*)
+        run: |
+          shopt -s nullglob
+          dirs=(idixus_*/)
+          if [ ${#dirs[@]} -eq 0 ]; then
+            echo "::notice::Aucun addon idixus_* — ruff ignoré."
+            exit 0
+          fi
+          echo "Cible : ${dirs[*]}"
+          ruff format --check --config ruff.toml "${dirs[@]}"
+          ruff check --config ruff.toml "${dirs[@]}"
+
+  tests:
+    name: Tests Odoo (idixus_*)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: odoo
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Détecter les modules idixus_* avec tests
+        id: modules
+        run: |
+          shopt -s nullglob
+          mods=()
+          for d in idixus_*/; do
+            m="${d%/}"
+            [ -f "$m/__manifest__.py" ] && [ -d "$m/tests" ] && mods+=("$m")
+          done
+          if [ ${#mods[@]} -eq 0 ]; then
+            echo "list=" >> "$GITHUB_OUTPUT"
+            echo "::notice::Aucun module idixus_* avec tests — tests ignorés."
+          else
+            joined=$(IFS=,; echo "${mods[*]}")
+            echo "list=$joined" >> "$GITHUB_OUTPUT"
+            echo "Modules : $joined"
+          fi
+
+      - uses: actions/setup-python@v5
+        if: steps.modules.outputs.list != ''
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Dépendances système
+        if: steps.modules.outputs.list != ''
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libpq-dev libldap2-dev libsasl2-dev libxml2-dev libxslt1-dev \
+            libjpeg-dev libfreetype-dev
+
+      - name: Dépendances Python
+        if: steps.modules.outputs.list != ''
+        run: |
+          python -m pip install --upgrade pip wheel
+          pip install --prefer-binary -r requirements.txt
+
+      - name: Lancer les tests
+        if: steps.modules.outputs.list != ''
+        run: |
+          python odoo-bin \
+            -d odoo \
+            --db_host localhost --db_port 5432 \
+            --db_user odoo --db_password odoo \
+            -i "${{ steps.modules.outputs.list }}" \
+            --test-enable \
+            --test-tags "/${{ steps.modules.outputs.list }}" \
+            --stop-after-init \
+            --log-level=test \
+            --no-http

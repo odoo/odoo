@@ -1,0 +1,23 @@
+# PostgreSQL pour le dev IDIXUS CRM.
+# Odoo (fork) tourne depuis le venv de l'hôte et se connecte ici.
+# Secrets dans .env (gitignoré). Démarrer : docker compose up -d
+services:
+  db:
+    image: postgres:16
+    container_name: idixus_crm_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-odoo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?définir POSTGRES_PASSWORD dans .env}
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+    ports:
+      - "${PG_HOST_PORT:-5434}:5432"
+    volumes:
+      - idixus_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-odoo}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  idixus_pgdata:
