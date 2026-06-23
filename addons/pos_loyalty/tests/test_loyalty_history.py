@@ -188,7 +188,7 @@ class TestPOSLoyaltyHistory(TestPointOfSaleHttpCommon):
         gift_card_program = LoyaltyProgram.browse(
             LoyaltyProgram.create_from_template('gift_card')['res_id']
         )
-        gift_card_program.pos_report_print_id = self.env.ref('loyalty.report_gift_card')
+        gift_card_program.pos_report_print_id = self.env.ref('loyalty.report_loyalty_card')
         self.main_pos_config.open_ui()
         pos_order = self.env['pos.order'].create({
             'config_id': self.main_pos_config.id,

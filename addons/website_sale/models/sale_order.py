@@ -1043,7 +1043,8 @@ class SaleOrder(models.Model):
         self.env["ir.cron"]._commit_progress(remaining=len(orders_to_process))
         for order in orders_to_process:
             # Send request rating emails.
-            order.website_id.rating_email_template_id.send_mail(order.id)
+            order.website_id.rating_email_template_id.with_context(
+                email_notification_allow_header=False).send_mail(order.id)
 
             order.is_rating_email_sent = True
             self.env["ir.cron"]._commit_progress(processed=1)

@@ -708,13 +708,13 @@ class TestTrackingTemplate(TestTrackingCommon):
 
         def _track_template_parameters(self, tracked_fields):
             if 'email_from' in tracked_fields:
-                return {'email_from': (mail_templates[0], {})}
+                return {'email_from': (mail_templates[0], {}, {})}
             elif 'container_id' in tracked_fields:
                 return {'container_id': (
                     mail_templates[1], {
                         'message_type': 'notification',
                         'subtype_id': self.env.ref('mail.mt_comment').id,
-                    }
+                    }, {}
                 )}
             return {}
         self.patch(self.registry['mail.test.ticket'], '_track_template_parameters', _track_template_parameters)

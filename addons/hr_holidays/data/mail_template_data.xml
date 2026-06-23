@@ -10,14 +10,37 @@
             <field name="description">Mail for new leave request</field>
             <field name="body_html" type="html">
                 <div>
-                    Dear <b><t t-out="object.env.context.get('manager')"/></b>,
+                    Dear <t t-out="object.sudo()._get_responsible_for_approval().partner_id.name or ''"/>,
                     <br/><br/>
-                    <p>I'm requesting a Time Off. I would appreciate if you could approve it whenever possible!</p>
+                    <p><span style="font-weight:bold;" t-out="object.employee_id.name"/> is requesting <span style="font-weight:bold;" t-out="object.duration_display"/> of <span style="font-weight:bold;">Time off</span></p>
                     <ul>
-                        <li>Time Type: <t t-out="object.work_entry_type_id.name"/></li>
-                        <li><t t-out="object.request_date_from"/> → <t t-out="object.request_date_to"/> (<t t-out="object.duration_display"/>)</li>
-                        <li t-if="object.name">Reason: <t t-out="object.name"/></li>
+                        <li>
+                            <span style="font-weight:bold; display:inline-block; width:80px">When</span>
+                            <t t-if="object.request_date_from.month != object.request_date_to.month or object.request_date_from.year != object.request_date_to.year">
+                                <span>
+                                    <t t-out="object.request_date_from" t-options='{"widget": "date", "format": "long"}'/>
+                                     to <t t-out="object.request_date_to" t-options='{"widget": "date", "format": "long"}'/>
+                                </span>
+                            </t>
+                            <t t-else="">
+                                <span>
+                                <t t-out="object.request_date_from.strftime('%B')"/>  <t t-out="object.request_date_from.day"/>
+                                <t t-if="object.request_date_from != object.request_date_to"> to  <t t-out="object.request_date_to.day"/></t>, <t t-out="object.request_date_to.year"/>
+                                </span>
+                            </t>
+                        </li>
+                        <li>
+                            <span style="font-weight:bold; display:inline-block; width:80px">Type</span>
+                            <span t-out="object.work_entry_type_id.name"/>
+                        </li>
+                        <li>
+                            <span style="font-weight:bold; display:inline-block; width:80px">Remaining</span>
+                            <span><t t-out="object.virtual_remaining_leaves"/> days</span>
+                        </li>
                     </ul>
+                    <br/>
+                    Please approve the time off at your disposal.
+                    <br/>
                 </div>
             </field>
             <field name="lang">{{ object.user_id.lang }}</field>

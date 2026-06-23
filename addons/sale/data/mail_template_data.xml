@@ -177,8 +177,8 @@
                                 <t t-if="(not hasattr(line, 'is_delivery') or not line.is_delivery) and not line.combo_item_id">
                                     <table width="100%" style="max-width: 590px; font-size: 14px; border-collapse: collapse;" role="presentation">
                                         <tr>
-                                            <td width="24%" style="max-width: 120px; padding: 0 10px 10px 0; vertical-align: top;">
-                                                <img t-if="line.product_id" t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128" t-attf-style="width: 64px; height: {{object.website_id and object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: cover; object-position: center;" alt="Product image"></img>
+                                            <td style="width: 64px; padding: 0 10px 10px 0; vertical-align: top;">
+                                                <img t-if="line.product_id" t-attf-src="/web/image/product.product/{{ line.product_id.id }}/image_128" t-attf-style="width: 100%; height: {{object.website_id and object.website_id._get_product_image_ratio_height() or '64px'}}; object-fit: cover; object-position: center;" alt="Product image"></img>
                                             </td>
                                             <td align="left" style="vertical-align: top; padding-bottom: 22px;">
                                                 <h3 t-attf-style="mso-line-height-rule:exactly; margin:0; font-size: 14px; {{'margin-bottom: 6px;' if line.product_type == 'combo' else ''}}">

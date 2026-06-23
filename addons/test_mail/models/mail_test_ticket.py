@@ -50,7 +50,8 @@ class MailTestTicket(models.Model):
                 {
                     'composition_mode': 'mass_mail',
                     'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
-                }
+                },
+                {},
             )
         elif 'datetime' in tracked_fields:
             res['datetime'] = (
@@ -207,6 +208,7 @@ class MailTestTicketPartner(models.Model):
                     'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
                     'email_layout_xmlid': 'mail.mail_notification_light'
                 },
+                {},
             )
         return res
 
