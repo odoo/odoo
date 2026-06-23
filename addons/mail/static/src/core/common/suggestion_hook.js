@@ -114,24 +114,18 @@ export class UseSuggestion {
         let start = 0;
         let end = 0;
         let text = "";
-        if (this.composerService.htmlEnabled) {
-            const selection = this.editor().shared.selection.getEditableSelection();
-            if (
-                !isTextNode(selection.startContainer) ||
-                !isContentEditable(selection.startContainer) ||
-                !selection.isCollapsed
-            ) {
-                this.clearSearch();
-                return;
-            }
-            start = selection.startOffset;
-            end = selection.endOffset;
-            text = selection.anchorNode.textContent;
-        } else {
-            start = this.composer.selection.start;
-            end = this.composer.selection.end;
-            text = this.composer.composerText;
+        const selection = this.editor().shared.selection.getEditableSelection();
+        if (
+            !isTextNode(selection.startContainer) ||
+            !isContentEditable(selection.startContainer) ||
+            !selection.isCollapsed
+        ) {
+            this.clearSearch();
+            return;
         }
+        start = selection.startOffset;
+        end = selection.endOffset;
+        text = selection.anchorNode.textContent;
         if (start !== end) {
             // avoid interfering with multi-char selection
             this.clearSearch();
@@ -209,21 +203,18 @@ export class UseSuggestion {
             [SUGGESTION_DELIMITERS.EMOJI, SUGGESTION_DELIMITERS.CANNED_RESPONSE].includes(
                 this.detection.delimiter
             ) ||
-            (this.composerService.htmlEnabled &&
-                this.detection.delimiter !== SUGGESTION_DELIMITERS.CHANNEL_COMMAND)
+            this.detection.delimiter !== SUGGESTION_DELIMITERS.CHANNEL_COMMAND
         ) {
             position = this.detection.position;
         }
-        if (this.composerService.htmlEnabled) {
-            const { startContainer, endContainer, endOffset } =
-                this.editor().shared.selection.getEditableSelection();
-            this.editor().shared.selection.setSelection({
-                anchorNode: startContainer,
-                anchorOffset: position,
-                focusNode: endContainer,
-                focusOffset: endOffset,
-            });
-        }
+        const { startContainer, endContainer, endOffset } =
+            this.editor().shared.selection.getEditableSelection();
+        this.editor().shared.selection.setSelection({
+            anchorNode: startContainer,
+            anchorOffset: position,
+            focusNode: endContainer,
+            focusOffset: endOffset,
+        });
         if (option.partner) {
             this.composer.mentionedPartners.add({ id: option.partner.id });
         } else if (option.role) {
@@ -231,21 +222,12 @@ export class UseSuggestion {
         } else if (option.cannedResponse) {
             this.composer.cannedResponses.push(option.cannedResponse);
         }
-        if (this.composerService.htmlEnabled) {
-            const inlineElement = makeMentionFromOption(option, { thread: this.thread });
-            this.editor().shared.dom.insert(inlineElement);
-            const [anchorNode, anchorOffset] = rightPos(inlineElement);
-            this.editor().shared.selection.setSelection({ anchorNode, anchorOffset });
-            this.editor().shared.dom.insert("\u00A0");
-            this.editor().shared.history.commit();
-        } else {
-            // remove the user-typed search delimiter
-            this.composer.composerText =
-                this.composer.composerText.substring(0, position) +
-                this.composer.composerText.substring(this.composer.selection.end);
-            this.clearSearch();
-            this.composer.insertText(`${option.label} `, position);
-        }
+        const inlineElement = makeMentionFromOption(option, { thread: this.thread });
+        this.editor().shared.dom.insert(inlineElement);
+        const [anchorNode, anchorOffset] = rightPos(inlineElement);
+        this.editor().shared.selection.setSelection({ anchorNode, anchorOffset });
+        this.editor().shared.dom.insert("\u00A0");
+        this.editor().shared.history.commit();
     }
     update() {
         if (!this.detection.delimiter) {
