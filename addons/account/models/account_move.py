@@ -7280,6 +7280,14 @@ class AccountMove(models.Model):
             file_name = self.name
         return f"{file_name.replace('/', '_')}.{extension}"
 
+    def _get_invoice_mail_template_dynamic_report_filename(self, report, extension='pdf'):
+        """ Get the filename of the generated invoice report for a dynamic report. """
+        self.ensure_one()
+        if not report.print_report_name:
+            return False
+        file_name = safe_eval(report.print_report_name, {'object': self})
+        return f"{file_name.replace('/', '_')}.{extension}"
+
     def _get_invoice_proforma_pdf_report_filename(self):
         """ Get the filename of the generated proforma PDF invoice report. """
         self.ensure_one()
