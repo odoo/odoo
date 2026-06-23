@@ -592,7 +592,7 @@ class MrpWorkorder(models.Model):
                 continue
             date_start = max(from_date or datetime.now(), datetime.now())
             if consider_blocked_by:
-                wo.blocked_by_workorder_ids.filtered(lambda wo: wo.id not in done_wo)._action_plan(from_date=from_date, alternative=alternative)
+                wo.blocked_by_workorder_ids.filtered(lambda wo: wo.id not in done_wo and not wo.is_planned)._action_plan(from_date=from_date, alternative=alternative)
             done_wo.update(wo.blocked_by_workorder_ids.ids)
             if wo.blocked_by_workorder_ids and wo.blocked_by_workorder_ids[-1].date_finished:
                 date_start = wo.blocked_by_workorder_ids[-1].date_finished
