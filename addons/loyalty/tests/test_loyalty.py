@@ -19,7 +19,7 @@ class TestLoyalty(TransactionCase):
 
         cls.program = cls.env["loyalty.program"].create({
             "name": "Test Program",
-            "reward_ids": [(0, 0, {})],
+            "reward_ids": [Command.create({})],
         })
         cls.product = (
             cls
@@ -78,35 +78,23 @@ class TestLoyalty(TransactionCase):
         ])
         self.program.write({
             "communication_plan_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "program_id": self.program.id,
-                        "trigger": "create",
-                        "mail_template_id": create_tmpl.id,
-                    },
-                ),
-                (
-                    0,
-                    0,
-                    {
-                        "program_id": self.program.id,
-                        "trigger": "points_reach",
-                        "points": 50,
-                        "mail_template_id": fifty_tmpl.id,
-                    },
-                ),
-                (
-                    0,
-                    0,
-                    {
-                        "program_id": self.program.id,
-                        "trigger": "points_reach",
-                        "points": 100,
-                        "mail_template_id": hundred_tmpl.id,
-                    },
-                ),
+                Command.create({
+                    "program_id": self.program.id,
+                    "trigger": "create",
+                    "mail_template_id": create_tmpl.id,
+                }),
+                Command.create({
+                    "program_id": self.program.id,
+                    "trigger": "points_reach",
+                    "points": 50,
+                    "mail_template_id": fifty_tmpl.id,
+                }),
+                Command.create({
+                    "program_id": self.program.id,
+                    "trigger": "points_reach",
+                    "points": 100,
+                    "mail_template_id": hundred_tmpl.id,
+                }),
             ]
         })
 
