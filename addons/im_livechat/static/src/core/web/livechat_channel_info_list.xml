@@ -30,9 +30,9 @@
             <div t-if="this.expectAnswerSteps.length" class="d-flex flex-column bg-inherit gap-1">
                 <h6 class="pt-3 mb-0">Chatbot answers</h6>
                 <t t-foreach="this.expectAnswerSteps" t-as="step" t-key="step.id">
-                    <div class="d-flex align-items-center gap-1 bg-inherit rounded-3">
+                    <div t-foreach="step.user_answer_chatbot_message_ids" t-as="answer" t-key="answer.id" class="d-flex align-items-center gap-1 bg-inherit rounded-3">
                         <i class="fa fa-comment-o me-1"/>
-                        <span class="text-truncate" t-out="step.answer"/>
+                        <span class="text-truncate" t-out="answer.mail_message_id.inlineBody"/>
                     </div>
                 </t>
             </div>

@@ -155,6 +155,13 @@ class LivechatChatbotScriptController(http.Controller):
                 result = chatbot._validate_email(last_user_message.body, discuss_channel)
             elif step_type == "question_phone":
                 result = chatbot._validate_phone(last_user_message.body, discuss_channel)
+            if result.get("success"):
+                # sudo - chatbot.message: linking the validated answer to its question is allowed.
+                question_chatbot_msg = self.env["chatbot.message"].sudo().search([
+                    ("discuss_channel_id", "=", discuss_channel.id),
+                    ("script_step_id", "=", discuss_channel.chatbot_current_step_id.id),
+                ], order="id ASC", limit=1)
+                last_user_message.sudo().chatbot_message_ids.question_chatbot_message_id = question_chatbot_msg.id
             if posted_message := result.pop("posted_message"):
                 store = Store().add(
                     discuss_channel,
