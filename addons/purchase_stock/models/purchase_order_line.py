@@ -221,7 +221,7 @@ class PurchaseOrderLine(models.Model):
                     move.product_uom_qty *= -1
                     move.location_id = picking.location_id
                     move.location_dest_id = move.forecasted_location_id = picking.location_dest_id
-                move._action_confirm()._action_assign()
+                move.with_context(move_picking_partner_id=line.partner_id)._action_confirm()._action_assign()
 
     def _get_move_dests_initial_demand(self, move_dests):
         return self.product_id.uom_id._compute_quantity(
