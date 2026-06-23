@@ -64,12 +64,11 @@ patch(PaymentForm.prototype, {
 
         this._setPaymentFlow("direct");
 
-        const radio = document.querySelector('input[name="o_payment_radio"]:checked');
-        const inlineForm = this._getInlineForm(radio);
-        const inlineContext = inlineForm.querySelector(".o_qfpay_inline_context");
-
-        this.qfpayInlineValues = JSON.parse(inlineContext.dataset.qfpayInlineFormValues);
         try {
+            const radio = document.querySelector('input[name="o_payment_radio"]:checked');
+            const inlineForm = this._getInlineForm(radio);
+            const inlineContext = inlineForm.querySelector(".o_qfpay_inline_context");
+            this.qfpayInlineValues = JSON.parse(inlineContext.dataset.qfpayInlineFormValues);
             await this.waitFor(loadJS(this.qfpayInlineValues.sdk_url));
         } catch {
             this._displayErrorDialog(
@@ -151,7 +150,8 @@ patch(PaymentForm.prototype, {
                 _t("Payment Error"),
                 error.message || _t("An unexpected error occurred during payment.")
             );
-            this._qfpayCleanup({ enableButton: true });
+            this._qfpayCleanup();
+            this._enableButton();
         }
     },
 
@@ -183,14 +183,12 @@ patch(PaymentForm.prototype, {
     },
 
     /**
-     * Remove tracked SDK listeners, close the wallet dialog, and optionally re-enable the button.
+     * Remove tracked SDK listeners and close the wallet dialog.
      *
      * @private
-     * @param {object} [options] - Optional cleanup options.
-     * @param {boolean} [options.enableButton=false] - Whether to re-enable the submit button.
      * @return {void}
      */
-    _qfpayCleanup({ enableButton = false } = {}) {
+    _qfpayCleanup() {
         for (const { listener, options } of this.qfpayTrackedListeners) {
             window.removeEventListener("message", listener, options);
         }
@@ -199,10 +197,6 @@ patch(PaymentForm.prototype, {
         if (this.qfpayDialogClose) {
             this.qfpayDialogClose();
             this.qfpayDialogClose = null;
-        }
-
-        if (enableButton) {
-            this._enableButton();
         }
     },
 });

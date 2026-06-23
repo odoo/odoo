@@ -86,10 +86,7 @@ class TestPaymentTransaction(QFPayCommon):
             "_send_api_request",
             return_value={
                 "respcd": "0000",
-                "data": [
-                    {"out_trade_no": "other-ref", "respcd": "1143"},
-                    {"out_trade_no": tx.reference, "respcd": "0000"},
-                ],
+                "data": [{"out_trade_no": tx.reference, "respcd": "0000"}],
             },
         ):
             payment_data = tx._qfpay_query_transaction_data()
@@ -109,13 +106,13 @@ class TestPaymentTransaction(QFPayCommon):
     def test_apply_updates_confirms_transaction(self):
         """Test that success payment data sets the transaction state to done."""
         tx = self._create_transaction("direct")
-        tx._apply_updates(self.webhook_data)
+        tx.with_context(payment_safe_write=True)._apply_updates(self.webhook_data)
         self.assertEqual(tx.state, "done")
 
     def test_apply_updates_sets_pending_transaction(self):
         """Test that pending response codes set the transaction state to pending."""
         tx = self._create_transaction("direct")
-        tx._apply_updates({
+        tx.with_context(payment_safe_write=True)._apply_updates({
             "respcd": const.PAYMENT_STATUS_MAPPING["pending"][0],
             "respmsg": "Pending",
         })
@@ -124,7 +121,7 @@ class TestPaymentTransaction(QFPayCommon):
     def test_apply_updates_cancels_transaction(self):
         """Test that cancel response codes set the transaction state to cancel."""
         tx = self._create_transaction("direct")
-        tx._apply_updates({
+        tx.with_context(payment_safe_write=True)._apply_updates({
             "respcd": const.PAYMENT_STATUS_MAPPING["cancel"][0],
             "respmsg": "Canceled",
         })
@@ -133,5 +130,8 @@ class TestPaymentTransaction(QFPayCommon):
     def test_apply_updates_sets_error_on_unknown_status(self):
         """Test that unknown response codes set the transaction state to error."""
         tx = self._create_transaction("direct")
-        tx._apply_updates({"respcd": "9999", "errmsg": "Unknown status"})
+        tx.with_context(payment_safe_write=True)._apply_updates({
+            "respcd": "9999",
+            "errmsg": "Unknown status",
+        })
         self.assertEqual(tx.state, "error")

@@ -23,9 +23,8 @@ SUPPORTED_CURRENCIES = (
     "AUD",
 )
 
-# The codes of the payment methods to activate when QFPay is activated.
-DEFAULT_PAYMENT_METHOD_CODES = (
-    # Primary payment methods.
+# The codes of the default primary payment methods to activate
+DEFAULT_PAYMENT_METHOD_CODES = {
     "alipay",
     "alipay_hk",
     "wechat_pay",
@@ -33,10 +32,7 @@ DEFAULT_PAYMENT_METHOD_CODES = (
     "fps",
     "payme",
     "card",
-    # Brand payment methods.
-    "visa",
-    "mastercard",
-)
+}
 
 # Mapping of payment method codes to QFPay codes (for creating the payment intent).
 PAYMENT_METHODS_MAPPING = frozendict({

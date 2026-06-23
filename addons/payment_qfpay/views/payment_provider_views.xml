@@ -7,19 +7,19 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <group name="provider_credentials" position="inside">
-                <group invisible="code != 'qfpay'">
-                    <field
-                        name="qfpay_app_code"
-                        string="App Code"
-                        required="code == 'qfpay' and state != 'disabled'"
-                    />
-                    <field
-                        name="qfpay_app_key"
-                        string="App Key"
-                        required="code == 'qfpay' and state != 'disabled'"
-                        widget="password"
-                    />
-                </group>
+                <field
+                    name="qfpay_app_code"
+                    string="App Code"
+                    invisible="code != 'qfpay'"
+                    required="is_live"
+                />
+                <field
+                    name="qfpay_app_key"
+                    string="App Key"
+                    invisible="code != 'qfpay'"
+                    required="is_live"
+                    widget="password"
+                />
             </group>
         </field>
     </record>

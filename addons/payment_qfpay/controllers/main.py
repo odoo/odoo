@@ -22,7 +22,7 @@ class QFPayController(http.Controller):
         if tx_sudo and tx_sudo.state not in ("done", "cancel", "error"):
             payment_data = tx_sudo._qfpay_query_transaction_data()
             if payment_data:
-                tx_sudo._process("qfpay", payment_data)
+                tx_sudo._record(payment_data)
         return request.redirect("/payment/status")
 
     @http.route(const.WEBHOOK_ROUTE, type="http", auth="public", methods=["POST"], csrf=False)
@@ -42,5 +42,5 @@ class QFPayController(http.Controller):
             )
             received_signature = request.httprequest.headers.get("X-QF-SIGN")
             payment_utils.verify_signature(received_signature, expected_signature)
-            tx_sudo._process("qfpay", data)
+            tx_sudo._record(data)
         return "SUCCESS"
