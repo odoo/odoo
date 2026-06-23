@@ -52,8 +52,11 @@
 
 // Naive heuristic to leave enough space for the nocontent helper in dialogs
 .o_dialog {
-    .o_content:has(.o_view_nocontent) {
-        min-height: 20rem;
+    // Targets both .o_list_renderer and .o_kanban_renderer
+    @include media-breakpoint-up(sm){
+        .o_renderer:has(.o_view_nocontent) {
+            min-height: 20rem;
+        }
     }
 }
 
