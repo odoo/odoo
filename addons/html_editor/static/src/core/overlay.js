@@ -1,4 +1,4 @@
-import { useExternalListener, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { useExternalListener, useSubEnv } from "@web/owl2/utils";
 import { useCrossDocumentListener } from "../utils/hooks";
 import { Component, onWillDestroy, props, t, xml, proxy } from "@odoo/owl";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
@@ -51,21 +51,21 @@ export class EditorOverlay extends Component {
             position.unlock();
         });
 
-        const rootRef = useRef("root");
+        // const rootRef = useRef("root");
 
         if (this.props.positionOptions?.updatePositionOnResize ?? true) {
-            const resizeObserver = new ResizeObserver(() => {
-                position.unlock();
-            });
-            useLayoutEffect(
-                (root) => {
-                    resizeObserver.observe(root);
-                    return () => {
-                        resizeObserver.unobserve(root);
-                    };
-                },
-                () => [rootRef.el]
-            );
+            // const resizeObserver = new ResizeObserver(() => {
+            //     position.unlock();
+            // });
+            // useLayoutEffect(
+            //     (root) => {
+            //         resizeObserver.observe(root);
+            //         return () => {
+            //             resizeObserver.unobserve(root);
+            //         };
+            //     },
+            //     () => [rootRef.el]
+            // );
         }
 
         if (this.props.closeOnPointerdown) {
