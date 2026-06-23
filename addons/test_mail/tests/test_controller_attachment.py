@@ -8,28 +8,44 @@ from odoo.addons.mail.tests.common_controllers import MailControllerAttachmentCo
 class TestAttachmentController(MailControllerAttachmentCommon):
     def test_independent_attachment_delete(self):
         """Test access to delete an attachment whether or not limited `ownership_token` is sent"""
-        self._execute_subtests_delete(self.all_users, token=True, allowed=True)
-        self._execute_subtests_delete(self.user_admin, token=False, allowed=True)
+        # Only non-internal users should be able to delete with an ownership token
         self._execute_subtests_delete(
-            (self.guest, self.user_employee, self.user_portal, self.user_public),
+            (self.guest, self.user_portal, self.user_public),
+            token=True,
+            allowed=True,
+        )
+        # Non-internal users should not be able to delete without an ownership token
+        self._execute_subtests_delete(
+            (self.guest, self.user_portal, self.user_public),
             token=False,
             allowed=False,
         )
+        # Standard access rights should be checked for internal users
+        self._execute_subtests_delete(self.user_admin, token=False, allowed=True)
+        self._execute_subtests_delete(self.user_employee, token=False, allowed=False)
 
     def test_attachment_delete_linked_to_thread(self):
         """Test access to delete an attachment associated with a thread
         whether or not limited `ownership_token` is sent"""
         thread = self.env["mail.test.simple"].create({"name": "Test"})
-        self._execute_subtests_delete(self.all_users, token=True, allowed=True, thread=thread)
+        # Only non-internal users should be able to delete with an ownership token
         self._execute_subtests_delete(
-            (self.user_admin, self.user_employee),
-            token=False,
+            (self.guest, self.user_portal, self.user_public),
+            token=True,
             allowed=True,
             thread=thread,
         )
+        # Non-internal users should not be able to delete without an ownership token
         self._execute_subtests_delete(
             (self.guest, self.user_portal, self.user_public),
             token=False,
             allowed=False,
+            thread=thread,
+        )
+        # Standard access rights should be checked for internal users
+        self._execute_subtests_delete(
+            (self.user_admin, self.user_employee),
+            token=False,
+            allowed=True,
             thread=thread,
         )
