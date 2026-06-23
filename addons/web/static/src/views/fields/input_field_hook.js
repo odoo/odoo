@@ -143,8 +143,15 @@ export function useInputField(params) {
             isDirty = false;
         }
         if (!isDirty && !component.props.record.isFieldInvalid(fieldName)) {
+            const wasFullySelected =
+                document.activeElement === inputRef.el &&
+                inputRef.el.selectionStart === 0 &&
+                inputRef.el.selectionEnd === inputRef.el.value.length;
             inputRef.el.value = value;
             lastSetValue = inputRef.el.value;
+            if (wasFullySelected) {
+                inputRef.el.select();
+            }
         }
     });
 
