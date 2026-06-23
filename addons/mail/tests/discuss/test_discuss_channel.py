@@ -818,14 +818,36 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertEqual(len(chat_user_current.channel_member_ids), 1)
         self.assertFalse(chat_user_current.self_member_id.is_pinned)
 
+    def test_unfollow_non_member_sends_locally_pinned_notification(self):
+        channel = self.env["discuss.channel"]._create_channel(name="Public Channel", group_id=None)
+        self.assertFalse(channel.with_user(self.user_employee).self_member_id)
+        with self.assertBus(
+            [
+                BusResult(
+                    self.user_employee,
+                    "mail.record/insert",
+                    {
+                        "discuss.channel": [
+                            {
+                                "close_chat_window": True,
+                                "id": channel.id,
+                                "isLocallyPinned": False,
+                            },
+                        ],
+                    },
+                ),
+            ],
+        ):
+            channel.with_user(self.user_employee).action_unfollow()
+
     def test_group_unfollow_should_not_post_message_if_the_partner_has_been_removed(self):
         '''
         When a partner leaves a group, the system will help post a message under
         that partner's name in the group to notify others if `email_sent` is set `False`.
         The message should only be posted when the partner is still a member of the group
-        before method `_action_unfollow()` is called.
+        before `action_unfollow()` is called.
         If the partner has been removed earlier, no more messages will be posted
-        even if `_action_unfollow()` is called again.
+        even if `action_unfollow()` is called again.
         '''
         test_group = self.env['discuss.channel'].create({
             'name': 'Private Channel',
@@ -842,7 +864,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertFalse(messages_0)
 
         # a message should be posted to notify others when a partner is about to leave
-        test_group._action_unfollow(self.test_partner)
+        test_group.with_user(self.test_user).action_unfollow()
         messages_1 = self.env['mail.message'].search([
             ('model', '=', 'discuss.channel'),
             ('res_id', '=', test_group.id),
@@ -851,7 +873,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertEqual(len(messages_1), 1)
 
         # no more messages should be posted if the partner has been removed before.
-        test_group._action_unfollow(self.test_partner)
+        test_group.with_user(self.test_user).action_unfollow()
         messages_2 = self.env['mail.message'].search([
             ('model', '=', 'discuss.channel'),
             ('res_id', '=', test_group.id),
@@ -865,7 +887,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         channel.with_user(self.test_user)._add_members(partners=self.test_partner)
 
         # no message should be posted to notify others when a partner is joined and left
-        channel._action_unfollow(self.test_partner)
+        channel.with_user(self.test_user).action_unfollow()
         messages = self.env['mail.message'].search([
             ('model', '=', 'discuss.channel'),
             ('res_id', '=', channel.id),
