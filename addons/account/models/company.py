@@ -513,21 +513,26 @@ class ResCompany(models.Model):
         :return: A dictionary representing a window action.
         """
 
+        # account.bank.statement.line has no standalone list/form views (lines are
+        # shown within their journal entry), so an act_window on that model fails to
+        # render. Each line delegates to a journal entry via move_id, so redirect to
+        # the related account.move records instead.
+        moves = unreconciled_statement_lines.move_id
         action = {
             'name': _("Unreconciled Transactions"),
             'type': 'ir.actions.act_window',
-            'res_model': 'account.bank.statement.line',
+            'res_model': 'account.move',
             'context': {'create': False},
         }
-        if len(unreconciled_statement_lines) == 1:
+        if len(moves) == 1:
             action.update({
                 'view_mode': 'form',
-                'res_id': unreconciled_statement_lines.id,
+                'res_id': moves.id,
             })
         else:
             action.update({
                 'view_mode': 'list,form',
-                'domain': [('id', 'in', unreconciled_statement_lines.ids)],
+                'domain': [('id', 'in', moves.ids)],
             })
         return action
 
