@@ -8,6 +8,7 @@ const _allScriptsLoaded = new Promise(resolve => {
 }).then(stopWaitingLazy);
 
 const retriggeringWaitingProms = [];
+const bufferedClicks = new Map();
 /**
  * Function to use as an event handler to replay the incoming event after the
  * whole lazy JS has been loaded. Note that blocking the incoming event is left
@@ -19,6 +20,9 @@ const retriggeringWaitingProms = [];
 async function waitForLazyAndRetrigger(ev) {
     // Wait for the lazy JS to be loaded before re-triggering the event.
     const targetEl = ev.target;
+    if (ev.type === "click" && !bufferedClicks.has(targetEl)) {
+        bufferedClicks.set(targetEl, ev);
+    }
     await _allScriptsLoaded;
     // Loaded scripts were able to add a delay to wait for before re-triggering
     // events: we wait for it here.

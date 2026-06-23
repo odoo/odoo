@@ -430,7 +430,7 @@ registry.category("web_tour.tours").add("edit_menus", {
         {
             content: "When the mega menu is opened, scroll up",
             trigger: ":iframe .top_menu .o_mega_menu_toggle.show",
-            run() {
+            async run(helpers) {
                 const marginTopOfMegaMenu = getComputedStyle(
                     this.anchor.closest(".dropdown").querySelector(".o_mega_menu")
                 )["margin-top"];
@@ -438,6 +438,7 @@ registry.category("web_tour.tours").add("edit_menus", {
                     console.error("The margin-top of the mega menu should be 0px");
                 }
                 // Scroll up.
+                await helpers.animationFrame();
                 this.anchor
                     .closest("body")
                     .querySelector(".s_media_list_item:nth-child(2)")
