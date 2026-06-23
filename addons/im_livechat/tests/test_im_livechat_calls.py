@@ -25,6 +25,10 @@ class TestImLivechatCalls(TestImLivechatCommon):
             return result
 
         with patch.object(LivechatController, "get_session", wraps(og_get_session)(_patched_get_session)):
+            # The routing map is cached (the "routing" ormcache) with the controller endpoints
+            # baked in. When it was already built with the original method, the monkeypatch above
+            # is ignored and the call is never started.
+            self.env.transaction.invalidate_ormcache("routing")
             self.start_tour(
                 f"/im_livechat/support/{self.livechat_channel.id}",
                 "im_livechat.meeting_view_tour",
