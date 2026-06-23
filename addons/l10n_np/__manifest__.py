@@ -10,6 +10,9 @@
     'depends': [
         'account',
     ],
+    'data': [
+        'data/account_chart_template_data.xml',
+    ],
     'demo': [
         'demo/demo_company.xml',
     ],
