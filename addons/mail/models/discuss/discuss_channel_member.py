@@ -17,6 +17,7 @@ from ...tools import jwt, discuss
 
 _logger = logging.getLogger(__name__)
 SFU_MODE_THRESHOLD = 3
+POST_LEAVE_MESSAGE = object()
 
 
 class DiscussChannelMember(models.Model):
@@ -329,21 +330,42 @@ class DiscussChannelMember(models.Model):
             res.remove("is_pinned")
             res.one("channel_id", "_store_channel_fields", predicate=lambda m: m.is_pinned)
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_notify_channel_left(self):
+        post_leave_message = self.env.context.get("post_leave_message") is POST_LEAVE_MESSAGE
+        for member in self:
+            channel = member.channel_id
+            channel.message_unsubscribe(member.partner_id.ids)
+            for bus_channel in member._bus_channels():
+                custom_store = Store(bus_channel=bus_channel)
+                custom_store.add(channel, {"close_chat_window": True, "isLocallyPinned": False})
+            if channel.channel_type != "channel" and post_leave_message:
+                notification = Markup(
+                    '<div class="o_mail_notification" data-oe-type="channel-left">%s</div>',
+                ) % self.env._("left the channel")
+                # sudo: mail.message - post as sudo since the user just unsubscribed from the channel
+                channel.sudo().message_post(
+                    body=notification,
+                    subtype_xmlid="mail.mt_comment",
+                    author_id=member.partner_id.id,
+                )
+
     def unlink(self):
         # sudo: discuss.channel.rtc.session - cascade unlink of sessions for self member
         self.sudo().rtc_session_ids.unlink()  # ensure unlink overrides are applied
         # always unlink members of sub-channels as well
-        domains = [
-            [
-                ("id", "not in", self.ids),
-                ("partner_id", "=", member.partner_id.id),
-                ("guest_id", "=", member.guest_id.id),
-                ("channel_id", "in", member.channel_id.sub_channel_ids.ids),
+        if self:
+            domains = [
+                [
+                    ("partner_id", "=", member.partner_id.id),
+                    ("guest_id", "=", member.guest_id.id),
+                    ("channel_id", "in", member.channel_id.sub_channel_ids.ids),
+                ]
+                for member in self
             ]
-            for member in self
-        ]
-        for member in self.env["discuss.channel.member"].search(Domain.OR(domains)):
-            member.channel_id._action_unfollow(partner=member.partner_id, guest=member.guest_id)
+            self.env["discuss.channel.member"].search_fetch(
+                Domain("id", "not in", self.ids) & Domain.OR(domains),
+            ).unlink()
         # sudo - discuss.channel: allowed to access channels to update member-based naming
         name_members_by_channel = {
             channel: channel.channel_name_member_ids for channel in self.channel_id
