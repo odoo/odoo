@@ -289,12 +289,18 @@ class TestSubqueries(TransactionCase):
             WHERE (EXISTS (SELECT FROM(
                 SELECT "test_orm_multi_line"."multi" AS __inverse
                 FROM "test_orm_multi_line"
-                WHERE "test_orm_multi_line"."name" LIKE %s
+                WHERE (
+                    "test_orm_multi_line"."multi" IS NOT NULL
+                    AND "test_orm_multi_line"."name" LIKE %s
+                )
             ) AS __sub WHERE __inverse = "test_orm_multi"."id")
             AND EXISTS (SELECT FROM(
                 SELECT "test_orm_multi_line"."multi" AS __inverse
                 FROM "test_orm_multi_line"
-                WHERE "test_orm_multi_line"."name" LIKE %s
+                WHERE (
+                    "test_orm_multi_line"."multi" IS NOT NULL
+                    AND "test_orm_multi_line"."name" LIKE %s
+                )
             ) AS __sub WHERE __inverse = "test_orm_multi"."id")
             )
             ORDER BY "test_orm_multi"."id"
@@ -312,8 +318,11 @@ class TestSubqueries(TransactionCase):
                 SELECT "test_orm_multi_line"."multi" AS __inverse
                 FROM "test_orm_multi_line"
                 WHERE (
-                    "test_orm_multi_line"."name" LIKE %s
-                    OR "test_orm_multi_line"."name" LIKE %s
+                    "test_orm_multi_line"."multi" IS NOT NULL
+                    AND (
+                        "test_orm_multi_line"."name" LIKE %s
+                        OR "test_orm_multi_line"."name" LIKE %s
+                    )
                 )
             ) AS __sub WHERE __inverse = "test_orm_multi"."id")
             ORDER BY "test_orm_multi"."id"
@@ -331,14 +340,20 @@ class TestSubqueries(TransactionCase):
             WHERE (EXISTS (SELECT FROM(
                 SELECT "test_orm_multi_line"."multi" AS __inverse
                 FROM "test_orm_multi_line"
-                WHERE "test_orm_multi_line"."name" LIKE %s
+                WHERE (
+                    "test_orm_multi_line"."multi" IS NOT NULL
+                    AND "test_orm_multi_line"."name" LIKE %s
+                )
             ) AS __sub WHERE __inverse = "test_orm_multi"."id")
             AND EXISTS (SELECT FROM(
                 SELECT "test_orm_multi_line"."multi" AS __inverse
                 FROM "test_orm_multi_line"
                 WHERE (
-                    "test_orm_multi_line"."name" LIKE %s
-                    OR "test_orm_multi_line"."name" LIKE %s
+                    "test_orm_multi_line"."multi" IS NOT NULL
+                    AND (
+                        "test_orm_multi_line"."name" LIKE %s
+                        OR "test_orm_multi_line"."name" LIKE %s
+                    )
                 )
             ) AS __sub WHERE __inverse = "test_orm_multi"."id")
             )
@@ -765,7 +780,7 @@ class TestSearchRelated(TransactionCase):
                 WHERE EXISTS(SELECT FROM (
                     SELECT "test_orm_related"."foo_id" AS __inverse
                     FROM "test_orm_related"
-                    WHERE "test_orm_related"."name" IN %s
+                    WHERE ("test_orm_related"."foo_id" IS NOT NULL AND "test_orm_related"."name" IN %s)
                     AND "test_orm_related"."id" < %s
                 ) AS __sub WHERE __inverse = "test_orm_related_foo"."id")
                 AND "test_orm_related_foo"."id" < %s
@@ -803,7 +818,10 @@ class TestSearchRelated(TransactionCase):
                 AND EXISTS(SELECT FROM (
                     SELECT "test_orm_related"."foo_id" AS __inverse
                     FROM "test_orm_related"
-                    WHERE "test_orm_related"."name" IN %s
+                    WHERE (
+                        "test_orm_related"."foo_id" IS NOT NULL
+                        AND "test_orm_related"."name" IN %s
+                    )
                     AND "test_orm_related"."id" < %s
                 ) AS __sub WHERE __inverse = "test_orm_related__foo_id"."id")
             )
@@ -1073,8 +1091,10 @@ class TestSearchRelated(TransactionCase):
             WHERE EXISTS (SELECT FROM(
                 SELECT "test_orm_related"."foo_id" AS __inverse
                 FROM "test_orm_related"
-                WHERE "test_orm_related"."name" IN %s
-                AND "test_orm_related"."id" < %s
+                WHERE (
+                    "test_orm_related"."foo_id" IS NOT NULL
+                    AND "test_orm_related"."name" IN %s
+                ) AND "test_orm_related"."id" < %s
             ) AS __sub WHERE __inverse = "test_orm_related_foo"."id"
             ) AND "test_orm_related_foo"."id" < %s
             ORDER BY "test_orm_related_foo"."id"
@@ -1087,7 +1107,10 @@ class TestSearchRelated(TransactionCase):
             WHERE EXISTS (SELECT FROM(
                 SELECT "test_orm_related"."foo_id" AS __inverse
                 FROM "test_orm_related"
-                WHERE "test_orm_related"."name" IN %s
+                WHERE (
+                    "test_orm_related"."foo_id" IS NOT NULL
+                    AND "test_orm_related"."name" IN %s
+                )
             ) AS __sub WHERE __inverse = "test_orm_related_foo"."id"
             ) AND "test_orm_related_foo"."id" < %s
             ORDER BY "test_orm_related_foo"."id"
@@ -1504,7 +1527,7 @@ class TestSearchAccessOperator(TransactionCase):
                 SELECT "test_orm_message"."discussion" AS __inverse FROM "test_orm_message"
                 LEFT JOIN "test_orm_discussion" AS "test_orm_message__discussion"
                 ON ("test_orm_message"."discussion" = "test_orm_message__discussion"."id")
-                WHERE ("test_orm_message"."active" IS TRUE AND "test_orm_message"."name" ILIKE %s)
+                WHERE ("test_orm_message"."active" IS TRUE AND "test_orm_message"."discussion" IS NOT NULL AND "test_orm_message"."name" ILIKE %s)
                 AND ("test_orm_message"."discussion" IS NOT NULL
                     AND "test_orm_message__discussion"."id" IS NOT NULL
                     AND "test_orm_message__discussion"."id" < %s)
@@ -1633,8 +1656,10 @@ class TestSearchAny(TransactionCase):
             WHERE EXISTS (SELECT FROM (
                 SELECT "test_orm_related"."foo_id" AS __inverse
                 FROM "test_orm_related"
-                WHERE "test_orm_related"."name" IN %s
-                AND "test_orm_related"."id" < %s
+                WHERE (
+                    "test_orm_related"."foo_id" IS NOT NULL
+                    AND "test_orm_related"."name" IN %s
+                ) AND "test_orm_related"."id" < %s
             ) AS __sub WHERE __inverse = "test_orm_related_foo"."id"
             ) AND "test_orm_related_foo"."id" < %s
             ORDER BY "test_orm_related_foo"."id"
@@ -1647,14 +1672,15 @@ class TestSearchAny(TransactionCase):
             WHERE EXISTS (SELECT FROM (
                 SELECT "test_orm_related"."foo_id" AS __inverse
                 FROM "test_orm_related"
-                WHERE
-                    "test_orm_related"."foo_id" IN (
+                WHERE (
+                    "test_orm_related"."foo_id" IS NOT NULL
+                    AND "test_orm_related"."foo_id" IN (
                         SELECT "test_orm_related_foo"."id"
                         FROM "test_orm_related_foo"
                         WHERE "test_orm_related_foo"."name" IN %s
                         AND "test_orm_related_foo"."id" < %s
                     )
-                AND "test_orm_related"."id" < %s
+                ) AND "test_orm_related"."id" < %s
             ) AS __sub WHERE __inverse = "test_orm_related_foo"."id"
             ) AND "test_orm_related_foo"."id" < %s
             ORDER BY "test_orm_related_foo"."id"
@@ -1667,7 +1693,10 @@ class TestSearchAny(TransactionCase):
             WHERE EXISTS (SELECT FROM (
                 SELECT "test_orm_related"."foo_id" AS __inverse
                 FROM "test_orm_related"
-                WHERE "test_orm_related"."name" IN %s
+                WHERE (
+                    "test_orm_related"."foo_id" IS NOT NULL
+                    AND "test_orm_related"."name" IN %s
+                )
             ) AS __sub WHERE __inverse = "test_orm_related_foo"."id"
             ) AND "test_orm_related_foo"."id" < %s
             ORDER BY "test_orm_related_foo"."id"
@@ -1680,13 +1709,15 @@ class TestSearchAny(TransactionCase):
             WHERE EXISTS (SELECT FROM (
                 SELECT "test_orm_related"."foo_id" AS __inverse
                 FROM "test_orm_related"
-                WHERE
-                    "test_orm_related"."foo_id" IN (
+                WHERE (
+                    "test_orm_related"."foo_id" IS NOT NULL
+                    AND "test_orm_related"."foo_id" IN (
                         SELECT "test_orm_related_foo"."id"
                         FROM "test_orm_related_foo"
                         WHERE "test_orm_related_foo"."name" IN %s
                         AND "test_orm_related_foo"."id" < %s
                     )
+                )
             ) AS __sub WHERE __inverse = "test_orm_related_foo"."id"
             ) AND "test_orm_related_foo"."id" < %s
             ORDER BY "test_orm_related_foo"."id"
