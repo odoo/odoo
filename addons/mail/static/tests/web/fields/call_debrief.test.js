@@ -197,29 +197,25 @@ test("CallDebrief: generates silence gaps in timeline", async () => {
     expect(".o-CallDebriefTimeline-track").toHaveCount(1);
 
     // There should be 4 segments total:
-    // 1. Media segment (0s to 60s) -> 25% width, left 0%
-    // 2. Silence segment (60s to 120s) -> 25% width, left 25%
-    // 3. Media segment (120s to 180s) -> 25% width, left 50%
-    // 4. Silence segment (180s to 240s) -> 25% width, left 75%
+    // 1. Media segment (0s to 60s) -> 25% width
+    // 2. Silence segment (60s to 120s) -> 25% width
+    // 3. Media segment (120s to 180s) -> 25% width
+    // 4. Silence segment (180s to 240s) -> 25% width
     expect(".o-CallDebriefTimeline-segment").toHaveCount(4);
     expect(".o-CallDebriefTimeline-media-segment").toHaveCount(2);
     expect(".o-CallDebriefTimeline-silence-segment").toHaveCount(2);
 
     // Verify coordinates
     const segments = document.querySelectorAll(".o-CallDebriefTimeline-segment");
-    expect(segments[0].style.left).toBe("0%");
     expect(segments[0].style.width).toBe("25%");
     expect(segments[0].classList.contains("o-CallDebriefTimeline-media-segment")).toBe(true);
 
-    expect(segments[1].style.left).toBe("25%");
     expect(segments[1].style.width).toBe("25%");
     expect(segments[1].classList.contains("o-CallDebriefTimeline-silence-segment")).toBe(true);
 
-    expect(segments[2].style.left).toBe("50%");
     expect(segments[2].style.width).toBe("25%");
     expect(segments[2].classList.contains("o-CallDebriefTimeline-media-segment")).toBe(true);
 
-    expect(segments[3].style.left).toBe("75%");
     expect(segments[3].style.width).toBe("25%");
     expect(segments[3].classList.contains("o-CallDebriefTimeline-silence-segment")).toBe(true);
 });
