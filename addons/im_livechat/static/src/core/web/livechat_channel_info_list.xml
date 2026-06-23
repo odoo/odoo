@@ -53,6 +53,30 @@
                 <TranscriptSender thread="this.props.thread"/>
                 <a class="btn btn-outline-secondary" title="Download a copy of this conversation" target="_blank" t-att-href="this.props.thread.channel.transcriptUrl"><i class="pe-2 fa fa-download"/>Download</a>
             </div>
+            <div t-if="this.visitorRecentChannels.length" class="d-flex flex-column bg-inherit gap-1">
+                <h6 class="pt-3 mb-1">Recent conversations</h6>
+                <div class="d-flex flex-column o-gap-0_5">
+                    <a
+                        t-foreach="this.visitorRecentChannels" t-as="channel" t-key="channel.localId"
+                        class="o-livechat-LivechatChannelInfoList-recentConversation btn btn-sm btn-secondary d-flex flex-column w-100 m-0 px-3 py-1 rounded-0"
+                        t-attf-href="/odoo/discuss?active_id=discuss.channel_{{channel.id}}"
+                        target="_blank"
+                        t-att-class="{
+                            'o-rounded-top-bubble': channel_first,
+                            'o-rounded-bottom-bubble': channel_last,
+                        }"
+                    >
+                        <div class="d-flex align-items-center">
+                            <i class="fa fa-external-link me-2 o-mt-0_5 opacity-75"/>
+                            <span>
+                                <t t-if="channel.livechat_end_dt" t-out="this.CLOSED_ON_TEXT(channel)"/>
+                                <t t-else="">Conversation ongoing</t>
+                            </span>
+                        </div>
+                        <span t-if="channel.description" class="text-start text-muted smaller text-truncate" t-out="channel.description"/>
+                    </a>
+                </div>
+            </div>
         </ActionPanel>
     </t>
 

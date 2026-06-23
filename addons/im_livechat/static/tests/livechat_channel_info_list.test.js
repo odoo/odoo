@@ -339,3 +339,66 @@ test("auto-open of livechat info & members panels should combine", async () => {
     await contains(".o-discuss-ChannelMemberList");
     await contains(".o-livechat-ChannelInfoList", { count: 0 });
 });
+
+test("Show recent conversations in channel info list", async () => {
+    const pyEnv = await startServer();
+    const customerPartnerId = pyEnv["res.partner"].create({
+        name: "Bob",
+        user_ids: [pyEnv["res.users"].create({ name: "Bob" })],
+    });
+    // At least two ongoing chats so that sort function ends up comparing two
+    // ongoing chats.
+    const channelIds = pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [],
+            channel_type: "livechat",
+            description: "question about the live chat app",
+            livechat_status: "in_progress",
+        },
+        {
+            channel_member_ids: [],
+            channel_type: "livechat",
+            description: "question about the discuss app",
+            livechat_status: "in_progress",
+        },
+        {
+            channel_member_ids: [],
+            channel_type: "livechat",
+            livechat_status: "in_progress",
+        },
+    ]);
+    pyEnv["discuss.channel.member"].create([
+        {
+            channel_id: channelIds[0],
+            livechat_member_type: "visitor",
+            partner_id: customerPartnerId,
+        },
+        {
+            channel_id: channelIds[1],
+            livechat_member_type: "visitor",
+            partner_id: customerPartnerId,
+        },
+        {
+            channel_id: channelIds[2],
+            livechat_member_type: "visitor",
+            partner_id: customerPartnerId,
+        },
+        {
+            channel_id: channelIds[2],
+            livechat_member_type: "agent",
+            partner_id: serverState.partnerId,
+        },
+    ]);
+    await start();
+    await openDiscuss(channelIds.at(-1));
+    await contains(".o-livechat-LivechatChannelInfoList-recentConversation", {
+        count: 2,
+        text: "Conversation ongoing",
+    });
+    await contains(
+        ".o-livechat-LivechatChannelInfoList-recentConversation :text('question about the discuss app')"
+    );
+    await contains(
+        ".o-livechat-LivechatChannelInfoList-recentConversation :text('question about the live chat app')"
+    );
+});

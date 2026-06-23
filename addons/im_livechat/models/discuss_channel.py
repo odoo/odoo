@@ -739,7 +739,31 @@ class DiscussChannel(models.Model):
         return Markup("").join(parts)
 
     def _store_livechat_extra_fields(self, res: Store.FieldList):
-        pass
+        res.many(
+            "visitor_recent_channel_ids",
+            "_store_channel_fields",
+            value=lambda c: c._get_visitor_recent_channels(),
+            predicate=is_livechat_channel
+        )
+
+    def _get_visitor_recent_channels(self):
+        self.ensure_one()
+        channels = self.env["discuss.channel"]
+        for (channel,) in self.env["im_livechat.channel.member.history"]._read_group(
+            Domain.AND([
+                Domain.OR([
+                    Domain("partner_id", "in", self.livechat_customer_partner_ids.ids),
+                    Domain("guest_id", "in", self.livechat_customer_guest_ids.ids),
+                ]),
+                Domain("livechat_member_type", "=", "visitor"),
+                Domain("channel_id.create_date", ">=", "today -7d")
+            ]),
+            groupby=["channel_id"],
+            order="channel_id DESC",
+            limit=5
+        ):
+            channels |= channel
+        return channels
 
     def _apply_livechat_feedback(self, rate, reason=None):
         """Post customer feedback and apply its rating to the live chat session.
