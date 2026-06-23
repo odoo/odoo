@@ -372,10 +372,14 @@ class HrWorkEntryType(models.Model):
     @api.depends('requires_allocation', 'virtual_remaining_leaves', 'max_leaves', 'unit_of_measure', 'country_id')
     @api.depends_context('work_entry_type_display_name', 'employee_id', 'company')
     def _compute_display_name(self):
+        display_country_name = not bool(self.env.companies and len(self.env.companies.mapped('country_id')) == 1)
         for record in self:
             if not record.requested_display_name():
                 # leave counts is based on employee_id, would be inaccurate if not based on correct employee
-                record.display_name = f"{record.name} ({record.country_id.name or self.env._("Generic")})"
+                if display_country_name:
+                    record.display_name = f"{record.name} ({record.country_id.name or self.env._("Generic")})"
+                else:
+                    record.display_name = record.name
                 continue
             name = record.name
             if record.requires_allocation and self.env.context.get('default_date_from'):
@@ -386,7 +390,10 @@ class HrWorkEntryType(models.Model):
                     name = self.env._("%(name)s (%(time)g remaining out of %(maximum)g hours)", name=record.name, time=remaining_time, maximum=maximum)
                 else:
                     name = self.env._("%(name)s (%(time)g remaining out of %(maximum)g days)", name=record.name, time=remaining_time, maximum=maximum)
-            record.display_name = f"{name} ({record.country_id.name or self.env._("Generic")})"
+            if display_country_name:
+                record.display_name = f"{name} ({record.country_id.name or self.env._("Generic")})"
+            else:
+                record.display_name = name
         return None
 
     @api.depends('count_as')
