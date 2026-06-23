@@ -4,8 +4,8 @@
             <t t-out="this.state.error"/>
         </div>
         <div t-else="" t-ref="this.rootElement" class="o-CallDebrief d-flex flex-column bg-view" t-att-class="this.callDebriefCustomClasses">
-            <div class="o-CallDebrief-media-container d-flex flex-column h-100" t-att-class="{ 'o-CallDebrief-media-container--no-video': !this.hasVideo }">
-                <div t-if="this.hasVideo" t-on-click="() => this.togglePlay()" class="o-CallDebrief-video position-relative d-flex flex-grow-1 w-100 border border-bottom-0 rounded-top overflow-hidden cursor-pointer">
+            <div class="o-CallDebrief-media-container d-flex h-100" t-att-class="{ 'o-CallDebrief-media-container--no-video': !this.hasVideo }">
+                <div t-if="this.hasVideo" t-on-click="() => this.togglePlay()" class="o-CallDebrief-video position-relative d-flex border-bottom-0 overflow-hidden cursor-pointer" t-att-class="this.callDebriefVideoCustomClasses">
                     <video
                         t-key="this.state.currentSegment.id"
                         t-ref="this.mediaPlayer"

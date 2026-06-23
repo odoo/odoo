@@ -117,6 +117,10 @@ export class CallDebrief extends Component {
         return this.state.currentSegment?.type === "video";
     }
 
+    get callDebriefVideoCustomClasses() {
+        return {}
+    }
+
     onMediaError() {
         this.showVideoFeedback(_t("Media Error"));
         console.warn("Media playback error. The format might not be supported by your browser.");

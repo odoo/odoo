@@ -40,7 +40,7 @@
                         </option>
                     </t>
                 </select>
-                <button t-if="this.props.hasVideo and !this.isMobileOS" t-on-click="this.props.onToggleFullscreen" class="o-CallDebrief-control btn btn-secondary rounded-pill p-1" t-att-data-tooltip="this.fullscreenTooltip" data-control-feedback="fullscreen">
+                <button t-if="this.props.hasVideo and !this.env.isSmall" t-on-click="this.props.onToggleFullscreen" class="o-CallDebrief-control btn btn-secondary rounded-pill p-1" t-att-data-tooltip="this.fullscreenTooltip" data-control-feedback="fullscreen">
                     <i class="fa fa-stack" t-att-class="this.props.isFullscreen ? 'fa-compress' : 'fa-expand'"/>
                 </button>
                 <button class="o-CallDebrief-control btn btn-secondary rounded-pill p-1" t-att-data-tooltip="this.downloadTooltip" t-if="this.props.mediaUrl" t-on-click="() => this.downloadMedia()">
