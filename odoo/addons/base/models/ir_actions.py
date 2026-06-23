@@ -640,6 +640,7 @@ class IrActionsServer(models.Model):
                                  'act_id', 'gid', string='Allowed Groups', help='Groups that can execute the server action. Leave empty to allow everybody.')
 
     update_field_id = fields.Many2one('ir.model.fields', string='Field to Update', ondelete='cascade', compute='_compute_crud_relations', store=True, readonly=False)
+    update_field_name = fields.Char(related='update_field_id.name', string='Field Technical Name')
     update_property = fields.Char(string='Property to Update', compute='_compute_crud_relations', store=True, readonly=False)
     update_path = fields.Char(string='Field to Update Path', help="Path to the field to update, e.g. 'partner_id.name'", default=_default_update_path)
     update_related_model_id = fields.Many2one('ir.model', compute='_compute_crud_relations', readonly=False, store=True)
@@ -677,6 +678,7 @@ class IrActionsServer(models.Model):
         ('resource_ref', 'reference'),
         ('update_boolean_value', 'update_boolean_value'),
         ('selection_value', 'selection_value'),
+        ('dynamic_selection', 'dynamic_selection'),
     ], compute='_compute_value_field_to_show')
     # Webhook
     webhook_url = fields.Char(string='Webhook URL', help="URL to send the POST request to.")
@@ -1261,6 +1263,8 @@ class IrActionsServer(models.Model):
                 virtual = self.env[action.crud_model_name].new()
                 property_def = virtual.get_property_definition(action.update_field_id.name + "." + action.update_property)
                 action.value_field_to_show = _get_value_field_to_show(property_def.get('type'))
+            elif action.update_field_id.ttype == 'selection' and not action.update_field_id.selection_ids:
+                action.value_field_to_show = 'dynamic_selection'
             else:
                 action.value_field_to_show = _get_value_field_to_show(action.update_field_id.ttype)
 
