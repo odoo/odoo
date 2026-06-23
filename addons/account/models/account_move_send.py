@@ -264,7 +264,7 @@ class AccountMoveSend(models.AbstractModel):
 
         attachments = []
         for extra_mail_template in extra_mail_templates:
-            filename = move.with_context(invoice_report=extra_mail_template)._get_invoice_report_filename() or f'{extra_mail_template.name.lower()}_{move.name}.pdf'
+            filename = move._get_invoice_mail_template_dynamic_report_filename(extra_mail_template) or f'{extra_mail_template.name.lower()}_{move.name}.pdf'
             attachments.append({
                 'id': f'placeholder_{extra_mail_template.name.lower()}_{filename}',
                 'name': filename,
