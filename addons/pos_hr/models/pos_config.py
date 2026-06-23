@@ -8,16 +8,16 @@ class PosConfig(models.Model):
     _name = 'pos.config'
     _inherit = ['hr.mixin', 'pos.config']
 
-    minimal_employee_ids = fields.Many2many(
-        'hr.employee', 'pos_hr_minimal_employee_hr_employee', string="Employees with minimal access",
+    restrictive_employee_ids = fields.Many2many(
+        'hr.employee', 'pos_hr_restrictive_employee_hr_employee', string="Employees with restrictive level access",
         bypass_search_access=True,
         help='If left empty, all employees can log in to PoS')
-    basic_employee_ids = fields.Many2many(
-        'hr.employee', 'pos_hr_basic_employee_hr_employee', string="Employees with basic access",
+    cashier_employee_ids = fields.Many2many(
+        'hr.employee', 'pos_hr_cashier_employee_hr_employee', string="Employees with cashier level access",
         bypass_search_access=True,
         help='If left empty, all employees can log in to PoS')
-    advanced_employee_ids = fields.Many2many(
-        'hr.employee', 'pos_hr_advanced_employee_hr_employee', string="Employees with manager access",
+    manager_employee_ids = fields.Many2many(
+        'hr.employee', 'pos_hr_manager_employee_hr_employee', string="Employees with manager level access",
         bypass_search_access=True,
         help='Employees linked to users with the PoS Manager role are automatically added to this list')
     logged_employee_ids = fields.Many2many(
@@ -28,11 +28,11 @@ class PosConfig(models.Model):
     )
 
     def write(self, vals):
-        sudo_fields = ('minimal_employee_ids', 'basic_employee_ids', 'advanced_employee_ids')
+        sudo_fields = ('restrictive_employee_ids', 'cashier_employee_ids', 'manager_employee_ids')
         res = True
 
-        if 'advanced_employee_ids' not in vals:
-            vals['advanced_employee_ids'] = []
+        if 'manager_employee_ids' not in vals:
+            vals['manager_employee_ids'] = []
         pos_manager_group = self.sudo()._get_group_pos_manager()
         for config in self:
             config_vals = dict(vals)
@@ -45,7 +45,7 @@ class PosConfig(models.Model):
                 target_user.action_create_employee()
                 allowed_employees = target_user.employee_id
 
-            config_vals['advanced_employee_ids'] += [(4, emp.id) for emp in allowed_employees]
+            config_vals['manager_employee_ids'] += [(4, emp.id) for emp in allowed_employees]
             sudo_vals = {
                 field_name: config_vals.pop(field_name)
                 for field_name in sudo_fields
@@ -58,39 +58,39 @@ class PosConfig(models.Model):
                 super(PosConfig, config.sudo()).write(sudo_vals)
         return res
 
-    @api.onchange('minimal_employee_ids')
-    def _onchange_minimal_employee_ids(self):
-        for employee in self.minimal_employee_ids:
+    @api.onchange('restrictive_employee_ids')
+    def _onchange_restrictive_employee_ids(self):
+        for employee in self.restrictive_employee_ids:
             if employee.user_id._has_group('point_of_sale.group_pos_manager'):
-                self.minimal_employee_ids -= employee
-            elif employee in self.basic_employee_ids:
-                self.basic_employee_ids -= employee
-            elif employee in self.advanced_employee_ids:
-                self.advanced_employee_ids -= employee
+                self.restrictive_employee_ids -= employee
+            elif employee in self.cashier_employee_ids:
+                self.cashier_employee_ids -= employee
+            elif employee in self.manager_employee_ids:
+                self.manager_employee_ids -= employee
 
-    @api.onchange('basic_employee_ids')
-    def _onchange_basic_employee_ids(self):
-        for employee in self.basic_employee_ids:
+    @api.onchange('cashier_employee_ids')
+    def _onchange_cashier_employee_ids(self):
+        for employee in self.cashier_employee_ids:
             if employee.user_id._has_group('point_of_sale.group_pos_manager'):
-                self.basic_employee_ids -= employee
-            elif employee in self.advanced_employee_ids:
-                self.advanced_employee_ids -= employee
-            elif employee in self.minimal_employee_ids:
-                self.minimal_employee_ids -= employee
+                self.cashier_employee_ids -= employee
+            elif employee in self.manager_employee_ids:
+                self.manager_employee_ids -= employee
+            elif employee in self.restrictive_employee_ids:
+                self.restrictive_employee_ids -= employee
 
-    @api.onchange('advanced_employee_ids')
-    def _onchange_advanced_employee_ids(self):
-        for employee in self.advanced_employee_ids:
-            if employee in self.basic_employee_ids:
-                self.basic_employee_ids -= employee
-            if employee in self.minimal_employee_ids:
-                self.minimal_employee_ids -= employee
+    @api.onchange('manager_employee_ids')
+    def _onchange_manager_employee_ids(self):
+        for employee in self.manager_employee_ids:
+            if employee in self.cashier_employee_ids:
+                self.cashier_employee_ids -= employee
+            if employee in self.restrictive_employee_ids:
+                self.restrictive_employee_ids -= employee
 
     def _employee_domain(self, user_id):
         domain = self._check_company_domain(self.company_id)
-        if len(self.basic_employee_ids) > 0:
+        if len(self.cashier_employee_ids) > 0:
             domain = Domain.AND([
                 domain,
-                ['|', ('user_id', '=', user_id), ('id', 'in', self.basic_employee_ids.ids + self.advanced_employee_ids.ids + self.minimal_employee_ids.ids)]
+                ['|', ('user_id', '=', user_id), ('id', 'in', self.cashier_employee_ids.ids + self.manager_employee_ids.ids + self.restrictive_employee_ids.ids)]
             ])
         return domain
