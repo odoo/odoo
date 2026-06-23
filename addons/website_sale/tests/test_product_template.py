@@ -203,3 +203,46 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         self.assertEqual(product_template.base_unit_count, 0.0001)
         self.assertEqual(product.base_unit_price, 10000.0)
         self.assertEqual(product_template.base_unit_price, 10000.0)
+
+    def test_combo_display_price_heuristic(self):
+        """
+        Test that tax-inclusive combo price is estimated by picking cheapest item of each combo
+        choice.
+        """
+        self.website.show_line_subtotals_tax_selection = "tax_included"
+        tax_10 = self.env["account.tax"].create({"name": "Tax 10%", "amount": 10.0})
+
+        product_a1 = self._create_product(list_price=20.0, taxes_id=[Command.link(tax_10.id)])
+        product_a2 = self._create_product(list_price=30.0, taxes_id=[Command.link(tax_10.id)])
+        product_b1 = self._create_product(list_price=90.0)
+        product_b2 = self._create_product(list_price=80.0)
+
+        combo_a = self.env["product.combo"].create({
+            "name": "Combo choice A",
+            "combo_item_ids": [
+                Command.create({"product_id": product_a1.id}),
+                Command.create({"product_id": product_a2.id}),
+            ],
+        })
+        combo_b = self.env["product.combo"].create({
+            "name": "Combo choice B",
+            "combo_item_ids": [
+                Command.create({"product_id": product_b1.id}),
+                Command.create({"product_id": product_b2.id}),
+            ],
+        })
+        combo_tmpl = self._create_product(
+            name="Combo product",
+            list_price=95.0,
+            type="combo",
+            combo_ids=[Command.link(combo_a.id), Command.link(combo_b.id)],
+        ).product_tmpl_id
+
+        with self.mock_request():
+            price = combo_tmpl._apply_taxes_to_price(95.0, self.currency, website=self.website)
+
+        # combo_a.base_price=20, combo_b.base_price=80; total=100
+        # combo_a's price is 20/100*95=19; cheapest item (product_a1) has 10% tax → 20.90
+        # combo_b's price is' 80/100*95=76; cheapest item (product_b2) has 15% default tax → 87.40
+        # Total: 20.90 + 87.40 = 108.30
+        self.assertAlmostEqual(price, 108.30)
