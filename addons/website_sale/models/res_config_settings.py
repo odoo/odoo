@@ -24,6 +24,11 @@ class ResConfigSettings(models.TransientModel):
         implied_group="website_sale.group_automate_suggested_products",
         group="website.group_website_restricted_editor",
     )
+    group_unpublish_out_of_stock = fields.Boolean(
+        string="Unpublish Out-of-Stock Products",
+        implied_group="website_sale.group_unpublish_out_of_stock",
+        group="website.group_website_restricted_editor",
+    )
 
     # Modules
     module_website_sale_collect = fields.Boolean("Click & Collect")

@@ -143,6 +143,7 @@ class ProductTemplate(models.Model):
         relation="product_public_category_product_template_rel",
     )
 
+    is_published = fields.Boolean(compute="_compute_is_published", store=True, readonly=False)
     publish_date = fields.Datetime(
         string="Publish Date",
         compute="_compute_publish_date",
@@ -258,6 +259,24 @@ class ProductTemplate(models.Model):
     def _compute_publish_date(self):
         """Set `publish_date` to the moment of (re-)publishing."""
         self.filtered("is_published").publish_date = fields.Datetime.now()
+
+    @api.depends(
+        "is_storable",
+        "allow_out_of_stock_order",
+        "product_variant_ids.qty_available",
+        "product_variant_ids.outgoing_qty",
+    )
+    def _compute_is_published(self):
+        """Auto-unpublish a product when all variants are out of stock, republish when restocked."""
+        if not self.env["res.groups"]._is_feature_enabled(
+            "website_sale.group_unpublish_out_of_stock"
+        ):
+            return
+        for template in self:
+            if not template.id or not template.is_storable or template.allow_out_of_stock_order:
+                continue
+            out_of_stock = all(variant.free_qty <= 0 for variant in template.product_variant_ids)
+            template.is_published = not out_of_stock
 
     def _compute_website_url(self):
         super()._compute_website_url()
@@ -1342,8 +1361,10 @@ class ProductTemplate(models.Model):
     @api.model
     def _search_get_field_domain(self, field, search_term):
         if field == "product_tag_ids.name":
-            return Domain('product_tag_ids', 'any',
-                [('name', 'ilike', search_term), ('visible_to_customers', '=', True)]
+            return Domain(
+                "product_tag_ids",
+                "any",
+                [("name", "ilike", search_term), ("visible_to_customers", "=", True)],
             )
         return super()._search_get_field_domain(field, search_term)
 
@@ -1356,7 +1377,9 @@ class ProductTemplate(models.Model):
             combination_info = product._get_combination_info(only_template=True)
             values = product.mapped("attribute_line_ids.value_ids")
             data["attribute_value_ids"] = values.read(["id", "name"])
-            data["product_tag_ids"] = product.product_tag_ids.filtered('visible_to_customers').read(["name"])
+            data["product_tag_ids"] = product.product_tag_ids.filtered(
+                "visible_to_customers"
+            ).read(["name"])
             price = self._search_render_results_prices(mapping, combination_info)
             if price:
                 data["price"] = price
