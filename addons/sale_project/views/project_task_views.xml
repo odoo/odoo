@@ -415,11 +415,14 @@
             <field name="is_deadline_exceeded" position="after">
                 <field name="quantity_percentage"/>
             </field>
-            <xpath expr="//field[@name='name']" position="after">
-                <t t-if="record.sale_line_display_name.raw_value and record.quantity_percentage.raw_value">
-                    <field name="sale_line_display_name"/>(
-                    <field name="quantity_percentage" widget="percentage" class="d-contents"/>)
-                </t>
+            <xpath expr="//div[@name='deadline']" position="before">
+                <div t-if="record.sale_line_display_name.raw_value and record.quantity_percentage.raw_value" class="d-flex gap-1" name="sale_line" title="Sales Order Item">
+                    <i class="fa fa-money px-1 mt-1"/>
+                    <span>
+                        <field name="sale_line_display_name"/>
+                        (<field name="quantity_percentage" widget="percentage" class="d-contents"/>)
+                    </span>
+                </div>
             </xpath>
         </field>
     </record>
