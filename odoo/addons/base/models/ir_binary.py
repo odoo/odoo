@@ -139,7 +139,10 @@ class IrBinary(models.AbstractModel):
             if filename:
                 stream.download_name = filename
             elif filename_field in record:
-                stream.download_name = record[filename_field]
+                field = record._fields[filename_field]
+                has_access = not field.groups or record.user_has_groups(field.groups)
+                if 'name' in filename_field or has_access:
+                    stream.download_name = record[filename_field]
             if not stream.download_name:
                 stream.download_name = f'{record._table}-{record.id}-{field_name}'
 
