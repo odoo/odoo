@@ -84,6 +84,19 @@ export function encodeOptionsToParams(options, optionsConfig, useBoolean = false
                 URLParams.push(`${encodeURI(paramName)}=${encodeURI(paramValue)}`);
             }
         }
+
+        if (config?.linkedParams?.length) {
+            for (const paramName of config.linkedParams) {
+                const isDefaultValue = optionValue === config.default;
+                if (!isDefaultValue) {
+                    let paramValue = convertOptionValueToUrlParam(optionValue, config);
+                    if (useBoolean && config.type === Boolean) {
+                        paramValue = paramName ? "true" : "false";
+                    }
+                    URLParams.push(`${encodeURI(paramName)}=${encodeURI(paramValue)}`);
+                }
+            }
+        }
     }
     return URLParams.join("&");
 }
