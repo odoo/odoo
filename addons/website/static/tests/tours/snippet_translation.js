@@ -7,9 +7,11 @@ import {
     getClientActionUrl,
     insertSnippet,
     registerWebsitePreviewTour,
+    switchToLang,
     testSwitchWebsite,
 } from "@website/js/tours/tour_utils";
 import { stepUtils } from "@web_tour/tour_utils";
+import { registry } from "@web/core/registry";
 
 registerWebsitePreviewTour("snippet_translation", {}, () => [
     stepUtils.goToUrl(getClientActionUrl()),
@@ -35,12 +37,9 @@ registerWebsitePreviewTour("snippet_translation", {}, () => [
         trigger: '.btn[data-action="save"]:contains("Save in fu_GB")',
     },
 ]);
-registerWebsitePreviewTour(
-    "snippet_translation_changing_lang",
-    {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-    },
-    () => [
+
+registry.category("web_tour.tours").add("snippet_translation_changing_lang", {
+    steps: () => [
         stepUtils.goToUrl(getClientActionUrl()),
         stepUtils.waitIframeIsReady(),
         {
@@ -48,29 +47,13 @@ registerWebsitePreviewTour(
             trigger: ":iframe .js_language_selector button",
             run: "click",
         },
-        {
-            content: "Select the language to Parseltongue",
-            trigger: ":iframe .js_language_selector .js_change_lang[data-url_code=pa_GB]",
-            run: "click",
-        },
-        {
-            content: "Wait the language has changed.",
-            trigger: ":iframe header.o_top_fixed_element nav li:contains(parseltongue)",
-        },
+        ...switchToLang("pa"),
         {
             content: "Open dropdown language selector",
             trigger: ":iframe .js_language_selector button",
             run: "click",
         },
-        {
-            content: "Select the language to English",
-            trigger: ":iframe .js_language_selector .js_change_lang[data-url_code=en]",
-            run: "click",
-        },
-        {
-            content: "Wait the language has changed.",
-            trigger: ":iframe nav li:contains(english)",
-        },
+        ...switchToLang("en"),
         {
             content: "Open Edit dropdown",
             trigger: ".o_edit_website_container button",
@@ -94,8 +77,9 @@ registerWebsitePreviewTour(
             trigger:
                 ':iframe .s_cover .btn-outline-secondary:contains("Contact us in Parseltongue")',
         },
-    ]
-);
+    ],
+});
+
 registerWebsitePreviewTour("snippet_translation_switching_website", {}, () => [
     stepUtils.goToUrl(getClientActionUrl()),
     ...clickOnEditAndWaitEditModeInTranslatedPage(),
