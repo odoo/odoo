@@ -100,7 +100,7 @@ html, body {
     height: 100%;
 }
 
-pre {    
+pre {
     padding: map-get($spacers, 2) map-get($spacers, 3);
     border: $border-width solid $border-color;
     border-radius: $border-radius;
@@ -156,7 +156,7 @@ ul.o_checklist {
             display: block;
             height: $o-checklist-before-size;
             width: $o-checklist-before-size;
-            top: 4px;
+            top: calc(50% - #{$o-checklist-before-size / 2});
             border: 1px solid;
             text-align: center;
             cursor: pointer;
@@ -170,6 +170,10 @@ ul.o_checklist {
                 justify-content: center;
                 padding-left: 1px #{"/*rtl:ignore*/"};
                 padding-top: 1px;
+                font-size: $o-checklist-before-size;
+            }
+            &::after {
+                text-decoration: line-through;
             }
         }
     }
@@ -1012,7 +1016,8 @@ section, .oe_img_bg, [data-oe-shape-data] {
         margin-bottom: 0;
     }
     ul.o_checklist>li:not(.oe-nested)::before {
-        top: 0px!important;
+        top: 0 !important;
+        transform: none !important;
     }
 }
 
