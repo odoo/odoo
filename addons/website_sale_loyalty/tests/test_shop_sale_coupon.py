@@ -89,36 +89,28 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
         self.env["loyalty.program"].create({
             "name": "Buy 4 Small Cabinets, get one for free",
             "trigger": "auto",
-            "rule_ids": [(0, 0, {"minimum_qty": 4, "product_ids": large_cabinet})],
+            "rule_ids": [Command.create({"minimum_qty": 4, "product_ids": large_cabinet})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "product",
-                        "reward_product_id": large_cabinet.id,
-                        "discount_line_product_id": free_large_cabinet.id,
-                    },
-                )
+                Command.create({
+                    "reward_type": "product",
+                    "reward_product_id": large_cabinet.id,
+                    "discount_line_product_id": free_large_cabinet.id,
+                })
             ],
         })
 
         self.env["loyalty.program"].create({
             "name": "Code for 10% on orders",
             "trigger": "with_code",
-            "rule_ids": [(0, 0, {"mode": "with_code", "code": "testcode"})],
+            "rule_ids": [Command.create({"mode": "with_code", "code": "testcode"})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 10,
-                        "discount_mode": "percent",
-                        "discount_applicability": "order",
-                        "discount_line_product_id": ten_percent.id,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
+                    "discount_line_product_id": ten_percent.id,
+                })
             ],
         })
 
@@ -128,19 +120,15 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
             "program_type": "loyalty",
             "portal_visible": True,
             "applies_on": "both",
-            "rule_ids": [(0, 0, {"mode": "auto"})],
+            "rule_ids": [Command.create({"mode": "auto"})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 21,
-                        "discount_mode": "percent",
-                        "discount_applicability": "order",
-                        "required_points": 50,
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 21,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
+                    "required_points": 50,
+                })
             ],
         })
 
@@ -182,30 +170,22 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
             "applies_on": "future",
             "trigger": "auto",
             "rule_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_point_amount": 1,
-                        "reward_point_mode": "money",
-                        "reward_point_split": True,
-                        "product_ids": gift_card,
-                    },
-                )
+                Command.create({
+                    "reward_point_amount": 1,
+                    "reward_point_mode": "money",
+                    "reward_point_split": True,
+                    "product_ids": gift_card,
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount_mode": "per_point",
-                        "discount": 1,
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                        "description": "PAY WITH GIFT CARD",
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount_mode": "per_point",
+                    "discount": 1,
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                    "description": "PAY WITH GIFT CARD",
+                })
             ],
         })
         # Another program for good measure
@@ -214,18 +194,14 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
             "applies_on": "current",
             "trigger": "with_code",
             "program_type": "promotion",
-            "rule_ids": [(0, 0, {"mode": "with_code", "code": "10PERCENT"})],
+            "rule_ids": [Command.create({"mode": "with_code", "code": "10PERCENT"})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 10,
-                        "discount_mode": "percent",
-                        "discount_applicability": "order",
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
+                })
             ],
         })
         # Create a gift card to be used
@@ -298,9 +274,13 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
             "name": "10% TEST Discount",
             "trigger": "with_code",
             "applies_on": "current",
-            "rule_ids": [(0, 0, {})],
+            "rule_ids": [Command.create({})],
             "reward_ids": [
-                (0, 0, {"reward_type": "discount", "discount": 10, "discount_mode": "percent"})
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "percent",
+                })
             ],
         })
 
@@ -402,30 +382,26 @@ class TestWebsiteSaleCoupon(HttpCase, WebsiteSaleCommon):
             "applies_on": "current",
             "trigger": "with_code",
             "rule_ids": [
-                (0, 0, {"code": "12345", "reward_point_amount": 1, "reward_point_mode": "order"})
+                Command.create({
+                    "code": "12345",
+                    "reward_point_amount": 1,
+                    "reward_point_mode": "order",
+                })
             ],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 10,
-                        "discount_applicability": "specific",
-                        "required_points": 1,
-                        "discount_product_ids": chair,
-                    },
-                ),
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 50,
-                        "discount_applicability": "order",
-                        "required_points": 1,
-                    },
-                ),
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_applicability": "specific",
+                    "required_points": 1,
+                    "discount_product_ids": chair,
+                }),
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 50,
+                    "discount_applicability": "order",
+                    "required_points": 1,
+                }),
             ],
         })
         self.start_tour(

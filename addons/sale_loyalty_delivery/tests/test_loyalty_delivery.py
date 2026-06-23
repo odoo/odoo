@@ -65,16 +65,12 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
             "program_type": "gift_card",
             "trigger": "auto",
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 1,
-                        "discount_mode": "per_point",
-                        "discount_applicability": "order",
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 1,
+                    "discount_mode": "per_point",
+                    "discount_applicability": "order",
+                })
             ],
         })
         self.env["loyalty.generate.wizard"].with_context(active_id=program_gift_card.id).create({
@@ -147,18 +143,14 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
             "program_type": "coupons",
             "applies_on": "current",
             "trigger": "auto",
-            "rule_ids": [(0, 0, {})],
+            "rule_ids": [Command.create({})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 90,
-                        "discount_mode": "percent",
-                        "discount_applicability": "order",
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 90,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
+                })
             ],
         })
 

@@ -911,7 +911,7 @@ class SaleOrder(models.Model):
         if coupon_points:
             self.sudo().write({
                 "coupon_point_ids": [
-                    (0, 0, {"coupon_id": coupon.id, "points": points})
+                    Command.create({"coupon_id": coupon.id, "points": points})
                     for coupon, points in coupon_points.items()
                 ]
             })
@@ -950,11 +950,11 @@ class SaleOrder(models.Model):
         for vals, line in zip(reward_vals, old_lines):
             if vals["product_id"] == line.product_id.id:
                 vals["name"] = line.name  # Preserve custom description
-            command_list.append((Command.UPDATE, line.id, vals))
+            command_list.append(Command.update(line.id, vals))
         if len(reward_vals) > len(old_lines):
-            command_list.extend((Command.CREATE, 0, vals) for vals in reward_vals[len(old_lines) :])
+            command_list.extend(Command.create(vals) for vals in reward_vals[len(old_lines) :])
         elif len(reward_vals) < len(old_lines) and delete:
-            command_list.extend((Command.DELETE, line.id) for line in old_lines[len(reward_vals) :])
+            command_list.extend(Command.delete(line.id) for line in old_lines[len(reward_vals) :])
         self.write({"order_line": command_list})
         return self.env["sale.order.line"] if delete else old_lines[len(reward_vals) :]
 
@@ -1372,7 +1372,7 @@ class SaleOrder(models.Model):
         # |       STEP 5: Cleanup                    |
         # +==========================================+
 
-        order_line_update = [(Command.DELETE, line.id) for line in lines_to_unlink]
+        order_line_update = [Command.delete(line.id) for line in lines_to_unlink]
         if order_line_update:
             self.write({"order_line": order_line_update})
         if coupons_to_unlink:
@@ -1555,9 +1555,10 @@ class SaleOrder(models.Model):
                         "This program requires a code to be applied."
                     )
                 elif not minimum_amount_matched:
-                    program_result['error'] = self.env._(
-                        "To take advantage of this offer, your order must include at least %(amount)s %(currency)s of the eligible products.",
-                        amount=min(program.rule_ids.mapped('minimum_amount')),
+                    program_result["error"] = self.env._(
+                        "To take advantage of this offer, your order must include at least"
+                        " %(amount)s %(currency)s of the eligible products.",
+                        amount=min(program.rule_ids.mapped("minimum_amount")),
                         currency=program.currency_id.name,
                     )
                 elif not product_qty_matched:

@@ -28,7 +28,7 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             "sale_ok": False,
             "purchase_ok": False,
             "list_price": 20.0,
-            "taxes_id": [(6, 0, [tax_15pc_excl.id])],
+            "taxes_id": [Command.set(tax_15pc_excl.ids)],
         })
         cls.carrier = cls.env["delivery.carrier"].create({
             "name": "The Poste",
@@ -58,8 +58,10 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         program = self.env["loyalty.program"].create({
             "name": "Free Shipping if at least 100 euros",
             "trigger": "auto",
-            "rule_ids": [(0, 0, {"minimum_amount": 100, "minimum_amount_tax_mode": "incl"})],
-            "reward_ids": [(0, 0, {"reward_type": "shipping"})],
+            "rule_ids": [
+                Command.create({"minimum_amount": 100, "minimum_amount_tax_mode": "incl"})
+            ],
+            "reward_ids": [Command.create({"reward_type": "shipping"})],
         })
 
         # Price of order will be 5*1.15 = 5.75 (tax included)
@@ -94,16 +96,12 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         # Order price will be 5.75 + 81.74*1.15 = 99.75
         order.write({
             "order_line": [
-                (
-                    0,
-                    False,
-                    {
-                        "product_id": self.product_B.id,
-                        "name": "Product 1B",
-                        "product_uom_qty": 1.0,
-                        "price_unit": 81.74,
-                    },
-                )
+                Command.create({
+                    "product_id": self.product_B.id,
+                    "name": "Product 1B",
+                    "product_uom_qty": 1.0,
+                    "price_unit": 81.74,
+                })
             ]
         })
         self._auto_rewards(order, program)
@@ -113,16 +111,12 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         # be reimbursed
         order.write({
             "order_line": [
-                (
-                    0,
-                    False,
-                    {
-                        "product_id": self.product_A.id,
-                        "name": "Product 1",
-                        "product_uom_qty": 1.0,
-                        "price_unit": 0.30,
-                    },
-                )
+                Command.create({
+                    "product_id": self.product_A.id,
+                    "name": "Product 1",
+                    "product_uom_qty": 1.0,
+                    "price_unit": 0.30,
+                })
             ]
         })
 
@@ -132,12 +126,10 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         # Test case 3: the amount is not sufficient now, the reward should be removed
         order.write({
             "order_line": [
-                (
-                    2,
+                Command.delete(
                     order.order_line.filtered(
                         lambda line: line.product_id.id == self.product_A.id
-                    ).id,
-                    False,
+                    ).id
                 )
             ]
         })
@@ -151,24 +143,20 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         p_minimum_threshold_free_delivery = self.env["loyalty.program"].create({
             "name": "free shipping if > 872 tax excl",
             "trigger": "auto",
-            "rule_ids": [(0, 0, {"minimum_amount": 872})],
-            "reward_ids": [(0, 0, {"reward_type": "shipping"})],
+            "rule_ids": [Command.create({"minimum_amount": 872})],
+            "reward_ids": [Command.create({"reward_type": "shipping"})],
         })
         p_2 = self.env["loyalty.program"].create({
             "name": "10% reduction if > 872 tax excl",
             "trigger": "auto",
-            "rule_ids": [(0, 0, {"minimum_amount": 872})],
+            "rule_ids": [Command.create({"minimum_amount": 872})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 10,
-                        "discount_mode": "percent",
-                        "discount_applicability": "order",
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 10,
+                    "discount_mode": "percent",
+                    "discount_applicability": "order",
+                })
             ],
         })
         programs = p_minimum_threshold_free_delivery | p_2
@@ -238,25 +226,25 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             "name": "Free shipping if > 872 tax excl",
             "trigger": "with_code",
             "rule_ids": [
-                (0, 0, {"mode": "with_code", "code": "free_shipping", "minimum_amount": 872})
+                Command.create({
+                    "mode": "with_code",
+                    "code": "free_shipping",
+                    "minimum_amount": 872,
+                })
             ],
-            "reward_ids": [(0, 0, {"reward_type": "shipping"})],
+            "reward_ids": [Command.create({"reward_type": "shipping"})],
         })
         p_2 = self.env["loyalty.program"].create({
             "name": "Buy 4 large cabinet, get one for free",
             "trigger": "auto",
-            "rule_ids": [(0, 0, {"product_ids": self.iPadMini, "minimum_qty": 4})],
+            "rule_ids": [Command.create({"product_ids": self.iPadMini, "minimum_qty": 4})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "product",
-                        "reward_product_id": self.iPadMini.id,
-                        "reward_product_qty": 1,
-                        "required_points": 1,
-                    },
-                )
+                Command.create({
+                    "reward_type": "product",
+                    "reward_product_id": self.iPadMini.id,
+                    "reward_product_qty": 1,
+                    "required_points": 1,
+                })
             ],
         })
         programs = p_1 | p_2
@@ -315,18 +303,14 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         programs |= self.env["loyalty.program"].create({
             "name": "20% reduction on large cabinet in cart",
             "trigger": "auto",
-            "rule_ids": [(0, 0, {})],
+            "rule_ids": [Command.create({})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount": 20,
-                        "discount_mode": "percent",
-                        "discount_applicability": "cheapest",
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount": 20,
+                    "discount_mode": "percent",
+                    "discount_applicability": "cheapest",
+                })
             ],
         })
         self._auto_rewards(order, programs)
@@ -348,8 +332,8 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             "program_type": "loyalty",
             "applies_on": "both",
             "trigger": "auto",
-            "rule_ids": [(0, 0, {"reward_point_mode": "money", "reward_point_amount": 1})],
-            "reward_ids": [(0, 0, {"reward_type": "shipping", "required_points": 100})],
+            "rule_ids": [Command.create({"reward_point_mode": "money", "reward_point_amount": 1})],
+            "reward_ids": [Command.create({"reward_type": "shipping", "required_points": 100})],
         })
         # Add points to a partner to trigger the promotion
         self.env["loyalty.card"].create({
@@ -412,18 +396,14 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             "trigger": "auto",
             "program_type": "promotion",
             "applies_on": "current",
-            "rule_ids": [(0, 0, {"minimum_qty": 2, "minimum_amount": 0})],
+            "rule_ids": [Command.create({"minimum_qty": 2, "minimum_amount": 0})],
             "reward_ids": [
-                (
-                    0,
-                    0,
-                    {
-                        "reward_type": "discount",
-                        "discount_mode": "percent",
-                        "discount": 10.0,
-                        "discount_applicability": "order",
-                    },
-                )
+                Command.create({
+                    "reward_type": "discount",
+                    "discount_mode": "percent",
+                    "discount": 10.0,
+                    "discount_applicability": "order",
+                })
             ],
         })
 
@@ -454,9 +434,13 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
             "name": "Free shipping if > 872 tax excl",
             "trigger": "with_code",
             "rule_ids": [
-                (0, 0, {"mode": "with_code", "code": "free_shipping", "minimum_amount": 872})
+                Command.create({
+                    "mode": "with_code",
+                    "code": "free_shipping",
+                    "minimum_amount": 872,
+                })
             ],
-            "reward_ids": [(0, 0, {"reward_type": "shipping"})],
+            "reward_ids": [Command.create({"reward_type": "shipping"})],
         })
         programs = p_1
         self.iPadMini.taxes_id = self.tax_10pc_incl
