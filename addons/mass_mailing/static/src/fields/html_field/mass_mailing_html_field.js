@@ -187,7 +187,7 @@ export class MassMailingHtmlField extends HtmlField {
             showFullscreen: this.state.isNewlySelectedTheme && this.withBuilder,
             withBuilder: this.withBuilder,
             saveRecord: this.saveRecord.bind(this),
-            discardRecord: this.discardRecord.bind(this),
+            discardIframe: this.discardIframe.bind(this),
         };
         if (this.env.debug) {
             Object.assign(props, {
@@ -205,10 +205,10 @@ export class MassMailingHtmlField extends HtmlField {
         }
     }
 
-    async discardRecord() {
+    async discardIframe() {
         if (this.isDirty || (await this.props.record.isDirty())) {
             this.state.isNewlySelectedTheme = false;
-            await this.props.record.discard();
+            this.state.key++;
         }
     }
 

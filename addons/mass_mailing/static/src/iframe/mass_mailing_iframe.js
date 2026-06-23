@@ -39,7 +39,7 @@ export class MassMailingIframe extends Component {
         iframeRef: t.function(),
         iframeWrapperRef: t.function(),
         saveRecord: t.function(),
-        discardRecord: t.function(),
+        discardIframe: t.function(),
         showFullscreen: t.boolean().optional(),
         showThemeSelector: t.boolean().optional(),
         showCodeView: t.boolean().optional(),
@@ -381,7 +381,7 @@ export class MassMailingIframe extends Component {
     }
 
     async discardAndClose() {
-        await this.props.discardRecord();
+        await this.props.discardIframe();
         this.toggleFullScreen(false);
     }
 
