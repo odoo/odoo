@@ -24,25 +24,32 @@
 */
 .o_field_widget.o_field_call_debrief {
     --fieldWidget-display: block;
+
+    container: callDebrief-field / inline-size;
 }
 
 .o-CallDebrief {
     max-height: var(--CallDebrief-max-height, 85vh);
     max-width: var(--CallDebrief-max-width, #{map-get($container-max-widths, xxl)});
+    margin: var(--CallDebrief-margin, 0);
     scrollbar-width: thin;
     scrollbar-color: currentColor transparent;
 
     &:fullscreen {
-        --CallDebrief__video-flex-shrink: 0;
+        .o-CallDebrief-video {
+            --CallDebrief__video-border-radius: 0;
 
-        &.o-CallDebrief--has-video-transcript {
-            --CallDebrief__video-max-height: 66%;
+            border: 0;
+        }
+
+        .o-CallDebrief-media-container {
+            background: black;
         }
     }
 
     .o-CallDebrief-media-container {
-        container-type: inline-size;
         min-height: 0;
+        flex-direction: var(--CallDebrief__mediaContainer-flex-direction, column);
     }
 
     .o-CallDebrief-mediaPlayer {
@@ -52,8 +59,12 @@
 
     .o-CallDebrief-video {
         flex-shrink: var(--CallDebrief__video-flex-shrink, 1);
+        flex-basis: var(--CallDebrief__video-flex-basis, 100%);
         min-height: 200px;
         max-height: var(--CallDebrief__video-max-height, auto);
+        border: $border-width solid $border-color;
+        border-right: var(--CallDebrief__video-border-right, #{$border-width})  solid $border-color;
+        border-radius: var(--CallDebrief__video-border-radius, #{$border-radius $border-radius 0 0});
         background-color: black;
     }
 
@@ -66,10 +77,8 @@
 
 .o_cell:has(.o-CallDebrief) {
     @include media-breakpoint-down(md) {
-        .o-CallDebrief-mediaPlayer {
-            --#{$prefix}border-width: 0;
+        .o-CallDebrief:not(:fullscreen) {
             --#{$prefix}background-color: none;
-            --CallDebrief__mediaPlayer-padding: #{map-get($spacers, 3)} 0 0;
         }
     }
 }

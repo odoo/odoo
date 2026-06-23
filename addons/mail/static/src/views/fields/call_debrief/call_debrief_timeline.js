@@ -103,12 +103,10 @@ export class CallDebriefTimeline extends Component {
 
     _styleSegment(segment) {
         if (!this.props.totalDuration || !segment || !segment.duration) {
-            return `left: 0%; width: 0%;`;
+            return `width: 0%;`;
         }
-        const start = segment.startSec || 0;
         const width = Math.min(100, (segment.duration / this.props.totalDuration) * 100);
-        const left = (start / this.props.totalDuration) * 100;
-        return `left: ${left}%; width: ${width}%;`;
+        return `width: ${width}%;`;
     }
 
     _stylePositionMediaProgress(media) {
@@ -195,5 +193,12 @@ export class CallDebriefTimeline extends Component {
 
     get formattedTotalDuration() {
         return this.formatDuration(this.props.totalDuration);
+    }
+
+    segmentCustomClasses(segment, isFirst, isLast) {
+        return {
+            'o-CallDebriefTimeline-silence-segment bg-200': segment.isSilence,
+            'o-CallDebriefTimeline-media-segment bg-300': !segment.isSilence,
+        };
     }
 }

@@ -205,19 +205,15 @@ test("CallDebrief: generates silence gaps in timeline", async () => {
 
     // Verify coordinates
     const segments = document.querySelectorAll(".o-CallDebriefTimeline-segment");
-    expect(segments[0].style.left).toBe("0%");
     expect(segments[0].style.width).toBe("25%");
     expect(segments[0].classList.contains("o-CallDebriefTimeline-media-segment")).toBe(true);
 
-    expect(segments[1].style.left).toBe("25%");
     expect(segments[1].style.width).toBe("25%");
     expect(segments[1].classList.contains("o-CallDebriefTimeline-silence-segment")).toBe(true);
 
-    expect(segments[2].style.left).toBe("50%");
     expect(segments[2].style.width).toBe("25%");
     expect(segments[2].classList.contains("o-CallDebriefTimeline-media-segment")).toBe(true);
 
-    expect(segments[3].style.left).toBe("75%");
     expect(segments[3].style.width).toBe("25%");
     expect(segments[3].classList.contains("o-CallDebriefTimeline-silence-segment")).toBe(true);
 });
