@@ -296,9 +296,8 @@ class AccountMove(models.Model):
     # -------------------------------------------------------------------------
 
     @api.depends(
-        'commercial_partner_id.country_id',
-        'commercial_partner_id.vat',
-        'company_id.account_fiscal_country_id',
+        'commercial_partner_id',
+        'company_id',
         'date',
         'l10n_fr_pdp_flow_10_operation_type',
         'l10n_fr_pdp_flow_10_report_type',
@@ -328,9 +327,8 @@ class AccountMove(models.Model):
             moves.l10n_fr_pdp_last_flow_id = last_flow
 
     @api.depends(
-        'commercial_partner_id.country_id',
-        'commercial_partner_id.vat',
-        'company_id.account_fiscal_country_id',
+        'commercial_partner_id',
+        'company_id',
         'date',
         'l10n_fr_pdp_flow_10_report_type',
         'l10n_fr_pdp_has_error',
@@ -358,9 +356,8 @@ class AccountMove(models.Model):
                 move.l10n_fr_pdp_status = move.l10n_fr_pdp_last_flow_id.state
 
     @api.depends(
-        'commercial_partner_id.country_id',
-        'commercial_partner_id.vat',
-        'company_id.account_fiscal_country_id',
+        'company_id',
+        'commercial_partner_id',
         'l10n_fr_pdp_flow_10_report_type',
         'line_ids.matched_credit_ids.credit_move_id',
         'line_ids.matched_debit_ids.debit_move_id',
@@ -369,16 +366,14 @@ class AccountMove(models.Model):
         'state',
     )
     def _compute_l10n_fr_pdp_has_error(self):
+        # To prevent computing all moves linked to a partner when a change is made to a partner,
+        # the l10n_fr_pdp_has_error compute does not depends on all fields that might influance it's value.
         for move in self:
             move.l10n_fr_pdp_has_error = bool(move._get_l10n_fr_pdp_errors(lazy=True))
 
     @api.depends(
-        'commercial_partner_id.country_id',
-        'commercial_partner_id.vat',
-        'company_id.account_fiscal_country_id',
-        'company_id.account_peppol_edi_user',
-        'company_id.l10n_fr_f10_enable_reporting',
-        'company_id.l10n_fr_pdp_send_to_ppf',
+        'company_id',
+        'commercial_partner_id',
         'line_ids.matched_credit_ids.credit_move_id',
         'line_ids.matched_debit_ids.debit_move_id',
         'state',
@@ -399,12 +394,8 @@ class AccountMove(models.Model):
 
     @api.depends(
         'date',
-        'commercial_partner_id.country_id',
-        'commercial_partner_id.vat',
-        'company_id.account_fiscal_country_id',
-        'company_id.l10n_fr_f10_enable_reporting',
-        'company_id.l10n_fr_pdp_annuaire_start_date',
-        'company_id.l10n_fr_pdp_periodicity',
+        'company_id',
+        'commercial_partner_id',
         'l10n_fr_pdp_flow_10_operation_type',
         'line_ids.matched_credit_ids.credit_move_id',
         'line_ids.matched_debit_ids.debit_move_id',
