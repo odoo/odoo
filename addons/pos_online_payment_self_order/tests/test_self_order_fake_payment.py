@@ -85,6 +85,36 @@ class TestSelfOrderFakePayment(TestSelfOrderMobile):
         self._fake_online_payment(order.id, order.access_token, self.payment_provider.id, exit_route="/", confirmation_page=False)
         self.assertEqual(order.state, 'paid')
 
+    def test_get_order_to_print_has_partner(self):
+        """
+        Tests that the partner is in the data even if it wasn't added through
+        the pos_data, in cases like offline kiosk
+        """
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+            'self_ordering_service_mode': 'table',
+            'self_order_online_payment_method_id': self.online_payment_method.id,
+            'use_presets': False,
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, "")
+        order, _ = self.create_backend_pos_order({
+            'order_data': {
+                'source': 'mobile',
+                'state': 'draft',
+                'partner_id': self.partner.id,
+            },
+            'line_data': [{
+                'product_id': self.cola.id,
+                'qty': 1,
+            }],
+        })
+        order._portal_ensure_token()
+        self._fake_online_payment(order.id, order.access_token, self.payment_provider.id, exit_route="/", confirmation_page=True)
+        pos_data = order.get_order_to_print()
+        self.assertEqual(pos_data['res.partner'][0]['id'], self.partner.id)
+
 
 @odoo.tests.tagged("post_install", "-at_install")
 class TestSelfOrderFakePaymentMail(MailCase, TestSelfOrderMobile):
