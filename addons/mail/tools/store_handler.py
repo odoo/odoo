@@ -1,3 +1,4 @@
+import functools
 import logging
 from collections.abc import Iterable
 from typing import Literal, NamedTuple, get_args
@@ -55,8 +56,13 @@ class StoreHandlerRegistry:
                     or (entry.audience == "logged_in" and not user._is_public())
                     or (entry.audience == "internal" and user._is_internal())
                 ):
-                    assert isinstance(controller, Controller), (
-                        "controller must be an instance of odoo.http.routing_map.Controller"
+                    # local import: store_handler is imported by the controller module, so
+                    # importing the controller at module level would create a cycle.
+                    from odoo.addons.mail.controllers.store import StoreController  # noqa: PLC0415
+
+                    assert isinstance(controller, StoreController), (
+                        f'Store handler "{name}" must run on a StoreController subclass, '
+                        f'not on "{controller!r}"'
                     )
                     self._validate_func_name(entry.func_name)
                     # getattr: used to ensure we get the inherited method when the controller is extended,
@@ -96,14 +102,43 @@ class StoreHandlerRegistry:
 store_handler_registry = StoreHandlerRegistry()
 
 
+class StoreHandlerMethod:
+    """Descriptor returned by ``@store_handler``.
+
+    Registration is deferred to ``__set_name__`` so the owning class is known when the
+    handler registers, and can be validated to be a ``StoreController`` subclass.
+    """
+
+    def __init__(self, name: str, func, *, audience: AUDIENCE, readonly: bool):
+        self.name = name
+        self.func = func
+        self.audience = audience
+        self.readonly = readonly
+        functools.update_wrapper(self, func)
+
+    def __set_name__(self, owner, attr_name):
+        # local import: store_handler is imported by the controller module, so importing
+        # the controller at module level would create a cycle.
+        from odoo.addons.mail.controllers.store import StoreController  # noqa: PLC0415
+
+        assert owner is not StoreController and issubclass(owner, StoreController), (
+            f'Store handler "{self.name}" must be registered on a StoreController subclass'
+        )
+        store_handler_registry.add(
+            self.name,
+            self.func.__name__,
+            audience=self.audience,
+            readonly=self.readonly,
+        )
+
+    def __get__(self, instance, owner=None):
+        if instance is None:
+            return self.func
+        return self.func.__get__(instance, owner)
+
+
 def store_handler(name: str, *, audience: AUDIENCE = "internal", readonly: bool = True):
     def store_handler__decorator(func):
-        store_handler_registry.add(
-            name,
-            func.__name__,
-            audience=audience,
-            readonly=readonly,
-        )
-        return func
+        return StoreHandlerMethod(name, func, audience=audience, readonly=readonly)
 
     return store_handler__decorator

@@ -4,42 +4,18 @@ from collections import defaultdict
 from odoo.http import request
 
 from odoo.addons.mail.controllers.thread import ThreadController
-from odoo.addons.mail.tools.discuss import Store, mail_route
-from odoo.addons.mail.tools.store_handler import (
-    store_handler,
-    store_handler_registry,
-)
+from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.store_handler import store_handler
 
 
 class WebclientController(ThreadController):
-    """Routes for the web client."""
-
-    @mail_route("/mail/store", methods=["POST"], type="jsonrpc", auth="public", readonly=lambda self, *_: self._is_mail_fetch_readonly())
-    def mail_store(self, fetch_params, context=None):
-        """Returns store data for the given fetch_params."""
-        context_user_id = context.get("uid") if context else None
-        store = Store()
-        if context_user_id and (not self.env.user or context_user_id != self.env.user.id):
-            # The user has been logged out in the meantime
-            return store
-
-        if context:
-            request.update_context(**context)
-        self._process_request_loop(store, fetch_params)
-        return store
-
-    def _is_mail_fetch_readonly(self):
-        if request.httprequest.method == "OPTIONS":
-            # CORS preflight request has an empty body, nothing to parse
-            return True
-        fetch_params = request.get_json_data().get("params", {}).get("fetch_params", [])
-        return store_handler_registry.is_fetch_readonly(fetch_params)
+    """Generic store handlers for the web client."""
 
     def _process_request_loop(self, store: Store, fetch_params):
-        # aggregate of messages to return, to batch them in a single query when all the fetch params
-        # have been processed
+        # aggregate of messages to return, to batch them in a single query when all the fetch
+        # params have been processed
         request.update_context(messages=request.env["mail.message"], add_inbox_fields=False, add_chatter_fields=False)
-        store_handler_registry.execute_for_user(self, store, fetch_params)
+        super()._process_request_loop(store, fetch_params)
         if messages := request.env.context["messages"]:
             fields_params = {
                 **({"inbox_fields": True} if request.env.context["add_inbox_fields"] else {}),
