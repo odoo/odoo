@@ -106,4 +106,8 @@ patch(PosOrderline.prototype, {
         }
         return res;
     },
+
+    isRefund() {
+        return super.isRefund(...arguments) && !this.is_reward_line;
+    },
 });
