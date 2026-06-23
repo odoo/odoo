@@ -24,19 +24,4 @@
         </field>
     </record>
 
-    <!-- Attendance work entry type setting -->
-    <record id="res_config_settings_view_form_inherit" model="ir.ui.view">
-        <field name="name">res.config.settings.view.form.inherit.hr_holidays_attendance</field>
-        <field name="model">res.config.settings</field>
-        <field name="inherit_id" ref="hr_attendance.res_config_settings_view_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//block[@name='overtime_settings']" position="inside">
-                <setting string="Attendance Work Entry Type" company_dependent="1"
-                         help="Default work entry type assigned to attendance records. Used by the time rule engine.">
-                    <field name="attendance_work_entry_type_id" options="{'no_create': True}"/>
-                </setting>
-            </xpath>
-        </field>
-    </record>
-
 </odoo>

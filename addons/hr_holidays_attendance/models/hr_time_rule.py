@@ -25,6 +25,7 @@ class HrTimeRule(models.Model):
                         ('employee_id', '=', employee.id),
                         ('work_entry_type_id', '=', rule.allocation_type_id.id),
                         ('state', '=', 'validate'),
+                        ('date_to', '=', False),
                     ], limit=1)
                     if allocation:
                         allocation.number_of_days += alloc_days
@@ -33,6 +34,7 @@ class HrTimeRule(models.Model):
                             'employee_id': employee.id,
                             'work_entry_type_id': rule.allocation_type_id.id,
                             'number_of_days': alloc_days,
+                            'date_to': False,
                             'state': 'confirm',
                         })
 
@@ -59,6 +61,7 @@ class HrTimeRule(models.Model):
                         ('employee_id', '=', employee.id),
                         ('work_entry_type_id', '=', rule.allocation_type_id.id),
                         ('state', '=', 'validate'),
+                        ('date_to', '=', False),
                     ], limit=1)
                     if allocation:
                         allocation.number_of_days -= deduct

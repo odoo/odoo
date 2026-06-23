@@ -22,7 +22,7 @@ export class AttendanceCalendarOverview extends Component {
     }
 
     get displayExtraHours() {
-        return this.env.searchModel.context.display_extra_hours ?? false;
+        return true;
     }
 
     async loadData() {

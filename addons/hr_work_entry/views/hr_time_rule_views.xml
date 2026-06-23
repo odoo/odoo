@@ -16,8 +16,12 @@
                         <h1><field name="name" placeholder="e.g. Exceed 8h per day"/></h1>
                     </div>
                     <group>
-                        <field name="country_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_company" readonly="company_id"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
+                        <group>
+                            <field name="country_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_company" readonly="company_id"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
                     </group>
 
                     <notebook>
@@ -36,6 +40,11 @@
                                         <field name="expected_hours" widget="float_time" nolabel="1" style="width:8ch"
                                             invisible="calendar_source"/>
                                         <field name="working_hours_mode" nolabel="1" style="width:25ch"/>
+                                        <span class="text-muted ms-1" invisible="not calendar_source">·  ±</span>
+                                        <field name="employer_tolerance" widget="float_time" nolabel="1" style="width:8ch"
+                                            invisible="not calendar_source or threshold_operator == 'less_than'"/>
+                                        <field name="employee_tolerance" widget="float_time" nolabel="1" style="width:8ch"
+                                            invisible="not calendar_source or threshold_operator != 'less_than'"/>
                                     </span>
                                     <span class="d-flex gap-3">
                                         <span class="text-muted me-2" invisible="not calendar_source">based on</span>
@@ -85,7 +94,7 @@
                                 <span class="o_form_label">Time Type</span>
                                 <field name="condition_work_entry_type_ids" widget="many2many_tags"
                                     nolabel="1"
-                                    placeholder="All types"/>
+                                    placeholder="Select the time types triggering this rule"/>
                             </group>
 
                             <separator string="Effect"/>
@@ -97,7 +106,7 @@
                                 <div>
                                     <field name="work_entry_type_id" nolabel="1"
                                         options="{'no_create': True}"
-                                        placeholder="Don't split"/>
+                                        placeholder="Leave as it is"/>
                                     <field name="country_work_entry_type_ids" invisible="1"/>
                                 </div>
 
@@ -109,6 +118,23 @@
         </field>
     </record>
 
+    <record id="hr_time_rule_view_search" model="ir.ui.view">
+        <field name="name">hr.time.rule.search</field>
+        <field name="model">hr.time.rule</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <separator/>
+                <filter name="give_salary" string="Give Salary" domain="[('amount_rate', '>', 0)]"/>
+                <separator/>
+                <group>
+                    <filter name="group_amount_rate" string="Salary Rate" context="{'group_by': 'amount_rate'}"/>
+                    <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record id="hr_time_rule_view_list" model="ir.ui.view">
         <field name="name">hr.time.rule.list</field>
         <field name="model">hr.time.rule</field>
@@ -116,10 +142,10 @@
             <list>
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="condition_work_entry_type_ids" widget="many2many_tags" string="Applies To" optional="show"/>
-                <field name="work_entry_type_id" string="Outputs" optional="show"/>
-                <field name="country_id" optional="hide" groups="base.group_multi_company"/>
-                <field name="active" widget="boolean_toggle" optional="hide"/>
+                <field name="condition_label" string="Condition"/>
+                <field name="description" optional="hide"/>
+                <field name="amount_rate" string="Salary Rate (%)" optional="hide"/>
+                <field name="country_id" optional="hide"/>
             </list>
         </field>
     </record>

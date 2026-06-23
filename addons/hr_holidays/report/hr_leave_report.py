@@ -81,7 +81,7 @@ class HrLeaveReport(models.Model):
                 from hr_leave as request
                 inner join hr_employee as employee on (request.employee_id = employee.id)
                 LEFT JOIN hr_version v ON v.id = employee.current_version_id
-                where employee.active IS True
+                where employee.active IS True AND request.active IS True AND request.time_rule_id IS NULL
                 ) leaves
             );
         """)

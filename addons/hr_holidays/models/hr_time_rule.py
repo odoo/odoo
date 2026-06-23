@@ -5,9 +5,9 @@ from datetime import UTC, timedelta
 from zoneinfo import ZoneInfo
 
 from odoo import fields, models
-from odoo.tools.intervals import Intervals
 
 from odoo.addons.hr_work_entry.models.hr_time_rule import _record_overlap_intervals
+from odoo.tools.intervals import Intervals
 
 
 class HrTimeRule(models.Model):
@@ -16,7 +16,11 @@ class HrTimeRule(models.Model):
     work_entry_type_id = fields.Many2one(
         domain="[('id', 'in', country_work_entry_type_ids), ('requires_allocation', '=', False)]",
     )
-    leave_compensation_rate = fields.Float("Allocate %", default=0.0)
+    leave_compensation_rate = fields.Float(
+        "Allocate %",
+        default=0.0,
+        help="Leave allocated or taken at this rate of the excess or deficit. 100% = 1:1.",
+    )
     allocation_type_id = fields.Many2one(
         'hr.work.entry.type',
         string="Allocate to",
@@ -59,6 +63,12 @@ class HrTimeRule(models.Model):
         return self
 
     def _apply_leave_output(self, excess, deficit):
+        """Create output and remainder leave records from the computed excess/deficit.
+
+        For excess: shrink source date_to to first OT start (or archive if OT covers the
+        beginning), create remainder records for subsequent non-OT gaps, and output records
+        for OT segments.  For deficit: emit output records as before.
+        """
         Leave = self.env['hr.leave'].sudo()
         auto_ctx = dict(
             skip_time_rules=True,
@@ -73,10 +83,12 @@ class HrTimeRule(models.Model):
 
         leave_create_vals = []
         archive_source_ids = []
+        all_source_ids = set()
 
         for employee, by_source in deficit.items():
             tz = ZoneInfo(employee._get_tz())
             for source_leave, intervals in by_source.items():
+                all_source_ids.add(source_leave.id)
                 by_period = defaultdict(list)
                 for start, stop, rule, _pp in intervals:
                     if rule.quantity_period == 'week':
@@ -115,10 +127,12 @@ class HrTimeRule(models.Model):
                         if allocation:
                             allocation.number_of_days = max(0, allocation.number_of_days - deduct_days)
 
+        dummy = self.env['resource.calendar']
+
         for employee, by_source in excess.items():
             tz = ZoneInfo(employee._get_tz())
             for source_leave, intervals in by_source.items():
-                # build (start, stop) -> accumulated pp before stripping pp for overlap resolution
+                all_source_ids.add(source_leave.id)
                 pp_by_range = {}
                 for s, e, _r, pp in intervals:
                     key = (s, e)
@@ -132,22 +146,6 @@ class HrTimeRule(models.Model):
                 ]
                 if not output_slices:
                     continue
-
-                archive_source_ids.append(source_leave.id)
-
-                src_start = source_leave.date_from.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
-                src_stop = source_leave.date_to.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
-                src_iv = Intervals([(src_start, src_stop, self.env['resource.calendar'])])
-                out_iv = Intervals(
-                    [(s, e, self.env['resource.calendar']) for s, e, *_ in output_slices],
-                    keep_distinct=True,
-                )
-                for seg_start, seg_stop, _ in src_iv - out_iv:
-                    seg_date_from = seg_start.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-                    seg_date_to = seg_stop.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-                    leave_create_vals.append(
-                        self._get_remainder_leave_vals(employee, source_leave, seg_date_from, seg_date_to)
-                    )
 
                 alloc_create_vals = []
                 for start_local, stop_local, rules, _pp in output_slices:
@@ -189,6 +187,36 @@ class HrTimeRule(models.Model):
                     else:
                         merged_slices.append([start, stop, rules, effective, pp, merge_key])
 
+                # compute remainder segments (source - all outputs)
+                src_start = source_leave.date_from.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+                src_stop = source_leave.date_to.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+                out_union = Intervals(
+                    [(s, e, dummy) for s, e, *_ in output_slices],
+                    keep_distinct=True,
+                )
+                remainder_segments = list(Intervals([(src_start, src_stop, dummy)]) - out_union)
+
+                min_out_start_local = min(s for s, e, *_ in output_slices)
+                min_out_start_utc = min_out_start_local.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+
+                if min_out_start_utc <= source_leave.date_from:
+                    # OT covers the very start → archive source; all remainders become records
+                    archive_source_ids.append(source_leave.id)
+                    for seg_s, seg_e, _ in remainder_segments:
+                        df = seg_s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                        dt = seg_e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                        leave_create_vals.append(self._get_remainder_leave_vals(employee, source_leave, df, dt))
+                else:
+                    # OT starts after source start → shrink source date_to; source IS remainder[0]
+                    Leave.browse([source_leave.id]).with_context(**auto_ctx).write({
+                        'date_to': min_out_start_utc,
+                        'request_date_to': min_out_start_utc.date(),
+                    })
+                    for seg_s, seg_e, _ in remainder_segments[1:]:
+                        df = seg_s.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                        dt = seg_e.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
+                        leave_create_vals.append(self._get_remainder_leave_vals(employee, source_leave, df, dt))
+
                 for start_local, stop_local, all_rules, rule, accumulated_pp, _merge_key in merged_slices:
                     date_from = start_local.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
                     date_to = stop_local.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
@@ -202,4 +230,8 @@ class HrTimeRule(models.Model):
         if archive_source_ids:
             Leave.browse(archive_source_ids).with_context(**auto_ctx).write({'active': False})
 
-        Leave.with_context(**auto_ctx).create(leave_create_vals)
+        new_leaves = Leave.with_context(**auto_ctx).create(leave_create_vals)
+
+        if all_source_ids:
+            sources = Leave.with_context(active_test=False).browse(list(all_source_ids))
+            (sources | new_leaves)._create_resource_leave()

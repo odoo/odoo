@@ -23,7 +23,6 @@ class HrEmployeePublic(models.Model):
         groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer")
     last_check_out = fields.Datetime(related='employee_id.last_check_out',
         groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer")
-    display_extra_hours = fields.Boolean(related='company_id.hr_attendance_display_overtime')
     display_attendances = fields.Boolean(related='employee_id.display_attendances')
 
     def action_open_last_month_attendances(self):

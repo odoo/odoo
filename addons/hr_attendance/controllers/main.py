@@ -68,7 +68,7 @@ class HrAttendance(http.Controller):
                     'display_systray': employee.company_id.attendance_from_systray,
                     'device_tracking_enabled': employee.company_id.attendance_device_tracking,
                     'capture_check_in_image': employee.company_id.attendance_capture_check_in,
-                    'has_attendance_check_in_ability': employee._has_attendance_check_in_ability(),
+                    'has_attendance_check_in_ability': employee.attendance_based,
                 })
         return response
 
@@ -95,7 +95,7 @@ class HrAttendance(http.Controller):
                     ('check_out', '>', datetime.datetime.combine(fields.Date.context_today(request.env.user), datetime.time.min)),
                 ]).mapped('worked_hours')) or 0,
                 'use_pin': employee.company_id.attendance_kiosk_use_pin,
-                'display_overtime': employee.company_id.hr_attendance_display_overtime,
+                'display_overtime': True,
                 'device_tracking_enabled': employee.company_id.attendance_device_tracking,
                 'is_employee_single_checkin': not employee.version_id.is_flexible and employee.company_id.single_check_in,
                 'break_management_enabled': employee.company_id.attendance_break_management,
