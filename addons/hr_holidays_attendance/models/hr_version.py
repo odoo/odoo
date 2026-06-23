@@ -103,7 +103,7 @@ class HrVersion(models.Model):
                 if check_out > check_in:
                     wet = att.work_entry_type_id or self.env['hr.work.entry.type'].browse(default_wet_id)
                     raw_att.append((check_in, check_out, wet))
-                    att_by_range[(check_in, check_out)] = att
+                    att_by_range[check_in, check_out] = att
                     # deficit outputs do not represent actual attendance for wt-leave clipping
                     if not att.is_time_rule_output or att.source_attendance_id:
                         att_coverage_raw[rid].append((check_in, check_out, dummy))

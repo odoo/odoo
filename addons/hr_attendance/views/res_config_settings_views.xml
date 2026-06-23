@@ -10,7 +10,7 @@
                 <app data-string="Attendances" string="Attendances" name="hr_attendance" groups="hr_attendance.group_hr_attendance_manager">
                     <block title="Attendance Rules &amp; Enforcement">
                         <setting string="Attendance Validation" company_dependent="1" help="When enabled, attendance records must be validated by an officer before they count toward work entries and time rules.">
-                            <field name="attendance_validation"/>
+                            <field name="attendance_validation" widget="radio"/>
                         </setting>
                         <setting string="Automatic Check-Out" company_dependent="1" help="Automatically check out employees based on their working schedule with an additional tolerance, or at a specific time each day. Does not apply to employees with a flexible working schedule.">
                             <field name="auto_check_out"/>
@@ -46,6 +46,10 @@
                         <setting string="Take Pictures on Check-In" company_dependent="1" help="Capture a photo at the time of check-in using the device camera (if available). Images are automatically optimized for performance and storage.">
                             <field name="attendance_capture_check_in"/>
                         </setting>
+                        <setting string="Attendance Work Entry Type" company_dependent="1"
+                                 help="Default work entry type assigned to attendance records. Used by the time rule engine.">
+                            <field name="attendance_work_entry_type_id" options="{'no_create': True}"/>
+                        </setting>
                     </block>
                     <block title="Kiosk Settings">
                         <setting string="Kiosk Mode" company_dependent="1" help="Define the way the user will be identified by the application.">
@@ -67,35 +71,6 @@
                         </setting>
                         <setting title="Set PIN codes in the employee detail form (in HR Settings tab)." invisible="attendance_kiosk_mode == 'barcode'" help="Use PIN codes (defined on the Employee's profile) to check-in.">
                             <field name="attendance_kiosk_use_pin"/>
-                        </setting>
-                    </block>
-                    <block title="Overtime Options" name="overtime_settings">
-                        <!-- TODO: Remove the tolerance settings in master -->
-                        <setting company_dependent="1" invisible="1">
-                            <div class="mt16">
-                                <label for="overtime_company_threshold" class="o_form_label">
-                                    Tolerance Time In Favor Of Company
-                                </label>
-                                <div class="text-muted">
-                                    Allow a period of time (around working hours) where extra time will not be counted, in benefit of the company
-                                </div>
-                                <span class="me-2">Time Period</span><field name="overtime_company_threshold" class="text-center" style="width: 5ch;"/><span class="ms-2">Minutes</span>
-                                <br/>
-                                <br/>
-                                <label for="overtime_employee_threshold" class="o_form_label">
-                                    Tolerance Time In Favor Of Employee
-                                </label>
-                                <div class="text-muted">
-                                    Allow a period of time (around working hours) where extra time will not be deducted, in benefit of the employee
-                                </div>
-                                <span class="me-2">Time Period </span><field name="overtime_employee_threshold" class="text-center" style="width: 5ch;"/><span> Minutes</span>
-                            </div>
-                        </setting>
-                        <setting title="Display Overtime" string="Display Overtime" company_dependent="1" help="Display Overtime in Kiosk mode and on User profile.">
-                            <field name="hr_attendance_display_overtime"/>
-                        </setting>
-                        <setting title="Overtime Validation" string="Overtime Validation" company_dependent="1" help="Can be converted as Time Off (cfr Time Off configuration).">
-                            <field name="attendance_overtime_validation" widget="radio"/>
                         </setting>
                     </block>
                 </app>

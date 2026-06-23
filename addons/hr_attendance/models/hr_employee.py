@@ -52,7 +52,6 @@ class HrEmployee(models.Model):
     hours_last_month_display = fields.Char(
         compute='_compute_hours_last_month', groups="hr.group_hr_user")
     total_overtime = fields.Float(compute='_compute_total_overtime')
-    display_extra_hours = fields.Boolean(related='company_id.hr_attendance_display_overtime')
     display_attendances = fields.Boolean(compute="_compute_display_attendances")
 
     def _has_attendance_check_in_ability(self):

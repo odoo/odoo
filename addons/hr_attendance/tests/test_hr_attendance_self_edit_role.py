@@ -13,7 +13,6 @@ class TestHrAttendanceSelfEdit(TransactionCase):
         super().setUpClass()
         cls.company = cls.env['res.company'].create({
             'name': 'SweatChipChop Inc.',
-            'attendance_overtime_validation': 'no_validation',
         })
 
         cls.admin = new_test_user(cls.env, login='user_admin', groups='hr_attendance.group_hr_attendance_manager', company_id=cls.company.id).with_company(cls.company)

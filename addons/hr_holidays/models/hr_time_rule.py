@@ -16,7 +16,11 @@ class HrTimeRule(models.Model):
     work_entry_type_id = fields.Many2one(
         domain="[('id', 'in', country_work_entry_type_ids), ('requires_allocation', '=', False)]",
     )
-    leave_compensation_rate = fields.Float("Allocate %", default=0.0)
+    leave_compensation_rate = fields.Float(
+        "Allocate %",
+        default=0.0,
+        help="Leave allocated or taken at this rate of the excess or deficit. 100% = 1:1.",
+    )
     allocation_type_id = fields.Many2one(
         'hr.work.entry.type',
         string="Allocate to",

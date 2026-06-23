@@ -12,11 +12,6 @@ class ResCompany(models.Model):
     def _default_company_token(self):
         return str(uuid.uuid4())
 
-    # TODO: Remove in master
-    overtime_company_threshold = fields.Integer(string="Tolerance Time In Favor Of Company", default=0)
-    # TODO: Remove in master
-    overtime_employee_threshold = fields.Integer(string="Tolerance Time In Favor Of Employee", default=0)
-    hr_attendance_display_overtime = fields.Boolean(string="Display Extra Hours")
     attendance_kiosk_mode = fields.Selection([
         ('barcode', 'Barcode / RFID'),
         ('barcode_manual', 'Barcode / RFID and Manual Selection'),
@@ -32,17 +27,16 @@ class ResCompany(models.Model):
     attendance_kiosk_url = fields.Char(compute="_compute_attendance_kiosk_url")
     attendance_kiosk_use_pin = fields.Boolean(string='Employee PIN Identification')
     attendance_from_systray = fields.Boolean(string='Attendance From Systray', default=True)
-    attendance_overtime_validation = fields.Selection([
-        ('no_validation', 'Automatically Approved'),
-        ('by_manager', 'Approved by Manager'),
-    ], string='Extra Hours Validation', default='no_validation')
     auto_check_out = fields.Boolean(string="Automatic Check Out", default=False)
     single_check_in = fields.Boolean(string="Single Check-In Attendance System")
     auto_check_out_mode = fields.Selection([('tolerance', 'Tolerance'), ('specific_time', 'Specific Time')], default='tolerance')
     auto_check_out_tolerance = fields.Float(default=2, export_string_translation=False)
     auto_check_out_specific_time = fields.Float(default=20.0, export_string_translation=False)
     absence_management = fields.Boolean(string="Absence Management", default=False)
-    attendance_validation = fields.Boolean(string="Attendance Validation", default=False)
+    attendance_validation = fields.Selection([
+        ('no_validation', 'Worked days are automatically approved'),
+        ('manual_validation', 'Worked days require manual approval'),
+    ], string="Attendance Validation", default='no_validation')
     attendance_work_entry_type_id = fields.Many2one(
         'hr.work.entry.type',
         string="Attendance Work Entry Type",

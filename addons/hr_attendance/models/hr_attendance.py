@@ -912,7 +912,7 @@ class HrAttendance(models.Model):
                     if vals.get('employee_id'):
                         employee = self.env['hr.employee'].browse(vals['employee_id'])
                         company = employee.company_id or company
-                    vals['state'] = 'draft' if company.attendance_validation else 'validated'
+                    vals['state'] = 'draft' if company.attendance_validation == 'manual_validation' else 'validated'
         res = super().create(vals_list)
         if not self.env.context.get('skip_time_rules'):
             today = date.today()

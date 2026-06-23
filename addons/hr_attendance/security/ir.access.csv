@@ -16,3 +16,5 @@ hr_attendance_rule_attendance_own,Attendance own user: create/edit his own atten
                 ('employee_id.user_id', '=', user.id)
             ]"
 hr_attendance_rule_employee_company,Employee multi company rule,hr.attendance,,crud,"['|',('employee_id.company_id','=',False),('employee_id.company_id', 'in', company_ids)]"
+access_hr_time_rule_attendance_manager,hr.time.rule.attendance.manager,hr.time.rule,hr_attendance.group_hr_attendance_user,crud,
+access_hr_time_rule_attendance_user,hr.time.rule.attendance.user,hr.time.rule,hr_attendance.group_hr_attendance_officer,r,

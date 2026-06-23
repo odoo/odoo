@@ -716,7 +716,7 @@ class TestTimeRulePipeline(TransactionCase):
             'work_entry_type_id': self.overtime_type.id,
             'condition_work_entry_type_ids': [self.att_type.id],
         })
-        # Mon–Fri: Mon 10h, Tue–Fri 8h each -> 42h total -> 2h weekly excess
+        # Mon-Fri: Mon 10h, Tue-Fri 8h each -> 42h total -> 2h weekly excess
         mon = self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 12, 8),
@@ -2140,7 +2140,7 @@ class TestTimeRuleCronBehavior(TransactionCase):
             self.assertAlmostEqual(week_h, 0.0, places=5, msg="Week rules not yet processed")
 
             with freeze_time('2022-12-19'):
-                # Mon 2022-12-19: week cron processes Mon 12 – Sun 18.
+                # Mon 2022-12-19: week cron processes Mon 12 - Sun 18.
                 self.env['hr.attendance']._cron_process_week_time_rules()
 
             day_h = sum(o.worked_hours for o in self._outputs_for(att.id, self.day_ot_type))
@@ -2177,4 +2177,3 @@ class TestTimeRuleCronBehavior(TransactionCase):
             )
         finally:
             rule.write({'active': False})
-

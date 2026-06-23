@@ -115,13 +115,19 @@ class HrTimeRule(models.Model):
     _order = 'sequence, id'
 
     name = fields.Char(required=True)
+    description = fields.Text()
+    condition_label = fields.Char(compute='_compute_condition_label', string="Condition")
     active = fields.Boolean(default=True)
     sequence = fields.Integer(default=10)
 
     country_id = fields.Many2one('res.country', compute='_compute_country_id', store=True, readonly=False, index="btree_not_null")
     country_code = fields.Char(related='country_id.code')
     company_id = fields.Many2one('res.company')
-    employee_domain = fields.Char(string="Employees", default='[]')
+    employee_domain = fields.Char(
+        string="Employees",
+        default='[]',
+        help="The rule will automatically apply to all time entries for matching employees.",
+    )
 
     threshold_operator = fields.Selection([
         ('exceed', 'Exceed'),
@@ -133,7 +139,9 @@ class HrTimeRule(models.Model):
         ('schedule_week', 'the weekly schedule'),
         ('day', 'per day'),
         ('week', 'per week'),
-    ], required=True, default='schedule_day', string="Working Hours Mode")
+    ], required=True, default='schedule_day', string="Working Hours Mode",
+        help="Define a condition based on the quantity of work made by the employee on a specific period of time.",
+    )
 
     calendar_source = fields.Selection([
         ('employee', 'Employee Schedule'),
@@ -166,7 +174,7 @@ class HrTimeRule(models.Model):
         ('6', 'Sunday'),
     ], string="Week Starts On", default='0')
 
-    apply_monday = fields.Boolean(default=True)
+    apply_monday = fields.Boolean(default=True, help="Define a condition based on the timing of the time entry.")
     apply_tuesday = fields.Boolean(default=True)
     apply_wednesday = fields.Boolean(default=True)
     apply_thursday = fields.Boolean(default=True)
@@ -187,13 +195,14 @@ class HrTimeRule(models.Model):
         string="Time Type",
         required=True,
         domain="[('id', 'in', country_work_entry_type_ids)]",
-        help="Only fire this rule for records of these work entry types.",
+        help="If set, only the selected types will be considered by this rule.",
     )
 
     work_entry_type_id = fields.Many2one(
         'hr.work.entry.type',
         string="Set Excess to",
         domain="[('id', 'in', country_work_entry_type_ids)]",
+        help="Define a time type that will be created to count the amount of time in excess or missing.",
         index="btree_not_null",
     )
     country_work_entry_type_ids = fields.Many2many(
@@ -226,6 +235,10 @@ class HrTimeRule(models.Model):
         "A time rule must apply on at least one day or on public holidays.",
     )
 
+    def copy_data(self, default=None):
+        vals_list = super().copy_data(default)
+        return [dict(vals, name=self.env._("%s (copy)", rule.name)) for rule, vals in zip(self, vals_list)]
+
     @api.constrains('expected_hours', 'calendar_source', 'quantity_period')
     def _check_quantity_condition(self):
         for rule in self:
@@ -241,6 +254,25 @@ class HrTimeRule(models.Model):
                     "Rule '%(name)s': a working-hours condition requires a period (day or week).",
                     name=rule.name,
                 ))
+
+    @api.depends('threshold_operator', 'working_hours_mode', 'expected_hours', 'timing_start', 'timing_stop')
+    def _compute_condition_label(self):
+        def _fmt_hour(h):
+            hh, mm = divmod(round(h * 60), 60)
+            return f"{hh:02d}:{mm:02d}"
+
+        for rule in self:
+            op = '>' if rule.threshold_operator == 'exceed' else '<'
+            mode = rule.working_hours_mode
+            if mode in ('schedule_day', 'schedule_week'):
+                period = 'day' if mode == 'schedule_day' else 'week'
+                label = f"{op} schedule/{period}"
+            else:
+                period = 'day' if mode == 'day' else 'week'
+                label = f"{op} {rule.expected_hours:g}h/{period}"
+            if rule.timing_start != 0 or rule.timing_stop != 24:
+                label += f" {_fmt_hour(rule.timing_start)}-{_fmt_hour(rule.timing_stop)}"
+            rule.condition_label = label
 
     @api.depends('company_id')
     def _compute_country_id(self):
@@ -531,7 +563,8 @@ class HrTimeRule(models.Model):
 
         if self.threshold_operator == 'less_than':
             deficit_amount = -excess_amount
-            if float_compare(deficit_amount, self.employee_tolerance, 5) != 1:
+            tolerance = self.employee_tolerance if self.calendar_source else 0
+            if float_compare(deficit_amount, tolerance, 5) != 1:
                 return {}, {}
             last_source = max(
                 intervals_by_source.keys(),
@@ -546,7 +579,8 @@ class HrTimeRule(models.Model):
             else:
                 return {}, {last_source: [(stop - timedelta(hours=deficit_amount), stop, self, pp)]}
 
-        if float_compare(excess_amount, self.employer_tolerance, 5) != 1:
+        tolerance = self.employer_tolerance if self.calendar_source else 0
+        if float_compare(excess_amount, tolerance, 5) != 1:
             return {}, {}
 
         excess_by_source = defaultdict(list)
