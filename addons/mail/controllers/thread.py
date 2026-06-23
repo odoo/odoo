@@ -1,17 +1,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+
 from markupsafe import Markup
 from werkzeug.exceptions import NotFound
 
-from odoo import http
 from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.tools.misc import verify_limited_field_access_token
-from odoo.addons.mail.tools.discuss import mail_route, Store
+
+from odoo.addons.mail.controllers.store import StoreController
+from odoo.addons.mail.tools.discuss import Store, mail_route
 
 
-class ThreadController(http.Controller):
+class ThreadController(StoreController):
 
     # access helpers
     # ------------------------------------------------------------
