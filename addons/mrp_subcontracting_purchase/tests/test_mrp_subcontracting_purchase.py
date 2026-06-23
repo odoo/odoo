@@ -734,6 +734,43 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         po.order_line.product_qty = 2.0
         self.assertEqual(po.order_line.product_qty, 2.0)
 
+    def test_increase_qty_purchased_on_po_with_subcontracted_product(self):
+        """
+        Test what happen when we increase the qty purchased on a purchase order.
+        it should create a new picking and a new subcontracting mo.
+        """
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route.active = True
+        self.comp2.bom_ids.unlink()
+        self.finished.route_ids = mto_route.ids
+        self.env['product.supplierinfo'].create({
+            'product_id': self.finished.id,
+            'partner_id': self.vendor.id,
+            'price': 12.0,
+            'delay': 0
+        })
+
+        self.env['mrp.production'].create({
+            'product_id': self.finished2.id,
+            'product_qty': 3.0,
+            'move_raw_ids': [(0, 0, {
+                'product_id': self.finished.id,
+                'product_uom_qty': 3.0,
+                'product_uom': self.finished.uom_id.id,
+            })]
+        }).action_confirm()
+
+        po = self.env['purchase.order.line'].search([('product_id', '=', self.finished.id)]).order_id
+        po.button_confirm()
+        self.assertEqual(len(po.picking_ids), 1)
+        mo = po.picking_ids.move_ids.move_orig_ids.production_id
+        po.picking_ids.button_validate()
+        po.order_line.product_qty = 5
+        self.assertEqual(len(po.picking_ids), 2)
+        self.assertEqual(po.picking_ids[0].move_ids.move_orig_ids.production_id, mo)
+        self.assertEqual(len(po.picking_ids[1].move_ids.move_orig_ids), 1)
+        self.assertNotEqual(po.picking_ids[1].move_ids.move_orig_ids.production_id, mo)
+
     def test_mrp_report_bom_structure_subcontracting_quantities(self):
         """Testing quantities and availablility states in subcontracted BoM report
         1. Create a BoM of a finished product with a single component
