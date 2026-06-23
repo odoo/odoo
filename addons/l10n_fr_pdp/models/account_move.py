@@ -272,7 +272,11 @@ class AccountMove(models.Model):
         return wizard._get_records_action(name=self.env._("Send Response Message"), target='new')
 
     def _post(self, soft=True):
-        res = super()._post(soft)
+        res = super(AccountMove, self.with_context(l10n_fr_pdp_skip_ereporting_tracking=True))._post(soft)
+        pdp_moves = self.filtered(lambda move: move.state == 'posted')
+        pdp_moves._compute_l10n_fr_pdp_status()
+        for move in pdp_moves.filtered('l10n_fr_pdp_flow_10_report_type'):
+            move._l10n_fr_pdp_message_log_ereporting_status()
         for company, moves in self.filtered('pdp_can_send_response').grouped('company_id').items():
             company.account_peppol_edi_user._pdp_send_response(moves, 'AP')
         return res
@@ -282,13 +286,19 @@ class AccountMove(models.Model):
         pdp_fields = tracked_fields & PDP_TRACKED_FIELDS
         if not pdp_fields:
             return super()._message_track(fields_iter, initial_values_dict)
+        if self.env.context.get('l10n_fr_pdp_skip_ereporting_tracking'):
+            return super()._message_track(tracked_fields - pdp_fields, initial_values_dict)
 
         tracking = super()._message_track(tracked_fields - pdp_fields, initial_values_dict)
         for move in self:
             initial_values = initial_values_dict.get(move.id, {})
+            tracked_initial_values = pdp_fields & set(initial_values)
+            if not tracked_initial_values:
+                continue
+            move._compute_l10n_fr_pdp_status()
             if any(
                 field_name in initial_values and initial_values[field_name] != move[field_name]
-                for field_name in pdp_fields
+                for field_name in tracked_initial_values
             ):
                 move._l10n_fr_pdp_message_log_ereporting_status()
         return tracking
@@ -317,11 +327,7 @@ class AccountMove(models.Model):
             + Markup('<li><span class="fw-bold">') + self.env._("E-reporting Status:")
             + Markup('</span> ') + status_label + Markup('</li>')
         )
-        if (errors := (
-            self.l10n_fr_pdp_last_flow_id.state == 'error'
-            and [self.env._("Last Flow is in error")]
-            or self._get_l10n_fr_pdp_errors()
-        )):
+        if errors := self._get_l10n_fr_pdp_errors():
             error_lines = Markup('').join(
                 Markup('<li>') + error.lstrip('- ') + Markup('</li>')
                 for error in errors
@@ -414,6 +420,8 @@ class AccountMove(models.Model):
                 move.l10n_fr_pdp_status = None
             elif move.l10n_fr_pdp_last_flow_id.period_end >= today:
                 move.l10n_fr_pdp_status = 'pending'
+            elif move.l10n_fr_pdp_last_flow_id.state == 'error':
+                move.l10n_fr_pdp_status = 'ready'
             else:
                 move.l10n_fr_pdp_status = move.l10n_fr_pdp_last_flow_id.state
 
