@@ -1410,22 +1410,16 @@ test("Check notification popover for incoming messages", async () => {
         { ...baseNotification, mail_message_id: messageCcId },
     ]);
     // We patch the store mock as it doesn't support incoming_email_to and incoming_email_cc.
-    const originalToStore = MailMessage.prototype._to_store;
+    const originalStoreMessageFields = MailMessage.prototype._store_message_fields;
     patchWithCleanup(MailMessage.prototype, {
-        _to_store(store, fields, for_current_user, add_followers) {
-            originalToStore.call(this, store, fields, for_current_user, add_followers);
-            for (const message of this) {
-                if (message.id === messageToId) {
-                    store._add_record_fields(this.browse(message.id), {
-                        incoming_email_to: [["incomingTo", emailTo]],
-                    });
-                }
-                if (message.id === messageCcId) {
-                    store._add_record_fields(this.browse(message.id), {
-                        incoming_email_cc: [["incomingCc", emailCc]],
-                    });
-                }
-            }
+        _store_message_fields(res) {
+            originalStoreMessageFields.apply(this, arguments);
+            res.attr("incoming_email_to", [["incomingTo", emailTo]], {
+                predicate: (m) => m.id === messageToId,
+            });
+            res.attr("incoming_email_cc", [["incomingCc", emailCc]], {
+                predicate: (m) => m.id === messageCcId,
+            });
         },
     });
     await start();

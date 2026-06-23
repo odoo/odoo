@@ -1,6 +1,6 @@
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { Store } from "@mail/../tests/mock_server/store";
 
-import { fields, getKwArgs, makeKwArgs, models, serverState } from "@web/../tests/web_test_helpers";
+import { fields, getKwArgs, models, serverState } from "@web/../tests/web_test_helpers";
 import { Domain } from "@web/core/domain";
 
 /** @typedef {import("@web/core/domain").DomainListRepr} DomainListRepr */
@@ -10,6 +10,18 @@ export class MailMessage extends models.ServerModel {
 
     author_id = fields.Generic({ default: () => serverState.partnerId });
     pinned_at = fields.Generic({ default: false });
+
+    /** @type {typeof models.Model["prototype"]["create"]} */
+    create(vals) {
+        for (const values of Array.isArray(vals) ? vals : [vals]) {
+            // mock: a guest-authored message has no partner author (python defaults author_id to
+            // False; the mock field default would otherwise set it to the current user).
+            if (values.author_guest_id && !values.author_id) {
+                values.author_id = false;
+            }
+        }
+        return super.create(vals);
+    }
 
     /** @param {DomainListRepr} [domain] */
     mark_all_as_read(domain) {
@@ -58,177 +70,195 @@ export class MailMessage extends models.ServerModel {
         return messageIds;
     }
 
-    /** @param {number[]} ids */
-    _to_store(store, fields, for_current_user, inbox_fields) {
-        const kwargs = getKwArgs(arguments, "store", "fields", "for_current_user", "inbox_fields");
-        store = kwargs.store;
-        fields = kwargs.fields;
-        for_current_user = kwargs.for_current_user ?? false;
-        inbox_fields = kwargs.inbox_fields ?? false;
-
+    _store_message_fields(
+        res,
+        { format_reply = true, chatter_fields, inbox_fields = false, followers } = {}
+    ) {
         /** @type {import("mock_models").MailFollowers} */
         const MailFollowers = this.env["mail.followers"];
-        /** @type {import("mock_models").MailMessageLinkPreview} */
-        const MailMessageLinkPreview = this.env["mail.message.link.preview"];
-        /** @type {import("mock_models").MailNotification} */
-        const MailNotification = this.env["mail.notification"];
         /** @type {import("mock_models").MailThread} */
         const MailThread = this.env["mail.thread"];
         /** @type {import("mock_models").ResFake} */
         const ResFake = this.env["res.fake"];
 
-        const notifications = MailNotification._filtered_for_web_client(
-            MailNotification._filter([["mail_message_id", "in", this.map((m) => m.id)]]).map(
-                (n) => n.id
-            )
+        res.many("attachment_ids", "_store_attachment_fields", {
+            sort: "id",
+            dynamic_fields: "_store_attachment_dynamic_fields",
+            sudo: true,
+        });
+        res.one("author_guest_id", "_store_avatar_fields", { sudo: true });
+        res.one(
+            "author_id",
+            (r) => {
+                r.attr("is_company");
+                r.one("main_user_id", ["partner_id", "share"]);
+                r.from_method("_store_avatar_fields");
+            },
+            { dynamic_fields: "_store_author_dynamic_fields", sudo: true }
         );
-        store._add_record_fields(
-            this,
-            fields.filter((field) => !["notification_ids", "mail_link_preview_ids"].includes(field))
-        );
-        for (const message of this) {
-            const thread = message.model && this.env[message.model].browse(message.res_id)[0];
-            if (thread) {
-                const thread_data = {
-                    display_name: thread.name ?? thread.display_name,
-                    has_mail_thread: this.env[message.model]._inherit?.includes("mail.thread"),
-                    module_icon: "/base/static/description/icon.png",
-                };
-                if (thread.priority) {
-                    thread_data.priority = thread.priority;
-                    thread_data.priority_definition = this.env[message.model].fields_get([
-                        "priority",
-                    ])["priority"]["selection"];
-                }
-                if (for_current_user && inbox_fields) {
-                    thread_data.selfFollower = mailDataHelpers.Store.one(
-                        MailFollowers.browse(
-                            MailFollowers.search([
-                                ["res_model", "=", message.model],
-                                ["res_id", "=", message.res_id],
-                                ["partner_id", "=", this.env.user.partner_id],
-                            ])
-                        ),
-                        makeKwArgs({
-                            fields: ["is_active", mailDataHelpers.Store.one("partner_id", [])],
-                        })
-                    );
-                }
-                store._add_record_fields(
-                    this.env[message.model].browse(message.res_id),
-                    thread_data,
-                    makeKwArgs({ as_thread: true })
-                );
-            }
-            const data = {
-                default_subject:
-                    message.model &&
-                    message.res_id &&
-                    (message.model === "res.fake"
-                        ? ResFake._message_compute_subject([message.res_id])
-                        : MailThread._message_compute_subject([message.res_id])
-                    ).get(message.res_id),
-                record_name: thread?.name ?? thread?.display_name,
-                scheduledDatetime: false,
-                thread: mailDataHelpers.Store.one(
-                    message.model && this.env[message.model].browse(message.res_id),
-                    makeKwArgs({ as_thread: true, only_id: true })
-                ),
-            };
-            if (fields.includes("message_link_preview_ids")) {
-                data.message_link_preview_ids = mailDataHelpers.Store.many(
-                    MailMessageLinkPreview.browse(message.message_link_preview_ids).filter(
-                        (lpm) => !lpm.is_hidden
-                    )
-                );
-            }
-            if (fields.includes("notification_ids")) {
-                data.notification_ids = mailDataHelpers.Store.many(
-                    notifications.filter(
-                        (notification) => notification.mail_message_id == message.id
-                    )
-                );
-            }
-            if (for_current_user) {
-                data["needaction"] = Boolean(
-                    this.env.user &&
-                        MailNotification.search([
-                            ["mail_message_id", "=", message.id],
-                            ["is_read", "=", false],
-                            ["res_partner_id", "=", this.env.user.partner_id],
-                        ]).length
-                );
-                data["is_bookmarked"] = message.bookmarked_partner_ids?.includes(
-                    this.env.user?.partner_id
-                );
-            }
-            store._add_record_fields(this.browse(message.id), data);
+        res.attr("body", (m) => ["markup", m.body]); // mock: html fields must be markup-wrapped
+        res.extend(["create_date", "date"]);
+        res.attr("email_from", undefined, {
+            predicate: (m) => res.is_for_internal_users() || (!m.author_id && !m.author_guest_id),
+        });
+        // keep "model" for iOS app
+        res.extend(["incoming_email_cc", "incoming_email_to", "message_type", "model"]);
+        res.many("partner_ids", (r) => r.from_method("_store_avatar_fields"), {
+            dynamic_fields: "_store_partner_name_dynamic_fields",
+            sort: "id",
+            sudo: true,
+        });
+        res.many("partner_cc_ids", (r) => r.from_method("_store_avatar_fields"), {
+            dynamic_fields: "_store_partner_name_dynamic_fields",
+            predicate: (m) => m.model !== "discuss.channel",
+            sort: "id",
+            sudo: true,
+        });
+        res.attr("pinned_at");
+        res.from_method("_store_reaction_group_fields");
+        res.attr("reply_to", undefined, {
+            predicate: (m) => res.is_for_internal_users() || (!m.author_id && !m.author_guest_id),
+        });
+        // keep "record_name" and "res_id" for iOS app
+        res.extend(["record_name", "res_id"]);
+        res.attr("subject");
+        res.one("subtype_id", ["description"], { sudo: true });
+        res.attr("write_date");
+        this._store_linked_messages_fields(res);
+        this._store_message_link_previews_fields(res);
+        if (res.is_for_internal_users()) {
+            res.many("notification_ids", "_store_notification_fields", { sudo: true });
         }
-        this._author_to_store(store);
-        this._store_add_linked_messages(store);
-    }
 
-    get _to_store_defaults() {
-        return [
-            mailDataHelpers.Store.many(
-                "attachment_ids",
-                makeKwArgs({
-                    sort: (a1, a2) => a1.id - a2.id,
-                })
-            ),
-            mailDataHelpers.Store.attr("body", (m) => ["markup", m.body]),
-            "create_date",
-            "date",
-            "message_type",
-            "model",
-            "message_link_preview_ids",
-            "notification_ids",
-            mailDataHelpers.Store.one("parent_id", makeKwArgs({ format_reply: false })),
-            mailDataHelpers.Store.many("partner_ids", makeKwArgs({ fields: ["name"] })),
-            mailDataHelpers.Store.many("partner_cc_ids", makeKwArgs({ fields: ["name"] })),
-            "pinned_at",
-            mailDataHelpers.Store.attr("reactions", (m) =>
-                mailDataHelpers.Store.many(this.env["mail.message.reaction"].browse(m.reaction_ids))
-            ),
-            "res_id",
-            "subject",
-            "write_date",
-            mailDataHelpers.Store.one(
-                "subtype_id",
-                makeKwArgs({
-                    fields: ["description"],
-                    predicate: (m) => m.subtype_id,
-                })
-            ),
-        ];
-    }
-
-    _author_to_store(store) {
-        /** @type {import("mock_models").MailGuest} */
-        const MailGuest = this.env["mail.guest"];
-        /** @type {import("mock_models").MailMessage} */
-        const MailMessage = this.env["mail.message"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
-
-        for (const message of this) {
-            const data = {
-                author_id: false,
-                author_guest_id: false,
-                email_from: message.email_from,
-            };
-            if (message.author_guest_id) {
-                data.author_guest_id = mailDataHelpers.Store.one(
-                    MailGuest.browse(message.author_guest_id),
-                    makeKwArgs({ fields: ["avatar_128", "name"] })
+        const followerByRecordAndPartner = {};
+        const followerKey = (model, resId) => `${model}\x00${resId}`;
+        if (res.is_for_current_user() && inbox_fields && this.env.user) {
+            for (const message of this) {
+                if (!message.model || message.model === "discuss.channel" || !message.res_id) {
+                    continue;
+                }
+                const [follower] = MailFollowers.browse(
+                    MailFollowers.search([
+                        ["res_model", "=", message.model],
+                        ["res_id", "=", message.res_id],
+                        ["partner_id", "=", this.env.user.partner_id],
+                    ])
                 );
-            } else if (message.author_id) {
-                data.author_id = mailDataHelpers.Store.one(
-                    ResPartner.browse(message.author_id),
-                    makeKwArgs({ fields: ["avatar_128", "is_company", "name", "user"] })
-                );
+                if (follower) {
+                    followerByRecordAndPartner[followerKey(message.model, message.res_id)] =
+                        follower.id;
+                }
             }
-            store._add_record_fields(MailMessage.browse(message.id), data);
+        }
+        res.one(
+            "thread",
+            (r) => {
+                const threadModel = r.records?._name;
+                // sudo: mail.thread - if mentionned in a non accessible thread, name is allowed
+                r.attr("display_name", (t) => t.name ?? t.display_name, { sudo: true });
+                r.attr("has_mail_thread", () =>
+                    Boolean(this.env[threadModel]?._inherit?.includes("mail.thread"))
+                );
+                r.attr("module_icon", () => "/base/static/description/icon.png", {
+                    predicate: () => inbox_fields,
+                });
+                r.one("selfFollower", ["is_active", "partner_id"], {
+                    predicate: () =>
+                        res.is_for_current_user() &&
+                        inbox_fields &&
+                        threadModel !== "discuss.channel",
+                    value: (t) =>
+                        MailFollowers.browse(
+                            followerByRecordAndPartner[followerKey(threadModel, t.id)]
+                        ),
+                });
+                r.attr("priority", (t) => t.priority, {
+                    predicate: (t) => inbox_fields && t.priority,
+                    sudo: true,
+                });
+                r.attr(
+                    "priority_definition",
+                    () => this.env[threadModel].fields_get(["priority"])["priority"]["selection"],
+                    { predicate: (t) => inbox_fields && t.priority }
+                );
+            },
+            { as_thread: true }
+        );
+        if (res.is_for_current_user()) {
+            res.attr("is_bookmarked", (m) =>
+                Boolean(m.bookmarked_partner_ids?.includes(this.env.user?.partner_id))
+            );
+        }
+        res.attr("default_subject", (m) => {
+            if (!m.model || !m.res_id) {
+                return false;
+            }
+            return (
+                m.model === "res.fake"
+                    ? ResFake._message_compute_subject([m.res_id])
+                    : MailThread._message_compute_subject([m.res_id])
+            ).get(m.res_id);
+        });
+        res.attr("scheduledDatetime", () => false);
+        if (res.is_for_current_user()) {
+            res.attr("needaction", (m) => this._needaction(m));
+        }
+        // Add extras at the end to guarantee order in result.
+        this._store_extra_fields(res, { format_reply });
+
+        // discuss override: call history and parent message (format_reply)
+        res.many("call_history_ids", ["duration_hour", "end_dt"], {
+            predicate: (m) => m.body && m.body.includes('data-oe-type="call"'),
+        });
+    }
+
+    _needaction(message) {
+        /** @type {import("mock_models").MailNotification} */
+        const MailNotification = this.env["mail.notification"];
+        return Boolean(
+            this.env.user &&
+                MailNotification.search([
+                    ["mail_message_id", "=", message.id],
+                    ["is_read", "=", false],
+                    ["res_partner_id", "=", this.env.user.partner_id],
+                ]).length
+        );
+    }
+
+    _store_message_link_previews_fields(res) {
+        /** @type {import("mock_models").MailMessageLinkPreview} */
+        const MailMessageLinkPreview = this.env["mail.message.link.preview"];
+        res.many("message_link_preview_ids", "_store_message_link_preview_fields", {
+            value: (m) =>
+                MailMessageLinkPreview.browse(m.message_link_preview_ids).filter(
+                    (lpm) => !lpm.is_hidden
+                ),
+            sort: (lpm1, lpm2) => lpm1.sequence - lpm2.sequence || lpm1.id - lpm2.id,
+        });
+    }
+
+    _store_author_dynamic_fields(res) {
+        this._store_partner_name_dynamic_fields(res);
+    }
+
+    _store_attachment_dynamic_fields(attachmentRes) {
+        if (attachmentRes.is_for_current_user() && this.is_current_user_or_guest_author) {
+            attachmentRes.from_method("_store_ownership_fields");
+        }
+    }
+
+    _store_partner_name_dynamic_fields(res) {
+        res.attr("name");
+    }
+
+    _store_extra_fields(res, { format_reply } = {}) {
+        if (format_reply) {
+            // discuss override: parent message of channel messages
+            res.one("parent_id", "_store_message_fields", {
+                fields_params: { format_reply: false },
+                predicate: (m) => m.model === "discuss.channel",
+                sudo: true,
+            });
         }
     }
 
@@ -304,10 +334,9 @@ export class MailMessage extends models.ServerModel {
                 "mail.message/mark_as_unread",
                 {
                     message_ids: [message.id],
-                    store_data: new mailDataHelpers.Store(
-                        this.browse(message.id),
-                        makeKwArgs({ for_current_user: true })
-                    ).get_result(),
+                    store_data: new Store()
+                        .add(this.browse(message.id), "_store_message_fields")
+                        .as_dict(),
                 }
             );
         }
@@ -365,7 +394,7 @@ export class MailMessage extends models.ServerModel {
      * @param {number} partner_id
      * @param {number} guest_id
      * @param {string} action
-     * @param {import("@mail/../tests/mock_server/mail_mock_server").mailDataHelpers.Store} store
+     * @param {import("@mail/../tests/mock_server/store").Store} store
      */
     _message_reaction(id, content, partner_id, guest_id, action, store) {
         ({ id, content, partner_id, guest_id, action, store } = getKwArgs(
@@ -398,38 +427,89 @@ export class MailMessage extends models.ServerModel {
         if (action === "remove" && reaction) {
             MailMessageReaction.unlink(reaction.id);
         }
-        this._reaction_group_to_store(id, store, content);
+        if (store) {
+            store.add(this.browse(id), "_store_reaction_group_fields", {
+                fields_params: { content },
+            });
+        }
         this._bus_send_reaction_group(id, content);
     }
 
     _bus_send_reaction_group(id, content) {
         /** @type {import("mock_models").BusBus} */
         const BusBus = this.env["bus.bus"];
-        const store = new mailDataHelpers.Store();
-        this._reaction_group_to_store(id, store, content);
-        BusBus._sendone(
-            this._bus_notification_target(id),
-            "mail.record/insert",
-            store.get_result()
-        );
+        const store = new Store();
+        store.add(this.browse(id), "_store_reaction_group_fields", { fields_params: { content } });
+        BusBus._sendone(this._bus_notification_target(id), "mail.record/insert", store.as_dict());
     }
 
-    _reaction_group_to_store(id, store, content) {
+    _store_reaction_group_fields(res, { content = null } = {}) {
         /** @type {import("mock_models").MailMessageReaction} */
         const MailMessageReaction = this.env["mail.message.reaction"];
 
-        const reactions = MailMessageReaction.search([
-            ["message_id", "=", id],
-            ["content", "=", content],
-        ]);
-        let reaction_group = mailDataHelpers.Store.many(
-            MailMessageReaction.browse(reactions),
-            makeKwArgs({ mode: "ADD" })
-        );
-        if (reactions.length === 0) {
-            reaction_group = [["DELETE", { message: this.browse(id), content: content }]];
+        const messageIds = res.records.map((m) => m.id);
+        const filter_content = content != null;
+        let reactions;
+        if (filter_content) {
+            reactions = MailMessageReaction.browse(
+                MailMessageReaction.search([
+                    ["message_id", "in", messageIds],
+                    ["content", "=", content],
+                ])
+            );
+        } else {
+            reactions = MailMessageReaction.browse(
+                MailMessageReaction.search([["message_id", "in", messageIds]])
+            );
         }
-        store.add(this.browse(id), { reactions: reaction_group });
+        const reactionsByMessage = {};
+        for (const reaction of reactions) {
+            (reactionsByMessage[reaction.message_id] ??= []).push(reaction);
+        }
+        res.many("reactions", [], {
+            mode: filter_content ? "ADD" : "REPLACE",
+            predicate: (m) => !filter_content || m.id in reactionsByMessage,
+            value: (m) => {
+                const byContent = {};
+                for (const reaction of reactionsByMessage[m.id] ?? []) {
+                    (byContent[reaction.content] ??= []).push(reaction);
+                }
+                return Object.entries(byContent).map(([groupContent, groupReactions]) => ({
+                    content: groupContent,
+                    count: groupReactions.length,
+                    guests: groupReactions.filter((r) => r.guest_id).map((r) => r.guest_id),
+                    message: m.id,
+                    partners: groupReactions.filter((r) => r.partner_id).map((r) => r.partner_id),
+                    sequence: Math.min(...groupReactions.map((r) => r.id)),
+                }));
+            },
+        });
+        if (filter_content) {
+            res.many("reactions", [], {
+                mode: "DELETE",
+                predicate: (m) => !(m.id in reactionsByMessage),
+                value: (m) => ({ message: m.id, content }),
+            });
+        }
+        res.many(
+            "reaction_ids",
+            (r) => {
+                r.one("partner_id", "_store_avatar_fields", {
+                    dynamic_fields: (avatarRes, reaction) =>
+                        this.browse(reaction.message_id)._store_partner_name_dynamic_fields(
+                            avatarRes
+                        ),
+                    only_data: true,
+                });
+                r.one("guest_id", "_store_avatar_fields", { only_data: true });
+            },
+            {
+                only_data: true,
+                predicate: (m) => m.id in reactionsByMessage,
+                value: (m) =>
+                    MailMessageReaction.browse((reactionsByMessage[m.id] ?? []).map((r) => r.id)),
+            }
+        );
     }
 
     /**
@@ -571,75 +651,75 @@ export class MailMessage extends models.ServerModel {
         return domain;
     }
 
-    /**
-     * @param {import("@mail/../tests/mock_server/mail_mock_server").mailDataHelpers.Store} store
-     */
-    _store_add_linked_messages(store) {
+    _linked_message_ids(message) {
+        const body = message?.body || "";
+        const doc = new DOMParser().parseFromString(body, "text/html");
+        const anchors = doc.querySelectorAll(
+            'a.o_message_redirect[data-oe-model="mail.message"][data-oe-id]'
+        );
         const mids = [];
-        for (const message of this) {
-            const body = message?.body || "";
-            const doc = new DOMParser().parseFromString(body, "text/html");
-            const anchors = doc.querySelectorAll(
-                'a.o_message_redirect[data-oe-model="mail.message"][data-oe-id]'
-            );
-            for (const a of anchors) {
-                const idStr = a.getAttribute("data-oe-id");
-                const id = parseInt(idStr, 10);
-                if (!Number.isNaN(id)) {
-                    mids.push(id);
-                }
+        for (const a of anchors) {
+            const id = parseInt(a.getAttribute("data-oe-id"), 10);
+            if (!Number.isNaN(id)) {
+                mids.push(id);
             }
         }
-        for (const message of this.env["mail.message"]._filter([["id", "in", mids]])) {
-            if (message.model && message.res_id) {
-                const record = this.env[message.model]._filter([["id", "=", message.res_id]]);
-                store.add(
-                    this.env["mail.message"].browse(message.id),
-                    makeKwArgs({
-                        fields: [
-                            "model",
-                            "res_id",
-                            mailDataHelpers.Store.attr(
-                                "thread",
-                                mailDataHelpers.Store.one(
-                                    this.env[message.model].browse(record.id),
-                                    makeKwArgs({ fields: ["display_name"] })
-                                )
-                            ),
-                        ],
-                    })
-                );
+        // search all messages, not only `this` (linked messages are usually not in the recordset)
+        return this.env["mail.message"]
+            ._filter([
+                ["id", "in", mids],
+                ["model", "!=", false],
+                ["res_id", "!=", false],
+            ])
+            .map((m) => m.id);
+    }
+
+    _store_linked_messages_fields(res) {
+        res.many(
+            "linked_message_ids",
+            (r) => {
+                r.extend(["model", "res_id"]);
+                // sudo: mail.thread - reading record name of accessible message is acceptable
+                r.one("thread", ["display_name"], { as_thread: true, sudo: true });
+            },
+            {
+                only_data: true,
+                // browse on the model (not `this`): linked messages are usually not in the recordset
+                value: (m) => this.env["mail.message"].browse(this._linked_message_ids(m)),
             }
-        }
+        );
+    }
+
+    _store_notification_fields(res) {
+        /** @type {import("mock_models").MailNotification} */
+        const MailNotification = this.env["mail.notification"];
+
+        res.extend(["author_id", "author_guest_id", "date", "message_type"]);
+        res.attr("body", (m) => ["markup", m.body]); // mock: html fields must be markup-wrapped
+        res.many("notification_ids", "_store_notification_fields", {
+            value: (m) =>
+                MailNotification.browse(
+                    MailNotification._filtered_for_web_client(
+                        MailNotification.search([["mail_message_id", "=", m.id]])
+                    ).map((n) => n.id)
+                ),
+        });
+        res.one(
+            "thread",
+            (r) => {
+                const threadModel = r.records?._name;
+                r.attr("modelName", () => this.env[threadModel]._description ?? threadModel);
+                r.attr("display_name");
+            },
+            { as_thread: true }
+        );
     }
 
     /**
      * @param {number[]} ids
-     * @param {import("@mail/../tests/mock_server/mail_mock_server").mailDataHelpers.Store} store
+     * @param {import("@mail/../tests/mock_server/store").Store} store
      */
     _message_notifications_to_store(ids, store) {
-        /** @type {import("mock_models").MailNotification} */
-        const MailNotification = this.env["mail.notification"];
-
-        for (const message of this.browse(ids)) {
-            store.add(this.browse(message.id), {
-                author_id: mailDataHelpers.Store.one(
-                    this.env["res.partner"].browse(message.author_id),
-                    makeKwArgs({ only_id: true })
-                ),
-                body: message.body,
-                date: message.date,
-                message_type: message.message_type,
-                notification_ids: mailDataHelpers.Store.many(
-                    MailNotification._filtered_for_web_client(
-                        MailNotification.search([["mail_message_id", "=", message.id]])
-                    )
-                ),
-                thread: mailDataHelpers.Store.one(
-                    message.model ? this.env[message.model].browse(message.res_id) : false,
-                    makeKwArgs({ as_thread: true, fields: ["modelName", "display_name"] })
-                ),
-            });
-        }
+        store.add(this.browse(ids), "_store_notification_fields");
     }
 }

@@ -21,7 +21,7 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { Store } from "@mail/../tests/mock_server/store";
 import { CALL_GRID_LAYOUT } from "@mail/discuss/call/common/call_layout";
 import {
     CROSS_TAB_CLIENT_MESSAGE,
@@ -241,15 +241,16 @@ test("should display invitations", async () => {
     pyEnv["bus.bus"]._sendone(
         partner,
         "mail.record/insert",
-        new mailDataHelpers.Store(pyEnv["discuss.channel.rtc.session"].browse(sessionId), {
-            channel_member_id: { id: memberId },
-        })
+        new Store()
+            .add(pyEnv["discuss.channel.rtc.session"].browse(sessionId), {
+                channel_member_id: { id: memberId },
+            })
             .add(pyEnv["discuss.channel.member"].browse(memberId), {
                 partner_id: { id: partnerId },
                 channel_id: { id: channelId, model: "discuss.channel" },
                 rtc_inviting_session_id: { id: sessionId },
             })
-            .get_result()
+            .as_dict()
     );
     await contains(".o-discuss-CallInvitation");
     await contains(".o-discuss-CallInvitation button[title='Join Call']");
@@ -259,9 +260,11 @@ test("should display invitations", async () => {
     pyEnv["bus.bus"]._sendone(
         partner,
         "mail.record/insert",
-        new mailDataHelpers.Store(pyEnv["discuss.channel.member"].browse(memberId), {
-            rtc_inviting_session_id: false,
-        }).get_result()
+        new Store()
+            .add(pyEnv["discuss.channel.member"].browse(memberId), {
+                rtc_inviting_session_id: false,
+            })
+            .as_dict()
     );
     await contains(".o-discuss-CallInvitation", { count: 0 });
     await expect.waitForSteps(["stop - call-invitation"]);

@@ -1,4 +1,3 @@
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { mailModels, openView } from "@mail/../tests/mail_test_helpers";
 import { fields } from "@web/../tests/web_test_helpers";
 import { serializeDate, today } from "@web/core/l10n/dates";
@@ -30,14 +29,9 @@ export class MailActivity extends mailModels.MailActivity {
         return res;
     }
 
-    get _to_store_defaults() {
-        return [
-            ...super._to_store_defaults,
-            "res_name",
-            mailDataHelpers.Store.one(
-                "calendar_event_id",
-                this.env["calendar.event"]._store_calendar_event_fields(...arguments)
-            ),
-        ];
+    _store_activity_fields(res) {
+        super._store_activity_fields(res);
+        res.attr("res_name");
+        res.one("calendar_event_id", "_store_calendar_event_fields");
     }
 }

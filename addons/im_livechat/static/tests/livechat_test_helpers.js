@@ -20,7 +20,6 @@ import { LivechatChannelRule } from "./mock_server/mock_models/livechat_channel_
 import { Im_LivechatExpertise } from "./mock_server/mock_models/im_livechat_expertise";
 import { ResGroupsPrivilege } from "./mock_server/mock_models/res_groups_privilege";
 import { ResGroups } from "./mock_server/mock_models/res_groups";
-import { ResPartner } from "./mock_server/mock_models/res_partner";
 import { ResUsers } from "./mock_server/mock_models/res_users";
 import { session } from "@web/session";
 
@@ -52,7 +51,6 @@ export const livechatModels = {
     LivechatChannelRule,
     Im_LivechatExpertise,
     IrWebSocket,
-    ResPartner,
     ResUsers,
     ResGroupsPrivilege,
     ResGroups,

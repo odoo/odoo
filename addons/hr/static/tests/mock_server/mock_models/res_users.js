@@ -20,4 +20,10 @@ export class ResUsers extends mailModels.ResUsers {
         relation: "hr.work.location",
     });
     job_title = fields.Char({ related: "employee_id.job_title" });
+
+    _store_im_status_fields(res) {
+        super._store_im_status_fields(res);
+        // sudo: res.users - internal users can access employee information for the IM status
+        res.many("all_employee_ids", "_store_im_status_fields", { sudo: true });
+    }
 }

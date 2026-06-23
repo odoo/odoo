@@ -1,17 +1,11 @@
 import { ResourceResource } from "@resource/../tests/mock_server/mock_models/resource_resource";
 
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { patch } from "@web/core/utils/patch";
 
 patch(ResourceResource.prototype, {
-    _get_store_avatar_card_fields() {
-        return [
-            ...super._get_store_avatar_card_fields(...arguments),
-            "department_id",
-            mailDataHelpers.Store.one(
-                "employee_id",
-                this.env["hr.employee"]._get_store_avatar_card_fields(...arguments)
-            ),
-        ];
+    _store_avatar_card_fields(res) {
+        super._store_avatar_card_fields(res);
+        res.one("department_id", ["name"]);
+        res.one("employee_id", "_store_avatar_card_fields", { sudo: true });
     },
 });

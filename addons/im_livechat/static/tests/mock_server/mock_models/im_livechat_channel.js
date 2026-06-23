@@ -1,10 +1,11 @@
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { Store } from "@mail/../tests/mock_server/store";
 
-import { Command, fields, getKwArgs, makeKwArgs, models } from "@web/../tests/web_test_helpers";
+import { Command, fields, models } from "@web/../tests/web_test_helpers";
 
 export class LivechatChannel extends models.ServerModel {
     _name = "im_livechat.channel";
 
+    are_you_inside = fields.Boolean({ compute: "_compute_are_you_inside" });
     available_operator_ids = fields.Many2many({ relation: "res.users" }); // FIXME: somehow not fetched properly
     user_ids = fields.Many2many({ relation: "res.users" }); // FIXME: somehow not fetched properly
 
@@ -15,10 +16,7 @@ export class LivechatChannel extends models.ServerModel {
         this.env["bus.bus"]._sendone(
             partner,
             "mail.record/insert",
-            new mailDataHelpers.Store(
-                this.browse(id),
-                makeKwArgs({ fields: ["are_you_inside", "name"] })
-            ).get_result()
+            new Store().add(this.browse(id), ["are_you_inside", "name"]).as_dict()
         );
     }
 
@@ -29,13 +27,15 @@ export class LivechatChannel extends models.ServerModel {
         this.env["bus.bus"]._sendone(
             partner,
             "mail.record/insert",
-            new mailDataHelpers.Store(
-                this.browse(id),
-                makeKwArgs({ fields: ["are_you_inside", "name"] })
-            ).get_result()
+            new Store().add(this.browse(id), ["are_you_inside", "name"]).as_dict()
         );
     }
 
+    _compute_are_you_inside() {
+        for (const channel of this) {
+            channel.are_you_inside = channel.user_ids.includes(this.env.user.id);
+        }
+    }
     /** @param {integer} id */
     _compute_available_operator_ids(id) {
         /** @type {import("mock_models").ResUsers} */
@@ -103,21 +103,5 @@ export class LivechatChannel extends models.ServerModel {
             availableUsers.find((operator) => operator.partner_id === previous_operator_id) ??
             availableUsers[0]
         );
-    }
-
-    _to_store(store, fields) {
-        const kwargs = getKwArgs(arguments, "store", "fields");
-        fields = kwargs.fields;
-        store._add_record_fields(
-            this,
-            fields.filter((field) => field !== "are_you_inside")
-        );
-        for (const livechatChannel of this) {
-            if (fields.includes("are_you_inside")) {
-                store._add_record_fields(this.browse(livechatChannel.id), {
-                    are_you_inside: livechatChannel.user_ids.includes(this.env.user.id),
-                });
-            }
-        }
     }
 }

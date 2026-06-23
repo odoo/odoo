@@ -1,6 +1,4 @@
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
-
-import { makeKwArgs, models } from "@web/../tests/web_test_helpers";
+import { models } from "@web/../tests/web_test_helpers";
 
 export class MailNotification extends models.ServerModel {
     _name = "mail.notification";
@@ -30,14 +28,15 @@ export class MailNotification extends models.ServerModel {
         });
     }
 
-    get _to_store_defaults() {
-        return [
-            "failure_type",
-            "mail_email_address",
-            "mail_message_id",
-            "notification_status",
-            "notification_type",
-            mailDataHelpers.Store.one("res_partner_id", makeKwArgs({ fields: ["name", "email"] })),
-        ];
+    _store_notification_fields(res) {
+        res.extend(["failure_type", "mail_message_id"]);
+        res.extend(["notification_status", "notification_type"]);
+        res.one("res_partner_id", (r) => {
+            r.extend(["name", "email"]);
+            r.attr("display_name", undefined, { predicate: (p) => !p.name });
+        });
+        if (res.is_for_internal_users()) {
+            res.attr("mail_email_address");
+        }
     }
 }

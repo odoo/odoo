@@ -1,6 +1,4 @@
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
-
-import { getKwArgs, makeKwArgs, webModels } from "@web/../tests/web_test_helpers";
+import { getKwArgs, webModels } from "@web/../tests/web_test_helpers";
 
 export class IrAttachment extends webModels.IrAttachment {
     /**
@@ -31,44 +29,19 @@ export class IrAttachment extends webModels.IrAttachment {
         return true; // dummy value for mock server
     }
 
-    /** @param {number} ids */
-    _to_store(store, fields) {
-        const kwargs = getKwArgs(arguments, "store", "fields");
-        fields = kwargs.fields;
-
-        for (const attachment of this) {
-            const [data] = this._read_format(
-                attachment.id,
-                fields.filter((field) => field !== "thread"),
-                false
-            );
-            if (fields.includes("thread")) {
-                data.thread =
-                    attachment.model !== "mail.compose.message" && attachment.res_id
-                        ? mailDataHelpers.Store.one(
-                              this.env[attachment.res_model].browse(attachment.res_id),
-                              makeKwArgs({
-                                  as_thread: true,
-                                  only_id: true,
-                              })
-                          )
-                        : false;
-            }
-            store._add_record_fields(this.browse(attachment.id), data);
-        }
+    _store_ownership_fields(res) {
+        res.attr("ownership_token", (a) => a.id); // mock: token is the record id
     }
 
-    get _to_store_defaults() {
-        return [
-            "checksum",
-            "create_date",
-            "mimetype",
-            "name",
-            "res_name",
-            "thread",
-            "type",
-            "url",
-            "voice_ids",
-        ];
+    _store_attachment_fields(res) {
+        res.extend(["checksum", "create_date", "file_size", "has_thumbnail", "mimetype", "name"]);
+        res.attr("raw_access_token", (a) => a.id); // mock: token is the record id
+        res.attr("res_name");
+        res.attr("res_model");
+        res.one("thread", [], { as_thread: true });
+        res.attr("thumbnail_access_token", (a) => a.id); // mock: token is the record id
+        res.extend(["type", "url"]);
+        // sudo: discuss.voice.metadata - checking the existence of voice metadata is acceptable
+        res.many("voice_ids", [], { sudo: true });
     }
 }

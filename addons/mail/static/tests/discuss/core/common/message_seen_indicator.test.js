@@ -6,7 +6,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { Store } from "@mail/../tests/mock_server/store";
 
 import { describe, test } from "@odoo/hoot";
 import { Command, serverState, withUser } from "@web/../tests/web_test_helpers";
@@ -108,15 +108,17 @@ test("mark channel as seen from the bus", async () => {
     pyEnv["bus.bus"]._sendone(
         channel,
         "mail.record/insert",
-        new mailDataHelpers.Store(
-            DiscussChannelMember.browse(
-                DiscussChannelMember.search([
-                    ["channel_id", "=", channelId],
-                    ["partner_id", "=", partnerId],
-                ])
-            ),
-            { seen_message_id: messageId }
-        ).get_result()
+        new Store()
+            .add(
+                DiscussChannelMember.browse(
+                    DiscussChannelMember.search([
+                        ["channel_id", "=", channelId],
+                        ["partner_id", "=", partnerId],
+                    ])
+                ),
+                { seen_message_id: messageId }
+            )
+            .as_dict()
     );
     await contains(".o-mail-MessageSeenIndicator[title='Seen by test']");
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 2 });
@@ -149,15 +151,17 @@ test("should display message indicator when message is seen", async () => {
     pyEnv["bus.bus"]._sendone(
         channel,
         "mail.record/insert",
-        new mailDataHelpers.Store(
-            DiscussChannelMember.browse(
-                DiscussChannelMember.search([
-                    ["channel_id", "=", channelId],
-                    ["partner_id", "=", partnerId],
-                ])
-            ),
-            { seen_message_id: messageId }
-        ).get_result()
+        new Store()
+            .add(
+                DiscussChannelMember.browse(
+                    DiscussChannelMember.search([
+                        ["channel_id", "=", channelId],
+                        ["partner_id", "=", partnerId],
+                    ])
+                ),
+                { seen_message_id: messageId }
+            )
+            .as_dict()
     );
     await contains(".o-mail-MessageSeenIndicator .fa-check", { count: 2 });
 });

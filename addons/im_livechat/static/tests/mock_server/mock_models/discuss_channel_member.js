@@ -1,6 +1,6 @@
 import { mailModels } from "@mail/../tests/mail_test_helpers";
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
-import { fields, makeKwArgs } from "@web/../tests/web_test_helpers";
+
+import { fields } from "@web/../tests/web_test_helpers";
 
 export class DiscussChannelMember extends mailModels.DiscussChannelMember {
     livechat_member_type = fields.Selection({
@@ -45,52 +45,48 @@ export class DiscussChannelMember extends mailModels.DiscussChannelMember {
         return idOrIds;
     }
 
-    /**
-     * @override
-     * @type {typeof mailModels.DiscussChannelMember["prototype"]["_get_store_partner_fields"]}
-     */
-    _get_store_partner_fields(fields) {
-        /** @type {import("mock_models").DiscussChannel} */
-        const DiscussChannel = this.env["discuss.channel"];
+    _store_member_fields(res) {
+        super._store_member_fields(res);
+        res.attr("livechat_member_type", undefined, {
+            predicate: (m) => {
+                const [channel] = this.env["discuss.channel"].browse(m.channel_id);
+                return channel?.channel_type === "livechat";
+            },
+        });
+    }
 
+    _store_partner_dynamic_fields(partnerRes) {
+        super._store_partner_dynamic_fields(partnerRes);
         const member = this[0];
-        const [channel] = DiscussChannel.browse(member.channel_id);
-        if (channel.channel_type === "livechat") {
-            if (!fields) {
-                fields = [
-                    "active",
-                    "avatar_128",
-                    "country_id",
-                    "is_public",
-                    "user_livechat_username",
-                    ...this.env["res.partner"]._get_store_im_status_fields(),
-                ];
-                if (member.livechat_member_type == "visitor") {
-                    fields.push(
-                        "email",
-                        mailDataHelpers.Store.many(
-                            "user_ids",
-                            makeKwArgs({ fields: ["offline_since"] })
-                        )
-                    );
-                }
-            }
+        const [channel] = this.env["discuss.channel"].browse(member.channel_id);
+        if (channel?.channel_type !== "livechat") {
+            return;
         }
-        return super._get_store_partner_fields(fields);
-    }
-    /**
-     * @override
-     * @type {typeof mailModels.DiscussChannelMember["prototype"]["_to_store"]}
-     */
-    _to_store(store, fields, extra_fields) {
-        super._to_store(...arguments);
-        for (const member of this) {
-            store._add_record_fields(this.browse(member.id), {
-                livechat_member_type: member.livechat_member_type,
-            });
+        partnerRes._fields.length = 0; // mock: mirror partner_res.clear()
+        partnerRes.attr("active");
+        partnerRes.one("country_id", ["code", "name"]);
+        partnerRes.attr("is_public");
+        partnerRes.from_method("_store_avatar_fields");
+        partnerRes.from_method("_store_livechat_username_fields");
+        partnerRes.from_method("_store_mention_fields");
+        if (member.livechat_member_type === "visitor") {
+            partnerRes.attr("email");
+            partnerRes.many("user_ids", ["offline_since"]);
         }
+        partnerRes.from_method("_store_im_status_fields", { internal: true });
     }
-    get _to_store_defaults() {
-        return super._to_store_defaults.concat(["livechat_member_type"]);
+
+    _store_guest_dynamic_fields(guestRes) {
+        super._store_guest_dynamic_fields(guestRes);
+        const member = this[0];
+        const [channel] = this.env["discuss.channel"].browse(member.channel_id);
+        if (channel?.channel_type !== "livechat") {
+            return;
+        }
+        guestRes._fields.length = 0; // mock: mirror guest_res.clear()
+        guestRes.one("country_id", ["code", "name"]);
+        guestRes.attr("offline_since");
+        guestRes.from_method("_store_avatar_fields");
+        guestRes.from_method("_store_im_status_fields", { internal: true });
     }
 }

@@ -1,4 +1,4 @@
-import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
+import { Store } from "@mail/../tests/mock_server/store";
 
 import { getKwArgs, makeKwArgs, models } from "@web/../tests/web_test_helpers";
 
@@ -30,12 +30,14 @@ export class DiscussChannelRtcSession extends models.ServerModel {
             notifications.push([
                 channel,
                 "mail.record/insert",
-                new mailDataHelpers.Store(DiscussChannel.browse(channel.id), {
-                    rtc_session_ids: mailDataHelpers.Store.many(
-                        this.browse(sessions.map((session) => session.id)),
-                        makeKwArgs({ mode: "ADD" })
-                    ),
-                }).get_result(),
+                new Store()
+                    .add(DiscussChannel.browse(channel.id), (res) =>
+                        res.many("rtc_session_ids", "_store_rtc_session_fields", {
+                            mode: "ADD",
+                            value: this.browse(sessions.map((session) => session.id)),
+                        })
+                    )
+                    .as_dict(),
             ]);
         }
         for (const record of rtcSessions) {
@@ -76,47 +78,24 @@ export class DiscussChannelRtcSession extends models.ServerModel {
                 [
                     partner,
                     "mail.record/insert",
-                    new mailDataHelpers.Store(DiscussChannel.browse(Number(session.channel_id)), {
-                        rtc_session_ids: mailDataHelpers.Store.many(
-                            sessions,
-                            makeKwArgs({ only_id: true, mode: "DELETE" })
-                        ),
-                    }).get_result(),
+                    new Store()
+                        .add(DiscussChannel.browse(Number(session.channel_id)), (res) =>
+                            res.many("rtc_session_ids", [], { mode: "DELETE", value: sessions })
+                        )
+                        .as_dict(),
                 ],
             ]);
         }
         super.unlink(...arguments);
     }
 
-    /**
-     * @param {number} id
-     * @param {{ extra?; boolean }} options
-     */
-    _to_store(store, fields, extra) {
-        const kwargs = getKwArgs(arguments, "store", "fields", "extra");
-        fields = kwargs.fields;
-        extra = kwargs.extra ?? false;
+    _store_rtc_session_fields(res) {
+        res.one("channel_member_id", "_store_avatar_card_fields");
+    }
 
-        store._add_record_fields(this, []);
-        for (const rtcSession of this) {
-            let data = [
-                mailDataHelpers.Store.one(
-                    "channel_member_id",
-                    makeKwArgs({
-                        fields: ["channel"].concat(
-                            this.env["discuss.channel.member"]._to_store_persona([
-                                "name",
-                                ...this.env["res.partner"]._get_store_im_status_fields(),
-                            ])
-                        ),
-                    })
-                ),
-            ];
-            if (extra) {
-                data = data.concat(["is_camera_on", "is_deaf", "is_muted", "is_screen_sharing_on"]);
-            }
-            store._add_record_fields(this.browse(rtcSession.id), data);
-        }
+    _store_extra_fields(res) {
+        this._store_rtc_session_fields(res);
+        res.extend(["is_camera_on", "is_deaf", "is_muted", "is_screen_sharing_on"]);
     }
 
     /**
@@ -143,10 +122,9 @@ export class DiscussChannelRtcSession extends models.ServerModel {
         const [member] = DiscussChannelMember.browse(session.channel_member_id);
         const [channel] = DiscussChannel.search_read([["id", "=", member.channel_id]]);
         BusBus._sendone(channel, "discuss.channel.rtc.session/update_and_broadcast", {
-            store_data: new mailDataHelpers.Store(
-                DiscussChannelRtcSession.browse(id),
-                makeKwArgs({ extra: true })
-            ).get_result(),
+            store_data: new Store()
+                .add(DiscussChannelRtcSession.browse(id), "_store_extra_fields")
+                .as_dict(),
             channelId: channel.id,
         });
     }

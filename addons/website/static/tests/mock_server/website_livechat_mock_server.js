@@ -17,9 +17,11 @@ patch(mailDataHelpers, {
                 0,
                 5
             );
-            store._add_record_fields(WebsiteVisitor.browse(channel.livechat_visitor_id), {
-                discuss_channel_ids: mailDataHelpers.Store.many(DiscussChannel.browse(channelIds)),
-            });
+            store.add(WebsiteVisitor.browse(channel.livechat_visitor_id), (res) =>
+                res.many("discuss_channel_ids", "_store_channel_fields", {
+                    value: DiscussChannel.browse(channelIds),
+                })
+            );
         }
     },
 });
