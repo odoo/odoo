@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
@@ -24,22 +23,22 @@ export class ProductInfoPopup extends Component {
             activeSnooze: this.getActiveSnooze(),
         });
 
-        useLayoutEffect(
-            () => {
-                if (!this.state.activeSnooze) {
-                    return;
-                }
-
-                this.updateCountdown();
-                const interval = setInterval(() => {
-                    this.updateCountdown();
-                }, 1000);
-                return () => {
-                    clearInterval(interval);
-                };
-            },
-            () => [this.state.activeSnooze]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         if (!this.state.activeSnooze) {
+        //             return;
+        //         }
+        //
+        //         this.updateCountdown();
+        //         const interval = setInterval(() => {
+        //             this.updateCountdown();
+        //         }, 1000);
+        //         return () => {
+        //             clearInterval(interval);
+        //         };
+        //     },
+        //     () => [this.state.activeSnooze]
+        // );
     }
     searchProduct(productName) {
         this.pos.setSelectedCategory(0);
