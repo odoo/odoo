@@ -22,6 +22,17 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"></field>
         <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_sale_order"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-dollar"
+                        invisible="not sale_id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Sales Order</span>
+                    </div>
+                </button>
+            </xpath>
             <field name="origin" position="after">
                 <field
                     name="return_reason_id"
