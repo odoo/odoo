@@ -45,8 +45,12 @@ class SaleOrder(models.Model):
                     reward_amount += line.price_subtotal
                 else:
                     # Free product are 'regular' product lines with a price_unit of 0
-                    reward_amount -= line.product_id.lst_price * line.product_uom_qty
-            order.reward_amount = reward_amount
+                    reward_amount -= (
+                        line.product_id.lst_price * line.product_uom_qty
+                    )  # TODO(loti): seems a bit bold to use lst_price. Why not use the pricelist for a more realistic value?
+            order.reward_amount = (
+                reward_amount  # TODO(loti): so this is <= 0? Might be worth mentioning.
+            )
 
     def _compute_extra_total_fields(self):
         super()._compute_extra_total_fields()
@@ -160,8 +164,8 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         """Override to validate and update coupon rewards.
 
-        If called with one SO, checks if there exists rewards that are available but not claimed,
-        and if so returns a notification action.
+        If called with one SO, check if there are any rewards that are available but not claimed,
+        and if so return a notification action.
 
         :raises ValidationError: A coupon gave a negative amount of points.
         :return: True or a notification action
@@ -176,7 +180,7 @@ class SaleOrder(models.Model):
             if any(order._get_real_points_for_coupon(coupon) < 0 for coupon in all_coupons):
                 raise ValidationError(
                     order.env._(
-                        "One or more rewards on the sale order is invalid. Please check them."
+                        "One or more rewards on the sale order are invalid. Please check them."
                     )
                 )
             order._update_programs_and_rewards()
@@ -751,7 +755,7 @@ class SaleOrder(models.Model):
             ("sale_ok", "=", True),
             *self.env["loyalty.program"]._check_company_domain([
                 self.company_id.id,
-                self.company_id.parent_id.id,
+                self.company_id.parent_id.id,  # TODO(loti): why only direct parent and not the whole chain? Or can there only be 1 level of nesting?
             ]),
             "|",
             ("pricelist_ids", "=", False),
@@ -878,14 +882,12 @@ class SaleOrder(models.Model):
     def _get_real_points_for_coupon(self, coupon, post_confirm=False):  # noqa: ARG002
         """Return the actual points usable for this coupon for this order.
 
-        Set `pos_confirm` to True to include points for future orders.
-
         This is calculated by taking the points on the coupon, the points the order will give to the
         coupon (if applicable) and removing the points taken by already applied rewards.
         """
         self.ensure_one()
         points = coupon.points
-        if self.state not in ("sale", "done"):
+        if self.state not in ("sale", "done"):  # TODO(loti): `done` doesn't exist.
             if coupon.program_id.applies_on != "future":
                 # Points that will be given by the order upon confirming the order
                 points += self.coupon_point_ids.filtered(lambda p: p.coupon_id == coupon).points
@@ -907,11 +909,17 @@ class SaleOrder(models.Model):
                 coupon.sudo().points += points
         for pe in self.coupon_point_ids.sudo():
             if pe.coupon_id in coupon_points:
-                pe.points = coupon_points.pop(pe.coupon_id)
+                pe.points = coupon_points.pop(
+                    pe.coupon_id
+                )  # TODO(loti): if there's already a "points" rec for the coupon, update it.
         if coupon_points:
             self.sudo().write({
                 "coupon_point_ids": [
-                    (0, 0, {"coupon_id": coupon.id, "points": points})
+                    (
+                        0,
+                        0,
+                        {"coupon_id": coupon.id, "points": points},
+                    )  # TODO(loti): if there's no "points" rec for the coupon, create it.
                     for coupon, points in coupon_points.items()
                 ]
             })
@@ -1151,7 +1159,7 @@ class SaleOrder(models.Model):
 
         # Automatically load in eWallet and loyalty cards coupons with previously received points
         if self._allow_nominative_programs():
-            loyalty_card = self.env["loyalty.card"].search([
+            loyalty_card = self.env["loyalty.card"].search([  # TODO(loti): name should be plural.
                 ("id", "not in", self.applied_coupon_ids.ids),
                 ("partner_id", "=", self.partner_id.id),
                 ("points", ">", 0),
@@ -1174,7 +1182,11 @@ class SaleOrder(models.Model):
             [
                 ("id", "not in", points_programs.ids),
                 ("trigger", "=", "auto"),
-                ("rule_ids.mode", "=", "auto"),
+                (
+                    "rule_ids.mode",
+                    "=",
+                    "auto",
+                ),  # TODO(loti): why can both programs and rules have auto/code triggers?
             ],
         ])
         automatic_programs = (
@@ -1191,14 +1203,16 @@ class SaleOrder(models.Model):
         domain_matching_programs = all_programs_to_check.filtered_domain(program_domain)
         all_programs_status = {
             p: {"error": "error"} for p in all_programs_to_check - domain_matching_programs
-        }
+        }  # TODO(loti): `"error": "error"`? Useless. Also these aren't "all" programs (but they will be after `all_programs_status.update`).
         # Compute applicability and points given for all programs that passed the domain check
         # Note that points are computed with reward lines present
         all_programs_status.update(self._program_check_compute_points(domain_matching_programs))
         # Delay any unlink to the end of the function since they cause a full cache invalidation
         lines_to_unlink = self.env["sale.order.line"]
-        coupons_to_unlink = self.env["loyalty.card"]
-        point_entries_to_unlink = self.env["sale.order.coupon.points"]
+        coupons_to_unlink = self.env[
+            "loyalty.card"
+        ]  # TODO(loti): I don't really like that we call loyalty.card records "coupons". It's misleading IMO.
+        point_entries_to_unlink = self.env["sale.order.coupon.points"]  # TODO(loti): why "entries"?
         # Remove any coupons that are expired
         if initial_coupons := self.applied_coupon_ids:
             check_date = self._get_confirmed_tx_create_date()
@@ -1207,7 +1221,9 @@ class SaleOrder(models.Model):
             )
             removed = initial_coupons - self.applied_coupon_ids
             lines_to_unlink |= self.order_line.filtered(lambda sol: sol.coupon_id in removed)
-        point_ids_per_program = defaultdict(lambda: self.env["sale.order.coupon.points"])
+        point_ids_per_program = defaultdict(
+            lambda: self.env["sale.order.coupon.points"]
+        )  # TODO(loti): points_per_program
         for pe in self.coupon_point_ids:
             # Update coupons that were created for Public User
             if pe.coupon_id.partner_id.is_public and not self.partner_id.is_public:
@@ -1254,8 +1270,11 @@ class SaleOrder(models.Model):
                 if not all_point_changes and program.is_nominative:
                     all_point_changes = [0]
                 for pe, points in zip(program_point_entries.sudo(), all_point_changes):
-                    pe.points = points
-                if len(program_point_entries) < len(all_point_changes):
+                    pe.points = points  # TODO(loti): this reassigns the points at random on the program's loyalty cards. I guess this is ok, but feels a bit weird.
+                    # I'd rather remove all points and coupons and reassign new ones.
+                if len(program_point_entries) < len(
+                    all_point_changes
+                ):  # TODO(loti): a bit ugly to do it like this.
                     new_coupon_points = all_point_changes[len(program_point_entries) :]
                     # next_order_coupons should be linked to the order's partner
                     partner_id = program.program_type == "next_order_coupons" and self.partner_id.id
@@ -1275,17 +1294,21 @@ class SaleOrder(models.Model):
                             for _ in new_coupon_points
                         ])
                     )
-                    self._add_points_for_coupon(dict(zip(new_coupons, new_coupon_points)))
+                    self._add_points_for_coupon(
+                        dict(zip(new_coupons, new_coupon_points))
+                    )  # TODO(loti): this API can probably be simplified/improved.
                 elif len(program_point_entries) > len(all_point_changes):
                     point_ids_to_unlink = program_point_entries[len(all_point_changes) :]
                     all_coupons -= point_ids_to_unlink.coupon_id
                     coupons_to_unlink |= point_ids_to_unlink.coupon_id
-                    point_ids_to_unlink.points = 0
+                    point_ids_to_unlink.points = 0  # TODO(loti): why not, but is this necessary?
 
         # Programs applied using a coupon
         applied_coupon_per_program = defaultdict(lambda: self.env["loyalty.card"])
         for coupon in self.applied_coupon_ids:
-            applied_coupon_per_program[coupon.program_id] |= coupon
+            applied_coupon_per_program[coupon.program_id] |= (
+                coupon  # TODO(loti): can probably be done by some sort of grouping.
+            )
         for program in coupon_programs:
             if program not in domain_matching_programs or (
                 program.applies_on == "current" and "error" in all_programs_status[program]
@@ -1306,7 +1329,7 @@ class SaleOrder(models.Model):
         # state.
         reward_line_pool = self.order_line.filtered(
             lambda line: line.reward_id and line.coupon_id
-        )._reset_loyalty()
+        )._reset_loyalty()  # TODO(loti): I'd rather remove them all, but that might be slower and cause some reordering.
         seen_rewards = set()
         line_rewards = []
         # gift_card and ewallet are considered as payments and should always be applied last.
@@ -1419,10 +1442,18 @@ class SaleOrder(models.Model):
         so_products_per_rule = programs._get_valid_products(self.order_line.product_id)
         lines_per_rule = defaultdict(lambda: self.env["sale.order.line"])
         # Skip lines that have no effect on the minimum amount to reach.
+        # TODO(loti): we should NOT exclude discounts when computing amounts (since they reduce the
+        # min amount to reach). We should probably skip EW and GC though (they're currently skipped
+        # since they're automatic, but we probably shouldn't skip ALL automatic programs).
         for line in self.order_line - self._get_no_effect_on_threshold_lines():
             is_discount = line.reward_id.reward_type == "discount"
             reward_program = line.reward_id.program_id
             # Skip lines for automatic discounts, as well as combo item lines.
+            # TODO(loti): so we only skip "discount" rewards from "automatic" programs.
+            # So "free product" rewards or "with code" programs ar never skipped.
+            # Why?
+            # I guess "free products" have a zero price so they shouldn't change anything (but then, why keep them?)
+            # So in reality we simply skip automatic discounts. Why? Maybe that's wrong?
             if (is_discount and reward_program.trigger == "auto") or line.combo_item_id:
                 continue
             for program in programs:
@@ -1452,7 +1483,9 @@ class SaleOrder(models.Model):
             program_result = result.setdefault(program, dict())
             for rule in program.rule_ids:
                 # prevent bottomless ewallet spending
-                if program.program_type == "ewallet" and not program.trigger_product_ids:
+                if (
+                    program.program_type == "ewallet" and not program.trigger_product_ids
+                ):  # TODO(loti): should probably do the same for gift card (see https://www.odoo.com/odoo/project.task/3756134)
                     break
                 if rule.mode == "with_code" and rule not in self.code_enabled_rule_ids:
                     continue
@@ -1492,7 +1525,9 @@ class SaleOrder(models.Model):
                             rule.reward_point_amount for _ in range(int(ordered_rule_products_qty))
                         )
                     elif rule.reward_point_mode == "money":
-                        for line in self.order_line:
+                        for line in (
+                            self.order_line
+                        ):  # TODO(loti): probably not all of order_line, maybe rule_products?
                             if (
                                 line.is_reward_line
                                 or line.combo_item_id
@@ -1510,12 +1545,14 @@ class SaleOrder(models.Model):
                                     * line_price_total
                                     / line.product_uom_qty
                                 ),
-                                precision_digits=2,
+                                precision_digits=2,  # TODO(loti): should we use the currency's rounding instead?
                                 rounding_method="DOWN",
                             )
                             if not points_per_unit:
                                 continue
+                            # TODO(loti): this isn't really a split per unit (since unit is money and not uom_qty). Is this intended?
                             rule_points.extend([points_per_unit] * int(line.product_uom_qty))
+                # TODO(loti): this comment seems oddly placed...
                 # All checks have been passed we can now compute the points to give
                 elif rule.reward_point_mode == "order":
                     points += rule.reward_point_amount
@@ -1526,11 +1563,15 @@ class SaleOrder(models.Model):
                     amount_paid = 0.0
                     rule_products = so_products_per_rule.get(rule, [])
                     for line in self.order_line - self._get_no_effect_on_threshold_lines():
-                        if line.combo_item_id or line.reward_id.program_id.program_type in [
-                            "ewallet",
-                            "gift_card",
-                            program.program_type,
-                        ]:
+                        if (
+                            line.combo_item_id
+                            or line.reward_id.program_id.program_type
+                            in [
+                                "ewallet",
+                                "gift_card",  # TODO(loti): ignore EW and GC because they're not really "free" since you've already paid for them. They're more like payment methods.
+                                program.program_type,
+                            ]
+                        ):
                             continue
                         line_price_total = self._get_order_line_price(line, "price_total")
                         amount_paid += (
@@ -1541,12 +1582,12 @@ class SaleOrder(models.Model):
 
                     points += float_round(
                         rule.reward_point_amount * amount_paid,
-                        precision_digits=2,
+                        precision_digits=2,  # TODO(loti): should we use the currency's rounding instead?
                         rounding_method="DOWN",
                     )
                 elif rule.reward_point_mode == "unit":
                     points += rule.reward_point_amount * ordered_rule_products_qty
-            # NOTE: for programs that are nominative we always allow the program to be 'applied' on
+            # NOTE: for programs that are nominative, we always allow the program to be "applied" on
             # the order with 0 points so that `_get_claimable_rewards` returns the rewards
             # associated with those programs.
             if not program.is_nominative:
@@ -1564,6 +1605,7 @@ class SaleOrder(models.Model):
                     program_result["error"] = self.env._(
                         "You don't have the required product quantities on your sales order."
                     )
+            # TODO(loti): the `is_public` check should be in `_allow_nominative_programs` IMO
             elif self.partner_id.is_public and not self._allow_nominative_programs():
                 program_result["error"] = self.env._(
                     "This program is not available for public users."

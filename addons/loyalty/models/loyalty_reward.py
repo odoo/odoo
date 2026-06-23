@@ -71,7 +71,7 @@ class LoyaltyReward(models.Model):
         required=True,
         default="discount",
     )
-    user_has_debug = fields.Boolean(compute="_compute_user_has_debug")
+    user_has_debug = fields.Boolean(compute="_compute_user_has_debug")  # TODO(loti): useless.
 
     # Discount rewards
     discount = fields.Float(string="Discount", default=10)
@@ -98,8 +98,10 @@ class LoyaltyReward(models.Model):
     )
     all_discount_product_ids = fields.Many2many(
         comodel_name="product.product", compute="_compute_all_discount_product_ids"
-    )
-    reward_product_domain = fields.Char(compute="_compute_reward_product_domain", store=False)
+    )  # TODO(loti): only used in POS.
+    reward_product_domain = fields.Char(
+        compute="_compute_reward_product_domain", store=False
+    )  # TODO(loti): this is weird... Also only used in POS so shouldn't be declared here.
     discount_max_amount = fields.Monetary(
         string="Max Discount",
         help="This is the max amount this reward may discount, leave to 0 for no limit.",
@@ -113,10 +115,10 @@ class LoyaltyReward(models.Model):
     )
     is_global_discount = fields.Boolean(compute="_compute_is_global_discount")
 
-    # Product rewards
+    # Product rewards  # TODO(loti): why no category here? Should be consistent (maybe remove category and tag everywhere).
     reward_product_id = fields.Many2one(
         string="Product", comodel_name="product.product", domain=[("type", "!=", "combo")]
-    )
+    )  # TODO(loti): why only one if multiple are allowed via tags?
     reward_product_tag_id = fields.Many2one(string="Product Tag", comodel_name="product.tag")
     multi_product = fields.Boolean(compute="_compute_multi_product")
     reward_product_ids = fields.Many2many(
@@ -125,11 +127,11 @@ class LoyaltyReward(models.Model):
         comodel_name="product.product",
         compute="_compute_multi_product",
         search="_search_reward_product_ids",
-    )
+    )  # TODO(loti): do we really need this field? Can't it be computed "on the go" (same as discount products and rule products). Where is the search used?
     reward_product_qty = fields.Integer(default=1)
     reward_product_uom_id = fields.Many2one(
         comodel_name="uom.uom", compute="_compute_reward_product_uom_id"
-    )
+    )  # TODO(loti): only used in POS...
 
     required_points = fields.Float(string="Points needed", default=1)
     point_name = fields.Char(related="program_id.portal_point_name", readonly=True)
@@ -169,7 +171,9 @@ class LoyaltyReward(models.Model):
                 self.discount_product_category_id, []
             )
             product_category_ids.append(self.discount_product_category_id.id)
-            constrains.append([("categ_id", "in", product_category_ids)])
+            constrains.append([
+                ("categ_id", "in", product_category_ids)
+            ])  # TODO(loti): use child_of instead (and ditch _find_all_category_children).
         if self.discount_product_tag_id:
             constrains.append([("all_product_tag_ids", "in", self.discount_product_tag_id.id)])
         domain = Domain.OR(constrains) if constrains else Domain.TRUE
@@ -178,7 +182,9 @@ class LoyaltyReward(models.Model):
         return domain
 
     @api.model
-    def _get_active_products_domain(self):
+    def _get_active_products_domain(
+        self,
+    ):  # TODO(loti): only used in Sale, and only used once. Could be a simple helper method in the class where it's used.
         return [
             "|",
             ("reward_type", "!=", "product"),

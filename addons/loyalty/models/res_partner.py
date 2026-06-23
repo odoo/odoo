@@ -18,7 +18,7 @@ class ResPartner(models.Model):
             domain=[
                 "|",
                 ("company_id", "=", False),
-                ("company_id", "in", self.env.companies.ids),
+                ("company_id", "in", self.env.companies.ids),  # TODO(loti): can be simplified.
                 (
                     "partner_id",
                     "in",
@@ -34,7 +34,10 @@ class ResPartner(models.Model):
             aggregates=["__count"],
         )
         self.loyalty_card_count = 0
-        for partner, count in loyalty_groups:
+        for (
+            partner,
+            count,
+        ) in loyalty_groups:  # TODO(loti): seems complex. There's probably an easier way.
             while partner:
                 if partner in self:
                     partner.loyalty_card_count += count

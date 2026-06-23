@@ -91,6 +91,7 @@ class SaleOrderLine(models.Model):
         for line in res:
             if line.coupon_id and line.points_cost and line.state == "sale":
                 line.coupon_id.points -= line.points_cost
+                # TODO(loti): what if the history line doesn't exist yet? Doesn't work.
                 line.order_id._update_loyalty_history(line.coupon_id, line.points_cost)
         return res
 
@@ -107,6 +108,7 @@ class SaleOrderLine(models.Model):
                 if line.points_cost != previous_cost or line.coupon_id != previous_coupon:
                     previous_coupon.points += previous_cost
                     line.coupon_id.points -= line.points_cost
+                    # TODO(loti): what about the history line? Should be updated as well (or new one created).
         return res
 
     def unlink(self):

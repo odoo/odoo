@@ -14,7 +14,7 @@ class LoyaltyProgram(models.Model):
         read_group_res = self.env["sale.order.line"]._read_group(
             [("reward_id", "in", self.reward_ids.ids)], ["order_id"], ["reward_id:array_agg"]
         )
-        for program in self:
+        for program in self:  # TODO(loti): ugly and unclear. Find a better way.
             program_reward_ids = program.reward_ids.ids
             program.order_count = sum(
                 any(id_ in reward_ids for id_ in program_reward_ids)

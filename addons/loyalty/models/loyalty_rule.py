@@ -50,7 +50,7 @@ class LoyaltyRule(models.Model):
     currency_id = fields.Many2one(related="program_id.currency_id")
 
     # Only for dev mode
-    user_has_debug = fields.Boolean(compute="_compute_user_has_debug")
+    user_has_debug = fields.Boolean(compute="_compute_user_has_debug")  # TODO(loti): useless.
     product_domain = fields.Char(default="[]")
 
     product_ids = fields.Many2many(string="Products", comodel_name="product.product")
@@ -99,6 +99,7 @@ class LoyaltyRule(models.Model):
         allow this.
         """
         for rule in self:
+            # TODO(loti): use program_id.is_nominative instead? (not the same though)
             if rule.reward_point_split and (
                 rule.program_id.applies_on == "both" or rule.program_id.program_type == "ewallet"
             ):
@@ -122,6 +123,7 @@ class LoyaltyRule(models.Model):
             ("code", "in", mapped_codes),
             ("active", "=", True),
         ]):
+            # TODO(loti): why can both rules and loyalty cards have codes?
             raise ValidationError(self.env._("A coupon with the same code was found."))
 
     @api.depends("mode")
