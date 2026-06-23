@@ -110,6 +110,15 @@ class MvDealLine(models.Model):
         string='End Time',
     )
 
+    # Per-row Max Per Day cap. Propagated to every child Schedule on
+    # save (see schedule_inherit_vals below).
+    max_per_day = fields.Integer(
+        string='Max Per Day',
+        help='Upper bound on spots per day. Applied to every Schedule '
+             'created from / linked to this Deal Line when the planner '
+             'clicks Save in the Units Grid.',
+    )
+
     # Days of week toggles - blue/active when True per the mockup.
     day_mon = fields.Boolean(string='M', default=True)
     day_tue = fields.Boolean(string='T', default=True)
@@ -214,4 +223,5 @@ class MvDealLine(models.Model):
             'start_time':   self.start_time or defaults[0] or False,
             'end_time':     self.end_time   or defaults[1] or False,
             'days_allowed': [(6, 0, self.days_allowed.ids)],
+            'max_per_day':  self.max_per_day or 0,
         }

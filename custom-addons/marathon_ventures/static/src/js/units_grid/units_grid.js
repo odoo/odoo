@@ -54,10 +54,13 @@ export class MvUnitsGrid extends Component {
             pendingLtcRow: null,
             pendingLtcDate: "",
             // Multi-row selection state. `selected` is keyed by row.id
-            // (only real rows, not LTC previews). `bulkLtcDate` is the
-            // date the planner types into the top-of-table bulk bar.
+            // (only real rows, not LTC previews). bulkAction tracks
+            // which bulk modal is open: "" (none), "ltc", or "maxday".
+            // bulkLtcDate / bulkMaxDay back the inputs in those modals.
             selected: {},
+            bulkAction: "",
             bulkLtcDate: "",
+            bulkMaxDay: "",
         });
         onWillStart(this.loadGrid.bind(this));
         onWillUpdateProps((nextProps) => {
@@ -85,10 +88,12 @@ export class MvUnitsGrid extends Component {
             ltc_ops: [],       // Staged Last-To-Cancel operations
         };
         this.state.dirty = false;
-        // Drop any selection + bulk-bar date too - the rows from the
+        // Drop any selection + bulk-bar state too - the rows from the
         // freshly-loaded payload may have different ids.
         this.state.selected = {};
+        this.state.bulkAction = "";
         this.state.bulkLtcDate = "";
+        this.state.bulkMaxDay = "";
     }
 
     // Phase 12: deal-level start date changed -> snap to Monday,
@@ -529,6 +534,18 @@ export class MvUnitsGrid extends Component {
         this._markDirty();
     }
 
+    onMaxPerDayChange(row, ev) {
+        if (row._is_ltc_preview) {
+            ev.target.value = row.max_per_day || 0;
+            return;
+        }
+        const n = parseInt(ev.target.value, 10);
+        row.max_per_day = Number.isFinite(n) && n >= 0 ? n : 0;
+        const upd = this._findOrPushRowUpdate(row);
+        upd.max_per_day = row.max_per_day;
+        this._markDirty();
+    }
+
     onRateChange(row, ev) {
         if (row._is_ltc_preview) { ev.target.value = row.rate || 0; return; }
         const n = parseFloat(ev.target.value);
@@ -718,10 +735,71 @@ export class MvUnitsGrid extends Component {
         this.state.bulkLtcDate = ev.target.value || "";
     }
 
+    // ---- Bulk Action dropdown (LTC / Max/Day) ---------------------
+    onBulkActionSelect(ev) {
+        const value = (ev.target.value || "").trim();
+        ev.target.value = "";   // reset the <select> so the placeholder shows again
+        if (!this.selectedRowIds.length) {
+            alert("No rows selected.");
+            return;
+        }
+        if (value === "ltc") {
+            this.state.bulkAction = "ltc";
+            if (!this.state.bulkLtcDate) {
+                const dealStart = this.state.payload
+                    && this.state.payload.deal
+                    && this.state.payload.deal.units_start_date;
+                this.state.bulkLtcDate = dealStart || "";
+            }
+        } else if (value === "maxday") {
+            this.state.bulkAction = "maxday";
+            this.state.bulkMaxDay = "";
+        }
+    }
+
+    cancelBulkAction() {
+        this.state.bulkAction = "";
+    }
+
+    onBulkMaxDayInput(ev) {
+        this.state.bulkMaxDay = ev.target.value || "";
+    }
+
+    // Apply the typed Max/Day value to every selected row. Each
+    // affected row gets row.max_per_day updated locally and a queued
+    // row_update with max_per_day, which save_units_grid then writes
+    // to mv.deal_line + propagates to every linked schedule via
+    // schedule_inherit_vals().
+    confirmBulkMaxDay() {
+        const raw = this.state.bulkMaxDay;
+        const n = parseInt(raw, 10);
+        if (!Number.isFinite(n) || n < 0) {
+            alert("Please enter a non-negative Max/Day value.");
+            return;
+        }
+        const ids = this.selectedRowIds;
+        if (!ids.length) {
+            alert("No rows selected.");
+            return;
+        }
+        const targets = (this.state.payload.rows || []).filter(
+            (r) => !r._is_ltc_preview && this.state.selected[r.id],
+        );
+        for (const row of targets) {
+            row.max_per_day = n;
+            const upd = this._findOrPushRowUpdate(row);
+            upd.max_per_day = n;
+        }
+        this._markDirty();
+        this.state.bulkAction = "";
+        this.state.bulkMaxDay = "";
+        this.clearSelection();
+    }
+
     applyBulkLtc() {
         const dateIso = this.state.bulkLtcDate;
         if (!dateIso) {
-            alert("Please pick an LTC date in the bulk bar before clicking Go.");
+            alert("Please pick an LTC date before clicking Apply.");
             return;
         }
         const ids = this.selectedRowIds;
@@ -738,7 +816,8 @@ export class MvUnitsGrid extends Component {
         for (const row of targets) {
             this._stageLtc(row, dateIso);
         }
-        // Clear the bulk bar so the planner sees the action completed.
+        // Close the modal, clear bulk state, drop the selection.
+        this.state.bulkAction = "";
         this.state.bulkLtcDate = "";
         this.clearSelection();
     }
@@ -884,6 +963,15 @@ export class MvUnitsGrid extends Component {
         if (!iso) return "";
         const d = new Date(iso + "T00:00:00");
         return (d.getMonth() + 1) + "/" + d.getDate();
+    }
+
+    // Returns a URL that opens the schedule record's form view in a
+    // new browser tab. Used by the eye icon under each Units cell.
+    // Modern Odoo (17+) supports the /odoo/<model>/<id> route; the
+    // /web#... hash format is the fallback for older builds.
+    scheduleOpenUrl(cell) {
+        if (!cell || !cell.sched_id) return "#";
+        return `/odoo/mv.schedules/${cell.sched_id}`;
     }
 }
 

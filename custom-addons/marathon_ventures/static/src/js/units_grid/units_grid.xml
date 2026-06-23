@@ -99,29 +99,99 @@
 
       <div t-if="!state.loaded" class="mv-units-loading">Loading units grid...</div>
 
-      <!-- Bulk LTC bar: visible when 1+ data rows are checked. Lets
-           the planner cancel post-week schedules and split the LTC
-           week across every selected row in one shot. Stages locally;
-           commits only on Save (same as the per-row Section 2). -->
+      <!-- Bulk action bar: visible when 1+ data rows are checked.
+           Houses an Action <select> that opens a modal for the picked
+           bulk operation (LTC or Max/Day). Each option's modal applies
+           the change to every selected row, staged locally - persisted
+           on Save. -->
       <div t-if="hasSelection" class="mv-bulk-ltc-bar">
         <span class="mv-bulk-ltc-bar__count">
           <t t-esc="selectedRowIds.length"/> row(s) selected
         </span>
         <span class="mv-bulk-ltc-bar__field">
-          <span class="mv-bulk-ltc-bar__label">LTC date</span>
-          <input type="date" class="mv-bulk-input mv-bulk-input--date"
-                 t-att-value="state.bulkLtcDate || ''"
-                 t-on-input="(ev) => this.onBulkLtcDateInput(ev)"/>
+          <span class="mv-bulk-ltc-bar__label">Action</span>
+          <select class="mv-bulk-input"
+                  t-on-change="(ev) => this.onBulkActionSelect(ev)">
+            <option value="">Select action -</option>
+            <option value="ltc">LTC</option>
+            <option value="maxday">Max/Day</option>
+          </select>
         </span>
-        <button class="btn btn-primary btn-sm"
-                t-on-click.prevent="applyBulkLtc"
-                title="Apply LTC to every selected row">
-          Go
-        </button>
         <button class="btn btn-light btn-sm"
                 t-on-click.prevent="clearSelection">
           Clear selection
         </button>
+      </div>
+
+      <!-- Bulk LTC modal -->
+      <div t-if="state.bulkAction === 'ltc'"
+           class="mv-confirm-overlay"
+           t-on-click.stop="() => this.cancelBulkAction()">
+        <div class="mv-confirm-dialog"
+             t-on-click.stop="() => {}">
+          <div class="mv-confirm-dialog__title">
+            Apply LTC to <t t-esc="selectedRowIds.length"/> row(s)
+          </div>
+          <div class="mv-confirm-dialog__body">
+            Pick the LTC date:
+            <div style="margin-top: 8px;">
+              <input type="date" class="mv-bulk-input mv-bulk-input--date"
+                     t-att-value="state.bulkLtcDate || ''"
+                     t-on-input="(ev) => this.onBulkLtcDateInput(ev)"/>
+            </div>
+            <br/>
+            <small class="text-muted">
+              Weeks after the LTC week are cancelled and the LTC week
+              itself is split into a new row with truncated days_allowed.
+            </small>
+          </div>
+          <div class="mv-confirm-dialog__footer">
+            <button class="btn btn-light"
+                    t-on-click.stop.prevent="() => this.cancelBulkAction()">
+              Cancel
+            </button>
+            <button class="btn btn-primary"
+                    t-on-click.stop.prevent="() => this.applyBulkLtc()">
+              Apply
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bulk Max/Day modal -->
+      <div t-if="state.bulkAction === 'maxday'"
+           class="mv-confirm-overlay"
+           t-on-click.stop="() => this.cancelBulkAction()">
+        <div class="mv-confirm-dialog"
+             t-on-click.stop="() => {}">
+          <div class="mv-confirm-dialog__title">
+            Set Max/Day on <t t-esc="selectedRowIds.length"/> row(s)
+          </div>
+          <div class="mv-confirm-dialog__body">
+            Enter the Max per Day value:
+            <div style="margin-top: 8px;">
+              <input type="number" step="1" min="0"
+                     class="mv-bulk-input mv-bulk-input--units"
+                     t-att-value="state.bulkMaxDay || ''"
+                     t-on-input="(ev) => this.onBulkMaxDayInput(ev)"/>
+            </div>
+            <br/>
+            <small class="text-muted">
+              On Save, the value is written to every selected Deal Line
+              and propagated to all of its schedules.
+            </small>
+          </div>
+          <div class="mv-confirm-dialog__footer">
+            <button class="btn btn-light"
+                    t-on-click.stop.prevent="() => this.cancelBulkAction()">
+              Cancel
+            </button>
+            <button class="btn btn-primary"
+                    t-on-click.stop.prevent="() => this.confirmBulkMaxDay()">
+              Apply
+            </button>
+          </div>
+        </div>
       </div>
 
       <div t-if="state.loaded and state.payload" class="mv-units-table-scroll">
@@ -209,13 +279,25 @@
                 </span>
               </div>
 
-              <!-- Phase 12: only Rate stays at the row level. Run dates
-                   moved to the deal-level Start Date strip above. -->
+              <!-- Phase 12: Rate at the row level. Run dates moved to the
+                   deal-level Start Date strip above. Max Per Day was added
+                   in Phase 14 - it propagates to every linked schedule on
+                   Save via mv.deal_line.schedule_inherit_vals(). -->
               <div class="mv-daypart-foot">
-                <label class="mv-foot-label">Rate</label>
-                <input type="number" step="0.01" class="mv-foot-input mv-foot-input--rate"
-                       t-att-value="row.rate || 0"
-                       t-on-input="(ev) => this.onRateChange(row, ev)"/>
+                <div class="rate_section">
+                  <label class="mv-foot-label">Rate</label>
+                  <input type="number" step="0.01" class="mv-foot-input mv-foot-input--rate"
+                        t-att-value="row.rate || 0"
+                        t-on-input="(ev) => this.onRateChange(row, ev)"/>
+                </div>
+                <div class="mpd_section">
+                  <label class="mv-foot-label">Max/Day</label>
+                  <input type="number" step="1" min="0"
+                        class="mv-foot-input mv-foot-input--maxday"
+                        t-att-value="row.max_per_day || 0"
+                        t-att-title="'Max spots per day - propagated to every schedule on Save'"
+                        t-on-input="(ev) => this.onMaxPerDayChange(row, ev)"/>
+                </div>
               </div>
             </td>
 
@@ -234,6 +316,18 @@
                    t-att-title="'Cancelled units: ' + cell.cancelled_units">
                 x: 0/<t t-esc="cell.cancelled_units"/>
               </div>
+              <!-- Open-schedule eye icon: only rendered for cells
+                   backed by a real mv.schedules record. Click opens
+                   the schedule's form view in a new browser tab. -->
+              <a t-if="cell.sched_id"
+                 class="mv-cell-eye"
+                 target="_blank"
+                 rel="noopener"
+                 t-att-href="scheduleOpenUrl(cell)"
+                 t-att-title="'Open schedule #' + cell.sched_id + ' in a new tab'"
+                 t-on-click.stop="() => {}">
+                <i class="fa fa-eye"/>
+              </a>
             </td>
 
             <!-- Row total -->
@@ -344,6 +438,7 @@
           <tr t-if="state.payload.rows.length > 0" class="mv-grand-row">
             <td class="mv-row-check-col"></td>
             <td class="mv-grand-cell">
+              <t t-esc="(state.payload.grand_total_spots || 0).toLocaleString()"/> spots total
               <t t-esc="(state.payload.grand_total_spots || 0).toLocaleString()"/> spots total
               <span t-if="(state.payload.grand_total_cancelled || 0) > 0"
                     class="mv-grand-cell__cancelled">

@@ -145,6 +145,7 @@ class MvDealUnitsGridRpc(models.Model):
                 'end_time':   dl.end_time   or False,
                 'days_mask': dl.days_mask(),
                 'rate': dl.rate,
+                'max_per_day': dl.max_per_day or 0,
                 'run_start': dl.run_start.isoformat() if dl.run_start else None,
                 'run_end':   dl.run_end.isoformat()   if dl.run_end   else None,
                 'cells': cells,

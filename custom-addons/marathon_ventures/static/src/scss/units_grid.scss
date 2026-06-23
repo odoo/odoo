@@ -234,6 +234,7 @@
     text-align: center;
     vertical-align: middle;
     border-left: 1px solid #f0f1f3;
+    position: relative;
 }
 .mv-cell-input {
     width: 100%;
@@ -348,6 +349,31 @@
     padding: 1px 5px;
     margin-bottom: 4px;
     font-style: normal;
+}
+
+/* Open-schedule eye icon under a Units cell. Small, faded blue by
+   default; brightens on hover. Anchor target="_blank" so the click
+   opens the schedule in a new tab. */
+.mv-cell-eye {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 2px;
+    font-size: 11px;
+    color: #6b7280;
+    text-decoration: none;
+    line-height: 1.1;
+    cursor: pointer;
+    position: absolute;
+}
+.mv-cell-eye:hover {
+    color: #1d4ed8;
+    text-decoration: none;
+}
+.mv-cell-eye:focus { outline: none; }
+.mv-cell-eye .fa-eye {
+    font-size: 12px;
 }
 
 /* Cancelled-units annotation. The week cell stays editable (input is
@@ -485,6 +511,9 @@
 }
 .mv-foot-input--rate {
     width: 80px;
+}
+.mv-foot-input--maxday {
+    width: 64px;
 }
 .mv-foot-input--date {
     width: 130px;

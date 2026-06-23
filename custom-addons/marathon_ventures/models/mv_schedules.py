@@ -1216,13 +1216,17 @@ class MvSchedules(models.Model):
             # TODO: translate SF formula to Python
             rec.locked_units = False
 
-    @api.depends()
+    @api.depends('days_allowed', 'max_per_day')
     def _compute_max_allowable_units_per_day(self):
         # SF formula (verbatim, may need translation):
         #   (IF(INCLUDES(Days_Allowed__c,'Mon'),1,0) + IF(INCLUDES(Days_Allowed__c,'Tue'),1,0) + IF(INCLUDES(Days_Allowed__c,'Wed'),1,0) + IF(INCLUDES(Days_Allowed__c,'Thu'),1,0) + IF(INCLUDES(Days_Allowed__c,'Fri'),1,0) + IF(INCLUDES(Days_Allowed__c,'Sat'),1,0) + IF(INCLUDES(Days_Allowed__c,'Sun'),1,0)) *  Max_Per_Day__c
+        days_list = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+
         for rec in self:
-            # TODO: translate SF formula to Python
-            rec.max_allowable_units_per_day = False
+            # Count selected days (equivalent to SF INCLUDES sum)
+            days_count = len(rec.days_allowed)
+
+            rec.max_allowable_units_per_day = days_count * (rec.max_per_day or 0)
 
     @api.depends()
     def _compute_militarytime(self):
