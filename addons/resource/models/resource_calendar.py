@@ -73,12 +73,14 @@ class ResourceCalendar(models.Model):
         compute="_compute_hours_per_week", store=True, digits=(10, 5), readonly=False, copy=False)
     is_fulltime = fields.Boolean(compute='_compute_is_fulltime', string="Is Full Time")
     work_resources_count = fields.Integer("Work Resources count", compute='_compute_work_resources_count')
+    employees_count = fields.Integer("Employees count", compute='_compute_work_resources_count')
     work_time_rate = fields.Float(string='Work Time Rate', compute='_compute_work_time_rate', store=True,
         help='Work time rate versus full time working schedule, should be between 0 and 100 %.')
     calendar_type = fields.Selection([
         ('fixed', 'Fixed'),
         ('variable', 'Variable')],
         string='Calendar Type', default='fixed', required=True)
+    is_duplicate_schedule = fields.Boolean(compute='_compute_is_duplicate_schedule')
 
     def _get_attendances_to_unlink(self, next_calendar_type=None):
         """ To retrieve attendances with date, to unlink when the calendar will be/is fixed
@@ -134,6 +136,67 @@ class ResourceCalendar(models.Model):
         calendars._clean_excluded_occurrences()
         calendars._convert_single_occurrence_recurrencies()
 
+    @api.model
+    def create_calendar_copy_with_updates(self, calendar_id, vals):
+        """
+        Create a copy of a calendar, then parse the changes (vals)
+        applies modifications to the new calendar, ensuring that attendance_ids are correctly mapped to the new calendar's attendance records.
+        """
+        calendar = self.browse(calendar_id).exists()
+        if not calendar:
+            return False
+
+        new_calendar = calendar.copy({
+            'name': self.env._("%s (Individual)") % calendar.name
+        })
+
+        attendance_changes = vals.get('attendance_ids', [])
+        commands = []
+
+        if attendance_changes:
+            for command in attendance_changes:
+                if len(command) >= 3:
+                    cmd_type = command[0]
+                    old_line_id = command[1]
+                    line_vals = command[2]
+
+                    # Create a new row
+                    if cmd_type == 0:
+                        commands.append((0, 0, line_vals))
+
+                    # Update an existing row
+                    elif cmd_type == 1:
+                        old_line = self.env['resource.calendar.attendance'].browse(old_line_id)
+                        if old_line.exists():
+                            match_line = new_calendar.attendance_ids.filtered(
+                                lambda l: l.dayofweek == old_line.dayofweek and
+                                          l.duration_hours == old_line.duration_hours and
+                                          l.hour_from == old_line.hour_from and
+                                          l.hour_to == old_line.hour_to
+                            )
+                            if match_line:
+                                commands.append((1, match_line[0].id, line_vals))
+
+                    # Delete a row
+                    elif cmd_type == 2:
+                        old_line = self.env['resource.calendar.attendance'].browse(old_line_id)
+                        if old_line.exists():
+                            match_line = new_calendar.attendance_ids.filtered(
+                                lambda l: l.dayofweek == old_line.dayofweek and
+                                          l.duration_hours == old_line.duration_hours and
+                                          l.hour_from == old_line.hour_from and
+                                          l.hour_to == old_line.hour_to
+                            )
+                            if match_line:
+                                commands.append((2, match_line[0].id, False))
+
+            vals['attendance_ids'] = commands
+
+        if vals:
+            new_calendar.write(vals)
+
+        return new_calendar.id
+
     # --------------------------------------------------
     # Compute Methods
     # --------------------------------------------------
@@ -182,11 +245,16 @@ class ResourceCalendar(models.Model):
 
     def _compute_work_resources_count(self):
         resources_per_calendar = dict(self.env['resource.resource']._read_group(
-            domain=[('calendar_id', 'in', self.ids)],
+            domain=[('calendar_id', 'in', self.ids), ('resource_type', '=', 'material')],
+            groupby=['calendar_id'],
+            aggregates=['__count']))
+        employees_per_calendar = dict(self.env['resource.resource']._read_group(
+            domain=[('calendar_id', 'in', self.ids), ('resource_type', '=', 'user')],
             groupby=['calendar_id'],
             aggregates=['__count']))
         for calendar in self:
             calendar.work_resources_count = resources_per_calendar.get(calendar, 0)
+            calendar.employees_count = employees_per_calendar.get(calendar, 0)
 
     @api.depends('hours_per_week', 'full_time_required_hours')
     def _compute_is_fulltime(self):
@@ -200,6 +268,34 @@ class ResourceCalendar(models.Model):
                 calendar.work_time_rate = calendar.hours_per_week / calendar.full_time_required_hours
             else:
                 calendar.work_time_rate = 1.0
+
+    @api.depends('hours_per_week')
+    def _compute_is_duplicate_schedule(self):
+        """
+        Compute whether there are other schedules with the same hours per week.
+        """
+        self.ensure_one()
+
+        if not self.id or not self.hours_per_week:
+            self.is_duplicate_schedule = False
+        else:
+            duplicates_count = self.search_count([
+                ('id', '!=', self.id),
+                ('hours_per_week', '=', self.hours_per_week),
+                ('company_id', '=', self.company_id.id)
+            ])
+            self.is_duplicate_schedule = duplicates_count > 0
+
+    def action_view_duplicate_schedules(self):
+        self.ensure_one()
+        return {
+            'name': self.env._('Duplicate Working Schedules'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'resource.calendar',
+            'view_mode': 'list,form',
+            'domain': [('hours_per_week', '=', self.hours_per_week)],
+            'target': 'current',
+        }
 
     def is_calendar_referenced(self):
         self.ensure_one()

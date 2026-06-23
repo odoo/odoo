@@ -33,6 +33,16 @@
                                     <span class="o_stat_text">Time Off</span>
                                 </div>
                         </button>
+                        <button name="%(resource_employee_action_from_calendar)d" type="action"
+                                icon="fa-cogs"
+                                class="oe_stat_button"
+                                groups="base.group_user">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">
+                                        <field name="employees_count" string="Employees" widget="statinfo"/>
+                                    </span>
+                                </div>
+                        </button>
                         <button name="%(resource_resource_action_from_calendar)d" type="action"
                                 icon="fa-cogs"
                                 class="oe_stat_button"
@@ -43,6 +53,15 @@
                                     </span>
                                 </div>
                         </button>
+                    </div>
+                    <div class="alert alert-warning text-start o_form_header" 
+                        role="alert" 
+                        invisible="not is_duplicate_schedule">
+                        <span>Some Working Schedules have the same calendar as this one → </span>
+                        <button name="action_view_duplicate_schedules" 
+                                type="object" 
+                                class="btn btn-link p-0 align-baseline fw-bold" 
+                                string="See Working Schedules"/>
                     </div>
                     <group name="resource_header" col="2" class="align-items-end">
                         <group>
@@ -78,6 +97,17 @@
         </field>
     </record>
 
+    <record id="resource_calendar_form_js" model="ir.ui.view">
+        <field name="name">resource.calendar.form.js</field>
+        <field name="model">resource.calendar</field>
+        <field name="inherit_id" ref="resource.resource_calendar_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="js_class">resource_calendar_form</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="view_resource_calendar_tree" model="ir.ui.view">
         <field name="name">resource.calendar.list</field>
         <field name="model">resource.calendar</field>
@@ -87,6 +117,7 @@
                 <field name="hours_per_week" string="Schedule Total Time" optional="hide"/>
                 <field name="work_time_rate" widget="percentage"/>
                 <field name="full_time_required_hours" widget="float_time" optional="hide"/>
+                <field name="employees_count" string="# Employees" optional="hide"/>
                 <field name="work_resources_count" string="# Work Resources" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
             </list>
