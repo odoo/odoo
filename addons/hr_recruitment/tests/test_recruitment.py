@@ -465,6 +465,51 @@ class TestRecruitment(MailCase, TransactionCase):
         applicant.partner_phone = '987654321'
         self.assertEqual(applicant.partner_id.phone, '987654321', "Phone should have been updated on the partner.")
 
+    def test_applicant_override_partner_tracking_values(self):
+        """ Test that when creating an applicant with the same e-mail as an existing partner, we override
+        that partner's name & phone with the applicant's. Furthermore, theses changes should be logged on both
+        the applicant and the partner views
+        """
+        partner = self.env['res.partner'].create({
+            'name': 'A Partner',
+            'email': 'a.partner@example.com',
+            'phone': '123456789',
+        })
+        # This is needed because the _tracking_discard invoked by the partner's create will not be cleared otherwise
+        self.flush_tracking()
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            applicant = self.env['hr.applicant'].create({
+                'partner_name': 'Some Applicant',
+                'email_from': 'a.partner@example.com',
+                'partner_phone': '987654321',
+            })
+            self.flush_tracking()
+
+        self.assertEqual(partner.name, applicant.partner_name)
+        self.assertEqual(partner.phone, applicant.partner_phone)
+
+        self.assertEqual(len(self._new_msgs), 3, "Applicant creation + Partner value tracking x2 (in partner & applicant views)")
+        expected_trackings = [
+            [
+                ('commercial_company_name', 'char', 'A Partner', 'Some Applicant'),
+                ('name', 'char', 'A Partner', 'Some Applicant'),
+                ('phone', 'char', '123456789', '987654321'),
+            ],
+            [
+                ('name', 'char', 'A Partner', 'Some Applicant', {'html_string': 'Name'}),
+                ('phone', 'char', '123456789', '987654321', {'html_string': 'Phone'}),
+            ],
+        ]
+        for msg, record, expected_tracking in zip(self._new_msgs[1:], [partner, applicant], expected_trackings):
+            self.assertMessageFields(msg, {
+                'message_type': 'tracking',
+                'model': record._name,
+                'res_id': record.id,
+                'subtype_id': self.env.ref('mail.mt_note'),
+                'subject': False,
+                'tracking_values': expected_tracking
+            })
+
     def test_stage_email_header_uses_application_label(self):
         recipient = self.env['res.partner'].create({
             'name': 'Recipient',
