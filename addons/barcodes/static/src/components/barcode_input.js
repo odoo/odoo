@@ -1,4 +1,4 @@
-import { Component, onMounted, proxy, signal, props, types } from "@odoo/owl";
+import { Component, onMounted, proxy, signal, props, t } from "@odoo/owl";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { _t } from "@web/core/l10n/translation";
 
@@ -7,9 +7,9 @@ export class BarcodeInput extends Component {
 
     props = props(
         {
-            onSubmit: types.function(),
-            "placeholder?": types.string(),
-            "inputFocus?": types.boolean(),
+            onSubmit: t.function(),
+            placeholder: t.string().optional(),
+            inputFocus: t.boolean().optional(),
         },
         {
             placeholder: _t("Enter a barcode..."),

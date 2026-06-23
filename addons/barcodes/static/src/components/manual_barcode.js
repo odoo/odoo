@@ -1,6 +1,6 @@
 import { BarcodeDialog } from "@web/core/barcode/barcode_dialog";
 import { BarcodeInput } from "./barcode_input";
-import { props, types } from "@odoo/owl";
+import { props, t } from "@odoo/owl";
 
 export class ManualBarcodeScanner extends BarcodeDialog {
     static template = "barcodes.ManualBarcodeScanner";
@@ -11,6 +11,6 @@ export class ManualBarcodeScanner extends BarcodeDialog {
 
     props = props({
         ...BarcodeDialog.props,
-        "placeholder?": types.string(),
+        placeholder: t.string().optional(),
     });
 }

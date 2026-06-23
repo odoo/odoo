@@ -1,4 +1,4 @@
-import { Component, signal, props, proxy, types, useListener } from "@odoo/owl";
+import { Component, signal, props, proxy, t, useListener } from "@odoo/owl";
 import { BarcodeVideoScanner, isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scanner";
 import { BarcodeInput } from "./barcode_input";
 
@@ -9,14 +9,19 @@ export class BarcodeView extends Component {
         BarcodeInput,
     };
 
-    props = props({
-        facingMode: types.selection(["environment", "left", "right", "user"]),
-        onResult: types.function(),
-        onError: types.function(),
-        onInputSubmit: types.function(),
-        "slots?": types.object(),
-        "inputFocus?": types.boolean(),
-    })
+    props = props(
+        {
+            facingMode: t.selection(["environment", "left", "right", "user"]),
+            onResult: t.function(),
+            onError: t.function(),
+            onInputSubmit: t.function(),
+            slots: t.object().optional(),
+            inputFocus: t.boolean().optional(),
+        },
+        {
+            inputFocus: false,
+        }
+    )
 
     setup() {
         this.state = proxy({
