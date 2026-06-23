@@ -838,6 +838,26 @@ class Field[T]:
     # Company-dependent fields
     #
 
+    def write_default_company_dependent(value, column, model, model_id):
+        request = SQL("""
+                UPDATE %(model)s
+                SET %(column)s = jsonb_set(
+                    COALESCE(%(column)s, '{}'::jsonb),
+                    '{default_company_dependent}',
+                    '%(value)s'::jsonb
+                )
+                WHERE id = %(model_id)s;
+                """,
+                column = column,
+                model = model._table_sql,
+                model_id = model_id,
+                value = value,
+            )
+        model._invalidate_cache(['active'], [model_id])
+        model.env.cr.execute(request)
+        model._invalidate_cache(['active'], [model_id])
+        return True
+
     def get_company_dependent_fallback(self, records):
         assert self.company_dependent
         fallback = records.env['ir.default'] \
@@ -1297,10 +1317,11 @@ class Field[T]:
             # e.g SQL('COALESCE(%s->%s') and SQL('to_jsonb(%s))::boolean') as 2 orderby values
             # and concatenated by SQL(',') in the final result, which works in an unexpected way
             sql_field = SQL(
-                "COALESCE(%(column)s->(%(company_id)s::VARCHAR),to_jsonb(%(fallback)s::%(column_type)s))",
+                "COALESCE(%(column)s->(%(company_id)s::VARCHAR),COALESCE(%(column)s->%(default_company_dependent)s,to_jsonb(%(fallback)s::%(column_type)s)))",
                 column=sql_field,
                 company_id=company_id,
                 fallback=fallback,
+                default_company_dependent='default_company_dependent',
                 column_type=self.sql_column_type,
             )
             if self.type in ('boolean', 'integer', 'float', 'monetary'):
