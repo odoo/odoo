@@ -78,7 +78,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         test_partner_write_date = fields.Datetime.to_string(self.test_partner.write_date)
 
         def notifications():
-            message = self.env["mail.message"].search([], order="id desc", limit=1)
+            message = self.env["mail.message"].sudo().search([], order="id desc", limit=1)
             member = self.env["discuss.channel.member"].search([], order="id desc", limit=1)
             return [
                 BusResult(test_group),
