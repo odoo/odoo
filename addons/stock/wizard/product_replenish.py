@@ -151,6 +151,12 @@ class ProductReplenish(models.TransientModel):
             }]
         return False
 
+    def _compute_allowed_route_ids(self):
+        super()._compute_allowed_route_ids()
+        for wizard in self:
+            categ_route_ids = wizard.product_id.route_from_categ_ids
+            wizard.allowed_route_ids = wizard.allowed_route_ids | categ_route_ids
+
     def _get_replenishment_order_notification(self, move):
         link = self._get_replenishment_order_notification_link(move)
         if not link:
