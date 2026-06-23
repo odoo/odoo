@@ -94,4 +94,7 @@ patch(PosOrderline.prototype, {
             this._e_wallet_program_id === orderline._e_wallet_program_id
         );
     },
+    isRefund() {
+        return super.isRefund(...arguments) && !this.is_reward_line;
+    },
 });
