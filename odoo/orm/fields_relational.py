@@ -861,7 +861,13 @@ class _RelationalMulti(_Relational):
                 query = domain.value
                 # XXX only when no overwrites? # no active test?
             else:
-                query = comodel._search(domain, active_test=True, bypass_access=bypass_access)
+                registry = model.env.registry
+                for inverse_field in registry.field_inverses[self]:
+                    # if the inverse is a column, already make sure it's set
+                    # this is usually the case for one2many
+                    if inverse_field.column_type and inverse_field not in comodel.env.registry.not_null_fields:
+                        domain &= Domain(inverse_field.name, '!=', False)
+                query = comodel._search(domain, bypass_access=bypass_access)
             assert isinstance(query, Query)
         elif isinstance(value, Query):
             domain = field_domain.optimize_full(comodel)
