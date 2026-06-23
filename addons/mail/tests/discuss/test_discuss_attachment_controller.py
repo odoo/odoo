@@ -31,17 +31,25 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
         channel = self.env["discuss.channel"].create(
             {"group_public_id": None, "name": "public channel"}
         )
-        self._execute_subtests_delete(self.all_users, token=True, allowed=True, thread=channel)
+        # Only non-internal users should be able to delete with an ownership token
         self._execute_subtests_delete(
-            (self.user_admin, self.user_employee),
-            token=False,
+            (self.guest, self.user_portal, self.user_public),
+            token=True,
             allowed=True,
             thread=channel,
         )
+        # Non-internal users should not be able to delete without an ownership token
         self._execute_subtests_delete(
             (self.guest, self.user_portal, self.user_public),
             token=False,
             allowed=False,
+            thread=channel,
+        )
+        # Standard access rights should be checked for internal users
+        self._execute_subtests_delete(
+            (self.user_admin, self.user_employee),
+            token=False,
+            allowed=True,
             thread=channel,
         )
 
@@ -51,14 +59,23 @@ class TestDiscussAttachmentController(MailControllerAttachmentCommon):
         channel = self.env["discuss.channel"].create(
             {"name": "Private Channel", "channel_type": "group"}
         )
-        self._execute_subtests_delete(self.all_users, token=True, allowed=True, thread=channel)
-        self._execute_subtests_delete(self.user_admin, token=False, allowed=True, thread=channel)
+        # Only non-internal users should be able to delete with an ownership token
+        self._execute_subtests_delete(
+            (self.guest, self.user_portal, self.user_public),
+            token=True,
+            allowed=True,
+            thread=channel
+        )
+        # Non-internal users should not be able to delete without an ownership token
         self._execute_subtests_delete(
             (self.guest, self.user_employee, self.user_portal, self.user_public),
             token=False,
             allowed=False,
             thread=channel,
         )
+        # Standard access rights should be checked for internal users
+        self._execute_subtests_delete(self.user_admin, token=False, allowed=True, thread=channel)
+        self._execute_subtests_delete(self.user_employee, token=False, allowed=False, thread=channel)
 
     def test_first_page_access_of_mail_attachment_pdf(self):
         """Test accessing the first page of a PDF that is encrypted(test_AES.pdf) or has invalid encoding(test_unicode.pdf)."""
