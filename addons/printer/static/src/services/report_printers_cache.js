@@ -31,14 +31,14 @@ registry.category("services").add("report_printers_cache", {
         }
 
         return {
+            get cache() {
+                return cache;
+            },
+
             unCacheReport(reportId) {
                 const updated = { ...cache };
                 delete updated[reportId];
                 writeCache(updated);
-            },
-
-            cacheReportSettings(reportId, settings) {
-                writeCache({ ...cache, [reportId]: settings });
             },
 
             async getPrinterSettingsForReport(reportId) {
@@ -56,7 +56,9 @@ registry.category("services").add("report_printers_cache", {
                 await action.doAction(openDeviceSelectionWizard);
 
                 const uiWasBlocked = ui.isBlocked;
-                if (uiWasBlocked) ui.unblock();
+                if (uiWasBlocked) {
+                    ui.unblock();
+                }
 
                 return new Promise((resolve) => {
                     const onPrinterSelected = ({ detail }) => {
@@ -64,10 +66,12 @@ registry.category("services").add("report_printers_cache", {
 
                         const { deviceSettings: newSettings } = detail;
                         if (newSettings) {
-                            this.cacheReportSettings(reportId, newSettings);
+                            writeCache({ ...cache, [reportId]: newSettings });
                         }
                         bus.removeEventListener("printer-selected", onPrinterSelected);
-                        if (uiWasBlocked) ui.block();
+                        if (uiWasBlocked) {
+                            ui.block();
+                        }
                         resolve(newSettings ?? null);
                     };
                     bus.addEventListener("printer-selected", onPrinterSelected);
