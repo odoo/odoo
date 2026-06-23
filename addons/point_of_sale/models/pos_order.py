@@ -1746,7 +1746,7 @@ class PosOrderLine(models.Model):
             account = fiscal_position.map_account(account)
 
         is_refund_order = float_compare(line.order_id.amount_total, 0, precision_rounding=self.order_id.currency_id.rounding) < 0.0
-        is_refund_line = line.qty * line.price_unit < 0
+        is_refund_line = line.isRefund()
 
         product_name = line.product_id \
             .with_context(lang=line.order_id.partner_id.lang or self.env.user.lang) \
@@ -1793,6 +1793,8 @@ class PosOrderLine(models.Model):
         original_price = self.tax_ids_after_fiscal_position.compute_all(self.price_unit, self.currency_id, self.qty, product=self.product_id, partner=self.order_id.partner_id)['total_included']
         return original_price - self.price_subtotal_incl
 
+    def isRefund(self):
+        return self.qty * self.price_unit < 0
 
 class PosOrderLineLot(models.Model):
     _name = "pos.pack.operation.lot"

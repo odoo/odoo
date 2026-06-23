@@ -27,3 +27,6 @@ class PosOrderLine(models.Model):
         params = super()._load_pos_data_fields(config_id)
         params += ['is_reward_line', 'reward_id', 'reward_identifier_code', 'points_cost', 'coupon_id']
         return params
+
+    def isRefund(self):
+        return super().isRefund() and not self.is_reward_line
