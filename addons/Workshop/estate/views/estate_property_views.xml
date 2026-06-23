@@ -28,14 +28,29 @@
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
             <kanban>
-                <templates>
+                <field name="best_price"/>
+                <field name="selling_price"/>
+                <field name="state"/>
+                <template>
                     <t t-name="card">
                         <field name="name"/>
                         <field name="expected_price"/>
                         <field name="tag_ids" widget="many2many_tags"/>
+                
+                        <t t-if ="record.state.raw_value == 'offer_accepted'">
+                            <div>
+                                <span> Best Offer </span>
+                                <field name="best_price" />
+                            </div>
+                        </t>
+                        <t t-if ="record.state.raw_value == 'offer_accepted' or record.state.raw_value == 'sold'">
+                            <div>
+                                <span> Selling Price </span>
+                                <field name="selling_price" />
+                            </div>
+                        </t>
                     </t>
-                </templates>
-            
+                </template>
             </kanban>
         </field>
     </record>
