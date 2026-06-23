@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { Component, props, proxy, t } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
 
@@ -34,16 +34,16 @@ export class FormStatusIndicator extends Component {
 
     setup() {
         this.saveButton = useRef("save");
-        useLayoutEffect(
-            () => {
-                if (!this.props.isNew && this.indicatorMode === "invalid") {
-                    this.saveButton.el.setAttribute("disabled", "1");
-                } else {
-                    this.saveButton.el.removeAttribute("disabled");
-                }
-            },
-            () => [this.props.isValid, this.props.isDirty]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         if (!this.props.isNew && this.indicatorMode === "invalid") {
+        //             this.saveButton.el.setAttribute("disabled", "1");
+        //         } else {
+        //             this.saveButton.el.removeAttribute("disabled");
+        //         }
+        //     },
+        //     () => [this.props.isValid, this.props.isDirty]
+        // );
     }
 
     get displayButtons() {
