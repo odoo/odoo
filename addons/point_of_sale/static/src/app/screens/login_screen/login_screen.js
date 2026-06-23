@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { Component, useState } from "@odoo/owl";
+import { Component, useState, onMounted } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useTime } from "@point_of_sale/app/utils/time_hook";
 import { _t } from "@web/core/l10n/translation";
@@ -14,6 +14,9 @@ export class LoginScreen extends Component {
         this.dialog = useService("dialog");
         this.ui = useState(useService("ui"));
         this.time = useTime();
+        onMounted(async () => {
+            await this.pos.checkClockDrift();
+        });
     }
 
     openRegister() {

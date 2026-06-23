@@ -155,17 +155,18 @@ class PosSession(models.Model):
 
     def _load_pos_data(self, data):
         domain = self._load_pos_data_domain(data)
-        fields = self._load_pos_data_fields(self.config_id.id)
-        data = self.search_read(domain, fields, load=False, limit=1)
+        session_fields = self._load_pos_data_fields(self.config_id.id)
+        data = self.search_read(domain, session_fields, load=False, limit=1)
         data[0]['_partner_commercial_fields'] = self.env['res.partner']._commercial_fields()
         data[0]['_server_version'] = exp_version()
         data[0]['_base_url'] = self.get_base_url()
+        data[0]['_server_time'] = fields.Datetime.now().isoformat()
         data[0]['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
         data[0]['_has_available_products'] = self._pos_has_valid_product()
         data[0]['_pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
         return {
             'data': data,
-            'fields': fields
+            'fields': session_fields
         }
 
     def load_data(self, models_to_load, only_data=False):

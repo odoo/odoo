@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="point_of_sale.ClockWarningPopup">
+        <Dialog size="'md'">
+            <t t-set-slot="header">
+                <h4 class="modal-title text-break">Device Clock Mismatch</h4>
+            </t>
+
+            <p class="mb-3">
+                Your device clock differs from the server by
+                <strong t-esc="formattedDrift"/>.
+                If you continue, all order and payment timestamps will be recorded
+                using the device clock and will be incorrect.
+            </p>
+
+            <div class="mb-3">
+                <div class="d-flex justify-content-between py-1 border-bottom">
+                    <span class="text-muted">Current device time</span>
+                    <strong class="font-monospace">
+                        <t t-esc="time.date"/> <t t-esc="time.hours"/>
+                        <span class="text-muted ms-1 small" t-esc="timezone"/>
+                    </strong>
+                </div>
+                <div class="d-flex justify-content-between py-1">
+                    <span class="text-muted">Difference from server</span>
+                    <strong class="font-monospace" t-esc="formattedDrift"/>
+                </div>
+            </div>
+
+            <div class="alert alert-warning mb-3" role="alert">
+                <strong>Consequences of continuing:</strong>
+                <ul class="mb-0 mt-1">
+                    <li>Order and payment dates will be wrong in all reports</li>
+                    <li>Daily sales totals may appear in the wrong accounting period</li>
+                    <li>Receipts will show an incorrect date and time</li>
+                </ul>
+            </div>
+
+            <p class="text-muted small mb-0">
+                To fix this, close the Point of Sale, correct the date, time, and
+                time zone in your device settings, then reopen.
+            </p>
+
+            <t t-set-slot="footer">
+                <button class="button btn btn-primary" t-on-click="continueAnyway">
+                    Continue Anyway
+                </button>
+                <button class="button btn btn-secondary" t-on-click="cancel">
+                    Fix Device Clock
+                </button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

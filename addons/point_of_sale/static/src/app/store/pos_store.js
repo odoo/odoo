@@ -19,6 +19,7 @@ import { ConnectionLostError } from "@web/core/network/rpc";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
 import { _t } from "@web/core/l10n/translation";
 import { OpeningControlPopup } from "@point_of_sale/app/store/opening_control_popup/opening_control_popup";
+import { ClockWarningPopup } from "@point_of_sale/app/store/clock_warning_popup/clock_warning_popup";
 import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
@@ -557,6 +558,7 @@ export class PosStore extends Reactive {
     }
 
     async afterProcessServerData() {
+        this._captureClockDrift();
         const paidUnsyncedOrderIds = this.models["pos.order"]
             .filter((order) => order.isUnsyncedPaid)
             .map((order) => order.id);
@@ -588,6 +590,40 @@ export class PosStore extends Reactive {
                 this.config.access_token,
                 this.config.id
             );
+        }
+    }
+
+    _captureClockDrift() {
+        const serverTimeStr = this.session._server_time;
+        if (!serverTimeStr) {
+            return;
+        }
+        const serverTime = DateTime.fromISO(serverTimeStr, { zone: "utc" });
+        const driftMinutes = Math.abs(serverTime.diff(DateTime.now(), "minutes").minutes);
+        this._clockDriftData = { driftMinutes };
+    }
+
+    async checkClockDrift() {
+        if (this._clockDriftChecked) {
+            return;
+        }
+        this._clockDriftChecked = true;
+
+        const data = this._clockDriftData;
+        if (!data || data.driftMinutes < 5) {
+            return;
+        }
+
+        const confirmed = await new Promise((resolve) => {
+            this.dialog.add(ClockWarningPopup, {
+                driftMinutes: data.driftMinutes,
+                onContinue: () => resolve(true),
+                onCancel: () => resolve(false),
+            });
+        });
+
+        if (!confirmed) {
+            window.location.href = "/odoo/point-of-sale";
         }
     }
 
