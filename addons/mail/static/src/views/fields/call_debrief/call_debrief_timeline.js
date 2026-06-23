@@ -61,12 +61,55 @@ export class CallDebriefTimeline extends Component {
         return `left: clamp(${minOffset}px, ${percentage}%, calc(100% - ${minOffset}px));`;
     }
 
-    _stylePositionMediaSegment(media) {
-        if (!this.props.totalDuration || !media || !media.duration) {
+    /**
+     * Converts the list of actual audio segments into a complete list for the timeline
+     * by injecting "silence" gaps where no audio is playing.
+     *
+     * To lay out the timeline using Flexbox, we need actual DOM elements to fill the empty
+     * space (silence). This lets us keep the main audio engine clean (it only worries about
+     * playing real audio) while the timeline gets the elements it needs to draw the spaces.
+     */
+    get timelineSegments() {
+        const timelineSegments = [];
+        const mediaSegments = this.props.mediaSegments || [];
+        const totalDuration = this.props.totalDuration || 0;
+        let previousMediaSegEnd = 0;
+
+        const silentSegment = (start, end) => ({
+            isSilence: true,
+            startSec: start,
+            endSec: end,
+            duration: end - start,
+        });
+
+        // Inject silence in all gaps BEFORE medias
+        // START|--GAP--|--MEDIA--|--GAP--|--MEDIA--|--LAST GAP--|END
+        for (const segment of mediaSegments) {
+            const mediaSegStart = segment.startSec || 0;
+            if (previousMediaSegEnd < mediaSegStart) {
+                timelineSegments.push(silentSegment(previousMediaSegEnd, mediaSegStart));
+            }
+            timelineSegments.push({
+                ...segment,
+                isSilence: false,
+            });
+            previousMediaSegEnd = segment.endSec || mediaSegStart;
+        }
+
+        // Capture LAST GAP
+        if (totalDuration > previousMediaSegEnd) {
+            timelineSegments.push(silentSegment(previousMediaSegEnd, totalDuration));
+        }
+
+        return timelineSegments;
+    }
+
+    _styleSegment(segment) {
+        if (!this.props.totalDuration || !segment || !segment.duration) {
             return `left: 0%; width: 0%;`;
         }
-        const start = media.startSec || 0;
-        const width = Math.min(100, (media.duration / this.props.totalDuration) * 100);
+        const start = segment.startSec || 0;
+        const width = Math.min(100, (segment.duration / this.props.totalDuration) * 100);
         const left = (start / this.props.totalDuration) * 100;
         return `left: ${left}%; width: ${width}%;`;
     }
