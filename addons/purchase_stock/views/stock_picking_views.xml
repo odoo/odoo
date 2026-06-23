@@ -16,6 +16,17 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"></field>
         <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_purchase_order"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-credit-card"
+                        invisible="not purchase_id">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">Purchase Order</span>
+                    </div>
+                </button>
+            </xpath>
             <xpath expr="//button[@name='action_return']" position="attributes">
                 <attribute name="invisible">not show_return or not (state == 'done' or purchase_id)</attribute>
             </xpath>

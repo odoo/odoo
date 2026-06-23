@@ -309,6 +309,17 @@ class StockPicking(models.Model):
 
         return return_picking
 
+    def action_view_sale_order(self):
+        self.ensure_one()
+        if self.sale_id:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'sale.order',
+                'res_id': self.sale_id.id,
+                'view_mode': 'form',
+            }
+        return False
+
     def _log_less_quantities_than_expected(self, moves):
         """ Log an activity on sale order that are linked to moves. The
         note summarize the real processed quantity and promote a
