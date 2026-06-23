@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="account.AccountDashboardKpis">
+        <div
+            t-if="this.state.cards.length and this.state.isVisible"
+            class="o_account_dashboard_kpis_wrapper"
+        >
+            <div class="o_account_dashboard_kpis">
+                <AccountDashboardKpiCard
+                    t-foreach="this.state.cards"
+                    t-as="card"
+                    t-key="card.id"
+                    card="card"
+                    onClick.bind="this.onClickCard"
+                />
+            </div>
+
+            <button
+                type="button"
+                class="btn-close o_account_dashboard_kpis_close"
+                title="Close"
+                aria-label="Close"
+                t-on-click="this.hideKpis"
+            />
+        </div>
+    </t>
+
+</templates>

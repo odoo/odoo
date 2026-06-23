@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="account.AccountDashboardKpiCard">
+        <button
+            type="button"
+            class="o_card o_account_dashboard_kpi_card btn text-start"
+            t-att-disabled="!this.props.card.action_id"
+            t-on-click="this.onClick"
+        >
+            <span class="o_account_dashboard_kpi_content">
+                <span class="o_account_dashboard_kpi_name" t-out="this.props.card.name"/>
+                <span
+                    t-if="this.props.card.has_total"
+                    class="o_account_dashboard_kpi_value"
+                    t-out="this.props.card.value"
+                />
+            </span>
+
+            <span t-if="this.props.card.values" class="o_account_dashboard_kpi_values">
+                <span
+                    t-foreach="this.props.card.values"
+                    t-as="value"
+                    t-key="value.label"
+                    class="o_account_dashboard_kpi_value_item"
+                >
+                    <span class="o_account_dashboard_kpi_value_label" t-out="value.label"/>
+                    <span class="o_account_dashboard_kpi_value_amount" t-out="value.value"/>
+                </span>
+            </span>
+        </button>
+    </t>
+
+</templates>

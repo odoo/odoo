@@ -7,6 +7,10 @@
             <attribute name="t-on-drop.prevent">this.kanbanDragDrop</attribute>
             <attribute name="t-on-dragover.prevent">() => {}</attribute>
         </xpath>
+
+        <xpath expr="//div[@t-ref='this.rootRef']/t[1]" position="before">
+            <AccountDashboardKpis/>
+        </xpath>
     </t>
 
 </templates>

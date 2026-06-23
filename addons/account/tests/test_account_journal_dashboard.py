@@ -1,3 +1,5 @@
+import json
+
 from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
@@ -203,6 +205,110 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
         dashboard_data = default_journal_sale._get_journal_dashboard_data_batched()[default_journal_sale.id]
         self.assertEqual(format_amount(self.env, 55, company_currency), dashboard_data['sum_waiting'])
         self.assertEqual(format_amount(self.env, 55, company_currency), dashboard_data['sum_late'])
+
+    @freeze_time("2026-07-15")
+    def test_sale_purchase_graph_monthly_paid_unpaid_values(self):
+        sale_journal = self.company_data['default_journal_sale']
+        purchase_journal = self.company_data['default_journal_purchase']
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'journal_id': sale_journal.id,
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2026-07-10',
+            'date': '2026-07-10',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'quantity': 1,
+                'price_unit': 100,
+                'tax_ids': [],
+            })],
+        })
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'journal_id': purchase_journal.id,
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2026-07-10',
+            'date': '2026-07-10',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'quantity': 1,
+                'price_unit': 200,
+                'tax_ids': [],
+            })],
+        })
+        (invoice + bill).action_post()
+
+        customer_payment_move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'journal_id': self.company_data['default_journal_misc'].id,
+            'date': '2026-07-10',
+            'line_ids': [
+                Command.create({
+                    'account_id': self.company_data['default_account_receivable'].id,
+                    'partner_id': self.partner_a.id,
+                    'credit': 25,
+                }),
+                Command.create({
+                    'account_id': self.company_data['default_account_assets'].id,
+                    'debit': 25,
+                }),
+            ],
+        })
+        customer_payment_move.action_post()
+        (invoice + customer_payment_move).line_ids.filtered_domain([
+            ('account_id', '=', self.company_data['default_account_receivable'].id),
+        ]).reconcile()
+
+        supplier_payment_move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'journal_id': self.company_data['default_journal_misc'].id,
+            'date': '2026-07-10',
+            'line_ids': [
+                Command.create({
+                    'account_id': self.company_data['default_account_payable'].id,
+                    'partner_id': self.partner_a.id,
+                    'debit': 50,
+                }),
+                Command.create({
+                    'account_id': self.company_data['default_account_assets'].id,
+                    'credit': 50,
+                }),
+            ],
+        })
+        supplier_payment_move.action_post()
+        (bill + supplier_payment_move).line_ids.filtered_domain([
+            ('account_id', '=', self.company_data['default_account_payable'].id),
+        ]).reconcile()
+
+        self.env['account.move'].flush_model(['amount_total_signed', 'amount_residual_signed'])
+        graph_data = (sale_journal + purchase_journal)._get_sale_purchase_graph_data()
+        sale_graph = graph_data[sale_journal.id][0]
+        purchase_graph = graph_data[purchase_journal.id][0]
+
+        self.assertEqual(sale_graph['type'], 'monthly_paid_unpaid')
+        self.assertEqual(purchase_graph['type'], 'monthly_paid_unpaid')
+        self.assertNotIn('is_sample_data', sale_graph)
+        self.assertNotIn('is_sample_data', purchase_graph)
+
+        self.assertEqual(sale_graph['paid_values'][-1], 25)
+        self.assertEqual(sale_graph['unpaid_values'][-1], 75)
+        self.assertEqual(purchase_graph['paid_values'][-1], 50)
+        self.assertEqual(purchase_graph['unpaid_values'][-1], 150)
+
+    def test_disable_dashboard_graph_skips_sale_purchase_graph(self):
+        sale_journal = self.company_data['default_journal_sale']
+
+        sale_journal.disable_dashboard_graph = True
+        sale_journal._kanban_dashboard_graph()
+
+        self.assertFalse(sale_journal.kanban_dashboard_graph)
+
+        sale_journal.disable_dashboard_graph = False
+        sale_journal._kanban_dashboard_graph()
+
+        graph_data = json.loads(sale_journal.kanban_dashboard_graph)
+        self.assertEqual(graph_data[0]['type'], 'monthly_paid_unpaid')
 
     @freeze_time("2023-03-15")
     def test_purchase_journal_numbers_and_sums(self):

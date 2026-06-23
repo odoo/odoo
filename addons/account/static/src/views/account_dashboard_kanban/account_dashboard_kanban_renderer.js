@@ -1,6 +1,7 @@
 import { proxy } from "@odoo/owl";
 import { useSubEnv } from "@web/owl2/utils";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
+import { AccountDashboardKpis } from "@account/components/account_dashboard_kpis/account_dashboard_kpis";
 import { DashboardKanbanRecord } from "./account_dashboard_kanban_record";
 
 
@@ -9,6 +10,7 @@ export class DashboardKanbanRenderer extends KanbanRenderer {
     static components = {
         ...KanbanRenderer.components,
         KanbanRecord: DashboardKanbanRecord,
+        AccountDashboardKpis,
     };
 
     setup() {
