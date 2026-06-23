@@ -27,7 +27,13 @@ const stepSchema = {
     trigger: t.string(),
     id: t.string().optional(),
     isActive: t.array(t.string()).optional(),
-    run: t.or([t.string(), t.function(), t.boolean()]).optional(),
+    run: t
+        .customValidator(
+            t.or([t.string(), t.function()]),
+            (fn) => typeof fn === "string" || !/\{\s*\}$/.test(fn.toString().trim()),
+            "run must be a string or a non-empty function"
+        )
+        .optional(),
 };
 
 const stepSchemaAuto = {
@@ -178,8 +184,8 @@ export class TourService {
                     typeof tour.steps === "function"
                         ? tour.steps()
                         : Array.isArray(tour.steps)
-                          ? tour.steps
-                          : [],
+                        ? tour.steps
+                        : [],
             };
         }
         // Automatic tour (come from registry)

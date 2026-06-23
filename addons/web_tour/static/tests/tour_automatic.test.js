@@ -134,11 +134,6 @@ test("Step Tour validity", async () => {
         "received": "[Known object]",
         "path": "run",
         "message": "value is not a function"
-      },
-      {
-        "received": "[Known object]",
-        "path": "run",
-        "message": "value is not a boolean"
       }
     ]
   }
@@ -225,6 +220,34 @@ test("a failing tour logs the step that failed in run", async () => {
         ].join("\n"),
     ];
     expect.verifySteps(expectedError);
+});
+
+test("empty run function is rejected", async () => {
+    patchWithCleanup(console, {
+        error: (msg) => expect.step(msg),
+    });
+    tourRegistry.add("tour_reject_empty_run", {
+        steps: () => [
+            { trigger: "button", run: () => {} },
+            { trigger: "button", run: function () {} },
+            { trigger: "button", run() {} },
+        ],
+    });
+    const expectedError = `Error in schema for TourStep\n${JSON.stringify(
+        [
+            {
+                received: "run",
+                path: "run",
+                message: "run must be a string or a non-empty function",
+            },
+        ],
+        null,
+        2
+    )}`;
+    await makeMockEnv({});
+    await getService("tour_service").startTour("tour_reject_empty_run");
+    await animationFrame();
+    expect.verifySteps([expectedError, expectedError, expectedError]);
 });
 
 test("a failing tour with disabled element", async () => {
