@@ -61,6 +61,8 @@ describe("custom selection", () => {
         expect(overlayColorTDs[1]).not.toBe("none");
         expect(overlayColorTDs[2]).not.toBe("none");
     });
+
+    test.tags("desktop");
     test("should not deselect cells while resizing table", async () => {
         const content = unformat(`
             <table class="table table-bordered o_table">
@@ -90,27 +92,27 @@ describe("custom selection", () => {
         const clientX = cellRect.right;
         const clientY = cellRect.top + cellRect.height / 2;
 
-        // Simulate mousemove at the right border of first cell.
-        await manuallyDispatchProgrammaticEvent(firstTd, "mousemove", {
+        // Simulate pointermove at the right border of first cell.
+        await manuallyDispatchProgrammaticEvent(firstTd, "pointermove", {
             detail: 1,
             clientX,
             clientY,
         });
 
-        // Simulate mousedown at the right border of first cell.
-        await manuallyDispatchProgrammaticEvent(firstTd, "mousedown", {
+        // Simulate pointerdown at the right border of first cell.
+        await manuallyDispatchProgrammaticEvent(firstTd, "pointerdown", {
             detail: 1,
             clientX,
             clientY,
         });
 
-        // Simulate mousemove to resize cell.
-        manuallyDispatchProgrammaticEvent(firstTd, "mousemove", {
+        // Simulate pointermove to resize cell.
+        manuallyDispatchProgrammaticEvent(firstTd, "pointermove", {
             detail: 1,
             clientX: clientX + 100,
             clientY,
         });
-        manuallyDispatchProgrammaticEvent(firstTd, "mouseup", {
+        manuallyDispatchProgrammaticEvent(firstTd, "pointerup", {
             detail: 1,
             clientX: clientX + 100,
             clientY,
