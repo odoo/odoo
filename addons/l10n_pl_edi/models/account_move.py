@@ -450,6 +450,13 @@ class AccountMove(models.Model):
             'target': '_blank',
         }
 
+    def action_l10n_pl_edi_import_from_ksef(self):
+        self.env['account.move']._l10n_pl_edi_download_bills_from_ksef()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+        }
+
     def _cron_l10n_pl_edi_check_invoice_status(self):
         """get all moves that are in state sent run action_update_invoice_status on all of them"""
         for move in self.env['account.move'].search([('l10n_pl_edi_status', '=', 'sent')]):
