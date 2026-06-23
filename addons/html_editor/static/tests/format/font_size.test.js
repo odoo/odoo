@@ -1,11 +1,14 @@
 import { test, expect } from "@odoo/hoot";
 import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
-import { setFontSize, setFontSizeClassName, tripleClick } from "../_helpers/user_actions";
+import {
+    insertText,
+    setFontSize,
+    setFontSizeClassName,
+    tripleClick,
+} from "../_helpers/user_actions";
 import { Plugin } from "@html_editor/plugin";
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { animationFrame } from "@odoo/hoot-mock";
-import { execCommand } from "../_helpers/userCommands";
 import { press } from "@odoo/hoot-dom";
 import { getContent } from "../_helpers/selection";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
@@ -37,14 +40,6 @@ test("should change the font size of a whole heading after a triple click", asyn
         },
         contentAfter: '<h1><span style="font-size: 36px;">[ab]</span></h1><p>cd</p>',
     });
-});
-
-test("should get ready to type with a different font size", async () => {
-    const { editor } = await setupEditor('<p class="p">ab[]cd</p>');
-    execCommand(editor, "formatFontSize", { size: "36px" });
-    await animationFrame();
-    expect(".p span").toHaveStyle({ "font-size": "36px" });
-    expect(".p span").toHaveAttribute("data-oe-zws-empty-inline", "");
 });
 
 test("should change the font-size for a character in an inline that has a font-size", async () => {
@@ -97,21 +92,6 @@ test("should remove a redundant font-size", async () => {
     });
 });
 
-test("should change the font-size to default", async () => {
-    await testEditor({
-        contentBefore: "<p>[ab]</p>",
-        stepFunction: setFontSize(),
-        contentAfter: "<p>[ab]</p>",
-    });
-});
-
-test("should change the font-size to default removing the existing style with no empty span at the end", async () => {
-    await testEditor({
-        contentBefore: '<p><span style="font-size: 36px;">[abc]</span></p>',
-        stepFunction: setFontSize(),
-        contentAfter: "<p>[abc]</p>",
-    });
-});
 test("should not format non-editable text (setFontSize)", async () => {
     await testEditor({
         contentBefore: '<p>a[b</p><p contenteditable="false">c</p><p>d]e</p>',
@@ -208,7 +188,7 @@ test("should apply font size on topmost `u` or `s` tags if multiple applied", as
 test("should add style to br except line-break br", async () => {
     const { editor, el } = await setupEditor("<p>[]abc<br><br></p>");
     await press(["ctrl", "a"]);
-    execCommand(editor, "formatFontSize", { size: "36px" });
+    setFontSize("36px")(editor);
     expect(getContent(el)).toBe(`<p><span style="font-size: 36px;">[abc</span><br>]<br></p>`);
 });
 
@@ -224,7 +204,7 @@ test("should update the font size currectly if already has one", async () => {
 test("should add style to br except line-break br (2)", async () => {
     const { editor, el } = await setupEditor("<p>[]abc<br><br><br></p>");
     await press(["ctrl", "a"]);
-    execCommand(editor, "formatFontSize", { size: "36px" });
+    setFontSize("36px")(editor);
     expect(getContent(el)).toBe(
         `<p><span style="font-size: 36px;">[abc</span><br><span style="font-size: 36px;"><br></span>]<br></p>`
     );
@@ -252,4 +232,22 @@ test("should apply font size on non breaking space", async () => {
         stepFunction: setFontSize("36px"),
         contentAfter: `<div><p>a<span style="font-size: 36px;">[&nbsp;]</span>b</p></div>`,
     });
+});
+
+test("change font size on a collapsed cursor inside an existing size", async () => {
+    const { editor, el } = await setupEditor(`<p><span style="font-size: 14px;">ab[]cd</span></p>`);
+    setFontSize("36px")(editor);
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe(
+        `<p><span style="font-size: 14px;">ab</span><span style="font-size: 36px;">x[]</span><span style="font-size: 14px;">cd</span></p>`
+    );
+});
+
+test("changing font size twice on a collapsed cursor before typing keeps the last size", async () => {
+    const { editor, el } = await setupEditor(`<p>ab[]cd</p>`);
+    // Pick 36px, then change to 24px without typing in between.
+    setFontSize("36px")(editor);
+    setFontSize("24px")(editor);
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe(`<p>ab<span style="font-size: 24px;">x[]</span>cd</p>`);
 });

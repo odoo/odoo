@@ -26,7 +26,9 @@ describe("alert snippet availability in powerbox", () => {
 });
 
 test("should not unwrap s_blockquote when inserting it in unbreakable inline element", async () => {
-    const { getEditor } = await setupWebsiteBuilder(`<span class="oe_unbreakable">ab</span>`);
+    const { getEditor } = await setupWebsiteBuilder(
+        `<p><span class="oe_unbreakable">ab</span></p>`
+    );
     setSelection({ anchorNode: queryOne(":iframe span"), anchorOffset: 0 });
     execCommand(getEditor(), "s_blockquote");
     expect(":iframe span .s_blockquote").toHaveCount(0);

@@ -516,6 +516,20 @@ describe("makeSavePoint", () => {
         redo(editor);
         expect(getContent(el)).toBe(`<p>ab[]</p>`);
     });
+    test("makeSavePoint restores a selection invalidated by the reverted mutations", async () => {
+        const { el, editor } = await setupEditor(`<p>abc</p>`);
+        setSelection({
+            anchorNode: el.firstChild,
+            anchorOffset: 0,
+            focusNode: el.firstChild,
+            focusOffset: 1,
+        });
+        editor.shared.selection.stageSelection();
+        const restore = editor.shared.history.makeSavePoint();
+        editor.shared.format.requestFormat("underline", { applyStyle: true, commit: false });
+        restore();
+        expect(getContent(el)).toBe(`<p>[abc]</p>`);
+    });
 });
 
 describe("makePreviewableOperation", () => {

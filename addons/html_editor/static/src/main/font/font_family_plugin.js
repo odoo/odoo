@@ -3,6 +3,7 @@ import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { FontFamilySelector } from "@html_editor/main/font/font_family_selector";
 import { closestElement } from "../../utils/dom_traversal";
+import { removeStyle } from "@html_editor/utils/formatting";
 import { READ, withSequence } from "@html_editor/utils/resource";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { isStylable } from "@html_editor/utils/dom_info";
@@ -35,6 +36,20 @@ export class FontFamilyPlugin extends Plugin {
     fontFamily = proxy({ displayName: defaultFontFamily.nameShort });
     /** @type {import("plugins").EditorResources} */
     resources = {
+        format_specs: [
+            {
+                id: "fontFamily",
+                isFormatted: (node) => !!closestElement(node, (el) => el.style["font-family"]),
+                hasStyle: (node) => node.style && node.style["font-family"],
+                addStyle: (node, props) => {
+                    removeStyle(node, "font-family");
+                    if (props.fontFamily) {
+                        node.style["font-family"] = props.fontFamily;
+                    }
+                },
+                removeStyle: (node) => removeStyle(node, "font-family"),
+            },
+        ],
         toolbar_items: [
             withSequence(15, {
                 id: "font-family",
@@ -46,7 +61,7 @@ export class FontFamilyPlugin extends Plugin {
                     currentFontFamily: this.fontFamily,
                     focusEditable: () => this.dependencies.selection.focusEditable(),
                     onSelected: (item) => {
-                        this.dependencies.format.formatSelection("fontFamily", {
+                        this.dependencies.format.requestFormat("fontFamily", {
                             applyStyle: item.fontFamily !== false,
                             formatProps: item,
                         });

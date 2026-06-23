@@ -4,64 +4,76 @@ import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { Plugin } from "../plugin";
 import { closestBlock, isBlock } from "../utils/blocks";
-import { cleanTextNode, fillEmpty, removeClass, splitTextNode, unwrapContents } from "../utils/dom";
+import { cleanTextNode, fillEmpty, splitTextNode, unwrapContents } from "../utils/dom";
 import {
     hasPseudoElementContent,
     hasSameClasses,
     hasSameStyleAttributes,
-    hasVisibleContent,
+    isBold,
     isContentEditable,
     isElement,
+    isEmpty,
     isEmptyBlock,
-    isEmptyTextNode,
+    isItalic,
     isPhrasingContent,
     isSelfClosingElement,
-    isStylable,
+    isStrikeThrough,
     isTextNode,
-    isVisible,
+    isUnderline,
     isVisibleTextNode,
-    isZwnbsp,
     isZWS,
+    paragraphRelatedElementsSelector,
     previousLeaf,
-    PROTECTED_QWEB_SELECTOR,
 } from "../utils/dom_info";
-import { isFakeLineBreak } from "../utils/dom_state";
 import {
     childNodes,
     closestElement,
     descendants,
-    findFurthest,
+    findUpTo,
     selectElements,
 } from "../utils/dom_traversal";
-import { formatsSpecs, FORMATTABLE_TAGS } from "../utils/formatting";
+import { FORMATTABLE_TAGS, removeStyle } from "../utils/formatting";
 import { boundariesIn, leftPos, rightPos } from "../utils/position";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 
 const allWhitespaceRegex = /^[\s\u200b]*$/;
 const NOT_A_NUMBER = /[^\d]/g;
 
-function isFormatted(formatPlugin, format) {
-    return (sel, nodes) => formatPlugin.isSelectionFormat(format, nodes);
-}
-
 /**
  * @typedef {Object} FormatShared
- * @property { FormatPlugin['isSelectionFormat'] } isSelectionFormat
- * @property { FormatPlugin['insertAndSelectZws'] } insertAndSelectZws
+ * @property { FormatPlugin['canFormatContent'] } canFormatContent
+ * @property { FormatPlugin['getOrCreateZws'] } getOrCreateZws
  * @property { FormatPlugin['mergeAdjacentInlines'] } mergeAdjacentInlines
- * @property { FormatPlugin['formatSelection'] } formatSelection
+ * @property { FormatPlugin['removeSelectionFormats'] } removeSelectionFormats
+ * @property { FormatPlugin['requestFormat'] } requestFormat
  */
 
 /**
- * @typedef {((formatName: string, options: {
- *      formatProps: object,
- *      applyStyle: boolean,
- * }) => void | boolean)[]} format_selection_overrides
+ * @typedef {Object} FormatSpec
+ * @property {string} id
+ * @property {string} [tagName]
+ * @property {(node: Node, formatProps?: object) => boolean} isFormatted
+ * @property {(node: Node) => boolean} [isTag]
+ * @property {(node: Node) => boolean} hasStyle
+ * @property {(node: Node, formatProps?: object) => void} addStyle
+ * @property {(node: Node) => void} [addNeutralStyle]
+ * @property {(node: Node) => void} removeStyle
+ */
+
+/**
+ * @typedef {FormatSpec[]} format_specs
+ * @typedef {(() => void)[]} before_format_handlers
  * @typedef {(() => void)[]} on_all_formats_removed_handlers
+ * @typedef {(() => void)[]} on_format_requested_handlers
+ * @typedef {(() => void)[]} on_collapsed_formats_removed_handlers
+ * @typedef {((node: Node, formatName: string, applyStyle: boolean) => void)[]} on_format_applied_handlers
  * @typedef {((root: Node) => void)[]} on_will_merge_adjacent_siblings_handlers
  * @typedef {((root: Node) => void)[]} on_merged_adjacent_siblings_handlers
  *
+ * @typedef {((node: Node, formatName: string, options: { applyStyle: boolean, formatProps: object }) => Node | undefined)[]} formattable_node_providers
+ * @typedef {((selection: EditorSelection) => boolean | undefined)[]} can_format_content_predicates
  * @typedef {((className: string) => boolean | undefined)[]} is_format_class_predicates
+ * @typedef {((node: Node) => boolean | undefined)[]} is_formattable_node_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} has_format_predicates
  *
  * @typedef {(({
@@ -78,11 +90,11 @@ export class FormatPlugin extends Plugin {
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing mergeAdjacentInlines.
     static shared = [
         "areSimilarElements",
-        "isSelectionFormat",
-        "insertAndSelectZws",
+        "canFormatContent",
+        "getOrCreateZws",
         "mergeAdjacentInlines",
-        "formatSelection",
-        "removeFormats",
+        "removeSelectionFormats",
+        "requestFormat",
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -91,46 +103,28 @@ export class FormatPlugin extends Plugin {
                 id: "formatBold",
                 description: _t("Toggle bold"),
                 icon: "fa-bold",
-                run: this.formatSelection.bind(this, "bold"),
+                run: this.requestFormat.bind(this, "bold"),
                 isAvailable: this.canFormatContent.bind(this),
             },
             {
                 id: "formatItalic",
                 description: _t("Toggle italic"),
                 icon: "fa-italic",
-                run: this.formatSelection.bind(this, "italic"),
+                run: this.requestFormat.bind(this, "italic"),
                 isAvailable: this.canFormatContent.bind(this),
             },
             {
                 id: "formatUnderline",
                 description: _t("Toggle underline"),
                 icon: "fa-underline",
-                run: this.formatSelection.bind(this, "underline"),
+                run: this.requestFormat.bind(this, "underline"),
                 isAvailable: this.canFormatContent.bind(this),
             },
             {
                 id: "formatStrikethrough",
                 description: _t("Toggle strikethrough"),
                 icon: "fa-strikethrough",
-                run: this.formatSelection.bind(this, "strikeThrough"),
-                isAvailable: this.canFormatContent.bind(this),
-            },
-            {
-                id: "formatFontSize",
-                run: ({ size }) =>
-                    this.formatSelection("fontSize", {
-                        applyStyle: true,
-                        formatProps: { size },
-                    }),
-                isAvailable: this.canFormatContent.bind(this),
-            },
-            {
-                id: "formatFontSizeClassName",
-                run: ({ className }) =>
-                    this.formatSelection("setFontSizeClassName", {
-                        applyStyle: true,
-                        formatProps: { className },
-                    }),
+                run: this.requestFormat.bind(this, "strikeThrough"),
                 isAvailable: this.canFormatContent.bind(this),
             },
             {
@@ -159,8 +153,8 @@ export class FormatPlugin extends Plugin {
                 groupId: "decoration",
                 namespaces: ["compact", "expanded"],
                 commandId: "formatBold",
-                isActive: isFormatted(this, "bold"),
-                isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
+                isActive: () =>
+                    this.activeFormats["bold"]?.applyStyle ?? this.isFormatActive("bold"),
             },
             {
                 id: "italic",
@@ -168,8 +162,8 @@ export class FormatPlugin extends Plugin {
                 groupId: "decoration",
                 namespaces: ["compact", "expanded"],
                 commandId: "formatItalic",
-                isActive: isFormatted(this, "italic"),
-                isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
+                isActive: () =>
+                    this.activeFormats["italic"]?.applyStyle ?? this.isFormatActive("italic"),
             },
             {
                 id: "underline",
@@ -177,30 +171,92 @@ export class FormatPlugin extends Plugin {
                 groupId: "decoration",
                 namespaces: ["compact", "expanded"],
                 commandId: "formatUnderline",
-                isActive: isFormatted(this, "underline"),
-                isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
+                isActive: () =>
+                    this.activeFormats["underline"]?.applyStyle ?? this.isFormatActive("underline"),
             },
             {
                 id: "strikethrough",
                 description: _t("Strikethrough (Ctrl + 5)"),
                 groupId: "decoration",
                 commandId: "formatStrikethrough",
-                isActive: isFormatted(this, "strikeThrough"),
-                isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
+                isActive: () =>
+                    this.activeFormats["strikeThrough"]?.applyStyle ??
+                    this.isFormatActive("strikeThrough"),
             },
             withSequence(20, {
                 id: "remove_format",
                 groupId: "decoration",
                 commandId: "removeFormat",
-                isDisabled: (sel, nodes) =>
-                    !this.hasAnyFormat(nodes) || nodes.some((node) => !isStylable(node)),
+                isDisabled: (sel, nodes) => !this.hasAnyFormat(nodes),
             }),
+        ],
+        format_specs: [
+            {
+                id: "italic",
+                tagName: "em",
+                isFormatted: isItalic,
+                isTag: (node) => ["EM", "I"].includes(node.tagName),
+                hasStyle: (node) => Boolean(node.style && node.style["font-style"]),
+                addStyle: (node) => (node.style["font-style"] = "italic"),
+                addNeutralStyle: (node) => (node.style["font-style"] = "normal"),
+                removeStyle: (node) => removeStyle(node, "font-style"),
+            },
+            {
+                id: "bold",
+                tagName: "strong",
+                isFormatted: isBold,
+                isTag: (node) => ["STRONG", "B"].includes(node.tagName),
+                hasStyle: (node) => Boolean(node.style && node.style["font-weight"]),
+                addStyle: (node) => (node.style["font-weight"] = "bolder"),
+                addNeutralStyle: (node) => {
+                    node.style["font-weight"] = "normal";
+                },
+                removeStyle: (node) => removeStyle(node, "font-weight"),
+            },
+            {
+                id: "underline",
+                tagName: "u",
+                isFormatted: isUnderline,
+                isTag: (node) => node.tagName === "U",
+                hasStyle: (node) =>
+                    node.style &&
+                    (node.style["text-decoration"].includes("underline") ||
+                        node.style["text-decoration-line"].includes("underline")),
+                addStyle: (node) => (node.style["text-decoration-line"] += " underline"),
+                removeStyle: (node) =>
+                    removeStyle(
+                        node,
+                        node.style["text-decoration"].includes("underline")
+                            ? "text-decoration"
+                            : "text-decoration-line",
+                        "underline"
+                    ),
+            },
+            {
+                id: "strikeThrough",
+                tagName: "s",
+                isFormatted: isStrikeThrough,
+                isTag: (node) => node.tagName === "S",
+                hasStyle: (node) =>
+                    node.style &&
+                    (node.style["text-decoration"].includes("line-through") ||
+                        node.style["text-decoration-line"].includes("line-through")),
+                addStyle: (node) => (node.style["text-decoration-line"] += " line-through"),
+                removeStyle: (node) =>
+                    removeStyle(
+                        node,
+                        node.style["text-decoration"].includes("line-through")
+                            ? "text-decoration"
+                            : "text-decoration-line",
+                        "line-through"
+                    ),
+            },
         ],
         /** Handlers */
         on_beforeinput_handlers: withSequence(20, this.onBeforeInput.bind(this)),
-        on_selectionchange_handlers: this.removeEmptyInlineElement.bind(this),
-        on_will_set_tag_handlers: this.removeFontSizeFormat.bind(this),
-        before_insert_processors: this.unwrapEmptyFormat.bind(this),
+        on_selectionchange_handlers: this.clearPendingFormats.bind(this),
+        before_insert_handlers: this.beforeInsert.bind(this),
+        on_deleted_handlers: this.convertEmptyFormatToPendingIntent.bind(this),
 
         /** Processors */
         clean_for_save_processors: this.cleanForSave.bind(this),
@@ -214,75 +270,144 @@ export class FormatPlugin extends Plugin {
         },
     };
 
+    setup() {
+        this.activeFormats = {};
+        this.formatSpecs = this.getResource("format_specs");
+    }
+
+    getFormatSpec(formatName) {
+        return this.formatSpecs.find((spec) => spec.id === formatName);
+    }
+
     /**
-     * @param {string[]} formats
-     * @param {Node[]} targetedNodes
+     * Remove formats from the current selection, toggling each off via
+     * requestFormat.
+     *
+     * @param {string[]} [formatNames] formats to remove (defaults to all)
      */
-    removeFormats(formats, targetedNodes) {
-        const editableTargetedNodes = targetedNodes.filter(
-            this.dependencies.selection.isNodeEditable
-        );
-        for (const format of formats) {
-            if (
-                !formatsSpecs[format].removeStyle ||
-                !this.hasSelectionFormat(format, editableTargetedNodes)
-            ) {
-                continue;
+    removeSelectionFormats(formatNames = this.formatSpecs.map((spec) => spec.id)) {
+        for (const formatName of formatNames) {
+            if (this.getFormatSpec(formatName).removeStyle && this.hasFormat(formatName)) {
+                this.requestFormat(formatName, { applyStyle: false, commit: false });
             }
-            this.formatSelection(format, { applyStyle: false, removeFormat: true });
         }
     }
 
-    unwrapEmptyFormat(insertedNode) {
-        const anchorNode = this.dependencies.selection.getEditableSelection().anchorNode;
-        if (!allWhitespaceRegex.test(insertedNode.textContent)) {
-            return insertedNode;
+    /**
+     * When a delete leaves the cursor inside an empty styled inline, convert
+     * that inline back into a pending format intent ({@link activeFormats}) so
+     * the format survives for the next typed character.
+     */
+    convertEmptyFormatToPendingIntent() {
+        const selection = this.dependencies.selection.getEditableSelection();
+        const anchorNode = selection.anchorNode;
+        let element = closestElement(anchorNode);
+        if (!isZWS(element) || !isPhrasingContent(element)) {
+            return;
         }
-        const emptyZWS = closestElement(anchorNode, "[data-oe-zws-empty-inline]");
-        if (
-            !emptyZWS ||
-            !emptyZWS.parentElement.isContentEditable ||
-            this.dependencies.delete.isUnremovable(emptyZWS)
+        const cursor = this.dependencies.selection.preserveSelection();
+        while (
+            (isZWS(element) || isEmpty(element)) &&
+            isPhrasingContent(element) &&
+            !this.dependencies.delete.isUnremovable(element)
         ) {
-            return insertedNode;
+            const spec = this.formatSpecs.find(
+                (spec) => spec.isTag?.(element) || spec.hasStyle?.(element)
+            );
+            if (!spec) {
+                break;
+            }
+            const parent = element.parentElement;
+            const restore = prepareUpdate(...leftPos(anchorNode), ...rightPos(anchorNode));
+            removeFormat(element, spec, cursor);
+            this.activeFormats[spec.id] = { applyStyle: true };
+            if (
+                element.isConnected &&
+                element.getAttributeNames().length === 1 &&
+                element.hasAttribute("data-oe-zws-empty-inline")
+            ) {
+                cursor.update(callbacksForCursorUpdate.remove(element));
+                element.remove();
+            }
+            restore();
+            element = parent;
+            // Delete is a special case: it triggers a selectionchange, which
+            // would normally discard pending format intents (see
+            // clearPendingFormats). Here we have just recorded one from the
+            // emptied inline, so we skip that next clear to preserve it.
+            this.skipNextFormatClear = true;
         }
-        const cursors = this.dependencies.selection.preserveSelection();
-        cursors.update(callbacksForCursorUpdate.remove(emptyZWS));
-        emptyZWS.remove();
-        cursors.restore();
-        return insertedNode;
+        cursor.restore();
     }
 
+    /**
+     * Remove every removable format from the selection.
+     *
+     * For a non-collapsed selection the formats are stripped from the DOM
+     * immediately. For a collapsed selection it discards any pending format
+     * intents and records a pending removal for each active format, applied to
+     * the next typed character (see {@link applyPendingFormats}).
+     */
     removeAllFormats() {
+        const sel = this.dependencies.selection.getEditableSelection();
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
-        this.removeFormats(Object.keys(formatsSpecs), targetedNodes);
+        if (sel.isCollapsed) {
+            this.activeFormats = {}; // discard pending "apply" intents
+            for (const spec of this.formatSpecs) {
+                if (spec.removeStyle && this.hasFormat(spec.id, targetedNodes)) {
+                    this.activeFormats[spec.id] = { applyStyle: false };
+                }
+            }
+            this.trigger("on_collapsed_formats_removed_handlers");
+            return;
+        }
+        this.removeSelectionFormats();
         this.trigger("on_all_formats_removed_handlers");
         this.dependencies.history.commit();
     }
 
-    removeFontSizeFormat({ block }) {
-        for (const node of [block, ...descendants(block)]) {
-            removeFormat(node, formatsSpecs.fontSize);
-            removeFormat(node, formatsSpecs.setFontSizeClassName);
-        }
+    /**
+     * Filters a set of nodes down to those that can carry inline formatting.
+     *
+     * @param {Node[]} [targetedNodes]
+     * @returns {Node[]} Subset of targetedNodes that are formattable.
+     */
+    getFormattableNodes(targetedNodes = this.dependencies.selection.getTargetedNodes()) {
+        const systemNodesSelector = this.getResource("system_node_selectors").join(", ");
+        return targetedNodes.filter((node) => {
+            const predicatesResult = this.checkPredicates("is_formattable_node_predicates", node);
+            if (predicatesResult !== undefined) {
+                return predicatesResult;
+            }
+            if (systemNodesSelector && closestElement(node, systemNodesSelector)) {
+                return false;
+            }
+            if (!this.dependencies.selection.isNodeEditable(node)) {
+                return false;
+            }
+            if (isTextNode(node)) {
+                return isVisibleTextNode(node) || isZWS(node);
+            }
+            if (node.nodeName === "BR") {
+                const prevLeaf = previousLeaf(node, closestBlock(node));
+                return !prevLeaf || prevLeaf.nodeName === "BR";
+            }
+            return false;
+        });
     }
 
     /**
-     * Return true if the current selection on the editable contains a formated
+     * Return true if the current selection on the editable contains a formatted
      * node
      *
      * @param {String} format 'bold'|'italic'|'underline'|'strikeThrough'|'switchDirection'
      * @param {Node[]} [targetedNodes]
      * @returns {boolean}
      */
-    hasSelectionFormat(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
-        const targetedTextNodes = targetedNodes.filter(
-            (node) =>
-                node.matches?.(PROTECTED_QWEB_SELECTOR) ||
-                (isTextNode(node) && (isVisibleTextNode(node) || isZWS(node)))
-        );
-        const isFormatted = formatsSpecs[format].isFormatted;
-        return targetedTextNodes.some((n) => isFormatted(n, { editable: this.editable }));
+    hasFormat(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
+        const nodes = this.getFormattableNodes(targetedNodes);
+        const isFormatted = this.getFormatSpec(format).isFormatted;
+        return nodes.some((n) => isFormatted(n, { editable: this.editable }));
     }
     /**
      * Return true if the current selection on the editable appears as the given
@@ -293,37 +418,28 @@ export class FormatPlugin extends Plugin {
      * @param {Node[]} [targetedNodes]
      * @returns {boolean}
      */
-    isSelectionFormat(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
-        const isFormatted = formatsSpecs[format].isFormatted;
-        const isNonFormattedWhiteSpaces = (node) =>
-            /^(\s|\n)+$/.test(node.nodeValue) && !isFormatted(node, { editable: this.editable });
-        const targetedTextNodes = targetedNodes.filter(
-            (node) =>
-                isTextNode(node) &&
-                !isNonFormattedWhiteSpaces(node) &&
-                this.dependencies.selection.isNodeEditable(node) &&
-                (this.checkPredicates("is_formattable_node_predicates", node) ?? true)
-        );
-        return (
-            targetedTextNodes.length &&
-            targetedTextNodes.every(
-                (node) =>
-                    isZwnbsp(node) ||
-                    isEmptyTextNode(node) ||
-                    isFormatted(node, { editable: this.editable })
-            )
-        );
+    isFormatActive(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
+        const isFormatted = this.getFormatSpec(format).isFormatted;
+        let hasFormatted = false;
+        for (const node of this.getFormattableNodes(targetedNodes)) {
+            if (isFormatted(node, { editable: this.editable })) {
+                hasFormatted = true;
+            } else if (!/^\s+$/.test(node.nodeValue)) {
+                // If the node is not formatted and contains some non-whitespace
+                // character, the format can't be active.
+                return false;
+            }
+            // unformatted whitespace, skip.
+        }
+        return hasFormatted;
     }
 
     hasAnyFormat(targetedNodes) {
         const editableTargetedNodes = targetedNodes.filter(
             this.dependencies.selection.isNodeEditable
         );
-        for (const format of Object.keys(formatsSpecs)) {
-            if (
-                formatsSpecs[format].removeStyle &&
-                this.hasSelectionFormat(format, editableTargetedNodes)
-            ) {
+        for (const spec of this.formatSpecs) {
+            if (spec.removeStyle && this.hasFormat(spec.id, editableTargetedNodes)) {
                 return true;
             }
         }
@@ -332,210 +448,223 @@ export class FormatPlugin extends Plugin {
         );
     }
 
-    formatSelection(formatName, options) {
-        if (this._formatSelection(formatName, options) && !options?.removeFormat) {
+    /**
+     * Toggle or set a format on the current selection.
+     *
+     * For a non-collapsed selection, the format is applied immediately to the
+     * DOM via {@link formatSelection}.
+     *
+     * For a collapsed selection, nothing is mutated: the intent is recorded in
+     * {@link activeFormats} and applied lazily the next time the user types
+     * or a programmatic insert happens (see {@link applyPendingFormats}).
+     *
+     * @param {string} formatName
+     * @param {Object} [options]
+     * @param {boolean} [options.applyStyle]
+     * @param {Object} [options.formatProps]
+     */
+    requestFormat(formatName, options) {
+        const sel = this.dependencies.selection.getEditableSelection();
+        if (!sel.isCollapsed) {
+            this.formatSelection(formatName, options);
+            return;
+        }
+        const domActive = this.isFormatActive(formatName);
+        const pending = this.activeFormats[formatName];
+        if (options?.applyStyle === undefined && pending?.applyStyle === !domActive) {
+            delete this.activeFormats[formatName];
+        } else {
+            this.activeFormats[formatName] = {
+                applyStyle: options?.applyStyle ?? !(pending?.applyStyle ?? domActive),
+                formatProps: options?.formatProps,
+            };
+        }
+        this.trigger("on_format_requested_handlers");
+    }
+
+    formatSelection(formatName, { applyStyle, formatProps, commit = true } = {}) {
+        this.dependencies.selection.selectAroundNonEditable();
+        const selection = this.dependencies.split.splitSelection();
+        if (typeof applyStyle === "undefined") {
+            applyStyle = !this.isFormatActive(formatName);
+        }
+        this.trigger("before_format_handlers");
+        const cursor = this.dependencies.selection.preserveSelection();
+        let targetedNodes = this.dependencies.selection.getTargetedNodes();
+        if (!selection.isCollapsed && isEmptyBlock(selection.endContainer)) {
+            targetedNodes = [
+                ...targetedNodes,
+                selection.endContainer,
+                ...descendants(selection.endContainer),
+            ];
+        }
+
+        const formatSpec = this.getFormatSpec(formatName);
+        const unformattedNodes = [
+            ...new Set(
+                this.getFormattableNodes(targetedNodes).flatMap((node) => {
+                    let target;
+                    for (const provider of this.getResource("formattable_node_providers")) {
+                        target = provider(node, formatName, { applyStyle, formatProps });
+                        if (target) {
+                            break;
+                        }
+                    }
+                    if (
+                        target &&
+                        (this.checkPredicates("is_formattable_node_predicates", target) ?? true) &&
+                        // Format can only be applied to block if it can
+                        // be neutralized.
+                        (!isBlock(target) || formatSpec.addNeutralStyle)
+                    ) {
+                        return [target];
+                    }
+                    const block = closestElement(node, paragraphRelatedElementsSelector);
+                    if (
+                        block &&
+                        // we only allow to remove style from
+                        // paragraphRelatedElements not apply.
+                        !applyStyle &&
+                        isContentEditable(block) &&
+                        (this.dependencies.selection.areNodeContentsFullySelected(block) ||
+                            (selection.isCollapsed && isEmptyBlock(block)))
+                    ) {
+                        return [block];
+                    }
+                    return [node];
+                })
+            ),
+        ];
+
+        for (const node of unformattedNodes) {
+            if (isTextNode(node) || node.nodeName === "BR") {
+                const { inlineAncestor, parentNode } = this.splitInlineAncestors(node, {
+                    formatName,
+                    cursor,
+                });
+                const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
+                if (firstBlockOrClassHasFormat && !applyStyle) {
+                    formatSpec.addNeutralStyle &&
+                        formatSpec.addNeutralStyle(getOrCreateSpan(node, inlineAncestor, cursor));
+                } else if (!firstBlockOrClassHasFormat && applyStyle) {
+                    const tag =
+                        formatSpec.tagName && this.document.createElement(formatSpec.tagName);
+                    if (tag) {
+                        cursor.update(callbacksForCursorUpdate.after(node, tag));
+                        node.after(tag);
+                        cursor.update(callbacksForCursorUpdate.append(tag, node));
+                        tag.append(node);
+
+                        if (!formatSpec.isFormatted(tag, formatProps)) {
+                            cursor.update(callbacksForCursorUpdate.unwrap(tag));
+                            unwrapContents(tag);
+                            formatSpec.addStyle(
+                                getOrCreateSpan(node, inlineAncestor, cursor),
+                                formatProps
+                            );
+                        }
+                    } else {
+                        formatSpec.addStyle(
+                            getOrCreateSpan(node, inlineAncestor, cursor),
+                            formatProps
+                        );
+                    }
+                }
+            } else {
+                const nodesToUnformat = descendants(node).filter((n) => {
+                    if (!isElement(n)) {
+                        return false;
+                    }
+                    const block =
+                        closestElement(n, "LI") ??
+                        closestElement(n, paragraphRelatedElementsSelector);
+                    return block === node;
+                });
+                for (const n of [node, ...nodesToUnformat]) {
+                    removeFormat(n, formatSpec, cursor);
+                }
+                if (applyStyle && !formatSpec.isFormatted(node, formatProps)) {
+                    formatSpec.addStyle(node, formatProps);
+                } else if (
+                    !applyStyle &&
+                    formatSpec.isFormatted(node, formatProps) &&
+                    formatSpec.addNeutralStyle
+                ) {
+                    formatSpec.addNeutralStyle(node);
+                }
+            }
+            this.trigger("on_format_applied_handlers", node, formatName, applyStyle);
+        }
+
+        cursor.restore();
+        if (
+            unformattedNodes.length === 1 &&
+            unformattedNodes[0] &&
+            isTextNode(unformattedNodes[0]) &&
+            unformattedNodes[0].textContent === "\u200B"
+        ) {
+            const [anchorNode, anchorOffset, focusNode, focusOffset] = [
+                ...leftPos(unformattedNodes[0]),
+                ...rightPos(unformattedNodes[0]),
+            ];
+            this.dependencies.selection.setSelection({
+                anchorNode,
+                anchorOffset,
+                focusNode,
+                focusOffset,
+            });
+        }
+        if (commit) {
             this.dependencies.history.commit();
         }
     }
 
-    // @todo phoenix: refactor this method.
-    _formatSelection(formatName, { applyStyle, formatProps } = {}) {
-        const deepSelection = this.dependencies.selection.getSelectionData().deepEditableSelection;
-        const anchorElement = deepSelection.anchorNode;
-        const focusElement = deepSelection.focusNode;
-        if (
-            anchorElement === focusElement &&
-            !isContentEditable(anchorElement) &&
-            !closestElement(anchorElement, PROTECTED_QWEB_SELECTOR)
-        ) {
-            return;
-        }
-        this.dependencies.selection.selectAroundNonEditable();
-        // note: does it work if selection is in opposite direction?
-        const selection = this.dependencies.split.splitSelection();
-        if (typeof applyStyle === "undefined") {
-            applyStyle = !this.isSelectionFormat(formatName);
-        }
+    splitInlineAncestors(node, { formatName, cursor }) {
+        let inlineAncestor;
+        /** @type { Node } */
+        let currentNode = node;
+        let parentNode = node.parentElement;
+        const formatSpec = this.getFormatSpec(formatName);
 
-        const formattedNodes = new Set();
-        if (
-            this.delegateTo("format_selection_overrides", formatName, formattedNodes, {
-                applyStyle,
-                formatProps,
-            })
-        ) {
-            return;
-        }
+        // Remove the format on all inline ancestors until a block or an element
+        // with a class that is not indicated as splittable.
+        const isClassListSplittable = (classList) =>
+            [...classList].every(
+                (className) =>
+                    this.checkPredicates("is_format_class_predicates", className) ?? false
+            );
 
-        let zws;
-        if (selection.isCollapsed) {
-            if (isTextNode(selection.anchorNode) && selection.anchorNode.textContent === "\u200b") {
-                zws = selection.anchorNode;
-                this.dependencies.selection.setSelection({
-                    anchorNode: zws,
-                    anchorOffset: 0,
-                    focusNode: zws,
-                    focusOffset: 1,
-                });
-            } else {
-                zws = this.insertAndSelectZws();
-            }
-        }
+        while (parentNode && !isBlock(parentNode)) {
+            const splittable =
+                (!this.dependencies.split.isUnsplittable(parentNode) ||
+                    parentNode.dataset.textEffect) &&
+                (parentNode.classList.length === 0 || isClassListSplittable(parentNode.classList));
 
-        const cursor = this.dependencies.selection.preserveSelection();
-        const systemNodesSelector = this.getResource("system_node_selectors").join(", ");
-        const selectedTextNodes = /** @type { Text[] } **/ (
-            this.dependencies.selection
-                .getTargetedNodes()
-                .filter(
-                    (n) =>
-                        (!systemNodesSelector || !closestElement(n, systemNodesSelector)) &&
-                        this.dependencies.selection.areNodeContentsFullySelected(n) &&
-                        ((isTextNode(n) && (isVisibleTextNode(n) || isZWS(n))) ||
-                            (n.nodeName === "BR" &&
-                                (isFakeLineBreak(n) ||
-                                    previousLeaf(n, closestBlock(n))?.nodeName === "BR"))) &&
-                        isContentEditable(n)
-                )
-        );
-        const unformattedTextNodes = selectedTextNodes.filter(
-            (n) =>
-                !formattedNodes.has(n) &&
-                (this.checkPredicates("is_formattable_node_predicates", n) ?? true)
-        );
-        const formatSpec = formatsSpecs[formatName];
-        for (const node of unformattedTextNodes) {
-            const inlineAncestors = [];
-            /** @type { Node } */
-            let currentNode = node;
-            let parentNode = node.parentElement;
-
-            // Remove the format on all inline ancestors until a block or an element
-            // with a class that is not indicated as splittable.
-            const isClassListSplittable = (classList) =>
-                [...classList].every(
-                    (className) =>
-                        this.checkPredicates("is_format_class_predicates", className) ?? false
+            if (splittable) {
+                const newLastAncestorInlineFormat = this.dependencies.split.splitAroundUntil(
+                    currentNode,
+                    parentNode
                 );
-
-            // Special case: if the parent node is unsplittable and fully selected,
-            // we should make sure the span is applied outside of it.
-            if (
-                parentNode &&
-                !isBlock(parentNode) &&
+                removeFormat(newLastAncestorInlineFormat, formatSpec, cursor);
+                if (newLastAncestorInlineFormat.isConnected) {
+                    inlineAncestor = newLastAncestorInlineFormat;
+                    currentNode = newLastAncestorInlineFormat;
+                }
+                parentNode = currentNode.parentElement;
+            } else if (
                 this.dependencies.split.isUnsplittable(parentNode) &&
                 this.dependencies.selection.areNodeContentsFullySelected(parentNode)
             ) {
-                inlineAncestors.push(parentNode);
-            }
-
-            while (
-                parentNode &&
-                !isBlock(parentNode) &&
-                (!this.dependencies.split.isUnsplittable(parentNode) ||
-                    parentNode.dataset.textEffect) &&
-                (parentNode.classList.length === 0 || isClassListSplittable(parentNode.classList))
-            ) {
-                const isUselessZws =
-                    parentNode.tagName === "SPAN" &&
-                    parentNode.hasAttribute("data-oe-zws-empty-inline") &&
-                    parentNode.getAttributeNames().length === 1;
-
-                if (isUselessZws) {
-                    cursor.update(callbacksForCursorUpdate.unwrap(parentNode));
-                    unwrapContents(parentNode);
-                } else {
-                    const newLastAncestorInlineFormat = this.dependencies.split.splitAroundUntil(
-                        currentNode,
-                        parentNode
-                    );
-                    removeFormat(newLastAncestorInlineFormat, formatSpec, cursor);
-                    if (["setFontSizeClassName", "fontSize"].includes(formatName) && applyStyle) {
-                        removeClass(newLastAncestorInlineFormat, "o_default_font_size");
-                    }
-                    if (newLastAncestorInlineFormat.isConnected) {
-                        inlineAncestors.push(newLastAncestorInlineFormat);
-                        currentNode = newLastAncestorInlineFormat;
-                    }
-                }
-
-                parentNode = currentNode.parentElement;
-            }
-
-            const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
-            if (firstBlockOrClassHasFormat && !applyStyle) {
-                const isParentNodeBlockAndCompletelySelected =
-                    isBlock(parentNode) &&
-                    this.dependencies.selection.areNodeContentsFullySelected(parentNode);
-                if (
-                    isParentNodeBlockAndCompletelySelected &&
-                    formatName === "setFontSizeClassName"
-                ) {
-                    for (const node of [parentNode, ...descendants(parentNode).filter(isElement)]) {
-                        removeFormat(node, formatSpec, cursor);
-                    }
-                } else {
-                    formatSpec.addNeutralStyle &&
-                        formatSpec.addNeutralStyle(getOrCreateSpan(node, inlineAncestors, cursor));
-                }
-            } else if (
-                (!firstBlockOrClassHasFormat || parentNode.nodeName === "LI") &&
-                applyStyle
-            ) {
-                const tag = formatSpec.tagName && this.document.createElement(formatSpec.tagName);
-                if (tag) {
-                    cursor.update(callbacksForCursorUpdate.after(node, tag));
-                    node.after(tag);
-                    cursor.update(callbacksForCursorUpdate.append(tag, node));
-                    tag.append(node);
-
-                    if (!formatSpec.isFormatted(tag, formatProps)) {
-                        cursor.remapNode(tag, node);
-                        tag.after(node);
-                        tag.remove();
-                        formatSpec.addStyle(
-                            getOrCreateSpan(node, inlineAncestors, cursor),
-                            formatProps
-                        );
-                    }
-                } else if (formatName !== "fontSize" || formatProps.size !== undefined) {
-                    formatSpec.addStyle(
-                        getOrCreateSpan(node, inlineAncestors, cursor),
-                        formatProps
-                    );
-                }
-            }
-        }
-
-        if (zws) {
-            const siblings = [...zws.parentElement.childNodes];
-            if (
-                !isBlock(zws.parentElement) &&
-                unformattedTextNodes.includes(siblings[0]) &&
-                unformattedTextNodes.includes(siblings[siblings.length - 1])
-            ) {
-                zws.parentElement.setAttribute("data-oe-zws-empty-inline", "");
+                // Special case: if the parent node is unsplittable and
+                // fully selected, we should make sure the span is applied
+                // outside of it.
+                inlineAncestor = parentNode;
+                break;
             } else {
-                const span = this.document.createElement("span");
-                span.setAttribute("data-oe-zws-empty-inline", "");
-                cursor.update(callbacksForCursorUpdate.before(zws, span));
-                zws.before(span);
-                cursor.update(callbacksForCursorUpdate.append(span, zws));
-                span.append(zws);
+                break;
             }
         }
-        cursor.restore();
-        if (
-            unformattedTextNodes.length === 1 &&
-            unformattedTextNodes[0] &&
-            unformattedTextNodes[0].textContent === "\u200B"
-        ) {
-            this.dependencies.selection.setCursorEnd(unformattedTextNodes[0]);
-            // To ensure history step is added when overrides apply formatting.
-            // @see formatSelection
-            return !!formattedNodes.size;
-        }
-        return true;
+        return { inlineAncestor, parentNode };
     }
 
     normalize(root) {
@@ -575,32 +704,6 @@ export class FormatPlugin extends Plugin {
             }
         }
         this.mergeAdjacentInlines(root, { preserveSelection });
-    }
-
-    removeEmptyInlineElement(selectionData) {
-        const { anchorNode } = selectionData.editableSelection;
-        const blockEl = closestBlock(anchorNode);
-        if (!blockEl) {
-            return;
-        }
-        const inlineElement = findFurthest(
-            closestElement(anchorNode),
-            blockEl,
-            (e) => isPhrasingContent(e) && !isVisible(e) && !hasVisibleContent(e)
-        );
-        if (
-            this.lastEmptyInlineElement?.isConnected &&
-            this.lastEmptyInlineElement !== inlineElement
-        ) {
-            // Remove last empty inline element.
-            this.cleanElement(this.lastEmptyInlineElement, { preserveSelection: true });
-        }
-        // Skip if current block is empty.
-        if (inlineElement && !isEmptyBlock(blockEl)) {
-            this.lastEmptyInlineElement = inlineElement;
-        } else {
-            this.lastEmptyInlineElement = null;
-        }
     }
 
     cleanElement(element, { preserveSelection }) {
@@ -668,15 +771,58 @@ export class FormatPlugin extends Plugin {
     /**
      * Use the actual selection (assumed to be collapsed) and insert a
      * zero-width space at its anchor point. Then, select that zero-width
-     * space.
+     * space. If a zero-width space already exists at the anchor point,
+     * it's returned instead.
      *
      * @returns {Node} the inserted zero-width space
      */
-    insertAndSelectZws() {
+    getOrCreateZws() {
         const selection = this.dependencies.selection.getEditableSelection();
+        if (
+            selection.anchorNode.nodeType === Node.TEXT_NODE &&
+            selection.anchorNode.textContent === "\u200b"
+        ) {
+            return selection.anchorNode;
+        }
         const zws = this.insertText(selection, "\u200B");
         splitTextNode(zws, selection.anchorOffset);
         return zws;
+    }
+
+    /**
+     * Discard pending format intents when the selection changes.
+     */
+    clearPendingFormats() {
+        if (this.skipNextFormatClear) {
+            this.skipNextFormatClear = false;
+            return;
+        }
+        this.activeFormats = {};
+    }
+
+    /**
+     * Apply the pending format intents recorded in {@link activeFormats} onto
+     * a ZWS at the cursor.
+     */
+    applyPendingFormats() {
+        if (!Object.keys(this.activeFormats).length) {
+            return;
+        }
+        this.getOrCreateZws();
+        for (const [formatName, { applyStyle, formatProps }] of Object.entries(
+            this.activeFormats
+        )) {
+            this.formatSelection(formatName, { applyStyle, formatProps, commit: false });
+        }
+        this.activeFormats = {};
+    }
+
+    beforeInsert() {
+        const selection = this.dependencies.selection.getEditableSelection();
+        if (!selection.isCollapsed) {
+            return;
+        }
+        this.applyPendingFormats();
     }
 
     onBeforeInput(ev) {
@@ -691,23 +837,7 @@ export class FormatPlugin extends Plugin {
             if (!selection.isCollapsed) {
                 return;
             }
-            // Links are a special case here. When typing, link
-            // element gets removed automatically whereas
-            // other inline tags would be preserved.
-            const element = closestElement(selection.anchorNode, ":not(a)");
-            if (element.hasAttribute("data-oe-zws-empty-inline")) {
-                // Select its ZWS content to make sure the text will be
-                // inserted inside the element, and not before (outside) it.
-                // This addresses an undesired behavior of the
-                // contenteditable.
-                const [anchorNode, anchorOffset, focusNode, focusOffset] = boundariesIn(element);
-                this.dependencies.selection.setSelection({
-                    anchorNode,
-                    anchorOffset,
-                    focusNode,
-                    focusOffset,
-                });
-            }
+            this.applyPendingFormats();
         }
     }
 
@@ -792,43 +922,39 @@ export class FormatPlugin extends Plugin {
     }
 
     canFormatContent(selection) {
-        return (
-            isHtmlContentSupported(selection) &&
-            this.dependencies.selection.getTargetedNodes().every((node) => isStylable(node))
-        );
+        const predicatesResult = this.checkPredicates("can_format_content_predicates", selection);
+        if (predicatesResult !== undefined) {
+            return predicatesResult && isHtmlContentSupported(selection);
+        }
+        const { anchorNode, focusNode } = selection;
+        if (anchorNode === focusNode && !isContentEditable(anchorNode)) {
+            return false;
+        }
+        return isHtmlContentSupported(selection);
     }
 }
 
-function getOrCreateSpan(node, ancestors, cursor) {
+function getOrCreateSpan(node, ancestor, cursor) {
     const document = node.ownerDocument;
-    const span = ancestors.find(
-        (element) =>
-            element.tagName === "SPAN" && element.isConnected && !element.dataset.textEffect
-    );
-    const lastInlineAncestor = ancestors.findLast(
-        (element) => !isBlock(element) && element.isConnected
-    );
-    if (span) {
-        return span;
-    } else {
-        const span = document.createElement("span");
-        // Apply font span above current inline top ancestor so that
-        // the font style applies to the other style tags as well.
-        if (lastInlineAncestor) {
-            cursor?.update(callbacksForCursorUpdate.after(lastInlineAncestor, span));
-            lastInlineAncestor.after(span);
-            cursor?.update(callbacksForCursorUpdate.append(span, lastInlineAncestor));
-            span.append(lastInlineAncestor);
-        } else {
-            cursor?.update(callbacksForCursorUpdate.after(node, span));
-            node.after(span);
-            cursor?.update(callbacksForCursorUpdate.append(span, node));
-            span.append(node);
+    if (ancestor) {
+        const reusableSpan = findUpTo(
+            node,
+            ancestor.parentElement,
+            (el) => el.tagName === "SPAN" && !el.dataset.textEffect
+        );
+        if (reusableSpan) {
+            return reusableSpan;
         }
-        return span;
     }
+    const span = document.createElement("span");
+    const wrapTarget = ancestor ?? node;
+    cursor.update(callbacksForCursorUpdate.after(wrapTarget, span));
+    wrapTarget.after(span);
+    cursor.update(callbacksForCursorUpdate.append(span, wrapTarget));
+    span.append(wrapTarget);
+    return span;
 }
-function removeFormat(node, formatSpec, cursor) {
+export function removeFormat(node, formatSpec, cursor) {
     const document = node.ownerDocument;
     node = closestElement(node);
     if (formatSpec.hasStyle(node)) {
@@ -855,6 +981,12 @@ function removeFormat(node, formatSpec, cursor) {
             }
             cursor?.remapNode(node, newNode);
             node.parentNode.replaceChild(newNode, node);
+        } else if (
+            node.getAttributeNames().length === 1 &&
+            node.hasAttribute("data-oe-zws-empty-inline")
+        ) {
+            cursor?.update(callbacksForCursorUpdate.remove(node));
+            node.remove();
         } else {
             cursor?.update(callbacksForCursorUpdate.unwrap(node));
             unwrapContents(node);

@@ -91,7 +91,7 @@ describe("button style", () => {
                 </div>
             `),
             stepFunction: (editor) => {
-                editor.shared.format.formatSelection("setFontSizeClassName", {
+                editor.shared.format.requestFormat("fontSize", {
                     formatProps: { className: "h1-fs" },
                     applyStyle: true,
                 });

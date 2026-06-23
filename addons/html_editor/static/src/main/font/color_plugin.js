@@ -2,13 +2,15 @@ import { Plugin } from "@html_editor/plugin";
 import {
     BG_CLASSES_REGEX,
     COLOR_COMBINATION_CLASSES_REGEX,
+    getColorOrClass,
     hasAnyNodesColor,
     hasColor,
     TEXT_CLASSES_REGEX,
 } from "@html_editor/utils/color";
-import { fillEmpty, unwrapContents } from "@html_editor/utils/dom";
+import { fillEmpty, removeStyle, unwrapContents } from "@html_editor/utils/dom";
 import {
     isEmptyBlock,
+    isPhrasingContent,
     isRedundantElement,
     isTextNode,
     isVisibleTextNode,
@@ -24,7 +26,7 @@ import {
 import { isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
 import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-import { isBlock } from "@html_editor/utils/blocks";
+import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 
 const COLOR_COMBINATION_CLASSES = [1, 2, 3, 4, 5].map((i) => `o_cc${i}`);
@@ -36,6 +38,8 @@ const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`)
  * @property { ColorPlugin['removeAllColor'] } removeAllColor
  * @property { ColorPlugin['getElementColors'] } getElementColors
  * @property { ColorPlugin['applyColor'] } applyColor
+ * @property { ColorPlugin['requestColor'] } requestColor
+ * @property { ColorPlugin['getActiveColorInfo'] } getActiveColorInfo
  */
 
 /**
@@ -43,19 +47,22 @@ const COLOR_COMBINATION_SELECTOR = COLOR_COMBINATION_CLASSES.map((c) => `.${c}`)
  * @typedef {((color: string, mode: "color" | "backgroundColor") => void)[]} apply_color_overrides
  * @typedef {((color: string, mode: "color" | "backgroundColor") => string)[]} apply_background_color_processors
  * @typedef {((color: string) => string)[]} background_color_processors
+ * @typedef {(() => void)[]} on_color_requested_handlers
  *
  * @typedef {((el: HTMLElement, actionParam: string) => string)[]} color_combination_providers
  */
 
 export class ColorPlugin extends Plugin {
     static id = "color";
-    static dependencies = ["selection", "split", "history", "format"];
+    static dependencies = ["selection", "split", "history", "format", "delete"];
     static shared = [
         "colorElement",
         "removeAllColor",
         "getElementColors",
         "getColorCombination",
         "applyColor",
+        "requestColor",
+        "getActiveColorInfo",
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -63,7 +70,7 @@ export class ColorPlugin extends Plugin {
             {
                 id: "applyColor",
                 run: ({ color, mode }) => {
-                    this.applyColor(color, mode);
+                    this.requestColor(color, mode);
                     this.dependencies.history.commit();
                 },
                 isAvailable: isHtmlContentSupported,
@@ -71,7 +78,12 @@ export class ColorPlugin extends Plugin {
         ],
         /** Handlers */
         on_all_formats_removed_handlers: this.removeAllColor.bind(this),
+        on_collapsed_formats_removed_handlers: this.removeAllColor.bind(this),
         color_combination_providers: getColorCombinationFromClass,
+        on_beforeinput_handlers: this.onBeforeInput.bind(this),
+        before_insert_handlers: this.beforeInsert.bind(this),
+        on_selectionchange_handlers: this.clearPendingColors.bind(this),
+        on_deleted_handlers: this.convertEmptyColorToPendingIntent.bind(this),
 
         /** Predicates */
         has_format_predicates: (node) => {
@@ -90,11 +102,53 @@ export class ColorPlugin extends Plugin {
         normalize_processors: this.normalize.bind(this),
     };
 
+    setup() {
+        this.activeColorInfo = {};
+    }
+
     normalize(root) {
         for (const el of selectElements(root, "font")) {
             if (isRedundantElement(el)) {
                 unwrapContents(el);
             }
+        }
+    }
+
+    getActiveColorInfo() {
+        return this.activeColorInfo;
+    }
+
+    onBeforeInput(ev) {
+        if (ev.inputType === "insertText") {
+            const selection = this.dependencies.selection.getEditableSelection();
+            if (!selection.isCollapsed) {
+                return;
+            }
+            this.applyPendingColors();
+        }
+    }
+
+    beforeInsert() {
+        const selection = this.dependencies.selection.getEditableSelection();
+        if (selection.isCollapsed) {
+            this.applyPendingColors();
+        }
+    }
+
+    /**
+     * Discard pending color intents when the selection changes.
+     */
+    clearPendingColors() {
+        if (this.skipNextColorClear) {
+            this.skipNextColorClear = false;
+            return;
+        }
+        this.activeColorInfo = {};
+    }
+
+    applyPendingColors() {
+        for (const [mode, color] of Object.entries(this.activeColorInfo)) {
+            this.applyColor(color, mode);
         }
     }
 
@@ -121,6 +175,20 @@ export class ColorPlugin extends Plugin {
     }
 
     removeAllColor() {
+        const sel = this.dependencies.selection.getEditableSelection();
+        if (sel.isCollapsed) {
+            const el = closestElement(sel.anchorNode);
+            const block = closestBlock(sel.anchorNode);
+            for (const mode of ["color", "backgroundColor"]) {
+                if (findUpTo(el, block, (node) => getColorOrClass(node, mode))) {
+                    this.activeColorInfo[mode] = "";
+                }
+            }
+            this.skipNextColorClear = true;
+            this.trigger("on_color_requested_handlers");
+            return;
+        }
+        this.activeColorInfo = {};
         const colorModes = ["color", "backgroundColor"];
         const colorNodeProviders = this.getResource("color_target_providers");
         let someColorWasRemoved = true;
@@ -159,6 +227,25 @@ export class ColorPlugin extends Plugin {
         }
     }
 
+    requestColor(color, mode, previewMode = false) {
+        const sel = this.dependencies.selection.getEditableSelection();
+        if (sel.isCollapsed) {
+            const block = closestBlock(sel.anchorNode);
+            const colorNode = findUpTo(closestElement(sel.anchorNode), block, (node) =>
+                getColorOrClass(node, mode)
+            );
+            const current = colorNode && getColorOrClass(colorNode, mode);
+            if ((current?.value ?? "") === color) {
+                delete this.activeColorInfo[mode];
+            } else {
+                this.activeColorInfo[mode] = color;
+            }
+            this.skipNextColorClear = true;
+            this.trigger("on_color_requested_handlers");
+            return;
+        }
+        this.applyColor(color, mode, previewMode);
+    }
     /**
      * Apply a css or class color on the current selection (wrapped in <font>).
      *
@@ -179,15 +266,7 @@ export class ColorPlugin extends Plugin {
         let targetedNodes;
         // Get the <font> nodes to color
         if (selection.isCollapsed) {
-            let zws;
-            if (
-                selection.anchorNode.nodeType === Node.TEXT_NODE &&
-                selection.anchorNode.textContent === "\u200b"
-            ) {
-                zws = selection.anchorNode;
-            } else {
-                zws = this.dependencies.format.insertAndSelectZws();
-            }
+            const zws = this.dependencies.format.getOrCreateZws();
             this.dependencies.selection.setSelection(
                 {
                     anchorNode: zws,
@@ -331,6 +410,9 @@ export class ColorPlugin extends Plugin {
                     if (node.textContent) {
                         cursors.update(callbacksForCursorUpdate.append(font, node));
                         font.appendChild(node);
+                        if (isTextNode(node) && isZWS(node)) {
+                            font.setAttribute("data-oe-zws-empty-inline", "");
+                        }
                         descendants(node).forEach((n) => alreadyWithinFont.add(n));
                     } else {
                         fillEmpty(font);
@@ -351,6 +433,7 @@ export class ColorPlugin extends Plugin {
 
         // Color the selected <font>s and remove uncolored fonts.
         const fontsSet = new Set(fonts);
+        delete this.activeColorInfo[mode];
         for (const font of fontsSet) {
             this.colorElement(font, color, mode);
             if (
@@ -359,12 +442,69 @@ export class ColorPlugin extends Plugin {
                 ["FONT", "SPAN"].includes(font.nodeName) &&
                 (!font.hasAttribute("style") || !color)
             ) {
-                cursors.update(callbacksForCursorUpdate.unwrap(font));
-                unwrapContents(font);
+                const parent = font.parentNode;
+                if (
+                    font.childNodes.length === 1 &&
+                    isTextNode(font.firstChild) &&
+                    isZWS(font.firstChild)
+                ) {
+                    cursors.update(callbacksForCursorUpdate.remove(font));
+                    font.remove();
+                } else {
+                    cursors.update(callbacksForCursorUpdate.unwrap(font));
+                    unwrapContents(font);
+                }
+                fillEmpty(parent);
                 fontsSet.delete(font);
             }
         }
         cursors.restore();
+    }
+
+    convertEmptyColorToPendingIntent() {
+        const selection = this.dependencies.selection.getEditableSelection();
+        const anchorNode = selection.anchorNode;
+        let element = closestElement(anchorNode);
+        const cursor = this.dependencies.selection.preserveSelection();
+        while (
+            isZWS(element) &&
+            isPhrasingContent(element) &&
+            !this.dependencies.delete.isUnremovable(element)
+        ) {
+            const color = getColorOrClass(element, "color");
+            const bgColor = getColorOrClass(element, "backgroundColor");
+            if (!color && !bgColor) {
+                break;
+            }
+            const parent = element.parentElement;
+            if (color) {
+                this.activeColorInfo.color = color.value;
+                this.colorElement(element, "", "color");
+            }
+            if (bgColor) {
+                this.activeColorInfo.backgroundColor = bgColor.value;
+                this.colorElement(element, "", "backgroundColor");
+            }
+            const nonZwsAttrs = element
+                .getAttributeNames()
+                .filter((attr) => attr !== "data-oe-zws-empty-inline");
+            if (["FONT", "SPAN"].includes(element.nodeName) && !nonZwsAttrs.length) {
+                cursor.update(callbacksForCursorUpdate.unwrap(element));
+                unwrapContents(element);
+            }
+            element = parent;
+        }
+        if (
+            Object.keys(this.activeColorInfo).length &&
+            anchorNode.isConnected &&
+            anchorNode.nodeType === Node.TEXT_NODE &&
+            anchorNode.textContent === "\u200b"
+        ) {
+            cursor.update(callbacksForCursorUpdate.remove(anchorNode));
+            anchorNode.remove();
+            this.skipNextColorClear = true;
+        }
+        cursor.restore();
     }
 
     /**
@@ -516,7 +656,11 @@ export class ColorPlugin extends Plugin {
         if (this.delegateTo("apply_color_style_overrides", element, mode, color, params)) {
             return;
         }
-        element.style[mode] = color;
+        if (color) {
+            element.style[mode] = color;
+        } else {
+            removeStyle(element, mode);
+        }
     }
 }
 

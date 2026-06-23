@@ -2,9 +2,8 @@ import { Plugin } from "@html_editor/plugin";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { leftPos, rightPos } from "@html_editor/utils/position";
 import { QWebPicker } from "./qweb_picker";
-import { isElement, PROTECTED_QWEB_SELECTOR } from "@html_editor/utils/dom_info";
+import { QWEB_STYLE_ATTRS, isElement } from "@html_editor/utils/dom_info";
 import { withSequence } from "@html_editor/utils/resource";
-import { formatsSpecs } from "@html_editor/utils/formatting";
 
 const isUnsplittableQWebElement = (node) =>
     isElement(node) &&
@@ -29,6 +28,9 @@ const QWEB_DATA_ATTRIBUTES = [
 ];
 const dataAttributesSelector = QWEB_DATA_ATTRIBUTES.map((attr) => `[${attr}]`).join(", ");
 
+// Selector for QWeb-specific attributes
+const PROTECTED_QWEB_SELECTOR = "[t-esc], [t-raw], [t-out], [t-field]";
+
 export const isUnremovableQWebElement = (node) =>
     node.getAttribute?.("t-set") || node.getAttribute?.("t-call");
 
@@ -42,7 +44,6 @@ export class QWebPlugin extends Plugin {
 
         /** Overrides */
         apply_color_overrides: this.applyColorToFieldNodes.bind(this),
-        format_selection_overrides: this.applyFormatToFieldNodes.bind(this),
 
         /** Processors */
         clean_for_save_processors: (root) => {
@@ -71,9 +72,31 @@ export class QWebPlugin extends Plugin {
                 return true;
             }
         },
+        is_formattable_node_predicates: (node) => {
+            if (node.matches?.(PROTECTED_QWEB_SELECTOR)) {
+                return true;
+            }
+        },
+        can_format_content_predicates: (selection) => {
+            const targetedNodes = new Set(
+                this.dependencies.selection.getTargetedNodes().map((n) => closestElement(n))
+            );
+            if (
+                QWEB_STYLE_ATTRS.some((att) =>
+                    [...targetedNodes].some((node) => node.hasAttribute(att))
+                )
+            ) {
+                return false;
+            }
+            const { anchorNode, focusNode } = selection;
+            if (anchorNode === focusNode && closestElement(anchorNode, PROTECTED_QWEB_SELECTOR)) {
+                return true;
+            }
+        },
 
         /** Providers */
         color_target_providers: (node) => closestElement(node, PROTECTED_QWEB_SELECTOR),
+        formattable_node_providers: (node) => closestElement(node, PROTECTED_QWEB_SELECTOR),
 
         system_attributes: QWEB_DATA_ATTRIBUTES,
     };
@@ -97,24 +120,6 @@ export class QWebPlugin extends Plugin {
         for (const fieldNode of fieldNodes) {
             this.dependencies.color.colorElement(fieldNode, color, mode);
             [fieldNode, ...descendants(fieldNode)].forEach((n) => coloredNodes.add(n));
-        }
-    }
-
-    applyFormatToFieldNodes(formatName, formattedNodes, { formatProps, applyStyle } = {}) {
-        const fieldNodes = new Set(
-            this.dependencies.selection
-                .getTargetedNodes()
-                .map((n) => closestElement(n, PROTECTED_QWEB_SELECTOR))
-                .filter(Boolean)
-        );
-        const formatSpec = formatsSpecs[formatName];
-        for (const fieldNode of fieldNodes) {
-            if (applyStyle) {
-                formatSpec.addStyle(fieldNode, formatProps);
-            } else {
-                formatSpec.removeStyle(fieldNode);
-            }
-            [fieldNode, ...descendants(fieldNode)].forEach((n) => formattedNodes.add(n));
         }
     }
 

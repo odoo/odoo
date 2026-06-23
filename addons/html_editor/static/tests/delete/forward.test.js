@@ -4,7 +4,7 @@ import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
 import { deleteForward, insertText, tripleClick } from "../_helpers/user_actions";
 import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
-import { animationFrame } from "@odoo/hoot-dom";
+import { animationFrame, tick } from "@odoo/hoot-dom";
 import {
     compareHighlightedContent,
     highlightedPre,
@@ -1325,21 +1325,6 @@ describe("Selection not collapsed", () => {
         });
     });
 
-    test("should not delete single remaining empty inline", async () => {
-        // Forward selection
-        await testEditor({
-            contentBefore: "<h1><i>[abcdef]</i></h1>",
-            stepFunction: deleteForward,
-            // The flagged 200B is there to preserve the font so if we
-            // write now, we still write in the font element's style.
-            contentAfterEdit:
-                '<h1 o-we-hint-text="Heading 1" class="o-we-hint"><i data-oe-zws-empty-inline="">[]\u200B</i><br></h1>',
-            // The flagged 200B is removed by the sanitizer if its
-            // parent remains empty.
-            contentAfter: "<h1>[]<br></h1>",
-        });
-    });
-
     test("should not delete styling nodes if not selected", async () => {
         await testEditor({
             contentBefore: '<p>a<span class="style-class">[bcde]</span>f</p>',
@@ -1466,23 +1451,25 @@ describe("Selection not collapsed", () => {
     });
 
     test("should delete a selection from the beginning of a heading1 with a format to the end of a paragraph (1)", async () => {
-        await testEditor({
-            contentBefore: "<h1><u>[abcd</u></h1><p>ef]</p><h2>1</h2>",
-            stepFunction: deleteForward,
-            contentAfterEdit:
-                '<h1 o-we-hint-text="Heading 1" class="o-we-hint"><u data-oe-zws-empty-inline="">[]\u200B</u><br></h1><h2>1</h2>',
-            contentAfter: "<h1>[]<br></h1><h2>1</h2>",
-        });
+        const { editor, el } = await setupEditor("<h1><u>[abcd</u></h1><p>ef]</p><h2>1</h2>");
+        deleteForward(editor);
+        expect(getContent(el)).toBe(
+            `<h1 o-we-hint-text="Heading 1" class="o-we-hint">[]<br></h1><h2>1</h2>`
+        );
+        await tick();
+        await insertText(editor, "x");
+        expect(getContent(el)).toBe("<h1><u>x[]</u></h1><h2>1</h2>");
     });
 
     test("should delete a selection from the beginning of a heading1 with a format to the end of a paragraph (2)", async () => {
-        await testEditor({
-            contentBefore: "<h1>[<u>abcd</u></h1><p>ef]</p><h2>2</h2>",
-            stepFunction: deleteForward,
-            contentAfterEdit:
-                '<h1 o-we-hint-text="Heading 1" class="o-we-hint"><u data-oe-zws-empty-inline="">[]\u200B</u><br></h1><h2>2</h2>',
-            contentAfter: "<h1>[]<br></h1><h2>2</h2>",
-        });
+        const { editor, el } = await setupEditor("<h1>[<u>abcd</u></h1><p>ef]</p><h2>2</h2>");
+        deleteForward(editor);
+        expect(getContent(el)).toBe(
+            `<h1 o-we-hint-text="Heading 1" class="o-we-hint">[]<br></h1><h2>2</h2>`
+        );
+        await tick();
+        await insertText(editor, "x");
+        expect(getContent(el)).toBe("<h1><u>x[]</u></h1><h2>2</h2>");
     });
 
     test.tags("desktop");

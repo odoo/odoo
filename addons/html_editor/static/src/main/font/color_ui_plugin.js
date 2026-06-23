@@ -45,6 +45,7 @@ export class ColorUIPlugin extends Plugin {
             },
         ],
         on_selectionchange_handlers: withSequence(100, this.updateSelectedColor.bind(this)),
+        on_color_requested_handlers: this.updateSelectedColor.bind(this),
         background_color_processors: this.getBackgroundColorProcessor.bind(this),
         apply_background_color_processors: this.applyBackgroundColorProcessor.bind(this),
         /** Providers */
@@ -58,7 +59,7 @@ export class ColorUIPlugin extends Plugin {
         this.selectedColors = proxy({ color: "", backgroundColor: "" });
         this.previewableApplyColor = this.dependencies.history.makePreviewableOperation(
             (color, mode, previewMode) =>
-                this.dependencies.color.applyColor(color, mode, previewMode)
+                this.dependencies.color.requestColor(color, mode, previewMode)
         );
     }
 
@@ -156,20 +157,23 @@ export class ColorUIPlugin extends Plugin {
             }
         }
 
-        this.selectedColors.backgroundColor = backgroundColor || "#00000000";
+        const pending = this.dependencies.color.getActiveColorInfo();
+        this.selectedColors.backgroundColor =
+            pending.backgroundColor ?? (backgroundColor || "#00000000");
 
         // Compute and update the text color.
         const nodes = this.dependencies.selection.getTargetedNodes().filter(isTextNode);
         if (nodes.length === 0) {
-            this.selectedColors.color = "";
+            this.selectedColors.color = pending.color ?? "";
             return;
         }
         const el = closestElement(nodes[0]);
         if (!el) {
-            this.selectedColors.color = "";
+            this.selectedColors.color = pending.color ?? "";
             return;
         }
-        this.selectedColors.color = this.dependencies.color.getElementColors(el).color;
+        const fromDom = this.dependencies.color.getElementColors(el);
+        this.selectedColors.color = pending.color ?? fromDom.color;
     }
 
     getBackgroundColorProcessor(backgroundColor) {
