@@ -1,12 +1,9 @@
 import { describe, test } from "@odoo/hoot";
+import { click, contains, openDiscuss, start, startServer } from "@mail/../tests/mail_test_helpers";
 import {
-    click,
-    contains,
-    insertText,
-    openDiscuss,
-    start,
-    startServer,
-} from "@mail/../tests/mail_test_helpers";
+    containsTextInComposer,
+    insertTextInComposer,
+} from "@mail/../tests/mail_test_helpers_composer";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 import { defineLivechatModels } from "./livechat_test_helpers";
 
@@ -31,11 +28,11 @@ test("Suggestions are shown after delimiter was used in text (::)", async () => 
     });
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "::");
+    await insertTextInComposer(".o-mail-Composer", "::");
     await contains(".o-mail-Composer-suggestion strong", { text: "hello" });
-    await insertText(".o-mail-Composer-input", ")");
+    await insertTextInComposer(".o-mail-Composer", ")");
     await contains(".o-mail-Composer-suggestion strong", { count: 0 });
-    await insertText(".o-mail-Composer-input", " ::");
+    await insertTextInComposer(".o-mail-Composer", " ::");
     await contains(".o-mail-Composer-suggestion strong", { text: "hello" });
 });
 
@@ -55,9 +52,9 @@ test("Internal user mention shows their live chat username", async () => {
     pyEnv["res.users"]._applyComputesAndValidate();
     await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "@");
+    await insertTextInComposer(".o-mail-Composer", "@");
     await click('.o-mail-Composer-suggestion:contains(Mitchell Admin "Batman")');
-    await contains(".o-mail-Composer-input:value(@Batman)");
+    await containsTextInComposer(".o-mail-Composer", "\uFEFF@Batman\uFEFF\u00a0");
     await click(".o-mail-Composer button[title='Send']:enabled");
     await contains(".o-mail-Message a.o_mail_redirect", { text: "@Batman" });
 });

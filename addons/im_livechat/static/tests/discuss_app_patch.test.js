@@ -2,14 +2,15 @@ import {
     click,
     contains,
     insertText,
+    MENU_ACTIVE_IDS,
     openDiscuss,
     start,
     startServer,
     triggerHotkey,
-    MENU_ACTIVE_IDS,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { withGuest } from "@mail/../tests/mock_server/mail_mock_server";
-import { describe, mockDate, test } from "@odoo/hoot";
+import { describe, mockDate, press, test } from "@odoo/hoot";
 import { Command, serverState } from "@web/../tests/web_test_helpers";
 
 import { rpc } from "@web/core/network/rpc";
@@ -76,7 +77,53 @@ test("invite button should be present on livechat", async () => {
     await contains("button[title='Add People']");
 });
 
-test("command palette search finds livechats", async () => {
+test("livechats are sorted by last activity time in the sidebar: most recent at the top", async () => {
+    mockDate("2023-01-03 12:00:00"); // so that it's after last interest (mock server is in 2019 by default!)
+    const pyEnv = await startServer();
+    const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor 11" });
+    const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor 12" });
+    pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [
+                Command.create({
+                    last_interest_dt: "2021-01-01 10:00:00",
+                    livechat_member_type: "agent",
+                    partner_id: serverState.partnerId,
+                }),
+                Command.create({ guest_id: guestId_1, livechat_member_type: "visitor" }),
+            ],
+            channel_type: "livechat",
+        },
+        {
+            channel_member_ids: [
+                Command.create({
+                    last_interest_dt: "2021-02-01 10:00:00",
+                    livechat_member_type: "agent",
+                    partner_id: serverState.partnerId,
+                }),
+                Command.create({ guest_id: guestId_2, livechat_member_type: "visitor" }),
+            ],
+            channel_type: "livechat",
+        },
+    ]);
+    await start();
+    await openDiscuss();
+    await contains(".o-mail-DiscussSidebarChannel", { count: 2 });
+    await contains(":nth-child(1 of .o-mail-DiscussSidebarChannel-container)", {
+        text: "Visitor 12",
+    });
+    await click(".o-mail-DiscussSidebarChannel", { text: "Visitor 11" });
+    await insertTextInComposer(".o-mail-Composer", "Blabla");
+    await press("Enter");
+    await contains(":nth-child(1 of .o-mail-DiscussSidebarChannel-container)", {
+        text: "Visitor 11",
+    });
+    await contains(":nth-child(2 of .o-mail-DiscussSidebarChannel-container)", {
+        text: "Visitor 12",
+    });
+});
+
+test("sidebar search finds livechats", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor 11" });
     pyEnv["discuss.channel"].create({
@@ -122,7 +169,7 @@ test("Conversation description works in livechat", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Composer-input:focus");
+    await contains(".o-mail-Composer-html:focus");
     await contains(
         "input.o-mail-DiscussContent-threadDescription:value(Yup, that customer again...)"
     );

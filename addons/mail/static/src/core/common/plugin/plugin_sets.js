@@ -45,6 +45,7 @@ export const MAIL_TEXT_PLUGINS = [
     DomReferenceMapPlugin,
     DomPlugin,
     EmojiPlugin,
+    FeffPlugin,
     HintPlugin,
     HistoryPlugin,
     InputPlugin,

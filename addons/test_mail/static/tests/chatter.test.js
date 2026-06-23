@@ -2,7 +2,6 @@ import {
     click,
     contains,
     inputFiles,
-    insertText,
     listenStoreFetch,
     openFormView,
     patchUiSize,
@@ -13,6 +12,7 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, test } from "@odoo/hoot";
 import { defineTestMailModels } from "@test_mail/../tests/test_mail_test_helpers";
 import { MockServer, onRpc } from "@web/../tests/web_test_helpers";
@@ -194,7 +194,7 @@ test("opened attachment box should remain open after adding a new attachment", a
     await click(".o-mail-Composer-send:enabled");
     await contains(".o_move_next");
     await click("button", { text: "Send message" });
-    await insertText(".o-mail-Composer-input", "test");
+    await insertTextInComposer(".o-mail-Composer", "test");
     triggerHotkey("control+Enter");
     await contains(".o-mail-Message-body", { text: "test" });
     await contains(".o-mail-AttachmentBox .o-mail-AttachmentImage", { count: 2 });

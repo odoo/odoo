@@ -1,11 +1,11 @@
 import { defineCrmLivechatModels } from "@crm_livechat/../tests/crm_livechat_test_helpers";
 import {
     click,
-    insertText,
     openDiscuss,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
+import { insertTextInComposer } from "@mail/../tests/mail_test_helpers_composer";
 import { describe, expect, test } from "@odoo/hoot";
 import { onRpc, serverState } from "@web/../tests/web_test_helpers";
 
@@ -26,7 +26,7 @@ test("Can execute lead command", async () => {
         return true;
     });
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "/lead great lead");
+    await insertTextInComposer(".o-mail-Composer", "/lead great lead");
     await click(".o-mail-Composer button[title='Send']:enabled");
     await expect.waitForSteps([[channelId]]);
 });

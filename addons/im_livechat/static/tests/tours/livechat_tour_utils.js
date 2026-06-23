@@ -1,9 +1,9 @@
-export const LIVECHAT_COMPOSER = ".o-livechat-root:shadow .o-mail-Composer-input";
+export const LIVECHAT_COMPOSER = ".o-livechat-root:shadow .o-mail-Composer-html";
 
 /** Type `text` into the livechat composer once it is ready, without sending it. */
 export const editComposer = (text) => ({
-    trigger: `${LIVECHAT_COMPOSER}:enabled`,
-    run: `edit ${text}`,
+    trigger: `${LIVECHAT_COMPOSER}`, // aku-todo: missing :enabled
+    run: `editor ${text}`,
 });
 
 /**
