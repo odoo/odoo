@@ -1,4 +1,4 @@
-import { render, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
+import { render, useRef, useSubEnv } from "@web/owl2/utils";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -153,30 +153,30 @@ export class KanbanController extends Component {
                 return state;
             },
         });
-        useLayoutEffect(
-            (isReady) => {
-                if (isReady) {
-                    if (this.env.isSmall && this.model.root.isGrouped) {
-                        const { scrollPositions } = this.props.state || {};
-                        if (scrollPositions) {
-                            const { scrollLeft, columnScrollTops } = scrollPositions;
-                            this.rootRef.el.querySelector(".o_renderer").scrollLeft = scrollLeft;
-                            const groups = this.model.root.groups;
-                            for (const [serverValue, scrollTop] of columnScrollTops) {
-                                const group = groups.find((g) => g.serverValue === serverValue);
-                                if (group) {
-                                    const sel = `.o_kanban_group[data-id=${group.id}]`;
-                                    this.rootRef.el.querySelector(sel).scrollTop = scrollTop;
-                                }
-                            }
-                        }
-                    } else {
-                        setScrollFromState();
-                    }
-                }
-            },
-            () => [this.model.isReady()]
-        );
+        // useLayoutEffect(
+        //     (isReady) => {
+        //         if (isReady) {
+        //             if (this.env.isSmall && this.model.root.isGrouped) {
+        //                 const { scrollPositions } = this.props.state || {};
+        //                 if (scrollPositions) {
+        //                     const { scrollLeft, columnScrollTops } = scrollPositions;
+        //                     this.rootRef.el.querySelector(".o_renderer").scrollLeft = scrollLeft;
+        //                     const groups = this.model.root.groups;
+        //                     for (const [serverValue, scrollTop] of columnScrollTops) {
+        //                         const group = groups.find((g) => g.serverValue === serverValue);
+        //                         if (group) {
+        //                             const sel = `.o_kanban_group[data-id=${group.id}]`;
+        //                             this.rootRef.el.querySelector(sel).scrollTop = scrollTop;
+        //                         }
+        //                     }
+        //                 }
+        //             } else {
+        //                 setScrollFromState();
+        //             }
+        //         }
+        //     },
+        //     () => [this.model.isReady()]
+        // );
         usePager(() => {
             const root = this.model.root;
             const { count, hasLimitedCount, isGrouped, limit, offset } = root;
@@ -200,12 +200,12 @@ export class KanbanController extends Component {
         onMounted(() => {
             this.firstLoad = false;
         });
-        useLayoutEffect(
-            () => {
-                this.onSelectionChanged();
-            },
-            () => [this.model.root.selection?.length, this.model.root.isDomainSelected]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         this.onSelectionChanged();
+        //     },
+        //     () => [this.model.root.selection?.length, this.model.root.isDomainSelected]
+        // );
         onWillStart(async () => {
             this.isExportEnable = await user.hasGroup("base.group_allow_export");
         });
