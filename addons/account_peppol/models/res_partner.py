@@ -7,6 +7,7 @@ from hashlib import md5
 from urllib import parse
 
 from odoo import api, fields, models
+from odoo.fields import Domain
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.addons.account.models.company import PEPPOL_LIST
 
@@ -84,8 +85,8 @@ class ResPartner(models.Model):
 
     def _compute_routing_scheme_endpoint(self):
         # Don't recompute on partners corresponding to registered companies
-        partners_not_to_recompute = self._get_partners_to_skip_peppol_computation()
-        partners_to_recompute = self.browse([partner.id for partner in self if partner._origin not in partners_not_to_recompute])
+        partners_not_to_recompute = self.filtered_domain(self._domain_peppol_do_not_modify_routing_identifier())
+        partners_to_recompute = self.browse([partner.id for partner in self if partner._origin.id not in partners_not_to_recompute.ids])
         super(ResPartner, partners_to_recompute)._compute_routing_scheme_endpoint()
 
     # -------------------------------------------------------------------------
@@ -285,10 +286,18 @@ class ResPartner(models.Model):
 
         return mandatory_fields
 
-    def _get_partners_to_skip_peppol_computation(self):
-        return self.env['res.company'].search([
+    @api.model
+    def _domain_peppol_do_not_modify_routing_identifier(self):
+        registered_company_partners = self.env['res.company'].sudo().with_context(active_test=False).search([
             ('account_peppol_proxy_state', 'in', self.env['account_edi_proxy_client.user']._get_can_send_domain()),
-        ]).mapped('partner_id')
+        ]).partner_id
+        return Domain([
+            ('routing_scheme', '!=', False),
+            ('routing_endpoint', '!=', False),
+            '|',
+            ('peppol_verification_state', '=', 'valid'),
+            ('id', 'in', registered_company_partners.ids),
+        ])
 
     @api.model
     def _get_peppol_proxy_identification_info(self, routing_scheme, routing_endpoint):
