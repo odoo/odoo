@@ -179,7 +179,7 @@ patch(SaleOrderLineOne2Many.prototype, {
 });
 
 patch(SaleOrderLineListRenderer, {
-    rowsTemplate: "sale_management.ListRenderer.Rows",
+    createRowTemplate: "sale_management.ListRenderer.CreateRow",
 });
 
 patch(SaleOrderLineListRenderer.prototype, {

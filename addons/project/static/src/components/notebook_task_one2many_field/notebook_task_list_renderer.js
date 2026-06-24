@@ -6,6 +6,7 @@ import { TaskListRenderer } from "../task_list_renderer";
 
 export class NotebookTaskListRenderer extends TaskListRenderer {
     static rowsTemplate = "project.NotebookTaskListRenderer.Rows";
+    static createRowTemplate = "project.NotebookTaskListRenderer.CreateRow";
     setup() {
         super.setup();
         this.hideState = proxy({

@@ -124,7 +124,9 @@ export const listRendererProps = {
 export class ListRenderer extends Component {
     static template = "web.ListRenderer";
     static rowsTemplate = "web.ListRenderer.Rows";
+    static createRowTemplate = "web.ListRenderer.CreateRow";
     static recordRowTemplate = "web.ListRenderer.RecordRow";
+    static groupCreateRowTemplate = "web.ListRenderer.GroupCreateRow";
     static groupRowTemplate = "web.ListRenderer.GroupRow";
     static components = {
         DropdownItem,
@@ -1231,6 +1233,13 @@ export class ListRenderer extends Component {
 
     get displayRowCreates() {
         return this.isX2Many && this.canCreate;
+    }
+
+    /**
+     * @param {Group} group
+     */
+    displayGroupCreateRow(group) {
+        return !group.list.isGrouped && this.props.editable && this.canCreate;
     }
 
     /**
