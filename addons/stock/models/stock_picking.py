@@ -80,7 +80,7 @@ class StockPickingType(models.Model):
     reservation_days_before_priority = fields.Integer('Days when starred', help="Maximum number of days before scheduled date that priority picking products should be reserved.")
     auto_show_allocation_report = fields.Boolean(
         "Show Allocation",
-        help="If this checkbox is ticked, Odoo will automatically show the allocation report (if there are moves to allocate to) when validating.")
+        help="If this checkbox is ticked, Odoo will show the allocation report (if there are moves to allocate to.)")
     auto_print_delivery_slip = fields.Boolean(
         "Auto Print Delivery Slip",
         help="If this checkbox is ticked, Odoo will automatically print the delivery slip of a picking when it is validated.")
