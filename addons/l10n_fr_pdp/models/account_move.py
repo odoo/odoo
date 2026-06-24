@@ -162,8 +162,7 @@ class AccountMove(models.Model):
             move.pdp_can_send_response = (
                 bool(move.peppol_message_uuid)
                 and move.peppol_is_sent
-                and move.company_id._get_peppol_proxy_type() == 'pdp'
-                and move.partner_id._get_pdp_receiver_identification_info()[0] == 'pdp'
+                and move.partner_id.with_company(move.company_id).l10n_fr_is_pdp
             )
 
     @api.depends('company_id')

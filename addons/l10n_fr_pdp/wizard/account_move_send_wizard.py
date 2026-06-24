@@ -11,14 +11,14 @@ class AccountMoveSendWizard(models.TransientModel):
     def _get_peppol_checkbox_label(self, default_label):
         self.ensure_one()
         pdp_partner = self.move_id.partner_id.commercial_partner_id.with_company(self.company_id)
-        if self.company_id._get_peppol_proxy_type() != 'pdp' or pdp_partner._get_pdp_receiver_identification_info()[0] != 'pdp':
+        if not pdp_partner.l10n_fr_is_pdp:
             return super()._get_peppol_checkbox_label(default_label)
         return self.env._("French E-Invoicing")
 
     def _get_peppol_checkbox_addendum_disable_reason(self):
         self.ensure_one()
         pdp_partner = self.move_id.partner_id.commercial_partner_id.with_company(self.company_id)
-        if pdp_partner._get_pdp_receiver_identification_info()[0] != 'pdp':
+        if not pdp_partner.l10n_fr_is_pdp:
             return super()._get_peppol_checkbox_addendum_disable_reason()
         partner_is_valid = pdp_partner.peppol_verification_state == 'valid'
         verification_display_state_map = dict(pdp_partner._fields['pdp_verification_display_state']._description_selection(self.env))
