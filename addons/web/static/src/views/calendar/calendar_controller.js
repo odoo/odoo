@@ -356,10 +356,6 @@ export class CalendarController extends Component {
     editRecordInCreation(record) {
         const rawRecord = this.model.buildRawRecord(record);
         const context = this.model.makeContextDefaults(rawRecord);
-        if(this.props.context.is_management_related){
-            context['default_employee_id'] = false;
-            context['is_new_record'] = true;
-        }
         return this.editRecord(record, context);
     }
 

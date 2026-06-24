@@ -161,6 +161,15 @@ export class TimeOffCalendarController extends CalendarController {
     async editRecord(record, context = {}) {
         return this._editRecord(record, context);
     }
+
+    editRecordInCreation(record) {
+        const rawRecord = this.model.buildRawRecord(record);
+        const context = this.model.makeContextDefaults(rawRecord);
+        if (this.props.context.is_management_related) {
+            context['default_employee_id'] = false;
+        }
+        return this.editRecord(record, context);
+    }
 }
 
 export class TimeOffReportCalendarController extends TimeOffCalendarController {
