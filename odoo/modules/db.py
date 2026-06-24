@@ -10,6 +10,7 @@ import logging
 import os
 import pathlib
 import re
+import sys
 import shutil
 import subprocess
 import tempfile
@@ -321,17 +322,37 @@ class DatabaseExists(UserError, ValueError):
     pass
 
 
-def _create_empty_database(db_name: str) -> None:
+def _get_sys_cr(db_names):
     db_system_name = config['db_system']
     try:
         sys_cr = odoo.sql_db.db_connect(db_system_name).cursor()
     except psycopg2.errors.OperationalError:
         # If we use the `db_name` as the system database and we are trying to
         # create it, try to use postgres as the system database.
-        if db_system_name == 'postgres' or db_system_name != db_name:
+        if db_system_name == 'postgres' or db_system_name not in db_names:
             raise
         _logger.info("Defaulting to 'postgres' system database for database creation")
         sys_cr = odoo.sql_db.db_connect('postgres').cursor()
+    return sys_cr
+
+
+def check_postgres_user():
+    if (config['db_user'] or os.environ.get('PGUSER')) == 'postgres':
+        sys.stderr.write("Using the database user 'postgres' is a security risk, aborting.")
+        sys.exit(1)
+
+    sys_cr = _get_sys_cr(config['db_name'])
+
+    with closing(sys_cr) as cr:
+        cr.execute("SHOW is_superuser")
+        if cr.fetchone() != ('off',):
+            sys.stderr.write("Using a PostgreSQL superuser is a security risk, aborting.\n")
+            sys.exit(1)
+
+
+def _create_empty_database(db_name: str) -> None:
+    sys_cr = _get_sys_cr([db_name])
+
     with closing(sys_cr) as cr:
         cr.execute("SELECT datname FROM pg_database WHERE datname = %s",
                    (db_name,), log_exceptions=False)
