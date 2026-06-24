@@ -101,11 +101,10 @@ class ProductProduct(models.Model):
 
     def _is_add_to_cart_allowed(self):
         self.ensure_one()
-        if self.env.user.has_group("base.group_system"):
-            return True
         if self._is_donation():
             return True
-        if not self.active or not self.website_published:
+
+        if not self.active or not self._is_published():
             return False
         if not self.filtered_domain(self.env["website"]._product_domain()):
             return False
@@ -115,6 +114,9 @@ class ProductProduct(models.Model):
         ):
             return False
         return website.has_ecommerce_access()
+
+    def _is_published(self):
+        return self.website_published or self.env.user.has_group("base.group_system")
 
     @api.onchange("public_categ_ids")
     def _onchange_public_categ_ids(self):
