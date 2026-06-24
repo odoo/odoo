@@ -288,11 +288,8 @@ class ProductProduct(models.Model):
 
     def _get_extra_tracking_values(self, **kwargs):
         extra_tracking_values = {}
-        if (
-            kwargs.get('res_model') == self._name
-            and (res_id := kwargs.get('res_id'))
-        ):
-            extra_tracking_values['product_id'] = res_id
+        if kwargs.get("res_model") == self._name and (res_id := kwargs.get("res_id")):
+            extra_tracking_values["product_id"] = res_id
         return extra_tracking_values
 
     def _is_sold_out(self):
@@ -378,3 +375,14 @@ class ProductProduct(models.Model):
 
                 product.stock_notification_partner_ids -= partner
                 self.env["ir.cron"]._commit_progress(1)
+
+    def _can_add_to_stock_notifications(self):
+        """Return whether the product is eligible for stock notifications.
+
+        Note: `self.ensure_one()`
+
+        :return: True if the product is active, saleable, and published on the website
+        :rtype: bool
+        """
+        self.ensure_one()
+        return self.active and self.sale_ok and self.website_published
