@@ -24,9 +24,14 @@ export class AllocationReport extends Component {
         return false;
     })
 
-    canAssignAll = computed(
-        () => this.hasContent && this.productLines.some((line) => line.freeQty() > 0)
-    )
+    canAssignAll = computed(() => {
+        if (!this.hasContent) {
+            return false;
+        }
+        return this.productLines.some((line) =>
+            line.freeQty() > 0 && line.needs && line.needs.some((need) => need.allocateQuantity())
+        );
+    })
 
     setup() {
         this.actionService = useService("action");
