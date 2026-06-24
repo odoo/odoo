@@ -955,3 +955,14 @@ class ProductTemplate(models.Model):
     @api.model
     def _allow_publish_rating_stats(self):
         return True
+
+    @api.model
+    def _get_mail_message_access(self, res_ids, operation, model_name=None):
+        if (
+            (not model_name or model_name == 'product.template')
+            and operation == 'create'
+            and not self.env.user._is_internal()
+            and not self.env['website'].is_view_active('website_sale.product_comment')
+        ):
+            return 'write'
+        return super()._get_mail_message_access(res_ids, operation, model_name=model_name)
