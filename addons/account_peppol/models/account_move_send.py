@@ -28,6 +28,14 @@ class AccountMoveSend(models.AbstractModel):
             default_sending_methods.add('peppol')
         return default_sending_methods
 
+    @api.model
+    def _generate_and_send_invoices(self, moves, from_cron=False, allow_raising=True, allow_fallback_pdf=False, **custom_settings):
+        for partner, company in moves.grouped(lambda m: (m.commercial_partner_id, m.company_id)):
+            if partner.with_company(company).peppol_verification_state != 'valid' and self._is_applicable_to_company('peppol', company):
+                partner.button_account_peppol_check_partner_endpoint(company=company)
+
+        return super()._generate_and_send_invoices(moves, from_cron, allow_raising, allow_fallback_pdf, **custom_settings)
+
     # -------------------------------------------------------------------------
     # ALERTS
     # -------------------------------------------------------------------------
