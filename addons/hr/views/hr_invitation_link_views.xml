@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hr_invitation_link_view_form" model="ir.ui.view">
+        <field name="name">hr.invitation.link.form</field>
+        <field name="model">hr.invitation.link</field>
+        <field name="arch" type="xml">
+            <form string="Create invite link">
+                <sheet>
+                    <div class="oe_title mb-2">
+                        <h1>Create invite link</h1>
+                        <p class="text-muted">
+                            Create links to let your employees create their account and fill in their
+                            personnal data: address, contacts, personnal information, family, etc.
+                        </p>
+                    </div>
+                    <group>
+                        <field name="name" string="Label" placeholder="e.g. Sales interns"/>
+                        <label for="max_uses" string="Max uses"/>
+                        <div class="o_row">
+                            <field name="max_uses" class="oe_inline" placeholder="unlimited"/>
+                            <span>times</span>
+                        </div>
+                        <field name="expiration_datetime" string="Expires on" placeholder="don't expire"/>
+                        <label for="allowed_email_domains" string="Restrict domain @"/>
+                        <field name="allowed_email_domains" nolabel="1" placeholder="any domain"
+                            help="Only users with an email matching one of these domains will be able to register. You can list multiple domains, one per line"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <group invisible="not id" string="Your invitation link">
+                        <field name="url" widget="CopyClipboardURL" class="o_invitation_link_url_field" readonly="1" nolabel="1" colspan="2"/>
+                        <label for="used_count" string="Used"/>
+                        <div class="o_row">
+                            <field name="used_count" class="oe_inline"/>
+                            <span>times</span>
+                        </div>
+                        <field name="active" invisible="1"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Create link" name="action_create_link" type="object" class="btn-primary" invisible="id"/>
+                    <button string="Save" special="save" class="btn-primary" invisible="not id"/>
+                    <button string="Discard" special="cancel" class="btn-secondary" invisible="not id"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_invitation_link_view_list" model="ir.ui.view">
+        <field name="name">hr.invitation.link.list</field>
+        <field name="model">hr.invitation.link</field>
+        <field name="arch" type="xml">
+            <list string="Invitation Links">
+                <field name="name"/>
+                <field name="url" widget="CopyClipboardURL"/>
+                <field name="used_count"/>
+                <field name="max_uses"/>
+                <field name="expiration_datetime"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_invitation_link_action" model="ir.actions.act_window">
+        <field name="name">Invitation Links</field>
+        <field name="res_model">hr.invitation.link</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first invitation link
+            </p><p>
+                Share a link to let people register their own employee account.
+            </p>
+        </field>
+    </record>
+
+    <record id="hr_invitation_link_action_new" model="ir.actions.act_window">
+        <field name="name">Create invite link</field>
+        <field name="res_model">hr.invitation.link</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hr_invitation_link_view_form"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

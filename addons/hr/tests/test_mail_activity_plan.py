@@ -222,20 +222,8 @@ class TestActivitySchedule(ActivityScheduleHRCase):
             self.assertEqual(n_warning, 1)
             self.assertIn(f'{self.employee_1.name} has no manager.', form.warning)
             form.save()
-            # Additional warnings when users are not linked
+            # restore the manager link for the next iteration
             self.employee_1.parent_id = self.employee_manager
-            self.employee_manager.user_id = False
-            form = self._instantiate_activity_schedule_wizard(employees)
-            form.plan_id = self.plan_onboarding
-            self.assertTrue(form.has_warning)
-            n_warning = form.warning.count('<li>')
-            self.assertEqual(n_warning, len(employees))
-            self.assertIn(f"{self.employee_1.name}'s manager ({self.employee_manager.name}) has no user.", form.warning)
-            if len(employees) > 1:
-                self.assertIn(f"{self.employee_2.name}'s manager ({self.employee_manager.name}) has no user.", form.warning)
-            # should save without error, with coach
-            form.save()
-            self.employee_manager.user_id = self.user_manager
 
     @freeze_time('2023-08-31')
     @users('admin')

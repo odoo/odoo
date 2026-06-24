@@ -5,7 +5,7 @@ import ast
 from markupsafe import Markup
 
 from odoo import _, api, fields, models
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.tools.misc import clean_context
 from odoo.addons.mail.tools.discuss import Store
@@ -392,3 +392,39 @@ class ResUsers(models.Model):
         super()._store_im_status_fields(res)
         # sudo: res.users - internal users can access employee information for the IM status
         res.many("all_employee_ids", "_store_im_status_fields", sudo=True)
+
+    @api.model
+    def signup(self, values, token=None):
+        # When the signup happens through a valid HR invitation link (no
+        # auth_signup token), provision a Light self-service user + employee
+        # instead of a regular template user.
+        link_id = self.env.context.get('hr_invite_link_id')
+        if link_id and not token:
+            return self._signup_from_invitation(values, link_id)
+        return super().signup(values, token)
+
+    @api.model
+    def _signup_from_invitation(self, values, link_id):
+        link = self.env['hr.invitation.link'].sudo().browse(link_id).exists()
+        if not link:
+            raise UserError(_("This invitation link is no longer valid."))
+        ok, reason = link._is_valid()
+        if not ok:
+            raise UserError(reason)
+        login = values.get('login')
+        if not link._is_email_domain_allowed(login):
+            raise UserError(_("Registrations from this email address are not allowed for this invitation link."))
+        # Reserve one use (row-locked, raises if the quota is now full) before
+        # creating anything, so concurrent signups cannot exceed max_uses.
+        link._consume()
+        # Creating the employee auto-provisions the linked Light user (see
+        # hr.employee._get_or_create_self_service_user). The person then owns a
+        # Light (self-service) account, never a billable/regular one.
+        employee = self.env['hr.employee'].sudo().with_company(link.company_id).create({
+            'name': values.get('name') or login,
+            'work_email': login,
+            'company_id': link.company_id.id,
+        })
+        user = employee.user_id
+        user.write({'login': login, 'password': values.get('password')})
+        return login, values.get('password')

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr.EmployeeKanbanButtons" t-inherit="web.KanbanView.Buttons" t-inherit-mode="primary">
+        <xpath expr="//button[hasclass('o-kanban-button-new')]" position="after">
+            <button t-if="!this.env.inDialog" type="button"
+                class="btn btn-secondary o_employee_invite_button"
+                t-on-click="() => this.openInviteDialog()">
+                Invite
+            </button>
+        </xpath>
+    </t>
+
+    <t t-name="hr.EmployeeListButtons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary">
+        <xpath expr="//button[hasclass('o_list_button_add')]" position="after">
+            <button t-if="!this.env.inDialog and !this.editedRecord" type="button"
+                class="btn btn-secondary o_employee_invite_button"
+                t-on-click="() => this.openInviteDialog()">
+                Invite
+            </button>
+        </xpath>
+    </t>
+
+    <t t-name="hr.EmployeeInviteKanbanRenderer">
+        <div class="o_employee_invite_renderer d-flex flex-column">
+            <InvitationLinksBanner/>
+            <t t-call="web.KanbanRenderer"/>
+        </div>
+    </t>
+
+    <t t-name="hr.EmployeeInviteListRenderer">
+        <div class="o_employee_invite_renderer d-flex flex-column">
+            <InvitationLinksBanner/>
+            <t t-call="web.ListRenderer"/>
+        </div>
+    </t>
+
+    <t t-name="hr.InvitationLinksBanner">
+        <div t-if="this.state.links.length"
+            class="o_invitation_links_banner d-flex align-items-start gap-3 m-2 mb-0 p-3 rounded"
+            role="status">
+            <span class="o_invitation_links_title d-flex align-items-center gap-2 fw-bold text-nowrap pt-1">
+                <i class="fa fa-paper-plane"/>
+                <span>Invitation Links</span>
+            </span>
+            <div class="o_invitation_links_list d-flex flex-column gap-2 flex-grow-1">
+                <t t-foreach="this.state.links" t-as="link" t-key="link.id">
+                    <div class="o_invitation_link_row">
+                        <div class="input-group input-group-sm o_invitation_link_url">
+                            <input type="text" class="form-control" readonly="readonly" t-att-value="link.url"/>
+                            <button class="btn" title="Copy link"
+                                t-on-click="() => this.copyUrl(link)">
+                                <i class="fa fa-clone"/>
+                            </button>
+                        </div>
+                        <span class="badge text-bg-secondary o_invitation_link_tag text-truncate"
+                            t-out="link.display_name"/>
+                        <span class="o_invitation_link_usage text-muted small text-nowrap"
+                            t-out="this.usageLabel(link)"/>
+                        <button class="btn btn-link btn-sm text-muted p-1" title="Edit"
+                            t-on-click="() => this.editLink(link)">
+                            <i class="fa fa-pencil"/>
+                        </button>
+                        <button class="btn btn-link btn-sm text-muted p-1" title="Delete"
+                            t-on-click="() => this.deleteLink(link)">
+                            <i class="fa fa-trash-o"/>
+                        </button>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>
