@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Page shown when an invitation link is expired / disabled / over quota. -->
+    <template id="invite_invalid" name="Invitation link unavailable">
+        <t t-call="web.login_layout">
+            <div class="text-center">
+                <p class="alert alert-warning" role="alert">
+                    <t t-out="reason"/>
+                </p>
+                <a href="/web/login" class="btn btn-link" role="button">Back to Login</a>
+            </div>
+        </t>
+    </template>
+
+</odoo>

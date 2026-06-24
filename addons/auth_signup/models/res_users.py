@@ -22,19 +22,23 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     state = fields.Selection(compute='_compute_state', search='_search_state', string='Status',
-                 selection=[('new', 'Invited'), ('active', 'Confirmed')])
+                 selection=[('new', 'Invited'), ('active', 'Confirmed'), ('inactive', 'Inactive')])
 
     def _search_state(self, operator, value):
         if operator != 'in':
             return NotImplemented
-        if len(value) > 1:
-            return Domain.TRUE
-        in_log = 'active' in value
-        return Domain('log_ids', '!=' if in_log else '=', False)
+        # Note: matching 'inactive' (archived) users requires active_test=False.
+        domains_by_state = {
+            'new': Domain('active', '=', True) & Domain('login_date', '=', False),
+            'active': Domain('active', '=', True) & Domain('login_date', '!=', False),
+            'inactive': Domain('active', '=', False),
+        }
+        return Domain.OR([domains_by_state[v] for v in value if v in domains_by_state])
 
+    @api.depends('active', 'login_date')
     def _compute_state(self):
         for user in self:
-            user.state = 'active' if user.login_date else 'new'
+            user.state = 'inactive' if not user.active else 'active' if user.login_date else 'new'
 
     @api.model
     def signup(self, values, token=None):
