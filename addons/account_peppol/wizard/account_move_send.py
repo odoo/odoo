@@ -111,7 +111,7 @@ class AccountMoveSend(models.TransientModel):
         for wizard in self:
             edi_user = wizard.company_id.sudo().account_edi_proxy_client_ids.filtered(
                 lambda usr: usr.proxy_type == 'peppol'
-            )
+            )[:1]
             mode = mode_strings.get(edi_user.edi_mode)
             wizard.account_peppol_edi_mode_info = f' ({mode})' if mode else ''
 
