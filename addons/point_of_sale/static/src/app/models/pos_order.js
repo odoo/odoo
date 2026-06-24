@@ -759,6 +759,17 @@ export class PosOrder extends PosOrderAccounting {
         return this.discountLines?.[0]?.extra_tax_data?.discount_percentage || 0;
     }
 
+    get isDirectSale() {
+        return false; // Overridden in pos_restaurant
+    }
+
+    get preparationName() {
+        if (this.isDirectSale) {
+            return this.floatingOrderName || this.pos_reference;
+        }
+        return this.getName();
+    }
+
     getName() {
         let name = this.floatingOrderName || "";
         if (this.isRefund) {
