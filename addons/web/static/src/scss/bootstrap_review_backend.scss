@@ -270,6 +270,17 @@ $-o-bg-colors-custom: null;
     background-color: inherit;
 }
 
+// Bootstrap uses line-height-base on its small variants of components but uses
+// the small font-size. This results in elements being rendered on subpixels.
+// This rounds the line-size (see secondary_variables.scss) to the nearest
+// integer. We then divide it by the small font-size to get the pixel perfect
+// line-height.
+.btn-sm, .form-control-sm, .form-select-sm, .pagination-sm,
+.input-group-sm > :is(.form-control, .form-select, .input-group-text, .btn) {
+    $line-height-sm-rounded: ceil($o-line-size-sm-px);
+    line-height: ($line-height-sm-rounded / $o-font-size-base-small-px);
+}
+
 // Alert
 // ==============================================================================
 .alert {
