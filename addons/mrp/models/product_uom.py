@@ -9,7 +9,7 @@ class ProductUom(models.Model):
 
     def _compute_allowed_uom_ids(self):
         super()._compute_allowed_uom_ids()
-        if self.env.context.get('default_uom_id'):
+        if self.env.context.get('active_model') == 'uom.uom':
             return
 
         has_byproducts = self.env.user.has_group('mrp.group_mrp_byproducts')
