@@ -12,6 +12,9 @@ $o-webclient-media: screen !default;
 // Color-scheme
 $o-webclient-color-scheme: bright !default;
 
+// Options
+$o-enable-backdrop-blur: false !default;
+
 // Font sizes
 $o-root-font-size: 1rem !default;
 $o-font-size-base: o-to-rem(14px) !default;
@@ -96,6 +99,12 @@ $o-theme-text-colors: (
     "danger": #d23f3a,
 )!default;
 
+// Gradients
+$o-gradient:    null !default;
+$o-gradient-sm: null !default;
+$o-gradient-lg: null !default;
+$o-gradient-btn:  null !default;
+
 // Opacities
 $o-opacity-disabled: .5 !default;
 $o-opacity-muted: .76 !default;
@@ -132,6 +141,8 @@ $o-table-cell-padding-y-sm: .5rem !default;
 $o-component-active-color:  $o-black !default;
 $o-component-active-bg: mix($o-action, $o-gray-100, 20%) !default;
 $o-component-active-border: $o-action !default;
+
+$o-border-color: $o-gray-300 !default;
 
 $o-view-background-color: #FFFFFF !default;
 $o-shadow-color: #303030 !default;
@@ -222,6 +233,7 @@ $o-card-body-bg-opacity: 0.9 !default;
 $o-border-radius: o-to-rem(4px) !default;
 $o-border-radius-sm: o-to-rem(3px) !default;
 $o-border-radius-lg: o-to-rem(6px) !default;
+$o-border-radius-xl: o-to-rem(12px) !default;
 
 // == Buttons
 // Map of customized values for each button. If a button's design is defined
