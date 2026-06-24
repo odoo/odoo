@@ -903,6 +903,8 @@ class TestItEdiImport(TestItEdi, TestAccountEdiProxyUser):
         created_moves = []
 
         def mock_create(self, vals_list):
+            for doc in vals_list:
+                doc['document_tax_mode'] = 'tax_excluded'
             moves = super_create(self, vals_list)
             created_moves.extend(moves)
             return moves
