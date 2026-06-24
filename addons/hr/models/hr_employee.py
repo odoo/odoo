@@ -1603,7 +1603,7 @@ class HrEmployee(models.Model):
         if not login:
             sequence = self.env['ir.sequence'].sudo().next_by_code('hr.employee.user.login')
             login = '__emp_%s' % (sequence or uuid.uuid4().hex)
-        light_groups = self.env.ref('base.group_user') + ResUsers._get_minimal_light_user_groups()
+        light_groups = self.env.ref('base.group_user') + ResUsers._get_maximal_light_user_groups()
         return ResUsers.create({
             'name': vals.get('name') or login,
             'login': login,
