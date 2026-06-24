@@ -25,8 +25,17 @@ patch(PosOrderline.prototype, {
         return false;
     },
     getDisplayData() {
+        if (this.order_id?.uiState._isSettlingSO) {
+            if (!this._displayDataCache) {
+                this._displayDataCache = this._computeDisplayData();
+            }
+            return this._displayDataCache;
+        }
+        this._displayDataCache = null;
+        return this._computeDisplayData();
+    },
+    _computeDisplayData() {
         let down_payment_details = [];
-
         // FIXME: This is a hack to handle the case where the down_payment_details is a stringified JSON.
         try {
             down_payment_details = JSON.parse(this.down_payment_details);
@@ -48,7 +57,10 @@ patch(PosOrderline.prototype, {
      * @param {'sale.order.line'} saleOrderLine
      */
     async setQuantityFromSOL(saleOrderLine) {
-        if (!saleOrderLine.has_valued_move_ids) {
+        if (saleOrderLine.is_downpayment) {
+            // Down payment lines carry their amount as a negative `qty_to_invoice`
+            this.set_quantity(saleOrderLine.qty_to_invoice);
+        } else if (!saleOrderLine.has_valued_move_ids) {
             this.set_quantity(saleOrderLine.product_uom_qty);
         } else if (
             this.product_id.type === "service" &&
