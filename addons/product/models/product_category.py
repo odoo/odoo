@@ -44,6 +44,10 @@ class ProductCategory(models.Model):
     def _search_complete_name(self, operator, value):
         if operator in Domain.NEGATIVE_OPERATORS:
             return NotImplemented
+        if self.env.context.get('import_file'):
+            complete_name = next(iter(value))
+            candidates = self.search([('name', '=', complete_name.split(' / ')[-1])])
+            return [('id', 'in', candidates.filtered(lambda c: c.complete_name == complete_name).ids)]
         return [
             '|',
             ('name', operator, value),
