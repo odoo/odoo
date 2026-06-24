@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug.exceptions import BadRequest
-
+from odoo.exceptions import AccessError, ValidationError
 from odoo.http import Controller, request, route
 from odoo.http.session import touch
 from odoo.tools.mail import email_re
@@ -67,15 +66,26 @@ class ProductWishlist(Controller):
     def add_stock_email_notification(self, email, product_id):
         # TDE FIXME: seems a bit open
         if not email_re.match(email):
-            raise BadRequest(self.env._("Invalid Email"))
+            raise ValidationError(self.env._("Invalid Email"))
 
         product = self.env["product.product"].browse(int(product_id))
+
+        # check if product available
+        if not product.exists() or not product._can_add_to_stock_notifications():
+            raise ValidationError(
+                self.env._("This product is not eligible for stock notifications.")
+            )
+
         partner = self.env["mail.thread"].sudo()._partner_find_from_emails_single([email])
+
+        is_public_user = self.env.website.is_public_user()
+        if is_public_user and partner.user_ids.exists():
+            raise AccessError(self.env._("Please sign in to proceed."))
 
         if not product._has_stock_notification(partner):
             product.sudo().stock_notification_partner_ids += partner
 
-        if self.env.website.is_public_user():
+        if is_public_user:
             request.session["product_with_stock_notification_enabled"] = list(
                 set(request.session.get("product_with_stock_notification_enabled", []))
                 | {product_id}
