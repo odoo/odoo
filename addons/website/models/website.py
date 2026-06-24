@@ -17,11 +17,12 @@ from concurrent.futures import ThreadPoolExecutor
 from lxml import etree, html
 from markupsafe import Markup
 from requests import RequestException
+
 from urllib.parse import urlparse, urlsplit
 from werkzeug import urls
 
 from odoo import api, fields, models, tools, release
-from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.addons.website.models.ir_http import SITEMAP_GROUPS, sitemap_qs2dom
 from odoo.addons.website.tools import (
     adapt_dark_palette_content,
     get_base_domain,
@@ -1764,15 +1765,19 @@ class Website(models.CachedModel):
             controllers for dynamic pages (e.g. blog).
             By default, returns template views marked as pages.
 
+            The URLs of a ``sitemap`` callable land in the section named by
+            ``@sitemap_group``, on itself or on the function it overrides,
+            else in ``pages``.
+
             :param str query_string: a (user-provided) string, fetches pages
                                      matching the string
 
-            :param boolean ignore_custom_homepage: used to exclude the hompage url
+            :param boolean ignore_custom_homepage: used to exclude the homepage url
                 from the page list if the homepage is not ``/``
-            :returns: a list of mappings with two keys: ``name`` is the displayable
-                      name of the resource (page), ``url`` is the absolute URL
-                      of the same.
-            :rtype: list({name: str, url: str})
+            :returns: one mapping per URL: ``loc`` is the URL, ``group`` its
+                      sitemap section, ``lastmod`` its last change, a
+                      ``date`` or ``datetime``, when known
+            :rtype: Iterator[dict]
         """
         self = self.with_context(website_id=self.id)  # noqa: PLW0642
 
@@ -1799,12 +1804,12 @@ class Website(models.CachedModel):
         for page in pages:
             if ignore_custom_homepage and homepage_url == page['url']:
                 continue
-            record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
+            record = {'loc': page['url'], 'id': page['id'], 'name': page['name'], 'group': 'pages'}
             if page.view_id.priority != 16:
                 record['priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
             last_dates = [d for d in (page.write_date, page.view_write_date) if d]
             if last_dates:
-                record['lastmod'] = max(last_dates).date()
+                record['lastmod'] = max(last_dates)
             yield record
 
         # ==== CONTROLLERS ====
@@ -1852,8 +1857,12 @@ class Website(models.CachedModel):
                 if func_key in sitemap_endpoint_done:
                     continue
                 sitemap_endpoint_done.add(func_key)
+                # The group declared on the function, else on the same-named
+                # function it overrides, else the CMS pages.
+                group = getattr(func_key, '_sitemap_group',
+                    SITEMAP_GROUPS.get(getattr(func_key, '__name__', None), 'pages'))
                 for loc in sitemap_func(self.with_context(lang=self.default_lang_id.code).env, rule, query_string):
-                    loc_norm = {**loc, 'loc': _norm(loc['loc'])}
+                    loc_norm = {**loc, 'group': group, 'loc': _norm(loc['loc'])}
                     url = loc_norm['loc']
                     if url not in url_set:
                         yield loc_norm
@@ -1902,7 +1911,7 @@ class Website(models.CachedModel):
                 url = _norm(url)
                 pattern = query_string and '*%s*' % "*".join(query_string.split('/'))
                 if not query_string or fnmatch.fnmatch(url.lower(), pattern):
-                    page = {'loc': url}
+                    page = {'loc': url, 'group': 'pages'}
                     if url in url_set:
                         continue
                     url_set.add(url)
@@ -1951,6 +1960,29 @@ class Website(models.CachedModel):
         pages = self.env['website.page'].sudo().search(domain, order=order, limit=limit)
         pages = pages.with_context(website_id=self.env.website.id)._get_most_specific_pages()
         return pages
+
+    def _get_views_lastmod(self, views):
+        """ Last change of each of ``views`` as shown on this website.
+
+        The builder saves an edit in this website's copy of the view (same
+        key), or in an extension view holding just the edited area (child of
+        that key). The shared view a record points to keeps its old date.
+
+        :rtype: dict[ir.ui.view, datetime]
+        """
+        # Sudo, here and below: a visitor cannot read views, and only their
+        # key and date are read.
+        views = views.sudo()
+        views.fetch(['key', 'write_date'])
+        lastmod = {view.key: view.write_date for view in views}
+        for key, parent_key, last_edit in self.env['ir.ui.view'].sudo()._read_group(
+            (Domain('key', 'in', lastmod.keys()) | Domain('inherit_id.key', 'in', lastmod.keys()))
+            & self.website_domain(),
+            groupby=['key', 'inherit_id.key'], aggregates=['write_date:max'],
+        ):
+            for edited_key in {key, parent_key} & lastmod.keys():
+                lastmod[edited_key] = max(lastmod[edited_key], last_edit)
+        return {view: lastmod[view.key] for view in views}
 
     def search_pages(self, needle=None, limit=None):
         name = self.env['ir.http']._slugify(needle, max_length=50, path=True)
