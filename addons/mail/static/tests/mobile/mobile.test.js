@@ -91,6 +91,19 @@ test("enter key should create a newline in composer", async () => {
     await contains(".o-mail-Message-body:has(br)", { textContent: "TestOther" });
 });
 
+test("sending a message blurs the composer on mobile", async () => {
+    mockTouch(true);
+    mockUserAgent("android");
+    patchUiSize({ size: SIZES.SM });
+    const pyEnv = await startServer();
+    await start();
+    await openDiscuss(pyEnv["discuss.channel"].create({ name: "General" }));
+    await insertText(".o-mail-Composer-input", "Test");
+    await click(".o-mail-Composer button[title='Send']");
+    await contains(".o-mail-Message-body", { textContent: "Test" });
+    await contains(".o-mail-Composer-input:not(:focus)");
+});
+
 test("can add message reaction (mobile)", mailCanAddMessageReactionMobile);
 
 test("can copy text to clipboard (mobile)", mailCanCopyTextToClipboardMobile);

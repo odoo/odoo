@@ -56,7 +56,7 @@ test("search emoji from keywords", async () => {
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add Emojis']");
-    await insertText("input[placeholder='Search emoji']", "mexican");
+    await insertText(".o-EmojiPicker-search input", "mexican");
     await contains(".o-Emoji:text('🌮')");
     await insertText(".o-EmojiPicker-search input", "9", { replace: true });
     await contains(".o-Emoji:eq(0):text('🕘')");
@@ -70,7 +70,7 @@ test("search emoji from keywords should be case insensitive", async () => {
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add Emojis']");
-    await insertText("input[placeholder='Search emoji']", "ok");
+    await insertText(".o-EmojiPicker-search input", "ok");
     await contains(".o-Emoji:text('🆗')"); // all search terms are uppercase OK
 });
 
@@ -80,7 +80,7 @@ test("search emoji from keywords with special regex character", async () => {
     await start();
     await openDiscuss(channelId);
     await click("button[title='Add Emojis']");
-    await insertText("input[placeholder='Search emoji']", "(blood");
+    await insertText(".o-EmojiPicker-search input", "(blood");
     await contains(".o-Emoji:text('🆎')");
 });
 
@@ -92,8 +92,49 @@ test("updating search emoji should scroll top", async () => {
     await click("button[title='Add Emojis']");
     await contains(".o-EmojiPicker-content", { scroll: 0 });
     await scroll(".o-EmojiPicker-content", 150);
-    await insertText("input[placeholder='Search emoji']", "m");
+    await insertText(".o-EmojiPicker-search input", "m");
     await contains(".o-EmojiPicker-content", { scroll: 0 });
+});
+
+test("keep emoji order stable while searching", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Add Emojis']");
+    await insertText(".o-EmojiPicker-search input", "clock");
+    await contains(".o-Emoji:eq(0):text('⌚')");
+    await contains(".o-Emoji:eq(1):text('⏰')");
+    await contains(".o-Emoji:eq(2):text('⏱️')");
+    await click(".o-EmojiPicker-content .o-Emoji:text('🕒')", { shiftKey: true });
+    await contains(".o-mail-Composer-input", { value: "🕒" });
+    await contains(".o-Emoji:eq(0):text('⌚')");
+    await contains(".o-Emoji:eq(1):text('⏰')");
+    await contains(".o-Emoji:eq(2):text('⏱️')");
+});
+
+test("clear search icon only appear when there is a search term", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Add Emojis']");
+    await contains(".o-EmojiPicker-search .oi-search + input");
+    await contains(".o-EmojiPicker-search .fa-times-circle", { count: 0 });
+    await insertText(".o-EmojiPicker-search input", "ok");
+    await contains(".o-EmojiPicker-search input + .fa-times-circle");
+});
+
+test("clearing emoji search keeps focus", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
+    await start();
+    await openDiscuss(channelId);
+    await click("button[title='Add Emojis']");
+    await insertText(".o-EmojiPicker-search input", "ok");
+    await click(".o-EmojiPicker-search .fa-times-circle");
+    await contains(".o-EmojiPicker-search input:focus", { value: "" });
+    await contains(".o-EmojiPicker-search .fa-times-circle", { count: 0 });
 });
 
 test("Press Escape in emoji picker closes the emoji picker", async () => {
@@ -163,7 +204,7 @@ test("search emojis prioritize frequently used emojis", async () => {
     await click(".o-EmojiPicker-content .o-Emoji:text('🤥')");
     await click("button[title='Add Emojis']");
     await contains(".o-EmojiPicker-navbar [title='Frequently used']");
-    await insertText("input[placeholder='Search emoji']", "lie");
+    await insertText(".o-EmojiPicker-search input", "lie");
     await contains(".o-EmojiPicker-sectionIcon", { count: 0 }); // await search performed
     await contains(".o-EmojiPicker-content .o-Emoji:eq(0):text('🤥')");
 });
