@@ -607,6 +607,17 @@ class AccountMove(models.Model):
         # All other cases: International
         return 'b2bi'
 
+    def _need_ubl_cii_xml(self, invoice_edi_format):
+        self.ensure_one()
+        builder = self.partner_id.commercial_partner_id._get_edi_builder(invoice_edi_format)
+        if 'email' not in self.env.context.get('sending_method', []) or not invoice_edi_format or not builder:
+            return super()._need_ubl_cii_xml(invoice_edi_format)
+
+        _xml_content, errors = builder._export_invoice(self)
+        if errors:
+            return False
+        return super()._need_ubl_cii_xml(invoice_edi_format)
+
     # -------------------------------------------------------------------------
     # CRUD Override
     # -------------------------------------------------------------------------
