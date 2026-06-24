@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Component, proxy } from "@odoo/owl";
 import { Orderline } from "@point_of_sale/app/components/orderline/orderline";
@@ -35,14 +34,14 @@ export class OrderSummary extends Component {
 
         this.updatePotentialCombos();
 
-        useLayoutEffect(
-            () => {
-                // We update the potential combos when the order changes
-                // or the quantity of the items changes.
-                this.updatePotentialCombos();
-            },
-            () => [this.currentOrder.totalQuantity, this.currentOrder.id]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         // We update the potential combos when the order changes
+        //         // or the quantity of the items changes.
+        //         this.updatePotentialCombos();
+        //     },
+        //     () => [this.currentOrder.totalQuantity, this.currentOrder.id]
+        // );
     }
 
     updatePotentialCombos() {
