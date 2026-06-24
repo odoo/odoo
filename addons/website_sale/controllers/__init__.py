@@ -11,6 +11,7 @@ from . import (
     product_feed,
     reorder,
     sale,
+    thread,
     variant,
     website,
     wishlist,

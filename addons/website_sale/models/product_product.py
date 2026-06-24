@@ -3,6 +3,7 @@
 from collections import OrderedDict
 
 from odoo import _, api, fields, models
+from odoo.fields import Domain
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
@@ -285,3 +286,12 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
         return self.env['website'].image_url(self, 'image_1024')
+
+    def _mail_get_operation_for_mail_message_operation(self, message_operation):
+        if (
+            message_operation == 'create'
+            and not self.env.user._is_internal()
+            and not self.env['website'].is_view_active('website_sale.product_comment')
+        ):
+            return [(Domain.TRUE, 'write')]
+        return super()._mail_get_operation_for_mail_message_operation(message_operation)
