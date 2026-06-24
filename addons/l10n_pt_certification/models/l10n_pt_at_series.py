@@ -143,7 +143,7 @@ class L10nPtATSeries(models.Model):
                 if self.env['account.move'].search_count([
                     ('l10n_pt_at_series_id', '=', at_series.id),
                     ('state', "in", ('posted', 'cancel')),
-                    ('move_type', '=', at_series.document_type),
+                    ('l10n_pt_document_type', '=', at_series.document_type),
                 ], limit=1):
                     raise UserError(_("You cannot change the properties of a series that has already been used in a move."))
                 if self.env['account.payment'].search_count([
@@ -160,7 +160,7 @@ class L10nPtATSeries(models.Model):
                 self.env['account.move'].search_count([
                     ('l10n_pt_at_series_id', '=', at_series.id),
                     ('state', "in", ('posted', 'cancel')),
-                    ('move_type', '=', at_series.document_type),
+                    ('l10n_pt_document_type', '=', at_series.document_type),
                 ], limit=1)
                 or self.env['account.payment'].search_count([
                     ('l10n_pt_at_series_id', '=', at_series.id),

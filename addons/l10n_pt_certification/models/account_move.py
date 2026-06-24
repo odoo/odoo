@@ -8,6 +8,10 @@ from odoo.tools import SQL, float_repr
 
 from odoo.addons.l10n_pt_certification.utils import hashing as pt_hash_utils
 from odoo.addons.l10n_pt_certification.models.l10n_pt_at_series import AT_SERIES_ACCOUNTING_DOCUMENT_TYPES
+from odoo.addons.l10n_pt_certification.const import (
+    PT_SIMPLIFIED_INVOICE_GOODS_LIMIT,
+    PT_SIMPLIFIED_INVOICE_SERVICES_LIMIT,
+)
 
 AT_SERIES_TYPE_SAFT_TYPE_MAP = {
     'out_invoice': 'FT',
@@ -46,20 +50,6 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.l10n_pt_line_discount < 0.0 or line.l10n_pt_line_discount > 100.0:
                 raise ValidationError(_("Discount amounts should be between 0% and 100%."))
-
-    @api.constrains('tax_ids')
-    def _check_l10n_pt_tax_ids(self):
-        """
-        PT requirements state that no line can be created without a tax. In case of tax exemption,
-        the correct tax with the appropriate exemption reason should be added to the line.
-        """
-        if self.filtered(
-            lambda l: l.display_type == 'product'
-            and l.move_type != 'entry'
-            and l.company_id.account_fiscal_country_id.code == 'PT'
-            and not l.tax_ids
-        ):
-            raise ValidationError(_("You cannot create a move line without VAT tax."))
 
     @api.constrains('price_total')
     def _check_l10n_pt_zero_negative_lines(self):
@@ -123,7 +113,7 @@ class AccountMove(models.Model):
         comodel_name="l10n_pt.at.series",
         string="AT Series",
         compute='_compute_l10n_pt_at_series_id',
-        readonly=False, store=True,
+        readonly=False, store=True, copy=False,
     )
     # Cancelling reason is a PT requirement, added to the SAF-T
     l10n_pt_cancel_reason = fields.Char(
@@ -165,7 +155,7 @@ class AccountMove(models.Model):
 
     def _get_starting_sequence(self):
         self.ensure_one()
-        if self.country_code == 'PT' and self.move_type in AT_SERIES_TYPE_SAFT_TYPE_MAP:
+        if self._is_pt_move():
             if self.l10n_pt_at_series_id:
                 return f"{self.l10n_pt_at_series_id.document_identifier}/00000"
             standard = super()._get_starting_sequence()
@@ -184,14 +174,16 @@ class AccountMove(models.Model):
         return super().action_reverse()
 
     def action_post(self):
-        pt_moves = self.filtered(lambda m: m._is_pt_move()).sorted('invoice_date')
-        for move in pt_moves:
+        for move in self.filtered(lambda m: m._is_pt_move()).sorted('invoice_date'):
             if not move.journal_id:
                 raise UserError(_("You cannot post an invoice without a journal. Please select a journal and try again."))
+
+            move._check_l10n_pt_simplified_invoice_limit()
 
             if not move.l10n_pt_at_series_id:
                 move.l10n_pt_at_series_id = move._l10n_pt_create_at_series_from_sequence()
 
+            move._check_l10n_pt_lines_taxes()
             move._check_l10n_pt_at_series_id()
             move._check_l10n_pt_dates()
             move.name = move.l10n_pt_at_series_id._l10n_pt_get_document_number_sequence().next_by_id()
@@ -298,6 +290,52 @@ class AccountMove(models.Model):
     # MISC REQUIREMENTS
     ####################################
 
+    @api.onchange('name')
+    def _onchange_l10n_pt_name(self):
+        if self._is_pt_move() and self.name and not re.match(r'^[^ ]+ [^/^ ]+/[0-9]+$', self.name):
+            raise ValidationError(_(
+                "The document number (%s) is invalid. It must start with the internal code "
+                "of the document type, a space, the name of the series followed by a slash and the number of the "
+                "document within the series (e.g. INV 2025A/1).",
+                self.name
+            ))
+
+    def _check_l10n_pt_simplified_invoice_limit(self):
+        """
+        A sales receipt is a simplified invoice (FS). Per the Portuguese VAT code, simplified invoices
+        cannot exceed 1000 EUR for goods or 100 EUR for services. An over-limit receipt cannot be posted.
+        """
+        self.ensure_one()
+        if not self._is_pt_move() or self.move_type != 'out_receipt':
+            return
+
+        total_amount_in_eur = self.currency_id._convert(
+            self.amount_total,
+            self.env.ref('base.EUR'),
+            self.company_id,
+            self.invoice_date or fields.Date.context_today(self)
+        )
+        # If product has no type or its tax has no tax_scope, it is considered a service to be safe
+        has_services = any(
+            (
+                line.product_id.type == 'service'
+                or line.tax_ids.filtered(lambda t: t.tax_scope == 'service')
+                or (
+                    not line.product_id.type
+                    and not line.tax_ids.filtered(lambda t: t.tax_scope)
+                )
+            )
+            for line in self.invoice_line_ids
+            if line.display_type == 'product'
+        )
+        limit = PT_SIMPLIFIED_INVOICE_SERVICES_LIMIT if has_services else PT_SIMPLIFIED_INVOICE_GOODS_LIMIT
+        if total_amount_in_eur > limit:
+            raise UserError(_(
+                "A sales receipt (simplified invoice) cannot exceed %(limit)s EUR. "
+                "Please issue a regular invoice instead.",
+                limit=float_repr(limit, 2),
+            ))
+
     @api.onchange('l10n_pt_global_discount')
     def _inverse_l10n_pt_global_discount(self):
         for move in self.filtered(lambda m: m.country_code == 'PT'):
@@ -397,19 +435,107 @@ class AccountMove(models.Model):
             return 'l10n_pt_certification.report_invoice_document'
         return super()._get_name_invoice_report()
 
-    @api.onchange('name')
-    def _onchange_l10n_pt_name(self):
-        if self._is_pt_move() and self.name and not re.match(r'^[^ ]+ [^/^ ]+/[0-9]+$', self.name):
-            raise ValidationError(_(
-                "The document number (%s) is invalid. It must start with the internal code "
-                "of the document type, a space, the name of the series followed by a slash and the number of the "
-                "document within the series (e.g. INV 2025A/1).",
-                self.name
-            ))
+    def _check_l10n_pt_lines_taxes(self):
+        """
+        PT requirement: All lines must have at least one tax, and in case of tax exemption, the correct tax with the
+        appropriate exemption reason should be added to the line.
+        """
+        for move in self.filtered(lambda m: m._is_pt_move()):
+            if move.line_ids.filtered(lambda l: l.display_type == 'product' and not l.tax_ids):
+                raise ValidationError(_("You cannot create a move line without VAT tax."))
 
     ####################################
     # PT FIELDS - ATCUD, AT SERIES
     ####################################
+
+    def _l10n_pt_create_at_series_from_sequence(self):
+        """ Auto-create an AT series based on the move's sequence prefix and date metadata.
+        This is called when no matching AT series exists for a new sequence period.
+
+        :return: The newly created l10n_pt.at.series record, or an empty recordset if creation fails.
+        """
+        self.ensure_one()
+
+        if (self.name and self.name != '/'):
+            seq_source = self.name
+        else:
+            seq_source = self._get_starting_sequence()
+            if self.l10n_pt_document_type == 'out_receipt':
+                seq_source = 'S' + seq_source
+
+        format_string, format_values = self._get_sequence_format_param(seq_source)
+
+        prefix1 = format_values.get('prefix1', '')
+        prefix = re.sub(r'[^a-zA-Z0-9]', '', prefix1.strip())
+
+        sequence_number_reset = self._deduce_sequence_number_reset(seq_source)
+        date_start, date_end, forced_year_start, forced_year_end = self._get_sequence_date_range(sequence_number_reset)
+
+        year = forced_year_start or format_values.get('year') or date_start.year
+        year_end = forced_year_end or format_values.get('year_end') or ''
+
+        month = str(format_values.get('month', '00')).zfill(2)
+
+        if sequence_number_reset == 'month':
+            series_name = f"{year}{month}"
+        elif sequence_number_reset == 'year_range_month':
+            series_name = f"{year}{year_end}{month}"
+        elif sequence_number_reset == 'year_range':
+            series_name = f"{year}{year_end}"
+        elif sequence_number_reset == 'year':
+            series_name = str(year)
+        else:
+            series_name = f"{prefix}{year}"
+
+        return self.env['l10n_pt.at.series'].create({
+            'name': series_name,
+            'prefix': prefix,
+            'document_type': self.l10n_pt_document_type,
+            'journal_id': self.journal_id.id,
+            'company_id': self.company_id.id,
+            'date_start': date_start,
+            'date_end': date_end,
+            # TODO: to be handled later
+            'training_series': True,
+            'at_code': f'AT-{prefix}{series_name}',
+        })
+
+    def _check_l10n_pt_at_series_id(self):
+        self.ensure_one()
+        if self._is_pt_move():
+            if not self.l10n_pt_at_series_id:
+                raise UserError(_("Please select a series for this move."))
+            series = self.l10n_pt_at_series_id
+            if self.l10n_pt_document_type != series.document_type:
+                raise UserError(_("The series does not match the document type of the move."))
+            invoice_date = self.invoice_date or fields.Date.context_today(self)
+            series_date_valid = (
+                (not series.date_start or series.date_start <= invoice_date)
+                and (not series.date_end or series.date_end >= invoice_date)
+            )
+            if not series.active and not series_date_valid:
+                raise UserError(_("An inactive series cannot be used."))
+            if not series.at_code:
+                raise UserError(self.env._(
+                        "The AT Series '%(series)s' is missing the AT Validation Code. "
+                        "Please fill in the AT Validation Code obtained from the Portal das Finanças before posting.",
+                        series=series.display_name,
+                    )
+                )
+
+    def _check_l10n_pt_document_number(self):
+        for move in self.filtered(lambda m: (
+            m._is_pt_move()
+            and m.move_type in self.get_sale_types(include_receipts=True)
+            and m.l10n_pt_at_series_id
+        )):
+            if move.l10n_pt_document_number and not re.match(r'^[^ ]+ [^/^ ]+/[0-9]+$', move.l10n_pt_document_number):
+                raise ValidationError(_(
+                    "The document number (%s) is invalid. It must start with the internal code "
+                    "of the document type, a space, the name of the series followed by a slash and the number of the "
+                    "document within the series (e.g. INV 2025A/1). Please check if the series selected fulfill these "
+                    "requirements.", move.l10n_pt_document_number
+                ))
 
     @api.depends('move_type', 'company_id', 'date', 'journal_id', 'l10n_pt_document_type', 'name', 'invoice_date')
     def _compute_l10n_pt_at_series_id(self):
@@ -421,6 +547,7 @@ class AccountMove(models.Model):
                 and (
                     not m.l10n_pt_at_series_id
                     or m.l10n_pt_at_series_id.journal_id != m.journal_id
+                    or m.l10n_pt_at_series_id.document_type != m.l10n_pt_document_type
                     or not m.l10n_pt_at_series_id.active
                 )
             )
@@ -428,6 +555,7 @@ class AccountMove(models.Model):
         for move in moves_to_compute:
             # Get the last move with an AT series for this journal and document type
             last_move = self.env['account.move'].search([
+                ('id', '!=', move.id),
                 ('company_id', '=', move.company_id.id),
                 ('journal_id', '=', move.journal_id.id),
                 ('l10n_pt_document_type', '=', move.l10n_pt_document_type),
@@ -451,76 +579,6 @@ class AccountMove(models.Model):
 
             move.l10n_pt_at_series_id = at_series
 
-    def _l10n_pt_create_at_series_from_sequence(self):
-        """ Auto-create an AT series based on the move's sequence prefix and date metadata.
-        This is called when no matching AT series exists for a new sequence period.
-
-        :return: The newly created l10n_pt.at.series record, or an empty recordset if creation fails.
-        """
-        self.ensure_one()
-
-        seq_source = self.name if (self.name and self.name != '/') else self._get_starting_sequence()
-        format_string, format_values = self._get_sequence_format_param(seq_source)
-
-        prefix1 = format_values.get('prefix1', '')
-        prefix = re.sub(r'[^a-zA-Z0-9]', '', prefix1.strip())
-
-        sequence_number_reset = self._deduce_sequence_number_reset(
-            format_string.format(**{**format_values, 'seq': 1})
-        )
-        date_start, date_end, forced_year_start, forced_year_end = self._get_sequence_date_range(sequence_number_reset)
-
-        year = forced_year_start or format_values.get('year') or date_start.year
-        year_end = forced_year_end or format_values.get('year_end') or ''
-
-        month = format_values.get('month')
-        month_str = str(month).zfill(2) if month else "00"
-
-        if sequence_number_reset == 'month':
-            series_name = f"{year}{month_str}"
-        elif sequence_number_reset == 'year_range_month':
-            series_name = f"{year}{year_end}{month_str}"
-        elif sequence_number_reset == 'year_range':
-            series_name = f"{year}{year_end}"
-        elif sequence_number_reset == 'year':
-            series_name = str(year)
-        else:
-            series_name = f"{prefix}{year}"
-
-        return self.env['l10n_pt.at.series'].create({
-            'name': series_name,
-            'prefix': prefix,
-            'document_type': self.l10n_pt_document_type,
-            'journal_id': self.journal_id.id,
-            'company_id': self.company_id.id,
-            'date_start': date_start,
-            'date_end': date_end,
-            # TODO: to be handled later
-            'training_series': True,
-            'at_code': f'AT-{prefix}{series_name}',
-        })
-
-    def _check_l10n_pt_at_series_id(self):
-        self.ensure_one()
-        if self.move_type in ('out_invoice', 'out_receipt', 'out_refund'):
-            if not self.l10n_pt_at_series_id:
-                raise UserError(_("Please select a series for this move."))
-            series = self.l10n_pt_at_series_id
-            invoice_date = self.invoice_date or fields.Date.context_today(self)
-            series_date_valid = (
-                (not series.date_start or series.date_start <= invoice_date)
-                and (not series.date_end or series.date_end >= invoice_date)
-            )
-            if not series.active and not series_date_valid:
-                raise UserError(_("An inactive series cannot be used."))
-            if not series.at_code:
-                raise UserError(self.env._(
-                        "The AT Series '%(series)s' is missing the AT Validation Code. "
-                        "Please fill in the AT Validation Code obtained from the Portal das Finanças before posting.",
-                        series=series.display_name,
-                    )
-                )
-
     @api.depends('name', 'move_type', 'company_id', 'state')
     def _compute_l10n_pt_document_number(self):
         for move in self:
@@ -533,23 +591,8 @@ class AccountMove(models.Model):
             else:
                 move.l10n_pt_document_number = False
 
-    def _check_l10n_pt_document_number(self):
-        for move in self.filtered(lambda m: (
-            m._is_pt_move()
-            and m.move_type in self.get_sale_types(include_receipts=True)
-            and m.l10n_pt_at_series_id
-        )):
-            if move.l10n_pt_document_number and not re.match(r'^[^ ]+ [^/^ ]+/[0-9]+$', move.l10n_pt_document_number):
-                raise ValidationError(_(
-                    "The document number (%s) is invalid. It must start with the internal code "
-                    "of the document type, a space, the name of the series followed by a slash and the number of the "
-                    "document within the series (e.g. INV 2025A/1). Please check if the series selected fulfill these "
-                    "requirements.", move.l10n_pt_document_number
-                ))
-
     @api.depends('move_type')
     def _compute_l10n_pt_document_type(self):
-        # Debit notes need to be set to the correct PT document type
         for move in self:
             if (
                 move._is_pt_move()

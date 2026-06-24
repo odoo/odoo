@@ -23,7 +23,7 @@ class TestL10nPtCommon(AccountTestInvoicingCommon):
                 'document_type': series_type,
                 'prefix': prefix,
                 'at_code': f'AT-TEST{prefix}{year}',
-            } for series_type, prefix in (('out_invoice', 'INV'), ('out_refund', 'RINV'), ('payment_receipt', 'PAY'))])
+            } for series_type, prefix in (('out_invoice', 'INV'), ('out_receipt', 'FS'), ('out_refund', 'RINV'), ('payment_receipt', 'PAY'))])
             return series
 
         super().setUpClass()
@@ -37,6 +37,7 @@ class TestL10nPtCommon(AccountTestInvoicingCommon):
             'country_id': cls.env.ref('base.pt').id,
             'vat': 'PT123456789',
         })
+        cls.partner_a.vat = 'PT123456789'
         cls.company_data_2 = cls.setup_other_company()
         cls.series_2017 = create_at_series('2017')
         cls.series_2024 = create_at_series('2024')

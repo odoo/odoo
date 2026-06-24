@@ -124,6 +124,49 @@ class TestL10nPtMiscRequirements(TestL10nPtCommon):
             move = self.create_invoice(move_type, date)
             self.assertEqual(move._get_l10n_pt_document_number(), expected)
 
+    def test_l10n_pt_document_types(self):
+        """
+        Test that out_invoice is a regular invoice (FT) and out_receipt a simplified invoice (FS).
+        """
+        invoice = self.create_invoice('out_invoice')
+        self.assertEqual(invoice.l10n_pt_document_type, 'out_invoice')
+
+        receipt = self.create_invoice('out_receipt', amount=500.0)
+        self.assertEqual(receipt.l10n_pt_document_type, 'out_receipt')
+
+    def test_l10n_pt_simplified_invoice_limit(self):
+        """
+        Test that a sales receipt (simplified invoice) exceeding the goods limit cannot be posted,
+        while one within the limit posts normally.
+        """
+        with self.assertRaisesRegex(UserError, "sales receipt.*cannot exceed"):
+            self.create_invoice('out_receipt', amount=1000.0)
+
+        receipt = self.create_invoice('out_receipt', amount=500.0)
+        self.assertEqual(receipt.state, 'posted')
+
+    def test_l10n_pt_receipt_no_partner(self):
+        """
+        Test that a sales receipt can be posted without a partner.
+        """
+        receipt = self.env['account.move'].with_company(self.company_pt).create({
+            'company_id': self.company_pt.id,
+            'move_type': 'out_receipt',
+            'invoice_date': fields.Date.from_string('2024-01-01'),
+            'l10n_pt_at_series_id': self.series_2024.filtered(lambda s: s.document_type == 'out_receipt').id,
+            'line_ids': [
+                Command.create({
+                    'name': 'Product A',
+                    'quantity': 1,
+                    'price_unit': 500.0,
+                    'tax_ids': [self.tax_sale_23.id],
+                }),
+            ],
+        })
+        receipt.action_post()
+        self.assertEqual(receipt.state, 'posted')
+        self.assertFalse(receipt.partner_id)
+
     def test_l10n_pt_invoice_lines(self):
         """
         Test that invoices without taxes or non-positive lines cannot be posted

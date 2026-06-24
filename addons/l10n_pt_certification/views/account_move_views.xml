@@ -72,8 +72,7 @@
                         <group id="portuguese_info_group_receipt">
                             <field name="l10n_pt_at_series_id"
                                    readonly="state in ['cancel', 'posted']"
-                                   required="move_type == 'out_receipt' and country_code == 'PT'"
-                                   domain="[('active', '=', True), ('journal_id', '=', journal_id)]"/>
+                                   domain="[('active', '=', True), ('journal_id', '=', journal_id), ('document_type', '=', l10n_pt_document_type)]"/>
                             <field name="inalterable_hash" groups="base.group_no_one"/>
                             <field name="l10n_pt_atcud"/>
                             <field name="l10n_pt_cancel_reason"
