@@ -31,7 +31,7 @@
             <field name="arch" type="xml">
                 <list position="inside">
                     <field name="state" widget="badge" optional="hide"
-                        decoration-info="state == 'new'" decoration-success="state == 'active'"/>
+                        decoration-muted="state == 'new'" decoration-success="state == 'active'"/>
                 </list>
             </field>
         </record>
@@ -43,6 +43,18 @@
             <field name="binding_model_id" ref="base.model_res_users" />
             <field name="state">code</field>
             <field name="code">records.action_reset_password()</field>
+        </record>
+
+        <record id="view_users_search" model="ir.ui.view">
+            <field name="name">res.users.search.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <separator />
+                    <filter name="group_by_state" string="Status" context="{'group_by': 'state'}"/>
+                </xpath>
+            </field>
         </record>
 
 </odoo>

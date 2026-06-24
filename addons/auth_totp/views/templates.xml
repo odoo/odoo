@@ -3,21 +3,19 @@
     <template id="auth_totp_form" name="Two-Factor Authentication">
         <t t-call="web.login_layout" disable_footer.translate="1">
             <div class="oe_login_form">
-                <h5 class="card-title">Two-factor Authentication</h5>
+                <h5 class="card-title">Enter verification code</h5>
                 <form method="POST" action="" class="">
                     <div class="mb-2 mt-2 text-muted">
-                        To login, enter below the six-digit authentication code provided by your Authenticator app.
+                        <!-- Key emoji HTML code-->
+                        &#128273; Check your Authenticator app for your code.
                         <br/>
-                        <a href="https://www.odoo.com/documentation/latest/applications/general/auth/2fa.html"
-                           title="Learn More" target="_blank">Learn More</a>
                     </div>
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <input type="hidden" name="redirect" t-att-value="redirect"/>
                     <div class="mb-3">
-                        <label class="fw-bold" for="totp_token">Authentication Code</label>
                         <input
                             id="totp_token" name="totp_token" class="form-control mb-2" autocomplete="one-time-code"
-                            inputmode="numeric" autofocus="autofocus" required="required" placeholder="e.g. 123456"
+                            inputmode="numeric" autofocus="autofocus" required="required" placeholder="Enter code"
                         />
                     </div>
                     <div class="text-center py-2 border-top">
@@ -34,15 +32,6 @@
                             </button>
                         </div>
 
-                    </div>
-                </form>
-
-                <form method="POST" action="/web/session/logout">
-                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                    <div class="w-100 text-center">
-                        <button type="submit" class="btn btn-link btn-sm mb-2">
-                            Cancel
-                        </button>
                     </div>
                 </form>
             </div>

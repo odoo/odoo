@@ -63,11 +63,7 @@ registry.category("web_tour.tours").add('totportal_login_enabled', {
     trigger: 'button:contains("Log in")',
     run: "click",
     expectUnloadPage: true,
-}, {
-    content: "expect totp screen",
-    trigger: 'label:contains(Authentication Code)',
-    run: "click",
-}, {
+},  {
     content: "input code",
     trigger: 'input[name=totp_token]',
     run: async function (helpers) {
