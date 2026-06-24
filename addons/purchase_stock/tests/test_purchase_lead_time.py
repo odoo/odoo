@@ -310,7 +310,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(len(orderpoint), 1)
 
         # First replenishment trigger
-        orderpoint.action_replenish()
+        self.assertTrue(('tag', 'display_notification') in orderpoint.action_replenish().items())
         po_line = self.env['purchase.order.line'].search([('product_id', '=', self.product.id)])
         self.assertEqual(len(po_line), 1, 'A purchase order line should be created')
         self.assertEqual(po_line.product_qty, 5)
