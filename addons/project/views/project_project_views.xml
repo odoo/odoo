@@ -128,7 +128,7 @@
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
-                            <field name="user_id" string="Project Manager" widget="many2one_avatar_user" readonly="not active" domain="[('share', '=', False)]"/>
+                            <field name="user_id" string="Project Manager" widget="many2one_avatar_user" readonly="not active"/>
                             <field name="date_start" string="Planned Date" widget="daterange" options='{"end_date_field": "date", "always_range": True}' required="date_start or date" />
                             <field name="date" invisible="1" required="date_start"/>
                         </group>
@@ -549,7 +549,7 @@
                                     <field name="activity_ids" widget="kanban_activity" class="ms-2"/>
                                 </div>
                                 <div class="d-flex ms-auto align-items-center">
-                                    <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]" class="me-1"/>
+                                    <field name="user_id" widget="many2one_avatar_user" class="me-1"/>
                                     <field t-if="record.last_update_status.value &amp;&amp; widget.editable &amp;&amp; !record.is_template.raw_value" name="last_update_status" widget="project_state_selection"/>
                                     <span t-if="record.last_update_status.value &amp;&amp; !widget.editable" t-att-class="'o_status_bubble mx-0 o_color_bubble_' + record.last_update_color.value" t-att-title="record.last_update_status.value"></span>
                                 </div>
