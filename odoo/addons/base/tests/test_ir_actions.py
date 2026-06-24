@@ -10,9 +10,10 @@ from unittest.mock import patch
 
 import odoo
 from odoo.exceptions import UserError, ValidationError, AccessError
-from odoo.tools import mute_logger
+from odoo.tools import mute_logger, frozendict
 from odoo.tests import common, tagged
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.addons.base.models.res_partner import ResPartner
 from odoo import Command
 
 
@@ -596,6 +597,45 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             # should warn in logs (hence mute_logger)
             self.action.with_context(self.context).run()
         self.assertEqual(num_requests, 2)
+
+    def test_webhook_sample_payload_with_frozendict_key(self):
+        """Test webhook sample payload generation with a frozendict used as a dict key.
+        Ensure serialization does not crash and key content is preserved in the output."""
+
+        model = self.env['ir.model']._get('res.partner')
+
+        field = self.env['ir.model.fields'].create({
+            'name': 'x_payload',
+            'field_description': 'Payload',
+            'model_id': model.id,
+            'store': False,
+            'ttype': 'binary',
+        })
+
+        action = self.env['ir.actions.server'].create({
+            'name': 'Webhook Test',
+            'state': 'webhook',
+            'model_id': model.id,
+            'webhook_field_ids': [Command.link(field.id)],
+        })
+
+        fake_payload = {
+            frozendict({
+                'move_id': 1,
+                'date_maturity': date(2026, 6, 24),
+            }): {
+                'amount_currency': 1.15,
+                'balance': 1.15,
+            },
+        }
+
+        # Bypass the JSON field's own json.dumps validation by mocking read(),
+        # Such values cannot be stored through normal ORM field types, but can
+        with patch.object(ResPartner, 'read', return_value=[{'x_payload': fake_payload}]):
+            action._compute_webhook_sample_payload()
+
+        self.assertTrue(action.webhook_sample_payload)
+        self.assertIn('move_id', action.webhook_sample_payload)
 
     def test_90_convert_to_float(self):
         # make sure eval_value convert the value into float for float-type fields
