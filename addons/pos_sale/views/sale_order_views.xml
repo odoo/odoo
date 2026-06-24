@@ -25,4 +25,35 @@
         </field>
     </record>
 
+    <record id="sale_order_list_inherit_pos_sale" model="ir.ui.view">
+        <field name="name">sale.order.list.inherit.pos.sale</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_tree"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <field name="user_id" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+            <field name="activity_ids" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </field>
+            <xpath expr="//field[@name='company_id' and @groups='base.group_multi_company']" position="attributes">
+                <attribute name="column_invisible">True</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sale_order_search_inherit_pos_sale" model="ir.ui.view">
+        <field name="name">sale.order.search.inherit.pos.sale</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <filter name="my_sale_orders_filter" position="after">
+                <separator />
+                <filter name="paid_orders_filter" string="Paid" domain="[('amount_unpaid', '=', 0)]"/>
+                <filter name="unpaid_orders_filter" string="Not Paid" domain="[('amount_unpaid', '!=', 0)]"/>
+            </filter>
+        </field>
+    </record>
 </odoo>

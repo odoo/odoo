@@ -83,12 +83,21 @@ export function checkOrdersListEmpty() {
     ];
 }
 
+export function isOrdersListNotEmpty() {
+    return {
+        content: "Check that the orders list is not empty",
+        trigger: ".o_data_row",
+    };
+}
+
 export function checkOrdersListNotEmpty() {
-    return [
-        ...ProductScreen.clickControlButton("Quotation / Order"),
-        {
-            content: "Check that the orders list is not empty",
-            trigger: ".o_data_row",
-        },
-    ];
+    return [...ProductScreen.clickControlButton("Quotation / Order"), isOrdersListNotEmpty()];
+}
+
+export function removeUnpiadFilter() {
+    return {
+        content: "Remove 'Not Paid' filter",
+        trigger: `.modal:not(.o_inactive_modal) .o_searchview .o_facet_remove`,
+        run: "click",
+    };
 }

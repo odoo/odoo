@@ -73,6 +73,7 @@
                     </t>
                 </t>
                 <t t-if="this.pos.config.fiscal_position_ids.length and this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton"
+                    name="o_fiscal_position_button"
                     iconClasses="'fa fa-book'"
                     btnText.translate="Tax"
                     btnClasses="'o_fiscal_position_button btn-secondary '"

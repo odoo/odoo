@@ -21,12 +21,14 @@
                     onClick="this.onClickWallet"/>
             </t>
             <t t-if="this.pos.models['loyalty.program'].some((p) => ['coupons', 'promotion', 'gift_card', 'promo_code', 'next_order_coupons'].includes(p.program_type))" t-call="point_of_sale.controlButton"
+                name="o_loyalty_code_button"
                 iconClasses="'fa fa-percent'"
                 btnText.translate="Enter Code"
                 btnClasses="'btn-secondary '"
                 onClick="() => this.clickPromoCode()">
             </t>
             <t t-if="this.pos.models['loyalty.program'].length and this.pos.cashier._role !== 'minimal'" t-call="point_of_sale.controlButton"
+                name="o_reward_button"
                 iconClasses="'fa fa-star'"
                 btnText.translate="Reward"
                 btnClasses="'btn-secondary ' + (this.state.nbrRewards ? ' highlight' : 'disabled')"

@@ -9,5 +9,11 @@
                 onClick="() =>   this.onClickQuotation()">
             </t>
         </xpath>
+        <xpath expr="//t[@t-if='this.props.showRemainingButtons']/div/t[@name='o_pricelist_button']" position="attributes">
+            <attribute name="disabled" add="this.pos.getOrder().hasPrePaidSOLine" separator=" or " />
+        </xpath>
+        <xpath expr="//t[@t-if='this.props.showRemainingButtons']/div/t[@name='o_fiscal_position_button']" position="attributes">
+            <attribute name="disabled" add="this.pos.getOrder().hasPrePaidSOLine" separator=" or " />
+        </xpath>
     </t>
 </templates>
