@@ -2,10 +2,27 @@
 // =============================================================================
 
 :where(body[class*="o_website_sale_"]) {
+    // Set the default border width to replace SCSS var with CSS
+    --border-width: #{$border-width};
+
     .o_wsale_custom_border {
         --o-border-color: var(--o-wsale-border-color);
         --border-color: var(--o-wsale-border-color);
         --o-wsale-card-border-color: var(--o-wsale-border-color);
+        --border-width: var(--o-wsale-border-width, #{$border-width});
+
+        .accordion {
+            --accordion-border-width: var(--border-width);
+        }
+
+        .btn {
+            // Buttons should not be impacted, unless modified by outline theme.
+            --btn-border-width: #{$border-width};
+        }
+
+        .css_quantity {
+            --border-width: #{$border-width};
+        }
     }
 }
 
@@ -175,7 +192,7 @@
 
         &.o_wsale_filmstrip_bordered {
             --o-wsale-filmstrip-item-min-height: 3.5rem;
-            --o-wsale-filmstrip-item-border-width: #{$border-width};
+            --o-wsale-filmstrip-item-border-width: var(--border-width);
             --o-wsale-filmstrip-item-bg: transparent;
             --o-wsale-filmstrip-item-image-bg: #{$gray-100};
 
@@ -183,7 +200,7 @@
         }
 
         &.o_wsale_filmstrip_tabs {
-            --o-wsale-filmstrip-wrapper-border-width: 0 0 #{$border-width} 0;
+            --o-wsale-filmstrip-wrapper-border-width: 0 0 var(--border-width) 0;
             --o-wsale-filmstrip-wrapper-padding-bottom: 0;
 
             --o-wsale-filmstrip-gap: 0;
@@ -198,9 +215,9 @@
 
             --o-wsale-filmstrip-item-border-color-hover: #{$primary};
             --o-wsale-filmstrip-item-color-hover: #{$primary};
-            --o-wsale-filmstrip-item-box-shadow-hover: inset 0 #{$border-width * -1} 0 #{$primary};
+            --o-wsale-filmstrip-item-box-shadow-hover: inset 0 calc(var(--border-width) * -1) 0 #{$primary};
 
-            --o-wsale-filmstrip-item-border-width-active: 0 0 #{$border-width * 2} 0;
+            --o-wsale-filmstrip-item-border-width-active: 0 0 calc(var(--border-width) * 2) 0;
             --o-wsale-filmstrip-item-bg-active: transparent;
 
             .o_wsale_filmstrip_wrapper {
@@ -211,7 +228,7 @@
         &.o_wsale_filmstrip_pills {
             --o-wsale-filmstrip-flex-wrap: wrap;
 
-            --o-wsale-filmstrip-item-border-width: #{$border-width};
+            --o-wsale-filmstrip-item-border-width: var(--border-width);
             --o-wsale-filmstrip-item-border-radius: #{$border-radius-pill};
             --o-wsale-filmstrip-item-padding-y: #{$nav-link-padding-y};
             --o-wsale-filmstrip-item-padding-x: #{$nav-link-padding-x};
@@ -259,7 +276,7 @@
         }
 
         &.o_wsale_filmstrip_grid {
-            --o-wsale-filmstrip-wrapper-border-width: #{$border-width} 0 #{$border-width} 0;
+            --o-wsale-filmstrip-wrapper-border-width: var(--border-width) 0 var(--border-width) 0;
             --o-wsale-filmstrip-wrapper-padding-bottom: 0;
             --o-wsale-filmstrip-wrapper-width: 100%;
 
@@ -268,7 +285,7 @@
             --o-wsale-filmstrip-item-direction: column;
             --o-wsale-filmstrip-item-justify: flex-start;
             --o-wsale-filmstrip-item-width: 18rem;
-            --o-wsale-filmstrip-item-border-width: 0 #{$border-width} 0 0 #{"/*rtl: 0 0 0 " + $border-width + "*/"};
+            --o-wsale-filmstrip-item-border-width: 0 var(--border-width) 0 0 #{"/*rtl: 0 0 0 " + var(--border-width) + "*/"};
             --o-wsale-filmstrip-item-border-radius: 0;
             --o-wsale-filmstrip-item-padding-y: #{map-get($spacers, 3)};
             --o-wsale-filmstrip-item-padding-x: #{map-get($spacers, 3)};
@@ -610,15 +627,15 @@
             &:where(:not(.o_wsale_has_sidebar)) {
                 @include media-breakpoint-up(sm) {
                     #o_wsale_pager {
-                        border-right: #{$border-width} solid #{$border-color};
-                        border-left: #{$border-width} solid #{$border-color};
+                        border-right: var(--border-width) solid var(--border-color);
+                        border-left: var(--border-width) solid var(--border-color);
                     }
                 }
                 @include media-breakpoint-up(lg) {
-                    --o-wsale-topbar-border-width: 0 #{$border-width} #{$border-width} #{$border-width};
+                    --o-wsale-topbar-border-width: 0 var(--border-width) var(--border-width) var(--border-width);
                     #category_footer {
-                        border-right: #{$border-width} solid #{$border-color};
-                        border-left: #{$border-width} solid #{$border-color};
+                        border-right: var(--border-width) solid var(--border-color);
+                        border-left: var(--border-width) solid var(--border-color);
                     }
                 }
             }
@@ -626,12 +643,12 @@
             &.o_wsale_has_sidebar {
                 @include media-breakpoint-up(sm) {
                     #o_wsale_pager {
-                        border-left: #{$border-width} solid #{$border-color};
-                        border-right: #{$border-width} solid #{$border-color};
+                        border-left: var(--border-width) solid var(--border-color);
+                        border-right: var(--border-width) solid var(--border-color);
                     }
                 }
                 @include media-breakpoint-up(lg) {
-                    --o-wsale-topbar-border-width: 0 #{$border-width} #{$border-width} 0;
+                    --o-wsale-topbar-border-width: 0 var(--border-width) var(--border-width) 0;
 
                     #o_wsale_pager {
                         /*rtl:ignore*/
@@ -645,23 +662,23 @@
 
             #o_wsale_products_grid {
                 /*rtl:ignore*/
-                box-shadow: inset -1px -1px 0 0px var(--o-border-color);
+                box-shadow: inset calc(var(--border-width) * -1) calc(var(--border-width) * -1) 0 0px var(--o-border-color);
             }
 
             &:where(:not(.o_wsale_has_sidebar)) #o_wsale_products_grid {
-                border-left: #{$border-width} solid #{$border-color};
+                border-left: var(--border-width) solid var(--border-color);
             }
 
             &.o_wsale_has_sidebar .o_wsale_products_opt_layout_catalog#o_wsale_products_grid {
                 @include media-breakpoint-down(lg) {
-                    border-left: #{$border-width} solid #{$border-color};
+                    border-left: var(--border-width) solid var(--border-color);
                 }
             }
         }
 
         &.o_wsale_has_sidebar {
             @include media-breakpoint-up(lg) {
-                --o-wsale-sidebar-border: #{$border-width} solid #{$border-color};
+                --o-wsale-sidebar-border: var(--border-width) solid #{$border-color};
             }
             @include media-breakpoint-up(lg) {
                 #products_grid {
@@ -672,11 +689,10 @@
                         padding-left: 0;
                     */
                 }
-            }
-
-            .o_wsale_products_main_row {
-                border-left: #{$border-width} solid #{$border-color};
-                margin-left: 0;
+                .o_wsale_products_main_row {
+                    border-left: var(--border-width) solid #{$border-color};
+                    margin-left: 0;
+                }
             }
 
             #products_grid_before {
@@ -1334,7 +1350,7 @@ $-product-radius-map: (
             .o_wsale_product_details_content_section_price,
             .o_wsale_product_details_content_section_accordion
         )) {
-            border-top: var(--o-wsale-product-details-section-border-width, #{$border-width}) solid $border-color;
+            border-top: var(--o-wsale-product-details-section-border-width, var(--border-width)) solid var(--border-color);
             padding-top: var(--o-wsale-product-details-section-padding-top, #{map-get($spacers, 4)});
         }
         &:where(.o_wsale_product_details_content_section_cta:has(.o_wsale_cta_wrapper_boxed)) {

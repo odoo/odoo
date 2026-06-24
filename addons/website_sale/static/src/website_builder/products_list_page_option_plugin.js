@@ -11,6 +11,7 @@ export class ProductsListPageOptionPlugin extends Plugin {
         builder_actions: {
             SetShopContainerAction,
             SetBorderColor,
+            SetBorderWidth,
             SetPpgAction,
             SetPprAction,
             SetDefaultSortAction,
@@ -93,6 +94,29 @@ export class SetBorderColor extends PreviewableWebsiteConfigAction {
     // so the picker shows the currently-applied color when re-opened
     getValue({ editingElement: shopContainerEl }) {
         return shopContainerEl.style.getPropertyValue("--o-wsale-border-color");
+    }
+}
+
+export class SetBorderWidth extends PreviewableWebsiteConfigAction {
+    static id = "setBorderWidth";
+
+    async apply({ editingElement: shopContainerEl, isPreviewing, params, value }) {
+        await super.apply({ editingElement: shopContainerEl, isPreviewing, params, value });
+        shopContainerEl.style.setProperty("--o-wsale-border-width", value);
+
+        if (!isPreviewing) {
+            await rpc("/shop/config/website", { 'shop_border_width': value });
+        }
+    }
+
+    clean({ editingElement: shopContainerEl, isPreviewing, params }) {
+        super.clean({ editingElement: shopContainerEl, isPreviewing, params });
+        shopContainerEl.style.removeProperty("--o-wsale-border-width");
+    }
+
+    // so the input shows the currently-applied width when re-opened
+    getValue({ editingElement: shopContainerEl }) {
+        return shopContainerEl.style.getPropertyValue("--o-wsale-border-width");
     }
 }
 

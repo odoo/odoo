@@ -182,8 +182,8 @@
             />
             <div
                 id="wrap"
-                t-attf-class="d-flex flex-column flex-grow-1 {{website.shop_border_color and 'o_wsale_custom_border'}}"
-                t-attf-style="--o-wsale-border-color: {{website.shop_border_color}};"
+                t-attf-class="d-flex flex-column flex-grow-1 {{(website.shop_border_color or website.shop_border_width) and 'o_wsale_custom_border'}}"
+                t-attf-style="--o-wsale-border-color: {{website.shop_border_color}}; --o-wsale-border-width: {{website.shop_border_width}}"
             >
                 <div class="oe_website_sale o_website_sale_checkout_container container d-flex flex-column flex-grow-1 py-lg-2">
                     <div t-attf-class="row #{not show_wizard_checkout and 'mt32'} mb32">

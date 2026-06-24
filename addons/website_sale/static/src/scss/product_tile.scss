@@ -524,7 +524,7 @@
         --o-wsale-card-info-padding: #{map-get($spacers, 2)} 0;
     }
     &.o_wsale_products_opt_layout_list {
-        --o-wsale-card-border-width: 0 0 #{$border-width};
+        --o-wsale-card-border-width: 0 0 var(--border-width, #{$border-width});
         --o-wsale-card-padding: 0 0 var(--o-wsale-products-grid-gap);
         --o-wsale-card-info-padding: 0 0 0 #{map-get($spacers, 2)};
         --o-wsale-card-info-attributes-display: flex;
@@ -564,7 +564,7 @@
 
 .o_wsale_products_opt_design_cards {
     --_padding-base: #{map-get($spacers, 2)};
-    --o-wsale-card-border-width: 1px;
+    --o-wsale-card-border-width: var(--border-width, #{$border-width});
     --o-wsale-card-info-padding: #{map-get($spacers, 2)} var(--_padding-base) var(--_padding-base);
     --o-wsale-card-info-grow: 1;
     --o-wsale-card-border-radius: var(--o-wsale-opt-border-radius, 0px);
@@ -635,7 +635,7 @@
     --_padding-base: calc(#{map-get($spacers, 2)} + calc(var(--o-wsale-products-grid-gap) * 0.25));
 
     --o-wsale-card-info-position: none;
-    --o-wsale-card-border-width: #{$border-width};
+    --o-wsale-card-border-width: var(--border-width, #{$border-width});
     --o-wsale-card-border-radius: var(--o-wsale-opt-border-radius, 0px);
     --o-wsale-card-info-padding: #{map-get($spacers, 2)} 0 0 0;
     --o-wsale-card-padding: var(--_padding-base);
@@ -674,15 +674,15 @@
 }
 .o_wsale_products_opt_design_grid {
     --o-wsale-card-height: 100%;
-    --o-wsale-card-border-width: 0 #{$border-width $border-width} 0 #{"/*rtl: 0 0 " + $border-width $border-width + "*/"};
+    --o-wsale-card-border-width: 0 var(--border-width, #{$border-width}) var(--border-width, #{$border-width}) 0 #{"/*rtl: 0 0 0 " + $border-width + "*/"};
     --o-wsale-card-info-grow: 1;
-    --o-wsale-card-info-shadow: inset 0 #{$border-width} 0 0 var(--o-border-color);
+    --o-wsale-card-info-shadow: inset 0 var(--border-width, #{$border-width}) 0 0 var(--o-border-color);
     --o-wsale-card-thumb-margin: calc(var(--o-wsale-products-grid-gap-y) * 0.5);
     --o-wsale-card-info-padding: MAX(var(--o-wsale-card-thumb-margin), #{map-get($spacers, 2)}) MAX(var(--o-wsale-card-thumb-margin), #{map-get($spacers, 2)}) MAX(var(--o-wsale-card-thumb-margin), #{map-get($spacers, 2)});
     --o-wsale-card-border-radius: 0px !important;
     --o-wsale-topbar-padding-left: #{$container-padding-x * 0.5};
     --o-wsale-topbar-padding-right: calc(var(--o-wsale-container-fluid-padding-xl, var(--gutter-x)) * 0.5);
-    --o-wsale-topbar-border-width: 0 0 #{$border-width};
+    --o-wsale-topbar-border-width: 0 0 var(--border-width, #{$border-width}) 0;
     --o-border-color: var(--o-wsale-card-border-color, #{$gray-300});
     --border-color: var(--o-border-color);
     --gap: 0px;
@@ -1237,7 +1237,7 @@
 }
 .o_wsale_products_opt_design_condensed {
     $_padding_min: MIN(#{map-get($spacers, 1)}, 1vw);
-    --o-wsale-card-border-width: 0 0 1px;
+    --o-wsale-card-border-width: 0 0 var(--border-width, #{$border-width}) 0;
     --o-wsale-card-padding: #{$_padding_min} 0 calc(#{$_padding_min} + var(--o-wsale-products-grid-gap));
     --o-wsale-card-thumb-size: 3.375rem;
     --o-wsale-card-thumb-border-radius: var(--o-wsale-opt-border-radius, 0);
@@ -1292,7 +1292,7 @@
     --o-wsale-card-attribute-previewer-width: 100%;
     --o-wsale-card-sub-display: contents;
     --o-wsale-card-price-text-align: right;
-    --o-wsale-card-border-width: 0 0 1px;
+    --o-wsale-card-border-width: 0 0 var(--border-width, #{$border-width}) 0;
     --o-wsale-card-padding: 0 0 var(--o-wsale-products-grid-gap, 16px);
     --o-wsale-card-info-attributes-display: flex;
     --o-wsale-card-btns-justify-content: end;

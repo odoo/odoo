@@ -1945,6 +1945,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         writable_fields = {
             "shop_page_container",
             "shop_border_color",
+            "shop_border_width",
             "shop_ppg",
             "shop_ppr",
             "shop_default_sort",

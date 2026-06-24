@@ -164,6 +164,17 @@
             enabledTabs="['solid', 'custom']"
         />
     </BuilderRow>
+    <BuilderRow label.translate="Width" level="1">
+        <BuilderNumberInput
+            action="'setBorderWidth'"
+            actionParam="{ previewClass: 'o_wsale_custom_border'}"
+            unit="'px'"
+            saveUnit="'px'"
+            step="1"
+            min="0"
+            default="1"
+        />
+    </BuilderRow>
 
     <BuilderRow t-if="this.isActiveItem('categories_opt')" label.translate="Collapse Category Recursive" level="1">
         <BuilderCheckbox
