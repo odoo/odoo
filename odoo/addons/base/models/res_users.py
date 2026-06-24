@@ -436,22 +436,45 @@ class ResUsers(models.Model):
         """
         return self.env['res.groups']
 
+    @api.model
+    def _sync_minimal_light_user_groups(self):
+        """Grant the current minimal Light-user group set to existing Light users.
+
+        A Light user is provisioned with the minimal group set known at creation
+        time, so a module installed *afterwards* would never grant its group to
+        the Light users that predate it. Modules that extend
+        :meth:`_get_minimal_light_user_groups` call this from their
+        ``post_init_hook`` to top up those users: every internal user whose access
+        does not exceed the Light baseline is brought up to the full minimal set.
+        """
+        minimal = self._get_minimal_light_user_groups()
+        if not minimal:
+            return
+        group_no_one = self.env.ref('base.group_no_one')
+        light_groups = (self.env.ref('base.group_user') + minimal).all_implied_ids - group_no_one
+        internal_users = self.with_context(active_test=False).search([('share', '=', False)])
+        light_users = internal_users.filtered(
+            lambda user: not (user.all_group_ids - group_no_one - light_groups))
+        if light_users:
+            light_users.write({'group_ids': [(4, gid) for gid in minimal.ids]})
+
     @api.depends('all_group_ids')
     def _compute_role(self):
         # ``role`` is a plain projection of group membership; there is no Python
         # difference between a Light and a regular user. A Light user is simply an
-        # internal user whose extra privileges are limited to the minimal light
-        # set -- any access beyond that reads as a regular User here.
-        minimal = self._get_minimal_light_user_groups()
+        # internal user whose access is exactly the internal-user baseline plus
+        # the minimal light set -- any access beyond that reads as a regular User.
         group_user = self.env.ref('base.group_user')
         group_no_one = self.env.ref('base.group_no_one')
-        baseline = group_user.all_implied_ids + group_no_one
+        # Compare full group closures (not the raw minimal set) so the projection
+        # holds even when the light groups imply, or are implied by, other groups.
+        light_groups = (group_user + self._get_minimal_light_user_groups()).all_implied_ids - group_no_one
         for user in self:
             if user.has_group('base.group_system'):
                 user.role = 'group_system'
             elif user.has_group('base.group_user'):
-                extra = user.all_group_ids._origin - baseline
-                user.role = 'light' if extra == minimal else 'group_user'
+                user_groups = user.all_group_ids._origin - group_no_one
+                user.role = 'light' if user_groups == light_groups else 'group_user'
             else:
                 user.role = False
 
