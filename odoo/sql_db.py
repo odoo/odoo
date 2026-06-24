@@ -88,7 +88,7 @@ def categorize_query(decoded_query: str) -> tuple[typing.Literal['from', 'into']
 
 sql_counter: int = 0
 
-MAX_IDLE_TIMEOUT = 60 * 10
+MAX_IDLE_TIMEOUT = int(os.getenv("ODOO_DB_MAX_IDLE_TIMEOUT", "600"))
 
 
 class Savepoint:
