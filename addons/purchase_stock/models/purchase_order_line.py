@@ -377,9 +377,15 @@ class PurchaseOrderLine(models.Model):
         description_picking = ''
         if values.get('product_description_variants'):
             description_picking = values['product_description_variants']
+        has_temp_manual_orderpoint = (
+            values.get('orderpoint_id')
+            and values['orderpoint_id'].create_uid.id == SUPERUSER_ID
+            and values['orderpoint_id'].trigger == 'manual'
+        )
         lines = self.filtered(
             lambda l: l.propagate_cancel == values['propagate_cancel']
-            and (l.orderpoint_id in [values['orderpoint_id'], False] if values['orderpoint_id'] and not values['move_dest_ids'] else True)
+            and (l.orderpoint_id in [values['orderpoint_id'], False] if values['orderpoint_id']
+            and not values['move_dest_ids'] and not has_temp_manual_orderpoint else True)
             and (l.product_uom_id == product_uom if values.get('force_uom') else True)
         )
 
