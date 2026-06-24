@@ -54,6 +54,10 @@ class ReportCmr(models.AbstractModel):
         packageless_mls = pickings.move_line_ids.filtered(lambda ml: not ml.result_package_id and ml.move_id not in packageless_moves)
         has_uom_id = 'uom_id' in self.env['stock.move.line']._fields
 
+        consignee_id = pickings[0].sale_id.partner_id if 'sale_id' in pickings[0]._fields and pickings[0].sale_id else pickings[0].partner_id
+        en_lang = self.env['res.lang'].search([('code', '=like', 'en_%'), ('active', '=', True)], limit=1)
+        primary_lang = en_lang.code if en_lang else (pickings[0].company_id.partner_id.lang or 'en_US')
+
         packages_weight = done_outermost_packages._get_weight()
         packages_weight.update(ongoing_outermost_packages._get_weight(pickings.ids))
 
@@ -75,52 +79,84 @@ class ReportCmr(models.AbstractModel):
 
             products = []
             hs_codes = []
-            for (prod, unit), mls in package_mls.grouped(lambda ml: (ml.product_id, ml.uom_id if has_uom_id else False)).items():
-                products.append((sum(mls.mapped('quantity')), unit.name if unit else False, prod.with_context(display_default_code=False).display_name))
-                hs_codes.append(prod.hs_code if 'hs_code' in prod._fields else False)
+            for (product, unit), mls in package_mls.grouped(lambda ml: (ml.product_id, ml.uom_id if has_uom_id else False)).items():
+                qty = sum(mls.mapped('quantity'))
+                if qty:
+                    product_name = product.with_context(lang=primary_lang, display_default_code=False).display_name
+                    product_translated_name = product.with_context(lang=consignee_id.lang, display_default_code=False).display_name
+                    product_no_variant_att_value = mls.move_id.never_product_template_attribute_value_ids.with_context(lang=primary_lang).name
+                    product_translated_no_variant_att_value = mls.move_id.never_product_template_attribute_value_ids.with_context(lang=consignee_id.lang).name
+                    products.append((
+                        qty,
+                        unit.name if unit else False,
+                        product_name + (f' ({product_no_variant_att_value})' if product_no_variant_att_value else ''),
+                        (product_translated_name + (f' ({product_translated_no_variant_att_value})' if product_translated_no_variant_att_value else '')) if primary_lang != consignee_id.lang else False,
+                    ))
+                    hs_codes.append(product.hs_code if 'hs_code' in product._fields else False)
 
             package_volume = package.package_type_id.packaging_length *\
                 package.package_type_id.width *\
                 package.package_type_id.height if package.package_type_id else 0.0
 
-            goods_rows.append({
-                'package_name': package.name or False,
-                'packing_method': package.package_type_id.name if package.package_type_id else False,
-                'products': products,
-                'hs_codes': hs_codes,
-                'weight': kg_uom.round(weight_uom._compute_quantity(package.shipping_weight or packages_weight.get(package, 0), kg_uom)),
-                'volume': m3_uom.round(package_volume * packages_volume_factor * volume_factor),
-            })
+            if products:
+                goods_rows.append({
+                    'package_name': package.name or False,
+                    'packing_method': package.package_type_id.name if package.package_type_id else False,
+                    'products': products,
+                    'hs_codes': hs_codes,
+                    'weight': kg_uom.round(weight_uom._compute_quantity(package.shipping_weight or packages_weight.get(package, 0), kg_uom)),
+                    'volume': m3_uom.round(package_volume * packages_volume_factor * volume_factor),
+                })
 
         for move in packageless_moves:
             hs = move.product_id.hs_code if 'hs_code' in move.product_id._fields else False
-            goods_rows.append({
-                'package_name': False,
-                'packing_method': False,
-                'products': [(move.quantity, move.uom_id.name if has_uom_id and move.uom_id else False, move.product_id.with_context(display_default_code=False).display_name)],
-                'hs_codes': [hs],
-                'weight': kg_uom.round(weight_uom._compute_quantity(move.quantity_product_uom * move.product_id.weight, kg_uom)),
-                'volume': m3_uom.round(move.quantity_product_uom * move.product_id.volume * volume_factor),
-            })
+            if move.quantity_product_uom:
+                product_name = move.product_id.with_context(lang=primary_lang, display_default_code=False).display_name
+                product_translated_name = move.product_id.with_context(lang=consignee_id.lang, display_default_code=False).display_name
+                product_no_variant_att_value = move.never_product_template_attribute_value_ids.with_context(lang=primary_lang).name
+                product_translated_no_variant_att_value = move.never_product_template_attribute_value_ids.with_context(lang=consignee_id.lang).name
+                goods_rows.append({
+                    'package_name': False,
+                    'packing_method': False,
+                    'products': [(
+                        move.quantity,
+                        move.uom_id.name if has_uom_id and move.uom_id else False,
+                        product_name + (f' ({product_no_variant_att_value})' if product_no_variant_att_value else ''),
+                        (product_translated_name + (f' ({product_translated_no_variant_att_value})' if product_translated_no_variant_att_value else '')) if primary_lang != consignee_id.lang else False,
+                    )],
+                    'hs_codes': [hs],
+                    'weight': kg_uom.round(weight_uom._compute_quantity(move.quantity_product_uom * move.product_id.weight, kg_uom)),
+                    'volume': m3_uom.round(move.quantity_product_uom * move.product_id.volume * volume_factor),
+                })
 
-        for (prod, unit), mls in packageless_mls.grouped(lambda ml: (ml.product_id, ml.uom_id if has_uom_id else False)).items():
+        for (product, unit), mls in packageless_mls.grouped(lambda ml: (ml.product_id, ml.uom_id if has_uom_id else False)).items():
             qty = sum(mls.mapped('quantity_product_uom'))
-            hs = prod.hs_code if 'hs_code' in prod._fields else False
-            goods_rows.append({
-                'package_name': False,
-                'packing_method': False,
-                'products': [(sum(mls.mapped('quantity')), unit.name if unit else False, prod.with_context(display_default_code=False).display_name)],
-                'hs_codes': [hs],
-                'weight': kg_uom.round(weight_uom._compute_quantity(qty * prod.weight, kg_uom)),
-                'volume': m3_uom.round(qty * prod.volume * volume_factor),
-            })
+            hs = product.hs_code if 'hs_code' in product._fields else False
+            if qty:
+                product_name = product.with_context(lang=primary_lang, display_default_code=False).display_name
+                product_translated_name = product.with_context(lang=consignee_id.lang, display_default_code=False).display_name
+                product_no_variant_att_value = mls.move_id.never_product_template_attribute_value_ids.with_context(lang=primary_lang).name
+                product_translated_no_variant_att_value = mls.move_id.never_product_template_attribute_value_ids.with_context(lang=consignee_id.lang).name
+                goods_rows.append({
+                    'package_name': False,
+                    'packing_method': False,
+                    'products': [(
+                        sum(mls.mapped('quantity')),
+                        unit.name if unit else False,
+                        product_name + (f' ({product_no_variant_att_value})' if product_no_variant_att_value else ''),
+                        (product_translated_name + (f' ({product_translated_no_variant_att_value})' if product_translated_no_variant_att_value else '')) if primary_lang != consignee_id.lang else False,
+                    )],
+                    'hs_codes': [hs],
+                    'weight': kg_uom.round(weight_uom._compute_quantity(qty * product.weight, kg_uom)),
+                    'volume': m3_uom.round(qty * product.volume * volume_factor),
+                })
 
         return {
-            'should_compress_goods_rows': len(pickings.move_ids) > 9,
+            'should_compress_goods_rows': len(pickings.move_ids) > 6,
             'outermost_packages_count': len(ongoing_outermost_packages | done_outermost_packages),
             'goods_rows': goods_rows,
             'sender_id': pickings[0].company_id.partner_id,
-            'consignee_id': pickings[0].sale_id.partner_id if 'sale_id' in pickings[0]._fields and pickings[0].sale_id else pickings[0].partner_id,
+            'consignee_id': consignee_id,
             'carrier_id': pickings[0].carrier_id if 'carrier_id' in pickings[0]._fields else False,
             'delivery_address': pickings[0].partner_id,
             'warehouse_id': pickings[0].picking_type_id.warehouse_id,
