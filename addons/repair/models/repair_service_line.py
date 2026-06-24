@@ -1,5 +1,6 @@
+from collections import defaultdict
+
 from odoo import api, fields, models
-from odoo.exceptions import UserError
 
 
 class RepairServiceLine(models.Model):
@@ -23,6 +24,8 @@ class RepairServiceLine(models.Model):
     invoice_line_ids = fields.One2many('account.move.line', 'repair_service_line_id', string='Invoice Line', index='btree_not_null')
     sequence = fields.Integer('Sequence', default=0)
     description = fields.Text(string="Description", translate=True)
+    qty_invoiced = fields.Float(string='Invoiced Quantity', compute='_compute_qty_invoiced', digits='Product Unit')
+    qty_to_invoice = fields.Float(string='Quantity To Invoice', compute='_compute_qty_to_invoice', digits='Product Unit')
 
     @api.depends('product_id')
     def _compute_uom_id(self):
@@ -34,10 +37,25 @@ class RepairServiceLine(models.Model):
         for line in self:
             line.allowed_uom_ids = line.product_id._get_available_uoms()
 
+    @api.depends('invoice_line_ids.move_id.state', 'invoice_line_ids.quantity')
+    def _compute_qty_invoiced(self):
+        invoiced_quantities = self._prepare_qty_invoiced()
+        for line in self:
+            line.qty_invoiced = invoiced_quantities[line]
+
+    @api.depends('qty_invoiced', 'quantity', 'uom_id', 'invoice_line_ids', 'repair_id.state')
+    def _compute_qty_to_invoice(self):
+        for line in self:
+            invoice_policy = line.product_id.invoice_policy
+            if line.repair_id.state == 'done' and invoice_policy == 'delivery' or line.product_id.invoice_policy == 'order':
+                line.qty_to_invoice = line.quantity - line.qty_invoiced
+                continue
+            line.qty_to_invoice = 0
+
     @api.model_create_multi
     def create(self, vals_list):
         repair_service_line = super().create(vals_list)
-        repair_service_line._create_repair_linked_line()
+        repair_service_line._create_repair_sale_order_line()
         return repair_service_line
 
     def write(self, vals):
@@ -50,13 +68,8 @@ class RepairServiceLine(models.Model):
                 elif line.sale_line_id:
                     lines_to_update |= line
 
-                if not line.invoice_line_ids and line.repair_id.invoice_ids:
-                    lines_to_create |= line
-                elif line.invoice_line_ids:
-                    lines_to_update |= line
-
-            lines_to_create._create_repair_linked_line()
-            lines_to_update._update_repair_linked_line()
+            lines_to_create._create_repair_sale_order_line()
+            lines_to_update._update_repair_sale_order_line()
         return res
 
     @api.ondelete(at_uninstall=True)
@@ -64,42 +77,6 @@ class RepairServiceLine(models.Model):
         self.filtered(
             lambda r: r.repair_id and r.sale_line_id
         ).sale_line_id.write({'product_uom_qty': 0.0})
-
-        self.filtered(
-            lambda r: r.repair_id and r.invoice_line_ids and r.invoice_line_ids.move_id.state != 'posted'
-        ).invoice_line_ids.write({'quantity': 0.0})
-
-    def _update_repair_linked_line(self):
-        if self.repair_id.sale_order_id:
-            return self._update_repair_sale_order_line()
-        if self.repair_id.invoice_ids:
-            return self._update_repair_invoice_line()
-
-    def _create_repair_linked_line(self):
-        if self.repair_id.sale_order_id:
-            return self._create_repair_sale_order_line()
-        if self.repair_id.invoice_ids:
-            return self._create_repair_invoice_line()
-
-    def _update_repair_invoice_line(self):
-        lines_to_recreate = self.env['repair.service.line']
-        for line in self:
-            if line.invoice_line_ids.move_id.state == 'posted':
-                raise UserError(self.env._("This line is linked to a posted invoice and cannot be modified.\n"
-                                    "Please create a new line to link to a new invoice or reset the invoice to draft."))
-            if line.product_id != line.invoice_line_ids.product_id:
-                lines_to_recreate |= line
-                continue
-
-            line.invoice_line_ids.write({
-                'product_uom_id': line.uom_id.id,
-                'quantity': line.quantity,
-            })
-
-        lines_to_recreate.invoice_line_ids.unlink()
-        lines_to_recreate._create_repair_invoice_line()
-        if self.repair_id.under_warranty:
-            self.price_unit = 0.0
 
     def _update_repair_sale_order_line(self):
         lines_to_recreate = self.env['repair.service.line']
@@ -147,17 +124,22 @@ class RepairServiceLine(models.Model):
         self.env['sale.order.line'].create(vals_list)
 
     def _create_repair_invoice_line(self):
+        if not self:
+            return
         vals_list = []
-
+        invoice_id = self.repair_id.invoice_ids[0]
+        is_refund_type = invoice_id.move_type == 'out_refund'
         for line in self:
-            invoice_id = line.repair_id.invoice_ids.filtered(lambda invoice: invoice.state != 'posted')
-            if line.invoice_line_ids or not invoice_id:
+            if not invoice_id or not line.qty_to_invoice:
                 continue
+            line_qty = line.qty_to_invoice
+            if is_refund_type:
+                line_qty *= -1
 
             vals_list.append({
                 **line._prepare_repair_service_line_common_vals(),
                 'move_id': invoice_id[0].id,
-                'quantity': line.quantity,
+                'quantity': line_qty,
             })
 
         self.env['account.move.line'].create(vals_list)
@@ -181,3 +163,20 @@ class RepairServiceLine(models.Model):
             'readOnly': len(self) > 1,
             **parent_record._get_product_catalog_uom_data(self.product_id, self[0].uom_id),
         }
+
+    def _prepare_qty_invoiced(self):
+        invoiced_qties = defaultdict(float)
+        for line in self:
+            for invoice_line in line.invoice_line_ids:
+                if (
+                    invoice_line.move_id.state != 'cancel'
+                    or invoice_line.move_id.payment_state == 'invoicing_legacy'
+                ):
+                    invoice_qty = invoice_line.product_uom_id._compute_quantity(
+                        invoice_line.quantity, line.uom_id, round=False
+                    )
+                    if invoice_line.move_id.move_type == 'out_invoice':
+                        invoiced_qties[line] += invoice_qty
+                    elif invoice_line.move_id.move_type == 'out_refund':
+                        invoiced_qties[line] -= invoice_qty
+        return invoiced_qties
