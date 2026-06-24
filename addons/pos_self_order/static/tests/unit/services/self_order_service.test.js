@@ -508,6 +508,8 @@ describe("printOrderChanges", () => {
         store.addToCart(testProduct1, 1);
         store.addToCart(testProduct2, 1);
 
+        store.currentOrder.floating_order_name ||= "Self-Order 0001";
+
         const orderLines = store.currentOrder.lines;
         expect(orderLines[0].product_id.pos_categ_ids[0]).toBe(cat3);
         expect(orderLines[1].product_id.pos_categ_ids[0]).toBe(cat2);

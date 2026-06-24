@@ -763,7 +763,7 @@ export class PosOrder extends PosOrderAccounting {
     }
 
     get floatingOrderName() {
-        return this.floating_order_name || this.tracking_number.toString() || "";
+        return this.floating_order_name || this.tracking_number?.toString() || "";
     }
 
     sortBySequenceAndCategory(a, b) {
@@ -789,6 +789,17 @@ export class PosOrder extends PosOrderAccounting {
             value: this.discountLines?.[0]?.extra_tax_data?.discount_value || 0,
             type: this.discountLines?.[0]?.extra_tax_data?.discount_type || "",
         };
+    }
+
+    get isDirectSale() {
+        return false; // Overridden in pos_restaurant
+    }
+
+    get preparationName() {
+        if (this.isDirectSale) {
+            return this.floatingOrderName || this.pos_reference;
+        }
+        return this.getName();
     }
 
     getName() {
@@ -819,6 +830,48 @@ export class PosOrder extends PosOrderAccounting {
         return !this.currency.isZero(this.change) && this.finalized;
     }
 
+<<<<<<< 08712436656aa3be7c0950cc47304199fbf56169
+||||||| c9862e76266c382ede1492fe61bc428c205b740b
+    getOrderData(reprint = false) {
+        return {
+            reprint: reprint,
+            pos_reference: this.getName(),
+            config_name: this.config_id?.name || this.config.name,
+            time: luxon.DateTime.now().toFormat("HH:mm"),
+            tracking_number: this.tracking_number,
+            preset_name: this.preset_id?.name || "",
+            preset_time: this.presetDateTime,
+            employee_name: this.employee_id?.name || this.user_id?.name,
+            internal_note: getStrNotes(this.internal_note),
+            general_customer_note: this.general_customer_note,
+            changes: {
+                title: "",
+                data: [],
+            },
+        };
+    }
+
+=======
+    getOrderData(reprint = false) {
+        return {
+            reprint: reprint,
+            pos_reference: this.preparationName,
+            config_name: this.config_id?.name || this.config.name,
+            time: luxon.DateTime.now().toFormat("HH:mm"),
+            tracking_number: this.tracking_number,
+            preset_name: this.preset_id?.name || "",
+            preset_time: this.presetDateTime,
+            employee_name: this.employee_id?.name || this.user_id?.name,
+            internal_note: getStrNotes(this.internal_note),
+            general_customer_note: this.general_customer_note,
+            changes: {
+                title: "",
+                data: [],
+            },
+        };
+    }
+
+>>>>>>> 87787ecf8eb87c5eb8acced132408b52f0192203
     getLinesToCompute() {
         return this.lines.filter(
             (line) =>
