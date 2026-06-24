@@ -172,6 +172,13 @@ export async function mountWithCleanup(ComponentClass, options) {
     const commonEnv = env || getMockEnv() || (await makeMockEnv({}, { app }));
     after(() => destroy(app));
 
+    app.env = commonEnv;
+    app.pluginManager.config.env = app.env;
+    const envPluginInstance = app.pluginManager.getPluginById("__ENV__");
+    if (envPluginInstance) {
+        envPluginInstance.env = app.env;
+    }
+
     const componentRoot = app.createRoot(ComponentClass, {
         env: Object.assign(Object.create(commonEnv), componentEnv),
         props,

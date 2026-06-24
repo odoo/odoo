@@ -399,22 +399,20 @@ export async function start(options) {
         addSwitchTabDropdownItem(rootTarget, target);
         const selector = `.o-mail-Discuss-asTabContainer[data-as-tab-id="${target.dataset.asTabId}"]`;
         env = await makeMockEnv({ discussAsTabId, selector }, { makeNew: true });
-    } else {
-        env = getMockEnv() || (await makeMockEnv({}));
     }
-    env.testEnv = true;
     patchWithCleanup(SoundEffects.prototype, {
         _setAudioSrc(audio, srcPath) {
             audio["data-src"] = srcPath;
         },
     });
-    // Note that loading the emojis cannot be called before setting up the env because
-    // it depends on translations being loaded.
     await Promise.all([
         options?.waitUntilSubscribe === false ? Promise.resolve() : waitUntilSubscribe(),
         mountWithCleanup(WebClient, { env, target }),
-        emojiLoader.load(),
     ]);
+    // Note that loading the emojis cannot be called before setting up the env because
+    // it depends on translations being loaded.
+    await emojiLoader.load();
+    env ||= getMockEnv();
     const storeService = env.services["mail.store"];
     const popoutService = env.services["mail.popout"];
     after(() => {
