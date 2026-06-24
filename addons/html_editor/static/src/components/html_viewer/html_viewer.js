@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import {
     Component,
     markup,
@@ -9,6 +9,7 @@ import {
     props,
     proxy,
     t,
+    useEffect,
 } from "@odoo/owl";
 import { getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
@@ -64,12 +65,17 @@ export class HtmlViewer extends Component {
             });
         } else {
             this.readonlyElementRef = useRef("readonlyContent");
-            useLayoutEffect(
-                () => {
-                    this.processReadonlyContent(this.readonlyElementRef.el);
-                },
-                () => [this.props.config.value.toString(), this.readonlyElementRef?.el]
-            );
+            useEffect(() => {
+                void this.props.config.value;
+                if (!this.readonlyElementRef.el) {
+                    return;
+                }
+                for (const cleanup of this._cleanups) {
+                    cleanup();
+                }
+                this._cleanups.length = 0;
+                this.processReadonlyContent(this.readonlyElementRef.el);
+            });
         }
 
         if (this.props.config.cssAssetId) {
@@ -87,14 +93,12 @@ export class HtmlViewer extends Component {
                 }
                 return result;
             });
-            useLayoutEffect(
-                () => {
-                    if (this.readonlyElementRef?.el) {
-                        this.mountComponents();
-                    }
-                },
-                () => [this.props.config.value.toString(), this.readonlyElementRef?.el]
-            );
+            useEffect(() => {
+                void this.props.config.value;
+                if (this.readonlyElementRef?.el) {
+                    this.mountComponents();
+                }
+            });
             this.tocManager = new TableOfContentManager(this.readonlyElementRef);
         }
     }
