@@ -1718,6 +1718,10 @@ class Website(models.CachedModel):
             controllers for dynamic pages (e.g. blog).
             By default, returns template views marked as pages.
 
+            A ``sitemap`` callable runs with ``website_id`` in the context, so
+            ``website_published`` already scopes to this website. Its URLs land
+            in the section named by ``@sitemap_group``, else after its module.
+
             :param str query_string: a (user-provided) string, fetches pages
                                      matching the string
 
@@ -1749,7 +1753,7 @@ class Website(models.CachedModel):
         for page in pages:
             if ignore_custom_homepage and homepage_url == page['url']:
                 continue
-            record = {'loc': page['url'], 'id': page['id'], 'name': page['name']}
+            record = {'loc': page['url'], 'id': page['id'], 'name': page['name'], 'group': 'pages'}
             if page.view_id.priority != 16:
                 record['priority'] = min(round(page.view_id.priority / 32.0, 1), 1)
             last_dates = [d for d in (page.write_date, page.view_write_date) if d]
@@ -1780,12 +1784,50 @@ class Website(models.CachedModel):
                 return f.__func__
             return f
 
+        def _route_module(rule):
+            """
+            Name the sitemap group after the module defining the rule's sitemap
+            function Rules without a sitemap function, and the static routes
+            owned by `website` itself, fall back on `pages`.
+
+            :param rule: routing rule whose `sitemap` entry names the owner
+            :type rule: werkzeug.routing.Rule
+            :rtype: str
+            """
+            sitemap_func = rule.endpoint.routing.get('sitemap')
+            # Without one there is no stable owner: `rule.endpoint.func` is the
+            # merged leaf of the controller chain, so it would move to whichever
+            # module last overrode the handler, renaming a submitted sub-sitemap.
+            if not callable(sitemap_func):
+                return 'pages'
+            module = _unwrap_callable(sitemap_func).__module__.split('.')[2]
+            # `website` contributes the homepage, which belongs with the CMS
+            # pages already yielded under `pages`.
+            if module == 'website':
+                return 'pages'
+            return module.removeprefix('website_').replace('_', '-')
+
+        # Grouping needs every rule known before the first loc is yielded, so
+        # sweep the routing map once and keep what the loop below needs.
+        sitemap_rules = []
+        record_route_modules = set()
         for rule in router.iter_rules():
             sitemap_func = rule.endpoint.routing.get('sitemap')
             if sitemap_func is False:
                 continue
 
-            if rule.endpoint.routing.get('sitemap') is True:
+            # A sitemap function generates the URLs itself; only without one
+            # does the rule have to be enumerable by the router.
+            listed = callable(sitemap_func) or self.rule_is_enumerable(rule)
+            module = _route_module(rule)
+            sitemap_rules.append((rule, sitemap_func, listed, module))
+            # A module earns its own group once one of its listed routes has a
+            # dynamic segment (/shop/<product>); modules with none stay in `pages`.
+            if listed and rule._converters:
+                record_route_modules.add(module)
+
+        for rule, sitemap_func, listed, module in sitemap_rules:
+            if sitemap_func is True:
                 source = inspect.getsource(rule.endpoint.func)
                 if ('return request.redirect' in source or 'return redirect(' in source):
                     logger.warning(
@@ -1797,20 +1839,24 @@ class Website(models.CachedModel):
                         ', '.join(rule.endpoint.routing['routes']),
                     )
 
+            sitemap_group = module if module in record_route_modules else 'pages'
             if callable(sitemap_func):
+                # Routes sharing a sitemap function are yielded once, under the
+                # group declared on that function.
                 func_key = _unwrap_callable(sitemap_func)
+                sitemap_group = getattr(func_key, '_sitemap_group', sitemap_group)
                 if func_key in sitemap_endpoint_done:
                     continue
                 sitemap_endpoint_done.add(func_key)
                 for loc in sitemap_func(self.with_context(lang=self.default_lang_id.code).env, rule, query_string):
-                    loc_norm = {**loc, 'loc': _norm(loc['loc'])}
+                    loc_norm = {**loc, 'group': sitemap_group, 'loc': _norm(loc['loc'])}
                     url = loc_norm['loc']
                     if url not in url_set:
                         yield loc_norm
                         url_set.add(url)
                 continue
 
-            if not self.rule_is_enumerable(rule):
+            if not listed:
                 continue
 
             # Warn only if the 'sitemap' key is absent from routing (legacy behavior)
@@ -1852,7 +1898,7 @@ class Website(models.CachedModel):
                 url = _norm(url)
                 pattern = query_string and '*%s*' % "*".join(query_string.split('/'))
                 if not query_string or fnmatch.fnmatch(url.lower(), pattern):
-                    page = {'loc': url}
+                    page = {'loc': url, 'group': sitemap_group}
                     if url in url_set:
                         continue
                     url_set.add(url)

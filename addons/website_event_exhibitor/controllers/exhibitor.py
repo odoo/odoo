@@ -6,6 +6,7 @@ from random import randint, sample
 from werkzeug.exceptions import Forbidden
 
 from odoo import http
+from odoo.addons.website.models.ir_http import sitemap_group
 from odoo.addons.website_event.controllers.main import WebsiteEventController
 from odoo.fields import Domain
 from odoo.http import request
@@ -125,8 +126,21 @@ class ExhibitorController(WebsiteEventController):
     # FRONTEND FORM
     # ------------------------------------------------------------
 
+    @sitemap_group("events")
+    def sitemap_event_exhibitor(env, rule, qs):
+        slug = env['ir.http']._slug
+        # Fetch only what the loop reads, here and on the related records.
+        sponsors = env['event.sponsor'].with_context(prefetch_fields=False).search_fetch(
+            [('event_id.exhibitor_menu', '=', True)],
+            ['name', 'event_id', 'write_date'])
+        event_slugs = {event.id: slug(event) for event in sponsors.event_id}
+        for sponsor in sponsors:
+            loc = f'/event/{event_slugs[sponsor.event_id.id]}/exhibitor/{slug(sponsor)}'
+            if not qs or qs.lower() in loc.lower():
+                yield {'loc': loc, 'lastmod': sponsor.write_date.date()}
+
     @http.route(['''/event/<model("event.event", "[('exhibitor_menu', '=', True)]"):event>/exhibitor/<model("event.sponsor", "[('event_id', '=', event.id)]"):sponsor>'''],
-                type='http', auth="public", website=True, sitemap=True)
+                type='http', auth="public", website=True, sitemap=sitemap_event_exhibitor)
     def event_exhibitor(self, event, sponsor, **options):
         if not sponsor.has_access('read'):
             raise Forbidden()

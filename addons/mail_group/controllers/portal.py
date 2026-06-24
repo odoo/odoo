@@ -20,7 +20,8 @@ class PortalMailGroup(http.Controller):
     _thread_per_page = 20
     _replies_per_page = 5
 
-    def _get_website_domain(self):
+    @staticmethod
+    def _get_website_domain():
         # Base group domain in addition to the security access rules
         # Do not show rejected message on the portal view even for admin
         return [('moderation_status', '!=', 'rejected')]
@@ -60,7 +61,36 @@ class PortalMailGroup(http.Controller):
     # MAIN PAGE
     # ------------------------------------------------------------
 
-    @http.route('/groups', type='http', auth='public', sitemap=True, website=True, list_as_website_content=_lt("Groups"))
+    def sitemap_groups(env, rule, qs):
+        groups = env['mail.group'].search_fetch([], ['write_date', 'name'])
+        Message = env['mail.group.message']
+        thread_domain = PortalMailGroup._get_website_domain() + [
+            # `group_view_messages` defaults to thread mode, which hides replies.
+            ('group_message_parent_id', '=', False),
+        ]
+        # Posting never writes on `mail.group`, yet a group page renders its thread
+        # bodies and the index renders every group's counters: a new message dates
+        # both. A group with no message falls back on itself.
+        groups_lastmod = {group.id: group.write_date for group in groups}
+        for group, last_message in Message._read_group(
+            thread_domain + [('mail_group_id', 'in', groups.ids)],
+            groupby=['mail_group_id'], aggregates=['write_date:max'],
+        ):
+            groups_lastmod[group.id] = max(groups_lastmod[group.id], last_message)
+
+        if not qs or qs.lower() in '/groups':
+            page = {'loc': '/groups'}
+            if groups:
+                page['lastmod'] = max(groups_lastmod.values()).date()
+            yield page
+
+        for group in groups:
+            loc = f'/groups/{env["ir.http"]._slug(group)}'
+            if not qs or qs.lower() in loc.lower():
+                yield {'loc': loc, 'lastmod': groups_lastmod[group.id].date()}
+
+    @http.route('/groups', type='http', auth='public',
+                sitemap=sitemap_groups, website=True, list_as_website_content=_lt("Groups"))
     def groups_index(self, email='', **kw):
         """View of the group lists. Allow the users to subscribe and unsubscribe."""
         if kw.get('group_id') and kw.get('token'):
@@ -104,7 +134,7 @@ class PortalMailGroup(http.Controller):
     @http.route([
         '/groups/<model("mail.group"):group>',
         '/groups/<model("mail.group"):group>/page/<int:page>',
-    ], type='http', auth='public', sitemap=True, website=True)
+    ], type='http', auth='public', sitemap=sitemap_groups, website=True)
     def group_view_messages(self, group, page=1, mode='thread', date_begin=None, date_end=None, **post):
         GroupMessage = request.env['mail.group.message']
 

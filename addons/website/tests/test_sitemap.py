@@ -1,8 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import TransactionCase, tagged
 import functools
 from unittest.mock import patch
+
+from lxml import html
+
+from odoo.tests import HttpCase, TransactionCase, tagged
+
+from odoo.addons.website.models.ir_http import sitemap_group
+from odoo.addons.website.tests.common import all_sitemap_urls
 
 
 @tagged('-at_install', 'post_install')
@@ -64,6 +70,7 @@ class TestWebsiteSitemap(TransactionCase):
 
         class FakeRule:
             endpoint = FakeEndpoint()
+            _converters = {}
 
         class FakeRouter:
             def iter_rules(self):
@@ -105,6 +112,7 @@ class TestWebsiteSitemap(TransactionCase):
 
         class RuleBound:
             endpoint = EndpointBound()
+            _converters = {}
 
         # Second rule uses a partial wrapping the same bound method
         class EndpointPartial:
@@ -112,6 +120,7 @@ class TestWebsiteSitemap(TransactionCase):
 
         class RulePartial:
             endpoint = EndpointPartial()
+            _converters = {}
 
         class FakeRouter:
             def iter_rules(self):
@@ -123,7 +132,49 @@ class TestWebsiteSitemap(TransactionCase):
         # The sitemap callable should have been executed only once
         self.assertEqual(call_count['n'], 1)
         # And the returned loc should be present (normalized already)
-        self.assertIn({'loc': '/once'}, locs)
+        self.assertIn('/once', [loc['loc'] for loc in locs])
+
+    def test_sitemap_group_tagging(self):
+        website = self.env.ref('base.default_website')
+        page = self.env['website.page'].create({
+            'name': 'Grouped Page',
+            'website_id': website.id,
+            'url': '/grp-test',
+            'type': 'qweb',
+            'arch': '<t t-call="website.layout"/>',
+            'is_published': True,
+        })
+        locs = list(website.with_user(website.user_id)._enumerate_pages())
+        # Every entry must be tagged with a group so the controller can split.
+        self.assertTrue(all('group' in loc for loc in locs))
+        # CMS pages are website-core content, bucketed under 'pages'.
+        page_loc = next(loc for loc in locs if loc['loc'] == page.url)
+        self.assertEqual(page_loc['group'], 'pages')
+
+    def test_sitemap_group_explicit_name(self):
+        # @sitemap_group must win over the module-derived default.
+        website = self.env['website'].search([], limit=1)
+
+        @sitemap_group('my-section')
+        def fake_sitemap_callable(env, rule, qs):
+            yield {'loc': '/named'}
+
+        class FakeEndpoint:
+            routing = {'sitemap': fake_sitemap_callable}
+
+        class FakeRule:
+            endpoint = FakeEndpoint()
+            _converters = {}
+
+        class FakeRouter:
+            def iter_rules(self):
+                return [FakeRule()]
+
+        with patch('odoo.addons.website.models.ir_http.IrHttp.routing_map', autospec=True, return_value=FakeRouter()):
+            locs = list(website.with_user(website.user_id)._enumerate_pages())
+
+        loc = next(l for l in locs if l['loc'] == '/named')
+        self.assertEqual(loc['group'], 'my-section', "@sitemap_group must set the sitemap group")
 
     def test_enumerate_pages_homepage_filtering(self):
         website = self.env.ref('base.default_website')
@@ -147,3 +198,48 @@ class TestWebsiteSitemap(TransactionCase):
         locs_without_homepage_urls = [page['loc'] for page in locs_without_homepage]
         self.assertIn('/', locs_without_homepage_urls)
         self.assertNotIn(homepage_url, locs_without_homepage_urls)
+
+    def test_sitemap_group_invalid_name(self):
+        with self.assertRaises(ValueError):
+            sitemap_group('My Section!')(lambda env, rule, qs: None)
+
+
+@tagged('-at_install', 'post_install')
+class TestSitemapIndex(HttpCase):
+    """/sitemap.xml is an index; check it splits URLs into per-group sub-sitemaps."""
+
+    def _open_sitemap_index(self):
+        # Drop cached sitemaps so each test regenerates from the current state.
+        self.env['ir.attachment'].search([('url', '=like', '/sitemap%')]).unlink()
+        return html.fromstring(self.url_open('/sitemap.xml').content)
+
+    def test_sitemap_index_splits_by_group(self):
+        website = self.env.ref('base.default_website')
+        page_url = '/index-split-test'
+        self.env['website.page'].create({
+            'name': 'Index Split Test',
+            'website_id': website.id,
+            'url': page_url,
+            'type': 'qweb',
+            'arch': '<t t-call="website.layout"/>',
+            'is_published': True,
+        })
+
+        index = self._open_sitemap_index()
+        locs = index.xpath('//loc/text()')
+        self.assertTrue(locs, "/sitemap.xml must be an index listing sub-sitemaps")
+        self.assertTrue(all(loc.endswith('.xml') for loc in locs),
+                        "The index must only list sub-sitemaps, not page URLs")
+        self.assertTrue(any('-pages-' in loc for loc in locs),
+                        "CMS pages must be listed in a 'pages' group sub-sitemap")
+
+        # The page URL itself lives in a sub-sitemap, not the index.
+        self.assertIn(page_url, all_sitemap_urls(self))
+
+    def test_sitemap_group_chunking(self):
+        # A group over LOC_PER_SITEMAP is split into several indexed chunks.
+        with patch('odoo.addons.website.controllers.main.LOC_PER_SITEMAP', 1):
+            index = self._open_sitemap_index()
+        chunks = [loc for loc in index.xpath('//loc/text()') if '-pages-' in loc]
+        self.assertGreater(len(chunks), 1,
+                           "The 'pages' group must be split into multiple sub-sitemaps")

@@ -14,6 +14,7 @@ _lt = LazyTranslate(__name__)
 
 class WebsiteCustomer(GoogleMap):
     _references_per_page = 20
+    _customers_domain = [('website_published', '=', True), ('assigned_partner_id', '!=', False)]
 
     def _get_gmap_domains(self, **kw):
         if kw.get('dom', '') != "website_customer.customers":
@@ -33,23 +34,41 @@ class WebsiteCustomer(GoogleMap):
         return domain
 
     def sitemap_industry(env, rule, qs):
+        slug = env['ir.http']._slug
+        # Sudo like the listing does; `_customers_domain` is what keeps the selection public.
+        Partner = env['res.partner'].sudo()
+        per_page = WebsiteCustomer._references_per_page
+        # Every /customers* URL renders one page of these, in `_order` like the listing.
+        partners = Partner.search_fetch(
+            WebsiteCustomer._customers_domain, ['write_date', 'industry_id', 'country_id'])
+
+        def page_lastmod(records):
+            return max(records[:per_page].mapped('write_date')).date()
+
         if not qs or qs.lower() in '/customers':
-            yield {'loc': '/customers'}
+            page = {'loc': '/customers'}
+            if partners:
+                page['lastmod'] = page_lastmod(partners)
+            yield page
 
         Industry = env['res.partner.industry']
+        by_industry = partners.grouped('industry_id')
         dom = sitemap_qs2dom(qs, '/customers/industry', Industry._rec_name)
-        for industry in Industry.search(dom):
-            loc = '/customers/industry/%s' % env['ir.http']._slug(industry)
+        for industry in Industry.search_fetch(dom, ['name', 'write_date']):
+            loc = f'/customers/industry/{slug(industry)}'
             if not qs or qs.lower() in loc:
-                yield {'loc': loc}
+                listed = by_industry.get(industry)
+                yield {
+                    'loc': loc,
+                    'lastmod': page_lastmod(listed) if listed else industry.write_date.date(),
+                }
 
-        dom = [('website_published', '=', True), ('assigned_partner_id', '!=', False), ('country_id', '!=', False)]
-        dom += sitemap_qs2dom(qs, '/customers/country')
-        countries = env['res.partner'].sudo()._read_group(dom, ['country_id'])
-        for [country] in countries:
-            loc = '/customers/country/%s' % env['ir.http']._slug(country)
+        for country, listed in partners.grouped('country_id').items():
+            if not country:
+                continue
+            loc = f'/customers/country/{slug(country)}'
             if not qs or qs.lower() in loc:
-                yield {'loc': loc}
+                yield {'loc': loc, 'lastmod': page_lastmod(listed)}
 
     @http.route([
         '/customers',
@@ -66,7 +85,7 @@ class WebsiteCustomer(GoogleMap):
         Partner = request.env['res.partner']
         search_value = post.get('search')
 
-        domain = [('website_published', '=', True), ('assigned_partner_id', '!=', False)]
+        domain = list(self._customers_domain)
         if search_value:
             domain += [
                 '|', '|',

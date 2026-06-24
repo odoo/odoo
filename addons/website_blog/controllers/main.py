@@ -21,6 +21,7 @@ _lt = LazyTranslate(__name__)
 
 class WebsiteBlog(http.Controller):
     _blog_post_per_page = 12  # multiple of 2,3,4
+    _blog_post_order = 'is_published desc, published_date desc, id asc'
     _post_comment_per_page = 10
 
     def tags_list(self, tag_ids, current_tag):
@@ -118,7 +119,7 @@ class WebsiteBlog(http.Controller):
             **post
         )
         total, details, fuzzy_search_term = self.env.website._search_with_fuzzy('blog_post', search,
-            offset=0, limit=page * self._blog_post_per_page, order="is_published desc, published_date desc, id asc", options=options)
+            offset=0, limit=page * self._blog_post_per_page, order=self._blog_post_order, options=options)
         posts = details[0].get('results', BlogPost)
         posts = posts[offset:offset + self._blog_post_per_page]
 
@@ -178,20 +179,34 @@ class WebsiteBlog(http.Controller):
     def sitemap_blog(env, rule, qs):
         Blog = env['blog.blog']
         domain = env.website.website_domain()
-        blogs = tools.lazy(lambda: Blog.search(domain, order="sequence"))
         slug = env['ir.http']._slug
+        Post = env['blog.post']
+        blogs = Blog.search_fetch(
+            domain, ['write_date', 'seo_name', 'name'], order="sequence")
+        # Both URLs render one page of posts, from the listing's own domain and order.
+        per_page = WebsiteBlog._blog_post_per_page
+        posts = Post.search_fetch(
+            Domain.AND(Post._search_get_base_domain(env.website)),
+            ['blog_id', 'write_date'], order=WebsiteBlog._blog_post_order)
+        posts_by_blog = posts.grouped('blog_id')
 
         def match(loc):
             return not qs or qs.lower() in loc.lower()
 
-        if len(blogs) > 1:
-            if match('/blog'):
-                yield {'loc': '/blog'}
+        if len(blogs) > 1 and match('/blog'):
+            # The index lists posts; blogs only reach it through the shared nav.
+            page = {'loc': '/blog'}
+            if posts:
+                page['lastmod'] = max(posts[:per_page].mapped('write_date')).date()
+            yield page
 
         for blog in blogs:
             loc = f'/blog/{slug(blog)}'
             if match(loc):
-                yield {'loc': loc}
+                # A blog page renders its own header and its first page of posts.
+                first_page = posts_by_blog.get(blog, Post)[:per_page]
+                lastmod = max(first_page.mapped('write_date') + [blog.write_date])
+                yield {'loc': loc, 'lastmod': lastmod.date()}
 
     @http.route([
         '/blog',
@@ -239,7 +254,7 @@ class WebsiteBlog(http.Controller):
 
         return request.render("website_blog.blog_post_short", values)
 
-    @http.route(['''/blog/<model("blog.blog"):blog>/feed'''], type='http', auth="public", website=True, sitemap=True)
+    @http.route(['''/blog/<model("blog.blog"):blog>/feed'''], type='http', auth="public", website=True, sitemap=False)
     def blog_feed(self, blog, limit='15', **kwargs):
         v = {}
         v['blog'] = blog
@@ -262,18 +277,33 @@ class WebsiteBlog(http.Controller):
     def sitemap_blog_post(env, rule, qs):
         BlogPost = env['blog.post']
         IrHttp = env['ir.http']
-        posts = BlogPost.search([('website_published', '=', True)])
+        slug = IrHttp._slug
+        # Fetch only what the loop reads, here and on the related records.
+        posts = BlogPost.with_context(prefetch_fields=False).search_fetch(
+            [('website_published', '=', True)],
+            ['name', 'seo_name', 'blog_id', 'write_date'],
+        )
+        posts_lastmod = {post.id: post.write_date for post in posts}
+        if env.website.is_view_active('website_blog.opt_blog_post_comment'):
+            # With comments on, the page shows a count of them: a new comment
+            # changes the page without touching the post.
+            for res_id, lastmod in env['mail.message']._read_group(
+                [('model', '=', 'blog.post'), ('res_id', 'in', posts.ids)],
+                groupby=['res_id'], aggregates=['write_date:max'],
+            ):
+                posts_lastmod[res_id] = max(posts_lastmod[res_id], lastmod)
+        blog_slugs = {blog.id: slug(blog) for blog in posts.blog_id}
 
         for post in posts:
             # Canonical path: /blog/<blog>/<post>
             blog = post.blog_id
-            canonical_url = f"/blog/{IrHttp._slug(blog)}/{IrHttp._slug(post)}"
+            canonical_url = f"/blog/{blog_slugs[blog.id]}/{slug(post)}"
 
             if not qs or qs.lower() in canonical_url.lower():
                 # blog posts should also have lastmod for seo purposes.
                 yield {
                     "loc": canonical_url,
-                    "lastmod": (post.write_date or post.create_date).date(),
+                    "lastmod": posts_lastmod[post.id].date(),
                 }
 
     @http.route([

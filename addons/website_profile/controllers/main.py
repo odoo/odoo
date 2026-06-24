@@ -15,12 +15,15 @@ from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.translate import LazyTranslate
+from odoo.addons.website.models.ir_http import sitemap_group
 
 _lt = LazyTranslate(__name__)
 
 
 class WebsiteProfile(http.Controller):
     _users_per_page = 30
+    _users_domain = [('karma', '>', 1), ('website_published', '=', True)]
+    _users_order = 'karma DESC, id DESC'
     _pager_max_pages = 5
 
     # Profile
@@ -184,7 +187,22 @@ class WebsiteProfile(http.Controller):
         })
         return values
 
-    @http.route('/profile/ranks_badges', type='http', auth="public", website=True, sitemap=True, readonly=True, list_as_website_content=_lt("Ranks and Badges"))
+    @sitemap_group("pages")
+    def sitemap_ranks_badges(env, rule, qs):
+        if qs and qs.lower() not in '/profile/ranks_badges':
+            return
+        # The page lists every rank and published badge, so date it from those.
+        ranks_lastmod = env['gamification.karma.rank'].sudo()._read_group(
+            [], aggregates=['write_date:max'])[0][0]
+        badges_lastmod = env['gamification.badge'].sudo()._read_group(
+            [('website_published', '=', True)], aggregates=['write_date:max'])[0][0]
+        dates = [d for d in (ranks_lastmod, badges_lastmod) if d]
+        page = {'loc': '/profile/ranks_badges'}
+        if dates:
+            page['lastmod'] = max(dates).date()
+        yield page
+
+    @http.route('/profile/ranks_badges', type='http', auth="public", website=True, sitemap=sitemap_ranks_badges, readonly=True, list_as_website_content=_lt("Ranks and Badges"))
     def view_ranks_badges(self, **kwargs):
         values = {
             **self._prepare_ranks_badges_values(**kwargs),
@@ -208,11 +226,24 @@ class WebsiteProfile(http.Controller):
             })
         return user_values
 
+    @sitemap_group("pages")
+    def sitemap_all_users(env, rule, qs):
+        if qs and qs.lower() not in '/profile/users':
+            return
+        # Only the first page is listed, and it ranks one page of users.
+        listed = env['res.users'].sudo().search_fetch(
+            WebsiteProfile._users_domain, ['write_date'],
+            order=WebsiteProfile._users_order, limit=WebsiteProfile._users_per_page)
+        page = {'loc': '/profile/users'}
+        if listed:
+            page['lastmod'] = max(listed.mapped('write_date')).date()
+        yield page
+
     @http.route(['/profile/users',
-                 '/profile/users/page/<int:page>'], type='http', auth="public", website=True, sitemap=True, readonly=True, list_as_website_content=_lt("User Profiles"))
+                 '/profile/users/page/<int:page>'], type='http', auth="public", website=True, sitemap=sitemap_all_users, readonly=True, list_as_website_content=_lt("User Profiles"))
     def view_all_users_page(self, page=1, **kwargs):
         User = request.env['res.users']
-        dom = [('karma', '>', 1), ('website_published', '=', True)]
+        dom = self._users_domain
 
         # Searches
         search_term = kwargs.get('search')
@@ -257,7 +288,7 @@ class WebsiteProfile(http.Controller):
                     dom,
                     limit=self._users_per_page,
                     offset=pager['offset'],
-                    order='karma DESC, id DESC',
+                    order=self._users_order,
                 )
 
             user_values = self._prepare_all_users_values(users)

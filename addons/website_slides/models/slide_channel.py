@@ -327,6 +327,17 @@ class SlideChannel(models.Model):
             channel.slide_category_ids = channel.slide_ids.filtered(lambda slide: slide.is_category)
             channel.slide_content_ids = channel.slide_ids - channel.slide_category_ids
 
+    def _get_sitemap_lastmod_map(self):
+        res = {channel.id: channel.write_date for channel in self}
+        # The channel page lists its slides, so an edited slide must advance
+        # the recrawl signal of the channel page.
+        for channel, last in self.env['slide.slide']._read_group(
+            [('channel_id', 'in', self.ids)],
+            groupby=['channel_id'], aggregates=['write_date:max'],
+        ):
+            res[channel.id] = max(res[channel.id], last)
+        return res
+
     @api.depends('slide_ids.slide_category', 'slide_ids.is_published', 'slide_ids.completion_time',
                  'slide_ids.likes', 'slide_ids.dislikes', 'slide_ids.total_views', 'slide_ids.is_category', 'slide_ids.active')
     def _compute_slides_statistics(self):
@@ -1055,11 +1066,16 @@ class SlideChannel(models.Model):
         return self.env.ref('website_slides.website_slides_menu_root').id
 
     @api.model
+    def _search_get_base_domain(self, website):
+        """ Domain of the courses listed on `/slides`, before its filters. """
+        return [website.website_domain(), [('is_visible', '=', True)]]
+
+    @api.model
     def _search_get_detail(self, website, order, options):
         my = options.get('my')
         search_tags = options.get('tag')
         slide_category = options.get('slide_category')
-        domain = [website.website_domain(), [('is_visible', '=', True)]]
+        domain = self._search_get_base_domain(website)
         if my:
             domain.append([('is_member', '=', True)])
         if search_tags:

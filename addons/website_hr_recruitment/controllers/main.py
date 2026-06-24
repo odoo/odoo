@@ -5,6 +5,7 @@ from functools import partial
 
 from odoo import http, _
 from odoo.addons.website.controllers.form import WebsiteForm
+from odoo.addons.website.models.ir_http import sitemap_group
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.translate import LazyTranslate
@@ -14,10 +15,35 @@ _lt = LazyTranslate(__name__)
 
 class WebsiteHrRecruitment(WebsiteForm):
     _jobs_per_page = 12
+    _jobs_order = 'is_published desc, sequence, no_of_recruitment desc'
 
+    @sitemap_group("jobs")
     def sitemap_jobs(env, rule, qs):
+        # One search feeds every /jobs* URL: the listing, each detail page and
+        # each apply page.
+        slug = env['ir.http']._slug
+        Job = env['hr.job']
+        jobs = Job.search_fetch(
+            [('is_published', '=', True)], ['write_date', 'seo_name', 'name'])
+
         if not qs or qs.lower() in '/jobs':
-            yield {'loc': '/jobs'}
+            page = {'loc': '/jobs'}
+            # Renders one page of jobs, from the listing's own domain and order.
+            listed = Job.search(
+                Domain.AND(Job._search_get_base_domain(env.website)),
+                order=WebsiteHrRecruitment._jobs_order, limit=WebsiteHrRecruitment._jobs_per_page)
+            # Only the public user's rules publish-filter that domain; keep the
+            # jobs this run actually yields.
+            listed &= jobs
+            if listed:
+                page['lastmod'] = max(listed.mapped('write_date')).date()
+            yield page
+
+        for job in jobs:
+            lastmod = job.write_date.date()
+            for loc in (f'/jobs/{slug(job)}', f'/jobs/apply/{slug(job)}'):
+                if not qs or qs.lower() in loc:
+                    yield {'loc': loc, 'lastmod': lastmod}
 
     @http.route([
         '/jobs',
@@ -126,7 +152,7 @@ class WebsiteHrRecruitment(WebsiteForm):
             "jobs", search,
             offset=0,
             limit=self._jobs_per_page * 50,
-            order="is_published desc, sequence, no_of_recruitment desc",
+            order=self._jobs_order,
             options={
                 'allowFuzzy': not noFuzzy,
             }
@@ -170,18 +196,12 @@ class WebsiteHrRecruitment(WebsiteForm):
         })
         return f"/jobs/{request.env['ir.http']._slug(job)}"
 
-    def sitemap_jobs_detail(env, rule, qs):
-        slug = env['ir.http']._slug
-        for job in env['hr.job'].search([('is_published', '=', True)]):
-            if not qs or qs.lower() in f'/jobs/{slug(job)}':
-                yield {'loc': f'/jobs/{slug(job)}'}
-
-    @http.route('''/jobs/detail/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=sitemap_jobs_detail)
+    @http.route('''/jobs/detail/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=False)
     def jobs_detail(self, job, **kwargs):
         redirect_url = f"/jobs/{request.env['ir.http']._slug(job)}"
         return request.redirect(redirect_url, code=301)
 
-    @http.route('''/jobs/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
+    @http.route('''/jobs/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=sitemap_jobs)
     def job(self, job, **kwargs):
         return request.render("website_hr_recruitment.detail", {
             'structured_data': job._render_jsonld(is_detail_page=True),
@@ -189,7 +209,7 @@ class WebsiteHrRecruitment(WebsiteForm):
             'main_object': job,
         })
 
-    @http.route('''/jobs/apply/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
+    @http.route('''/jobs/apply/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=sitemap_jobs)
     def jobs_apply(self, job, **kwargs):
         error = {}
         default = {}

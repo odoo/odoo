@@ -7,6 +7,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
 from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.website.models.ir_http import sitemap_group
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.misc import get_lang
@@ -16,12 +17,59 @@ from odoo.exceptions import UserError, ValidationError
 
 _lt = LazyTranslate(__name__)
 
+EVENTS_PER_PAGE = 12
+
+
+def _events_order(date):
+    """ Order of the events listed on `/event`. """
+    return f"is_published desc, {'date_begin desc' if date == 'old' else 'date_begin'}, id desc"
+
 
 class WebsiteEventController(http.Controller):
 
-    def sitemap_event(env, rule, qs):
-        if not qs or qs.lower() in '/events':
-            yield {'loc': '/events'}
+    @sitemap_group("events")
+    def sitemap_events(env, rule, qs):
+        """ One search feeds the listing and every event page. """
+        slug = env['ir.http']._slug
+        Event = env['event.event']
+        # Fetch only what the loop reads, here and on the related records.
+        events = Event.with_context(prefetch_fields=False).search_fetch(
+            [('website_published', '=', True)],
+            ['name', 'seo_name', 'menu_id', 'write_date'], order='id')
+        # An event page renders its tickets, so a ticket change must advance
+        # the recrawl signal of the event.
+        events_lastmod = {event.id: event.write_date for event in events}
+        for event, last_ticket in env['event.event.ticket']._read_group(
+            [('event_id', 'in', events.ids)], groupby=['event_id'], aggregates=['write_date:max'],
+        ):
+            events_lastmod[event.id] = max(events_lastmod[event.id], last_ticket)
+
+        def matches_qs(loc):
+            return not qs or qs.lower() in loc.lower()
+
+        if matches_qs('/events'):
+            page = {'loc': '/events'}
+            # Renders one page of upcoming events, from the listing's own domain and order.
+            listed = Event.search(
+                Domain.AND(Event._search_get_base_domain(env.website, date='scheduled')),
+                order=_events_order('scheduled'), limit=EVENTS_PER_PAGE)
+            # Only the public user's rules publish-filter that domain; keep the
+            # events this run actually yields.
+            listed &= events
+            if listed:
+                page['lastmod'] = max(events_lastmod[event.id] for event in listed).date()
+            yield page
+
+        for event in events:
+            if event.menu_id and event.menu_id.child_id:
+                final_url = event.menu_id.child_id[0].url
+            else:
+                final_url = f'/event/{slug(event)}/register'
+
+            if not matches_qs(final_url):
+                continue
+
+            yield {'loc': final_url, 'lastmod': events_lastmod[event.id].date()}
 
     # ------------------------------------------------------------
     # EVENT LIST
@@ -45,7 +93,7 @@ class WebsiteEventController(http.Controller):
             f'/{base}/tags/<string:slug_tags>',
             f'/{base}/tags/<string:slug_tags>/page/<int:page>',
         ]
-    ], type='http', auth="public", website=True, sitemap=sitemap_event, list_as_website_content=_lt("Events"))
+    ], type='http', auth="public", website=True, sitemap=sitemap_events, list_as_website_content=_lt("Events"))
     def events(self, page=1, slug_tags=None, **searches):
         if (slug_tags or searches.get('tags', '[]').count(',') > 0) and request.httprequest.method == 'GET' and not searches.get('prevent_redirect'):
             # Previously, the tags were searched using GET, which caused issues with crawlers (too many hits)
@@ -68,13 +116,10 @@ class WebsiteEventController(http.Controller):
         if searches['date'] == 'upcoming':
             searches['date'] = 'scheduled'
 
-        step = 12  # Number of events per page
+        step = EVENTS_PER_PAGE
 
         options = self._get_events_search_options(slug_tags, **searches)
-        order = 'date_begin'
-        if searches.get('date', 'scheduled') == 'old':
-            order = 'date_begin desc'
-        order = 'is_published desc, ' + order + ', id desc'
+        order = _events_order(searches.get('date', 'scheduled'))
         search = searches.get('search')
         event_count, details, fuzzy_search_term = self.env.website._search_with_fuzzy("events", search,
             offset=0, limit=page * step, order=order, options=options)
@@ -222,24 +267,6 @@ class WebsiteEventController(http.Controller):
             page = 'website.page_404'
 
         return request.render(page, values)
-
-    def sitemap_events(env, rule, qs):
-        slug = env['ir.http']._slug
-        events = env['event.event'].sudo().search([('website_published', '=', True)], order='id')
-
-        def matches_qs(loc):
-            return not qs or qs.lower() in loc.lower()
-
-        for event in events:
-            if event.menu_id and event.menu_id.child_id:
-                final_url = event.menu_id.child_id[0].url
-            else:
-                final_url = '/event/%s/register' % slug(event)
-
-            if not matches_qs(final_url):
-                continue
-
-            yield {'loc': final_url}
 
     @http.route(['''/event/<model("event.event"):event>'''], type='http', auth="public", website=True, sitemap=sitemap_events, readonly=True)
     def event(self, event, **post):
