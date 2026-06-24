@@ -50,7 +50,7 @@ re_into = re.compile(r'\binto\s+"?([a-zA-Z_0-9]+)\b', re.IGNORECASE)
 
 sql_counter = 0
 
-MAX_IDLE_TIMEOUT = 60 * 10
+MAX_IDLE_TIMEOUT = int(os.getenv("ODOO_DB_MAX_IDLE_TIMEOUT", "600"))
 
 
 class Savepoint:
