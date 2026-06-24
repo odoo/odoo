@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError
+from odoo.fields import Command
 from odoo.tests import common, Form
 
 @common.tagged('post_install', '-at_install')
@@ -26,6 +27,12 @@ class TestDeliveryCost(common.TransactionCase):
             'product_id': cls.product_delivery.id,
             'free_over': False,
         })
+        cls.package_type = cls.env['stock.package.type'].create({
+            'name': 'Simple Package Type',
+            'base_weight': 1.0,
+        })
+        cls.usd_currency = cls.env.ref('base.USD')
+        cls.eur_currency = cls.env.ref('base.EUR')
 
     def test_delivery_real_cost(self):
         """Ensure that the price is correctly set on the delivery line in the case of a Back Order
@@ -124,3 +131,40 @@ class TestDeliveryCost(common.TransactionCase):
         picking._action_done()
         self.assertEqual(picking.carrier_price, 40.0)
         self.assertEqual(delivery_line.price_unit, picking.carrier_price)
+
+    def test_get_package_currency(self):
+        '''
+        Ensure packages returned by `_get_packages_from_picking` and `_get_packages_from_order` have
+        the correct currency.
+        '''
+        self.env.company.currency_id = self.usd_currency
+        eur_pricelist = self.env['product.pricelist'].create({
+            'name': 'EUR Pricelist',
+            'currency_id': self.eur_currency.id,
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_18.id,
+            'partner_invoice_id': self.partner_18.id,
+            'partner_shipping_id': self.partner_18.id,
+            'pricelist_id': eur_pricelist.id,
+            'order_line': [Command.create({
+                'name': 'PC Assemble + 2GB RAM',
+                'product_id': self.product_4.id,
+                'product_uom_qty': 2,
+                'price_unit': 120.00,
+            })],
+        })
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': so.id,
+            'default_carrier_id': self.delivery_carrier.id,
+        }))
+        delivery_wizard.save().button_confirm()
+        self.assertTrue(so.order_line.filtered('is_delivery'))
+        so.action_confirm()
+
+        package = self.env['delivery.carrier']._get_packages_from_order(so, self.package_type)
+        self.assertEqual(package[0].currency_id, self.eur_currency)
+        picking = so.picking_ids[0]
+        self.assertEqual(picking.company_id.currency_id, self.usd_currency)
+        package = self.env['delivery.carrier']._get_packages_from_picking(picking, self.package_type)
+        self.assertEqual(package[0].currency_id, self.eur_currency)
