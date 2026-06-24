@@ -314,6 +314,7 @@ class PosConfig(models.Model):
         record['_self_ordering_image_background_ids'] = config.self_ordering_image_background_ids.ids
         record['_pos_special_products_ids'] = config._get_special_products().ids
         record['_self_order_pos'] = True
+        record['_base_url'] = config.get_base_url()
         return read_records
 
     def load_self_data(self):
