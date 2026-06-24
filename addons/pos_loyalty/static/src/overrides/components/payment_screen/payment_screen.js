@@ -71,4 +71,14 @@ patch(PaymentScreen.prototype, {
         }
         await super.validateOrder(...arguments);
     },
+    async _finalizeValidation() {
+        const couponData = this.currentOrder.getCouponPointChanges();
+        for (const [couponId, vals] of Object.entries(couponData)) {
+            const coupon = this.pos.models["loyalty.card"].get(couponId);
+            if (coupon) {
+                coupon.update({ points: coupon.points + vals.points });
+            }
+        }
+        await super._finalizeValidation(...arguments);
+    },
 });

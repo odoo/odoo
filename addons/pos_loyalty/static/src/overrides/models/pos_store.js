@@ -9,7 +9,6 @@ import { Mutex } from "@web/core/utils/concurrency";
 import { effect } from "@web/core/utils/reactive";
 import { batched } from "@web/core/utils/timing";
 import { serializeDate } from "@web/core/l10n/dates";
-import { omit } from "@web/core/utils/objects";
 
 let nextId = -1;
 const mutex = new Mutex();
@@ -818,74 +817,17 @@ patch(PosStore.prototype, {
     },
     async _postProcessLoyalty(order) {
         // Compile data for our function
-        const ProgramModel = this.models["loyalty.program"];
-        const rewardLines = order._get_reward_lines();
-        const partner = order.get_partner();
-        let couponData = Object.values(order.uiState.couponPointChanges).reduce((agg, pe) => {
-            const earnedPoints =
-                pe.points - order._getPointsCorrection(ProgramModel.get(pe.program_id));
-            agg[pe.coupon_id] = Object.assign({}, pe, {
-                points: earnedPoints,
-                points_earned: earnedPoints,
-                points_spent: 0,
-            });
-            const program = ProgramModel.get(pe.program_id);
-            if (
-                (program.is_nominative || program.program_type == "next_order_coupons") &&
-                partner
-            ) {
-                agg[pe.coupon_id].partner_id = partner.id;
+        let payload = order.coupon_updates_cache;
+        if (!payload) {
+            const couponData = order.getCouponPointChanges();
+            if (Object.keys(couponData || {}).length > 0) {
+                payload = await this.data.call("pos.order", "confirm_coupon_programs", [
+                    order.id,
+                    couponData,
+                ]);
             }
-            if (program.program_type != "loyalty") {
-                agg[pe.coupon_id].expiration_date = program.date_to || pe.expiration_date;
-            }
-            return agg;
-        }, {});
-        for (const line of rewardLines) {
-            if (!line.coupon_id) {
-                continue;
-            }
-            const reward = line.reward_id;
-            const couponId = line.coupon_id.id;
-            if (!couponData[couponId]) {
-                couponData[couponId] = {
-                    points: 0,
-                    points_earned: 0,
-                    points_spent: 0,
-                    program_id: reward.program_id.id,
-                    coupon_id: couponId,
-                    barcode: false,
-                };
-                if (reward.program_type != "loyalty") {
-                    couponData[couponId].expiration_date = reward.program_id.date_to;
-                }
-            }
-            if (!couponData[couponId].line_codes) {
-                couponData[couponId].line_codes = [];
-            }
-            if (!couponData[couponId].line_codes.includes(line.reward_identifier_code)) {
-                !couponData[couponId].line_codes.push(line.reward_identifier_code);
-            }
-            couponData[couponId].points -= line.points_cost;
-            couponData[couponId].points_spent += line.points_cost;
         }
-        // We actually do not care about coupons for 'current' programs that did not claim any reward, they will be lost if not validated
-        couponData = Object.fromEntries(
-            Object.entries(couponData)
-                .filter(([key, value]) => {
-                    const program = ProgramModel.get(value.program_id);
-                    if (program.applies_on === "current") {
-                        return value.line_codes && value.line_codes.length;
-                    }
-                    return true;
-                })
-                .map(([key, value]) => [key, omit(value, "appliedRules")])
-        );
-        if (Object.keys(couponData || {}).length > 0) {
-            const payload = await this.data.call("pos.order", "confirm_coupon_programs", [
-                order.id,
-                couponData,
-            ]);
+        if (payload) {
             if (payload.coupon_updates) {
                 for (const couponUpdate of payload.coupon_updates) {
                     // The following code is a workaround to update the id of an existing record.
@@ -928,7 +870,7 @@ patch(PosStore.prototype, {
             // Update the usage count since it is checked based on local data
             if (payload.program_updates) {
                 for (const programUpdate of payload.program_updates) {
-                    const program = ProgramModel.get(programUpdate.program_id);
+                    const program = this.models["loyalty.program"].get(programUpdate.program_id);
                     if (program) {
                         program.total_order_count = programUpdate.usages;
                     }
