@@ -10,6 +10,27 @@ import { formatDate } from "../formatters";
 
 const { DateTime } = luxon;
 
+/**
+ * Ordered thresholds `diffString` uses to pick the unit a date's relative distance is displayed
+ * in: the first entry whose gap (measured in `thresholdUnit`) is at most `maxUnits` wins, and the
+ * date is rendered one level more precisely, in `displayUnit`, instead of Luxon's default (which
+ * can be ambiguous, e.g. "next month" for anywhere between 1 and 60 days).
+ *
+ * Example: a date 24 days away is within 1 month, so the "months" entry matches and it's shown in
+ * weeks instead: "In 4 weeks". A date 3 years away matches nothing before the catch-all, so it
+ * falls back to years: "In 3 years".
+ *
+ * `verifyCalendarBoundary` guards the "months" entry against variable month lengths: from Jan 30,
+ * the diff to Mar 1 would floor to 1 month and wrongly match without it, even though Mar 1 is
+ * really in the month *after* next.
+ */
+const RELATIVE_RANGES = [
+    { thresholdUnit: "weeks", displayUnit: "days", maxUnits: 1 },
+    { thresholdUnit: "months", displayUnit: "weeks", maxUnits: 1, verifyCalendarBoundary: true },
+    { thresholdUnit: "years", displayUnit: "months", maxUnits: 1 },
+    { thresholdUnit: "years", displayUnit: "years", maxUnits: Infinity },
+];
+
 export class RelativeDateField extends Component {
     static components = { DateTimeField };
 
@@ -36,20 +57,25 @@ export class RelativeDateField extends Component {
     }
 
     get diffString() {
-        const diffDays = this.diffDays;
-        if (diffDays === null) {
+        if (this.diffDays === null) {
             return "";
-        }
-        if (Math.abs(diffDays) > 99) {
-            return this.formattedValue;
         }
         const { record, name } = this.props;
         const value = record.data[name];
-        const relativeCalendarOptions = {};
-        if (Math.abs(diffDays) <= 30) {
-            relativeCalendarOptions.unit = "days";
-        }
-        return capitalize(value.toRelativeCalendar(relativeCalendarOptions));
+        const today = DateTime.local().startOf("day");
+        const v = value.startOf("day");
+
+        const unit = RELATIVE_RANGES.find(({ thresholdUnit, maxUnits, verifyCalendarBoundary }) => {
+            const delta = Math.floor(Math.abs(v.diff(today, thresholdUnit)[thresholdUnit]));
+            return (
+                delta <= maxUnits &&
+                (!verifyCalendarBoundary ||
+                    (v >= today.minus({ [thresholdUnit]: maxUnits }).startOf(thresholdUnit) &&
+                        v <= today.plus({ [thresholdUnit]: maxUnits }).endOf(thresholdUnit)))
+            );
+        }).displayUnit;
+
+        return capitalize(value.toRelativeCalendar({ unit }));
     }
 
     get formattedValue() {
