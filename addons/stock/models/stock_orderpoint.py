@@ -697,7 +697,7 @@ class StockWarehouseOrderpoint(models.Model):
             'date_order': dates_info['date_order'],
             'date_deadline': date or False,
             'warehouse_id': self.warehouse_id,
-            'orderpoint_id': self.trigger == 'auto' and self,
+            'orderpoint_id': self,
         }
         reference = self.env.context.get('origins')
         if reference:
