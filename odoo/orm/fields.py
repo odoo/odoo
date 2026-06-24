@@ -1886,8 +1886,9 @@ class Field[T]:
         protected_ids = []
         new_ids = []
         other_ids = []
+        all_protected_ids = records.env._protected.get(records.env.protect_key(self), ())
         for record_id in records._ids:
-            if record_id in records.env._protected.get(self, ()):
+            if record_id in all_protected_ids:
                 protected_ids.append(record_id)
             elif not record_id:
                 new_ids.append(record_id)

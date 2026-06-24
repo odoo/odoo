@@ -86,4 +86,4 @@ class AccountCodeMapping(models.Model):
 
     def _inverse_code(self):
         for record in self:
-            record.account_id.with_company(record.company_id).write({'code': record.code})
+            record.account_id.with_company(record.company_id).code = record.code

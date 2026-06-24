@@ -197,6 +197,8 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
             '_table_objects': frozendict(),         # populated in _setup()
         })
         model_cls._fields = MappingProxyType(model_cls._fields__)
+        record_cls = type(name, (models.TopModel, model_cls), {'_register': False, '_name': name})
+        model_cls._record_cls = record_cls
 
     # determine all the classes the model should inherit from
     bases = LastOrderedSet([model_def])

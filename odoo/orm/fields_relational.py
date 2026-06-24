@@ -363,13 +363,13 @@ class Many2one(_Relational):
         # use registry to avoid creating a recordset for the model
         ids = () if value is None else (value,)
         prefetch_ids = Prefetch.relational(self, record)
-        return record.pool[self.comodel_name](record.env, ids, prefetch_ids)
+        return record.pool[self.comodel_name]._record_cls(record.env, ids, prefetch_ids)
 
     def convert_to_record_multi(self, values, records):
         # return the ids as a recordset without duplicates
         prefetch_ids = Prefetch.relational(self, records)
         ids = tuple(unique(id_ for id_ in values if id_ is not None))
-        return records.pool[self.comodel_name](records.env, ids, prefetch_ids)
+        return records.pool[self.comodel_name]._record_cls(records.env, ids, prefetch_ids)
 
     def convert_to_read(self, value, record, use_display_name=True):
         if use_display_name and value:
@@ -687,7 +687,7 @@ class _RelationalMulti(_Relational):
         prefetch_ids = Prefetch.relational(self, record)
         env = record.env
         Comodel = env.registry[self.comodel_name]
-        corecords = Comodel(env, value, prefetch_ids)
+        corecords = Comodel._record_cls(env, value, prefetch_ids)
         if not env.su and corecords and not self.bypass_search_access:
             # For performance, this slightly modified version of
             # `_filtered_access` does not recheck permissions for records marked

@@ -15,7 +15,7 @@ class TestSaleAutoInvoice(TestSaleCouponCommon):
             "name": "100discount",
             "program_type": "promo_code",
             "rule_ids": [Command.create({"code": "100dis", "minimum_amount": 0})],
-            "reward_ids": [Command.create({"discount": 100})],
+            "reward_ids": [Command.create({"discount": 100, "discount_applicability": "order"})],
         })
         # Add order line to order
         order = self._create_so(
