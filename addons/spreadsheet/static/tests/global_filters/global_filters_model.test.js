@@ -1673,7 +1673,7 @@ test("Export global filters for excel", async function () {
     expect(filterSheet.cells["C2"]).toBe(
         String(model.getters.getFilterDisplayValue(filter.label)[1][0].value)
     );
-    model.exportXLSX(); // should not crash
+    await model.exportXLSX(); // should not crash
 });
 
 test("Export from/to global filters for excel", async function () {
@@ -1728,7 +1728,7 @@ test("Export boolean global filters with undefined value for excel", async funct
     expect(filterSheet.cells["B1"]).toBe("Value");
     expect(filterSheet.cells["B2"]).toBe("");
 
-    model.exportXLSX(); // should not crash
+    await model.exportXLSX(); // should not crash
 });
 
 test("Export relational global filter for excel", async function () {
@@ -1759,7 +1759,7 @@ test("Export relational global filter for excel", async function () {
     expect(filterSheet.cells["A3"]).toBe("test relation ilike");
     expect(filterSheet.cells["B3"]).toBe("hello, world");
 
-    model.exportXLSX(); // should not crash
+    await model.exportXLSX(); // should not crash
 });
 
 test("Date filter automatic default value for years filter", async function () {
