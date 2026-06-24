@@ -73,7 +73,7 @@
                    <button name="action_repair_end" invisible="state != 'under_repair'" type="object" string="End Repair" class="oe_highlight" data-hotkey="x"/>
                    <button name="action_assign" invisible="not reserve_visible" string="Reserve" type="object"/>
                    <button name="action_create_sale_order" type="object" string="Quote" invisible="not can_create_sale_or_invoice"/>
-                   <button name="action_create_invoice" type="object" string="Invoice" invisible="not (can_create_sale_or_invoice or can_create_extra_invoice)"/>
+                   <button name="action_create_invoice" type="object" string="Invoice" invisible="not can_create_extra_invoice"/>
                    <button name="action_repair_cancel_draft" invisible="state != 'cancel'" string="Set to Draft" type="object" data-hotkey="z"/>
                    <button name="action_repair_cancel" string="Cancel" type="object" invisible="state in ('done', 'cancel')" data-hotkey="l"/>
                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,under_repair,done"/>
@@ -177,6 +177,8 @@
                                 <field name="product_uom_qty" string="Demand" readonly="state in ('done', 'cancel')"/>
                                 <field name="forecast_expected_date" column_invisible="True"/>
                                 <field name="product_qty" readonly="1" column_invisible="True"/>
+                                <field name="qty_invoiced" column_invisible="not parent.invoice_ids" optional="hide"/>
+                                <field name="qty_to_invoice" column_invisible="not parent.invoice_ids" groups="base.group_no_one" optional="hide"/>
                                 <field name="quantity" string="Quantity" readonly="not product_id" optional="show"/>
                                 <field name="uom_id" readonly="state != 'draft' and not additional" options="{'no_open': True, 'no_create': True}" widget="many2one_uom"/>
                                 <field name="lot_ids" widget="many2many_tags"
@@ -214,6 +216,8 @@
                                     context="{'default_type': 'service'}"/>
                                 <field name="description" optional="hide"/>
                                 <field name="quantity"/>
+                                <field name="qty_invoiced" column_invisible="not parent.invoice_ids" optional="hide"/>
+                                <field name="qty_to_invoice" column_invisible="not parent.invoice_ids" groups="base.group_no_one" optional="hide"/>
                                 <field
                                     name="uom_id"
                                     groups="uom.group_uom"
