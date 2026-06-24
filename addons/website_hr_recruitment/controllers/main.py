@@ -5,6 +5,7 @@ from functools import partial
 
 from odoo import http, _
 from odoo.addons.website.controllers.form import WebsiteForm
+from odoo.addons.website.models.ir_http import sitemap_group
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.translate import LazyTranslate
@@ -15,9 +16,19 @@ _lt = LazyTranslate(__name__)
 class WebsiteHrRecruitment(WebsiteForm):
     _jobs_per_page = 12
 
+    @sitemap_group("jobs")
     def sitemap_jobs(env, rule, qs):
         if not qs or qs.lower() in '/jobs':
             yield {'loc': '/jobs'}
+
+        # Both the detail page and the apply page render the job.
+        slug = env['ir.http']._slug
+        jobs = env['hr.job'].search_fetch(
+            [('is_published', '=', True)], ['write_date', 'seo_name', 'name'])
+        for job in jobs:
+            for loc in (f'/jobs/{slug(job)}', f'/jobs/apply/{slug(job)}'):
+                if not qs or qs.lower() in loc:
+                    yield {'loc': loc, 'lastmod': job.write_date}
 
     @http.route([
         '/jobs',
@@ -170,18 +181,12 @@ class WebsiteHrRecruitment(WebsiteForm):
         })
         return f"/jobs/{request.env['ir.http']._slug(job)}"
 
-    def sitemap_jobs_detail(env, rule, qs):
-        slug = env['ir.http']._slug
-        for job in env['hr.job'].search([('is_published', '=', True)]):
-            if not qs or qs.lower() in f'/jobs/{slug(job)}':
-                yield {'loc': f'/jobs/{slug(job)}'}
-
-    @http.route('''/jobs/detail/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=sitemap_jobs_detail)
+    @http.route('''/jobs/detail/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=False)
     def jobs_detail(self, job, **kwargs):
         redirect_url = f"/jobs/{request.env['ir.http']._slug(job)}"
         return request.redirect(redirect_url, code=301)
 
-    @http.route('''/jobs/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
+    @http.route('''/jobs/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=sitemap_jobs)
     def job(self, job, **kwargs):
         return request.render("website_hr_recruitment.detail", {
             'structured_data': job._render_jsonld(is_detail_page=True),
@@ -189,7 +194,7 @@ class WebsiteHrRecruitment(WebsiteForm):
             'main_object': job,
         })
 
-    @http.route('''/jobs/apply/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
+    @http.route('''/jobs/apply/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=sitemap_jobs)
     def jobs_apply(self, job, **kwargs):
         error = {}
         default = {}
