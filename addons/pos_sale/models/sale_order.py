@@ -145,6 +145,7 @@ class SaleOrderLine(models.Model):
                         if line.lot_id:
                             lot_qty_by_name[line.lot_id.name] = lot_qty_by_name.get(line.lot_id.name, 0.0) + line.quantity
                     item['lot_qty_by_name'] = lot_qty_by_name
+                item['has_valued_move_ids'] = sale_line.has_valued_move_ids()
                 if product_uom == sale_line_uom:
                     results.append(item)
                     continue
