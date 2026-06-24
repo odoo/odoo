@@ -204,6 +204,7 @@ Section $(TITLE_Odoo_IoT) SectionOdoo_IoT
     # Other configuration
     WriteIniStr "$INSTDIR\odoo.conf" "options" "list_db" "False"
     WriteIniStr "$INSTDIR\odoo.conf" "options" "max_cron_threads" "0"
+    WriteIniStr "$INSTDIR\odoo.conf" "options" "http_interface" "0.0.0.0"
     # Write VERSION file
     FileOpen $0 "$INSTDIR\VERSION" w
     FileWrite $0 "${BUILD_DATE}"
