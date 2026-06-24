@@ -60,11 +60,11 @@ patch(PosStore.prototype, {
         if (program === false) {
             return;
         }
-        const orderTotal = this.getOrder()?.priceIncl ?? 0;
-        if (program && orderTotal < 0) {
-            vals.price_unit = -orderTotal;
-        }
         if (program) {
+            const orderTotal = this.getOrder()?.priceIncl ?? 0;
+            if (orderTotal < 0) {
+                vals.price_unit = -orderTotal;
+            }
             // When selling a gift card or an eWallet product, we should not put taxes on it.
             // When buying a gift card and spending it on products, the taxes are applied
             // on the products, not on the gift card. A gift card line should thus never have taxes.
