@@ -6,7 +6,9 @@ patch(CashierName.prototype, {
     setup() {
         super.setup(...arguments);
         if (this.pos.config.module_pos_hr) {
-            this.cashierSelector = useCashierSelector();
+            this.cashierSelector = useCashierSelector({
+                onScan: (employee) => this.pos.set_cashier(employee),
+            });
         }
     },
     //@Override
