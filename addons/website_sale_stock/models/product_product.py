@@ -107,3 +107,14 @@ class ProductProduct(models.Model):
         if self._is_sold_out():
             gmc_info['availability'] = 'out_of_stock'
         return gmc_info
+
+    def _can_add_to_stock_notifications(self):
+        """Return whether the product is eligible for stock notifications.
+
+        Note: `self.ensure_one()`
+
+        :return: True if the product is active, saleable, and published on the website
+        :rtype: bool
+        """
+        self.ensure_one()
+        return self.active and self.sale_ok and self.website_published
