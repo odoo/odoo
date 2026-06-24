@@ -65,7 +65,7 @@ from .fields_temporal import Datetime
 from .fields_textual import Char, StoredTranslations
 
 from .identifiers import NewId
-from .query import Query, TableSQL
+from .query import Query, LazySQL, TableSQL
 from .utils import (
     OriginIds, Prefetch, check_object_name, parse_field_expr,
     COLLECTION_TYPES, SQL_OPERATORS,
@@ -537,6 +537,8 @@ class BaseModel(metaclass=MetaModel):
         or table query.
         """
         table_query = self._table_query
+        if table_query is not None and isinstance(table_query, LazySQL):
+            return table_query
         if table_query and isinstance(table_query, SQL):
             table_sql = SQL("(%s)", table_query)
         elif table_query:

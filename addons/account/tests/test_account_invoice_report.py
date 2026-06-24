@@ -345,3 +345,99 @@ class TestAccountInvoiceReport(AccountTestInvoicingCommon):
         )
         self.assertEqual(report.inventory_value, -1600)
         self.assertEqual(report.price_margin, -100)
+
+    def test_minimal_queries(self):
+        """Check that inner the queries for `account.invoice.report` are minimal.
+
+        Depending on the parameters of the graph/pivot views, we don't need to do some joins.
+        For instance, the partner, product or UoM are not always used and would force worse query plans.
+        """
+        with self.assertQueries([
+            """
+            SELECT date_trunc(%s, "account_invoice_report"."invoice_date"::timestamp)::date,
+                   SUM("account_invoice_report"."price_total"),
+                   COUNT(*)
+              FROM (
+                       SELECT "account_move_line"."id" AS "id",
+                              "account_move_line__move_id"."move_type" AS "move_type",
+                              "account_move_line__move_id"."state" AS "state",
+                              "account_move_line"."company_id" AS "company_id",
+                              "account_move_line__move_id"."invoice_date" AS "invoice_date",
+                              "account_move_line"."price_subtotal" * CASE WHEN "account_move_line__move_id"."move_type" IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END / "account_move_line__move_id"."invoice_currency_rate" AS "price_total"
+                         FROM "account_move_line"
+                         JOIN "account_move" AS "account_move_line__move_id"
+                           ON ("account_move_line"."move_id" = "account_move_line__move_id"."id")
+                        WHERE (
+                                  "account_move_line"."account_id" IS NOT NULL
+                                  AND "account_move_line"."display_type" IN %s
+                                  AND "account_move_line__move_id"."move_type" IN %s
+                              )
+                   ) AS "account_invoice_report"
+             WHERE ("account_invoice_report"."move_type" IN %s AND ("account_invoice_report"."state" IN %s OR "account_invoice_report"."state" IS NULL))
+               AND "account_invoice_report"."company_id" IN %s
+          GROUP BY date_trunc(%s, "account_invoice_report"."invoice_date"::timestamp)::date
+          ORDER BY date_trunc(%s, "account_invoice_report"."invoice_date"::timestamp)::date ASC
+            """
+        ]):
+            # Default graph view
+            self.env['account.invoice.report'].formatted_read_group(
+                domain=[('state', 'not in', ('draft', 'cancel')), ('move_type', '=', 'out_invoice')],
+                groupby=['invoice_date:month'],
+                aggregates=['price_total:sum', '__count'],
+                order=None,
+            )
+
+        with self.assertQueries([
+            """
+                SELECT GROUPING(
+                           "account_invoice_report"."product_categ_id",
+                           date_trunc(%s, "account_invoice_report"."invoice_date"::timestamp)::date
+                       ),
+                       "account_invoice_report"."product_categ_id",
+                       date_trunc(%s, "account_invoice_report"."invoice_date"::timestamp)::date,
+                       SUM("account_invoice_report"."price_subtotal"),
+                       COUNT(*)
+                  FROM (
+                         SELECT "account_move_line"."id" AS "id",
+                                "account_move_line__move_id"."move_type" AS "move_type",
+                                "account_move_line__move_id"."state" AS "state",
+                                "account_move_line"."company_id" AS "company_id",
+                                "account_move_line__product_id__product_tmpl_id"."categ_id" AS "product_categ_id",
+                                "account_move_line__move_id"."invoice_date" AS "invoice_date",
+                                -(1 * "account_move_line"."balance") AS "price_subtotal"
+                           FROM "account_move_line"
+                           JOIN "account_move" AS "account_move_line__move_id"
+                             ON ("account_move_line"."move_id" = "account_move_line__move_id"."id")
+                      LEFT JOIN "product_product" AS "account_move_line__product_id"
+                             ON ("account_move_line"."product_id" = "account_move_line__product_id"."id")
+                      LEFT JOIN "product_template" AS "account_move_line__product_id__product_tmpl_id"
+                             ON ("account_move_line__product_id"."product_tmpl_id" = "account_move_line__product_id__product_tmpl_id"."id")
+                          WHERE (
+                                    "account_move_line"."account_id" IS NOT NULL
+                                    AND "account_move_line"."display_type" IN %s
+                                    AND "account_move_line__move_id"."move_type" IN %s
+                                )
+                       ) AS "account_invoice_report"
+             LEFT JOIN "product_category" AS "account_invoice_report__product_categ_id"
+                    ON ("account_invoice_report"."product_categ_id" = "account_invoice_report__product_categ_id"."id")
+             LEFT JOIN "product_category" AS "account_invoice_report__product_categ_id__parent_id"
+                    ON ("account_invoice_report__product_categ_id"."parent_id" = "account_invoice_report__product_categ_id__parent_id"."id")
+                 WHERE ("account_invoice_report"."move_type" IN %s AND ("account_invoice_report"."state" IN %s OR "account_invoice_report"."state" IS NULL))
+                   AND "account_invoice_report"."company_id" IN %s
+              GROUP BY GROUPING SETS (
+                           ("account_invoice_report"."product_categ_id", "account_invoice_report__product_categ_id__parent_id"."name"->>%s, "account_invoice_report__product_categ_id"."name"->>%s),
+                           (date_trunc(%s, "account_invoice_report"."invoice_date"::timestamp)::date),
+                           (date_trunc(%s, "account_invoice_report"."invoice_date"::timestamp)::date, "account_invoice_report"."product_categ_id", "account_invoice_report__product_categ_id__parent_id"."name"->>%s, "account_invoice_report__product_categ_id"."name"->>%s)
+                       )
+              ORDER BY "account_invoice_report__product_categ_id__parent_id"."name"->>%s DESC,
+                       "account_invoice_report__product_categ_id"."name"->>%s ASC ,
+                       date_trunc(%s, "account_invoice_report"."invoice_date"::timestamp)::date ASC
+            """,
+        ]):
+            # Default pivot view
+            self.env['account.invoice.report'].formatted_read_grouping_sets(
+                domain=[('state', 'not in', ('draft', 'cancel')), ('move_type', '=', 'out_invoice')],
+                grouping_sets=[['product_categ_id'], ['invoice_date:month'], ['invoice_date:month', 'product_categ_id']],
+                aggregates=['price_subtotal:sum', '__count'],
+                order=None,
+            )

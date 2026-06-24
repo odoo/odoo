@@ -351,6 +351,32 @@ class TableSQL(SQL):
         raise ValueError(f"Invalid field {field_name}: _join() not possible")
 
 
+class LazySQL(SQL):
+    def __init__(self, table: TableSQL):
+        self._table = table
+        self._select_dict = {}
+
+    @property
+    def _sql_tuple(self):
+        return self._table._query.subselect(*[
+            SQL("%s AS %s", sql_expression, SQL.identifier(fname))
+            for fname, sql_expression in self._select_dict.items()
+        ])._sql_tuple
+
+    def __getattr__(self, item: str):
+        return getattr(self._table, item)
+
+    __getitem__ = __getattr__
+
+    def __setitem__(self, name, value):
+        assert isinstance(name, str) and isinstance(value, SQL)
+        self._select_dict[name] = value
+
+    def _select(self, name, value):
+        self[name] = value
+        return SQL.identifier(name)
+
+
 class FieldSQL(SQL):
     """ An SQL object that represents the expression of a field.
 
