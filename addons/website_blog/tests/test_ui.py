@@ -197,4 +197,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
 
                 mock_request.session.touch = lambda: None
                 mock_request.render = fake_render
-                controller.blog_post(blog1, current_post)
+                controller.blog_post(
+                    blog1.with_env(mock_request.env),
+                    current_post.with_env(mock_request.env),
+                )

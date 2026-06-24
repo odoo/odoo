@@ -48,9 +48,10 @@ class TestPage(common.TransactionCase):
         })
 
     def test_copy_page(self):
-        View = self.env['ir.ui.view']
-        Page = self.env['website.page']
-        Menu = self.env['website.menu']
+        website_id = self.ref('base.default_website')
+        View = self.env['ir.ui.view'].with_context(website_id=website_id)
+        Page = self.env['website.page'].with_context(website_id=website_id)
+        Menu = self.env['website.menu'].with_context(website_id=website_id)
         # Specific page
         self.specific_view = View.create({
             'name': 'Base',
@@ -604,7 +605,22 @@ class WithContext(HttpCase):
 
     def test_07_not_authorized(self):
         # Create page that requires specific user role.
-        specific_page = self.page.copy({'website_id': self.ref('base.default_website')})
+        specific_page = self.page.copy({'website_id': self.ref('base.default_website'), 'url': '/page_2'})
+        specific_page.write({
+            'arch': self.page.arch.replace('I am a generic page', 'I am a specific page not available for visitors'),
+            'is_published': True,
+            'visibility': 'restricted_group',
+            'group_ids': [Command.link(self.ref('website.group_website_designer'))],
+        })
+        # Access page as anonymous visitor.
+        self.authenticate(None, None)
+        r = self.url_open('/page_2')
+        # Check that is is rendered as a website page.
+        self.assertEqual(403, r.status_code, "Must fail with 403")
+
+        # with the same page url
+
+        specific_page = self.page.copy({'website_id': self.ref('base.default_website'), 'url': '/page_1'})
         specific_page.write({
             'arch': self.page.arch.replace('I am a generic page', 'I am a specific page not available for visitors'),
             'is_published': True,

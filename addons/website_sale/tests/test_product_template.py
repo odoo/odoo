@@ -59,11 +59,11 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         self.env["res.config.settings"].create({
             "show_line_subtotals_tax_selection": "tax_excluded"
         }).execute()
-        with self.mock_request():
-            markup_data = self.product._prepare_jsonld_vals()
+        with self.mock_request() as request:
+            markup_data = self.product.with_context(request.env.context)._prepare_jsonld_vals()
             self.assertEqual(
                 markup_data["offers"]["price"],
-                self.website.currency_id.round(self.product.base_unit_price),
+                request.env.website.currency_id.round(self.product.base_unit_price),
             )
 
     def test_markup_data_uses_taxes_included_price_when_configured_on_website(self):
@@ -91,7 +91,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             .search([("name", "!=", company_currency.name)], limit=1)
         )
         with self.mock_request():
-            markup = self.product._prepare_jsonld_vals()
+            markup = self.product.with_context(website_id=self.website.id)._prepare_jsonld_vals()
         # Expected converted price
         expected_price = company_currency._convert(
             self.product.list_price,

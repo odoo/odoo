@@ -71,8 +71,9 @@ class WebsiteSaleVisitorTests(WebsiteSaleCommon):
             "website_published": True,
             "sale_ok": True,
         })
+        snippet_filter = self.env.ref("website_sale.dynamic_filter_newest_products").with_context(website_id=self.website.id)
+
         with self.mock_request():
-            snippet_filter = self.env.ref("website_sale.dynamic_filter_newest_products")
             res = snippet_filter._prepare_values(limit=16, search_domain=[])
 
         res_products = [res_product["_record"] for res_product in res]
@@ -102,7 +103,7 @@ class WebsiteSaleVisitorTests(WebsiteSaleCommon):
 
         self.website = self.website.with_user(public_user).with_context(website_id=self.website.id)
 
-        snippet_filter = self.env.ref("website_sale.dynamic_filter_latest_viewed_products")
+        snippet_filter = self.env.ref("website_sale.dynamic_filter_latest_viewed_products").with_context(website_id=self.website.id)
 
         # BEFORE VISITING THE PRODUCT
         res = snippet_filter._prepare_values(limit=16, search_domain=[])

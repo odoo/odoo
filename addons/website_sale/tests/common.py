@@ -152,7 +152,7 @@ class WebsiteSaleCommon(DeliveryCommon):
         website = website or self.website
         user = user or website.user_id
 
-        request_env = self.env(user=user)
+        request_env = self.env(user=user, context=dict(self.env, website_id=website.id))
         website = website.with_env(request_env)
 
         def make_json_response(data, *_args, **_kwargs):

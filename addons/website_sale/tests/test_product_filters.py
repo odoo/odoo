@@ -257,7 +257,8 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
                 for product_id in viewed_products.ids
             ])
             with_variants = self.WebsiteSnippetFilter.with_context(
-                dynamic_filter=dyn_filter, hide_variants=False
+                dynamic_filter=dyn_filter, hide_variants=False,
+                website_id=self.ref('base.default_website'),
             )._get_products("latest_viewed")
             self.assertSetEqual(
                 {p["product_id"] for p in with_variants},
@@ -266,7 +267,8 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             )
 
             no_variants = self.WebsiteSnippetFilter.with_context(
-                dynamic_filter=dyn_filter, hide_variants=True
+                dynamic_filter=dyn_filter, hide_variants=True,
+                website_id=self.ref('base.default_website'),
             )._get_products("latest_viewed")
             self.assertSetEqual(
                 {p["product_id"] for p in no_variants},
@@ -333,7 +335,8 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         dyn_filter = self.env.ref("website_sale.dynamic_filter_cross_selling_accessories")
         with self.mock_request():
             with_variants = self.WebsiteSnippetFilter.with_context(
-                dynamic_filter=dyn_filter, hide_variants=False
+                dynamic_filter=dyn_filter, hide_variants=False,
+                website_id=self.ref('base.default_website'),
             )._get_products("accessories", product_template_id=str(self.computer.id))
             self.assertListEqual(
                 [p["product_id"] for p in with_variants],
@@ -342,7 +345,8 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             )
 
             no_variants = self.WebsiteSnippetFilter.with_context(
-                dynamic_filter=dyn_filter, hide_variants=True
+                dynamic_filter=dyn_filter, hide_variants=True,
+                website_id=self.ref('base.default_website'),
             )._get_products("accessories", product_template_id=str(self.computer.id))
             self.assertListEqual(
                 [p["product_id"] for p in no_variants],
@@ -365,7 +369,8 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         dyn_filter = self.env.ref("website_sale.dynamic_filter_cross_selling_alternative_products")
         with self.mock_request():
             with_variants = self.WebsiteSnippetFilter.with_context(
-                dynamic_filter=dyn_filter, hide_variants=False
+                dynamic_filter=dyn_filter, hide_variants=False,
+                website_id=self.ref('base.default_website'),
             )._get_products("alternative_products", product_template_id=str(self.mac.id))
             self.assertListEqual(
                 [p["product_id"] for p in with_variants],
@@ -374,7 +379,8 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             )
 
             no_variants = self.WebsiteSnippetFilter.with_context(
-                dynamic_filter=dyn_filter, hide_variants=True
+                dynamic_filter=dyn_filter, hide_variants=True,
+                website_id=self.ref('base.default_website'),
             )._get_products("alternative_products", product_template_id=str(self.mac.id))
             self.assertListEqual(
                 [p["product_id"] for p in no_variants],
@@ -394,6 +400,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         When showing variants, the filter should return 16 variants with repeating templates.
         When hiding variants, the filter should return 16 templates, all unique.
 
+                website_id=self.ref('base.default_website'),
         This filter is unique in that it's defined in `data/data.xml`, and hence can't be called
         via the `_get_products` method.
         """
@@ -402,7 +409,7 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
             "sale_ok": False
         })
 
-        dyn_filter = self.env.ref("website_sale.dynamic_filter_newest_products")
+        dyn_filter = self.env.ref("website_sale.dynamic_filter_newest_products").with_context(website_id=self.ref('base.default_website'))
         with self.mock_request():
             with_variants = dyn_filter._prepare_values(search_domain=[])
             self.assertEqual(

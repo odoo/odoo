@@ -507,7 +507,7 @@ class WebsitePage(models.Model):
     def _get_page_info(self, request) -> dict | None:
         req_page = request.httprequest.path
 
-        website = self.env["website"].get_current_website()
+        website = self.env.website
 
         # specific page first
         page_domain = Domain('url', '=', req_page) & website.website_domain()
