@@ -274,3 +274,18 @@ class TestUi(TestPosHrHttpCommon):
             "test_scan_employee_barcode_with_pos_hr_disabled",
             login="pos_admin"
         )
+
+    def test_switch_cashier_with_badge(self):
+        """
+        Scanning a cashier's badge from the product screen should switch to
+        that cashier.
+        """
+        self.emp2.write({"pin": False, "barcode": "041222"})
+        self.emp3.barcode = "041333"
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.main_pos_config.current_session_id.set_opening_control(0, None)
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "test_switch_cashier_with_badge",
+            login="pos_user",
+        )
