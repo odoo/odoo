@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from functools import lru_cache
 import re
 import json
 
@@ -622,8 +623,16 @@ class DeliveryCarrier(models.Model):
 
         return price
 
+    @staticmethod
+    @lru_cache(maxsize=1)
+    def _parse_carrier_prices(carrier_prices_dumped):
+        try:
+            return json.loads(carrier_prices_dumped)
+        except json.JSONDecodeError:
+            return {}
+
     def _get_carrier_data(self, carrier_prices_dumped, currency_id):
-        carrier_prices = json.loads(carrier_prices_dumped)
+        carrier_prices = DeliveryCarrier._parse_carrier_prices(carrier_prices_dumped)
         currency = self.env["res.currency"].browse(currency_id)
         return carrier_prices, currency
 
@@ -631,7 +640,7 @@ class DeliveryCarrier(models.Model):
         price = delivery_vals.get("display_price", 0.0)
         return currency.format(price)
 
-    @api.depends_context("carrier_prices", "wizard_currency_id", "formatted_display_name")
+    @api.depends_context("carrier_prices_dumped", "wizard_currency_id", "formatted_display_name")
     def _compute_display_name(self):
         """Change display name for the carrier selection in SO"""
         carrier_prices_dumped = self.env.context.get("carrier_prices_dumped")
@@ -646,13 +655,13 @@ class DeliveryCarrier(models.Model):
         carrier_prices, currency = self._get_carrier_data(carrier_prices_dumped, currency_id)
 
         for carrier in self:
-            delivery_vals = carrier_prices.get(str(carrier.id))
+            delivery_vals = carrier_prices.get(str(carrier.id), {})
 
             if delivery_vals and "display_price" in delivery_vals:
                 formatted_price = self._get_delivery_formatted_price(delivery_vals, currency)
                 carrier.display_name = f"{carrier.display_name}\t--{formatted_price}--"
 
-    @api.depends_context("carrier_prices", "wizard_currency_id")
+    @api.depends_context("carrier_prices_dumped", "wizard_currency_id")
     def _compute_delivery_cost(self):
         """Provide Cost column for the list view for carriers from SO selection"""
         carrier_prices_dumped = self.env.context.get("carrier_prices_dumped")
@@ -666,5 +675,5 @@ class DeliveryCarrier(models.Model):
         carrier_prices, currency = self._get_carrier_data(carrier_prices_dumped, currency_id)
 
         for carrier in self:
-            delivery_vals = carrier_prices.get(str(carrier.id))
+            delivery_vals = carrier_prices.get(str(carrier.id), {})
             carrier.delivery_cost = self._get_delivery_formatted_price(delivery_vals, currency)

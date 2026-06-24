@@ -23,8 +23,8 @@ class ChooseDeliveryCarrier(models.TransientModel):
         domain="[('id', 'in', available_carrier_ids)]",
         required=True,
     )
-    carrier_prices = fields.Json(compute="_compute_carrier_prices")
-    carrier_prices_dumped = fields.Char(compute="_compute_carrier_prices")
+    carrier_prices = fields.Json()
+    carrier_prices_dumped = fields.Char()
     delivery_type = fields.Selection(related="carrier_id.delivery_type")
     delivery_price = fields.Float()
     display_price = fields.Float(string="Cost", readonly=True)
@@ -44,8 +44,13 @@ class ChooseDeliveryCarrier(models.TransientModel):
 
     @api.onchange("carrier_id", "carrier_prices")
     def _onchange_carrier_id(self):
-        if not self.carrier_id or not self.carrier_prices:
+        if not self.carrier_prices:
+            if self.carrier_id and self.delivery_type in ("fixed", "base_on_rule"):
+                vals = self._get_delivery_rate()
+                if vals.get("error_message"):
+                    return {"error": vals["error_message"]}
             return
+
         delivery_vals = self.carrier_prices.get(str(self.carrier_id.id), {})
         if delivery_vals.get("error_message"):
             raise UserError(delivery_vals.get("error_message"))
@@ -140,17 +145,13 @@ class ChooseDeliveryCarrier(models.TransientModel):
             "delivery_message": self.delivery_message,
         })
 
-    @api.depends("total_weight")
-    def _compute_carrier_prices(self):
-        """Compute delivery prices for all cariers"""
-        for wizard in self:
-            json_result = {}
-            for available_carrier in wizard.available_carrier_ids:
-                hash_val = available_carrier._origin.id or available_carrier.id
-                try:
-                    delivery_vals = wizard._get_carrier_delivery_rate(available_carrier)
-                    json_result[str(hash_val)] = delivery_vals
-                except Exception as e:  # noqa: BLE001
-                    json_result[str(hash_val)] = {"error_message": e.args[0]}
-            wizard.carrier_prices = json_result
-            wizard.carrier_prices_dumped = json.dumps(json_result)
+    @api.model
+    def get_wizard_carrier_rate(self, wizard_id, carrier_id):
+        """Compute delivery prices for a single carier"""
+        wizard = self.browse(wizard_id)
+        carrier = self.env['delivery.carrier'].browse(carrier_id)
+        try:
+            delivery_vals = wizard._get_carrier_delivery_rate(carrier)
+            return delivery_vals
+        except Exception as e:  # noqa: BLE001
+            return {"error_message": e.args[0]}

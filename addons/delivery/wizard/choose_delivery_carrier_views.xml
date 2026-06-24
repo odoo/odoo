@@ -5,6 +5,8 @@
         <field name="model">choose.delivery.carrier</field>
         <field name="arch" type="xml">
             <form>
+                <widget name="delivery_carrier_rates_loader"/>
+                <field name="available_carrier_ids" invisible="1"/>
                 <group col="8">
                     <group colspan="2">
                         <label name="carried_weight_label" for="total_weight" groups="uom.group_uom"/>
