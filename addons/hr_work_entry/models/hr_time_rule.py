@@ -325,6 +325,8 @@ class HrTimeRule(models.Model):
         self.ensure_one()
         if self.company_id:
             employees = employees.filtered(lambda e: e.company_id == self.company_id)
+        elif self.country_id:
+            employees = employees.filtered(lambda e: e.company_id.country_id == self.country_id)
         if not employees:
             return employees
         if not self.employee_domain or self.employee_domain == '[]':
