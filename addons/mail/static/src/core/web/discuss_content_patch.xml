@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="mail.DiscussContent" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-DiscussContent-threadAvatar')]" position="attributes">
+            <attribute name="t-att-class">{ 'cursor-pointer': this.correspondentPartner }</attribute>
+            <attribute name="t-on-click">this.onClickThreadAvatar</attribute>
+        </xpath>
         <xpath expr="//*[@t-ref='this.rootRef']" position="before">
             <div t-if="this.ui.isSmall and this.store.discuss.activeTab === 'inbox' and this.store.self_user?.notification_type === 'inbox'" class="w-100 border-bottom" t-custom-ref="mobileTopbar">
                 <t t-call="mail.DiscussContent.mobileTopbar"/>

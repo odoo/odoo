@@ -268,6 +268,31 @@ test("can access portal partner profile from avatar popover", async () => {
     await contains(".o_field_widget[name='name'] .o_input", { value: "Joel" });
 });
 
+test("clicking chat correspondent avatars opens avatar card", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        email: "mario@example.com",
+        name: "Mario",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-DiscussContent-threadAvatar.cursor-pointer");
+    await contains(".o_avatar_card");
+    await contains(".o-mail-avatar-card-name:text('Mario')");
+    await contains(".o_card_user_infos > a:text('mario@example.com')");
+    await click(".o-mail-Thread-avatar.cursor-pointer");
+    await contains(".o_avatar_card");
+    await contains(".o-mail-avatar-card-name:text('Mario')");
+    await contains(".o_card_user_infos > a:text('mario@example.com')");
+});
+
 test("Preserve letter case and accents when creating channel from sidebar", async () => {
     await start();
     await openDiscuss();
