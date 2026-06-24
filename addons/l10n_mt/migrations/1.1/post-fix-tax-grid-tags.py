@@ -46,6 +46,19 @@ def _replace_tags_sql(cr, tax_ids, old_tag, new_tag, is_base=False):
         'tax_ids': tax_ids_tuple
     })
 
+    # update grid in repartition line of taxes as well
+    cr.execute(
+        """
+        UPDATE account_account_tag_account_tax_repartition_line_rel rel
+           SET account_account_tag_id = %s
+          FROM account_tax_repartition_line repartition
+         WHERE repartition.id = rel.account_tax_repartition_line_id
+           AND repartition.tax_id IN %s
+           AND rel.account_account_tag_id = %s
+        """,
+        [new_tag.id, tax_ids_tuple, old_tag.id]
+    )
+
     return updated_count
 
 
