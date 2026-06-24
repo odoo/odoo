@@ -255,6 +255,22 @@ class HrLeave(models.Model):
 
     @api.model
     def _search_is_time_rule_output(self, operator, value):
+        if operator == 'in':
+            has_true = True in value
+            has_false = False in value
+            if has_true and not has_false:
+                return [('time_rule_id', '!=', False)]
+            if has_false and not has_true:
+                return [('time_rule_id', '=', False)]
+            return []
+        if operator == 'not in':
+            has_true = True in value
+            has_false = False in value
+            if has_true and not has_false:
+                return [('time_rule_id', '=', False)]
+            if has_false and not has_true:
+                return [('time_rule_id', '!=', False)]
+            return [('id', '=', False)]
         if (operator == '=' and value) or (operator == '!=' and not value):
             return [('time_rule_id', '!=', False)]
         return [('time_rule_id', '=', False)]
@@ -1106,7 +1122,8 @@ class HrLeave(models.Model):
                     holiday_sudo.message_subscribe(partner_ids=holiday.employee_id.leave_manager_id.partner_id.ids)
                 if holiday.validation_type == 'no_validation' or self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
                     # Automatic validation should be done in sudo, because user might not have the rights to do it by himself
-                    holiday_sudo.action_approve()
+                    # skip_time_rules: create() handles the time rule call once for all past leaves below
+                    holiday_sudo.with_context(skip_time_rules=True).action_approve()
                     holiday_sudo.message_subscribe(partner_ids=holiday._get_responsible_for_approval().partner_id.ids)
                     holiday_sudo.message_post(body=_("The time off has been automatically approved"), subtype_xmlid="mail.mt_comment") # Message from OdooBot (sudo)
                 elif not self.env.context.get('import_file'):
@@ -1118,7 +1135,7 @@ class HrLeave(models.Model):
                 'message': self.env._('There is no valid allocation to cover this request for the following employees: %s', invalid_employee_names),
             })
         if self.env.context.get('leave_fast_create'):
-            holidays._create_resource_leave()
+            holidays.filtered(lambda l: l.state == 'validate')._create_resource_leave()
         if not self.env.context.get('skip_time_rules'):
             today = fields.Date.today()
             past = holidays.filtered(lambda l: not l.is_time_rule_output and l.date_to and l.date_to.date() < today)
@@ -1174,7 +1191,6 @@ class HrLeave(models.Model):
 
         write_self = self.with_context(skip_leave_version_check=True) if skip_leave_version_check else self
         result = super(HrLeave, write_self).write(values)
-        result = super().write(values)
 
         if validated_leaves and dates_changed and not state_unvalidated:
             if not self.env.context.get('skip_create_resource_leave'):
@@ -1357,6 +1373,7 @@ class HrLeave(models.Model):
 
             all_children.with_context(skip_time_rules=True).unlink()
 
+            modified_sources = self.env['hr.leave']
             for src in all_source_leaves:
                 original_dt = max(src.date_to, max_child_dt.get(src.id, src.date_to))
                 if not src.active or original_dt != src.date_to:
@@ -1365,8 +1382,10 @@ class HrLeave(models.Model):
                         'date_to': original_dt,
                         'request_date_to': original_dt.date(),
                     })
+                    modified_sources |= src
 
-            all_source_leaves._create_resource_leave()
+            if modified_sources:
+                modified_sources._create_resource_leave()
 
             excess, deficit = rules._evaluate_rules(all_source_leaves, start_dt, end_dt)
             for emp, by_leave in excess.items():

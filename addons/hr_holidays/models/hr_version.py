@@ -218,7 +218,7 @@ class HrVersion(models.Model):
             return result
         hr_leaves = self.env['hr.leave']
         for record in payload.all_records:
-            if record and record._name == 'resource.calendar.leaves' and record.work_entry_type_id == payload.record.work_entry_type_id:
+            if record and record._name == 'resource.calendar.leaves' and record.holiday_id:
                 hr_leaves |= record.holiday_id
         if hr_leaves:
             result.append(('leave_ids', hr_leaves))

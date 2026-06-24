@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
                 <app data-string="Attendances" string="Attendances" name="hr_attendance" groups="hr_attendance.group_hr_attendance_manager">
-                    <block title="Attendance Rules &amp; Enforcement">
+                    <block title="Attendance Rules &amp; Enforcement" name="attendance_settings">
                         <setting string="Attendance Validation" company_dependent="1" help="When enabled, attendance records must be validated by an officer before they count toward work entries and time rules.">
                             <field name="attendance_validation" widget="radio"/>
                         </setting>

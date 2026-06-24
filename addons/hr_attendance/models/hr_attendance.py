@@ -804,9 +804,9 @@ class HrAttendance(models.Model):
             result = {}
             for child in children:
                 src = child.source_attendance_id
-                # deficit outputs have a time_rule_id and start past the source's current check_out;
+                # deficit outputs start past the source's current check_out;
                 # using their check_out would incorrectly inflate the source's restored span
-                if child.time_rule_id and child.check_in > src.check_out:
+                if src and child.check_in > src.check_out:
                     continue
                 sid = src.id
                 if child.check_out and (sid not in result or child.check_out > result[sid]):
@@ -829,23 +829,20 @@ class HrAttendance(models.Model):
             if not source_attendances:
                 continue
 
-            is_aggregate = bool(rules) and all(r.quantity_period == 'week' for r in rules)
+            is_weekly = bool(rules) and all(r.quantity_period == 'week' for r in rules)
             auto_ctx = dict(skip_time_rules=True, tracking_disable=True)
             sources_to_revert = {}
 
-            if is_aggregate:
-                # week rules emit output records and delete them on rerun; sources are not archived
-                self.env['hr.attendance'].sudo().search([
-                    ('source_attendance_id', 'in', source_attendances.ids),
-                    ('is_time_rule_output', '=', True),
-                    ('time_rule_id', 'in', rules.ids),
-                ]).with_context(skip_time_rules=True).unlink()
-                # day-rule outputs may have shrunk source check_out; temporarily restore full span
-                # so weekly totals are computed against the original attendance duration
-                remaining = self.env['hr.attendance'].sudo().search([
+            if is_weekly:
+                # only delete prior weekly-rule outputs; day-rule outputs must be preserved
+                all_children = self.env['hr.attendance'].sudo().search([
                     ('source_attendance_id', 'in', source_attendances.ids),
                 ])
-                max_child_co = _max_span_check_out(remaining)
+                non_weekly = all_children.filtered(lambda a: a.time_rule_id not in rules)
+                (all_children - non_weekly).with_context(skip_time_rules=True).unlink()
+                # day-rule outputs may have shrunk source check_out; temporarily restore full span
+                # so weekly totals are computed against the original attendance duration
+                max_child_co = _max_span_check_out(non_weekly)
                 for src in source_attendances:
                     effective_co = max(src.check_out, max_child_co.get(src.id, src.check_out))
                     if effective_co != src.check_out:
