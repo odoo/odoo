@@ -17,26 +17,28 @@ export function firstProductIsFavorite(name) {
     ];
 }
 
-export function clickLine(productName, quantity = "1") {
+export function clickLine(productName, quantity = "1", extraAttrs = {}) {
     return [
         ...Order.hasLine({
             withoutClass: ".selected",
             run: "click",
             productName,
             quantity,
+            ...extraAttrs,
         }),
-        ...Order.hasLine({ withClass: ".selected", productName, quantity }),
+        ...Order.hasLine({ withClass: ".selected", productName, quantity, ...extraAttrs }),
     ].flat();
 }
-export function clickSelectedLine(productName, quantity = "1") {
+export function clickSelectedLine(productName, quantity = "1", extraAttrs = {}) {
     return [
         ...Order.hasLine({
             withClass: ".selected",
             run: "click",
             productName,
             quantity,
+            ...extraAttrs,
         }),
-        ...Order.hasLine({ withoutClass: ".selected", productName, quantity }),
+        ...Order.hasLine({ withoutClass: ".selected", productName, quantity, ...extraAttrs }),
     ].flat();
 }
 export function clickReview() {
@@ -142,9 +144,9 @@ export function clickInfoProduct(name, extraSteps = []) {
         ...inLeftSide([...clickControlButton("Info"), ...extraSteps]),
     ];
 }
-export function clickOrderline(productName, quantity = "1") {
+export function clickOrderline(productName, quantity = "1", extraAttrs = {}) {
     return [
-        ...clickLine(productName, quantity),
+        ...clickLine(productName, quantity, extraAttrs),
         {
             content: "Check the product page",
             trigger: ".product-list",
@@ -299,7 +301,9 @@ export function clickInternalNoteButton(buttonLabel) {
         },
     ];
 }
-
+export function cancelOrder() {
+    return [clickControlButton("Cancel Order"), Dialog.confirm()].flat();
+}
 /**
  * Selects a given price list in the user interface. This function is designed to be used to select a specific price list.
  *
@@ -609,7 +613,13 @@ export function isShown() {
         },
     ];
 }
-export function selectedOrderlineHas(productName, quantity, price, attributeLine = "") {
+export function selectedOrderlineHas(
+    productName,
+    quantity,
+    price,
+    attributeLine = "",
+    extraAttrs = {}
+) {
     return inLeftSide(
         Order.hasLine({
             withClass: ".selected",
@@ -617,6 +627,7 @@ export function selectedOrderlineHas(productName, quantity, price, attributeLine
             quantity,
             price,
             attributeLine,
+            ...extraAttrs,
         })
     );
 }

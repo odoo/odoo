@@ -181,13 +181,6 @@ export class SplitBillScreen extends Component {
                     newLine.combo_parent_id = comboMap.get(line.uuid);
                 }
 
-                if (line.getQuantity() === this.qtyTracker[line.uuid]) {
-                    lineToDel.push(line);
-                } else {
-                    const newQty = line.getQuantity() - this.qtyTracker[line.uuid];
-                    line.update({ qty: newQty });
-                }
-
                 this.pos.handlePreparationHistory(
                     originalOrder.last_order_preparation_change.lines,
                     newOrder.last_order_preparation_change.lines,
@@ -195,6 +188,13 @@ export class SplitBillScreen extends Component {
                     newLine,
                     this.qtyTracker[line.uuid]
                 );
+
+                if (line.getQuantity() === this.qtyTracker[line.uuid]) {
+                    lineToDel.push(line);
+                } else {
+                    const newQty = line.getQuantity() - this.qtyTracker[line.uuid];
+                    line.update({ qty: newQty });
+                }
             }
         }
 
