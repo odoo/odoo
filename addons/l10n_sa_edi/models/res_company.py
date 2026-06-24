@@ -35,7 +35,6 @@ class ResCompany(models.Model):
                         raise UserError(_("ZATCA API Mode cannot be changed after an invoice has been successfully submitted under the Production Mode."))
                 journals = self.env['account.journal'].search([('company_id', '=', company.id)])
                 journals._l10n_sa_reset_certificates()
-                journals.l10n_sa_latest_submission_hash = False
                 api_mode = dict(self._fields['l10n_sa_api_mode'].selection).get(vals['l10n_sa_api_mode'])
                 for journal in journals.filtered(lambda j: j.type == 'sale'):
                     journal.message_post(body=_("ZATCA API Mode changed to %s", api_mode))

@@ -1,4 +1,4 @@
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class ZatcaMixin(models.AbstractModel):
@@ -11,14 +11,7 @@ class ZatcaMixin(models.AbstractModel):
     l10n_sa_invoice_signature = fields.Char("Unsigned XML Signature", copy=False)
     l10n_sa_edi_document_id = fields.Many2one(comodel_name="l10n_sa_edi.document", copy=False)
     l10n_sa_edi_state = fields.Selection(related="l10n_sa_edi_document_id.state")
-    l10n_sa_edi_log_ids = fields.One2many(related='l10n_sa_edi_document_id.l10n_sa_edi_log_ids')
     l10n_sa_chain_index = fields.Integer(related="l10n_sa_edi_document_id.l10n_sa_chain_index")
-    l10n_sa_is_test = fields.Boolean(compute="_compute_l10n_sa_is_test", store=True)
-
-    @api.depends('l10n_sa_edi_document_id.l10n_sa_edi_log_ids.is_test')
-    def _compute_l10n_sa_is_test(self):
-        for record in self:
-            record.l10n_sa_is_test = all(record.l10n_sa_edi_log_ids.mapped('is_test'))
 
     def _l10n_sa_get_alerts(self):
         return {}
@@ -54,7 +47,7 @@ class ZatcaMixin(models.AbstractModel):
 
     def _l10n_sa_edi_create_document(self):
         self.ensure_one()
-        if self.l10n_sa_edi_document_id:
+        if self.l10n_sa_edi_state != 'rejected' and self.l10n_sa_edi_document_id:
             return
         self.l10n_sa_edi_document_id = self.env['l10n_sa_edi.document'].create({
             'res_id': self.id,

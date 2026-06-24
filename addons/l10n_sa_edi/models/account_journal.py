@@ -88,9 +88,6 @@ class AccountJournal(models.Model):
     l10n_sa_chain_sequence_id = fields.Many2one('ir.sequence', string='ZATCA account.move chain sequence',
                                                 readonly=True, copy=False)
 
-    l10n_sa_latest_submission_hash = fields.Char("Latest Submission Hash", copy=False,
-                                                 help="Hash of the latest submitted invoice to be used as the Previous Invoice Hash (KSA-13)")
-
     # ====== Utility Functions =======
 
     def _l10n_sa_ready_to_submit_einvoices(self):
@@ -100,22 +97,6 @@ class AccountJournal(models.Model):
         """
         self.ensure_one()
         return self.sudo().l10n_sa_production_csid_json
-
-    def _l10n_sa_api_onboard_sanity_checks(self):
-        """
-            Perform a sanity check to validate that the journal is ready to be onboarded
-        """
-
-        # If the invoice wasn't sent to ZATCA because of a timeout, it will retain its existing chain index
-        # Make sure there are no opened invoices with the journal's existing sequence
-        has_stuck_moves = self.env['l10n_sa_edi.document'].search(
-            [
-                ('journal_id', '=', self.id),
-                ('l10n_sa_chain_index', '!=', 0),
-                ('state', '=', 'to_send')
-            ], limit=1)
-        if has_stuck_moves:
-            raise UserError(_("Oops! The journal is stuck. Please submit the pending invoices to ZATCA and try again."))
 
     # ====== CSR Generation =======
 
@@ -184,10 +165,6 @@ class AccountJournal(models.Model):
                 3.  Get the Production CSID
         """
         self.ensure_one()
-        # we want to perform sanity checks to ensure that the journal is ready to be onboarded
-        # If the check fails, we do not want to revoke the existing PCSID because the user might still need it to post hanging invoices
-        self._l10n_sa_api_onboard_sanity_checks()
-
         try:
             # If the company does not have a private key, we generate it.
             # The private key is used to generate the CSR but also to sign the invoices
@@ -415,20 +392,13 @@ class AccountJournal(models.Model):
             self.l10n_sa_chain_sequence_id = self._l10n_sa_edi_create_new_chain()
         return self.l10n_sa_chain_sequence_id.next_by_id()
 
-    def _l10n_sa_get_last_posted_doc(self):
-        """
-        Returns the last invoice posted to this journal's chain.
-        That invoice may have been received by the govt or not (eg. in case of a timeout).
-        Only upon confirmed reception/refusal of that invoice can another one be posted.
-        """
+    def _l10n_sa_get_previous_document(self, chain_index):
+        """Returns the document with the given chain index on this journal, used for PIH lookup."""
         self.ensure_one()
-        return self.env['l10n_sa_edi.document'].search(
-            [
-                ('journal_id', '=', self.id),
-                ('l10n_sa_chain_index', '!=', 0)
-            ],
-            limit=1, order='l10n_sa_chain_index desc',
-        )
+        return self.env['l10n_sa_edi.document'].search([
+            ('journal_id', '=', self.id),
+            ('l10n_sa_chain_index', '=', chain_index),
+        ], limit=1)
 
     # ====== API Calls to ZATCA =======
 
