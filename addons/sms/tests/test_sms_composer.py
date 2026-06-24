@@ -1,9 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
+from datetime import timedelta
 
 from odoo.addons.sms.models.mail_thread import MailThread
 from odoo.addons.sms.tests.common import SMSCommon, SMSCase
+from odoo.fields import Datetime
 from odoo.tests import tagged
 
 
@@ -82,3 +84,104 @@ class TestSMSComposerComment(SMSCommon, SMSCase):
                     [{'partner': self.partner_employee}], sms_content, messages,
                     mail_message_values={"body": expected_notification_content},
                 )
+
+    def test_sms_composer_schedule_action(self):
+        """ Test that simulates the correct working of the 'Schedule' button in the wizard """
+
+        test_partner = self.env['res.partner'].create({
+            'name': 'Test User',
+            'phone': '+393331234567',
+        })
+
+        future_date = Datetime.now() + timedelta(days=1)
+
+        composer = self.env['sms.composer'].with_context(
+            active_model='res.partner',
+            active_id=test_partner.id,
+        ).create({
+            'body': 'Scheduled Message',
+            'composition_mode': 'comment',
+            'scheduled_date': future_date,
+        })
+
+        composer.action_schedule_message()
+
+        scheduled_msg = self.env['mail.scheduled.message'].search([
+            ('model', '=', 'res.partner'),
+            ('res_id', '=', test_partner.id),
+        ], limit=1)
+
+        self.assertTrue(scheduled_msg, "The wizard should have created a 'mail.scheduled.message' record.")
+
+        with self.mockSMSGateway():
+            scheduled_msg._post_message()
+
+        sms = self.env['sms.sms'].search([
+            ('body', '=', 'Scheduled Message')
+        ], limit=1)
+
+        self.assertTrue(sms, "The SMS should be created after the scheduled message is processed")
+        self.assertEqual(sms.number, '+393331234567')
+
+        self.assertIn(sms.state, ['pending', 'outgoing'])
+
+    def test_sms_composer_action_create_template(self):
+        """ Test to save new SMS template """
+        composer = self.env['sms.composer'].with_context(
+            active_model='res.partner',
+            active_id=self.partner_employee.id
+        ).create({
+            'body': 'SMS Template new body',
+            'template_name': 'Test SMS Template',
+        })
+
+        composer.action_create_sms_template()
+
+        template = self.env['sms.template'].search([('name', '=', 'Test SMS Template')], limit=1)
+        self.assertTrue(template, 'New SMS Template must be created')
+        self.assertEqual(template.body, 'SMS Template new body')
+        self.assertEqual(template.model_id.model, 'res.partner')
+
+    def test_sms_composer_schedule_html_conversion_and_url_references(self):
+        test_partner = self.env['res.partner'].create({
+            'name': 'John Smith',
+            'phone': '+323339876543',
+        })
+
+        sms_plaintext_body = "See our promo here:\nhttps://odoo.com\nEnjoy!"
+        future_date = Datetime.now() + timedelta(days=2)
+
+        composer = self.env['sms.composer'].with_context(
+            active_model='res.partner',
+            active_id=test_partner.id,
+        ).create({
+            'body': sms_plaintext_body,
+            'composition_mode': 'comment',
+            'scheduled_date': future_date,
+        })
+
+        composer.action_schedule_message()
+
+        scheduled_msg = self.env['mail.scheduled.message'].search([
+            ('model', '=', 'res.partner'),
+            ('res_id', '=', test_partner.id),
+        ], limit=1)
+
+        self.assertTrue(scheduled_msg, "The scheduled message should have been created.")
+        self.assertIn('<br>', scheduled_msg.body, "Line breaks should be converted into HTML <br> tags.")
+        self.assertIn('<p>', scheduled_msg.body, "The body should be encapsulated inside HTML paragraph tags.")
+        self.assertIn('<a href="https://odoo.com"', scheduled_msg.body, "The URL should be encapsulated inside an HTML anchor tag.")
+
+        with self.mockSMSGateway():
+            scheduled_msg._post_message()
+
+        sms_final = self.env['sms.sms'].search([
+            ('number', '=', '+323339876543')
+        ], limit=1)
+
+        self.assertTrue(sms_final, "The final SMS should have been generated from the scheduled message.")
+        self.assertEqual(
+            sms_final.body,
+            sms_plaintext_body,
+            "The final SMS body does not match the original plaintext or contains duplicated URLs."
+        )

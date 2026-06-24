@@ -39,32 +39,62 @@
                         <field name="sanitized_numbers" invisible="1"/>
                         <field name="template_id" invisible="1"/>
                         <div name="recipient_single_description" class="o_form_label d-flex align-items-center" invisible="not comment_single_recipient">
-                            To <field name="recipient_single_description" class="ps-1" invisible="not recipient_single_description"/>
+                            <span class="text-muted">To</span>
+                            <field name="recipient_single_description" class="ps-1" invisible="not recipient_single_description"/>
                         </div>
                         <field invisible="not comment_single_recipient" name="recipient_single_number_itf" nolabel="1" onchange_on_keydown="True" placeholder="e.g. +1 415 555 0100"/>
                     </group>
-                        <field name="body" widget="sms_widget" invisible="comment_single_recipient or recipient_single_valid"
+                        <field name="body" widget="sms_widget" onchange_on_keydown="True" invisible="comment_single_recipient or recipient_single_valid"
                             options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'res_model'}"
                             placeholder="Write a message..."/>
-                        <field name="body" widget="sms_widget" invisible="comment_single_recipient or not recipient_single_valid" default_focus="1"
+                        <field name="body" widget="sms_widget" onchange_on_keydown="True" invisible="comment_single_recipient or not recipient_single_valid" default_focus="1"
                             options="{'dynamic_placeholder': true, 'dynamic_placeholder_model_reference_field': 'res_model'}"
                             placeholder="Write a message..."/>
-                        <field name="body" widget="sms_widget" invisible="not comment_single_recipient"
+                        <field name="body" widget="sms_widget" onchange_on_keydown="True" invisible="not comment_single_recipient"
                         placeholder="Write a message..."/>
                         <field name="mass_keep_log" invisible="1"/>
                         <field name="use_exclusion_list" invisible="1"/>
                 </sheet>
                 <footer>
                     <!-- attrs doesn't work for 'disabled'-->
-                    <button string="Send" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
-                            invisible="composition_mode not in ('comment', 'numbers') or not recipient_single_valid"/>
-                    <button string="Send" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
-                            invisible="composition_mode not in ('comment', 'numbers') or recipient_single_valid" disabled='1'/>
-                    <button string="Put in queue" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
-                        invisible="composition_mode != 'mass'"/>
-                    <button string="Send now" type="object" name="action_send_sms_mass_now" data-hotkey="w"
-                        invisible="composition_mode != 'mass'"/>
-                    <button class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                    <div class="d-flex w-100 justify-content-between align-items-center flex-wrap">
+                        <div class="d-flex flex-wrap gap-1">
+                            <button string="Send" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
+                                    invisible="composition_mode not in ('comment', 'numbers') or not recipient_single_valid or scheduled_date"/>
+                            <button string="Schedule" type="object" class="btn-primary" name="action_schedule_message" data-hotkey="q"
+                                    invisible="composition_mode != 'comment' or not scheduled_date or not recipient_single_valid"/>
+                            <button string="Send" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
+                                    invisible="composition_mode not in ('comment', 'numbers') or recipient_single_valid or scheduled_date" disabled="1"/>
+                            <button string="Schedule" type="object" class="btn-primary" name="action_schedule_message" data-hotkey="q"
+                                    invisible="composition_mode != 'comment' or not scheduled_date or recipient_single_valid" disabled="1"/>
+                            <button string="Put in queue" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
+                                invisible="composition_mode != 'mass'"/>
+                            <button string="Send now" type="object" name="action_send_sms_mass_now" data-hotkey="w"
+                                invisible="composition_mode != 'mass'"/>
+                            <button class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                            <field name="scheduled_date" widget="text_scheduled_date" invisible="composition_mode != 'comment'"/>
+                            <field name="template_id" widget="mail_composer_template_selector" options="{'no_label': True}"/>
+                        </div>
+                        <div class="ms-auto text-muted small">
+                            <widget name="sms_char_counter"/>
+                        </div>
+                    </div>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="sms_composer_view_form_template_save" model="ir.ui.view">
+        <field name="name">sms.composer.view.form.template.save</field>
+        <field name="model">sms.composer</field>
+        <field name="arch" type="xml">
+            <form string="Save as SMS Template">
+                <group>
+                    <field name="template_name" placeholder="e.g: Send order confirmation" required="1"/>
+                </group>
+                <footer>
+                    <button name="action_create_sms_template" type="object" class="btn btn-primary" string="Save Template"/>
+                    <button class="btn btn-secondary" special="cancel"/>
                 </footer>
             </form>
         </field>
