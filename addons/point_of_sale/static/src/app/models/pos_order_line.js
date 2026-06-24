@@ -26,6 +26,9 @@ export class PosOrderline extends Base {
             hasChange: true,
         };
         this.saved_quantity = 0;
+        if (this.discount === undefined) {
+            this.discount = 0;
+        }
     }
 
     set_full_product_name() {
@@ -184,6 +187,9 @@ export class PosOrderline extends Base {
                 : parseFloat("" + discount);
 
         const disc = Math.min(Math.max(parsed_discount || 0, 0), 100);
+        if (this.discount === disc) {
+            return;
+        }
         this.discount = disc;
         this.order_id.recomputeOrderData();
         this.setDirty();
