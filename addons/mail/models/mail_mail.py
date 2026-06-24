@@ -9,6 +9,7 @@ import re
 import smtplib
 from collections import defaultdict
 from datetime import timedelta
+from lxml import html
 
 import psycopg2
 from dateutil.parser import parse
@@ -370,6 +371,22 @@ class MailMail(models.Model):
         self.ensure_one()
         if tools.is_html_empty(self.body_html):
             return ''
+        root = html.fromstring(self.body_html)
+        nodes = root.xpath('//a[contains(@class, "o_mail_redirect") and @data-oe-model="res.partner"]')
+        if not nodes:
+            return self.env['mail.render.mixin']._replace_local_links(self.body_html)
+        partner_ids = {int(node.get('data-oe-id')) for node in nodes}
+        partners = self.env['res.partner'].browse(partner_ids)
+        partner_emails = {p.id: p.email for p in partners}
+        for node in nodes:
+            partner_id = int(node.get('data-oe-id'))
+            email = partner_emails.get(partner_id)
+            if email:
+                node.set('href', f'mailto:{email}')
+            else:
+                node.attrib.pop('href', None)
+                node.tag = 'span'
+        self.body_html = html.tostring(root, encoding='unicode')
         return self.env['mail.render.mixin']._replace_local_links(self.body_html)
 
     def _personalize_outgoing_body(self, body, partner=False, doc_to_followers=None):
