@@ -4,10 +4,14 @@
 <template id="s_carousel" name="Carousel">
     <section class="s_carousel_wrapper p-0" data-vxml="001" data-vcss="001">
         <t t-set="uniq" t-value="datetime.datetime.now().microsecond"/>
-        <div t-attf-id="myCarousel{{uniq}}" class="s_carousel s_carousel_default carousel slide d-flex flex-column-reverse" data-bs-ride="true" data-bs-interval="10600" role="region" aria-roledescription="carousel">
+        <div t-attf-id="myCarousel{{uniq}}" class="s_carousel s_carousel_default o_carousel_pause_btn_hidden carousel slide d-flex flex-column-reverse" data-bs-ride="true" data-bs-interval="10600" role="region" aria-roledescription="carousel">
             <!-- Controls and indicators are set before the content so that they
                  are focused in priority when navigating the page with tab. -->
             <!-- Controls -->
+            <button class="o_carousel_pause o_snippet_not_selectable o_not_editable btn py-3 z-2" t-attf-aria-controls="myCarousel{{uniq}}" title="Pause slides">
+                <span class="fa fa-pause" aria-hidden="true"/>
+                <span class="visually-hidden">Pause slides</span>
+            </button>
             <button class="carousel-control-prev o_not_editable" contenteditable="false" t-attf-data-bs-target="#myCarousel{{uniq}}" t-attf-aria-controls="myCarousel{{uniq}}_inner" data-bs-slide="prev" aria-label="Previous slide" title="Previous slide">
                 <span class="carousel-control-prev-icon" aria-hidden="true"/>
                 <span class="visually-hidden">Previous slide</span>

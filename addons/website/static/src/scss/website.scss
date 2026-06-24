@@ -1097,15 +1097,23 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
             min-width: 0;
             margin: 0;
         }
-        .carousel-control-prev, .carousel-control-next {
+        .carousel-control-prev, .carousel-control-next, .o_carousel_pause {
             position: relative;
             width: auto;
+        }
+
+        .o_carousel_pause {
+            padding-block: 0;
+
+            & .fa {
+                height: auto;
+            }
         }
     }
 
     // Allow clicks to pass through the carousel control's wrapper, while
     // keeping the control buttons/indicators clickable.
-    .carousel-indicators > *, .carousel-control-prev, .carousel-control-next {
+    .carousel-indicators > *, .carousel-control-prev, .carousel-control-next, .o_carousel_pause {
         pointer-events: auto;
     }
 
@@ -1277,10 +1285,15 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
 // This style is shared by the new versions of carousels
 // 001 for s_carousel & 002 for s_quotes_carousel
 %s_carousel_variants {
+    .o_carousel_pause {
+        width: $carousel-control-width;
+    }
+
     // Controllers in Mobile
     @include media-breakpoint-down(md) {
         .carousel-control-prev,
-        .carousel-control-next {
+        .carousel-control-next,
+        .o_carousel_pause {
             top: auto;
             bottom: map-get($spacers, 3);
             height: $-o-carousel-controllers-size;
@@ -1288,17 +1301,39 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
             margin: 0 map-get($spacers, 3);
         }
 
-        &:not(.s_carousel_arrows_hidden) .carousel-indicators {
-            $-margin-x: calc(#{map-get($spacers, 3)} * 2 + #{$-o-carousel-controllers-size});
+        .o_carousel_pause {
+            padding: 0;
 
-            min-height: $-o-carousel-controllers-size;
+            .fa {
+                height: auto !important;
+            }
+        }
+        &:not(.s_carousel_arrows_hidden) .o_carousel_pause {
+            left: map-get($spacers, 5);
+        }
+
+        $-margin-x: calc(#{map-get($spacers, 3)} * 2 + #{$-o-carousel-controllers-size});
+
+        &:not(.s_carousel_arrows_hidden), &:not(.o_carousel_pause_btn_hidden) {
+            .carousel-indicators {
+                min-height: $-o-carousel-controllers-size;
+            }
+        }
+        &.o_carousel_pause_btn_hidden:not(.s_carousel_arrows_hidden) .carousel-indicators {
             margin: 0 $-margin-x map-get($spacers, 3);
+        }
+        &.s_carousel_arrows_hidden:not(.o_carousel_pause_btn_hidden) .carousel-indicators {
+            margin: 0 0 map-get($spacers, 3) $-margin-x;
+        }
+        &:not(.s_carousel_arrows_hidden, .o_carousel_pause_btn_hidden) .carousel-indicators {
+            margin: 0 $-margin-x map-get($spacers, 3) calc(#{$-margin-x} + #{map-get($spacers, 5)});
         }
     }
 
     .carousel-control-prev,
     .carousel-control-next,
-    .carousel-indicators {
+    .carousel-indicators,
+    .o_carousel_pause {
         position: absolute;
     }
 
@@ -1307,6 +1342,28 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
             .carousel-control-prev-icon, .carousel-control-next-icon {
                 box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px black;
             }
+        }
+    }
+
+    .o_carousel_pause {
+        display: grid;
+        justify-content: center;
+        color: $body-bg;
+        opacity: 0.5;
+
+        &:hover, &:focus-visible {
+            opacity: 1;
+        }
+        &:focus-visible {
+            box-shadow: inset 0 0 0 2px white, inset 0 0 0 4px black;
+        }
+
+        &:active {
+            border-color: transparent;
+        }
+
+        .fa {
+            align-content: center;
         }
     }
 
@@ -1325,15 +1382,30 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
         background-size: 50%;
     }
 
+    .o_carousel_pause .fa {
+        width: $-o-carousel-controllers-size;
+        height: $-o-carousel-controllers-size;
+    }
+
+    &.carousel-dark:not(.s_carousel_controllers_indicators_outside) {
+        .o_carousel_pause .fa {
+            filter: $carousel-dark-control-icon-filter;
+        }
+    }
+
     &.s_carousel_default {
-        .carousel-control-prev, .carousel-control-next {
+        .o_carousel_pause {
+            border-radius: 0;
+        }
+
+        .carousel-control-prev, .carousel-control-next, .o_carousel_pause {
             &:hover {
                 background: rgba($carousel-dark-indicator-active-bg, .2);
             }
         }
 
         &.carousel-dark {
-            .carousel-control-prev, .carousel-control-next {
+            .carousel-control-prev, .carousel-control-next, .o_carousel_pause {
                 &:hover {
                     background: rgba($carousel-indicator-active-bg, .2);
                 }
@@ -1357,7 +1429,7 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
     }
 
     &.s_carousel_rounded {
-        .carousel-control-prev-icon, .carousel-control-next-icon {
+        .carousel-control-prev-icon, .carousel-control-next-icon, .o_carousel_pause .fa {
             border-radius: $border-radius-pill;
         }
     }
@@ -1368,11 +1440,18 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
         }
     }
 
+    &.o_carousel_pause_btn_hidden {
+        .o_carousel_pause {
+            display: none;
+        }
+    }
+
     .o_horizontal_controllers {
         @extend %o_horizontal_controllers;
     }
 
-    &.s_carousel_arrows_hidden .o_horizontal_controllers .o_arrows_wrapper {
+    &.s_carousel_arrows_hidden .o_horizontal_controllers .o_arrows_wrapper,
+    &.o_carousel_pause_btn_hidden .o_horizontal_controllers .o_carousel_pause {
         display: none;
     }
 
@@ -1520,6 +1599,19 @@ $-o-carousel-controllers-size: var(--CarouselControllers-size, #{map-get($spacer
         &:not(:has(.s_carousel_indicators_hidden)) {
             .carousel-control-prev, .carousel-control-next {
                 margin-bottom: $-o-carousel-controllers-size;
+            }
+        }
+
+        &:not(.o_carousel_pause_btn_hidden) {
+            .o_carousel_pause {
+                margin-bottom: 0;
+                padding: 0 !important;
+                border: 0;
+                color: inherit;
+
+                &:hover {
+                    background-color: transparent;
+                }
             }
         }
 

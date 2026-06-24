@@ -64,6 +64,3 @@ export class GallerySlider001 extends Interaction {
 }
 
 registry.category("public.interactions").add("website.gallery_slider_001", GallerySlider001);
-registry
-    .category("public.interactions.edit")
-    .add("website.gallery_slider_001", { Interaction: GallerySlider001 });

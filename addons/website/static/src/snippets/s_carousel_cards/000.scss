@@ -45,10 +45,14 @@
         @include media-breakpoint-up(lg) {
             &.s_carousel_cards_with_img {
 
-                .o_horizontal_controllers_row {
+                .o_horizontal_controllers_container,
+                // Compatibility before .o_carousel_pause button.
+                :not(.o_horizontal_controllers_container) > .o_horizontal_controllers_row {
                     margin: 0 0 0 var(--card-img-size-h);
                 }
-                &:has(.s_card.flex-lg-row-reverse) .o_horizontal_controllers_row {
+                &:has(.s_card.flex-lg-row-reverse) .o_horizontal_controllers_container,
+                // Compatibility before .o_carousel_pause button.
+                &:has(.s_card.flex-lg-row-reverse) :not(.o_horizontal_controllers_container) > .o_horizontal_controllers_row {
                     margin: 0 var(--card-img-size-h) 0 0;
                 }
             }

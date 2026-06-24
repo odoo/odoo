@@ -4,27 +4,33 @@
 <template id="s_carousel_cards" name="Carousel Cards">
     <section class="s_carousel_cards_wrapper pt64 pb64">
         <t t-set="uniq" t-value="datetime.datetime.now().microsecond"/>
-        <div t-attf-id="myCarouselCards{{uniq}}" class="s_carousel_cards s_carousel_cards_with_img s_carousel_boxed container carousel carousel-fade slide" data-bs-interval="10000" data-bs-ride="true" data-option-name="CarouselCards" style="--card-img-size-h: 60%; --CardBody-extra-height: 0px;" role="region" aria-roledescription="carousel">
+        <div t-attf-id="myCarouselCards{{uniq}}" class="s_carousel_cards s_carousel_cards_with_img s_carousel_boxed o_carousel_pause_btn_hidden container carousel carousel-fade slide" data-bs-interval="10000" data-bs-ride="true" data-option-name="CarouselCards" style="--card-img-size-h: 60%; --CardBody-extra-height: 0px;" role="region" aria-roledescription="carousel">
             <!-- Controls and indicators are set before the content so that they
                  are focused in priority when navigating the page with tab. -->
             <div class="o_horizontal_controllers position-absolute start-0 end-0 bottom-0 o_not_editable">
-                <div class="o_horizontal_controllers_row d-flex gap-3 justify-content-between flex-nowrap">
-                    <!-- Indicators -->
-                    <div class="s_carousel_indicators_dots carousel-indicators align-items-center flex-shrink-1 w-auto mb-0">
-                        <button type="button" t-attf-data-bs-target="#myCarouselCards{{uniq}}" data-bs-slide-to="0" class="active" role="tab" aria-selected="true" t-attf-aria-controls="myCarouselCards{{uniq}}_1"/>
-                        <button type="button" t-attf-data-bs-target="#myCarouselCards{{uniq}}" data-bs-slide-to="1" role="tab" aria-selected="false" t-attf-aria-controls="myCarouselCards{{uniq}}_2"/>
-                        <button type="button" t-attf-data-bs-target="#myCarouselCards{{uniq}}" data-bs-slide-to="2" role="tab" aria-selected="false" t-attf-aria-controls="myCarouselCards{{uniq}}_3"/>
-                    </div>
-                    <!-- Controls -->
-                    <div class="o_arrows_wrapper gap-2 align-items-center w-auto p-0">
-                        <button class="carousel-control-prev bottom-0 o_not_editable" contenteditable="false" t-attf-data-bs-target="#myCarouselCards{{uniq}}" t-attf-aria-controls="myCarouselCards{{uniq}}_inner" data-bs-slide="prev" aria-label="Previous slide" title="Previous slide">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"/>
-                            <span class="visually-hidden">Previous slide</span>
-                        </button>
-                        <button class="carousel-control-next bottom-0 o_not_editable" contenteditable="false" t-attf-data-bs-target="#myCarouselCards{{uniq}}" t-attf-aria-controls="myCarouselCards{{uniq}}_inner" data-bs-slide="next" aria-label="Next slide" title="Next slide">
-                            <span class="carousel-control-next-icon" aria-hidden="true"/>
-                            <span class="visually-hidden">Next slide</span>
-                        </button>
+                <div class="o_horizontal_controllers_container d-flex">
+                    <button class="o_carousel_pause o_snippet_not_selectable o_not_editable btn z-2" t-attf-aria-controls="myCarouselCards{{uniq}}" title="Pause slides">
+                        <span class="fa fa-pause" aria-hidden="true"/>
+                        <span class="visually-hidden">Pause slides</span>
+                    </button>
+                    <div class="o_horizontal_controllers_row d-flex gap-3 justify-content-between flex-nowrap flex-grow-1">
+                        <!-- Indicators -->
+                        <div class="s_carousel_indicators_dots carousel-indicators align-items-center align-self-center flex-shrink-1 w-auto mb-0">
+                            <button type="button" t-attf-data-bs-target="#myCarouselCards{{uniq}}" data-bs-slide-to="0" class="active" role="tab" aria-selected="true" t-attf-aria-controls="myCarouselCards{{uniq}}_1"/>
+                            <button type="button" t-attf-data-bs-target="#myCarouselCards{{uniq}}" data-bs-slide-to="1" role="tab" aria-selected="false" t-attf-aria-controls="myCarouselCards{{uniq}}_2"/>
+                            <button type="button" t-attf-data-bs-target="#myCarouselCards{{uniq}}" data-bs-slide-to="2" role="tab" aria-selected="false" t-attf-aria-controls="myCarouselCards{{uniq}}_3"/>
+                        </div>
+                        <!-- Controls -->
+                        <div class="o_arrows_wrapper gap-2 align-items-center w-auto p-0">
+                            <button class="carousel-control-prev bottom-0 o_not_editable" contenteditable="false" t-attf-data-bs-target="#myCarouselCards{{uniq}}" t-attf-aria-controls="myCarouselCards{{uniq}}_inner" data-bs-slide="prev" aria-label="Previous slide" title="Previous slide">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"/>
+                                <span class="visually-hidden">Previous slide</span>
+                            </button>
+                            <button class="carousel-control-next bottom-0 o_not_editable" contenteditable="false" t-attf-data-bs-target="#myCarouselCards{{uniq}}" t-attf-aria-controls="myCarouselCards{{uniq}}_inner" data-bs-slide="next" aria-label="Next slide" title="Next slide">
+                                <span class="carousel-control-next-icon" aria-hidden="true"/>
+                                <span class="visually-hidden">Next slide</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
