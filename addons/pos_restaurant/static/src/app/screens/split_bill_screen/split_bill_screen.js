@@ -42,6 +42,7 @@ export class SplitBillScreen extends Component {
 
     onClickLine(line) {
         const lines = line.getAllLinesInCombo();
+        const comboRootLine = lines[0];
 
         for (const line of lines) {
             if (!line.isPosGroupable() && !line.isPartOfCombo()) {
@@ -50,12 +51,14 @@ export class SplitBillScreen extends Component {
                 } else {
                     this.qtyTracker[line.uuid] = line.getQuantity();
                 }
-            } else if (!this.qtyTracker[line.uuid]) {
-                this.qtyTracker[line.uuid] = 1;
             } else if (this.qtyTracker[line.uuid] === line.getQuantity()) {
                 this.qtyTracker[line.uuid] = 0;
             } else {
-                this.qtyTracker[line.uuid] += 1;
+                const selectedQty = line.combo_parent_id
+                    ? line.getQuantity() / comboRootLine.getQuantity()
+                    : 1;
+                const currentQty = this.qtyTracker[line.uuid] || 0;
+                this.qtyTracker[line.uuid] = currentQty + selectedQty;
             }
             // We need this split for decimal quantities (e.g. 0.5 kg)
             if (this.qtyTracker[line.uuid] > line.getQuantity()) {
