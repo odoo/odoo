@@ -7,8 +7,8 @@ import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { Component, onMounted, status, proxy } from "@odoo/owl";
 import { loadIframe } from "@mail/convert_inline/iframe_utils";
-import { MailPreviewRecordField } from "@mail/views/web/fields/mail_preview_record_field/mail_preview_record_field";
 import { MailingPreviewDisplayModeToggle } from "../mailing_preview_mode_toggle/mailing_preview_mode_toggle";
+import { MassMailingPreviewRecordField } from "./mass_mailing_preview_record_field";
 
 export class MailingPreviewIframe extends Component {
     static template = "mass_mailing.MailingPreviewIframe";
@@ -17,7 +17,7 @@ export class MailingPreviewIframe extends Component {
     };
 
     static components = {
-        MailPreviewRecordField,
+        MassMailingPreviewRecordField,
         MailingPreviewDisplayModeToggle,
     };
 

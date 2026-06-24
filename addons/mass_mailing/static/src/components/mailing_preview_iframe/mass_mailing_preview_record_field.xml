@@ -1,0 +1,10 @@
+<templates>
+    <t t-name="mass_mailing.MassMailingPreviewRecordField" t-inherit="mail.MailPreviewRecordField" t-inherit-mode="primary">
+        <xpath expr="//div[t[@t-if='relation']]" position="attributes">
+            <attribute name="class" add="flex-column align-items-start ps-2 o_mass_mailing_preview_record_selector_width" remove="align-items-center px-1" separator=" "/>
+        </xpath>
+        <xpath expr="//div[t[@t-if='relation']]//Many2One" position="before">
+            <div class="text-truncate w-100 fw-bold" t-out="this.props.record.data.email_from"></div>
+        </xpath>
+    </t>
+</templates>
