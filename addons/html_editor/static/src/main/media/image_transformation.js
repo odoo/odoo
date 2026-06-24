@@ -58,12 +58,12 @@ export class ImageTransformation extends Component {
             this.positionTransfoContainer();
             this.props.onComponentMounted();
         });
-        useExternalListener(window, "mousemove", this.mouseMove);
-        useExternalListener(window, "mouseup", this.mouseUp);
+        useExternalListener(window, "pointermove", this.pointerMove);
+        useExternalListener(window, "pointerup", this.pointerUp);
         if (this.document.defaultView.frameElement) {
             const iframeWindow = this.document.defaultView;
-            useExternalListener(iframeWindow, "mousemove", this.mouseMove);
-            useExternalListener(iframeWindow, "mouseup", this.mouseUp);
+            useExternalListener(iframeWindow, "pointermove", this.pointerMove);
+            useExternalListener(iframeWindow, "pointerup", this.pointerUp);
         }
         // When a character key is pressed and the image gets deleted,
         // close the image transform via selectionchange.
@@ -88,7 +88,7 @@ export class ImageTransformation extends Component {
         this.props.destroy();
     }
 
-    mouseMove(ev) {
+    pointerMove(ev) {
         if (!this.transfo.active) {
             return;
         }
@@ -227,7 +227,7 @@ export class ImageTransformation extends Component {
         this.image.style.width = Math.min(100, widthPercent).toFixed(2) + "%";
     }
 
-    mouseUp() {
+    pointerUp() {
         if (!this.transfo.active) {
             return;
         }
@@ -242,7 +242,7 @@ export class ImageTransformation extends Component {
         this.props.onChange?.();
     }
 
-    mouseDown(ev) {
+    pointerDown(ev) {
         if (this.transfo.active) {
             return;
         }
