@@ -20,10 +20,10 @@ class AccountMove(models.Model):
     l10n_sa_is_csid_ready = fields.Boolean(compute='_compute_l10n_sa_is_csid_ready')
     l10n_sa_compliance_checks_passed = fields.Boolean(related='journal_id.l10n_sa_compliance_checks_passed')
 
-    @api.depends('commercial_partner_id.country_id', 'company_id.country_id')
+    @api.depends('commercial_partner_id.country_id')
     def _compute_l10n_sa_edi_transaction_type_ids(self):
         for move in self:
-            if move.commercial_partner_id.country_id != move.company_id.country_id and move.l10n_sa_invoice_type == 'tax':
+            if move.commercial_partner_id.country_id.code != 'SA' and move.l10n_sa_invoice_type == 'tax':
                 move.l10n_sa_edi_transaction_type_ids = self.env.ref('l10n_sa_edi.transaction_type_export', raise_if_not_found=False)
             else:
                 move.l10n_sa_edi_transaction_type_ids = None
