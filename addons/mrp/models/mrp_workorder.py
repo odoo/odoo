@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 import json
+from zoneinfo import ZoneInfo
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -494,9 +495,19 @@ class MrpWorkorder(models.Model):
     def _calculate_duration_expected(self, date_start=False, date_finished=False):
         if not self.workcenter_id.resource_calendar_id:
             return ((date_finished or self.date_finished) - (date_start or self.date_start)).total_seconds() / 60
+        tz = self.workcenter_id.tz or 'UTC'
+
+        date_start = date_start or self.date_start
+        date_finished = date_finished or self.date_finished
+
+        if tz != 'UTC':
+            date_start = date_start.astimezone(ZoneInfo(tz))
+            date_finished = date_finished.astimezone(ZoneInfo(tz))
+
         interval = self.workcenter_id.resource_calendar_id.get_work_duration_data(
-            date_start or self.date_start, date_finished or self.date_finished,
-            domain=[('count_as', 'in', ['absence', 'working_time'])]
+            date_start,
+            date_finished,
+            domain=[('count_as', 'in', ['absence', 'working_time'])],
         )
         return interval['hours'] * 60
 
