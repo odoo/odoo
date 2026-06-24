@@ -39,16 +39,18 @@ export class ProductTemplate extends ProductTemplateAccounting {
     isConfigurable() {
         return this.attribute_line_ids.find(
             (l) =>
-                l.product_template_value_ids.length > 1 ||
-                l.product_template_value_ids.some((v) => v.is_custom)
+                l.active !== false &&
+                (l.product_template_value_ids.length > 1 ||
+                    l.product_template_value_ids.some((v) => v.is_custom))
         );
     }
 
     needToConfigure() {
+        const activeLines = this.attribute_line_ids.filter((l) => l.active !== false);
         return (
             this.isConfigurable() &&
-            this.attribute_line_ids.length > 0 &&
-            this.attribute_line_ids.some((l) => l.attribute_id.create_variant === "no_variant")
+            activeLines.length > 0 &&
+            activeLines.some((l) => l.attribute_id?.create_variant === "no_variant")
         );
     }
 
