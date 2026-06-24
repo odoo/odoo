@@ -298,10 +298,3 @@ class ResPartner(models.Model):
             ('peppol_verification_state', '=', 'valid'),
             ('id', 'in', registered_company_partners.ids),
         ])
-
-    @api.model
-    def _get_peppol_proxy_identification_info(self, routing_scheme, routing_endpoint):
-        # Return tuple `(proxy_type, peppol_identifier)` where `peppol_identifier` is in form "{scheme}:{identifier}"
-        if not routing_scheme or not routing_endpoint:
-            return None, ""
-        return 'peppol', f"{routing_scheme}:{routing_endpoint}"

@@ -18,6 +18,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     invoice_edi_format = fields.Selection(selection_add=[('ubl_21_fr', "France E-Invoicing (UBL 2.1)")])
+    l10n_fr_is_pdp = fields.Boolean(compute='_compute_l10n_fr_is_pdp')
     pdp_verification_display_state = fields.Selection(
         selection=[
             ('not_verified', 'Not verified yet'),
@@ -47,6 +48,12 @@ class ResPartner(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
+    @api.depends('routing_scheme')
+    @api.depends_context('company')
+    def _compute_l10n_fr_is_pdp(self):
+        for partner in self:
+            partner.l10n_fr_is_pdp = self.env.company._get_peppol_proxy_type() == 'pdp' and partner.routing_scheme == '0225'
+
     @api.depends('peppol_verification_state', 'routing_scheme', 'routing_endpoint')
     @api.depends_context('company')
     def _compute_pdp_verification_display_state(self):
@@ -62,7 +69,7 @@ class ResPartner(models.Model):
         if self.filtered(
             lambda partner: (
                 partner.invoice_sending_method == "peppol"
-                and partner._get_pdp_receiver_identification_info()[0] == 'pdp'
+                and partner.l10n_fr_is_pdp
                 and partner.invoice_edi_format != "ubl_21_fr"
             )
         ):
@@ -129,7 +136,7 @@ class ResPartner(models.Model):
         state = state if state is not None else self.peppol_verification_state
         if not state or state == 'not_verified':
             return state
-        elif self.env.company._get_peppol_proxy_type() == 'pdp' and self._get_pdp_receiver_identification_info()[0] == 'pdp':
+        elif self.l10n_fr_is_pdp:
             return f'pdp_{state}'
         else:
             return f'peppol_{state}'
@@ -137,7 +144,7 @@ class ResPartner(models.Model):
     def _get_suggested_peppol_edi_format(self):
         # EXTENDS 'account_edi_ubl_cidd`
         self.ensure_one()
-        if self.env.company._get_peppol_proxy_type() == 'pdp' and self.commercial_partner_id._get_pdp_receiver_identification_info()[0] == 'pdp':
+        if self.l10n_fr_is_pdp:
             return 'ubl_21_fr'
         return super()._get_suggested_peppol_edi_format()
 
@@ -192,15 +199,3 @@ class ResPartner(models.Model):
             return None
 
         return decoded_response.get('result')
-
-    def _get_pdp_receiver_identification_info(self):
-        eas, _sep, endpoint = (self.routing_identifier or '').partition(':')
-        return self._get_peppol_proxy_identification_info(eas, endpoint)
-
-    @api.model
-    def _get_peppol_proxy_identification_info(self, routing_scheme, routing_endpoint):
-        # Extend `account_peppol`
-        proxy_type, identifier = super()._get_peppol_proxy_identification_info(routing_scheme, routing_endpoint)
-        if routing_scheme == '0225':
-            proxy_type = 'pdp'
-        return proxy_type, identifier

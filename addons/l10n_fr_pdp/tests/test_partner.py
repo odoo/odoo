@@ -31,10 +31,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
 
         # Setting the endpoint explicitly routes the partner via PDP (EAS 0225).
         partner.routing_identifier = '0225:968515759_96851575905808'
-        self.assertEqual(
-            partner._get_pdp_receiver_identification_info(),
-            ('pdp', '0225:968515759_96851575905808'),
-        )
+        self.assertTrue(partner.l10n_fr_is_pdp)
 
         # A partner identified by SIREN only (9 digits) derives the same SIREN.
         partner_siren = self.env["res.partner"].create({
@@ -49,7 +46,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
     def test_pdp_edi_formats(self):
         partner = self.partner_a
         partner.invoice_sending_method = 'peppol'
-        self.assertEqual(partner._get_pdp_receiver_identification_info()[0], 'pdp')
+        self.assertTrue(partner.l10n_fr_is_pdp)
         with self.assertRaises(UserError):
             partner.invoice_edi_format = 'ubl_bis3'
 
@@ -65,10 +62,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
             'invoice_edi_format': 'ubl_bis3',
         }])
 
-        self.assertEqual(
-            partner._get_pdp_receiver_identification_info(),
-            ('peppol', "0208:0239843188")
-        )
+        self.assertFalse(partner.l10n_fr_is_pdp)
 
         def _request_handler(s: requests.Session, r: requests.PreparedRequest, /, **kwargs):
             self.assertEqual(r.method, "GET")
@@ -90,10 +84,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
 
     def test_validate_partner_be(self):
         partner = self.partner_b
-        self.assertEqual(
-            partner._get_pdp_receiver_identification_info(),
-            ('peppol', "0208:0239843188")
-        )
+        self.assertFalse(partner.l10n_fr_is_pdp)
         partner.button_account_peppol_check_partner_endpoint()
         self.assertRecordValues(partner, [{
             'peppol_verification_state': 'not_valid',
@@ -141,10 +132,7 @@ class TestL10nFrPdpPartner(TestL10nFrPdpCommon):
 
     def test_validate_partner_fr(self):
         partner = self.partner_a
-        self.assertEqual(
-            partner._get_pdp_receiver_identification_info(),
-            ('pdp', "0225:968515759_96851575905808")
-        )
+        self.assertTrue(partner.l10n_fr_is_pdp)
         partner.button_account_peppol_check_partner_endpoint()
         self.assertRecordValues(partner, [{
             'peppol_verification_state': 'not_valid',
