@@ -7,6 +7,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
 from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.website.models.ir_http import sitemap_group
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.misc import get_lang
@@ -19,6 +20,7 @@ _lt = LazyTranslate(__name__)
 
 class WebsiteEventController(http.Controller):
 
+    @sitemap_group("events")
     def sitemap_event(env, rule, qs):
         if not qs or qs.lower() in '/events':
             yield {'loc': '/events'}
@@ -223,23 +225,46 @@ class WebsiteEventController(http.Controller):
 
         return request.render(page, values)
 
+    @sitemap_group("events")
     def sitemap_events(env, rule, qs):
         slug = env['ir.http']._slug
-        events = env['event.event'].sudo().search([('website_published', '=', True)], order='id')
+        # Fetch only what the loop reads, here and on the related records.
+        events = env['event.event'].with_context(prefetch_fields=False).search_fetch(
+            [('website_published', '=', True)],
+            ['name', 'seo_name', 'menu_id', 'write_date'], order='id')
+        # An event page renders its tickets, so a ticket change must advance
+        # the recrawl signal of the event.
+        events_lastmod = {event.id: event.write_date for event in events}
+        for event, last_ticket in env['event.event.ticket']._read_group(
+            [('event_id', 'in', events.ids)], groupby=['event_id'], aggregates=['write_date:max'],
+        ):
+            events_lastmod[event.id] = max(events_lastmod[event.id], last_ticket)
+
+        # A menu page renders its own view, which the builder edits instead of
+        # the event.
+        event_menus = env['website.event.menu'].search_fetch(
+            [('menu_id', 'in', events.menu_id.child_id.ids), ('view_id', '!=', False)],
+            ['menu_id', 'view_id'],
+        )
+        views_lastmod = env.website._get_views_lastmod(event_menus.view_id)
+        menus_lastmod = {event_menu.menu_id: views_lastmod[event_menu.view_id] for event_menu in event_menus}
 
         def matches_qs(loc):
             return not qs or qs.lower() in loc.lower()
 
         for event in events:
+            lastmod = events_lastmod[event.id]
             if event.menu_id and event.menu_id.child_id:
-                final_url = event.menu_id.child_id[0].url
+                menu = event.menu_id.child_id[0]
+                final_url = menu.url
+                lastmod = max(lastmod, menus_lastmod.get(menu, lastmod))
             else:
                 final_url = '/event/%s/register' % slug(event)
 
             if not matches_qs(final_url):
                 continue
 
-            yield {'loc': final_url}
+            yield {'loc': final_url, 'lastmod': lastmod}
 
     @http.route(['''/event/<model("event.event"):event>'''], type='http', auth="public", website=True, sitemap=sitemap_events, readonly=True)
     def event(self, event, **post):
