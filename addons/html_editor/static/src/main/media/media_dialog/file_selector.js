@@ -8,7 +8,16 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { user } from "@web/core/user";
 import { useDebounced } from "@web/core/utils/timing";
 import { SearchMedia } from "./search_media";
-import { Component, xml, onWillStart, proxy } from "@odoo/owl";
+import {
+    Component,
+    xml,
+    onWillStart,
+    proxy,
+    signal,
+    useEffect,
+    onMounted,
+    onWillUnmount,
+} from "@odoo/owl";
 
 export const IMAGE_MIMETYPES = [
     "image/jpg",
@@ -133,16 +142,11 @@ export class FileSelectorControlPanel extends Component {
         this.debouncedValidateUrl = useDebounced(this.props.validateUrl, 500);
 
         this.fileInput = useRef("file-input");
-        const urlInputRef = useRef("urlInput");
+        this.urlInputRef = signal.ref(HTMLInputElement);
 
-        // useLayoutEffect(
-        //     () => {
-        //         if (this.state.showUrlInput) {
-        //             urlInputRef.el.focus();
-        //         }
-        //     },
-        //     () => [this.state.showUrlInput]
-        // );
+        useEffect(() => {
+            this.urlInputRef()?.focus();
+        });
     }
 
     get showSearchServiceSelect() {
@@ -203,7 +207,7 @@ export class FileSelector extends Component {
         this.uploadService = useService("upload");
         this.keepLast = new KeepLast();
 
-        this.loadMoreButtonRef = useRef("load-more-button");
+        this.loadMoreButtonRef = signal.ref(HTMLDivElement);
         this.existingAttachmentsRef = useRef("existing-attachments");
 
         this.state = proxy({
@@ -226,28 +230,27 @@ export class FileSelector extends Component {
         this.debouncedOnScroll = useDebounced(this.updateScroll, 15);
         this.debouncedScrollUpdate = useDebounced(this.updateScroll, 500);
 
-        // useLayoutEffect(
-        //     (modalEl) => {
-        //         if (modalEl) {
-        //             modalEl.addEventListener("scroll", this.debouncedOnScroll);
-        //             return () => {
-        //                 modalEl.removeEventListener("scroll", this.debouncedOnScroll);
-        //             };
-        //         }
-        //     },
-        //     () => [this.props.modalRef.el?.querySelector("main.modal-body")]
-        // );
+        let modalBodyEl;
+        onMounted(() => {
+            modalBodyEl = this.props.modalRef.el?.querySelector("main.modal-body");
+            modalBodyEl?.addEventListener("scroll", this.debouncedOnScroll);
+        });
+        onWillUnmount(() => {
+            modalBodyEl?.removeEventListener("scroll", this.debouncedOnScroll);
+        });
 
-        // useLayoutEffect(
-        //     () => {
-        //         // Updating the scroll button each time the attachments change.
-        //         // Hiding the "Load more" button to prevent it from flickering.
-        //         this.loadMoreButtonRef.el.classList.add("o_hide_loading");
-        //         this.state.canScrollAttachments = false;
-        //         this.debouncedScrollUpdate();
-        //     },
-        //     () => [this.allAttachments.length]
-        // );
+        useEffect(() => {
+            // Re-run each time the attachments change, and once the button is mounted.
+            void this.allAttachments.length;
+            const loadMoreButton = this.loadMoreButtonRef();
+            if (!loadMoreButton) {
+                return;
+            }
+            // Hiding the "Load more" button to prevent it from flickering.
+            loadMoreButton.classList.add("o_hide_loading");
+            this.state.canScrollAttachments = false;
+            this.debouncedScrollUpdate();
+        });
     }
 
     get canLoadMore() {
@@ -443,11 +446,11 @@ export class FileSelector extends Component {
      * fully visible or not.
      */
     updateScroll() {
-        const loadMoreTop = this.loadMoreButtonRef.el.getBoundingClientRect().top;
+        const loadMoreTop = this.loadMoreButtonRef().getBoundingClientRect().top;
         const modalEl = this.props.modalRef.el.querySelector("main.modal-body");
         const modalBottom = modalEl.getBoundingClientRect().bottom;
         this.state.canScrollAttachments = loadMoreTop >= modalBottom;
-        this.loadMoreButtonRef.el.classList.remove("o_hide_loading");
+        this.loadMoreButtonRef().classList.remove("o_hide_loading");
     }
 
     /**
@@ -468,7 +471,7 @@ export class FileSelector extends Component {
      * scrolls to the "Load more" button.
      */
     handleScrollAttachments() {
-        let scrollToEl = this.loadMoreButtonRef.el;
+        let scrollToEl = this.loadMoreButtonRef();
         const attachmentEls = [
             ...this.existingAttachmentsRef.el.querySelectorAll(".o_existing_attachment_cell"),
         ];
