@@ -1375,7 +1375,7 @@ class AccountMove(models.Model):
                         untaxed_amount = invoice.amount_untaxed_signed
                     invoice_payment_terms = invoice.invoice_payment_term_id._compute_terms(
                         date_ref=invoice.invoice_date or invoice.date or fields.Date.context_today(invoice),
-                        currency=invoice.currency_id,
+                        currency=invoice.currency_id or invoice.journal_id.currency_id or invoice.company_currency_id,
                         tax_amount_currency=tax_amount_currency,
                         tax_amount=tax_amount,
                         untaxed_amount_currency=untaxed_amount_currency,
