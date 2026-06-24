@@ -21,7 +21,7 @@ class IrActionsReport(models.Model):
                 stream_list.append(stream)
                 attachments = self.env['ir.attachment'].search([('res_id', 'in', expense.ids), ('res_model', '=', 'hr.expense')])
                 expense_report = OdooPdfFileReader(stream, strict=False)
-                output_pdf = OdooPdfFileWriter()
+                output_pdf = OdooPdfFileWriter(producer=self._get_pdf_producer(self._get_pdf_engine(report)))
                 output_pdf.append_pages_from_reader(expense_report)
                 for attachment in self._prepare_local_attachments(attachments):
                     if attachment.mimetype == 'application/pdf':

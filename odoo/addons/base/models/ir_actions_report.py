@@ -406,8 +406,8 @@ class IrActionsReport(models.Model):
         raise UserError(_("Odoo is unable to merge the generated PDFs."))
 
     @api.model
-    def _merge_pdfs(self, streams, handle_error=None):
-        writer = PdfFileWriter()
+    def _merge_pdfs(self, streams, handle_error=None, producer="Odoo"):
+        writer = PdfFileWriter(producer=producer)
         for stream in streams:
             try:
                 reader = PdfFileReader(stream)
@@ -472,6 +472,7 @@ class IrActionsReport(models.Model):
         all_res_ids_wo_stream = res_ids if has_duplicated_ids else res_ids_wo_stream
 
         engine_name = self._get_pdf_engine(report_sudo)
+        pdf_producer = self._get_pdf_producer(engine_name)
         if engine_name == 'html':
             # PDF generation is not setup
 
@@ -547,7 +548,7 @@ class IrActionsReport(models.Model):
             reader = PdfFileReader(pdf_content_stream)
             if len(reader.pages) == len(res_ids_wo_stream):
                 for i, p in enumerate(reader.pages):
-                    attachment_writer = PdfFileWriter()
+                    attachment_writer = PdfFileWriter(producer=pdf_producer)
                     attachment_writer.add_page(p)
                     stream = io.BytesIO()
                     attachment_writer.write(stream)
@@ -588,7 +589,7 @@ class IrActionsReport(models.Model):
                     # Split the PDF according to outlines.
                     for i, num in enumerate(outlines_pages):
                         to = outlines_pages[i + 1] if i + 1 < len(outlines_pages) else len(reader.pages)
-                        attachment_writer = PdfFileWriter()
+                        attachment_writer = PdfFileWriter(producer=pdf_producer)
                         for p in reader.pages[num:to]:
                             attachment_writer.add_page(p)
                         stream = io.BytesIO()
@@ -670,6 +671,7 @@ class IrActionsReport(models.Model):
 
         # access the report details with sudo() but keep evaluation context as current user
         report_sudo = self._get_report(report_ref)
+        pdf_producer = self._get_pdf_producer(self._get_pdf_engine(report_sudo))
 
         # Generate the ir.attachment if needed.
         if not has_duplicated_ids and report_sudo.attachment and not self.env.context.get("report_pdf_no_attachment"):
@@ -694,7 +696,7 @@ class IrActionsReport(models.Model):
         if len(streams_to_merge) == 1:
             pdf_content = streams_to_merge[0].getvalue()
         else:
-            with self._merge_pdfs(streams_to_merge, custom_handle_merge_pdfs_error) as pdf_merged_stream:
+            with self._merge_pdfs(streams_to_merge, custom_handle_merge_pdfs_error, producer=pdf_producer) as pdf_merged_stream:
                 pdf_content = pdf_merged_stream.getvalue()
 
         if error_record_ids:
@@ -765,6 +767,13 @@ class IrActionsReport(models.Model):
             })
         data['is_html_empty'] = is_html_empty
         return data
+
+    def _get_pdf_producer(self, engine_name: str) -> str:
+        """Return the PDF /Producer metadata string for the given engine.
+
+        Override in engine modules to return "EngineName vX.Y.Z".
+        """
+        return "Odoo"
 
     def _get_pdf_engine(self, report=None, default_engine='wkhtmltopdf') -> str:
         """Resolve the PDF engine name from report settings and db's fallback.

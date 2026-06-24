@@ -28,6 +28,12 @@ class IrActionsReport(models.Model):
         ondelete={'qweb-pdf-paper-muncher': 'set default'},
     )
 
+    def _get_pdf_producer(self, engine_name):
+        if engine_name == 'paper-muncher':
+            v = paper_muncher().version
+            return f"{v}" if v else "Paper Muncher"
+        return super()._get_pdf_producer(engine_name)
+
     @api.model
     def get_pdf_engine_state(self, engine_name):
         if engine_name != 'paper-muncher':
@@ -129,7 +135,7 @@ class IrActionsReport(models.Model):
                 os_env=os_env,
                 wsgi_environ=wsgi_environ,
             ) as server:
-                return server.serve(documents)  # TODO: ir.config_parameter
+                return server.serve(documents)
 
     def _run_pdf_engine_without_processing(
             self,

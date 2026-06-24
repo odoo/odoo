@@ -29,7 +29,8 @@ class IrActionsReport(models.Model):
             pdf_content = pdf_stream.getvalue()
             reader_buffer = io.BytesIO(pdf_content)
             reader = OdooPdfFileReader(reader_buffer, strict=False)
-            writer = OdooPdfFileWriter()
+            report_sudo = self._get_report(report_ref)
+            writer = OdooPdfFileWriter(producer=self._get_pdf_producer(self._get_pdf_engine(report_sudo)))
             writer.clone_reader_document_root(reader)
 
             # Generate and attach EDI documents from each builder
