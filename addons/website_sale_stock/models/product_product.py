@@ -82,3 +82,14 @@ class ProductProduct(models.Model):
                 mail = self_ctxt.env['mail.mail'].sudo().create(mail_values)
                 mail.send(raise_exception=False)
                 product.stock_notification_partner_ids -= partner
+
+    def _can_add_to_stock_notifications(self):
+        """Return whether the product is eligible for stock notifications.
+
+        Note: `self.ensure_one()`
+
+        :return: True if the product is active, saleable, and published on the website
+        :rtype: bool
+        """
+        self.ensure_one()
+        return self.active and self.sale_ok and self.website_published
