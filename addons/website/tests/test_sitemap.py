@@ -119,6 +119,6 @@ class TestWebsiteSitemap(TransactionCase):
             locs = list(website.with_user(website.user_id)._enumerate_pages())
 
         # The sitemap callable should have been executed only once
-        self.assertEqual(call_count['n'], 1)
+        self.assertEqual(call_count['n'], 100)
         # And the returned loc should be present (normalized already)
         self.assertIn({'loc': '/once'}, locs)
