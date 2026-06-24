@@ -1695,3 +1695,12 @@ class ProductTemplate(models.Model):
                     )
                 data["free_qty"] = max_quantity
         return data
+
+    def _mail_get_operation_for_mail_message_operation(self, message_operation):
+        if (
+            message_operation == "create"
+            and not self.env.user._is_internal()
+            and not self.env["website"].is_view_active("website_sale.product_comment")
+        ):
+            return [(Domain.TRUE, "write")]
+        return super()._mail_get_operation_for_mail_message_operation(message_operation)
