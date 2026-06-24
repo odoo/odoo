@@ -743,7 +743,14 @@
                                     <t t-set="line_padding" t-value="line_padding + 1"/>
                                 </t>
 
-                                <t t-set="padding_class" t-value="line_padding and ('px-' + str(line_padding)) or ''"/>
+                                <t
+                                    t-set="padding_style"
+                                    t-value="(
+                                        line_padding
+                                        and ('padding-left:' + str(line_padding * 8) + 'px')
+                                        or 'padding-left: 4px'
+                                    )"
+                                />
                                 <t t-set="show_section_total" t-value="is_section or not line.parent_id.collapse_prices"/>
 
                                 <t t-if="not line.collapse_composition">
@@ -774,21 +781,24 @@
                                         <td
                                             name="td_section_name_xs"
                                             t-att-colspan="section_name_colspan - 1 - (1 if display_discount else 0) - (1 if display_taxes else 0)"
-                                            t-attf-class="d-sm-none {{padding_class}}"
+                                            class="d-sm-none"
+                                            t-att-style="padding_style"
                                         >
                                             <span t-field="line.name"/>
                                         </td>
                                         <td
                                             name="td_section_name_sm"
                                             t-att-colspan="section_name_colspan - (1 if display_taxes else 0)"
-                                            t-attf-class="d-none d-sm-table-cell d-md-none {{padding_class}}"
+                                            class="d-none d-sm-table-cell d-md-none"
+                                            t-att-style="padding_style"
                                         >
                                             <span t-field="line.name"/>
                                         </td>
                                         <td
                                             name="td_section_name"
                                             t-att-colspan="section_name_colspan"
-                                            t-attf-class="d-none d-md-table-cell {{padding_class}}"
+                                            class="d-none d-md-table-cell"
+                                            t-att-style="padding_style"
                                         >
                                             <span t-field="line.name"/>
                                         </td>
@@ -809,7 +819,7 @@
                                         <td
                                             name="td_note_name"
                                             colspan="99"
-                                            t-att-class="padding_class"
+                                            t-att-style="padding_style"
                                         >
                                             <span t-field="line.name"/>
                                         </td>
@@ -817,7 +827,7 @@
                                     <tr t-elif="is_combo" name="tr_combo" class="fw-bold">
                                         <td
                                             name="td_combo_name"
-                                            t-att-class="padding_class"
+                                            t-att-style="padding_style"
                                         >
                                             <span t-field="line.name">Combo Product</span>
                                         </td>
@@ -849,7 +859,7 @@
                                     <tr t-else="" name="tr_product">
                                         <td
                                             name="td_product_name"
-                                            t-att-class="padding_class"
+                                            t-att-style="padding_style"
                                         >
                                             <div class="d-flex flex-row align-items-center">
                                                 <img
@@ -915,7 +925,7 @@
                                         t-as="section_line"
                                         name="tr_section_group"
                                     >
-                                        <td name="td_section_group_name" t-att-class="padding_class">
+                                        <td name="td_section_group_name" t-att-style="padding_style">
                                             <span t-field="line.name">
                                                 Section Summary
                                             </span>
