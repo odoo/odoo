@@ -201,6 +201,10 @@ registerWebsitePreviewTour(
         // Click on the "Banner" snippet.
         ...clickOnSnippet(snippets[1]),
         {
+            content: "Wait for the target to be the banner (by looking at its options)",
+            trigger: ".options-container[data-container-title=Banner]",
+        },
+        {
             content: "Drag the 'Banner' snippet to the end of the page",
             trigger: ".o_overlay_options button.o_move_handle",
             run: "drag_and_drop :iframe #wrapwrap footer",
