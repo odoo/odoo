@@ -1,5 +1,4 @@
 import { proxy } from "@odoo/owl";
-import { useLayoutEffect } from "@web/owl2/utils";
 import { localization } from "@web/core/l10n/localization";
 const { DateTime } = luxon;
 
@@ -16,16 +15,16 @@ export function useTime() {
         state.day = dateNow.toFormat("cccc");
         state.date = dateNow.toFormat(dateFormat);
     }
-    useLayoutEffect(
-        () => {
-            const interval = setInterval(() => setTime(), 500);
-
-            return () => {
-                clearInterval(interval);
-            };
-        },
-        () => []
-    );
+    // useLayoutEffect(
+    //     () => {
+    //         const interval = setInterval(() => setTime(), 500);
+    //
+    //         return () => {
+    //             clearInterval(interval);
+    //         };
+    //     },
+    //     () => []
+    // );
     setTime();
     return state;
 }
