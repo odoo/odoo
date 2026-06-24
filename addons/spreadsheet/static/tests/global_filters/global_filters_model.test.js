@@ -54,7 +54,7 @@ import {
     insertPivotInSpreadsheet,
 } from "@spreadsheet/../tests/helpers/pivot";
 import { toRangeData } from "@spreadsheet/../tests/helpers/zones";
-import { GlobalFiltersCoreViewPlugin } from "@spreadsheet/global_filters/plugins/global_filters_core_view_plugin";
+import { GlobalFiltersUIPlugin } from "@spreadsheet/global_filters/plugins/global_filters_ui_plugin";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
 
 describe.current.tags("headless");
@@ -1656,7 +1656,7 @@ test("Export global filters for excel", async function () {
     await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
     const [filter] = model.getters.getGlobalFilters();
     const filterPlugin = model["handlers"].find(
-        (handler) => handler instanceof GlobalFiltersCoreViewPlugin
+        (handler) => handler instanceof GlobalFiltersUIPlugin
     );
     const exportData = { styles: [], sheets: [], formats: {} };
     filterPlugin.exportForExcel(exportData);
@@ -1693,7 +1693,7 @@ test("Export from/to global filters for excel", async function () {
     });
     const [filter] = model.getters.getGlobalFilters();
     const filterPlugin = model["handlers"].find(
-        (handler) => handler instanceof GlobalFiltersCoreViewPlugin
+        (handler) => handler instanceof GlobalFiltersUIPlugin
     );
     const exportData = { styles: {}, formats: {}, sheets: [] };
     filterPlugin.exportForExcel(exportData);
@@ -1718,7 +1718,7 @@ test("Export boolean global filters with undefined value for excel", async funct
     const { model } = await createSpreadsheetWithPivotAndList();
     await addGlobalFilter(model, { id: "42", label: "test", type: "boolean" });
     const filterPlugin = model["handlers"].find(
-        (handler) => handler instanceof GlobalFiltersCoreViewPlugin
+        (handler) => handler instanceof GlobalFiltersUIPlugin
     );
     const exportData = { styles: [], sheets: [] };
     filterPlugin.exportForExcel(exportData);
@@ -1747,7 +1747,7 @@ test("Export relational global filter for excel", async function () {
     });
 
     const filterPlugin = model["handlers"].find(
-        (handler) => handler instanceof GlobalFiltersCoreViewPlugin
+        (handler) => handler instanceof GlobalFiltersUIPlugin
     );
     const exportData = { styles: [], sheets: [], formats: {} };
     filterPlugin.exportForExcel(exportData);
