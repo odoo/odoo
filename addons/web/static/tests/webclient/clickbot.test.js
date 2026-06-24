@@ -283,7 +283,7 @@ test("only one app", async () => {
         "Tested 0 modals",
         "Tested 4 filters",
         SUCCESS_SIGNAL,
-        'savedState: {"logger":true,"studioCount":0,"testedApps":["app1"],"testedMenus":["app1"],"testedFilters":4,"testedModals":0,"testedViews":2,"testedFormsViews":1,"testedNewRecord":2,"appIndex":0,"menuIndex":0,"errorMenuCount":0,"startTime":43554.39999999106,"xmlId":"app1"}',
+        'savedState: {"logger":true,"testingOffline":false,"appIndex":0,"menuIndex":0,"onlineStats":{"testedApps":["app1"],"testedMenus":["app1"],"testedViews":2,"testedFormsViews":1,"testedNewRecord":2,"testedModals":0,"testedFilters":4,"studioCount":0,"errorMenuCount":0},"offlineStats":{"testedApps":[],"testedMenus":[],"testedViews":0,"testedFormsViews":0,"testedNewRecord":0,"testedModals":0,"errorMenuCount":0},"startTime":43554.39999999106,"xmlId":"app1"}',
     ]);
 });
 
