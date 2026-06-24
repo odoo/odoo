@@ -1922,14 +1922,46 @@ def verify_limited_field_access_token(record, field_name, access_token, *, scope
     ) and datetime.datetime.now() < datetime.datetime.fromtimestamp(int(timestamp, 16))
 
 
-ADDRESS_REGEX = re.compile(r'^(.*?)(\s[0-9][0-9\S]*)?(?: - (.+))?$', flags=re.DOTALL)
+ADDRESS_REGEXES = [
+    # Same as regex bellow, but match if the building number is at the start of the string
+    re.compile(r'''^
+        (?P<building_number>[0-9][a-zA-Z0-9/-]*)[,\s]+
+        (?P<street>.*?)
+        # We want to capture the door number after the last comma of the string, as we could
+        # have commas in the street name
+        (?:\s*[-,/]\s*(?P<door_number>(?=.*\d)(?:(?!\s*,\s*|\s+-\s+).)+))?
+    $''', flags=re.DOTALL | re.VERBOSE),
+    # Match addresses where building number is between street name and door number
+    re.compile(r'''^
+        # Non greedy match on street name, so it will stops as soon as it faces a digit
+        (?P<street>.*?)\s*
+        # We will use this comma for a condition later
+        (?P<comma>,)?\s*
+        # Match the building number, it must starts with a digit, and it stops when facing
+        # a blank space, a comma or end of string
+        (?P<building_number>[0-9][a-zA-Z0-9/-]*)?
+        # If we didn't capture a comma in the comma group, we do a positive lookahead to check
+        # if we have a door number after
+        (?(comma)|(?=\s+[,-/]|\s*$))
+        # Door number group has to starts with '-', ',' or '/'
+        (?:\s*[-,/]\s*(?P<door_number>(?=.*\d)(?:(?!\s*,\s*|\s+-\s+).)+))?
+    ''', flags=re.DOTALL | re.VERBOSE),
+]
 def street_split(street):
-    match = ADDRESS_REGEX.match(street or '')
-    results = match.groups('') if match else ('', '', '')
+    for regex in ADDRESS_REGEXES:
+        match = regex.match(street or '')
+        results = match.groupdict() if match else {}
+        if results:
+            return {
+                'street_name': (results.get('street') or '').strip(),
+                'street_number': (results.get('building_number') or '').strip(),
+                'street_number2': (results.get('door_number') or '').strip(),
+            }
+
     return {
-        'street_name': results[0].strip(),
-        'street_number': results[1].strip(),
-        'street_number2': results[2],
+        'street_name': '',
+        'street_number': '',
+        'street_number2': '',
     }
 
 
