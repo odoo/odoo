@@ -46,15 +46,24 @@ class StockMove(models.Model):
     def _compute_description_picking(self):
         super()._compute_description_picking()
         for move in self:
-            if move.purchase_line_id:
+            if move.purchase_line_id and not move.description_picking_manual:
                 current_description = move.description_picking
+                product = move.product_id.with_context(lang=move._get_lang())
+                has_receipt_description = bool(product._get_picking_description(move.picking_type_id))
+                if not has_receipt_description:
+                    current_description = '\n'.join(
+                        line for line in current_description.split('\n')
+                        if line not in {product.display_name, product.name}
+                    )
                 seller = move.purchase_line_id.sudo().selected_seller_id
                 vendor_reference = f'[{seller.product_code}]' if seller.product_code else ''
                 vendor_reference += f' {seller.product_name}' if seller.product_name else ''
                 if vendor_reference.strip() in current_description:
                     vendor_reference = ''
                 no_variant_attributes = '\n'.join(f'{attribute.attribute_id.name}: {attribute.name}' for attribute in move.purchase_line_id.sudo().product_no_variant_attribute_value_ids)
-                move.description_picking = (no_variant_attributes + '\n' + vendor_reference + '\n' + current_description).strip()
+                if no_variant_attributes and no_variant_attributes.strip() in current_description:
+                    no_variant_attributes = ''
+                move.description_picking = '\n'.join(part for part in (no_variant_attributes, vendor_reference, current_description) if part)
 
     def _get_description(self):
         return self.purchase_line_id.name if self.purchase_line_id else super()._get_description()
