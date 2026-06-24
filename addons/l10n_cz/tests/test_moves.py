@@ -1,7 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from freezegun import freeze_time
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo.tools import SQL
 from odoo import fields, Command
 
 
@@ -16,6 +18,10 @@ class TestAccountCZ(AccountTestInvoicingCommon):
         super().setUpClass()
 
         cls.currency_usd = cls.env.ref('base.USD')
+        cls.other_currency = cls.setup_other_currency('EUR', rates=[
+            ('2026-06-01', 1),
+            ('2026-06-02', 2),
+            ('2026-06-03', 3)])
         cls.invoice_a = cls.env['account.move'].create({
             'move_type': 'out_invoice',
             'invoice_date': '2024-07-10',
@@ -54,3 +60,37 @@ class TestAccountCZ(AccountTestInvoicingCommon):
 
         inv_line = self.env['account.move'].search([('statement_line_id', '=', st_line.id)])
         self.assertNotEqual(inv_line.taxable_supply_date, st_line.date)
+
+    @freeze_time('2026-06-02')
+    def test_currency_rate_manual_change(self):
+        """
+        Ensure that if invoice_currency_rate is manually set and invoice_date is not set,
+        posting the invoice doesn't change the currency rate back to default
+        """
+        invoice1 = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'invoice_date': False,
+            'taxable_supply_date': '2026-06-01',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [Command.create({'quantity': 1, 'price_unit': 60})],
+            'currency_id': self.other_currency.id,
+        }])
+        self.assertEqual(invoice1.invoice_currency_rate, 1.0)
+        self.env.execute_query(SQL(" UPDATE account_move SET create_date = '2026-06-02' where id  = %s", invoice1.id))
+        invoice1.invalidate_recordset(['create_date'])
+        # currency rate of the invoice creation date that will be computed on action_post
+        invoice1.invoice_currency_rate = 2
+        invoice1.action_post()
+        self.assertRecordValues(invoice1.line_ids, [
+            {'amount_currency':   -60.0, 'balance':   -30.0},  # Product line
+            {'amount_currency':    60.0, 'balance':    30.0},  # Receivable line
+        ])
+        invoice1.button_draft()
+        invoice1.invoice_date = False
+        invoice1.invoice_currency_rate = 2
+        with freeze_time('2026-06-03'):
+            invoice1.action_post()
+        self.assertRecordValues(invoice1.line_ids, [
+            {'amount_currency':   -60.0, 'balance':   -30.0},  # Product line
+            {'amount_currency':    60.0, 'balance':    30.0},  # Receivable line
+        ])
