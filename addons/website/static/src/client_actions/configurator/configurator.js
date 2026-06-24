@@ -1063,7 +1063,34 @@ export class ThemeSelectionScreen extends ApplyConfiguratorScreen {
         }
         const heading = previewDocument.querySelector("h1, .h1");
         if (heading) {
-            heading.textContent = previewHeader;
+            const hasOwnText = [...heading.childNodes].some(
+                (node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim()
+            );
+            const headingContent =
+                heading.children.length === 1 && !hasOwnText ? heading.firstElementChild : heading;
+            const lineBreakCount = headingContent.querySelectorAll("br").length;
+            if (!lineBreakCount) {
+                headingContent.textContent = previewHeader;
+                return;
+            }
+
+            const words = previewHeader.split(/\s+/);
+            const wordsPerLine = Math.ceil(words.length / (lineBreakCount + 1));
+            const lines = [];
+            for (let i = 0; i <= lineBreakCount; i++) {
+                const line = words.slice(i * wordsPerLine, (i + 1) * wordsPerLine).join(" ");
+                if (line) {
+                    lines.push(line);
+                }
+            }
+
+            headingContent.replaceChildren();
+            for (const [index, line] of lines.entries()) {
+                if (index) {
+                    headingContent.append(previewDocument.createElement("br"));
+                }
+                headingContent.append(line);
+            }
         }
     }
 
