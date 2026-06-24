@@ -1292,6 +1292,58 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         with self.assertRaises(UserError, msg='Should not be able to invoice already invoiced timesheets'):
             wizard_2.create_invoices()
 
+    def test_invoice_remaining_qty_after_partial_invoice(self):
+        """Invoicing part of a timesheet-delivered line, then invoicing again
+        without a period, should bill the remaining delivered quantity even
+        though every timesheet is already linked to the first invoice."""
+        product = self.env['product.product'].create({
+            'name': "Service delivered on timesheets",
+            'list_price': 90,
+            'type': 'service',
+            'service_policy': 'delivered_timesheet',
+            'invoice_policy': 'delivery',
+            'service_type': 'timesheet',
+            'service_tracking': 'task_global_project',
+            'project_id': self.project_global.id,
+            'taxes_id': False,
+        })
+        partner = self.env['res.partner'].create({'name': 'Toto'})
+        sale_order = self.env['sale.order'].create({
+            'partner_id': partner.id,
+            'order_line': [
+                Command.create({'product_id': product.id, 'product_uom_qty': 10.0}),
+            ],
+        })
+        sale_order.action_confirm()
+        sol = sale_order.order_line
+        task = sale_order.tasks_ids
+        self.env['account.analytic.line'].create({
+            'name': 'Test Line',
+            'project_id': task.project_id.id,
+            'task_id': task.id,
+            'unit_amount': 10.0,
+            'employee_id': self.employee_user.id,
+        })
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': sale_order.ids,
+            'active_id': sale_order.id,
+        }
+        wizard = self.env['sale.advance.payment.inv'].with_context(context).create({
+            'advance_payment_method': 'delivered',
+        })
+        invoice = self.env['account.move'].browse(wizard.create_invoices()['res_id'])
+        invoice.invoice_line_ids.filtered(lambda line: line.sale_line_ids).quantity = 6.0
+        invoice.action_post()
+
+        wizard_2 = self.env['sale.advance.payment.inv'].with_context(context).create({
+            'advance_payment_method': 'delivered',
+        })
+        invoice_2 = self.env['account.move'].browse(wizard_2.create_invoices()['res_id'])
+        self.assertEqual(invoice_2.invoice_line_ids.sale_line_ids, sol)
+        self.assertEqual(invoice_2.invoice_line_ids.quantity, 4.0,
+            "The second invoice should bill the remaining delivered hours.")
+
     def test_invoice_timesheet_uom_conversion_with_period(self):
         """
         Ensure that invoice quantities are correctly computed when the
