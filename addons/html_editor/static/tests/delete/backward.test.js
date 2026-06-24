@@ -1706,6 +1706,45 @@ describe("Selection collapsed", () => {
             });
         });
     });
+
+    describe("Emoji", () => {
+        test("backspace removes the previous grapheme cluster", async () => {
+            const { el, editor } = await setupEditor(`<p>abc🚴‍♂️👍🏻1️⃣[]def</p>`);
+
+            // Remove 1️⃣.
+            deleteBackward(editor);
+            expect(getContent(el)).toBe(`<p>abc🚴‍♂️👍🏻[]def</p>`);
+
+            // Remove 👍🏻.
+            deleteBackward(editor);
+            expect(getContent(el)).toBe(`<p>abc🚴‍♂️[]def</p>`);
+
+            // Remove 🚴‍♂️.
+            deleteBackward(editor);
+            expect(getContent(el)).toBe(`<p>abc[]def</p>`);
+        });
+
+        test("backspace removes only the previous grapheme cluster", async () => {
+            const { el, editor } = await setupEditor(`<p>🚴‍♂️[]🚴‍♂️</p>`);
+
+            deleteBackward(editor);
+            expect(getContent(el)).toBe(`<p>[]🚴‍♂️</p>`);
+        });
+
+        test("backspace removes a grapheme cluster across text nodes", async () => {
+            const { el, editor } = await setupEditor(`<p>abc🚴‍♂️<b>[]def</b></p>`);
+
+            deleteBackward(editor);
+            expect(getContent(el)).toBe(`<p>abc[]<b>def</b></p>`);
+        });
+
+        test("backspace near a <br> preserves the preceding grapheme cluster", async () => {
+            const { el, editor } = await setupEditor(`<p>🚴‍♂️<br>[]abc</p>`);
+
+            deleteBackward(editor);
+            expect(getContent(el)).toBe(`<p>🚴‍♂️[]abc</p>`);
+        });
+    });
 });
 
 describe("Selection not collapsed", () => {

@@ -170,7 +170,8 @@ describe("Selection collapsed", () => {
                 },
                 contentAfterEdit:
                     '<p>ab<span class="style" data-oe-zws-empty-inline="">[]\u200B</span>ef</p>',
-                contentAfter: '<p>ab<span class="style" data-oe-zws-empty-inline="">[]\u200B</span>ef</p>',
+                contentAfter:
+                    '<p>ab<span class="style" data-oe-zws-empty-inline="">[]\u200B</span>ef</p>',
             });
         });
 
@@ -1298,6 +1299,45 @@ describe("Selection collapsed", () => {
             });
         });
     });
+
+    describe("Emoji", () => {
+        test("delete removes the next grapheme cluster", async () => {
+            const { el, editor } = await setupEditor(`<p>abc[]🚴‍♂️👍🏻1️⃣def</p>`);
+
+            // Remove 🚴‍♂️.
+            deleteForward(editor);
+            expect(getContent(el)).toBe(`<p>abc[]👍🏻1️⃣def</p>`);
+
+            // Remove 👍🏻.
+            deleteForward(editor);
+            expect(getContent(el)).toBe(`<p>abc[]1️⃣def</p>`);
+
+            // Remove 1️⃣.
+            deleteForward(editor);
+            expect(getContent(el)).toBe(`<p>abc[]def</p>`);
+        });
+
+        test("delete removes only the next grapheme cluster", async () => {
+            const { el, editor } = await setupEditor(`<p>[]🚴‍♂️🚴‍♂️</p>`);
+
+            deleteForward(editor);
+            expect(getContent(el)).toBe(`<p>[]🚴‍♂️</p>`);
+        });
+
+        test("delete removes a grapheme cluster across text nodes", async () => {
+            const { el, editor } = await setupEditor(`<p><b>abc[]</b>🚴‍♂️def</p>`);
+
+            deleteForward(editor);
+            expect(getContent(el)).toBe(`<p><b>abc[]</b>def</p>`);
+        });
+
+        test("delete near a <br> preserves the following grapheme cluster", async () => {
+            const { el, editor } = await setupEditor(`<p>abc[]<br>🚴‍♂️</p>`);
+
+            deleteForward(editor);
+            expect(getContent(el)).toBe(`<p>abc[]🚴‍♂️</p>`);
+        });
+    });
 });
 
 describe("Selection not collapsed", () => {
@@ -1329,7 +1369,8 @@ describe("Selection not collapsed", () => {
         await testEditor({
             contentBefore: '<p>a<span class="style-class">[bcde]</span>f</p>',
             stepFunction: deleteForward,
-            contentAfter: '<p>a<span class="style-class" data-oe-zws-empty-inline="">[]\u200B</span>f</p>',
+            contentAfter:
+                '<p>a<span class="style-class" data-oe-zws-empty-inline="">[]\u200B</span>f</p>',
         });
     });
 
@@ -1670,7 +1711,8 @@ describe("Selection not collapsed", () => {
         await testEditor({
             contentBefore: '<p>ab<b class="oe_unremovable">[cd]</b>ef</p>',
             stepFunction: deleteForward,
-            contentAfter: '<p>ab<b class="oe_unremovable" data-oe-zws-empty-inline="">[]\u200B</b>ef</p>',
+            contentAfter:
+                '<p>ab<b class="oe_unremovable" data-oe-zws-empty-inline="">[]\u200B</b>ef</p>',
         });
     });
 

@@ -305,6 +305,7 @@ export class DeletePlugin extends Plugin {
         range = this.adjustRange(range, [
             this.includeEmptyInlineEnd,
             this.includePreviousZWS,
+            this.includePreviousGrapheme,
             this.includeEndOrStartBlock,
         ]);
         range = this.deleteRange(range);
@@ -336,6 +337,7 @@ export class DeletePlugin extends Plugin {
         range = this.adjustRange(range, [
             this.includeEmptyInlineStart,
             this.includeNextZWS,
+            this.includeNextGrapheme,
             this.includeEndOrStartBlock,
         ]);
         range = this.deleteRange(range);
@@ -1018,6 +1020,72 @@ export class DeletePlugin extends Plugin {
             startContainer.textContent[startOffset - 1] === "\u200B"
         ) {
             range.setStart(startContainer, startOffset - 1);
+        }
+        return range;
+    }
+
+    /**
+     * Extends the start of the range to include the full previous ZWJ grapheme
+     * cluster when the range partially overlaps it.
+     *
+     * @param {Range} range
+     * @returns {Range}
+     */
+    includePreviousGrapheme(range) {
+        const { startContainer, startOffset, endContainer, endOffset } = range;
+
+        if (!isTextNode(startContainer)) {
+            return range;
+        }
+
+        const segmentEndOffset =
+            startContainer === endContainer ? endOffset : nodeSize(startContainer);
+
+        const lastSegment = [
+            ...new Intl.Segmenter(undefined, {
+                granularity: "grapheme",
+            }).segment(startContainer.textContent.slice(0, segmentEndOffset)),
+        ].at(-1);
+
+        if (!lastSegment || lastSegment.segment.length === 1) {
+            return range;
+        }
+
+        const segmentStartOffset = segmentEndOffset - lastSegment.segment.length;
+        if (segmentStartOffset < startOffset) {
+            range.setStart(startContainer, segmentStartOffset);
+        }
+        return range;
+    }
+
+    /**
+     * Extends the end of the range to include the full next ZWJ grapheme
+     * cluster when the range partially overlaps it.
+     *
+     * @param {Range} range
+     * @returns {Range}
+     */
+    includeNextGrapheme(range) {
+        const { startContainer, startOffset, endContainer, endOffset } = range;
+
+        if (!isTextNode(endContainer)) {
+            return range;
+        }
+
+        const segmentStartOffset = startContainer === endContainer ? startOffset : 0;
+        const firstSegment = [
+            ...new Intl.Segmenter(undefined, {
+                granularity: "grapheme",
+            }).segment(endContainer.textContent.slice(segmentStartOffset)),
+        ][0];
+
+        if (!firstSegment || firstSegment.segment.length === 1) {
+            return range;
+        }
+
+        const segmentEndOffset = segmentStartOffset + firstSegment.segment.length;
+        if (segmentEndOffset > endOffset) {
+            range.setEnd(endContainer, segmentEndOffset);
         }
         return range;
     }
