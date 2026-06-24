@@ -48,3 +48,29 @@ class TestSaleTimesheetReport(TestCommonSaleTimesheet):
         self.assertEqual(report.unit_amount, 24)
         self.assertEqual(report.timesheet_revenues, 30)
         self.assertEqual(report.billable_time, 24)
+
+    def test_invoice_timesheet_report_filtering(self):
+        """Test that the timesheet report placeholder is removed for invoices without timesheets."""
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_b.id,
+            'invoice_line_ids': [Command.create({'price_unit': 500.0})],
+        })
+        invoice.action_post()
+
+        timesheet_report = self.env.ref('sale_timesheet.timesheet_report_account_move')
+        mail_template = self.env['mail.template'].create({
+            'name': 'Test Invoice Template',
+            'model_id': self.env['ir.model']._get_id('account.move'),
+            'report_template_ids': [Command.link(timesheet_report.id)],
+        })
+
+        placeholders = self.env['account.move.send'].new()._get_placeholder_mail_template_dynamic_attachments_data(
+            invoice, mail_template
+        )
+
+        self.assertNotIn(
+            timesheet_report.report_name,
+            [p.get('dynamic_report') for p in placeholders],
+            "Timesheet report placeholder should be removed for invoices without timesheets",
+        )
