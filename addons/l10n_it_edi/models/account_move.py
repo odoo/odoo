@@ -1349,6 +1349,8 @@ class AccountMove(models.Model):
         moves = self.with_company(company_id).create([{
                 'l10n_it_edi_attachment_file': BinaryBytes(file_data['raw']),
                 'l10n_it_edi_attachment_name': file_data['name'],
+                'document_tax_mode': 'tax_excluded',
+                'move_type': 'out_invoice',
             } for file_data in files_data
         ])
         attachments_map = dict(Attachment._read_group(
