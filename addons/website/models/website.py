@@ -1494,16 +1494,6 @@ class Website(models.CachedModel):
             # during the match of env['ir.http'], the website information was
             # added from the request.
             website_id = self.env.context.get('host_id')
-        else:
-            # The request is not currently accessible for this route; you must
-            # call the fallback which will be done with respect to the URL on
-            # the current thread.
-            import threading  # noqa: PLC0415
-            domain_name = (
-                (request and request.httprequest.host)
-                or getattr(threading.current_thread(), 'url', None)
-                or '')
-            website_id = self.env["ir.http"]._get_host_id_from_domain(domain_name)
 
         if website_id not in existing_ids:
             if fallback and existing_ids:
