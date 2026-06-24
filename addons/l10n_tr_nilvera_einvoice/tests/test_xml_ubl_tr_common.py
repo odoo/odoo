@@ -21,6 +21,7 @@ class TestUBLTRCommon(AccountTestInvoicingCommon):
             'city': 'İç Anadolu Bölgesi',
             'state_id': cls.env.ref('base.state_tr_81').id,
             'country_id': cls.env.ref('base.tr').id,
+            'website': 'www.trexample.com',
             'email': 'info@company.trexample.com',
             'phone': '+90 501 234 56 78',
             'ref': 'Ulus',

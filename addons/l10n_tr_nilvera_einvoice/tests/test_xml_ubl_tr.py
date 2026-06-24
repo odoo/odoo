@@ -209,3 +209,28 @@ class TestUBLTR(TestUBLTRCommon):
 
         self.assertEqual(product_line.discount, 12.0)
         self.assertFalse(global_discount_line, "Nilvera moves should not have any global discount line")
+
+    def test_xml_invoice_earchive_ecommerce_sale_without_transfer(self):
+        with freeze_time('2025-03-05'):
+            invoice = self._generate_invoice(
+                partner_id=self.earchive_partner,
+                l10n_tr_sales_type='website',
+                invoice_line_ids=[
+                    Command.create({
+                        'product_id': self.service_product.id,
+                        'price_unit': 150.0,
+                        'quantity': 1,
+                        'tax_ids': [Command.set(self.tax_20.ids)],
+                    }),
+                ],
+            )
+            self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({'payment_method_line_id': self.inbound_payment_method_line.id})\
+            ._create_payments()
+            generated_xml = self.env['account.edi.xml.ubl.tr']._export_invoice(invoice)[0]
+
+        with file_open('l10n_tr_nilvera_einvoice/tests/expected_xmls/invoice_earchive_ecommerce_sale_without_transfer.xml', 'rb') as expected_xml_file:
+            expected_xml = expected_xml_file.read()
+
+        self.assertXmlTreeEqual(self.get_xml_tree_from_string(generated_xml), self.get_xml_tree_from_string(expected_xml))

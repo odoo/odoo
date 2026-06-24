@@ -142,6 +142,17 @@ class AccountMove(models.Model):
         string="GİB Product Export Invoice",
         help="Check this box if this is a product export invoice.",
     )
+    l10n_tr_sales_type = fields.Selection(
+        selection=[
+            ('normal', "Normal Sale"),
+            ('website', "Website Sale"),
+        ],
+        compute='_compute_l10n_tr_sales_type',
+        string="Sales Type",
+        store=True,
+        readonly=False,
+        copy=False,
+    )
     l10n_tr_shipping_type = fields.Selection(
         selection=[
             ('1', "Sea Transportation"),
@@ -283,6 +294,18 @@ class AccountMove(models.Model):
     def _compute_l10n_tr_exemption_code_id(self):
         for record in self:
             record.l10n_tr_exemption_code_id = False
+
+    @api.depends('partner_id')
+    def _compute_l10n_tr_sales_type(self):
+        for move in self:
+            if (
+                move.country_code == 'TR'
+                and move.is_sale_document()
+                and move.l10n_tr_nilvera_customer_status == 'earchive'
+            ):
+                move.l10n_tr_sales_type = 'website' if 'website_id' in move._fields and move.website_id else 'normal'
+            else:
+                move.l10n_tr_sales_type = None
 
     @api.onchange("partner_id")
     def _onchange_partner_id(self):

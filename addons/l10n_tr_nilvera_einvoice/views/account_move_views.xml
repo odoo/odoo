@@ -106,9 +106,15 @@
                            readonly="state in ['cancel', 'posted']"/>
                     <label class="o_form_label mx-3" invisible="l10n_tr_nilvera_customer_status != 'einvoice'" for="l10n_tr_gib_invoice_type" string="is"/>
                     <field name="l10n_tr_gib_invoice_type"
-                           required="l10n_tr_nilvera_customer_status == 'einvoice' and l10n_tr_gib_invoice_scenario"
+                           required="l10n_tr_nilvera_customer_status == 'einvoice' and l10n_tr_gib_invoice_scenario
+                                     or l10n_tr_nilvera_customer_status == 'earchive'"
                            invisible="l10n_tr_nilvera_customer_status not in ['einvoice', 'earchive']"
                            readonly="state in ['cancel', 'posted']"/>
+                    <label class="o_form_label mx-3" invisible="l10n_tr_nilvera_customer_status != 'earchive'" for="l10n_tr_sales_type" string="channel"/>
+                    <field name="l10n_tr_sales_type"
+                           required="country_code == 'TR' and l10n_tr_nilvera_customer_status == 'earchive'"
+                           invisible="l10n_tr_nilvera_customer_status != 'earchive'"
+                           readonly="state != 'draft'"/>
                 </div>
                 <field name="l10n_tr_exemption_code_id"
                        domain="[('code_type', 'in', l10n_tr_exemption_code_domain_list or [])]"
