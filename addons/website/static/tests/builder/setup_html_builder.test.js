@@ -1,6 +1,6 @@
 import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
-import { expect, test } from "@odoo/hoot";
-import { animationFrame, waitFor } from "@odoo/hoot-dom";
+import { describe, expect, test, beforeEach } from "@odoo/hoot";
+import { animationFrame, waitFor, click } from "@odoo/hoot-dom";
 import { patchWithCleanup, contains } from "@web/../tests/web_test_helpers";
 import { WebsiteBuilder } from "@website/builder/website_builder";
 import { modifyText, exampleContent } from "@html_builder/../tests/helpers";
@@ -12,32 +12,47 @@ test("setup of the editable elements", async () => {
     expect(":iframe #wrap").toHaveClass("o_editable");
 });
 
-test("history back", async () => {
+describe("history back", () => {
     let builder;
-    // Patch to get the builder sidebar instance
-    patchWithCleanup(WebsiteBuilder.prototype, {
-        setup() {
-            super.setup(...arguments);
-            builder = this;
-        },
+
+    beforeEach(() => {
+        // Patch to get the builder sidebar instance
+        patchWithCleanup(WebsiteBuilder.prototype, {
+            setup() {
+                super.setup(...arguments);
+                builder = this;
+            },
+        });
     });
     // Navigating back in the browser history should not lead to a warning popup
     // if the website was not edited.
-    const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleContent);
-    builder.onBeforeLeave();
-    await animationFrame();
-    expect(
-        ".modal-content:contains('If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode.')"
-    ).toHaveCount(0);
+    test("no dialog when no changes made", async () => {
+        await setupWebsiteBuilder(exampleContent);
+        builder.onBeforeLeave();
+        await animationFrame();
+        expect(".modal-content:contains('If you proceed, your changes will be lost')").toHaveCount(
+            0
+        );
+    });
     // Navigating back in the browser history should lead to a warning popup if
     // the website was edited.
-    await modifyText(getEditor(), getEditableContent());
-    await animationFrame();
-    builder.onBeforeLeave();
-    await animationFrame();
-    expect(
-        ".modal-content:contains('If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode.')"
-    ).toHaveCount(1);
+    test("confirmation dialog when changes made", async () => {
+        const { getEditor, getEditableContent } = await setupWebsiteBuilder(exampleContent);
+        await modifyText(getEditor(), getEditableContent());
+        await animationFrame();
+        builder.onBeforeLeave();
+        await animationFrame();
+        expect(".modal-content:contains('If you proceed, your changes will be lost')").toHaveCount(
+            1
+        );
+        await click(".btn:contains('Continue')");
+        await animationFrame();
+        expect(".modal-content:contains('If you proceed, your changes will be lost')").toHaveCount(
+            0
+        );
+        expect(":iframe #wrap").not.toHaveClass("o_dirty");
+        expect(":iframe #wrap").not.toHaveClass("o_editable");
+    });
 });
 
 test("Set and update the 'contenteditable' attribute on the editable elements", async () => {

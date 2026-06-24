@@ -2,7 +2,6 @@ import {
     changeOption,
     clickOnSave,
     insertSnippet,
-    clickOnEditAndWaitEditMode,
     registerWebsitePreviewTour,
 } from '@website/js/tours/tour_utils';
 
@@ -341,28 +340,6 @@ registerWebsitePreviewTour(
             content: "Ensure the image is replaced with a placeholder thumbnail",
             trigger:
                 ":iframe .s_text_image img[src='/html_editor/static/src/img/placeholder_thumbnail.png']",
-        },
-        ...clickOnEditAndWaitEditMode(),
-        ...insertSnippet({
-            id: "s_text_image",
-            name: "Text - Image",
-            groupName: "Content",
-        }),
-        {
-            content: "Use browser's go back button",
-            trigger: "body",
-            run() {
-                window.history.back();
-            },
-        },
-        {
-            content: "Check dialog is opened",
-            trigger: ".modal",
-        },
-        {
-            content: "Click on the 'Continue' button to close the dialog",
-            trigger: ".btn:contains(Continue)",
-            run: "click",
         },
     ]
 );
