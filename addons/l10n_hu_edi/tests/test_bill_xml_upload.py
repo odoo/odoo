@@ -1,16 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields
-from odoo.addons.l10n_hu_edi_receive.tests.common import L10nHuEdiTestCommonReceive
+from odoo.addons.l10n_hu_edi.tests.common import L10nHuEdiTestCommon
 from odoo.tests import tagged
 from odoo.tools.misc import file_open
 
 
 @tagged('post_install', '-at_install', 'post_install_l10n')
-class TestBillXmlUpload(L10nHuEdiTestCommonReceive):
+class TestBillXmlUpload(L10nHuEdiTestCommon):
 
     def upload_xml(self, filename):
-        file_path = f'l10n_hu_edi_receive/tests/invoice_xmls/{filename}'
+        file_path = f'l10n_hu_edi/tests/invoice_xmls/{filename}'
         with file_open(file_path, 'rb') as file:
             content = file.read()
         attachment = self.env['ir.attachment'].create({
@@ -306,7 +306,7 @@ class TestBillXmlUpload(L10nHuEdiTestCommonReceive):
 
     def test_credit_debit_note_upload(self):
         credit_note_original_bill = self.upload_xml('credit_note_original_bill.xml')
-        credit_note = self.upload_xml('credit_note.xml')
+        credit_note = self.upload_xml('credit_note_receive.xml')
         self.assertEqual(credit_note.reversed_entry_id, credit_note_original_bill)
 
         debit_note_original_bill = self.upload_xml('debit_note_original_bill.xml')

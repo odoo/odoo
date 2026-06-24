@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
 export class SyncWithNavBtn extends Component {
-    static template = "l10n_hu_edi_receive.SyncWithNavBtn";
+    static template = "l10n_hu_edi.SyncWithNavBtn";
     static props = {};
 
     setup() {
@@ -24,7 +24,7 @@ export class SyncWithNavBtn extends Component {
         this.action.doAction({
             name: _t("Sync with NAV"),
             type: "ir.actions.act_window",
-            res_model: "l10n_hu_edi_receive.bills.wizard",
+            res_model: "l10n_hu_edi.receive.bills.wizard",
             views: [[false, "form"]],
             target: "new",
         });
@@ -41,7 +41,7 @@ export class L10nHuEdiAccountMoveListController extends AccountMoveListControlle
 export const l10nHuEdiAccountMoveUploadListView = {
     ...accountMoveUploadListView,
     Controller: L10nHuEdiAccountMoveListController,
-    buttonTemplate: "l10n_hu_edi_receive.ListView.Buttons",
+    buttonTemplate: "l10n_hu_edi.ListView.Buttons",
 };
 
 registry.category("views").add("l10n_hu_edi_account_move_tree", l10nHuEdiAccountMoveUploadListView);
