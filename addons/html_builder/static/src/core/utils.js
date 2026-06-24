@@ -1,7 +1,6 @@
 import {
     useComponent,
     useEnv,
-    useLayoutEffect,
     useRef,
     useSubEnv,
 } from "@web/owl2/utils";
@@ -1069,24 +1068,24 @@ export function useVisibilityObserver(contentName, callback) {
     };
 
     const observer = new MutationObserver(applyVisibility);
-    useLayoutEffect(
-        (contentEl) => {
-            if (!contentEl) {
-                return;
-            }
-            applyVisibility();
-            observer.observe(contentEl, {
-                subtree: true,
-                attributes: true,
-                childList: true,
-                attributeFilter: ["class"],
-            });
-            return () => {
-                observer.disconnect();
-            };
-        },
-        () => [contentRef.el]
-    );
+    // useLayoutEffect(
+    //     (contentEl) => {
+    //         if (!contentEl) {
+    //             return;
+    //         }
+    //         applyVisibility();
+    //         observer.observe(contentEl, {
+    //             subtree: true,
+    //             attributes: true,
+    //             childList: true,
+    //             attributeFilter: ["class"],
+    //         });
+    //         return () => {
+    //             observer.disconnect();
+    //         };
+    //     },
+    //     () => [contentRef.el]
+    // );
 }
 
 export function useInputDebouncedCommit(ref) {
