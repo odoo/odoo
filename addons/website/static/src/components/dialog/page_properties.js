@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { _t } from "@web/core/l10n/translation";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
@@ -36,12 +36,12 @@ export class PageDependencies extends Component {
         this.action = useRef("action");
         this.sprintf = sprintf;
 
-        useLayoutEffect(
-            () => {
-                this.fetchDependencies();
-            },
-            () => []
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         this.fetchDependencies();
+        //     },
+        //     () => []
+        // );
         this.state = proxy({
             dependencies: null,
             dependencyCount: 0,
