@@ -61,9 +61,11 @@ class TestWebsiteSitemap(TransactionCase):
 
         class FakeEndpoint:
             routing = {'sitemap': fake_sitemap_callable}
+            func = fake_sitemap_callable
 
         class FakeRule:
             endpoint = FakeEndpoint()
+            _converters = {}
 
         class FakeRouter:
             def iter_rules(self):
@@ -102,16 +104,20 @@ class TestWebsiteSitemap(TransactionCase):
         # First rule uses the bound method directly
         class EndpointBound:
             routing = {'sitemap': holder.sitemap}
+            func = holder.sitemap
 
         class RuleBound:
             endpoint = EndpointBound()
+            _converters = {}
 
         # Second rule uses a partial wrapping the same bound method
         class EndpointPartial:
             routing = {'sitemap': functools.partial(holder.sitemap)}
+            func = holder.sitemap
 
         class RulePartial:
             endpoint = EndpointPartial()
+            _converters = {}
 
         class FakeRouter:
             def iter_rules(self):
@@ -123,7 +129,51 @@ class TestWebsiteSitemap(TransactionCase):
         # The sitemap callable should have been executed only once
         self.assertEqual(call_count['n'], 1)
         # And the returned loc should be present (normalized already)
-        self.assertIn({'loc': '/once'}, locs)
+        self.assertIn('/once', [loc['loc'] for loc in locs])
+
+    def test_sitemap_group_tagging(self):
+        website = self.env.ref('base.default_website')
+        page = self.env['website.page'].create({
+            'name': 'Grouped Page',
+            'website_id': website.id,
+            'url': '/grp-test',
+            'type': 'qweb',
+            'arch': '<t t-call="website.layout"/>',
+            'is_published': True,
+        })
+        locs = list(website.with_user(website.user_id)._enumerate_pages())
+        # Every entry must be tagged with a group so the controller can split.
+        self.assertTrue(all('group' in loc for loc in locs))
+        # CMS website.page records are website-core content, bucketed under 'website'.
+        page_loc = next(loc for loc in locs if loc['loc'] == page.url)
+        self.assertEqual(page_loc['group'], 'website')
+
+    def test_sitemap_group_explicit_name(self):
+        # A route may name its own sitemap section with @route(sitemap_group=...).
+        # That explicit name must win over the module-derived default.
+        website = self.env['website'].search([], limit=1)
+
+        def fake_sitemap_callable(env, rule, qs):
+            yield {'loc': '/named'}
+
+        class FakeEndpoint:
+            routing = {'sitemap': fake_sitemap_callable, 'sitemap_group': 'my-section'}
+            func = fake_sitemap_callable
+
+        class FakeRule:
+            endpoint = FakeEndpoint()
+            _converters = {}
+
+        class FakeRouter:
+            def iter_rules(self):
+                return [FakeRule()]
+
+        with patch('odoo.addons.website.models.ir_http.IrHttp.routing_map', autospec=True, return_value=FakeRouter()):
+            locs = list(website.with_user(website.user_id)._enumerate_pages())
+
+        loc = next(l for l in locs if l['loc'] == '/named')
+        self.assertEqual(loc['group'], 'my-section',
+                         "Explicit @route(sitemap_group=...) must set the sitemap group")
 
     def test_enumerate_pages_homepage_filtering(self):
         website = self.env.ref('base.default_website')

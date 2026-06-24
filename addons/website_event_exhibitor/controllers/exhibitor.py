@@ -126,7 +126,7 @@ class ExhibitorController(WebsiteEventController):
     # ------------------------------------------------------------
 
     @http.route(['''/event/<model("event.event", "[('exhibitor_menu', '=', True)]"):event>/exhibitor/<model("event.sponsor", "[('event_id', '=', event.id)]"):sponsor>'''],
-                type='http', auth="public", website=True, sitemap=True)
+                type='http', auth="public", website=True, sitemap=True, sitemap_group="events")
     def event_exhibitor(self, event, sponsor, **options):
         if not sponsor.has_access('read'):
             raise Forbidden()

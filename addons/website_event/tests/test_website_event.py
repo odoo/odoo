@@ -8,6 +8,7 @@ from odoo import fields
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.website.tests.common import all_sitemap_urls
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon, OnlineEventCase
 from odoo.exceptions import AccessError
 from odoo.tests import HttpCase, tagged
@@ -316,10 +317,11 @@ class TestWebsiteAccess(HttpCaseWithUserDemo, OnlineEventCase):
         self.assertFalse(unpublished_events[0].name in resp.text, 'Public should not see the unpublished events.')
 
     def test_sitemap(self):
-        resp = self.url_open('/sitemap.xml')
-        self.assertTrue('/event/event-0' in resp.text, 'Published events must be present in the sitemap')
-        self.assertTrue('/event/event-1' in resp.text, 'Published events must be present in the sitemap')
-        self.assertFalse('/event/event-2' in resp.text, 'Unpublished events must not be present in the sitemap')
+        # Search the union of all sub-sitemaps (index only lists the sub-sitemaps)
+        sitemap = all_sitemap_urls(self)
+        self.assertIn('/event/event-0', sitemap, 'Published events must be present in the sitemap')
+        self.assertIn('/event/event-1', sitemap, 'Published events must be present in the sitemap')
+        self.assertNotIn('/event/event-2', sitemap, 'Unpublished events must not be present in the sitemap')
 
     @users('user_portal')
     def test_check_search_in_address(self):

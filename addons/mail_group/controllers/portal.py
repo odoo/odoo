@@ -60,7 +60,7 @@ class PortalMailGroup(http.Controller):
     # MAIN PAGE
     # ------------------------------------------------------------
 
-    @http.route('/groups', type='http', auth='public', sitemap=True, website=True, list_as_website_content=_lt("Groups"))
+    @http.route('/groups', type='http', auth='public', sitemap=True, sitemap_group="groups", website=True, list_as_website_content=_lt("Groups"))
     def groups_index(self, email='', **kw):
         """View of the group lists. Allow the users to subscribe and unsubscribe."""
         if kw.get('group_id') and kw.get('token'):
@@ -104,7 +104,7 @@ class PortalMailGroup(http.Controller):
     @http.route([
         '/groups/<model("mail.group"):group>',
         '/groups/<model("mail.group"):group>/page/<int:page>',
-    ], type='http', auth='public', sitemap=True, website=True)
+    ], type='http', auth='public', sitemap=True, sitemap_group="groups", website=True)
     def group_view_messages(self, group, page=1, mode='thread', date_begin=None, date_end=None, **post):
         GroupMessage = request.env['mail.group.message']
 
