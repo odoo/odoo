@@ -31,7 +31,7 @@ class ProductTemplateAttributeLine(models.Model):
 
     @api.model
     def _load_pos_data_fields(self, config):
-        return ['display_name', 'attribute_id', 'product_template_value_ids']
+        return ['display_name', 'attribute_id', 'product_template_value_ids', 'active']
 
     @api.model
     def _load_pos_data_domain(self, data, config):
