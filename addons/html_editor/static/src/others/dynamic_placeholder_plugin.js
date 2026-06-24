@@ -1,8 +1,8 @@
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
-import { DynamicPlaceholderPopover } from "@web/views/fields/dynamic_placeholder_popover";
 import { withSequence } from "@html_editor/utils/resource";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
+import { EditorDynamicPlaceholderPopover } from "./editor_dynamic_placeholder_popover";
 
 /**
  * @typedef {Object} DynamicPlaceholderShared
@@ -39,7 +39,7 @@ export class DynamicPlaceholderPlugin extends Plugin {
         this.defaultResModel = this.config.dynamicPlaceholderResModel;
 
         /** @type {import("@html_editor/core/overlay_plugin").Overlay} */
-        this.overlay = this.dependencies.overlay.createOverlay(DynamicPlaceholderPopover, {
+        this.overlay = this.dependencies.overlay.createOverlay(EditorDynamicPlaceholderPopover, {
             hasAutofocus: true,
             className: "popover",
         });
