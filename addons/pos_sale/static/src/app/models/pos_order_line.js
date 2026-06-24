@@ -25,8 +25,17 @@ patch(PosOrderline.prototype, {
         return false;
     },
     get saleDetails() {
+        if (this.order_id?.uiState._isSettlingSO) {
+            if (!this._saleDetailsCache) {
+                this._saleDetailsCache = this._computeSaleDetails();
+            }
+            return this._saleDetailsCache;
+        }
+        this._saleDetailsCache = null;
+        return this._computeSaleDetails();
+    },
+    _computeSaleDetails() {
         let down_payment_details = [];
-
         // FIXME: This is a hack to handle the case where the down_payment_details is a stringified JSON.
         try {
             down_payment_details = JSON.parse(this.down_payment_details);
