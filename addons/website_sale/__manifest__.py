@@ -19,6 +19,7 @@
         # Record data
         'data/data.xml',
         'data/mail_template_data.xml',
+        'data/portal_templates.xml',
         'data/product_snippet_template_data.xml',
         'data/snippet_category_template_data.xml',
         'data/digest_data.xml',
@@ -137,6 +138,9 @@
             # backend.
             'delivery/static/src/js/location_selector/**/*',
             'website_sale/static/src/js/location_selector/**/*',
+        ],
+        'portal.assets_chatter': [
+            'website_sale/static/src/js/mail/*',
         ],
         'web._assets_primary_variables': [
             'website_sale/static/src/scss/primary_variables.scss',
