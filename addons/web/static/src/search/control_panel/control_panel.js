@@ -676,19 +676,32 @@ export class ControlPanel extends Component {
      * @param {HTMLElement} params.previous
      */
     _sortEmbeddedActionDrop({ element, previous }) {
-        const order = this.state.embeddedInfos.embeddedActions.map((el) => el.id);
+        const oldOrder = this.state.embeddedInfos.embeddedActions.map((el) => el.id);
         const elementId = Number(element.dataset.id) || false;
-        const elementIndex = order.indexOf(elementId);
-        order.splice(elementIndex, 1);
+        const newOrder = [...oldOrder];
+        const elementIndex = newOrder.indexOf(elementId);
+        newOrder.splice(elementIndex, 1);
         if (previous) {
-            const prevIndex = order.indexOf(Number(previous.dataset.id) || false);
-            order.splice(prevIndex + 1, 0, elementId);
+            const prevIndex = newOrder.indexOf(Number(previous.dataset.id) || false);
+            newOrder.splice(prevIndex + 1, 0, elementId);
         } else {
-            order.splice(0, 0, elementId);
+            newOrder.splice(0, 0, elementId);
         }
-        this._sortEmbeddedActions(order);
+
+        const firstAction = this.state.embeddedInfos.embeddedActions.find(
+            (ea) => ea.id === newOrder[0]
+        );
+        if (firstAction?.default_view_mode === "form") {
+            this.notificationService.add(_t("%s cannot be set as priority.", firstAction.name), {
+                type: "warning",
+            });
+            this._sortEmbeddedActions(oldOrder);
+            return;
+        }
+
+        this._sortEmbeddedActions(newOrder);
         this.embeddedActionsConfigHandler.setEmbeddedActionsConfig({
-            embedded_actions_order: order,
+            embedded_actions_order: newOrder,
         });
     }
 
