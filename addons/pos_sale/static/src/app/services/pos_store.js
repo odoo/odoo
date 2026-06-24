@@ -98,77 +98,100 @@ patch(PosStore.prototype, {
         }
     },
     async settleSO(sale_order, orderFiscalPos) {
-        if (sale_order.pricelist_id) {
-            this.getOrder().setPricelist(sale_order.pricelist_id);
-        }
-        let previousProductLine = null;
-
-        const converted_lines = await this.data.call("sale.order.line", "read_converted", [
-            sale_order.order_line.map((l) => l.id),
-        ]);
-        const state = this.initLoadState();
-        for (const line of sale_order.order_line) {
-            if (this.isSaleOrderLineNote(line)) {
-                if (previousProductLine) {
-                    const previousNote = previousProductLine.customer_note;
-                    previousProductLine.customer_note = previousNote
-                        ? previousNote + "--" + line.name
-                        : line.name;
-                }
-                continue;
+        const order = this.getOrder();
+        // Suppress expensive reactive work (order summary and customer display
+        // re-renders, loyalty updates) for the whole settle. Not in uiState:
+        // that is persisted, so a reload mid-settle would restore a stuck flag.
+        order._isSettlingSO = true;
+        try {
+            if (sale_order.pricelist_id) {
+                this.getOrder().setPricelist(sale_order.pricelist_id);
             }
+            let previousProductLine = null;
 
+            const converted_lines = await this.data.call("sale.order.line", "read_converted", [
+                sale_order.order_line.map((l) => l.id),
+            ]);
+            const state = this.initLoadState();
+            for (const line of sale_order.order_line) {
+                if (this.isSaleOrderLineNote(line)) {
+                    if (previousProductLine) {
+                        const previousNote = previousProductLine.customer_note;
+                        previousProductLine.customer_note = previousNote
+                            ? previousNote + "--" + line.name
+                            : line.name;
+                    }
+                    continue;
+                }
+
+<<<<<<< ba7668556fe05f2cb4f8f090af7f354feec59f9f
             if (line.is_downpayment) {
                 line.product_id = this.config.down_payment_product_id;
             } else if (!line.display_type && !line.product_id) {
                 line.product_id = this.config.default_product_id;
             }
+||||||| cfcf746c0791bde1ad47191d02c50b5cebdbb692
+            if (line.is_downpayment) {
+                line.product_id = this.config.down_payment_product_id;
+            }
+=======
+                if (line.is_downpayment) {
+                    line.product_id = this.config.down_payment_product_id;
+                }
+>>>>>>> ab0f19954742ef8c9d06b722d4825ce3de0ddaf8
 
-            const taxes = orderFiscalPos?.getTaxesAfterFiscalPosition(line.tax_ids) || line.tax_ids;
-            const newLineValues = {
-                product_tmpl_id: line.product_id?.product_tmpl_id,
-                product_id: line.product_id,
-                qty: line.product_uom_qty,
-                price_unit: line.price_unit,
-                price_type: "manual",
-                tax_ids: taxes.map((tax) => ["link", tax]),
-                sale_order_origin_id: sale_order,
-                sale_order_line_id: line,
-                customer_note: line.customer_note,
-                description: line.name,
-                order_id: this.getOrder(),
-                attribute_value_ids: [
-                    ...(line.product_no_variant_attribute_value_ids || [])
-                        .filter((ptav) => !ptav.is_custom)
-                        .map((ptav) => ["link", ptav]),
-                    ...(line.product_custom_attribute_value_ids || []).flatMap(
-                        ({ custom_product_template_attribute_value_id: ptav }) =>
-                            ptav ? [["link", ptav]] : []
+                const taxes =
+                    orderFiscalPos?.getTaxesAfterFiscalPosition(line.tax_ids) || line.tax_ids;
+                const newLineValues = {
+                    product_tmpl_id: line.product_id?.product_tmpl_id,
+                    product_id: line.product_id,
+                    qty: line.product_uom_qty,
+                    price_unit: line.price_unit,
+                    price_type: "manual",
+                    tax_ids: taxes.map((tax) => ["link", tax]),
+                    sale_order_origin_id: sale_order,
+                    sale_order_line_id: line,
+                    customer_note: line.customer_note,
+                    description: line.name,
+                    order_id: this.getOrder(),
+                    attribute_value_ids: [
+                        ...(line.product_no_variant_attribute_value_ids || [])
+                            .filter((ptav) => !ptav.is_custom)
+                            .map((ptav) => ["link", ptav]),
+                        ...(line.product_custom_attribute_value_ids || []).flatMap(
+                            ({ custom_product_template_attribute_value_id: ptav }) =>
+                                ptav ? [["link", ptav]] : []
+                        ),
+                    ],
+                    custom_attribute_value_ids: (line.product_custom_attribute_value_ids || []).map(
+                        (cav) => [
+                            "create",
+                            {
+                                custom_product_template_attribute_value_id:
+                                    cav.custom_product_template_attribute_value_id,
+                                custom_value: cav.custom_value,
+                            },
+                        ]
                     ),
-                ],
-                custom_attribute_value_ids: (line.product_custom_attribute_value_ids || []).map(
-                    (cav) => [
-                        "create",
-                        {
-                            custom_product_template_attribute_value_id:
-                                cav.custom_product_template_attribute_value_id,
-                            custom_value: cav.custom_value,
-                        },
-                    ]
-                ),
-            };
-            if (["line_section", "line_subsection"].includes(line.display_type)) {
-                continue;
-            }
-            const converted_line = converted_lines.find((l) => l.id === line.id);
-            newLineValues.qty = this.getConvertedQuantityFromSaleOrderline(converted_line, line);
-            if (!newLineValues.qty || newLineValues.qty === 0) {
-                continue;
-            }
+                };
+                if (["line_section", "line_subsection"].includes(line.display_type)) {
+                    continue;
+                }
+                const converted_line = converted_lines.find((l) => l.id === line.id);
+                newLineValues.qty = this.getConvertedQuantityFromSaleOrderline(
+                    converted_line,
+                    line
+                );
+                if (!newLineValues.qty || newLineValues.qty === 0) {
+                    continue;
+                }
 
-            const newLine = await this.addLineToCurrentOrder(newLineValues, {}, false);
-            previousProductLine = newLine;
-            await this.updateSOLines(line, converted_line, newLine, newLineValues, state);
+                const newLine = await this.addLineToCurrentOrder(newLineValues, {}, false);
+                previousProductLine = newLine;
+                await this.updateSOLines(line, converted_line, newLine, newLineValues, state);
+            }
+        } finally {
+            order._isSettlingSO = false;
         }
         // Add a down payment for transactions when automatic invoice is disabled
         const paidDiff = this.getOrder().amount_total - sale_order.amount_unpaid;
