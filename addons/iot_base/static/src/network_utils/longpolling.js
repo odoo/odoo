@@ -27,6 +27,7 @@ export class IoTLongpolling {
         this.notification = notification;
         this.orm = orm;
         this.useLna = false;
+        this.lnaFallback = false;
     }
 
     /**
@@ -144,13 +145,26 @@ export class IoTLongpolling {
      * @param {Object} headers headers to send with the request (optional, allows patching)
      */
     async _rpcIoT(iot_ip, route, params, timeout = undefined, fallback = false, headers = undefined) {
+        const willRetry = this.lnaFallback && this.useLna;
+        try {
+            return await this._doRpcIoT(iot_ip, route, params, timeout, fallback || willRetry, headers, this.useLna);
+        } catch (error) {
+            if (!willRetry || error?.name === "AbortError") {
+                throw error;
+            }
+            const result = await this._doRpcIoT(iot_ip, route, params, timeout, fallback, headers, false);
+            this.useLna = false;
+            return result;
+        }
+    }
+
+    async _doRpcIoT(iot_ip, route, params, timeout, fallback, headers, useLna) {
         try {
             const abortController = new AbortController();
-
             if (this._listeners[iot_ip] && route === this.pollRoute) {
                 this._listeners[iot_ip].abortController = abortController;
             }
-            return await post(iot_ip, route, params, timeout, headers, abortController.signal, this.useLna);
+            return await post(iot_ip, route, params, timeout, headers, abortController.signal, useLna);
         } catch (error) {
             if (error?.name === "AbortError") {
                 throw error;
@@ -234,6 +248,16 @@ export class IoTLongpolling {
      */
     setLna(isLnaEnabled) {
         this.useLna = isLnaEnabled;
+    }
+
+    /**
+     * Enable/disable retrying requests without LNA on failure.
+     * When enabled and a request fails, it is retried without LNA.
+     * On success, LNA is permanently disabled for the session.
+     * @param {boolean} value
+     */
+    setLnaFallback(value) {
+        this.lnaFallback = value;
     }
 }
 

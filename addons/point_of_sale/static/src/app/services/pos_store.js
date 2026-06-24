@@ -407,6 +407,10 @@ export class PosStore extends WithLazyGetterTrap {
         return this.config.company_id;
     }
 
+    get lnaFallback() {
+        return false;
+    }
+
     async processServerData() {
         // Used to identify the device when several devices are connected to the same POS
         this.device = this.data.device;
@@ -740,7 +744,10 @@ export class PosStore extends WithLazyGetterTrap {
         await this.deviceSync.readDataFromServer();
 
         if (this.config.other_devices && this.config.epson_printer_ip) {
-            this.hardwareProxy.printer = new EpsonPrinter({ ip: this.config.epson_printer_ip });
+            this.hardwareProxy.printer = new EpsonPrinter({
+                ip: this.config.epson_printer_ip,
+                lnaFallback: this.lnaFallback,
+            });
         }
     }
 
@@ -1282,7 +1289,7 @@ export class PosStore extends WithLazyGetterTrap {
 
     createPrinter(config) {
         if (config.printer_type === "epson_epos") {
-            return new EpsonPrinter({ ip: config.epson_printer_ip });
+            return new EpsonPrinter({ ip: config.epson_printer_ip, lnaFallback: this.lnaFallback });
         }
         const url = deduceUrl(config.proxy_ip || "");
         return new HWPrinter({ url });
