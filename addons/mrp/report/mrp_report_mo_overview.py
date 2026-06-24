@@ -359,18 +359,10 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         }
 
     def _get_kit_operations(self, bom):
-        operations = self.env['mrp.routing.workcenter']
-        for bom_line in bom.bom_line_ids:
-            if bom_line.child_bom_id and bom_line.child_bom_id.type == 'phantom':
-                operations += bom_line.child_bom_id.operation_ids + self._get_kit_operations(bom_line.child_bom_id)
-        return operations
+        return self.env['mrp.routing.workcenter']
 
     def _get_kit_bom_lines(self, bom):
-        bom_lines = self.env['mrp.bom.line']
-        for bom_line in bom.bom_line_ids:
-            if bom_line.child_bom_id and bom_line.child_bom_id.type == 'phantom':
-                bom_lines += bom_line + bom_line.child_bom_id.bom_line_ids + self._get_kit_bom_lines(bom_line.child_bom_id)
-        return bom_lines
+        return self.env['mrp.bom.line']
 
     def _get_finished_operation_data(self, production, level=0, current_index=False):
         currency = (production.company_id or self.env.company).currency_id

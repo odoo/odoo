@@ -81,49 +81,13 @@ class StockMoveLine(models.Model):
         returns: dictionary {same_key_as_super: {same_values_as_super, ...}
         """
         aggregated_move_lines = super()._get_aggregated_product_quantities(**kwargs)
-        kit_name = kwargs.get('kit_name')
-
-        to_be_removed = []
-        for aggregated_move_line in aggregated_move_lines:
-            bom = aggregated_move_lines[aggregated_move_line]['bom']
-            is_phantom = bom.type == 'phantom' if bom else False
-            if kit_name:
-                product = bom.product_id or bom.product_tmpl_id if bom else False
-                display_name = product.display_name if product else False
-                description = aggregated_move_lines[aggregated_move_line]['description']
-                if not is_phantom or display_name != kit_name:
-                    to_be_removed.append(aggregated_move_line)
-                elif description == kit_name:
-                    aggregated_move_lines[aggregated_move_line]['description'] = ""
-            elif not kwargs and is_phantom:
-                to_be_removed.append(aggregated_move_line)
-
-        for move_line in to_be_removed:
-            del aggregated_move_lines[move_line]
-
         return aggregated_move_lines
 
     def _prepare_stock_move_vals(self):
-        move_vals = super()._prepare_stock_move_vals()
-        if self.env['product.product'].browse(move_vals['product_id']).is_kits:
-            move_vals['location_id'] = self.location_id.id
-            move_vals['location_dest_id'] = self.location_dest_id.id
-        return move_vals
+        return super()._prepare_stock_move_vals()
 
     def _get_linkable_moves(self):
-        """ Don't linke move lines with kit products to moves with dissimilar locations so that
-        post `action_explode()` move lines will have accurate location data.
-        """
-        self.ensure_one()
-        if self.product_id and self.product_id.is_kits:
-            moves = self.picking_id.move_ids.filtered(lambda move:
-                move.product_id == self.product_id and
-                move.location_id == self.location_id and
-                move.location_dest_id == self.location_dest_id
-            )
-            return sorted(moves, key=lambda m: m.quantity < m.product_qty, reverse=True)
-        else:
-            return super()._get_linkable_moves()
+        return super()._get_linkable_moves()
 
     def _exclude_requiring_lot(self):
         return (

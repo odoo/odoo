@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 from odoo import _, api, Command, fields, models
-from odoo.tools import OrderedSet, float_is_zero
+from odoo.tools import float_is_zero
 from odoo.exceptions import ValidationError
 
 
@@ -99,21 +99,6 @@ class StockMove(models.Model):
     @api.depends('bom_line_id')
     def _compute_description_picking(self):
         super()._compute_description_picking()
-        bom_line_description = {}
-        for bom in self.bom_line_id.bom_id:
-            if bom.type != 'phantom':
-                continue
-            # mapped('id') to keep NewId
-            line_ids = self.bom_line_id.filtered(lambda line: line.bom_id == bom).mapped('id')
-            total = len(line_ids)
-            for i, line_id in enumerate(line_ids):
-                bom_line_description[line_id] = '%s - %d/%d' % (bom.display_name, i + 1, total)
-
-        for move in self:
-            if not move.description_picking_manual and move.bom_line_id.id in bom_line_description:
-                if move.description_picking == move.product_id.display_name:
-                    move.description_picking = ''
-                move.description_picking += ('\n' if move.description_picking else '') + bom_line_description.get(move.bom_line_id.id)
 
     @api.depends('raw_material_production_id.priority')
     def _compute_priority(self):
@@ -358,55 +343,10 @@ class StockMove(models.Model):
         return res
 
     def _action_confirm(self, merge=True, merge_into=False, create_proc=True):
-        moves = self.action_explode()
-        merge_into = merge_into and merge_into.action_explode()
-        # we go further with the list of ids potentially changed by action_explode
-        return super(StockMove, moves)._action_confirm(merge=merge, merge_into=merge_into, create_proc=create_proc)
-
-    def _action_done(self, cancel_backorder=False):
-        # explode kit moves that avoided the action_explode of any confirmation process
-        moves_to_explode = self.filtered(lambda m: m.product_id.is_kits and m.state not in ('draft', 'cancel'))
-        exploded_moves = moves_to_explode.action_explode()
-        moves = (self - moves_to_explode) | exploded_moves
-        return super(StockMove, moves)._action_done(cancel_backorder)
+        return super()._action_confirm(merge=merge, merge_into=merge_into, create_proc=create_proc)
 
     def _should_bypass_reservation(self, forced_location=False):
-        return super()._should_bypass_reservation(forced_location) or self.product_id.with_company(self.company_id).is_kits
-
-    def action_explode(self):
-        """ Explodes pickings """
-        # in order to explode a move, we must have a picking_type_id on that move because otherwise the move
-        # won't be assigned to a picking and it would be weird to explode a move into several if they aren't
-        # all grouped in the same picking.
-        moves_ids_to_return = OrderedSet()
-        moves_ids_to_unlink = OrderedSet()
-        phantom_moves_vals_list = []
-        for move in self:
-            if (not move.picking_type_id and not (move.is_scrap or self.env.context.get('skip_picking_assignation'))) or (move.production_id and move.production_id.product_id == move.product_id):
-                moves_ids_to_return.add(move.id)
-                continue
-            bom = self.env['mrp.bom'].sudo()._bom_find(move.product_id, company_id=move.company_id.id, bom_type='phantom')[move.product_id]
-            if not bom:
-                moves_ids_to_return.add(move.id)
-                continue
-            if move.uom_id.is_zero(move.product_uom_qty):
-                factor = move.uom_id._compute_quantity(move.quantity, bom.uom_id) / bom.product_qty
-            else:
-                factor = move.uom_id._compute_quantity(move.product_uom_qty, bom.uom_id) / bom.product_qty
-            _dummy, lines = bom.sudo().explode(move.product_id, factor, picking_type=bom.picking_type_id, never_attribute_values=move.never_product_template_attribute_value_ids)
-            phantom_moves_vals_list += move._generate_all_phantom_moves(lines)
-            # delete the move with original product which is not relevant anymore
-            moves_ids_to_unlink.add(move.id)
-
-        if phantom_moves_vals_list:
-            phantom_moves = self.env['stock.move'].create(phantom_moves_vals_list)
-            phantom_moves._adjust_procure_method()
-            moves_ids_to_return |= phantom_moves.action_explode().ids
-        move_to_unlink = self.env['stock.move'].browse(moves_ids_to_unlink).sudo()
-        move_to_unlink.quantity = 0
-        move_to_unlink._action_cancel()
-        move_to_unlink.unlink()
-        return self.env['stock.move'].browse(moves_ids_to_return)
+        return super()._should_bypass_reservation(forced_location)
 
     def action_show_details(self):
         self.ensure_one()
@@ -479,40 +419,6 @@ class StockMove(models.Model):
             return self.origin
         return super()._prepare_procurement_origin()
 
-    def _prepare_phantom_move_values(self, bom_line, product_qty, quantity_done):
-        return {
-            'picking_id': self.picking_id.id if self.picking_id else False,
-            'product_id': bom_line.product_id.id,
-            'uom_id': bom_line.uom_id.id,
-            'product_uom_qty': product_qty,
-            'quantity': quantity_done,
-            'picked': self.picked,
-            'bom_line_id': bom_line.id,
-            'description_picking': self.product_id.display_name,
-        }
-
-    def _generate_all_phantom_moves(self, exploded_lines_data):
-        self.ensure_one()
-        phantom_moves_vals_list = []
-        for bom_line, line_data in exploded_lines_data:
-            if self.uom_id.is_zero(self.product_uom_qty) or self.env.context.get('is_scrap'):
-                vals = self._generate_move_phantom(bom_line, 0, line_data['qty'])
-            else:
-                vals = self._generate_move_phantom(bom_line, line_data['qty'], 0)
-            for val in vals:
-                val['cost_share'] = line_data.get('line_cost_share', 0.0)
-            phantom_moves_vals_list += vals
-        return phantom_moves_vals_list
-
-    def _generate_move_phantom(self, bom_line, product_qty, quantity_done):
-        vals = []
-        if bom_line.product_id.type == 'consu':
-            vals = self.copy_data(default=self._prepare_phantom_move_values(bom_line, product_qty, quantity_done))
-            if self.state == 'assigned':
-                for v in vals:
-                    v['state'] = 'assigned'
-        return vals
-
     def _is_consuming(self):
         return super()._is_consuming() or self.picking_type_id.code == 'mrp_operation'
 
@@ -568,70 +474,11 @@ class StockMove(models.Model):
     def _prepare_merge_moves_distinct_fields(self):
         res = super()._prepare_merge_moves_distinct_fields()
         res += ['created_production_id', 'cost_share', 'production_group_id']
-        if self.bom_line_id and ("phantom" in self.bom_line_id.bom_id.mapped('type')):
-            res.append('bom_line_id')
         return res
 
     @api.model
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
         return super()._prepare_merge_negative_moves_excluded_distinct_fields() + ['created_production_id']
-
-    def _compute_kit_quantities(self, product_id, kit_qty, kit_bom, filters):
-        """ Computes the quantity delivered or received when a kit is sold or purchased.
-        A ratio 'qty_processed/qty_needed' is computed for each component, and the lowest one is kept
-        to define the kit's quantity delivered or received.
-        :param product_id: The kit itself a.k.a. the finished product
-        :param kit_qty: The quantity from the order line
-        :param kit_bom: The kit's BoM
-        :param filters: Dict of lambda expression to define the moves to consider and the ones to ignore
-        :return: The quantity delivered or received
-        """
-        qty_ratios = []
-        kit_qty = kit_qty / kit_bom.product_qty
-        boms, bom_sub_lines = kit_bom.explode(product_id, kit_qty)
-
-        def get_qty(move):
-            if move.picked:
-                return move.uom_id._compute_quantity(move.quantity, move.product_id.uom_id, rounding_method='HALF-UP')
-            else:
-                return move.product_qty
-
-        for bom_line, bom_line_data in bom_sub_lines:
-            # skip service since we never deliver them
-            if bom_line.product_id.type == 'service':
-                continue
-            if bom_line.uom_id.is_zero(bom_line_data['qty']):
-                # As BoMs allow components with 0 qty, a.k.a. optionnal components, we simply skip those
-                # to avoid a division by zero.
-                continue
-            bom_line_moves = self.filtered(lambda m: m.bom_line_id == bom_line)
-            if bom_line_moves:
-                # We compute the quantities needed of each components to make one kit.
-                # Then, we collect every relevant moves related to a specific component
-                # to know how many are considered delivered.
-                uom_qty_per_kit = bom_line_data['qty'] / (bom_line_data['original_qty'])
-                qty_per_kit = bom_line.uom_id._compute_quantity(uom_qty_per_kit / kit_bom.product_qty, bom_line.product_id.uom_id, round=False)
-                if not qty_per_kit:
-                    continue
-                # Due to multi-step only the last move of each chain should be considered
-                incoming_moves = bom_line_moves.filtered(filters['incoming_moves'])
-                final_incoming_moves = incoming_moves - incoming_moves.move_orig_ids
-                incoming_qty = sum(final_incoming_moves.mapped(get_qty))
-                outgoing_moves = bom_line_moves.filtered(filters['outgoing_moves'])
-                final_outgoing_moves = outgoing_moves - outgoing_moves.move_orig_ids
-                outgoing_qty = sum(final_outgoing_moves.mapped(get_qty))
-                qty_processed = incoming_qty - outgoing_qty
-                # We compute a ratio to know how many kits we can produce with this quantity of that specific component
-                qty_ratios.append(bom_line.product_id.uom_id.round(qty_processed / qty_per_kit))
-            else:
-                return 0.0
-        if qty_ratios:
-            # Now that we have every ratio by components, we keep the lowest one to know how many kits we can produce
-            # with the quantities delivered of each component. We use the floor division here because a 'partial kit'
-            # doesn't make sense.
-            return min(qty_ratios) // 1
-        else:
-            return 0.0
 
     def _update_candidate_moves_list(self, candidate_moves_set):
         super()._update_candidate_moves_list(candidate_moves_set)

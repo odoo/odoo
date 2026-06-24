@@ -643,7 +643,7 @@ class MrpProduction(models.Model):
                     never_attribute_values=production.never_product_template_attribute_value_ids)
 
                 for bom, bom_data in exploded_boms:
-                    # If the operations of the parent BoM and phantom BoM are the same, don't recreate work orders.
+                    # If the operations of the parent BoM are the same, don't recreate work orders.
                     if not (bom.operation_ids and (not bom_data['parent_line'] or bom_data['parent_line'].bom_id.operation_ids != bom.operation_ids)):
                         continue
                     for operation in bom.operation_ids:
@@ -1397,8 +1397,7 @@ class MrpProduction(models.Model):
             factor = production.uom_id._compute_quantity(production.product_qty, production.bom_id.uom_id, round=False) / production.bom_id.product_qty
             _boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id, never_attribute_values=production.never_product_template_attribute_value_ids)
             for bom_line, line_data in lines:
-                if bom_line.child_bom_id and bom_line.child_bom_id.type == 'phantom' or\
-                        bom_line.product_id.type != 'consu':
+                if bom_line.product_id.type != 'consu':
                     continue
                 operation = bom_line.operation_id.id or line_data['parent_line'] and line_data['parent_line'].operation_id.id
                 moves.append(production._get_move_raw_values(
@@ -1844,11 +1843,10 @@ class MrpProduction(models.Model):
                 # of the current MO's BoM and of the components that are kits), stash the BoMs' normalised factors (the
                 # values expected after layers of UoM conversions).
                 for bom, data in order.bom_id.explode(order.bom_id.product_id, order.product_qty)[0]:
-                    if bom.type == 'phantom' or bom == order.bom_id:
+                    if bom == order.bom_id:
                         bom_factors[bom.id] = bom_factor * data['qty'] / data['original_qty']
                         all_lines |= bom.bom_line_ids.filtered(lambda line:
-                            line.child_bom_id.type != 'phantom'
-                            and not line._skip_bom_line(order.product_id)
+                            not line._skip_bom_line(order.product_id)
                         )
                 missing_lines = all_lines - order.move_raw_ids.bom_line_id
             for move in order.move_raw_ids:
@@ -3256,19 +3254,13 @@ class MrpProduction(models.Model):
     def _resequence_workorders(self):
         """Re-sequence the workorders of a given production"""
         self.ensure_one()
-        # reorganize the workorders to put the kit operations first
-        phantom_workorders = self.workorder_ids.filtered(lambda wo: wo.operation_id.bom_id.type == 'phantom')
-        for index_wo, wo in enumerate(phantom_workorders):
-            wo.sequence = index_wo
-        offset = len(phantom_workorders)
-        non_phantom_workorders = self.workorder_ids - phantom_workorders
         operation_sequence_map = {op.id: index for index, op in enumerate(self.bom_id.operation_ids)}
-        for index_wo, wo in enumerate(non_phantom_workorders):
+        for index_wo, wo in enumerate(self.workorder_ids):
             if wo.operation_id:
-                wo.sequence = operation_sequence_map.get(wo.operation_id.id, 0) + offset
+                wo.sequence = operation_sequence_map.get(wo.operation_id.id, 0)
                 wo.blocked_by_workorder_ids = [Command.clear()]
             else:
-                wo.sequence = index_wo + offset
+                wo.sequence = index_wo
         return True
 
     def _track_get_fields(self):

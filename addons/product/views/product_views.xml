@@ -139,16 +139,16 @@
                                         />
                                     </div>
 
-                                    <label for="standard_price" class="o_form_label" invisible="type == 'combo'
-                                        or (not is_product_variant and (
-                                            product_variant_count &gt; 1
-                                            or (product_variant_count == 0 and is_dynamically_created)
-                                        ))"/>
-                                    <div class="d-flex align-items-baseline gap-2" name="standard_price_uom" invisible="type == 'combo'
-                                        or (not is_product_variant and (
-                                            product_variant_count &gt; 1
-                                            or (product_variant_count == 0 and is_dynamically_created)
-                                        ))"
+                                    <label for="standard_price" class="o_form_label"                     invisible="type == 'combo' or type == 'kit'
+                        or (not is_product_variant and (
+                            product_variant_count &gt; 1
+                            or (product_variant_count == 0 and is_dynamically_created)
+                        ))"/>
+                                    <div class="d-flex align-items-baseline gap-2" name="standard_price_uom" invisible="type == 'combo' or type == 'kit'
+                        or (not is_product_variant and (
+                            product_variant_count &gt; 1
+                            or (product_variant_count == 0 and is_dynamically_created)
+                        ))"
                                     >
                                         
                                         <field
@@ -183,6 +183,17 @@
                             <group name="internal_notes" string="Internal Notes">
                                 <field colspan="2" name="description" nolabel="1" placeholder="This note is only for internal purposes."/>
                             </group>
+                        </page>
+                        <page string="Kit Components" name="kit_components" invisible="type != 'kit'">
+                            <field name="kit_line_ids" widget="one2many">
+                                <list string="Components" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="product_id"/>
+                                    <field name="product_qty"/>
+                                    <field name="uom_id" groups="uom.group_uom"/>
+                                    <field name="price_ratio"/>
+                                </list>
+                            </field>
                         </page>
                         <page string="Sales" name="sales" invisible="1 or not sale_ok">
                             <group name="sale" class="o_label_nowrap">
@@ -330,6 +341,7 @@
                 <filter string="Goods" name="goods" domain="[('type', '=', 'consu')]"/>
                 <filter string="Services" name="services" domain="[('type','=','service')]"/>
                 <filter string="Combo" name="combo" domain="[('type', '=', 'combo')]"/>
+                <filter string="Kit" name="kit" domain="[('type', '=', 'kit')]"/>
                 <separator/>
                 <filter string="Favorites" name="favorites" domain="[('is_favorite', '=', True)]"/>
                 <separator/>

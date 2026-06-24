@@ -155,49 +155,20 @@ class StockWarehouseOrderpoint(models.Model):
         return bom.uom_id
 
     def _quantity_in_progress(self):
-        bom_kits = self.env['mrp.bom']._bom_find(self.product_id, bom_type='phantom')
-        bom_kit_orderpoints = {
-            orderpoint: bom_kits[orderpoint.product_id]
-            for orderpoint in self
-            if orderpoint.product_id in bom_kits
-        }
-        orderpoints_without_kit = self - self.env['stock.warehouse.orderpoint'].concat(bom_kit_orderpoints.keys())
-        res = super(StockWarehouseOrderpoint, orderpoints_without_kit)._quantity_in_progress()
-        for orderpoint in bom_kit_orderpoints:
-            dummy, bom_sub_lines = bom_kit_orderpoints[orderpoint].explode(orderpoint.product_id, 1)
-            ratios_qty_available = []
-            # total = qty_available + in_progress
-            ratios_total = []
-            for bom_line, bom_line_data in bom_sub_lines:
-                component = bom_line.product_id
-                if not component.is_storable or bom_line.uom_id.is_zero(bom_line_data['qty']):
-                    continue
-                uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
-                qty_per_kit = bom_line.uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, raise_if_failure=False)
-                if not qty_per_kit:
-                    continue
-                qty_by_product_location, dummy = component._get_quantity_in_progress(orderpoint.location_id.ids)
-                qty_in_progress = qty_by_product_location.get((component.id, orderpoint.location_id.id), 0.0)
-                qty_available = component.qty_available / qty_per_kit
-                ratios_qty_available.append(qty_available)
-                ratios_total.append(qty_available + (qty_in_progress / qty_per_kit))
-            # For a kit, the quantity in progress is :
-            #  (the quantity if we have received all in-progress components) - (the quantity using only available components)
-            product_qty = min(ratios_total or [0]) - min(ratios_qty_available or [0])
-            res[orderpoint.id] = orderpoint.product_id.uom_id._compute_quantity(product_qty, orderpoint.uom_id, round=False)
+        res = super()._quantity_in_progress()
 
         # add quantities coming from draft MOs
         productions_group = self.env['mrp.production']._read_group(
             [
                 ('state', '=', 'draft'),
-                ('product_id', 'in', orderpoints_without_kit.product_id.ids),
-                ('forecasted_location_id', 'in', orderpoints_without_kit.location_id.ids),
+                ('product_id', 'in', self.product_id.ids),
+                ('forecasted_location_id', 'in', self.location_id.ids),
                 ('id', 'not in', self.env.context.get('ignore_mo_ids', [])),
             ],
             ['product_id', 'forecasted_location_id'],
             ['product_uom_qty:sum'],
         )
-        orderpoint_map = {(op.product_id.id, op.location_id.id): op for op in orderpoints_without_kit}
+        orderpoint_map = {(op.product_id.id, op.location_id.id): op for op in self}
         for product, location, qty in productions_group:
             if orderpoint := orderpoint_map.get((product.id, location.id)):
                 res[orderpoint.id] += qty
@@ -206,7 +177,7 @@ class StockWarehouseOrderpoint(models.Model):
         # by the end of the stock forecast
         in_progress_productions = self.env['mrp.production'].search([
             ('state', '=', 'confirmed'),
-            ('orderpoint_id', 'in', orderpoints_without_kit.ids),
+            ('orderpoint_id', 'in', self.ids),
             ('id', 'not in', self.env.context.get('ignore_mo_ids', [])),
         ])
         for prod in in_progress_productions:

@@ -99,6 +99,26 @@ class PurchaseOrderLine(models.Model):
         ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
     is_downpayment = fields.Boolean()
     selected_seller_id = fields.Many2one('product.supplierinfo', compute='_compute_selected_seller_id', help='Technical field to get the vendor pricelist used to generate this line')
+    linked_line_id = fields.Many2one(
+        string="Linked Order Line",
+        comodel_name="purchase.order.line",
+        ondelete="cascade",
+        domain="[('order_id', '=', order_id)]",
+        copy=False,
+        index='btree_not_null',
+    )
+    linked_line_ids = fields.One2many(
+        string="Linked Order Lines",
+        comodel_name="purchase.order.line",
+        inverse_name="linked_line_id",
+    )
+    kit_line_id = fields.Many2one(
+        string="Kit Component Line",
+        comodel_name="product.kit.line",
+        ondelete="set null",
+        copy=False,
+        index='btree_not_null',
+    )
 
     _accountable_required_fields = models.Constraint(
         'CHECK(display_type IS NOT NULL OR is_downpayment OR (product_id IS NOT NULL AND uom_id IS NOT NULL AND date_planned IS NOT NULL))',
@@ -262,7 +282,10 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_id', 'product_id.type')
     def _compute_qty_received_method(self):
         for line in self:
-            if line.product_id and line.product_id.type in ['consu', 'service']:
+            if line.product_id and line.product_id.type == 'kit':
+                # Kit header lines are never received; receiving tracked on component lines.
+                line.qty_received_method = False
+            elif line.product_id and line.product_id.type in ['consu', 'service']:
                 line.qty_received_method = 'manual'
             else:
                 line.qty_received_method = False
@@ -345,7 +368,39 @@ class PurchaseOrderLine(models.Model):
             if line.product_id and line.order_id.state == 'purchase':
                 msg = _("Extra line with %s ", line.product_id.display_name)
                 line.order_id.message_post(body=msg)
+
+        # Explode kit products into component lines
+        kit_lines = lines.filtered(
+            lambda l: l.product_id.type == "kit" and not l.kit_line_id and not l.linked_line_id
+        )
+        kit_lines._create_kit_component_lines()
+
         return lines
+
+    def _create_kit_component_lines(self):
+        """Create component lines for kit header lines."""
+        component_vals_list = []
+        for kit_line in self:
+            kit_product = kit_line.product_id
+            kit_qty = kit_line.product_qty
+            for kit_component in kit_product.product_tmpl_id.kit_line_ids:
+                price_unit = (
+                    kit_line.price_unit * kit_component.price_ratio / 100.0
+                    if kit_component.price_ratio
+                    else 0.0
+                )
+                component_vals_list.append({
+                    "order_id": kit_line.order_id.id,
+                    "product_id": kit_component.product_id.id,
+                    "product_qty": kit_qty * kit_component.product_qty,
+                    "uom_id": kit_component.uom_id.id,
+                    "price_unit": price_unit,
+                    "linked_line_id": kit_line.id,
+                    "kit_line_id": kit_component.id,
+                    "date_planned": kit_line.date_planned,
+                })
+        if component_vals_list:
+            self.create(component_vals_list)
 
     def write(self, vals):
         values = vals
@@ -382,7 +437,28 @@ class PurchaseOrderLine(models.Model):
                     delta_qty_received = line.uom_id._compute_quantity(delta_qty_received, line.product_id.uom_id)
                     line.product_id.with_context(skip_qty_available_update=True).qty_available += delta_qty_received
                 line._track_qty_received(values['qty_received'])
-        return super().write(values)
+
+        result = super().write(values)
+
+        # Rescale kit component lines when the kit header qty changes
+        if 'product_qty' in values and not self.env.context.get('kit_rescale'):
+            kit_headers = self.filtered(lambda l: l.product_id.type == 'kit')
+            if kit_headers:
+                kit_headers._rescale_kit_component_lines(values['product_qty'])
+
+        return result
+
+    def _rescale_kit_component_lines(self, new_kit_qty):
+        """Update component quantities when a kit header line's quantity changes."""
+        for kit_line in self.filtered(lambda l: l.product_id.type == 'kit'):
+            old_qty = kit_line.product_qty
+            if not old_qty:
+                continue
+            ratio = new_kit_qty / old_qty
+            for component_line in kit_line.linked_line_ids.filtered('kit_line_id'):
+                component_line.with_context(
+                    kit_rescale=True
+                ).product_qty = component_line.product_qty * ratio
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_purchase(self):

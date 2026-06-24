@@ -67,6 +67,7 @@ class ProductTemplate(models.Model):
             ('consu', "Goods"),
             ('service', "Service"),
             ('combo', "Combo"),
+            ('kit', "Kit"),
         ],
         required=True,
         default='consu',
@@ -75,6 +76,12 @@ class ProductTemplate(models.Model):
         string="Combo Choices",
         comodel_name='product.combo',
         check_company=True,
+    )
+    kit_line_ids = fields.One2many(
+        string="Kit Components",
+        comodel_name='product.kit.line',
+        inverse_name='product_tmpl_id',
+        copy=True,
     )
     service_tracking = fields.Selection(selection=[
             ('no', 'Nothing'),
@@ -262,7 +269,7 @@ class ProductTemplate(models.Model):
 
     @api.depends('type')
     def _compute_service_tracking(self):
-        self.filtered(lambda product: product.type != 'service').service_tracking = 'no'
+        self.filtered(lambda product: product.type not in ('service', 'kit')).service_tracking = 'no'
 
     def _compute_purchase_ok(self):
         pass
@@ -603,7 +610,28 @@ class ProductTemplate(models.Model):
                     "This product is part of a combo, so its type can't be changed to \"combo\"."
                 ))
             self.purchase_ok = False
+        elif self.type == 'kit':
+            if self.attribute_line_ids:
+                raise UserError(_("Kit products can't have attributes."))
         return {}
+
+    @api.constrains('type', 'kit_line_ids')
+    def _check_kit_line_ids_not_empty(self):
+        for template in self:
+            if template.type == 'kit' and not template.kit_line_ids:
+                raise ValidationError(_("A kit product must contain at least 1 component."))
+
+    @api.constrains('type', 'kit_line_ids')
+    def _check_kit_price_ratio(self):
+        for template in self:
+            if template.type != 'kit':
+                continue
+            total = sum(line.price_ratio for line in template.kit_line_ids)
+            if total and abs(total - 100.0) > 0.01:
+                raise ValidationError(
+                    _("The sum of price ratios for kit '%(kit)s' must equal 100%% (currently %(total).2f%%).",
+                      kit=template.display_name, total=total)
+                )
 
     @api.onchange('uom_id')
     def _onchange_uom_id(self):
