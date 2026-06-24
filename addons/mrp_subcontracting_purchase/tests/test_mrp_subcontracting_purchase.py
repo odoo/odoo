@@ -1104,3 +1104,27 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         self.assertIn(replenish_wizard.route_id, buy_routes)
         manufacture_route = self.env['stock.rule'].search([('action', '=', 'manufacture'), ('company_id', '=', self.company.id)]).route_id
         self.assertNotIn(manufacture_route, replenish_wizard.allowed_route_ids)
+
+    def test_monthly_demand_subcontracting_resupply(self):
+        """Ensure that monthly demand is correctly counted for subcontracting
+        resupply transfers generated from a subcontracting purchase order.
+        """
+        resupply_product = self.comp3
+        resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')], limit=1)
+        resupply_product.route_ids = [Command.link(resupply_sub_on_order_route.id)]
+        self.finished2.seller_ids = [Command.create({
+            'partner_id': self.subcontractor_partner1.id,
+            'delay': 0,
+        })]
+
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': self.finished2.id,
+            'qty_to_order': 20,
+        })
+        orderpoint.action_replenish()
+        po = self.env['purchase.order'].search([('partner_id', '=', self.subcontractor_partner1.id)], limit=1)
+        po.button_confirm()
+
+        # Monthly demand should be 20.0 with and without warehouse.
+        self.assertEqual(resupply_product.with_context(warehouse_id=self.warehouse.id).monthly_demand, 20.0)
+        self.assertEqual(resupply_product.monthly_demand, 20.0)
