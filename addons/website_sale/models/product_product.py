@@ -4,6 +4,7 @@ from collections import OrderedDict
 from urllib.parse import urlencode, urlparse
 
 from odoo import api, fields, models
+from odoo.fields import Domain
 from odoo.http import request
 
 
@@ -417,3 +418,12 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
         return self.active and self.sale_ok and self.website_published
+
+    def _mail_get_operation_for_mail_message_operation(self, message_operation):
+        if (
+            message_operation == "create"
+            and not self.env.user._is_internal()
+            and not self.env["website"].is_view_active("website_sale.product_comment")
+        ):
+            return [(Domain.TRUE, "write")]
+        return super()._mail_get_operation_for_mail_message_operation(message_operation)
