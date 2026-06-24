@@ -135,6 +135,12 @@ class AccountMove(models.Model):
             return self.delivery_date
         return super()._get_invoice_currency_rate_date()
 
+    def _get_default_currency_rate_date(self):
+        self.ensure_one()
+        if self.country_code == 'HU' and self.taxable_supply_date:
+            return self.taxable_supply_date
+        return super()._get_default_currency_rate_date()
+
     @api.depends('l10n_hu_edi_messages')
     def _compute_message_html(self):
         for move in self:
