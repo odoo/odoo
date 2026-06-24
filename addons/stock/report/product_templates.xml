@@ -28,5 +28,18 @@
                 </t>
             </t>
         </template>
+        <template id="label_location_template_view">
+            <t t-foreach="docs" t-as="location">
+                <t t-translation="off">
+^XA^CI28
+^FO100,50
+^A0N,44,33^FD<t t-out="location.display_name"/>^FS
+^FO100,150^BY3
+^BCN,100,Y,N,N
+^FD<t t-out="location.barcode or location.name"/>^FS
+^XZ
+                </t>
+            </t>
+        </template>
     </data>
 </odoo>
