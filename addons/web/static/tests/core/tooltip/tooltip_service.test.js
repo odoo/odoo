@@ -2,7 +2,12 @@ import { expect, test } from "@odoo/hoot";
 import { click, drag, hover, leave, pointerDown, pointerUp, queryOne } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, mockTouch, runAllTimers } from "@odoo/hoot-mock";
 import { Component, xml, proxy } from "@odoo/owl";
-import { makeMockEnv, mockService, mountWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    makeMockEnv,
+    mockService,
+    mountWithCleanup,
+    registerTemplate,
+} from "@web/../tests/web_test_helpers";
 
 import { popoverService } from "@web/core/popover/popover_service";
 import { OPEN_DELAY, SHOW_AFTER_DELAY } from "@web/core/tooltip/tooltip_service";
@@ -186,12 +191,9 @@ test("tooltip with a template, no info", async () => {
         `;
     }
 
+    registerTemplate("my_tooltip_template", /* xml */ `<i t-out='env.tooltip_text'/>`);
     await makeMockEnv({ tooltip_text: "tooltip" });
-    await mountWithCleanup(MyComponent, {
-        templates: {
-            my_tooltip_template: /* xml */ `<i t-out='env.tooltip_text'/>`,
-        },
-    });
+    await mountWithCleanup(MyComponent);
 
     expect(".o-tooltip").toHaveCount(0);
 
@@ -218,16 +220,16 @@ test("tooltip with a template and info", async () => {
         }
     }
 
-    await mountWithCleanup(MyComponent, {
-        templates: {
-            my_tooltip_template: /* xml */ `
-                <ul>
-                    <li>X: <t t-out="x"/></li>
-                    <li>Y: <t t-out="y"/></li>
-                </ul>
-            `,
-        },
-    });
+    registerTemplate(
+        "my_tooltip_template",
+        /* xml */ `
+            <ul>
+                <li>X: <t t-out="x"/></li>
+                <li>Y: <t t-out="y"/></li>
+            </ul>
+        `
+    );
+    await mountWithCleanup(MyComponent);
 
     expect(".o-tooltip").toHaveCount(0);
 

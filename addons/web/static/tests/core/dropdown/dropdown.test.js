@@ -24,6 +24,7 @@ import {
     mockService,
     mountWithCleanup,
     patchWithCleanup,
+    registerTemplate,
 } from "@web/../tests/web_test_helpers";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -1170,25 +1171,24 @@ test("multi-level dropdown: recursive template can be rendered", async () => {
         }
     }
 
-    await mountWithCleanup(Parent, {
-        templates: {
-            ["recursive.Template"]: /* xml */ `
-                <Dropdown state="this.dropdown">
-                    <button><t t-out="name" /></button>
-                    <t t-set-slot="content">
-                        <t t-foreach="items" t-as="item" t-key="item_index">
+    registerTemplate(
+        "recursive.Template",
+        /* xml */ `
+        <Dropdown state="this.dropdown">
+            <button><t t-out="name" /></button>
+            <t t-set-slot="content">
+                <t t-foreach="items" t-as="item" t-key="item_index">
 
-                            <t t-if="!item.children.length">
-                                <DropdownItem><t t-out="item.name"/></DropdownItem>
-                            </t>
-
-                            <t t-else="" t-call="recursive.Template" name="item.name" items="item.children"/>
-                        </t>
+                    <t t-if="!item.children.length">
+                        <DropdownItem><t t-out="item.name"/></DropdownItem>
                     </t>
-                </Dropdown>
-            `,
-        },
-    });
+
+                    <t t-else="" t-call="recursive.Template" name="item.name" items="item.children"/>
+                </t>
+            </t>
+        </Dropdown>`
+    );
+    await mountWithCleanup(Parent);
 
     // Each sub-dropdown needs a tick to open
     await animationFrame();
