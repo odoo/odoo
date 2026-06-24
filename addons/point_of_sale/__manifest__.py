@@ -155,7 +155,7 @@
             "point_of_sale/static/src/utils.js",
             'bus/static/src/services/bus_service.js',
             'bus/static/src/services/worker_service.js',
-            'bus/static/src/bus_parameters_service.js',
+            'bus/static/src/bus_parameters_plugin.js',
             'bus/static/src/multi_tab_service.js',
             'bus/static/src/multi_tab_shared_worker_service.js',
             'bus/static/src/multi_tab_fallback_service.js',
