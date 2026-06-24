@@ -44,7 +44,7 @@ class HrVersion(models.Model):
         start_dt = date_start.replace(tzinfo=UTC) if not date_start.tzinfo else date_start
         end_dt = date_stop.replace(tzinfo=UTC) if not date_stop.tzinfo else date_stop
 
-        # working-time leaves from the leave pipeline (e.g. TOIL output leaves)
+        # working-time leaves from the leave pipeline
         working_time_leaves = self.env['hr.leave'].sudo().search([
             ('work_entry_type_id.count_as', '=', 'working_time'),
             ('employee_id', 'in', self.employee_id.ids),
@@ -63,12 +63,10 @@ class HrVersion(models.Model):
 
         knocked_raw = defaultdict(list)
         time_on_raw = defaultdict(list)
-        # actual-worked coverage per rid — used to suppress duplicate wt-leave output from base
         att_coverage_raw = defaultdict(list)
         dummy = self.env['resource.calendar']
         attendance_vals = []
 
-        # wt-leave intervals per rid — compete with attendance in priority resolution below
         wt_iv_by_rid = defaultdict(list)
         for leave in working_time_leaves:
             rid = leave.employee_id.resource_id.id
@@ -84,8 +82,8 @@ class HrVersion(models.Model):
             default_wet_id = version._get_default_work_entry_type_id()
             emp_atts = attendances.filtered(lambda a: a.employee_id == version.employee_id)
 
-            raw_att = []  # (check_in, check_out, wet) for priority resolution
-            att_by_range = {}  # (check_in, check_out) -> hr.attendance record
+            raw_att = []
+            att_by_range = {}
             for att in emp_atts:
                 check_in = att.check_in.replace(tzinfo=UTC)
                 check_out = att.check_out.replace(tzinfo=UTC)
@@ -104,15 +102,17 @@ class HrVersion(models.Model):
                     wet = att.work_entry_type_id or self.env['hr.work.entry.type'].browse(default_wet_id)
                     raw_att.append((check_in, check_out, wet))
                     att_by_range[check_in, check_out] = att
-                    # deficit outputs do not represent actual attendance for wt-leave clipping
-                    if not att.is_time_rule_output or att.source_attendance_id:
-                        att_coverage_raw[rid].append((check_in, check_out, dummy))
 
-            # priority-resolve attendance intervals against wt-leave intervals (best sequence wins)
+            # priority-resolve attendance against wt-leave intervals (lower sequence wins)
             combined = raw_att + wt_iv_by_rid.get(rid, [])
             for seg_start, seg_stop, wet in self._resolve_attendance_intervals(combined):
                 att = att_by_range.get((seg_start, seg_stop))
-                extra = version._get_more_vals_attendance_interval((seg_start, seg_stop, att)) if att else []
+                if not att:
+                    # wt-leave won; base always generates wt-leave work entries
+                    continue
+                # attendance won: record so base suppresses its wt-leave output
+                att_coverage_raw[rid].append((seg_start, seg_stop, dummy))
+                extra = version._get_more_vals_attendance_interval((seg_start, seg_stop, att))
                 attendance_vals.append({
                     'date_start': seg_start.replace(tzinfo=None),
                     'date_stop': seg_stop.replace(tzinfo=None),
@@ -169,8 +169,7 @@ class HrVersion(models.Model):
             return list(Intervals([interval], keep_distinct=True) - time_on)
 
         if count_as == 'working_time':
-            # attendance-covered portions are handled via priority resolution in attendance_vals;
-            # suppress the base's duplicate output for those portions
+            # suppress base's wt-leave output for portions where attendance won the fight
             att_coverage = self.env.context.get('att_coverage_intervals', {}).get(
                 self.employee_id.resource_id.id, Intervals()
             )
