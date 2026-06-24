@@ -3,6 +3,7 @@ import { changesToOrder } from "@point_of_sale/app/models/utils/order_change";
 
 export function generateKioskPreparationReceipt(store) {
     const order = store.currentOrder;
+    order.floating_order_name ||= "Self-Order 0001";
     const orderData = order.getOrderData();
     const changes = changesToOrder(order, store.config.preparationCategories).new;
 
