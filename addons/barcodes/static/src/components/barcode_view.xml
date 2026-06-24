@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="barcodes.BarcodeView">
+        <div class="d-flex align-items-center justify-content-center text-center py-3 px-5 text-bg-800">
+            <div t-if="this.state.barcodeScannerOpened" t-ref="this.barcodeRef">
+                <div>
+                    <BarcodeVideoScanner
+                        t-if="this.state.barcodeScannerSupported"
+                        facingMode="this.props.facingMode"
+                        onError.bind="this.onError"
+                        onResult.bind="this.onResult"
+                    />
+                    <div t-else="" t-custom-ref="videoPreview"
+                        class="h-100 d-flex flex-column justify-content-center align-items-center gap-1">
+                        <i class="fa fa-2x fa-camera text-muted" />
+                        <strong>No access to your camera</strong>
+                        <div class="d-flex gap-2 justify-content-center align-items-center">
+                            <span>Edit access to scan</span>
+                            <button
+                                class="btn btn-link p-0 m-0 border-0 w-auto h-auto "
+                                style="min-width: auto; min-height: auto;"
+                                data-tooltip="Click the icon in the browser on the left of the address bar and toggle Camera permissions."
+                            >
+                                <i class="fa fa-question-circle"/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <BarcodeInput
+                        onSubmit.bind="this.inputButtonSubmit"
+                        placeholder="this.props.placeholder"
+                        inputFocus="this.props.inputFocus"
+                    />
+                </div>
+            </div>
+            <div t-else="" class="d-flex gap-1 align-items-center">
+                <t t-call-slot="barcode_preview"/>
+                <t t-call-slot="barcode_open_button" t-on-click="this.toggleView"/>
+            </div>
+        </div>
+    </t>
+</templates>
