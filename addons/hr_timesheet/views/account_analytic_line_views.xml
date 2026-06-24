@@ -296,7 +296,7 @@
                     <templates>
                         <t t-name="card">
                             <div class="d-flex gap-1 flex-row">
-                                <div class="align-self-center me-2" invisible="context.get('default_date')">
+                                <div class="align-self-center me-2 flex-shrink-0" invisible="context.get('default_date')">
                                     <field name="date" invisible="1"/>
                                     <div t-out="luxon.DateTime.fromISO(record.date.raw_value).toFormat('MMM d')"/>
                                     <div t-out="luxon.DateTime.fromISO(record.date.raw_value).toFormat('yyyy')"/>
