@@ -18,6 +18,7 @@ from odoo.tools import _, frozendict
 from odoo.tools.float_utils import float_compare
 from odoo.tools.misc import unquote
 from odoo.tools.safe_eval import safe_eval, test_python_expr
+from odoo.tools.json import stringify_keys
 
 _logger = logging.getLogger(__name__)
 _server_action_logger = _logger.getChild("server_action_safe_eval")
@@ -861,6 +862,7 @@ class IrActionsServer(models.Model):
                         payload.update(sample_record.read(self.webhook_field_ids.mapped('name'), load=None)[0])
                     else:
                         payload[field.name] = WEBHOOK_SAMPLE_VALUES[field.ttype] if field.ttype in WEBHOOK_SAMPLE_VALUES else WEBHOOK_SAMPLE_VALUES[None]
+            payload = stringify_keys(payload)
             action.webhook_sample_payload = json.dumps(payload, indent=4, sort_keys=True, default=str)
 
     @api.constrains('code')
