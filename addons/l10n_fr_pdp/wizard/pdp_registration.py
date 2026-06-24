@@ -129,6 +129,13 @@ class PdpRegistration(models.TransientModel):
                     'action_text': self.env._("Go to company"),
                     'action': wizard.company_id._get_records_action(name=self.env._("Check Company Data")),
                 }
+            # Check SIREN
+            kyc_siren = wizard._get_kyc_siren()
+            if wizard.siren_number != kyc_siren:
+                warnings['kyc_siren_warning'] = {
+                    'level': 'info',
+                    'message': self.env._("%s will be used as SIREN for the KYC", kyc_siren),
+                }
             # Check identifier
             if (
                 wizard.pdp_identifier
@@ -161,6 +168,12 @@ class PdpRegistration(models.TransientModel):
     # -------------------------------------------------------------------------
     # HELPERS
     # -------------------------------------------------------------------------
+
+    def _get_kyc_siren(self):
+        kyc_siren_param = self.env['ir.config_parameter'].sudo().get_str('l10n_fr_pdp.kyc_siren')
+        match = PDP_identifier_re.match(kyc_siren_param)
+        kyc_siren = match and match.group(1)
+        return kyc_siren or self.siren_number
 
     def _ensure_mandatory_fields(self):
         if not self.contact_email:
@@ -221,7 +234,7 @@ class PdpRegistration(models.TransientModel):
         base_url = self.company_id._pdp_get_iap_url()
         response = iap_tools.iap_jsonrpc(f'{base_url}/api/id_authentication/1/authentication', params={
             'db_uuid': self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
-            'vat': self.siren_number,
+            'vat': self._get_kyc_siren(),
             'auth_email': self.contact_email,
             'company_name': self.company_id.name,
             'localization': 'FR',
@@ -293,7 +306,7 @@ class PdpRegistration(models.TransientModel):
         base_url = self.company_id._pdp_get_iap_url()
         response = iap_tools.iap_jsonrpc(f'{base_url}/api/id_authentication/1/get_authentication_hash', params={
             'db_uuid': self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
-            'vat': self.siren_number,
+            'vat': self._get_kyc_siren(),
             'auth_email': self.contact_email,
             'object_uuid': self.pdp_authentication_uuid,
         })
