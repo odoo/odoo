@@ -6,6 +6,7 @@ from . import account_move
 from . import account_move_send
 from . import account_peppol_response
 from . import ir_attachment
+from . import ir_config_parameter
 from . import pdp_flow
 from . import pdp_flow_xml_builder
 from . import res_company
