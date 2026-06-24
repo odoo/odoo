@@ -4,7 +4,7 @@
 import werkzeug.urls
 
 from odoo import http
-from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.addons.website.models.ir_http import sitemap_group, sitemap_qs2dom
 from odoo.addons.website_google_map.controllers.main import GoogleMap
 from odoo.tools.translate import _, LazyTranslate
 from odoo.http import request
@@ -32,6 +32,7 @@ class WebsiteCustomer(GoogleMap):
 
         return domain
 
+    @sitemap_group("customers")
     def sitemap_industry(env, rule, qs):
         if not qs or qs.lower() in '/customers':
             yield {'loc': '/customers'}
