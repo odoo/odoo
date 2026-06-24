@@ -79,13 +79,22 @@
             <field name="binding_type">report</field>
         </record>
         <record id="action_report_location_barcode" model="ir.actions.report">
-            <field name="name">Location Barcode</field>
+            <field name="name">Location Barcode (PDF)</field>
             <field name="model">stock.location</field>
             <field name="report_type">qweb-pdf</field>
             <field name="report_name">stock.report_location_barcode</field>
             <field name="report_file">stock.report_location_barcode</field>
             <field name="paperformat_id" ref="product.paperformat_label_sheet"/>
             <field name="print_report_name">'Location - %s' % object.name</field>
+            <field name="binding_model_id" ref="model_stock_location"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="action_label_location_template" model="ir.actions.report">
+            <field name="name">Location Barcode (ZPL)</field>
+            <field name="model">stock.location</field>
+            <field name="report_type">qweb-text</field>
+            <field name="report_name">stock.label_location_template_view</field>
+            <field name="report_file">stock.label_location_template_view</field>
             <field name="binding_model_id" ref="model_stock_location"/>
             <field name="binding_type">report</field>
         </record>
