@@ -1265,3 +1265,28 @@ test("No 'Labels Position' option when the form has no field", async () => {
     expect(":iframe form .s_website_form_field").toHaveCount(0);
     expect("div:has(>span:contains('Labels Position'))").toHaveCount(0);
 });
+
+test("Don't crash when current form model is not allowed", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+
+    // Set one form model to still see the dropdown while not being the default
+    // current form model.
+    patchWithCleanup(webModels.IrModel.prototype, {
+        get_compatible_form_models() {
+            return [
+                {
+                    id: 687,
+                    model: "hr.applicant",
+                    name: "Applicant",
+                    website_form_label: "Apply for a Job",
+                    website_form_key: "apply_job",
+                },
+            ];
+        },
+    });
+
+    await setupWebsiteBuilderWithSnippet("s_website_form");
+    await contains(":iframe section").click();
+    await contains("[data-label='Action'] button:contains('None')").click();
+    await contains("[data-action-id='selectAction']:contains('Apply for a Job')").click();
+});
