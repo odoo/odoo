@@ -303,3 +303,25 @@ class TestUblImportBis3InvoiceBERetrieveTax(TestUblImportBis3InvoiceBE):
                 'amount_total': 81.07,
             }],
         )
+
+    def test_import_invoice_fixed_tax_fuzzy(self):
+        tax_21 = self.percent_tax(21.0)
+
+        recupel = self.fixed_tax(0.12, name='REC 0.12', include_base_amount=True, sequence=0)
+
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_import_invoice_fixed_tax_fuzzy',
+            journal=self.company_data['default_journal_sale'],
+        )
+
+        self.assertRecordValues(
+            invoice.invoice_line_ids,
+            [
+                {
+                    'quantity': 2.0,
+                    'price_unit': 199.875,
+                    'discount': 0.0,
+                    'tax_ids': (recupel + tax_21).ids,
+                },
+            ],
+        )
