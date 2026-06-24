@@ -6,8 +6,8 @@ class ResUsers(models.Model):
     _inherit = ['res.users', 'pos.load.mixin']
 
     @api.model
-    def _get_minimal_light_user_groups(self):
-        groups = super()._get_minimal_light_user_groups()
+    def _get_maximal_light_user_groups(self):
+        groups = super()._get_maximal_light_user_groups()
         group = self.env.ref('point_of_sale.group_pos_user', raise_if_not_found=False)
         return groups | group if group else groups
 
