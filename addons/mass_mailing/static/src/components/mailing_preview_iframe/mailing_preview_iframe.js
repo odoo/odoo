@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { renderToFragment } from "@web/core/utils/render";
@@ -36,25 +36,25 @@ export class MailingPreviewIframe extends Component {
             });
         });
 
-        useLayoutEffect(
-            () => {
-                this.iframeLoaded.promise.then(() => {
-                    this.iframeRef.el?.contentDocument.body.replaceChildren(
-                        this.renderBodyContent()
-                    );
-                });
-            },
-            () => [this.props.record.data.preview_record_ref]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         this.iframeLoaded.promise.then(() => {
+        //             this.iframeRef.el?.contentDocument.body.replaceChildren(
+        //                 this.renderBodyContent()
+        //             );
+        //         });
+        //     },
+        //     () => [this.props.record.data.preview_record_ref]
+        // );
 
-        useLayoutEffect(
-            () => {
-                this.iframeLoaded.promise.then(() => {
-                    this.throttledResize();
-                });
-            },
-            () => [this.state.isMobileMode]
-        );
+        // useLayoutEffect(
+        //     () => {
+        //         this.iframeLoaded.promise.then(() => {
+        //             this.throttledResize();
+        //         });
+        //     },
+        //     () => [this.state.isMobileMode]
+        // );
 
         useBus(this.ui.bus, "resize", () => {
             this.iframeLoaded.promise.then(() => {
