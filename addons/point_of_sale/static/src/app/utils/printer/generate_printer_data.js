@@ -38,7 +38,7 @@ export class GeneratePrinterData {
         return {
             company_state_name: this.company.state_id?.name || "",
             company_country_name: this.company.country_id?.name || "",
-            vat_label: this.company.country_id.vat_label || "Tax ID",
+            vat_label: this.company.country_id?.vat_label || "Tax ID",
         };
     }
 
