@@ -69,15 +69,28 @@ class AccountMove(models.Model):
         for move in self:
             withholding_deducted_currency = 0.0
             if move.is_invoice(include_receipts=True):
-                withholding_deducted_currency = sum(
-                    line.currency_id._convert(
-                        from_amount=-move.direction_sign * line.amount_currency,
-                        to_currency=move.currency_id,
-                        company=move.company_id,
-                        date=move.date,
+                for line in move.line_ids.filtered(lambda l: l.display_type == 'payment_term'):
+                    partial_fname, counterpart_line_fname, amount_fname = (
+                        ('matched_credit_ids', 'credit_move_id', 'credit_amount_currency')
+                        if line.debit else
+                        ('matched_debit_ids', 'debit_move_id', 'debit_amount_currency')
                     )
-                    for line in move.line_ids.reconciled_lines_ids.move_id.line_ids.filtered(lambda line: line.tax_line_id.is_withholding_tax)
-                )
+                    for counterpart_move, partials in line[partial_fname].grouped(lambda p: p[counterpart_line_fname].move_id).items():
+                        ratio = sum(
+                            partial[amount_fname] / counterpart_amount
+                            for partial in partials
+                            if (counterpart_amount := partial[counterpart_line_fname].amount_currency)
+                        )
+                        withholding_deducted_currency += sum(
+                            wth_line.currency_id._convert(
+                                from_amount=-wth_line.amount_currency * ratio,
+                                to_currency=move.currency_id,
+                                company=move.company_id,
+                                date=counterpart_move.date,
+                                round=False,
+                            )
+                            for wth_line in counterpart_move.line_ids.filtered('tax_line_id.is_withholding_tax')
+                        )
             move.withholding_deducted_amount_currency = withholding_deducted_currency
 
     @api.depends("withholding_total_amount_currency", "withholding_deducted_amount_currency")
