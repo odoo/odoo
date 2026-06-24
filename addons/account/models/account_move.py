@@ -5187,7 +5187,18 @@ class AccountMove(models.Model):
             source, target = tax.invoice_repartition_line_ids, tax.refund_repartition_line_ids
             if tax_rep.document_type == 'refund':
                 source, target = target, source
-            return target[list(source).index(tax_rep)]
+            source_reps = source.filtered(
+                lambda rep: rep.repartition_type == tax_rep.repartition_type
+            ).sorted(lambda rep: (rep.sequence, rep.id))
+            target_reps = target.filtered(
+                lambda rep: rep.repartition_type == tax_rep.repartition_type
+            ).sorted(lambda rep: (rep.sequence, rep.id))
+
+            index_by_id = {rep.id: i for i, rep in enumerate(source_reps)}
+            index = index_by_id.get(tax_rep.id)
+            if index is None:
+                return self.env['account.tax.repartition.line']
+            return target_reps[index:index + 1]
 
         company = self.company_id
         payment_term_line = self.line_ids.filtered(lambda x: x.display_type == 'payment_term')
@@ -5208,9 +5219,10 @@ class AccountMove(models.Model):
         # Get the current tax amounts in the current invoice.
         tax_amounts = defaultdict(lambda: {'amount_currency': 0.0, 'balance': 0.0})
         for line in tax_lines:
-            tax_rep_id = inverse_tax_rep(line.tax_repartition_line_id).id
-            tax_amounts[tax_rep_id]['amount_currency'] += line.amount_currency
-            tax_amounts[tax_rep_id]['balance'] += line.balance
+            if (inverse_rep := inverse_tax_rep(line.tax_repartition_line_id)):
+                tax_rep_id = inverse_rep.id
+                tax_amounts[tax_rep_id]['amount_currency'] += line.amount_currency
+                tax_amounts[tax_rep_id]['balance'] += line.balance
 
         base_lines = [
             {
