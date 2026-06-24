@@ -85,12 +85,14 @@ class TestUi(TestPointOfSaleHttpCommon):
                 (0, 0, {
                     'title': 'Name',
                     'question_type': 'name',
-                    'once_per_order': False,
                 }),
                 (0, 0, {
                     'title': 'Email',
                     'question_type': 'email',
-                    'once_per_order': False,
+                }),
+                (0, 0, {
+                    'title': 'Phone',
+                    'question_type': 'phone',
                 }),
             ]
         })
@@ -293,7 +295,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(len(no_partner_registration), 1)
         self.assertEqual(no_partner_registration.name, "TEST")
         self.assertEqual(no_partner_registration.email, "2@test.com")
-
+        self.assertEqual(no_partner_registration.phone, "1234567890")
         partner_registrations = registrations.filtered(lambda r: r.partner_id == event_partner)
         self.assertEqual(len(partner_registrations), 3)
 
@@ -301,6 +303,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         r2 = partner_registrations.filtered(lambda r: r.name == "Name 2")
         self.assertEqual(len(r2), 1)
         self.assertEqual(r2.email, "2@test.com")
+        self.assertEqual(r2.phone, "+99999999")
 
         # Customer during order, partial registration information
         r3 = partner_registrations.filtered(lambda r: r.name == "Name 3")
