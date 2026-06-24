@@ -382,7 +382,7 @@ class SaleOrderLine(models.Model):
         for so_line in so_line_new_project.sorted(lambda sol: (sol.sequence, sol.id)):
             project = False
             if so_line.product_id.service_tracking in ['project_only', 'task_in_project']:
-                project = so_line.project_id
+                project = so_line.project_id or so_line.order_id.project_id
             if not project and _can_create_project(so_line):
                 # If no reference analytic account exists, set the account of the generated project to the account of the project's SO or create a new one
                 account = map_account_per_so.get(so_line.order_id.id)
