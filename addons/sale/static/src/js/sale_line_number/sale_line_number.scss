@@ -5,7 +5,7 @@
         counter-reset: sale_line_counter;
     }
 
-    .o_line_number::before {
+    .o_data_row:not(.o_hide_composition) .o_line_number::before {
         content: counter(sale_line_counter);
         counter-increment: sale_line_counter;
     }
@@ -29,10 +29,13 @@
                 content: counter(sale_line_counter);
                 counter-increment: sale_line_counter;
 
-                width: var(--LineNumber-width);
+                width: calc(var(--LineNumber-width) + #{$table-cell-padding-x-sm} * 2);
                 padding: $table-cell-padding-y-sm $table-cell-padding-x-sm;
+                white-space: nowrap;
+                overflow: hidden;
 
-                font-weight: normal;
+                font-weight: normal !important;
+                font-style: normal !important;
             }
         }
     }
