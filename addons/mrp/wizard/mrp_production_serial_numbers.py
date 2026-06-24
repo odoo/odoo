@@ -21,7 +21,11 @@ class MrpProductionSerials(models.TransientModel):
     @api.depends('production_id')
     def _compute_lot_name(self):
         for wizard in self:
-            wizard.serial_numbers = '\n'.join(wizard.production_id.lot_producing_ids.mapped('name'))
+            names = wizard.production_id.lot_producing_ids.mapped('name')
+            extra_lot = wizard.env.context.get('extra_lot')
+            if extra_lot and extra_lot not in names:
+                names.append(extra_lot)
+            wizard.serial_numbers = '\n'.join(names)
             if wizard.lot_name:
                 continue
             wizard.lot_name = wizard.production_id.lot_producing_ids[:1].name
