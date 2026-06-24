@@ -1,3 +1,4 @@
+import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { SettingsBlock } from "../settings/settings_block";
@@ -28,10 +29,8 @@ export class ResConfigDevTool extends Component {
         this.isTests = odoo.debug.includes("tests");
 
         this.action = useService("action");
-        this.demo = useService("demo_data");
-
         onWillStart(async () => {
-            this.isDemoDataActive = await this.demo.isDemoDataActive();
+            this.isDemoDataActive = await rpc("/base_setup/demo_active", {}, {cache: true});
         });
     }
 
