@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { PageDependencies } from "@website/components/dialog/page_properties";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { UrlField, urlField } from "@web/views/fields/url/url_field";
@@ -33,32 +33,32 @@ class PageUrlField extends UrlField {
         // parameters as soon as the user t.
         // TODO should find a way to do this more automatically (and option in
         // the framework? or at least a t-on-input?)
-        useLayoutEffect(
-            (inputEl) => {
-                if (inputEl) {
-                    const originalValue = inputEl.value;
-                    let previousValueChanged = false;
-                    const fireChangeEvent = debounce(() => {
-                        const currentValue = inputEl.value;
-                        const valueChanged = currentValue !== originalValue;
-                        if (valueChanged !== previousValueChanged) {
-                            if (currentValue[0] !== "/") {
-                                inputEl.value = `/${currentValue}`;
-                            }
-                            inputEl.dispatchEvent(new Event("change"));
-                            inputEl.value = currentValue;
-                            previousValueChanged = valueChanged;
-                        }
-                    }, 100);
-
-                    inputEl.addEventListener("input", fireChangeEvent);
-                    return () => {
-                        inputEl.removeEventListener("input", fireChangeEvent);
-                    };
-                }
-            },
-            () => [this.inputRef.el]
-        );
+        // useLayoutEffect(
+        //     (inputEl) => {
+        //         if (inputEl) {
+        //             const originalValue = inputEl.value;
+        //             let previousValueChanged = false;
+        //             const fireChangeEvent = debounce(() => {
+        //                 const currentValue = inputEl.value;
+        //                 const valueChanged = currentValue !== originalValue;
+        //                 if (valueChanged !== previousValueChanged) {
+        //                     if (currentValue[0] !== "/") {
+        //                         inputEl.value = `/${currentValue}`;
+        //                     }
+        //                     inputEl.dispatchEvent(new Event("change"));
+        //                     inputEl.value = currentValue;
+        //                     previousValueChanged = valueChanged;
+        //                 }
+        //             }, 100);
+        //
+        //             inputEl.addEventListener("input", fireChangeEvent);
+        //             return () => {
+        //                 inputEl.removeEventListener("input", fireChangeEvent);
+        //             };
+        //         }
+        //     },
+        //     () => [this.inputRef.el]
+        // );
     }
 
     get value() {
