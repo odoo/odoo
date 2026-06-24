@@ -1,56 +1,13 @@
-from odoo import _, api, fields, models
-from odoo.exceptions import RedirectWarning, UserError
+from odoo import _, fields, models
+from odoo.exceptions import RedirectWarning
 
 
 class PosConfig(models.Model):
     _inherit = 'pos.config'
 
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code')
-    l10n_pt_pos_at_series_id = fields.Many2one(
-        'l10n_pt.at.series',
-        string="Official Series of the Tax Authority",
-        copy=False,
-        domain="[('document_type', '=', 'pos_order')]",
-    )
-    l10n_pt_pos_at_series_id_domain = fields.Binary(string="AT Series Domain", compute="_compute_l10n_pt_pos_at_series_id_domain")
-
-    _sql_constraints = [
-        (
-            'unique_l10n_pt_pos_at_series_id',
-            'unique(l10n_pt_pos_at_series_id)',
-            'An AT series can only be assigned to one POS configuration.'
-        )
-    ]
-
-    @api.depends('company_id')
-    def _compute_l10n_pt_pos_at_series_id_domain(self):
-        """
-        Allows the domain used in the PoS Config view to include both company-exclusive series and
-        non-exclusive series belonging to the root company.
-        """
-        for config in self:
-            config.l10n_pt_pos_at_series_id_domain = [
-                '|',
-                '&', ('company_id', '=', config.company_id.id), ('company_exclusive_series', '=', True),
-                '&', ('company_id', 'in', config.company_id.parent_ids.ids), ('company_exclusive_series', '=', False),
-                ('active', '=', False),
-                ('document_type', '=', 'pos_order'),
-            ]
 
     def _l10n_pt_pos_verify_config(self):
-        if not self.l10n_pt_pos_at_series_id or self.l10n_pt_pos_at_series_id.document_type != 'pos_order' or not self.l10n_pt_pos_at_series_id.active:
-            raise RedirectWarning(
-                _('You have to set an Official Series of type Invoice/Receipt (FR) for this POS configuration.'),
-                {
-                    "view_mode": "form",
-                    "res_model": "pos.config",
-                    "type": "ir.actions.act_window",
-                    "res_id": self.id,
-                    "views": [[self.env.ref("l10n_pt_pos.pos_config_view_form_inherit_pt").id, "form"]],
-                },
-                _("Go to the POS configuration")
-            )
-
         if incorrect_products := self.env['product.product'].search([
             '|', ('default_code', '=', False), ('taxes_id', '=', False),
             ('available_in_pos', '=', True),
@@ -101,10 +58,3 @@ class PosConfig(models.Model):
                 continue
             config._l10n_pt_pos_verify_config()
         return super().open_ui()
-
-    def write(self, vals):
-        for config in self:
-            if 'l10n_pt_pos_at_series_id' in vals and config.has_active_session:
-                raise UserError(_("You cannot change the AT series of a Point of Sale with an open session. "
-                                  "Try again once the session is closed."))
-        return super().write(vals)

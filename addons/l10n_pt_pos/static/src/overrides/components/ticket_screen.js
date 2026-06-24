@@ -5,12 +5,14 @@ import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_sc
 
 patch(TicketScreen.prototype, {
     async _fetchSyncedOrders() {
-        // When opening the refund screen for instance, we need to mark all cached orders
-        // as not up to date, so that we fetch the latest names provided by the backend.
+        await super._fetchSyncedOrders(...arguments);
         if (!this.pos.isPortugueseCompany()) {
-            return super._fetchSyncedOrders(...arguments);
+            return;
         }
-        const cachedOrders = this.pos.models["pos.order"].getAll();
+        const configId = this.pos.config.id;
+        const cachedOrders = this.pos.models["pos.order"]
+            .getAll()
+            .filter((o) => o.config_id?.id === configId);
         const regex = /[^/^]+\/[0-9]+/;
         const idsNotUpToDate = [];
         for (const order of cachedOrders) {

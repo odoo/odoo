@@ -6,6 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 AT_SERIES_ACCOUNTING_DOCUMENT_TYPES = [
     ('out_invoice', 'Invoice (FT)'),
     ('out_receipt', 'Simplified Invoice (FS)'),
+    ('out_invoice_receipt', 'Invoice/Receipt (FR)'),
     ('out_refund', 'Credit Note (NC)'),
     ('debit_note', 'Debit Note (ND)'),
     ('payment_receipt', 'Payment Receipt (RG)'),
@@ -128,7 +129,7 @@ class L10nPtATSeries(models.Model):
         for series in self:
             if series.document_type == 'payment_receipt' and not series.journal_id:
                 raise ValidationError(_("A Payment Journal is required when you have Payment Receipt lines."))
-            if series.document_type in {'out_receipt', 'out_invoice', 'out_refund', 'debit_note'} and not series.journal_id:
+            if series.document_type in {'out_receipt', 'out_invoice', 'out_invoice_receipt', 'out_refund', 'debit_note'} and not series.journal_id:
                 raise ValidationError(_("A Sales Journal is required for account move document types (FT, FS, NC, ND)."))
 
     def _get_at_code(self):

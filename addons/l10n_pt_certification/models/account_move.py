@@ -16,6 +16,7 @@ from odoo.addons.l10n_pt_certification.const import (
 AT_SERIES_TYPE_SAFT_TYPE_MAP = {
     'out_invoice': 'FT',
     'out_receipt': 'FS',
+    'out_invoice_receipt': 'FR',
     'out_refund': 'NC',
     'debit_note': 'ND',
 }
@@ -173,23 +174,6 @@ class AccountMove(models.Model):
             raise UserError(_("You cannot reverse an invoice that has already been fully reversed."))
         return super().action_reverse()
 
-    def action_post(self):
-        for move in self.filtered(lambda m: m._is_pt_move()).sorted('invoice_date'):
-            if not move.journal_id:
-                raise UserError(_("You cannot post an invoice without a journal. Please select a journal and try again."))
-
-            move._check_l10n_pt_simplified_invoice_limit()
-
-            if not move.l10n_pt_at_series_id:
-                move.l10n_pt_at_series_id = move._l10n_pt_create_at_series_from_sequence()
-
-            move._check_l10n_pt_lines_taxes()
-            move._check_l10n_pt_at_series_id()
-            move._check_l10n_pt_dates()
-            move.name = move.l10n_pt_at_series_id._l10n_pt_get_document_number_sequence().next_by_id()
-            move._check_l10n_pt_document_number()
-        return super().action_post()
-
     def write(self, vals):
         # Since the AT Series defines the document number, it cannot be changed to avoid holes in the
         # document number sequence.
@@ -336,6 +320,14 @@ class AccountMove(models.Model):
                 limit=float_repr(limit, 2),
             ))
 
+    def _l10n_pt_is_invoice_receipt(self):
+        self.ensure_one()
+        return False
+        # return (
+        #     self._is_pt_move()
+        #     and self.move_type == 'out_invoice'
+        # )
+
     @api.onchange('l10n_pt_global_discount')
     def _inverse_l10n_pt_global_discount(self):
         for move in self.filtered(lambda m: m.country_code == 'PT'):
@@ -395,10 +387,23 @@ class AccountMove(models.Model):
             raise UserError(_("There exists secured invoices with a lock date ahead of the present time."))
 
     def _post(self, soft=True):
-        """
-        EXTENDS 'account'. The PT certification requires that credit notes, line by line and in total,
-        do not have bigger values than the original invoice.
-        """
+        for move in self.filtered(lambda m: m._is_pt_move()).sorted('invoice_date'):
+            if not move.journal_id:
+                raise UserError(_("You cannot post an invoice without a journal. Please select a journal and try again."))
+
+            move._check_l10n_pt_simplified_invoice_limit()
+            if move._l10n_pt_is_invoice_receipt():
+                move.l10n_pt_document_type = 'out_invoice_receipt'
+
+            if not move.l10n_pt_at_series_id:
+                move.l10n_pt_at_series_id = move._l10n_pt_create_at_series_from_sequence()
+
+            move._check_l10n_pt_lines_taxes()
+            move._check_l10n_pt_at_series_id()
+            move._check_l10n_pt_dates()
+            move.name = move.l10n_pt_at_series_id._l10n_pt_get_document_number_sequence().next_by_id()
+            move._check_l10n_pt_document_number()
+
         self.filtered(lambda m: m.country_code == 'PT')._check_reversal_amounts_and_quantities(only_reconciled=False)
         return super()._post(soft)
 
@@ -462,6 +467,8 @@ class AccountMove(models.Model):
             seq_source = self._get_starting_sequence()
             if self.l10n_pt_document_type == 'out_receipt':
                 seq_source = 'S' + seq_source
+            elif self.l10n_pt_document_type == 'out_invoice_receipt':
+                seq_source = 'REC' + seq_source
 
         format_string, format_values = self._get_sequence_format_param(seq_source)
 
