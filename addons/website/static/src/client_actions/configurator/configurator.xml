@@ -435,15 +435,12 @@
                         <t t-foreach="this.state.themes" t-as="theme" t-key="theme_index">
                             <t t-call="website.Configurator.ThemePreviewCard" previewTheme="theme"/>
                         </t>
-                    </div>
-                    <t t-if="!this.showViewMoreThemesButton and this.state.extraThemes.length" t-foreach="Array(Math.ceil(this.state.extraThemes.length/3))" t-as="nbrExtraRow" t-key="nbrExtraRow_index">
-                        <div class="grid gap-4 pb-4">
-                            <t t-foreach="Array(3)" t-as="nbrExtraCol" t-key="nbrExtraCol_index">
-                                <t t-call="website.Configurator.ThemePreviewCard"
-                                   previewTheme="this.state.extraThemes[nbrExtraRow_index * 3 + nbrExtraCol_index]"/>
+                        <t t-if="!this.showViewMoreThemesButton and this.state.extraThemes.length">
+                            <t t-foreach="this.state.extraThemes" t-as="extraTheme" t-key="extraTheme.name">
+                                <t t-call="website.Configurator.ThemePreviewCard" previewTheme="extraTheme"/>
                             </t>
-                        </div>
-                    </t>
+                        </t>
+                    </div>
                 </t>
             </div>
             <div
