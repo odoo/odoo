@@ -3,8 +3,7 @@ import { stepUtils } from "@web_tour/tour_utils";
 import { showProductColumn } from "@account/js/tours/tour_utils";
 
 
-registry.category("web_tour.tours").add('main_flow_tour', {
-    steps: () => [
+registry.category("web_tour.tours").add('main_flow_tour', [
 ...stepUtils.toggleHomeMenu().map(step => {
     step.isActive = ["community", "mobile"];
     return step
@@ -1342,4 +1341,4 @@ stepUtils.toggleHomeMenu()[0],
     isActive: ["desktop", "enterprise"],
     content: "check that we're back on the dashboard",
     trigger: 'a:contains("Sales")',
-}]});
+}]);

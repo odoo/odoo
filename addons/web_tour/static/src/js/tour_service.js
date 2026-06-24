@@ -28,11 +28,11 @@ const stepSchema = {
     id: t.string().optional(),
     isActive: t.array(t.string()).optional(),
     run: t.or([t.string(), t.function(), t.boolean()]).optional(),
+    content: t.string().optional(),
 };
 
 const stepSchemaAuto = {
     ...stepSchema,
-    content: t.string().optional(),
     expectUnloadPage: t.boolean().optional(),
     timeout: t.customValidator(t.number(), (value) => value >= 0 && value <= 60000).optional(),
     tooltipPosition: t
@@ -42,7 +42,6 @@ const stepSchemaAuto = {
 
 const stepSchemaOnboarding = {
     ...stepSchema,
-    content: t.or([t.string(), t.object()]).optional(), //allow object(_t && markup)
     tooltipPosition: t
         .customValidator(t.string(), (value) => ["top", "bottom", "left", "right"].includes(value))
         .optional(),
@@ -55,13 +54,26 @@ const stepSchemaDebug = {
     break: t.boolean().optional(),
 };
 
-const tourSchema = {
+const deprecatedTourSchema = {
     steps: t.function(),
-    undeterministicTour_doNotCopy: t.boolean().optional(),
+    undeterministicTour_doNotCopy: t.boolean(),
 };
 
 const tourRegistry = registry.category("web_tour.tours");
-tourRegistry.addValidation(t.strictObject(tourSchema));
+tourRegistry.addValidation(
+    t.customValidator(
+        t.or([t.array(t.strictObject(stepSchemaDebug)), t.strictObject(deprecatedTourSchema)]),
+        (value) => {
+            if (!Array.isArray(value)) {
+                console.warn(
+                    `Tour registered with deprecated schema { steps: () => [] }. ` +
+                        `Use a plain array instead: registry.category("web_tour.tours").add("name", [step1, step2, ...])`
+                );
+            }
+            return true;
+        }
+    )
+);
 
 export class TourService {
     /**
@@ -170,7 +182,8 @@ export class TourService {
                 return;
             }
             if (!tour.steps.length && tourRegistry.contains(tour.name)) {
-                tour.steps = tourRegistry.get(tour.name).steps;
+                const registeredTour = tourRegistry.get(tour.name);
+                tour.steps = Array.isArray(registeredTour) ? registeredTour : registeredTour.steps;
             }
             return {
                 ...tour,
@@ -178,8 +191,8 @@ export class TourService {
                     typeof tour.steps === "function"
                         ? tour.steps()
                         : Array.isArray(tour.steps)
-                          ? tour.steps
-                          : [],
+                        ? tour.steps
+                        : [],
             };
         }
         // Automatic tour (come from registry)
@@ -189,6 +202,9 @@ export class TourService {
             if (!tour) {
                 console.error(`Tour '${name}' is not found in registry 'web_tour.tours'.`);
                 return;
+            }
+            if (Array.isArray(tour)) {
+                return { name, steps: tour };
             }
             return {
                 ...tour,
