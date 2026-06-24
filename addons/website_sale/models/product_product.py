@@ -382,3 +382,14 @@ class ProductProduct(models.Model):
     def _apply_taxes_to_price(self, *args, **kwargs):
         self.ensure_one()
         return self.product_tmpl_id._apply_taxes_to_price(*args, product=self, **kwargs)
+
+    def _can_add_to_stock_notifications(self):
+        """Return whether the product is eligible for stock notifications.
+
+        Note: `self.ensure_one()`
+
+        :return: True if the product is active, saleable, and published on the website
+        :rtype: bool
+        """
+        self.ensure_one()
+        return self.active and self.sale_ok and self.website_published
