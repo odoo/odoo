@@ -440,18 +440,19 @@ class ResUsers(models.Model):
     def _compute_role(self):
         # ``role`` is a plain projection of group membership; there is no Python
         # difference between a Light and a regular user. A Light user is simply an
-        # internal user whose extra privileges are limited to the minimal light
-        # set -- any access beyond that reads as a regular User here.
-        minimal = self._get_minimal_light_user_groups()
+        # internal user whose access is exactly the internal-user baseline plus
+        # the minimal light set -- any access beyond that reads as a regular User.
         group_user = self.env.ref('base.group_user')
         group_no_one = self.env.ref('base.group_no_one')
-        baseline = group_user.all_implied_ids + group_no_one
+        # Compare full group closures (not the raw minimal set) so the projection
+        # holds even when the light groups imply, or are implied by, other groups.
+        light_groups = (group_user + self._get_minimal_light_user_groups()).all_implied_ids - group_no_one
         for user in self:
             if user.has_group('base.group_system'):
                 user.role = 'group_system'
             elif user.has_group('base.group_user'):
-                extra = user.all_group_ids._origin - baseline
-                user.role = 'light' if extra == minimal else 'group_user'
+                user_groups = user.all_group_ids._origin - group_no_one
+                user.role = 'light' if user_groups == light_groups else 'group_user'
             else:
                 user.role = False
 
