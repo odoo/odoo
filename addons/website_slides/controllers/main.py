@@ -12,7 +12,7 @@ from odoo import fields, http, tools, _
 from odoo.addons.base.models.ir_qweb import keep_query
 from odoo.addons.portal.controllers.thread import PortalWebClientController
 from odoo.addons.website.controllers.main import QueryURL
-from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.addons.website.models.ir_http import sitemap_qs2dom, sitemap_group
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, ValidationError, UserError, MissingError
 from odoo.fields import Domain
@@ -40,14 +40,16 @@ class WebsiteSlides(WebsiteProfile):
         'date': 'create_date desc',
     }
 
+    @sitemap_group("courses")
     def sitemap_slide(env, rule, qs):
         Channel = env['slide.channel']
         dom = sitemap_qs2dom(qs=qs, route='/slides/', field=Channel._rec_name)
-        dom &= env.website.website_domain()
-        for channel in Channel.search(dom):
-            loc = '/slides/%s' % env['ir.http']._slug(channel)
+        channels = Channel.search_fetch(dom, ['write_date', 'seo_name', 'name'])
+        channels_lastmod = channels._get_sitemap_lastmod_map()
+        for channel in channels:
+            loc = f'/slides/{env["ir.http"]._slug(channel)}'
             if not qs or qs.lower() in loc:
-                yield {'loc': loc}
+                yield {'loc': loc, 'lastmod': channels_lastmod[channel.id].date()}
 
     def _slide_render_context_base(self):
         return {
@@ -397,6 +399,7 @@ class WebsiteSlides(WebsiteProfile):
     def _has_slide_channel_search(self, my=None, slug_tags=None, slide_category=None, **post):
         return my or post.get('search') or slug_tags or post.get('tag') or slide_category
 
+    @sitemap_group("courses")
     def sitemap_slides_channel(env, rule, qs):
         if not qs or qs.lower() in '/slides':
             yield {"loc": "/slides"}
@@ -978,16 +981,23 @@ class WebsiteSlides(WebsiteProfile):
     # SLIDE.SLIDE MAIN / SEARCH
     # --------------------------------------------------
 
+    @sitemap_group("courses")
     def sitemap_slide_view(env, rule, qs):
-        slides = env['slide.slide'].search([('website_published', '=', True), ('active', '=', True)])
+        slides = env['slide.slide'].with_context(prefetch_fields=False).search_fetch(
+            [('website_published', '=', True), ('active', '=', True)],
+            ['name', 'seo_name', 'channel_id', 'is_category', 'write_date'],
+        )
+        channels_lastmod = slides.filtered('is_category').channel_id._get_sitemap_lastmod_map()
         for slide in slides:
             if slide.is_category:
                 loc = slide.channel_id.website_url
+                lastmod = channels_lastmod[slide.channel_id.id]
             else:
                 loc = slide.website_url
+                lastmod = slide.write_date
 
             if not qs or qs.lower() in loc.lower():
-                yield {'loc': loc}
+                yield {'loc': loc, 'lastmod': lastmod.date()}
 
     @http.route('/slides/slide/<model("slide.slide"):slide>', type='http', auth="public",
                 website=True, sitemap=sitemap_slide_view, handle_params_access_error=handle_wslide_error)

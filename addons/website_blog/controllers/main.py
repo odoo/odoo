@@ -178,7 +178,8 @@ class WebsiteBlog(http.Controller):
     def sitemap_blog(env, rule, qs):
         Blog = env['blog.blog']
         domain = env.website.website_domain()
-        blogs = tools.lazy(lambda: Blog.search(domain, order="sequence"))
+        # Fetch only what the loop reads, not the HTML columns.
+        blogs = Blog.search_fetch(domain, ['seo_name', 'name'], order="sequence")
         slug = env['ir.http']._slug
 
         def match(loc):
@@ -239,7 +240,7 @@ class WebsiteBlog(http.Controller):
 
         return request.render("website_blog.blog_post_short", values)
 
-    @http.route(['''/blog/<model("blog.blog"):blog>/feed'''], type='http', auth="public", website=True, sitemap=True)
+    @http.route(['''/blog/<model("blog.blog"):blog>/feed'''], type='http', auth="public", website=True, sitemap=False)
     def blog_feed(self, blog, limit='15', **kwargs):
         v = {}
         v['blog'] = blog
@@ -262,18 +263,33 @@ class WebsiteBlog(http.Controller):
     def sitemap_blog_post(env, rule, qs):
         BlogPost = env['blog.post']
         IrHttp = env['ir.http']
-        posts = BlogPost.search([('website_published', '=', True)])
+        slug = IrHttp._slug
+        # Fetch only what the loop reads, here and on the related records.
+        posts = BlogPost.with_context(prefetch_fields=False).search_fetch(
+            [('website_published', '=', True)],
+            ['name', 'seo_name', 'blog_id', 'write_date'],
+        )
+        posts_lastmod = {post.id: post.write_date for post in posts}
+        if env.website.is_view_active('website_blog.opt_blog_post_comment'):
+            # With comments on, the page shows a count of them: a new comment
+            # changes the page without touching the post.
+            for res_id, lastmod in env['mail.message']._read_group(
+                [('model', '=', 'blog.post'), ('res_id', 'in', posts.ids)],
+                groupby=['res_id'], aggregates=['write_date:max'],
+            ):
+                posts_lastmod[res_id] = max(posts_lastmod[res_id], lastmod)
+        blog_slugs = {blog.id: slug(blog) for blog in posts.blog_id}
 
         for post in posts:
             # Canonical path: /blog/<blog>/<post>
             blog = post.blog_id
-            canonical_url = f"/blog/{IrHttp._slug(blog)}/{IrHttp._slug(post)}"
+            canonical_url = f"/blog/{blog_slugs[blog.id]}/{slug(post)}"
 
             if not qs or qs.lower() in canonical_url.lower():
                 # blog posts should also have lastmod for seo purposes.
                 yield {
                     "loc": canonical_url,
-                    "lastmod": (post.write_date or post.create_date).date(),
+                    "lastmod": posts_lastmod[post.id].date(),
                 }
 
     @http.route([

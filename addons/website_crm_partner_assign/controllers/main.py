@@ -10,6 +10,7 @@ from odoo import http
 from odoo.http import request
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.website.models.ir_http import sitemap_group
 from odoo.addons.website_google_map.controllers.main import GoogleMap
 from odoo.addons.website_partnership.controllers.main import WebsitePartnership
 from odoo.fields import Domain
@@ -197,6 +198,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
 
         return domain
 
+    @sitemap_group("partners")
     def sitemap_partners(env, rule, qs):
         if not qs or qs.lower() in '/partners':
             yield {'loc': '/partners'}
