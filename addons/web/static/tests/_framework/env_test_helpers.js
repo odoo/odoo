@@ -15,6 +15,7 @@ import { MockServer, makeMockServer, onRpc } from "./mock_server/mock_server";
 import { App } from "@odoo/owl";
 import { services } from "@web/core/services";
 import { rpc } from "@web/core/network/rpc";
+import { getTemplate } from "@web/core/templates";
 
 /**
  * @typedef {Record<keyof Services, any>} Dependencies
@@ -167,6 +168,7 @@ export async function makeMockEnv(partialEnv, options = {}) {
     const app =
         options.app ||
         makeApp({
+            getTemplate,
             plugins: services,
         });
 
