@@ -138,20 +138,6 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'person_vals': self._get_partner_person_vals(partner),
         }
 
-    def _get_invoice_period_vals_list(self, invoice):
-        # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
-        # If you change this method, please change the corresponding new helper as well (at the end of this file).
-        """
-        For now, we cannot fill this data from an invoice
-        This corresponds to the 'delivery or invoice period'. For UBL Bis 3, in the case of intra-community supply,
-        the Actual delivery date (BT-72) or the Invoicing period (BG-14) should be present under the form:
-        {
-            'start_date': str,
-            'end_date': str,
-        }.
-        """
-        return []
-
     def _get_additional_document_reference_list(self, invoice):
         # Old helper used only for non-BIS3 UBLs, removed in saas-18.4.
         # If you change this method, please change the corresponding new helper as well (at the end of this file).
@@ -557,11 +543,6 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             for vals in allowance_charge_vals_list
             if vals.get('from_fixed_tax')
         )
-        period_vals = {}
-        # deferred_start_date & deferred_end_date are enterprise-only fields
-        if line._fields.get('deferred_start_date') and (line.deferred_start_date or line.deferred_end_date):
-            period_vals.update({'start_date': line.deferred_start_date})
-            period_vals.update({'end_date': line.deferred_end_date})
         return {
             'currency': line.currency_id,
             'currency_dp': self._get_currency_decimal_places(line.currency_id),
@@ -573,7 +554,6 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'tax_total_vals': self._get_invoice_line_tax_totals_vals_list(line, taxes_vals),
             'item_vals': self._get_invoice_line_item_vals(line, taxes_vals),
             'price_vals': self._get_invoice_line_price_vals(line),
-            'invoice_period_vals_list': [period_vals] if period_vals else []
         }
 
     def _get_invoice_monetary_total_vals(self, invoice, taxes_vals, line_extension_amount, allowance_total_amount, charge_total_amount):
@@ -732,7 +712,6 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'SignatureType_template': 'account_edi_ubl_cii.ubl_20_SignatureType',
             'ResponseType_template': 'account_edi_ubl_cii.ubl_20_ResponseType',
             'DeliveryType_template': 'account_edi_ubl_cii.ubl_20_DeliveryType',
-            'InvoicePeriodType_template': 'account_edi_ubl_cii.ubl_20_InvoicePeriodType',
             'MonetaryTotalType_template': 'account_edi_ubl_cii.ubl_20_MonetaryTotalType',
             'InvoiceLineType_template': 'account_edi_ubl_cii.ubl_20_InvoiceLineType',
             'CreditNoteLineType_template': 'account_edi_ubl_cii.ubl_20_CreditNoteLineType',
@@ -938,8 +917,6 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
     def _get_invoice_line_xpaths(self, document_type=False, qty_factor=1):
         return {
-            'deferred_start_date': './{*}InvoicePeriod/{*}StartDate',
-            'deferred_end_date': './{*}InvoicePeriod/{*}EndDate',
             'date_format': '%Y-%m-%d',
         }
 
