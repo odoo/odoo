@@ -6,7 +6,7 @@ import { ProductCard } from "@point_of_sale/app/components/product_card/product_
 import { NumericInput } from "@point_of_sale/app/components/inputs/numeric_input/numeric_input";
 import { useService } from "@web/core/utils/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { isValidEmail, isValidPhone } from "@point_of_sale/utils";
+import { isValidEmail } from "@point_of_sale/utils";
 
 export class EventRegistrationPopup extends Component {
     static template = "pos_event.EventRegistrationPopup";
@@ -90,6 +90,12 @@ export class EventRegistrationPopup extends Component {
         this.state.touchedFields.add(this.getFieldKey(questionId, ticketIndex));
     }
 
+    isValidPhone(string) {
+        const phone = string.replace(/[\s.\-()]/g, "");
+        const pattern = /^\+?\d{8,18}$/;
+        return pattern.test(phone);
+    }
+
     validateQuestion(question, value) {
         if (question.is_mandatory_answer && !value?.trim()) {
             return false;
@@ -101,7 +107,7 @@ export class EventRegistrationPopup extends Component {
             return isValidEmail(value);
         }
         if (question.question_type === "phone") {
-            return isValidPhone(value);
+            return this.isValidPhone(value);
         }
         return true;
     }
