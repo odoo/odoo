@@ -81,6 +81,7 @@ class HrLeave(models.Model):
             country = self.env['hr.employee'].browse(employee).company_id.country_id or self.env.company.country_id
             domain = [
                 ('country_id', '=', country.id),
+                ('time_off_selectable', '=', True),
                 '|',
                     ('requires_allocation', '=', False),
                     ('has_valid_allocation', '=', True)
@@ -673,7 +674,7 @@ class HrLeave(models.Model):
     @api.depends('employee_id', 'request_date_from', 'request_date_to')
     def _compute_work_entry_type_id(self):
         for holiday in self:
-            allowed_country_ids = [holiday.employee_id.company_id.country_id.id, False]
+            allowed_country_ids = [holiday.employee_id.company_id.country_id.id]
             local_work_entry_types = self.env['hr.work.entry.type'].with_context(default_date_from=holiday.request_date_from, default_date_to=holiday.request_date_to).search([('country_id', 'in', allowed_country_ids)])
             if holiday.work_entry_type_id and holiday.work_entry_type_id in local_work_entry_types:
                 continue
