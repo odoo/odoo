@@ -425,7 +425,7 @@ class ResUsers(models.Model):
                 user.password = user.new_password
 
     @api.model
-    def _get_minimal_light_user_groups(self):
+    def _get_maximal_light_user_groups(self):
         """Groups a Light user is granted on top of the internal-user baseline.
 
         A Light user is a regular internal user (``base.group_user``) whose only
@@ -437,26 +437,26 @@ class ResUsers(models.Model):
         return self.env['res.groups']
 
     @api.model
-    def _sync_minimal_light_user_groups(self):
+    def _sync_maximal_light_user_groups(self):
         """Grant the current minimal Light-user group set to existing Light users.
 
         A Light user is provisioned with the minimal group set known at creation
         time, so a module installed *afterwards* would never grant its group to
         the Light users that predate it. Modules that extend
-        :meth:`_get_minimal_light_user_groups` call this from their
+        :meth:`_get_maximal_light_user_groups` call this from their
         ``post_init_hook`` to top up those users: every internal user whose access
         does not exceed the Light baseline is brought up to the full minimal set.
         """
-        minimal = self._get_minimal_light_user_groups()
-        if not minimal:
+        maximal = self._get_maximal_light_user_groups()
+        if not maximal:
             return
         group_no_one = self.env.ref('base.group_no_one')
-        light_groups = (self.env.ref('base.group_user') + minimal).all_implied_ids - group_no_one
+        light_groups = (self.env.ref('base.group_user') + maximal).all_implied_ids - group_no_one
         internal_users = self.with_context(active_test=False).search([('share', '=', False)])
         light_users = internal_users.filtered(
             lambda user: not (user.all_group_ids - group_no_one - light_groups))
         if light_users:
-            light_users.write({'group_ids': [(4, gid) for gid in minimal.ids]})
+            light_users.write({'group_ids': [(4, gid) for gid in maximal.ids]})
 
     @api.depends('all_group_ids')
     def _compute_role(self):
@@ -468,28 +468,28 @@ class ResUsers(models.Model):
         group_no_one = self.env.ref('base.group_no_one')
         # Compare full group closures (not the raw minimal set) so the projection
         # holds even when the light groups imply, or are implied by, other groups.
-        light_groups = (group_user + self._get_minimal_light_user_groups()).all_implied_ids - group_no_one
+        light_groups = (group_user + self._get_maximal_light_user_groups()).all_implied_ids - group_no_one
         for user in self:
             if user.has_group('base.group_system'):
                 user.role = 'group_system'
             elif user.has_group('base.group_user'):
                 user_groups = user.all_group_ids._origin - group_no_one
-                user.role = 'light' if user_groups == light_groups else 'group_user'
+                user.role = 'light' if set(user_groups).issubset(set(light_groups)) else 'group_user'
             else:
                 user.role = False
 
     def _inverse_role(self):
         group_user = self.env.ref('base.group_user')
         group_system = self.env.ref('base.group_system')
-        minimal = self._get_minimal_light_user_groups()
+        light_groups = self._get_maximal_light_user_groups()
         for user in self:
             if not user.role:
                 continue
             if user.role == 'light':
                 # Downgrading to Light is intentionally lossy: it strips every
                 # extra app access and returns the user to the light baseline
-                # (internal user + the minimal light set).
-                user.group_ids = group_user + minimal
+                # (internal user + the maximal light set).
+                user.group_ids = group_user + light_groups
                 continue
             # Switching to User / Administrator keeps the user's existing app
             # groups and only swaps the role anchor.
@@ -503,14 +503,14 @@ class ResUsers(models.Model):
         # record so the groups widget updates immediately when the role changes.
         group_system = self.env['res.groups'].new(origin=self.env.ref('base.group_system'))
         group_user = self.env['res.groups'].new(origin=self.env.ref('base.group_user'))
-        minimal = self.env['res.groups']
-        for group in self._get_minimal_light_user_groups():
-            minimal |= self.env['res.groups'].new(origin=group)
+        light_groups = self.env['res.groups']
+        for group in self._get_maximal_light_user_groups():
+            light_groups |= self.env['res.groups'].new(origin=group)
         for user in self:
             if not user.role:
                 continue
             if user.role == 'light':
-                user.group_ids = group_user + minimal
+                user.group_ids = group_user + light_groups
                 continue
             groups = user.group_ids - (group_user + group_system)
             anchor = group_user + group_system if user.role == 'group_system' else group_user

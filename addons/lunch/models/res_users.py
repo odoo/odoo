@@ -10,7 +10,7 @@ class ResUsers(models.Model):
     favorite_lunch_product_ids = fields.Many2many('lunch.product', 'lunch_product_favorite_user_rel', 'user_id', 'product_id', groups='lunch.group_lunch_user', copy=False)
 
     @api.model
-    def _get_minimal_light_user_groups(self):
-        groups = super()._get_minimal_light_user_groups()
+    def _get_maximal_light_user_groups(self):
+        groups = super()._get_maximal_light_user_groups()
         group = self.env.ref('lunch.group_lunch_user', raise_if_not_found=False)
         return groups | group if group else groups
