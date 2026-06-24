@@ -236,13 +236,13 @@ class HrVersion(models.Model):
                     start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
                 real_leaves = (multi_day_leaves & static_attendances) | one_day_leaves
             elif version.has_static_work_entries() or not leaves:
-                real_leaves = leaves & expected_attendances
+                real_leaves = version._get_real_leaves_static(leaves, expected_attendances)
             else:
                 # intersect with static calendar, not badge records, so leave duration is schedule-driven
                 resources_per_tz = version._get_resources_per_tz()
                 static_attendances = calendar._attendance_intervals_batch(
                     start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
-                real_leaves = leaves & static_attendances
+                real_leaves = version._get_real_leaves_static_attendance(leaves, static_attendances)
 
             absence_attendances = Intervals([
                 (s, e, IntervalPayload(rca.work_entry_type_id[:1], rca))
@@ -250,7 +250,7 @@ class HrVersion(models.Model):
                 if rca.work_entry_type_id[:1] and rca.work_entry_type_id[:1].count_as == 'absence'
             ], keep_distinct=True)
             real_leaves = real_leaves | absence_attendances
-            real_worked_leaves = worked_leaves - real_leaves
+            real_worked_leaves = version._get_real_worked_leaves(worked_leaves, real_leaves)
             work_attendances = Intervals([
                 iv for iv in expected_attendances
                 if not (iv[2].work_entry_type_id[:1] and iv[2].work_entry_type_id[:1].count_as == 'absence')
@@ -296,10 +296,10 @@ class HrVersion(models.Model):
         return attendances - leaves - worked_leaves
 
     def _get_real_leaves_static(self, leaves, expected_attendances):
-        return expected_attendances & leaves
+        return leaves & expected_attendances
 
     def _get_real_leaves_static_attendance(self, leaves, static_attendances):
-        return static_attendances & leaves
+        return leaves & static_attendances
 
     def _get_real_worked_leaves(self, worked_leaves, real_leaves):
         return worked_leaves - real_leaves

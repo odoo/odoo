@@ -621,7 +621,10 @@ class HrTimeRule(models.Model):
             return excess, deficit
 
         employees = records.employee_id
-        work_intervals_by_calendar = self._build_work_intervals_by_calendar(employees, start_dt, end_dt)
+        applicable_rules = self.filtered(lambda r: bool(r._get_applicable_employees(employees)))
+        if not applicable_rules:
+            return excess, deficit
+        work_intervals_by_calendar = applicable_rules._build_work_intervals_by_calendar(employees, start_dt, end_dt)
         min_date = min(r.date_from for r in records).date()
         max_date = max(r.date_to for r in records).date()
 
@@ -634,7 +637,7 @@ class HrTimeRule(models.Model):
                 (start_local, stop_local, record.work_entry_type_id, frozenset(), record, None)
             )
 
-        for rule in self:
+        for rule in applicable_rules:
             work_intervals = work_intervals_by_calendar[rule._get_schedule_calendar().id or False]
             rule_window_by_emp = rule._build_rule_day_intervals(min_date, max_date, employees, work_intervals)
             condition_wets = rule.condition_work_entry_type_ids

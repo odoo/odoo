@@ -87,8 +87,8 @@ class HrVersion(models.Model):
             for att in emp_atts:
                 check_in = att.check_in.replace(tzinfo=UTC)
                 check_out = att.check_out.replace(tzinfo=UTC)
-                # deficit outputs represent unworked time; exclude from time_on (absence clipping)
-                if not att.is_time_rule_output or att.source_attendance_id:
+                # deficit outputs start at/after source check_out (unworked time); exclude from time_on
+                if not att.source_attendance_id or att.check_in < att.source_attendance_id.check_out:
                     time_on_raw[rid].append((check_in, check_out, dummy))
                 if not version.attendance_based:
                     start_day = check_in.astimezone(tz).date()
@@ -104,15 +104,20 @@ class HrVersion(models.Model):
                     att_by_range[check_in, check_out] = att
 
             # priority-resolve attendance against wt-leave intervals (lower sequence wins)
+            leave_types = {wet for _, _, wet in wt_iv_by_rid.get(rid, [])}
             combined = raw_att + wt_iv_by_rid.get(rid, [])
             for seg_start, seg_stop, wet in self._resolve_attendance_intervals(combined):
-                att = att_by_range.get((seg_start, seg_stop))
-                if not att:
-                    # wt-leave won; base always generates wt-leave work entries
+                if wet in leave_types:
+                    # wt-leave won; so we skip and let base handle it
                     continue
-                # attendance won: record so base suppresses its wt-leave output
+                # attendance won: look up the source record (dict miss on split sub-segments,
+                # fall back to the original attendance that contains this segment)
+                att = att_by_range.get((seg_start, seg_stop)) or next(
+                    (att_by_range[ci, co] for ci, co, _ in raw_att if ci <= seg_start and co >= seg_stop),
+                    None,
+                )
                 att_coverage_raw[rid].append((seg_start, seg_stop, dummy))
-                extra = version._get_more_vals_attendance_interval((seg_start, seg_stop, att))
+                extra = version._get_more_vals_attendance_interval((seg_start, seg_stop, att)) if att else []
                 attendance_vals.append({
                     'date_start': seg_start.replace(tzinfo=None),
                     'date_stop': seg_stop.replace(tzinfo=None),
