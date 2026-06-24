@@ -184,7 +184,7 @@ class AccountPaymentRegister(models.TransientModel):
         for wizard in self:
             wizard.withholding_hide_tax_base_account = bool(wizard.company_id.withholding_tax_base_account_id)
 
-    @api.depends('can_edit_wizard', 'withhold')
+    @api.depends('can_edit_wizard', 'display_withholding', 'withhold')
     def _compute_amount(self):
         super()._compute_amount()
         for wizard in self:
@@ -222,6 +222,16 @@ class AccountPaymentRegister(models.TransientModel):
                 if wizard.payment_difference == withholding_residual:
                     wizard.show_payment_difference = False
 
+    @api.depends('withhold')
+    def _compute_journal_id(self):
+        super()._compute_journal_id()
+        for wizard in self:
+            if wizard.withhold == 'withhold':
+                wizard.journal_id = self.env['account.journal'].search([
+                    *self.env['account.journal']._check_company_domain(wizard.company_id),
+                    ('type', '=', 'general'),
+                ], limit=1)
+
     # ----------------------------
     # Onchange, Constraint methods
     # ----------------------------
@@ -241,17 +251,6 @@ class AccountPaymentRegister(models.TransientModel):
             return
 
         self.withholding_line_ids._update_placeholders()
-
-    @api.onchange('withhold')
-    def _onchange_withhold(self):
-        for wizard in self:
-            if wizard.withhold == 'withhold':
-                wizard.journal_id = self.env['account.journal'].search([
-                        *self.env['account.journal']._check_company_domain(self.env.company),
-                        ('type', '=', 'general'),
-                    ], limit=1)
-            else:
-                self.env.add_to_compute(self._fields['journal_id'], wizard)
 
     # -----------------------
     # CRUD, inherited methods
