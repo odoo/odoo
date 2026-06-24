@@ -19,7 +19,12 @@ class TestMenusAdmin(odoo.tests.HttpCase):
     @classmethod
     def _request_handler(cls, s: Session, r: PreparedRequest, /, **kw):
         # mock odoofin requests
-        if 'proxy/v1/get_dashboard_institutions' in r.url:
+        mocked_endpoints = (
+            'proxy/v1/get_dashboard_institutions',
+            'proxy/v2/get_dashboard_institutions',
+        )
+
+        if any(endpoint in r.url for endpoint in mocked_endpoints):
             r = Response()
             r.status_code = 200
             r.json = lambda: {'result': {}}
