@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { onMounted, onWillUnmount, useListener } from "@odoo/owl";
 import { EditDecorProperties } from "./edit_decor/edit_decor";
 import { EditTableProperties } from "./edit_table/edit_table";
@@ -94,40 +94,40 @@ export class FloorPlanEditor extends FloorPlanBase {
             }
         });
 
-        useLayoutEffect(
-            (selectedFloor) => {
-                this.selectedDOMElement = null;
-                this.updateActionMenu();
-                this.ensureBoardFits(false);
+        // useLayoutEffect(
+        //     (selectedFloor) => {
+        //         this.selectedDOMElement = null;
+        //         this.updateActionMenu();
+        //         this.ensureBoardFits(false);
 
-                selectedFloor?.ensureBgImageLoaded().then((hasChanged) => {
-                    if (hasChanged) {
-                        this.ensureBoardFits(false);
-                    }
-                });
-            },
-            () => [this.floorPlanStore.selectedFloor]
-        );
+        //         selectedFloor?.ensureBgImageLoaded().then((hasChanged) => {
+        //             if (hasChanged) {
+        //                 this.ensureBoardFits(false);
+        //             }
+        //         });
+        //     },
+        //     () => [this.floorPlanStore.selectedFloor]
+        // );
 
-        useLayoutEffect(
-            (selectedFloorEl) => {
-                this.textEditHandler?.endEdit();
-                this.selectedDOMElement = this.getDOMFloorElement(selectedFloorEl?.uuid);
-                this.updateActionMenu();
-                this.startEditText();
-            },
-            () => [this.floorPlanStore.getSelectedElement()]
-        ); //This use effect need to be declared before the action menu setup, so that selectedDOMElement is set before action menu uses it
+        // useLayoutEffect(
+        //     (selectedFloorEl) => {
+        //         this.textEditHandler?.endEdit();
+        //         this.selectedDOMElement = this.getDOMFloorElement(selectedFloorEl?.uuid);
+        //         this.updateActionMenu();
+        //         this.startEditText();
+        //     },
+        //     () => [this.floorPlanStore.getSelectedElement()]
+        // ); //This use effect need to be declared before the action menu setup, so that selectedDOMElement is set before action menu uses it
 
-        useLayoutEffect(
-            (isEditMode) => {
-                this.updatedCanvasTranslateX();
-                if (isEditMode) {
-                    this.startEditText();
-                }
-            },
-            () => [this.floorPlanStore.elementEditMode]
-        );
+        // useLayoutEffect(
+        //     (isEditMode) => {
+        //         this.updatedCanvasTranslateX();
+        //         if (isEditMode) {
+        //             this.startEditText();
+        //         }
+        //     },
+        //     () => [this.floorPlanStore.elementEditMode]
+        // );
 
         this.actionMenu = useActionMenu(
             "actionMenu",
