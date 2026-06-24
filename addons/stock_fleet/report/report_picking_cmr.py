@@ -54,6 +54,11 @@ class ReportCmr(models.AbstractModel):
         packageless_mls = pickings.move_line_ids.filtered(lambda ml: not ml.result_package_id and ml.move_id not in packageless_moves)
         has_uom_id = 'uom_id' in self.env['stock.move.line']._fields
 
+        consignee_id = pickings[0].sale_id.partner_id if 'sale_id' in pickings[0]._fields and pickings[0].sale_id else pickings[0].partner_id
+        en_lang = self.env['res.lang'].search([('code', '=like', 'en_%'), ('active', '=', True)], limit=1)
+        primary_lang = en_lang.code if en_lang else (pickings[0].company_id.partner_id.lang or 'en_US')
+        secondary_lang = consignee_id.lang or 'en_US'
+
         packages_weight = done_outermost_packages._get_weight()
         packages_weight.update(ongoing_outermost_packages._get_weight(pickings.ids))
 
@@ -76,7 +81,12 @@ class ReportCmr(models.AbstractModel):
             products = []
             hs_codes = []
             for (prod, unit), mls in package_mls.grouped(lambda ml: (ml.product_id, ml.uom_id if has_uom_id else False)).items():
-                products.append((sum(mls.mapped('quantity')), unit.name if unit else False, prod.with_context(display_default_code=False).display_name))
+                products.append(
+                    sum(mls.mapped('quantity')),
+                    unit.name if unit else False,
+                    prod.with_context(lang=primary_lang, display_default_code=False).display_name,
+                    prod.with_context(lang=secondary_lang, display_default_code=False).display_name if primary_lang != secondary_lang else False
+                )
                 hs_codes.append(prod.hs_code if 'hs_code' in prod._fields else False)
 
             package_volume = package.package_type_id.packaging_length *\
@@ -97,7 +107,12 @@ class ReportCmr(models.AbstractModel):
             goods_rows.append({
                 'package_name': False,
                 'packing_method': False,
-                'products': [(move.quantity, move.uom_id.name if has_uom_id and move.uom_id else False, move.product_id.with_context(display_default_code=False).display_name)],
+                'products': [(
+                    move.quantity,
+                    move.uom_id.name if has_uom_id and move.uom_id else False,
+                    move.product_id.with_context(lang=primary_lang, display_default_code=False).display_name,
+                    move.product_id.with_context(lang=secondary_lang, display_default_code=False).display_name if primary_lang != secondary_lang else False
+                )],
                 'hs_codes': [hs],
                 'weight': kg_uom.round(weight_uom._compute_quantity(move.quantity_product_uom * move.product_id.weight, kg_uom)),
                 'volume': m3_uom.round(move.quantity_product_uom * move.product_id.volume * volume_factor),
@@ -109,7 +124,12 @@ class ReportCmr(models.AbstractModel):
             goods_rows.append({
                 'package_name': False,
                 'packing_method': False,
-                'products': [(sum(mls.mapped('quantity')), unit.name if unit else False, prod.with_context(display_default_code=False).display_name)],
+                'products': [(
+                    sum(mls.mapped('quantity')),
+                    unit.name if unit else False,
+                    prod.with_context(lang=primary_lang, display_default_code=False).display_name,
+                    prod.with_context(lang=secondary_lang, display_default_code=False).display_name if primary_lang != secondary_lang else False
+                )],
                 'hs_codes': [hs],
                 'weight': kg_uom.round(weight_uom._compute_quantity(qty * prod.weight, kg_uom)),
                 'volume': m3_uom.round(qty * prod.volume * volume_factor),
@@ -120,7 +140,7 @@ class ReportCmr(models.AbstractModel):
             'outermost_packages_count': len(ongoing_outermost_packages | done_outermost_packages),
             'goods_rows': goods_rows,
             'sender_id': pickings[0].company_id.partner_id,
-            'consignee_id': pickings[0].sale_id.partner_id if 'sale_id' in pickings[0]._fields and pickings[0].sale_id else pickings[0].partner_id,
+            'consignee_id': consignee_id,
             'carrier_id': pickings[0].carrier_id if 'carrier_id' in pickings[0]._fields else False,
             'delivery_address': pickings[0].partner_id,
             'warehouse_id': pickings[0].picking_type_id.warehouse_id,
