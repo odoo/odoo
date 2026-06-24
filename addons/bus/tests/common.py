@@ -154,6 +154,7 @@ class BusCase(BaseCase):
         those forms.
         """
         self._reset_bus()
+        self.env.invalidate_all()  # Mimic the old behavior, necessary for test_60_rtc_sync_sessions_should_gc_and_return_outdated_and_active_sessions
         yield
         self._assertBusNotifications(notifications, show_store_versioning=show_store_versioning)
 

@@ -42,5 +42,6 @@ from . import (
     test_timeit,
     test_transactions,
     # test_uninstall  # Cannot be handled by the runbot. Makes Odoo loop forever when done during an installation.
+    test_unlink,
     test_views,
 )

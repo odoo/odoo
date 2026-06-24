@@ -226,6 +226,7 @@ class TestPeppolParticipant(TransactionCase):
         # Disconnect from the network.
         with mock_get_participant_status(peppol_state='sender'), mock_cancel_peppol_registration():
             settings.button_peppol_deregister()
+        settings.invalidate_recordset()
         self.assertRecordValues(settings, [{
             'account_peppol_proxy_state': 'not_registered',
             'peppol_use_parent_company': False,
@@ -318,6 +319,7 @@ class TestPeppolParticipant(TransactionCase):
             mock_documents_retrieval(messages=[])
         ):
             settings.button_peppol_deregister()
+            settings.invalidate_recordset()
         self.assertRecordValues(settings, [{
             'account_peppol_proxy_state': 'not_registered',
             'peppol_use_parent_company': False,

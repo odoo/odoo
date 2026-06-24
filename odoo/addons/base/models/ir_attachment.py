@@ -473,7 +473,7 @@ class IrAttachment(models.Model):
     res_name = fields.Char('Resource Name', compute='_compute_res_name')
     res_model = fields.Char('Resource Model')
     res_field = fields.Char('Resource Field')
-    res_id = fields.Many2oneReference('Resource ID', model_field='res_model')
+    res_id = fields.Many2oneReference('Resource ID', model_field='res_model', ondelete='cascade')
     company_id = fields.Many2one('res.company', string='Company', change_default=True,
                                  default=lambda self: self.env.company)
     type = fields.Selection([('url', 'URL'), ('binary', 'File')],
@@ -771,17 +771,19 @@ class IrAttachment(models.Model):
                 vals['raw'] = attachment.raw
         return vals_list
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=True)
+    def _delete_file_hook(self):
         # First delete in the database, *then* in the filesystem if the
         # database allowed it. Helps avoid errors when concurrent transactions
         # are deleting the same file, and some of the transactions are
         # rolled back by PostgreSQL (due to concurrent updates detection).
         to_delete = OrderedSet(attach.store_fname for attach in self if attach.store_fname)
-        res = super().unlink()
-        for file_path in to_delete:
-            self._file_delete(file_path)
 
-        return res
+        def _post_hook():
+            for file_path in to_delete:
+                self._file_delete(file_path)
+
+        return _post_hook
 
     @api.model_create_multi
     def create(self, vals_list):

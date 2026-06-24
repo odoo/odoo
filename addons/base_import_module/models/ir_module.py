@@ -386,6 +386,7 @@ class IrModuleModule(models.Model):
                         # call import module after rebinding to the new registry
                         env_sudo[self._name]._import_module(mod_name, path, force=force, with_demo=with_demo)
                     except Exception as e:
+                        self.env.registry.clear_cache()  # _xmlid_lookup for test_import_zip_invalid_data
                         raise UserError(_(
                             "Error while importing module '%(module)s'.\n\n %(error_message)s \n\n",
                             module=mod_name, error_message=traceback.format_exc(),

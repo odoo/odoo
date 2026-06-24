@@ -26,7 +26,7 @@ class RatingRating(models.Model):
     res_name = fields.Char(string='Resource name', compute='_compute_res_name', store=True)
     res_model_id = fields.Many2one('ir.model', 'Related Document Model', index=True, ondelete='cascade')
     res_model = fields.Char(string='Document Model', related='res_model_id.model', store=True, index=True, readonly=True)
-    res_id = fields.Many2oneReference(string='Document', model_field='res_model', required=True, index=True)
+    res_id = fields.Many2oneReference(string='Document', model_field='res_model', required=True, index=True, ondelete='cascade')
     resource_ref = fields.Reference(
         string='Resource Ref', selection='_selection_target_model',
         compute='_compute_resource_ref', readonly=True)

@@ -960,7 +960,7 @@ class TestPoSBasicConfig(TestPoSCommon):
         closed_session = self.pos_session
         self.assertTrue(closed_session.state == 'closed', 'Session should be closed.')
 
-        return_to_invoice = closed_session.order_ids[1]
+        return_to_invoice = closed_session.order_ids.sorted('id')[1]
         test_customer = self.env['res.partner'].create({'name': 'Test Customer'})
         new_session_date = return_to_invoice.date_order + relativedelta(days=2)
 

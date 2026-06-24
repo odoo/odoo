@@ -233,6 +233,7 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
         images = product_green._get_images()
         # images on fields are resized to max 1920
         image_png = binary_to_image(images[1].image_1920)
+        images[0].invalidate_model(['image_1920'])  # No depends on _compute_image_1920
         self.assertEqual(images[0].image_1920.content, red_image.content)
         self.assertEqual(image_png.size, (1268, 1920))
         self.assertEqual(images[2].image_1920.content, image_gif.content)

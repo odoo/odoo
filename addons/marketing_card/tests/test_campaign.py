@@ -114,7 +114,7 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
         mailing.card_lang = 'fr_FR'
         self.assertFalse(mailing.card_requires_sync_count)
 
-        with self.mock_mail_gateway(), self.assertQueryCount(42):
+        with self.mock_mail_gateway(), self.assertQueryCount(35):
             mailing._action_send_mail()
 
         cards = self.env['card.card'].search([('campaign_id', '=', campaign.id)])
@@ -128,7 +128,7 @@ class TestMarketingCardMail(MailCase, MarketingCardCommon):
         nl_mailing = mailing.copy(default={'card_lang': 'nl_NL'})
         with self.mock_image_renderer():
             nl_mailing.action_update_cards()
-        with self.mock_mail_gateway(), self.assertQueryCount(38):
+        with self.mock_mail_gateway(), self.assertQueryCount(28):
             nl_mailing._action_send_mail()
         # render language should be based purely on the mailing language
         self.assertNotEqual(nl_mailing.env.lang, 'nl_NL')

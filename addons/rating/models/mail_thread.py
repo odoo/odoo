@@ -15,13 +15,6 @@ class MailThread(models.AbstractModel):
     # MAIL OVERRIDES
     # --------------------------------------------------
 
-    def unlink(self):
-        """ When removing a record, its rating should be deleted too. """
-        record_ids = self.ids
-        result = super().unlink()
-        self.env['rating.rating'].sudo().search([('res_model', '=', self._name), ('res_id', 'in', record_ids)]).unlink()
-        return result
-
     def _get_message_create_ignore_field_names(self):
         return super()._get_message_create_ignore_field_names() | {"rating_id"}
 

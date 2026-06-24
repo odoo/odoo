@@ -1,4 +1,6 @@
+from __future__ import annotations
 
+import typing
 from collections import defaultdict
 from operator import attrgetter
 
@@ -9,6 +11,9 @@ from .fields import Field
 from .fields_numeric import Integer
 from .fields_selection import Selection
 from .models import BaseModel
+
+if typing.TYPE_CHECKING:
+    from .fields_relational import OnDelete
 
 
 class Reference(Selection):
@@ -66,15 +71,25 @@ class Many2oneReference(Integer):
     `model_field` attribute for the current :class:`Many2oneReference` field.
 
     :param str model_field: name of the :class:`Char` where the model name is stored.
+
+    :param ondelete: What to do when the referenced record is deleted.
+                     By default: nothing.
     """
     type = 'many2one_reference'
 
     model_field = None
     aggregator = None
+    ondelete: OnDelete = 'set null'  # see Model._delete_collect_extra
 
     _related_model_field = property(attrgetter('model_field'))
 
     _description_model_field = property(attrgetter('model_field'))
+
+    def setup_nonrelated(self, model):
+        assert self.ondelete in ('restrict', 'set null', 'cascade'), self
+        if self.ondelete == 'set null' and self.required:
+            self.ondelete = 'restrict'
+        return super().setup_nonrelated(model)
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: id or None

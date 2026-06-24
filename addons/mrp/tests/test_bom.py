@@ -2860,6 +2860,7 @@ class TestBoM(TestMrpCommon):
 
         # Delete all existing operations, the copy operations buttons shouldn't be visible if there is none.
         self.env['mrp.routing.workcenter'].search([]).unlink()
+        self.env.invalidate_all()  # no depends on show_copy_operations_button
         self.assertFalse(self.bom_1.show_copy_operations_button, "The copy operations button should be visible even if the current BoM is empty.")
 
 

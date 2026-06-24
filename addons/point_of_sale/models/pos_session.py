@@ -421,6 +421,7 @@ class PosSession(models.Model):
                 self.message_post(body=body)
         self.write({'state': 'closed'})
         self.env.flush_all()  # ensure sale.report is up to date
+        self.env.invalidate_all()  # invalidate after unlinking moves
         return True
 
     def _process_session_validation(self, balancing_account, amount_to_balance, bank_payment_method_diffs):
