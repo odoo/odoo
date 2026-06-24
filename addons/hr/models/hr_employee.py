@@ -1250,6 +1250,8 @@ class HrEmployee(models.Model):
         if not self.user_id:
             raise UserError(self.env._("This employee has no user."))
         self.user_id.active = not self.user_id.active
+        if not self.user_id.active and self.is_in_contract:
+            return self.action_new_departure()
 
     def _compute_display_name(self):
         if self.browse().has_access('read'):
