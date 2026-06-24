@@ -10,7 +10,7 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
 import { _t } from "@web/core/l10n/translation";
 
 export class MovesListRenderer extends ListRenderer {
-    static rowsTemplate = "stock.AddPackageListRendererRows";
+    static createRowTemplate = "stock.AddPackageListRendererRow";
 
     setup() {
         super.setup();

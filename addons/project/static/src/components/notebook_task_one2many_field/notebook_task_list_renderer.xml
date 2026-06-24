@@ -8,7 +8,9 @@
                 </t>
             </t>
         </xpath>
+    </t>
 
+    <t t-name="project.NotebookTaskListRenderer.CreateRow" t-inherit="web.ListRenderer.CreateRow" t-inherit-mode="primary">
         <xpath expr="//t[@t-foreach='this.controls']" position="after">
             <a t-if="this.ShowX2MRecords" role="button" class="ml16 o_toggle_closed_task_button" href="#" t-on-click="() => this.toggleHideClosed()">
                 <t t-out="this.toggleListHideLabel"/>

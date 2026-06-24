@@ -699,7 +699,7 @@ test("resequence a x2m in a form view dialog from another x2m", async () => {
     expect(".modal").toHaveCount(1);
     expect(queryAllTexts(".modal [name='name']")).toEqual(["aaa", "second record"]);
     expect.verifySteps(["web_read"]);
-    await contains(".modal tr:eq(2) .o_handle_cell").dragAndDrop(".modal [name='name']:eq(0)");
+    await contains(".modal tr:eq(2) .o_handle_cell").dragAndDrop(".modal [name='name']:eq(1)");
     expect(queryAllTexts(".modal [name='name']")).toEqual(["second record", "aaa"]);
     expect.verifySteps([]);
 
@@ -2348,7 +2348,7 @@ test("embedded one2many (editable list) with handle widget", async () => {
     expect.verifySteps([]);
 
     // Drag and drop the second line in first position
-    await contains("tbody tr:eq(1) .o_handle_cell").dragAndDrop(".o_field_one2many tbody tr:eq(0)");
+    await contains("tbody tr:eq(2) .o_handle_cell").dragAndDrop(".o_field_one2many tbody tr:eq(1)");
 
     expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual([
         "blip",
@@ -3315,9 +3315,9 @@ test("one2many list field edition", async () => {
         resId: 2,
     });
 
-    expect(".o_field_one2many tbody td:eq(0)").toHaveText("relational record 1");
+    expect(".o_field_one2many tbody td:eq(1)").toHaveText("relational record 1");
 
-    await contains(".o_field_one2many tbody td").click();
+    await contains(".o_field_one2many tbody td:eq(1)").click();
     expect(".o_field_one2many tbody .o_data_row:eq(0)").toHaveClass("o_selected_row");
     await contains(".o_field_one2many tbody td input").edit("new value", { confirm: false });
     expect(".o_field_one2many tbody .o_data_row:eq(0)").toHaveClass("o_selected_row");
@@ -3330,15 +3330,15 @@ test("one2many list field edition", async () => {
     // discard changes
     await contains(".o_form_button_cancel").click();
     expect(".modal").toHaveCount(0);
-    expect(".o_field_one2many tbody td:eq(0)").toHaveText("relational record 1");
+    expect(".o_field_one2many tbody td:eq(1)").toHaveText("relational record 1");
 
     // edit again and save
-    await contains(".o_field_one2many tbody td").click();
+    await contains(".o_field_one2many tbody td:eq(1)").click();
     await contains(".o_field_one2many tbody td input").edit("new value");
     await contains(".o_form_view").click();
     await clickSave();
 
-    expect(".o_field_one2many tbody td:eq(0)").toHaveText("new value");
+    expect(".o_field_one2many tbody td:eq(1)").toHaveText("new value");
 });
 
 test("one2many list: create action disabled", async () => {
@@ -4678,11 +4678,11 @@ test("onchange in a one2many", async () => {
         resId: 2,
     });
 
-    await contains(".o_field_one2many tbody td").click();
+    await contains(".o_field_one2many tbody td:eq(1)").click();
     await contains(".o_field_one2many tbody td input").edit("new value", { confirm: false });
     await clickSave();
 
-    expect(".o_field_one2many tbody td:eq(0)").toHaveText("from onchange");
+    expect(".o_field_one2many tbody td:eq(1)").toHaveText("from onchange");
 });
 
 test("one2many, default_get and onchange (basic)", async () => {
@@ -6093,7 +6093,7 @@ test("many2one and many2many in one2many", async () => {
     expect('.o_data_row td div[name="partner_ids"] .badge').toHaveCount(2);
 
     // edit the m2m of first row
-    await contains(".o_list_renderer tbody td").click();
+    await contains(".o_list_renderer tbody td:eq(1)").click();
 
     expect(queryAllTexts(".o_selected_row .o_field_many2many_tags .badge")).toEqual([
         "second record",
@@ -10501,7 +10501,7 @@ test("reorder one2many with many2many_tags in list and list in form", async () =
     expect(".modal").toHaveCount(1);
     expect(queryAllTexts(".modal [name='name']")).toEqual(["aaa", "first record"]);
 
-    await contains(".modal tr:eq(2) .o_handle_cell").dragAndDrop(".modal tr:eq(1)");
+    await contains(".modal tr:eq(3) .o_handle_cell").dragAndDrop(".modal tr:eq(2)");
     expect(queryAllTexts(".modal [name='name']")).toEqual(["first record", "aaa"]);
 });
 
@@ -13253,7 +13253,7 @@ test("one2many with default_order on id, but id not in view", async () => {
     expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual(["yop", "blip", "kawa"]);
 
     // drag the third record to top of the list
-    await contains("tbody tr:eq(2) .o_handle_cell").dragAndDrop("tbody tr");
+    await contains("tbody tr:eq(3) .o_handle_cell").dragAndDrop("tbody tr:eq(1)");
     await clickSave();
 
     expect(queryAllTexts(".o_data_cell.o_list_char")).toEqual(["kawa", "yop", "blip"]);

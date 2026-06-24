@@ -25,7 +25,7 @@
         />
     </t>
 
-    <t t-name="stock.AddPackageListRendererRows" t-inherit="web.ListRenderer.Rows" t-inherit-mode="primary">
+    <t t-name="stock.AddPackageListRendererRow" t-inherit="web.ListRenderer.CreateRow" t-inherit-mode="primary">
         <td class="o_field_x2many_list_row_add" position="inside">
             <a t-if="this.canAddPackage" href="#" class="px-3" tabindex="0" t-on-click.stop.prevent="() => this.onClickMovePackage()">Move a Pack</a>
         </td>

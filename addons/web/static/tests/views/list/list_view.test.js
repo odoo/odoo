@@ -10665,6 +10665,44 @@ test(`navigation: not moving down with keydown`, async () => {
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
 });
 
+test(`o2m list editable="top" displays "Add a line" button at the top`, async () => {
+    Foo._records[0].o2m = [1, 2];
+
+    await mountView({
+        resModel: "foo",
+        type: "form",
+        arch: `
+            <form>
+                <field name="o2m">
+                    <list editable="top">
+                        <field name="name"/>
+                    </list>
+                </field>
+            </form>
+        `,
+        resId: 1,
+    });
+
+    expect(".o_field_x2many_list tbody tr:eq(0) td").toHaveText("Add a line");
+    expect(".o_field_x2many_list tbody tr:eq(1) td:first").toHaveClass("o_data_cell");
+    expect(".o_field_x2many_list tbody tr:eq(2) td:first").toHaveClass("o_data_cell");
+});
+
+test.tags("desktop");
+test(`grouped editable="top" list displays "Add a line" button at the top`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `<list editable="top"><field name="foo"/></list>`,
+        groupBy: ["bar"],
+    });
+
+    await contains(`.o_group_header`).click();
+    expect(`.o_group_header + tr td.o_group_field_row_add`).toHaveCount(1);
+    expect(`.o_group_header + tr td.o_group_field_row_add a`).toHaveText("Add a line");
+    expect(`.o_group_header + tr + tr .o_data_cell`).toHaveCount(1);
+});
+
 test.tags("desktop");
 test(`no crash when keydown on x2many "Add a line" cell while record is in edit mode`, async () => {
     Foo._records[0].o2m = [];
@@ -14216,9 +14254,9 @@ test(`edit a line and discard it in grouped editable`, async () => {
     expect(`.o_data_row:nth-child(5)`).toHaveClass("o_selected_row");
 
     await contains(`.o_list_button_discard`).click();
-    await contains(`.o_data_row:nth-child(3) .o_data_cell:nth-child(2)`).click();
+    await contains(`.o_data_row:nth-child(4) .o_data_cell:nth-child(2)`).click();
     expect(`.o_selected_row`).toHaveCount(1);
-    expect(`.o_data_row:nth-child(3)`).toHaveClass("o_selected_row");
+    expect(`.o_data_row:nth-child(4)`).toHaveClass("o_selected_row");
 
     await contains(`.o_list_button_discard`).click();
     expect(`.o_selected_row`).toHaveCount(0);
