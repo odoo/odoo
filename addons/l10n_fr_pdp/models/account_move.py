@@ -295,7 +295,7 @@ class AccountMove(models.Model):
 
     def _l10n_fr_pdp_message_log_ereporting_status(self):
         self.ensure_one()
-        if self.l10n_fr_pdp_status in {None, 'out_of_scope'}:
+        if self.l10n_fr_pdp_status in {False, 'out_of_scope'}:
             return
 
         status_selection = self._fields['l10n_fr_pdp_status']._description_selection(self.env)
