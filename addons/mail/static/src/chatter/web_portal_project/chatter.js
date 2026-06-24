@@ -22,13 +22,19 @@ export class Chatter extends Component {
             threadModel: t.string(),
             twoColumns: t.boolean().optional(false),
         });
+        this.thread = signal();
+        useOnChange(
+            () => [this.props.threadId, this.props.threadModel],
+            (threadId, threadModel) => this.onChangeThread(threadId, threadModel),
+            { initialRun: false }
+        );
+        onMounted(() => this.onChangeThread(this.props.threadId, this.props.threadModel));
+
         this.state = proxy({
             jumpThreadPresent: 0,
-            /** @type {import("models").Thread} */
-            thread: undefined,
         });
         this.messageHighlight = useMessageScrolling({
-            thread: () => this.state.thread,
+            thread: this.thread,
             messageFetchRouteParams: () => this.messageFetchRouteParams,
         });
         this.highlightMessage = router.current.highlight_message_id;
@@ -36,26 +42,39 @@ export class Chatter extends Component {
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
         useChildSubEnv(this.childSubEnv);
         useSubEnv(this.subEnv);
+    }
 
-        onMounted(this._onMounted);
-
-        useOnChange(
-            () => [this.props.threadId, this.props.threadModel],
-            (threadId, threadModel) => this.changeThread(threadModel, threadId),
-            { initialRun: false }
+    onChangeThread(threadId, threadModel) {
+        this.thread.set(
+            this.store["mail.thread"].insert({
+                model: threadModel,
+                id: threadId,
+                highlightMessage: this.highlightMessage,
+            })
         );
-        useOnChange(
-            () => [this.state.thread],
-            (thread) => {
-                if (!this.env.chatter || this.env.chatter?.fetchThreadData) {
-                    if (this.env.chatter) {
-                        this.env.chatter.fetchThreadData = false;
-                    }
-                    this.load(thread, this.requestList);
-                }
-            },
-            { initialRun: false }
-        );
+        if (threadId === false) {
+            if (this.thread().messages.length === 0) {
+                const { effectiveSelf } = this.thread();
+                const authorModelName = effectiveSelf.Model.getName();
+                this.thread().messages.push({
+                    id: this.store.getNextTemporaryId(),
+                    is_transient: true,
+                    author_id: authorModelName === "res.partner" ? effectiveSelf : undefined,
+                    author_guest_id: authorModelName === "mail.guest" ? effectiveSelf : undefined,
+                    body: _t("Creating a new record..."),
+                    message_type: "notification",
+                    thread: this.thread(),
+                    res_id: threadId,
+                    model: threadModel,
+                });
+            }
+        }
+        if (!this.env.chatter || this.env.chatter?.fetchThreadData) {
+            if (this.env.chatter) {
+                this.env.chatter.fetchThreadData = false;
+            }
+            this.load(this.thread(), this.requestList);
+        }
     }
 
     get afterPostRequestList() {
@@ -78,7 +97,7 @@ export class Chatter extends Component {
     }
 
     get onCloseFullComposerRequestList() {
-        return this.state.thread.fullComposerCloseRequestList;
+        return this.thread().fullComposerCloseRequestList;
     }
 
     get requestList() {
@@ -89,41 +108,13 @@ export class Chatter extends Component {
         return { messageFetchRouteParams: this.extraMessageFetchRouteParams };
     }
 
-    changeThread(threadModel, threadId) {
-        const data = {
-            model: threadModel,
-            id: threadId,
-        };
-        if (this.highlightMessage) {
-            data.highlightMessage = this.highlightMessage;
-        }
-        this.state.thread = this.store["mail.thread"].insert(data);
-        if (threadId === false) {
-            if (this.state.thread.messages.length === 0) {
-                const { effectiveSelf } = this.state.thread;
-                const authorModelName = effectiveSelf.Model.getName();
-                this.state.thread.messages.push({
-                    id: this.store.getNextTemporaryId(),
-                    is_transient: true,
-                    author_id: authorModelName === "res.partner" ? effectiveSelf : undefined,
-                    author_guest_id: authorModelName === "mail.guest" ? effectiveSelf : undefined,
-                    body: _t("Creating a new record..."),
-                    message_type: "notification",
-                    thread: this.state.thread,
-                    res_id: threadId,
-                    model: threadModel,
-                });
-            }
-        }
-    }
-
     /**
      * Fetch data for the thread according to the request list.
      * @param {import("models").Thread} thread
      * @param {string[]} requestList
      */
     async load(thread, requestList) {
-        if (!thread?.id || !this.state.thread?.eq(thread)) {
+        if (!thread?.id || !this.thread()?.eq(thread)) {
             return;
         }
         await thread.fetchThreadData(requestList, {
@@ -132,23 +123,13 @@ export class Chatter extends Component {
     }
 
     onCloseFullComposerCallback() {
-        this.load(this.state.thread, this.onCloseFullComposerRequestList);
-    }
-
-    _onMounted() {
-        this.changeThread(this.props.threadModel, this.props.threadId);
-        if (!this.env.chatter || this.env.chatter?.fetchThreadData) {
-            if (this.env.chatter) {
-                this.env.chatter.fetchThreadData = false;
-            }
-            this.load(this.state.thread, this.requestList);
-        }
+        this.load(this.thread(), this.onCloseFullComposerRequestList);
     }
 
     onPostCallback() {
         this.state.jumpThreadPresent++;
         // Load new messages to fetch potential new messages from other users (useful due to lack of auto-sync in chatter).
-        this.load(this.state.thread, this.afterPostRequestList);
+        this.load(this.thread(), this.afterPostRequestList);
     }
 
     onScroll() {

@@ -2,28 +2,28 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Chatter">
-    <div t-if="this.state.thread" class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex flex-column bg-inherit" t-att-class="{ 'overflow-auto o-scrollbar-thin': this.webChatterProps.isChatterAside, 'o-chatter-disabled': this.props.threadId === false }" t-on-scroll="this.onScrollDebounced" t-ref="this.rootRef">
+    <div t-if="this.thread()" class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex flex-column bg-inherit" t-att-class="{ 'overflow-auto o-scrollbar-thin': this.webChatterProps.isChatterAside, 'o-chatter-disabled': this.props.threadId === false }" t-on-scroll="this.onScrollDebounced" t-ref="this.rootRef">
         <div class="o-mail-Chatter-top d-print-none position-sticky top-0" t-att-class="{ 'shadow-sm': this.state.isTopStickyPinned }" t-custom-ref="top">
             <div class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0 overflow-x-auto o-gap-0_5">
                 <div t-if="this.state.isSearchOpen" class="flex-grow-1">
-                    <SearchMessageInput closeSearch.bind="this.closeSearch" messageSearch="this.messageSearch" thread="this.state.thread"/>
+                    <SearchMessageInput closeSearch.bind="this.closeSearch" messageSearch="this.messageSearch" thread="this.thread()"/>
                 </div>
                 <div t-else="" class="d-flex gap-1">
                     <button class="o-mail-Chatter-sendMessage btn text-nowrap my-2" t-att-class="{
                         'btn-primary': this.state.composerType !== 'note',
                         'btn-secondary': this.state.composerType === 'note',
                         'active': this.state.composerType === 'message',
-                    }" t-att-disabled="!this.state.thread.canPostMessage and this.props.threadId" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
+                    }" t-att-disabled="!this.thread().canPostMessage and this.props.threadId" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
                         Send message
                     </button>
                     <button class="o-mail-Chatter-logNote btn text-nowrap my-2" t-att-class="{
                         'btn-primary active': this.state.composerType === 'note',
                         'btn-secondary': this.state.composerType !== 'note',
-                    }" t-att-disabled="!this.state.thread.canPostMessage and this.props.threadId and this.props.threadId" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
+                    }" t-att-disabled="!this.thread().canPostMessage and this.props.threadId and this.props.threadId" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
                         Log note
                     </button>
                     <button t-if="this.webChatterProps.has_activities" class="o-mail-Chatter-activity btn btn-secondary text-nowrap my-2"
-                            t-att-disabled="!this.state.thread.canPostMessage and this.props.threadId"
+                            t-att-disabled="!this.thread().canPostMessage and this.props.threadId"
                             data-hotkey="shift+a" t-on-click="this.scheduleActivity">
                         <span>Activity</span>
                     </button>
@@ -35,10 +35,10 @@
                 <button t-if="this.hasPinnedMessages" class="btn btn-link text-action p-1" aria-label="Pinned Messages" title="Pinned Messages" t-on-click="this.onClickPinnedMessages" t-att-disabled="this.state.isSearchOpen">
                     <i class="fa fa-fw fa-thumb-tack" role="img"/>
                 </button>
-                <button t-if="this.webChatterProps.hasAttachmentPreview and this.state.thread.attachmentsInWebClientView.length" class="btn btn-link text-action px-1" t-on-click="this.popoutAttachment">
+                <button t-if="this.webChatterProps.hasAttachmentPreview and this.thread().attachmentsInWebClientView.length" class="btn btn-link text-action px-1" t-on-click="this.popoutAttachment">
                     <i class="fa fa-window-restore fa-fw" aria-hidden="Pop out Attachments" title="Pop out Attachments"/>
                 </button>
-                <FileUploader t-if="this.attachments.length === 0" fileUploadClass="'o-mail-Chatter-fileUploader'" showUploadingText="false" multiUpload="true" onUploaded="this.onUploaded({ thread: this.state.thread })" onClick="(ev) => this.onClickAttachFile(ev)" t-key="this.state.thread.localId">
+                <FileUploader t-if="this.attachments.length === 0" fileUploadClass="'o-mail-Chatter-fileUploader'" showUploadingText="false" multiUpload="true" onUploaded="this.onUploaded({ thread: this.thread() })" onClick="(ev) => this.onClickAttachFile(ev)" t-key="this.thread().localId">
                     <t t-set-slot="toggler">
                         <t t-call="mail.Chatter.attachFiles"/>
                     </t>
@@ -46,22 +46,22 @@
                 <t t-else="" t-call="mail.Chatter.attachFiles"/>
                 <div class="o-mail-Followers d-flex">
                     <Dropdown position="'bottom-end'" menuClass="'o-mail-Followers-dropdown ' + this.store.discussDropdownMenuClass(this)" state="this.followerListDropdown">
-                        <button t-att-class="'o-mail-Followers-button btn btn-link d-flex align-items-center text-action px-1 my-2 ' + (this.state.thread.selfFollower ? 'active' : '')" t-att-disabled="this.isDisabled" t-att-title="this.followerButtonLabel">
-                            <i class="fa fa-fw" role="img" t-attf-class="{{ this.state.thread.selfFollower ? 'fa-user' : 'fa-user-o' }}"/>
-                            <i t-if="this.state.thread.id and this.state.thread.followersCount === undefined" class="fa fa-circle-o-notch fa-spin"/>
-                            <sup t-else="" class="o-mail-Followers-counter" t-out="this.state.thread.followersCount ?? 0"/>
+                        <button t-att-class="'o-mail-Followers-button btn btn-link d-flex align-items-center text-action px-1 my-2 ' + (this.thread().selfFollower ? 'active' : '')" t-att-disabled="this.isDisabled" t-att-title="this.followerButtonLabel">
+                            <i class="fa fa-fw" role="img" t-attf-class="{{ this.thread().selfFollower ? 'fa-user' : 'fa-user-o' }}"/>
+                            <i t-if="this.thread().id and this.thread().followersCount === undefined" class="fa fa-circle-o-notch fa-spin"/>
+                            <sup t-else="" class="o-mail-Followers-counter" t-out="this.thread().followersCount ?? 0"/>
                         </button>
                         <t t-set-slot="content">
-                            <FollowerList onAddFollowers.bind="this.onAddFollowers" onFollowerChanged.bind="this.onFollowerChanged" thread="this.state.thread" dropdown="this.followerListDropdown"/>
+                            <FollowerList onAddFollowers.bind="this.onAddFollowers" onFollowerChanged.bind="this.onFollowerChanged" thread="this.thread()" dropdown="this.followerListDropdown"/>
                         </t>
                     </Dropdown>
                 </div>
             </div>
             <t t-if="this.state.composerType">
-                <Composer composer="this.state.thread.composer"
+                <Composer composer="this.thread().composer"
                     autofocus="true" className="this.state.composerType === 'message' ? '' : 'pt-4'" mode="'extended'"
                     onPostCallback.bind="this.onPostCallback" onCloseFullComposerCallback.bind="this.onCloseFullComposerCallback"
-                    dropzoneRef="this.rootRef" thread="this.state.thread" type="this.state.composerType" t-key="this.props.threadId"
+                    dropzoneRef="this.rootRef" thread="this.thread()" type="this.state.composerType" t-key="this.props.threadId"
                     withMessageFields="true"
                 />
             </t>
@@ -81,9 +81,9 @@
                             attachments="this.attachments"
                             unlinkAttachment.bind="this.unlinkAttachment"
                         />
-                        <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded="this.onUploaded({ thread: this.state.thread })" onClick="(ev) => this.onClickAttachFile(ev)" t-key="this.state.thread.localId">
+                        <FileUploader multiUpload="true" fileUploadClass="'o-mail-Chatter-fileUploader'" onUploaded="this.onUploaded({ thread: this.thread() })" onClick="(ev) => this.onClickAttachFile(ev)" t-key="this.thread().localId">
                             <t t-set-slot="toggler">
-                                <button class="btn btn-link px-1" type="button" t-att-disabled="!this.state.thread.canPostMessage">
+                                <button class="btn btn-link px-1" type="button" t-att-disabled="!this.thread().canPostMessage">
                                     <i class="fa fa-plus-square"/>
                                     Attach files
                                 </button>
@@ -98,7 +98,7 @@
                         <hr class="flex-grow-1"/>
                     </div>
                     <div class="d-flex flex-column">
-                        <MessageCardList messages="this.state.thread.pinnedMessages" thread="this.state.thread" mode="'pin'"/>
+                        <MessageCardList messages="this.thread().pinnedMessages" thread="this.thread()" mode="'pin'"/>
                     </div>
                 </div>
                 <t t-if="this.webChatterProps.has_activities and this.activities.length and !this.messageSearch.searching and !this.messageSearch.searched">
@@ -107,8 +107,8 @@
                 <t t-if="this.scheduledMessages.length">
                     <t t-call="mail.ScheduledMessagesList"/>
                 </t>
-                <SearchMessageResult t-if="this.messageSearch.searching or this.messageSearch.searched" thread="this.state.thread"  messageSearch="this.messageSearch" onClickJump.bind="this.closeSearch"/>
-                <Thread t-else="" thread="this.state.thread" t-key="this.state.thread.localId" order="'desc'" scrollRef="this.rootRef" jumpPresent="this.state.jumpThreadPresent"/>
+                <SearchMessageResult t-if="this.messageSearch.searching or this.messageSearch.searched" thread="this.thread()"  messageSearch="this.messageSearch" onClickJump.bind="this.closeSearch"/>
+                <Thread t-else="" thread="this.thread()" t-key="this.thread().localId" order="'desc'" scrollRef="this.rootRef" jumpPresent="this.state.jumpThreadPresent"/>
             </t>
         </div>
     </div>
@@ -154,10 +154,10 @@
 
 <t t-name="mail.Chatter.attachFiles">
     <button class="o-mail-Chatter-attachFiles btn btn-link text-action px-1 d-flex align-items-center" aria-label="Attach files" t-on-click="this.onClickAddAttachments"
-            t-att-disabled="this.state.isSearchOpen || (!this.state.thread.canPostMessage and this.attachments.length === 0)">
+            t-att-disabled="this.state.isSearchOpen || (!this.thread().canPostMessage and this.attachments.length === 0)">
         <i class="fa fa-paperclip fa-lg fa-fw"/>
         <sup t-if="this.attachments.length > 0" t-out="this.attachments.length"/>
-        <i t-if="!this.state.thread.areAttachmentsLoaded and this.state.thread.isLoadingAttachments and this.state.showAttachmentLoading" class="fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
+        <i t-if="!this.thread().areAttachmentsLoaded and this.thread().isLoadingAttachments and this.state.showAttachmentLoading" class="fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>
     </button>
 </t>
 
