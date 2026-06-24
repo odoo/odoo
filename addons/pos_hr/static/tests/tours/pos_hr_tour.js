@@ -453,3 +453,19 @@ registry.category("web_tour.tours").add("test_logged_employee_ids_tracking", {
             ProductScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_switch_cashier_with_badge", {
+    steps: () =>
+        [
+            PosHr.loginScreenIsShown(),
+            scan_barcode("041222"),
+            ProductScreen.isShown(),
+            ProductScreen.addOrderline("Desk Pad", "1"),
+            scan_barcode("041333"),
+            Chrome.createFloatingOrder(),
+            ProductScreen.addOrderline("Desk Pad", "1"),
+            Chrome.clickOrders(),
+            TicketScreen.nthRowContains(1, "Pos Employee2", false),
+            TicketScreen.nthRowContains(2, "Test Employee 3", false),
+        ].flat(),
+});
