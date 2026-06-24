@@ -792,6 +792,7 @@ export class SeoChecks extends Component {
     }
 
     imgUpdated(img) {
+        img.alt = (img.alt || "").trim();
         img.updated = true;
         this.seoContext.updatedAlts = this.state.altAttributes.filter((img) => img.updated);
     }

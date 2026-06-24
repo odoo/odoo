@@ -1445,7 +1445,7 @@ class Website(Home):
                         element.set('alt', '')
                         element.set('role', 'presentation')
                     else:
-                        element.set('alt', markup_escape(img['alt']))
+                        element.set('alt', markup_escape((img.get('alt') or '').strip()))
                         element.attrib.pop('role', None)
                     modified = True
             if modified:
