@@ -8,7 +8,7 @@ from odoo.http import request
 
 
 class ProductProduct(models.Model):
-    _name = 'product.product'
+    _name = "product.product"
     _inherit = ["product.product", "website.structured_data.mixin"]
     _mail_post_access = "read"
 
@@ -135,14 +135,11 @@ class ProductProduct(models.Model):
         # Use sudo to access cross-company taxes.
         price = self._apply_taxes_to_price(product_price, website.currency_id, website=website)
 
-        offer = {
-            "@type": "Offer",
-            "price": price,
-            "priceCurrency": website.currency_id.name,
-        }
+        offer = {"@type": "Offer", "price": price, "priceCurrency": website.currency_id.name}
         if self.is_product_variant and self.is_storable:
             offer["availability"] = (
-                "https://schema.org/OutOfStock" if self._is_sold_out()
+                "https://schema.org/OutOfStock"
+                if self._is_sold_out()
                 else "https://schema.org/InStock"
             )
 
@@ -384,3 +381,14 @@ class ProductProduct(models.Model):
     def _apply_taxes_to_price(self, *args, **kwargs):
         self.ensure_one()
         return self.product_tmpl_id._apply_taxes_to_price(*args, product=self, **kwargs)
+
+    def _can_add_to_stock_notifications(self):
+        """Return whether the product is eligible for stock notifications.
+
+        Note: `self.ensure_one()`
+
+        :return: True if the product is active, saleable, and published on the website
+        :rtype: bool
+        """
+        self.ensure_one()
+        return self.active and self.sale_ok and self.website_published
