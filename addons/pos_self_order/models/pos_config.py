@@ -316,6 +316,7 @@ class PosConfig(models.Model):
             'primaryTextColor': self.env.company.email_primary_color,
         }
         record['_self_order_pos'] = True
+        record['_base_url'] = config.get_base_url()
         return read_records
 
     def load_self_data(self):

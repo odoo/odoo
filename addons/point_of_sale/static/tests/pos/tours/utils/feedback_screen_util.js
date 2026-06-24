@@ -71,6 +71,7 @@ export function checkTicketData(data, basic = false) {
     //   is_cashier,
     //   cashier_name,
     //   is_qr_code,
+    //   has_portal_url
     //   payment_lines: [{
     // 	  name,
     // 	  amount,
@@ -95,8 +96,9 @@ export function checkTicketData(data, basic = false) {
     //   }],
     // }
     const check = async (data, basic) => {
+        const order = posmodel.getOrder();
         const ticket = await posmodel.printer.renderer.toHtml(posmodel.orderReceiptComponent, {
-            order: posmodel.getOrder(),
+            order: order,
             basic_receipt: basic,
         });
 
@@ -200,6 +202,16 @@ export function checkTicketData(data, basic = false) {
         } else if (data.is_qr_code === false) {
             if (ticket.querySelector(".pos-receipt #posqrcode")) {
                 throw new Error("A QR code has been found in receipt.");
+            }
+        }
+
+        if (data.has_portal_url) {
+            const selfInvoicingURL = ticket.querySelector(".pos-receipt .portal-url");
+            if (
+                !selfInvoicingURL ||
+                selfInvoicingURL.textContent !== `${order.config._base_url}/pos/ticket`
+            ) {
+                throw new Error("No valid self invoicing URL has been found in receipt.");
             }
         }
 

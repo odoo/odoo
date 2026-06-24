@@ -235,6 +235,7 @@ registry.category("web_tour.tours").add("test_zero_decimal_places_currency", {
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 total_amount: "100",
+                has_portal_url: true,
             }),
         ].flat(),
 });
