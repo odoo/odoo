@@ -5,7 +5,6 @@ from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import tagged, Form
 from odoo.tests.common import TransactionCase
-from odoo.tools import mute_logger
 
 
 class TestCarrierPropagation(TransactionCase):
@@ -56,9 +55,6 @@ class TestCarrierPropagation(TransactionCase):
         })
         cls.rule_pack = cls.warehouse.delivery_route_id.rule_ids.filtered(lambda r: r.picking_type_id == cls.warehouse.pack_type_id)
 
-    # Mute translate warnings since they appear only in tests.
-    # In production, language is taken from the http request
-    @mute_logger('odoo.tools.translate')
     def test_carrier_no_propagation(self):
         """
             Set the carrier propagation to False on stock.rule
@@ -92,9 +88,6 @@ class TestCarrierPropagation(TransactionCase):
         pack = pick.move_ids.move_dest_ids.picking_id
         self.assertFalse(pack.carrier_id)
 
-    # Mute translate warnings since they appear only in tests.
-    # In production, language is taken from the http request
-    @mute_logger('odoo.tools.translate')
     def test_carrier_propagation(self):
         """
             Set the carrier propagation to True on stock.rule
@@ -153,9 +146,6 @@ class TestCarrierPropagation(TransactionCase):
         pickings[1].button_validate()
         self.assertRecordValues(pickings[2], [{'carrier_id': False, 'carrier_tracking_ref': False}])
 
-    # Mute translate warnings since they appear only in tests.
-    # In production, language is taken from the http request
-    @mute_logger('odoo.tools.translate')
     def test_route_based_on_carrier_delivery(self):
         """
             Check that the route on the sale order line is selected as per the first priority even if route on shipping mehod is present
@@ -240,9 +230,6 @@ class TestCarrierPropagation(TransactionCase):
         sale_order2.action_confirm()
         self.assertEqual(sale_order2.picking_ids.location_id, route2.rule_ids.location_src_id)
 
-    # Mute translate warnings since they appear only in tests.
-    # In production, language is taken from the http request
-    @mute_logger('odoo.tools.translate')
     def test_carrier_picking_batch_validation(self):
         """
         Create 2 delivery orders with carriers. Make them respectively
