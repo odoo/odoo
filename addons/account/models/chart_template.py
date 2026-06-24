@@ -378,7 +378,10 @@ class AccountChartTemplate(models.AbstractModel):
                                 values.pop(field_name, None)
 
                 elif model_name == 'account.tax':
-                    if xmlid not in xmlid2tax or (tax_template_changed(xmlid2tax[xmlid], values) and not force_update):
+                    if xmlid not in xmlid2tax and 'name' not in values:
+                        skip_update.add((model_name, xmlid))
+                        _logger.warning("Required field missing on non existing record while reloading the CoA for %r", xmlid)
+                    elif xmlid not in xmlid2tax or (tax_template_changed(xmlid2tax[xmlid], values) and not force_update):
                         if not force_create:
                             skip_update.add((model_name, xmlid))
                             continue
