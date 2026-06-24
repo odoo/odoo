@@ -1,6 +1,6 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.ImageTransformation">
-        <div class="transfo-container" t-ref="this.transfoContainer" t-on-mousedown.prevent="this.mouseDown">
+        <div class="transfo-container" t-ref="this.transfoContainer" t-on-pointerdown.prevent="this.pointerDown">
             <div class="transfo-controls" t-ref="this.transfoControls">
                 <div class="transfo-rotator oi-lg">
                     <i class="oi oi-2x oi-filled" data-icon="circle"></i>
