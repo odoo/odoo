@@ -50,8 +50,8 @@ export class ImageTransformation extends Component {
         onMounted(() => {
             this.positionTransfoContainer();
         });
-        useExternalListener(window, "mousemove", this.mouseMove);
-        useExternalListener(window, "mouseup", this.mouseUp);
+        useExternalListener(window, "pointermove", this.pointerMove);
+        useExternalListener(window, "pointerup", this.pointerUp);
         // When a character key is pressed and the image gets deleted,
         // close the image transform via selectionchange.
         useExternalListener(this.document, "selectionchange", () => this.props.destroy());
@@ -70,7 +70,7 @@ export class ImageTransformation extends Component {
         });
     }
 
-    mouseMove(ev) {
+    pointerMove(ev) {
         if (!this.transfo.active) {
             return;
         }
@@ -180,13 +180,13 @@ export class ImageTransformation extends Component {
         this.positionTransfoContainer();
     }
 
-    mouseUp() {
+    pointerUp() {
         this.isCurrentlyTransforming = false;
         this.transfo.active = null;
         this.props.onChange();
     }
 
-    mouseDown(ev) {
+    pointerDown(ev) {
         if (this.transfo.active) {
             return;
         }
