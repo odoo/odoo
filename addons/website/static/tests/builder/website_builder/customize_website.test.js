@@ -8,6 +8,7 @@ import {
     models,
     defineModels,
     patchWithCleanup,
+    registerTemplate,
 } from "@web/../tests/web_test_helpers";
 import {
     defineWebsiteModels,
@@ -15,7 +16,6 @@ import {
 } from "@website/../tests/builder/website_helpers";
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { ToggleBodyBgImageAction } from "@website/builder/plugins/customize_website_plugin";
-import { renderToString } from "@web/core/utils/render";
 
 defineWebsiteModels();
 
@@ -479,9 +479,9 @@ test("theme background image is properly set", async () => {
 });
 
 test("BuilderButton with action “templatePreviewableWebsiteConfig”", async () => {
-    renderToString.app.addTemplate("test.template.1", `<div class="template1"></div>`);
-    renderToString.app.addTemplate("test.template.2", `<div class="template2"></div>`);
-    renderToString.app.addTemplate("test.template.3", `<div class="template3"></div>`);
+    registerTemplate("test.template.1", `<div class="template1"></div>`);
+    registerTemplate("test.template.2", `<div class="template2"></div>`);
+    registerTemplate("test.template.3", `<div class="template3"></div>`);
     onRpc("/website/theme_customize_data", async (request) => {
         const { params } = await request.json();
         expect.step("theme_customize_data");
