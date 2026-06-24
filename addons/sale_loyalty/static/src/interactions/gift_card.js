@@ -14,14 +14,14 @@ export class GiftCardCopy extends Interaction {
     onClick(ev) {
         const clipboardButtonEl = ev.currentTarget;
         const textValue = clipboardButtonEl.dataset.clipboardText;
-        const tooltip = window.Tooltip.getOrCreateInstance(clipboardButtonEl, {
-            title: _t("Copied"),
-            trigger: "manual",
-            placement: "bottom",
-        });
+        const iconEl = clipboardButtonEl.querySelector("i");
         browser.navigator.clipboard.writeText(textValue);
-        tooltip.show();
-        this.waitForTimeout(() => tooltip.hide(), 1200);
+        iconEl.classList.replace("fa-clone", "fa-check");
+        iconEl.classList.add("text-success");
+        this.waitForTimeout(() => {
+            iconEl.classList.replace("fa-check", "fa-clone");
+            iconEl.classList.remove("text-success");
+        }, 1800);
     }
 }
 

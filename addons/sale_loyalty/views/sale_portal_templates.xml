@@ -25,25 +25,27 @@
                 <h6 t-if="not hide_intro" class="mb-3">
                     Your gift card<t t-if="len(gift_cards) > 1">s are</t><t t-else=""> is</t> ready to use
                 </h6>
-                <div class="o_purchased_gift_cards">
+                <div class="o_purchased_gift_cards row row-cols-2">
                     <t t-foreach="gift_cards" t-as="gift_card">
-                        <span class="o_purchased_gift_card_label text-muted">
+                        <small t-attf-class="o_purchased_gift_card_label col-12 mb-1 text-muted #{' mt-4' if not gift_card_first else ''}">
                             Gift card <t t-out="gift_card_index + 1"/>:
-                            <t t-out="gift_card._format_points(order._get_real_points_for_coupon(gift_card, post_confirm=True))"/>
-                        </span>
-                        <div class="o_purchased_gift_card d-flex align-items-center justify-content-between gap-3 rounded px-3 py-2">
-                            <strong class="h6 mb-0 text-muted text-nowrap" t-out="gift_card.code"/>
-                            <button
-                                type="button"
-                                class="btn border-0 p-0 copy-to-clipboard"
-                                t-att-data-clipboard-text="gift_card.code"
-                                title="Copy code"
-                                aria-label="Copy code"
-                            >
-                                <i class="fa fa-clone"/>
-                            </button>
+                            <span class="fw-bold" t-out="gift_card._format_points(order._get_real_points_for_coupon(gift_card, post_confirm=True))"/>
+                        </small>
+                        <div class="o_purchased_gift_card col-12 col-md-4 col-lg-5 col-xl-4 gap-2 pe-md-0">
+                            <div class="d-flex align-items-center justify-content-between border px-2 pe-0 rounded">
+                                <span class="mb-0 fs-6 text-nowrap opacity-50" t-out="gift_card.code"/>
+                                <button
+                                    type="button"
+                                    class="copy-to-clipboard btn m-1 border-0 p-0"
+                                    t-att-data-clipboard-text="gift_card.code"
+                                    title="Copy code"
+                                    aria-label="Copy code"
+                                >
+                                    <i class="fa fa-clone"/>
+                                </button>
+                            </div>
                         </div>
-                        <form class="o_gift_card_send_form">
+                        <form class="o_gift_card_send_form col-12 col-md mt-2 mt-md-0">
                             <input
                                 type="hidden"
                                 name="code"
