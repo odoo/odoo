@@ -190,7 +190,7 @@ class SaleOrderLine(models.Model):
 
             if qty_to_invoice:
                 line.qty_to_invoice = qty_to_invoice
-            else:
+            elif start_date or end_date:
                 prev_inv_status = line.invoice_status
                 line.qty_to_invoice = qty_to_invoice
                 line.invoice_status = prev_inv_status
