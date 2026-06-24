@@ -146,6 +146,7 @@ class WebsiteEventBoothController(WebsiteEventController):
                     additional_values={contact_email_normalized: {
                         'phone': kwargs.get('contact_phone'),
                         'name': kwargs.get('contact_name'),
+                        'lang': request.env.lang,
                     }},
                 )
             else:
