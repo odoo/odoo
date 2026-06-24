@@ -193,7 +193,7 @@ export class EditorOverlay extends Component {
         if (canFlip) {
             // Don't show the overlay when the selection is out of the screen
             const target = this.props.target || this.getSelectionTarget();
-            if (target.ownerDocument !== window.top.document) {
+            if (target.ownerDocument !== overlayElement.ownerDocument) {
                 const iframe = getIFrame(overlayElement, target);
                 const iframeRect = iframe.getBoundingClientRect();
                 top -= iframeRect.top;
