@@ -7,7 +7,7 @@ import { KeepLast } from "@web/core/utils/concurrency";
 import { user } from "@web/core/user";
 import { useDebounced } from "@web/core/utils/timing";
 import { SearchMedia } from "./search_media";
-import { Component, onWillStart, proxy, signal, useListener, xml } from "@odoo/owl";
+import { Component, onWillStart, proxy, signal, useEffect, useListener, xml } from "@odoo/owl";
 
 export const IMAGE_MIMETYPES = [
     "image/jpg",
@@ -135,16 +135,9 @@ export class FileSelectorControlPanel extends Component {
         });
         this.debouncedValidateUrl = useDebounced(this.props.validateUrl, 500);
 
-        const urlInputRef = this.urlInputRef;
-
-        // useLayoutEffect(
-        //     () => {
-        //         if (this.state.showUrlInput) {
-        //             urlInputRef().focus();
-        //         }
-        //     },
-        //     () => [this.state.showUrlInput]
-        // );
+        useEffect(() => {
+            this.urlInputRef()?.focus();
+        });
     }
 
     get showSearchServiceSelect() {
@@ -230,22 +223,21 @@ export class FileSelector extends Component {
 
         // The modal body is a structural part of the dialog, it is therefore
         // only rendered along with the modal itself.
-        useListener(
-            () => this.props.modalRef()?.querySelector("main.modal-body"),
-            "scroll",
-            this.debouncedOnScroll
-        );
+        const modalBody = () => this.props.modalRef()?.querySelector("main.modal-body");
+        useListener(modalBody, "scroll", this.debouncedOnScroll);
 
-        // useLayoutEffect(
-        //     () => {
-        //         // Updating the scroll button each time the attachments change.
-        //         // Hiding the "Load more" button to prevent it from flickering.
-        //         this.loadMoreButtonRef().classList.add("o_hide_loading");
-        //         this.state.canScrollAttachments = false;
-        //         this.debouncedScrollUpdate();
-        //     },
-        //     () => [this.allAttachments.length]
-        // );
+        useEffect(() => {
+            // Re-run each time the attachments change, and once the button is mounted.
+            void this.allAttachments.length;
+            const loadMoreButton = this.loadMoreButtonRef();
+            if (!loadMoreButton) {
+                return;
+            }
+            // Hiding the "Load more" button to prevent it from flickering.
+            loadMoreButton.classList.add("o_hide_loading");
+            this.state.canScrollAttachments = false;
+            this.debouncedScrollUpdate();
+        });
     }
 
     get canLoadMore() {
