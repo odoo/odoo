@@ -133,6 +133,7 @@ export {
     toggleSearchBarMenu,
     validateSearch,
 } from "./_framework/search_test_helpers";
+export { registerTemplate } from "./_framework/templates_test_helpers";
 export { swipeLeft, swipeRight } from "./_framework/touch_helpers";
 export {
     allowTranslations,
