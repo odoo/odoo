@@ -1909,14 +1909,25 @@ def verify_limited_field_access_token(record, field_name, access_token):
     ) and datetime.datetime.now() < datetime.datetime.fromtimestamp(int(timestamp, 16))
 
 
-ADDRESS_REGEX = re.compile(r'^(.*?)(\s[0-9][0-9\S]*)?(?: - (.+))?$', flags=re.DOTALL)
+ADDRESS_REGEXES = [
+    re.compile(r'^(?P<bldgnb>[0-9][0-9\S]*)\s+(?P<street>.*?),?(?: - (?P<door_nb>.+))?$', flags=re.DOTALL),
+    re.compile(r'^(?P<street>.*?)\s*(?P<comma>,)?\s*(?P<bldgnb>[0-9][a-zA-Z0-9]*)?(?(comma)|(?=\s*[,-]|\s*$))(?:\s*-\s*(?P<door_nb>.*?)(?=\s*,|\s*$))?', flags=re.DOTALL),
+]
 def street_split(street):
-    match = ADDRESS_REGEX.match(street or '')
-    results = match.groups('') if match else ('', '', '')
+    for regex in ADDRESS_REGEXES:
+        match = regex.match(street or '')
+        results = match.groupdict() if match else {}
+        if results:
+            return {
+                'street_name': (results.get('street') or '').strip(),
+                'street_number': (results.get('bldgnb') or '').strip(),
+                'street_number2': (results.get('door_nb') or '').strip(),
+            }
+
     return {
-        'street_name': results[0].strip(),
-        'street_number': results[1].strip(),
-        'street_number2': results[2],
+        'street_name': '',
+        'street_number': '',
+        'street_number2': '',
     }
 
 
