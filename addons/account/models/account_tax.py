@@ -4877,7 +4877,7 @@ class AccountTax(models.Model):
             .filtered(lambda x: x.repartition_type == repartition_type and x.document_type == document_type)\
             .mapped('tag_ids')
 
-    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, is_refund=False, handle_price_include=True, include_caba_tags=False, rounding_method=None):
+    def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, is_refund=False, handle_price_include=True, include_caba_tags=False, rounding_method=None, document_tax_mode=None):
         """Compute all information required to apply taxes (in self + their children in case of a tax group).
         We consider the sequence of the parent for group of taxes.
         Eg. considering letters as taxes and alphabetic order as sequence::
@@ -4947,6 +4947,7 @@ class AccountTax(models.Model):
             quantity=quantity,
             is_refund=is_refund,
             special_mode=special_mode,
+            document_tax_mode=document_tax_mode,
         )
         self._add_tax_details_in_base_line(base_line, company, rounding_method=rounding_method)
         self.with_context(
