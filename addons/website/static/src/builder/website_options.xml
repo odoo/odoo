@@ -88,7 +88,6 @@
             <image_tool_option selector="img" exclude="[data-oe-type='image'] > img:not([data-attachment-id])"/>
             <image_pop_up_option template="website.ImagePopUpOption" selector="img" exclude="a img, header img, footer img, .s_image_gallery img, *:has(> a.stretched-link) img, .o_product_detail_img_wrapper img"/>
             <image_and_fa_option
-                template="html_builder.ImageAndFaOption"
                 selector="span.fa, i.fa, img"
                 t-attf-exclude="[data-oe-type='image'] > img, [data-oe-xpath], {{socialMediaElementsSelector}}"/>
             <dynamic_svg_option t-att-selector="this.dynamicSVGSelector"/>
