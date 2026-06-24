@@ -665,6 +665,8 @@
             </xpath>
             <xpath expr="//field[@name='work_entry_type_id']" position="attributes">
                 <attribute name="domain">[
+                    ('id', 'in', allowed_work_entry_type_ids),
+                    ('time_off_selectable', '=', True),
                     '|',
                         ('requires_allocation', '=', False),
                         '&amp;',
