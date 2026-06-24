@@ -150,8 +150,7 @@ class ResPartner(models.Model):
         for partner in self:
             partner.is_ubl_format = partner.invoice_edi_format in self._get_ubl_cii_formats()
 
-    @api.depends('commercial_partner_id', 'commercial_partner_id.vat',
-                 'commercial_partner_id.additional_identifiers', 'commercial_partner_id.country_id')
+    @api.depends('vat', 'additional_identifiers', 'country_id')
     def _compute_routing_scheme_endpoint(self):
         for partner in self:
             identifier_vals = partner._get_preferred_routing_identifier_vals(force_recompute=True)
@@ -220,7 +219,7 @@ class ResPartner(models.Model):
         - Returns empty dict when nothing routable is available.
         """
         self.ensure_one()
-        partner = self.commercial_partner_id
+        partner = self.commercial_partner_id or self  # if it's a new record, the commercial can be empty
         if not force_recompute and partner.routing_scheme and partner.routing_endpoint and partner.routing_scheme in ISO_IDENTIFIERS_METADATA:
             return {'scheme': partner.routing_scheme, 'value': partner.routing_endpoint}
         identifier_vals = pick_preferred_identifier(
