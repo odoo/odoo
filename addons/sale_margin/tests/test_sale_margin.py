@@ -44,7 +44,7 @@ class TestSaleMargin(SaleCommon):
             list_price=100.0, standard_price=50.0, taxes_id=[Command.set([])]
         )
         tax_group = cls.env["account.tax.group"].create({"name": "Tax Group A"})
-        cls.tax_included, cls.tax_excluded = cls.env["account.tax"].create([
+        cls.tax_included, cls.tax_excluded, cls.tax_default = cls.env["account.tax"].create([
             {
                 "name": "Tax with price include",
                 "amount": 50,
@@ -57,6 +57,7 @@ class TestSaleMargin(SaleCommon):
                 "price_include_override": "tax_excluded",
                 "tax_group_id": tax_group.id,
             },
+            {"name": "Tax with default", "amount": 50, "tax_group_id": tax_group.id},
         ])
 
         cls.so = cls._create_so(
@@ -291,6 +292,31 @@ class TestSaleMargin(SaleCommon):
         # Price excluded taxes should not have any impact on the margin computation
         self._test_margin_onchange("margin", TAX_INCL_VALUES[1:])
         self._test_margin_onchange("margin_percent", TAX_INCL_VALUES[1:])
+
+    def test_margin_onchanges_document_tax_mode(self):
+        self.product_50_margin.taxes_id = [Command.link(self.tax_default.id)]
+        self.so._recompute_taxes()
+        self.assertRecordValues(
+            self.sol,
+            [
+                {
+                    "price_unit": 100.0,
+                    "purchase_price": 50.0,
+                    "margin": 50,
+                    "margin_percent": 0.5,
+                    "tax_ids": [self.tax_default.id],
+                    "document_tax_mode": "tax_excluded",
+                }
+            ],
+        )
+        # Price excluded taxes should not have any impact on the margin computation
+        self._test_margin_onchange("margin", NO_TAX_INCL_VALUES)
+        self._test_margin_onchange("margin_percent", NO_TAX_INCL_VALUES)
+
+        # When price_include_override is not set, the tax policy depends on the document_tax_mode
+        self.sol.order_id.document_tax_mode = "tax_included"
+        self._test_margin_onchange("margin", TAX_INCL_VALUES)
+        self._test_margin_onchange("margin_percent", TAX_INCL_VALUES)
 
     def _test_margin_onchange(self, fname, vals_list):
         with Form(self.so) as so_form, so_form.order_line.edit(0) as sol_form:
