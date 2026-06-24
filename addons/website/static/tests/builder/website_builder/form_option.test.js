@@ -1,7 +1,14 @@
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, edit, press } from "@odoo/hoot-dom";
-import { contains, defineModels, models, onRpc, webModels } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    defineModels,
+    models,
+    onRpc,
+    patchWithCleanup,
+    webModels,
+} from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import {
@@ -650,4 +657,29 @@ test("Changing field type from date to datetime removes value property (and attr
 
     expect(":iframe input#field").toHaveAttribute("value", "");
     expect(":iframe input#field").toHaveProperty("value", "");
+});
+
+test("Don't crash when current form model is not allowed", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+
+    // Set one form model to still see the dropdown while not being the default
+    // current form model.
+    patchWithCleanup(webModels.IrModel.prototype, {
+        get_compatible_form_models() {
+            return [
+                {
+                    id: 687,
+                    model: "hr.applicant",
+                    name: "Applicant",
+                    website_form_label: "Apply for a Job",
+                    website_form_key: "apply_job",
+                },
+            ];
+        },
+    });
+
+    await setupWebsiteBuilderWithSnippet("s_website_form");
+    await contains(":iframe .s_website_form_field").click();
+    await contains("[data-label='Action'] button:contains('None')").click();
+    await contains("[data-action-id='selectAction']:contains('Apply for a Job')").click();
 });
