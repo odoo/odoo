@@ -722,7 +722,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not self.env.website.has_ecommerce_access():
             return request.redirect(f"/web/login?redirect={request.httprequest.path}")
 
-        if website_id := kwargs.pop("website", kwargs.pop("website_id", None)):
+        if website_id := kwargs.pop("website", None):
             if website := request.env["website"].browse(int(website_id)).exists():
                 # We cannot simply use the domain URL for the redirect because,
                 # although in practice we usually have one domain per website,

@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import OrderedDict
-from urllib.parse import urlencode, urlparse
+from urllib.parse import urlencode, urlsplit
 
 from odoo import api, fields, models
 from odoo.http import request
@@ -33,15 +33,22 @@ class ProductProduct(models.Model):
 
     # === COMPUTE METHODS ===#
 
-    @api.depends_context("lang")
+    @api.depends_context("lang", "notification_website_id")
     @api.depends("product_tmpl_id.website_url", "product_template_attribute_value_ids")
     def _compute_product_website_url(self):
         slug = self.env["ir.http"]._slug
         for product in self:
-            url = urlparse(product.product_tmpl_id.website_url)
             query_params = {}
-            if website_id := self.env.context.get("website_url_website_id"):
+            if (website_id := self.env.context.get("notification_website_id")) and (
+                website := self.env["website"].browse(website_id).exists()
+            ):
+                base = urlsplit(website.get_base_url())
+                url = urlsplit(product.product_tmpl_id.website_url)._replace(
+                    scheme=base.scheme, netloc=base.netloc
+                )
                 query_params["website"] = website_id
+            else:
+                url = urlsplit(product.product_tmpl_id.website_url)
             if pavs := product.product_template_attribute_value_ids.product_attribute_value_id:
                 # There's no need to group the PAVs by attribute since a product variant can have
                 # only one PAV per attribute.
@@ -323,7 +330,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
         if not self.is_storable or self.allow_out_of_stock_order:
             return False
-        website = website or self.env["website"].get_current_website()
+        website = website or self.env.website
         free_qty = website._get_product_available_qty(self.sudo())
         return free_qty <= 0
 
@@ -370,16 +377,15 @@ class ProductProduct(models.Model):
         - company partner email
         - website salesperson email
         - company email_formatted, which includes the mail alias domain catchall
-        - current user email
         """
-        notifications_to_send = self.env["product.stock.notification"]
-        for _, _, notifications in filter(
-            lambda g: not g[0].with_company(g[1].company_id)._is_sold_out(website=g[1]),
-            self.env["product.stock.notification"]._read_group(
-                [], groupby=["product_id", "website_id"], aggregates=["id:recordset"]
-            ),
-        ):
-            notifications_to_send |= notifications
+        grouped_notifications = self.env["product.stock.notification"]._read_group(
+            [], groupby=["product_id", "website_id"], aggregates=["id:recordset"]
+        )
+        notifications_to_send = [
+            notification
+            for product, website, notification in grouped_notifications
+            if not product.with_company(website.company_id)._is_sold_out(website=website)
+        ]
         self.env["ir.cron"]._commit_progress(remaining=len(notifications_to_send))
         email_template = self.env.ref(
             "website_sale.email_template_back_in_stock", raise_if_not_found=False
@@ -393,7 +399,6 @@ class ProductProduct(models.Model):
                 website.company_id.partner_id.email_formatted
                 or website.salesperson_id.email_formatted
                 or website.company_id.email_formatted
-                or self.env.user.email_formatted
             )
             email_template.with_user(website.salesperson_id).sudo().with_context(
                 customer_name=partner.name, lang=partner.lang

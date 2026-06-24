@@ -322,7 +322,7 @@
                     </div>
                     <div t-attf-style="margin-bottom: 22px; font-size: 14px;">
                         <a
-                            t-att-href="product.with_context(website_url_website_id=website.id).website_url"
+                            t-att-href="product.with_context(notification_website_id=website.id).website_url"
                             t-attf-style="background-color: {{website.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{website.company_id.email_primary_color or '#fff'}}; border-radius: 5px; font-size:14px;"
                         >
                             Order Now
