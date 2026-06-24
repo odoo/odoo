@@ -19,3 +19,16 @@ class ResCompany(models.Model):
             else:
                 domain = [('country_id', '=', country.id)]
             company.allowed_work_entry_type_ids = self.env['hr.work.entry.type'].search(domain)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        companies = super().create(vals_list)
+        if any(company.country_id for company in companies):
+            self.env['hr.work.entry.type']._archive_generic_types()
+        return companies
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'country_id' in vals:
+            self.env['hr.work.entry.type']._archive_generic_types()
+        return res
