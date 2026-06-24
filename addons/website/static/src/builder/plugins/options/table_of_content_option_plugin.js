@@ -56,9 +56,13 @@ export class TableOfContentOptionPlugin extends Plugin {
         });
     }
 
+    getNavbarContainer(tableOfContentEl) {
+        return tableOfContentEl.querySelector(".s_table_of_content_navbar");
+    }
+
     updateTableOfContentNavbar(tableOfContentMain) {
         const tableOfContent = tableOfContentMain.closest(".s_table_of_content");
-        const tableOfContentNavbar = tableOfContent.querySelector(".s_table_of_content_navbar");
+        const tableOfContentNavbar = this.getNavbarContainer(tableOfContent);
         const currentNavbarItems = [...tableOfContentNavbar.children].map((el) => ({
             title: el.textContent,
             href: el.getAttribute("href"),

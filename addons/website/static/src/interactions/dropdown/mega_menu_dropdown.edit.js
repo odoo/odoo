@@ -41,6 +41,14 @@ const MegaMenuDropdownEdit = (I) =>
                 }
             });
         }
+
+        megaMenuOfToggle(megaMenuToggleEl) {
+            return (
+                megaMenuToggleEl.parentElement.matches("[data-oe-translate-state]")
+                    ? megaMenuToggleEl
+                    : megaMenuToggleEl.parentElement
+            ).parentElement.querySelector(".o_mega_menu");
+        }
     };
 
 registry.category("public.interactions.edit").add("website.mega_menu_dropdown", {

@@ -164,61 +164,6 @@ class TranslationToolsTestCase(BaseCase):
         self.assertEqual(result, source)
         self.assertItemsEqual(terms, ['Form stuff'])
 
-    def test_translate_xml_o_translate_inline_on_block(self):
-        """ Test xml_translate() with non-inline elements with o_translate_inline. """
-        terms = []
-        source = """<div>
-                        <h1 class="o_translate_inline">Blah</h1>more text
-                        <h1 class="o_translate_inline" t-if="True">Other Blah</h1>even more text
-                    </div>"""
-        result = xml_translate(terms.append, source)
-        self.assertEqual(result, source)
-        self.assertItemsEqual(terms,
-            ['<h1 class="o_translate_inline">Blah</h1>more text', 'Other Blah', 'even more text'])
-
-    def test_translate_xml_o_translate_inline_on_parent(self):
-        """ Test xml_translate() with non-inline elements inside o_translate_inline. """
-        terms = []
-        source = """<div>
-                        <span class="o_translate_inline">Blah<h1>more text</h1></span>
-                        <span class="o_translate_inline">Other Blah<h1 t-if="True">even more text</h1></span>
-                    </div>"""
-        result = xml_translate(terms.append, source)
-        self.assertEqual(result, source)
-        self.assertItemsEqual(terms,
-            ['<span class="o_translate_inline">Blah<h1>more text</h1></span>', 'Other Blah', 'even more text'])
-
-    def test_translate_xml_highlight(self):
-        """ Test xml_translate() with highlight span (with o_translate_inline). """
-        terms = []
-        source = """<div>
-                        <span class="o_text_highlight o_translate_inline">
-                            <a>solo link</a>
-                        </span>
-                    </div>
-                    <div>
-                        <span class="o_text_highlight o_translate_inline">
-                            <span>Here is a <a>nested link</a> in highlight</span>
-                        </span>
-                    </div>"""
-        result = xml_translate(terms.append, source)
-        self.assertEqual(result, source)
-        self.assertItemsEqual(terms, ["""<span class="o_text_highlight o_translate_inline">
-                            <a>solo link</a>
-                        </span>""", """<span class="o_text_highlight o_translate_inline">
-                            <span>Here is a <a>nested link</a> in highlight</span>
-                        </span>"""])
-
-    def test_translate_xml_o_translate_inline_with_groups(self):
-        """ Test xml_translate() with groups attribute and with o_translate_inline. """
-        terms = []
-        source = """<div>
-                        <a class="o_translate_inline" href="#" groups="anyone">Skip</a>
-                    </div>"""
-        result = xml_translate(terms.append, source)
-        self.assertEqual(result, source)
-        self.assertItemsEqual(terms, ['Skip'])
-
     def test_translate_xml_groups(self):
         """ Test xml_translate() with groups attributes. """
         terms = []
@@ -285,7 +230,9 @@ class TranslationToolsTestCase(BaseCase):
         result = xml_translate(terms.append, source)
         self.assertEqual(result, source)
         self.assertItemsEqual(terms,
-            ['<span class="oe_menu_text">Blah</span>'])
+            ["""<a class="nav-link oe_menu_leaf" href="/odoo/action-54?menu_id=42">
+                                    <span class="oe_menu_text">Blah</span>
+                                </a>"""])
 
     def test_translate_xml_with_namespace(self):
         """ Test xml_translate() on elements with namespaces. """

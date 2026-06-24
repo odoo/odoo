@@ -122,7 +122,7 @@ export function renderField(field, resetId = false) {
             field.type === "boolean"
                 ? markup`<span>${_t(
                       "I agree to the"
-                  )} <a class="o_translate_inline" href="#bottom" target="_blank">Terms & Conditions</a></span>`
+                  )} <a href="#bottom" target="_blank">Terms & Conditions</a></span>`
                 : _t("Describe your field here.");
     } else if (["email_cc", "email_to"].includes(field.name)) {
         params.default_description = _t("Separate email addresses with a comma.");

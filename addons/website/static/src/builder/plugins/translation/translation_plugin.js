@@ -5,6 +5,7 @@ import { withSequence } from "@html_editor/utils/resource";
 import { makeContentsInline, unwrapContents } from "@html_editor/utils/dom";
 import { DISABLED_NAMESPACE } from "@html_editor/main/toolbar/toolbar_plugin";
 import { closestElement } from "@html_editor/utils/dom_traversal";
+import { patch } from "@web/core/utils/patch";
 
 /**
  * @typedef {Map<HTMLElement, ElementTranslationInfo} ElToTranslationInfoMap
@@ -72,6 +73,7 @@ export class TranslationPlugin extends Plugin {
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
+        force_background_translation_state_selectors: ["a[role]", "a.nav-link"],
         clean_for_save_processors: this.cleanForSave.bind(this),
         dirty_els_providers: this.getDirtyTranslations.bind(this),
         on_replicated_handlers: ({ sourceEl, targetEl }) => {
@@ -119,8 +121,38 @@ export class TranslationPlugin extends Plugin {
         this.websiteService = this.services.website;
         this.notificationService = this.services.notification;
         this.dialogService = this.services.dialog;
-        this.nonTranslatedSelector =
-            `:not(${this.config.translatedElements.join(", ")})` + `:not(.o_translate_inline)`;
+        this.nonTranslatedSelector = `:not(${this.config.translatedElements.join(", ")})`;
+
+        this.unpatchDropdown = this.window.Dropdown // null in tests without loadAssetsFrontendJS
+            ? patch(this.window.Dropdown, {
+                  getOrCreateInstance(element, config = {}) {
+                      const existingInstance = this.getInstance(element);
+                      if (existingInstance) {
+                          return existingInstance;
+                      } else {
+                          const newDropdown = new this(
+                              element,
+                              typeof config === "object" ? config : null
+                          );
+                          if (element.parentNode.matches("span[data-oe-translation-state]")) {
+                              const translationSpan = element.parentNode;
+                              // adapted from bootstrap's dropdown's contructor
+                              // to take the translation span into account
+                              newDropdown._parent = translationSpan.parentNode;
+                              const SELECTOR_MENU =
+                                  ".dropdown-menu:not(.o-dropdown--menu, span[data-oe-translation-state])";
+                              newDropdown._menu = newDropdown._parent.querySelector(SELECTOR_MENU);
+                          }
+                          return newDropdown;
+                      }
+                  },
+              })
+            : () => {};
+    }
+
+    destroy() {
+        super.destroy();
+        this.unpatchDropdown();
     }
 
     prepareTranslation() {
@@ -163,16 +195,6 @@ export class TranslationPlugin extends Plugin {
                 sticky: false,
             });
         };
-        // The TOC navbar lives under `.o_not_editable`, so its translation
-        // spans are excluded from `findOEditable`. Iterate them explicitly
-        // so `handleToC` can align their source SHA with the matching
-        // heading and tag them with `o_translation_without_style`.
-        const tocNavTranslationEls = this.editable.querySelectorAll(
-            ".s_table_of_content_navbar_wrap [data-oe-translation-source-sha]"
-        );
-        for (const translateEl of new Set([...this.editableEls, ...tocNavTranslationEls])) {
-            this.handleToC(translateEl);
-        }
         const savableInsideNotEditableEls = this.editable.querySelectorAll(
             ".o_not_editable .o_savable, .o_not_editable .o_savable_attribute"
         );
@@ -307,34 +329,6 @@ export class TranslationPlugin extends Plugin {
         }
     }
 
-    handleToC(translateEl) {
-        if (translateEl.closest(".s_table_of_content_navbar_wrap")) {
-            // Make sure the same translation ids are used
-            const href = translateEl.closest("a").getAttribute("href");
-            const headerEl = translateEl
-                .closest(".s_table_of_content")
-                .querySelector(`${href} [data-oe-translation-source-sha]`);
-            if (headerEl) {
-                if (
-                    translateEl.dataset.oeTranslationSourceSha !==
-                    headerEl.dataset.oeTranslationSourceSha
-                ) {
-                    // Use the same identifier for the generated navigation
-                    // label and its associated header so that the general
-                    // synchronization mechanism kicks in.
-                    // The initial value is kept to be restored before save in
-                    // order to keep the translation of the unstyled label
-                    // distinct from the one of the header.
-                    translateEl.dataset.oeTranslationSaveSha =
-                        translateEl.dataset.oeTranslationSourceSha;
-                    translateEl.dataset.oeTranslationSourceSha =
-                        headerEl.dataset.oeTranslationSourceSha;
-                }
-                translateEl.classList.add("o_translation_without_style");
-            }
-        }
-    }
-
     markTranslatableNodes() {
         // attributes
         for (const [translateEl, translationInfo] of this.elToTranslationInfoMap) {
@@ -426,10 +420,6 @@ export class TranslationPlugin extends Plugin {
         root.querySelectorAll(".o_savable_attribute").forEach((el) => {
             el.classList.remove("o_savable_attribute");
         });
-        if (root.dataset.oeTranslationSaveSha) {
-            root.dataset.oeTranslationSourceSha = root.dataset.oeTranslationSaveSha;
-            delete root.dataset.oeTranslationSaveSha;
-        }
     }
 }
 
