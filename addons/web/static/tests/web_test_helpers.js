@@ -38,22 +38,22 @@ import { globalCachedFetch } from "./_framework/module_set.hoot";
  */
 
 export {
+    clearRegistry,
+    getMockEnv,
+    getService,
+    makeDialogMockEnv,
+    makeMockEnv,
+    mockOffline,
+    mockService,
+    restoreRegistry,
+} from "./_framework/app_test_helpers";
+export {
     findComponent,
     getDropdownMenu,
     mountWithCleanup,
     waitUntilIdle,
 } from "./_framework/component_test_helpers";
 export { contains, defineStyle, editAce, sortableDrag } from "./_framework/dom_test_helpers";
-export {
-    clearRegistry,
-    getMockEnv,
-    getService,
-    makeDialogMockEnv,
-    makeMockEnv,
-    mockService,
-    restoreRegistry,
-    mockOffline,
-} from "./_framework/env_test_helpers";
 export {
     clickKanbanLoadMore,
     clickKanbanRecord,
