@@ -1,9 +1,12 @@
+import base64
 import logging
 import re
 from xml.dom.minidom import parseString
 
 from dateutil.relativedelta import relativedelta
+from hashlib import sha256
 from lxml import etree
+from stdnum.pl.nip import compact
 from decimal import Decimal
 
 from odoo import Command, api, fields, models
@@ -290,6 +293,31 @@ class AccountMove(models.Model):
         ksef_values = self._l10n_pl_edi_get_xml_values()
         xml_content = self.env['ir.qweb']._render(qweb_template.id, ksef_values)
         return "\n".join([line for line in xml_content.splitlines() if line.strip()])
+
+    def _l10n_pl_edi_generate_qr_link(self):
+        self.ensure_one()
+        if self.l10n_pl_edi_attachment_file:
+            mode = self.env['ir.config_parameter'].sudo().get_str('l10n_pl_edi_ksef.mode', 'prod')
+            base_link = "https://qr.ksef.mf.gov.pl/invoice/" if mode == 'prod' else "https://qr-test.ksef.mf.gov.pl/invoice/"
+            return (
+                f"{base_link}"
+                f"{compact(self.company_id.vat)}/"
+                f"{self.invoice_date.strftime('%d-%m-%Y')}/"
+                f"{base64.urlsafe_b64encode(sha256(base64.b64decode(self.l10n_pl_edi_attachment_file)).digest()).decode()}"
+            )
+        return ""
+
+    def _l10n_pl_edi_generate_qr(self):
+        self.ensure_one()
+        return base64.b64encode(
+            self.env['ir.actions.report'].barcode(
+                barcode_type='QR',
+                value=self._l10n_pl_edi_generate_qr_link(),
+                width=180,
+                height=180,
+                quiet=0,
+            )
+        )
 
     def _l10n_pl_edi_get_status_mapping(self):
         """
