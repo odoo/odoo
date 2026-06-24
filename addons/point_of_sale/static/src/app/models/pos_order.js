@@ -760,7 +760,7 @@ export class PosOrder extends PosOrderAccounting {
     }
 
     get floatingOrderName() {
-        return this.floating_order_name || this.tracking_number.toString() || "";
+        return this.floating_order_name || this.tracking_number?.toString() || "";
     }
 
     sortBySequenceAndCategory(a, b) {
@@ -786,6 +786,17 @@ export class PosOrder extends PosOrderAccounting {
             value: this.discountLines?.[0]?.extra_tax_data?.discount_value || 0,
             type: this.discountLines?.[0]?.extra_tax_data?.discount_type || "",
         };
+    }
+
+    get isDirectSale() {
+        return false; // Overridden in pos_restaurant
+    }
+
+    get preparationName() {
+        if (this.isDirectSale) {
+            return this.floatingOrderName || this.pos_reference;
+        }
+        return this.getName();
     }
 
     getName() {
@@ -819,7 +830,7 @@ export class PosOrder extends PosOrderAccounting {
     getOrderData(reprint = false) {
         return {
             reprint: reprint,
-            pos_reference: this.getName(),
+            pos_reference: this.preparationName,
             config_name: this.config_id?.name || this.config.name,
             time: luxon.DateTime.now().toFormat("HH:mm"),
             tracking_number: this.tracking_number,
