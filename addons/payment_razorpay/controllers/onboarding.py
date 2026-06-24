@@ -34,9 +34,9 @@ class RazorpayController(Controller):
         provider_id = int(data['provider_id'])
         authorization_code = data.get('authorization_code')
         csrf_token = data['csrf_token']
-        provider_sudo = request.env['payment.provider'].sudo().browse(provider_id).exists()
-        if not provider_sudo or provider_sudo.code != 'razorpay':
-            raise ValidationError(_("Could not find Razorpay provider with id %s", provider_sudo))
+        provider = request.env['payment.provider'].browse(provider_id).exists()
+        if not provider or provider.code != 'razorpay':
+            raise ValidationError(_("Could not find Razorpay provider with id %s", provider))
 
         # Verify the CSRF token.
         if not request.validate_csrf(csrf_token):
@@ -45,7 +45,7 @@ class RazorpayController(Controller):
 
         # Request and set the OAuth tokens on the provider.
         action = request.env.ref('payment.action_payment_provider')
-        redirect_url = f'/odoo/action-{action.id}/{int(provider_sudo.id)}'
+        redirect_url = f'/odoo/action-{action.id}/{int(provider.id)}'
         if not authorization_code:  # The user cancelled the authorization.
             return request.redirect(redirect_url)
 
@@ -54,7 +54,7 @@ class RazorpayController(Controller):
             {'authorization_code': authorization_code}
         )
         try:
-            response_content = provider_sudo._send_api_request(
+            response_content = provider._send_api_request(
                 'POST', '/get_access_token', json=proxy_payload, is_proxy_request=True
             )
         except ValidationError as e:
@@ -63,7 +63,7 @@ class RazorpayController(Controller):
                 qcontext={'error_message': str(e), 'provider_url': redirect_url},
             )
         expires_in = fields.Datetime.now() + timedelta(seconds=int(response_content['expires_in']))
-        provider_sudo.write({
+        provider.write({
             # Reset the classical API key fields.
             'razorpay_key_id': None,
             'razorpay_key_secret': None,
@@ -79,7 +79,7 @@ class RazorpayController(Controller):
             'is_published': True,
         })
         try:
-            provider_sudo.action_razorpay_create_webhook()
+            provider.action_razorpay_create_webhook()
         except ValidationError as error:
             _logger.warning(error)
         return request.redirect(redirect_url)
