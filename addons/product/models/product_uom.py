@@ -27,10 +27,10 @@ class ProductUom(models.Model):
             raise ValidationError(_("A product already uses the barcode"))
 
     @api.depends('product_id')
-    @api.depends_context('default_uom_id')
+    @api.depends_context('active_model')
     def _compute_allowed_uom_ids(self):
-        if uom_id := self.env.context.get('default_uom_id'):
-            self.allowed_uom_ids = self.env['uom.uom'].browse(uom_id)
+        if self.env.context.get('active_model') == 'uom.uom':
+            self.allowed_uom_ids = self.uom_id
             return
         for product_uom in self:
             product = product_uom.product_id
