@@ -555,6 +555,8 @@ class MailingMailing(models.Model):
                 mailing.recipients_count = self.env[mailing.mailing_model_real].search_count(mailing._get_recipients_domain())
             elif mailing.contact_list_ids:
                 mailing.recipients_count = sum(contact_list.contact_count for contact_list in mailing.contact_list_ids)
+            else:
+                mailing.recipients_count = 0
 
     # ------------------------------------------------------
     # ORM
