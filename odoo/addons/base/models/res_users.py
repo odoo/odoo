@@ -436,6 +436,28 @@ class ResUsers(models.Model):
         """
         return self.env['res.groups']
 
+    @api.model
+    def _sync_minimal_light_user_groups(self):
+        """Grant the current minimal Light-user group set to existing Light users.
+
+        A Light user is provisioned with the minimal group set known at creation
+        time, so a module installed *afterwards* would never grant its group to
+        the Light users that predate it. Modules that extend
+        :meth:`_get_minimal_light_user_groups` call this from their
+        ``post_init_hook`` to top up those users: every internal user whose access
+        does not exceed the Light baseline is brought up to the full minimal set.
+        """
+        minimal = self._get_minimal_light_user_groups()
+        if not minimal:
+            return
+        group_no_one = self.env.ref('base.group_no_one')
+        light_groups = (self.env.ref('base.group_user') + minimal).all_implied_ids - group_no_one
+        internal_users = self.with_context(active_test=False).search([('share', '=', False)])
+        light_users = internal_users.filtered(
+            lambda user: not (user.all_group_ids - group_no_one - light_groups))
+        if light_users:
+            light_users.write({'group_ids': [(4, gid) for gid in minimal.ids]})
+
     @api.depends('all_group_ids')
     def _compute_role(self):
         # ``role`` is a plain projection of group membership; there is no Python
