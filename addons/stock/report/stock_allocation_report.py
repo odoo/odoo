@@ -86,7 +86,9 @@ class StockAllocationReport(models.AbstractModel):
                 if move.state == 'draft':
                     continue  # Draft quantities can't be allocated.
                 if move.move_dest_ids:
-                    assigned_qty += move.product_qty
+                    already_assigned_qty = sum(move.move_dest_ids.mapped('product_qty'))
+                    assigned_qty += min(already_assigned_qty, move.product_qty)
+                    free_qty += max(move.product_qty - already_assigned_qty, 0)
                 else:
                     free_qty += move.product_qty
 
@@ -264,6 +266,7 @@ class StockAllocationReport(models.AbstractModel):
                         out_move.move_line_ids.move_id = new_out
                     out_to_process = new_out
 
+                allocated_location = src_move.picking_type_id.allocated_location_id
                 linked_qty = min(available_quantity, qty_assigned_by_out_move_id[out_move.id])
                 available_quantity -= linked_qty
                 if src_move.state == 'done' and linked_qty:
@@ -271,6 +274,7 @@ class StockAllocationReport(models.AbstractModel):
                         linked_qty = out_move.uom_id._compute_quantity(linked_qty, product_uom)
                     qty_assigned_by_out_move_id[out_move.id] -= linked_qty
                 elif src_move.state != 'done' and\
+                     allocated_location and\
                      product_uom.compare(linked_qty, src_move.product_qty) != 0:
                     # Split source move to allocate only needed quantity.
                     original_src_move_uom = self._convert_move_quantity(src_move)
@@ -306,9 +310,12 @@ class StockAllocationReport(models.AbstractModel):
         res = defaultdict(lambda: {'in_moves': set(), 'out_moves': []})
         for (src_move_ids, allocation_data) in allocation_list:
             product_id = self.env['stock.move'].browse(src_move_ids).product_id.id
+            update_src_move_ids = set(src_move_ids)
             for (out_move_ids, quantity) in allocation_data:
-                updated_data = self.action_assign(src_move_ids, out_move_ids, quantity)
+                updated_data = self.action_assign(update_src_move_ids, out_move_ids, quantity)
                 res[product_id]['in_moves'] = updated_data['in_moves']
+                # Update source move ids list in case a move was split.
+                update_src_move_ids.update(updated_data['in_moves'])
                 res[product_id]['out_moves'].append(updated_data['out_moves'])
         return res
 
