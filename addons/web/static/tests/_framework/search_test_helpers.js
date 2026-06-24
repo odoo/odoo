@@ -2,7 +2,7 @@ import { queryAll, queryAllTexts, queryOne, queryText } from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
 import { findComponent, mountWithCleanup } from "./component_test_helpers";
 import { contains } from "./dom_test_helpers";
-import { getMockEnv, makeMockEnv } from "./env_test_helpers";
+import { getMockEnv, makeMockEnv } from "./app_test_helpers";
 
 import { WithSearch } from "@web/search/with_search/with_search";
 import { getDefaultConfig } from "@web/views/view";
@@ -155,9 +155,7 @@ export function isItemSelected(label) {
  */
 export function isOptionSelected(itemLabel, optionLabel) {
     const { parentElement: root } = queryOne`.o_menu_item:text(${itemLabel})`;
-    return queryOne(`.o_item_option:text(${optionLabel})`, { root }).classList.contains(
-        "selected"
-    );
+    return queryOne(`.o_item_option:text(${optionLabel})`, { root }).classList.contains("selected");
 }
 
 export function getMenuItemTexts() {

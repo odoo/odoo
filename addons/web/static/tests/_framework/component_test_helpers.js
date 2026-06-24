@@ -3,6 +3,7 @@ import { App, Component, onWillDestroy, xml } from "@odoo/owl";
 import { appTranslateFn } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { getPopoverForTarget } from "@web/core/popover/popover";
+import { services } from "@web/core/services";
 import { getTemplate as defaultGetTemplate } from "@web/core/templates";
 import { isIterable } from "@web/core/utils/arrays";
 import { patch } from "@web/core/utils/patch";
@@ -10,9 +11,8 @@ import {
     customDirectives as defaultCustomDirectives,
     globalValues as defaultGlobalValues,
 } from "@web/env";
-import { getMockEnv, makeApp, makeMockEnv } from "./env_test_helpers";
+import { getMockEnv, makeApp, makeMockEnv } from "./app_test_helpers";
 import { patchWithCleanup } from "./patch_test_helpers";
-import { services } from "@web/core/services";
 
 import { makeMockServer, MockServer } from "./mock_server/mock_server";
 

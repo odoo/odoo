@@ -18,7 +18,7 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 import { View } from "@web/views/view";
 import { mountWithCleanup } from "./component_test_helpers";
 import { contains } from "./dom_test_helpers";
-import { getMockEnv, getService } from "./env_test_helpers";
+import { getMockEnv, getService } from "./app_test_helpers";
 import { registerInlineViewArchs } from "./mock_server/mock_model";
 
 /**
