@@ -1132,3 +1132,20 @@ class TestChartTemplate(AccountTestInvoicingCommon):
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
             self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
         self.assertEqual(company.chart_template, 'test')
+
+    def test_install_module_partial_data(self):
+        company = self.env['res.company'].create({'name': 'Test Company'})
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
+
+        def new_module_data(self, template_code):
+            return {
+                'template_data': {},
+                'account.tax': {'deleted_xmlid': {'amount': 5}},  # if the xmlid didn't exist, assume it was deleted and don't block
+            }
+        with (
+            patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=new_module_data, autospec=True),
+            self.assertLogs('odoo.addons.account.models.chart_template', level='WARN') as log_cm,
+        ):
+            self.env['account.chart.template'].try_loading('test', company=company, install_demo=False)
+        self.assertIn("reloading the CoA for 'deleted_xmlid'", log_cm.output[0])
