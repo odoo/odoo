@@ -334,7 +334,7 @@ export class FormOptionPlugin extends Plugin {
     applyFormModel(el, activeForm, modelId, formInfo) {
         let oldFormInfo;
         if (modelId) {
-            const oldFormKey = activeForm.website_form_key;
+            const oldFormKey = activeForm?.website_form_key;
             if (oldFormKey) {
                 oldFormInfo = registry
                     .category("website.form_editor_actions")
@@ -925,7 +925,7 @@ export class SelectAction extends BuilderAction {
         const models = this.dependencies.websiteFormOption.getModelsCache(el);
         const targetModelName = getModelName(el);
         const activeForm = models.find((m) => m.model === targetModelName);
-        return parseInt(modelId) === activeForm.id;
+        return parseInt(modelId) === activeForm?.id;
     }
 }
 // Select the value of a field (hidden) that will be used on the model as a preset.
