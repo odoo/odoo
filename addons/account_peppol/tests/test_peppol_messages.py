@@ -546,9 +546,9 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
         move_2 = self.create_move(not_peppol_partner)
         (move_1 + move_2).action_post()
         wizard = self.create_send_and_print(move_1 + move_2)
+        wizard.action_send_and_print()
         self.assertEqual(peppol_partner.peppol_verification_state, 'valid')
         self.assertEqual(not_peppol_partner.peppol_verification_state, 'not_verified')
-        wizard.action_send_and_print()
         self.assertEqual((move_1 + move_2).mapped('is_being_sent'), [True, True])
         with self.enter_registry_test_mode():
             self.env.ref('account.ir_cron_account_move_send').method_direct_trigger()
