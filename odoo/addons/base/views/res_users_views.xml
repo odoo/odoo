@@ -116,6 +116,7 @@
                         </div>
                         <widget name="web_ribbon" title="External user" bg_color="text-bg-warning" invisible="not share"/>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
+                        <widget name="web_ribbon" title="Light User" bg_color="text-bg-success" invisible="role != 'light' or not active"/>
                         <div class="alert alert-info text-center o_form_header"
                             invisible="active and active_partner or not active and not active_partner or active and not active_partner"
                             role="alert">
