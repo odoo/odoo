@@ -1,5 +1,5 @@
 import { useRef } from "@web/owl2/utils";
-import { Component, props, t, xml } from "@odoo/owl";
+import { Component, props, t, useEffect, xml } from "@odoo/owl";
 import { useIsChildLarger } from "@point_of_sale/app/hooks/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
@@ -61,12 +61,10 @@ export class ListContainer extends Component {
         this.ui = useService("ui");
         this.dialog = useService("dialog");
 
-        // useLayoutEffect(
-        //     () => {
-        //         this.sizing.reload();
-        //     },
-        //     () => [this.props.items]
-        // );
+        useEffect(() => {
+            void this.props.items;
+            this.sizing.reload();
+        });
     }
     shouldBeInvisible(itemIndex) {
         return itemIndex >= this.sizing.maxItems;
