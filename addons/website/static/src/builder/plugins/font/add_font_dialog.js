@@ -87,7 +87,7 @@ export class AddFontDialog extends Component {
         valid: true,
         loading: false,
         googleFontFamily: undefined,
-        googleServe: !this.env.services.website.currentWebsite.cookies_bar,
+        googleServe: this.env.services.website.currentWebsite.cookies_bar,
         uploadedFontName: undefined,
         uploadedFonts: [],
         uploadedFontFaces: undefined,
