@@ -1,4 +1,3 @@
-import { useLayoutEffect } from "@web/owl2/utils";
 import { FloorPlanBase } from "@pos_restaurant/app/screens/floor_screen/floor_plan_base";
 import { markRaw, onWillUnmount, useListener } from "@odoo/owl";
 import { useDebounced } from "@web/core/utils/timing";
@@ -22,12 +21,12 @@ export class FloorPlan extends FloorPlanBase {
         this.ui = useService("ui");
         useListener(window, "resize", useDebounced(this.handleWindowResize, 100));
         this.scrollFloorId = null;
-        useLayoutEffect(
-            (selectedFloor, isKanban) => {
-                this.onFloorChange(selectedFloor, isKanban);
-            },
-            () => [this.floorPlanStore.selectedFloor, this.floorPlanStore.isKanban()]
-        );
+        // useLayoutEffect(
+        //     (selectedFloor, isKanban) => {
+        //         this.onFloorChange(selectedFloor, isKanban);
+        //     },
+        //     () => [this.floorPlanStore.selectedFloor, this.floorPlanStore.isKanban()]
+        // );
         this.initTableLinkDND();
         onWillUnmount(() => {
             this.saveScrollPosition();
