@@ -54,7 +54,7 @@ export class ActivityMenu extends Component {
         this.state.isDisplayed = this.employee.display_systray;
         this.state.checkedIn = this.employee.attendance_state === "checked_in";
 
-        this.hoursToday = formatFloatTime(this.employee.hours_today, { numeric: true });
+        this.hoursToday = this.localizeAndSplitDuration(this.employee.hours_today);
 
         this.attendancesToday = (this.employee.today_attendance_ids || []).map((att) => {
             const checkIn = deserializeDateTime(att.check_in).toLocaleString({
@@ -72,9 +72,9 @@ export class ActivityMenu extends Component {
                 : this.employee.last_attendance_worked_hours;
             return {
                 id: att.id,
-                start: checkIn,
-                end: checkOut,
-                duration: formatFloatTime(duration, { numeric: true }),
+                start: this.splitLocalizedTime(checkIn),
+                end: checkOut ? this.splitLocalizedTime(checkOut) : null,
+                duration: this.localizeAndSplitDuration(duration),
             };
         });
         this.hasCheckedInToday = this.attendancesToday.length > 0;
@@ -83,6 +83,29 @@ export class ActivityMenu extends Component {
     splitTime(timeStr) {
         const [h, m] = timeStr.split(":");
         return { h, m };
+    }
+
+    splitLocalizedTime(timeStr) {  
+        // Should give two matches: hours + separator and rest (minutes + optional AM/PM/etc.)
+        const match = timeStr.match(/^(\d+\D+)(.*)$/);
+        
+        if (!match) {
+            return { unmuted: timeStr }
+        }
+        return {
+            unmuted: match[1],
+            muted: match[2]
+        };
+    }
+
+    localizeAndSplitDuration(duration) {
+        const durationString = formatFloatTime(duration, { numeric: true });
+        const splitDuration = this.splitTime(durationString);
+        const formattedDuration = _t("%(hours)sh%(minutes)s", {
+            hours: splitDuration.h,
+            minutes: splitDuration.m,
+        });
+        return this.splitLocalizedTime(formattedDuration);
     }
 
     async checking(latitude = false, longitude = false) {
