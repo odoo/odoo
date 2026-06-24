@@ -20,16 +20,24 @@ export class PortalHomeCounters extends Interaction {
     }
 
     async updateCounters() {
-        const needed = Object.values(this.el.querySelectorAll("[data-placeholder_count]")).map(
-            (documentsCounterEl) => documentsCounterEl.dataset["placeholder_count"]
-        );
+        const needed = [];
+        const limits = {};
+        for (const documentsCounterEl of this.el.querySelectorAll("[data-placeholder_count]")) {
+            const dataset = documentsCounterEl.dataset;
+            const counterName = dataset["placeholder_count"];
+            const limit = dataset["counter_limit"];
+            needed.push(counterName);
+            limits[counterName] = limit ? Number(limit) : null;
+        }
         const numberRpc = Math.min(Math.ceil(needed.length / 5), 3); // max 3 rpc, up to 5 counters by rpc ideally
         const counterByRpc = Math.ceil(needed.length / numberRpc);
         const countersAlwaysDisplayed = this.getCountersAlwaysDisplayed();
 
         const proms = range(Math.min(numberRpc, needed.length)).map(async (i) => {
+            const counters = needed.slice(i * counterByRpc, (i + 1) * counterByRpc);
             const documentsCountersData = await rpc("/my/counters", {
-                counters: needed.slice(i * counterByRpc, (i + 1) * counterByRpc),
+                counters,
+                limits: Object.fromEntries(counters.map((name) => [name, limits[name]])),
             });
             Object.keys(documentsCountersData).forEach((counterName) => {
                 const documentsCounterEl = this.el.querySelector(

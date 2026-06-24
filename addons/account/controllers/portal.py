@@ -16,16 +16,16 @@ from odoo.addons.portal.controllers.portal import pager as portal_pager
 
 class PortalAccount(CustomerPortal):
 
-    def _prepare_home_portal_values(self, counters):
-        values = super()._prepare_home_portal_values(counters)
+    def _prepare_home_portal_values(self, counters, limits):
+        values = super()._prepare_home_portal_values(counters, limits)
         if 'overdue_invoice_count' in counters:
             values['overdue_invoice_count'] = self._get_overdue_invoice_count()
         if 'invoice_count' in counters:
-            invoice_count = request.env['account.move'].search_count(self._get_invoices_domain('out'), limit=1) \
+            invoice_count = request.env['account.move'].search_count(self._get_invoices_domain('out'), limit=limits['invoice_count']) \
                 if request.env['account.move'].has_access('read') else 0
             values['invoice_count'] = invoice_count
         if 'bill_count' in counters:
-            bill_count = request.env['account.move'].search_count(self._get_invoices_domain('in'), limit=1) \
+            bill_count = request.env['account.move'].search_count(self._get_invoices_domain('in'), limit=limits['bill_count']) \
                 if request.env['account.move'].has_access('read') else 0
             values['bill_count'] = bill_count
         return values

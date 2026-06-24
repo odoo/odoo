@@ -179,7 +179,7 @@ class CustomerPortal(Controller):
             'portal_entries': portal_entries,
         }
 
-    def _prepare_home_portal_values(self, counters):
+    def _prepare_home_portal_values(self, counters, limits):
         """Values for /my & /my/home routes template rendering.
 
         Includes the record count for the displayed badges.
@@ -189,9 +189,9 @@ class CustomerPortal(Controller):
         return {}
 
     @route(['/my/counters'], type='jsonrpc', auth="user", website=True, readonly=True)
-    def counters(self, counters, **kw):
+    def counters(self, counters, limits, **kw):
         cache = request.session.get('portal_counters', {}).copy()
-        res = self._prepare_home_portal_values(counters)
+        res = self._prepare_home_portal_values(counters, limits)
         cache.update({k: bool(v) for k, v in res.items() if k.endswith('_count')})
         if cache != request.session.get('portal_counters'):
             request.session['portal_counters'] = cache
@@ -200,7 +200,7 @@ class CustomerPortal(Controller):
     @route(['/my', '/my/home'], type='http', auth="user", website=True, list_as_website_content=_lt("User Dashboard"))
     def home(self, **kw):
         values = self._prepare_portal_layout_values()
-        values.update(self._prepare_home_portal_values([]))
+        values.update(self._prepare_home_portal_values([], {}))
         return request.render("portal.portal_my_home", values)
 
     @route(['/my/account'], type='http', auth='user', website=True)
