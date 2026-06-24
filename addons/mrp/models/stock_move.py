@@ -349,14 +349,6 @@ class StockMove(models.Model):
         if procurements:
             self.env['stock.rule'].run(procurements)
 
-    def _action_assign(self, force_qty=False):
-        res = super(StockMove, self)._action_assign(force_qty=force_qty)
-        for move in self.filtered(lambda x: x.production_id or x.raw_material_production_id):
-            if move.move_line_ids:
-                move.move_line_ids.write({'production_id': move.raw_material_production_id.id,
-                                               'workorder_id': move.workorder_id.id,})
-        return res
-
     def _action_confirm(self, merge=True, merge_into=False, create_proc=True):
         moves = self.action_explode()
         merge_into = merge_into and merge_into.action_explode()
