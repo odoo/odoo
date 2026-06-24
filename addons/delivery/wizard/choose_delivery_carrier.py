@@ -1,7 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import json
-
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
@@ -55,7 +53,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
         if delivery_vals.get("error_message"):
             raise UserError(delivery_vals.get("error_message"))
 
-        if delivery_vals.get("display_price", False):
+        if "display_price" in delivery_vals:
             self.delivery_message = delivery_vals["delivery_message"]
             self.delivery_price = delivery_vals["delivery_price"]
             self.display_price = delivery_vals["display_price"]
@@ -102,7 +100,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     def _get_delivery_rate(self):
         self.ensure_one()
         delivery_vals = self._get_carrier_delivery_rate(self.carrier_id)
-        if delivery_vals.get("display_price"):
+        if "display_price" in delivery_vals:
             self.delivery_message = delivery_vals["delivery_message"]
             self.delivery_price = delivery_vals["delivery_price"]
             self.display_price = delivery_vals["display_price"]
