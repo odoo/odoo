@@ -4,6 +4,7 @@
  */
 
 import { App, effect, proxy } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 import { rpcBus } from "@web/core/network/rpc";
 
 export const SUCCESS_SIGNAL = "clickbot test succeeded";
@@ -27,6 +28,11 @@ const BLACKLISTED_MENUS = new Set([
 const BLACKLISTED_NEW_RECORD = new Set([
     "website_hr_recruitment.menu_job_pages", // The new button opens a website editor, not a form
     "stock.menu_action_warehouse_form", // It opens an error dialog : Creating a new warehouse will automatically activate the Storage Locations setting.
+]);
+
+const BLACKLISTED_OFFLINE_MENUS = new Set([
+    "mass_mailing.mass_mailing_menu_root", // form view hangs offline loading iframe assets
+    "mass_mailing_sms.mass_mailing_sms_menu_root", // form view hangs offline loading iframe assets
 ]);
 
 const BLACKLISTED_RECORD_ACTIONS = new Set([
@@ -183,30 +189,55 @@ const EXCEPTION_RECORD_ACTIONS = {
 const STUDIO_SYSTRAY_ICON_SELECTOR = ".o_web_studio_navbar_item:not(.o_disabled) i";
 
 export class Clickbot {
-    constructor(env, { xmlId, logger, light, currentState } = {}) {
+    constructor(env, { xmlId, logger, light, offline, currentState } = {}) {
         this.env = env;
         this.xmlId = xmlId;
         this.state = proxy(
             currentState || {
                 light,
                 logger,
-                studioCount: 0,
-                testedApps: [],
-                testedMenus: [],
-                testedFilters: 0,
-                testedModals: 0,
-                testedViews: 0,
-                testedFormsViews: 0,
-                testedNewRecord: 0,
+                offline,
+                testingOffline: false,
                 appIndex: 0,
                 menuIndex: 0,
-                errorMenuCount: 0,
+                onlineStats: {
+                    testedApps: [],
+                    testedMenus: [],
+                    testedViews: 0,
+                    testedFormsViews: 0,
+                    testedNewRecord: 0,
+                    testedModals: 0,
+                    testedFilters: 0,
+                    studioCount: 0,
+                    errorMenuCount: 0,
+                },
+                offlineStats: {
+                    testedApps: [],
+                    testedMenus: [],
+                    testedViews: 0,
+                    testedFormsViews: 0,
+                    testedNewRecord: 0,
+                    testedModals: 0,
+                    errorMenuCount: 0,
+                },
             }
         );
         this._actionCount = 0;
         this._calledRPC = {};
         this._errorRPC = undefined;
         this._disposeEffect = () => {};
+    }
+
+    get _stats() {
+        return this.state.testingOffline ? this.state.offlineStats : this.state.onlineStats;
+    }
+
+    _isMenuAvailableOffline(menu) {
+        return (
+            !this.state.testingOffline ||
+            !menu.actionID ||
+            this.env.services.offline.isAvailableOffline(menu.actionID)
+        );
     }
 
     async start() {
@@ -216,25 +247,19 @@ export class Clickbot {
         }
         this.state.startTime = this.state.startTime || performance.now();
         try {
-            if (this.xmlId) {
-                this.state.xmlId = this.xmlId;
-                const app = this.env.services.menu.getApps().find((a) => a.xmlid === this.xmlId);
-                if (!app) {
-                    throw new Error(`No app found for xmlid ${this.xmlId}`);
-                }
-                this.currentAPP = app;
-                await this._testApp(app);
-            } else {
-                const apps = this.env.services.menu.getApps();
-                while (this.state.appIndex < apps.length) {
-                    this.currentAPP = apps[this.state.appIndex];
-                    await this._testApp(apps[this.state.appIndex]);
-                    this.state.appIndex++;
-                }
+            if (!this.state.testingOffline) {
+                await this._start();
+            }
+
+            if (this.state.offline) {
+                await this._testOffline();
             }
 
             this._logStatistics();
-            if (this.state.errorMenuCount === 0) {
+            const totalErrors =
+                this.state.onlineStats.errorMenuCount +
+                (this.state.offline ? this.state.offlineStats.errorMenuCount : 0);
+            if (totalErrors === 0) {
                 console.log(SUCCESS_SIGNAL);
             } else {
                 this._originalError(FAILURE_SIGNAL);
@@ -258,6 +283,55 @@ export class Clickbot {
     }
 
     // ── PRIVATE ─────────────────────────────────────────────
+
+    async _start() {
+        if (this.xmlId) {
+            this.state.xmlId = this.xmlId;
+            const app = this.env.services.menu.getApps().find((a) => a.xmlid === this.xmlId);
+            if (!app) {
+                throw new Error(`No app found for xmlid ${this.xmlId}`);
+            }
+            this.currentAPP = app;
+            await this._testApp(app);
+        } else {
+            this.state.appIndex = 0;
+            const apps = this.env.services.menu.getApps();
+            while (this.state.appIndex < apps.length) {
+                this.currentAPP = apps[this.state.appIndex];
+                await this._testApp(apps[this.state.appIndex]);
+                this.state.appIndex++;
+            }
+        }
+    }
+
+    async _testOffline() {
+        if (this.state.logger) {
+            console.log("Start testing offline");
+        }
+        this.state.testingOffline = true;
+
+        class FakeOfflineXHR extends EventTarget {
+            open() {}
+            setRequestHeader() {}
+            send() {
+                setTimeout(() => this.dispatchEvent(new ProgressEvent("error")), 20);
+            }
+        }
+
+        this.oldFetch = window.fetch;
+        this.originalXHR = window.XMLHttpRequest;
+
+        const rejectFetch = () => Promise.reject(new TypeError("Failed to fetch"));
+        browser.fetch = rejectFetch;
+        window.fetch = rejectFetch;
+        browser.XMLHttpRequest = FakeOfflineXHR;
+        window.XMLHttpRequest = FakeOfflineXHR;
+
+        this.env.services.offline.offline = true;
+        await this.env.services.offline.getVisitedStatus();
+
+        return this._start();
+    }
 
     _createStopButton() {
         const stopButton = document.createElement("button");
@@ -296,6 +370,13 @@ export class Clickbot {
 
     _cleanup() {
         this._disposeEffect();
+        if (this.oldFetch) {
+            browser.fetch = this.oldFetch;
+            browser.XMLHttpRequest = this.originalXHR;
+            window.fetch = this.oldFetch;
+            window.XMLHttpRequest = this.originalXHR;
+            this.env.services.offline.offline = false;
+        }
         console.warn = this._originalWarn;
         console.error = this._originalError;
         localStorage.removeItem("running.clickbot");
@@ -310,18 +391,28 @@ export class Clickbot {
             return;
         }
         console.log(`Test took ${(performance.now() - this.state.startTime) / 1000} seconds`);
-        console.log(`Tested ${this.state.testedApps.length} apps`);
-        console.log(`Tested ${this.state.testedMenus.length} menus`);
-        if (this.state.errorMenuCount > 0) {
-            console.log(`Error found while testing ${this.state.errorMenuCount} menus`);
+        this._logStats(this.state.onlineStats);
+        if (this.state.offline) {
+            console.log(`---- Offline stats ----`);
+            this._logStats(this.state.offlineStats);
         }
-        console.log(`Tested ${this.state.testedViews} views`);
-        console.log(`Tested ${this.state.testedFormsViews} form views`);
-        console.log(`Tested ${this.state.testedNewRecord} new record views`);
-        console.log(`Tested ${this.state.testedModals} modals`);
-        console.log(`Tested ${this.state.testedFilters} filters`);
-        if (this.state.studioCount > 0) {
-            console.log(`Tested ${this.state.studioCount} views in Studio`);
+    }
+
+    _logStats(stats) {
+        console.log(`Tested ${stats.testedApps.length} apps`);
+        console.log(`Tested ${stats.testedMenus.length} menus`);
+        if (stats.errorMenuCount > 0) {
+            console.log(`Error found while testing ${stats.errorMenuCount} menus`);
+        }
+        console.log(`Tested ${stats.testedViews} views`);
+        console.log(`Tested ${stats.testedFormsViews} form views`);
+        console.log(`Tested ${stats.testedNewRecord} new record views`);
+        console.log(`Tested ${stats.testedModals} modals`);
+        if (stats.testedFilters !== undefined) {
+            console.log(`Tested ${stats.testedFilters} filters`);
+        }
+        if (stats.studioCount) {
+            console.log(`Tested ${stats.studioCount} views in Studio`);
         }
     }
 
@@ -333,6 +424,9 @@ export class Clickbot {
         }
         if (this.currentFilter) {
             msg += ` - Current testing filter is ${this.currentFilter}\n`;
+        }
+        if (this.state.testingOffline) {
+            msg += ` - Currently running offline\n`;
         }
         return msg;
     }
@@ -380,6 +474,10 @@ export class Clickbot {
                         this._errorRPC
                     )}`;
                 }
+
+                // Close the error dialog
+                // TODO: Not sure if this is needed.
+                document.querySelector(".o_dialog header > .btn-close").click();
 
                 throw new Error(msg);
             }
@@ -447,7 +545,7 @@ export class Clickbot {
             () => document.querySelector(".o_main_navbar:not(.o_studio_navbar) .o_menu_toggle"),
             "leaving studio"
         );
-        this.state.studioCount++;
+        this._stats.studioCount++;
     }
 
     async _testFilters() {
@@ -474,7 +572,7 @@ export class Clickbot {
         if (this.state.logger) {
             console.log(`Testing ${filterMenuItems.length} filters`);
         }
-        this.state.testedFilters += filterMenuItems.length;
+        this._stats.testedFilters += filterMenuItems.length;
         for (const filter of filterMenuItems) {
             if (filter.classList.contains("o_accordion")) {
                 this.currentFilter = filter.innerText.trim();
@@ -536,6 +634,9 @@ export class Clickbot {
             if (records) {
                 this.recordTested = true;
                 const row = document.querySelectorAll(".o_data_row")[0];
+                if (row.classList.contains("o_disabled_offline")) {
+                    return;
+                }
                 // Open the first record in the list
                 const stopCondition = exceptionActions?.list?.toCheck
                     ? () => document.querySelector(exceptionActions?.list?.toCheck) !== null
@@ -566,7 +667,7 @@ export class Clickbot {
                     );
                 } else if (document.querySelector(".o_form_view")) {
                     this.formviewTested = true;
-                    this.state.testedFormsViews++;
+                    this._stats.testedFormsViews++;
                     await this._triggerClick(
                         document.querySelector(".o_back_button"),
                         () => document.querySelector(`.o_list_view`) !== null,
@@ -596,6 +697,9 @@ export class Clickbot {
                 const card = document.querySelectorAll(
                     ".o_kanban_record:not(.o_kanban_ghost).cursor-pointer"
                 )[0];
+                if (card.classList.contains("o_disabled_offline")) {
+                    return;
+                }
                 const stopCondition = exceptionActions?.kanban?.toCheck
                     ? () => document.querySelector(exceptionActions?.kanban?.toCheck) !== null
                     : () => document.querySelector(".o_form_view") !== null;
@@ -612,7 +716,7 @@ export class Clickbot {
                 } else {
                     // form view
                     this.formviewTested = true;
-                    this.state.testedFormsViews++;
+                    this._stats.testedFormsViews++;
                     await this._triggerClick(
                         document.querySelector(".o_back_button"),
                         () => document.querySelector(`.o_kanban_view`) !== null,
@@ -636,8 +740,12 @@ export class Clickbot {
             document.querySelector(".o_list_view") &&
             document.querySelector(".o_list_button_add:not(.dropdown)")
         ) {
+            const listNewBtn = document.querySelector(".o_list_button_add");
+            if (listNewBtn.classList.contains("o_disabled_offline")) {
+                return;
+            }
             await this._triggerClick(
-                document.querySelector(".o_list_button_add"),
+                listNewBtn,
                 () =>
                     document.querySelector(".o_form_view") !== null ||
                     document.querySelector(".o_data_row.o_selected_row") !== null ||
@@ -645,7 +753,7 @@ export class Clickbot {
                 "list view's new button"
             );
 
-            this.state.testedNewRecord++;
+            this._stats.testedNewRecord++;
 
             // close the modal
             if (document.querySelector(".o_dialog:not(.o_error_dialog)")) {
@@ -675,8 +783,12 @@ export class Clickbot {
             document.querySelector(".o_kanban_view") &&
             document.querySelector(".o-kanban-button-new:not(.dropdown)")
         ) {
+            const kanbanNewBtn = document.querySelector(".o-kanban-button-new");
+            if (kanbanNewBtn.classList.contains("o_disabled_offline")) {
+                return;
+            }
             await this._triggerClick(
-                document.querySelector(".o-kanban-button-new"),
+                kanbanNewBtn,
                 () =>
                     document.querySelector(".o_form_view") !== null ||
                     document.querySelector(".o_kanban_quick_create") !== null ||
@@ -684,7 +796,7 @@ export class Clickbot {
                 "kanban view's new button"
             );
 
-            this.state.testedNewRecord++;
+            this._stats.testedNewRecord++;
 
             // close the modal
             if (document.querySelector(".o_dialog:not(.o_error_dialog)")) {
@@ -718,8 +830,10 @@ export class Clickbot {
         this.recordTested = false;
         await this._testNewRecord();
         await this._testClickingRecord();
-        await this._testStudio();
-        await this._testFilters();
+        if (!this.state.offline) {
+            await this._testStudio();
+            await this._testFilters();
+        }
         this.currentView = undefined;
     }
 
@@ -732,7 +846,7 @@ export class Clickbot {
                 .split("_")[1];
         }
         await this._testView(viewType);
-        this.state.testedViews++;
+        this._stats.testedViews++;
         if (this.state.light === true) {
             return;
         }
@@ -751,14 +865,14 @@ export class Clickbot {
             const target = document.querySelector(
                 `nav.o_cp_switch_buttons > button.o_switch_view.o_${viewType}`
             );
-            if (target) {
+            if (target && !target.classList.contains("o_disabled_offline")) {
                 await this._triggerClick(
                     target,
                     () => document.querySelector(`.o_switch_view.o_${viewType}.active`) !== null,
                     `${viewType} view switcher`
                 );
                 await this._testView(viewType);
-                this.state.testedViews++;
+                this._stats.testedViews++;
             }
         }
     }
@@ -771,10 +885,22 @@ export class Clickbot {
             }
             return;
         }
+        if (this.state.testingOffline && BLACKLISTED_OFFLINE_MENUS.has(menu.xmlid)) {
+            if (this.state.logger) {
+                console.log(`Skipping offline-blacklisted menu ${menu.name} (${menu.xmlid})`);
+            }
+            return;
+        }
+        if (!this._isMenuAvailableOffline(menu)) {
+            if (this.state.logger) {
+                console.log(`Skipping offline-unavailable menu ${menu.name} (${menu.xmlid})`);
+            }
+            return;
+        }
         if (this.state.logger) {
             console.log(`Testing menu ${menu.name} (${menu.xmlid})`);
         }
-        this.state.testedMenus.push(menu.xmlid);
+        this._stats.testedMenus.push(menu.xmlid);
         const startActionCount = this._actionCount;
         try {
             await this.env.services.menu.selectMenu(menu);
@@ -785,7 +911,7 @@ export class Clickbot {
                     if (this.state.logger) {
                         console.log(`Modal detected: ${menu.name} (${menu.xmlid})`);
                     }
-                    this.state.testedModals++;
+                    this._stats.testedModals++;
                     return true;
                 }
                 return startActionCount !== this._actionCount;
@@ -803,7 +929,7 @@ export class Clickbot {
             if (err instanceof ClickbotStopError) {
                 throw err;
             }
-            this.state.errorMenuCount++;
+            this._stats.errorMenuCount++;
             let msg = `Error found:\n`;
             msg += this._currentTraceback();
             msg += `The error is :\n`;
@@ -816,8 +942,8 @@ export class Clickbot {
         if (this.state.logger) {
             console.log(`Testing app: ${app.name} (${app.xmlid})`);
         }
-        if (!this.state.testedApps.includes(app.xmlid)) {
-            this.state.testedApps.push(app.xmlid);
+        if (!this._stats.testedApps.includes(app.xmlid)) {
+            this._stats.testedApps.push(app.xmlid);
         }
 
         if (this.state.light || !app.children.length) {

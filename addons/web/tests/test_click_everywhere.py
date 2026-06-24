@@ -58,7 +58,7 @@ class TestMenusAdminLight(odoo.tests.HttpCase):
             return r
         return super()._request_handler(s, r, **kw)
 
-    def test_01_click_apps_menus_as_admin(self):
+    def _run_clickbot(self, offline=False):
         # Disable onboarding tours to remove warnings
         if 'tour_enabled' in self.env['res.users']._fields:
             self.env.ref('base.user_admin').tour_enabled = False
@@ -69,7 +69,17 @@ class TestMenusAdminLight(odoo.tests.HttpCase):
             self.env['pos.prep.display'].create({
                 'name': 'Super Smart Kitchen Display',
             })
-        self.browser_js("/odoo", "odoo.loader.modules.get('@web/webclient/clickbot/clickbot_loader').startClickEverywhere({ light: true });", "odoo.isReady === true", login="admin", timeout=120, success_signal="clickbot test succeeded")
+
+        click_bot_options = "{ light: true, offline: true }" if offline else "{ light: true }"
+        js_code = f"odoo.loader.modules.get('@web/webclient/clickbot/clickbot_loader').startClickEverywhere({click_bot_options});"
+
+        self.browser_js("/odoo", js_code, "odoo.isReady === true", login="admin", timeout=120, success_signal="clickbot test succeeded")
+
+    def test_01_click_apps_menus_as_admin(self):
+        self._run_clickbot(offline=False)
+
+    def test_02_click_apps_menus_as_admin_offline(self):
+        self._run_clickbot(offline=True)
 
 
 @odoo.tests.tagged('post_install', '-at_install')

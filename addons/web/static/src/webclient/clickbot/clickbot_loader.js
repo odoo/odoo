@@ -34,6 +34,7 @@ if (currentState) {
         light: currentState.light,
         logger: currentState.logger,
         currentState,
+        offline: currentState.offline,
     });
 }
 
