@@ -140,11 +140,18 @@ class SaleOrderLine(models.Model):
         :param float price: The price value to assign.
         """
         self.ensure_one()
-        details = self.tax_ids.flatten_taxes_hierarchy().compute_all(price, handle_price_include=False)
-        taxes = [tax["amount"] for tax in details["taxes"] if tax["price_include"]]
-        # Round to remove minor precision differences introduced by tax computations
-        # (e.g. 100.0004 -> 100).
-        self.price_unit = self.currency_id.round(price + sum(taxes))
+        base_line = self._prepare_base_line_for_taxes_computation(
+            quantity=1, discount=0, price_unit=price, special_mode="total_excluded"
+        )
+        company = self.company_id or self.env.company
+        self.env["account.tax"]._add_tax_details_in_base_line(base_line, company)
+        self.env["account.tax"]._round_base_lines_tax_details([base_line], company)
+        tax_details = base_line["tax_details"]
+        self.price_unit = tax_details["raw_total_excluded_currency"] + sum(
+            tax_data["raw_tax_amount_currency"]
+            for tax_data in tax_details["taxes_data"]
+            if tax_data["original_price_include"]
+        )
 
     def _prepare_template_line_values(self):
         vals = super()._prepare_template_line_values()
