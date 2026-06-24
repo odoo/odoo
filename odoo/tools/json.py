@@ -2,6 +2,7 @@
 from datetime import date, datetime
 import json as json_
 import re
+from collections.abc import Mapping
 
 import markupsafe
 from .func import lazy
@@ -73,3 +74,21 @@ def json_default(obj):
     if isinstance(obj, fields.Domain):
         return list(obj)
     return str(obj)
+
+
+def stringify_keys(obj):
+    """Recursively convert mapping keys to strings.
+
+    Webhook sample payloads may contain mappings with non-string keys,
+    such as ``frozendict`` instances. Since ``json.dumps`` requires
+    JSON-compatible mapping keys, such payloads must be normalized before
+    serialization.
+    """
+
+    if isinstance(obj, Mapping):
+        return {
+            str(k): stringify_keys(v)
+            for k, v in obj.items()
+        }
+
+    return obj
