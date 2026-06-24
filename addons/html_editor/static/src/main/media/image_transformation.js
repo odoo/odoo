@@ -57,8 +57,8 @@ export class ImageTransformation extends Component {
             this.props.onComponentMounted();
         });
         const iframeWindow = this.document.defaultView;
-        useCrossDocumentListener(iframeWindow, "mousemove", this.mouseMove);
-        useCrossDocumentListener(iframeWindow, "mouseup", this.mouseUp);
+        useCrossDocumentListener(iframeWindow, "pointermove", this.pointerMove);
+        useCrossDocumentListener(iframeWindow, "pointerup", this.pointerUp);
         // When a character key is pressed and the image gets deleted,
         // close the image transform via selectionchange.
         useExternalListener(this.document, "selectionchange", () => this.destroy());
@@ -81,7 +81,7 @@ export class ImageTransformation extends Component {
         this.props.destroy();
     }
 
-    mouseMove(ev) {
+    pointerMove(ev) {
         if (!this.transfo.active?.type) {
             return;
         }
@@ -201,13 +201,13 @@ export class ImageTransformation extends Component {
         this.image.style.width = Math.min(100, widthPercent).toFixed(2) + "%";
     }
 
-    mouseUp() {
+    pointerUp() {
         if (!this.transfo.active) {
             return;
         }
         this.isCurrentlyTransforming = false;
         // Width should be converted to percentage only
-        // when image dimension is changed. See `mouseMove`.
+        // when image dimension is changed. See `pointerMove`.
         if (this.transfo.active.type.length === 2) {
             this.convertPixelWidthToPercentage();
         }
@@ -216,7 +216,7 @@ export class ImageTransformation extends Component {
         this.props.onChange?.();
     }
 
-    mouseDown(ev) {
+    pointerDown(ev) {
         if (this.transfo.active) {
             return;
         }
