@@ -307,7 +307,7 @@ class PeppolRegistration(models.TransientModel):
             })
         return action_dict
 
-    def _action_send_notification(self, title, message):
+    def _action_send_notification(self, message):
         move_ids = self.env.context.get('active_ids')
         if move_ids and self.env.context.get('active_model') == 'account.move':
             next_action = self.env['account.move'].browse(move_ids).action_send_and_print()
@@ -319,7 +319,6 @@ class PeppolRegistration(models.TransientModel):
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': title,
                 'type': 'success',
                 'message': message,
                 'next': next_action,
@@ -498,6 +497,5 @@ class PeppolRegistration(models.TransientModel):
             },
         }
         return self._action_send_notification(
-            title=_('Peppol Activation'),
             message=notifications[self.company_id.account_peppol_proxy_state]['message'],
         )
