@@ -1,11 +1,14 @@
-import { useService } from "@web/core/utils/hooks";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { Component, props, signal, t } from "@odoo/owl";
+import { ActionList } from "@mail/core/common/action_list";
 import { ImStatus } from "@mail/core/common/im_status";
 import { useDynamicInterval } from "@mail/utils/common/misc";
 import { formatLocalDateTime } from "@mail/utils/common/dates";
-import { ActionList } from "@mail/core/common/action_list";
+
+import { Component, props, signal, t } from "@odoo/owl";
+
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { useService } from "@web/core/utils/hooks";
 
 export class AvatarCard extends Component {
     static template = "mail.AvatarCard";
@@ -115,4 +118,27 @@ export class AvatarCard extends Component {
         }
         this.actionService.doAction(action, { newWindow });
     }
+}
+
+/**
+ * @param {Object} param
+ * @param {boolean | undefined} param.stopPropagation
+ * @returns {{ open: (event: Event, partner: import("models").ResPartner) => void }}
+ */
+export function usePartnerAvatarCard({ stopPropagation = false } = {}) {
+    const avatarCard = usePopover(AvatarCard);
+    return {
+        open(event, partner) {
+            if (!partner || avatarCard.isOpen) {
+                return;
+            }
+            if (stopPropagation) {
+                event.stopPropagation();
+            }
+            avatarCard.open(event.currentTarget, {
+                id: partner.id,
+                model: "res.partner",
+            });
+        },
+    };
 }
