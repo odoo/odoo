@@ -1,7 +1,8 @@
-import { rpc } from '@web/core/network/rpc';
+import { rpc, RPCError } from '@web/core/network/rpc';
 import { isEmail } from '@web/core/utils/strings';
 import { patch } from '@web/core/utils/patch';
 import { patchDynamicContent } from '@web/public/utils';
+import { _t } from '@web/core/l10n/translation';
 import { WebsiteSale } from '@website_sale/interactions/website_sale';
 
 patch(WebsiteSale.prototype, {
@@ -42,25 +43,38 @@ patch(WebsiteSale.prototype, {
         const email = stockNotificationEl.querySelector('#stock_notification_input').value.trim();
 
         if (!isEmail(email)) {
-            return this._displayEmailIncorrectMessage(stockNotificationEl);
+            return this._displayErrorMessage(_t('Invalid email'), stockNotificationEl);
         }
 
         try {
             await this.waitFor(rpc(
                 '/shop/add/stock_notification', { product_id: productId, email }
             ));
-        } catch {
-            this._displayEmailIncorrectMessage(stockNotificationEl);
-            return;
+        } catch (error) {
+            if (error instanceof RPCError) {
+                this._displayErrorMessage(error.data.message, stockNotificationEl);
+                return;
+            }
+            throw error;
         }
         const message = stockNotificationEl.querySelector('#stock_notification_success_message');
         message.classList.remove('d-none');
         formEl.classList.add('d-none');
     },
 
-    _displayEmailIncorrectMessage(stockNotificationEl) {
+    _displayErrorMessage(message, stockNotificationEl) {
         const incorrectIconEl = stockNotificationEl.querySelector('#stock_notification_input_incorrect');
         incorrectIconEl.classList.remove('d-none');
+
+        const errorMessageEl = stockNotificationEl.querySelector('#stock_notification_error_message');
+        if (errorMessageEl) {
+            errorMessageEl.textContent = message;
+        } else {
+            const span = document.createElement('span');
+            span.id = 'stock_notification_error_message';
+            span.textContent = message;
+            incorrectIconEl.appendChild(span);
+        }
     },
 
     /**
