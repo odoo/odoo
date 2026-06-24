@@ -1,5 +1,4 @@
-import { proxy, useListener } from "@odoo/owl";
-// import { useLayoutEffect } from "@web/owl2/utils";
+import { proxy, useEffect, useListener } from "@odoo/owl";
 
 // Resolve the element backing a ref regardless of its kind, preserving every legacy form and only
 // ADDING the Owl 3 signal case:
@@ -38,19 +37,16 @@ export function useDropdownAutoVisibility(overlayState, popoverRef) {
     }
     const state = proxy(overlayState);
     const getEl = () => resolveRefEl(popoverRef);
-    // useLayoutEffect(
-    //     () => {
-    //         const el = getEl();
-    //         if (el) {
-    //             if (!state.isOverlayVisible) {
-    //                 el.style.visibility = "hidden";
-    //             } else {
-    //                 el.style.visibility = "visible";
-    //             }
-    //         }
-    //     },
-    //     () => [state.isOverlayVisible]
-    // );
+    useEffect(() => {
+        const el = getEl();
+        if (el) {
+            if (!state.isOverlayVisible) {
+                el.style.visibility = "hidden";
+            } else {
+                el.style.visibility = "visible";
+            }
+        }
+    });
 }
 
 export function useToolbarDropdownFocus(dropdown, buttonRef) {
