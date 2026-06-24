@@ -222,6 +222,7 @@ class TestHolidayContract(TransactionCase):
         # I create a new employee "Jules"
         cls.jules_emp = cls.env['hr.employee'].create({
             'name': 'Jules',
+            'work_email': 'jules@employee.com',
             'sex': 'male',
             'birthday': '1984-05-01',
             'country_id': cls.env.ref('base.be').id,

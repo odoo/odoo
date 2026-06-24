@@ -23,7 +23,7 @@ class HrLeaveAllocation(models.Model):
         return res
 
     overtime_deductible = fields.Boolean(compute='_compute_overtime_deductible')
-    employee_overtime = fields.Float(compute='_compute_employee_overtime', groups='base.group_user')
+    employee_overtime = fields.Float(compute='_compute_employee_overtime', groups='base.group_user_lite')
 
     @api.depends('work_entry_type_id')
     def _compute_overtime_deductible(self):

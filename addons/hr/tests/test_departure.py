@@ -20,6 +20,7 @@ class TestDeparture(TestHrCommon):
         super().setUpClass()
         cls.emp_boss = cls.env['hr.employee'].create({
             'name': "Nice boss",
+            'work_email': 'nice@boss.com',
             'contract_date_start': date.today(),
         })
 

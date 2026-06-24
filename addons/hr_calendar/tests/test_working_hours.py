@@ -388,49 +388,52 @@ class TestWorkingHoursWithVersion(TestHrContractCalendarCommon):
         ]
         self.assertEqual(work_hours, expected_hours)
 
-    def test_multi_companies_2_employees_1_partner_1_selected_companies(self):
-        """
-        INPUT:
-        ======
-        Employees                                   Companies
-        employee B1 company A ---> 28h               [X] A    <- main company
-        employee B2 company A ---> 35h night         [ ] B
-
-        OUTPUT:
-        =======
-        The schedule will be the union between 28h's and 35h night's schedule
-        """
-        self.env.user.company_id = self.company_A
-        self.env.user.company_ids = [self.company_A.id]
-
-        self.env["hr.employee"].create({
-            "name": "Partner B2 - Calendar 35h night",
-            "tz": "Europe/Brussels",
-            "work_contact_id": self.partnerB.id,
-            "company_id": self.company_A.id,
-            "date_version": datetime(2023, 12, 1),
-            "contract_date_start": datetime(2023, 12, 1),
-            "resource_calendar_id": self.calendar_35h_night.id,
-            "wage": 5000,
-        })
-
-        work_hours = self.env["res.partner"].get_working_hours_for_all_attendees(
-            [self.partnerB.id],
-            datetime(2023, 12, 25).isoformat(),
-            datetime(2023, 12, 31).isoformat(),
-        )
-        expected_hours = [
-            {"daysOfWeek": [1], "startTime": "15:00", "endTime": "22:00"},
-            {"daysOfWeek": [2], "startTime": "08:00", "endTime": "12:00"},
-            {"daysOfWeek": [2], "startTime": "13:00", "endTime": "22:00"},
-            {"daysOfWeek": [3], "startTime": "08:00", "endTime": "12:00"},
-            {"daysOfWeek": [3], "startTime": "13:00", "endTime": "22:00"},
-            {"daysOfWeek": [4], "startTime": "08:00", "endTime": "12:00"},
-            {"daysOfWeek": [4], "startTime": "13:00", "endTime": "22:00"},
-            {"daysOfWeek": [5], "startTime": "08:00", "endTime": "12:00"},
-            {"daysOfWeek": [5], "startTime": "13:00", "endTime": "22:00"},
-        ]
-        self.assertEqual(work_hours, expected_hours)
+    # TODO DBE: we create employee with partner B on company, but partner B already has an employee and a user on company A.
+    #  so we cannot create another employee for this partner -> UNIQUE(user, company) for employee.
+    # def test_multi_companies_2_employees_1_partner_1_selected_companies(self):
+    #     """
+    #     INPUT:
+    #     ======
+    #     Employees                                   Companies
+    #     employee B1 company A ---> 28h               [X] A    <- main company
+    #     employee B2 company A ---> 35h night         [ ] B
+    #
+    #     OUTPUT:
+    #     =======
+    #     The schedule will be the union between 28h's and 35h night's schedule
+    #     """
+    #     self.env.user.company_id = self.company_A
+    #     self.env.user.company_ids = [self.company_A.id]
+    #
+    #     self.env["hr.employee"].create({
+    #         "name": "Partner B2 - Calendar 35h night",
+    #         "tz": "Europe/Brussels",
+    #         "work_email": "partner_b2@35night.com",
+    #         "work_contact_id": self.partnerB.id,
+    #         "company_id": self.company_A.id,
+    #         "date_version": datetime(2023, 12, 1),
+    #         "contract_date_start": datetime(2023, 12, 1),
+    #         "resource_calendar_id": self.calendar_35h_night.id,
+    #         "wage": 5000,
+    #     })
+    #
+    #     work_hours = self.env["res.partner"].get_working_hours_for_all_attendees(
+    #         [self.partnerB.id],
+    #         datetime(2023, 12, 25).isoformat(),
+    #         datetime(2023, 12, 31).isoformat(),
+    #     )
+    #     expected_hours = [
+    #         {"daysOfWeek": [1], "startTime": "15:00", "endTime": "22:00"},
+    #         {"daysOfWeek": [2], "startTime": "08:00", "endTime": "12:00"},
+    #         {"daysOfWeek": [2], "startTime": "13:00", "endTime": "22:00"},
+    #         {"daysOfWeek": [3], "startTime": "08:00", "endTime": "12:00"},
+    #         {"daysOfWeek": [3], "startTime": "13:00", "endTime": "22:00"},
+    #         {"daysOfWeek": [4], "startTime": "08:00", "endTime": "12:00"},
+    #         {"daysOfWeek": [4], "startTime": "13:00", "endTime": "22:00"},
+    #         {"daysOfWeek": [5], "startTime": "08:00", "endTime": "12:00"},
+    #         {"daysOfWeek": [5], "startTime": "13:00", "endTime": "22:00"},
+    #     ]
+    #     self.assertEqual(work_hours, expected_hours)
 
     def test_flexible_employee_is_available_in_the_middle_of_a_day(self):
         self.env.user.company_id = self.company_A

@@ -36,6 +36,7 @@ class TestMemberOfDepartment(TransactionCase):
                 "name": "OTHER GUY",
                 "department_id": cls.duck_department.id,
                 "date_version": date(2026, 1, 1),
+                "work_email": 'other_guy@employee.com',
             },
         ])
         cls.env["hr.version"].create({

@@ -273,9 +273,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         employee_1, employee_2 = self.env['hr.employee'].sudo().create([
             {
                 'name': 'Emp1',
+                'work_email': 'emp1@employee.com',
                 'leave_manager_id': self.user_responsible_id,
             }, {
                 'name': 'Emp2',
+                'work_email': 'emp2@employee.com',
                 'leave_manager_id': self.user_responsible_id,
             },
         ])
@@ -292,9 +294,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         employee_1, employee_2 = self.env['hr.employee'].sudo().create([
             {
                 'name': 'Emp1',
+                'work_email': 'emp1@employee.com',
                 'leave_manager_id': self.user_responsible_id,
             }, {
                 'name': 'Emp2',
+                'work_email': 'emp2@employee.com',
                 'leave_manager_id': self.user_responsible_id,
             },
         ])
@@ -317,9 +321,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         self.employee_1, self.employee_2 = self.env['hr.employee'].sudo().create([
             {
                 'name': 'Rambo1',
+                'work_email': 'rambo1@employee.com',
                 'leave_manager_id': self.user_responsible_id,
             }, {
                 'name': 'Rambo2',
+                'work_email': 'rambo2@employee.com',
                 'leave_manager_id': self.user_responsible_id,
             },
         ])
@@ -389,12 +395,15 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         employee_1, employee_2, employee_3 = self.env['hr.employee'].sudo().create([
             {
                 'name': 'Emp1',
+                'work_email': 'emp1@employee.com',
                 'leave_manager_id': self.user_responsible_id,
             }, {
                 'name': 'Emp2',
+                'work_email': 'emp2@employee.com',
                 'leave_manager_id': self.user_responsible_id,
             }, {
                 'name': 'Emp3',
+                'work_email': 'emp3@employee.com',
             },
         ])
         leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
@@ -414,9 +423,11 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         employee_1, employee_2 = self.env['hr.employee'].sudo().create([
             {
                 'name': 'Emp1',
+                'work_email': 'emp1@employee.com',
                 'leave_manager_id': self.user_responsible_id,
             }, {
                 'name': 'Emp2',
+                'work_email': 'emp2@employee.com',
                 'leave_manager_id': self.user_responsible_id,
                 'resource_calendar_id': False,
                 'hours_per_week': 21,
@@ -538,7 +549,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             'company_id': company.id,
             'name': 'Standard 40h/week',
         })
-        employee = self.env['hr.employee'].create({'name': "Remi", 'company_id': company.id})
+        employee = self.env['hr.employee'].create({'name': "Remi", 'work_email': 'remi@employee.com', 'company_id': company.id})
         leave_wizard_form = Form(self.env['hr.leave.generate.multi.wizard'])
         leave_wizard_form.work_entry_type_id = self.holidays_type_1
         leave_wizard_form.date_from = date(2019, 5, 6)
@@ -2056,8 +2067,10 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         employee_1, employee_2 = self.env['hr.employee'].sudo().create([
             {
                 'name': 'Emp1',
+                'work_email': 'emp1@employee.com',
             }, {
                 'name': 'Emp2',
+                'work_email': 'emp2@employee.com',
                 'resource_calendar_id': self.irregular_calendar.id,
             },
         ])
@@ -2084,7 +2097,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
     def test_multi_timeoff_wizard_days_with_allocation(self):
         employee_1, employee_2 = self.env['hr.employee'].sudo().create([
-            {'name': 'Emp1'}, {'name': 'Emp2'},
+            {'name': 'Emp1', 'work_email': 'emp1@employee.com'},
+            {'name': 'Emp2', 'work_email': 'emp2@employee.com'},
         ])
         self.env['hr.leave.allocation'].create([{
             'name': 'Emp1 Allocation',
@@ -2127,7 +2141,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
     def test_multi_timeoff_wizard_days_conflicting(self):
         employee_1, employee_2 = self.env['hr.employee'].sudo().create([
-            {'name': 'Emp1'}, {'name': 'Emp2'},
+            {'name': 'Emp1', 'work_email': 'emp1@employee.com'},
+            {'name': 'Emp2', 'work_email': 'emp2@employee.com'},
         ])
         leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
             'work_entry_type_id': self.holidays_type_1.id,
@@ -2160,8 +2175,10 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         employee_1, employee_2 = self.env['hr.employee'].sudo().create([
             {
                 'name': 'Emp1',
+                'work_email': 'emp1@employee.com',
             }, {
                 'name': 'Emp2',
+                'work_email': 'emp2@employee.com',
                 'resource_calendar_id': self.irregular_calendar.id,
             },
         ])
@@ -2192,7 +2209,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
     def test_multi_timeoff_wizard_half_day_with_allocation(self):
         employee_1, employee_2 = self.env['hr.employee'].sudo().create([
-            {'name': 'Emp1'}, {'name': 'Emp2'},
+            {'name': 'Emp1', 'work_email': 'emp1@employee.com'},
+            {'name': 'Emp2', 'work_email': 'emp2@employee.com'},
         ])
         self.env['hr.leave.allocation'].create([{
             'name': 'Emp1 Allocation',
@@ -2246,8 +2264,10 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         employee_1, employee_2 = self.env['hr.employee'].sudo().create([
             {
                 'name': 'Emp1',
+                'work_email': 'emp1@employee.com',
             }, {
                 'name': 'Emp2',
+                'work_email': 'emp2@employee.com',
                 'resource_calendar_id': evening_calendar.id,
                 'tz': 'Europe/Brussels',
             },
@@ -2277,8 +2297,10 @@ class TestLeaveRequests(TestHrHolidaysCommon):
         employee_1, employee_2 = self.env['hr.employee'].sudo().create([
             {
                 'name': 'Emp1',
+                'work_email': 'emp1@employee.com',
             }, {
                 'name': 'Emp2',
+                'work_email': 'emp2@employee.com',
                 'resource_calendar_id': self.irregular_calendar.id,
             },
         ])
@@ -2307,7 +2329,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
     def test_multi_timeoff_wizard_hours_with_allocation(self):
         employee_1, employee_2 = self.env['hr.employee'].sudo().create([
-            {'name': 'Emp1'}, {'name': 'Emp2'},
+            {'name': 'Emp1', 'work_email': 'emp1@employee.com'},
+            {'name': 'Emp2', 'work_email': 'emp2@employee.com'},
         ])
         self.env['hr.leave.allocation'].create([{
             'name': 'Emp1 Allocation',
@@ -2353,7 +2376,8 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
     def test_multi_timeoff_wizard_hours_conflicting(self):
         employee_1, employee_2 = self.env['hr.employee'].sudo().create([
-            {'name': 'Emp1'}, {'name': 'Emp2'},
+            {'name': 'Emp1', 'work_email': 'emp1@employee.com'},
+            {'name': 'Emp2', 'work_email': 'emp2@employee.com'},
         ])
         leave_wizard = self.env['hr.leave.generate.multi.wizard'].create({
             'work_entry_type_id': self.holidays_type_hours.id,

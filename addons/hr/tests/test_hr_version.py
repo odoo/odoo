@@ -17,6 +17,7 @@ class TestHrVersion(TestHrCommon):
     def test_dates_constraints(self):
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'work_email': 'john@doe.com',
             'date_version': '2020-01-01'
         })
         self.assertFalse(employee.contract_date_start)
@@ -59,6 +60,7 @@ class TestHrVersion(TestHrCommon):
         # Simple overlap cases
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'work_email': 'john@doe.com',
             'date_version': '2020-01-01',
             'contract_date_start': '2020-01-01',
             'contract_date_end': '2020-12-31'
@@ -101,6 +103,7 @@ class TestHrVersion(TestHrCommon):
         # A single version and no contract
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'work_email': 'john@doe.com',
             'date_version': '2020-01-01'
         })
         self.assertEqual(employee._get_all_contract_dates(), [])
@@ -150,6 +153,7 @@ class TestHrVersion(TestHrCommon):
         # Create a new version after the end of the current contract
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'work_email': 'john@doe.com',
             'date_version': '2020-01-01',
             'contract_date_start': '2020-01-01',
             'contract_date_end': '2020-12-31',
@@ -163,7 +167,8 @@ class TestHrVersion(TestHrCommon):
 
         # Forcing the contract_date_start and or contract_date_end in the 'create' should override False
         employee = self.env['hr.employee'].create({
-            'name': 'John Doe',
+            'name': 'John Doe 2',
+            'work_email': 'john2@doe.com',
             'contract_date_start': '2020-01-01',
             'contract_date_end': '2020-12-31',
         })
@@ -178,7 +183,8 @@ class TestHrVersion(TestHrCommon):
 
         # Create a new version before the start of the current contract
         employee = self.env['hr.employee'].create({
-            'name': 'John Doe',
+            'name': 'John Doe 3',
+            'work_email': 'john3@doe.com',
             'contract_date_start': '2020-01-01',
             'contract_date_end': '2020-12-31',
         })
@@ -189,7 +195,8 @@ class TestHrVersion(TestHrCommon):
 
         # Create a new version between two contracts
         employee = self.env['hr.employee'].create({
-            'name': 'John Doe',
+            'name': 'John Doe 4',
+            'work_email': 'john4@doe.com',
             'contract_date_start': '2020-01-01',
             'contract_date_end': '2020-12-31'
         })
@@ -213,6 +220,7 @@ class TestHrVersion(TestHrCommon):
         # Create a new version on a permanent contract
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'work_email': 'john@doe.com',
             'date_version': '2020-01-01',
             'contract_date_start': '2020-01-01',
         })
@@ -225,7 +233,8 @@ class TestHrVersion(TestHrCommon):
 
         # Create a new version on a fixed term contract
         employee = self.env['hr.employee'].create({
-            'name': 'John Doe',
+            'name': 'John Doe 2',
+            'work_email': 'john2@doe.com',
             'contract_date_start': '2020-01-01',
             'contract_date_end': '2021-12-31'
         })
@@ -236,7 +245,8 @@ class TestHrVersion(TestHrCommon):
 
         # Create a new version on any contract interval regardless of the version valid at that date
         employee = self.env['hr.employee'].create({
-            'name': 'John Doe',
+            'name': 'John Doe 3',
+            'work_email': 'john3@doe.com',
             'contract_date_start': '2020-01-01',
             'contract_date_end': '2020-12-31'
         })
@@ -260,6 +270,7 @@ class TestHrVersion(TestHrCommon):
         """
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'work_email': 'john@doe.com',
             'date_version': '2020-01-01',
             'contract_date_start': '2020-01-01',
             'contract_date_end': '2021-12-31',
@@ -310,6 +321,7 @@ class TestHrVersion(TestHrCommon):
         """
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'work_email': 'john@doe.com',
             'date_version': '2020-01-01',
         })
         version = employee.version_id
@@ -330,6 +342,7 @@ class TestHrVersion(TestHrCommon):
         """
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'work_email': 'john@doe.com',
             'date_version': '2020-01-01',
         })
         v1 = employee.version_id
@@ -355,6 +368,7 @@ class TestHrVersion(TestHrCommon):
         # If no contract dates are defined, the employee is not considered in contract
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'work_email': 'john@doe.com',
             'date_version': '2020-01-01',
         })
         self.assertFalse(employee._is_in_contract(date(2010, 1, 1)))
@@ -379,6 +393,7 @@ class TestHrVersion(TestHrCommon):
         with freeze_time(date(2020, 1, 1)), self.enter_registry_test_mode():
             employee = self.env['hr.employee'].create({
                 'name': 'John Doe',
+                'work_email': 'john@doe.com',
                 'date_version': '2020-01-01',
             })
             v1 = employee.version_id
@@ -431,6 +446,7 @@ class TestHrVersion(TestHrCommon):
         """
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'work_email': 'john@doe.com',
             'date_version': '2020-01-01',
             'contract_date_start': '2020-01-01',
             'contract_date_end': '2020-12-31',
@@ -450,6 +466,7 @@ class TestHrVersion(TestHrCommon):
         """
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'work_email': 'john@doe.com',
             'date_version': '2020-01-01',
             'contract_date_start': '2020-01-01',
             'contract_date_end': '2020-5-31',
@@ -474,6 +491,7 @@ class TestHrVersion(TestHrCommon):
 
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'work_email': 'john@doe.com',
             'date_version': '2020-01-01',
             'contract_date_start': '2020-01-01',
             'contract_date_end': '2020-5-31',
@@ -503,6 +521,7 @@ class TestHrVersion(TestHrCommon):
 
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'work_email': 'john@doe.com',
             'date_version': '2020-01-01',
             'contract_date_start': '2020-01-01',
             'contract_date_end': '2020-12-31',
@@ -526,6 +545,7 @@ class TestHrVersion(TestHrCommon):
     def test_delete_version(self):
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'work_email': 'john@doe.com',
             'date_version': '2020-01-01',
         })
         v1 = employee.version_id
@@ -551,10 +571,12 @@ class TestHrVersion(TestHrCommon):
         employee_john, employee_rob = self.env['hr.employee'].create([
             {
                 'name': 'John Doe',
+                'work_email': 'john@doe.com',
                 'date_version': '2020-01-01',
             },
             {
                 'name': 'Rob Carter',
+                'work_email': 'rob@carter.com',
                 'date_version': '2020-10-18',
             }
         ])
@@ -572,11 +594,13 @@ class TestHrVersion(TestHrCommon):
         employee_john, employee_rob = self.env['hr.employee'].create([
             {
                 'name': 'John Doe',
+                'work_email': 'john@doe.com',
                 'date_version': '2020-01-01',
                 'contract_date_start': '2020-01-01',
             },
             {
                 'name': 'Rob Carter',
+                'work_email': 'rob@carter.com',
                 'date_version': '2020-10-18',
             }
         ])
@@ -594,11 +618,13 @@ class TestHrVersion(TestHrCommon):
         employee_john, employee_rob = self.env['hr.employee'].create([
             {
                 'name': 'John Doe',
+                'work_email': 'john@doe.com',
                 'date_version': '2020-01-01',
                 'contract_date_start': '2020-01-01',
             },
             {
                 'name': 'Rob Carter',
+                'work_email': 'rob@carter.com',
                 'date_version': '2020-10-18',
                 'contract_date_start': '2020-10-18',
             }
@@ -622,12 +648,14 @@ class TestHrVersion(TestHrCommon):
         employee_john, employee_rob = self.env['hr.employee'].create([
             {
                 'name': 'John Doe',
+                'work_email': 'john@doe.com',
                 'date_version': '2020-01-01',
                 'contract_date_start': '2020-01-01',
                 'contract_date_end': '2020-10-10'
             },
             {
                 'name': 'Rob Carter',
+                'work_email': 'rob@carter.com',
                 'date_version': '2020-10-18',
                 'contract_date_start': '2020-10-18',
             }
@@ -723,11 +751,13 @@ class TestHrVersion(TestHrCommon):
                 'name': 'Employee1',
                 'hr_responsible_id': self.res_users_hr_manager.id,
                 'department_id': rd_dep.id,
+                'work_email': 'employee@test.com',
             },
             {
                 'contract_date_start': '2022-10-10',
                 'wage': 2000,
                 'name': 'Employee2',
+                'work_email': 'employee_2@test.com',
             },
         ])
         internal_user = mail_new_test_user(
@@ -782,10 +812,12 @@ class TestHrVersion(TestHrCommon):
     def test_archive_or_unassign_all_versions(self):
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'work_email': 'john@doe.com',
             'date_version': '2020-01-01',
         })
         another_employee = self.env['hr.employee'].create({
-            'name': 'Jane Doe'
+            'name': 'Jane Doe',
+            'work_email': 'jane@doe.com',
         })
         employee.create_version({
             'date_version': '2021-01-01',
@@ -802,6 +834,7 @@ class TestHrVersion(TestHrCommon):
     def test_unlink_version_except_one(self):
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'work_email': 'john@doe.com',
             'date_version': '2020-01-01',
         })
         version = employee.create_version({
@@ -814,6 +847,7 @@ class TestHrVersion(TestHrCommon):
     def test_first_contract_date_on_create(self):
         employee = self.env['hr.employee'].create({
             'name': 'Youssef Ahmed',
+            'work_email': 'youssef@ahmed.com',
             'date_version': '2026-01-01',
             'contract_date_start': '2026-01-01',
         })
@@ -823,6 +857,7 @@ class TestHrVersion(TestHrCommon):
     def test_first_contract_date_with_new_version(self):
         employee = self.env['hr.employee'].create({
             'name': 'Youssef Ahmed',
+            'work_email': 'youssef@ahmed.com',
             'date_version': '2026-01-01',
             'contract_date_start': '2026-01-01',
         })
@@ -836,6 +871,7 @@ class TestHrVersion(TestHrCommon):
     def test_first_contract_date_with_new_contract(self):
         employee = self.env['hr.employee'].create({
             'name': 'Youssef Ahmed',
+            'work_email': 'youssef@ahmed.com',
             'date_version': '2026-01-01',
             'contract_date_start': '2026-01-01',
             'contract_date_end': '2026-01-31',
@@ -857,6 +893,7 @@ class TestHrVersion(TestHrCommon):
     def test_first_contract_date_with_unlink_versions(self):
         employee = self.env['hr.employee'].create({
             'name': 'Youssef Ahmed',
+            'work_email': 'youssef@ahmed.com'
         })
 
         version_1 = employee.create_version({
@@ -878,6 +915,7 @@ class TestHrVersion(TestHrCommon):
     def test_version_date_start_end_search(self):
         employee = self.env['hr.employee'].create({
             'name': 'John Doe',
+            'work_email': 'john@doe.com',
             'date_version': '2026-01-01',
         })
         employee.write({'contract_date_start': '2026-01-01', 'contract_date_end': '2026-12-31'})

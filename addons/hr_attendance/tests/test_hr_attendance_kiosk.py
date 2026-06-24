@@ -20,11 +20,13 @@ class TestHrAttendanceKiosk(HttpCase):
 
         cls.employee_A = cls.env['hr.employee'].create({
             'name': 'employee_A',
+            'work_email': 'empA@employee.com',
              'company_id': cls.company_B.id,
              'department_id': cls.department_A.id,
         })
         cls.employee_B = cls.env['hr.employee'].create({
             'name': 'employee_B',
+            'work_email': 'empB@employee.com',
             'company_id': cls.company_A.id,
             'department_id': cls.department_A.id,
         })

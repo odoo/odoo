@@ -110,7 +110,7 @@ class TestPlanningGanttResourceEmployeeWorkingPeriods(TestHrCommon):
         """ Test the working period of a new employee with no contract """
 
         # Create a new employee with no contract
-        employee_hope = self.env['hr.employee'].create({'name': 'Hope'})
+        employee_hope = self.env['hr.employee'].create({'name': 'Hope', 'work_email': 'hope@employee.com'})
         self.assertTrue(employee_hope.version_id, "A default version should be created for a new employee.")
         self.assertFalse(employee_hope.version_id.contract_date_start, "The default version should not yet have a contract start date.")
 

@@ -35,6 +35,7 @@ class TestEmployee(TransactionCase):
         """
         existing_employee = self.env['hr.employee'].create({
             'name': 'Test Employee',
+            'work_email': 'test1@employee.com',
             'company_id': self.company.id,
             'resource_calendar_id': self.company.resource_calendar_id.id,
         })
@@ -49,6 +50,7 @@ class TestEmployee(TransactionCase):
 
         employee = self.env['hr.employee'].create({
             'name': 'Test Employee',
+            'work_email': 'test2@employee.com',
             'company_id': self.company.id,
             'resource_calendar_id': self.company.resource_calendar_id.id,
         })
@@ -70,6 +72,7 @@ class TestEmployee(TransactionCase):
         # simulate the company of the employee updated is not in the allowed_company_ids of the current user
         employee2 = self.env['hr.employee'].with_company(self.env.company).create({
             'name': 'Test Employee',
+            'work_email': 'test3@employee.com',
             'company_id': self.company.id,
             'resource_calendar_id': self.company.resource_calendar_id.id,
         })
@@ -97,6 +100,7 @@ class TestEmployee(TransactionCase):
         """
         employee = self.env['hr.employee'].create({
             'name': 'Test Employee',
+            'work_email': 'test@employee.com',
             'company_id': self.company.id,
         })
         employee.write({'resource_calendar_id': self.company.resource_calendar_id.id})
@@ -151,6 +155,7 @@ class TestEmployee(TransactionCase):
             'name': 'Test Employee',
             'resource_calendar_id': self.company.resource_calendar_id.id,
             'company_id': self.company.id,
+            'work_email': 'work_email@employee.com',
         })
         old_timesheet_count = len(self.env['account.analytic.line'].search([
             ('employee_id', '=', employee.id)]))

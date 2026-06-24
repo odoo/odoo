@@ -22,6 +22,7 @@ class TestRecruitmentProcess(TestHrCommon):
         })
         employee_niv = self.env['hr.employee'].create({
             'name': 'Sharlene Rhodes',
+            'work_email': 'sharlene@employee.com',
         })
         job_developer = job_developer.with_user(self.res_users_hr_officer.id)
         employee_niv = employee_niv.with_user(self.res_users_hr_officer.id)

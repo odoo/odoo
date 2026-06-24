@@ -102,6 +102,7 @@ class TestWorkeEntryHolidays(TestWorkEntryBase, TestHolidayContract):
 
         employee = self.env['hr.employee'].create({
             'name': 'My employee',
+            'work_email': 'test@employee.com',
             'contract_date_start': self.start.date() - relativedelta(years=1),
             'contract_date_end': False,
             'resource_calendar_id': calendar.id,

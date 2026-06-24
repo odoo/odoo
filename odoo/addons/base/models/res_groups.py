@@ -335,7 +335,7 @@ class ResGroups(models.Model):
         group_definitions = self._get_group_definitions()
         group_ids = [
             gid
-            for xid in ('base.group_user', 'base.group_portal', 'base.group_public')
+            for xid in ('base.group_user_lite', 'base.group_portal', 'base.group_public')
             if (gid := group_definitions.get_id(xid))
         ]
         return self.sudo().browse(group_ids)

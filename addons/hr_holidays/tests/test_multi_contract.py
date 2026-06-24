@@ -205,6 +205,7 @@ class TestHolidaysMultiContract(TestHolidayContract):
         ])
         employee = self.env['hr.employee'].create({
             'name': 'Employee',
+            'work_email': 'test@employee.com',
             'resource_calendar_id': calendar_partial.id,
         })
         employee.create_version({
@@ -298,6 +299,7 @@ class TestHolidaysMultiContract(TestHolidayContract):
 
         employee = self.env['hr.employee'].create({
             'name': 'Employee',
+            'work_email': 'test@employee.com',
             'resource_calendar_id': calendar_full.id,
         })
 
@@ -388,6 +390,7 @@ class TestHolidaysMultiContract(TestHolidayContract):
         ])
         employee = self.env['hr.employee'].create({
             'name': "Employee",
+            'work_email': 'test@employee.com',
             "resource_calendar_id": calendar_partial.id,
         })
         employee.create_version({

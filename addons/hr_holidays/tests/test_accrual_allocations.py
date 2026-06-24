@@ -4041,6 +4041,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         with freeze_time("2017-12-05"):
             employee_without_calendar = self.env['hr.employee'].create({
                 'name': 'employee without calendar',
+                'work_email': 'test@employee.com',
                 'resource_calendar_id': False,
             })
             accrual_plan = self.env['hr.leave.accrual.plan'].create({
@@ -4951,10 +4952,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         employees = self.env['hr.employee'].create([
             {
                 'name': 'Test Department Employee',
+                'work_email': 'department_test@employee.com',
                 'company_id': self.company.id,
             },
             {
                 'name': 'Department Employee 1',
+                'work_email': 'department_test1@employee.com',
                 'company_id': self.company.id,
             },
         ])

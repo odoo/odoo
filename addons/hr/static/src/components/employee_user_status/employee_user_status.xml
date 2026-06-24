@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr.EmployeeUserStatus">
+        <t t-if="this.canEditAny">
+            <Dropdown>
+                <button
+                    t-attf-class="btn btn-link d-flex align-items-center shadow-none rounded-pill {{ this.additionalClassName }} {{ this.getDropdownButtonDecoration(this.value) }}"
+                    style="min-width: 10ch; min-height: 2.5em;"
+                >
+                    <span class="m-1" t-if="this.showIcon" t-att-class="this.getIcon(this.value)"/>
+                    <span t-out="this.display"/>
+                </button>
+                <t t-set-slot="content">
+                    <t t-if="this.editableOptions.includes(false)">
+                        <DropdownItem
+                            class="'o_employee_user_status_dropdown_item'"
+                            t-if="!this.required || !this.value"
+                            t-out="this.props.placeholder || ''"
+                            onSelected="() => this.onChange(false)"
+                        />
+                    </t>
+                    <t t-foreach="this.options" t-as="option" t-key="option[0]">
+                        <t t-if="this.editableOptions.includes(option[0])">
+                            <DropdownItem
+                                class="'d-flex text-black align-items-center o_employee_user_status_dropdown_item'"
+                                onSelected="() => this.onChange(option[0])"
+                            >
+                                <div class="me-2 mb-1" style="width: 10px; height: 10px;" t-att-class="this.getDropdownItemDecoration(option[0]) + ' ' + this.getIcon(option[0])"/>
+                                <span t-out="option[1]"/>
+                            </DropdownItem>
+                        </t>
+                    </t>
+                </t>
+            </Dropdown>
+        </t>
+        <t t-else="">
+            <div
+                t-if="this.value"
+                t-attf-class="badge border rounded-pill px-2 py-1 cursor-default d-flex align-items-center {{ this.additionalClassName }} {{ this.getDropdownButtonDecoration(this.value) }}"
+                style="min-width: 10ch; min-height: 2.5em;"
+                t-on-click.stop.prevent="() => {}"
+                t-out="this.display"
+            />
+        </t>
+    </t>
+
+</templates>

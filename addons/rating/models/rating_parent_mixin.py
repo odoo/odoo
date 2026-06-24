@@ -23,7 +23,7 @@ class RatingParentMixin(models.AbstractModel):
         compute="_compute_rating_percentage_satisfaction", compute_sudo=True,
         store=False, help="Percentage of happy ratings")
     rating_count = fields.Integer(string='# Ratings', compute="_compute_rating_percentage_satisfaction", compute_sudo=True)
-    rating_avg = fields.Float('Average Rating', groups='base.group_user',
+    rating_avg = fields.Float('Average Rating', groups='base.group_user_lite',
         compute='_compute_rating_percentage_satisfaction', compute_sudo=True, search='_search_rating_avg')
     rating_avg_percentage = fields.Float('Average Rating (%)', groups='base.group_user',
         compute='_compute_rating_percentage_satisfaction', compute_sudo=True)

@@ -39,10 +39,16 @@
             <field name="user_ids" eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]"/>
         </record>
 
+        <record model="res.groups" id="group_user_lite">
+            <field name="name">Role / Lite User</field>
+            <field name="comment">Access to employees features</field>
+        </record>
+
         <record model="res.groups" id="group_user">
-            <field name="name">Role / User</field>
+            <field name="name">Role / Regular User</field>
             <field name="comment">Access to the home menu</field>
             <field name="api_key_duration">90.0</field>
+            <field name="implied_ids" eval="[Command.link(ref('group_user_lite'))]"/>
         </record>
 
         <record model="res.groups" id="group_multi_company">
@@ -86,7 +92,7 @@
         </record>
         <record model="res.groups" id="group_everyone">
             <field name="name">Role / Everyone</field>
-            <field name="implied_by_ids" eval="[Command.link(ref('base.group_portal')), Command.link(ref('base.group_public')), Command.link(ref('base.group_user'))]"/>
+            <field name="implied_by_ids" eval="[Command.link(ref('base.group_portal')), Command.link(ref('base.group_public')), Command.link(ref('base.group_user_lite'))]"/>
             <field name="comment">Includes all users. This makes group restrictions more convenient.</field>
         </record>
 

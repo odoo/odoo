@@ -344,6 +344,7 @@ class TestHrLeaveMandatoryDays(TransactionCase):
 
         employee_emp_2 = self.env['hr.employee'].create({
             'name': 'Tototo Employee',
+            'work_email': 'tototo@employee.com',
             'company_id': self.company.id,
             'resource_calendar_id': self.default_calendar.id,
             'department_id': deployment_department.id,

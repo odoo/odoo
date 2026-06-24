@@ -18,7 +18,7 @@ class RatingMixin(models.AbstractModel):
     rating_last_feedback = fields.Text('Rating Last Feedback', groups='base.group_user', related='rating_ids.feedback')
     rating_last_image = fields.Binary('Rating Last Image', groups='base.group_user', related='rating_ids.rating_image')
     rating_count = fields.Integer('Rating count', compute="_compute_rating_stats", compute_sudo=True)
-    rating_avg = fields.Float("Average Rating", groups='base.group_user',
+    rating_avg = fields.Float("Average Rating", groups='base.group_user_lite',
         compute='_compute_rating_stats', compute_sudo=True, search='_search_rating_avg')
     rating_avg_text = fields.Selection(rating_data.RATING_TEXT, groups='base.group_user',
         compute='_compute_rating_avg_text', compute_sudo=True)

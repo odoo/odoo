@@ -22,7 +22,7 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     state = fields.Selection(compute='_compute_state', search='_search_state', string='Status',
-                 selection=[('new', 'Invited'), ('active', 'Confirmed')])
+                 selection=[('new', 'Invited'), ('active', 'Active'), ('inactive', 'Inactive')])
 
     def _search_state(self, operator, value):
         if operator != 'in':
@@ -34,7 +34,7 @@ class ResUsers(models.Model):
 
     def _compute_state(self):
         for user in self:
-            user.state = 'active' if user.login_date else 'new'
+            user.state = 'inactive' if not user.active else 'active' if user.login_date else 'new'
 
     @api.model
     def signup(self, values, token=None):

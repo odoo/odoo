@@ -1035,8 +1035,9 @@ class HrApplicant(models.Model):
         self.ensure_one()
         address_id = self.partner_id.address_get(['contact'])['contact']
         address_sudo = self.env['res.partner'].sudo().browse(address_id)
+        parnter_name = self.partner_name or self.partner_id.display_name
         return {
-            'name': self.partner_name or self.partner_id.display_name,
+            'name': parnter_name,
             'work_contact_id': self.partner_id.id,
             'job_id': self.job_id.id,
             'job_title': self.job_id.name,
@@ -1051,7 +1052,7 @@ class HrApplicant(models.Model):
             'lang': address_sudo.lang,
             'department_id': self.department_id.id,
             'address_id': self.company_id.partner_id.id,
-            'work_email': self.department_id.company_id.email or self.email_from,  # To have a valid email address by default
+            'work_email': parnter_name.lower().replace(' ', '_') + '@employee.com',
             'work_phone': self.department_id.company_id.phone,
             'applicant_ids': self.ids,
             'phone': self.partner_phone

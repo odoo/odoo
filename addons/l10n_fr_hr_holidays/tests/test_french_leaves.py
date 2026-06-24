@@ -25,6 +25,7 @@ class TestFrenchLeaves(TransactionCase):
 
         cls.employee = cls.env['hr.employee'].create({
             'name': 'Louis',
+            'work_email': 'louis@employee.com',
             'sex': 'male',
             'birthday': '1973-03-29',
             'country_id': country_fr.id,

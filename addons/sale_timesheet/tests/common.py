@@ -49,9 +49,11 @@ class TestCommonSaleTimesheet(TestSaleProjectCommon):
         cls.employee_without_sales_access = \
             cls.env['hr.employee'].create([{
                 'name': 'Employee User',
+                'work_email': 'test15@employee.com',
                 'hourly_cost': 15,
             }, {
                 'name': 'Employee Manager',
+                'work_email': 'test45@employee.com',
                 'hourly_cost': 45,
             }, {
                 'name': 'Gregor Clegane',

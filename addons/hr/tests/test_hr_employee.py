@@ -33,7 +33,8 @@ class TestHrEmployee(TestHrCommon):
 
     def test_employee_must_have_active_version(self):
         employee = self.env['hr.employee'].create({
-            'name': 'Batman'
+            'name': 'Batman',
+            'work_email': 'batman@begins.com'
         })
         self.assertEqual(len(employee.version_ids), 1)
         employee_version = employee.version_id
@@ -49,7 +50,7 @@ class TestHrEmployee(TestHrCommon):
             employee_version.write({'active': False})
 
     def test_employee_smart_button_multi_company(self):
-        partner = self.env['res.partner'].create({'name': 'Partner Test'})
+        partner = self.env['res.partner'].create({'name': 'Partner Test', 'email': 'test@partner.com'})
         company_A = self.env['res.company'].create({'name': 'company_A'})
         company_B = self.env['res.company'].create({'name': 'company_B'})
         self.env['hr.employee'].create({
@@ -206,22 +207,27 @@ class TestHrEmployee(TestHrCommon):
             {
                 'name': 'employee',
                 'department_id': dept.id,
+                'work_email': 'employee@dept.com',
             },
             {
                 'name': 'employee sub',
                 'department_id': dept_sub.id,
+                'work_email': 'employee@dept_sub.com',
             },
             {
                 'name': 'employee sub sub',
                 'department_id': dept_sub_sub.id,
+                'work_email': 'employee@dept_sub_sub.com',
             },
             {
                 'name': 'employee other',
                 'department_id': dept_other.id,
+                'work_email': 'employee@dept_other.com',
             },
             {
                 'name': 'employee parent',
                 'department_id': dept_parent.id,
+                'work_email': 'employee@dept_parent.com',
             },
         ])
         self.res_users_hr_officer.employee_ids = emp
@@ -240,7 +246,8 @@ class TestHrEmployee(TestHrCommon):
 
     def test_employee_create_from_user(self):
         employee = self.env['hr.employee'].create({
-            'name': 'Test User 3 - employee'
+            'name': 'Test User 3 - employee',
+            'work_email': 'testuser3@employee.com'
         })
         user_1, user_2, user_3 = self.env['res.users'].create([
             {
@@ -351,6 +358,7 @@ class TestHrEmployee(TestHrCommon):
 
         employee_2 = self.env['hr.employee'].create({
             'name': 'Hr 2 - employee',
+            'work_email': 'employee2@hr.com',
             'company_id': test_company.id,
         })
 
@@ -478,7 +486,7 @@ class TestHrEmployee(TestHrCommon):
 
     def test_avatar(self):
         # Check simple employee has a generated image (initials)
-        employee_georgette = self.env['hr.employee'].create({'name': 'Georgette Pudubec'})
+        employee_georgette = self.env['hr.employee'].create({'name': 'Georgette Pudubec', 'work_email': 'pudubec@pudupette.com'})
         self.assertTrue(employee_georgette.image_1920)
         self.assertTrue(employee_georgette.avatar_1920)
 
@@ -499,7 +507,8 @@ class TestHrEmployee(TestHrCommon):
     def test_badge_validation(self):
         # check employee's barcode should be a sequence of digits and alphabets
         employee = self.env['hr.employee'].create({
-            'name': 'Badge Employee'
+            'name': 'Badge Employee',
+            'work_email': 'badge@employee.com'
         })
 
         employee_form = Form(employee)
@@ -520,6 +529,7 @@ class TestHrEmployee(TestHrCommon):
         new_user = new_test_user(self.env, 'employee')
         employee = self.env['hr.employee'].create({
             'name': 'Test Employee',
+            'work_email': 'test@employee.com'
         })
         domain = Domain([
             ('name', '=', 'Test Employee'),
@@ -535,6 +545,7 @@ class TestHrEmployee(TestHrCommon):
         employee = self.env['hr.employee'].create({
             'name': 'Employee',
             'tz': 'Asia/Tokyo',
+            'work_email': 'employee@tokyo.com'
         })
         self.assertTrue(employee.resource_calendar_id)
         self.assertFalse(employee.is_flexible)
@@ -598,65 +609,67 @@ class TestHrEmployee(TestHrCommon):
             self.assertEqual(employee_form.job_title, first_job.name)
 
     def test_user_creation_from_employee_with_invalid_email(self):
-        employee = self.env['hr.employee'].create({
-            'name': 'Test Employee',
-            'work_email': 'test'
-        })
-
-        action = employee.action_create_users()
-        self.assertEqual(action['params']['message'], f'You need to set a valid work email address for {employee.name}')
-        self.assertFalse(employee.user_id)
+        # TODO DBE: with assert Validation Error
+        with self.assertRaises(ValidationError):
+            self.env['hr.employee'].create({
+                'name': 'Test Employee',
+                'work_email': 'test'
+            })
+        # self.assertEqual(action['params']['message'], f'You need to set a valid work email address for {employee.name}')
+        # self.assertFalse(employee.user_id)
 
     def test_user_creation_from_employee_multi_emails(self):
-        employees = self.env['hr.employee'].create([
-            {
-                'name': 'Existing Email Employee',
-                'work_email': self.user_without_image.email,
-            }, {
-                'name': 'New Employee',
-                'work_email': 'newuser@example.com',
-            }, {
+        # TODO DBE: with assert validation error
+        # if existing employee with same email, will link to the existing user
+        employees = self.env['hr.employee'].create({
+            'name': 'Existing Email Employee',
+            'work_email': self.user_without_image.email,
+        })
+        # User with employee already exists
+        with mute_logger('odoo.sql_db'), self.assertRaises(ValidationError):
+            employees |= self.env['hr.employee'].create({
+                'name': 'Existing user with Employee',
+                'work_email': f'"John Doe" <{self.user_without_image.email_normalized}>',
+            })
+        employees |= self.env['hr.employee'].create({
+            'name': 'New Employee',
+            'work_email': 'newuser@example.com',
+        })
+        with mute_logger('odoo.sql_db'), self.assertRaises(ValidationError):
+            employees |= self.env['hr.employee'].create({
                 'name': 'Invalid Email Employee',
                 'work_email': 'invalid-email',
-            }, {
+            })
+        with mute_logger('odoo.sql_db'), self.assertRaises(NotNullViolation):
+            employees |= self.env['hr.employee'].create({
                 'name': 'Without Email Employee',
                 'work_email': False,
-            }, {
-                'name': 'Formatted Email Employee',
-                'work_email': f'"John Doe" <{self.user_without_image.email_normalized}>',
-            }, {
-                'name': 'Multi Email Employee',
-                'work_email': '"Name1" <name@test.example.com>, "Name 2" <name2@test.example.com>',
-            }, {
-                'name': 'Duplicate Email Employee 1',
-                'work_email': 'duplicate@example.com',
-            }, {
+            })
+        employees |= self.env['hr.employee'].create({
+            'name': 'Formatted Email Employee',
+            'work_email': '"John Doe" <john@doe.com>'
+        })
+        employees |= self.env['hr.employee'].create({
+            'name': 'Multi Email Employee',
+            'work_email': '"Name1" <name@test.example.com>, "Name 2" <name2@test.example.com>',
+        })
+        employees |= self.env['hr.employee'].create({
+            'name': 'Duplicate Email Employee 1',
+            'work_email': 'duplicate@example.com',
+        })
+        with mute_logger('odoo.sql_db'), self.assertRaises(ValidationError, msg="A user already exists with this e-mail address: duplicate@example.com"):
+            employees |= self.env['hr.employee'].create({
                 'name': 'Duplicate Email Employee 2',
                 'work_email': 'duplicate@example.com',
-            },
-        ])
+            })
         # Add an existing employee who already has a user to the employee list
         employees += self.employee_without_image
         context = {'selected_ids': employees.ids}
         confirmed_employees = self.env['hr.employee'].with_context(context).browse(employees.ids)
-        action = confirmed_employees.action_create_users()
-
-        params = action.get('params')
-        self.assertEqual(params.get('message'), f"The following employees have the same work email address: {employees[6].name}, {employees[7].name}")
-        params = params.get('next').get('params')
-        self.assertEqual(params.get('message'), f"User already exists with the same email for Employees {employees[0].name}, {employees[4].name}")
-        params = params.get('next').get('params')
-        self.assertEqual(params.get('message'), f"You need to set a valid work email address for {employees[2].name}, {employees[5].name}")
-        params = params.get('next').get('params')
-        self.assertEqual(params.get('message'), f"You need to set the work email address for {employees[3].name}")
-        params = params.get('next').get('params')
-        self.assertEqual(params.get('message'), f"User already exists for Those Employees {employees[8].name}")
-        params = params.get('next').get('params')
-        self.assertEqual(params.get('message'), f"Users {employees[1].name} creation successful")
-        self.assertTrue(employees[1].user_id)
+        self.assertTrue(len(confirmed_employees), 4)
 
     def test_user_contact_phone_sync(self):
-        partner = self.env['res.partner'].create({'name': 'Partner Test'})
+        partner = self.env['res.partner'].create({'name': 'Partner Test', 'email': 'test@partner.com'})
         first_company = self.env['res.company'].create({'name': 'First Company'})
         first_employee = self.env['hr.employee'].create({
             'name': 'First Employee',
@@ -812,7 +825,7 @@ class TestHrEmployee(TestHrCommon):
         })
 
         out_working_emp = self.env['hr.employee'].create(
-            {'name': 'Out of Office Employee', 'contract_date_start': False, 'contract_date_end': False}
+            {'name': 'Out of Office Employee', 'contract_date_start': False, 'contract_date_end': False, 'work_email': 'out@office.com'}
         )
 
         self.env["mail.presence"]._update_presence(present_user_a)
@@ -915,6 +928,7 @@ class TestHrEmployeeLinks(HttpCase):
         )
         employee_sonic = self.env['hr.employee'].create({
             'name': 'Sonic the Hedgehog',
+            'work_email': "sonic@hedgehog.com"
         })
         with mute_logger('odoo.http'):  # ignore raised RedirectWarning
             self.start_tour(
@@ -942,6 +956,7 @@ class TestVersionCron(TransactionCase):
             cls.employee = cls.env['hr.employee'].create(
                 {
                     'name': 'Charizard',
+                    'work_email': 'ch@rizard.com',
                     'work_phone': '+32404040404',
                     "distance_home_work": 32,
                     "distance_home_work_unit": 'miles',

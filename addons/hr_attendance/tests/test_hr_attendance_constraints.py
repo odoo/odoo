@@ -14,7 +14,7 @@ class TestHrAttendance(TransactionCase):
     def setUpClass(cls):
         super(TestHrAttendance, cls).setUpClass()
         cls.attendance = cls.env['hr.attendance']
-        cls.test_employee = cls.env['hr.employee'].create({'name': "Jacky", 'ruleset_id': False})
+        cls.test_employee = cls.env['hr.employee'].create({'name': "Jacky", 'work_email': 'test@employee.com', 'ruleset_id': False})
         # demo data contains set up for cls.test_employee
         cls.open_attendance = cls.attendance.create({
             'employee_id': cls.test_employee.id,
@@ -66,7 +66,7 @@ class TestHrAttendance(TransactionCase):
 
     @freeze_time("2024-02-05 11:00:00")
     def test_attendance_in_the_future(self):
-        employee = self.env['hr.employee'].create({'name': "Test"})
+        employee = self.env['hr.employee'].create({'name': "Test", 'work_email': 'other_test@employee.com'})
         self.attendance.create({
             'employee_id': employee.id,
             'check_in': time.strftime('2024-02-10 11:00'),

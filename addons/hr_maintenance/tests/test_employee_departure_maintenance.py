@@ -12,6 +12,7 @@ class TestHrMaintenance(TransactionCase):
             'name': 'New Employee',
             'date_version': date(2025, 1, 1),
             'contract_date_start': date(2025, 1, 1),
+            'work_email': 'new_employee@test.com'
         })
         self.laptop = self.env['maintenance.equipment'].create({
             'name': 'New Laptop',

@@ -13,7 +13,8 @@ class TestHrFleetDriver(common.TransactionCase):
         super().setUpClass()
 
         cls.test_employee = cls.env['hr.employee'].create({
-            'name': 'Test Employee'
+            'name': 'Test Employee',
+            'work_email': 'test@employee.com'
         })
 
         cls.test_user = cls.env['res.users'].create({
@@ -211,6 +212,7 @@ class TestHrFleetDriver(common.TransactionCase):
             'name': 'New Employee',
             'date_version': date(2025, 1, 1),
             'contract_date_start': date(2025, 1, 1),
+            'work_email': 'new@employee.com'
         })
         self.car.driver_id = self.new_employee.work_contact_id.id
         self.assertEqual(self.car.driver_employee_id, self.new_employee, "Car is not assign to the employee")

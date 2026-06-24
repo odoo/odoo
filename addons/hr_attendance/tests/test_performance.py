@@ -53,6 +53,7 @@ class TestHrAttendancePerformance(TransactionCase):
 
         employees = cls.env['hr.employee'].create([{
             'name': f'Employee {i}',
+            'work_email': f'test_{i}@employee.com',
             'sex': 'male',
             'birthday': '1982-08-01',
             'country_id': cls.env.ref('base.us').id,

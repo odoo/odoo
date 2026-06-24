@@ -9,7 +9,7 @@ hr_employee_comp_rule,Employee multi company rule,hr.employee,,crud,"['|', '|', 
             ('id', '=', user.employee_id.parent_id.id),
             ('user_id', '=', user.id)
         ]"
-access_hr_employee_public_user,hr.employee_public,hr.employee.public,base.group_user,r,
+access_hr_employee_public_user,hr.employee_public,hr.employee.public,base.group_user_lite,r,
 access_hr_employee_resource_user,resource.resource.user,resource.resource,hr.group_hr_user,crud,
 access_hr_department_user,hr.department.user,hr.department,hr.group_hr_user,crd,
 hr_dept_hr_officer_access_rule,Department Access For HR Officers,hr.department,hr.group_hr_user,u,
@@ -43,11 +43,12 @@ mail_plan_templates_rule_group_hr_manager,Manager can edit employee plan templat
 access_hr_payroll_structure_type_hr_contract_manager,hr.payroll.structure.type.contract.manager,hr.payroll.structure.type,hr.group_hr_manager,crud,
 ir_rule_hr_payroll_structure_type_multi_company,HR Payroll Structure Type: Multi Company,hr.payroll.structure.type,,crud,"['|', ('country_id', '=', False), ('country_id', 'in', user.env.companies.mapped('country_id').ids)]"
 access_hr_resource_calendar_user,hr.employee.resource.calendar.user,resource.calendar,hr.group_hr_user,crud,
+access_hr_resource_calendar_attendance_user_lite,hr.employee.resource.calendar.attendance.user.lite,resource.calendar.attendance,base.group_user_lite,crud,
 access_hr_resource_calendar_attendance_user,hr.employee.resource.calendar.attendance.user,resource.calendar.attendance,hr.group_hr_user,crud,
 homeworking_admin_rule,homeworking: admin,hr.employee.location,hr.group_hr_user,crud,
-homeworking_own_rule,homeworking: own,hr.employee.location,base.group_user,crud,"[
+homeworking_own_rule,homeworking: own,hr.employee.location,base.group_user_lite,crud,"[
             ('employee_id', '=', user.employee_id.id)
         ]"
-ir_rule_res_partner_bank_internal_users,HR: Prevent non HR officers from accessing employee bank accounts,res.partner.bank,base.group_user,r,"[('partner_id.employee_ids', '=', False)]"
+ir_rule_res_partner_bank_internal_users,HR: Prevent non HR officers from accessing employee bank accounts,res.partner.bank,base.group_user_lite,r,"[('partner_id.employee_ids', '=', False)]"
 ir_rule_res_partner_bank_internal_users_1,HR: Prevent non HR officers from accessing employee bank accounts,res.partner.bank,base.group_partner_manager,cru,"[('partner_id.employee_ids', '=', False)]"
 ir_rule_res_partner_bank_employees,HR: Allow HR officers from accessing employee bank accounts,res.partner.bank,hr.group_hr_user,cru,

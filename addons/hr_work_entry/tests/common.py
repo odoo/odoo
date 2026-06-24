@@ -33,6 +33,7 @@ class TestWorkEntryBase(TransactionCase):
         # I create a new employee "Richard"
         cls.richard_emp = cls.env['hr.employee'].create({
             'name': 'Richard',
+            'work_email': 'richard@employee.com',
             'sex': 'male',
             'birthday': '1984-05-01',
             'country_id': cls.env.ref('base.be').id,

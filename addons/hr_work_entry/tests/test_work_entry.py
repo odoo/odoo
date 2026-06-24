@@ -61,6 +61,7 @@ class TestWorkEntry(TestWorkEntryBase):
         })
         hk_employee = self.env['hr.employee'].create({
             'name': 'HK Employee',
+            'work_email': 'hk@employee.com',
             'resource_calendar_id': hk_resource_calendar_id.id,
             'date_version': datetime(2023, 8, 1),
             'contract_date_start': datetime(2023, 8, 1),
@@ -86,6 +87,7 @@ class TestWorkEntry(TestWorkEntryBase):
         calendar = self.env['resource.calendar'].create({'name': 'Calendar'})
         employee = self.env['hr.employee'].create({
             'name': 'Test',
+            'work_email': 'test@employee.com',
             'resource_calendar_id': calendar.id,
             'date_version': datetime(2024, 9, 1),
             'contract_date_start': datetime(2024, 9, 1),
@@ -159,10 +161,10 @@ class TestWorkEntry(TestWorkEntryBase):
         # the cases of flexible then fully flexible and fully flexible then flexible are similar in logic to the last 2
         # so they should work if last 2 are working properly
         emp_flex_std, emp_std_flex, emp_fullyflex_std, emp_std_fullyflex = self.env['hr.employee'].create([
-            {'name': 'emp flex std'},
-            {'name': 'emp std flex'},
-            {'name': 'emp fullyflex std'},
-            {'name': 'emp fullyflex std'},
+            {'name': 'emp flex std', 'work_email': 'emp_flex_std@employee.com'},
+            {'name': 'emp std flex', 'work_email': 'emp_std_flex@employee.com'},
+            {'name': 'emp fullyflex std', 'work_email': 'emp_fully_flex@employee.com'},
+            {'name': 'emp fullyflex std', 'work_email': 'emp_ff_std@employee.com'},
         ])
         self.env['hr.version'].create([{
             'employee_id': emp_flex_std.id,
@@ -348,6 +350,7 @@ class TestWorkEntry(TestWorkEntryBase):
         # first version with a 40h calendar
         employee = self.env['hr.employee'].create({
             'name': 'Test',
+            'work_email': 'test@employee.com',
             'resource_calendar_id': calendar_40h.id,
             'date_version': datetime(2025, 1, 1),
             'contract_date_start': datetime(2025, 1, 1),
@@ -416,6 +419,7 @@ class TestWorkEntry(TestWorkEntryBase):
         # first version with a 40h calendar
         employee = self.env['hr.employee'].create({
             'name': 'Test',
+            'work_email': 'test@employee.com',
             'resource_calendar_id': calendar_40h.id,
             'date_version': datetime(2025, 1, 1),
             'contract_date_start': datetime(2025, 1, 1),

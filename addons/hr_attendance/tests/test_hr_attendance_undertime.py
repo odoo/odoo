@@ -58,6 +58,7 @@ class TestHrAttendanceUndertime(HttpCase):
         })
         cls.other_employee = cls.env['hr.employee'].create({
             'name': 'Yolanda',
+            'work_email': 'yolo@employee.com',
             'company_id': cls.company.id,
             'tz': 'UTC',
             'date_version': date(2020, 1, 1),
@@ -67,6 +68,7 @@ class TestHrAttendanceUndertime(HttpCase):
         })
         cls.jpn_employee = cls.env['hr.employee'].create({
             'name': 'Sacha',
+            'work_email': 'sacha@employee.com',
             'company_id': cls.company.id,
             'tz': 'Asia/Tokyo',
             'date_version': date(2020, 1, 1),
@@ -78,6 +80,7 @@ class TestHrAttendanceUndertime(HttpCase):
 
         cls.honolulu_employee = cls.env['hr.employee'].create({
             'name': 'Susan',
+            'work_email': 'susan@employee.com',
             'company_id': cls.company.id,
             'tz': 'Pacific/Honolulu',
             'date_version': date(2020, 1, 1),
@@ -89,6 +92,7 @@ class TestHrAttendanceUndertime(HttpCase):
 
         cls.europe_employee = cls.env['hr.employee'].with_company(cls.company_1).create({
             'name': 'Schmitt',
+            'work_email': 'schmitt@schmet.com',
             'company_id': cls.company_1.id,
             'tz': 'Europe/Brussels',
             'date_version': date(2020, 1, 1),
@@ -100,6 +104,7 @@ class TestHrAttendanceUndertime(HttpCase):
 
         cls.no_contract_employee = cls.env['hr.employee'].create({
             'name': 'No Contract',
+            'work_email': 'nocontract@employee.com',
             'company_id': cls.company.id,
             'tz': 'UTC',
             'resource_calendar_id': cls.company.resource_calendar_id.id,
@@ -108,6 +113,7 @@ class TestHrAttendanceUndertime(HttpCase):
         })
         cls.future_contract_employee = cls.env['hr.employee'].create({
             'name': 'Future contract',
+            'work_email': 'futur@employee.com',
             'company_id': cls.company.id,
             'tz': 'UTC',
             'resource_calendar_id': cls.company.resource_calendar_id.id,
@@ -117,6 +123,7 @@ class TestHrAttendanceUndertime(HttpCase):
 
         cls.flexible_employee = cls.env['hr.employee'].create({
             'name': 'Flexi',
+            'work_email': 'flexi@employee.com',
             'company_id': cls.company.id,
             'tz': 'UTC',
             'resource_calendar_id': False,

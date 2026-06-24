@@ -18,8 +18,8 @@ class TestMultiCompanyReport(TestHrCommon):
         cls.company_1 = cls.env['res.company'].create({'name': 'Opoo'})
         cls.company_2 = cls.env['res.company'].create({'name': 'Otoo'})
         cls.employees = cls.env['hr.employee'].create([
-            {'name': 'Bidule', 'company_id': cls.company_1.id},
-            {'name': 'Machin', 'company_id': cls.company_2.id},
+            {'name': 'Bidule', 'work_email': 'bi@dudule.com', 'company_id': cls.company_1.id},
+            {'name': 'Machin', 'work_email': 'm@chin.com', 'company_id': cls.company_2.id},
         ])
         cls.res_users_hr_officer.company_ids = [
             (4, cls.company_1.id),
@@ -65,6 +65,7 @@ class TestMultiCompany(TestHrCommon):
         cls.employee_other_a = cls.env['hr.employee'].create({
             'name': 'Employee Other A',
             'company_id': cls.company_a.id,
+            'work_email': 'employee_a@test.com',
         })
 
         cls.employee_b = cls.env['hr.employee'].create({
@@ -77,6 +78,7 @@ class TestMultiCompany(TestHrCommon):
         cls.employee_other_b = cls.env['hr.employee'].create({
             'name': 'Employee Other B',
             'company_id': cls.company_b.id,
+            'work_email': 'employee_b@test.com',
         })
 
         cls.env.flush_all()
