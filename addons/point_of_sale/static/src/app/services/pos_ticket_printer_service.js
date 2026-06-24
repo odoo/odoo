@@ -46,11 +46,11 @@ export class PosTicketPrinterService {
     }
 
     get config() {
-        return this.data.models["pos.config"].getFirst();
+        return this.data.models["pos.config"].get(odoo.pos_config_id);
     }
 
     get session() {
-        return this.data.models["pos.session"].getFirst();
+        return this.data.models["pos.session"].get(odoo.pos_session_id);
     }
 
     get receiptPrinters() {

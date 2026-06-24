@@ -58,8 +58,8 @@ export class SelfOrder extends Reactive {
 
         // data
         this.models = this.data.models;
-        this.session = this.models["pos.session"].getFirst();
-        this.config = this.models["pos.config"].getFirst();
+        this.session = this.models["pos.session"].get(odoo.pos_session_id);
+        this.config = this.models["pos.config"].get(odoo.pos_config_id);
         this.company = this.config.company_id;
         this.currency = this.config.currency_id;
 

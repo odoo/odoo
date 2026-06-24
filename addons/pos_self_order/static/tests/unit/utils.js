@@ -68,6 +68,9 @@ export const setupSelfPosEnv = async (
     pay_after = "each"
 ) => {
     // Do not change these variables, they are in accordance with the setup data
+    odoo.pos_session_id = 1;
+    odoo.pos_config_id = 1;
+    odoo.self_ordering_mode = mode;
     odoo.access_token = uuidv4();
     odoo.info = {
         isEnterprise: true,

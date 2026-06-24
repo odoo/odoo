@@ -105,11 +105,11 @@ export class PosOrderline extends PosOrderlineAccounting {
     }
 
     get config() {
-        return this.models["pos.config"].getFirst();
+        return this.models["pos.config"].get(odoo.pos_config_id);
     }
 
     get session() {
-        return this.models["pos.session"].getFirst();
+        return this.models["pos.session"].get(odoo.pos_session_id);
     }
 
     get currency() {

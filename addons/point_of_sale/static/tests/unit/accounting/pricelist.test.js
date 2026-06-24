@@ -17,8 +17,7 @@ test("Nested Pricelists with different currencies", async () => {
     });
 
     // POS uses MXN
-    const config = store.models["pos.config"].getFirst();
-    config.update({ currency_id: mxn });
+    store.config.update({ currency_id: mxn });
 
     // Base pricelist in USD: +10 USD surcharge on list_price
     const usd = store.models["res.currency"].get(1);
