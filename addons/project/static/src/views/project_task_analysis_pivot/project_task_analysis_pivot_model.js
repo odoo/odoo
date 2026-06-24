@@ -5,6 +5,10 @@ export class ProjectTaskAnalysisPivotModel extends ProjectTaskModelMixin(PivotMo
     async load(searchParams) {
         const domain = searchParams.domain || [];
         searchParams.domain = this._processSearchDomain(domain);
-        return super.load(searchParams);
+        const result = await super.load(searchParams);
+        if (searchParams.context?.hide_count_measure) {
+            delete this.metaData.measures.__count;
+        }
+        return result;
     }
 }

@@ -271,6 +271,14 @@
         <field name="groups_ids" eval="[(4, ref('project.group_project_manager'))]" />
     </record>
 
+    <record id="project_embedded_action_time_by_stage" model="ir.embedded.actions">
+        <field name="parent_res_model">project.project</field>
+        <field name="sequence">132</field>
+        <field name="name">Time by Stage</field>
+        <field name="parent_action_id" ref="project.act_project_project_2_project_task_all"/>
+        <field name="python_method">action_project_time_by_stage_report</field>
+    </record>
+
     <!-- Set pivot view and arrange in order -->
     <record id="project_task_kanban_action_view" model="ir.actions.act_window.view">
         <field name="sequence" eval="10"/>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_time_by_stage_report_view_search" model="ir.ui.view">
+        <field name="name">project.time.by.stage.report.view.search</field>
+        <field name="model">project.task.stage.report</field>
+        <field name="arch" type="xml">
+            <search string="Time by Stage">
+                <field name="name" string="Tasks" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="tag_ids"/>
+                <field name="user_ids" filter_domain="[('user_ids.name', 'ilike', self), ('user_ids.active', 'in', [True, False])]"/>
+                <field name="stage_id"/>
+                <field name="milestone_id" groups="project.group_project_milestone" invisible="not context.get('allow_milestones', True)"/>
+                <field name="partner_id" operator="child_of" invisible="context.get('template_project')"/>
+                <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
+                <field string="Properties" name="task_properties"/>
+                <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
+                <separator/>
+                <filter string="Creation Date" name="creation_date_filter" date="create_date"/>
+                <separator/>
+                <filter string="Deadline" name="date_deadline" date="date_deadline">
+                    <filter name="deadline_future" string="Future" domain="[('date_deadline', '&gt;=', 'today +1d')]"/>
+                    <filter name="deadline_this_week" string="This Week" domain="[
+                        ('date_deadline', '&gt;=', '=week_start'),
+                        ('date_deadline', '&lt;', '=week_start +1w'),
+                    ]"/>
+                    <filter name="deadline_today" string="Today" domain="[
+                        ('date_deadline', '&gt;=', 'today'),
+                        ('date_deadline', '&lt;', 'today +1d'),
+                    ]"/>
+                    <filter name="deadline_past_due" string="Overdue" domain="[('date_deadline', '&lt;', 'today')]"/>
+                </filter>
+                <separator/>
+                <filter string="Open" name="open_tasks" domain="[('is_closed', '=', False)]"/>
+                <filter string="Closed" name="closed_tasks" domain="[('is_closed', '=', True)]"/>
+                <filter string="Rotting" name="filter_rotting" domain="[('task_id.is_rotting', '=', True)]"/>
+                <filter string="Closed On" name="closed_on" domain="[('is_closed', '=', True)]" date="date_last_stage_update" invisible="context.get('template_project')">
+                    <filter name="create_date_last_30_days" string="Last 30 Days" domain="[('date_last_stage_update', '&gt;=', 'today -30d'), ('date_last_stage_update', '&lt;', 'today')]"/>
+                    <filter name="create_date_last_365_days" string="Last 365 Days" domain="[('date_last_stage_update', '&gt;=', 'today -365d'), ('date_last_stage_update', '&lt;', 'today')]"/>
+                </filter>
+                <separator/>
+                <group>
+                    <filter string="Assignees" name="user" context="{'group_by': 'user_ids'}"/>
+                    <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
+                    <filter string="Milestone" name="milestone" context="{'group_by': 'milestone_id'}" groups="project.group_project_milestone" invisible="not context.get('allow_milestones', True)"/>
+                    <filter string="Priority" name="priority" context="{'group_by': 'priority'}"/>
+                    <filter string="Tags" name="tags" context="{'group_by': 'tag_ids'}"/>
+                    <filter string="Customer" name="customer" context="{'group_by': 'partner_id'}" invisible="context.get('template_project')"/>
+                    <filter string="Company" name="company_id" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Creation Date" name="create_date" context="{'group_by': 'create_date'}"/>
+                    <filter string="Deadline" name="deadline" context="{'group_by': 'date_deadline'}"/>
+                    <separator/>
+                    <filter string="Properties" name="properties" context="{'group_by': 'task_properties'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="project_time_by_stage_report_view_graph" model="ir.ui.view">
+        <field name="name">project.time.by.stage.report.view.graph</field>
+        <field name="model">project.task.stage.report</field>
+        <field name="arch" type="xml">
+            <graph string="Stage Chart" sample="1" js_class="project_task_analysis_graph">
+                <field name="stage_id"/>
+                <field name="time_spent" type="measure" widget="float_time"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="project_time_by_stage_report_view_pivot" model="ir.ui.view">
+        <field name="name">project.time.by.stage.report.view.pivot</field>
+        <field name="model">project.task.stage.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Stage Analysis" sample="1" js_class="project_task_analysis_pivot">
+                <field name="stage_id" type="row"/>
+                <field name="time_spent" type="measure" widget="float_time"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_project_time_by_stage_report" model="ir.actions.act_window">
+        <field name="name">Time by Stage</field>
+        <field name="res_model">project.task.stage.report</field>
+        <field name="path">time-by-stage</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="context">{'hide_count_measure': True}</field>
+        <field name="search_view_id" ref="project_time_by_stage_report_view_search"/>
+        <field name="domain">[('project_id', '=', active_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">No data yet!</p>
+            <p>Analyze the progress of your projects and the performance of your employees.</p>
+        </field>
+    </record>
+
+</odoo>

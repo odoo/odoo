@@ -45,6 +45,7 @@
         'views/project_task_templates.xml',
         'views/project_sharing_project_task_templates.xml',
         'report/project_report_views.xml',
+        'report/project_time_by_stage_report_views.xml',
         'data/ir_cron_data.xml',
         'data/mail_message_subtype_data.xml',
         'data/mail_template_data.xml',
