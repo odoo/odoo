@@ -10,10 +10,6 @@ export class MailPreviewRecordField extends ReferenceField {
         Pager,
     };
     static template = "mail.MailPreviewRecordField";
-    static props = {
-        ...super.props,
-        hideRecordSelector: { type: Boolean, optional: true },
-    };
 
     setup() {
         super.setup();
