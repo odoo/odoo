@@ -7,21 +7,21 @@ from odoo.exceptions import UserError
 
 
 class L10nHuEdiReceiveBillsWizard(models.TransientModel):
-    _name = 'l10n_hu_edi_receive.bills.wizard'
+    _name = 'l10n_hu_edi.receive.bills.wizard'
     _description = "Receive Bills Wizard"
 
-    l10n_hu_edi_receive_from = fields.Datetime(default=lambda self: fields.Datetime.now() - timedelta(weeks=1))
-    l10n_hu_edi_receive_to = fields.Datetime(default=lambda self: fields.Datetime.now())
+    datetime_from = fields.Datetime(default=lambda self: fields.Datetime.now() - timedelta(weeks=1))
+    datetime_to = fields.Datetime(default=lambda self: fields.Datetime.now())
 
     def action_receive_bills(self):
         self.ensure_one()
 
-        if (self.l10n_hu_edi_receive_to - self.l10n_hu_edi_receive_from) > timedelta(days=35):
+        if (self.datetime_to - self.datetime_from) > timedelta(days=35):
             raise UserError(self.env._("The length of the interval specified by the query parameter can be up to 35 days."))
 
         moves = self.env['account.move']
         for company in self.env.companies.filtered(lambda c: c.l10n_hu_edi_server_mode in ('test', 'production')):
-            moves += company.l10n_hu_edi_receive_inbound_invoices(self.l10n_hu_edi_receive_from, self.l10n_hu_edi_receive_to)
+            moves += company.l10n_hu_edi_receive_inbound_invoices(self.datetime_from, self.datetime_to)
 
         if moves:
             message = self.env._("Bills were successfully received from NAV.")

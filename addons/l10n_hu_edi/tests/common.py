@@ -3,6 +3,8 @@
 import contextlib
 import datetime
 
+from lxml import etree
+
 from odoo import Command, tools
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests.common import MockHTTPClient
@@ -76,6 +78,7 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
         })
 
         # Currency rates
+        cls.currency_huf = cls.env.ref('base.HUF')
         currency_eur = cls.env.ref('base.EUR')
         currency_eur.active = True
         cls.env['res.currency.rate'].create(
@@ -123,6 +126,9 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
                 }),
             ],
         })
+        cls.tax_purchase_27 = cls.env['account.chart.template'].ref('V27')
+        cls.tax_purchase_5 = cls.env['account.chart.template'].ref('V5')
+        cls.tax_purchase_exempt = cls.env['account.chart.template'].ref('VKKS')
 
     @classmethod
     def write_edi_credentials(cls):
@@ -400,12 +406,20 @@ class L10nHuEdiTestCommon(AccountTestInvoicingCommon):
         return invoice, cancel_wizard
 
     def _get_mocked_requests(self):
-        return ['manageInvoice', 'queryTaxpayer', 'tokenExchange', 'queryTransactionStatus', 'queryTransactionList', 'manageAnnulment']
+        return ['manageInvoice', 'queryTaxpayer', 'tokenExchange', 'queryTransactionStatus', 'queryTransactionList', 'manageAnnulment', 'queryInvoiceDigest', 'queryInvoiceData']
 
     def _get_request_file_name(self, service, data):
+        if service == 'queryInvoiceData' and b'batchIndex' in data:
+            service += '_batch'
         return f'{service}_request'
 
     def _get_response_file_name(self, service, data):
+        if service == 'queryInvoiceData':
+            query = etree.fromstring(data).find('{*}invoiceNumberQuery')
+            file_name = query.findtext('{*}invoiceNumber').replace('/', '_')
+            if batch_index := query.findtext('{*}batchIndex'):
+                file_name += ('_' + batch_index)
+            return file_name
         return f'{service}_response'
 
     @contextlib.contextmanager
