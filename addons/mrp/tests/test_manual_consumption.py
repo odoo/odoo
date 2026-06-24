@@ -386,3 +386,22 @@ class TestManualConsumption(TestMrpCommon):
         move = details_form.save()
         # Quantity was modified, so `manual_consumption` should be set
         self.assertTrue(move.manual_consumption)
+
+    def test_manually_created_move_line_gets_production_id_on_done(self):
+        """
+        A `stock.move.line` added manually to a component move must
+        have `production_id` set.
+        """
+        bom = self.bom_4
+        mo = self.env['mrp.production'].create([{
+            'product_id': bom.product_id.id,
+            'product_qty': 1,
+            'bom_id': bom.id,
+        }])
+        move = mo.move_raw_ids[0]
+        self.env['stock.move.line'].create([{
+            'move_id': move.id,
+            'product_id': move.product_id.id,
+            'quantity': 1,
+        }])
+        self.assertEqual(move.move_line_ids.mapped('production_id').id, mo.id)
