@@ -80,7 +80,7 @@ class StockPickingType(models.Model):
 
     auto_print_product_labels = fields.Boolean(
         "Auto Print Product Labels",
-        help="If this checkbox is ticked, Odoo will automatically print the product labels of a picking when it is validated.")
+        help="If this checkbox is ticked, Odoo will show the allocation report (if there are moves to allocate to.)")
     product_label_format = fields.Selection([
         ('dymo', 'Dymo'),
         ('2x7', '2 x 7'),
