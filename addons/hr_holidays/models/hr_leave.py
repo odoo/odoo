@@ -81,6 +81,7 @@ class HrLeave(models.Model):
             country = self.env['hr.employee'].browse(employee).company_id.country_id or self.env.company.country_id
             domain = [
                 ('country_id', '=', country.id),
+                ('time_off_selectable', '=', True),
                 '|',
                     ('requires_allocation', '=', False),
                     ('has_valid_allocation', '=', True)
