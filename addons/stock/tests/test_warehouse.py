@@ -727,3 +727,11 @@ class TestWarehouse(TestStockCommon):
         new_mto_route = route_sudo.search([("name", "=", "Replenish on Order (MTO)")])
         self.assertEqual(len(new_mto_route), 1)
         self.assertEqual(new_mto_route.company_id.id, company_2.id)
+
+    def test_sequence_preservation_on_step_change(self):
+        out_type = self.warehouse_1.out_type_id
+        sequence = out_type.sequence_id
+        end_of_prefix = 'LOREM/'
+        sequence.prefix += end_of_prefix
+        self.warehouse_1.delivery_steps = 'pick_ship'
+        self.assertTrue(sequence.prefix.endswith(end_of_prefix))
