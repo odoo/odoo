@@ -38,10 +38,10 @@ class PayUOnboardingController(Controller):
         authorization_code = data.get("auth_code")
         provider_id = int(data["provider_id"])
         csrf_token = data["csrf_token"]
-        provider_sudo = self.env["payment.provider"].sudo().browse(provider_id).exists()
-        if not provider_sudo or provider_sudo.code != "payu":
+        provider = self.env["payment.provider"].browse(provider_id).exists()
+        if not provider or provider.code != "payu":
             raise ValidationError(
-                self.env._("Could not find PayU provider with id %s", provider_sudo.id)
+                self.env._("Could not find PayU provider with id %s", provider.id)
             )
 
         # Verify the CSRF token
@@ -50,7 +50,7 @@ class PayUOnboardingController(Controller):
             raise Forbidden
 
         action = self.env.ref("payment.action_payment_provider")
-        redirect_url = f"/odoo/action-{action.id}/{int(provider_sudo.id)}"
+        redirect_url = f"/odoo/action-{action.id}/{int(provider.id)}"
         if not authorization_code:  # The user cancelled the authorization
             return request.redirect(redirect_url)
 
@@ -60,11 +60,11 @@ class PayUOnboardingController(Controller):
             "redirect_uri": f"{const.OAUTH_URL}/redirect",
         }
         try:
-            response_content = provider_sudo._send_api_request(
+            response_content = provider._send_api_request(
                 "POST", "/get_access_token", json=proxy_payload, is_proxy_request=True
             )
             access_token = response_content["access_token"]
-            credentials_response = provider_sudo._send_api_request(
+            credentials_response = provider._send_api_request(
                 "GET", f"/api/v1/merchants/{merchant_id}/credential", payu_access_token=access_token
             )
         except ValidationError as error:
@@ -73,7 +73,7 @@ class PayUOnboardingController(Controller):
                 {"error_message": str(error), "provider_url": redirect_url},
             )
         credentials = credentials_response.get("data", {}).get("credentials", {})
-        provider_sudo.write({
+        provider.write({
             # Save the OAuth credentials
             "payu_key_id": credentials.get("prod_key"),
             "payu_merchant_salt": credentials.get("prod_salt"),
