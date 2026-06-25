@@ -1,4 +1,5 @@
 import { onWebsocketEvent } from "@bus/../tests/mock_websocket";
+import { WebsocketWorker } from "@bus/workers/websocket_worker";
 import {
     click,
     contains,
@@ -9,7 +10,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
 import { tick } from "@odoo/hoot-dom";
-import { makeMockEnv } from "@web/../tests/web_test_helpers";
+import { makeMockEnv, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -26,6 +27,7 @@ test("Member list and Pinned Messages Panel menu are exclusive", async () => {
 });
 
 test("subscribe to presence channels according to store data", async () => {
+    patchWithCleanup(WebsocketWorker, { OUTGOING_BATCH_DELAY: 10 });
     const env = await makeMockEnv();
     const store = env.services["mail.store"];
     onWebsocketEvent("subscribe", (data) => expect.step(`subscribe - [${data.channels}]`));
