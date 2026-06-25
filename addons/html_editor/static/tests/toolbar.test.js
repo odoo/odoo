@@ -16,6 +16,7 @@ import {
     queryOne,
     waitFor,
     waitForNone,
+    waitUntil,
 } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame, tick } from "@odoo/hoot-mock";
 import {
@@ -424,6 +425,31 @@ test("toolbar works: change font size correctly when closest block element has a
         `<h2 class="h3-fs">abc <strong>def </strong><span class="h1-fs"><strong>[ghi]</strong></span></h2>`
     );
     expect(inputEl).toHaveValue(h1Size);
+});
+
+test("toolbar font size selector reflects heading size after remove format", async () => {
+    const { el } = await setupEditor(`<h2 class="display-3-fs">[heading 2]</h2>`);
+    await expandToolbar();
+    const style = getHtmlStyle(document);
+    const getFontSizeFromVar = (cssVar) => {
+        const strValue = getCSSVariableValue(cssVar, style);
+        const remValue = parseFloat(strValue);
+        const pxValue = convertNumericToUnit(remValue, "rem", "px", style);
+        return Math.round(pxValue);
+    };
+    await waitFor(".o-we-toolbar");
+    const iframeEl = queryOne(".o-we-toolbar [name='font_size_selector'] iframe");
+    const inputEl = await waitUntil(() => {
+        const input = iframeEl.contentWindow.document?.querySelector("input[name='font-size-input']");
+        return input?.value && input;
+    });
+    expect(inputEl).toHaveValue(getFontSizeFromVar("display-3-font-size").toString());
+
+    await click(".btn[name='remove_format']");
+    await animationFrame();
+
+    expect(getContent(el)).toBe(`<h2>[heading 2]</h2>`);
+    expect(inputEl).toHaveValue(getFontSizeFromVar("h2-font-size").toString());
 });
 
 test("toolbar works: show the correct text alignment", async () => {
