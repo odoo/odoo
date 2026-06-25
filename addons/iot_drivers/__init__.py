@@ -1,8 +1,6 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 from functools import wraps
 import requests
 
-from . import server_logger
 from . import connection_manager
 from . import controllers
 from . import event_manager

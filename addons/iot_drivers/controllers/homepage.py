@@ -16,7 +16,6 @@ from odoo.tools.misc import file_path
 
 from odoo.addons.iot_drivers.connection_manager import connection_manager
 from odoo.addons.iot_drivers.main import iot_devices, unsupported_devices
-from odoo.addons.iot_drivers.server_logger import server_logger
 from odoo.addons.iot_drivers.tools import (
     certificate,
     helpers,
@@ -139,8 +138,6 @@ class IotBoxOwlHomePage(Controller):
     @route.iot_route('/iot_drivers/server_clear', type='http', cors='*')
     def clear_server_configuration(self):
         helpers.disconnect_from_server()
-        if server_logger:
-            server_logger.close()
         return json.dumps({
             'status': 'success',
             'message': 'Successfully disconnected from server',
