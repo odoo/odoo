@@ -9,6 +9,12 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 
 const useDialogDraggable = makeDraggableHook({
     name: "useDialogDraggable",
+    onDragStart() {
+        document.documentElement.style.cursor = "grabbing";
+    },
+    onDragEnd() {
+        document.documentElement.style.cursor = "";
+    },
     onWillStartDrag({ ctx, addCleanup, addStyle, getRect }) {
         const { height, width } = getRect(ctx.current.element);
         ctx.current.container = document.createElement("div");
