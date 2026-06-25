@@ -30,8 +30,8 @@
             <field name="inherit_id" ref="base.view_users_tree"/>
             <field name="arch" type="xml">
                 <list position="inside">
-                    <field name="state" widget="badge" optional="hide"
-                        decoration-info="state == 'new'" decoration-success="state == 'active'"/>
+                    <field name="state" widget="badge" optional="show"
+                        decoration-info="state == 'new'" decoration-success="state == 'active'" decoration-danger="state == 'inactive'"/>
                 </list>
             </field>
         </record>
