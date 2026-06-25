@@ -3,6 +3,7 @@
 
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.tests import TransactionCase, tagged
 
 
@@ -14,11 +15,20 @@ class TestEmployee(TransactionCase):
         cls.company = cls.env['res.company'].create({
             'name': 'Test Company',
         })
+        cls.fixed_hours_calendar = cls.env['resource.calendar'].create({
+            'name': 'Fixed Hours Calendar',
+            'company_id': cls.company.id,
+            'attendance_ids': [
+                Command.create({'dayofweek': str(weekday), 'hour_from': hour, 'hour_to': hour + 4})
+                for weekday in range(5)
+                for hour in [8, 13]
+            ],
+        })
         cls.global_leave = cls.env['resource.calendar.leaves'].create({
             'name': 'Test Global Leave',
             'date_from': '2020-01-01 00:00:00',
             'date_to': '2020-01-01 23:59:59',
-            'calendar_id': cls.company.resource_calendar_id.id,
+            'calendar_id': cls.fixed_hours_calendar.id,
             'company_id': cls.company.id,
         })
 
@@ -36,7 +46,7 @@ class TestEmployee(TransactionCase):
         existing_employee = self.env['hr.employee'].create({
             'name': 'Test Employee',
             'company_id': self.company.id,
-            'resource_calendar_id': self.company.resource_calendar_id.id,
+            'resource_calendar_id': self.fixed_hours_calendar.id,
         })
         resource_leave = self.env['resource.calendar.leaves'].with_company(self.company).create({
             'name': 'Future resource specific leave without a calendar',
@@ -50,7 +60,7 @@ class TestEmployee(TransactionCase):
         employee = self.env['hr.employee'].create({
             'name': 'Test Employee',
             'company_id': self.company.id,
-            'resource_calendar_id': self.company.resource_calendar_id.id,
+            'resource_calendar_id': self.fixed_hours_calendar.id,
         })
         # Check resource-specific leave does not create a timesheet
         resource_timesheet = self.env['account.analytic.line'].search([
@@ -71,7 +81,7 @@ class TestEmployee(TransactionCase):
         employee2 = self.env['hr.employee'].with_company(self.env.company).create({
             'name': 'Test Employee',
             'company_id': self.company.id,
-            'resource_calendar_id': self.company.resource_calendar_id.id,
+            'resource_calendar_id': self.fixed_hours_calendar.id,
         })
         timesheet = self.env['account.analytic.line'].search([
             ('employee_id', '=', employee2.id),
@@ -99,7 +109,7 @@ class TestEmployee(TransactionCase):
             'name': 'Test Employee',
             'company_id': self.company.id,
         })
-        employee.write({'resource_calendar_id': self.company.resource_calendar_id.id})
+        employee.write({'resource_calendar_id': self.fixed_hours_calendar.id})
         timesheet = self.env['account.analytic.line'].search([
             ('employee_id', '=', employee.id),
             ('global_leave_id', '=', self.global_leave.id),
@@ -133,7 +143,7 @@ class TestEmployee(TransactionCase):
         self.assertEqual(len(timesheet), 1, 'We should not have created duplicate public holiday leaves')
 
         # simulate the company of the employee updated is not in the allowed_company_ids of the current user
-        employee.with_company(self.env.company).write({'resource_calendar_id': self.company.resource_calendar_id.id})
+        employee.with_company(self.env.company).write({'resource_calendar_id': self.fixed_hours_calendar.id})
         timesheet = self.env['account.analytic.line'].search([
             ('employee_id', '=', employee.id),
             ('global_leave_id', '=', self.global_leave.id),

@@ -32,6 +32,15 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
             (0, 0, {'dayofweek': '4', 'hour_from': 13, 'hour_to': 16})
         ]
 
+        self.fixed_hours_calendar = self.env['resource.calendar'].create({
+            'name': 'Fixed Hours Calendar',
+            'company_id': self.test_company.id,
+            'attendance_ids': [
+                Command.create({'dayofweek': str(weekday), 'hour_from': hour, 'hour_to': hour + 4})
+                for weekday in range(5)
+                for hour in [8, 13]
+            ],
+        })
         self.part_time_calendar, self.part_time_calendar2 = self.env['resource.calendar'].create([
             {
                 'name': 'Part Time Calendar',
@@ -139,10 +148,11 @@ class TestTimesheetGlobalTimeOff(common.TransactionCase):
         today = datetime.today()
         leave_start_datetime = today + timedelta(days=-today.weekday(), weeks=1)  # Next monday
         leave_end_datetime = leave_start_datetime + timedelta(days=5)  # Next friday
+        self.full_time_employee.resource_calendar_id = self.fixed_hours_calendar
 
         self.env['resource.calendar.leaves'].create({
             'name': 'Test',
-            'calendar_id': self.test_company.resource_calendar_id.id,
+            'calendar_id': self.fixed_hours_calendar.id,
             'date_from': leave_start_datetime,
             'date_to': leave_end_datetime,
         })
