@@ -6,11 +6,11 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { rpc, rpcBus } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
-import { renderToString } from "@web/core/utils/render";
+import { renderToFragment } from "@web/core/utils/render";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { BoardAction } from "./board_action";
-import { blockDom, Component, proxy } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 export class BoardController extends Component {
     static template = "board.BoardView";
@@ -116,12 +116,8 @@ export class BoardController extends Component {
     }
 
     saveBoard() {
-        const templateFn = renderToString.app.getTemplate("board.arch");
-        const ctx = Object.create(this.board);
-        ctx.this = this.board;
-        const bdom = templateFn(ctx, {});
         const root = document.createElement("rendertostring");
-        blockDom.mount(bdom, root);
+        root.appendChild(renderToFragment("board.arch", this.board));
         const result = xmlSerializer.serializeToString(root);
         const arch = result.slice(result.indexOf("<", 1), result.indexOf("</rendertostring>"));
 

@@ -11,6 +11,7 @@ import { waitImages } from "@point_of_sale/utils";
 import { SelectDefaultPrinterPopup } from "@point_of_sale/app/components/popups/select_default_printer_popup/select_default_printer_popup";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { ZebraPrinter } from "@point_of_sale/app/utils/printer/zebra_printer";
+import { useApp } from "@odoo/owl";
 
 const { DateTime } = luxon;
 
@@ -29,6 +30,7 @@ export class PosTicketPrinterService {
     }
 
     setup(env, { dialog, pos_data, notification }) {
+        this.app = useApp();
         this.env = env;
         this.dialog = dialog;
         this.notification = notification;
@@ -419,7 +421,7 @@ export class PosTicketPrinterService {
     async getHtmlFromComponent(ComponentClass, data) {
         const container = document.getElementById("receipt-iframe-container");
         container.innerHTML = "";
-        const root = renderToString.app.createRoot(ComponentClass, { props: data });
+        const root = this.app.createRoot(ComponentClass, { props: data });
         await root.mount(container);
         const result = container.innerHTML;
         root.destroy();
