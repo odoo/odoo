@@ -27,38 +27,38 @@
             </xpath>
 
             <!-- Baiwang E-Fapiao tab in notebook -->
-            <xpath expr="//notebook" position="inside">
-                <page string="Baiwang E-Fapiao"
-                      name="china_e_fapiao"
-                      invisible="country_code != 'CN' or move_type not in ('out_invoice', 'out_refund')">
+            <xpath expr="//field[@name='l10n_cn_fapiao']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='l10n_cn_fapiao']" position="after">
+                <field name="l10n_cn_baiwang_invoice_type_code" 
+                       invisible="country_code != 'CN' or move_type not in ('out_invoice', 'out_refund')"/>
+            </xpath>
 
-                    <group invisible="move_type != 'out_invoice'">
+            <xpath expr="//header" position="inside">
+                <button name="action_request_baiwang_red_form"
+                        string="Cancel"
+                        type="object"
+                        class="oe_highlight"
+                        invisible="state != 'draft' or move_type != 'out_refund' or not l10n_cn_baiwang_red_form_required or l10n_cn_baiwang_red_form_status == 'red_form_confirmed'"/>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+                <page string="Baiwang E-Fapiao" name="china_e_fapiao" invisible="country_code != 'CN' or move_type not in ('out_invoice', 'out_refund')">
+                    <group>
                         <group string="E-Fapiao Details">
-                            <field name="l10n_cn_baiwang_invoice_type_code"/>
                             <field name="l10n_cn_baiwang_invoice_no"/>
                             <field name="l10n_cn_baiwang_invoice_date"/>
                             <field name="l10n_cn_baiwang_state" widget="badge"
                                    decoration-success="l10n_cn_baiwang_state == 'issued'"
                                    decoration-warning="l10n_cn_baiwang_state == 'sent'"
                                    decoration-danger="l10n_cn_baiwang_state == 'failed'"/>
-                            <field name="l10n_cn_baiwang_date_consistency_warning"
-                                   readonly="1"
-                                   invisible="not l10n_cn_baiwang_date_consistency_warning"/>
+                            <field name="l10n_cn_baiwang_date_consistency_warning" readonly="1" invisible="not l10n_cn_baiwang_date_consistency_warning"/>
                             <field name="l10n_cn_baiwang_serial_no" invisible="not l10n_cn_baiwang_serial_no"/>
                         </group>
-                        <group string="Error" invisible="not l10n_cn_baiwang_error_message">
-                            <field name="l10n_cn_baiwang_error_message" nolabel="1" colspan="2"/>
-                        </group>
-                    </group>
 
-                    <group invisible="move_type != 'out_refund'">
-                        <group string="Red Form Configuration">
-                            <field name="l10n_cn_baiwang_original_invoice_id"
-                                   domain="[('move_type', '=', 'out_invoice'), ('l10n_cn_baiwang_invoice_no', '!=', False)]"/>
+                        <group string="Red Form Requests" invisible="move_type != 'out_refund'">
                             <field name="l10n_cn_baiwang_red_form_type"/>
-                        </group>
-                        
-                        <group string="Red Form Requests">
                             <field name="l10n_cn_baiwang_red_form_number"/>
                             <field name="l10n_cn_baiwang_red_form_status" widget="badge"
                                    decoration-success="l10n_cn_baiwang_red_form_status == 'red_form_confirmed'"
@@ -69,17 +69,17 @@
                             <div class="o_row">
                                 <field name="l10n_cn_baiwang_red_form_uuid"/>
                                 <button name="action_request_baiwang_red_form"
-                                        string="Send Red Form"
+                                        string="Cancel"
                                         type="object"
                                         class="btn-primary"
-                                        icon="fa-paper-plane"
+                                        icon="fa-times-circle"
                                         invisible="state != 'draft' or l10n_cn_baiwang_red_form_status == 'red_form_confirmed'"/>
                             </div>
                         </group>
-                    </group>
-                    
-                    <group string="System Error Log" invisible="move_type != 'out_refund' or not l10n_cn_baiwang_error_message">
-                        <field name="l10n_cn_baiwang_error_message" nolabel="1" colspan="2"/>
+
+                        <group string="System Error Log" invisible="not l10n_cn_baiwang_error_message">
+                            <field name="l10n_cn_baiwang_error_message" nolabel="1" colspan="2"/>
+                        </group>
                     </group>
                 </page>
             </xpath>

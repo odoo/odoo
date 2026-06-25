@@ -60,11 +60,6 @@ class AccountMove(models.Model):
         selection=RED_FORM_TYPES,
         string="Red Form Reason",
     )
-    l10n_cn_baiwang_original_invoice_id = fields.Many2one(
-        'account.move',
-        string="Original Invoice",
-        help="The original blue invoice being reversed",
-    )
 
     # EDI document tracking
     l10n_cn_edi_document_ids = fields.One2many(
@@ -145,18 +140,16 @@ class AccountMove(models.Model):
         'country_code',
         'move_type',
         'state',
-        'l10n_cn_baiwang_original_invoice_id.l10n_cn_baiwang_invoice_no',
         'reversed_entry_id.l10n_cn_baiwang_invoice_no',
     )
     def _compute_l10n_cn_baiwang_red_form_required(self):
         for move in self:
-            original_move = move.l10n_cn_baiwang_original_invoice_id or move.reversed_entry_id
             move.l10n_cn_baiwang_red_form_required = bool(
                 move.country_code == 'CN'
                 and move.move_type == 'out_refund'
                 and move.state == 'draft'
-                and original_move
-                and original_move.l10n_cn_baiwang_invoice_no,
+                and move.reversed_entry_id
+                and move.reversed_entry_id.l10n_cn_baiwang_invoice_no
             )
 
     @api.depends('invoice_date', 'l10n_cn_baiwang_invoice_date', 'l10n_cn_baiwang_invoice_no')
@@ -367,12 +360,9 @@ class AccountMove(models.Model):
         client.ensure_connection()
 
         # Find original blue invoice
-        original_move = self.l10n_cn_baiwang_original_invoice_id or self.reversed_entry_id
+        original_move = self.reversed_entry_id
         if not original_move or not original_move.l10n_cn_baiwang_invoice_no:
-            raise UserError(self.env._(
-                "Cannot find the original invoice number. Please link the original invoice "
-                "or ensure it was issued via Baiwang first.",
-            ))
+            raise UserError(self.env._("Cannot find the original invoice number. Ensure this credit note was created from a posted Baiwang invoice."))
 
         # Create EDI document record to track this request
         edi_doc = self.env['l10n_cn_edi.document'].create({

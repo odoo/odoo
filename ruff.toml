@@ -4,7 +4,7 @@
 # some rules present here are not enabled on runbot (yet) but are still advised to follow when possible : ["B904", "COM812", "E741", "EM101", "I001", "RET", "RUF021", "RUF102", "TRY002", "UP006", "UP007"]
 
 
-target-version = "py313"
+target-version = "py312"
 
 [lint]
 preview = true
@@ -60,7 +60,7 @@ ignore = [
     "RUF001",     # ambiguous-unicode-character-string
     "RUF005",     # collection-literal-concatenation
     "RUF012",     # mutable-class-default
-    # "RUF067",     # non-empty-init-module
+    "RUF067",     # non-empty-init-module
     "RUF100",     # unused-noqa
     "SIM102",     # collapsible-if
     "SIM108",     # if-else-block-instead-of-if-exp
