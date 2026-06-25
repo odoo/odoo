@@ -229,7 +229,7 @@ class PosOrder(models.Model):
             'source': 'kiosk' if device_type == 'kiosk' else 'mobile',
             'email': partner.email if partner else order.get('email'),
             'mobile': order.get('mobile'),
-            'state': order.get('state'),
+            'state': 'draft',
             'account_move': order.get('account_move'),
             'floating_order_name': floating_order_name,
             'general_customer_note': order.get('general_customer_note'),
