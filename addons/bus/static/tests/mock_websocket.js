@@ -82,6 +82,7 @@ patchWithCleanup(MockServer.prototype, {
     },
 });
 
+WebsocketWorker.OUTGOING_BATCH_DELAY = 0;
 patch(WebsocketWorker.prototype, {
     INITIAL_RECONNECT_DELAY: 0,
     RECONNECT_JITTER: 5,

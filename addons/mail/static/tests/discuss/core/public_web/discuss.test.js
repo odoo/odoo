@@ -1,4 +1,5 @@
 import { waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
+import { WebsocketWorker } from "@bus/workers/websocket_worker";
 import {
     contains,
     defineMailModels,
@@ -36,6 +37,7 @@ test("open channel in discuss from push notification", async () => {
 });
 
 test("notify message to user as non member", async () => {
+    patchWithCleanup(WebsocketWorker, { OUTGOING_BATCH_DELAY: 500 });
     patchWithCleanup(window, {
         Notification: class Notification {
             static get permission() {
