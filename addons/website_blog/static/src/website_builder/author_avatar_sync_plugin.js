@@ -12,6 +12,7 @@ export class AuthorAvatarSyncPlugin extends Plugin {
          */
         on_pending_mutations_staged_handlers: (mutations) => {
             mutations
+                .filter((m) => !m.isAutomatic)
                 .filter((m) => m.type === EDITOR_MUTATION_TYPES.ATTRIBUTES && m.attributeName === "data-oe-many2one-id")
                 .map((m) => ({...m, target: this.dependencies.domReferenceMap.getNodeById(m.nodeId)}))
                 .filter((m) => m.target.dataset.oeField === "author_id")

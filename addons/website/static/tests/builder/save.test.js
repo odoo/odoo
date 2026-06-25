@@ -33,6 +33,8 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { WebsiteBuilder } from "@website/builder/website_builder";
+import { selectElements } from "@html_editor/utils/dom_traversal";
+import { withSequence } from "@html_editor/utils/resource";
 
 defineWebsiteModels();
 
@@ -689,4 +691,61 @@ test("Errors different than validation errors are not caught on save", async () 
     await insertText(getEditor(), "x");
     await contains(".o-snippets-top-actions button:contains(Save)").click();
     expect.verifyErrors(["RPC_ERROR: Not A Validation Error"]);
+});
+
+test("should not add o_dirty for mutations done by normalize called by commit", async () => {
+    addPlugin(
+        class extends Plugin {
+            static id = "test_plugin_mutation";
+            static dependencies = ["domObserver"];
+            // static dependencies = ["history"];
+            /** @type {import("plugins").WebsiteResources} */
+            resources = {
+                normalize_processors: [
+                    withSequence(1, (root) => {
+                        for (const el of selectElements(root, ".test-content")) {
+                            el.dataset.counter = parseInt(el.dataset.counter) + 1;
+                        }
+                        return root;
+                    }),
+                    withSequence(2, (root) => {
+                        this.dependencies.domObserver.ignore(() => {
+                            // this.dependencies.history.ignoreDOMMutations(() => {
+                            for (const el of selectElements(root, ".test-sibling")) {
+                                el.dataset.counter = parseInt(el.dataset.counter) + 1;
+                            }
+                        });
+                        return root;
+                    }),
+                ],
+            };
+        }
+    );
+    const { getEditor } = await setupWebsiteBuilder("", {
+        headerContent: `
+            <div class="test-parent">
+                <div class="test-target" data-oe-model="stuff">
+                    <div class="test-content" data-counter="0">Hello</div>
+                <div>
+                <div class="test-sibling" data-oe-model="stuff" data-counter="0">
+                    Hello
+                <div>
+            </div>
+        `,
+    });
+    const editor = getEditor();
+
+    expect(":iframe .test-target").toHaveClass("o_savable");
+    expect(":iframe .test-target").not.toHaveClass("o_dirty");
+    expect(":iframe .test-content").toHaveAttribute("data-counter", "1");
+    expect(":iframe .test-sibling").toHaveAttribute("data-counter", "1");
+
+    queryOne(":iframe .test-parent").dataset.changed = true;
+    setSelection({ anchorNode: queryOne(":iframe .test-sibling") });
+    await insertText(editor, "X");
+
+    expect(":iframe .test-sibling").toHaveClass("o_dirty");
+    expect(":iframe .test-target").not.toHaveClass("o_dirty");
+    expect(":iframe .test-content").toHaveAttribute("data-counter", "2");
+    expect(":iframe .test-sibling").toHaveAttribute("data-counter", "2");
 });
