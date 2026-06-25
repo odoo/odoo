@@ -141,6 +141,10 @@ class Manager(Thread):
 
             wifi.reconnect(system.get_conf('wifi_ssid'), system.get_conf('wifi_password'))
 
+        if system.IS_WINDOWS and not system.get_conf("http_interface", "options"):
+            system.update_conf({"http_interface": "0.0.0.0"}, "options")
+            helpers.odoo_restart()
+
         system.start_nginx_server()
         _logger.info("IoT Box Image version: %s", system.get_version(detailed_version=True))
         if system.IS_WINDOWS:
