@@ -76,7 +76,7 @@ export class PopupVisibilityPlugin extends Plugin {
         // save (see save plugin) and Bootstrap moves it if it is not within the
         // document (see Bootstrap Modal's _showElement).
         if (targetEl.matches(".s_popup") && this.editable.contains(targetEl)) {
-            this.window.Modal.getOrCreateInstance(targetEl.querySelector(".modal")).show();
+            this.toggleModal(targetEl, true);
         }
     }
 
@@ -84,7 +84,21 @@ export class PopupVisibilityPlugin extends Plugin {
         // Do not use Bootstrap to close the popup, as we are cleaning a
         // clone of it. Instead, hide it manually (see `cleanForSave`).
         if (targetEl.matches(".s_popup") && !isCleaning) {
-            this.window.Modal.getOrCreateInstance(targetEl.querySelector(".modal")).hide();
+            this.toggleModal(targetEl, false);
+        }
+    }
+
+    toggleModal(targetEl, show) {
+        const modalEl = targetEl.querySelector(".modal");
+        const modalInstance = this.window.Modal.getOrCreateInstance(modalEl);
+        modalEl.dispatchEvent(new Event("transitionend"));
+        // Ensures Bootstrap events are triggered even if the popup is
+        // still transitioning.
+        modalInstance._isTransitioning = false;
+        if (show) {
+            modalInstance.show();
+        } else {
+            modalInstance.hide();
         }
     }
 
