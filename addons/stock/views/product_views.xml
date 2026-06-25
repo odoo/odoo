@@ -599,11 +599,11 @@
                             context="{'search_default_product_id': id, 'default_product_id': id}"> -->
                     <field name="qty_available" string="On Hand"
                            sum="Total On Hand" widget="stock_action_field"
-                           options="{ 'action_name': 'stock.action_view_inventory_tree' }"
+                           options="{ 'action_name': 'stock.action_view_inventory_tree', 'mute_empty': true }"
                            context="{ 'search_default_product_id': id, 'default_product_id': id }"/>
-                    <field name="free_qty" string="Free to Use" sum="Total Free to Use"/>
-                    <field name="incoming_qty" optional="show" sum="Total Incoming"/>
-                    <field name="outgoing_qty" optional="show" sum="Total Outgoing"/>
+                    <field name="free_qty" string="Free to Use" sum="Total Free to Use" decoration-muted="free_qty == 0"/>
+                    <field name="incoming_qty" optional="show" sum="Total Incoming" decoration-muted="incoming_qty == 0"/>
+                    <field name="outgoing_qty" optional="show" sum="Total Outgoing" decoration-muted="outgoing_qty == 0"/>
                     <field name="virtual_available" string="Forecasted" optional="hide" sum="Total Forecasted"/>
                     <field name="uom_id" widget="many2one_uom" groups="uom.group_uom" options="{'no_create': True}"/>
                     <button name="%(stock_move_line_action)d" string="History" type="action" class="btn-link"

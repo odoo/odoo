@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-name="stock.actionField" owl="1">
-        <a t-if="! this.disabled" href="#" t-on-click="this._onClick" class="btn-link">
+        <a t-if="! this.disabled" href="#" t-on-click="this._onClick" class="btn-link"
+           t-att-class="{'text-muted': this.props.muteEmpty &amp;&amp; !this.props.record.data[this.props.name]}">
             <t t-call="stock.actionFieldContent"/>
         </a>
         <t t-else="">

@@ -4,16 +4,12 @@
     <t t-name="mrp.BomOverviewControlPanel">
         <ControlPanel display="this.controlPanelDisplay">
             <t t-set-slot="control-panel-buttons">
-                <button t-on-click="this.manufactureFromBoM" type="button" class="btn btn-primary">Manufacture</button>
+                <button t-on-click="this.manufactureFromBoM" type="button" class="btn btn-primary d-print-none">Manufacture</button>
                 <button t-on-click="() => this.props.print()" type="button" class="btn btn-secondary">Print</button>
-                <!-- <t t-if="props.showVariants"> commented, waiting for ui update
-                    <button t-on-click="() => this.props.print(true)" type="button" class="btn btn-secondary text-nowrap">Print All Variants</button>
-                </t>
-                </t> -->
-                <button t-if="this.props.foldable" t-on-click="this.clickTogglefold" type="button" class="btn btn-secondary" t-out="this.foldButtonText"/>
+                <button t-if="this.props.foldable" t-on-click="this.clickTogglefold" type="button" class="btn btn-secondary d-print-none" t-out="this.foldButtonText"/>
             </t>
             <t t-set-slot="control-panel-actions">
-                <div t-if="this.props.showVariants" class="input-group align-items-center">
+                <div t-if="this.props.showVariants" class="input-group align-items-center d-print-none">
                     <div class="col-4 col-md-auto pe-2 fw-bold">Variant</div>
                     <div class="col">
                         <Many2XAutocomplete
@@ -27,16 +23,14 @@
                     </div>
                 </div>
                 <div class="d-flex gap-1">
-                    <div>
-                        <form class="d-flex flex-grow-1 gap-3 flex-column flex-md-row">
-                            <label class="visually-hidden" for="bom_quantity"/>
-                            <div t-attf-class="input-group align-items-center">
-                                <div class="col-4 col-md-auto px-2 fw-bold">Quantity</div>
-                                <input id="bom_quantity" type="number" step="any" t-on-change="ev => this.updateQuantity(ev)" t-on-keypress="ev => this.onKeyPress(ev)" t-att-value="this.props.bomQuantity" min="1" size="7" class="o_input form-control rounded-0" t-custom-ref="quantity"/>
-                                <div t-if="this.props.showOptions.uom" t-out="this.props.uomName" class="d-flex align-items-center text-muted small lh-sm"/>
-                            </div>
-                        </form>
-                    </div>
+                    <form class="d-flex flex-grow-1 gap-3 flex-column flex-md-row d-print-none">
+                        <label class="visually-hidden" for="bom_quantity"/>
+                        <div t-attf-class="input-group align-items-center">
+                            <div class="col-4 col-md-auto px-2 fw-bold">Quantity</div>
+                            <input id="bom_quantity" type="number" step="any" t-on-change="ev => this.updateQuantity(ev)" t-on-keypress="ev => this.onKeyPress(ev)" t-att-value="this.props.bomQuantity" min="1" size="7" class="o_input form-control rounded-0" t-custom-ref="quantity"/>
+                            <div t-if="this.props.showOptions.uom" t-out="this.props.uomName" class="d-flex align-items-center text-muted small lh-sm"/>
+                        </div>
+                    </form>
                 </div>
             </t>
             <t t-set-slot="control-panel-navigation-additional">
@@ -48,13 +42,13 @@
                     </Dropdown>
                 </t>
                 <t t-if="this.props.showOptions.mode == 'overview'">
-                    <div class="o_row" t-on-click="() => this.props.changeMode('forecast')" >
+                    <div class="o_row d-print-none" t-on-click="() => this.props.changeMode('forecast')" >
                         <i class="btn fa fa-toggle-off fa-lg pe-1"/>
                         <span>Forecast</span>
                     </div>
                 </t>
                 <t t-else="">
-                    <div class="o_row" t-on-click="() => this.props.changeMode('overview')" >
+                    <div class="o_row d-print-none" t-on-click="() => this.props.changeMode('overview')" >
                         <i class="btn fa fa-toggle-on fa-lg pe-1"/>
                         <span>Forecast</span>
                     </div>
