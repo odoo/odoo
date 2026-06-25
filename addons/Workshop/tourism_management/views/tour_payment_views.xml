@@ -1,0 +1,48 @@
+<odoo>
+    <record id="tour_payment_action" model="ir.actions.act_window">
+        <field name="name">Payments</field>
+        <field name="res_model">tour.payment</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="tour_payment_view_list" model="ir.ui.view">
+        <field name="name">tour.payment.list</field>
+        <field name="model">tour.payment</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="booking_id"/>
+                <field name="amount"/>
+                <field name="payment_method"/>
+                <field name="payment_date"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="tour_payment_view_form" model="ir.ui.view">
+        <field name="name">tour.payment.form</field>
+        <field name="model">tour.payment</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm" invisible="state != 'draft'"/>
+                    <button name="action_refund" type="object" string="Refund" invisible="state != 'confirmed'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="booking_id"/>
+                            <field name="amount"/>
+                        </group>
+                        <group>
+                            <field name="payment_method"/>
+                            <field name="payment_date"/>
+                            <field name="reference"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

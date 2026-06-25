@@ -1,0 +1,109 @@
+<odoo>
+    <record id="destination_burj_khalifa" model="tour.destination">
+        <field name="name">Burj Khalifa</field>
+        <field name="location">Downtown Dubai</field>
+        <field name="description">The tallest building in the world, with an observation deck.</field>
+    </record>
+    <record id="destination_dubai_marina" model="tour.destination">
+        <field name="name">Dubai Marina</field>
+        <field name="location">Dubai Marina</field>
+        <field name="description">A waterfront promenade lined with skyscrapers, restaurants and yachts.</field>
+    </record>
+    <record id="destination_desert_safari" model="tour.destination">
+        <field name="name">Desert Safari</field>
+        <field name="location">Dubai Desert Conservation Reserve</field>
+        <field name="description">Dune bashing, camel rides and a traditional Bedouin camp experience.</field>
+    </record>
+    <record id="destination_dubai_creek" model="tour.destination">
+        <field name="name">Dubai Creek</field>
+        <field name="location">Bur Dubai</field>
+        <field name="description">A historic waterway with traditional abra boat rides and old souks.</field>
+    </record>
+    <record id="destination_dubai_mall" model="tour.destination">
+        <field name="name">Dubai Mall</field>
+        <field name="location">Downtown Dubai</field>
+        <field name="description">One of the world's largest shopping and entertainment destinations.</field>
+    </record>
+
+    <record id="package_city_tour" model="tour.package">
+        <field name="name">City Tour</field>
+        <field name="package_type">city</field>
+        <field name="destination_ids" eval="[(6, 0, [ref('destination_burj_khalifa'), ref('destination_dubai_marina'), ref('destination_dubai_mall')])]"/>
+        <field name="duration_hours">6</field>
+        <field name="base_price">150</field>
+        <field name="max_capacity">40</field>
+        <field name="description">A guided tour of Dubai's most iconic modern landmarks.</field>
+    </record>
+    <record id="package_desert_safari" model="tour.package">
+        <field name="name">Desert Safari</field>
+        <field name="package_type">desert</field>
+        <field name="destination_ids" eval="[(6, 0, [ref('destination_desert_safari')])]"/>
+        <field name="duration_hours">5</field>
+        <field name="base_price">120</field>
+        <field name="max_capacity">25</field>
+        <field name="description">Dune bashing, sandboarding and a BBQ dinner under the stars.</field>
+    </record>
+    <record id="package_family_dubai_tour" model="tour.package">
+        <field name="name">Family Dubai Tour</field>
+        <field name="package_type">family</field>
+        <field name="destination_ids" eval="[(6, 0, [ref('destination_dubai_creek'), ref('destination_dubai_mall')])]"/>
+        <field name="duration_hours">8</field>
+        <field name="base_price">100</field>
+        <field name="max_capacity">30</field>
+        <field name="description">A relaxed, family-friendly day combining culture and entertainment.</field>
+    </record>
+    <record id="package_luxury_private_tour" model="tour.package">
+        <field name="name">Luxury Private Tour</field>
+        <field name="package_type">luxury</field>
+        <field name="destination_ids" eval="[(6, 0, [ref('destination_burj_khalifa'), ref('destination_dubai_marina')])]"/>
+        <field name="duration_hours">10</field>
+        <field name="base_price">500</field>
+        <field name="max_capacity">6</field>
+        <field name="description">A private, chauffeur-driven tour with premium experiences.</field>
+    </record>
+
+    <record id="vehicle_bus_50" model="tour.vehicle">
+        <field name="name">Bus 50 Seats</field>
+        <field name="vehicle_type">bus</field>
+        <field name="plate_number">DXB-BUS-001</field>
+        <field name="capacity">50</field>
+        <field name="driver_name">Ahmed Khan</field>
+        <field name="driver_phone">+971500000001</field>
+    </record>
+    <record id="vehicle_van_12" model="tour.vehicle">
+        <field name="name">Van 12 Seats</field>
+        <field name="vehicle_type">van</field>
+        <field name="plate_number">DXB-VAN-001</field>
+        <field name="capacity">12</field>
+        <field name="driver_name">Rashid Ali</field>
+        <field name="driver_phone">+971500000002</field>
+    </record>
+    <record id="vehicle_minibus_25" model="tour.vehicle">
+        <field name="name">Minibus 25 Seats</field>
+        <field name="vehicle_type">minibus</field>
+        <field name="plate_number">DXB-MIN-001</field>
+        <field name="capacity">25</field>
+        <field name="driver_name">Sara Yousef</field>
+        <field name="driver_phone">+971500000003</field>
+    </record>
+
+    <record id="taxi_partner_dubai_local" model="tour.taxi.partner">
+        <field name="name">Dubai Local Taxi Partner</field>
+        <field name="contact_person">Mohammed Saeed</field>
+        <field name="phone">+971500000004</field>
+        <field name="email">contact@dubailocaltaxi.ae</field>
+        <field name="commission_rate">15</field>
+    </record>
+
+    <record id="discount_rule_group" model="tour.discount.rule">
+        <field name="name">Group Discount (10+ Tourists)</field>
+        <field name="discount_type">group</field>
+        <field name="min_people">10</field>
+        <field name="percentage">10</field>
+    </record>
+    <record id="discount_rule_family" model="tour.discount.rule">
+        <field name="name">Family Discount (With Children)</field>
+        <field name="discount_type">family_children</field>
+        <field name="percentage">5</field>
+    </record>
+</odoo>

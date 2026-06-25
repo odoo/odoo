@@ -1,0 +1,43 @@
+<odoo>
+    <record id="tour_discount_rule_action" model="ir.actions.act_window">
+        <field name="name">Discount Rules</field>
+        <field name="res_model">tour.discount.rule</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="tour_discount_rule_view_list" model="ir.ui.view">
+        <field name="name">tour.discount.rule.list</field>
+        <field name="model">tour.discount.rule</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="discount_type"/>
+                <field name="min_people"/>
+                <field name="percentage"/>
+                <field name="fixed_amount"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="tour_discount_rule_view_form" model="ir.ui.view">
+        <field name="name">tour.discount.rule.form</field>
+        <field name="model">tour.discount.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group>
+                        <field name="discount_type"/>
+                        <field name="min_people" invisible="discount_type != 'group'"/>
+                        <field name="percentage"/>
+                        <field name="fixed_amount"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

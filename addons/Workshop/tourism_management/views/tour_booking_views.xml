@@ -1,0 +1,135 @@
+<odoo>
+    <record id="tour_booking_action" model="ir.actions.act_window">
+        <field name="name">Bookings</field>
+        <field name="res_model">tour.booking</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="tour_booking_view_list" model="ir.ui.view">
+        <field name="name">tour.booking.list</field>
+        <field name="model">tour.booking</field>
+        <field name="arch" type="xml">
+            <list decoration-success="state == 'completed'" decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="customer_id"/>
+                <field name="package_id"/>
+                <field name="tour_date"/>
+                <field name="total_people"/>
+                <field name="total_amount"/>
+                <field name="payment_status"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="tour_booking_view_search" model="ir.ui.view">
+        <field name="name">tour.booking.search</field>
+        <field name="model">tour.booking</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="customer_id"/>
+                <field name="package_id"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                <filter string="Paid" name="paid" domain="[('state', '=', 'paid')]"/>
+                <filter string="Completed" name="completed" domain="[('state', '=', 'completed')]"/>
+                <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancelled')]"/>
+                <!-- Group By -->
+                <group>
+                    <filter string="State" name="group_by_state" context="{'group_by': 'state'}"/>
+                    <filter string="Package" name="group_by_package" context="{'group_by': 'package_id'}"/>
+                    <filter string="Customer Type" name="group_by_customer_type" context="{'group_by': 'customer_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="tour_booking_view_form" model="ir.ui.view">
+        <field name="name">tour.booking.form</field>
+        <field name="model">tour.booking</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_submit" type="object" string="Submit for Quote" invisible="state != 'draft'"/>
+                    <button name="action_confirm" type="object" string="Confirm" invisible="state not in ('draft','quoted')"/>
+                    <button name="action_assign_transport" type="object" string="Assign Transport" invisible="state != 'confirmed'"/>
+                    <button name="action_mark_paid" type="object" string="Mark Paid" invisible="state != 'transport_assigned'"/>
+                    <button name="action_complete" type="object" string="Complete" invisible="state != 'paid'"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state in ('completed','cancelled')"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,quoted,confirmed,transport_assigned,paid,completed"/>
+                </header>
+                <sheet>
+                    <h1>
+                        <field name="name" readonly="1"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="customer_id"/>
+                            <field name="package_id"/>
+                            <field name="booking_date"/>
+                            <field name="tour_date"/>
+                        </group>
+                        <group>
+                            <field name="adult_count"/>
+                            <field name="child_count"/>
+                            <field name="total_people"/>
+                            <field name="customer_type"/>
+                        </group>
+                    </group>
+                    <group string="Pricing">
+                        <group>
+                            <field name="base_amount"/>
+                            <field name="discount_amount"/>
+                            <field name="total_amount"/>
+                        </group>
+                        <group>
+                            <field name="payment_status"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Tourists">
+                            <field name="group_member_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="age"/>
+                                    <field name="is_child"/>
+                                    <field name="nationality"/>
+                                    <field name="special_requirement"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Transport">
+                            <field name="transport_assignment_ids">
+                                <list editable="bottom">
+                                    <field name="transport_type"/>
+                                    <field name="vehicle_id" invisible="transport_type != 'internal'"/>
+                                    <field name="taxi_partner_id" invisible="transport_type != 'taxi_partner'"/>
+                                    <field name="pickup_location"/>
+                                    <field name="dropoff_location"/>
+                                    <field name="pickup_time"/>
+                                    <field name="status"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Payments">
+                            <field name="payment_ids">
+                                <list editable="bottom">
+                                    <field name="amount"/>
+                                    <field name="payment_method"/>
+                                    <field name="payment_date"/>
+                                    <field name="state"/>
+                                    <field name="reference"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,67 @@
+<odoo>
+    <record id="tour_booking_view_pivot" model="ir.ui.view">
+        <field name="name">tour.booking.pivot</field>
+        <field name="model">tour.booking</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="package_id" type="row"/>
+                <field name="state" type="col"/>
+                <field name="total_amount" type="measure"/>
+                <field name="total_people" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="tour_booking_view_graph" model="ir.ui.view">
+        <field name="name">tour.booking.graph</field>
+        <field name="model">tour.booking</field>
+        <field name="arch" type="xml">
+            <graph>
+                <field name="package_id"/>
+                <field name="total_amount" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="tour_booking_report_action" model="ir.actions.act_window">
+        <field name="name">Bookings Analysis</field>
+        <field name="res_model">tour.booking</field>
+        <field name="view_mode">pivot,graph</field>
+        <field name="domain">[('state', '!=', 'cancelled')]</field>
+    </record>
+
+    <record id="tour_payment_view_pivot" model="ir.ui.view">
+        <field name="name">tour.payment.pivot</field>
+        <field name="model">tour.payment</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="payment_method" type="row"/>
+                <field name="state" type="col"/>
+                <field name="amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="tour_payment_report_action" model="ir.actions.act_window">
+        <field name="name">Payments Analysis</field>
+        <field name="res_model">tour.payment</field>
+        <field name="view_mode">pivot,graph</field>
+    </record>
+
+    <record id="tour_transport_assignment_view_pivot" model="ir.ui.view">
+        <field name="name">tour.transport.assignment.pivot</field>
+        <field name="model">tour.transport.assignment</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="transport_type" type="row"/>
+                <field name="status" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="tour_transport_assignment_report_action" model="ir.actions.act_window">
+        <field name="name">Transport Utilization</field>
+        <field name="res_model">tour.transport.assignment</field>
+        <field name="view_mode">pivot,graph</field>
+    </record>
+</odoo>

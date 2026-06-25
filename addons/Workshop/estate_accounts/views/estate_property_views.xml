@@ -4,7 +4,18 @@
         <field name="model">estate.property</field>
         <field name="inherit_id" ref="estate.estate_property_view_form"/>
         <field name="arch" type="xml">
-            
+            <xpath expr="//sheet" position="inside">
+                <div class="oe_button_box" name="button_box">
+                    <button
+                    name="view_invoice"
+                    type="object"
+                    class="oe_stat_button"
+                    string="Invoice"
+                    icon="fa-dollar"
+                    invisible="invoice_id == False">
+                    </button>
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>

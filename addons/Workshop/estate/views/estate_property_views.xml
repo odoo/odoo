@@ -27,7 +27,7 @@
         <field name="name">estate.property.kanban</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
-            <kanban>
+            <kanban default_group_by = "property_type_id">
                 <field name="best_price"/>
                 <field name="selling_price"/>
                 <field name="state"/>

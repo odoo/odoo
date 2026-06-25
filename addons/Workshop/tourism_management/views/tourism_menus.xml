@@ -1,0 +1,26 @@
+<odoo>
+    <menuitem id="tourism_menu_root" name="Tourism Management" sequence="10"/>
+
+    <menuitem id="tourism_menu_bookings" name="Bookings" parent="tourism_menu_root" sequence="10"/>
+    <menuitem id="tourism_menu_booking" name="Bookings" parent="tourism_menu_bookings" action="tour_booking_action" sequence="10"/>
+    <menuitem id="tourism_menu_customer" name="Customers" parent="tourism_menu_bookings" action="tour_customer_action" sequence="20"/>
+
+    <menuitem id="tourism_menu_tours" name="Tours" parent="tourism_menu_root" sequence="20"/>
+    <menuitem id="tourism_menu_package" name="Tour Packages" parent="tourism_menu_tours" action="tour_package_action" sequence="10"/>
+    <menuitem id="tourism_menu_destination" name="Destinations" parent="tourism_menu_tours" action="tour_destination_action" sequence="20"/>
+
+    <menuitem id="tourism_menu_transportation" name="Transportation" parent="tourism_menu_root" sequence="30"/>
+    <menuitem id="tourism_menu_vehicle" name="Vehicles" parent="tourism_menu_transportation" action="tour_vehicle_action" sequence="10"/>
+    <menuitem id="tourism_menu_transport_assignment" name="Transport Assignments" parent="tourism_menu_transportation" action="tour_transport_assignment_action" sequence="20"/>
+    <menuitem id="tourism_menu_taxi_partner" name="Taxi Partners" parent="tourism_menu_transportation" action="tour_taxi_partner_action" sequence="30"/>
+
+    <menuitem id="tourism_menu_finance" name="Finance" parent="tourism_menu_root" sequence="40" groups="tourism_management.group_tourism_manager,tourism_management.group_tourism_finance"/>
+    <menuitem id="tourism_menu_payment" name="Payments" parent="tourism_menu_finance" action="tour_payment_action" sequence="10"/>
+    <menuitem id="tourism_menu_discount_rule" name="Discounts" parent="tourism_menu_finance" action="tour_discount_rule_action" sequence="20"/>
+    <menuitem id="tourism_menu_commission" name="Commissions" parent="tourism_menu_finance" action="tour_commission_action" sequence="30"/>
+
+    <menuitem id="tourism_menu_reporting" name="Reporting" parent="tourism_menu_root" sequence="50"/>
+    <menuitem id="tourism_menu_booking_report" name="Bookings Analysis" parent="tourism_menu_reporting" action="tour_booking_report_action" sequence="10"/>
+    <menuitem id="tourism_menu_payment_report" name="Payments Analysis" parent="tourism_menu_reporting" action="tour_payment_report_action" sequence="20"/>
+    <menuitem id="tourism_menu_transport_report" name="Transport Utilization" parent="tourism_menu_reporting" action="tour_transport_assignment_report_action" sequence="30"/>
+</odoo>

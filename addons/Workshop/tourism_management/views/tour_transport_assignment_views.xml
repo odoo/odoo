@@ -1,0 +1,56 @@
+<odoo>
+    <record id="tour_transport_assignment_action" model="ir.actions.act_window">
+        <field name="name">Transport Assignments</field>
+        <field name="res_model">tour.transport.assignment</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="tour_transport_assignment_view_list" model="ir.ui.view">
+        <field name="name">tour.transport.assignment.list</field>
+        <field name="model">tour.transport.assignment</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="booking_id"/>
+                <field name="transport_type"/>
+                <field name="vehicle_id"/>
+                <field name="taxi_partner_id"/>
+                <field name="pickup_time"/>
+                <field name="status"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="tour_transport_assignment_view_form" model="ir.ui.view">
+        <field name="name">tour.transport.assignment.form</field>
+        <field name="model">tour.transport.assignment</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm_assignment" type="object" string="Confirm"
+                            invisible="status not in ('pending','assigned')"/>
+                    <button name="action_complete_assignment" type="object" string="Complete"
+                            invisible="status != 'confirmed'"/>
+                    <button name="action_cancel_assignment" type="object" string="Cancel"
+                            invisible="status in ('completed','cancelled')"/>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="booking_id"/>
+                            <field name="transport_type"/>
+                            <field name="vehicle_id" invisible="transport_type != 'internal'"/>
+                            <field name="taxi_partner_id" invisible="transport_type != 'taxi_partner'"/>
+                        </group>
+                        <group>
+                            <field name="pickup_location"/>
+                            <field name="dropoff_location"/>
+                            <field name="pickup_time"/>
+                            <field name="commission_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
