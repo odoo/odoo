@@ -3,6 +3,8 @@ import { _t } from "@web/core/l10n/translation";
 import { GraphModel as ChartModel } from "@web/views/graph/graph_model";
 import { Domain } from "@web/core/domain";
 import { range } from "@web/core/utils/numbers";
+import { getCurrency } from "@web/core/currency";
+import { computeFormatFromCurrency } from "@spreadsheet/currency/helpers";
 
 export class ChartDataSource extends OdooViewsDataSource {
     /**
@@ -52,7 +54,19 @@ export class ChartDataSource extends OdooViewsDataSource {
         if (!this._isValid) {
             return { datasets: [], labels: [] };
         }
-        return this._model.data;
+        const { datasets, labels } = this._model.data;
+
+        // GraphModel normalizes all points in a dataset to the same currencyId,
+        // so compute the format once from the first entry.
+        const currencyId = datasets[0]?.currencyIds?.[0];
+        const format = this._getCurrencyFormatForId(currencyId) ?? undefined;
+        return {
+            datasets: datasets.map((ds) => ({
+                ...ds,
+                data: ds.data.map((d) => ({ value: d, format })),
+            })),
+            labels,
+        };
     }
 
     getHierarchicalData() {
@@ -83,6 +97,11 @@ export class ChartDataSource extends OdooViewsDataSource {
         this._model?.updateMetaData({ mode: newMode });
     }
 
+    _getCurrencyFormatForId(currencyId) {
+        const currency = getCurrency(currencyId);
+        return computeFormatFromCurrency(currency);
+    }
+
     _getHierarchicalData() {
         if (this._hierarchicalData && this.labelToDomainMapping) {
             return this._hierarchicalData;
@@ -100,8 +119,10 @@ export class ChartDataSource extends OdooViewsDataSource {
             domainMapping[gb] = {};
         }
 
+        // GraphModel normalizes all points to the same currencyId, so compute the format once.
+        const format = this._getCurrencyFormatForId(dataPoints[0]?.currencyId);
         for (const point of dataPoints) {
-            labels.push(point.value);
+            labels.push({ value: point.value, format });
             for (let i = 0; i < groupBy.length; i++) {
                 datasets[i].data.push(point.labels[i]);
                 datasets[i].identifiers.push(point.identifier);

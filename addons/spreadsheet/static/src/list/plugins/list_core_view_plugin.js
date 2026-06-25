@@ -4,6 +4,7 @@ import { Domain } from "@web/core/domain";
 import { ListDataSource } from "../list_data_source";
 import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
 import { isDataSourceUrl, parseDataSourceUrl } from "../../data_sources/data_source_link";
+import { computeFormatFromCurrency } from "@spreadsheet/currency/helpers";
 
 const { astToFormula, NotAvailableError, CircularDependencyError } = spreadsheet;
 const { isMarkdownLink, parseMarkdownLink } = spreadsheet.links;
@@ -297,7 +298,7 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
                 if (!currency) {
                     return "#,##0.00";
                 }
-                return this.getters.computeFormatFromCurrency(currency);
+                return computeFormatFromCurrency(currency);
             }
             case "date":
                 return locale.dateFormat;
