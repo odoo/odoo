@@ -307,11 +307,11 @@ export class FormatPlugin extends Plugin {
             }
             const listItem = closestElement(n, "li");
             if (listItem && this.dependencies.selection.isNodeContentsFullySelected(listItem)) {
-                const hasFontSizeStyle =
-                    formatName === "setFontSizeClassName"
-                        ? listItem.classList.contains(formatProps?.className)
-                        : listItem.style.fontSize;
-                return !hasFontSizeStyle;
+                if (formatName === "setFontSizeClassName") {
+                    return !listItem.classList.contains(formatProps?.className);
+                } else if (formatName === "fontSize") {
+                    return !listItem.style.fontSize;
+                }
             }
             return true;
         });

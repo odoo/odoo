@@ -477,3 +477,13 @@ test("should toggle bold across nested spans", async () => {
     bold(editor);
     expect(getContent(el)).toBe(`<p><span><span>[A</span> </span></p><p>B]</p>`);
 });
+
+test("should apply bold on fully selected list items with font-size style", async () => {
+    await testEditor({
+        contentBefore:
+            '<ol><li style="font-size: 18px; list-style-position: inside;">[abc]</li></ol>',
+        stepFunction: bold,
+        contentAfter:
+            '<ol><li style="font-size: 18px; list-style-position: inside;"><strong>[abc]</strong></li></ol>',
+    });
+});
