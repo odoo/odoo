@@ -7093,7 +7093,6 @@ class TestStockMove(TestStockCommon):
         ml4 = new_move_lines[3]
         ml5 = new_move_lines[4]
 
-
         # check quantities
         self.assertEqual(ml1.quantity, 3.0)
         self.assertEqual(ml2.quantity, 3.0)

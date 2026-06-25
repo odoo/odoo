@@ -2826,7 +2826,7 @@ Please change the quantity done or the rounding precision in your settings.""",
 
         return action
 
-    def split_move_lines(self, chunk_capacity):
+    def split_move_lines(self, chunk_capacity, package_type_id = None):
         """ This function separates move lines to create new ones with
         capacity of chunk_capacity.
         """
@@ -2843,7 +2843,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         package = None
         quantity_to_put = chunk_capacity
         curr_move_line = curr_move_lines.popleft() if len(curr_move_lines) else None
-        prev_move_line = None # helps us understand whether we need to copy a line or not
+        prev_move_line = None  # helps us understand whether we need to copy a line or not
         existing_quantity = curr_move_line.quantity if curr_move_line else 0
         line_quantity = 0
         while all_quantity > 0:
@@ -2886,7 +2886,10 @@ Please change the quantity done or the rounding precision in your settings.""",
 
             # do not create a new package if last package is not filled
             if quantity_to_put == chunk_capacity:
-                package = self.env['stock.package'].create({})
+                package_params = {}
+                if package_type_id:
+                    package_params = {'package_type_id': package_type_id}
+                package = self.env['stock.package'].create(package_params)
 
             if existing_quantity == 0:
                 # move to the next move line if we can, that has a quantity > 0
@@ -2898,7 +2901,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                 prev_move_line = None
                 existing_quantity = curr_move_line.quantity if curr_move_line else 0
 
-            if existing_quantity > 0: # get data from existing move lines
+            if existing_quantity > 0:  # get data from existing move lines
 
                 # if this move line has more products than a package fits
                 # then we need to continue getting products from this package

@@ -1137,7 +1137,7 @@ class StockMoveLine(models.Model):
             move = move_lines.move_id
             if not len(move_lines):
                 move = self.env['stock.move'].browse(self.env.context.get('move_id'))
-            return move.split_move_lines(package_capacity)
+            return move.split_move_lines(package_capacity, package_type_id)
 
         if self.env.context.get('all_move_line_ids'):
             move_lines = self.env['stock.move.line'].browse(self.env.context['all_move_line_ids'])

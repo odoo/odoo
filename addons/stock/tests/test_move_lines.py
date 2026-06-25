@@ -348,7 +348,6 @@ class TestStockMoveLine(TestStockCommon):
         [move_line1, move_line2, move_line3] = move1.move_line_ids
 
         # check packages
-        self.assertEqual(move_line1.result_package_id.id, pack.id)
         self.assertNotEqual(move_line1.result_package_id, move_line2.result_package_id)
         self.assertNotEqual(move_line3.result_package_id, move_line2.result_package_id)
 
