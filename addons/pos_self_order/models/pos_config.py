@@ -316,6 +316,7 @@ class PosConfig(models.Model):
         record['_self_order_pos'] = True
         google_places_api_key = self.env['ir.config_parameter'].sudo().get_str('google_address_autocomplete.google_places_api_key')
         record['_has_google_places_api_key'] = bool(google_places_api_key)
+        record['_base_url'] = config.get_base_url()
         return read_records
 
     def load_self_data(self):
