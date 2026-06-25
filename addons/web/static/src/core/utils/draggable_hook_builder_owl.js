@@ -1,4 +1,4 @@
-import { useExternalListener, useLayoutEffect } from "@web/owl2/utils";
+import { useExternalListener } from "@web/owl2/utils";
 import { onWillUnmount, proxy } from "@odoo/owl";
 import { useThrottleForAnimation } from "./timing";
 import { makeDraggableHook as nativeMakeDraggableHook } from "./draggable_hook_builder";
@@ -16,7 +16,7 @@ export function makeDraggableHook(params) {
         ...params,
         setupHooks: {
             addListener: useExternalListener,
-            setup: useLayoutEffect,
+            // setup: useLayoutEffect,
             teardown: onWillUnmount,
             throttle: useThrottleForAnimation,
             wrapState: proxy,
