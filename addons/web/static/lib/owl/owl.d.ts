@@ -145,15 +145,15 @@ export declare function untrack<T>(fn: (...args: any[]) => T): T;
 export type Constructor<T = any> = {
 	new (...args: any[]): T;
 };
-declare const hasDefault: unique symbol;
+export declare const hasDefault: unique symbol;
 export type WithDefault<T> = T & {
 	[hasDefault]: T;
 };
-declare const isOptional: unique symbol;
+export declare const isOptional: unique symbol;
 export type Optional<T> = T & {
 	[isOptional]: T;
 };
-declare const typeBrand: unique symbol;
+export declare const typeBrand: unique symbol;
 export type Type<T> = T & {
 	[typeBrand]: T;
 	/**
@@ -495,6 +495,14 @@ export interface AsyncComputed<T> {
 	error(): Error | null;
 	refresh(): void;
 	dispose(): void;
+	/**
+	 * Returns a promise that resolves as soon as no run is in flight: if a run
+	 * is currently running it resolves once that run (or any run that supersedes
+	 * it) settles, otherwise it resolves immediately. It never rejects — fetcher
+	 * errors are surfaced through `error()`. Handy to await the value in
+	 * `onWillStart`: `onWillStart(() => data.currentPromise())`.
+	 */
+	currentPromise(): Promise<void>;
 }
 /**
  * @experimental The exact API is subject to change in future versions.
@@ -709,7 +717,7 @@ declare function staticProp<T = any>(key: string): T;
 declare function staticProp<T>(key: string, type: WithDefault<T>): T;
 declare function staticProp<T>(key: string, type: Optional<T>): T | undefined;
 declare function staticProp<T>(key: string, type: T): StripBrands<T>;
-declare const isProps: unique symbol;
+export declare const isProps: unique symbol;
 export type Props<T extends {}> = T & {
 	[isProps]: never;
 };
