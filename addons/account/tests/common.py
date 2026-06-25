@@ -552,7 +552,7 @@ class AccountTestInvoicingCommon(ProductCommon):
         })
 
     @classmethod
-    def init_invoice(cls, move_type, partner=None, invoice_date='2019-01-01', post=False, products=None, amounts=None, taxes=None, company=None, currency=None, journal=None):
+    def init_invoice(cls, move_type, partner=None, invoice_date='2019-01-01', post=False, products=None, amounts=None, taxes=None, company=None, currency=None, journal=None, invoice_date_due='2025-03-07'):
         """ This method is deprecated. Please call ``_create_invoice`` instead. """
         if isinstance(taxes, list):
             sum_tax = cls.env['account.tax']
@@ -576,6 +576,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             journal_id=journal,
             date=invoice_date,
             invoice_date=invoice_date,
+            invoice_date_due=invoice_date_due,
             invoice_line_ids=invoice_line_ids,
             post=post,
         )
