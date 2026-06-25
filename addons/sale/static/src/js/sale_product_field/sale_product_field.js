@@ -4,7 +4,6 @@ import {
 } from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
-import { useLayoutEffect } from "@web/owl2/utils";
 import { saleProductMixin } from "../sale_product_mixin";
 
 export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
@@ -20,28 +19,28 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         this.wasCombo = false;
         let isMounted = false;
 
-        useLayoutEffect(
-            (value) => {
-                if (!isMounted) {
-                    isMounted = true;
-                } else if (value && this.isInternalUpdate) {
-                    // we don't want to trigger product update when update comes from an external sources,
-                    // such as an onchange, or the product configuration dialog itself
-                    if (this.wasCombo) {
-                        // If the previously selected product was a combo, delete its selected combo
-                        // items before changing the product.
-                        this.props.record.update({ selected_combo_items: "[]" });
-                    }
-                    if (this.relation === "product.template" || this.isCombo) {
-                        this._onProductTemplateUpdate();
-                    } else {
-                        this._onProductUpdate();
-                    }
-                }
-                this.isInternalUpdate = false;
-            },
-            () => [this.value && this.value.id]
-        );
+        // useLayoutEffect(
+        //     (value) => {
+        //         if (!isMounted) {
+        //             isMounted = true;
+        //         } else if (value && this.isInternalUpdate) {
+        //             // we don't want to trigger product update when update comes from an external sources,
+        //             // such as an onchange, or the product configuration dialog itself
+        //             if (this.wasCombo) {
+        //                 // If the previously selected product was a combo, delete its selected combo
+        //                 // items before changing the product.
+        //                 this.props.record.update({ selected_combo_items: "[]" });
+        //             }
+        //             if (this.relation === "product.template" || this.isCombo) {
+        //                 this._onProductTemplateUpdate();
+        //             } else {
+        //                 this._onProductUpdate();
+        //             }
+        //         }
+        //         this.isInternalUpdate = false;
+        //     },
+        //     () => [this.value && this.value.id]
+        // );
     }
 
     get productName() {
