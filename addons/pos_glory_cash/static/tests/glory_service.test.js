@@ -3,6 +3,8 @@ import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { GloryService } from "@pos_glory_cash/glory_service";
 import { SocketIoService } from "@pos_glory_cash/utils/socket_io";
 
+describe.current.tags("headless");
+
 const sentMessages = [];
 
 const mockSettings = {
