@@ -671,6 +671,316 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
         )
         self.assertXmlTreeEqual(result_tree, expected_tree)
 
+    def test_efaktur_xml_non_luxury_goods_with_discount(self):
+        """ Test that when selling product that involves the non luxury good tax with global discount"""
+
+        out_invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id]}),
+                (0, 0, {'name': 'line1', 'price_unit': -5000, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id]}),
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        out_invoice.action_post()
+        out_invoice.download_efaktur()
+
+        result_tree = etree.fromstring(out_invoice.l10n_id_coretax_document._generate_efaktur_invoice())
+        expected_tree = self.with_applied_xpath(
+            etree.fromstring(self.sample_xml),
+            '''
+            <xpath expr="//TrxCode" position="replace">
+                <TrxCode>04</TrxCode>
+            </xpath>
+            <xpath expr="//TotalDiscount" position="replace">
+                <TotalDiscount>5000.00</TotalDiscount>
+            </xpath>
+            <xpath expr="//TaxBase" position="replace">
+                <TaxBase>95000.00</TaxBase>
+            </xpath>
+            <xpath expr="//OtherTaxBase" position="replace">
+                <OtherTaxBase>87083.33</OtherTaxBase>
+            </xpath>
+            <xpath expr="//VAT" position="replace">
+                <VAT>10450.00</VAT>
+            </xpath>
+            <xpath expr="//VATRate" position="replace">
+                <VATRate>12</VATRate>
+            </xpath>
+            '''
+        )
+        self.assertXmlTreeEqual(result_tree, expected_tree)
+
+    def test_efaktur_xml_luxury_goods_with_discount(self):
+        """ Test that when selling product that involves the luxury good tax with global discount"""
+
+        out_invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.luxury_tax.id]}),
+                (0, 0, {'name': 'line1', 'price_unit': -5000, 'quantity': 1, 'tax_ids': [self.luxury_tax.id]}),
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        out_invoice.action_post()
+        out_invoice.download_efaktur()
+
+        result_tree = etree.fromstring(out_invoice.l10n_id_coretax_document._generate_efaktur_invoice())
+        expected_tree = self.with_applied_xpath(
+            etree.fromstring(self.sample_xml),
+            '''
+            <xpath expr="//TrxCode" position="replace">
+                <TrxCode>04</TrxCode>
+            </xpath>
+            <xpath expr="//TotalDiscount" position="replace">
+                <TotalDiscount>5000.00</TotalDiscount>
+            </xpath>
+            <xpath expr="//TaxBase" position="replace">
+                <TaxBase>95000.00</TaxBase>
+            </xpath>
+            <xpath expr="//OtherTaxBase" position="replace">
+                <OtherTaxBase>95000.00</OtherTaxBase>
+            </xpath>
+            <xpath expr="//VAT" position="replace">
+                <VAT>11400.00</VAT>
+            </xpath>
+            <xpath expr="//VATRate" position="replace">
+                <VATRate>12</VATRate>
+            </xpath>
+            '''
+        )
+        self.assertXmlTreeEqual(result_tree, expected_tree)
+
+    def test_efaktur_xml_non_luxury_goods_with_inline_discount(self):
+        """ Test that an inline discount (discount% field on the line) reduces TaxBase and
+        OtherTaxBase correctly for non-luxury tax.
+
+        Unlike the global-discount test which uses a separate negative price line,
+        the discount here is applied directly on the line via the discount field.
+        The end amounts are the same — the mechanism is what differs.
+        """
+        out_invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'discount': 5, 'tax_ids': [self.non_luxury_tax.id]}),
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        out_invoice.action_post()
+        out_invoice.download_efaktur()
+
+        # Expected values (price_unit=100000, qty=1, discount=5%, non_luxury kode 04):
+        #   Price         = 100000 (per unit, tax-excluded; discount% not factored into Price)
+        #   TotalDiscount = 100000 * 5% = 5000  (gross_amount * discount%)
+        #   TaxBase       = price_subtotal = 100000 * 95% = 95000
+        #   OtherTaxBase  = 95000 * 11/12 = 87083.33
+        #   VAT           = 87083.33 * 12% = 10450.00
+        result_tree = etree.fromstring(out_invoice.l10n_id_coretax_document._generate_efaktur_invoice())
+        expected_tree = self.with_applied_xpath(
+            etree.fromstring(self.sample_xml),
+            '''
+            <xpath expr="//TrxCode" position="replace">
+                <TrxCode>04</TrxCode>
+            </xpath>
+            <xpath expr="//TotalDiscount" position="replace">
+                <TotalDiscount>5000.00</TotalDiscount>
+            </xpath>
+            <xpath expr="//TaxBase" position="replace">
+                <TaxBase>95000.00</TaxBase>
+            </xpath>
+            <xpath expr="//OtherTaxBase" position="replace">
+                <OtherTaxBase>87083.33</OtherTaxBase>
+            </xpath>
+            <xpath expr="//VATRate" position="replace">
+                <VATRate>12</VATRate>
+            </xpath>
+            <xpath expr="//VAT" position="replace">
+                <VAT>10450.00</VAT>
+            </xpath>
+            '''
+        )
+        self.assertXmlTreeEqual(result_tree, expected_tree)
+
+    def test_efaktur_xml_luxury_goods_with_inline_discount(self):
+        """ Test that an inline discount (discount% field on the line) reduces TaxBase and
+        OtherTaxBase correctly for luxury tax.
+
+        Luxury tax skips the 11/12 reduction, so OtherTaxBase == TaxBase.
+        """
+        out_invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 1, 'discount': 5, 'tax_ids': [self.luxury_tax.id]}),
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        out_invoice.action_post()
+        out_invoice.download_efaktur()
+
+        # Expected values (price_unit=100000, qty=1, discount=5%, luxury kode 04):
+        #   Price         = 100000 (per unit, tax-excluded; discount% not factored into Price)
+        #   TotalDiscount = 100000 * 5% = 5000  (gross_amount * discount%)
+        #   TaxBase       = price_subtotal = 100000 * 95% = 95000
+        #   OtherTaxBase  = 95000 (luxury → full taxable_base, no 11/12 reduction)
+        #   VAT           = 95000 * 12% = 11400.00
+        result_tree = etree.fromstring(out_invoice.l10n_id_coretax_document._generate_efaktur_invoice())
+        expected_tree = self.with_applied_xpath(
+            etree.fromstring(self.sample_xml),
+            '''
+            <xpath expr="//TrxCode" position="replace">
+                <TrxCode>04</TrxCode>
+            </xpath>
+            <xpath expr="//TotalDiscount" position="replace">
+                <TotalDiscount>5000.00</TotalDiscount>
+            </xpath>
+            <xpath expr="//TaxBase" position="replace">
+                <TaxBase>95000.00</TaxBase>
+            </xpath>
+            <xpath expr="//OtherTaxBase" position="replace">
+                <OtherTaxBase>95000.00</OtherTaxBase>
+            </xpath>
+            <xpath expr="//VATRate" position="replace">
+                <VATRate>12</VATRate>
+            </xpath>
+            <xpath expr="//VAT" position="replace">
+                <VAT>11400.00</VAT>
+            </xpath>
+            '''
+        )
+        self.assertXmlTreeEqual(result_tree, expected_tree)
+
+    def test_efaktur_xml_luxury_goods_with_global_discount_and_qty(self):
+        """ Test global discount line (negative price line) combined with qty > 1.
+
+        The negative line's full amount must be proportionally spread across positive
+        lines based on their price_subtotal (which already includes qty). So with
+        qty=3 the positive line's subtotal is 300000, and the full 5000 discount is
+        attributed to it as negative_share.
+
+        Luxury tax: OtherTaxBase = TaxBase (no 11/12 reduction).
+        """
+        out_invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 3, 'tax_ids': [self.luxury_tax.id]}),
+                (0, 0, {'name': 'global discount', 'price_unit': -5000, 'quantity': 1, 'tax_ids': [self.luxury_tax.id]}),
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        out_invoice.action_post()
+        out_invoice.download_efaktur()
+
+        # Expected values (line1: qty=3, price_unit=100000; discount line: -5000):
+        #   total_price_pos = 300000 (line1 price_subtotal)
+        #   negative_share  = (300000/300000) * 5000 = 5000
+        #   Price           = 100000 (per unit, tax-excluded)
+        #   Qty             = 3
+        #   TotalDiscount   = 0 (no line discount%) + 5000 (negative_share) = 5000
+        #   TaxBase         = 300000 - 5000 = 295000
+        #   OtherTaxBase    = 295000 (luxury → full taxable_base, no 11/12)
+        #   VAT             = 295000 * 12% = 35400
+        result_tree = etree.fromstring(out_invoice.l10n_id_coretax_document._generate_efaktur_invoice())
+        expected_tree = self.with_applied_xpath(
+            etree.fromstring(self.sample_xml),
+            '''
+            <xpath expr="//TrxCode" position="replace">
+                <TrxCode>04</TrxCode>
+            </xpath>
+            <xpath expr="//Qty" position="replace">
+                <Qty>3.0</Qty>
+            </xpath>
+            <xpath expr="//TotalDiscount" position="replace">
+                <TotalDiscount>5000.00</TotalDiscount>
+            </xpath>
+            <xpath expr="//TaxBase" position="replace">
+                <TaxBase>295000.00</TaxBase>
+            </xpath>
+            <xpath expr="//OtherTaxBase" position="replace">
+                <OtherTaxBase>295000.00</OtherTaxBase>
+            </xpath>
+            <xpath expr="//VATRate" position="replace">
+                <VATRate>12</VATRate>
+            </xpath>
+            <xpath expr="//VAT" position="replace">
+                <VAT>35400.00</VAT>
+            </xpath>
+            '''
+        )
+        self.assertXmlTreeEqual(result_tree, expected_tree)
+
+    def test_efaktur_xml_non_luxury_goods_with_global_discount_and_qty(self):
+        """ Test global discount line (negative price line) combined with qty > 1.
+
+        Same scenario as the luxury variant above but using non-luxury tax,
+        which triggers the 11/12 reduction on OtherTaxBase (kode 04).
+        """
+        out_invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000, 'quantity': 3, 'tax_ids': [self.non_luxury_tax.id]}),
+                (0, 0, {'name': 'global discount', 'price_unit': -5000, 'quantity': 1, 'tax_ids': [self.non_luxury_tax.id]}),
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        out_invoice.action_post()
+        out_invoice.download_efaktur()
+
+        # Expected values (line1: qty=3, price_unit=100000; discount line: -5000):
+        #   total_price_pos = 300000 (line1 price_subtotal)
+        #   negative_share  = (300000/300000) * 5000 = 5000
+        #   Price           = 100000 (per unit, tax-excluded)
+        #   Qty             = 3
+        #   TotalDiscount   = 0 (no line discount%) + 5000 (negative_share) = 5000
+        #   TaxBase         = 300000 - 5000 = 295000
+        #   OtherTaxBase    = 295000 * 11/12 = 270416.67 (non-luxury → 11/12 reduction)
+        #   VAT             = 270416.67 * 12% = 32450.00
+        result_tree = etree.fromstring(out_invoice.l10n_id_coretax_document._generate_efaktur_invoice())
+        expected_tree = self.with_applied_xpath(
+            etree.fromstring(self.sample_xml),
+            '''
+            <xpath expr="//TrxCode" position="replace">
+                <TrxCode>04</TrxCode>
+            </xpath>
+            <xpath expr="//Qty" position="replace">
+                <Qty>3.0</Qty>
+            </xpath>
+            <xpath expr="//TotalDiscount" position="replace">
+                <TotalDiscount>5000.00</TotalDiscount>
+            </xpath>
+            <xpath expr="//TaxBase" position="replace">
+                <TaxBase>295000.00</TaxBase>
+            </xpath>
+            <xpath expr="//OtherTaxBase" position="replace">
+                <OtherTaxBase>270416.67</OtherTaxBase>
+            </xpath>
+            <xpath expr="//VATRate" position="replace">
+                <VATRate>12</VATRate>
+            </xpath>
+            <xpath expr="//VAT" position="replace">
+                <VAT>32450.00</VAT>
+            </xpath>
+            '''
+        )
+        self.assertXmlTreeEqual(result_tree, expected_tree)
+
     def test_efaktur_xml_luxury_goods_stlg(self):
         """ Test that when selling product that involves the luxury good tax, STLGRate and STLG
         should be filled in """
