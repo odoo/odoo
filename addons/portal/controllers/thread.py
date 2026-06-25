@@ -140,6 +140,7 @@ class PortalWebClientController(WebclientController):
             lambda res: (
                 res.attr("active"),
                 res.one("main_user_id", ["partner_id", "share"]),
+                res.many("user_ids", ["active", "company_ids", "share"], internal=True, sudo=True),
                 res.attr("name"),
                 res.from_method("_store_avatar_fields"),
             ),

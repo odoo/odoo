@@ -53,3 +53,63 @@ test("subscribe to presence channels according to store data", async () => {
         "subscribe - [odoo-presence-mail.guest_1-token,odoo-presence-res.users_1,odoo-presence-res.users_2]",
     ]);
 });
+
+test("partner representativeUser selector picks the best user by company and share", async () => {
+    const env = await makeMockEnv();
+    const store = env.services["mail.store"];
+    const companyA = store["res.company"].insert({ id: 1, name: "Company A" });
+    const companyB = store["res.company"].insert({ id: 2, name: "Company B" });
+    const portalUser = store["res.users"].insert({
+        id: 1,
+        name: "Portal",
+        share: true,
+        company_ids: [companyA.id],
+    });
+    const internalA = store["res.users"].insert({
+        id: 2,
+        name: "Internal A",
+        share: false,
+        company_ids: [companyA.id],
+    });
+    const internalB = store["res.users"].insert({
+        id: 3,
+        name: "Internal B",
+        share: false,
+        company_ids: [companyB.id],
+    });
+    const partner = store["res.partner"].insert({
+        id: 1,
+        name: "Multi-company Partner",
+        user_ids: [portalUser.id, internalA.id, internalB.id],
+        company_id: companyA.id,
+    });
+    // No active company → fallback to first internal user
+    expect(partner.representativeUser).toBe(internalA);
+    // Active company A → prefers internal user of A
+    store.self_user = store["res.users"].insert({
+        id: 4,
+        name: "Self",
+        share: false,
+        company_id: companyA.id,
+        company_ids: [companyA.id, companyB.id],
+    });
+    await tick();
+    expect(partner.representativeUser).toBe(internalA);
+    // Switch active company to B → prefers internal user of B
+    store.self_user.company_id = companyB;
+    await tick();
+    expect(partner.representativeUser).toBe(internalB);
+    // Portal-only partner → any user of active company
+    const portalPartner = store["res.partner"].insert({
+        id: 2,
+        name: "Portal-only",
+        user_ids: [portalUser.id],
+        company_id: companyA.id,
+    });
+    store.self_user.company_id = companyA;
+    await tick();
+    expect(portalPartner.representativeUser).toBe(portalUser);
+    // No users → undefined
+    const empty = store["res.partner"].insert({ id: 3, name: "Empty", user_ids: [] });
+    expect(empty.representativeUser).toBe(undefined);
+});

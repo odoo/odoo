@@ -234,6 +234,8 @@ class ResPartner(models.Model):
         res.from_method("_store_im_status_fields", internal=True)
         # sudo: can access avatar card fields of user of accessible partner
         res.one("main_user_id", "_store_avatar_card_fields", sudo=True)
+        # sudo: can access user fields of accessible partner
+        res.many("user_ids", ["active", "company_ids", "share"], internal=True, sudo=True)
         if res.is_for_internal_users():
             res.extend(["email", "phone", "tz"])
 
@@ -243,6 +245,8 @@ class ResPartner(models.Model):
         res.from_method("_store_im_status_fields", internal=True)
         # sudo: to access portal user of another company in chatter
         res.one("main_user_id", "_store_main_user_fields", sudo=True)
+        # sudo: to access user_ids for company-aware selection in chatter
+        res.many("user_ids", ["active", "company_ids", "share"], internal=True, sudo=True)
         res.extend(["email", "tz"], internal=True)
 
     @api.readonly

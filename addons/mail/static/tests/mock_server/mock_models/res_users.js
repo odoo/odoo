@@ -235,6 +235,7 @@ export class ResUsers extends webModels.ResUsers {
             r.records._compute_main_user_id(); // compute not automatically triggering
             r.extend(["active", "name", "tz"]);
             r.one("main_user_id", ["partner_id"]);
+            r.many("user_ids", ["active", "company_ids", "share"], { internal: true, sudo: true });
             r.from_method("_store_avatar_fields");
         });
         res.attr("is_admin", () => this._is_admin());

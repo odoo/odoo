@@ -92,6 +92,10 @@ export class MailMessage extends models.ServerModel {
             (r) => {
                 r.attr("is_company");
                 r.one("main_user_id", ["partner_id", "share"]);
+                r.many("user_ids", ["active", "company_ids", "share"], {
+                    internal: true,
+                    sudo: true,
+                });
                 r.from_method("_store_avatar_fields");
             },
             { dynamic_fields: "_store_author_dynamic_fields", sudo: true }

@@ -441,6 +441,7 @@ class ResUsers(models.Model):
             lambda res: (
                 res.extend(["active", "name", "tz"]),
                 res.one("main_user_id", ["partner_id"]),
+                res.many("user_ids", ["active", "company_ids", "share"], internal=True, sudo=True),
                 res.from_method("_store_avatar_fields"),
             ),
         )
