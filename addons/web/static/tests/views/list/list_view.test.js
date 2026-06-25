@@ -21323,3 +21323,25 @@ test(`optional columns toggle button is highlighted when a hidden field is inval
     expect(`.o_invalid_optional_columns_button`).toHaveCount(1);
     expect(`.o-dropdown--menu .o_invalid_dropdown_item`).toHaveCount(1);
 });
+
+test("should not crash in lists with groupby node and sample data", async () => {
+    Foo._records = [];
+    Bar._fields.bar_grouped = fields.Boolean({ default: false });
+
+    await mountView({
+        type: "list",
+        resModel: "foo",
+        arch: `
+            <list sample="1" default_group_by="m2o">
+                <groupby name="m2o">
+                    <field name="bar_grouped" invisible="1" />
+                    <button type="object" name="group_btn" string="Do Something" invisible="bar_grouped"/>
+                </groupby>
+                <field name="foo"/>
+                <field name="amount"/>
+                <field name="properties"/>
+            </list>`,
+    });
+
+    expect(queryAll(".o_group_header").length).toBeGreaterThan(0);
+});
