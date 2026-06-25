@@ -20,20 +20,17 @@ export class ProductHeaderCategoryOptionPlugin extends Plugin {
     async onSave() {
         const headerEl = this.editable.querySelector("#o_wsale_products_header");
         if (!headerEl) return;
-        const categoryId = headerEl.dataset.categoryId;
 
         const showTitle = headerEl.classList.contains("o_wsale_products_header_show_category_title");
         const showDescription = headerEl.classList.contains("o_wsale_products_header_show_category_description");
         const alignCategoryContent = headerEl.classList.contains("o_wsale_products_header_category_center_content");
 
-        if (categoryId) {
-            return rpc("/shop/config/category", {
-                category_id: categoryId,
-                show_category_title: showTitle,
-                show_category_description: showDescription,
-                align_category_content: alignCategoryContent,
-            });
-        }
+        return rpc("/shop/config/website", {
+            show_category_title: showTitle,
+            show_category_description: showDescription,
+            align_category_content: alignCategoryContent,
+        });
+
     }
 }
 

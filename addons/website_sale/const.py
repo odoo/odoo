@@ -12,6 +12,9 @@ SHOP_PAGE_STYLE_MAPPING = {
         "img_src": "/website_sale/static/src/img/configurator/shop/classic_grid.webp",
         "views": {"enable": [], "disable": []},
         "website_fields": {
+            "show_category_title": False,
+            "show_category_description": True,
+            "align_category_content": False,
             "shop_opt_products_design_classes": "o_wsale_products_opt_layout_catalog "
             "o_wsale_products_opt_design_thumbs "
             "o_wsale_products_opt_name_color_regular "
@@ -25,12 +28,7 @@ SHOP_PAGE_STYLE_MAPPING = {
             "o_wsale_products_opt_cc1 "
             "o_wsale_products_opt_rounded_2 "
             "o_wsale_products_opt_has_comparison "
-            "o_wsale_products_opt_actions_promote"
-        },
-        "category_fields": {
-            "show_category_title": False,
-            "show_category_description": True,
-            "align_category_content": False,
+            "o_wsale_products_opt_actions_promote",
         },
     },
     "modern_grid": {
@@ -47,6 +45,9 @@ SHOP_PAGE_STYLE_MAPPING = {
             ],
         },
         "website_fields": {
+            "show_category_title": True,
+            "show_category_description": True,
+            "align_category_content": False,
             "shop_ppr": 5,
             "shop_gap": "0px",
             "shop_page_container": "fluid",  # Content fullwidth
@@ -64,11 +65,6 @@ SHOP_PAGE_STYLE_MAPPING = {
             "o_wsale_products_opt_thumb_4_5 "
             "o_wsale_products_opt_text_align_center",
         },
-        "category_fields": {
-            "show_category_title": True,
-            "show_category_description": True,
-            "align_category_content": False,
-        },
     },
     "showcase": {
         "title": _lt("Showcase"),
@@ -85,6 +81,9 @@ SHOP_PAGE_STYLE_MAPPING = {
             ],
         },
         "website_fields": {
+            "show_category_title": True,
+            "show_category_description": True,
+            "align_category_content": True,
             "shop_gap": "0px",
             "shop_page_container": "fluid",  # Content fullwidth
             "shop_opt_products_design_classes": "o_wsale_products_opt_name_color_regular "
@@ -99,11 +98,6 @@ SHOP_PAGE_STYLE_MAPPING = {
             "o_wsale_products_opt_layout_list "
             "o_wsale_products_opt_design_showcase "
             "o_wsale_products_opt_rounded_0",
-        },
-        "category_fields": {
-            "show_category_title": True,
-            "show_category_description": True,
-            "align_category_content": True,
         },
     },
     "chips_contained": {
@@ -121,6 +115,9 @@ SHOP_PAGE_STYLE_MAPPING = {
             ],
         },
         "website_fields": {
+            "show_category_title": True,
+            "show_category_description": True,
+            "align_category_content": True,
             "shop_ppr": 4,
             "shop_gap": "16px",
             "shop_opt_products_design_classes": "o_wsale_products_opt_name_color_regular "
@@ -138,11 +135,6 @@ SHOP_PAGE_STYLE_MAPPING = {
             "o_wsale_products_opt_layout_catalog "
             "o_wsale_products_opt_design_chips",
         },
-        "category_fields": {
-            "show_category_title": True,
-            "show_category_description": True,
-            "align_category_content": True,
-        },
     },
     "condensed_list": {
         "title": _lt("Condensed List"),
@@ -154,6 +146,9 @@ SHOP_PAGE_STYLE_MAPPING = {
             "disable": [],
         },
         "website_fields": {
+            "show_category_title": True,
+            "show_category_description": True,
+            "align_category_content": False,
             "shop_gap": "4px",
             "shop_opt_products_design_classes": "o_wsale_products_opt_name_color_regular "
             "o_wsale_products_opt_thumb_cover "
@@ -166,11 +161,6 @@ SHOP_PAGE_STYLE_MAPPING = {
             "o_wsale_products_opt_layout_list "
             "o_wsale_products_opt_design_condensed "
             "o_wsale_products_opt_name_size_body",
-        },
-        "category_fields": {
-            "show_category_title": True,
-            "show_category_description": True,
-            "align_category_content": False,
         },
     },
     "cards": {
@@ -187,6 +177,9 @@ SHOP_PAGE_STYLE_MAPPING = {
             ],
         },
         "website_fields": {
+            "show_category_title": False,
+            "show_category_description": True,
+            "align_category_content": False,
             "shop_ppr": 4,
             "shop_gap": "8px",
             "shop_opt_products_design_classes": "o_wsale_products_opt_name_color_regular "
@@ -203,11 +196,6 @@ SHOP_PAGE_STYLE_MAPPING = {
             "o_wsale_products_opt_design_cards "
             "o_wsale_products_opt_thumb_4_5 "
             "o_wsale_products_opt_has_comparison",
-        },
-        "category_fields": {
-            "show_category_title": False,
-            "show_category_description": True,
-            "align_category_content": False,
         },
     },
 }
