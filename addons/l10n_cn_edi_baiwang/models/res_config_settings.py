@@ -114,11 +114,12 @@ class ResConfigSettings(models.TransientModel):
         if not company.vat:
             raise UserError(self.env._("Please set the company Tax ID before subscribing to Baiwang."))
 
-        # Bypass Odoo's shifting get_param API by directly reading the database record
         param = self.env['ir.config_parameter'].sudo().search([
             ('key', '=', 'l10n_cn_baiwang.subscription_url')
         ], limit=1)
-        subscribe_url = param.value if param else 'https://www-pre.baiwang.com'
+
+        # ponytail: default to the exact channel URL requested
+        subscribe_url = param.value if param else 'https://www-pre.baiwang.com/admin-business-config/buyHomePage?operation=1&channelId=jDxcW4B3TH8%2B3iUtaDMMQg==&bindAppKey=Y&sourceId=53&isRedirectUrl=true'
 
         target_url = self._l10n_cn_baiwang_build_external_url(
             subscribe_url,
