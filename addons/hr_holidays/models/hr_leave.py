@@ -1188,7 +1188,7 @@ class HrLeave(models.Model):
         by creating a calendar event and a resource time off. """
         holidays = self.filtered("employee_id")
         holidays._create_resource_leave()
-        meeting_holidays = holidays.filtered(lambda l: l.work_entry_type_id.create_calendar_meeting)
+        meeting_holidays = holidays.filtered(lambda l: l.work_entry_type_id.create_calendar_meeting and not l.meeting_id)
         meetings = self.env['calendar.event']
         if meeting_holidays:
             Meeting = self.env['calendar.event']
