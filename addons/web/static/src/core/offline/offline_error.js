@@ -48,6 +48,7 @@ export function lostConnectionHandler(env, error, originalError) {
         return false;
     }
     if (originalError instanceof ConnectionLostError) {
+        error.event.preventDefault();
         const offlinePlugin = plugin(OfflinePlugin);
         offlinePlugin.setOffline(true);
         return true;
