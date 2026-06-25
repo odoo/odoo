@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { Component, onMounted, onWillDestroy, proxy } from "@odoo/owl";
@@ -45,25 +45,25 @@ export class DebugWidget extends Component {
             }
         });
 
-        useLayoutEffect(
-            (isOpen) => {
-                if (!isOpen) {
-                    return;
-                }
+        // useLayoutEffect(
+        //     (isOpen) => {
+        //         if (!isOpen) {
+        //             return;
+        //         }
 
-                // Since addEventListener('storage') is not triggered from the same tab,
-                // we need to poll the device data to keep the widget updated.
-                const interval = setInterval(() => {
-                    this.state.next_number = this.pos.device?.data?.next_number;
-                    this.state.unsynced_number_stack = JSON.stringify(
-                        this.pos.device?.data?.unsynced_number_stack || []
-                    );
-                }, 500);
+        //         // Since addEventListener('storage') is not triggered from the same tab,
+        //         // we need to poll the device data to keep the widget updated.
+        //         const interval = setInterval(() => {
+        //             this.state.next_number = this.pos.device?.data?.next_number;
+        //             this.state.unsynced_number_stack = JSON.stringify(
+        //                 this.pos.device?.data?.unsynced_number_stack || []
+        //             );
+        //         }, 500);
 
-                return () => clearInterval(interval);
-            },
-            () => [this.state.isOpen]
-        );
+        //         return () => clearInterval(interval);
+        //     },
+        //     () => [this.state.isOpen]
+        // );
     }
     get isDisabled() {
         return this.pos.cashier._role === "minimal";
