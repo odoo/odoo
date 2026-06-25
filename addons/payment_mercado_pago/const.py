@@ -22,6 +22,20 @@ SUPPORTED_COUNTRIES = {
     "UY",
 }
 
+# Mapping of country codes to the locales supported by the Mercado Pago Bricks SDK. The locale is
+# bound to the country rather than the language (each supported country has a single locale, e.g.
+# Brazil is always pt-BR), so the website language's country part is enough to resolve it.
+# See https://www.mercadopago.com/developers/en/docs/checkout-bricks/additional-content/localization.
+COUNTRY_LOCALES = {
+    "AR": "es-AR",
+    "BR": "pt-BR",
+    "CL": "es-CL",
+    "CO": "es-CO",
+    "MX": "es-MX",
+    "PE": "es-PE",
+    "UY": "es-UY",
+}
+
 # Mapping of country codes to corresponding currency codes.
 CURRENCY_MAPPING = {
     "AR": "ARS",  # Argentina - Argentine Peso
