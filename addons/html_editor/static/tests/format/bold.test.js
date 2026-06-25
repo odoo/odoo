@@ -630,3 +630,13 @@ test("should not apply bold to selection placeholder nodes", async () => {
         `)
     );
 });
+
+test("should apply bold on fully selected list items with font-size style", async () => {
+    await testEditor({
+        contentBefore:
+            '<ol><li style="font-size: 18px; list-style-position: inside;">[abc]</li></ol>',
+        stepFunction: bold,
+        contentAfter:
+            '<ol><li style="font-size: 18px; list-style-position: inside;"><strong>[abc]</strong></li></ol>',
+    });
+});
