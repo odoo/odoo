@@ -181,7 +181,7 @@ class SaleReport(models.Model):
         }
 
     def _groupby_list(self, table: TableSQL):
-        return [
+        groupby_list = [
             table.product_id,
             table.price_unit,
             table.invoice_status,
@@ -196,6 +196,9 @@ class SaleReport(models.Model):
             table.product_id.product_tmpl_id.id,
             table.order_id.partner_id.id,
         ]
+        if table.consolidation_rate != SQL('1'):
+            groupby_list.append(table.consolidation_rate)
+        return groupby_list
 
     def _case_value_or_one(self, value):
         return SQL("CASE COALESCE(%(value)s, 0) WHEN 0 THEN 1.0 ELSE %(value)s END", value=value)
