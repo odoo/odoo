@@ -2203,6 +2203,46 @@ test("failure on loading messages should prompt retry button", async () => {
     expect.verifyErrors(["RPC_ERROR"]);
 });
 
+test("Retry on failed initial load should load messages", async () => {
+    expect.errors(1);
+    let messageFetchShouldFail = true;
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "General",
+    });
+    const messageIds = pyEnv["mail.message"].create(
+        range(60).map((i) => ({
+            body: `message ${i}`,
+            model: "discuss.channel",
+            res_id: channelId,
+        }))
+    );
+    const [selfMember] = pyEnv["discuss.channel.member"].search_read([
+        ["partner_id", "=", serverState.partnerId],
+        ["channel_id", "=", channelId],
+    ]);
+    pyEnv["discuss.channel.member"].write([selfMember.id], {
+        new_message_separator: messageIds[29],
+    });
+    listenStoreFetch("/discuss/channel/messages", {
+        onRpc() {
+            if (messageFetchShouldFail) {
+                return Promise.reject();
+            }
+        },
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains("button:text('Try again')");
+    messageFetchShouldFail = false;
+    await click("button:text('Try again')");
+    await waitStoreFetch("/discuss/channel/messages");
+    await contains(".o-mail-Message", { count: 60 });
+    await contains(".o-mail-Thread-newMessage");
+    expect.verifyErrors(["RPC_ERROR"]);
+});
+
 test("failure on loading more messages should display error and prompt retry button", async () => {
     // first call needs to be successful as it is the initial loading of messages
     // second call comes from load more and needs to fail in order to show the error alert
