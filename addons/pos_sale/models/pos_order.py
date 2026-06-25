@@ -44,6 +44,9 @@ class PosOrder(models.Model):
                 invoice_vals['invoice_payment_term_id'] = False
             if sale_orders[0].partner_invoice_id != sale_orders[0].partner_id:
                 invoice_vals['partner_id'] = sale_orders[0].partner_invoice_id.id
+            if not invoice_vals.get('reversed_entry_id'):
+                invoice_vals['ref'] = sale_orders[0].client_order_ref or sale_orders[0].name
+            invoice_vals['invoice_origin'] = ', '.join(sale_orders.mapped('name'))
         return invoice_vals
 
     def action_pos_order_paid(self):
