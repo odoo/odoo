@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
@@ -131,3 +132,20 @@ class TestPartnerRoutingFields(AccountTestInvoicingCommon):
         })
         self.assertEqual(partner.routing_scheme, '0208')
         self.assertEqual(partner.routing_endpoint, '0477472701')
+
+    def test_validate_fr_vat_routing_identifier(self):
+        """ A France VAT (EAS 9957) used as routing scheme/endpoint is validated as a VAT:
+        a valid number is accepted and normalized, an invalid one raises a clear error.
+        """
+        partner = self.env['res.partner'].create({'name': "FR VAT Routing"})
+
+        # A valid France VAT is accepted as the routing endpoint.
+        partner.routing_identifier = '9957:FR23334175221'
+        self.assertRecordValues(partner, [{
+            'routing_scheme': '9957',
+            'routing_endpoint': 'FR23334175221',
+        }])
+
+        # An invalid France VAT is rejected with a VAT validation error.
+        with self.assertRaisesRegex(ValidationError, "for partner does not seem to be valid"):
+            partner.routing_identifier = '9957:FR00000000000'

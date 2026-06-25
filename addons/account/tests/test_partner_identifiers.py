@@ -22,7 +22,7 @@ class TestAccountPartnerIdentifiers(TransactionCase):
         partner.global_location_number = ''
         self.assertFalse(partner.additional_identifiers)
 
-        with self.assertRaisesRegex(ValidationError, "Invalid identifier: EAN/GLN."):
+        with self.assertRaisesRegex(ValidationError, "Invalid identifier"):
             partner.global_location_number = 'wrong_gln'
 
     def test_retrieve_partner_by_additional_identifiers(self):
