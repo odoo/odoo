@@ -10,4 +10,9 @@ export class TimeOffCalendarYearPopover extends CalendarYearPopover {
         body: "hr_holidays.MandatoryDayCalendarYearPopover.body",
         record: "hr_holidays.CalendarYearPopover.record",
     };
+    onRecordClick(record) {
+        const context = this.props?.model?.meta?.context || {};
+        this.props.editRecord(record, context);
+        this.props.close();
+    }
 }

@@ -97,7 +97,7 @@ export class CalendarYearPopover extends Component {
         this.props.close();
     }
     onRecordClick(record) {
-        this.props.editRecord(record, this.props?.model?.meta?.context);
+        this.props.editRecord(record);
         this.props.close();
     }
 }

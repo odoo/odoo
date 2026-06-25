@@ -377,7 +377,7 @@
                                 invisible="not context.get('is_management_related', False)"
                                 groups="hr_holidays.group_hr_holidays_responsible"
                                 widget="many2one_avatar_employee"
-                                readonly="not context.get('is_new_record', False)"/>
+                                readonly="id"/>
                             <label for="request_date_from" string="Dates"/>
                             <div id="full_date" class="o_row">
                                 <field
