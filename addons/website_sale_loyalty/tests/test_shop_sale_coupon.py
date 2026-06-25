@@ -24,7 +24,7 @@ class WebsiteSaleLoyaltyTestUi(TestSaleCommon, HttpCase):
                 ("code", "=", "stripe")
             ]).allow_express_checkout = False
 
-        cls.env.ref("base.user_admin").write({
+        cls.env.ref("base.user_admin").sudo().write({
             "company_id": cls.env.company.id,
             "company_ids": [(4, cls.env.company.id)],
             "name": "Mitchell Admin",
