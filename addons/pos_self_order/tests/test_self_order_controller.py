@@ -33,6 +33,7 @@ class TestSelfOrderController(SelfOrderCommonTest):
         )
         data = self.make_request_to_controller('/pos-self-order/process-order/mobile', order_data)
         order1 = self.env['pos.order'].browse(data['pos.order'][0]['id'])
+        order1.state = 'paid'  # Force paid order, the controller cannot set the state without payment.
 
         order_data = self._create_order_data(
             state='draft',
