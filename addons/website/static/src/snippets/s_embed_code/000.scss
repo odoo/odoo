@@ -7,3 +7,24 @@
     background-color: lightcyan !important;
     color: black;
 }
+
+.s_embed_code_embedded {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    .s_embed_code.text-center & {
+        align-items: center;
+        text-align: center;
+    }
+    .s_embed_code.text-start & {
+        align-items: flex-start;
+        text-align: start;
+    }
+    .s_embed_code.text-end & {
+        align-items: flex-end;
+        text-align: end;
+    }
+    > * {
+        max-width: 100%;
+    }
+}
