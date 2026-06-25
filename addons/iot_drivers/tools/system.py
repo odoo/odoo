@@ -155,11 +155,11 @@ def check_image():
     return {'major': version[0], 'minor': version[1]}
 
 
-def update_conf(values, section='iot.box'):
+def update_conf(values: dict, section: str = "iot.box"):
     """Update odoo.conf with the given key and value.
 
-    :param dict values: key-value pairs to update the config with.
-    :param str section: The section to update the key-value pairs in (Default: iot.box).
+    :param values: key-value pairs to update the config with.
+    :param section: The section to update the key-value pairs in (Default: `iot.box`).
     """
     _logger.debug("Updating odoo.conf with values: %s", values)
     conf = get_conf()
@@ -175,12 +175,12 @@ def update_conf(values, section='iot.box'):
         conf.write(f)
 
 
-def get_conf(key=None, section='iot.box'):
+def get_conf(key: str | None = None, section: str = "iot.box"):
     """Get the value of the given key from odoo.conf, or the full config if no key is provided.
 
     :param key: The key to get the value of.
-    :param section: The section to get the key from (Default: iot.box).
-    :return: The value of the key provided or None if it doesn't exist, or full conf object if no key is provided.
+    :param section: The section to get the key from (Default: `iot.box`).
+    :return: The value of the key provided or `None` if it doesn't exist, or full conf object if no key is provided.
     """
     conf = configparser.RawConfigParser()
     conf.read(path_file("odoo.conf"))
