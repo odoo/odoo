@@ -27,9 +27,15 @@ class HrEmployeeDeparture(models.Model):
 
         all_drivers = self.employee_id.user_id.partner_id | self.employee_id.work_contact_id
         cars_sudo = self.sudo().env['fleet.vehicle'].search([('driver_id', 'in', all_drivers.ids)])
+        # as employees have been archived during action_register process, we cannot retreive the employee using car record.
+        # Create a mapping between employee (possibly archived) and the car to notify the employee with the corresponding car.
+        employee_per_car = {
+            car: self.employee_id.filtered(lambda e: e.work_contact_id == car.driver_id or e.user_id.partner_id == car.driver_id)
+            for car in cars_sudo
+        }
         if cars_sudo:
             for car in cars_sudo:
-                car.driver_employee_id.message_post(body=self.env._(
+                employee_per_car[car].message_post(body=self.env._(
                     "The vehicle %(car)s has been freed",
                     car=car.display_name,
                 ))
