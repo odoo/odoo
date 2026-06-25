@@ -21,10 +21,18 @@ class AccountEdiProxyClientUser(models.Model):
 
     def _get_proxy_urls(self):
         urls = super()._get_proxy_urls()
+
+        # Look for a local dev override, otherwise default to Odoo's real test server
+        param = self.env['ir.config_parameter'].sudo().search([
+            ('key', '=', 'l10n_cn_baiwang.local_proxy_url')
+        ], limit=1)
+
+        test_url = param.value if param else 'https://iap-services-test.odoo.com'
+
         urls['l10n_cn_edi_baiwang'] = {
             'demo': 'demo',
             'prod': 'https://iap.odoo.com',
-            'test': 'http://localhost:9856',
+            'test': test_url,
         }
         return urls
 
