@@ -564,6 +564,16 @@ class MrpBomLine(models.Model):
         if self.product_uom_id.category_id != self.product_id.uom_id.category_id:
             self.product_uom_id = self.product_id.uom_id.id
             res['warning'] = {'title': _('Warning'), 'message': _('The Product Unit of Measure you chose has a different category than in the product form.')}
+        elif self.product_uom_id.factor > self.product_id.uom_id.factor:
+            return {
+                'warning': {
+                    'title': _("Unsafe unit of measure"),
+                    'message': _("You are using a unit of measure smaller than the one you are using in "
+                                "order to stock your product. This can lead to rounding problem on reserved quantity. "
+                                "You should use the smaller unit of measure possible in order to valuate your stock or "
+                                "change its rounding precision to a smaller value (example: 0.00001)."),
+                }
+            }
         return res
 
     @api.onchange('product_id')
