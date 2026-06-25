@@ -432,18 +432,33 @@ export class DescriptionScreen extends Component {
                 .slice(0, limit)
                 .sort((x, y) => x.hitCountOrder - y.hitCountOrder);
         } else {
-            let synonymMatches = this.state.industries.filter((val, index) => {
-                // To match, every term should be contained in the synonym
-                for (const candidate of [...(val.synonyms || "").split(/[|,]/)]) {
-                    // Check if industry label has already matched
-                    if (
-                        terms.every((term) => candidate.toLowerCase().includes(term)) &&
-                        !matches.includes(val)
-                    ) {
-                        return true;
-                    }
+            const displayedLabels = new Set(matches.map((match) => match.label.toLowerCase()));
+            const normalizedTerm = term.trim().toLowerCase();
+            let synonymMatches = this.state.industries.flatMap((val) => {
+                if (matches.includes(val)) {
+                    return [];
                 }
-                return false;
+                let label;
+                for (const synonym of (val.synonyms || "").split(/[|,]/)) {
+                    const synonymLabel = synonym.trim();
+                    const normalizedSynonym = synonymLabel.toLowerCase();
+                    // To match, every term should be contained in the synonym
+                    if (!synonymLabel || !terms.every((term) => normalizedSynonym.includes(term))) {
+                        continue;
+                    }
+                    // Display the synonym only when it is exactly the user
+                    // input, otherwise display the industry label.
+                    if (normalizedSynonym === normalizedTerm) {
+                        label = synonymLabel;
+                        break;
+                    }
+                    label = label || val.label;
+                }
+                if (!label || displayedLabels.has(label.toLowerCase())) {
+                    return [];
+                }
+                displayedLabels.add(label.toLowerCase());
+                return [{ ...val, label }];
             });
             synonymMatches = synonymMatches.sort((x, y) => x.hitCountOrder - y.hitCountOrder);
             matches = matches.concat(synonymMatches);
@@ -456,6 +471,7 @@ export class DescriptionScreen extends Component {
         }
         return matches.map((match) => ({
             label: match.label,
+            cssClass: "text-capitalize",
             labelTermOrder: this._getMatchTermOrder(match.label, terms),
             onSelect: () => this._setSelectedIndustry(match.label, match.id),
         }));
