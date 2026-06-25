@@ -235,7 +235,7 @@ class WebsitePage(models.Model):
         if url_in_vals := ('url' in vals):
             vals_url = vals.pop('url')
             vals_url = adapt_translated_field_value(
-                self.env, vals_url,
+                self.env, self._fields['url'], vals_url,
                 lambda lang, url: (
                     '/' + self.env['ir.http']._slugify(url, max_length=1024, path=True)
                 )
@@ -252,7 +252,7 @@ class WebsitePage(models.Model):
         if url_in_vals:
             for page in self:
                 url = adapt_translated_field_value(
-                    self.env, vals_url,
+                    self.env, self._fields['url'], vals_url,
                     lambda lang, url: self._handle_url_update(page, page.website_id.id, url, lang)
                 )
                 super(WebsitePage, page).write({'url': url})
